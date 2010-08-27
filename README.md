@@ -45,7 +45,7 @@ To indicate certain methods are "safe":
 
     brakeman -s benign_method,totally_safe path/to/rails/app/root
 
-By default, brakeman will assume that unknown methods involving untrusted data are dangerous. For example, this would raise a warning:
+By default, brakeman will assume that unknown methods involving untrusted data are dangerous. For example, this would a warning:
 
     <%= some_method(:option => params[:input]) %>
 
