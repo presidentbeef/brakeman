@@ -1,0 +1,266 @@
+#!/usr/bin/env ruby
+require "optparse"
+require 'set'
+require 'yaml'
+
+Version = "0.0.1"
+
+trap("INT") do
+  $stderr.puts "\nInterrupted - exiting."
+  exit!
+end
+
+#Load scanner
+begin
+  require 'scanner'
+rescue LoadError
+  #Try to find lib directory locally
+  $: << "#{File.expand_path(File.dirname(__FILE__))}/../lib"
+
+  begin
+    require 'scanner'
+  rescue LoadError
+    abort "Cannot find lib/ directory."
+  end
+end
+
+#Parse command line options
+options = {}
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: brakeman [options] rails/root/path"
+
+  opts.on "-p", "--path PATH", "Specify path to Rails application" do |path|
+    options[:app_path] = File.expand_path path
+  end
+
+  opts.on "-q", "--quiet", "Suppress informational messages" do
+    options[:quiet] = true
+    $VERBOSE = nil
+  end
+
+  opts.separator ""
+  opts.separator "Scanning options:"
+
+  opts.on "--ignore-model-output", "Consider model attributes XSS-safe" do
+    options[:ignore_model_output] = true
+  end
+
+  opts.on "-r", "--report-direct", "Only report direct use of untrusted data" do |option|
+    options[:check_arguments] = !option
+  end
+
+  opts.on "-s", "--safe-methods meth1,meth2,etc", Array, "Consider the specified methods safe" do |methods|
+    options[:safe_methods] ||= Set.new
+    options[:safe_methods].merge methods.map {|e| e.to_sym }
+  end
+
+  opts.on "-t", "--test Check1,Check2,etc", Array, "Only run the specified checks" do |checks|
+    checks.each_with_index do |s, index|
+      if s[0,5] != "Check"
+        checks[index] = "Check" << s
+      end
+    end
+
+    options[:run_checks] ||= Set.new
+    options[:run_checks].merge checks
+  end
+
+  opts.on "-x", "--except Check1,Check2,etc", Array, "Skip the specified checks" do |skip|
+    skip.each do |s|
+      if s[0,5] != "Check"
+        s = "Check" << s
+      end
+
+      options[:skip_checks] ||= Set.new
+      options[:skip_checks] << s
+    end
+  end
+
+  opts.separator ""
+  opts.separator "Output options:"
+
+  opts.on "-d", "--debug", "Lots of output" do
+    options[:debug] = true 
+  end
+
+  opts.on "-f", 
+    "--format TYPE", 
+    [:pdf, :text, :html, :csv], 
+    "Specify output format. Default is text" do |type|
+    
+    type = "s" if type == :text
+    options[:output_format] = ("to_" << type.to_s).to_sym
+  end
+
+  opts.on "-l", "--[no]-combine-locations", "Combine warning locations (Default)" do |combine|
+    options[:combine_locations] = combine
+  end
+
+  opts.on "-m", "--routes", "Report controller information" do
+    options[:report_routes] = true
+  end
+
+  opts.on "--message-limit LENGTH", "Limit message length in HTML report" do |limit|
+    options[:message_limit] = limit.to_i
+  end
+
+  opts.on "-o", "--output FILE", "Specify file for output. Defaults to stdout" do |file|
+    options[:output_file] = file
+  end
+
+  opts.on "-w", 
+    "--confidence-level LEVEL", 
+    ["1", "2", "3"], 
+    "Set minimal confidence level (1 - 3). Default: 1" do |level|
+
+    options[:min_confidence] =  3 - level.to_i
+  end
+
+  opts.separator ""
+  opts.separator "Configuration files:"
+
+  opts.on "-c", "--config-file FILE", "Use specified configuration file" do |file|
+    options[:config_file] = File.expand_path(file)
+  end
+
+  opts.on "-C", "--create-config [FILE]", "Output configuration file based on options" do |file|
+    if file
+      options[:create_config] = file
+    else
+      options[:create_config] = true
+    end
+  end
+
+  opts.separator ""
+
+  opts.on_tail "-h", "--help", "Display this message" do
+    puts opts
+    exit
+  end
+end.parse!(ARGV)
+
+#Load configuation file
+[File.expand_path(options[:config_file].to_s),
+  File.expand_path("./config.yaml"),
+  File.expand_path("~/.brakeman/config.yaml"),
+  File.expand_path("/etc/brakeman/config.yaml"),
+  "#{File.expand_path(File.dirname(__FILE__))}/../lib/config.yaml"].each do |f|
+
+  if File.exist? f and not File.directory? f
+    warn "[Notice] Using configuration in #{f}" unless options[:quiet]
+    OPTIONS = YAML.load_file f
+    OPTIONS.merge! options
+    OPTIONS.each do |k,v|
+      if v.is_a? Array
+        OPTIONS[k] = Set.new v
+      end
+    end
+    break
+  end
+end
+  
+OPTIONS = options unless defined? OPTIONS
+
+#Set defaults just in case
+{ :skip_checks => Set.new, 
+  :check_arguments => true, 
+  :safe_methods => Set.new,
+  :min_confidence => 2,
+  :combine_locations => true,
+  :collapse_mass_assignment => true,
+  :ignore_redirect_to_model => true,
+  :ignore_model_output => false,
+  :message_limit => 100,
+  :html_style => "#{File.expand_path(File.dirname(__FILE__))}/../lib/format/style.css" 
+}.each do |k,v|
+  OPTIONS[k] = v if OPTIONS[k].nil?
+end
+
+
+#Set output format
+if OPTIONS[:output_format]
+  case OPTIONS[:output_format]
+  when :html, :to_html
+    OPTIONS[:output_format] = :to_html
+  when :csv, :to_csv
+    OPTIONS[:output_format] = :to_csv
+  when :pdf, :to_pdf
+    OPTIONS[:output_format] = :to_pdf
+  else
+    OPTIONS[:output_format] = :to_s
+  end
+else
+  case OPTIONS[:output_file]
+  when /\.html$/i
+    OPTIONS[:output_format] = :to_html
+  when /\.csv$/i
+    OPTIONS[:output_format] = :to_csv
+  when /\.pdf$/i
+    OPTIONS[:output_format] = :to_pdf
+  else
+    OPTIONS[:output_format] = :to_s
+  end
+end
+
+#Output configuration if requested
+if OPTIONS[:create_config]
+
+  if OPTIONS[:create_config].is_a? String
+    file = OPTIONS[:create_config]
+  else
+    file = nil
+  end
+
+  OPTIONS.delete :create_config
+
+  OPTIONS.each do |k,v|
+    if v.is_a? Set
+      OPTIONS[k] = v.to_a
+    end
+  end
+
+  if file
+    File.open file, "w" do |f|
+      YAML.dump OPTIONS, f
+    end
+    puts "Output configuration to #{file}"
+  else
+    puts YAML.dump(OPTIONS)
+  end
+  exit
+end
+
+
+#Check application path
+unless OPTIONS[:app_path]
+  if ARGV[-1].nil?
+    OPTIONS[:app_path] = File.expand_path "."
+  else
+    OPTIONS[:app_path] = File.expand_path ARGV[-1]
+  end
+end
+
+app_path = OPTIONS[:app_path]
+
+abort("Please supply the path to a Rails application.") unless app_path and File.exist? app_path + "/app"
+
+warn "[Notice] Using Ruby #{RUBY_VERSION}. Please make sure this matches the one used to run your Rails application."
+
+#Start scanning
+scanner = Scanner.new app_path
+
+warn "Processing application in #{app_path}"
+tracker = scanner.process
+
+warn "Running checks..."
+tracker.run_checks
+
+warn "Generating report..."
+if OPTIONS[:output_file]
+  File.open OPTIONS[:output_file], "w" do |f|
+    f.puts tracker.report.send(OPTIONS[:output_format])
+  end
+else
+  puts tracker.report.send(OPTIONS[:output_format])
+end
