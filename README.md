@@ -39,13 +39,13 @@ Multiple checks should be separated by a comma:
 
 To do the opposite and only run a certain set of tests:
 
-    brakeman -t Find,ValidationRegex path/to/rails/app/root
+    brakeman -t SQL,ValidationRegex path/to/rails/app/root
 
 To indicate certain methods are "safe":
 
     brakeman -s benign_method,totally_safe path/to/rails/app/root
 
-By default, brakeman will assume that unknown methods involving untrusted data are dangerous. For example, this would a warning:
+By default, brakeman will assume that unknown methods involving untrusted data are dangerous. For example, this would raise a warning:
 
     <%= some_method(:option => params[:input]) %>
 
