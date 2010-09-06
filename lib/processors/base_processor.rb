@@ -210,6 +210,8 @@ class BaseProcessor < SexpProcessor
     elsif args[1].is_a? Symbol or args[1].is_a? String
       type = :action
       value = Sexp.new(:lit, args[1].to_sym)
+		elsif args[1].nil?
+			type = :default
     elsif not hash? args[1]
       type = :action
       value = args[1]
