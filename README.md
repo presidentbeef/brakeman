@@ -6,6 +6,12 @@ It targets Rails versions > 2.0 and < 3.0.
 
 # Installation
 
+Using RubyGems:
+
+    gem install brakeman
+
+From source:
+
     gem build brakeman.gemspec
     gem install brakeman*.gem
 
