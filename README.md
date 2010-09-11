@@ -17,39 +17,39 @@ From source:
 
 # Usage
 
-    brakeman path/to/rails/app/root
+    brakeman app_path
 
 # Options
 
 To specify an output file for the results:
 
-    brakeman -o output_file path/to/rails/app/root
+    brakeman -o output_file app_path
 
 The output format is determined by the file extension or by using the `-f` option. Current options are: `text`, `html`, and `csv`.
 
 To suppress informational warnings and just output the report:
 
-    brakeman -q path/to/rails/app/root
+    brakeman -q app_path
 
 To see all kinds of debugging information:
 
-    brakeman -d path/to/rails/app/root
+    brakeman -d app_path
 
 Specific checks can be skipped, if desired. The name needs to be the correct case. For example, to skip looking for default routes (`DefaultRoutes`):
 
-    brakeman -x DefaultRoutes path/to/rails/app/root
+    brakeman -x DefaultRoutes app_path
 
 Multiple checks should be separated by a comma:
 
-    brakeman -x DefaultRoutes,Redirect path/to/rails/app/root
+    brakeman -x DefaultRoutes,Redirect app_path
 
 To do the opposite and only run a certain set of tests:
 
-    brakeman -t SQL,ValidationRegex path/to/rails/app/root
+    brakeman -t SQL,ValidationRegex app_path
 
 To indicate certain methods are "safe":
 
-    brakeman -s benign_method,totally_safe path/to/rails/app/root
+    brakeman -s benign_method,totally_safe app_path
 
 By default, brakeman will assume that unknown methods involving untrusted data are dangerous. For example, this would a warning:
 
@@ -57,7 +57,7 @@ By default, brakeman will assume that unknown methods involving untrusted data a
 
 To only raise warnings only when untrusted data is being directly used:
 
-    brakeman -r path/to/rails/app/root
+    brakeman -r app_path
 
 # Warning information
 
@@ -79,7 +79,7 @@ There are three levels of confidence:
 
 To only get warnings above a given confidence level:
 
-    brakeman -w3 /path/to/rails/app/root
+    brakeman -w3 app_path
 
 The `-w` switch takes a number from 1 to 3, with 1 being low (all warnings) and 3 being high (only high confidence warnings).
 
