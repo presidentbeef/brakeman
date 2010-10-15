@@ -201,4 +201,33 @@ class OutputProcessor < Ruby2Ruby
     exp.clear
     out
   end
+
+  #This is copied from Ruby2Ruby, except the :string_eval type has been added
+  def util_dthing(type, exp)
+    s = []
+
+    # first item in sexp is a string literal
+    s << dthing_escape(type, exp.shift)
+
+    until exp.empty?
+      pt = exp.shift
+      case pt
+      when Sexp then
+        case pt.first
+        when :str then
+          s << dthing_escape(type, pt.last)
+        when :evstr, :string_eval then
+          s << '#{' << process(pt) << '}' # do not use interpolation here
+        else
+          raise "unknown type: #{pt.inspect}"
+        end
+      else
+        # HACK: raise "huh?: #{pt.inspect}" -- hitting # constants in regexps
+        # do nothing for now
+      end
+    end
+
+    s.join
+  end
+
 end
