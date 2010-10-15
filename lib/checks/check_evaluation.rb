@@ -9,8 +9,6 @@ class CheckEvaluation < BaseCheck
   def run_check
     calls = tracker.find_call nil, [:eval, :instance_eval, :class_eval, :module_eval]
 
-    @templates = tracker.templates
-
     calls.each do |call|
       process_result call
     end
