@@ -625,4 +625,15 @@ class Report
 
     output << "</table></div>"
   end
+
+  def to_tabs
+    [[:warnings, "General"], [:controller_warnings, "Controller"],
+      [:model_warnings, "Model"], [:template_warnings, "Template"]].map do |meth, category|
+
+      checks.send(meth).map do |w|
+        "#{file_for w}\t#{w.line}\t#{w.warning_type}\t#{category}\t#{w.message}\t#{TEXT_CONFIDENCE[w.confidence]}"
+      end.join "\n"
+
+    end.join "\n"
+  end
 end

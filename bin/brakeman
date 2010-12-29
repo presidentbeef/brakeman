@@ -86,7 +86,7 @@ OptionParser.new do |opts|
 
   opts.on "-f", 
     "--format TYPE", 
-    [:pdf, :text, :html, :csv], 
+    [:pdf, :text, :html, :csv, :tabs], 
     "Specify output format. Default is text" do |type|
     
     type = "s" if type == :text
@@ -187,6 +187,8 @@ if OPTIONS[:output_format]
     OPTIONS[:output_format] = :to_csv
   when :pdf, :to_pdf
     OPTIONS[:output_format] = :to_pdf
+  when :tabs, :to_tabs
+    OPTIONS[:output_format] = :to_tabs
   else
     OPTIONS[:output_format] = :to_s
   end
@@ -198,6 +200,8 @@ else
     OPTIONS[:output_format] = :to_csv
   when /\.pdf$/i
     OPTIONS[:output_format] = :to_pdf
+  when /\.tabs$/i
+    OPTIONS[:output_format] = :to_tabs
   else
     OPTIONS[:output_format] = :to_s
   end
