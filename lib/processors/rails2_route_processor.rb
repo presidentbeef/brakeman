@@ -1,13 +1,11 @@
 require 'processors/base_processor'
-require 'processors/alias_processor'
-require 'util'
-require 'set'
-
 #Processes the Sexp from routes.rb. Stores results in tracker.routes.
 #
 #Note that it is only interested in determining what methods on which
 #controllers are used as routes, not the generated URLs for routes.
 class RoutesProcessor < BaseProcessor
+  include RouteHelper
+
   attr_reader :map, :nested, :current_controller
 
   def initialize tracker
@@ -99,11 +97,6 @@ class RoutesProcessor < BaseProcessor
     end
   end
 
-  #Add default routes
-  def add_resources_routes
-    @tracker.routes[@current_controller].merge [:index, :new, :create, :show, :edit, :update, :destroy]
-  end
-
   #Process all the options that might be in the hash passed to
   #map.resource, et al.
   def process_resource_options exp
@@ -178,11 +171,6 @@ class RoutesProcessor < BaseProcessor
         end
       end
     end
-  end
-
-  #Add default routes minus :index
-  def add_resource_routes
-    @tracker.routes[@current_controller].merge [:new, :create, :show, :edit, :update, :destroy]
   end
 
   #Process
@@ -260,28 +248,6 @@ class RoutesProcessor < BaseProcessor
     hash_iterate(exp) do |action, type|
       routes << action[1]
     end
-  end
-
-  #Manage Controller prefixes
-  #@prefix is an Array, but this method returns a string
-  #suitable for prefixing onto a controller name.
-  def prefix
-    if @prefix.length > 0
-      @prefix.join("::") << "::"
-    else
-      ''
-    end
-  end
-
-  #Sets the controller name to a proper class name.
-  #For example
-  # self.current_controller = :session
-  # @controller == :SessionController #true
-  #
-  #Also prepends the prefix if there is one set.
-  def current_controller= name
-    @current_controller = (prefix + camelize(name) + "Controller").to_sym
-    @tracker.routes[@current_controller] ||= Set.new
   end
 
   private
