@@ -14,6 +14,10 @@ class RoutesProcessor < BaseProcessor
     @with_options = nil #For use inside map.with_options
   end
 
+  def process_routes exp
+    process exp.dup
+  end
+
   def process_call exp
     case exp[1]
     when :resources
