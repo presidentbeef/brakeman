@@ -47,29 +47,24 @@ class CheckCrossSiteScripting < BaseCheck
 
       template[:outputs].each do |out|
         type, match = has_immediate_user_input?(out[1])
-        if type
-          unless duplicate? out
+        if type and not duplicate? out
             add_result out
             case type
             when :params
-
-              warn :template => @current_template, 
-                :warning_type => "Cross Site Scripting", 
-                :message => "Unescaped parameter value",
-                :line => match.line,
-                :code => match,
-                :confidence => CONFIDENCE[:high]
-
+              message = "Unescaped parameter value"
             when :cookies
-
-              warn :template => @current_template, 
-                :warning_type => "Cross Site Scripting", 
-                :message => "Unescaped cookie value",
-                :line => match.line,
-                :code => match,
-                :confidence => CONFIDENCE[:high]
+              message = "Unescaped cookie value"
+            else
+              message = "Unescaped user input value"
             end
-          end
+
+            warn :template => @current_template, 
+              :warning_type => "Cross Site Scripting",
+              :message => message,
+              :line => match.line,
+              :code => match,
+              :confidence => CONFIDENCE[:high]
+
         elsif not OPTIONS[:ignore_model_output] and match = has_immediate_model?(out[1])
           method = match[2]
 
@@ -168,8 +163,8 @@ class CheckCrossSiteScripting < BaseCheck
     elsif @inspect_arguments and (ALL_PARAMETERS.include?(exp) or params? exp)
 
       @matched = :params
-    else
-      process args if @inspect_arguments
+    elsif @inspect_arguments
+      process args
     end
   end
 
