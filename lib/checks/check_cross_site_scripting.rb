@@ -26,7 +26,7 @@ class CheckCrossSiteScripting < BaseCheck
 
   MODEL_METHODS = Set.new([:all, :find, :first, :last, :new])
 
-  IGNORE_LIKE = /^link_to_|_path|_tag|_url$/
+  IGNORE_LIKE = /^link_to_|(_path|_tag|_url)$/
 
   HAML_HELPERS = Sexp.new(:colon2, Sexp.new(:const, :Haml), :Helpers)
 
