@@ -3,6 +3,22 @@ require 'processors/template_processor'
 #Processes HAML templates.
 class HamlTemplateProcessor < TemplateProcessor
   HAML_FORMAT_METHOD = /format_script_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)/
+  
+  def initialize *args
+    super
+
+    @tracker.libs.each do |name, lib|
+      if name.to_s =~ /^Haml::Filters/
+        begin
+          require lib[:file]
+        rescue Exception => e
+          if OPTIONS[:debug]
+            raise e
+          end
+        end
+      end
+    end
+  end
 
   #Processes call, looking for template output
   def process_call exp
