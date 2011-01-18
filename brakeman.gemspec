@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = %q{brakeman}
-  s.version = "0.0.3"
+  s.version = "0.1.0"
   s.authors = ["Justin Collins"]
   s.summary = "Security vulnerability scanner for Ruby on Rails."
   s.description = "Brakeman detects security vulnerabilities in Ruby on Rails applications via static analysis."

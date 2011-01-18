@@ -1,0 +1,7 @@
+## 0.1.0
+
+  * Check link_to for XSS (because arguments are not escaped)
+  * Process layouts better (although not perfectly yet)
+  * Load custom Haml filters if they are in lib/
+  * Tab separated output via .tabs output extension
+  * Switch to normal versioning scheme
