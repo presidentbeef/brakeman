@@ -1,3 +1,7 @@
+## 0.1.1
+
+  * Be more permissive with ActiveSupport version
+
 ## 0.1.0
 
   * Check link_to for XSS (because arguments are not escaped)
