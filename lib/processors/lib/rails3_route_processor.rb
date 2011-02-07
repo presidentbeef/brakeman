@@ -96,6 +96,25 @@ class RoutesProcessor < BaseProcessor
 
     exp
   end
+
+  def process_verb exp
+    args = exp[3][1..-1]
+
+    if symbol? args[0]
+      @tracker.routes[@current_controller] << args[0][1]
+    else hash? args[0]
+      hash_iterate args[0] do |k, v|
+        if string? v
+          controller, action = extract_action v[1]
+
+          self.current_controller = controller
+          @tracker.routes[@current_controller] << action.to_sym
+        end
+      end
+    end
+
+    exp
+  end
         add_resources_routes
       end
     end
