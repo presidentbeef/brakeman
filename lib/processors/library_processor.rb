@@ -73,7 +73,8 @@ class LibraryProcessor < BaseProcessor
                     :public => {},
                     :private => {},
                     :protected => {},
-                    :src => exp }
+                    :src => exp,
+                    :file => @file_name }
     
       @tracker.libs[name] = @current_module
     end

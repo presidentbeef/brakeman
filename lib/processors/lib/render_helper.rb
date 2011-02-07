@@ -19,6 +19,14 @@ module RenderHelper
     exp
   end
 
+  #Processes layout
+  def process_layout name = nil
+    layout = name || layout_name
+    return unless layout
+
+    process_template layout, nil
+  end
+
   #Determines file name for partial and then processes it
   def process_partial name, args
     if name == "" or !(string? name or symbol? name)
@@ -60,6 +68,17 @@ module RenderHelper
       @tracker.template_cache << digest
 
       options = get_options args
+
+      #Process layout
+      if string? options[:layout]
+        process_template "layouts/#{options[:layout][1]}", nil
+      elsif sexp? options[:layout] and options[:layout][0] == :false
+        #nothing
+      elsif not template[:name].to_s.match(/[^\/_][^\/]+$/)
+        #Don't do this for partials
+        
+        process_layout
+      end
 
       if hash? options[:locals]
         hash_iterate options[:locals] do |key, value|

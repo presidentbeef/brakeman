@@ -93,6 +93,7 @@ class ControllerAliasProcessor < AliasProcessor
 
   #Processes the default template for the current action
   def process_default_render exp
+    process_layout
     process_template template_name, nil
   end
 
@@ -112,6 +113,20 @@ class ControllerAliasProcessor < AliasProcessor
       controller.gsub!("::", "/")
       underscore(controller + "/" + name.to_s)
     end
+  end
+
+  #Determines default layout name
+  def layout_name
+    controller = @tracker.controllers[@current_class]
+
+    return controller[:layout] if controller[:layout]
+    return false if controller[:layout] == false
+
+    app_controller = @tracker.controllers[:ApplicationController]
+
+    return app_controller[:layout] if app_controller and app_controller[:layout]
+
+    nil
   end
 
   #Returns true if the given method name is also a route

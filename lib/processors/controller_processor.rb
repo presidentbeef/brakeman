@@ -42,6 +42,7 @@ class ControllerProcessor < BaseProcessor
                     :file => @file_name }
     @tracker.controllers[@controller[:name]] = @controller
     exp[3] = process exp[3]
+    set_layout_name
     @controller = nil
     exp
   end
@@ -75,6 +76,20 @@ class ControllerProcessor < BaseProcessor
         when :before_filter
           @controller[:options][:before_filters] ||= []
           @controller[:options][:before_filters] << args[1..-1]
+        when :layout
+          if string? args[-1]
+            #layout "some_layout"
+
+            name = args[-1][1].to_s
+            unless Dir.glob("#{OPTIONS[:app_path]}/app/views/layouts/#{name}.html.{erb,haml}").empty?
+              @controller[:layout] = "layouts/#{name}"
+            else
+              warn "[Notice] Layout not found: #{name}" if OPTIONS[:debug]
+            end
+          elsif sexp? args[-1] and (args[-1][0] == :nil or args[-1][0] == :false)
+            #layout :false or layout nil
+            @controller[:layout] = false
+          end
         end
       end
       ignore
@@ -132,6 +147,18 @@ class ControllerProcessor < BaseProcessor
       add_fake_filter exp
     else
       super
+    end
+  end
+
+  #Sets default layout for renders inside Controller
+  def set_layout_name
+    return if @controller[:layout]
+
+    name = underscore(@controller[:name].to_s.split("::")[-1].gsub("Controller", ''))
+
+    #There is a layout for this Controller
+    unless Dir.glob("#{OPTIONS[:app_path]}/app/views/layouts/#{name}.html.{erb,haml}").empty?
+      @controller[:layout] = "layouts/#{name}"
     end
   end
 

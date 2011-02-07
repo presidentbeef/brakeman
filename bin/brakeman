@@ -4,7 +4,7 @@ require 'set'
 require 'yaml'
 
 
-Version = "0.0.2"
+Version = "0.1.1"
 
 trap("INT") do
   $stderr.puts "\nInterrupted - exiting."
