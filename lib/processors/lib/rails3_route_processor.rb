@@ -21,17 +21,19 @@ class RoutesProcessor < BaseProcessor
   end
 
   def process_call exp
-    case exp[1]
+    case exp[2]
     when :resources
       process_resources exp
-    when :scope
-      process_scope exp
     when :root
       process_root exp
     when :member
       process_member exp
     when :get, :put, :post, :delete
       process_verb exp
+    when :match
+      process_match exp
+    else
+      exp
     end
   end
 
