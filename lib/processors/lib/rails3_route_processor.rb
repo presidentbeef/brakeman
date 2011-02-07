@@ -37,8 +37,31 @@ class RoutesProcessor < BaseProcessor
     end
   end
 
-  def process_resources exp
-    if sexp[4][2] and sexp[4][2][0] == :hash
+  def process_iter exp
+    case exp[1][2]
+    when :namespace
+      process_namespace exp
+    when :resources
+      process_resource_block exp
+    when :scope
+      process_scope exp
+    else
+      super
+    end
+  end
+
+  def process_namespace exp
+    name = exp[1][3][1][1]
+    block = exp[3]
+
+    @prefix << camelize(name)
+
+    process block
+
+    @prefix.pop
+
+    exp
+  end
 
     elsif sexp[4][1..-1].all? { s | symbol? s }
       sexp[4][1..-1].each do |s|
