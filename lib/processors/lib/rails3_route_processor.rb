@@ -63,9 +63,22 @@ class RoutesProcessor < BaseProcessor
     exp
   end
 
-    elsif sexp[4][1..-1].all? { s | symbol? s }
-      sexp[4][1..-1].each do |s|
-        current_controller = s[1]
+  def process_root exp
+    args = exp[3][1..-1]
+
+    hash_iterate args[0] do |k, v|
+      if symbol? k and k[1] == :to
+        controller, action = extract_action v[1]
+
+        self.current_controller = controller
+        @tracker.routes[@current_controller] << action.to_sym
+
+        break
+      end
+    end
+
+    exp
+  end
         add_resources_routes
       end
     end
