@@ -118,5 +118,7 @@ class RoutesProcessor < BaseProcessor
         add_resources_routes
       end
     end
+  def extract_action str
+    str.split "#"
   end
 end
