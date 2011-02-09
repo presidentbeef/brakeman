@@ -24,6 +24,8 @@ class RoutesProcessor < BaseProcessor
     case exp[2]
     when :resources
       process_resources exp
+    when :resource
+      process_resource exp
     when :root
       process_root exp
     when :member
@@ -124,6 +126,15 @@ class RoutesProcessor < BaseProcessor
         self.current_controller = s[1]
         add_resources_routes
       end
+    end
+
+    exp
+  end
+
+  def process_resource exp
+    exp[3][1..-1].each do |s|
+      self.current_controller = s[1]
+      add_resource_routes
     end
 
     exp
