@@ -99,7 +99,7 @@ class CheckCrossSiteScripting < BaseCheck
 
   #Process an output Sexp
   def process_output exp
-    process exp[1]
+    process exp[1].dup
   end
 
   #Check a call for user input
