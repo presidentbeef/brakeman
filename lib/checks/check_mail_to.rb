@@ -22,7 +22,6 @@ class CheckMailTo < BaseCheck
         :warning_type => "Mail Link",
         :message => message,
         :confidence => CONFIDENCE[:high]
-      end
     end
   end
 
@@ -42,9 +41,8 @@ class CheckMailTo < BaseCheck
           end
         end
       end
-
     end
-      
+
     false
   end
 end
