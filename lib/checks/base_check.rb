@@ -342,8 +342,6 @@ class BaseCheck < SexpProcessor
     low_version = low_version.split(".").map! { |n| n.to_i }
     high_version = high_version.split(".").map! { |n| n.to_i }
 
-    puts "Comparing #{version.inspect} with #{low_version.inspect} and #{high_version.inspect}"
-
     version.each_with_index do |n, i|
       if n < low_version[i] or n > high_version[i]
         return false
