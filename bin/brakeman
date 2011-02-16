@@ -3,8 +3,9 @@ require "optparse"
 require 'set'
 require 'yaml'
 
+$:.unshift "#{File.expand_path(File.dirname(__FILE__))}/../lib"
 
-Version = "0.1.1"
+require 'version'
 
 trap("INT") do
   $stderr.puts "\nInterrupted - exiting."
@@ -242,14 +243,7 @@ warn "[Notice] Using Ruby #{RUBY_VERSION}. Please make sure this matches the one
 begin
   require 'scanner'
 rescue LoadError
-  #Try to find lib directory locally
-  $:.unshift "#{File.expand_path(File.dirname(__FILE__))}/../lib"
-
-  begin
-    require 'scanner'
-  rescue LoadError
-    abort "Cannot find lib/ directory."
-  end
+  abort "Cannot find lib/ directory."
 end
 
 #Start scanning
