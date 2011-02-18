@@ -75,7 +75,7 @@ OptionParser.new do |opts|
   opts.on "-f", 
     "--format TYPE", 
     [:pdf, :text, :html, :csv, :tabs], 
-    "Specify output format. Default is text" do |type|
+    "Specify output format. Default is tabs" do |type|
     
     type = "s" if type == :text
     options[:output_format] = ("to_" << type.to_s).to_sym
@@ -178,7 +178,7 @@ if OPTIONS[:output_format]
   when :tabs, :to_tabs
     OPTIONS[:output_format] = :to_tabs
   else
-    OPTIONS[:output_format] = :to_s
+    OPTIONS[:output_format] = :to_tabs
   end
 else
   case OPTIONS[:output_file]
@@ -191,7 +191,7 @@ else
   when /\.tabs$/i
     OPTIONS[:output_format] = :to_tabs
   else
-    OPTIONS[:output_format] = :to_s
+    OPTIONS[:output_format] = :to_tabs
   end
 end
 
