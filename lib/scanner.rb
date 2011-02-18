@@ -1,19 +1,12 @@
 require 'rubygems'
 begin
   require 'ruby_parser'
-  require 'haml'
   require 'erb'
-  require 'erubis'
   require 'processor'
 rescue LoadError => e
   $stderr.puts e.message
   $stderr.puts "Please install the appropriate dependency."
   exit
-end
-
-#Erubis processor which ignores any output which is plain text.
-class ScannerErubis < Erubis::Eruby
-  include Erubis::NoTextEnhancer
 end
 
 #Scans the Rails application.
@@ -133,6 +126,9 @@ class Scanner
     $stdout.sync = true
     count = 0
 
+    @initialized_haml = false
+    @initialize_erubis = false
+
     Dir.glob(views_path).sort.each do |f|
       count += 1
       type = f.match(/.*\.(erb|haml|rhtml)$/)[1].to_sym
@@ -142,14 +138,17 @@ class Scanner
       begin
         if type == :erb
           if tracker.config[:escape_html]
+            initialize_erubis unless @initialized_erubis
             src = RailsXSSErubis.new(File.read(f)).src
           elsif tracker.config[:erubis]
+            initialize_erubis unless @initialized_erubis
             src = ScannerErubis.new(File.read(f)).src
           else
             src = ERB.new(File.read(f), nil, "-").src
           end
           parsed = RubyParser.new.parse src
         elsif type == :haml
+          initialize_haml unless @initialized_haml
           src = Haml::Engine.new(File.read(f),
                                  :escape_html => !!tracker.config[:escape_html]).precompiled
           parsed = RubyParser.new.parse src
@@ -197,36 +196,20 @@ class Scanner
       end
     end
   end
-end
 
-#This is from the rails_xss plugin,
-#except we don't care about plain text.
-class RailsXSSErubis < ::Erubis::Eruby
-  include Erubis::NoTextEnhancer
+  private
 
-  #Initializes output buffer.
-  def add_preamble(src)
-    src << "@output_buffer = ActionView::SafeBuffer.new;\n"
+  def initialize_haml
+    require 'haml'
+    @initialized_haml = true
+  rescue LoadError => e
+    $stderr.puts e.message
+    $stderr.puts "Please install Haml."
+    exit!
   end
 
-  #This does nothing.
-  def add_text(src, text)
-    #    src << "@output_buffer << ('" << escape_text(text) << "'.html_safe!);"
-  end
-
-  #Add an expression to the output buffer _without_ escaping.
-  def add_expr_literal(src, code)
-    src << '@output_buffer << ((' << code << ').to_s);'
-  end
-
-  #Add an expression to the output buffer after escaping it.
-  def add_expr_escaped(src, code)
-    src << '@output_buffer << ' << escaped_expr(code) << ';'
-  end
-
-  #Add code to output buffer.
-  def add_postamble(src)
-    src << '@output_buffer.to_s'
+  def initialize_erubis
+    require 'scanner_erubis'
+    @initialized_erubis = true
   end
 end
-
