@@ -177,6 +177,8 @@ if OPTIONS[:output_format]
     OPTIONS[:output_format] = :to_pdf
   when :tabs, :to_tabs
     OPTIONS[:output_format] = :to_tabs
+  when OPTIONS[:output_format] = :to_s
+    OPTIONS[:output_format] = :to_s
   else
     OPTIONS[:output_format] = :to_tabs
   end
@@ -190,6 +192,8 @@ else
     OPTIONS[:output_format] = :to_pdf
   when /\.tabs$/i
     OPTIONS[:output_format] = :to_tabs
+  when /\.text$/i
+    OPTIONS[:output_format] = :to_s
   else
     OPTIONS[:output_format] = :to_tabs
   end
