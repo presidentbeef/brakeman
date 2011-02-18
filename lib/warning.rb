@@ -54,9 +54,9 @@ class Warning
   end
 
   #Return String of the code output from the OutputProcessor and
-  #stripped of newlines
+  #stripped of newlines and tabs.
   def format_code
-    OutputProcessor.new.format(self.code).gsub(/(\r|\n)+/, " ")
+    OutputProcessor.new.format(self.code).gsub(/(\t|\r|\n)+/, " ")
   end
 
   #Return formatted warning message
