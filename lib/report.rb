@@ -635,7 +635,7 @@ class Report
       [:model_warnings, "Model"], [:template_warnings, "Template"]].map do |meth, category|
 
       checks.send(meth).map do |w|
-        "#{file_for w}\t#{w.line}\t#{w.warning_type}\t#{category}\t#{w.message}\t#{TEXT_CONFIDENCE[w.confidence]}"
+        "#{file_for w}\t#{w.line}\t#{w.warning_type}\t#{category}\t#{w.format_message}\t#{TEXT_CONFIDENCE[w.confidence]}"
       end.join "\n"
 
     end.join "\n"
