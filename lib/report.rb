@@ -1,7 +1,5 @@
-require 'rubygems'
 require 'cgi'
 require 'set'
-require 'ruport'
 require 'processors/output_processor'
 require 'util'
 
@@ -258,6 +256,8 @@ class Report
 
   #Generate HTML output
   def to_html
+    load_ruport
+
     out = html_header <<
     "<h2 id='summary'>Summary</h2>" <<
     generate_overview.to_html << "<br/>" <<
@@ -293,6 +293,8 @@ class Report
 
   #Output text version of the report
   def to_s
+    load_ruport
+
     out = text_header <<
     "\n+SUMMARY+\n" <<
     generate_overview.to_s << "\n" <<
@@ -328,6 +330,8 @@ class Report
 
   #Generate CSV output
   def to_csv
+    load_ruport
+
     out = csv_header <<
     "\nSUMMARY\n" <<
     generate_overview.to_csv << "\n" <<
@@ -635,5 +639,13 @@ class Report
       end.join "\n"
 
     end.join "\n"
+  end
+
+  def load_ruport
+    require 'ruport'
+  rescue LoadError => e
+    $stderr.puts e
+    $stderr.puts "Please install Ruport."
+    exit!
   end
 end
