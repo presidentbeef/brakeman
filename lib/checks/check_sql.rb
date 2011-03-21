@@ -15,7 +15,11 @@ class CheckSQL < BaseCheck
   def run_check
     @rails_version = tracker.config[:rails_version]
     calls = tracker.find_model_find tracker.models.keys
+
     calls.concat tracker.find_call([], /^(find.*|last|first|all|count|sum|average|minumum|maximum)$/)
+
+    calls.concat tracker.find_model_find(nil).select { |result| constantize_call? result }
+
     calls.each do |c|
       process c
     end
@@ -120,5 +124,23 @@ class CheckSQL < BaseCheck
     end
 
     false
+  end
+
+  #Look for something like this:
+  #
+  # params[:x].constantize.find('something')
+  #
+  # s(:call,
+  #   s(:call,
+  #     s(:call, 
+  #       s(:call, nil, :params, s(:arglist)),
+  #       :[],
+  #       s(:arglist, s(:lit, :x))),
+  #     :constantize,
+  #     s(:arglist)),
+  #   :find,
+  #   s(:arglist, s(:str, "something")))
+  def constantize_call? result
+    sexp? result[-1][1] and result[-1][1][0] == :call and result[-1][1][2] == :constantize
   end
 end
