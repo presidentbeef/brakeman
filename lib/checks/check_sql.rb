@@ -16,7 +16,7 @@ class CheckSQL < BaseCheck
     @rails_version = tracker.config[:rails_version]
     calls = tracker.find_model_find tracker.models.keys
 
-    calls.concat tracker.find_call([], /^(find.*|last|first|all|count|sum|average|minumum|maximum)$/)
+    calls.concat tracker.find_call([], /^(find.*|last|first|all|count|sum|average|minumum|maximum|count_by_sql)$/)
 
     calls.concat tracker.find_model_find(nil).select { |result| constantize_call? result }
 
@@ -31,7 +31,7 @@ class CheckSQL < BaseCheck
 
     args = process call[3]
 
-    if call[2] == :find_by_sql
+    if call[2] == :find_by_sql or call[2] == :count_by_sql
       failed = check_arguments args[1]
     elsif call[2].to_s =~ /^find/
       failed = (args.length > 2 and check_arguments args[-1])
