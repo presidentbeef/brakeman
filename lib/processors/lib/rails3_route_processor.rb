@@ -104,6 +104,15 @@ class RoutesProcessor < BaseProcessor
 
     if symbol? args[0]
       @tracker.routes[@current_controller] << args[0][1]
+    elsif string? args[0]
+      route = args[0][1].split "/"
+      if route.length != 2
+        $stderr.puts "What to do with this? #{args[0][1]}"
+      else
+        self.current_controller = route[0]
+        @tracker.routes[@current_controller] << route[1].to_sym
+        @current_controller = nil
+      end
     else hash? args[0]
       hash_iterate args[0] do |k, v|
         if string? v
