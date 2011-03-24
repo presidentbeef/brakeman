@@ -6,7 +6,7 @@ class FindModelCall < FindCall
 
   #Passes +targets+ to FindCall
   def initialize targets
-    super(targets, /^(find.*|first|last|all|count|sum|average|minumum|maximum|count_by_sql)$/)
+    super(targets, /^(find.*|first|last|all|count|sum|average|minumum|maximum|count_by_sql)$/, true)
   end 
 
   #Matches entire method chain as a target. This differs from
