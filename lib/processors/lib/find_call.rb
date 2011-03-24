@@ -31,13 +31,14 @@ require 'processors/base_processor'
 # FindCall.new nil, /^g?sub!?$/
 class FindCall < BaseProcessor
 
-  def initialize targets, methods
+  def initialize targets, methods, in_depth = false
     super(nil)
     @calls = []
     @find_targets = targets
     @find_methods = methods
     @current_class = nil
     @current_method = nil
+    @in_depth = in_depth
   end
 
   #Returns a list of results.
@@ -97,6 +98,17 @@ class FindCall < BaseProcessor
       else
         @calls << Sexp.new(:result, @current_class, @current_method, exp).line(exp.line)
       end
+
+    end
+    
+    #Normally FindCall won't match a method invocation that is the target of
+    #another call, such as:
+    #
+    #  User.find(:first, :conditions => "user = '#{params['user']}').name
+    #
+    #A search for User.find will not match this unless @in_depth is true.
+    if @in_depth and sexp? exp[1] and exp[1][0] == :call
+      process exp[1]
     end
 
     exp
