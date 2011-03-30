@@ -107,7 +107,7 @@ class RoutesProcessor < BaseProcessor
     elsif string? args[0]
       route = args[0][1].split "/"
       if route.length != 2
-        $stderr.puts "What to do with this? #{args[0][1]}"
+        @tracker.routes[@current_controller] << route[0].to_sym
       else
         self.current_controller = route[0]
         @tracker.routes[@current_controller] << route[1].to_sym
