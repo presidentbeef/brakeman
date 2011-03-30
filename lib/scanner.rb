@@ -2,6 +2,7 @@ require 'rubygems'
 begin
   require 'ruby_parser'
   require 'haml'
+  require 'sass'
   require 'erb'
   require 'erubis'
   require 'processor'
