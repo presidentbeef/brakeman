@@ -29,7 +29,7 @@ class RoutesProcessor < BaseProcessor
     when :root
       process_root exp
     when :member
-      process_member exp
+      process_default exp
     when :get, :put, :post, :delete
       process_verb exp
     when :match
