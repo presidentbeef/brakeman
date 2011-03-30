@@ -43,8 +43,10 @@ class RoutesProcessor < BaseProcessor
     case exp[1][2]
     when :namespace
       process_namespace exp
-    when :resources
+    when :resource
       process_resource_block exp
+    when :resources
+      process_resources_block exp
     when :scope
       process_scope exp
     else
@@ -147,6 +149,16 @@ class RoutesProcessor < BaseProcessor
     end
 
     exp
+  end
+
+  def process_resources_block exp
+    process_resources exp[1]
+    process exp[3]
+  end
+
+  def process_resource_block exp
+    process_resource exp[1]
+    process exp[3]
   end
 
   def extract_action str
