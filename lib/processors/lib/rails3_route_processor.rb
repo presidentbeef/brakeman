@@ -48,7 +48,7 @@ class RoutesProcessor < BaseProcessor
     when :resources
       process_resources_block exp
     when :scope
-      process_scope exp
+      process_scope_block exp
     else
       super
     end
@@ -158,6 +158,11 @@ class RoutesProcessor < BaseProcessor
 
   def process_resource_block exp
     process_resource exp[1]
+    process exp[3]
+  end
+
+  def process_scope_block exp
+    #How to deal with options?
     process exp[3]
   end
 
