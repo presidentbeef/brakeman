@@ -88,13 +88,13 @@ class RoutesProcessor < BaseProcessor
     args = exp[3][1..-1]
 
     hash_iterate args[0] do |k, v|
-      if string? v
+      if string? k and string? v
         controller, action = extract_action v[1]
 
         self.current_controller = controller
-        @tracker.routes[@current_controller] << action.to_sym
-
-        break
+        @tracker.routes[@current_controller] << action.to_sym if action
+      elsif symbol? k and k[1] == :action
+        @tracker.routes[@current_controller] << v[1].to_sym
       end
     end
 
