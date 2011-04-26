@@ -6,7 +6,11 @@ class FindModelCall < FindCall
 
   #Passes +targets+ to FindCall
   def initialize targets
-    super(targets, /^(find.*|first|last|all|count|sum|average|minumum|maximum|count_by_sql)$/, true)
+    if OPTIONS[:rails3]
+      super(targets, /^(find.*|first|last|all|where|order|group|having)$/, true)
+    else
+      super(targets, /^(find.*|first|last|all)$/, true)
+    end
   end 
 
   #Matches entire method chain as a target. This differs from

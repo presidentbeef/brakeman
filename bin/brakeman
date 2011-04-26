@@ -27,6 +27,10 @@ OptionParser.new do |opts|
     $VERBOSE = nil
   end
 
+  opts.on "-3", "--rails3", "[Experimental] Rails 3 support" do
+    options[:rails3] = true
+  end
+
   opts.separator ""
   opts.separator "Scanning options:"
 
