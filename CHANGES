@@ -1,3 +1,9 @@
+## 0.3.1
+
+  * Always output a line number in tabbed output format
+  * Restrict characters in category name in tabbed output format to
+    word characters and spaces, for Hudson/Jenkins plugin
+
 ## 0.3.0
 
   * Check for SQL injection in calls using constantize()
