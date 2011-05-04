@@ -24,7 +24,9 @@ class CheckMassAssignment < BaseCheck
       :attributes=, 
       :update_attribute, 
       :update_attributes, 
-      :update_attributes!]
+      :update_attributes!,
+      :create,
+      :create!]
 
     calls.each do |result|
       process result
