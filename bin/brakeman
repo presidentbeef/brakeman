@@ -243,6 +243,11 @@ abort("Please supply the path to a Rails application.") unless app_path and File
 
 warn "[Notice] Using Ruby #{RUBY_VERSION}. Please make sure this matches the one used to run your Rails application."
 
+if File.exist? app_path + "/script/rails"
+  OPTIONS[:rails3] = true
+  warn "[Notice] Detected Rails 3 application. Enabling experimental Rails 3 support." 
+end
+
 #Load scanner
 begin
   require 'scanner'

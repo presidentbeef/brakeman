@@ -1,3 +1,5 @@
+  * Autodetect Rails 3 applications
+
 ## 0.3.1
 
   * Always output a line number in tabbed output format
