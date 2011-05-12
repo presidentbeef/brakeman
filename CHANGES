@@ -1,4 +1,8 @@
+## 0.3.2  
+
   * Autodetect Rails 3 applications
+  * Turn on auto-escaping for Rails 3 apps
+  * Check Model.create() for mass assignment
 
 ## 0.3.1
 
