@@ -53,7 +53,7 @@ class Scanner
       @processor.process_config(RubyParser.new.parse(File.read("#@path/config/gems.rb")))
     end
 
-    if File.exists? "#@path/vendor/plugins/rails_xss"
+    if File.exists? "#@path/vendor/plugins/rails_xss" or OPTIONS[:rails3]
       tracker.config[:escape_html] = true
       warn "[Notice] Escaping HTML by default"
     end
