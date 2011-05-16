@@ -50,6 +50,8 @@ class Processor
       result = ErbTemplateProcessor.new(@tracker, name, called_from, file_name).process src
     when :haml
       result = HamlTemplateProcessor.new(@tracker, name, called_from, file_name).process src
+    when :erubis
+      result = ErubisTemplateProcessor.new(@tracker, name, called_from, file_name).process src
     else
       abort "Unknown template type: #{type} (#{name})"
     end
