@@ -38,6 +38,10 @@ OptionParser.new do |opts|
     options[:ignore_model_output] = true
   end
 
+  opts.on "-e", "--escape-html", "Escape HTML by default" do
+    options[:escape_html] = true
+  end
+
   opts.on "-r", "--report-direct", "Only report direct use of untrusted data" do |option|
     options[:check_arguments] = !option
   end
