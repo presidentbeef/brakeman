@@ -153,6 +153,23 @@ class OutputProcessor < Ruby2Ruby
     out
   end
 
+def process_escaped_output exp
+    out = if exp[0].node_type == :str
+            ""
+          else
+            res = process exp[0]
+
+            if res == ""
+              ""
+            else
+              "[Escaped Output] #{res}"
+            end
+          end
+    exp.clear
+    out
+  end
+
+
   def process_format exp
     out = if exp[0].node_type == :str or exp[0].node_type == :ignore
             ""

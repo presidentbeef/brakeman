@@ -1,3 +1,9 @@
+## 0.4.0
+
+  * Handle Rails XSS protection properly
+  * More detection options for rails_xss
+  * Add --escape-html option 
+
 ## 0.3.2  
 
   * Autodetect Rails 3 applications

@@ -50,7 +50,7 @@ class CheckCrossSiteScripting < BaseCheck
       @current_template = template
 
       template[:outputs].each do |out|
-        type, match = has_immediate_user_input?(out[1])
+        type, match = (out[0] == :output and has_immediate_user_input?(out[1]))
         if type and not duplicate? out
             add_result out
             case type
@@ -102,6 +102,16 @@ class CheckCrossSiteScripting < BaseCheck
   #Process an output Sexp
   def process_output exp
     process exp[1].dup
+  end
+
+  #Look for calls to raw()
+  #Otherwise, ignore
+  def process_escaped_output exp
+    if exp[1].node_type == :call and exp[1][2] == :raw
+      process_output exp
+    else
+      exp
+    end
   end
 
   #Check a call for user input
