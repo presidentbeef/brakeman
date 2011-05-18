@@ -30,6 +30,8 @@ class CheckCrossSiteScripting < BaseCheck
 
   HAML_HELPERS = Sexp.new(:colon2, Sexp.new(:const, :Haml), :Helpers)
 
+  XML_HELPER = Sexp.new(:colon2, Sexp.new(:const, :Erubis), :XmlHelper)
+
   URI = Sexp.new(:const, :URI)
 
   CGI = Sexp.new(:const, :CGI)
@@ -154,6 +156,7 @@ class CheckCrossSiteScripting < BaseCheck
       (@matched == :model and IGNORE_MODEL_METHODS.include? method) or
       (target == HAML_HELPERS and method == :html_escape) or
       ((target == URI or target == CGI) and method == :escape) or
+      (target == XML_HELPER and method == :escape_xml) or
       (target == FORM_BUILDER and IGNORE_METHODS.include? method) or
       (method.to_s[-1,1] == "?")
 
@@ -163,7 +166,6 @@ class CheckCrossSiteScripting < BaseCheck
 
       @matched = :model
     elsif @inspect_arguments and (ALL_PARAMETERS.include?(exp) or params? exp)
-
       @matched = :params
     elsif @inspect_arguments
       process args
