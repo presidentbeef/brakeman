@@ -214,16 +214,28 @@ end
 
 #This is from Rails 3 version of the Erubis handler
 class RailsXSSErubis < ::Erubis::Eruby
-  include Erubis::NoTextEnhancer
 
-  #Initializes output buffer.
   def add_preamble(src)
     # src << "_buf = ActionView::SafeBuffer.new;\n"
   end
 
-  #This does nothing.
   def add_text(src, text)
-    # src << "@output_buffer << ('" << escape_text(text) << "'.html_safe!);"
+    if text.include? "\n"
+      lines = text.split("\n")
+      if text.match /\n\z/
+        lines.each do |line|
+          src << "@output_buffer << ('" << escape_text(line) << "'.html_safe!);\n"
+        end
+      else
+        lines[0..-2].each do |line|
+          src << "@output_buffer << ('" << escape_text(line) << "'.html_safe!);\n"
+        end
+      
+        src << "@output_buffer << ('" << escape_text(lines.last) << "'.html_safe!);"
+      end
+    else
+      src << "@output_buffer << ('" << escape_text(text) << "'.html_safe!);"
+    end
   end
 
   BLOCK_EXPR = /\s+(do|\{)(\s*\|[^|]*\|)?\s*\Z/
