@@ -1,3 +1,8 @@
+## 0.4.1
+  
+  * Fix reported line numbers when using new Erubis parser
+    (Mostly affects Rails 3 apps)
+
 ## 0.4.0
 
   * Handle Rails XSS protection properly
