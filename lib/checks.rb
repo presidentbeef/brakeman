@@ -13,6 +13,10 @@ class Checks
     @checks << klass
   end
 
+  def self.checks
+    @checks
+  end
+
   #No need to use this directly.
   def initialize
     @warnings = []

@@ -12,6 +12,14 @@ trap("INT") do
   exit!
 end
 
+def list_checks
+  require 'scanner'
+  $stderr.puts "Available Checks:"
+  $stderr.puts "-" * 30
+  $stderr.puts Checks.checks.map { |c| c.to_s }.sort.join "\n"
+  exit
+end
+
 #Parse command line options
 options = {}
 
@@ -130,6 +138,10 @@ OptionParser.new do |opts|
 
   opts.separator ""
 
+  opts.on "-k", "--checks", "List all available vulnerability checks" do
+    options[:list_checks] = true
+  end
+
   opts.on_tail "-h", "--help", "Display this message" do
     puts opts
     exit
@@ -157,6 +169,9 @@ end.parse!(ARGV)
 end
   
 OPTIONS = options unless defined? OPTIONS
+
+#List available checks and exits
+list_checks if OPTIONS[:list_checks]
 
 #Set defaults just in case
 { :skip_checks => Set.new, 
