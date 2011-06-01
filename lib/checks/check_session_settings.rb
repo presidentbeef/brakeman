@@ -3,11 +3,33 @@ require 'checks/base_check'
 class CheckSessionSettings < BaseCheck
   Checks.add self
 
+  SessionSettings = Sexp.new(:colon2, Sexp.new(:const, :ActionController), :Base)
+
   def run_check
     settings = tracker.config[:rails] and
                 tracker.config[:rails][:action_controller] and
                 tracker.config[:rails][:action_controller][:session]
 
+    check_for_issues settings
+
+    if tracker.initializers["session_store.rb"]
+      process tracker.initializers["session_store.rb"]
+    end
+  end
+
+  def process_attrasgn exp
+    if exp[1] == SessionSettings and exp[2] == :session= and
+      hash? exp[3][1] 
+
+      check_for_issues exp[3][1]
+    end
+
+    exp
+  end
+
+  private
+
+  def check_for_issues settings
     if settings and hash? settings
       hash_iterate settings do |key, value|
         if symbol? key

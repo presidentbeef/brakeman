@@ -75,7 +75,7 @@ class Processor
   def process_initializer name, src
     res = BaseProcessor.new(@tracker).process src
     res = AliasProcessor.new.process res
-    @tracker.initializers[name] = res
+    @tracker.initializers[Pathname.new(name).basename.to_s] = res
   end
 
   #Process source for a library file
