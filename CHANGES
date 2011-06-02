@@ -1,4 +1,5 @@
   * Check initializer for session settings
+  * Add line numbers to session setting warnings
   * Add --checks option to list checks
 
 ## 0.4.1
