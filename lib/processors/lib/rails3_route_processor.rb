@@ -163,16 +163,19 @@ class RoutesProcessor < BaseProcessor
   def process_resources_block exp
     process_resources exp[1]
     process exp[3]
+    exp
   end
 
   def process_resource_block exp
     process_resource exp[1]
     process exp[3]
+    exp
   end
 
   def process_scope_block exp
     #How to deal with options?
     process exp[3]
+    exp
   end
 
   def extract_action str
