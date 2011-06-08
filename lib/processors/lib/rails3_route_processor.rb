@@ -106,6 +106,15 @@ class RoutesProcessor < BaseProcessor
 
     if symbol? args[0]
       @tracker.routes[@current_controller] << args[0][1]
+    elsif hash? args[1]
+      hash_iterate args[1] do |k, v|
+        if symbol? k and k[1] == :to and string? v
+          controller, action = extract_action v[1]
+
+          self.current_controller = controller
+          @tracker.routes[@current_controller] << action.to_sym
+        end
+      end
     elsif string? args[0]
       route = args[0][1].split "/"
       if route.length != 2
