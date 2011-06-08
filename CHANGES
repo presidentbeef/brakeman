@@ -1,3 +1,7 @@
+## 0.5.0
+
+  * Add support for routes like get 'x/y', :to => 'ctrlr#whatever'
+  * Allow empty blocks in Rails 3 routes
   * Check initializer for session settings
   * Add line numbers to session setting warnings
   * Add --checks option to list checks
