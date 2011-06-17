@@ -1,3 +1,7 @@
+## 0.5.1
+
+ * Fix issue with 'has_one' => in routes
+
 ## 0.5.0
 
   * Add support for routes like get 'x/y', :to => 'ctrlr#whatever'
