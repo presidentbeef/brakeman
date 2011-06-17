@@ -116,7 +116,7 @@ class RoutesProcessor < BaseProcessor
         process_collection value
       when :has_one
         save_controller = current_controller
-        process_resource value[1..-1]
+        process_resource value[1..-1] #Verify this is proper behavior
         self.current_controller = save_controller
       when :has_many
         save_controller = current_controller
@@ -164,7 +164,7 @@ class RoutesProcessor < BaseProcessor
       process_resource_options exp[-1]
     else
       exp.each do |argument|
-        if argument.node_type == :lit
+        if sexp? argument and argument.node_type == :lit
           self.current_controller = pluralize(exp[0][1].to_s)
           add_resource_routes
           process_resource_options exp[-1]
