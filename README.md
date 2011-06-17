@@ -17,39 +17,41 @@ From source:
 
 # Usage
 
-    brakeman app_path
+    brakeman [app_path]
+
+It is simplest to run brakeman from the root directory of the Rails application. A path may also be supplied.
 
 # Options
 
 To specify an output file for the results:
 
-    brakeman -o output_file app_path
+    brakeman -o output_file
 
 The output format is determined by the file extension or by using the `-f` option. Current options are: `text`, `html`, `csv`, and `tabs`.
 
 To suppress informational warnings and just output the report:
 
-    brakeman -q app_path
+    brakeman -q
 
 To see all kinds of debugging information:
 
-    brakeman -d app_path
+    brakeman -d
 
 Specific checks can be skipped, if desired. The name needs to be the correct case. For example, to skip looking for default routes (`DefaultRoutes`):
 
-    brakeman -x DefaultRoutes app_path
+    brakeman -x DefaultRoutes
 
 Multiple checks should be separated by a comma:
 
-    brakeman -x DefaultRoutes,Redirect app_path
+    brakeman -x DefaultRoutes,Redirect
 
 To do the opposite and only run a certain set of tests:
 
-    brakeman -t SQL,ValidationRegex app_path
+    brakeman -t SQL,ValidationRegex
 
 To indicate certain methods are "safe":
 
-    brakeman -s benign_method,totally_safe app_path
+    brakeman -s benign_method,totally_safe
 
 By default, brakeman will assume that unknown methods involving untrusted data are dangerous. For example, this would cause a warning (Rails 2):
 
@@ -57,7 +59,7 @@ By default, brakeman will assume that unknown methods involving untrusted data a
 
 To only raise warnings only when untrusted data is being directly used:
 
-    brakeman -r app_path
+    brakeman -r
 
 # Warning information
 
@@ -79,7 +81,7 @@ There are three levels of confidence:
 
 To only get warnings above a given confidence level:
 
-    brakeman -w3 app_path
+    brakeman -w3
 
 The `-w` switch takes a number from 1 to 3, with 1 being low (all warnings) and 3 being high (only highest confidence warnings).
 
