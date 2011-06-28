@@ -43,6 +43,7 @@ Gem::Specification.new do |s|
     "lib/checks/check_session_settings.rb",
     "lib/checks/check_sql.rb",
     "lib/checks/check_validation_regex.rb",
+    "lib/tasks/brakeman_tasks.rake",
     "lib/format/style.css",
     "lib/processor.rb",
     "lib/processors/alias_processor.rb",
