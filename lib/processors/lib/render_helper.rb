@@ -11,7 +11,13 @@ module RenderHelper
     when :action
       process_action exp[2][1], exp[3]
     when :default
-      process_template template_name, exp[3]
+      begin
+        template = exp[3][2][1]
+      rescue Exception => e
+          puts "Bug to fix, giving #{e.message}"
+          return exp
+      end
+      process_template template, exp[3]
     when :partial
       process_partial exp[2], exp[3]
     when :nothing
