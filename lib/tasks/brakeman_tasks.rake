@@ -1,33 +1,31 @@
 require 'rake'
 
 namespace :brakeman do
+  OUTPUT_DIR = "tmp/brakeman"
+
 
   desc "Run brakeman' tests."
   task :test do
-    rm_rf "tmp/brakeman"
-    Rake::Task.new(:brakeman_test) do |t|
-        `brakeman`
-    end
-
-    Rake::Task[:brakeman_test].invoke
+    `brakeman`
   end
 
   desc 'Run brakeman tests and open results in your browser.'
   task :report do
-    begin
-      Rake::Task['brakeman:test'].invoke
-    rescue RuntimeError => e
-      puts e.message
-    end
+    #cleanup the environment
+    rm_rf OUTPUT_DIR
+    mkdir OUTPUT_DIR
 
-    Dir.glob("tmp/brakeman/**/index.html") do |file|
-      if PLATFORM['darwin']
-        system("open #{file}")
-      elsif PLATFORM[/linux/]
-        system("xdg-open #{file}")
-      else
-        puts "You can view brakeman results at #{file}"
-      end
+    #execute brakeman
+    OUTPUT_FILE = File.join(OUTPUT_DIR, "index.html")
+    `brakeman -o #{OUTPUT_FILE}`
+
+    #open the browser
+    if PLATFORM['darwin']
+        system("open #{OUTPUT_FILE}")
+    elsif PLATFORM[/linux/]
+      system("xdg-open #{OUTPUT_FILE}")
+    else
+      puts "You can view brakeman results at #{file}"
     end
   end
 
