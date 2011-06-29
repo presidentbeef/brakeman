@@ -1,7 +1,9 @@
 #The Warning class stores information about warnings
 class Warning
-  attr_reader :called_from, :check, :class, :code, :confidence, :controller, :file, :line,
-    :message, :method, :model, :template, :warning_set, :warning_type
+  attr_reader :called_from, :check, :class, :confidence, :controller,
+    :line, :method, :model, :template, :warning_set, :warning_type
+
+  attr_accessor :code, :context, :file, :message
 
   #+options[:result]+ can be a result Sexp from FindCall. Otherwise, it can be +nil+.
   def initialize options = {}

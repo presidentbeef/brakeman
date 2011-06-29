@@ -626,6 +626,8 @@ class Report
     output << "</table></div>"
   end
 
+  #Generated tab-separated output suitable for the Jenkins Brakeman Plugin:
+  #https://github.com/presidentbeef/brakeman-jenkins-plugin
   def to_tabs
     [[:warnings, "General"], [:controller_warnings, "Controller"],
       [:model_warnings, "Model"], [:template_warnings, "Template"]].map do |meth, category|
@@ -637,5 +639,29 @@ class Report
       end.join "\n"
 
     end.join "\n"
+  end
+
+  def to_test
+    report = { :errors => tracker.errors,
+               :controllers => tracker.controllers,
+               :models => tracker.models,
+               :templates => tracker.templates
+              }
+
+    [:warnings, :controller_warnings, :model_warnings, :template_warnings].each do |meth|
+      report[meth] = @checks.send(meth)
+      report[meth].each do |w|
+        w.message = w.format_message
+        if w.code
+          w.code = w.format_code
+        else
+          w.code = ""
+        end
+        w.context = context_for(w).join("\n")
+        w.file = file_for w
+      end
+    end
+      
+    report
   end
 end
