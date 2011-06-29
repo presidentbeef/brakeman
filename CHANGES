@@ -1,4 +1,6 @@
+## 0.5.2
 
+ * Output report file name when finished
  * Add initial tests for Rails 2.x
  * Fix ERB line numbers when using Ruby 1.9
 
