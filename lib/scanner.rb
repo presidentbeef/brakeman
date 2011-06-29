@@ -23,6 +23,7 @@ end
 
 #Scans the Rails application.
 class Scanner
+  RUBY_1_9 = !!(RUBY_VERSION =~ /^1\.9/)
 
   #Pass in path to the root of the Rails application
   def initialize path
@@ -161,6 +162,7 @@ class Scanner
             src = ScannerErubis.new(text).src
           else
             src = ERB.new(text, nil, "-").src
+            src.sub!(/^#.*\n/, '') if RUBY_1_9
           end
           parsed = RubyParser.new.parse src
         elsif type == :haml
