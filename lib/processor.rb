@@ -2,6 +2,7 @@
 Dir.glob("#{File.expand_path(File.dirname(__FILE__))}/processors/*.rb").each { |f| require f.match(/processors.*/)[0] }
 require 'tracker'
 require 'set'
+require 'pathname'
 
 #Makes calls to the appropriate processor.
 #
