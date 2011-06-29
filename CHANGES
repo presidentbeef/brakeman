@@ -1,3 +1,7 @@
+
+ * Add initial tests for Rails 2.x
+ * Fix ERB line numbers when using Ruby 1.9
+
 ## 0.5.1
 
  * Fix issue with 'has_one' => in routes
