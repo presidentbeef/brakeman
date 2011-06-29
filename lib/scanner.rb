@@ -164,9 +164,9 @@ class Scanner
             src = ERB.new(text, nil, "-").src
             src.sub!(/^#.*\n/, '') if RUBY_1_9
           end
+
           parsed = RubyParser.new.parse src
         elsif type == :haml
-          initialize_haml unless @initialized_haml
           src = Haml::Engine.new(text,
                                  :escape_html => !!tracker.config[:escape_html]).precompiled
           parsed = RubyParser.new.parse src
