@@ -145,25 +145,27 @@ class Scanner
       type = f.match(/.*\.(erb|haml|rhtml)$/)[1].to_sym
       type = :erb if type == :rhtml
       name = template_path_to_name f
+      text = File.read f
 
       begin
         if type == :erb
           if tracker.config[:escape_html]
             type = :erubis
             if OPTIONS[:rails3]
-              src = RailsXSSErubis.new(File.read(f)).src
+              src = RailsXSSErubis.new(text).src
             else
-              src = ErubisEscape.new(File.read(f)).src
+              src = ErubisEscape.new(text).src
             end
           elsif tracker.config[:erubis]
             type = :erubis
-            src = ScannerErubis.new(File.read(f)).src
+            src = ScannerErubis.new(text).src
           else
-            src = ERB.new(File.read(f), nil, "-").src
+            src = ERB.new(text, nil, "-").src
           end
           parsed = RubyParser.new.parse src
         elsif type == :haml
-          src = Haml::Engine.new(File.read(f),
+          initialize_haml unless @initialized_haml
+          src = Haml::Engine.new(text,
                                  :escape_html => !!tracker.config[:escape_html]).precompiled
           parsed = RubyParser.new.parse src
         else
