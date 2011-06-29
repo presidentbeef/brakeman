@@ -288,6 +288,7 @@ if OPTIONS[:output_file]
   File.open OPTIONS[:output_file], "w" do |f|
     f.puts tracker.report.send(OPTIONS[:output_format])
   end
+  warn "Report saved in '#{OPTIONS[:output_file]}'"
 else
   puts tracker.report.send(OPTIONS[:output_format])
 end
