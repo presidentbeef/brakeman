@@ -20,6 +20,7 @@ begin
         s.add_dependency "ruport", ">= 1.6.3"
         s.add_dependency "erubis", ">= 2.6.5"
         s.add_dependency "haml", ">= 3.0.12"
+        s.add_dependency "sass"
     end
     Jeweler::GemcutterTasks.new
 rescue LoadError
