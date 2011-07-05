@@ -173,9 +173,6 @@ class Scanner
         @processor.process_template(name, parsed, type, nil, f)
 
       rescue Racc::ParseError => e
-          require 'debug'
-          debugger
-
         tracker.error e, "could not parse #{f}"
       rescue Haml::Error => e
         tracker.error e, ["While compiling HAML in #{f}"] << e.backtrace
