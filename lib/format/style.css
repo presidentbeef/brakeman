@@ -60,6 +60,42 @@ p {
    background-color: white;
  }
 
+ div.errors_title {
+   cursor: pointer;
+ }
+
+ div.errors_title:hover {
+   background-color: #FCF4D4;
+ }
+
+ div.blessing_hash {
+   font-style: italic;
+   cursor: pointer;
+ }
+
+ div.blessing_hash:hover {
+   background-color: white;
+ }
+
+ div.blessing_extended {
+     font-style: normal;
+     display: none;
+ }
+
+ div.warning_type {
+   font-weight: bold;
+   cursor: pointer;
+ }
+
+ div.warning_type:hover {
+   background-color: white;
+ }
+
+ div.warning_type_extended {
+   font-weight: normal;
+     display: none;
+ }
+
  table.context {
    margin-top: 5px;
    margin-bottom: 5px;

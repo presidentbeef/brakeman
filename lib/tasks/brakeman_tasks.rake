@@ -2,14 +2,15 @@ require 'rake'
 
 namespace :brakeman do
   OUTPUT_DIR = "tmp/brakeman"
+  TEST_DIR = "test/brakeman"
 
 
-  desc "Run brakeman' tests."
+  desc "Run Brakeman's tests."
   task :test do
     `brakeman`
   end
 
-  desc 'Run brakeman tests and open results in your browser.'
+  desc "Run Brakeman's tests and open results in your browser."
   task :report do
     #cleanup the environment
     rm_rf OUTPUT_DIR
@@ -27,6 +28,15 @@ namespace :brakeman do
     else
       puts "You can view brakeman results at #{file}"
     end
+  end
+
+
+  desc 'Generate the initial configuration for Brakeman'
+  task :setup do
+    mkdir_p TEST_DIR
+    templates_path = File.expand_path(File.join(File.dirname(__FILE__), "template"))
+    blessed_path = File.join(templates_path, "blessed.rb")
+    cp blessed_path, TEST_DIR, :verbose => true
   end
 
 end
