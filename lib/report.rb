@@ -274,7 +274,9 @@ class Report
     end
 
     res = generate_errors
-    out << "<h2>Errors</h2>" << res.to_html if res
+    if res
+        out << "<div onClick=\"toggle('errors_table');\">  <h2>Exceptions raised during the analysis (click to see them)</h2 ></div> <div id='errors_table' style='display:none'>" << res.to_html<< '</div>'
+    end
 
     res = generate_warnings
     out << "<h2>Security Warnings</h2>" << res.to_html if res
