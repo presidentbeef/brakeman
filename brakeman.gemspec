@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Justin Collins", "Luca Invernizzi"]
-  s.date = %q{2011-06-28}
+  s.date = %q{2011-07-05}
   s.description = %q{Brakeman detects security vulnerabilities in Ruby on Rails applications via static analysis.}
   s.email = ["", "invernizzi.l@gmail.com"]
   s.executables = ["brakeman"]
@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
     "Rakefile",
     "WARNING_TYPES",
     "bin/brakeman",
+    "lib/blessing.rb",
     "lib/brakeman.rb",
     "lib/checks.rb",
     "lib/checks/base_check.rb",
@@ -71,10 +72,12 @@ Gem::Specification.new do |s|
     "lib/report.rb",
     "lib/scanner.rb",
     "lib/tasks/brakeman_tasks.rake",
+    "lib/tasks/template/blessed.rb",
     "lib/tracker.rb",
     "lib/util.rb",
     "lib/version.rb",
-    "lib/warning.rb"
+    "lib/warning.rb",
+    "lib/warning_types.rb"
   ]
   s.homepage = %q{http://github.com/invernizzi/brakeman}
   s.require_paths = ["lib"]
@@ -90,12 +93,14 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<ruport>, [">= 1.6.3"])
       s.add_runtime_dependency(%q<erubis>, [">= 2.6.5"])
       s.add_runtime_dependency(%q<haml>, [">= 3.0.12"])
+      s.add_runtime_dependency(%q<sass>, [">= 0"])
     else
       s.add_dependency(%q<activesupport>, [">= 2.2"])
       s.add_dependency(%q<ruby2ruby>, [">= 1.2.4"])
       s.add_dependency(%q<ruport>, [">= 1.6.3"])
       s.add_dependency(%q<erubis>, [">= 2.6.5"])
       s.add_dependency(%q<haml>, [">= 3.0.12"])
+      s.add_dependency(%q<sass>, [">= 0"])
     end
   else
     s.add_dependency(%q<activesupport>, [">= 2.2"])
@@ -103,6 +108,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<ruport>, [">= 1.6.3"])
     s.add_dependency(%q<erubis>, [">= 2.6.5"])
     s.add_dependency(%q<haml>, [">= 3.0.12"])
+    s.add_dependency(%q<sass>, [">= 0"])
   end
 end
 
