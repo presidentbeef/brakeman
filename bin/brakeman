@@ -292,3 +292,8 @@ if OPTIONS[:output_file]
 else
   puts tracker.report.send(OPTIONS[:output_format])
 end
+
+#if warnings have been found, exit with a non-zero exit code (for Continuous
+#Integration)
+exit tracker.checks.warnings.length
+

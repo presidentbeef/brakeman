@@ -4,6 +4,7 @@ require 'set'
 require 'ruport'
 require 'processors/output_processor'
 require 'util'
+require 'blessing'
 
 #Generates a report based on the Tracker and the results of
 #Tracker#run_checks. Be sure to +run_checks+ before generating
@@ -23,6 +24,12 @@ class Report
     @checks = tracker.checks
     @element_id = 0 #Used for HTML ids
     @warnings_summary = nil
+  end
+
+  def filter_false_positives
+      checks.filter_warnings do |warning|
+        Blessing.is_blessed? warning
+      end
   end
 
   #Generate summary table of what was parsed
@@ -83,7 +90,7 @@ class Report
 
   #Generate table of general security warnings
   def generate_warnings
-    table = Ruport::Data::Table(["Confidence", "Class", "Method", "Warning Type", "Message"])
+    table = Ruport::Data::Table(["Confidence", "Class", "Method", "Warning Type", "Message", "Blessing"])
     checks.warnings.each do |warning|
       next if warning.confidence > OPTIONS[:min_confidence]
       w = warning.to_row
@@ -91,6 +98,7 @@ class Report
       if OPTIONS[:output_format] == :to_html
         w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
         w["Message"] = with_context warning, w["Message"]
+        w["Blessing"] = toggle_blessing warning
       else
         w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
       end
@@ -113,7 +121,7 @@ class Report
   #Generate table of template warnings or return nil if no warnings
   def generate_template_warnings
     unless checks.template_warnings.empty?
-      table = Ruport::Data::Table(["Confidence", "Template", "Warning Type", "Message"])
+      table = Ruport::Data::Table(["Confidence", "Template", "Warning Type", "Message", "Blessing"])
       checks.template_warnings.each do |warning|
         next if warning.confidence > OPTIONS[:min_confidence]
         w = warning.to_row :template
@@ -121,6 +129,7 @@ class Report
         if OPTIONS[:output_format] == :to_html
           w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
           w["Message"] = with_context warning, w["Message"]
+          w["Blessing"] = toggle_blessing warning
         else
           w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
         end
@@ -144,7 +153,7 @@ class Report
   #Generate table of model warnings or return nil if no warnings
   def generate_model_warnings
     unless checks.model_warnings.empty?
-      table = Ruport::Data::Table(["Confidence", "Model", "Warning Type", "Message"])
+      table = Ruport::Data::Table(["Confidence", "Model", "Warning Type", "Message", "Blessing"])
       checks.model_warnings.each do |warning|
         next if warning.confidence > OPTIONS[:min_confidence]
         w = warning.to_row :model
@@ -152,6 +161,7 @@ class Report
         if OPTIONS[:output_format] == :to_html
           w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
           w["Message"] = with_context warning, w["Message"]
+          w["Blessing"] = toggle_blessing warning
         else
           w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
         end
@@ -175,7 +185,7 @@ class Report
   #Generate table of controller warnings or nil if no warnings
   def generate_controller_warnings
     unless checks.controller_warnings.empty?
-      table = Ruport::Data::Table(["Confidence", "Controller", "Warning Type", "Message"])
+      table = Ruport::Data::Table(["Confidence", "Controller", "Warning Type", "Message", "Blessing"])
       checks.controller_warnings.each do |warning|
         next if warning.confidence > OPTIONS[:min_confidence]
         w = warning.to_row :controller
@@ -183,6 +193,7 @@ class Report
         if OPTIONS[:output_format] == :to_html
           w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
           w["Message"] = with_context warning, w["Message"]
+          w["Blessing"] = toggle_blessing warning
         else
           w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
         end
@@ -258,6 +269,7 @@ class Report
 
   #Generate HTML output
   def to_html
+    filter_false_positives
     out = html_header <<
     "<h2 id='summary'>Summary</h2>" <<
     generate_overview.to_html << "<br/>" <<
@@ -274,7 +286,9 @@ class Report
     end
 
     res = generate_errors
-    out << "<h2>Errors</h2>" << res.to_html if res
+    if res
+        out << "<div class='errors_title' onClick=\"toggle('errors_table');\">  <h2>Exceptions raised during the analysis</h2 ></div> <div id='errors_table' style='display:none'>" << res.to_html<< '</div>'
+    end
 
     res = generate_warnings
     out << "<h2>Security Warnings</h2>" << res.to_html if res
@@ -293,6 +307,7 @@ class Report
 
   #Output text version of the report
   def to_s
+    filter_false_positives
     out = text_header <<
     "\n+SUMMARY+\n" <<
     generate_overview.to_s << "\n" <<
@@ -328,6 +343,7 @@ class Report
 
   #Generate CSV output
   def to_csv
+    filter_false_positives
     out = csv_header <<
     "\nSUMMARY\n" <<
     generate_overview.to_csv << "\n" <<
@@ -545,6 +561,19 @@ class Report
     end
 
     context
+  end
+
+  def toggle_blessing warning
+    hash = Blessing.hash_result warning
+    <<-HTML
+    <div class='blessing_hash' onclick=\"toggle('#{hash}');\">
+        #{hash}
+        <div class='blessing_extended' id='#{hash}'>
+            You can mark this message as a false positive by adding '#{hash}' to
+            <a href='file://#{Blessing.get_blessings_path}'>#{Blessing.get_blessings_path}</a>
+        </div>
+    </div>
+    HTML
   end
 
   #Generate HTML for warnings, including context show/hidden via Javascript

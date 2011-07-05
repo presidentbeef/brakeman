@@ -28,7 +28,7 @@ class Scanner
   #Pass in path to the root of the Rails application
   def initialize path
     @path = path
-    @app_path = path + "/app/"
+    @app_path = File.join(path, "app")
     @processor = Processor.new
   end
 
@@ -82,7 +82,7 @@ class Scanner
       begin
         @processor.process_initializer(f, RubyParser.new.parse(File.read(f)))
       rescue Racc::ParseError => e
-        tracker.error e, "could not parse #{f}"
+        tracker.error e, "could not parse #{f}. There is probably a typo in the file, test it with    require 'rubyparser'; RubyParser.new.parse(File.read '#{f}')"
       rescue Exception => e
         tracker.error e.exception(e.message + "\nWhile processing #{f}"), e.backtrace
       end

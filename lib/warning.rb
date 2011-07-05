@@ -1,5 +1,8 @@
+require 'warning_types'
+
 #The Warning class stores information about warnings
 class Warning
+  include WarningTypes
   attr_reader :called_from, :check, :class, :confidence, :controller,
     :line, :method, :model, :template, :warning_set, :warning_type
 
@@ -72,16 +75,33 @@ class Warning
     if self.code
       message << ": #{format_code}"
     end
-
     message
+  end
+
+  def warning_type_collapsible warning_type
+    random_id = (0...8).map{65.+(rand(25)).chr}.join
+    description = WarningTypes.description[warning_type]
+    return warning_type unless description
+    <<-HTML
+    <div class='warning_type' onclick=\"toggle('#{random_id}');\">
+        #{warning_type}
+        <div class='warning_type_extended' id='#{random_id}'>
+        #{description}
+        </div>
+    </div>
+    HTML
   end
 
   #Generates a hash suitable for inserting into a Ruport table
   def to_row type = :warning
     row = { "Confidence" => self.confidence,
-      "Warning Type" => self.warning_type.to_s,
       "Message" => self.format_message }
 
+    if OPTIONS[:output_format] == :to_html
+      row["Warning Type"] = warning_type_collapsible self.warning_type.to_s
+    else
+        row["Warning Type"] = self.warning_type.to_s
+    end
     case type
     when :template
       row["Template"] = self.view_name.to_s

@@ -140,7 +140,8 @@ class RoutesProcessor < BaseProcessor
 
   def process_resources exp
     if exp[3] and exp[3][2] and exp[3][2][0] == :hash
-      #handle hash
+        self.current_controller = exp[3][1][1]
+        add_resource_routes
     elsif exp[3][1..-1].all? { |s| symbol? s }
       exp[3][1..-1].each do |s|
         self.current_controller = s[1]

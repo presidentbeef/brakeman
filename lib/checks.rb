@@ -44,6 +44,16 @@ class Checks
     end
   end
 
+  def filter_warnings
+    [@template_warnings, @warnings, @controller_warnings, @model_warnings].each do |w|
+      warnings = w.dup
+      w.clear
+      warnings.select do |warning|
+        w << warning unless yield warning
+      end
+    end
+  end
+
   #Run all the checks on the given Tracker.
   #Returns a new instance of Checks with the results.
   def self.run_checks tracker
