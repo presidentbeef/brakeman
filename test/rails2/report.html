@@ -1,0 +1,1716 @@
+    <!DOCTYPE HTML SYSTEM>
+    <html>
+    <head>
+    <title>Brakeman Report</title>
+    <script type="text/javascript">
+      function toggle(context){
+        if (document.getElementById(context).style.display != "block")
+          document.getElementById(context).style.display = "block";
+        else
+          document.getElementById(context).style.display = "none";
+      }
+    </script>
+    <style type="text/css"> 
+    /* CSS style used for HTML reports */
+
+body {
+  font-family: sans-serif;
+  color: #161616;
+}
+
+p {
+  font-weight: bold;
+  font-size: 11pt;
+  color: #2D0200;
+ }
+
+ th {
+   background-color: #980905;
+   border-bottom: 5px solid #530200;
+   color: white;
+   font-size: 11pt;
+   padding: 1px 8px 1px 8px;
+ }
+
+ td {
+   border-bottom: 2px solid white;
+   font-family: monospace;
+   padding: 5px 8px 1px 8px;
+ }
+
+ table {
+   background-color: #FCF4D4;
+   border-collapse: collapse;
+ }
+
+ h1 {
+   color: #2D0200;
+   font-size: 14pt;
+ }
+
+ h2 {
+   color: #2D0200;
+   font-size: 12pt;
+ }
+
+ span.high-confidence {
+   font-weight:bold;
+   color: red;
+ }
+
+ span.med-confidence {
+ }
+
+ span.weak-confidence {
+   color:gray;
+ }
+
+ div.warning_message {
+   cursor: pointer;
+ }
+
+ div.warning_message:hover {
+   background-color: white;
+ }
+
+ table.context {
+   margin-top: 5px;
+   margin-bottom: 5px;
+   border-left: 1px solid #90e960;
+   color: #212121;
+ }
+
+ tr.context {
+   background-color: white;
+ }
+
+ tr.first {
+   border-top: 1px solid #7ecc54;
+   padding-top: 2px;
+ }
+
+ tr.error {
+  background-color: #f4c1c1 !important
+ }
+
+ tr.near_error {
+  background-color: #f4d4d4 !important
+ }
+
+ tr.alt {
+   background-color: #e8f4d4;
+ }
+
+ td.context {
+   padding: 2px 10px 0px 6px;
+   border-bottom: none;
+ }
+
+ td.context_line {
+   padding: 2px 8px 0px 7px;
+   border-right: 1px solid #b3bda4;
+   border-bottom: none;
+   color: #6e7465;
+ }
+
+ pre.context {
+   margin-bottom: 1px;
+ }
+
+    </style>
+    </head>
+    <body>
+    <h1>Brakeman Report</h1>
+    <table>
+      <tr>
+        <th>Application Path</th>
+        <th>Report Generation Time</th>
+        <th>Checks Performed</th>
+      </tr>
+      <tr>
+        <td>/home/justin/work/brakeman/test/rails2</td>
+        <td>2011-06-02 11:58:50 -0700</td>
+        <td>CrossSiteScripting, DefaultRoutes, Evaluation, Execute, FileAccess, ForgerySetting, MailTo, MassAssignment, ModelAttributes, NestedAttributes, Redirect, Render, SQL, SendFile, SessionSettings, ValidationRegex</td>
+      </tr>
+     </table>
+<h2 id='summary'>Summary</h2>	<table>
+		<tr>
+			<th>Scanned/Reported</th>
+			<th>Total</th>
+		</tr>
+		<tr>
+			<td>Controllers</td>
+			<td>3</td>
+		</tr>
+		<tr>
+			<td>Models</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>Templates</td>
+			<td>17</td>
+		</tr>
+		<tr>
+			<td>Errors</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>Security Warnings</td>
+			<td>29 <span class='high-confidence'>(25)</span></td>
+		</tr>
+	</table>
+<br/>	<table>
+		<tr>
+			<th>Warning Type</th>
+			<th>Total</th>
+		</tr>
+		<tr>
+			<td>Attribute Restriction</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>Command Injection</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>Cross Site Scripting</td>
+			<td>11</td>
+		</tr>
+		<tr>
+			<td>Cross-Site Request Forgery</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>Dangerous Eval</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>Default Routes</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>Dynamic Render Path</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>File Access</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>Format Validation</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>Mass Assignment</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>Redirect</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>SQL Injection</td>
+			<td>4</td>
+		</tr>
+		<tr>
+			<td>Session Setting</td>
+			<td>2</td>
+		</tr>
+	</table>
+<h2>Security Warnings</h2>	<table>
+		<tr>
+			<th>Confidence</th>
+			<th>Class</th>
+			<th>Method</th>
+			<th>Warning Type</th>
+			<th>Message</th>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>HomeController</td>
+			<td>test_command</td>
+			<td>Command Injection</td>
+			<td><div class='warning_message' onClick="toggle('context4');toggle('message4');toggle('full_message4')" >Possible command injection near line 37: system(params[:user_input])<table id='context4' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>33</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>  def test_command</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>34</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    `ls #{params[:file_name]}`</pre>
+            </td>
+          </tr>
+          <tr class='context near_error'>
+            <td class='context_line'>
+              <pre class='context'>36</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    system params[:user_input]</pre>
+            </td>
+          </tr>
+          <tr class='context alt error'>
+            <td class='context_line'>
+              <pre class='context'>37</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>39</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_eval</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>40</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    eval params[:dangerous_input]</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>41</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>HomeController</td>
+			<td>test_eval</td>
+			<td>Dangerous Eval</td>
+			<td><div class='warning_message' onClick="toggle('context2');toggle('message2');toggle('full_message2')" >User input in eval near line 41: eval(params[:dangerous_input])<table id='context2' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>36</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>    system params[:user_input]</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>37</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>39</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_eval</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>40</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    eval params[:dangerous_input]</pre>
+            </td>
+          </tr>
+          <tr class='context error'>
+            <td class='context_line'>
+              <pre class='context'>41</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>43</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_redirect</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>44</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    params[:action] = :index</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>45</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    redirect_to params</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>46</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>Default Routes</td>
+			<td><div class='warning_message' onClick="toggle('context1');toggle('message1');toggle('full_message1')" >All public methods in controllers are available as actions in routes.rb near line 41<table id='context1' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>36</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>  # See how all your routes lay out with &quot;rake routes&quot;</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>38</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  # Install the default routes as the lowest priority.</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>39</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  # Note: These default routes make all actions in every controller accessible via GET requests. You should</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>40</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  # consider removing or commenting them out if you're using named routes and resources.</pre>
+            </td>
+          </tr>
+          <tr class='context error'>
+            <td class='context_line'>
+              <pre class='context'>41</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  map.connect ':controller/:action/:id'</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>42</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  map.connect ':controller/:action/:id.:format'</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>43</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>end</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>HomeController</td>
+			<td>test_dynamic_render</td>
+			<td>Dynamic Render Path</td>
+			<td><div class='warning_message' onClick="toggle('context8');toggle('message8');toggle('full_message8')" >Render path is dynamic near line 60: render(file =&gt; &quot;/some/path/#{params[:page]}&quot;, {  })<table id='context8' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>55</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>  end</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>57</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_dynamic_render</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>58</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    page = params[:page]</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>59</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    render :file =&gt; &quot;/some/path/#{page}&quot;</pre>
+            </td>
+          </tr>
+          <tr class='context error'>
+            <td class='context_line'>
+              <pre class='context'>60</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>62</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  private</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>64</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def filter_it</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>65</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    @filtered = params[:evil_input]</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>HomeController</td>
+			<td>test_file_access</td>
+			<td>File Access</td>
+			<td><div class='warning_message' onClick="toggle('context5');toggle('message5');toggle('full_message5')" >Parameter value used in file name near line 24: File.open(((RAILS_ROOT + &quot;/&quot;) + params[:file]))<table id='context5' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>20</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>  def test_filter</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>21</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context near_error'>
+            <td class='context_line'>
+              <pre class='context'>23</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_file_access</pre>
+            </td>
+          </tr>
+          <tr class='context alt error'>
+            <td class='context_line'>
+              <pre class='context'>24</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    File.open RAILS_ROOT + &quot;/&quot; + params[:file]</pre>
+            </td>
+          </tr>
+          <tr class='context near_error'>
+            <td class='context_line'>
+              <pre class='context'>25</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>27</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_sql some_var = &quot;hello&quot;</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>28</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    User.find_by_sql &quot;select * from users where something = '#{some_var}'&quot;</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>29</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    User.all(:conditions =&gt; &quot;status =&gt; '#{happy}'&quot;)</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>OtherController</td>
+			<td>test_send_file</td>
+			<td>File Access</td>
+			<td><div class='warning_message' onClick="toggle('context9');toggle('message9');toggle('full_message9')" >Parameter value used in file name near line 22: send_file(params[:file])<table id='context9' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>17</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>    @users = User.all</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>18</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>20</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_send_file</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>21</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    send_file params[:file]</pre>
+            </td>
+          </tr>
+          <tr class='context error'>
+            <td class='context_line'>
+              <pre class='context'>22</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>23</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>end</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>HomeController</td>
+			<td>test_mass_assignment</td>
+			<td>Mass Assignment</td>
+			<td><div class='warning_message' onClick="toggle('context6');toggle('message6');toggle('full_message6')" >Unprotected mass assignment near line 54: User.new(params[:user])<table id='context6' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>49</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>    @some_variable = params[:unsafe_input]</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>50</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    render :index</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>51</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>53</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_mass_assignment</pre>
+            </td>
+          </tr>
+          <tr class='context error'>
+            <td class='context_line'>
+              <pre class='context'>54</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    User.new(params[:user])</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>55</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>57</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_dynamic_render</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>58</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    page = params[:page]</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>59</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    render :file =&gt; &quot;/some/path/#{page}&quot;</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>HomeController</td>
+			<td>test_redirect</td>
+			<td>Redirect</td>
+			<td><div class='warning_message' onClick="toggle('context7');toggle('message7');toggle('full_message7')" >Possible unprotected redirect near line 46: redirect_to(params)<table id='context7' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>41</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>  end</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>43</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_redirect</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>44</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    params[:action] = :index</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>45</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    redirect_to params</pre>
+            </td>
+          </tr>
+          <tr class='context error'>
+            <td class='context_line'>
+              <pre class='context'>46</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>48</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_render</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>49</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    @some_variable = params[:unsafe_input]</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>50</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    render :index</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>51</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>HomeController</td>
+			<td>test_sql</td>
+			<td>SQL Injection</td>
+			<td><div class='warning_message' onClick="toggle('context14');toggle('message14');toggle('full_message14')" >Possible SQL injection near line 30: User.first(:conditions =&gt; (&quot;name = '#{params[:name]}'&quot;))<table id='context14' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>25</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>  end</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>27</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_sql some_var = &quot;hello&quot;</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>28</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    User.find_by_sql &quot;select * from users where something = '#{some_var}'&quot;</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>29</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    User.all(:conditions =&gt; &quot;status =&gt; '#{happy}'&quot;)</pre>
+            </td>
+          </tr>
+          <tr class='context error'>
+            <td class='context_line'>
+              <pre class='context'>30</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    @user = User.first(:conditions =&gt; &quot;name = '#{params[:name]}'&quot;)</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>31</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>33</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_command</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>34</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    `ls #{params[:file_name]}`</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>Session Setting</td>
+			<td><div class='warning_message' onClick="toggle('context10');toggle('message10');toggle('full_message10')" >Session secret should be at least 30 characters long near line 9<table id='context10' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>4</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'># If you change this key, all old sessions will become invalid!</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>5</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'># Make sure the secret is at least 30 characters and all random, </pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>6</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'># no regular words or you'll be exposed to dictionary attacks.</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>7</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>ActionController::Base.session = {</pre>
+            </td>
+          </tr>
+          <tr class='context near_error'>
+            <td class='context_line'>
+              <pre class='context'>8</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  :key         =&gt; '_rails2_session',</pre>
+            </td>
+          </tr>
+          <tr class='context alt error'>
+            <td class='context_line'>
+              <pre class='context'>9</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  :secret      =&gt; 'secret!',</pre>
+            </td>
+          </tr>
+          <tr class='context near_error'>
+            <td class='context_line'>
+              <pre class='context'>10</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  :session_http_only   =&gt; false</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>11</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>}</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>13</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'># Use the database for sessions instead of the cookie-based default,</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>14</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'># which shouldn't be used to store highly confidential information</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>Session Setting</td>
+			<td><div class='warning_message' onClick="toggle('context11');toggle('message11');toggle('full_message11')" >Session cookies should be set to HTTP only near line 10<table id='context11' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>5</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'># Make sure the secret is at least 30 characters and all random, </pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>6</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'># no regular words or you'll be exposed to dictionary attacks.</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>7</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>ActionController::Base.session = {</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>8</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  :key         =&gt; '_rails2_session',</pre>
+            </td>
+          </tr>
+          <tr class='context near_error'>
+            <td class='context_line'>
+              <pre class='context'>9</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  :secret      =&gt; 'secret!',</pre>
+            </td>
+          </tr>
+          <tr class='context alt error'>
+            <td class='context_line'>
+              <pre class='context'>10</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  :session_http_only   =&gt; false</pre>
+            </td>
+          </tr>
+          <tr class='context near_error'>
+            <td class='context_line'>
+              <pre class='context'>11</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>}</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>13</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'># Use the database for sessions instead of the cookie-based default,</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>14</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'># which shouldn't be used to store highly confidential information</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>15</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'># (create the session table with &quot;rake db:sessions:create&quot;)</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='med-confidence'>Medium</span></td>
+			<td>HomeController</td>
+			<td>test_command</td>
+			<td>Command Injection</td>
+			<td><div class='warning_message' onClick="toggle('context3');toggle('message3');toggle('full_message3')" >Possible command injection near line 34: `ls #{params[:file_name]}`<table id='context3' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>29</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>    User.all(:conditions =&gt; &quot;status =&gt; '#{happy}'&quot;)</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>30</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    @user = User.first(:conditions =&gt; &quot;name = '#{params[:name]}'&quot;)</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>31</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>33</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_command</pre>
+            </td>
+          </tr>
+          <tr class='context error'>
+            <td class='context_line'>
+              <pre class='context'>34</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    `ls #{params[:file_name]}`</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>36</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    system params[:user_input]</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>37</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>39</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_eval</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='med-confidence'>Medium</span></td>
+			<td>HomeController</td>
+			<td>test_sql</td>
+			<td>SQL Injection</td>
+			<td><div class='warning_message' onClick="toggle('context12');toggle('message12');toggle('full_message12')" ><span id='message12' style='display:block' >Possible SQL injection near line 28: User.find_by_sql(&quot;select * from users where something = '#{(loca...</span><span id='full_message12' style='display:none'>Possible SQL injection near line 28: User.find_by_sql(&quot;select * from users where something = '#{(local some_var)}'&quot;)</span><table id='context12' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>23</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>  def test_file_access</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>24</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    File.open RAILS_ROOT + &quot;/&quot; + params[:file]</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>25</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>27</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_sql some_var = &quot;hello&quot;</pre>
+            </td>
+          </tr>
+          <tr class='context error'>
+            <td class='context_line'>
+              <pre class='context'>28</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    User.find_by_sql &quot;select * from users where something = '#{some_var}'&quot;</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>29</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    User.all(:conditions =&gt; &quot;status =&gt; '#{happy}'&quot;)</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>30</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    @user = User.first(:conditions =&gt; &quot;name = '#{params[:name]}'&quot;)</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>31</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>33</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_command</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='med-confidence'>Medium</span></td>
+			<td>HomeController</td>
+			<td>test_sql</td>
+			<td>SQL Injection</td>
+			<td><div class='warning_message' onClick="toggle('context13');toggle('message13');toggle('full_message13')" >Possible SQL injection near line 29: User.all(:conditions =&gt; (&quot;status =&gt; '#{happy}'&quot;))<table id='context13' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>24</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>    File.open RAILS_ROOT + &quot;/&quot; + params[:file]</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>25</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>27</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_sql some_var = &quot;hello&quot;</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>28</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    User.find_by_sql &quot;select * from users where something = '#{some_var}'&quot;</pre>
+            </td>
+          </tr>
+          <tr class='context error'>
+            <td class='context_line'>
+              <pre class='context'>29</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    User.all(:conditions =&gt; &quot;status =&gt; '#{happy}'&quot;)</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>30</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    @user = User.first(:conditions =&gt; &quot;name = '#{params[:name]}'&quot;)</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>31</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  end</pre>
+            </td>
+          </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>33</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  def test_command</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>34</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>    `ls #{params[:file_name]}`</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+	</table>
+	<p>Controller Warnings</p>
+	<table>
+		<tr>
+			<th>Confidence</th>
+			<th>Controller</th>
+			<th>Warning Type</th>
+			<th>Message</th>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>ApplicationController</td>
+			<td>Cross-Site Request Forgery</td>
+			<td>'protect_from_forgery' should be called in ApplicationController</td>
+		</tr>
+	</table>
+	<p>Model Warnings</p>
+	<table>
+		<tr>
+			<th>Confidence</th>
+			<th>Model</th>
+			<th>Warning Type</th>
+			<th>Message</th>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>Account, User</td>
+			<td>Attribute Restriction</td>
+			<td>Mass assignment is not restricted using attr_accessible</td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>Account</td>
+			<td>Format Validation</td>
+			<td><div class='warning_message' onClick="toggle('context15');toggle('message15');toggle('full_message15')" >Insufficient validation for 'name' using /^[a-zA-Z]+$/. Use \A and \z as anchors near line 2<table id='context15' class='context' style='display:none'>        <tr class='context first near_error'>
+          <td class='context_line'>
+            <pre class='context'>1</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>class Account &lt; ActiveRecord::Base</pre>
+          </td>
+        </tr>
+          <tr class='context alt error'>
+            <td class='context_line'>
+              <pre class='context'>2</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  validates_format_of :name, :with =&gt; /^[a-zA-Z]+$/</pre>
+            </td>
+          </tr>
+          <tr class='context near_error'>
+            <td class='context_line'>
+              <pre class='context'>3</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>end</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+	</table>
+	<p>View Warnings</p>
+	<table>
+		<tr>
+			<th>Confidence</th>
+			<th>Template</th>
+			<th>Warning Type</th>
+			<th>Message</th>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>home/index (HomeController#index)</td>
+			<td>Cross Site Scripting</td>
+			<td><div class='warning_message' onClick="toggle('context16');toggle('message16');toggle('full_message16')" >Unescaped parameter value near line 4: params[:user_input]<table id='context16' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>1</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>&lt;h1&gt;Home#index&lt;/h1&gt;</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>2</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>&lt;p&gt;Find me in app/views/home/index.html.erb&lt;/p&gt;</pre>
+            </td>
+          </tr>
+          <tr class='context near_error'>
+            <td class='context_line'>
+              <pre class='context'>3</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>&lt;%= params[:user_input] %&gt;</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>5</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>&lt;%= @some_variable %&gt;</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>home/index (HomeController#test_render)</td>
+			<td>Cross Site Scripting</td>
+			<td><div class='warning_message' onClick="toggle('context22');toggle('message22');toggle('full_message22')" >Unescaped parameter value near line 6: params[:unsafe_input]<table id='context22' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>1</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>&lt;h1&gt;Home#index&lt;/h1&gt;</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>2</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>&lt;p&gt;Find me in app/views/home/index.html.erb&lt;/p&gt;</pre>
+            </td>
+          </tr>
+          <tr class='context'>
+            <td class='context_line'>
+              <pre class='context'>3</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>&lt;%= params[:user_input] %&gt;</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>5</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>&lt;%= @some_variable %&gt;</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>home/test_filter (HomeController#test_filter)</td>
+			<td>Cross Site Scripting</td>
+			<td><div class='warning_message' onClick="toggle('context20');toggle('message20');toggle('full_message20')" >Unescaped parameter value near line 4: params[:evil_input]<table id='context20' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>1</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>&lt;h1&gt;Home#test_filter&lt;/h1&gt;</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>2</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>&lt;p&gt;Find me in app/views/home/test_filter.html.erb&lt;/p&gt;</pre>
+            </td>
+          </tr>
+          <tr class='context near_error'>
+            <td class='context_line'>
+              <pre class='context'>3</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>Value from filter: &lt;%= @filtered %&gt;</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>home/test_model (HomeController#test_model)</td>
+			<td>Cross Site Scripting</td>
+			<td><div class='warning_message' onClick="toggle('context19');toggle('message19');toggle('full_message19')" >Unescaped model attribute near line 4: User.first.name<table id='context19' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>1</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>&lt;h1&gt;Home#test_model&lt;/h1&gt;</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>2</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>&lt;p&gt;Find me in app/views/home/test_model.html.erb&lt;/p&gt;</pre>
+            </td>
+          </tr>
+          <tr class='context near_error'>
+            <td class='context_line'>
+              <pre class='context'>3</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>Hello, &lt;%= @name %&gt;!</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>home/test_params (HomeController#test_params)</td>
+			<td>Cross Site Scripting</td>
+			<td><div class='warning_message' onClick="toggle('context17');toggle('message17');toggle('full_message17')" >Unescaped parameter value near line 5: params[:name]<table id='context17' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>1</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>&lt;h1&gt;Home#test_params&lt;/h1&gt;</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>2</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>&lt;p&gt;Find me in app/views/home/test_params.html.erb&lt;/p&gt;</pre>
+            </td>
+          </tr>
+          <tr class='context near_error'>
+            <td class='context_line'>
+              <pre class='context'>4</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>Jello, &lt;%= @name %&gt;</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>6</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>More: &lt;%= @indirect %&gt;</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>home/test_sql (HomeController#test_sql)</td>
+			<td>Cross Site Scripting</td>
+			<td><div class='warning_message' onClick="toggle('context21');toggle('message21');toggle('full_message21')" >Unescaped model attribute near line 5: User.first(:conditions =&gt; (&quot;name = '#{params[:name]}'&quot;))<table id='context21' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>1</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>&lt;h1&gt;Home#test_sql&lt;/h1&gt;</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>2</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>&lt;p&gt;Find me in app/views/home/test_sql.html.erb&lt;/p&gt;</pre>
+            </td>
+          </tr>
+          <tr class='context near_error'>
+            <td class='context_line'>
+              <pre class='context'>4</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>&lt;%= @user %&gt;</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>other/_user (OtherController#test_collection)</td>
+			<td>Cross Site Scripting</td>
+			<td><div class='warning_message' onClick="toggle('context24');toggle('message24');toggle('full_message24')" >Unescaped model attribute near line 2: (Unresolved Model).new.first_name<table id='context24' class='context' style='display:none'>        <tr class='context first near_error'>
+          <td class='context_line'>
+            <pre class='context'>1</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>Name: &lt;%= user.first_name %&gt; &lt;%= user.last_name %&gt;</pre>
+          </td>
+        </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>other/test_iteration (OtherController#test_iteration)</td>
+			<td>Cross Site Scripting</td>
+			<td><div class='warning_message' onClick="toggle('context25');toggle('message25');toggle('full_message25')" >Unescaped model attribute near line 4: User.new.name<table id='context25' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>2</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>&lt;% @users.each do |user| %&gt;</pre>
+          </td>
+        </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>3</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  &lt;%= user.name %&gt;</pre>
+            </td>
+          </tr>
+          <tr class='context error'>
+            <td class='context_line'>
+              <pre class='context'>4</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  &lt;%= user.email %&gt;</pre>
+            </td>
+          </tr>
+          <tr class='context alt near_error'>
+            <td class='context_line'>
+              <pre class='context'>5</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>&lt;% end %&gt;</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>other/test_iteration (OtherController#test_iteration)</td>
+			<td>Cross Site Scripting</td>
+			<td><div class='warning_message' onClick="toggle('context26');toggle('message26');toggle('full_message26')" >Unescaped model attribute near line 5: User.new.email<table id='context26' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>2</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>&lt;% @users.each do |user| %&gt;</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>3</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  &lt;%= user.name %&gt;</pre>
+            </td>
+          </tr>
+          <tr class='context near_error'>
+            <td class='context_line'>
+              <pre class='context'>4</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>  &lt;%= user.email %&gt;</pre>
+            </td>
+          </tr>
+          <tr class='context alt error'>
+            <td class='context_line'>
+              <pre class='context'>5</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>&lt;% end %&gt;</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>other/test_locals (OtherController#test_locals)</td>
+			<td>Cross Site Scripting</td>
+			<td><div class='warning_message' onClick="toggle('context23');toggle('message23');toggle('full_message23')" >Unescaped parameter value near line 5: params[:user_input]<table id='context23' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>1</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>&lt;h1&gt;Other#test_locals&lt;/h1&gt;</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>2</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>&lt;p&gt;Find me in app/views/other/test_locals.html.erb&lt;/p&gt;</pre>
+            </td>
+          </tr>
+          <tr class='context near_error'>
+            <td class='context_line'>
+              <pre class='context'>4</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>This is user input: &lt;%= input %&gt;</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='high-confidence'>High</span></td>
+			<td>home/test_sql (HomeController#test_sql)</td>
+			<td>SQL Injection</td>
+			<td><div class='warning_message' onClick="toggle('context27');toggle('message27');toggle('full_message27')" >Possible SQL injection near line 5: User.first(:conditions =&gt; (&quot;name = '#{params[:name]}'&quot;))<table id='context27' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>1</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>&lt;h1&gt;Home#test_sql&lt;/h1&gt;</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>2</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>&lt;p&gt;Find me in app/views/home/test_sql.html.erb&lt;/p&gt;</pre>
+            </td>
+          </tr>
+          <tr class='context near_error'>
+            <td class='context_line'>
+              <pre class='context'>4</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>&lt;%= @user %&gt;</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+		<tr>
+			<td><span class='weak-confidence'>Weak</span></td>
+			<td>home/test_params (HomeController#test_params)</td>
+			<td>Cross Site Scripting</td>
+			<td><div class='warning_message' onClick="toggle('context18');toggle('message18');toggle('full_message18')" >Unescaped parameter value near line 7: indirect_method(params[:input])<table id='context18' class='context' style='display:none'>        <tr class='context first'>
+          <td class='context_line'>
+            <pre class='context'>2</pre>
+          </td>
+          <td class='context'>
+            <pre class='context'>&lt;p&gt;Find me in app/views/home/test_params.html.erb&lt;/p&gt;</pre>
+          </td>
+        </tr>
+          <tr class='context alt'>
+            <td class='context_line'>
+              <pre class='context'>4</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>Jello, &lt;%= @name %&gt;</pre>
+            </td>
+          </tr>
+          <tr class='context near_error'>
+            <td class='context_line'>
+              <pre class='context'>6</pre>
+            </td>
+            <td class='context'>
+              <pre class='context'>More: &lt;%= @indirect %&gt;</pre>
+            </td>
+          </tr>
+</table></div></td>
+		</tr>
+	</table>
+</body></html>
