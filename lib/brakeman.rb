@@ -36,6 +36,7 @@ module Brakeman
     #if warnings have been found, exit with a non-zero exit code (for Continuous
     #Integration)
     exit tracker.checks.warnings.length if cli_mode
+    return tracker.checks.warnings.length
   end
 
   private
@@ -61,7 +62,7 @@ module Brakeman
       end
     end
 
-    OPTIONS.merge! options unless defined? OPTIONS
+    OPTIONS.merge! options
 
     #List available checks and exits
     list_checks if OPTIONS[:list_checks]
@@ -149,7 +150,7 @@ module Brakeman
 
     app_path = OPTIONS[:app_path]
 
-    abort("Please supply the path to a Rails application.") unless app_path and File.exist? app_path + "/app"
+    abort("Please supply the path to a Rails application.") unless app_path and File.exist? File.join(app_path, "app")
 
     warn "[Notice] Using Ruby #{RUBY_VERSION}. Please make sure this matches the one used to run your Rails application."
 
