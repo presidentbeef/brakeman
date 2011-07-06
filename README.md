@@ -4,6 +4,8 @@ Brakeman is a static analysis tool which checks Ruby on Rails applications for s
 
 It targets Rails versions > 2.0 with experimental support for Rails 3.x
 
+There is also a [plugin available](https://github.com/presidentbeef/brakeman-jenkins-plugin) for Jenkins/Hudson.
+
 # Installation
 
 Using RubyGems:
@@ -19,7 +21,7 @@ From source:
 
     brakeman [app_path]
 
-It is simplest to run brakeman from the root directory of the Rails application. A path may also be supplied.
+It is simplest to run Brakeman from the root directory of the Rails application. A path may also be supplied.
 
 # Options
 
