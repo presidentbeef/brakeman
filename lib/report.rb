@@ -569,8 +569,8 @@ class Report
     <div class='blessing_hash' onclick=\"toggle('#{hash}');\">
         #{hash}
         <div class='blessing_extended' id='#{hash}'>
-            You can mark this message as a false positive by adding '#{hash}' to
-            <a href='file://#{Blessing.get_blessings_path}'>#{Blessing.get_blessings_path}</a>
+            You can mark this message as a false positive. To do so, add a full-line comment
+            anywhere in the code, containing the string '#{hash}'
         </div>
     </div>
     HTML

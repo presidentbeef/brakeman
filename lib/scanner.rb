@@ -12,6 +12,8 @@ rescue LoadError => e
   exit
 end
 
+require 'blessing'
+
 #Erubis processor which ignores any output which is plain text.
 class ScannerErubis < Erubis::Eruby
   include Erubis::NoTextEnhancer
@@ -56,14 +58,34 @@ class Scanner
     tracker
   end
 
+  def process_file file, &custom_processing
+    file = File.join(@path, file) unless file.match /^\//
+    return false unless File.exists? file
+    content = File.read file
+
+    #look for blessings
+    Blessing.parse_string_for_blessings content
+
+    #do the custom parsing
+    begin
+      yield RubyParser.new.parse(content), file
+    rescue Racc::ParseError => e
+      tracker.error e, "could not parse #{f}"
+    rescue Exception => e
+      tracker.error e.exception(e.message + "\nWhile processing #{f}"), e.backtrace
+    end
+    return true
+  end
+
+
   #Process config/environment.rb and config/gems.rb
   #
   #Stores parsed information in tracker.config
   def process_config
-    @processor.process_config(RubyParser.new.parse(File.read("#@path/config/environment.rb")))
-
-    if File.exists? "#@path/config/gems.rb"
-      @processor.process_config(RubyParser.new.parse(File.read("#@path/config/gems.rb")))
+    ["config/environment.rb", "config/gems.rb"].each do |file|
+      process_file file do |parsed, f|
+        @processor.process_config parsed
+      end
     end
 
     if File.exists? "#@path/vendor/plugins/rails_xss" or 
@@ -78,13 +100,9 @@ class Scanner
   #
   #Adds parsed information to tracker.initializers
   def process_initializers
-    Dir.glob(@path + "/config/initializers/**/*.rb").sort.each do |f|
-      begin
-        @processor.process_initializer(f, RubyParser.new.parse(File.read(f)))
-      rescue Racc::ParseError => e
-        tracker.error e, "could not parse #{f}. There is probably a typo in the file, test it with    require 'rubyparser'; RubyParser.new.parse(File.read '#{f}')"
-      rescue Exception => e
-        tracker.error e.exception(e.message + "\nWhile processing #{f}"), e.backtrace
+    Dir.glob(File.join(@path, "config/initializers/**/*.rb")).sort.each do |f|
+      process_file f do |parsed, file|
+        @processor.process_initializer file, parsed
       end
     end
   end
@@ -94,12 +112,8 @@ class Scanner
   #Adds parsed information to tracker.libs.
   def process_libs
     Dir.glob(@path + "/lib/**/*.rb").sort.each do |f|
-      begin
-        @processor.process_lib RubyParser.new.parse(File.read(f)), f
-      rescue Racc::ParseError => e
-        tracker.error e, "could not parse #{f}"
-      rescue Exception => e
-        tracker.error e.exception(e.message + "\nWhile processing #{f}"), e.backtrace
+      process_file f do |parsed, file|
+        @processor.process_lib parsed, file
       end
     end
   end
@@ -108,8 +122,8 @@ class Scanner
   #
   #Adds parsed information to tracker.routes
   def process_routes
-    if File.exists? "#@path/config/routes.rb"
-      @processor.process_routes RubyParser.new.parse(File.read("#@path/config/routes.rb"))
+    process_file "config/routes.rb" do |parsed, file|
+      @processor.process_routes parsed
     end
   end
 
@@ -118,12 +132,8 @@ class Scanner
   #Adds processed controllers to tracker.controllers
   def process_controllers
     Dir.glob(@app_path + "/controllers/**/*.rb").sort.each do |f|
-      begin
-        @processor.process_controller(RubyParser.new.parse(File.read(f)), f)
-      rescue Racc::ParseError => e
-        tracker.error e, "could not parse #{f}"
-      rescue Exception => e
-        tracker.error e.exception(e.message + "\nWhile processing #{f}"), e.backtrace
+      process_file f do |parsed, file|
+        @processor.process_controller parsed, file
       end
     end
 
@@ -147,6 +157,7 @@ class Scanner
       type = :erb if type == :rhtml
       name = template_path_to_name f
       text = File.read f
+      Blessing.parse_string_for_blessings text, type
 
       begin
         if type == :erb
@@ -205,15 +216,12 @@ class Scanner
   #Adds the processed models to tracker.models
   def process_models
     Dir.glob(@app_path + "/models/*.rb").sort.each do |f|
-      begin
-        @processor.process_model(RubyParser.new.parse(File.read(f)), f)
-      rescue Racc::ParseError => e
-        tracker.error e, "could not parse #{f}"
-      rescue Exception => e
-        tracker.error e.exception(e.message + "\nWhile processing #{f}"), e.backtrace
+      process_file f do |parsed, file|
+        @processor.process_model(parsed, f)
       end
     end
   end
+
 end
 
 #This is from Rails 3 version of the Erubis handler

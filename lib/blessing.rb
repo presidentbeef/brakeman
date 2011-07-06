@@ -1,35 +1,36 @@
 require 'digest/md5'
 
+
 module Blessing
 
+    @@WHOLE_LINE_COMMENTS = {:ruby => /^(?:\s*)#.+$/,
+                             :haml => /^(?:\s*)<!--.+-->$/,
+                             :erb => /^(?:\s*)<!--.+-->$/}
+    @@HASH_IN_COMMENT = /(?:^|[^\w]|\s+)\w{32}(?:\s+|[^\w]|$)/
 
-    @@BLESSING_FILE = File.join(OPTIONS[:app_path], 'test/brakeman/blessed.rb')
-
-    #load the user-defined blessings
-    begin
-        require "#{@@BLESSING_FILE}"
-        blessings = Blessings.blessings
-    rescue LoadError => e
-        puts "Unable to load blessings file (#{@@BLESSING_FILE}), continuing without it. Exception: #{e.message}"
-        blessings = []
-    end
-    #put the blessings into an Hash of hash :=> true
-    @@blessings_hash = Hash.new
-    blessings.each do |hash|
-        @@blessings_hash[hash] = true
-    end
+    @@blessings = Hash.new
 
     def self.is_blessed?(result)
         hash = self.hash_result result
-        @@blessings_hash[hash]
+        puts "checking #{hash}"
+        @@blessings[hash]
     end
 
-    def self.hash_result (result)
-        Digest::MD5.hexdigest("#{result.class}\n#{result.code.to_s}\n#{result.message}\n#{result.check}")
+    def self.hash_result(result)
+        Digest::MD5.hexdigest("#{result.class}\n#{result.code.to_s}\n#{result.check}")
     end
 
-    def self.get_blessings_path
-        @@BLESSING_FILE
+    def self.add_blessing(blessing_hash)
+        @@blessings[blessing_hash] = true
+    end
+
+    def self.parse_string_for_blessings string, language=:ruby
+      comments = string.scan @@WHOLE_LINE_COMMENTS[language]
+      comments.each do |comment|
+        comment.scan(@@HASH_IN_COMMENT) do |blessing_hash|
+          Blessing.add_blessing blessing_hash.strip
+        end
+      end
     end
 
 end
