@@ -52,4 +52,8 @@ class TemplateProcessor < BaseProcessor
     @current_template[:outputs] << exp
     exp
   end
+
+  def process_escaped_output exp
+    process_output exp
+  end
 end
