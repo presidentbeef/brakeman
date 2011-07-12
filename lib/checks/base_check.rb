@@ -172,7 +172,9 @@ class BaseCheck < SexpProcessor
   #(either :params or :cookies) and the second element is the matching 
   #expression
   def has_immediate_user_input? exp
-    if params? exp
+    if exp.nil?
+      return false
+    elsif params? exp
       return :params, exp
     elsif cookies? exp
       return :cookies, exp
