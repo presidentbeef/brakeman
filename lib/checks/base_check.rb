@@ -182,7 +182,7 @@ class BaseCheck < SexpProcessor
       if sexp? exp[1]
         if ALL_PARAMETERS.include? exp[1] or params? exp[1]
           return :params, exp
-        elsif exp[1] == COOKIES
+        elsif exp[1] == COOKIES or cookies? exp[1]
           return :cookies, exp
         else
           false
