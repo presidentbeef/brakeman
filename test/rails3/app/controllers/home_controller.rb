@@ -14,7 +14,7 @@ class HomeController < ApplicationController
   end
 
   def test_cookie
-    @name = cookie[:name]
+    @name = cookies[:name]
   end
 
   def test_filter
