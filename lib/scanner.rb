@@ -224,7 +224,10 @@ class RailsXSSErubis < ::Erubis::Eruby
   end
 
   def add_text(src, text)
-    if text.include? "\n"
+     puts "Add text: #{text.inspect}"
+    if text == "\n"
+      src << "\n"
+    elsif text.include? "\n"
       lines = text.split("\n")
       if text.match /\n\z/
         lines.each do |line|
