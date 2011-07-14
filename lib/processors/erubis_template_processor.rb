@@ -61,7 +61,9 @@ class ErubisTemplateProcessor < TemplateProcessor
     block
   end
 
-  #Look for assignments to output buffer
+  #Look for assignments to output buffer that look like this:
+  #  @output_buffer.append = some_output
+  #  @output_buffer.safe_append = some_output
   def process_attrasgn exp
     if exp[1].node_type == :ivar and exp[1][1] == :@output_buffer
       if exp[2] == :append= or exp[2] == :safe_append=
@@ -76,7 +78,7 @@ class ErubisTemplateProcessor < TemplateProcessor
           s
         end
       else
-        ignore
+        super
       end
     else
       super
