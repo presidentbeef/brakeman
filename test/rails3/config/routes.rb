@@ -1,4 +1,14 @@
 Rails3::Application.routes.draw do
+  get "other/test_locals"
+
+  get "other/test_object"
+
+  get "other/test_collection"
+
+  get "other/test_iteration"
+
+  get "other/test_send_file"
+
   get "home/index"
 
   get "home/test_params"

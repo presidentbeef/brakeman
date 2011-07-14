@@ -26,7 +26,7 @@ class HomeController < ApplicationController
 
   def test_sql some_var = "hello"
     User.find_by_sql "select * from users where something = '#{some_var}'"
-    User.all(:conditions => "status => '#{happy}'")
+    User.all(:conditions => "status = '#{happy}'")
     @user = User.first(:conditions => "name = '#{params[:name]}'")
   end
 
