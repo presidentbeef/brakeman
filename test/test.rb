@@ -184,6 +184,26 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /other_controller\.rb/
   end
 
+  def test_file_access_with_load
+    assert_warning :type => :warning,
+      :warning_type => "File Access",
+      :line => 64,
+      :message => /^Parameter value used in file name/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_file_access_load_false
+    warnings = find :type => :warning,
+      :warning_type => "File Access",
+      :line => 65,
+      :message => /^Parameter value used in file name/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+
+    assert_equal 0, warnings.length, "False positive found."
+  end
+
   def test_session_secret
     assert_warning :type => :warning,
       :warning_type => "Session Setting",

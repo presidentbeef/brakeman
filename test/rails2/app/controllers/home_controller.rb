@@ -59,6 +59,11 @@ class HomeController < ApplicationController
     render :file => "/some/path/#{page}"
   end
 
+  def test_load_params
+    load params[:file]
+    RandomClass.load params[:file]
+  end
+
   private
 
   def filter_it
