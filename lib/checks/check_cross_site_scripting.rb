@@ -22,7 +22,11 @@ class CheckCrossSiteScripting < BaseCheck
                            :fields_for, :label, :text_area, :text_field, :hidden_field, :check_box,
                            :field_field]) 
 
+  #Model methods which are known to be harmless
   IGNORE_MODEL_METHODS = Set.new([:average, :count, :maximum, :minimum, :sum])
+
+  #Methods known to not escape their input
+  KNOWN_DANGEROUS = Set.new([:auto_link, :truncate, :concat])
 
   MODEL_METHODS = Set.new([:all, :find, :first, :last, :new])
 
@@ -151,12 +155,18 @@ class CheckCrossSiteScripting < BaseCheck
       if message and not duplicate? exp
         add_result exp
 
+        if exp[1].nil? and KNOWN_DANGEROUS.include? exp[2]
+          confidence = CONFIDENCE[:high]
+        else
+          confidence = CONFIDENCE[:low]
+        end
+
         warn :template => @current_template, 
           :warning_type => "Cross Site Scripting", 
           :message => message,
           :line => exp.line,
           :code => exp,
-          :confidence => CONFIDENCE[:low]
+          :confidence => confidence
       end
 
       @mark = @matched = false
