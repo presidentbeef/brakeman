@@ -310,6 +310,15 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /test_model\.html\.erb/
   end
 
+  def test_model_attribute_from_controller_indirect_known_bad
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 5,
+      :message => /^Unescaped model attribute/,
+      :confidence => 0,
+      :file => /test_model\.html\.erb/
+  end
+
   def test_filter
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
