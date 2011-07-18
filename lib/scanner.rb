@@ -224,7 +224,6 @@ class RailsXSSErubis < ::Erubis::Eruby
   end
 
   def add_text(src, text)
-     puts "Add text: #{text.inspect}"
     if text == "\n"
       src << "\n"
     elsif text.include? "\n"

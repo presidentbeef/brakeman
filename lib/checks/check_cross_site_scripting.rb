@@ -63,13 +63,11 @@ class CheckCrossSiteScripting < BaseCheck
     if exp[0] == :output
       out = exp[1]
     elsif exp[0] == :escaped_output and raw_call? exp
-      puts "Check it! #{exp[1][3][1].inspect}"
       out = exp[1][3][1]
     end
 
     type, match = has_immediate_user_input? out
-    puts "MATCHED: #{out.inspect} as #{type}" if type
-    puts "Dupe? #{exp.inspect} #{duplicate? exp}"
+
     if type and not duplicate? exp
       add_result exp
       case type
