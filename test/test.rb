@@ -20,27 +20,10 @@ Rails2 = Report.new(scan2).to_test
 
 OPTIONS[:app_path] = File.expand_path "./rails3"
 OPTIONS[:rails3] = true
+load 'processors/route_processor.rb'
 scan3 = Scanner.new("rails3").process
 scan3.run_checks
 Rails3 = Report.new(scan3).to_test
-
-=begin
-[:warnings, :controller_warnings, :model_warnings, :template_warnings].each do |meth|
-  Rails2[meth].each do |w|
-    puts <<-THING
-  def test_
-    assert_warning :type => #{meth.to_s.gsub(/_warnings|s$/,"").inspect},
-      :warning_type => #{w.warning_type.inspect},
-      :line => #{w.line},
-      :message => /^#{w.message[0,40]}/,
-      :confidence => #{w.confidence},
-      :file => /#{File.basename(w.file || "").gsub(/\./, "\\.")}/
-  end
-
-    THING
-  end
-end
-=end
 
 require 'test/unit'
 
@@ -51,16 +34,17 @@ module FindWarning
     assert_equal 1, warnings.length, "Matched more than one warning"
   end 
 
- def find opts = {}, &block
-    if opts[:type].nil? or opts[:type] == :warning
+  def find opts = {}, &block
+    t = opts[:type]
+    if t.nil? or t == :warning
       warnings = report[:warnings]
     else
-      warnings = report[(opts[:type].to_s << "_warnings").to_sym]
+      warnings = report[(t.to_s << "_warnings").to_sym]
     end
 
     opts.delete :type
 
-    if block
+    result = if block
       warnings.select block
     else
       warnings.select do |w|
@@ -74,6 +58,14 @@ module FindWarning
         flag
       end
     end
+
+    warnings.reject! {|w| result.include? w }
+
+    if warnings.length == 0
+      puts "Good, all #{t} warnings matched."
+    end
+
+    result
   end
 end
 
@@ -86,23 +78,6 @@ class Rails2Tests < Test::Unit::TestCase
 
   def test_no_errors
     assert_equal 0, report[:errors].length
-  end
-
-  def test_index_output
-    assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
-      :line => 3,
-      :message => /^Unescaped parameter value/,
-      :confidence => 0,
-      :file => /home\/index.html/
-  end
-
-  def test_command_injection
-    assert_warning :warning_type => "Command Injection",
-      :line => 37,
-      :message => /^Possible command injection/,
-      :code => /params\[:user_input\]/,
-      :file => /home_controller.rb/
   end
 
   def test_eval
@@ -310,7 +285,7 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /test_model\.html\.erb/
   end
 
-  def test_model_attribute_from_controller_indirect_known_bad
+  def test_model_from_controller_indirect_bad
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 5,
@@ -402,5 +377,273 @@ class Rails3Tests < Test::Unit::TestCase
 
   def test_no_errors
     assert_equal 0, report[:errors].length
+  end
+
+  def test_eval_params
+    assert_warning :type => :warning,
+      :warning_type => "Dangerous Eval",
+      :line => 41,
+      :message => /^User input in eval near line 41: eval\(pa/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_command_injection_params_interpolation
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :line => 34,
+      :message => /^Possible command injection near line 34:/,
+      :confidence => 1,
+      :file => /home_controller\.rb/
+  end
+
+  def test_command_injection_system_params
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :line => 37,
+      :message => /^Possible command injection near line 37:/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_file_access_concatenation
+    assert_warning :type => :warning,
+      :warning_type => "File Access",
+      :line => 24,
+      :message => /^Parameter value used in file name near l/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_file_access_load
+    assert_warning :type => :warning,
+      :warning_type => "File Access",
+      :line => 64,
+      :message => /^Parameter value used in file name near l/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_mass_assignment
+    assert_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :line => 54,
+      :message => /^Unprotected mass assignment near line 54/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_redirect
+    assert_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 46,
+      :message => /^Possible unprotected redirect near line /,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_render_path
+    assert_warning :type => :warning,
+      :warning_type => "Dynamic Render Path",
+      :line => 60,
+      :message => /^Render path is dynamic near line 60: ren/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_file_access_send_file
+    assert_warning :type => :warning,
+      :warning_type => "File Access",
+      :line => 22,
+      :message => /^Parameter value used in file name near l/,
+      :confidence => 0,
+      :file => /other_controller\.rb/
+  end
+
+  def test_sql_injection_find_by_sql
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 28,
+      :message => /^Possible SQL injection near line 28: Use/,
+      :confidence => 1,
+      :file => /home_controller\.rb/
+  end
+
+  def test_sql_injection_unknown_variable
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 29,
+      :message => /^Possible SQL injection near line 29: Use/,
+      :confidence => 1,
+      :file => /home_controller\.rb/
+  end
+
+  def test_sql_injection_params
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 30,
+      :message => /^Possible SQL injection near line 30: Use/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_csrf_protection
+    assert_warning :type => :controller,
+      :warning_type => "Cross-Site Request Forgery",
+      :message => /^'protect_from_forgery' should be called /,
+      :confidence => 0,
+      :file => /application_controller\.rb/
+  end
+
+  def test_attribute_restriction
+    assert_warning :type => :model,
+      :warning_type => "Attribute Restriction",
+      :message => /^Mass assignment is not restricted using /,
+      :confidence => 0,
+      :file => /account, user\.rb/
+  end
+
+  def test_format_validation
+    assert_warning :type => :model,
+      :warning_type => "Format Validation",
+      :line => 2,
+      :message => /^Insufficient validation for 'name' using/,
+      :confidence => 0,
+      :file => /account\.rb/
+  end
+
+  def test_xss_parameter_direct
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped parameter value near line 3: p/,
+      :confidence => 0,
+      :file => /index\.html\.erb/
+  end
+
+  def test_xss_parameter_variable
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 5,
+      :message => /^Unescaped parameter value near line 5: p/,
+      :confidence => 0,
+      :file => /index\.html\.erb/
+  end
+
+  def test_xss_parameter_locals
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 4,
+      :message => /^Unescaped parameter value near line 4: p/,
+      :confidence => 0,
+      :file => /test_locals\.html\.erb/
+  end
+
+  def test_xss_model_collection
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped model attribute near line 1: \(/,
+      :confidence => 0,
+      :file => /_user\.html\.erb/
+  end
+
+  def test_xss_model
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped model attribute/,
+      :confidence => 0,
+      :file => /test_model\.html\.erb/
+  end
+
+  def test_xss_model_known_bad
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 6,
+      :message => /^Unescaped model attribute near line 6: a/,
+      :confidence => 0,
+      :file => /test_model\.html\.erb/
+  end
+
+  def test_file_access_in_template
+    assert_warning :type => :template,
+      :warning_type => "File Access",
+      :line => 3,
+      :message => /^Parameter value used in file name near l/,
+      :confidence => 0,
+      :file => /test_file_access\.html\.erb/
+  end
+
+  def test_xss_cookie_direct
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped cookie value/,
+      :confidence => 0,
+      :file => /test_cookie\.html\.erb/
+  end
+
+  def test_xss_filter
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped parameter value/,
+      :confidence => 0,
+      :file => /test_filter\.html\.erb/
+  end
+
+  def test_xss_iteration
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped model attribute/,
+      :confidence => 0,
+      :file => /test_iteration\.html\.erb/
+  end
+
+  def test_xss_iteration2
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 4,
+      :message => /^Unescaped model attribute/,
+      :confidence => 0,
+      :file => /test_iteration\.html\.erb/
+  end
+
+  def test_unescaped_model
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3, #This should be line 4 :(
+      :message => /^Unescaped model attribute/,
+      :confidence => 0,
+      :file => /test_sql\.html\.erb/
+  end
+
+  def test_xss_params
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 4,
+      :message => /^Unescaped parameter value/,
+      :confidence => 0,
+      :file => /test_params\.html\.erb/
+  end
+
+  def test_indirect_xss
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 6,
+      :message => /^Unescaped parameter value/,
+      :confidence => 2,
+      :file => /test_params\.html\.erb/
+  end
+
+  def test_sql_injection_in_template
+    assert_warning :type => :template,
+      :warning_type => "SQL Injection",
+      :line => 3, #This should be line 4 :(
+      :message => /^Possible SQL injection/,
+      :confidence => 0,
+      :file => /test_sql\.html\.erb/
   end
 end
