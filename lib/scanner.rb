@@ -110,6 +110,8 @@ class Scanner
   def process_routes
     if File.exists? "#@path/config/routes.rb"
       @processor.process_routes RubyParser.new.parse(File.read("#@path/config/routes.rb"))
+    else
+      warn "[Notice] No route information found"
     end
   end
 
