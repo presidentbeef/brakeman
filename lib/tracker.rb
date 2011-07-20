@@ -38,6 +38,7 @@ class Tracker
     @errors = []
     @libs = {}
     @checks = nil
+    @processed = nil
     @template_cache = Set.new
   end
 
