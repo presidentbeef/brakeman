@@ -39,12 +39,14 @@ class CheckValidationRegex < BaseCheck
     return unless regexp? value
 
     regex = value[1].inspect
-    if regex =~ /[^\A].*[^\z]\/(m|i|x|n|e|u|s|o)*\z/
-      warn :model => @current_model,
-        :warning_type => "Format Validation", 
-        :message => "Insufficient validation for '#{get_name validator}' using #{value[1].inspect}. Use \\A and \\z as anchors",
-        :line => value.line,
-        :confidence => CONFIDENCE[:high] 
+    if regex =~ /^\/(.{2}).*(.{2})\/(m|i|x|n|e|u|s|o)*\z/
+      if $1 != "\\A" or ($2 != "\\Z" and $2 != "\\z")
+        warn :model => @current_model,
+          :warning_type => "Format Validation", 
+          :message => "Insufficient validation for '#{get_name validator}' using #{value[1].inspect}. Use \\A and \\z as anchors",
+          :line => value.line,
+          :confidence => CONFIDENCE[:high] 
+      end
     end
   end
 

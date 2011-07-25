@@ -512,6 +512,46 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /account\.rb/
   end
 
+  def test_format_validation_with_z
+    assert_warning :type => :model,
+      :warning_type => "Format Validation",
+      :line => 3,
+      :message => /^Insufficient validation for 'blah' using/,
+      :confidence => 0,
+      :file => /account\.rb/
+  end
+
+  def test_format_validation_with_a
+    assert_warning :type => :model,
+      :warning_type => "Format Validation",
+      :line => 4,
+      :message => /^Insufficient validation for 'something' using/,
+      :confidence => 0,
+      :file => /account\.rb/
+  end
+
+  def test_allowable_validation
+    results = find :type => :model,
+      :warning_type => "Format Validation",
+      :line => 5,
+      :message => /^Insufficient validation/,
+      :confidence => 0,
+      :file => /account\.rb/
+
+    assert_equal 0, results.length, "Validation was allowable, should not raise warning"
+  end
+
+  def test_allowable_validation_with_Z
+    results = find :type => :model,
+      :warning_type => "Format Validation",
+      :line => 6,
+      :message => /^Insufficient validation/,
+      :confidence => 0,
+      :file => /account\.rb/
+
+    assert_equal 0, results.length, "Validation was allowable, should not raise warning"
+  end
+
   def test_xss_parameter_direct
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
