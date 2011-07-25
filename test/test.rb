@@ -13,11 +13,17 @@ OPTIONS = { :skip_checks => Set.new,
 
 require 'scanner'
 
+$stderr.puts "-" * 40
+$stderr.puts "Processing Rails 2 application..."
+$stderr.puts "-" * 40
 OPTIONS[:app_path] = File.expand_path "./rails2"
 scan2 = Scanner.new("rails2").process
 scan2.run_checks
 Rails2 = Report.new(scan2).to_test
 
+$stderr.puts "-" * 40
+$stderr.puts "Processing Rails 3 application..."
+$stderr.puts "-" * 40
 OPTIONS[:app_path] = File.expand_path "./rails3"
 OPTIONS[:rails3] = true
 load 'processors/route_processor.rb'
@@ -25,6 +31,9 @@ scan3 = Scanner.new("rails3").process
 scan3.run_checks
 Rails3 = Report.new(scan3).to_test
 
+$stderr.puts "-" * 40
+$stderr.puts "Checking results..."
+$stderr.puts "-" * 40
 require 'test/unit'
 
 module FindWarning
@@ -61,7 +70,7 @@ module FindWarning
 
     warnings.reject! {|w| result.include? w }
 
-    if warnings.length == 0
+    if result.length > 0 and warnings.length == 0
       puts "Good, all #{t} warnings matched."
     end
 
