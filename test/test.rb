@@ -385,6 +385,15 @@ class Rails2Tests < Test::Unit::TestCase
 
     assert_equal 0, results.length, "escape_once is a safe method"
   end
+
+  def test_indirect_cookie
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 5,
+      :message => /^Unescaped cookie value/,
+      :confidence => 2,
+      :file => /test_cookie\.html\.erb/
+  end
 end
 
 class Rails3Tests < Test::Unit::TestCase
@@ -715,5 +724,14 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /index\.html\.erb/
 
     assert_equal 0, results.length, "escape_once is a safe method"
+  end
+
+  def test_indirect_cookie
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 4,
+      :message => /^Unescaped cookie value/,
+      :confidence => 2,
+      :file => /test_cookie\.html\.erb/
   end
 end

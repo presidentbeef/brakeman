@@ -152,6 +152,8 @@ class CheckCrossSiteScripting < BaseCheck
         message = "Unescaped model attribute" 
       elsif @matched == :params
         message = "Unescaped parameter value" 
+      elsif @matched == :cookies
+        message = "Unescaped cookie value" 
       end
 
       if message and not duplicate? exp
@@ -199,8 +201,9 @@ class CheckCrossSiteScripting < BaseCheck
       exp[0] = :ignore
       @matched = false
     elsif sexp? exp[1] and model_name? exp[1][1]
-
       @matched = :model
+    elsif cookies? exp or cookies? target or COOKIES == exp or COOKIES == target 
+      @matched = :cookies
     elsif @inspect_arguments and (ALL_PARAMETERS.include?(exp) or params? exp)
       @matched = :params
     elsif @inspect_arguments
