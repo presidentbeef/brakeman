@@ -375,6 +375,16 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /test_sql\.html\.erb/
   end
 
+  def test_escape_once
+    results = find :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 7,
+      :message => /^Unescaped parameter value/,
+      :confidence => 2,
+      :file => /index\.html\.erb/
+
+    assert_equal 0, results.length, "escape_once is a safe method"
+  end
 end
 
 class Rails3Tests < Test::Unit::TestCase
@@ -694,5 +704,16 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Possible SQL injection/,
       :confidence => 0,
       :file => /test_sql\.html\.erb/
+  end
+
+  def test_escape_once
+    results = find :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 7,
+      :message => /^Unescaped parameter value/,
+      :confidence => 2,
+      :file => /index\.html\.erb/
+
+    assert_equal 0, results.length, "escape_once is a safe method"
   end
 end

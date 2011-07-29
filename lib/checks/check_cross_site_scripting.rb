@@ -16,11 +16,13 @@ class CheckCrossSiteScripting < BaseCheck
 
   #Ignore these methods and their arguments.
   #It is assumed they will take care of escaping their output.
-  IGNORE_METHODS = Set.new([:h, :escapeHTML, :link_to, :text_field_tag, :hidden_field_tag,
-                           :image_tag, :select, :submit_tag, :hidden_field, :url_encode,
-                           :radio_button, :will_paginate, :button_to, :url_for, :mail_to,
-                           :fields_for, :label, :text_area, :text_field, :hidden_field, :check_box,
-                           :field_field]) 
+  IGNORE_METHODS = Set.new([:button_to, :check_box, :escapeHTML, :escape_once,
+                           :field_field, :fields_for, :h, :hidden_field,
+                           :hidden_field, :hidden_field_tag, :image_tag, :label,
+                           :link_to, :mail_to, :radio_button, :select,
+                           :submit_tag, :text_area, :text_field, 
+                           :text_field_tag, :url_encode, :url_for,
+                           :will_paginate] )
 
   #Model methods which are known to be harmless
   IGNORE_MODEL_METHODS = Set.new([:average, :count, :maximum, :minimum, :sum])
