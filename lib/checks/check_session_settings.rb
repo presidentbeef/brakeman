@@ -27,10 +27,9 @@ class CheckSessionSettings < BaseCheck
   def process_attrasgn exp
     if not OPTIONS[:rails3] and exp[1] == SessionSettings and exp[2] == :session=
       check_for_issues exp[3][1], "#{OPTIONS[:app_path]}/config/initializers/session_store.rb"
-      exp
-    else
-      super
     end
+      
+    exp
   end
 
   #Looks for Rails3::Application.config.session_store :cookie_store, { ... }
@@ -38,10 +37,9 @@ class CheckSessionSettings < BaseCheck
   def process_call exp
     if OPTIONS[:rails3] and exp[1] == SessionSettings and exp[2] == :session_store
         check_for_issues exp[3][2], "#{OPTIONS[:app_path]}/config/initializers/session_store.rb"
-      exp
-    else
-      super
     end
+      
+    exp
   end
 
   private
