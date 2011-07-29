@@ -1,3 +1,10 @@
+## 0.6.1
+
+ * Fix XSS check for cookies as parameters in output
+ * Don't bother calling super in CheckSessionSettings
+ * Add escape_once as a safe method
+ * Accept '\Z' or '\z' in model validations
+
 ## 0.6.0
 
  * Tests are in place and fully functional
@@ -9,7 +16,6 @@
  * Fixes for Rails 3 XSS checks
  * Fixes to line numbers with Erubis
  * Fixes to escaped output scanning
- * Change Version to Brakeman::Version
  * Update CSRF CVE-2011-0447 message to be less assertive
 
 ## 0.5.2
