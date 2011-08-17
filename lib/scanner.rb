@@ -41,6 +41,8 @@ class Scanner
   def process
     warn "Processing configuration..."
     process_config
+    warn "Processing gems..."
+    process_gems
     warn "Processing initializers..."
     process_initializers
     warn "Processing libs..."
@@ -71,6 +73,17 @@ class Scanner
       (File.exists? "#@path/Gemfile" and File.read("#@path/Gemfile").include? "rails_xss")
       tracker.config[:escape_html] = true
       warn "[Notice] Escaping HTML by default"
+    end
+  end
+
+  #Process Gemfile
+  def process_gems
+    if File.exists? "#@path/Gemfile"
+      if File.exists? "#@path/Gemfile.lock"
+        @processor.process_gems(RubyParser.new.parse(File.read("#@path/Gemfile")), File.read("#@path/Gemfile.lock"))
+      else
+        @processor.process_gems(RubyParser.new.parse(File.read("#@path/Gemfile")))
+      end
     end
   end
 
