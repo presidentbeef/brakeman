@@ -87,15 +87,37 @@ class RoutesProcessor < BaseProcessor
   def process_match exp
     args = exp[3][1..-1]
 
-    hash_iterate args[0] do |k, v|
-      if string? k and string? v
-        controller, action = extract_action v[1]
+    #Check if there is an unrestricted action parameter
+    action_variable = false
 
-        self.current_controller = controller
-        @tracker.routes[@current_controller] << action.to_sym if action
-      elsif symbol? k and k[1] == :action
-        @tracker.routes[@current_controller] << v[1].to_sym
+    if string? args[0]
+      matcher = args[0][1]
+
+      if matcher == ':controller(/:action(/:id(.:format)))' or
+        matcher.include? ':controller' and matcher.include? ':action' #Default routes
+        @tracker.routes[:allow_all_actions] = args[0]
+        return exp
+      elsif matcher.include? ':action'
+        action_variable = true
       end
+    end
+
+    if hash? args[-1]
+      hash_iterate opts do |k, v|
+        if string? k and string? v
+          controller, action = extract_action v[1]
+
+          self.current_controller = controller
+          @tracker.routes[@current_controller] << action.to_sym if action
+        elsif symbol? k and k[1] == :action
+          @tracker.routes[@current_controller] << v[1].to_sym
+          action_variable = false
+        end
+      end
+    end
+
+    if action_variable
+      @tracker.routes[@current_controller] = :allow_all_actions
     end
 
     exp

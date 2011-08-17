@@ -734,4 +734,12 @@ class Rails3Tests < Test::Unit::TestCase
       :confidence => 2,
       :file => /test_cookie\.html\.erb/
   end
+
+  def test_default_routes
+    assert_warning :warning_type => "Default Routes",
+      :line => 93,
+      :message => /All public methods in controllers are available as actions/,
+      :file => /routes\.rb/
+  end
+
 end
