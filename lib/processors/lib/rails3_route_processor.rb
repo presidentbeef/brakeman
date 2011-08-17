@@ -103,7 +103,7 @@ class RoutesProcessor < BaseProcessor
     end
 
     if hash? args[-1]
-      hash_iterate opts do |k, v|
+      hash_iterate args[-1] do |k, v|
         if string? k and string? v
           controller, action = extract_action v[1]
 
