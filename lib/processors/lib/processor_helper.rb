@@ -16,6 +16,8 @@ module ProcessorHelper
       case exp.node_type
       when :const
         exp[1]
+      when :lvar
+        exp[1].to_sym
       when :colon2
         "#{class_name(exp[1])}::#{exp[2]}".to_sym
       when :colon3
