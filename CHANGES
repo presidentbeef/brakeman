@@ -1,3 +1,10 @@
+## 0.7.0
+
+ * Allow local variable as a class name
+ * Add checks for vulnerabilities fixed in Rails 2.3.14 and 3.0.10
+ * Check for default routes in Rails 3 apps
+ * Look in Gemfile or Gemfile.lock for Rails version
+
 ## 0.6.1
 
  * Fix XSS check for cookies as parameters in output
