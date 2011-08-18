@@ -1,3 +1,7 @@
+## 0.7.1
+
+ * Require BaseProcessor for GemProcessor
+
 ## 0.7.0
 
  * Allow local variable as a class name

@@ -1,4 +1,6 @@
-#Processes Gemfile.lock
+require 'processors/base_processor'
+
+#Processes Gemfile and Gemfile.lock
 class GemProcessor < BaseProcessor
   def initialize *args
     super
