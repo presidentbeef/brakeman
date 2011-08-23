@@ -56,9 +56,9 @@ class BaseCheck < SexpProcessor
     process exp[1] if sexp? exp[1]
     process exp[3]
 
-    if ALL_PARAMETERS.include? exp[1] or ALL_PARAMETERS.include? exp or params? exp[1]
+    if params? exp[1]
       @has_user_input = :params
-    elsif exp[1] == COOKIES or exp == COOKIES or cookies? exp[1]
+    elsif cookies? exp[1]
       @has_user_input = :cookies
     elsif sexp? exp[1] and model_name? exp[1][1]
       @has_user_input = :model
@@ -173,20 +173,16 @@ class BaseCheck < SexpProcessor
   #expression
   def has_immediate_user_input? exp
     if exp.nil?
-      return false
+      false
     elsif params? exp
       return :params, exp
     elsif cookies? exp
       return :cookies, exp
     elsif call? exp
-      if sexp? exp[1]
-        if ALL_PARAMETERS.include? exp[1] or params? exp[1]
-          return :params, exp
-        elsif exp[1] == COOKIES or cookies? exp[1]
-          return :cookies, exp
-        else
-          false
-        end
+      if params? exp[1]
+        return :params, exp
+      elsif cookies? exp[1]
+        return :cookies, exp
       else
         false
       end

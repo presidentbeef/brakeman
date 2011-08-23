@@ -202,9 +202,9 @@ class CheckCrossSiteScripting < BaseCheck
       @matched = false
     elsif sexp? exp[1] and model_name? exp[1][1]
       @matched = :model
-    elsif cookies? exp or cookies? target or COOKIES == exp or COOKIES == target 
+    elsif cookies? exp
       @matched = :cookies
-    elsif @inspect_arguments and (ALL_PARAMETERS.include?(exp) or params? exp)
+    elsif @inspect_arguments and params? exp
       @matched = :params
     elsif @inspect_arguments
       process args

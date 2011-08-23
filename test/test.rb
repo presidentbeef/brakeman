@@ -394,6 +394,27 @@ class Rails2Tests < Test::Unit::TestCase
       :confidence => 2,
       :file => /test_cookie\.html\.erb/
   end
+
+  #Check for params that look like params[:x][:y]
+  def test_params_multidimensional
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 8,
+      :message => /^Unescaped parameter value/,
+      :confidence => 0,
+      :file => /test_params\.html\.erb/
+  end
+
+  #Check for cookies that look like cookies[:blah][:blah]
+  def test_cookies_multidimensional
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 7,
+      :message => /^Unescaped cookie value/,
+      :confidence => 0,
+      :file => /test_cookie\.html\.erb/
+  end
+
 end
 
 class Rails3Tests < Test::Unit::TestCase
@@ -735,11 +756,44 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /test_cookie\.html\.erb/
   end
 
+  #Check for params that look like params[:x][:y]
+  def test_params_multidimensional
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 10,
+      :message => /^Unescaped parameter value/,
+      :confidence => 0,
+      :file => /test_params\.html\.erb/
+  end
+
+  #Check for cookies that look like cookies[:blah][:blah]
+  def test_cookies_multidimensional
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 6,
+      :message => /^Unescaped cookie value/,
+      :confidence => 0,
+      :file => /test_cookie\.html\.erb/
+  end
+
   def test_default_routes
     assert_warning :warning_type => "Default Routes",
       :line => 93,
       :message => /All public methods in controllers are available as actions/,
       :file => /routes\.rb/
   end
+end
 
+class BrakemanTests < Test::Unit::TestCase
+  def util
+    Class.new.extend Util
+  end
+
+  def test_cookies?
+    assert util.cookies?(RubyParser.new.parse 'cookies[:x][:y][:z]')
+  end
+
+  def test_params?
+    assert util.params?(RubyParser.new.parse 'params[:x][:y][:z]')
+  end
 end

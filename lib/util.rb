@@ -127,11 +127,36 @@ module Util
 
   #Check if _exp_ is a params hash
   def params? exp
-    exp.is_a? Sexp and exp.node_type == :params
+    if exp.is_a? Sexp
+      return true if exp.node_type == :params or ALL_PARAMETERS.include? exp
+
+      if exp.node_type == :call
+        if params? exp[1]
+          return true
+        elsif exp[2] == :[]
+          return params? exp[1]
+        end
+      end
+    end
+
+    false
   end
 
   def cookies? exp
-    exp.is_a? Sexp and exp.node_type == :cookies
+    if exp.is_a? Sexp
+      return true if exp.node_type == :cookies or exp == COOKIES
+
+      if exp.node_type == :call
+        if cookies? exp[1]
+          return true
+        elsif exp[2] == :[]
+          return cookies? exp[1]
+        end
+      end
+    end
+
+    false
+
   end
 
   #Check if _exp_ is a Sexp.
