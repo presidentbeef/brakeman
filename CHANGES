@@ -1,3 +1,8 @@
+## 0.7.2
+
+ * Fix handling of params and cookies with nested access
+ * Add CVEs for checks added in 0.7.0
+
 ## 0.7.1
 
  * Require BaseProcessor for GemProcessor
