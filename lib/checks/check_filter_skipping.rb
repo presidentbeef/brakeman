@@ -10,7 +10,7 @@ class CheckFilterSkipping < BaseCheck
     if version_between?('3.0.0', '3.0.9') and uses_arbitrary_actions?
 
       warn :warning_type => "Default Routes",
-        :message => "Versions before 3.0.10 have a vulnerability which allows filters to be bypassed. Upgrade or apply patches as needed.",
+        :message => "Versions before 3.0.10 have a vulnerability which allows filters to be bypassed: CVE-2011-2929",
         :confidence => CONFIDENCE[:high]
     end
   end

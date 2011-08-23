@@ -17,9 +17,9 @@ class CheckQuoteTableName < BaseCheck
       end
 
       if tracker.config[:rails_version] =~ /^3/
-        message = "Versions before 3.0.10 have a vulnerability in quote_table_name. Upgrade or apply patches as needed."
+        message = "Versions before 3.0.10 have a vulnerability in quote_table_name: CVE-2011-2930"
       else
-        message = "Versions before 2.3.14 have a vulnerability in quote_table_name. Upgrade or apply patches as needed."
+        message = "Versions before 2.3.14 have a vulnerability in quote_table_name: CVE-2011-2930"
       end
 
       warn :warning_type => "SQL Injection",

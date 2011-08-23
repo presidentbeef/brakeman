@@ -10,7 +10,7 @@ class CheckEscapeFunction < BaseCheck
     if version_between?('2.0.0', '2.3.13') and RUBY_VERSION < '1.9.0' 
 
       warn :warning_type => 'Cross Site Scripting',
-        :message => 'Versions before 2.3.14 have a vulnerability in escape method when used with Ruby 1.8. Upgrade or apply patches as needed.',
+        :message => 'Versions before 2.3.14 have a vulnerability in escape method when used with Ruby 1.8: CVE-2011-2931',
         :confidence => CONFIDENCE[:high]
     end
   end

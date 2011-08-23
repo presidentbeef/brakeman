@@ -11,9 +11,9 @@ class CheckStripTags < BaseCheck
         version_between?('3.0.0', '3.0.9')) and uses_strip_tags?
 
       if tracker.config[:rails_version] =~ /^3/
-        message = "Versions before 3.0.10 have a vulnerability in strip_tags. Upgrade or apply patches as needed."
+        message = "Versions before 3.0.10 have a vulnerability in strip_tags: CVE-2011-2931"
       else
-        message = "Versions before 2.3.13 have a vulnerability in strip_tags. Upgrade or apply patches as needed."
+        message = "Versions before 2.3.13 have a vulnerability in strip_tags: CVE-2011-2931"
       end
 
       warn :warning_type => "Cross Site Scripting",

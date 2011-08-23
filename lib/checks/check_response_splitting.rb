@@ -10,7 +10,7 @@ class CheckResponseSplitting < BaseCheck
     if version_between?('2.3.0', '2.3.13')
 
       warn :warning_type => "Response Splitting",
-        :message => "Versions before 2.3.14 have a vulnerability content type handling allowing injection of headers. Upgrade or apply patches as needed.",
+        :message => "Versions before 2.3.14 have a vulnerability content type handling allowing injection of headers: CVE-2011-3186",
         :confidence => CONFIDENCE[:med]
 
     end
