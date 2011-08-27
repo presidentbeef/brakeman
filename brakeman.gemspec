@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.authors = ["Justin Collins"]
   s.summary = "Security vulnerability scanner for Ruby on Rails."
   s.description = "Brakeman detects security vulnerabilities in Ruby on Rails applications via static analysis."
-  s.homepage = "http://github.com/presidentbeef/brakeman"
+  s.homepage = "http://brakemanscanner.org"
   s.files = ["bin/brakeman", "WARNING_TYPES", "FEATURES", "README.md"] + Dir["lib/**/*.rb"] + Dir["lib/format/*.css"]
   s.executables = ["brakeman"]
   s.add_dependency "activesupport", "~>2.2"
