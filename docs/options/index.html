@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Documentation</title>
+  <title>Brakeman: Options</title>
   <meta name="author" content="Justin Collins">
   
 
@@ -16,7 +16,7 @@
 
   
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/options/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -99,26 +99,122 @@
 <article>
   
   <header>
-    <h1 class="entry-title">Documentation</h1>
+    <h1 class="entry-title">Options</h1>
   </header>
   
-  <h2>Getting Started</h2>
+  <h3>Output Options</h3>
 
-<ul>
-<li><a href="/docs/install">Installation</a></li>
-<li><a href="/docs/running">Running Brakeman</a></li>
-<li><a href="/docs/options">Brakeman Options</a></li>
-</ul>
+<p><strong>Output File</strong></p>
+
+<p>To specify an output file for the results:</p>
+
+<pre><code>brakeman -o output_file
+</code></pre>
+
+<p><strong>Output Format</strong></p>
+
+<p>The output format is determined by the file extension used with the <code>-o</code> option or by using the <code>-f</code> option. Current options are: <code>text</code>, <code>html</code>, <code>tabs</code>, and <code>csv</code>.</p>
+
+<p>For example, to output an HTML report:</p>
+
+<pre><code>brakeman -o report.html
+</code></pre>
+
+<p><strong>Message Length</strong></p>
+
+<p>By default, brakeman truncates warning messages to 100 characters. The <code>--message-limit</code> option can be used to adjust this. Setting the limit to <code>-1</code> will disable truncation completely.</p>
+
+<p><strong>Quiet Operation</strong></p>
+
+<p>To suppress informational warnings and just output the report:</p>
+
+<pre><code>brakeman -q
+</code></pre>
+
+<p><strong>Debugging Information</strong></p>
+
+<p>To see all kinds of debugging information:</p>
+
+<pre><code>brakeman -d
+</code></pre>
+
+<h3>Scanning Options</h3>
+
+<p><strong>Specify Path to Application</strong></p>
+
+<p>Usually the path to the Rails app is the last argument. Optionally, the <code>--path</code> option can be used to specify a path.</p>
+
+<p><strong>Manually Turn on XSS Protection</strong></p>
+
+<p>If you are using the <code>rails_xss</code> gem or some other plugin, but Brakeman is not detecting it, the <code>--escape-html</code> option will use Erubis for rendering ERB files and turn on HTML escaping for ERB and HAML.</p>
+
+<p><strong>Manually Turn on Rails 3 Support</strong></p>
+
+<p>Brakeman should detect Rails 3 applications, but if not the <code>-3</code> will switch Brakeman to Rails 3 mode.</p>
+
+<p><strong>Specifying Which Checks to Run</strong></p>
+
+<p>Specific checks can be skipped, if desired. The name needs to be the correct case. For example, to skip looking for default routes (<code>DefaultRoutes</code>):</p>
+
+<pre><code>brakeman -x DefaultRoutes
+</code></pre>
+
+<p>Multiple checks should be separated by a comma:</p>
+
+<pre><code>brakeman -x DefaultRoutes,Redirect
+</code></pre>
+
+<p>To do the opposite and only run a certain set of tests:</p>
+
+<pre><code>brakeman -t SQL,ValidationRegex
+</code></pre>
+
+<p><strong>Report Routes</strong></p>
+
+<p>To see what actions brakeman has detected as being routes, use the <code>--routes</code> option.</p>
+
+<h3>Warning Options</h3>
+
+<p><strong>Ignore Safe Methods</strong></p>
+
+<p>To indicate certain methods are &#8220;safe&#8221;:</p>
+
+<pre><code>brakeman -s benign_method,totally_safe
+</code></pre>
+
+<p><strong>Assume Unknown Methods are Safe</strong></p>
+
+<p>By default, brakeman will assume that unknown methods involving untrusted data are dangerous. For example, this would raise a warning (in Rails 2.x):</p>
+
+<pre><code>&lt;%= some_method(:option =&gt; params[:input]) %&gt;
+</code></pre>
+
+<p>To only raise warnings only when untrusted data is being directly used:</p>
+
+<pre><code>brakeman -r
+</code></pre>
+
+<p><strong>Ignore Model Output</strong></p>
+
+<p>By default, brakeman will report unescaped model attributes as dangerous. To disregard these warnings, use <code>--ignore-model-output</code>.</p>
+
+<p><strong>Set Minimum Confidence Level</strong></p>
+
+<p>To only report warnings at or above a certain confidence level, use the <code>-w</code> option.</p>
+
+<ol>
+<li>Weak confidence</li>
+<li>Medium confidence</li>
+<li>High confidence</li>
+</ol>
 
 
-<h2>More Information</h2>
+<p>For example, to only show high confidence warnings:</p>
 
-<ul>
-<li><a href="/docs/confidence">Confidence Levels</a></li>
-<li><a href="/docs/warning_types">Warning Types</a></li>
-<li><a href="/docs/faq">FAQ</a></li>
-</ul>
+<pre><code>brakeman -w3
+</code></pre>
 
+<p>See <a href="/docs/confidence">confidence levels</a> for more information.</p>
 
   
     <footer>

@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Documentation</title>
+  <title>Brakeman: Confidence Levels</title>
   <meta name="author" content="Justin Collins">
   
 
@@ -16,7 +16,7 @@
 
   
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/confidence/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -99,26 +99,21 @@
 <article>
   
   <header>
-    <h1 class="entry-title">Documentation</h1>
+    <h1 class="entry-title">Confidence Levels</h1>
   </header>
   
-  <h2>Getting Started</h2>
+  <p>Brakeman assigns each warning a confidence level. This rating is intended to indicate how certain Brakeman is that the given warning is a real problem.</p>
+
+<p>The following guidelines are used:</p>
 
 <ul>
-<li><a href="/docs/install">Installation</a></li>
-<li><a href="/docs/running">Running Brakeman</a></li>
-<li><a href="/docs/options">Brakeman Options</a></li>
+<li>High - Either this is a simple warning or user input is very likely being used in unsafe ways.</li>
+<li>Medium - This generally indicates an unsafe use of a variable, but the variable may or may not be user input.</li>
+<li>Weak - Typically means user input was indirectly used in a potentially unsafe manner.</li>
 </ul>
 
 
-<h2>More Information</h2>
-
-<ul>
-<li><a href="/docs/confidence">Confidence Levels</a></li>
-<li><a href="/docs/warning_types">Warning Types</a></li>
-<li><a href="/docs/faq">FAQ</a></li>
-</ul>
-
+<p>However, Brakeman can easily guess wrong, so it is best to read through all warnings and assess their importance manually.</p>
 
   
     <footer>
