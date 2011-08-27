@@ -62,6 +62,8 @@
   <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
 <link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<script language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
+<script src="javascripts/jquery.github_badge.js"></script>
 
 </head>
 
@@ -131,8 +133,24 @@ gem install brakeman-*.gem
   
     <section>
   <p></p>
-  <p>Brakeman is a vulnerability scanner specifically designed for Ruby on Rails applications.</p>
-  <p>Brakeman statically analyzes Rails application code to find security vulnerabilities at any stage of development.</p>
+  <p>Brakeman is a vulnerability scanner specifically designed for Ruby on Rails applications. It statically analyzes Rails application code to find security issues at any stage of development.</p>
+</section>
+<section>
+<script type='text/javascript'>
+    $(document).ready(function(){
+        $("#github").GitHubBadge({
+          login: "presidentbeef",
+          kind: "project",
+          repo_name: "brakeman",
+          include_github_logo: false,
+          image_path: "",
+          commit_count: "1",
+          issue_count: "0",
+          repo_count: "0"
+      });
+    });
+</script>
+<div id="github"></div>
 </section>
 <section>
   <h1>Recent Posts</h1>
