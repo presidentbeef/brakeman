@@ -6,6 +6,10 @@ It targets Rails versions > 2.0 with experimental support for Rails 3.x
 
 There is also a [plugin available](https://github.com/presidentbeef/brakeman-jenkins-plugin) for Jenkins/Hudson.
 
+# Homepage
+
+http://brakemanscanner.org/
+
 # Installation
 
 Using RubyGems:
