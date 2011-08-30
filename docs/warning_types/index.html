@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman</title>
+  <title>Brakeman: Warning Types</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -95,65 +95,93 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
-
-
-
-  <article>
-    
+      <div>
+<article>
+  
   <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/08/27/one-year-anniversary-and-a-website/">One Year Anniversary</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-08-27 01:00:00 -0700" pubdate  updated >Aug 27<span>th</span>, 2011</time>
-
-
-</p>
-    
+    <h1 class="entry-title">Warning Types</h1>
   </header>
-
-
-  <div class="entry-content"><p>One year ago, Brakeman 0.0.1 was released as a gem. Then it was promptly yanked and replaced with <a href="http://rubygems.org/gems/brakeman/versions/0.0.2">Brakeman 0.0.2</a>.</p>
-
-<p>In celebration of this grand anniversary, there have been several new releases today.</p>
-
-<p>The first is <a href="http://rubygems.org/gems/brakeman/versions/0.7.2">Brakeman 0.7.2</a>, a minor release adding CVE numbers for the <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/f878a33159ac9967">latest vulnerabilities</a> and fixing how nested params/cookie accesses are handled (e.g., <code>params[:user][:name]</code> is now considered a direct use of a parameter).</p>
-
-<p>Next up, Brakeman has its own Twitter feed <a href="https://twitter.com/brakemanscanner">@BrakemanScanner</a>.</p>
-
-<p>Lastly, there is this new website. Look forward to tutorials and more in-depth information about how to use Brakeman effectively.</p>
-</div>
   
+  <h3>Cross Site Scripting</h3>
+
+<p>Cross site scripting warnings are raised when a parameter or model attribute is output through a view without being escaped.</p>
+
+<p>See <a href="http://guides.rubyonrails.org/security.html#cross-site-scripting-xss">the Ruby Security Guide</a> for details.</p>
+
+<h3>SQL Injection</h3>
+
+<p>String interpolation or concatenation has been detected in an SQL query. Use parameterized queries instead.</p>
+
+<p>See <a href="http://guides.rubyonrails.org/security.html#sql-injection">the Ruby Security Guide</a> for details.</p>
+
+<h3>Command Injection</h3>
+
+<p>Request parameters or string interpolation has been detected in a <code>system</code> call. This can lead to someone executing arbitrary commands. Use the safe form of <code>system</code> instead, which will pass in arguments safely.</p>
+
+<p>See <a href="http://guides.rubyonrails.org/security.html#command-line-injection">the Ruby Security Guide</a> for details.</p>
+
+<h3>Mass Assignment</h3>
+
+<p>Mass assignment is a method for initializing models. If the attributes which are set is not restricted, someone may set the attributes to any value they wish.</p>
+
+<p>Mass assignment can be disabled globally.</p>
+
+<p>Please see <a href="http://railspikes.com/2008/9/22/is-your-rails-application-safe-from-mass-assignment">this page</a> for more details.</p>
+
+<h3>Attribute Restriction</h3>
+
+<p>This warning comes up if a model does not limit what attributes can be set through mass assignment.</p>
+
+<p>In particular, this check looks for <code>attr_accessible</code> inside model definitions. If it is not found, this warning will be issued.</p>
+
+<p>Note that disabling mass assignment globally will suppress these warnings.</p>
+
+<h3>Cross-Site Request Forgery</h3>
+
+<p>No call to <code>protect_from_forgery</code> was found in <code>ApplicationController</code>. This method prevents CSRF.</p>
+
+<p>See <a href="http://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf">the Ruby Security Guide</a> for details.</p>
+
+<h3>Redirect</h3>
+
+<p>Redirects which rely on user-supplied values can be used to &#8220;spoof&#8221; websites or hide malicious links in otherwise harmless-looking URLs. They can also allow access to restricted areas of a site if the destination is not validated.</p>
+
+<p>This warning is shown when request parameters are used inside a call to <code>redirect_to</code>.</p>
+
+<p>See this <a href="http://www.owasp.org/index.php/Top_10_2010-A10">OWASP page</a> for more information.</p>
+
+<h3>Default Routes</h3>
+
+<p>The general default routes warning means there is a call to <code>map.connect ":controller/:action/:id"</code> in config/routes.rb. This allows any public method on any controller to be called as an action.</p>
+
+<p>If this warning is reported for a particular controller, it means there is a route to that controller containing <code>:action</code>.</p>
+
+<p>Default routes can be dangerous if methods are made public which are not intended to be used as URLs or actions.</p>
+
+<h3>Format Validation</h3>
+
+<p>Calls to <code>validates_format_of ..., :with =&gt; //</code> which do not use <code>\A</code> and <code>\z</code> as anchors will cause this warning. Using <code>^</code> and <code>$</code> is not sufficient, as <code>$</code> will only match up to a new line. This allows an attacker to put whatever malicious input they would like after a new line character.</p>
+
+<p>See <a href="http://guides.rubyonrails.org/security.html#regular-expressions">the Ruby Security Guide</a> for details.</p>
+
+<h3>Dynamic Render Path</h3>
+
+<p>When a call to <code>render</code> uses a dynamically generated path, template name, file name, or action, there is the possibility that a user can access templates that should be restricted. The issue may be worse if those templates execute code or modify the database.</p>
+
+<p>This warning is shown whenever the path to be rendered is not a static string or symbol.</p>
+
   
-
-
-  </article>
-
-<nav role="pagination">
-  <div>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</nav>
-
-<script type="text/javascript">
-    var disqus_shortname = 'brakeman';
-    (function () {
-      var s = document.createElement('script'); s.async = true;
-      s.type = 'text/javascript';
-      s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-      (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
-</script>
+    <footer>
+      <p class="meta">
+        
+        
+      </p>
+    </footer>
+  
+</article>
 
 </div>
+
 <aside role=sidebar>
   
     <section>
@@ -207,6 +235,7 @@
 
   
 </aside>
+
 
     </div>
   </div>

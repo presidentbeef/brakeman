@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman</title>
+  <title>Brakeman: Jenkins Job Setup</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/jenkins/setup/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -95,65 +95,67 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
-
-
-
-  <article>
-    
+      <div>
+<article>
+  
   <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/08/27/one-year-anniversary-and-a-website/">One Year Anniversary</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-08-27 01:00:00 -0700" pubdate  updated >Aug 27<span>th</span>, 2011</time>
-
-
-</p>
-    
+    <h1 class="entry-title">Jenkins Job Setup</h1>
   </header>
-
-
-  <div class="entry-content"><p>One year ago, Brakeman 0.0.1 was released as a gem. Then it was promptly yanked and replaced with <a href="http://rubygems.org/gems/brakeman/versions/0.0.2">Brakeman 0.0.2</a>.</p>
-
-<p>In celebration of this grand anniversary, there have been several new releases today.</p>
-
-<p>The first is <a href="http://rubygems.org/gems/brakeman/versions/0.7.2">Brakeman 0.7.2</a>, a minor release adding CVE numbers for the <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/f878a33159ac9967">latest vulnerabilities</a> and fixing how nested params/cookie accesses are handled (e.g., <code>params[:user][:name]</code> is now considered a direct use of a parameter).</p>
-
-<p>Next up, Brakeman has its own Twitter feed <a href="https://twitter.com/brakemanscanner">@BrakemanScanner</a>.</p>
-
-<p>Lastly, there is this new website. Look forward to tutorials and more in-depth information about how to use Brakeman effectively.</p>
-</div>
   
+  <p>The main goal when setting up a job is to have Jenkins run Brakeman, and then the plugin will read the results.</p>
+
+<p>Ruby must be installed on the Jenkins server.</p>
+
+<h2>Enable the plugin</h2>
+
+<p>On the job configuration page, check the box next to &#8220;Publish Brakeman warnings&#8221;.</p>
+
+<p>The plugin will look for an output file from Brakeman in the work directory. The name of the output file can be specified here, but the default should be fine.</p>
+
+<h2>Set Job to Run Brakeman</h2>
+
+<p>Click &#8220;Add Build Step&#8221; and then &#8220;Execute shell&#8221;.</p>
+
+<p>This is the tricky part, and it depends on how Ruby is set up on the server. The important part is that the output from Brakeman needs to be in the <code>tabs</code> format.</p>
+
+<h3>Without RVM</h3>
+
+<p>If Ruby is installed globally, then this should work:</p>
+
+<pre><code>gem install brakeman --no-ri --no-rdoc &amp;&amp;    
+brakeman -o brakeman-output.tabs
+</code></pre>
+
+<h3>With RVM</h3>
+
+<p>If <a href="http://beginrescueend.com/">RVM</a> is installed on the server:</p>
+
+<pre><code>bash -l -c '
+gem install brakeman --no-ri --no-rdoc &amp;&amp;
+brakeman -o brakeman-output.tabs'
+</code></pre>
+
+<p>It might make sense to also set up a separate gemset:</p>
+
+<pre><code>bash -l -c '
+rvm gemset create my-brakeman-job &amp;&amp;
+rvm gemset use my-brakeman-job &amp;&amp;
+gem install brakeman --no-ri --no-rdoc &amp;&amp;
+brakeman -o brakeman-output.tabs'
+</code></pre>
+
   
-
-
-  </article>
-
-<nav role="pagination">
-  <div>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</nav>
-
-<script type="text/javascript">
-    var disqus_shortname = 'brakeman';
-    (function () {
-      var s = document.createElement('script'); s.async = true;
-      s.type = 'text/javascript';
-      s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-      (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
-</script>
+    <footer>
+      <p class="meta">
+        
+        
+      </p>
+    </footer>
+  
+</article>
 
 </div>
+
 <aside role=sidebar>
   
     <section>
@@ -207,6 +209,7 @@
 
   
 </aside>
+
 
     </div>
   </div>
