@@ -92,7 +92,8 @@ class ControllerProcessor < BaseProcessor
           end
         end
       end
-      ignore
+
+      exp
     elsif target == nil and method == :render
       make_render exp
     elsif exp == FORMAT_HTML and context[1] != :iter 
