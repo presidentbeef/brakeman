@@ -32,6 +32,16 @@ scan3.run_checks
 Rails3 = Report.new(scan3).to_test
 
 $stderr.puts "-" * 40
+$stderr.puts "Processing Rails 3.1 application..."
+$stderr.puts "-" * 40
+OPTIONS[:app_path] = File.expand_path "./rails3.1"
+OPTIONS[:rails3] = true
+load 'processors/route_processor.rb'
+scan31 = Scanner.new("rails3.1").process
+scan31.run_checks
+Rails31 = Report.new(scan31).to_test
+
+$stderr.puts "-" * 40
 $stderr.puts "Checking results..."
 $stderr.puts "-" * 40
 require 'test/unit'
@@ -781,6 +791,30 @@ class Rails3Tests < Test::Unit::TestCase
       :line => 93,
       :message => /All public methods in controllers are available as actions/,
       :file => /routes\.rb/
+  end
+class Rails31Tests < Test::Unit::TestCase
+  include FindWarning
+  
+  def report
+    Rails31
+  end
+
+  def test_without_protection
+    assert_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :line => 43,
+      :message => /^Unprotected mass assignment/,
+      :confidence => 0,
+      :file => /users_controller\.rb/ 
+  end
+
+  def test_unprotected_redirect
+    assert_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 63,
+      :message => /^Possible unprotected redirect/,
+      :confidence => 2,
+      :file => /users_controller\.rb/ 
   end
 end
 
