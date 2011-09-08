@@ -90,6 +90,9 @@ class ControllerProcessor < BaseProcessor
             #layout :false or layout nil
             @controller[:layout] = false
           end
+        else
+          @controller[:options][method] ||= []
+          @controller[:options][method] << exp
         end
       end
 
