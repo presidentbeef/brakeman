@@ -477,7 +477,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_file_access_load
     assert_warning :type => :warning,
       :warning_type => "File Access",
-      :line => 64,
+      :line => 68,
       :message => /^Parameter value used in file name near l/,
       :confidence => 0,
       :file => /home_controller\.rb/
@@ -504,8 +504,8 @@ class Rails3Tests < Test::Unit::TestCase
   def test_render_path
     assert_warning :type => :warning,
       :warning_type => "Dynamic Render Path",
-      :line => 60,
-      :message => /^Render path is dynamic near line 60: ren/,
+      :line => 64,
+      :message => /^Render path is dynamic near line 64: ren/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end
@@ -792,6 +792,16 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /All public methods in controllers are available as actions/,
       :file => /routes\.rb/
   end
+
+  def test_user_input_in_mass_assignment
+    assert_warning :warning_type => "Mass Assignment",
+      :line => 58,
+      :message => /^Unprotected mass assignment/,
+      :confidence => 1,
+      :file => /home_controller\.rb/
+  end
+end
+
 class Rails31Tests < Test::Unit::TestCase
   include FindWarning
   
