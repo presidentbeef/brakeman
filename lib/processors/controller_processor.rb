@@ -59,7 +59,7 @@ class ControllerProcessor < BaseProcessor
 
     #Methods called inside class definition
     #like attr_* and other settings
-    if @current_method.nil? and target.nil?
+    if @current_method.nil? and target.nil? and @controller
       if args.length == 1 #actually, empty
         case method
         when :private, :protected, :public
