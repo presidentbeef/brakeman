@@ -54,6 +54,10 @@ class HomeController < ApplicationController
     User.new(params[:user])
   end
 
+  def test_mass_assignment_with_hash
+    User.new(:name => params[:user][:name])
+  end
+
   def test_dynamic_render
     page = params[:page]
     render :file => "/some/path/#{page}"
