@@ -71,7 +71,7 @@ class RoutesProcessor < BaseProcessor
     args = exp[3][1..-1]
 
     hash_iterate args[0] do |k, v|
-      if symbol? k and k[1] == :to
+      if symbol? k and k[1] == :to and string? v[1]
         controller, action = extract_action v[1]
 
         self.current_controller = controller
