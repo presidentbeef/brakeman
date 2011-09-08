@@ -55,6 +55,7 @@ class CheckMassAssignment < BaseCheck
         :code => call, 
         :confidence => confidence
     end
+
     res
   end
 
@@ -63,7 +64,7 @@ class CheckMassAssignment < BaseCheck
     args = process call[3]
     if args.length <= 1 #empty new()
       false
-    elsif hash? args[1]
+    elsif hash? args[1] and not include_user_input? args[1]
       #Still should probably check contents of hash
       false
     else
