@@ -6,6 +6,13 @@ begin
   require 'erb'
   require 'erubis'
   require 'processor'
+
+  #Load our own version of ruby_parser :(
+  original_verbosity = $VERBOSE
+  $VERBOSE = nil
+  require 'ruby_parser/ruby_parser.rb'
+  $VERBOSE = original_verbosity
+
 rescue LoadError => e
   $stderr.puts e.message
   $stderr.puts "Please install the appropriate dependency."
