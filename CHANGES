@@ -1,3 +1,14 @@
+## 0.8.0
+
+ * Add check for mass assignment using without_protection
+ * Add check for password in http_basic_authenticate_with
+ * Warn on user input in hash argument with mass assignment
+ * auto_link is now considered safe for Rails >= 3.0.6
+ * Output detected Rails version in report
+ * Keep track of methods called in class definition
+ * Add ruby_parser hack for Ruby 1.9 hash syntax
+ * Add a few Rails 3.1 tests
+
 ## 0.7.2
 
  * Fix handling of params and cookies with nested access
