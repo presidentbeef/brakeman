@@ -28,7 +28,7 @@ class CheckCrossSiteScripting < BaseCheck
   IGNORE_MODEL_METHODS = Set.new([:average, :count, :maximum, :minimum, :sum])
 
   #Methods known to not escape their input
-  KNOWN_DANGEROUS = Set.new([:auto_link, :truncate, :concat])
+  KNOWN_DANGEROUS = Set.new([:truncate, :concat])
 
   MODEL_METHODS = Set.new([:all, :find, :first, :last, :new])
 
@@ -51,6 +51,12 @@ class CheckCrossSiteScripting < BaseCheck
     @inspect_arguments = OPTIONS[:check_arguments]
 
     CheckLinkTo.new(checks, tracker).run_check
+
+    if version_between? "2.0.0", "3.0.5"
+      KNOWN_DANGEROUS << :auto_link
+    elsif version_between? "3.0.6", "3.0.99"
+      IGNORE_METHODS << :auto_link
+    end
 
     tracker.each_template do |name, template|
       @current_template = template
