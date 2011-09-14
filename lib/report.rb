@@ -368,6 +368,16 @@ class Report
     raise "PDF output is not yet supported."
   end
 
+  def rails_version
+    if version = tracker.config[:rails_version]
+      return version
+    elsif OPTIONS[:rails3]
+      return "3.x"
+    else
+      return "Unknown"
+    end
+  end
+
   #Return header for HTML output. Uses CSS from OPTIONS[:html_style]
   def html_header
     if File.exist? OPTIONS[:html_style]
@@ -398,11 +408,13 @@ class Report
     <table>
       <tr>
         <th>Application Path</th>
+        <th>Rails Version</th>
         <th>Report Generation Time</th>
         <th>Checks Performed</th>
       </tr>
       <tr>
         <td>#{File.expand_path OPTIONS[:app_path]}</td>
+        <td>#{rails_version}</td>
         <td>#{Time.now}</td>
         <td>#{checks.checks_run.sort.join(", ")}</td>
       </tr>
@@ -412,13 +424,13 @@ class Report
 
   #Generate header for text output
   def text_header
-    "\n+BRAKEMAN REPORT+\n\nApplication path: #{File.expand_path OPTIONS[:app_path]}\nGenerated at #{Time.now}\nChecks run: #{checks.checks_run.sort.join(", ")}\n"
+    "\n+BRAKEMAN REPORT+\n\nApplication path: #{File.expand_path OPTIONS[:app_path]}\nRails version: #{rails_version}\nGenerated at #{Time.now}\nChecks run: #{checks.checks_run.sort.join(", ")}\n"
   end
 
   #Generate header for CSV output
   def csv_header
-    header = Ruport::Data::Table(["Application Path", "Report Generation Time", "Checks Performed"])
-    header << [File.expand_path(OPTIONS[:app_path]), Time.now.to_s, checks.checks_run.sort.join(", ")]
+    header = Ruport::Data::Table(["Application Path", "Report Generation Time", "Checks Performed", "Rails Version"])
+    header << [File.expand_path(OPTIONS[:app_path]), Time.now.to_s, checks.checks_run.sort.join(", "), rails_version]
     "BRAKEMAN REPORT\n\n" << header.to_csv
   end
 
