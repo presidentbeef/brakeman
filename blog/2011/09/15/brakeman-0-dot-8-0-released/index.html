@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Installing Brakeman</title>
+  <title>Brakeman: Brakeman 0.8.0 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/install/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2011/09/15/brakeman-0-dot-8-0-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -96,36 +96,153 @@
   <div id="main">
     <div id="content">
       <div>
-<article>
+<article class="hentry">
   
   <header>
-    <h1 class="entry-title">Installing Brakeman</h1>
-  </header>
-  
-  <p>Brakeman is best installed via <a href="http://rubygems.org/">RubyGems</a>:</p>
-
-<pre><code>gem install brakeman
-</code></pre>
-
-<p>This will provide the <code>brakeman</code> executable.</p>
-
-<p>If you must have the latest and greatest, then you can build the gem yourself:</p>
-
-<pre><code>git clone git://github.com/presidentbeef/brakeman.git
-cd brakeman
-gem build brakeman.gemspec
-gem install brakeman-*.gem
-</code></pre>
-
-  
-    <footer>
+    
+      <h1 class="entry-title">Brakeman 0.8.0 Released</h1>
+    
+    
       <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+
+
+
+<time datetime="2011-09-15 10:06:00 -0700" pubdate  updated >Sep 15<span>th</span>, 2011</time>
+
+
+</p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Change list for Brakeman 0.8.0:</p>
+
+
+
+<ul>
+<li>Add check for mass assignment using without_protection</li>
+<li>Add check for password in http_basic_authenticate_with</li>
+<li>Warn on user input in hash argument with mass assignment</li>
+<li>auto_link is now considered safe for Rails >= 3.0.6</li>
+<li>Output detected Rails version in report</li>
+<li>Keep track of methods called in class definition</li>
+<li>Add ruby_parser hack for Ruby 1.9 hash syntax</li>
+<li>Add a few Rails 3.1 tests</li>
+</ul>
+
+
+<p>As always, please <a href="https://github.com/presidentbeef/brakeman/issues">report any issues</a>.</p>
+
+<h2>New Checks</h2>
+
+<p>This release adds two checks specific to Rails 3.1.</p>
+
+<p>The first looks for mass assignment which deliberately bypasses attribute protection. For example:</p>
+
+<pre><code>User.new(params[:user], :without_protection) =&gt; true)
+</code></pre>
+
+<p>If user input is used for initializing the record, the warning will be set to high confidence. Otherwise, it will show up as medium confidence.</p>
+
+<p>The second new check looks for controllers using the new <code>http_basic_authenticate_with</code> method and including the password directly in the source.</p>
+
+<p>The example from the <a href="http://guides.rubyonrails.org/getting_started.html">Rails guide</a> looks like this:</p>
+
+<pre><code>class PostsController &lt; ApplicationController
+
+  http_basic_authenticate_with :name =&gt; "dhh", :password =&gt; "secret", :except =&gt; :index
+
+  #...
+
+end
+</code></pre>
+
+<p>This would raise a warning, mostly because it is a bad idea to have passwords in plaintext right in your source code.</p>
+
+<h2>Changes to Existing Warnings</h2>
+
+<p>Mass assignment has been changed to raise a warning if there is any user input when calling <code>Model.new</code>.</p>
+
+<p><code>auto_link</code> was previously set to be a &#8220;known dangerous&#8221; method because it did not escape its output. That changed in Rails 3.0.6, however, so it would be considered safe for versions 3.0.6 and up. But then <code>auto_link</code> was removed in Rails 3.1, so for 3.1 and up it will be treated as a regular method.</p>
+
+<h2>Changes to Output</h2>
+
+<p>Warnings reports will now include the detected Rails version as part of the information reported.</p>
+
+<h2>Support for Ruby 1.9 Hash Syntax</h2>
+
+<p><a href="https://github.com/seattlerb/ruby_parser">RubyParser</a>, used by Brakeman for all its Ruby parsing needs, <a href="http://blog.zenspider.com/2010/12/bounty-ruby-parser-needs-19-lo.html">does not support the new Ruby 1.9 syntax</a>. After coming across an application which uses the <a href="http://blog.peepcode.com/tutorials/2011/rip-ruby-hash-rocket-syntax">1.9 hash syntax</a> <em>extremely</em> liberally, a temporary hack has been added that should allow Brakeman to parse it correctly.</p>
+
+<p>This does mean that Brakeman is overriding RubyParser&#8217;s code to add in this functionality. That is why it is a <em>temporary hack</em>.</p>
+
+<h2>New Tests</h2>
+
+<p>Work has begun on a test application using Rails 3.1. There do not seem to be any huge changes in 3.1 that would prevent Brakeman from working, though.</p>
+
+<h2>Next Version</h2>
+
+<p>The main area of focus for the next (major) release will be Rails 3.x routing. Brakeman is currently quite limited in what kinds of routes in understands.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
+
+      
+
+
+
+
+<time datetime="2011-09-15 10:06:00 -0700" pubdate  updated >Sep 15<span>th</span>, 2011</time>
+
+
+
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/release/'>release</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2011/09/15/brakeman-0-dot-8-0-released/" data-via="BrakemanScanner" data-counturl="http://brakemanscanner.org/blog/2011/09/15/brakeman-0-dot-8-0-released/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread"><div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'brakeman';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2011/09/15/brakeman-0-dot-8-0-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2011/09/15/brakeman-0-dot-8-0-released/';
+  //var disqus_developer = 1;
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 

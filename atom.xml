@@ -4,13 +4,88 @@
   <title>Brakeman</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2011-08-30T16:11:04-07:00</updated>
+  <updated>2011-09-15T11:02:59-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 0.8.0 Released</title>
+    <link href="http://brakemanscanner.org/blog/2011/09/15/brakeman-0-dot-8-0-released/"/>
+    <updated>2011-09-15T10:06:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2011/09/15/brakeman-0-dot-8-0-released</id>
+    <content type="html">&lt;p&gt;Change list for Brakeman 0.8.0:&lt;/p&gt;
+
+
+
+&lt;ul&gt;
+&lt;li&gt;Add check for mass assignment using without_protection&lt;/li&gt;
+&lt;li&gt;Add check for password in http_basic_authenticate_with&lt;/li&gt;
+&lt;li&gt;Warn on user input in hash argument with mass assignment&lt;/li&gt;
+&lt;li&gt;auto_link is now considered safe for Rails &gt;= 3.0.6&lt;/li&gt;
+&lt;li&gt;Output detected Rails version in report&lt;/li&gt;
+&lt;li&gt;Keep track of methods called in class definition&lt;/li&gt;
+&lt;li&gt;Add ruby_parser hack for Ruby 1.9 hash syntax&lt;/li&gt;
+&lt;li&gt;Add a few Rails 3.1 tests&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;As always, please &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;report any issues&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2&gt;New Checks&lt;/h2&gt;
+
+&lt;p&gt;This release adds two checks specific to Rails 3.1.&lt;/p&gt;
+
+&lt;p&gt;The first looks for mass assignment which deliberately bypasses attribute protection. For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;User.new(params[:user], :without_protection) =&amp;gt; true)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If user input is used for initializing the record, the warning will be set to high confidence. Otherwise, it will show up as medium confidence.&lt;/p&gt;
+
+&lt;p&gt;The second new check looks for controllers using the new &lt;code&gt;http_basic_authenticate_with&lt;/code&gt; method and including the password directly in the source.&lt;/p&gt;
+
+&lt;p&gt;The example from the &lt;a href=&quot;http://guides.rubyonrails.org/getting_started.html&quot;&gt;Rails guide&lt;/a&gt; looks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class PostsController &amp;lt; ApplicationController
+
+  http_basic_authenticate_with :name =&amp;gt; &quot;dhh&quot;, :password =&amp;gt; &quot;secret&quot;, :except =&amp;gt; :index
+
+  #...
+
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This would raise a warning, mostly because it is a bad idea to have passwords in plaintext right in your source code.&lt;/p&gt;
+
+&lt;h2&gt;Changes to Existing Warnings&lt;/h2&gt;
+
+&lt;p&gt;Mass assignment has been changed to raise a warning if there is any user input when calling &lt;code&gt;Model.new&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;auto_link&lt;/code&gt; was previously set to be a &quot;known dangerous&quot; method because it did not escape its output. That changed in Rails 3.0.6, however, so it would be considered safe for versions 3.0.6 and up. But then &lt;code&gt;auto_link&lt;/code&gt; was removed in Rails 3.1, so for 3.1 and up it will be treated as a regular method.&lt;/p&gt;
+
+&lt;h2&gt;Changes to Output&lt;/h2&gt;
+
+&lt;p&gt;Warnings reports will now include the detected Rails version as part of the information reported.&lt;/p&gt;
+
+&lt;h2&gt;Support for Ruby 1.9 Hash Syntax&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/seattlerb/ruby_parser&quot;&gt;RubyParser&lt;/a&gt;, used by Brakeman for all its Ruby parsing needs, &lt;a href=&quot;http://blog.zenspider.com/2010/12/bounty-ruby-parser-needs-19-lo.html&quot;&gt;does not support the new Ruby 1.9 syntax&lt;/a&gt;. After coming across an application which uses the &lt;a href=&quot;http://blog.peepcode.com/tutorials/2011/rip-ruby-hash-rocket-syntax&quot;&gt;1.9 hash syntax&lt;/a&gt; &lt;em&gt;extremely&lt;/em&gt; liberally, a temporary hack has been added that should allow Brakeman to parse it correctly.&lt;/p&gt;
+
+&lt;p&gt;This does mean that Brakeman is overriding RubyParser's code to add in this functionality. That is why it is a &lt;em&gt;temporary hack&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h2&gt;New Tests&lt;/h2&gt;
+
+&lt;p&gt;Work has begun on a test application using Rails 3.1. There do not seem to be any huge changes in 3.1 that would prevent Brakeman from working, though.&lt;/p&gt;
+
+&lt;h2&gt;Next Version&lt;/h2&gt;
+
+&lt;p&gt;The main area of focus for the next (major) release will be Rails 3.x routing. Brakeman is currently quite limited in what kinds of routes in understands.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>One Year Anniversary</title>
