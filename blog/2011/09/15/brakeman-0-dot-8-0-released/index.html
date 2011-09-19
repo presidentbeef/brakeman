@@ -118,8 +118,6 @@
 
 <div class="entry-content"><p>Change list for Brakeman 0.8.0:</p>
 
-
-
 <ul>
 <li>Add check for mass assignment using without_protection</li>
 <li>Add check for password in http_basic_authenticate_with</li>
@@ -158,13 +156,13 @@
 end
 </code></pre>
 
-<p>This would raise a warning, mostly because it is a bad idea to have passwords in plaintext right in your source code.</p>
+<p>This would raise a warning, mostly because it is a bad idea to have passwords in plain text right in your source code.</p>
 
 <h2>Changes to Existing Warnings</h2>
 
 <p>Mass assignment has been changed to raise a warning if there is any user input when calling <code>Model.new</code>.</p>
 
-<p><code>auto_link</code> was previously set to be a &#8220;known dangerous&#8221; method because it did not escape its output. That changed in Rails 3.0.6, however, so it would be considered safe for versions 3.0.6 and up. But then <code>auto_link</code> was removed in Rails 3.1, so for 3.1 and up it will be treated as a regular method.</p>
+<p><code>auto_link</code> was previously set to be a &#8220;known dangerous&#8221; method because it did not escape its output. That was fixed in Rails 3.0.6, so it will be considered safe for versions 3.0.6 and up. But then <code>auto_link</code> was removed in Rails 3.1, so for 3.1 and up it will be treated as a regular method.</p>
 
 <h2>Changes to Output</h2>
 
