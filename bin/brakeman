@@ -34,6 +34,10 @@ OptionParser.new do |opts|
   opts.separator ""
   opts.separator "Scanning options:"
 
+  opts.on "-a", "--assume-routes", "Assume all controller methods are actions" do
+    options[:assume_all_routes] = true
+  end
+
   opts.on "--ignore-model-output", "Consider model attributes XSS-safe" do
     options[:ignore_model_output] = true
   end
