@@ -1,3 +1,8 @@
+## 0.8.1
+
+ * Add option to assume all controller methods are actions
+ * Recover from errors when parsing routes
+
 ## 0.8.0
 
  * Add check for mass assignment using without_protection
