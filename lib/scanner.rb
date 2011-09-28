@@ -129,7 +129,13 @@ class Scanner
   #Adds parsed information to tracker.routes
   def process_routes
     if File.exists? "#@path/config/routes.rb"
-      @processor.process_routes RubyParser.new.parse(File.read("#@path/config/routes.rb"))
+      begin
+        @processor.process_routes RubyParser.new.parse(File.read("#@path/config/routes.rb"))
+      rescue Exception => e
+        tracker.error e.exception(e.message + "\nWhile processing routes.rb"), e.backtrace
+        warn "[Notice] Error while processing routes - assuming all public controller methods are actions."
+        OPTIONS[:assume_all_routes] = true
+      end
     else
       warn "[Notice] No route information found"
     end
