@@ -67,6 +67,16 @@ To only raise warnings only when untrusted data is being directly used:
 
     brakeman -r
 
+By default, each check will be run in a separate thread. To disable this behavior:
+
+    brakeman -n
+
+Normally Brakeman will parse `routes.rb` and attempt to infer which controller methods are used as actions. However, this is not perfect (especially for Rails 3). To ignore the automatically inferred routes and assume all methods are actions:
+
+    brakeman -a
+
+Note that this will be enabled automatically if Brakeman runs into an error while parsing the routes.
+
 # Warning information
 
 See WARNING_TYPES for more information on the warnings reported by this tool.
