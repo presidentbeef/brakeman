@@ -81,6 +81,7 @@ module Brakeman
       :ignore_redirect_to_model => true,
       :ignore_model_output => false,
       :message_limit => 100,
+      :parallel_checks => true,
       :html_style => "#{File.expand_path(File.dirname(__FILE__))}/../lib/format/style.css" 
     }
   end

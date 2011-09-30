@@ -9,7 +9,8 @@ OPTIONS = { :skip_checks => Set.new,
   :combine_locations => true,
   :collapse_mass_assignment => true,
   :ignore_redirect_to_model => true,
-  :ignore_model_output => false }
+  :ignore_model_output => false,
+  :parallel_checks => true }
 
 require 'scanner'
 
