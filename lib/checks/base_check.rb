@@ -8,15 +8,15 @@ require 'util'
 class BaseCheck < SexpProcessor
   include ProcessorHelper
   include Util
-  attr_reader :checks, :tracker
+  attr_reader :tracker, :warnings
 
   CONFIDENCE = { :high => 0, :med => 1, :low => 2 }
 
   #Initialize Check with Checks.
-  def initialize checks, tracker
+  def initialize tracker
     super()
     @results = [] #only to check for duplicates
-    @checks = checks
+    @warnings = []
     @tracker = tracker
     @string_interp = false
     @current_template = @current_module = @current_class = @current_method = nil
@@ -39,7 +39,6 @@ class BaseCheck < SexpProcessor
   #Default Sexp processing. Iterates over each value in the Sexp
   #and processes them if they are also Sexps.
   def process_default exp
-    type = exp.shift
     exp.each_with_index do |e, i|
       if sexp? e
         process e
@@ -48,7 +47,7 @@ class BaseCheck < SexpProcessor
       end
     end
 
-    exp.unshift type
+    exp
   end
 
   #Process calls and check if they include user input
@@ -83,7 +82,7 @@ class BaseCheck < SexpProcessor
 
   #Report a warning 
   def warn options
-    @checks.add_warning Warning.new(options.merge({ :check => self.class.to_s }))
+    @warnings << Warning.new(options.merge({ :check => self.class.to_s }))
   end 
 
   #Run _exp_ through OutputProcessor to get a nice String.

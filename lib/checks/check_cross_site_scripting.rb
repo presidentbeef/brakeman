@@ -50,7 +50,9 @@ class CheckCrossSiteScripting < BaseCheck
     @models = tracker.models.keys
     @inspect_arguments = OPTIONS[:check_arguments]
 
-    CheckLinkTo.new(checks, tracker).run_check
+    link_to_check = CheckLinkTo.new(tracker)
+    link_to_check.run_check
+    warnings.concat link_to_check.warnings unless link_to_check.warnings.empty?
 
     if version_between? "2.0.0", "3.0.5"
       KNOWN_DANGEROUS << :auto_link
