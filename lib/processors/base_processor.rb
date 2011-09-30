@@ -26,6 +26,7 @@ class BaseProcessor < SexpProcessor
 
   #Process a new scope. Removes expressions that are set to nil.
   def process_scope exp
+    exp = exp.dup
     exp.shift
     exp.map! do |e|
       res = process e
@@ -40,6 +41,7 @@ class BaseProcessor < SexpProcessor
 
   #Default processing.
   def process_default exp
+    exp = exp.dup
     type = exp.shift
     exp.each_with_index do |e, i|
       if sexp? e and not e.empty?
@@ -54,6 +56,7 @@ class BaseProcessor < SexpProcessor
 
   #Process an if statement.
   def process_if exp
+    exp = exp.dup
     exp[1] = process exp[1]
     exp[2] = process exp[2] if exp[2]
     exp[3] = process exp[3] if exp[3]
@@ -64,6 +67,7 @@ class BaseProcessor < SexpProcessor
   #
   #s(:iter, CALL, {:lasgn|:masgn}, BLOCK)
   def process_iter exp
+    exp = exp.dup
     call = process exp[1]
     #deal with assignments somehow
     if exp[3]
@@ -80,6 +84,7 @@ class BaseProcessor < SexpProcessor
 
   #String with interpolation. Changes Sexp node type to :string_interp
   def process_dstr exp
+    exp = exp.dup
     exp.shift
     exp.map! do |e|
       if e.is_a? String
@@ -101,6 +106,7 @@ class BaseProcessor < SexpProcessor
 
   #Processes a block. Changes Sexp node type to :rlist
   def process_block exp
+    exp = exp.dup
     exp.shift
 
     exp.map! do |e|
@@ -113,6 +119,7 @@ class BaseProcessor < SexpProcessor
   #Processes the inside of an interpolated String.
   #Changes Sexp node type to :string_eval
   def process_evstr exp
+    exp = exp.dup
     exp[0] = :string_eval
     exp[1] = process exp[1]
     exp
@@ -120,6 +127,7 @@ class BaseProcessor < SexpProcessor
 
   #Processes an or keyword
   def process_or exp
+    exp = exp.dup
     exp[1] = process exp[1]
     exp[2] = process exp[2]
     exp
@@ -127,6 +135,7 @@ class BaseProcessor < SexpProcessor
 
   #Processes an and keyword
   def process_and exp
+    exp = exp.dup
     exp[1] = process exp[1]
     exp[2] = process exp[2]
     exp
@@ -134,6 +143,7 @@ class BaseProcessor < SexpProcessor
 
   #Processes a hash
   def process_hash exp
+    exp = exp.dup
     exp.shift
     exp.map! do |e|
       if sexp? e
@@ -148,6 +158,7 @@ class BaseProcessor < SexpProcessor
 
   #Processes the values in an argument list
   def process_arglist exp
+    exp = exp.dup
     exp.shift
     exp.map! do |e|
       process e
@@ -158,18 +169,21 @@ class BaseProcessor < SexpProcessor
 
   #Processes a local assignment
   def process_lasgn exp
+    exp = exp.dup
     exp[2] = process exp[2]
     exp
   end
 
   #Processes an instance variable assignment
   def process_iasgn exp
+    exp = exp.dup
     exp[2] = process exp[2]
     exp
   end
 
   #Processes an attribute assignment, which can be either x.y = 1 or x[:y] = 1
   def process_attrasgn exp
+    exp = exp.dup
     exp[1] = process exp[1]
     exp[3] = process exp[3]
     exp
