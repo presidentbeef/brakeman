@@ -1,6 +1,7 @@
 ## 0.8.2
 
  * Run checks in parallel threads by default
+ * Fix compatibility with ruby_parser 2.3.1
 
 ## 0.8.1
 
