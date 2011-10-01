@@ -727,7 +727,7 @@ class RubyLexer
             # @comments << '=' << src.matched
             @comments << src.matched
 
-            unless src.scan(/.*?\n=end( |\t|\f)*[^(\n|\z)]*(\n|\z)/m) then
+            unless src.scan(/.*?\n=end( |\t|\f)*[^\n]*(\n|\z)/m) then
               @comments.clear
               rb_compile_error("embedded document meets end of file")
             end
