@@ -647,6 +647,7 @@ class Report
       [:model_warnings, "Model"], [:template_warnings, "Template"]].map do |meth, category|
 
       checks.send(meth).map do |w|
+        next if w.confidence > OPTIONS[:min_confidence]
         line = w.line || 0
         w.warning_type.gsub!(/[^\w\s]/, ' ')
         "#{file_for w}\t#{line}\t#{w.warning_type}\t#{category}\t#{w.format_message}\t#{TEXT_CONFIDENCE[w.confidence]}"
