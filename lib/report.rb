@@ -70,8 +70,15 @@ class Report
   def generate_errors
     unless tracker.errors.empty?
       table = Ruport::Data::Table(["Error", "Location"])
+      
+     
       tracker.errors.each do |w|
         p w if OPTIONS[:debug]
+
+        if OPTIONS[:output_format] == :to_html
+          w[:error] = CGI.escapeHTML w[:error]
+        end
+
         table << { "Error" => w[:error], "Location" => w[:backtrace][0] }
       end
 
@@ -275,7 +282,7 @@ class Report
 
     res = generate_errors
     if res
-        out << "<div onClick=\"toggle('errors_table');\">  <h2>Exceptions raised during the analysis (click to see them)</h2 ></div> <div id='errors_table' style='display:none'>" << res.to_html<< '</div>'
+        out << "<div onClick=\"toggle('errors_table');\">  <h2>Exceptions raised during the analysis (click to see them)</h2 ></div> <div id='errors_table' style='display:none'>" << res.to_html << '</div>'
     end
 
     res = generate_warnings
