@@ -2,66 +2,68 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://brakemanscanner.org/blog/2011/08/27/one-year-anniversary-and-a-website/</loc>
-        <lastmod>2011-08-30T09:48:41-07:00</lastmod>
+        <lastmod>2011-10-18T10:52:32-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/blog/2011/09/15/brakeman-0-dot-8-0-released/</loc>
-        <lastmod>2011-09-15T11:07:10-07:00</lastmod>
+        <lastmod>2011-10-18T10:52:32-07:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://brakemanscanner.org/blog/2011/10/21/brakeman-plugin-officially-available-for-jenkins/
+        </loc>
+        <lastmod>2011-10-21T23:36:59-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/options/</loc>
-        <lastmod>2011-08-30T11:34:17-07:00</lastmod>
+        <lastmod>2011-10-18T10:52:32-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/faq/</loc>
-        <lastmod>2011-08-30T11:34:17-07:00</lastmod>
+        <lastmod>2011-10-18T10:52:32-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/install/</loc>
-        <lastmod>2011-08-30T09:48:41-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://brakemanscanner.org/docs/writing_checks/</loc>
-        <lastmod>2011-09-20T23:25:55-07:00</lastmod>
+        <lastmod>2011-10-18T10:52:32-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/</loc>
-        <lastmod>2011-08-30T16:11:04-07:00</lastmod>
+        <lastmod>2011-10-18T10:52:32-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/confidence/</loc>
-        <lastmod>2011-08-30T11:34:17-07:00</lastmod>
+        <lastmod>2011-10-18T10:52:32-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/jenkins/installation/</loc>
-        <lastmod>2011-08-30T16:10:20-07:00</lastmod>
+        <lastmod>2011-10-20T11:49:44-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/jenkins/</loc>
-        <lastmod>2011-08-30T12:36:02-07:00</lastmod>
+        <lastmod>2011-10-20T11:46:15-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/jenkins/setup/</loc>
-        <lastmod>2011-08-30T16:09:36-07:00</lastmod>
+        <lastmod>2011-10-18T10:52:32-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/</loc>
-        <lastmod>2011-08-30T11:34:17-07:00</lastmod>
+        <lastmod>2011-10-18T10:52:32-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/running/</loc>
-        <lastmod>2011-08-30T11:34:17-07:00</lastmod>
+        <lastmod>2011-10-18T10:52:32-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/introduction/</loc>
-        <lastmod>2011-08-30T12:18:42-07:00</lastmod>
+        <lastmod>2011-10-18T10:52:32-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/</loc>
-        <lastmod>2011-09-15T11:07:10-07:00</lastmod>
+        <lastmod>2011-10-21T23:36:59-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/blog/archives/</loc>
-        <lastmod>2011-09-15T11:07:10-07:00</lastmod>
+        <lastmod>2011-10-21T23:36:59-07:00</lastmod>
     </url>
 </urlset>

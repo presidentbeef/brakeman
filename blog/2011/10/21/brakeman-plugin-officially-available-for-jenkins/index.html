@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Writing Checks</title>
+  <title>Brakeman: Brakeman Plugin 'Officially' Available for Jenkins</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/writing_checks/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2011/10/21/brakeman-plugin-officially-available-for-jenkins/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -96,50 +96,70 @@
   <div id="main">
     <div id="content">
       <div>
-<article>
+<article class="hentry">
   
   <header>
-    <h1 class="entry-title">Writing Checks</h1>
-  </header>
-  
-  <p>Each check in Brakeman is implemented as a subclass of <code>BaseCheck</code>. When Brakeman runs the checks, it will create an instance of the check and call <code>run_check</code> on it.</p>
-
-<p>The basic skeleton looks like this:</p>
-
-<pre><code>ruby - fix this!
-require 'checks/base_check'
-
-class MyCheck &lt; BaseCheck
-  Checks.add self
-
-  def run_check
-    #Here is where the magic happens
-  end
-end
-</code></pre>
-
-<p>Calling <code>Checks.add self</code> will add the class to the list of checks.</p>
-
-<h3>Using the Tracker</h3>
-
-<p>All the results from processing a Rails application are stored in a Tracker object.</p>
-
-<h3>Finding Method Calls</h3>
-
-<p>It is possible to search for method calls in a variety of ways. Searches can be done for a combination of targets and methods.</p>
-
-<h3>Generating Warnings</h3>
-
-<h3>Taking Advantage of SexpProcessor</h3>
-
-  
-    <footer>
+    
+      <h1 class="entry-title">Brakeman Plugin &#8216;Officially&#8217; Available for Jenkins</h1>
+    
+    
       <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+
+
+
+<time datetime="2011-10-21 11:54:00 -0700" pubdate  updated >Oct 21<span>st</span>, 2011</time>
+
+
+</p>
+    
+  </header>
+
+
+<div class="entry-content"><p>While a Brakeman plugin for the <a href="http://jenkins-ci.org">Jenkins</a>/<a href="http://hudson-ci.org">Hudson</a> continuous integration tool has been available since January, thanks to <a href="https://github.com/presidentbeef/brakeman-jenkins-plugin/issues/1">some prodding</a> the plugin is now available through the official Jenkins plugin manager.</p>
+
+<p><img src="images/brakeman_trend_graph.png" title="Example Plugin Graph" alt="Example Plugin Graph" /></p>
+
+<p>Installation of the plugin is no longer an arduous manual process. Just go to <code>Manage Jenkins -&gt; Manage Plugins -&gt; Available</code> and search for &#8220;Brakeman&#8221;. Check the box and then click the &#8220;Install&#8221; button down at the bottom of the page.</p>
+
+<p>Some more information about the plugin can be found on the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Brakeman+Plugin">Jenkins wiki</a>.</p>
+
+<p>See the <a href="docs/jenkins/setup">instructions</a> for how to set up a job to use the Brakeman plugin.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
+
+      
+
+
+
+
+<time datetime="2011-10-21 11:54:00 -0700" pubdate  updated >Oct 21<span>st</span>, 2011</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2011/10/21/brakeman-plugin-officially-available-for-jenkins/" data-via="BrakemanScanner" data-counturl="http://brakemanscanner.org/blog/2011/10/21/brakeman-plugin-officially-available-for-jenkins/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
 </article>
 
   <section>
@@ -147,8 +167,8 @@ end
     <div id="disqus_thread"><div id="disqus_thread"></div>
 <script type="text/javascript">
   var disqus_shortname = 'brakeman';
-  var disqus_identifier = 'http://brakemanscanner.org/docs/writing_checks/index.html';
-  var disqus_url = 'http://brakemanscanner.org/docs/writing_checks/index.html';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2011/10/21/brakeman-plugin-officially-available-for-jenkins/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2011/10/21/brakeman-plugin-officially-available-for-jenkins/';
   //var disqus_developer = 1;
   (function() {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
@@ -188,6 +208,10 @@ end
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2011/10/21/brakeman-plugin-officially-available-for-jenkins/">Brakeman Plugin &#8216;Officially&#8217; Available for Jenkins</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2011/09/15/brakeman-0-dot-8-0-released/">Brakeman 0.8.0 Released</a>

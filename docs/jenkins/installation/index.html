@@ -104,27 +104,39 @@
   
   <p><em>Note: This plugin does not contain Brakeman, it only imports and aggregates Brakeman results.</em></p>
 
-<h2>Install the Static Analysis Core Plugin</h2>
+<h2>Installion Through Plugin Manager</h2>
+
+<p>Navigate to <code>Manage Jenkins -&gt; Manage Plugins -&gt; Available</code>.</p>
+
+<p>Check the box next to &#8220;Brakeman&#8221; and click the &#8220;Install&#8221; button at the bottom of the page.</p>
+
+<p>When installation is complete, restart Jenkins.</p>
+
+<h2>Manual Installion</h2>
+
+<h3>Install the Static Analysis Core Plugin</h3>
 
 <p>First, install the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Static+Code+Analysis+Plug-ins">Static Analysis Core Plugin</a>.</p>
 
-<p>To do so, navigate through Hudson to the list of available plugins: <code>Manage Jenkins -&gt; Manage Plugins -&gt; Available</code>.</p>
+<p>To do so, navigate through Jenkins to the list of available plugins: <code>Manage Jenkins -&gt; Manage Plugins -&gt; Available</code>.</p>
 
 <p>Check the box next to &#8220;Static Analysis Utilities&#8221; and click &#8220;Install&#8221;.</p>
 
-<h2>Download Brakeman Plugin</h2>
+<h3>Download Brakeman Plugin</h3>
 
 <p>You can download the Brakeman plugin <a href="https://github.com/downloads/presidentbeef/brakeman-jenkins-plugin/brakeman.hpi">here</a> or from the &#8220;Downloads&#8221; link <a href="https://github.com/presidentbeef/brakeman-jenkins-plugin">here</a>.</p>
 
-<h2>Install the Brakeman Plugin</h2>
+<h3>Install the Brakeman Plugin</h3>
 
-<p>In Hudson, go to <code>Manage Jenkins -&gt; Manage Plugins -&gt; Advanced</code> (or just go to the &#8220;Advanced&#8221; tab if you are already on the plugins page). Click &#8220;Choose File&#8221; under &#8220;Upload Plugin&#8221; and choose the <code>brakeman.hpi</code> file saved from above.</p>
+<p>In Jenkins, go to <code>Manage Jenkins -&gt; Manage Plugins -&gt; Advanced</code> (or just go to the &#8220;Advanced&#8221; tab if you are already on the plugins page). Click &#8220;Choose File&#8221; under &#8220;Upload Plugin&#8221; and choose the <code>brakeman.hpi</code> file saved from above.</p>
 
 <p>Then click &#8220;Upload&#8221;.</p>
 
 <p>You may need to restart Jenkins after this.</p>
 
-<p>Then go on to <a href="/docs/jenkins/setup">setting up</a> a job to use the plugin.</p>
+<h2>Setup</h2>
+
+<p>See how to <a href="/docs/jenkins/setup">set up</a> a job to use the plugin.</p>
 
   
     <footer>
@@ -164,6 +176,10 @@
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2011/10/21/brakeman-plugin-officially-available-for-jenkins/">Brakeman Plugin &#8216;Officially&#8217; Available for Jenkins</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2011/09/15/brakeman-0-dot-8-0-released/">Brakeman 0.8.0 Released</a>
