@@ -4,7 +4,7 @@
   <title>Brakeman</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2011-10-22T00:03:37-07:00</updated>
+  <updated>2011-10-22T00:08:53-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -19,7 +19,7 @@
     <id>http://brakemanscanner.org/blog/2011/10/21/brakeman-plugin-officially-available-for-jenkins</id>
     <content type="html">&lt;p&gt;While a Brakeman plugin for the &lt;a href=&quot;http://jenkins-ci.org&quot;&gt;Jenkins&lt;/a&gt;/&lt;a href=&quot;http://hudson-ci.org&quot;&gt;Hudson&lt;/a&gt; continuous integration tool has been available since January, thanks to &lt;a href=&quot;https://github.com/presidentbeef/brakeman-jenkins-plugin/issues/1&quot;&gt;some prodding&lt;/a&gt; the plugin is now available through the official Jenkins plugin manager.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;images/brakeman_trend_graph.png&quot; title=&quot;Example Plugin Graph&quot; alt=&quot;Example Plugin Graph&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://brakemanscanner.org/images/brakeman_trend_graph.png&quot; title=&quot;Example Plugin Graph&quot; alt=&quot;Example Plugin Graph&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Installation of the plugin is no longer an arduous manual process. Just go to &lt;code&gt;Manage Jenkins -&amp;gt; Manage Plugins -&amp;gt; Available&lt;/code&gt; and search for &quot;Brakeman&quot;. Check the box and then click the &quot;Install&quot; button down at the bottom of the page.&lt;/p&gt;
 
