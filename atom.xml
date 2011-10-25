@@ -4,13 +4,65 @@
   <title>Brakeman</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2011-10-22T00:08:53-07:00</updated>
+  <updated>2011-10-25T10:24:11-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 0.8.3 Released</title>
+    <link href="http://brakemanscanner.org/blog/2011/10/25/brakeman-0-dot-8-3-released/"/>
+    <updated>2011-10-25T10:00:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2011/10/25/brakeman-0-dot-8-3-released</id>
+    <content type="html">&lt;p&gt;Changes for 0.8.3:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Respect -w flag in .tabs format (&lt;a href=&quot;https://github.com/tw-ngreen&quot;&gt;tw-ngreen&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Escape HTML output of error messages&lt;/li&gt;
+&lt;li&gt;Add --skip-libs option&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;Changes since 0.8.0:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Run checks in parallel threads by default&lt;/li&gt;
+&lt;li&gt;Fix compatibility with ruby_parser 2.3.1&lt;/li&gt;
+&lt;li&gt;Add option to assume all controller methods are actions&lt;/li&gt;
+&lt;li&gt;Recover from errors when parsing routes&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Fix for .tabs Format&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will now pay attention to the &lt;code&gt;-w&lt;/code&gt; flag (setting minimum confidence levels) when using the &lt;code&gt;.tabs&lt;/code&gt; format.&lt;/p&gt;
+
+&lt;h3&gt;Escape Error Messages in HTML&lt;/h3&gt;
+
+&lt;p&gt;Error message will now be escaped in the HTML output so they do not mess up the formatting.&lt;/p&gt;
+
+&lt;h3&gt;--skip-libs Option&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code&gt;--skip-libs&lt;/code&gt; option will cause Brakeman to not process the files in the &lt;code&gt;lib&lt;/code&gt; directory. At the moment, the results from this directory are only used in a couple places, so it is unlikely that skipping them will cause any problems.&lt;/p&gt;
+
+&lt;h3&gt;Parallel Checks&lt;/h3&gt;
+
+&lt;p&gt;Checks are now run in separate threads by default. Thus far, there does not seem to be a big difference between using threads and the sequential approach. To turn off threads, use the &lt;code&gt;-n&lt;/code&gt; option.&lt;/p&gt;
+
+&lt;h3&gt;ruby_parser Compatibility&lt;/h3&gt;
+
+&lt;p&gt;This is a stop-gap measure until &lt;a href=&quot;https://github.com/seattlerb/ruby_parser&quot;&gt;ruby_parser&lt;/a&gt; supports Ruby 1.9, which is getting closer to reality.&lt;/p&gt;
+
+&lt;h3&gt;Route Processing&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will no longer crash if there are problems parsing &lt;code&gt;routes.rb&lt;/code&gt;. Instead, it will assume all public methods on controllers are actions. The &lt;code&gt;-a&lt;/code&gt; option will also turn this behavior on.&lt;/p&gt;
+
+&lt;p&gt;Rails 3.1 route parsing is still a work in progress, so this should at least allow analysis of 3.1 apps, even if it means slightly reduced accuracy.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman Plugin 'Officially' Available for Jenkins</title>

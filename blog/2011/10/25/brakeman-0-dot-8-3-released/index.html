@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Confidence Levels</title>
+  <title>Brakeman: Brakeman 0.8.3 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/confidence/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2011/10/25/brakeman-0-dot-8-3-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -96,34 +96,124 @@
   <div id="main">
     <div id="content">
       <div>
-<article>
+<article class="hentry">
   
   <header>
-    <h1 class="entry-title">Confidence Levels</h1>
-  </header>
-  
-  <p>Brakeman assigns each warning a confidence level. This rating is intended to indicate how certain Brakeman is that the given warning is a real problem.</p>
+    
+      <h1 class="entry-title">Brakeman 0.8.3 Released</h1>
+    
+    
+      <p class="meta">
 
-<p>The following guidelines are used:</p>
+
+
+
+<time datetime="2011-10-25 10:00:00 -0700" pubdate  updated >Oct 25<span>th</span>, 2011</time>
+
+
+</p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Changes for 0.8.3:</p>
 
 <ul>
-<li>High - Either this is a simple warning or user input is very likely being used in unsafe ways.</li>
-<li>Medium - This generally indicates an unsafe use of a variable, but the variable may or may not be user input.</li>
-<li>Weak - Typically means user input was indirectly used in a potentially unsafe manner.</li>
+<li>Respect -w flag in .tabs format (<a href="https://github.com/tw-ngreen">tw-ngreen</a>)</li>
+<li>Escape HTML output of error messages</li>
+<li>Add &#8211;skip-libs option</li>
 </ul>
 
 
-<p>However, Brakeman can easily guess wrong, so it is best to read through all warnings and assess their importance manually.</p>
+<p>Changes since 0.8.0:</p>
 
+<ul>
+<li>Run checks in parallel threads by default</li>
+<li>Fix compatibility with ruby_parser 2.3.1</li>
+<li>Add option to assume all controller methods are actions</li>
+<li>Recover from errors when parsing routes</li>
+</ul>
+
+
+<h3>Fix for .tabs Format</h3>
+
+<p>Brakeman will now pay attention to the <code>-w</code> flag (setting minimum confidence levels) when using the <code>.tabs</code> format.</p>
+
+<h3>Escape Error Messages in HTML</h3>
+
+<p>Error message will now be escaped in the HTML output so they do not mess up the formatting.</p>
+
+<h3>&#8211;skip-libs Option</h3>
+
+<p>The <code>--skip-libs</code> option will cause Brakeman to not process the files in the <code>lib</code> directory. At the moment, the results from this directory are only used in a couple places, so it is unlikely that skipping them will cause any problems.</p>
+
+<h3>Parallel Checks</h3>
+
+<p>Checks are now run in separate threads by default. Thus far, there does not seem to be a big difference between using threads and the sequential approach. To turn off threads, use the <code>-n</code> option.</p>
+
+<h3>ruby_parser Compatibility</h3>
+
+<p>This is a stop-gap measure until <a href="https://github.com/seattlerb/ruby_parser">ruby_parser</a> supports Ruby 1.9, which is getting closer to reality.</p>
+
+<h3>Route Processing</h3>
+
+<p>Brakeman will no longer crash if there are problems parsing <code>routes.rb</code>. Instead, it will assume all public methods on controllers are actions. The <code>-a</code> option will also turn this behavior on.</p>
+
+<p>Rails 3.1 route parsing is still a work in progress, so this should at least allow analysis of 3.1 apps, even if it means slightly reduced accuracy.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-    <footer>
-      <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
+
+      
+
+
+
+
+<time datetime="2011-10-25 10:00:00 -0700" pubdate  updated >Oct 25<span>th</span>, 2011</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
   
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2011/10/25/brakeman-0-dot-8-3-released/" data-via="BrakemanScanner" data-counturl="http://brakemanscanner.org/blog/2011/10/25/brakeman-0-dot-8-3-released/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread"><div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'brakeman';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2011/10/25/brakeman-0-dot-8-3-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2011/10/25/brakeman-0-dot-8-3-released/';
+  //var disqus_developer = 1;
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
