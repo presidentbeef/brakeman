@@ -1,3 +1,9 @@
+## 0.8.3
+ 
+ * Respect -w flag in .tabs format (tw-ngreen)
+ * Escape HTML output of error messages
+ * Add --skip-libs option
+
 ## 0.8.2
 
  * Run checks in parallel threads by default
