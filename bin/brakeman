@@ -59,6 +59,10 @@ OptionParser.new do |opts|
     options[:safe_methods].merge methods.map {|e| e.to_sym }
   end
 
+  opts.on "--skip-libs", "Skip processing lib directory" do
+    options[:skip_libs] = true
+  end
+
   opts.on "-t", "--test Check1,Check2,etc", Array, "Only run the specified checks" do |checks|
     checks.each_with_index do |s, index|
       if s[0,5] != "Check"

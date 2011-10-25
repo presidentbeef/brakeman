@@ -113,6 +113,11 @@ class Scanner
   #
   #Adds parsed information to tracker.libs.
   def process_libs
+    if OPTIONS[:skip_libs]
+      warn '[Skipping]'
+      return
+    end
+
     Dir.glob(@path + "/lib/**/*.rb").sort.each do |f|
       begin
         @processor.process_lib RubyParser.new.parse(File.read(f)), f
