@@ -101,6 +101,10 @@ OptionParser.new do |opts|
     options[:output_format] = ("to_" << type.to_s).to_sym
   end
 
+  opts.on "--css-file CSSFile" do |file|
+    options[:html_style] = File.expand_path file
+  end
+
   opts.on "-l", "--[no]-combine-locations", "Combine warning locations (Default)" do |combine|
     options[:combine_locations] = combine
   end
