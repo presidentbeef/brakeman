@@ -11,8 +11,8 @@ class CheckResponseSplitting < BaseCheck
 
       warn :warning_type => "Response Splitting",
         :message => "Versions before 2.3.14 have a vulnerability content type handling allowing injection of headers: CVE-2011-3186",
-        :confidence => CONFIDENCE[:med]
-
+        :confidence => CONFIDENCE[:med],
+        :file => gemfile_or_environment
     end
   end
 end

@@ -351,4 +351,12 @@ class BaseCheck < SexpProcessor
 
     return true
   end
+
+  def gemfile_or_environment
+    if File.exist? File.expand_path "#{OPTIONS[:app_path]}/Gemfile"
+      "Gemfile"
+    else
+      "config/environment.rb"
+    end
+  end
 end

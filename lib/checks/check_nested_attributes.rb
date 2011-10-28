@@ -20,7 +20,8 @@ class CheckNestedAttributes < BaseCheck
 
       warn :warning_type => "Nested Attributes",
         :message => message,
-        :confidence => CONFIDENCE[:high]
+        :confidence => CONFIDENCE[:high],
+        :file => gemfile_or_environment
     end
   end
 

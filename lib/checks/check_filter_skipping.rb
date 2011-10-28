@@ -11,7 +11,8 @@ class CheckFilterSkipping < BaseCheck
 
       warn :warning_type => "Default Routes",
         :message => "Versions before 3.0.10 have a vulnerability which allows filters to be bypassed: CVE-2011-2929",
-        :confidence => CONFIDENCE[:high]
+        :confidence => CONFIDENCE[:high],
+        :file => gemfile_or_environment
     end
   end
 

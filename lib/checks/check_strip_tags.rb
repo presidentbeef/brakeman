@@ -18,7 +18,8 @@ class CheckStripTags < BaseCheck
 
       warn :warning_type => "Cross Site Scripting",
         :message => message,
-        :confidence => CONFIDENCE[:high]
+        :confidence => CONFIDENCE[:high],
+        :file => gemfile_or_environment
     end
   end
 

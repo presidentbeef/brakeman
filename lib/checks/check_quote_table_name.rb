@@ -24,7 +24,8 @@ class CheckQuoteTableName < BaseCheck
 
       warn :warning_type => "SQL Injection",
         :message => message,
-        :confidence => confidence
+        :confidence => confidence,
+        :file => gemfile_or_environment
     end
   end
 

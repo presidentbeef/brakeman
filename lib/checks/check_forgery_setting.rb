@@ -29,14 +29,16 @@ class CheckForgerySetting < BaseCheck
       warn :controller => :ApplicationController, 
         :warning_type => "Cross-Site Request Forgery",
         :message => "CSRF protection is flawed in unpatched versions of Rails #{tracker.config[:rails_version]} (CVE-2011-0447). Upgrade to 2.3.11 or apply patches as needed",
-        :confidence => CONFIDENCE[:high]
+        :confidence => CONFIDENCE[:high],
+        :file => gemfile_or_environment
 
     elsif version_between? "3.0.0", "3.0.3"
 
       warn :controller => :ApplicationController, 
         :warning_type => "Cross-Site Request Forgery",
         :message => "CSRF protection is flawed in unpatched versions of Rails #{tracker.config[:rails_version]} (CVE-2011-0447). Upgrade to 3.0.4 or apply patches as needed",
-        :confidence => CONFIDENCE[:high]
+        :confidence => CONFIDENCE[:high],
+        :file => gemfile_or_environment
     end
   end
 end

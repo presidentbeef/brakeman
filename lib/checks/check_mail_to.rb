@@ -21,7 +21,8 @@ class CheckMailTo < BaseCheck
       warn :result => result,
         :warning_type => "Mail Link",
         :message => message,
-        :confidence => CONFIDENCE[:high]
+        :confidence => CONFIDENCE[:high],
+        :file => gemfile_or_environment
     end
   end
 
