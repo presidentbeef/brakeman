@@ -16,10 +16,11 @@ class CheckDefaultRoutes < BaseCheck
         :file => "#{OPTIONS[:app_path]}/config/routes.rb"
     else #Report each controller separately
       tracker.routes.each do |name, actions|
-        if actions == :allow_all_actions
+        if actions.is_a? Array and actions[0] == :allow_all_actions
           warn :controller => name,
             :warning_type => "Default Routes", 
             :message => "Any public method in #{name} can be used as an action.",
+            :line => actions[1],
             :confidence => CONFIDENCE[:med],
             :file => "#{OPTIONS[:app_path]}/config/routes.rb"
         end

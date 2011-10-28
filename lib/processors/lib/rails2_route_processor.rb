@@ -184,15 +184,15 @@ class RoutesProcessor < BaseProcessor
       if exp[0][1] == ":controller/:action/:id"
         @tracker.routes[:allow_all_actions] = exp[0]
       elsif exp[0][1].include? ":action"
-        @tracker.routes[@current_controller] = :allow_all_actions
+        @tracker.routes[@current_controller] = [:allow_all_actions, exp.line]
         return
       end
     end
 
     #This -seems- redundant, but people might connect actions
     #to a controller which already allows them all
-    return if @tracker.routes[@current_controller] == :allow_all_actions
-
+    return if @tracker.routes[@current_controller].is_a? Array and @tracker.routes[@current_controller][0] == :allow_all_actions
+  
     exp[-1].each_with_index do |e,i|
       if symbol? e and e[1] == :action
         @tracker.routes[@current_controller] << exp[-1][i + 1][1].to_sym
