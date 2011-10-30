@@ -97,7 +97,9 @@ class Checks
 
         warn " - #{c}"
 
-        threads << Thread.new do
+        threads << Thread.new do |t|
+          Thread.current[:start] = Time.now
+          Thread.current[:checker] = c
           check = c.new(tracker)
           check.run_check
           check_runner.check_results << check.warnings unless check.warnings.empty?
@@ -109,7 +111,10 @@ class Checks
       end
     end
 
-    threads.each { |t| t.join }
+    threads.each do |t| 
+      puts "#{t[:checker]} took #{(Time.now - t[:start])} seconds"
+      t.join
+    end
 
     until check_runner.check_results.empty?
       r = check_runner.check_results.pop
