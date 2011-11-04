@@ -4,13 +4,62 @@
   <title>Brakeman</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2011-10-25T10:24:11-07:00</updated>
+  <updated>2011-11-04T15:16:11-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 0.8.4 Released</title>
+    <link href="http://brakemanscanner.org/blog/2011/11/04/brakeman-0-dot-8-4-released/"/>
+    <updated>2011-11-04T14:58:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2011/11/04/brakeman-0-dot-8-4-released</id>
+    <content type="html">&lt;p&gt;Changes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Option for separate attr_accessible warnings&lt;/li&gt;
+&lt;li&gt;Option to set CSS file for HTML output&lt;/li&gt;
+&lt;li&gt;Add file names for version-specific warnings&lt;/li&gt;
+&lt;li&gt;Add line number for default routes in a controller&lt;/li&gt;
+&lt;li&gt;Fix hash_insert()&lt;/li&gt;
+&lt;li&gt;Remove use of Queue from threaded checks&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Separate attr_accessible Warnings&lt;/h3&gt;
+
+&lt;p&gt;The current default is to roll all controllers lacking &lt;code&gt;attr_accessible&lt;/code&gt; into a single warning. This is convenient when manually looking at HTML or text output, but for Jenkins/Hudson it is better to have each be a separate warning. That way it is easier to track new and fixed warnings.&lt;/p&gt;
+
+&lt;p&gt;To turn on this behavior, use &lt;code&gt;--separate-models&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Custom CSS for HTML Output&lt;/h3&gt;
+
+&lt;p&gt;Use the &lt;code&gt;--css-file&lt;/code&gt; option to set a custom CSS file for styling HTML output. This file is copied directly into the report.&lt;/p&gt;
+
+&lt;h3&gt;File Names for Version-Specific Warnings&lt;/h3&gt;
+
+&lt;p&gt;Previously, there would be no file name associated with warnings about certain versions of Rails. This caused the warnings to not show up in the Jenkins/Hudson plugin. Now either &lt;code&gt;Gemfile&lt;/code&gt; or &lt;code&gt;config/environment.rb&lt;/code&gt; will be used as the file name for warnings based on the detected Rails version.&lt;/p&gt;
+
+&lt;h3&gt;Line Number for Default Routes&lt;/h3&gt;
+
+&lt;p&gt;When default routes were detected for specific controllers, there will now be a line number (from &lt;code&gt;routes.rb&lt;/code&gt;) associated with the warning.&lt;/p&gt;
+
+&lt;h3&gt;hash_insert() Fixed&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;hash_insert&lt;/code&gt; was broken and would cause some spurious warnings. For example, sometimes &lt;code&gt;only_path =&amp;gt; true&lt;/code&gt; would be set in &lt;code&gt;params&lt;/code&gt;, but Brakeman would mess up the &lt;code&gt;params&lt;/code&gt; hash and a redirect warning would still be created.&lt;/p&gt;
+
+&lt;h3&gt;Threaded Checks No Longer Use Queue&lt;/h3&gt;
+
+&lt;p&gt;When using threaded checks, the resulting warnings were stored in a thread-safe Queue. This has been removed, and the resulting value from each thread will be used instead. This should avoid some (small) locking overhead and is just simpler.&lt;/p&gt;
+
+&lt;h3&gt;&quot;Like&quot; Brakeman on Ruby Toolbox&lt;/h3&gt;
+
+&lt;p&gt;Please consider 'liking' Brakeman on the &lt;a href=&quot;https://www.ruby-toolbox.com/projects/brakeman&quot;&gt;Ruby Toolbox&lt;/a&gt;!&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 0.8.3 Released</title>
