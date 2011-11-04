@@ -8,7 +8,7 @@ require 'thread'
 class Checks
   @checks = []
 
-  attr_reader :warnings, :controller_warnings, :model_warnings, :template_warnings, :checks_run, :check_results
+  attr_reader :warnings, :controller_warnings, :model_warnings, :template_warnings, :checks_run
 
   #Add a check. This will call +_klass_.new+ when running tests
   def self.add klass
@@ -26,7 +26,6 @@ class Checks
     @model_warnings = []
     @controller_warnings = []
     @checks_run = []
-    @check_results = Queue.new
   end
 
   #Add Warning to list of warnings to report.
@@ -98,9 +97,14 @@ class Checks
         warn " - #{c}"
 
         threads << Thread.new do
-          check = c.new(tracker)
-          check.run_check
-          check_runner.check_results << check.warnings unless check.warnings.empty?
+          begin
+            check = c.new(tracker)
+            check.run_check
+            check.warnings
+          rescue Exception => e
+            warn "[#{c.to_s}] #{e}"
+            []
+          end
         end
 
         #Maintain list of which checks were run
@@ -111,10 +115,12 @@ class Checks
 
     threads.each { |t| t.join }
 
-    until check_runner.check_results.empty?
-      r = check_runner.check_results.pop
-      r.each do |w|
-        check_runner.add_warning w
+    warn "Checks finished, collecting results..."
+
+    #Collect results
+    threads.each do |thread|
+      thread.value.each do |warning|
+        check_runner.add_warning warning
       end
     end
 
