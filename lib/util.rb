@@ -64,13 +64,13 @@ module Util
 
   #Insert value into Hash Sexp
   def hash_insert hash, key, value
-    index = 0
+    index = 1
     hash_iterate hash.dup do |k,v|
-      index += 1
-      if k == key and index % 2 == 1
+      if k == key
         hash[index + 1] = value
         return hash
       end
+      index += 2
     end
       
     hash << key << value
