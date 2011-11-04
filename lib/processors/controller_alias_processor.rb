@@ -26,13 +26,13 @@ class ControllerAliasProcessor < AliasProcessor
   #Processes a method definition, which may include
   #processing any rendered templates.
   def process_methdef exp
-    set_env_defaults
     is_route = route? exp[1]
     other_method = @current_method
     @current_method = exp[1]
     @rendered = false if is_route
 
     env.scope do
+      set_env_defaults
 
       if is_route
         before_filter_list(@current_method, @current_class).each do |f|
