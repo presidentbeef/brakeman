@@ -7,11 +7,19 @@ class Rails2Tests < Test::Unit::TestCase
   include BrakemanTester::CheckExpected
 
   def expected
-    @expected ||= {
-      :controller => 1,
-      :model => 2,
-      :template => 16,
-      :warning => 17 }
+    if Scanner::RUBY_1_9
+      @expected ||= {
+        :controller => 1,
+        :model => 2,
+        :template => 16,
+        :warning => 17 }
+    else
+      @expected ||= {
+        :controller => 1,
+        :model => 2,
+        :template => 16,
+        :warning => 18 }
+    end
   end
 
   def report
