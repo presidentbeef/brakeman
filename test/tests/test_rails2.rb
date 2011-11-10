@@ -1,3 +1,5 @@
+abort "Please run using test/test.rb" unless defined? BrakemanTester
+
 Rails2 = BrakemanTester.run_scan "rails2", "Rails 2"
 
 class Rails2Tests < Test::Unit::TestCase

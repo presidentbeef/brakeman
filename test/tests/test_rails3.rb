@@ -1,4 +1,4 @@
-abort "Run this test using test/test.rb" unless defined? BrakemanTester
+abort "Please run using test/test.rb" unless defined? BrakemanTester
 
 Rails3 = BrakemanTester.run_scan "rails3", "Rails 3", :rails3 => true
 
