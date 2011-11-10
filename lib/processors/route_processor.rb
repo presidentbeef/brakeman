@@ -5,7 +5,7 @@ require 'util'
 require 'set'
 
 if OPTIONS[:rails3]
-  require 'processors/lib/rails3_route_processor'
+  load 'processors/lib/rails3_route_processor.rb'
 else
-  require 'processors/lib/rails2_route_processor'
+  load 'processors/lib/rails2_route_processor.rb'
 end
