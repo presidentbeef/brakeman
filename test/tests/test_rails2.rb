@@ -4,6 +4,15 @@ Rails2 = BrakemanTester.run_scan "rails2", "Rails 2"
 
 class Rails2Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
+  include BrakemanTester::CheckExpected
+
+  def expected
+    @expected ||= {
+      :controller => 1,
+      :model => 2,
+      :template => 16,
+      :warning => 17 }
+  end
 
   def report
     Rails2

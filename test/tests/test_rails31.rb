@@ -4,9 +4,18 @@ Rails31 = BrakemanTester.run_scan "rails3.1", "Rails 3.1", :rails3 => true
 
 class Rails31Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
+  include BrakemanTester::CheckExpected
   
   def report
     Rails31
+  end
+
+  def expected
+    @expected ||= {
+      :model => 0,
+      :template => 0,
+      :controller => 1,
+      :warning => 2 }
   end
 
   def test_without_protection

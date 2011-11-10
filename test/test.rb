@@ -8,6 +8,7 @@ require 'set'
 require 'test/unit'
 require 'scanner'
 
+#Helper methods for running scans
 module BrakemanTester
   class << self
     #Set environment for scan
@@ -56,6 +57,7 @@ module BrakemanTester
   end
 end
 
+#Helpers for finding warnings in the report
 module BrakemanTester::FindWarning
   def assert_warning opts
     warnings = find opts
@@ -89,6 +91,22 @@ module BrakemanTester::FindWarning
     end
 
     result
+  end
+end
+
+#Check that the number of warnings reported are as expected.
+#This is mainly to look for new warnings that are not being tested.
+module BrakemanTester::CheckExpected
+  def test_number_of_warnings
+    expected.each do |type, number|
+      if type == :warning
+        warnings = report[:warnings]
+      else
+        warnings = report[(type.to_s << "_warnings").to_sym]
+      end
+
+      assert_equal number, warnings.length, "Expected #{number} #{type} warnings, but found #{warnings.length}"
+    end
   end
 end
 

@@ -4,9 +4,19 @@ Rails3 = BrakemanTester.run_scan "rails3", "Rails 3", :rails3 => true
 
 class Rails3Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
+  include BrakemanTester::CheckExpected
   
   def report
     Rails3
+  end
+
+  def expected
+    @expected ||= {
+      :controller => 1,
+      :model => 4,
+      :template => 18,
+      :warning => 15
+    }
   end
 
   def test_no_errors
