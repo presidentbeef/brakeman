@@ -1,4 +1,6 @@
-$:.unshift "#{File.expand_path(File.dirname(__FILE__))}/../lib"
+test_path = File.expand_path(File.dirname(__FILE__))
+
+$:.unshift "#{test_path}/../lib"
 
 require 'set'
 
@@ -17,28 +19,28 @@ require 'scanner'
 $stderr.puts "-" * 40
 $stderr.puts "Processing Rails 2 application..."
 $stderr.puts "-" * 40
-OPTIONS[:app_path] = File.expand_path "./rails2"
-scan2 = Scanner.new("rails2").process
+OPTIONS[:app_path] = File.expand_path "#{test_path}/rails2"
+scan2 = Scanner.new(OPTIONS[:app_path]).process
 scan2.run_checks
 Rails2 = Report.new(scan2).to_test
 
 $stderr.puts "-" * 40
 $stderr.puts "Processing Rails 3 application..."
 $stderr.puts "-" * 40
-OPTIONS[:app_path] = File.expand_path "./rails3"
+OPTIONS[:app_path] = File.expand_path "#{test_path}/rails3"
 OPTIONS[:rails3] = true
 load 'processors/route_processor.rb'
-scan3 = Scanner.new("rails3").process
+scan3 = Scanner.new(OPTIONS[:app_path]).process
 scan3.run_checks
 Rails3 = Report.new(scan3).to_test
 
 $stderr.puts "-" * 40
 $stderr.puts "Processing Rails 3.1 application..."
 $stderr.puts "-" * 40
-OPTIONS[:app_path] = File.expand_path "./rails3.1"
+OPTIONS[:app_path] = File.expand_path "#{test_path}/rails3.1"
 OPTIONS[:rails3] = true
 load 'processors/route_processor.rb'
-scan31 = Scanner.new("rails3.1").process
+scan31 = Scanner.new(OPTIONS[:app_path]).process
 scan31.run_checks
 Rails31 = Report.new(scan31).to_test
 
