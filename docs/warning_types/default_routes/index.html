@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Frequently Asked Questions</title>
+  <title>Brakeman: Default Routes</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/faq/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/default_routes/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -99,58 +99,38 @@
 <article>
   
   <header>
-    <h1 class="entry-title">Frequently Asked Questions</h1>
+    <h1 class="entry-title">Default Routes</h1>
   </header>
   
-  <h3>What is the number in parentheses (red in HTML) in the report summary?</h3>
+  <p>The general default routes warning means there is a call to</p>
 
-<p>That number indicates how many high confidence warnings were found.</p>
-
-<h3>Why are line numbers reported wrong?</h3>
-
-<p>Line numbers are sometimes off. This can be due to the <a href="http://rubyforge.org/tracker/index.php?func=detail&amp;aid=26435&amp;group_id=439&amp;atid=1778">parser</a> reporting the wrong line number, or occasionally there is a bug in brakeman.</p>
-
-<p>However, it is important to note that the line number reported is where the vulnerability was found, not necessarily where it was introduced. For example, if a SQL query uses string interpolation which was assigned to a variable, the line with the query will be reported, not where the string is constructed.</p>
-
-<h3>Why is the context so different from the code shown in the warning?</h3>
-
-<p>The code in the warning is what is seen by brakeman, while the code in the context is pulled directly from the original file. These can be different, as brakeman propagates variables and performs other transformations on the code.</p>
-
-<h3>What is an &#8220;Unresolved Model&#8221;?</h3>
-
-<p>&#8220;Unresolved Model&#8221; is a placeholder used when it is clear that a model is being used at that location, but there is no way to know which model it is.</p>
-
-<h3>Why is a variable shown as &#8220;SomeModel.new&#8221; when it clearly is not?</h3>
-
-<p>Records from a model will be sometimes displayed this way.</p>
-
-<p>For example, if <code>User</code> is a model and there is an action like</p>
-
-<pre><code>class UsersController
-
-  def list
-    @users = User.all
-  end
-
-end
+<pre><code>#Rails 2.x
+map.connect ":controller/:action/:id"
 </code></pre>
 
-<p>and a corresponding view containing</p>
+<p>or</p>
 
-<pre><code>&lt;% @users.each do |user| %&gt;
-  &lt;%= user.name %&gt;
-&lt;% end %&gt;
+<pre><code>Rails 3.x
+match ':controller(/:action(/:id(.:format)))'
 </code></pre>
 
-<p>This will produce a warning (in Rails 2.x) that looks like</p>
+<p>in <code>config/routes.rb</code>. This allows any public method on any controller to be called as an action.</p>
 
-<pre><code>Unescaped model attribute near line 3: User.new.name
-</code></pre>
+<p>If this warning is reported for a particular controller, it means there is a route to that controller containing <code>:action</code>.</p>
 
-<h3>Brakeman reports 0 warnings. Am I safe?</h3>
+<p>Default routes can be dangerous if methods are made public which are not intended to be used as URLs or actions.</p>
 
-<p><strong>No</strong>. It just means Brakeman didn&#8217;t find any problems. There may be vulnerabilities Brakeman does not test for or did not discover. No security tool has 100% coverage.</p>
+<hr />
 
+<p>Back to <a href="/docs/warning_types">Warning Types</a></p>
+
+  
+    <footer>
+      <p class="meta">
+        
+        
+      </p>
+    </footer>
   
 </article>
 

@@ -28,7 +28,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/faq/</loc>
-        <lastmod>2011-10-18T10:52:32-07:00</lastmod>
+        <lastmod>2011-11-09T14:11:10-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/install/</loc>
@@ -55,8 +55,64 @@
         <lastmod>2011-10-18T10:52:32-07:00</lastmod>
     </url>
     <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/dynamic_render_path/</loc>
+        <lastmod>2011-11-10T16:29:29-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/command_injection/</loc>
+        <lastmod>2011-11-10T16:29:00-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/evaluation/</loc>
+        <lastmod>2011-11-10T16:29:36-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/cross_site_scripting/</loc>
+        <lastmod>2011-11-10T16:27:24-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/model_validation/</loc>
+        <lastmod>2011-11-10T16:29:55-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/sql_injection/</loc>
+        <lastmod>2011-11-10T16:30:15-08:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/docs/warning_types/</loc>
-        <lastmod>2011-10-18T10:52:32-07:00</lastmod>
+        <lastmod>2011-11-10T16:32:22-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/basic_auth/</loc>
+        <lastmod>2011-11-10T16:28:55-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/session_settings/</loc>
+        <lastmod>2011-11-10T16:30:09-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/default_routes/</loc>
+        <lastmod>2011-11-10T16:29:22-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/file_access/</loc>
+        <lastmod>2011-11-10T16:29:44-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/mass_assignment/</loc>
+        <lastmod>2011-11-10T16:22:52-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/cross_site_request_forgery/</loc>
+        <lastmod>2011-11-10T16:28:18-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/attribute_restriction/</loc>
+        <lastmod>2011-11-10T16:21:30-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/redirect/</loc>
+        <lastmod>2011-11-10T16:30:03-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/running/</loc>
