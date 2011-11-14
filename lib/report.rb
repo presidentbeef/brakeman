@@ -5,6 +5,17 @@ require 'ruport'
 require 'processors/output_processor'
 require 'util'
 
+#Fix for Ruport under 1.9
+#as reported here: https://github.com/ruport/ruport/pull/7
+module Ruport
+  class Formatter::CSV < Formatter
+    def csv_writer
+      @csv_writer ||= options.formatter ||
+        FCSV.instance(output, options.format_options || {})
+    end
+  end
+end
+
 #Generates a report based on the Tracker and the results of
 #Tracker#run_checks. Be sure to +run_checks+ before generating
 #a report.
