@@ -8,7 +8,7 @@ class CheckWithoutProtection < BaseCheck
   Checks.add self
 
   def run_check
-    if mass_assign_disabled? tracker or version_between? "0.0.0", "3.0.99"
+    if version_between? "0.0.0", "3.0.99"
       return
     end
 
