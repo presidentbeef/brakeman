@@ -30,8 +30,13 @@ module BrakemanTester
       ::OPTIONS.merge! opts
 
       #Force correct parser
-      Object.instance_eval { remove_const :RoutesProcessor }
+      Object.instance_eval do
+        remove_const :RoutesProcessor
+        remove_const :ConfigProcessor
+        remove_const :RAILS_CONFIG
+      end
       load 'processors/route_processor.rb'
+      load 'processors/config_processor.rb'
     end
 
     #Run scan on app at the given path
