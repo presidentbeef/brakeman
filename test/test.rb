@@ -66,6 +66,11 @@ module BrakemanTester::FindWarning
     assert_equal 1, warnings.length, "Matched more than one warning"
   end 
 
+  def assert_no_warning opts
+    warnings = find opts
+    assert_equal 0, warnings.length, "Unexpected warning found"
+  end
+
   def find opts = {}, &block
     t = opts[:type]
     if t.nil? or t == :warning
