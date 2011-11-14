@@ -36,6 +36,13 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /users_controller\.rb/ 
   end
 
+  def test_whitelist_attributes
+    assert_no_warning :type => :model,
+      :warning_type => "Attribute Restriction",
+      :message => /^Mass assignment is not restricted using attr_accessible/,
+      :confidence => 0
+  end
+
   #Such as
   #http_basic_authenticate_with :name => "dhh", :password => "secret"
   def test_basic_auth_with_password

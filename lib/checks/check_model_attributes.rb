@@ -9,7 +9,7 @@ class CheckModelAttributes < BaseCheck
   Checks.add self
 
   def run_check
-    return if mass_assign_disabled? tracker
+    return if mass_assign_disabled?
 
     names = []
 

@@ -104,14 +104,21 @@ class BaseCheck < SexpProcessor
   end
 
   #Checks if mass assignment is disabled globally in an initializer.
-  def mass_assign_disabled? tracker
-    matches = tracker.check_initializers(:"ActiveRecord::Base", :send)
-    if matches.empty?
-      false
+  def mass_assign_disabled?
+    if version_between?("3.1.0", "4.0.0") and 
+      tracker.config[:rails][:active_record] and 
+      tracker.config[:rails][:active_record][:whitelist_attributes] == Sexp.new(:true)
+
+      return true
     else
-      matches.each do |result|
-        if result[3][3] == Sexp.new(:arg_list, Sexp.new(:lit, :attr_accessible), Sexp.new(:nil))
-          return true
+      matches = tracker.check_initializers(:"ActiveRecord::Base", :send)
+      if matches.empty?
+        false
+      else
+        matches.each do |result|
+          if result[3][3] == Sexp.new(:arg_list, Sexp.new(:lit, :attr_accessible), Sexp.new(:nil))
+            return true
+          end
         end
       end
     end
