@@ -69,15 +69,22 @@ class Scanner
   #
   #Stores parsed information in tracker.config
   def process_config
-    @processor.process_config(RubyParser.new.parse(File.read("#@path/config/environment.rb")))
+    if OPTIONS[:rails3]
+      @processor.process_config(RubyParser.new.parse(File.read("#@path/config/application.rb")))
+      @processor.process_config(RubyParser.new.parse(File.read("#@path/config/environments/production.rb")))
+    else
+      @processor.process_config(RubyParser.new.parse(File.read("#@path/config/environment.rb")))
 
-    if File.exists? "#@path/config/gems.rb"
-      @processor.process_config(RubyParser.new.parse(File.read("#@path/config/gems.rb")))
+      if File.exists? "#@path/config/gems.rb"
+        @processor.process_config(RubyParser.new.parse(File.read("#@path/config/gems.rb")))
+      end
+
     end
 
     if File.exists? "#@path/vendor/plugins/rails_xss" or 
       OPTIONS[:rails3] or OPTIONS[:escape_html] or
       (File.exists? "#@path/Gemfile" and File.read("#@path/Gemfile").include? "rails_xss")
+
       tracker.config[:escape_html] = true
       warn "[Notice] Escaping HTML by default"
     end
