@@ -343,13 +343,23 @@ class BaseCheck < SexpProcessor
     low_version = low_version.split(".").map! { |n| n.to_i }
     high_version = high_version.split(".").map! { |n| n.to_i }
 
-    version.each_with_index do |n, i|
-      if n < low_version[i] or n > high_version[i]
+    version.each_with_index do |v, i|
+      if v < low_version[i]
         return false
+      elsif v > low_version[i]
+        break
       end
     end
 
-    return true
+    version.each_with_index do |v, i|
+      if v > high_version[i]
+        return false
+      elsif v < high_version[i]
+        break
+      end
+    end
+
+    true
   end
 
   def gemfile_or_environment
