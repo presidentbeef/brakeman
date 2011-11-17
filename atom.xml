@@ -4,13 +4,57 @@
   <title>Brakeman</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2011-11-10T16:32:22-08:00</updated>
+  <updated>2011-11-16T16:30:19-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 0.9.0 Released</title>
+    <link href="http://brakemanscanner.org/blog/2011/11/16/brakeman-0-dot-9-0-released/"/>
+    <updated>2011-11-16T16:23:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2011/11/16/brakeman-0-dot-9-0-released</id>
+    <content type="html">&lt;p&gt;Changes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Process Rails 3 configuration files&lt;/li&gt;
+&lt;li&gt;Check for config.active_record.whitelist_attributes = true&lt;/li&gt;
+&lt;li&gt;Always produce a warning for without_protection =&gt; true&lt;/li&gt;
+&lt;li&gt;Fix CSV output&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;This is just a small release on the way to 1.0.&lt;/p&gt;
+
+&lt;h3&gt;Rails 3 Configs&lt;/h3&gt;
+
+&lt;p&gt;Configurations in &lt;code&gt;config/application&lt;/code&gt; and &lt;code&gt;config/environments/production.rb&lt;/code&gt; will now be parsed.&lt;/p&gt;
+
+&lt;h3&gt;Check for Disabled Mass Assignment&lt;/h3&gt;
+
+&lt;p&gt;A new option was added in Rails 3.1 to globally disable mass assignment using &lt;code&gt;config.active_record.whitelist_attributes = true&lt;/code&gt;. Brakeman will now turn off mass assignment warnings if this configuration setting is detected.&lt;/p&gt;
+
+&lt;h3&gt;Always Warn on without_protection&lt;/h3&gt;
+
+&lt;p&gt;Rails 3.1 adds a way to bypass attribute protection when doing mass assignment.&lt;/p&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;User.new(params, :without_protection =&amp;gt; true)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Brakeman will now &lt;em&gt;always&lt;/em&gt; warn when &lt;code&gt;without_protection&lt;/code&gt; is used, even if mass assignment is disabled or attributes are protected on that model.&lt;/p&gt;
+
+&lt;h3&gt;Fix CSV Output&lt;/h3&gt;
+
+&lt;p&gt;Brakeman reports using the CSV format should work once again.&lt;/p&gt;
+
+&lt;p&gt;There is a bug in Ruport when using Ruby 1.9.2 and CSV output. A temporary patch has been added until this is resolved.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 0.8.4 Released</title>
