@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 0,
       :template => 0,
       :controller => 1,
-      :warning => 2 }
+      :warning => 3 }
   end
 
   def test_without_protection
@@ -52,5 +52,13 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Basic authentication password stored in source code/,
       :confidence => 0,
       :file => /users_controller\.rb/ 
+  end
+
+  def test_translate_bug
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^Versions before 3.1.2 have a vulnerability/,
+      :confidence => 0,
+      :file => /Gemfile/
   end
 end

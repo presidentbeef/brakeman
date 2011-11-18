@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 4,
       :template => 18,
-      :warning => 15
+      :warning => 16
     }
   end
 
@@ -384,6 +384,14 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Unprotected mass assignment/,
       :confidence => 1,
       :file => /home_controller\.rb/
+  end
+
+  def test_translate_bug
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^Versions before 3.0.11 have a vulnerability/,
+      :confidence => 1,
+      :file => /Gemfile/
   end
 end
 
