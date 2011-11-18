@@ -1,3 +1,7 @@
+## 0.9.1
+
+ * Add warning for translater helper XSS vulnerability
+
 ## 0.9.0
 
  * Process Rails 3 configuration files
