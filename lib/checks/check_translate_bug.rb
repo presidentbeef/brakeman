@@ -35,6 +35,6 @@ class CheckTranslateBug < BaseCheck
   end
 
   def uses_translate?
-    not tracker.find_call([], :translate).empty?
+    not tracker.find_call([], [:t, :translate]).empty?
   end
 end
