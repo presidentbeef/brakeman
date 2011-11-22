@@ -4,13 +4,38 @@
   <title>Brakeman</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2011-11-18T12:41:03-08:00</updated>
+  <updated>2011-11-21T17:26:52-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 0.9.2 Released</title>
+    <link href="http://brakemanscanner.org/blog/2011/11/21/brakeman-0-dot-9-2-released/"/>
+    <updated>2011-11-21T17:12:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2011/11/21/brakeman-0-dot-9-2-released</id>
+    <content type="html">&lt;p&gt;Changes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fix Rails 3 configuration parsing&lt;/li&gt;
+&lt;li&gt;Check both t() and translate() for cross-site scripting bug&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;Just a small release to get the Rails 3 config fix out.&lt;/p&gt;
+
+&lt;h3&gt;Rails 3 Configuration Parsing&lt;/h3&gt;
+
+&lt;p&gt;There was an issue that would cause Brakeman to crash on certain configurations. This has been fixed.&lt;/p&gt;
+
+&lt;h3&gt;Look for t()&lt;/h3&gt;
+
+&lt;p&gt;Both the &lt;code&gt;translate&lt;/code&gt; and its shorter alias &lt;code&gt;t&lt;/code&gt; will cause the warning about the cross-site scripting bug in them to be set to high confidence. If neither of these functions are found in the application, the confidence is set to medium.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 0.9.1 Released</title>
