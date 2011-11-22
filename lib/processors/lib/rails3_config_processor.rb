@@ -54,7 +54,7 @@ class ConfigProcessor < BaseProcessor
 
   #Look for configuration settings
   def process_attrasgn exp
-    return unless @inside_config
+    return exp unless @inside_config
 
     if exp[1] == RAILS_CONFIG
       #Get rid of '=' at end

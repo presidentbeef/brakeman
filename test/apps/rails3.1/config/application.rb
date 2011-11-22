@@ -48,3 +48,5 @@ module Rails31
     config.active_record.whitelist_attributes = true
   end
 end
+
+Haml::Template.options[:format] = :html5
