@@ -18,6 +18,7 @@ class Brakeman::BaseCheck < SexpProcessor
     @warnings = []
     @tracker = tracker
     @string_interp = false
+    @current_set = nil
     @current_template = @current_module = @current_class = @current_method = nil
     self.strict = false
     self.auto_shift_type = false
