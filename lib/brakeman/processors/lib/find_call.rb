@@ -31,8 +31,8 @@ require 'brakeman/processors/base_processor'
 # FindCall.new nil, /^g?sub!?$/
 class Brakeman::FindCall < Brakeman::BaseProcessor
 
-  def initialize targets, methods, in_depth = false
-    super(nil)
+  def initialize targets, methods, tracker, in_depth = false
+    super tracker
     @calls = []
     @find_targets = targets
     @find_methods = methods

@@ -12,7 +12,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
         begin
           require lib[:file]
         rescue Exception => e
-          if OPTIONS[:debug]
+          if @tracker.options[:debug]
             raise e
           end
         end

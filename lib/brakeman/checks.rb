@@ -49,7 +49,7 @@ class Brakeman::Checks
   #Run all the checks on the given Tracker.
   #Returns a new instance of Checks with the results.
   def self.run_checks tracker
-    if OPTIONS[:parallel_checks]
+    if tracker.options[:parallel_checks]
       self.run_checks_parallel tracker
     else
       self.run_checks_sequential tracker
@@ -64,8 +64,8 @@ class Brakeman::Checks
       check_name = get_check_name c
 
       #Run or don't run check based on options
-      unless OPTIONS[:skip_checks].include? check_name or 
-        (OPTIONS[:run_checks] and not OPTIONS[:run_checks].include? check_name)
+      unless tracker.options[:skip_checks].include? check_name or 
+        (tracker.options[:run_checks] and not tracker.options[:run_checks].include? check_name)
 
         warn " - #{check_name}"
 
@@ -95,8 +95,8 @@ class Brakeman::Checks
       check_name = get_check_name c
 
       #Run or don't run check based on options
-      unless OPTIONS[:skip_checks].include? check_name or 
-        (OPTIONS[:run_checks] and not OPTIONS[:run_checks].include? check_name)
+      unless tracker.options[:skip_checks].include? check_name or 
+        (tracker.options[:run_checks] and not tracker.options[:run_checks].include? check_name)
 
         warn " - #{check_name}"
 

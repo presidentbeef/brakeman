@@ -7,7 +7,7 @@ class Brakeman::CheckTranslateBug < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
   def run_check
-    if (version_between?('2.3.0', '2.3.99') and OPTIONS[:escape_html]) or 
+    if (version_between?('2.3.0', '2.3.99') and tracker.options[:escape_html]) or 
         version_between?('3.0.0', '3.0.10') or
         version_between?('3.1.0', '3.1.1')
 

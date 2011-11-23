@@ -5,11 +5,11 @@ require 'brakeman/processors/lib/find_call'
 class Brakeman::FindModelCall < Brakeman::FindCall
 
   #Passes +targets+ to FindCall
-  def initialize targets
-    if OPTIONS[:rails3]
-      super(targets, /^(find.*|first|last|all|where|order|group|having)$/, true)
+  def initialize targets, tracker
+    if tracker.options[:rails3]
+      super(targets, /^(find.*|first|last|all|where|order|group|having)$/, tracker, true)
     else
-      super(targets, /^(find.*|first|last|all)$/, true)
+      super(targets, /^(find.*|first|last|all)$/, tracker, true)
     end
   end 
 

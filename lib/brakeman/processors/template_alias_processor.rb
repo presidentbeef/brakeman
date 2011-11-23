@@ -44,7 +44,7 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
         if model == target[1]
           env[Sexp.new(:lvar, args[1])] = Sexp.new(:call, model, :new, Sexp.new(:arglist))
         else
-          env[Sexp.new(:lvar, args[1])] = Sexp.new(:call, Sexp.new(:const, Tracker::UNKNOWN_MODEL), :new, Sexp.new(:arglist))
+          env[Sexp.new(:lvar, args[1])] = Sexp.new(:call, Sexp.new(:const, Brakeman::Tracker::UNKNOWN_MODEL), :new, Sexp.new(:arglist))
         end
         
         process block if sexp? block

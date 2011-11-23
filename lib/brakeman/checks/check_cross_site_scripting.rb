@@ -46,9 +46,9 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   #Run check
   def run_check 
-    IGNORE_METHODS.merge OPTIONS[:safe_methods]
+    IGNORE_METHODS.merge tracker.options[:safe_methods]
     @models = tracker.models.keys
-    @inspect_arguments = OPTIONS[:check_arguments]
+    @inspect_arguments = tracker.options[:check_arguments]
 
     link_to_check = Brakeman::CheckLinkTo.new(tracker)
     link_to_check.run_check
@@ -100,7 +100,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
         :code => match,
         :confidence => CONFIDENCE[:high]
 
-    elsif not OPTIONS[:ignore_model_output] and match = has_immediate_model?(out)
+    elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(out)
       method = match[2]
 
       unless duplicate? out or IGNORE_MODEL_METHODS.include? method
@@ -156,7 +156,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       actually_process_call exp
       message = nil
 
-      if @matched == :model and not OPTIONS[:ignore_model_output]
+      if @matched == :model and not tracker.options[:ignore_model_output]
         message = "Unescaped model attribute" 
       elsif @matched == :params
         message = "Unescaped parameter value" 
@@ -274,7 +274,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
     methods = tracker.find_call [], :link_to 
 
     @models = tracker.models.keys
-    @inspect_arguments = OPTIONS[:check_arguments]
+    @inspect_arguments = tracker.options[:check_arguments]
 
     methods.each do |call|
       process_result call
@@ -315,7 +315,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
           :confidence => CONFIDENCE[:high]
       end
 
-    elsif not OPTIONS[:ignore_model_output] and match = has_immediate_model?(first_arg)
+    elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(first_arg)
       method = match[2]
 
       unless duplicate? result or IGNORE_MODEL_METHODS.include? method
@@ -334,7 +334,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
       end
 
     elsif @matched
-      if @matched == :model and not OPTIONS[:ignore_model_output]
+      if @matched == :model and not tracker.options[:ignore_model_output]
         message = "Unescaped model attribute in link_to"
       elsif @matched == :params
         message = "Unescaped parameter value in link_to"

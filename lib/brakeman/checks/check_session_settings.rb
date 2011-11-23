@@ -4,10 +4,14 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
-  if OPTIONS[:rails3]
-    SessionSettings = Sexp.new(:call, Sexp.new(:colon2, Sexp.new(:const, :Rails3), :Application), :config, Sexp.new(:arglist))
-  else
-    SessionSettings = Sexp.new(:colon2, Sexp.new(:const, :ActionController), :Base)
+  def initialize *args
+    super
+
+    if tracker.options[:rails3]
+      @session_settings = Sexp.new(:call, Sexp.new(:colon2, Sexp.new(:const, :Rails3), :Application), :config, Sexp.new(:arglist))
+    else
+      @session_settings = Sexp.new(:colon2, Sexp.new(:const, :ActionController), :Base)
+    end
   end
 
   def run_check
@@ -15,7 +19,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
                 tracker.config[:rails][:action_controller] and
                 tracker.config[:rails][:action_controller][:session]
 
-    check_for_issues settings, "#{OPTIONS[:app_path]}/config/environment.rb"
+    check_for_issues settings, "#{tracker.options[:app_path]}/config/environment.rb"
 
     if tracker.initializers["session_store.rb"]
       process tracker.initializers["session_store.rb"]
@@ -25,8 +29,8 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   #Looks for ActionController::Base.session = { ... }
   #in Rails 2.x apps
   def process_attrasgn exp
-    if not OPTIONS[:rails3] and exp[1] == SessionSettings and exp[2] == :session=
-      check_for_issues exp[3][1], "#{OPTIONS[:app_path]}/config/initializers/session_store.rb"
+    if not tracker.options[:rails3] and exp[1] == @session_settings and exp[2] == :session=
+      check_for_issues exp[3][1], "#{tracker.options[:app_path]}/config/initializers/session_store.rb"
     end
       
     exp
@@ -35,8 +39,8 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   #Looks for Rails3::Application.config.session_store :cookie_store, { ... }
   #in Rails 3.x apps
   def process_call exp
-    if OPTIONS[:rails3] and exp[1] == SessionSettings and exp[2] == :session_store
-        check_for_issues exp[3][2], "#{OPTIONS[:app_path]}/config/initializers/session_store.rb"
+    if tracker.options[:rails3] and exp[1] == @session_settings and exp[2] == :session_store
+        check_for_issues exp[3][2], "#{tracker.options[:app_path]}/config/initializers/session_store.rb"
     end
       
     exp

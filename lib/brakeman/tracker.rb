@@ -8,7 +8,7 @@ require 'brakeman/processors/lib/find_model_call'
 class Brakeman::Tracker
   attr_accessor :controllers, :templates, :models, :errors,
     :checks, :initializers, :config, :routes, :processor, :libs,
-    :template_cache
+    :template_cache, :options
 
   #Place holder when there should be a model, but it is not
   #clear what model it will be.
@@ -18,8 +18,9 @@ class Brakeman::Tracker
   #
   #The Processor argument is only used by other Processors
   #that might need to access it.
-  def initialize processor = nil
+  def initialize processor = nil, options = {}
     @processor = processor
+    @options = options
     @config = {}
     @templates = {}
     @controllers = {}
@@ -97,7 +98,7 @@ class Brakeman::Tracker
   #
   #See FindCall for details on arguments.
   def find_call target, method
-    finder = Brakeman::FindCall.new target, method
+    finder = Brakeman::FindCall.new target, method, self
 
     self.each_method do |definition, set_name, method_name|
       finder.process_source definition, set_name, method_name
@@ -114,7 +115,7 @@ class Brakeman::Tracker
   #
   #See FindCall for details on arguments.
   def find_model_find target
-    finder = Brakeman::FindModelCall.new target
+    finder = Brakeman::FindModelCall.new target, self
 
     self.each_method do |definition, set_name, method_name|
       finder.process_source definition, set_name, method_name
@@ -129,7 +130,7 @@ class Brakeman::Tracker
 
   #Similar to Tracker#find_call, but searches the initializers
   def check_initializers target, method
-    finder = Brakeman::FindCall.new target, method
+    finder = Brakeman::FindCall.new target, method, self
 
     initializers.each do |name, initializer|
       finder.process_source initializer

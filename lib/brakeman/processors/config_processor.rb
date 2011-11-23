@@ -1,5 +1,14 @@
-if OPTIONS[:rails3]
-  load 'brakeman/processors/lib/rails3_config_processor.rb'
-else
-  load 'brakeman/processors/lib/rails2_config_processor.rb'
+require 'brakeman/processors/base_processor'
+require 'brakeman/processors/alias_processor'
+require 'brakeman/processors/lib/rails3_config_processor.rb'
+require 'brakeman/processors/lib/rails2_config_processor.rb'
+
+class Brakeman::ConfigProcessor
+  def self.new tracker
+    if tracker.options[:rails3]
+      Brakeman::Rails3ConfigProcessor.new tracker
+    else
+      Brakeman::Rails2ConfigProcessor.new tracker
+    end
+  end
 end

@@ -30,13 +30,16 @@ end
 
 #Scans the Rails application.
 class Brakeman::Scanner
+  attr_reader :options
+
   RUBY_1_9 = !!(RUBY_VERSION =~ /^1\.9/)
 
   #Pass in path to the root of the Rails application
-  def initialize path
-    @path = path
-    @app_path = File.join(path, "app")
-    @processor = Brakeman::Processor.new
+  def initialize options
+    @options = options
+    @path = options[:app_path]
+    @app_path = File.join(@path, "app")
+    @processor = Brakeman::Processor.new options
   end
 
   #Returns the Tracker generated from the scan
@@ -69,7 +72,7 @@ class Brakeman::Scanner
   #
   #Stores parsed information in tracker.config
   def process_config
-    if OPTIONS[:rails3]
+    if options[:rails3]
       @processor.process_config(RubyParser.new.parse(File.read("#@path/config/application.rb")))
       @processor.process_config(RubyParser.new.parse(File.read("#@path/config/environments/production.rb")))
     else
@@ -82,7 +85,7 @@ class Brakeman::Scanner
     end
 
     if File.exists? "#@path/vendor/plugins/rails_xss" or 
-      OPTIONS[:rails3] or OPTIONS[:escape_html] or
+      options[:rails3] or options[:escape_html] or
       (File.exists? "#@path/Gemfile" and File.read("#@path/Gemfile").include? "rails_xss")
 
       tracker.config[:escape_html] = true
@@ -120,7 +123,7 @@ class Brakeman::Scanner
   #
   #Adds parsed information to tracker.libs.
   def process_libs
-    if OPTIONS[:skip_libs]
+    if options[:skip_libs]
       warn '[Skipping]'
       return
     end
@@ -146,7 +149,7 @@ class Brakeman::Scanner
       rescue Exception => e
         tracker.error e.exception(e.message + "\nWhile processing routes.rb"), e.backtrace
         warn "[Notice] Error while processing routes - assuming all public controller methods are actions."
-        OPTIONS[:assume_all_routes] = true
+        options[:assume_all_routes] = true
       end
     else
       warn "[Notice] No route information found"
@@ -192,7 +195,7 @@ class Brakeman::Scanner
         if type == :erb
           if tracker.config[:escape_html]
             type = :erubis
-            if OPTIONS[:rails3]
+            if options[:rails3]
               src = Brakeman::RailsXSSErubis.new(text).src
             else
               src = Brakeman::ErubisEscape.new(text).src

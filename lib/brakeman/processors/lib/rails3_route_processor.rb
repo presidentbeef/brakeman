@@ -2,7 +2,7 @@
 #
 #Note that it is only interested in determining what methods on which
 #controllers are used as routes, not the generated URLs for routes.
-class Brakeman::RoutesProcessor < Brakeman::BaseProcessor
+class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   include Brakeman::RouteHelper
 
   attr_reader :map, :nested, :current_controller

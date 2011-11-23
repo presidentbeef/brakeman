@@ -79,7 +79,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     method = find_method name, @current_class    
 
     if method.nil?
-      warn "[Notice] Could not find filter #{name}" if OPTIONS[:debug]
+      warn "[Notice] Could not find filter #{name}" if @tracker.options[:debug]
       return
     end
 
@@ -131,7 +131,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
 
   #Returns true if the given method name is also a route
   def route? method
-    return true if @tracker.routes[:allow_all_actions] or OPTIONS[:assume_all_routes]
+    return true if @tracker.routes[:allow_all_actions] or @tracker.options[:assume_all_routes]
     routes = @tracker.routes[@current_class]
     routes and (routes == :allow_all_actions or routes.include? method)
   end
@@ -199,7 +199,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       when :lit, :str
         filter[option] = value[1]
       else
-        warn "[Notice] Unknown before_filter value: #{option} => #{value}" if OPTIONS[:debug]
+        warn "[Notice] Unknown before_filter value: #{option} => #{value}" if @tracker.options[:debug]
       end
     else
       filter[:all] = true

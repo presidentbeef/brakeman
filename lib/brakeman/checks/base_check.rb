@@ -133,7 +133,7 @@ class Brakeman::BaseCheck < SexpProcessor
     location = location.to_sym
     @results.each do |r|
       if r[0] == line and r[1] == location
-        if OPTIONS[:combine_locations]
+        if tracker.options[:combine_locations]
           return true
         elsif r[2] == result
           return true
@@ -369,7 +369,7 @@ class Brakeman::BaseCheck < SexpProcessor
   end
 
   def gemfile_or_environment
-    if File.exist? File.expand_path "#{OPTIONS[:app_path]}/Gemfile"
+    if File.exist? File.expand_path "#{tracker.options[:app_path]}/Gemfile"
       "Gemfile"
     else
       "config/environment.rb"

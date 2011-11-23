@@ -1,7 +1,6 @@
-require 'yaml'
 require 'rubygems'
-
-OPTIONS = {}
+require 'yaml'
+require 'set'
 
 module Brakeman
   def self.run options
@@ -13,6 +12,10 @@ module Brakeman
     if options[:create_config]
       dump_config options
       exit
+    end
+
+    if options[:quiet]
+      $VERBOSE = nil
     end
 
     scan set_options(options)
@@ -152,9 +155,6 @@ module Brakeman
   end
 
   def self.scan options
-    OPTIONS.clear
-    OPTIONS.merge! options
-
     #Load scanner
     warn "Loading scanner..."
 
@@ -165,7 +165,7 @@ module Brakeman
     end
 
     #Start scanning
-    scanner = Scanner.new options[:app_path]
+    scanner = Scanner.new options
 
     warn "[Notice] Using Ruby #{RUBY_VERSION}. Please make sure this matches the one used to run your Rails application."
 
@@ -176,13 +176,13 @@ module Brakeman
     tracker.run_checks
 
     warn "Generating report..."
-    if OPTIONS[:output_file]
-      File.open OPTIONS[:output_file], "w" do |f|
-        f.puts tracker.report.send(OPTIONS[:output_format])
+    if options[:output_file]
+      File.open options[:output_file], "w" do |f|
+        f.puts tracker.report.send(options[:output_format])
       end
-      warn "Report saved in '#{OPTIONS[:output_file]}'"
+      warn "Report saved in '#{options[:output_file]}'"
     else
-      puts tracker.report.send(OPTIONS[:output_format])
+      puts tracker.report.send(options[:output_format])
     end
   end
 end

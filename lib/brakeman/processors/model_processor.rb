@@ -19,7 +19,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
   #s(:class, NAME, PARENT, s(:scope ...))
   def process_class exp
     if @model
-      warn "[Notice] Skipping inner class: #{class_name exp[1]}" if OPTIONS[:debug]
+      warn "[Notice] Skipping inner class: #{class_name exp[1]}" if @tracker.options[:debug]
       ignore
     else
       @model = { :name => class_name(exp[1]),

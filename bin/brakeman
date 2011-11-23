@@ -28,7 +28,6 @@ OptionParser.new do |opts|
 
   opts.on "-q", "--quiet", "Suppress informational messages" do
     options[:quiet] = true
-    $VERBOSE = nil
   end
 
   opts.on "-3", "--rails3", "[Experimental] Rails 3 support" do

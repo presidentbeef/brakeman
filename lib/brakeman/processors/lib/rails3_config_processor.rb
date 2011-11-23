@@ -1,6 +1,3 @@
-require 'brakeman/processors/base_processor'
-require 'brakeman/processors/alias_processor'
-
 Brakeman::RAILS_CONFIG = Sexp.new(:call, nil, :config, Sexp.new(:arglist))
   
 #Processes configuration. Results are put in tracker.config.
@@ -17,7 +14,7 @@ Brakeman::RAILS_CONFIG = Sexp.new(:call, nil, :config, Sexp.new(:arglist))
 #  tracker.config[:rails][:active_record][:whitelist_attributes]
 #
 #Values for tracker.config[:rails] will still be Sexps.
-class Brakeman::ConfigProcessor < Brakeman::BaseProcessor
+class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
   def initialize *args
     super
     @tracker.config[:rails] ||= {}

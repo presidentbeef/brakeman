@@ -46,10 +46,10 @@ class Brakeman::Report
     #Add number of high confidence warnings in summary.
     #Skipping for CSV because it makes the cell text instead of
     #a number.
-    unless OPTIONS[:output_format] == :to_csv
+    unless tracker.options[:output_format] == :to_csv
       summary = warnings_summary
 
-      if OPTIONS[:output_format] == :to_html
+      if tracker.options[:output_format] == :to_html
         warnings = "#{warnings} <span class='high-confidence'>(#{summary[:high_confidence]})</span>"
       else
         warnings = "#{warnings} (#{summary[:high_confidence]})"
@@ -83,9 +83,9 @@ class Brakeman::Report
       
      
       tracker.errors.each do |w|
-        p w if OPTIONS[:debug]
+        p w if tracker.options[:debug]
 
-        if OPTIONS[:output_format] == :to_html
+        if tracker.options[:output_format] == :to_html
           w[:error] = CGI.escapeHTML w[:error]
         end
 
@@ -102,10 +102,10 @@ class Brakeman::Report
   def generate_warnings
     table = Ruport::Data::Table(["Confidence", "Class", "Method", "Warning Type", "Message"])
     checks.warnings.each do |warning|
-      next if warning.confidence > OPTIONS[:min_confidence]
+      next if warning.confidence > tracker.options[:min_confidence]
       w = warning.to_row
 
-      if OPTIONS[:output_format] == :to_html
+      if tracker.options[:output_format] == :to_html
         w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
         w["Message"] = with_context warning, w["Message"]
       else
@@ -132,10 +132,10 @@ class Brakeman::Report
     unless checks.template_warnings.empty?
       table = Ruport::Data::Table(["Confidence", "Template", "Warning Type", "Message"])
       checks.template_warnings.each do |warning|
-        next if warning.confidence > OPTIONS[:min_confidence]
+        next if warning.confidence > tracker.options[:min_confidence]
         w = warning.to_row :template
 
-        if OPTIONS[:output_format] == :to_html
+        if tracker.options[:output_format] == :to_html
           w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
           w["Message"] = with_context warning, w["Message"]
         else
@@ -163,10 +163,10 @@ class Brakeman::Report
     unless checks.model_warnings.empty?
       table = Ruport::Data::Table(["Confidence", "Model", "Warning Type", "Message"])
       checks.model_warnings.each do |warning|
-        next if warning.confidence > OPTIONS[:min_confidence]
+        next if warning.confidence > tracker.options[:min_confidence]
         w = warning.to_row :model
 
-        if OPTIONS[:output_format] == :to_html
+        if tracker.options[:output_format] == :to_html
           w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
           w["Message"] = with_context warning, w["Message"]
         else
@@ -194,10 +194,10 @@ class Brakeman::Report
     unless checks.controller_warnings.empty?
       table = Ruport::Data::Table(["Confidence", "Controller", "Warning Type", "Message"])
       checks.controller_warnings.each do |warning|
-        next if warning.confidence > OPTIONS[:min_confidence]
+        next if warning.confidence > tracker.options[:min_confidence]
         w = warning.to_row :controller
 
-        if OPTIONS[:output_format] == :to_html
+        if tracker.options[:output_format] == :to_html
           w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
           w["Message"] = with_context warning, w["Message"]
         else
@@ -264,7 +264,7 @@ class Brakeman::Report
       unless template[:outputs].empty?
         template[:outputs].each do |out|
           out = out_processor.format out
-          out = CGI.escapeHTML(out) if OPTIONS[:output_format] == :to_html
+          out = CGI.escapeHTML(out) if tracker.options[:output_format] == :to_html
           table << { "Name" => name,
             "Output" => out.gsub("\n", ";").gsub(/\s+/, " ") }
         end
@@ -280,12 +280,12 @@ class Brakeman::Report
     generate_overview.to_html << "<br/>" <<
     generate_warning_overview.to_html
 
-    if OPTIONS[:report_routes] or OPTIONS[:debug]
+    if tracker.options[:report_routes] or tracker.options[:debug]
       out << "<h2>Controllers</h2>" <<
       generate_controllers.to_html
     end
 
-    if OPTIONS[:debug]
+    if tracker.options[:debug]
       out << "<h2>Templates</h2>" <<
       generate_templates.to_html
     end
@@ -317,12 +317,12 @@ class Brakeman::Report
     generate_overview.to_s << "\n" <<
     generate_warning_overview.to_s << "\n"
 
-    if OPTIONS[:report_routes] or OPTIONS[:debug]
+    if tracker.options[:report_routes] or tracker.options[:debug]
       out << "+CONTROLLERS+\n" <<
       generate_controllers.to_s << "\n"
     end
 
-    if OPTIONS[:debug]
+    if tracker.options[:debug]
       out << "+TEMPLATES+\n\n" <<
       generate_templates.to_s << "\n"
     end
@@ -352,12 +352,12 @@ class Brakeman::Report
     generate_overview.to_csv << "\n" <<
     generate_warning_overview.to_csv << "\n"
 
-    if OPTIONS[:report_routes] or OPTIONS[:debug]
+    if tracker.options[:report_routes] or tracker.options[:debug]
       out << "CONTROLLERS\n" <<
       generate_controllers.to_csv << "\n"
     end
 
-    if OPTIONS[:debug]
+    if tracker.options[:debug]
       out << "TEMPLATES\n\n" <<
       generate_templates.to_csv << "\n"
     end
@@ -388,19 +388,19 @@ class Brakeman::Report
   def rails_version
     if version = tracker.config[:rails_version]
       return version
-    elsif OPTIONS[:rails3]
+    elsif tracker.options[:rails3]
       return "3.x"
     else
       return "Unknown"
     end
   end
 
-  #Return header for HTML output. Uses CSS from OPTIONS[:html_style]
+  #Return header for HTML output. Uses CSS from tracker.options[:html_style]
   def html_header
-    if File.exist? OPTIONS[:html_style]
-      css = File.read OPTIONS[:html_style]
+    if File.exist? tracker.options[:html_style]
+      css = File.read tracker.options[:html_style]
     else
-      raise "Cannot find CSS stylesheet for HTML: #{OPTIONS[:html_style]}"
+      raise "Cannot find CSS stylesheet for HTML: #{tracker.options[:html_style]}"
     end
 
     <<-HTML
@@ -430,7 +430,7 @@ class Brakeman::Report
         <th>Checks Performed</th>
       </tr>
       <tr>
-        <td>#{File.expand_path OPTIONS[:app_path]}</td>
+        <td>#{File.expand_path tracker.options[:app_path]}</td>
         <td>#{rails_version}</td>
         <td>#{Time.now}</td>
         <td>#{checks.checks_run.sort.join(", ")}</td>
@@ -441,13 +441,13 @@ class Brakeman::Report
 
   #Generate header for text output
   def text_header
-    "\n+BRAKEMAN REPORT+\n\nApplication path: #{File.expand_path OPTIONS[:app_path]}\nRails version: #{rails_version}\nGenerated at #{Time.now}\nChecks run: #{checks.checks_run.sort.join(", ")}\n"
+    "\n+BRAKEMAN REPORT+\n\nApplication path: #{File.expand_path tracker.options[:app_path]}\nRails version: #{rails_version}\nGenerated at #{Time.now}\nChecks run: #{checks.checks_run.sort.join(", ")}\n"
   end
 
   #Generate header for CSV output
   def csv_header
     header = Ruport::Data::Table(["Application Path", "Report Generation Time", "Checks Performed", "Rails Version"])
-    header << [File.expand_path(OPTIONS[:app_path]), Time.now.to_s, checks.checks_run.sort.join(", "), rails_version]
+    header << [File.expand_path(tracker.options[:app_path]), Time.now.to_s, checks.checks_run.sort.join(", "), rails_version]
     "BRAKEMAN REPORT\n\n" << header.to_csv
   end
 
@@ -479,7 +479,7 @@ class Brakeman::Report
   #Return file name related to given warning. Uses +warning.file+ if it exists
   def file_for warning
     if warning.file
-      File.expand_path warning.file, OPTIONS[:app_path]
+      File.expand_path warning.file, tracker.options[:app_path]
     else
       case warning.warning_set
       when :controller
@@ -517,7 +517,7 @@ class Brakeman::Report
       end
     end
 
-    path = OPTIONS[:app_path]
+    path = tracker.options[:app_path]
 
     case type
     when :controller
@@ -583,12 +583,12 @@ class Brakeman::Report
     context = context_for warning
     full_message = nil
 
-    if OPTIONS[:message_limit] and
-      OPTIONS[:message_limit] > 0 and 
-      message.length > OPTIONS[:message_limit]
+    if tracker.options[:message_limit] and
+      tracker.options[:message_limit] > 0 and 
+      message.length > tracker.options[:message_limit]
 
       full_message = message
-      message = message[0..OPTIONS[:message_limit]] << "..."
+      message = message[0..tracker.options[:message_limit]] << "..."
     end
 
     if context.empty?
@@ -664,7 +664,7 @@ class Brakeman::Report
       [:model_warnings, "Model"], [:template_warnings, "Template"]].map do |meth, category|
 
       checks.send(meth).map do |w|
-        next if w.confidence > OPTIONS[:min_confidence]
+        next if w.confidence > tracker.options[:min_confidence]
         line = w.line || 0
         w.warning_type.gsub!(/[^\w\s]/, ' ')
         "#{file_for w}\t#{line}\t#{w.warning_type}\t#{category}\t#{w.format_message}\t#{TEXT_CONFIDENCE[w.confidence]}"

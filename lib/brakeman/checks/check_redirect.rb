@@ -39,12 +39,12 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   end
 
   #Custom check for user input. First looks to see if the user input
-  #is being output directly. This is necessary because of OPTIONS[:check_arguments]
+  #is being output directly. This is necessary because of tracker.options[:check_arguments]
   #which can be used to enable/disable reporting output of method calls which use
   #user input as arguments.
   def include_user_input? call
 
-    if OPTIONS[:ignore_redirect_to_model] and call? call[3][1] and 
+    if tracker.options[:ignore_redirect_to_model] and call? call[3][1] and 
       call[3][1][2] == :new and call[3][1][1]
 
       begin
@@ -71,7 +71,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
       end
     end
 
-    if OPTIONS[:check_arguments]
+    if tracker.options[:check_arguments]
       super
     else
       false

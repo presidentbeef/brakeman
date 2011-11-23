@@ -10,8 +10,8 @@ module Brakeman
   #The ControllerProcessor, TemplateProcessor, and ModelProcessor will
   #update the Tracker with information about what is parsed.
   class Processor
-    def initialize
-      @tracker = Tracker.new self
+    def initialize options
+      @tracker = Tracker.new self, options
     end
 
     def tracked_events
