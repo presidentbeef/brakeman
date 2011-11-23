@@ -1,1 +1,3 @@
-Brakeman::Version = "0.9.2"
+module Brakeman
+  Version = "0.9.2"
+end
