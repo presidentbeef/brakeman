@@ -4,9 +4,11 @@ $LOAD_PATH.unshift "#{TEST_PATH}/../lib"
 
 OPTIONS = {}
 
+require 'rubygems'
 require 'set'
 require 'test/unit'
-require 'scanner'
+require 'brakeman'
+require 'brakeman/scanner'
 
 #Helper methods for running scans
 module BrakemanTester
@@ -30,13 +32,13 @@ module BrakemanTester
       ::OPTIONS.merge! opts
 
       #Force correct parser
-      Object.instance_eval do
+      Brakeman.instance_eval do
         remove_const :RoutesProcessor
         remove_const :ConfigProcessor
         remove_const :RAILS_CONFIG
       end
-      load 'processors/route_processor.rb'
-      load 'processors/config_processor.rb'
+      load 'brakeman/processors/route_processor.rb'
+      load 'brakeman/processors/config_processor.rb'
     end
 
     #Run scan on app at the given path
@@ -48,10 +50,10 @@ module BrakemanTester
 
       announce "Processing #{name} application..."
 
-      tracker = Scanner.new(path).process
+      tracker = Brakeman::Scanner.new(path).process
       tracker.run_checks
 
-      Report.new(tracker).to_test
+      Brakeman::Report.new(tracker).to_test
     end
 
     #Make an announcement

@@ -4,8 +4,8 @@ require 'set'
 
 $:.unshift "#{File.expand_path(File.dirname(__FILE__))}/../lib"
 
-require 'version'
 require 'brakeman'
+require 'brakeman/version'
 
 trap("INT") do
   $stderr.puts "\nInterrupted - exiting."
@@ -152,6 +152,11 @@ OptionParser.new do |opts|
 
   opts.on "-k", "--checks", "List all available vulnerability checks" do
     options[:list_checks] = true
+  end
+
+  opts.on "-v", "--version", "Show Brakeman version" do
+    puts Brakeman::Version
+    exit
   end
 
   opts.on_tail "-h", "--help", "Display this message" do

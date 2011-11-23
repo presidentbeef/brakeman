@@ -1,6 +1,6 @@
 class UtilTests < Test::Unit::TestCase
   def util
-    Class.new.extend Util
+    Class.new.extend Brakeman::Util
   end
 
   def test_cookies?

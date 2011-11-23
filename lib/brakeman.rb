@@ -1,4 +1,5 @@
 require 'yaml'
+require 'rubygems'
 
 OPTIONS = {}
 
@@ -118,7 +119,7 @@ module Brakeman
   end
 
   def self.list_checks
-    require 'scanner'
+    require 'brakeman/scanner'
     $stderr.puts "Available Checks:"
     $stderr.puts "-" * 30
     $stderr.puts Checks.checks.map { |c| c.to_s }.sort.join "\n"
@@ -158,7 +159,7 @@ module Brakeman
     warn "Loading scanner..."
 
     begin
-      require 'scanner'
+      require 'brakeman/scanner'
     rescue LoadError
       abort "Cannot find lib/ directory."
     end

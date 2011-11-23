@@ -7,7 +7,7 @@ class Rails2Tests < Test::Unit::TestCase
   include BrakemanTester::CheckExpected
 
   def expected
-    if Scanner::RUBY_1_9
+    if Brakeman::Scanner::RUBY_1_9
       @expected ||= {
         :controller => 1,
         :model => 2,
