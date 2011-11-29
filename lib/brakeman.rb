@@ -86,7 +86,7 @@ module Brakeman
       :ignore_model_output => false,
       :message_limit => 100,
       :parallel_checks => true,
-      :html_style => "#{File.expand_path(File.dirname(__FILE__))}/../lib/format/style.css" 
+      :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css" 
     }
   end
 
