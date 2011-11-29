@@ -12,6 +12,8 @@ trap("INT") do
   exit!
 end
 
+Warnings_Found_Exit_Code = 3
+
 #Parse command line options
 options = {}
 
@@ -171,6 +173,6 @@ end.parse!(ARGV)
 clean = Brakeman.run options
 
 if options[:exit_on_warn] && !clean
-  exit 1
+  exit Warnings_Found_Exit_Code
 end
 
