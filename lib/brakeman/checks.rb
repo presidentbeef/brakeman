@@ -46,6 +46,11 @@ class Brakeman::Checks
     end
   end
 
+  #Return an array of all warnings found.
+  def all_warnings
+    @warnings + @template_warnings + @controller_warnings + @model_warnings
+  end
+
   #Run all the checks on the given Tracker.
   #Returns a new instance of Checks with the results.
   def self.run_checks tracker
