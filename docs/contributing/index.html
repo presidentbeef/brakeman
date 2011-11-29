@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Redirect</title>
+  <title>Brakeman: Contributing to Brakeman</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/redirect/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/contributing/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -100,30 +100,30 @@
 <article>
   
   <header>
-    <h1 class="entry-title">Redirect</h1>
+    <h1 class="entry-title">Contributing to Brakeman</h1>
   </header>
   
-  <p>Unvalidated redirects and forwards are #10 on the <a href="https://www.owasp.org/index.php/Top_10_2010-A10">OWASP Top Ten</a>.</p>
+  <p>The simplest way to contribute to the improvement of Brakeman is to run it against your own applications and then report any issues <a href="http://github.com/presidentbeef/brakeman/issues">here</a>.</p>
 
-<p>Redirects which rely on user-supplied values can be used to &#8220;spoof&#8221; websites or hide malicious links in otherwise harmless-looking URLs. They can also allow access to restricted areas of a site if the destination is not validated.</p>
+<p>Suggestions are welcome, too!</p>
 
-<p>Brakeman will raise warnings whenever <code>redirect_to</code> appears to be used with a user-supplied value that may allow them to change the <code>:host</code> option.</p>
+<h3>Creating New Checks</h3>
 
-<p>For example,</p>
+<p>Each check that Brakeman runs is a separate class contained in <code>lib/brakeman/checks/check_*.rb</code>. Some of these are very simple. For example, see the <a href="https://github.com/presidentbeef/brakeman/blob/master/lib/brakeman/checks/check_strip_tags.rb">StripTags</a>.</p>
 
-<pre><code>redirect_to params.merge(:action =&gt; :home)
-</code></pre>
+<p>New checks can be added simply by writing a new check and placing it in that directory. For best results, subclass from <code>BaseCheck</code> and follow the naming convention of starting the class name with <code>Check</code>.</p>
 
-<p>will create a warning like</p>
+<h3>Testing on Different Platforms</h3>
 
-<pre><code>Possible unprotected redirect near line 46: redirect_to(params)
-</code></pre>
+<p>Brakeman should work on most platforms without a problem. It is typically tested against MRI 1.8.7 and 1.9.3, so any problems outside those two should definitely be <a href="http://github.com/presidentbeef/brakeman/issues">reported</a>.</p>
 
-<p>To protect these redirects, use <code>:only_path =&gt; true</code> to limit the redirect to the current host or specify the host.</p>
+<h3>Contributing Features</h3>
 
-<hr />
+<p>New feature implementations should be submitted as a pull request on <a href="https://github.com/presidentbeef/brakeman">GitHub</a>.</p>
 
-<p>Back to <a href="/docs/warning_types">Warning Types</a></p>
+<h3>Reporting Success</h3>
+
+<p>If you are happily using Brakeman, consider sending a tweet to <a href="http://twitter.com/#!/brakemanscanner">@BrakemanScanner</a>.</p>
 
   
     <footer>
