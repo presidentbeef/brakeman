@@ -591,7 +591,7 @@ class Brakeman::Report
       message = message[0..tracker.options[:message_limit]] << "..."
     end
 
-    if context.empty?
+    if context.empty? and not full_message
       return CGI.escapeHTML(message)
     end
 
