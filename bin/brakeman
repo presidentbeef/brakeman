@@ -12,7 +12,7 @@ trap("INT") do
   exit!
 end
 
-Warnings_Found_Exit_Code = 3
+Brakeman::Warnings_Found_Exit_Code = 3
 
 #Parse command line options
 options = {}
@@ -149,7 +149,7 @@ OptionParser.new do |opts|
     end
   end
 
-  opts.on( "-s", "--exit-on-warn", "Exit code is non-zero if warnings found.") do |s|
+  opts.on( "-z", "--exit-on-warn", "Exit code is non-zero if warnings found.") do |s|
     options[:exit_on_warn] = s
   end
 
@@ -173,6 +173,6 @@ end.parse!(ARGV)
 clean = Brakeman.run options
 
 if options[:exit_on_warn] && !clean
-  exit Warnings_Found_Exit_Code
+  exit Brakeman::Warnings_Found_Exit_Code
 end
 

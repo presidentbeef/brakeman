@@ -186,7 +186,7 @@ module Brakeman
     end
 
     if options[:exit_on_warn]
-      tracker.checks.warnings.each do |warning|
+      tracker.checks.all_warnings.each do |warning|
         next if warning.confidence > options[:min_confidence]
         return false
       end
