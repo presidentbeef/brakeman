@@ -464,10 +464,13 @@ class Brakeman::Report
         checks.template_warnings].each do |warnings|
 
       warnings.each do |warning|
-        summary[warning.warning_type.to_s] += 1
+        unless warning.confidence > tracker.options[:min_confidence]
 
-        if warning.confidence == 0
-          high_confidence_warnings += 1
+          summary[warning.warning_type.to_s] += 1
+
+          if warning.confidence == 0
+            high_confidence_warnings += 1
+          end
         end
       end
     end
