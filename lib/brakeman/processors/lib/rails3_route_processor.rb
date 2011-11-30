@@ -162,6 +162,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
 
   def process_resources exp
     if exp[3] and exp[3][2] and exp[3][2][0] == :hash
+      self.current_controller = exp[3][1][1]
       #handle hash
     elsif exp[3][1..-1].all? { |s| symbol? s }
       exp[3][1..-1].each do |s|
