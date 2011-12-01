@@ -11,13 +11,13 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 16,
+        :template => 15,
         :warning => 17 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 16,
+        :template => 15,
         :warning => 18 }
     end
   end
@@ -308,7 +308,7 @@ class Rails2Tests < Test::Unit::TestCase
   end
 
   def test_sql_injection_in_template
-    assert_warning :type => :template,
+    assert_no_warning :type => :template,
       :warning_type => "SQL Injection",
       :line => 4,
       :message => /^Possible SQL injection/,
