@@ -14,12 +14,17 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
   def run_check
     @rails_version = tracker.config[:rails_version]
+
+    debug_info "Finding possible SQL calls on models"
     calls = tracker.find_model_find tracker.models.keys
 
+    debug_info "Finding possible SQL calls with no target"
     calls.concat tracker.find_call([], /^(find.*|last|first|all|count|sum|average|minumum|maximum|count_by_sql)$/)
 
+    debug_info "Finding possible SQL calls using constantized()"
     calls.concat tracker.find_model_find(nil).select { |result| constantize_call? result }
 
+    debug_info "Processing possible SQL calls"
     calls.each do |c|
       process c
     end

@@ -19,6 +19,7 @@ class Brakeman::BaseCheck < SexpProcessor
     @tracker = tracker
     @string_interp = false
     @current_set = nil
+    @debug_mode = tracker.options[:debug]
     @current_template = @current_module = @current_class = @current_method = nil
     self.strict = false
     self.auto_shift_type = false
@@ -375,5 +376,9 @@ class Brakeman::BaseCheck < SexpProcessor
     else
       "config/environment.rb"
     end
+  end
+
+  def debug_info msg
+    Kernel.warn msg if @debug_mode
   end
 end

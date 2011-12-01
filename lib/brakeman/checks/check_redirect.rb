@@ -10,6 +10,8 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
   def run_check
+    debug_info "Finding calls to redirect_to()"
+
     @tracker.find_call(nil, :redirect_to).each do |c|
       process c
     end
@@ -43,6 +45,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   #which can be used to enable/disable reporting output of method calls which use
   #user input as arguments.
   def include_user_input? call
+    debug_info "Checking if call includes user input"
 
     if tracker.options[:ignore_redirect_to_model] and call? call[3][1] and 
       call[3][1][2] == :new and call[3][1][1]

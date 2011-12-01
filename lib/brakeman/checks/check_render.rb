@@ -5,12 +5,14 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
   def run_check
+    debug_info "Checking all method bodies for calls to render()"
     tracker.each_method do |src, class_name, method_name|
       @current_class = class_name
       @current_method = method_name
       process src
     end
 
+    debug_info "Checking all templates for calls to render()"
     tracker.each_template do |name, template|
       @current_template = template
       process template[:src]
