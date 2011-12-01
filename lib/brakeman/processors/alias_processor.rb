@@ -364,7 +364,7 @@ class Brakeman::AliasProcessor < SexpProcessor
   def only_ivars
     res = SexpProcessor::Environment.new
     env.all.each do |k, v|
-      res[k] = v if k.node_type == :ivar
+      res[k] = v.dup if k.node_type == :ivar
     end
     res
   end
