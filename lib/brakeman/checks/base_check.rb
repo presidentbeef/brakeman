@@ -34,7 +34,14 @@ class Brakeman::BaseCheck < SexpProcessor
     location = location[:name] if location.is_a? Hash
     location = location.to_sym
 
-    @results << [result.line, location, result]
+    if result? result
+      line = result[-1].original_line || result[-1].line
+    else
+      line = result.original_line || result.line
+    end
+
+
+    @results << [line, location, result]
   end
 
   #Default Sexp processing. Iterates over each value in the Sexp
@@ -128,7 +135,13 @@ class Brakeman::BaseCheck < SexpProcessor
   #This is to avoid reporting duplicates. Checks if the result has been
   #reported already from the same line number.
   def duplicate? result, location = nil
-    line = result.line
+    if result? result
+      line = result[-1].original_line || result[-1].line
+    else
+      line = result.original_line || result.line
+    end
+
+
     location ||= (@current_template && @current_template[:name]) || @current_class || @current_module || @current_set || result[1]
 
     location = location[:name] if location.is_a? Hash
