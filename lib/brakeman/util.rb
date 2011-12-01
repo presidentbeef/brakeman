@@ -125,6 +125,11 @@ module Brakeman::Util
     exp.is_a? Sexp and exp.node_type == :lit and exp[1].is_a? Integer
   end
 
+  #Check if _exp_ represents a result: s(:result, ...)
+  def result? exp
+    exp.is_a? Sexp and exp.node_type == :result
+  end
+
   #Check if _exp_ is a params hash
   def params? exp
     if exp.is_a? Sexp
