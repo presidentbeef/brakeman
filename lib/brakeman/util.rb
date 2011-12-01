@@ -169,3 +169,13 @@ module Brakeman::Util
     exp.is_a? Sexp
   end
 end
+
+class Sexp
+  def original_line line = nil
+    if line
+      @original_line = line
+    else
+      @original_line
+    end
+  end
+end
