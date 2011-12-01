@@ -44,8 +44,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       failed = (args.length > 1 and check_arguments args[-1])
     end
 
-    if failed and not duplicate? call, exp[1]
-      add_result call, exp[1]
+    if failed and not exp[-1].original_line and not duplicate? exp
+      add_result exp
 
       if include_user_input? args[-1]
         confidence = CONFIDENCE[:high]
