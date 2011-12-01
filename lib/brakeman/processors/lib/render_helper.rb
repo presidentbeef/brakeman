@@ -102,6 +102,14 @@ module Brakeman::RenderHelper
         template_env[Sexp.new(:call, nil, variable, Sexp.new(:arglist))] = Sexp.new(:call, Sexp.new(:const, Brakeman::Tracker::UNKNOWN_MODEL), :new, Sexp.new(:arglist))
       end
 
+      #Set original_line for values so it is clear
+      #that values came from another file
+      template_env.all.each do |var, value|
+        unless value.original_line
+          value.original_line = value.line
+        end
+      end
+
       #Run source through AliasProcessor with instance variables from the
       #current environment.
       #TODO: Add in :locals => { ... } to environment
