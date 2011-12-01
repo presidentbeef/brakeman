@@ -373,7 +373,8 @@ class Brakeman::AliasProcessor < SexpProcessor
   #expressions, so warnings indicate the correct line.
   def set_line exp, line_number
     if sexp? exp
-      exp.line(line_number)
+      exp.original_line(exp.original_line || exp.line)
+      exp.line line_number
       exp.each do |e|
         set_line e, line_number
       end
