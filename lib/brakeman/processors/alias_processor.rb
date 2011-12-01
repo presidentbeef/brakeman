@@ -364,7 +364,8 @@ class Brakeman::AliasProcessor < SexpProcessor
   def only_ivars
     res = SexpProcessor::Environment.new
     env.all.each do |k, v|
-      res[k] = v.dup if k.node_type == :ivar
+      #TODO Why would this have nil values?
+      res[k] = v.dup if k.node_type == :ivar and not v.nil?
     end
     res
   end
