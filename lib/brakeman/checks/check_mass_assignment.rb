@@ -47,7 +47,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
       if include_user_input? call[3] and not hash? call[3][1]
         confidence = CONFIDENCE[:high]
       else
-        confidence = CONFIDENCE[:med]
+        confidence = CONFIDENCE[:low]
       end
       
       warn :result => res, 
