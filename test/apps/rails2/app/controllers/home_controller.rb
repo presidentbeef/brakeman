@@ -64,6 +64,11 @@ class HomeController < ApplicationController
     RandomClass.load params[:file]
   end
 
+  def test_redirect_with_url_for
+    url = url_for(params)
+    redirect_to url 
+  end
+
   private
 
   def filter_it
