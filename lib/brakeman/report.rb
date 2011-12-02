@@ -409,11 +409,15 @@ class Brakeman::Report
     <head>
     <title>Brakeman Report</title>
     <script type="text/javascript">
-      function toggle(context){
-        if (document.getElementById(context).style.display != "block")
-          document.getElementById(context).style.display = "block";
+      function toggle(context) {
+        var elem = document.getElementById(context);
+
+        if (elem.style.display != "block")
+          elem.style.display = "block";
         else
-          document.getElementById(context).style.display = "none";
+          elem.style.display = "none";
+          
+        elem.parentNode.scrollIntoView();
       }
     </script>
     <style type="text/css"> 
