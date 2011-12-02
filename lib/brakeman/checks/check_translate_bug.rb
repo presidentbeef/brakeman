@@ -37,6 +37,6 @@ class Brakeman::CheckTranslateBug < Brakeman::BaseCheck
   def uses_translate?
     debug_info "Finding calls to translate() or t()"
 
-    not tracker.find_call([], [:t, :translate]).empty?
+    not tracker.find_call(:target => nil, :methods => [:t, :translate]).empty?
   end
 end

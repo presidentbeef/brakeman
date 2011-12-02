@@ -8,7 +8,7 @@ class Brakeman::CheckEvaluation < Brakeman::BaseCheck
   #Process calls
   def run_check
     debug_info "Finding eval-like calls"
-    calls = tracker.find_call nil, [:eval, :instance_eval, :class_eval, :module_eval]
+    calls = tracker.find_call :method => [:eval, :instance_eval, :class_eval, :module_eval]
 
     debug_info "Processing eval-like calls"
     calls.each do |call|
@@ -18,11 +18,11 @@ class Brakeman::CheckEvaluation < Brakeman::BaseCheck
 
   #Warns if result includes user input
   def process_result result
-    if include_user_input? result[-1]
+    if include_user_input? result[:call]
       warn :result => result,
         :warning_type => "Dangerous Eval",
         :message => "User input in eval",
-        :code => result[-1],
+        :code => result[:call],
         :confidence => CONFIDENCE[:high]
     end
   end

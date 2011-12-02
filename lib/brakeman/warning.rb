@@ -17,13 +17,13 @@ class Brakeman::Warning
 
     result = options[:result]
     if result
-      if result.length == 3 #template result
-        @template ||= result[1]
-        @code ||= result[2]
+      if result[:location][0] == :template #template result
+        @template ||= result[:location][1]
+        @code ||= result[:call]
       else
-        @class ||= result[1]
-        @method ||= result[2]
-        @code ||= result[3]
+        @class ||= result[:location][1]
+        @method ||= result[:location][2]
+        @code ||= result[:call]
       end
     end
 

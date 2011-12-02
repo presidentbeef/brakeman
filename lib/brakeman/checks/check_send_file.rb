@@ -8,7 +8,7 @@ class Brakeman::CheckSendFile < Brakeman::CheckFileAccess
   def run_check
     debug_info "Finding all calls to send_file()"
 
-    methods = tracker.find_call nil, :send_file
+    methods = tracker.find_call :target => false, :method => :send_file
 
     methods.each do |call|
       process_result call

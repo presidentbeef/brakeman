@@ -65,6 +65,8 @@ class Brakeman::Scanner
     process_models
     warn "Processing controllers..."
     process_controllers
+    warn "Indexing call sites..."
+    index_call_sites
     tracker
   end
 
@@ -256,6 +258,10 @@ class Brakeman::Scanner
         tracker.error e.exception(e.message + "\nWhile processing #{f}"), e.backtrace
       end
     end
+  end
+
+  def index_call_sites
+    tracker.index_call_sites
   end
 end
 

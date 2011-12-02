@@ -30,16 +30,17 @@ class Brakeman::BaseCheck < SexpProcessor
 
   #Add result to result list, which is used to check for duplicates
   def add_result result, location = nil
-    location ||= (@current_template && @current_template[:name]) || @current_class || @current_module || @current_set || result[1]
+    location ||= (@current_template && @current_template[:name]) || @current_class || @current_module || @current_set || result[:location][1]
     location = location[:name] if location.is_a? Hash
     location = location.to_sym
 
-    if result? result
-      line = result[-1].original_line || result[-1].line
-    else
+    if result.is_a? Hash
+      line = result[:call].original_line || result[:call].line
+    elsif sexp? result
       line = result.original_line || result.line
+    else
+      raise ArgumentError
     end
-
 
     @results << [line, location, result]
   end
@@ -135,17 +136,19 @@ class Brakeman::BaseCheck < SexpProcessor
   #This is to avoid reporting duplicates. Checks if the result has been
   #reported already from the same line number.
   def duplicate? result, location = nil
-    if result? result
-      line = result[-1].original_line || result[-1].line
-    else
+    if result.is_a? Hash
+      line = result[:call].original_line || result[:call].line
+    elsif sexp? result
       line = result.original_line || result.line
+    else
+      raise ArgumentError
     end
 
-
-    location ||= (@current_template && @current_template[:name]) || @current_class || @current_module || @current_set || result[1]
+    location ||= (@current_template && @current_template[:name]) || @current_class || @current_module || @current_set || result[:location][1]
 
     location = location[:name] if location.is_a? Hash
     location = location.to_sym
+
     @results.each do |r|
       if r[0] == line and r[1] == location
         if tracker.options[:combine_locations]

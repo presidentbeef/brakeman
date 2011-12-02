@@ -21,7 +21,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
     @results = Set.new
 
     debug_info "Finding possible mass assignment calls on #{models.length} models"
-    calls = tracker.find_call models, [:new,
+    calls = tracker.find_call :targets => models, :methods => [:new,
       :attributes=, 
       :update_attribute, 
       :update_attributes, 
@@ -31,13 +31,13 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
 
     debug_info "Processing possible mass assignment calls"
     calls.each do |result|
-      process result
+      process_result result
     end
   end
 
   #All results should be Model.new(...) or Model.attributes=() calls
   def process_result res
-    call = res[-1]
+    call = res[:call]
 
     check = check_call call
 

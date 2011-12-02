@@ -32,6 +32,6 @@ class Brakeman::CheckQuoteTableName < Brakeman::BaseCheck
   def uses_quote_table_name?
     debug_info "Finding calls to quote_table_name()"
 
-    not tracker.find_call([], :quote_table_name).empty?
+    not tracker.find_call(:target => false, :method => :quote_table_name).empty?
   end
 end

@@ -18,17 +18,17 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     check_for_backticks tracker
 
     debug_info "Finding other system calls"
-    calls = tracker.find_call [:IO, :Open3, :Kernel, []], [:exec, :popen, :popen3, :syscall, :system]
+    calls = tracker.find_call :targets => [:IO, :Open3, :Kernel, nil], :methods => [:exec, :popen, :popen3, :syscall, :system]
 
     debug_info "Processing system calls"
     calls.each do |result|
-      process result
+      process_result result
     end
   end
 
   #Processes results from FindCall.
-  def process_result exp
-    call = exp[-1]
+  def process_result result
+    call = result[:call]
 
     args = process call[3]
 
@@ -39,8 +39,8 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       failure = include_user_input?(args) || include_interp?(args)
     end
 
-    if failure and not duplicate? call, exp[1]
-      add_result call, exp[1]
+    if failure and not duplicate? result
+      add_result result
 
       if @string_interp
         confidence = CONFIDENCE[:med]
@@ -48,15 +48,13 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
         confidence = CONFIDENCE[:high]
       end
 
-      warn :result => exp,
+      warn :result => result,
         :warning_type => "Command Injection", 
         :message => "Possible command injection",
         :line => call.line,
         :code => call,
         :confidence => confidence
     end
-
-    exp
   end
 
   #Looks for calls using backticks such as

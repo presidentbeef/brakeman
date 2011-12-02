@@ -26,6 +26,6 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
   def uses_strip_tags?
     debug_info "Finding calls to strip_tags()"
 
-    not tracker.find_call([], :strip_tags).empty?
+    not tracker.find_call(:target => false, :method => :strip_tags).empty?
   end
 end

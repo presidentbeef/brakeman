@@ -31,8 +31,8 @@ class Brakeman::CheckMailTo < Brakeman::BaseCheck
   def mail_to_javascript?
     debug_info "Checking calls to mail_to for javascript encoding"
 
-    tracker.find_call([], :mail_to).each do |result|
-      call = result[-1]
+    tracker.find_call(:target => false, :method => :mail_to).each do |result|
+      call = result[:call]
       args = call[-1]
 
       args.each do |arg|

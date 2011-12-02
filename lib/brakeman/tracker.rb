@@ -1,7 +1,9 @@
 require 'set'
+require 'brakeman/call_index'
 require 'brakeman/checks'
 require 'brakeman/report'
 require 'brakeman/processors/lib/find_call'
+require 'brakeman/processors/lib/find_all_calls'
 require 'brakeman/processors/lib/find_model_call'
 
 #The Tracker keeps track of all the processed information.
@@ -41,6 +43,7 @@ class Brakeman::Tracker
     @checks = nil
     @processed = nil
     @template_cache = Set.new
+    @call_index = nil
   end
 
   #Add an error to the list. If no backtrace is given,
@@ -95,20 +98,9 @@ class Brakeman::Tracker
   end
 
   #Find a method call.
-  #
-  #See FindCall for details on arguments.
-  def find_call target, method
-    finder = Brakeman::FindCall.new target, method, self
-
-    self.each_method do |definition, set_name, method_name|
-      finder.process_source definition, set_name, method_name
-    end
-
-    self.each_template do |name, template|
-      finder.process_source template[:src], nil, nil, template
-    end
-
-    finder.matches
+  def find_call options
+    index_calls unless @call_index
+    @call_index.find_calls options
   end
 
   #Finds method call on models.
@@ -142,5 +134,19 @@ class Brakeman::Tracker
   #Returns a Report with this Tracker's information
   def report
     Brakeman::Report.new(self)
+  end
+
+  def index_call_sites
+    finder = Brakeman::FindAllCalls.new self
+
+    self.each_method do |definition, set_name, method_name|
+      finder.process_source definition, set_name, method_name
+    end
+
+    self.each_template do |name, template|
+      finder.process_source template[:src], nil, nil, template
+    end
+
+    @call_index = Brakeman::CallIndex.new finder.calls
   end
 end

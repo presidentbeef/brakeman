@@ -7,13 +7,13 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
 
   def run_check
     debug_info "Finding possible file access"
-    methods = tracker.find_call [:Dir, :File, :IO, :Kernel, :"Net::FTP", :"Net::HTTP", :PStore, :Pathname, :Shell, :YAML], [:[], :chdir, :chroot, :delete, :entries, :foreach, :glob, :install, :lchmod, :lchown, :link, :load, :load_file, :makedirs, :move, :new, :open, :read, :read_lines, :rename, :rmdir, :safe_unlink, :symlink, :syscopy, :sysopen, :truncate, :unlink]
+    methods = tracker.find_call :targets => [:Dir, :File, :IO, :Kernel, :"Net::FTP", :"Net::HTTP", :PStore, :Pathname, :Shell, :YAML], :methods => [:[], :chdir, :chroot, :delete, :entries, :foreach, :glob, :install, :lchmod, :lchown, :link, :load, :load_file, :makedirs, :move, :new, :open, :read, :read_lines, :rename, :rmdir, :safe_unlink, :symlink, :syscopy, :sysopen, :truncate, :unlink]
 
     debug_info "Finding calls to load()"
-    methods.concat tracker.find_call [], [:load]
+    methods.concat tracker.find_call :target => false, :method => :load
 
     debug_info "Finding calls using FileUtils"
-    methods.concat tracker.find_call(:FileUtils, nil)
+    methods.concat tracker.find_call :target => :FileUtils
 
     debug_info "Processing found calls"
     methods.each do |call|
@@ -22,13 +22,13 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
   end
 
   def process_result result
-    call = result[-1]
+    call = result[:call]
 
     file_name = call[3][1]
 
     if check = include_user_input?(file_name)
-      unless duplicate? call, result[1]
-        add_result call, result[1]
+      unless duplicate? result
+        add_result result
 
         if check == :params
           message = "Parameter"

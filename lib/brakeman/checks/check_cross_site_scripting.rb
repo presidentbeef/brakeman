@@ -176,7 +176,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
           confidence = CONFIDENCE[:low]
         end
 
-        warn :template => @current_template, 
+        warn :template => @current_template,
           :warning_type => "Cross Site Scripting", 
           :message => message,
           :line => exp.line,
@@ -274,7 +274,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
   def run_check
     #Ideally, I think this should also check to see if people are setting
     #:escape => false
-    methods = tracker.find_call [], :link_to 
+    methods = tracker.find_call :target => false, :method => :link_to 
 
     @models = tracker.models.keys
     @inspect_arguments = tracker.options[:check_arguments]
@@ -287,7 +287,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
   def process_result result
     #Have to make a copy of this, otherwise it will be changed to
     #an ignored method call by the code above.
-    call = result[-1] = result[-1].dup
+    call = result[:call] = result[:call].dup
 
     @matched = false
 

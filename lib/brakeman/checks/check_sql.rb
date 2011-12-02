@@ -16,23 +16,31 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     @rails_version = tracker.config[:rails_version]
 
     debug_info "Finding possible SQL calls on models"
-    calls = tracker.find_model_find tracker.models.keys
+    if tracker.options[:rails3]
+      calls = tracker.find_call :targets => tracker.models.keys,
+        :methods => /^(find.*|first|last|all|where|order|group|having)$/,
+        :nested => true
+    else
+      calls = tracker.find_call :targets => tracker.models.keys,
+        :methods => /^(find.*|first|last|all)$/,
+        :nested => true
+    end
 
     debug_info "Finding possible SQL calls with no target"
-    calls.concat tracker.find_call([], /^(find.*|last|first|all|count|sum|average|minumum|maximum|count_by_sql)$/)
+    calls.concat tracker.find_call(:target => nil, :method => /^(find.*|last|first|all|count|sum|average|minumum|maximum|count_by_sql)$/)
 
     debug_info "Finding possible SQL calls using constantized()"
-    calls.concat tracker.find_model_find(nil).select { |result| constantize_call? result }
+    calls.concat tracker.find_call(:method => /^(find.*|last|first|all|count|sum|average|minumum|maximum|count_by_sql)$/).select { |result| constantize_call? result }
 
     debug_info "Processing possible SQL calls"
     calls.each do |c|
-      process c
+      process_result c
     end
   end
 
   #Process result from FindCall.
-  def process_result exp
-    call = exp[-1]
+  def process_result result
+    call = result[:call]
 
     args = process call[3]
 
@@ -44,8 +52,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       failed = (args.length > 1 and check_arguments args[-1])
     end
 
-    if failed and not exp[-1].original_line and not duplicate? exp
-      add_result exp
+    if failed and not call.original_line and not duplicate? result
+      add_result result
 
       if include_user_input? args[-1]
         confidence = CONFIDENCE[:high]
@@ -53,7 +61,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         confidence = CONFIDENCE[:med]
       end
 
-      warn :result => exp,
+      warn :result => result,
         :warning_type => "SQL Injection",
         :message => "Possible SQL injection",
         :confidence => confidence
@@ -66,12 +74,11 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         confidence = CONFIDENCE[:low]
       end
 
-      warn :result => exp, 
+      warn :result => result, 
         :warning_type => "SQL Injection", 
         :message => "Upgrade to Rails >= 2.1.2 to escape :limit and :offset. Possible SQL injection",
         :confidence => confidence
     end
-    exp
   end
 
   private

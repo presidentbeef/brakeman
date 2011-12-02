@@ -12,13 +12,13 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   def run_check
     debug_info "Finding calls to redirect_to()"
 
-    @tracker.find_call(nil, :redirect_to).each do |c|
-      process c
+    @tracker.find_call(:target => false, :method => :redirect_to).each do |res|
+      process_result res
     end
   end
 
-  def process_result exp
-    call = exp[-1]
+  def process_result result
+    call = result[:call]
 
     method = call[2]
 
@@ -29,15 +29,13 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
         confidence = CONFIDENCE[:low]
       end
 
-      warn :result => exp,
+      warn :result => result,
         :warning_type => "Redirect",
         :message => "Possible unprotected redirect",
         :line => call.line,
         :code => call,
         :confidence => confidence
     end
-
-    exp
   end
 
   #Custom check for user input. First looks to see if the user input
