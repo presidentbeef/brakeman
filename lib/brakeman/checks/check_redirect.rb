@@ -92,10 +92,26 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
           end
         end
       elsif call? arg and arg[2] == :url_for
-        return only_path?(arg)
+        return check_url_for(arg)
       end
     end
 
     false
+  end
+
+  #+url_for+ is only_path => true by default. This checks to see if it is
+  #set to false for some reason.
+  def check_url_for call
+    call[3].each do |arg|
+      if hash? arg
+        hash_iterate(arg) do |k,v|
+          if symbol? k and k[1] == :only_path and v.is_a? Sexp and v[0] == :false
+            return false
+          end
+        end
+      end
+    end
+
+    true
   end
 end
