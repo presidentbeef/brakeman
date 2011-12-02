@@ -382,7 +382,7 @@ class Rails3Tests < Test::Unit::TestCase
     assert_warning :warning_type => "Mass Assignment",
       :line => 58,
       :message => /^Unprotected mass assignment/,
-      :confidence => 1,
+      :confidence => 2,
       :file => /home_controller\.rb/
   end
 
