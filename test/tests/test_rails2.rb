@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 2,
         :template => 15,
-        :warning => 17 }
+        :warning => 18 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
         :template => 15,
-        :warning => 18 }
+        :warning => 19 }
     end
   end
 
@@ -314,6 +314,15 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Possible SQL injection/,
       :confidence => 0,
       :file => /test_sql\.html\.erb/
+  end
+
+  def test_sql_injection_call_chain
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 73,
+      :message => /^Possible SQL injection near line 73: User.humans.alive.find/,
+      :confidence => 0,
+      :file => /home_controller\.rb/ 
   end
 
   def test_escape_once

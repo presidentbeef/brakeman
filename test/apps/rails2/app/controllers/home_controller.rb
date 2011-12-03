@@ -69,6 +69,10 @@ class HomeController < ApplicationController
     redirect_to url 
   end
 
+  def test_sql_nested
+    User.humans.alive.find(:all, :conditions => "age > #{params[:age]}")
+  end
+
   private
 
   def filter_it
