@@ -153,6 +153,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #   :find,
   #   s(:arglist, s(:str, "something")))
   def constantize_call? result
-    sexp? result[-1][1] and result[-1][1][0] == :call and result[-1][1][2] == :constantize
+    call = result[:call]
+    call? call[1] and call[1][2] == :constantize
   end
 end
