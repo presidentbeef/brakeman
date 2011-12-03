@@ -14,9 +14,11 @@ class Brakeman::CallIndex
     target = options[:target] || options[:targets]
     method = options[:method] || options[:methods]
     nested = options[:nested]
-
+    
+    if options[:chained]
+      return find_chain options
     #Find by narrowest category
-    if target and method and target.is_a? Array and method.is_a? Array
+    elsif target and method and target.is_a? Array and method.is_a? Array
       if target.length > method.length
         calls = filter_by_target calls_by_methods(method), target
       else
@@ -65,6 +67,17 @@ class Brakeman::CallIndex
     end
   end
 
+  def find_chain options
+    target = options[:target] || options[:targets]
+    method = options[:method] || options[:methods]
+
+    calls = calls_by_method method
+    
+    return [] if calls.nil?
+
+    calls = filter_by_chain calls, target
+  end
+
   def calls_by_target target
     if target.is_a? Array
       calls_by_targets target
@@ -108,14 +121,15 @@ class Brakeman::CallIndex
       elsif methods.length > 1
         calls_by_methods methods
       else
-        calls_by_method[methods.first]
+        @calls_by_method[methods.first.to_sym]
       end
     else
-      @calls_by_method[method]
+      @calls_by_method[method.to_sym]
     end
   end
 
   def calls_by_methods methods
+    methods = methods.map { |m| m.to_sym }
     calls = []
 
     methods.each do |method|
@@ -157,5 +171,23 @@ class Brakeman::CallIndex
 
   def filter_nested calls
     filter calls, :nested, false
+  end
+
+  def filter_by_chain calls, target
+    if target.is_a? Array
+      targets = Set.new target
+
+      calls.select do |call|
+        targets.include? call[:chain].first
+      end
+    elsif target.is_a? Regexp
+      calls.select do |call|
+        call[:chain].first.to_s.match target
+      end
+    else
+      calls.select do |call|
+        call[:chain].first == target
+      end
+    end
   end
 end
