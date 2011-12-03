@@ -19,11 +19,11 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     if tracker.options[:rails3]
       calls = tracker.find_call :targets => tracker.models.keys,
         :methods => /^(find.*|first|last|all|where|order|group|having)$/,
-        :nested => true
+        :chained => true
     else
       calls = tracker.find_call :targets => tracker.models.keys,
         :methods => /^(find.*|first|last|all)$/,
-        :nested => true
+        :chained => true
     end
 
     debug_info "Finding possible SQL calls with no target"
