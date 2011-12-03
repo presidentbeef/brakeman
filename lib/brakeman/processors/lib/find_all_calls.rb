@@ -51,12 +51,16 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
 
     method = exp[2]
     process exp[3]
+
+    call = { :target => target, :method => method, :call => exp, :nested => @in_target, :chain => get_chain(exp) }
     
     if @current_template
-      @calls << { :target => target, :method => method, :call => exp, :nested => @in_target, :location => [:template, @current_template]}
+      call[:location] = [:template, @current_template]
     else
-      @calls << { :target => target, :method => method, :call => exp, :nested => @in_target, :location => [:class, @current_class, @current_method] }
+      call[:location] = [:class, @current_class, @current_method]
     end
+
+    @calls << call
 
     exp
   end
@@ -86,6 +90,16 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
       end
     else
       exp
+    end
+  end
+
+  #Returns method chain as an array
+  #For example, User.human.alive.all would return [:User, :human, :alive, :all]
+  def get_chain call
+    if call? call
+      get_chain(call[1]) + [call[2]]
+    else
+      [get_target(call)]
     end
   end
 end
