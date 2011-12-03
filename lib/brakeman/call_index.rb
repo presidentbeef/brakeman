@@ -108,14 +108,15 @@ class Brakeman::CallIndex
       elsif methods.length > 1
         calls_by_methods methods
       else
-        calls_by_method[methods.first]
+        @calls_by_method[methods.first.to_sym]
       end
     else
-      @calls_by_method[method]
+      @calls_by_method[method.to_sym]
     end
   end
 
   def calls_by_methods methods
+    methods = methods.map { |m| m.to_sym }
     calls = []
 
     methods.each do |method|
