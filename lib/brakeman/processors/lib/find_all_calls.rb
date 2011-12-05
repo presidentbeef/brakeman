@@ -96,7 +96,7 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
   #Returns method chain as an array
   #For example, User.human.alive.all would return [:User, :human, :alive, :all]
   def get_chain call
-    if call? call
+    if sexp? call and (call.node_type == :call or call.node_type == :attrasgn)
       get_chain(call[1]) + [call[2]]
     else
       [get_target(call)]
