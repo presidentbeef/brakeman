@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 4,
       :template => 18,
-      :warning => 16
+      :warning => 17
     }
   end
 
@@ -384,6 +384,14 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Unprotected mass assignment/,
       :confidence => 2,
       :file => /home_controller\.rb/
+  end
+
+  def test_mass_assignment_in_chained_call
+    assert_warning :warning_type => "Mass Assignment",
+      :line => 9,
+      :message => /^Unprotected mass assignment near line 9: Account.new/,
+      :confidence => 0,
+      :file => /account\.rb/
   end
 
   def test_translate_bug
