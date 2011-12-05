@@ -1,4 +1,5 @@
 require 'brakeman/checks/base_check'
+require 'set'
 
 #Checks for mass assignments to models.
 #
@@ -68,9 +69,26 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
       false
     elsif hash? args[1] and not include_user_input? args[1]
       false
+    elsif all_literals? args
+      false
     else
       true
     end
   end
 
+  LITERALS = Set.new([:lit, :true, :false, :nil, :string]) 
+
+  def all_literals? args
+    args.all? do |arg|
+      if sexp? arg
+        if arg.node_type == :hash
+          all_literals? arg
+        else
+          LITERALS.include? arg.node_type
+        end
+      else
+        true
+      end
+    end
+  end
 end
