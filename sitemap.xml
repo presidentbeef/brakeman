@@ -48,7 +48,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/</loc>
-        <lastmod>2011-10-18T10:52:32-07:00</lastmod>
+        <lastmod>2011-12-05T13:29:11-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/confidence/</loc>
@@ -129,6 +129,10 @@
     <url>
         <loc>http://brakemanscanner.org/docs/running/</loc>
         <lastmod>2011-11-29T10:46:36-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/presentations/</loc>
+        <lastmod>2011-12-05T13:26:15-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/contributing/</loc>
