@@ -182,7 +182,13 @@ class Brakeman::AliasProcessor < SexpProcessor
   def process_lasgn exp
     exp[2] = process exp[2] if sexp? exp[2]
     local = Sexp.new(:lvar, exp[1]).line(exp.line || -2)
-    env[local] = exp[2]
+
+    if @inside_if and env[local]
+      env[local] = Sexp.new(:or, env[local], exp[2]).line(exp.line || -2)
+    else
+      env[local] = exp[2]
+    end
+
     exp
   end
 
@@ -191,7 +197,13 @@ class Brakeman::AliasProcessor < SexpProcessor
   def process_iasgn exp
     exp[2] = process exp[2]
     ivar = Sexp.new(:ivar, exp[1]).line(exp.line)
-    env[ivar] = exp[2]
+
+    if @inside_if and env[ivar]
+      env[ivar] = Sexp.new(:or, env[ivar], exp[2]).line(exp.line)
+    else
+      env[ivar] = exp[2]
+    end
+
     exp
   end
 
@@ -200,7 +212,13 @@ class Brakeman::AliasProcessor < SexpProcessor
   def process_gasgn exp
     match = Sexp.new(:gvar, exp[1])
     value = exp[2] = process(exp[2])
-    env[match] = value
+
+    if @inside_if and env[match]
+      env[match] = Sexp.new(:or, env[match], value)
+    else
+      env[match] = value
+    end
+
     exp
   end
 
@@ -209,7 +227,13 @@ class Brakeman::AliasProcessor < SexpProcessor
   def process_cvdecl exp
     match = Sexp.new(:cvar, exp[1])
     value = exp[2] = process(exp[2])
-    env[match] = value
+    
+    if @inside_if and env[match]
+      env[match] = Sexp.new(:or, env[match], value)
+    else
+      env[match] = value
+    end
+
     exp
   end
 
@@ -234,7 +258,12 @@ class Brakeman::AliasProcessor < SexpProcessor
       value = exp[3][1] = process(exp[3][1])
       #This is what we'll replace with the value
       match = Sexp.new(:call, target, method.to_s[0..-2].to_sym, Sexp.new(:arglist))
-      env[match] = value
+
+      if @inside_if and env[match]
+        env[match] = Sexp.new(:or, env[match], value)
+      else
+        env[match] = value
+      end
     else
       raise "Unrecognized assignment: #{exp}"
     end
@@ -314,6 +343,30 @@ class Brakeman::AliasProcessor < SexpProcessor
     end
 
     env[match] = exp[2]
+
+    exp
+  end
+
+  #Sets @inside_if = true
+  def process_if exp
+    was_inside = @inside_if
+    @inside_if = true
+
+    condition = process exp[1]
+
+    if true? condition
+      exps = [exp[2]]
+    elsif false? condition
+      exps = exp[3..-1]
+    else
+      exps = exp[2..-1]
+    end
+    
+    exps.each do |e|
+      process e if sexp? e
+    end
+
+    @inside_if = was_inside
 
     exp
   end
