@@ -1,5 +1,4 @@
 require 'brakeman/checks/base_check'
-require 'brakeman/processors/lib/find_call'
 
 #Warn about response splitting in Rails versions before 2.3.13
 #http://groups.google.com/group/rubyonrails-security/browse_thread/thread/6ffc93bde0298768

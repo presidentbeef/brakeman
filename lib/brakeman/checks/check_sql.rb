@@ -1,5 +1,4 @@
 require 'brakeman/checks/base_check'
-require 'brakeman/processors/lib/find_call'
 
 #This check tests for find calls which do not use Rails' auto SQL escaping
 #

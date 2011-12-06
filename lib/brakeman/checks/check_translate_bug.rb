@@ -1,5 +1,4 @@
 require 'brakeman/checks/base_check'
-require 'brakeman/processors/lib/find_call'
 
 #Check for vulnerability in translate() helper that allows cross-site scripting
 #http://groups.google.com/group/rubyonrails-security/browse_thread/thread/2b61d70fb73c7cc5

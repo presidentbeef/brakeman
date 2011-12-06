@@ -1,5 +1,4 @@
 require 'brakeman/checks/base_check'
-require 'brakeman/processors/lib/find_call'
 
 #Checks for uses of strip_tags in Rails versions before 2.3.13 and 3.0.10
 #http://groups.google.com/group/rubyonrails-security/browse_thread/thread/2b9130749b74ea12

@@ -1,5 +1,4 @@
 require 'brakeman/checks/base_check'
-require 'brakeman/processors/lib/find_call'
 
 #Checks for string interpolation and parameters in calls to
 #Kernel#system, Kernel#exec, Kernel#syscall, and inside backticks.

@@ -1,5 +1,4 @@
 require 'brakeman/checks/base_check'
-require 'brakeman/processors/lib/find_call'
 
 #Check for vulnerability in nested attributes in Rails 2.3.9 and 3.0.0
 #http://groups.google.com/group/rubyonrails-security/browse_thread/thread/f9f913d328dafe0c

@@ -1,5 +1,4 @@
 require 'brakeman/checks/base_check'
-require 'brakeman/processors/lib/find_call'
 
 #Check for cross site scripting vulnerability in mail_to :encode => :javascript
 #with certain versions of Rails (< 2.3.11 or < 3.0.4).

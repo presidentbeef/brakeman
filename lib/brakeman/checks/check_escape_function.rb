@@ -1,5 +1,4 @@
 require 'brakeman/checks/base_check'
-require 'brakeman/processors/lib/find_call'
 
 #Check for versions with vulnerable html escape method
 #http://groups.google.com/group/rubyonrails-security/browse_thread/thread/56bffb5923ab1195

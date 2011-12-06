@@ -1,5 +1,4 @@
 require 'brakeman/checks/base_check'
-require 'brakeman/processors/lib/find_call'
 
 #Reports any calls to +redirect_to+ which include parameters in the arguments.
 #
