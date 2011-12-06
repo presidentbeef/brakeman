@@ -4,7 +4,6 @@ require 'brakeman/checks'
 require 'brakeman/report'
 require 'brakeman/processors/lib/find_call'
 require 'brakeman/processors/lib/find_all_calls'
-require 'brakeman/processors/lib/find_model_call'
 
 #The Tracker keeps track of all the processed information.
 class Brakeman::Tracker
@@ -101,23 +100,6 @@ class Brakeman::Tracker
   def find_call options
     index_calls unless @call_index
     @call_index.find_calls options
-  end
-
-  #Finds method call on models.
-  #
-  #See FindCall for details on arguments.
-  def find_model_find target
-    finder = Brakeman::FindModelCall.new target, self
-
-    self.each_method do |definition, set_name, method_name|
-      finder.process_source definition, set_name, method_name
-    end
-
-    self.each_template do |name, template|
-      finder.process_source template[:src], nil, nil, template
-    end
-
-    finder.matches
   end
 
   #Similar to Tracker#find_call, but searches the initializers
