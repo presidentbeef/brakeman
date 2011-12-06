@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 4,
       :template => 18,
-      :warning => 17
+      :warning => 18
     }
   end
 
@@ -329,6 +329,15 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Possible SQL injection/,
       :confidence => 0,
       :file => /test_sql\.html\.erb/
+  end
+
+  def test_sql_injection_via_if
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 32,
+      :message => /^Possible SQL injection near line 32: User.where/,
+      :confidence => 0,
+      :file => /user\.rb/
   end
 
   def test_escape_once
