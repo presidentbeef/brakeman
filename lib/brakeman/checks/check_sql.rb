@@ -37,7 +37,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     end
   end
 
-  #Process result from FindCall.
+  #Process result from Tracker#find_call.
   def process_result result
     call = result[:call]
 

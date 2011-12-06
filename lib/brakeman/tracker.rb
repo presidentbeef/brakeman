@@ -97,6 +97,26 @@ class Brakeman::Tracker
   end
 
   #Find a method call.
+  #
+  #Options:
+  #  * :target => target name(s)
+  #  * :method => method name(s)
+  #  * :chained => search in method chains
+  #
+  #If :target => false or :target => nil, searches for methods without a target.
+  #Targets and methods can be specified as a symbol, an array of symbols,
+  #or a regular expression.
+  #
+  #If :chained => true, matches target at head of method chain and method at end.
+  #
+  #For example:
+  #
+  #    find_call :target => User, :method => :all, :chained => true
+  #
+  #could match
+  #
+  #    User.human.active.all(...)
+  #
   def find_call options
     index_calls unless @call_index
     @call_index.find_calls options

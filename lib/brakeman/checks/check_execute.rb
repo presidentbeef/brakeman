@@ -25,7 +25,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     end
   end
 
-  #Processes results from FindCall.
+  #Processes results from Tracker#find_call.
   def process_result result
     call = result[:call]
 

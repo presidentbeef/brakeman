@@ -1,6 +1,9 @@
 require 'set'
 
+#Stores call sites to look up later.
 class Brakeman::CallIndex
+
+  #Initialize index with calls from FindAllCalls
   def initialize calls
     @calls_by_method = Hash.new { |h,k| h[k] = [] }
     @calls_by_target = Hash.new { |h,k| h[k] = [] }
@@ -10,6 +13,14 @@ class Brakeman::CallIndex
     index_calls calls
   end
 
+  #Find calls matching specified option hash.
+  #
+  #Options:
+  #
+  #  * :target - symbol, array of symbols, or regular expression to match target(s)
+  #  * :method - symbol, array of symbols, or regular expression to match method(s)
+  #  * :chained - boolean, whether or not to match against a whole method chain (false by default)
+  #  * :nested - boolean, whether or not to match against a method call that is a target itself (false by default)
   def find_calls options
     target = options[:target] || options[:targets]
     method = options[:method] || options[:methods]

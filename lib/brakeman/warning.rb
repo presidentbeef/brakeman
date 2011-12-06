@@ -5,7 +5,7 @@ class Brakeman::Warning
 
   attr_accessor :code, :context, :file, :message
 
-  #+options[:result]+ can be a result Sexp from FindCall. Otherwise, it can be +nil+.
+  #+options[:result]+ can be a result from Tracker#find_call. Otherwise, it can be +nil+.
   def initialize options = {}
     @view_name = nil
 
