@@ -160,7 +160,7 @@ OptionParser.new do |opts|
   end
 
   opts.on "-v", "--version", "Show Brakeman version" do
-    puts Brakeman::Version
+    puts "brakeman #{Brakeman::Version}"
     exit
   end
 
