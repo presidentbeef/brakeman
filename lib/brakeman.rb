@@ -3,6 +3,36 @@ require 'yaml'
 require 'set'
 
 module Brakeman
+
+  #Run Brakeman scan. Returns Tracker object.
+  #
+  #Options:
+  #
+  #  * :app_path - path to root of Rails app (required)
+  #  * :assume_all_routes - assume all methods are routes (default: false)
+  #  * :check_arguments - check arguments of methods (default: true)
+  #  * :collapse_mass_assignment - report unprotected models in single warning (default: true)
+  #  * :combine_locations - combine warning locations (default: true)
+  #  * :config_file - configuration file
+  #  * :create_config - output configuration file
+  #  * :escape_html - escape HTML by default (automatic)
+  #  * :exit_on_warn - return error exit code on warnings (default: false)
+  #  * :html_style - path to CSS file
+  #  * :ignore_model_output - consider models safe (default: false)
+  #  * :list_checks - list all checks (does not run scan)
+  #  * :message_limit - limit length of messages
+  #  * :min_confidence - minimum confidence (0-2, 0 is highest)
+  #  * :output_file - file for output
+  #  * :output_format - format for output (:to_s, :to_tabs, :to_csv, :to_html)
+  #  * :parallel_checks - run checks in parallel (default: true)
+  #  * :quiet - suppress most messages (default: false)
+  #  * :rails3 - force Rails 3 mode (automatic)
+  #  * :report_routes - show found routes on controllers (default: false)
+  #  * :run_checks - array of checks to run (run all if not specified)
+  #  * :safe_methods - array of methods to consider safe
+  #  * :skip_libs - do not process lib/ directory (default: false)
+  #  * :skip_checks - checks not to run (run all if not specified)
+  #
   def self.run options
     if options[:list_checks]
       list_checks
