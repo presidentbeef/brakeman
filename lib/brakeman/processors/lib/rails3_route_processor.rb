@@ -176,9 +176,15 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_resource exp
+    #Does resource even take more than one controller name?
     exp[3][1..-1].each do |s|
-      self.current_controller = s[1]
-      add_resource_routes
+      if symbol? s
+        self.current_controller = pluralize(s[1].to_s)
+        add_resource_routes
+      else
+        #handle something else, like options
+        #or something?
+      end
     end
 
     exp
