@@ -98,6 +98,10 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         return true
       when :call
         return check_call(arg)
+      else
+        return arg.any? do |a|
+          check_arguments(a)
+        end
       end
     end
 
