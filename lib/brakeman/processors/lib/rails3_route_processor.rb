@@ -126,7 +126,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   def process_verb exp
     args = exp[3][1..-1]
 
-    if symbol? args[0]
+    if symbol? args[0] and not hash? args[1]
       @tracker.routes[@current_controller] << args[0][1]
     elsif hash? args[1]
       hash_iterate args[1] do |k, v|
