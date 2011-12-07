@@ -2,9 +2,9 @@
 
 Brakeman is a static analysis tool which checks Ruby on Rails applications for security vulnerabilities.
 
-It targets Rails versions > 2.0 with experimental support for Rails 3.x
-
-There is also a [plugin available](https://github.com/presidentbeef/brakeman-jenkins-plugin) for Jenkins/Hudson.
+It targets Rails versions 2.x and 3.x.
+ 
+There is also a [plugin available](http://brakemanscanner.org/docs/jenkins/) for Jenkins/Hudson.
 
 # Homepage
 
@@ -76,6 +76,10 @@ Normally Brakeman will parse `routes.rb` and attempt to infer which controller m
     brakeman -a
 
 Note that this will be enabled automatically if Brakeman runs into an error while parsing the routes.
+
+By default, Brakeman will return 0 as an exit code unless something when very wrong. To return an error code when warnings were found:
+
+    brakeman -z
 
 # Warning information
 
