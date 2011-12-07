@@ -122,7 +122,7 @@ class Brakeman::Tracker
     @call_index.find_calls options
   end
 
-  #Similar to Tracker#find_call, but searches the initializers
+  #Searches the initializers for a method call
   def check_initializers target, method
     finder = Brakeman::FindCall.new target, method, self
 
