@@ -16,7 +16,7 @@ module Brakeman
   #  * :config_file - configuration file
   #  * :create_config - output configuration file
   #  * :escape_html - escape HTML by default (automatic)
-  #  * :exit_on_warn - return error exit code on warnings (default: false)
+  #  * :exit_on_warn - return false if warnings found, true otherwise. Not recommended for library use (default: false)
   #  * :html_style - path to CSS file
   #  * :ignore_model_output - consider models safe (default: false)
   #  * :list_checks - list all checks (does not run scan)
@@ -25,7 +25,8 @@ module Brakeman
   #  * :output_file - file for output
   #  * :output_format - format for output (:to_s, :to_tabs, :to_csv, :to_html)
   #  * :parallel_checks - run checks in parallel (default: true)
-  #  * :quiet - suppress most messages (default: false)
+  #  * :print_report - if no output file specified, print to stdout (default: false)
+  #  * :quiet - suppress most messages (default: true)
   #  * :rails3 - force Rails 3 mode (automatic)
   #  * :report_routes - show found routes on controllers (default: false)
   #  * :run_checks - array of checks to run (run all if not specified)
@@ -44,11 +45,13 @@ module Brakeman
       exit
     end
 
+    options = set_options options
+
     if options[:quiet]
       $VERBOSE = nil
     end
 
-    scan set_options(options)
+    scan options
   end
 
   private
@@ -116,6 +119,7 @@ module Brakeman
       :ignore_model_output => false,
       :message_limit => 100,
       :parallel_checks => true,
+      :quiet => true,
       :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css" 
     }
   end
@@ -205,13 +209,16 @@ module Brakeman
     warn "Running checks..."
     tracker.run_checks
 
-    warn "Generating report..."
     if options[:output_file]
+      warn "Generating report..."
+
       File.open options[:output_file], "w" do |f|
         f.puts tracker.report.send(options[:output_format])
       end
       warn "Report saved in '#{options[:output_file]}'"
-    else
+    elsif options[:print_report]
+      warn "Generating report..."
+
       puts tracker.report.send(options[:output_format])
     end
 
@@ -220,8 +227,10 @@ module Brakeman
         next if warning.confidence > options[:min_confidence]
         return false
       end
+      
+      return true
     end
-    return true
 
+    tracker
   end
 end

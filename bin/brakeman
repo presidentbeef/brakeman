@@ -170,7 +170,7 @@ OptionParser.new do |opts|
   end
 end.parse!(ARGV)
 
-clean = Brakeman.run options
+clean = Brakeman.run options.merge(:print_report => true, :quiet => options[:quiet])
 
 if options[:exit_on_warn] && !clean
   exit Brakeman::Warnings_Found_Exit_Code
