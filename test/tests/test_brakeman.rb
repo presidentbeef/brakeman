@@ -4,10 +4,10 @@ class UtilTests < Test::Unit::TestCase
   end
 
   def test_cookies?
-    assert util.cookies?(RubyParser.new.parse 'cookies[:x][:y][:z]')
+    assert util.cookies?(Ruby18Parser.new.parse 'cookies[:x][:y][:z]')
   end
 
   def test_params?
-    assert util.params?(RubyParser.new.parse 'params[:x][:y][:z]')
+    assert util.params?(Ruby18Parser.new.parse 'params[:x][:y][:z]')
   end
 end

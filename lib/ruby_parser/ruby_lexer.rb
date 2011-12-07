@@ -6,6 +6,12 @@ class RubyLexer
 
   ESC_RE = /\\([0-7]{1,3}|x[0-9a-fA-F]{1,2}|M-[^\\]|(C-|c)[^\\]|[^0-7xMCc])/
 
+  ##
+  # What version of ruby to parse. 18 and 19 are the only valid values
+  # currently supported.
+
+  attr_accessor :version
+
   # Additional context surrounding tokens that both the lexer and
   # grammar use.
   attr_reader :lex_state
@@ -58,6 +64,7 @@ class RubyLexer
     "===" => :tEQQ,
     "=>"  => :tASSOC,
     "=~"  => :tMATCH,
+    "->"  => :tLAMBDA,
   }
 
   # How the parser advances to the next token.
@@ -130,7 +137,7 @@ class RubyLexer
         string_buffer << '#'
       end
 
-      until src.scan(eos_re) do
+      until src.check(eos_re) do
         c = tokadd_string func, "\n", nil
 
         rb_compile_error err_msg if
@@ -146,9 +153,6 @@ class RubyLexer
         rb_compile_error err_msg if
           src.eos?
       end
-
-      # tack on a NL after the heredoc token - FIX NL should not be needed
-      src.unread_many(eos + "\n") # TODO: remove this... stupid stupid stupid
     else
       until src.check(eos_re) do
         string_buffer << src.scan(/.*(\n|\z)/)
@@ -195,12 +199,10 @@ class RubyLexer
       return nil
     end
 
-    if src.check(/.*\n/) then
+    if src.scan(/.*\n/) then
       # TODO: think about storing off the char range instead
-      line = src.string[src.pos, src.matched_size]
-      src.string[src.pos, src.matched_size] = "\n"
+      line = src.matched
       src.extra_lines_added += 1
-      src.pos += 1
     else
       line = nil
     end
@@ -216,7 +218,8 @@ class RubyLexer
     end
   end
 
-  def initialize
+  def initialize v = 18
+    self.version = v
     self.cond = RubyParser::StackState.new(:cond)
     self.cmdarg = RubyParser::StackState.new(:cmdarg)
     self.nest = 0
@@ -702,7 +705,6 @@ class RubyLexer
           end
         elsif src.scan(/\(/) then
           result = :tLPAREN2
-          self.command_start = true
 
           if lex_state == :expr_beg || lex_state == :expr_mid then
             result = :tLPAREN
@@ -838,6 +840,12 @@ class RubyLexer
             return :tPIPE
           end
         elsif src.scan(/\{/) then
+          if defined?(@hack_expects_lambda) && @hack_expects_lambda
+            @hack_expects_lambda = false
+            self.lex_state = :expr_beg
+            return :tLAMBEG
+          end
+
           result = if lex_state.is_argument || lex_state == :expr_end then
                      :tLCURLY      #  block (primary)
                    elsif lex_state == :expr_endarg then
@@ -850,6 +858,10 @@ class RubyLexer
           self.command_start = true unless result == :tLBRACE
 
           return result
+        elsif src.scan(/->/) then
+          @hack_expects_lambda = true
+          self.lex_state = :expr_arg
+          return :tLAMBDA
         elsif src.scan(/[+-]/) then
           sign = src.matched
           utype, type = if sign == "+" then
@@ -1033,8 +1045,14 @@ class RubyLexer
                 src.getch
               end
           self.lex_state = :expr_end
-          self.yacc_value = c[0].ord & 0xff
-          return :tINTEGER
+
+          if version == 18 then
+            self.yacc_value = c[0].ord & 0xff
+            return :tINTEGER
+          else
+            self.yacc_value = c
+            return :tSTRING
+          end
         elsif src.check(/\&/) then
           if src.scan(/\&\&\=/) then
             self.yacc_value = "&&"
@@ -1236,18 +1254,25 @@ class RubyLexer
           end
         end
 
-        if src.scan(/:(?!:)/)
-            result = :tHASHKEY
-            token << src.matched
-            self.yacc_value = token
-            return result
-        end
-
         result ||= if token =~ /^[A-Z]/ then
                      :tCONSTANT
                    else
                      :tIDENTIFIER
                    end
+      end
+
+      if (lex_state == :expr_beg && !command_state) || lex_state == :expr_arg || lex_state == :expr_cmdarg
+        colon = src.scan(/:/)
+
+        if colon && src.peek(1) != ":"
+          src.unscan
+          self.lex_state = :expr_beg
+          src.scan(/:/)
+          self.yacc_value = [token, src.lineno]
+          return :tLABEL
+        end
+
+        src.unscan if colon
       end
 
       unless lex_state == :expr_dot then
@@ -1269,6 +1294,10 @@ class RubyLexer
             return :kDO_COND  if cond.is_in_state
             return :kDO_BLOCK if cmdarg.is_in_state && state != :expr_cmdarg
             return :kDO_BLOCK if state == :expr_endarg
+            if defined?(@hack_expects_lambda) && @hack_expects_lambda
+              @hack_expects_lambda = false
+              return :kDO_LAMBDA
+            end
             return :kDO
           end
 

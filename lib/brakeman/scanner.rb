@@ -1,18 +1,13 @@
 require 'rubygems'
 begin
-  require 'ruby_parser'
+  #Load our own version of ruby_parser :'(
+  require 'ruby_parser/ruby_parser.rb'
+
   require 'haml'
   require 'sass'
   require 'erb'
   require 'erubis'
   require 'brakeman/processor'
-
-  #Load our own version of ruby_parser :(
-  original_verbosity = $VERBOSE
-  $VERBOSE = nil
-  require 'ruby_parser/ruby_parser.rb'
-  $VERBOSE = original_verbosity
-
 rescue LoadError => e
   $stderr.puts e.message
   $stderr.puts "Please install the appropriate dependency."
@@ -40,6 +35,12 @@ class Brakeman::Scanner
     @path = options[:app_path]
     @app_path = File.join(@path, "app")
     @processor = Brakeman::Processor.new options
+
+    if RUBY_1_9
+      @ruby_parser = ::Ruby19Parser
+    else
+      @ruby_parser = ::Ruby18Parser
+    end
   end
 
   #Returns the Tracker generated from the scan
@@ -75,13 +76,13 @@ class Brakeman::Scanner
   #Stores parsed information in tracker.config
   def process_config
     if options[:rails3]
-      @processor.process_config(RubyParser.new.parse(File.read("#@path/config/application.rb")))
-      @processor.process_config(RubyParser.new.parse(File.read("#@path/config/environments/production.rb")))
+      @processor.process_config(parse_ruby(File.read("#@path/config/application.rb")))
+      @processor.process_config(parse_ruby(File.read("#@path/config/environments/production.rb")))
     else
-      @processor.process_config(RubyParser.new.parse(File.read("#@path/config/environment.rb")))
+      @processor.process_config(parse_ruby(File.read("#@path/config/environment.rb")))
 
       if File.exists? "#@path/config/gems.rb"
-        @processor.process_config(RubyParser.new.parse(File.read("#@path/config/gems.rb")))
+        @processor.process_config(parse_ruby(File.read("#@path/config/gems.rb")))
       end
 
     end
@@ -99,9 +100,9 @@ class Brakeman::Scanner
   def process_gems
     if File.exists? "#@path/Gemfile"
       if File.exists? "#@path/Gemfile.lock"
-        @processor.process_gems(RubyParser.new.parse(File.read("#@path/Gemfile")), File.read("#@path/Gemfile.lock"))
+        @processor.process_gems(parse_ruby(File.read("#@path/Gemfile")), File.read("#@path/Gemfile.lock"))
       else
-        @processor.process_gems(RubyParser.new.parse(File.read("#@path/Gemfile")))
+        @processor.process_gems(parse_ruby(File.read("#@path/Gemfile")))
       end
     end
   end
@@ -112,7 +113,7 @@ class Brakeman::Scanner
   def process_initializers
     Dir.glob(@path + "/config/initializers/**/*.rb").sort.each do |f|
       begin
-        @processor.process_initializer(f, RubyParser.new.parse(File.read(f)))
+        @processor.process_initializer(f, parse_ruby(File.read(f)))
       rescue Racc::ParseError => e
         tracker.error e, "could not parse #{f}. There is probably a typo in the file. Test it with 'ruby_parse #{f}'"
       rescue Exception => e
@@ -132,7 +133,7 @@ class Brakeman::Scanner
 
     Dir.glob(@path + "/lib/**/*.rb").sort.each do |f|
       begin
-        @processor.process_lib RubyParser.new.parse(File.read(f)), f
+        @processor.process_lib parse_ruby(File.read(f)), f
       rescue Racc::ParseError => e
         tracker.error e, "could not parse #{f}. There is probably a typo in the file. Test it with 'ruby_parse #{f}'"
       rescue Exception => e
@@ -147,7 +148,7 @@ class Brakeman::Scanner
   def process_routes
     if File.exists? "#@path/config/routes.rb"
       begin
-        @processor.process_routes RubyParser.new.parse(File.read("#@path/config/routes.rb"))
+        @processor.process_routes parse_ruby(File.read("#@path/config/routes.rb"))
       rescue Exception => e
         tracker.error e.exception(e.message + "\nWhile processing routes.rb"), e.backtrace
         warn "[Notice] Error while processing routes - assuming all public controller methods are actions."
@@ -164,7 +165,7 @@ class Brakeman::Scanner
   def process_controllers
     Dir.glob(@app_path + "/controllers/**/*.rb").sort.each do |f|
       begin
-        @processor.process_controller(RubyParser.new.parse(File.read(f)), f)
+        @processor.process_controller(parse_ruby(File.read(f)), f)
       rescue Racc::ParseError => e
         tracker.error e, "could not parse #{f}. There is probably a typo in the file. Test it with 'ruby_parse #{f}'"
       rescue Exception => e
@@ -210,11 +211,11 @@ class Brakeman::Scanner
             src.sub!(/^#.*\n/, '') if RUBY_1_9
           end
 
-          parsed = RubyParser.new.parse src
+          parsed = parse_ruby src
         elsif type == :haml
           src = Haml::Engine.new(text,
                                  :escape_html => !!tracker.config[:escape_html]).precompiled
-          parsed = RubyParser.new.parse src
+          parsed = parse_ruby src
         else
           tracker.error "Unkown template type in #{f}"
         end
@@ -251,7 +252,7 @@ class Brakeman::Scanner
   def process_models
     Dir.glob(@app_path + "/models/*.rb").sort.each do |f|
       begin
-        @processor.process_model(RubyParser.new.parse(File.read(f)), f)
+        @processor.process_model(parse_ruby(File.read(f)), f)
       rescue Racc::ParseError => e
         tracker.error e, "could not parse #{f}"
       rescue Exception => e
@@ -262,6 +263,14 @@ class Brakeman::Scanner
 
   def index_call_sites
     tracker.index_call_sites
+  end
+
+  def parse_ruby input
+    if RUBY_1_9
+      Ruby19Parser.new.parse input
+    else
+      Ruby18Parser.new.parse input
+    end
   end
 end
 

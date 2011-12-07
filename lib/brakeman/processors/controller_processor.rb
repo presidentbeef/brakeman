@@ -1,4 +1,3 @@
-require 'ruby_parser'
 require 'brakeman/processors/base_processor'
 
 #Processes controller. Results are put in tracker.controllers
