@@ -1,6 +1,9 @@
 ## 1.0
 
  * Better handling of assignments inside ifs
+ * Check more expressions for SQL injection
+ * Use latest ruby_parser for better 1.9 syntax support
+ * Better behavior for Brakeman as a library
 
 ## 1.0.0rc1
 
@@ -13,7 +16,7 @@
  * Reduce SQL injection duplicate warnings
  * Lower confidence on mass assignment with no user input
  * Ignore mass assignment using all literal arguments
- * Keep expanded context in HTML output
+ * Keep expanded context in view with HTML output
 
 ## 0.9.2
 
