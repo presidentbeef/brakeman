@@ -38,7 +38,11 @@
         <loc>
             http://brakemanscanner.org/blog/2011/12/05/brakeman-1-dot-0-release-candidate-available/
         </loc>
-        <lastmod>2011-12-05T23:17:02-08:00</lastmod>
+        <lastmod>2011-12-05T23:21:32-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/blog/2011/12/08/brakeman-1-dot-0-released/</loc>
+        <lastmod>2011-12-08T11:17:30-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/options/</loc>
@@ -150,10 +154,10 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/</loc>
-        <lastmod>2011-12-05T23:17:02-08:00</lastmod>
+        <lastmod>2011-12-08T11:17:30-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/blog/archives/</loc>
-        <lastmod>2011-12-05T23:17:02-08:00</lastmod>
+        <lastmod>2011-12-08T11:17:30-08:00</lastmod>
     </url>
 </urlset>
