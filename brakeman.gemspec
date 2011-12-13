@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://brakemanscanner.org"
   s.files = ["bin/brakeman", "WARNING_TYPES", "FEATURES", "README.md"] + Dir["lib/**/*.rb"] + Dir["lib/brakeman/format/*.css"]
   s.executables = ["brakeman"]
-  s.add_dependency "activesupport", "~>2.2"
+  s.add_dependency "activesupport"
   s.add_dependency "ruby2ruby", "~>1.2.4" 
   s.add_dependency "ruport", "~>1.6.3"
   s.add_dependency "erubis", "~>2.6.5"
