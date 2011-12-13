@@ -138,6 +138,19 @@ class Brakeman::AliasProcessor < SexpProcessor
       if hash? target and hash? args[1]
         return process_hash_merge(target, args[1])
       end
+    when :<<
+      if string? target and string? args[1]
+        target[1] << args[1][1]
+        env[target_var] = target
+        return target
+      elsif array? target
+        target << args[1]
+        env[target_var] = target
+        return target
+      else
+        target = find_push_target exp
+        env[target] = exp
+      end
     end
 
     exp
@@ -437,5 +450,14 @@ class Brakeman::AliasProcessor < SexpProcessor
     end
 
     exp
+  end
+
+  #Finds the inner most call target which is not the target of a call to <<
+  def find_push_target exp
+    if call? exp and exp[2] == :<<
+      find_push_target exp[1]
+    else
+      exp
+    end
   end
 end
