@@ -117,8 +117,20 @@ class Brakeman::AliasProcessor < SexpProcessor
         joined = join_strings target, args[1]
         joined.line(exp.line)
         exp = joined
-      elsif integer? target and integer? args[1]
+      elsif number? target and number? args[1]
         exp = Sexp.new(:lit, target[1] + args[1][1])
+      end
+    when :-
+      if number? target and number? args[1]
+        exp = Sexp.new(:lit, target[1] - args[1][1])
+      end
+    when :*
+      if number? target and number? args[1]
+        exp = Sexp.new(:lit, target[1] * args[1][1])
+      end
+    when :/
+      if number? target and number? args[1]
+        exp = Sexp.new(:lit, target[1] / args[1][1])
       end
     when :[]
       if array? target
