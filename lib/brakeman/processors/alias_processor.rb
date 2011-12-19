@@ -25,6 +25,7 @@ class Brakeman::AliasProcessor < SexpProcessor
     self.default_method = :process_default
     self.warn_on_default = false
     @env = SexpProcessor::Environment.new
+    @inside_if = false
     set_env_defaults
   end
 
