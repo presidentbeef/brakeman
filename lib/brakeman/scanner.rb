@@ -105,6 +105,9 @@ class Brakeman::Scanner
         @processor.process_gems(parse_ruby(File.read("#@path/Gemfile")))
       end
     end
+  rescue Exception => e
+    warn "[Notice] Error while processing Gemfile."
+    tracker.error e.exception(e.message + "\nWhile processing Gemfile"), e.backtrace
   end
 
   #Process all the .rb files in config/initializers/
