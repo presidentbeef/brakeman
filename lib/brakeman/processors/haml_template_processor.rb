@@ -31,7 +31,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
 
     if (sexp? target and target[2] == :_hamlout) or target == :_hamlout
       res = case method
-            when :adjust_tabs, :rstrip!
+            when :adjust_tabs, :rstrip!, :attributes #Check attributes, maybe?
               ignore
             when :options
               Sexp.new :call, :_hamlout, :options, exp[3]
