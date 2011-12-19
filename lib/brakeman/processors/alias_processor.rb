@@ -161,7 +161,7 @@ class Brakeman::AliasProcessor < SexpProcessor
         return target
       else
         target = find_push_target exp
-        env[target] = exp
+        env[target] = exp unless target.nil? #Happens in TemplateAliasProcessor
       end
     end
 
