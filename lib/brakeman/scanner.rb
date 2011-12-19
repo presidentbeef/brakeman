@@ -76,15 +76,11 @@ class Brakeman::Scanner
   #Stores parsed information in tracker.config
   def process_config
     if options[:rails3]
-      @processor.process_config(parse_ruby(File.read("#@path/config/application.rb")))
-      @processor.process_config(parse_ruby(File.read("#@path/config/environments/production.rb")))
+      process_config_file "application.rb"
+      process_config_file "environments/production.rb"
     else
-      @processor.process_config(parse_ruby(File.read("#@path/config/environment.rb")))
-
-      if File.exists? "#@path/config/gems.rb"
-        @processor.process_config(parse_ruby(File.read("#@path/config/gems.rb")))
-      end
-
+      process_config_file "environment.rb"
+      process_config_file "gems.rb"
     end
 
     if File.exists? "#@path/vendor/plugins/rails_xss" or 
@@ -95,6 +91,18 @@ class Brakeman::Scanner
       warn "[Notice] Escaping HTML by default"
     end
   end
+
+  def process_config_file file
+    if File.exists? "#@path/config/#{file}"
+      @processor.process_config(parse_ruby(File.read("#@path/config/#{file}")))
+    end
+
+  rescue Exception => e
+    warn "[Notice] Error while processing config/#{file}"
+    tracker.error e.exception(e.message + "\nwhile processing Gemfile"), e.backtrace
+  end
+
+  private :process_config_file
 
   #Process Gemfile
   def process_gems
