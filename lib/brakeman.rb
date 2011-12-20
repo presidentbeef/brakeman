@@ -208,7 +208,11 @@ module Brakeman
     warn "Processing application in #{options[:app_path]}"
     tracker = scanner.process
 
-    warn "Running checks..."
+    if options[:parallel_checks]
+      warn "Running checks in parallel..."
+    else
+      warn "Runnning checks..."
+    end
     tracker.run_checks
 
     if options[:output_file]
