@@ -32,6 +32,7 @@ class Brakeman::Scanner
   #Pass in path to the root of the Rails application
   def initialize options
     @options = options
+    @report_progress = options[:report_progress]
     @path = options[:app_path]
     @app_path = File.join(@path, "app")
     @processor = Brakeman::Processor.new options
@@ -58,15 +59,15 @@ class Brakeman::Scanner
     process_initializers
     warn "Processing libs..."
     process_libs
-    warn "Processing routes..."
+    warn "Processing routes...        "
     process_routes
-    warn "Processing templates..."
+    warn "Processing templates...     "
     process_templates
-    warn "Processing models..."
+    warn "Processing models...        "
     process_models
-    warn "Processing controllers..."
+    warn "Processing controllers...   "
     process_controllers
-    warn "Indexing call sites..."
+    warn "Indexing call sites...      "
     index_call_sites
     tracker
   end
@@ -142,7 +143,16 @@ class Brakeman::Scanner
       return
     end
 
-    Dir.glob(@path + "/lib/**/*.rb").sort.each do |f|
+    lib_files = Dir.glob(@path + "/lib/**/*.rb").sort
+    total = lib_files.length
+    current = 0
+
+    lib_files.each do |f|
+      if @report_progress
+        print " #{current}/#{total} files processed\r"
+        current += 1
+      end
+
       begin
         @processor.process_lib parse_ruby(File.read(f)), f
       rescue Racc::ParseError => e
@@ -174,7 +184,17 @@ class Brakeman::Scanner
   #
   #Adds processed controllers to tracker.controllers
   def process_controllers
-    Dir.glob(@app_path + "/controllers/**/*.rb").sort.each do |f|
+    controller_files = Dir.glob(@app_path + "/controllers/**/*.rb").sort
+    total = controller_files.length * 2
+    current = 0
+
+    controller_files.each do |f|
+      warn "Processing #{f}" if options[:debug]
+      if @report_progress
+        print " #{current}/#{total} files processed\r"
+        current += 1
+      end
+
       begin
         @processor.process_controller(parse_ruby(File.read(f)), f)
       rescue Racc::ParseError => e
@@ -184,7 +204,17 @@ class Brakeman::Scanner
       end
     end
 
+    current = 0
+    total = tracker.controllers.length
+
+    warn "Processing data flow in controllers..."
+
     tracker.controllers.each do |name, controller|
+      if @report_progress
+        print " #{current}/#{total} controllers processed\r"
+        current += 1
+      end
+
       @processor.process_controller_alias controller[:src]
     end
   end
@@ -198,8 +228,15 @@ class Brakeman::Scanner
     $stdout.sync = true
     count = 0
 
-    Dir.glob(views_path).sort.each do |f|
-      count += 1
+    template_files = Dir.glob(views_path).sort
+    total = template_files.length
+
+    template_files.each do |f|
+      if @report_progress
+        count += 1
+        print " #{count}/#{total} files processed\r"
+      end
+
       type = f.match(/.*\.(erb|haml|rhtml)$/)[1].to_sym
       type = :erb if type == :rhtml
       name = template_path_to_name f
@@ -242,7 +279,17 @@ class Brakeman::Scanner
       end
     end
 
+    total = tracker.templates.length
+    count = 0
+
+    warn "Processing data flow in templates..."
+
     tracker.templates.keys.dup.each do |name|
+      if @report_progress
+        count += 1
+        print " #{count}/#{total} templates processed\r"
+      end
+
       @processor.process_template_alias tracker.templates[name]
     end
 
@@ -261,7 +308,17 @@ class Brakeman::Scanner
   #
   #Adds the processed models to tracker.models
   def process_models
-    Dir.glob(@app_path + "/models/*.rb").sort.each do |f|
+    model_files = Dir.glob(@app_path + "/models/*.rb").sort
+
+    total = model_files.length
+    current = 0
+
+    model_files.each do |f|
+      if @report_progress
+        print " #{current}/#{total} files processed\r"
+        current += 1
+      end
+
       begin
         @processor.process_model(parse_ruby(File.read(f)), f)
       rescue Racc::ParseError => e

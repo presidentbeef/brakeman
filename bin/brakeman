@@ -24,6 +24,10 @@ OptionParser.new do |opts|
     options[:parallel_checks] = false
   end
 
+  opts.on "--no-progress", "Do not show progress reports" do
+    options[:report_progress] = false
+  end
+
   opts.on "-p", "--path PATH", "Specify path to Rails application" do |path|
     options[:app_path] = File.expand_path path
   end

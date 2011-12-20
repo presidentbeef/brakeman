@@ -48,6 +48,7 @@ module Brakeman
     options = set_options options
 
     if options[:quiet]
+      options[:report_progress] = false
       $VERBOSE = nil
     end
 
@@ -120,6 +121,7 @@ module Brakeman
       :message_limit => 100,
       :parallel_checks => true,
       :quiet => true,
+      :report_progress => true,
       :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css" 
     }
   end
