@@ -84,7 +84,7 @@ class Brakeman::Scanner
       process_config_file "gems.rb"
     end
 
-    if File.exists? "#@path/vendor/plugins/rails_xss" or 
+    if File.exists? "#@path/vendor/plugins/rails_xss" or
       options[:rails3] or options[:escape_html] or
       (File.exists? "#@path/Gemfile" and File.read("#@path/Gemfile").include? "rails_xss")
 
@@ -362,7 +362,7 @@ class Brakeman::RailsXSSErubis < ::Erubis::Eruby
         lines[0..-2].each do |line|
           src << "@output_buffer << ('" << escape_text(line) << "'.html_safe!);\n"
         end
-      
+
         src << "@output_buffer << ('" << escape_text(lines.last) << "'.html_safe!);"
       end
     else
