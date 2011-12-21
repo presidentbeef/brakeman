@@ -211,8 +211,10 @@ class Brakeman::AliasProcessor < SexpProcessor
     exp[2] = process exp[2] if sexp? exp[2]
     local = Sexp.new(:lvar, exp[1]).line(exp.line || -2)
 
-    if @inside_if and env[local]
-      env[local] = Sexp.new(:or, env[local], exp[2]).line(exp.line || -2)
+    if @inside_if and val = env[local]
+      if val != exp[2] #avoid setting to value it already is (e.g. "1 or 1")
+        env[local] = Sexp.new(:or, val, exp[2]).line(exp.line || -2)
+      end
     else
       env[local] = exp[2]
     end
@@ -226,8 +228,10 @@ class Brakeman::AliasProcessor < SexpProcessor
     exp[2] = process exp[2]
     ivar = Sexp.new(:ivar, exp[1]).line(exp.line)
 
-    if @inside_if and env[ivar]
-      env[ivar] = Sexp.new(:or, env[ivar], exp[2]).line(exp.line)
+    if @inside_if and val = env[ivar]
+      if val != exp[2]
+        env[ivar] = Sexp.new(:or, val, exp[2]).line(exp.line)
+      end
     else
       env[ivar] = exp[2]
     end
@@ -241,8 +245,10 @@ class Brakeman::AliasProcessor < SexpProcessor
     match = Sexp.new(:gvar, exp[1])
     value = exp[2] = process(exp[2])
 
-    if @inside_if and env[match]
-      env[match] = Sexp.new(:or, env[match], value)
+    if @inside_if and val = env[match]
+      if val != value
+        env[match] = Sexp.new(:or, env[match], value)
+      end
     else
       env[match] = value
     end
@@ -256,8 +262,10 @@ class Brakeman::AliasProcessor < SexpProcessor
     match = Sexp.new(:cvar, exp[1])
     value = exp[2] = process(exp[2])
     
-    if @inside_if and env[match]
-      env[match] = Sexp.new(:or, env[match], value)
+    if @inside_if and val = env[match]
+      if val != value
+        env[match] = Sexp.new(:or, env[match], value)
+      end
     else
       env[match] = value
     end
@@ -287,8 +295,10 @@ class Brakeman::AliasProcessor < SexpProcessor
       #This is what we'll replace with the value
       match = Sexp.new(:call, target, method.to_s[0..-2].to_sym, Sexp.new(:arglist))
 
-      if @inside_if and env[match]
-        env[match] = Sexp.new(:or, env[match], value)
+      if @inside_if and val = env[match]
+        if val != value
+          env[match] = Sexp.new(:or, env[match], value)
+        end
       else
         env[match] = value
       end
