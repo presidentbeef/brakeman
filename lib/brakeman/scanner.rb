@@ -149,7 +149,7 @@ class Brakeman::Scanner
 
     lib_files.each do |f|
       if @report_progress
-        print " #{current}/#{total} files processed\r"
+        $stderr.print " #{current}/#{total} files processed\r"
         current += 1
       end
 
@@ -191,7 +191,7 @@ class Brakeman::Scanner
     controller_files.each do |f|
       warn "Processing #{f}" if options[:debug]
       if @report_progress
-        print " #{current}/#{total} files processed\r"
+        $stderr.print " #{current}/#{total} files processed\r"
         current += 1
       end
 
@@ -211,7 +211,7 @@ class Brakeman::Scanner
 
     tracker.controllers.each do |name, controller|
       if @report_progress
-        print " #{current}/#{total} controllers processed\r"
+        $stderr.print " #{current}/#{total} controllers processed\r"
         current += 1
       end
 
@@ -233,8 +233,8 @@ class Brakeman::Scanner
 
     template_files.each do |f|
       if @report_progress
+        $stderr.print " #{count}/#{total} files processed\r"
         count += 1
-        print " #{count}/#{total} files processed\r"
       end
 
       type = f.match(/.*\.(erb|haml|rhtml)$/)[1].to_sym
@@ -287,7 +287,7 @@ class Brakeman::Scanner
     tracker.templates.keys.dup.each do |name|
       if @report_progress
         count += 1
-        print " #{count}/#{total} templates processed\r"
+        $stderr.print " #{count}/#{total} templates processed\r"
       end
 
       @processor.process_template_alias tracker.templates[name]
@@ -315,7 +315,7 @@ class Brakeman::Scanner
 
     model_files.each do |f|
       if @report_progress
-        print " #{current}/#{total} files processed\r"
+        $stderr.print " #{current}/#{total} files processed\r"
         current += 1
       end
 
