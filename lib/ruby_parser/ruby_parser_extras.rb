@@ -1120,7 +1120,7 @@ class Sexp
 
   def compact
     @my_hash_value = nil
-    old_compact *args
+    old_compact
   end
 
   def find_and_replace_all *args
