@@ -387,9 +387,6 @@ class Brakeman::AliasProcessor < SexpProcessor
 
   #Sets @inside_if = true
   def process_if exp
-    was_inside = @inside_if
-    @inside_if = true
-
     condition = process exp[1]
 
     if true? condition
@@ -400,6 +397,9 @@ class Brakeman::AliasProcessor < SexpProcessor
       exps = exp[2..-1]
     end
     
+    was_inside = @inside_if
+    @inside_if = true
+
     exps.each do |e|
       process e if sexp? e
     end
