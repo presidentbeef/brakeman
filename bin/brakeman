@@ -64,6 +64,10 @@ OptionParser.new do |opts|
     options[:skip_libs] = true
   end
 
+  opts.on "--no-branching", "Disable flow sensitivity on conditionals" do
+    options[:ignore_ifs] = true
+  end
+
   opts.on "-r", "--report-direct", "Only report direct use of untrusted data" do |option|
     options[:check_arguments] = !option
   end

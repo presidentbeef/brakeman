@@ -39,10 +39,6 @@ class Brakeman::AliasProcessor < SexpProcessor
   #This method returns a new Sexp with variables replaced with their values,
   #where possible.
   def process_safely src, set_env = nil
-    if @tracker and @tracker.options[:ignore_ifs]
-      @ignore_ifs = true
-    end
-
     @env = Marshal.load(Marshal.dump(set_env)) if set_env
     @result = src.deep_clone
     process @result
@@ -392,6 +388,8 @@ class Brakeman::AliasProcessor < SexpProcessor
 
   #Sets @inside_if = true
   def process_if exp
+    @ignore_ifs ||= @tracker && @tracker.options[:ignore_ifs]
+
     condition = process exp[1]
 
     if true? condition
@@ -403,7 +401,7 @@ class Brakeman::AliasProcessor < SexpProcessor
     end
     
     was_inside = @inside_if
-    @inside_if = true unless @ignore_ifs
+    @inside_if = !@ignore_ifs
 
     exps.each do |e|
       process e if sexp? e
