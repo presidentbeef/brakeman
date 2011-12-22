@@ -92,7 +92,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
   def process_defn exp
     exp[0] = :methdef
-    exp[3] = @alias_processor.process_safely process(exp[3]), SexpProcessor::Environment.new
+    exp[3] = @alias_processor.process exp[3]
 
     if @current_class
       @current_class[:public][exp[1]] = exp[3]
@@ -105,7 +105,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
   def process_defs exp
     exp[0] = :selfdef
-    exp[4] = @alias_processor.process_safely process(exp[4]), SexpProcessor::Environment.new
+    exp[4] = @alias_processor.process exp[4]
 
     if @current_class
       @current_class[:public][exp[2]] = exp[4]
