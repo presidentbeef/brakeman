@@ -148,6 +148,7 @@ class Brakeman::Scanner
     current = 0
 
     lib_files.each do |f|
+      warn "Processing #{f}" if options[:debug]
       if @report_progress
         $stderr.print " #{current}/#{total} files processed\r"
         current += 1
