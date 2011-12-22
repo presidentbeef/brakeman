@@ -77,6 +77,12 @@ Normally Brakeman will parse `routes.rb` and attempt to infer which controller m
 
 Note that this will be enabled automatically if Brakeman runs into an error while parsing the routes.
 
+If Brakeman is running a bit slow, try
+
+    brakeman --faster
+
+This will disable some features, but will probably be much faster (currently it is the same as `--skip-libs --no-branching`). *WARNING*: This may cause Brakeman to miss some vulnerabilities.
+
 By default, Brakeman will return 0 as an exit code unless something when very wrong. To return an error code when warnings were found:
 
     brakeman -z
