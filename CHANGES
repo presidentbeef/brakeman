@@ -1,4 +1,14 @@
-## 1.0
+## 1.1.0
+
+ * Relax required versions for dependencies
+ * Performance improvements for source processing
+ * Better progress reporting
+ * Handle basic operators like << + - * /
+ * Rescue more errors to prevent complete crashes
+ * Compatibility with newer Haml versions
+ * Fix some warnings
+
+## 1.0.0
 
  * Better handling of assignments inside ifs
  * Check more expressions for SQL injection
