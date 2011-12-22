@@ -77,7 +77,7 @@ module Brakeman
 
     if File.exist? app_path + "/script/rails"
       options[:rails3] = true
-      warn "[Notice] Detected Rails 3 application. Enabling experimental Rails 3 support." 
+      warn "[Notice] Detected Rails 3 application" 
     end
 
     options
