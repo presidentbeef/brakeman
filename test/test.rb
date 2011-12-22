@@ -9,35 +9,14 @@ require 'test/unit'
 #Helper methods for running scans
 module BrakemanTester
   class << self
-    #Set environment for scan
-    def setup_scan opts = {}
-      #Set defaults
-      defaults = { :skip_checks => Set.new,
-        :check_arguments => true, 
-        :safe_methods => Set.new,
-        :min_confidence => 2,
-        :combine_locations => true,
-        :collapse_mass_assignment => true,
-        :ignore_redirect_to_model => true,
-        :ignore_model_output => false,
-        :parallel_checks => true }
-
-      #Set options for this scan
-      defaults.merge! opts
-    end
-
     #Run scan on app at the given path
     def run_scan path, name = nil, opts = {}
-      name ||= path
-      path = File.expand_path "#{TEST_PATH}/apps/#{path}"
-
-      options = setup_scan opts.merge(:app_path => path)
+      opts.merge! :app_path => "#{TEST_PATH}/apps/#{path}",
+        :quiet => false
 
       announce "Processing #{name} application..."
 
-      tracker = Brakeman::Scanner.new(options).process
-      tracker.run_checks
-
+      tracker = Brakeman.run opts
       Brakeman::Report.new(tracker).to_test
     end
 
