@@ -27,6 +27,7 @@ class Brakeman::AliasProcessor < SexpProcessor
     @env = SexpProcessor::Environment.new
     @inside_if = false
     @ignore_ifs = false
+    @tracker = nil #set in subclass as necessary
     set_env_defaults
   end
 
