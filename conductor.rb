@@ -1,12 +1,6 @@
 #!/bin/env ruby
 $:.unshift "#{File.expand_path(File.dirname(__FILE__))}/lib"
 
-require 'benchmark'
-require 'brakeman'
-require 'brakeman/options'
-
-options, _ = Brakeman::Options.parse! ARGV
-
 abort "Please supply the path to at least one Rails app" if ARGV.empty?
 
 trap("INT") do
@@ -14,14 +8,119 @@ trap("INT") do
   exit!
 end
 
-ARGV.each do |path|
-  run_options = options.merge :app_path => path
-  puts "Started scanning #{path} at #{Time.now}"
+require 'benchmark'
+require 'brakeman'
+require 'brakeman/options'
 
-  result = Benchmark.measure do
-    Brakeman.run run_options
+#Runs scans on one or more Rails apps and collects timing results
+class Conductor
+  attr_reader :results #All the timing results in a big hash
+
+  #Creates new Conductor to scan the given paths.
+  #
+  #+brakeman_options+ should be options as returned by Brakeman::Options.parse
+  #
+  #+paths+ should be an array of paths.
+  #
+  #+conductor_options+ sets options for the Conductor specifically. Currently,
+  #the only option is +:quiet+.
+  def initialize brakeman_options, paths, conductor_options = {}
+    @options = conductor_options
+    @bm_options = brakeman_options
+    @paths = paths
+    @scans = {}
+    @results = { :ruby_version => RUBY_DESCRIPTION, :scans => @scans }
+
+    @results[:scanner_load_time] = Benchmark.measure do
+      require 'brakeman/scanner'
+    end
   end
 
-  puts "Finished scanning #{path} at #{Time.now}"
-  puts "Scan time: #{result}"
+  #Runs scans on the paths set when the Conductor was created.
+  #
+  #Returns self.
+  #
+  #The result of a single scan is stored in a hash that looks like this:
+  #
+  #    { :path => String,       #Path that was scanned
+  #      :start_time => Time,   #Time at which scan started
+  #      :end_time => Time,     #Time at which scan finished
+  #      :times => {            #All timings collected via Brakeman.benchmark
+  #        :total_time => Tms,
+  #        ...
+  #      }
+  #    }
+  #
+  def run_scans
+    @results[:start_time] = Time.now
+
+    @results[:total_time] = Benchmark.measure do
+      @paths.each do |path|
+        Brakeman.clear_benchmarks #Reset times
+
+        options = @bm_options.merge :app_path => path
+
+        @scans[path] = { :path => path, :start_time => Time.now }
+        notify "Started scanning #{path} at #{@scans[path][:start_time]}"
+
+        #Benchmark the scan
+        Brakeman.benchmark :total_time do
+          Brakeman.run options
+        end
+
+        @scans[path][:end_time] = Time.now
+        notify "Finished scanning #{path} at #{@scans[path][:end_time]}"
+
+        @scans[path][:times] = Brakeman.benchmarks
+      end
+    end
+
+    @results[:end_time] = Time.now
+
+    self
+  end
+
+  #Output message unless :quiet => true
+  def notify msg
+    $stderr.puts msg unless @options[:quiet]
+  end
+
+  #Generate a report as a string
+  def report
+    output = [ summary ]
+
+    @scans.keys.sort.each do |path|
+      output << format_results(@scans[path])
+    end
+
+    output.join("\n#{"-" * 55}\n") << "\n#{"=" * 55}"
+  end
+
+  #Output summary as a string
+  def summary
+    "======================================================\n" <<
+    "Used #{@results[:ruby_version]}\n" <<
+    "Started at #{@results[:start_time]}\n" <<
+    "Finished at #{@results[:end_time]}\n" <<
+    "Scanned #{@results[:scans].length} path(s)\n" <<
+    "Total time: #{@results[:total_time].total}s"
+  end
+
+  #Format the results from a single scan
+  def format_results results
+    output = [ "#{results[:path]} @ #{results[:start_time]}" ]
+
+    #Report timings from longest to shortest
+    results[:times].to_a.sort_by { |name, time| time.total }.reverse.each do |result|
+      output << "\t#{result[0]}: #{result[1].format("%t %r")}"
+    end
+
+    output.join "\n"
+  end
+end
+
+if __FILE__ == $0
+  options, _ = Brakeman::Options.parse! ARGV
+
+  puts Conductor.new(options, ARGV).run_scans.report
 end
