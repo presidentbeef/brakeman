@@ -70,6 +70,7 @@ class Conductor
         @scans[path][:controllers] = tracker.controllers.length
         @scans[path][:templates] = tracker.templates.length
         @scans[path][:models] = tracker.models.length
+        @scans[path][:errors] = tracker.errors.length
       end
     end
 
@@ -107,7 +108,7 @@ class Conductor
   #Format the results from a single scan
   def format_results results
     output = [ "#{results[:path]} @ #{results[:start_time]}",
-      "  #{results[:controllers]} controllers, #{results[:models]} models, #{results[:templates]} templates"
+      "  #{results[:controllers]} controllers, #{results[:models]} models, #{results[:templates]} templates, #{results[:errors]} errors"
     ]
 
     #Report timings from longest to shortest
