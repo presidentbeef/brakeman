@@ -63,15 +63,19 @@ class Conductor
         @scans[path] = { :path => path, :start_time => Time.now }
         notify "Started scanning #{path} at #{@scans[path][:start_time]}"
 
+        tracker = nil
         #Benchmark the scan
         Brakeman.benchmark :total_time do
-          Brakeman.run options
+          tracker = Brakeman.run options
         end
 
         @scans[path][:end_time] = Time.now
         notify "Finished scanning #{path} at #{@scans[path][:end_time]}"
 
         @scans[path][:times] = Brakeman.benchmarks
+        @scans[path][:controllers] = tracker.controllers.length
+        @scans[path][:templates] = tracker.templates.length
+        @scans[path][:models] = tracker.models.length
       end
     end
 
@@ -108,7 +112,9 @@ class Conductor
 
   #Format the results from a single scan
   def format_results results
-    output = [ "#{results[:path]} @ #{results[:start_time]}" ]
+    output = [ "#{results[:path]} @ #{results[:start_time]}",
+      "  #{results[:controllers]} controllers, #{results[:models]} models, #{results[:templates]} templates"
+    ]
 
     #Report timings from longest to shortest
     results[:times].to_a.sort_by { |name, time| time.total }.reverse.each do |result|
