@@ -1,8 +1,6 @@
 #!/bin/env ruby
 $:.unshift "#{File.expand_path(File.dirname(__FILE__))}/lib"
 
-abort "Please supply the path to at least one Rails app" if ARGV.empty?
-
 trap("INT") do
   $stderr.puts "\nInterrupted - exiting."
   exit!
@@ -128,6 +126,8 @@ end
 
 if __FILE__ == $0
   options, _ = Brakeman::Options.parse! ARGV
+
+  abort "Please supply the path to at least one Rails app" if ARGV.empty?
 
   puts Conductor.new(options, ARGV).run_scans.report
 end
