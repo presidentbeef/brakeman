@@ -169,6 +169,12 @@ module Brakeman::Options
           end
         end
 
+        opts.separator "Conductor options"
+
+        opts.on "--limit LIMIT", Integer, "Limit the reported times to the top however many (default: 10)" do |limit|
+          options[:conductor_limit] = limit
+        end
+
         opts.separator ""
 
         opts.on "-k", "--checks", "List all available vulnerability checks" do
@@ -182,6 +188,7 @@ module Brakeman::Options
         opts.on_tail "-h", "--help", "Display this message" do
           options[:show_help] = true
         end
+
       end
 
       if destructive

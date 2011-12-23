@@ -111,7 +111,7 @@ class Conductor
     ]
 
     #Report timings from longest to shortest
-    results[:times].to_a.sort_by { |name, time| time.total }.reverse.each do |result|
+    results[:times].to_a.sort_by { |name, time| time.total }.reverse[0...@options[:conductor_limit]].each do |result|
       name = result[0].to_s
       output << "  #{name}: #{result[1].format("%t %r").rjust(50 - name.length)}"
     end
