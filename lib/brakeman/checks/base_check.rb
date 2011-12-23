@@ -1,5 +1,6 @@
 require 'sexp_processor'
 require 'brakeman/processors/output_processor'
+require 'brakeman/processors/lib/processor_helper'
 require 'brakeman/warning'
 require 'brakeman/util'
 
