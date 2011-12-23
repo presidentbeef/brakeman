@@ -1,8 +1,35 @@
 require 'rubygems'
 require 'yaml'
 require 'set'
+require 'benchmark' #In case this is not run from conductor.rb
 
 module Brakeman
+
+  @benchmarks = {}
+
+  def self.benchmark name
+    result = nil
+
+    times = Benchmark.measure do
+      result = yield
+    end
+
+    if @benchmarks[name]
+      @benchmarks[name] += times
+    else
+      @benchmarks[name] = times
+    end
+
+    result
+  end
+
+  def self.benchmarks
+    @benchmarks
+  end
+
+  def self.clear_benchmarks
+    @benchmarks = {}
+  end
 
   #This exit code is used when warnings are found and the --exit-on-warn
   #option is set
