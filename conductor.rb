@@ -16,15 +16,11 @@ class Conductor
 
   #Creates new Conductor to scan the given paths.
   #
-  #+brakeman_options+ should be options as returned by Brakeman::Options.parse
+  #+options+ should be options as returned by Brakeman::Options.parse
   #
   #+paths+ should be an array of paths.
-  #
-  #+conductor_options+ sets options for the Conductor specifically. Currently,
-  #the only option is +:quiet+.
-  def initialize brakeman_options, paths, conductor_options = {}
-    @options = conductor_options
-    @bm_options = brakeman_options
+  def initialize options, paths
+    @options = {:conductor_limit => 10}.merge! options
     @paths = paths
     @scans = {}
     @results = { :ruby_version => RUBY_DESCRIPTION, :scans => @scans }
@@ -56,7 +52,7 @@ class Conductor
       @paths.each do |path|
         Brakeman.clear_benchmarks #Reset times
 
-        options = @bm_options.merge :app_path => path
+        options = @options.merge :app_path => path
 
         @scans[path] = { :path => path, :start_time => Time.now }
         notify "Started scanning #{path} at #{@scans[path][:start_time]}"
