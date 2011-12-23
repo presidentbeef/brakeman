@@ -335,11 +335,7 @@ class Brakeman::Scanner
   end
 
   def parse_ruby input
-    if RUBY_1_9
-      Ruby19Parser.new.parse input
-    else
-      Ruby18Parser.new.parse input
-    end
+    @ruby_parser.new.parse input
   end
 end
 

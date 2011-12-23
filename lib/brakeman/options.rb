@@ -152,7 +152,7 @@ module Brakeman::Options
           "Set minimal confidence level (1 - 3)" do |level|
 
           options[:min_confidence] =  3 - level.to_i
-          end
+        end
 
         opts.separator ""
         opts.separator "Configuration files:"
@@ -176,13 +176,11 @@ module Brakeman::Options
         end
 
         opts.on "-v", "--version", "Show Brakeman version" do
-          puts "brakeman #{Brakeman::Version}"
-          exit
+          options[:show_version] = true
         end
 
         opts.on_tail "-h", "--help", "Display this message" do
-          puts opts
-          exit
+          options[:show_help] = true
         end
       end
 
