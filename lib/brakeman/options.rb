@@ -27,16 +27,16 @@ module Brakeman::Options
           options[:parallel_checks] = false
         end
 
-        opts.on "--no-progress", "Do not show progress reports" do
-          options[:report_progress] = false
+        opts.on "--[no-]progress", "Show progress reports" do |progress|
+          options[:report_progress] = progress
         end
 
         opts.on "-p", "--path PATH", "Specify path to Rails application" do |path|
           options[:app_path] = File.expand_path path
         end
 
-        opts.on "-q", "--quiet", "Suppress informational messages" do
-          options[:quiet] = true
+        opts.on "-q", "--[no-]quiet", "Suppress informational messages" do |quiet|
+          options[:quiet] = quiet
         end
 
         opts.on( "-z", "--exit-on-warn", "Exit code is non-zero if warnings found") do |s|
