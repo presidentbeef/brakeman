@@ -335,7 +335,9 @@ class Brakeman::Scanner
   end
 
   def parse_ruby input
-    @ruby_parser.new.parse input
+    Brakeman.benchmark :parse_ruby do
+      @ruby_parser.new.parse input
+    end
   end
 end
 

@@ -1,4 +1,5 @@
 require 'thread'
+require 'brakeman/util'
 
 #Collects up results from running different checks.
 #
@@ -6,6 +7,8 @@ require 'thread'
 #
 #All .rb files in checks/ will be loaded.
 class Brakeman::Checks
+  extend Brakeman::Util
+
   @checks = []
 
   attr_reader :warnings, :controller_warnings, :model_warnings, :template_warnings, :checks_run
@@ -54,10 +57,12 @@ class Brakeman::Checks
   #Run all the checks on the given Tracker.
   #Returns a new instance of Checks with the results.
   def self.run_checks tracker
-    if tracker.options[:parallel_checks]
-      self.run_checks_parallel tracker
-    else
-      self.run_checks_sequential tracker
+    Brakeman.benchmark :all_checks do
+      if tracker.options[:parallel_checks]
+        self.run_checks_parallel tracker
+      else
+        self.run_checks_sequential tracker
+      end
     end
   end
 
@@ -75,7 +80,10 @@ class Brakeman::Checks
         warn " - #{check_name}"
 
         check = c.new(tracker)
-        check.run_check
+
+        Brakeman.benchmark underscore(check_name).to_sym do
+          check.run_check
+        end
 
         check.warnings.each do |w|
           check_runner.add_warning w
@@ -108,7 +116,9 @@ class Brakeman::Checks
         threads << Thread.new do
           begin
             check = c.new(tracker)
-            check.run_check
+            Brakeman.benchmark underscore(check_name).to_sym do
+              check.run_check
+            end
             check.warnings
           rescue Exception => e
             warn "[#{check_name}] #{e}"
