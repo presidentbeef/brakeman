@@ -1,3 +1,13 @@
+# Conductor - Brakeman Benchmarking
+
+This branch of Brakeman contains a file called `conductor.rb` for running Brakeman and collecting some performance measurements.
+
+`conductor.rb` takes the same arguments as Brakeman, except multiple Rails applications can be specified:
+
+    ./conductor.rb my_app your_app some_other_app
+
+By default, this will output timings for each application.
+
 # Brakeman
 
 Brakeman is a static analysis tool which checks Ruby on Rails applications for security vulnerabilities.
