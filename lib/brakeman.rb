@@ -4,6 +4,10 @@ require 'set'
 
 module Brakeman
 
+  #This exit code is used when warnings are found and the --exit-on-warn
+  #option is set
+  Warnings_Found_Exit_Code = 3
+
   #Run Brakeman scan. Returns Tracker object.
   #
   #Options:
@@ -14,12 +18,10 @@ module Brakeman
   #  * :collapse_mass_assignment - report unprotected models in single warning (default: true)
   #  * :combine_locations - combine warning locations (default: true)
   #  * :config_file - configuration file
-  #  * :create_config - output configuration file
   #  * :escape_html - escape HTML by default (automatic)
   #  * :exit_on_warn - return false if warnings found, true otherwise. Not recommended for library use (default: false)
   #  * :html_style - path to CSS file
   #  * :ignore_model_output - consider models safe (default: false)
-  #  * :list_checks - list all checks (does not run scan)
   #  * :message_limit - limit length of messages
   #  * :min_confidence - minimum confidence (0-2, 0 is highest)
   #  * :output_file - file for output
@@ -35,16 +37,6 @@ module Brakeman
   #  * :skip_checks - checks not to run (run all if not specified)
   #
   def self.run options
-    if options[:list_checks]
-      list_checks
-      exit
-    end
-
-    if options[:create_config]
-      dump_config options
-      exit
-    end
-
     options = set_options options
 
     if options[:quiet]
@@ -55,21 +47,10 @@ module Brakeman
     scan options
   end
 
-  private
-
   def self.set_options options
     options = load_options(options[:config_file]).merge! options
     options = get_defaults.merge! options
     options[:output_format] = get_output_format options
-
-    #Check application path
-    unless options[:app_path]
-      if ARGV[-1].nil?
-        options[:app_path] = File.expand_path "."
-      else
-        options[:app_path] = File.expand_path ARGV[-1]
-      end
-    end
 
     app_path = options[:app_path]
 
@@ -86,7 +67,7 @@ module Brakeman
   def self.load_options config_file
     config_file ||= ""
 
-    #Load configuation file
+    #Load configuration file
     [File.expand_path(config_file),
       File.expand_path("./config.yaml"),
       File.expand_path("~/.brakeman/config.yaml"),
