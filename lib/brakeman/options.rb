@@ -126,7 +126,7 @@ module Brakeman::Options
           options[:html_style] = File.expand_path file
         end
 
-        opts.on "-l", "--[no]-combine-locations", "Combine warning locations (Default)" do |combine|
+        opts.on "-l", "--[no-]combine-locations", "Combine warning locations (Default)" do |combine|
           options[:combine_locations] = combine
         end
 
