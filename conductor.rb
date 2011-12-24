@@ -46,6 +46,16 @@ class Conductor
   #    }
   #
   def run_scans
+    @done = false
+    watcher = Thread.new do
+      until @done do
+        ps = "ps -p #{Process.pid} -opcpu | sed '1 d'"
+        ps_out = `#{ps}`
+        puts "\n#{Time.now} #{Process.times} #{Thread.list.count} threads #{ps_out}"
+        sleep 1
+      end
+    end
+
     @results[:start_time] = Time.now
 
     @results[:total_time] = Benchmark.measure do
@@ -74,7 +84,9 @@ class Conductor
       end
     end
 
+    @done = true
     @results[:end_time] = Time.now
+    watcher.join
 
     self
   end
