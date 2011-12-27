@@ -220,4 +220,14 @@ module Brakeman
 
     tracker
   end
+
+  def self.rescan tracker, files
+    scanner = Scanner.new tracker.options, tracker.processor
+
+    files.each do |path|
+      scanner.rescan_file File.expand_path(path)
+    end
+
+    tracker
+  end
 end

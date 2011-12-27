@@ -360,23 +360,31 @@ class Brakeman::Scanner
     @ruby_parser.new.parse input
   end
 
-  def scan_file path
+  def rescan_file path
+    tracker.template_cache.clear
+
     case file_type path
     when :controller
-      process_controller path
+      rescan_controller path
     when :template
-      process_template path
+      rescan_template path
     when :model
-      process_model path
+      rescan_model path
     when :lib
       process_library path
     when :config
       process_config
     when :initializer
       process_initializer path
+    when :routes
+      process_routes
     else
       raise "Cannot scan file: #{path}"
     end
+
+    index_call_sites
+  end
+
   def rescan_controller path
     #Process source
     process_controller path
