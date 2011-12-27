@@ -401,10 +401,12 @@ class Brakeman::Scanner
       :model
     when /\/lib/
       :lib
-    when /\/config/
-      :config
     when /\/config\/initializers/
       :initializer
+    when /config\/routes\.rb/
+      :routes
+    when /\/config/
+      :config
     else
       :unknown
     end
