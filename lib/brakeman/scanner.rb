@@ -377,6 +377,17 @@ class Brakeman::Scanner
     else
       raise "Cannot scan file: #{path}"
     end
+  def rescan_controller path
+    #Process source
+    process_controller path
+
+    #Process data flow and template rendering
+    #from the controller
+    tracker.controllers.each do |name, controller|
+      if controller[:file] == path
+        @processor.process_controller_alias controller[:src]
+      end
+    end
   end
 
   #Guess at what kind of file the path contains
