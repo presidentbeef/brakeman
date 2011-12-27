@@ -35,7 +35,7 @@ class Brakeman::Scanner
     @report_progress = options[:report_progress]
     @path = options[:app_path]
     @app_path = File.join(@path, "app")
-    @processor ||= Brakeman::Processor.new options
+    @processor = processor || Brakeman::Processor.new(options)
 
     if RUBY_1_9
       @ruby_parser = ::Ruby19Parser
