@@ -27,6 +27,9 @@ elsif options[:show_help]
 elsif options[:show_version]
   puts "brakeman #{Brakeman::Version}"
   exit
+elsif options[:install_rake_task]
+  Brakeman.install_rake_task
+  exit
 end
 
 #Set application path according to the commandline arguments

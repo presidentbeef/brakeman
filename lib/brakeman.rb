@@ -145,6 +145,32 @@ module Brakeman
     $stderr.puts Checks.checks.map { |c| c.to_s }.sort.join "\n"
   end
 
+  def self.install_rake_task
+    if not File.exists? "Rakefile"
+      abort "No Rakefile detected"
+    elsif File.exists? "lib/tasks/brakeman.rake"
+      abort "Task already exists"
+    end
+
+    require 'fileutils'
+
+    if not File.exists? "lib/tasks"
+      warn "Creating lib/tasks"
+      FileUtils.mkdir_p "lib/tasks"
+    end
+
+    path = File.expand_path(File.dirname(__FILE__))
+
+    FileUtils.cp "#{path}/brakeman/brakeman.rake", "lib/tasks/brakeman.rake"
+
+    if File.exists? "lib/tasks/brakeman.rake"
+      warn "Task created in lib/tasks/brakeman.rake"
+      warn "Usage: rake brakeman:run[output_file]"
+    else
+      warn "Could not create task"
+    end
+  end
+
   def self.dump_config options
     if options[:create_config].is_a? String
       file = options[:create_config]
