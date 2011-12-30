@@ -153,6 +153,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
 
           self.current_controller = controller
           @tracker.routes[@current_controller] << action.to_sym
+          break
         end
       end
     end
