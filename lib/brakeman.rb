@@ -142,7 +142,7 @@ module Brakeman
     require 'brakeman/scanner'
     $stderr.puts "Available Checks:"
     $stderr.puts "-" * 30
-    $stderr.puts Checks.checks.map { |c| c.to_s }.sort.join "\n"
+    $stderr.puts Checks.checks.map { |c| c.to_s.match(/^Brakeman::(.*)$/)[1] }.sort.join "\n"
   end
 
   def self.dump_config options
