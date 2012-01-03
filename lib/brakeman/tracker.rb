@@ -151,4 +151,20 @@ class Brakeman::Tracker
 
     @call_index = Brakeman::CallIndex.new finder.calls
   end
+
+  #Clear information related to templates.
+  #If :only_rendered => true, will delete templates rendered from
+  #controllers (but not those rendered from other templates)
+  def reset_templates options = { :only_rendered => false }
+    if options[:only_rendered]
+      @templates.delete_if do |name, template|
+        name.to_s.include? "Controller#"
+      end
+    else
+      @templates = {}
+    end
+    @processed = nil
+    @rest = nil
+    @template_cache.clear
+  end
 end
