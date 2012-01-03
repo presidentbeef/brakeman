@@ -377,7 +377,13 @@ class Brakeman::Scanner
     when :initializer
       process_initializer path
     when :routes
+      # Routes affect which controller methods are treated as actions
+      # which affects which templates are rendered, so routes, controllers,
+      # and templates rendered from controllers must be rescanned
+      tracker.reset_routes
+      tracker.reset_templates :only_rendered => true
       process_routes
+      process_controllers
     else
       raise "Cannot scan file: #{path}"
     end
