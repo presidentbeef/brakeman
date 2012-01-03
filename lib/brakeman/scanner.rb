@@ -166,11 +166,11 @@ class Brakeman::Scanner
   #Process a library
   def process_lib path
     begin
-      @processor.process_lib parse_ruby(File.read(f)), f
+      @processor.process_lib parse_ruby(File.read(path)), path
     rescue Racc::ParseError => e
-      tracker.error e, "could not parse #{f}. There is probably a typo in the file. Test it with 'ruby_parse #{f}'"
+      tracker.error e, "could not parse #{path}. There is probably a typo in the file. Test it with 'ruby_parse #{path}'"
     rescue Exception => e
-      tracker.error e.exception(e.message + "\nWhile processing #{f}"), e.backtrace
+      tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
     end
   end
 
