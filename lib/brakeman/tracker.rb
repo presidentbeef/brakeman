@@ -167,4 +167,8 @@ class Brakeman::Tracker
     @rest = nil
     @template_cache.clear
   end
+
+  def reset_routes
+    @routes = {}
+  end
 end
