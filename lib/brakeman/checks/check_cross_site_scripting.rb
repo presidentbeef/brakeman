@@ -209,7 +209,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       (target == FORM_BUILDER and IGNORE_METHODS.include? method) or
       (method.to_s[-1,1] == "?")
 
-      exp[0] = :ignore
+      #exp[0] = :ignore #should not be necessary
       @matched = false
     elsif sexp? exp[1] and model_name? exp[1][1]
       @matched = :model
