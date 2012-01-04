@@ -404,6 +404,50 @@ class Brakeman::Scanner
     end
   end
 
+  def rescan_template path
+    template_name = template_path_to_name(path)
+
+    tracker.reset_template template_name
+    process_template path
+
+    @processor.process_template_alias tracker.templates[template_name]
+
+    rescan = Set.new
+
+    rendered_from_controller = /^#{template_name}\.(.+Controller)#(.+)/
+    rendered_from_view = /^#{template_name}\.Template:(.+)/
+
+    #Search for processed template and process it.
+    #Search for rendered versions of template and re-render (if necessary)
+    tracker.templates.each do |name, template|
+      if template[:file] == path or template[:file].nil?
+       name = name.to_s
+
+       if name.match(rendered_from_controller)
+         #Rendered from controller, so reprocess controller
+
+         rescan << [:controller, $1.to_sym, $2.to_sym]
+       elsif name.match(rendered_from_view)
+         #Rendered from another template, so reprocess that template
+
+         rescan << [:template, $1.to_sym]
+       end
+      end
+    end
+
+    rescan.each do |r|
+      if r[0] == :controller
+        controller = tracker.controllers[r[1]]
+
+        @processor.process_controller_alias controller[:src], r[2]
+      elsif r[0] == :template
+        template = tracker.templates[r[1]]
+
+        rescan_template template[:file]
+      end
+    end
+  end
+
   #Guess at what kind of file the path contains
   def file_type path
     case path
