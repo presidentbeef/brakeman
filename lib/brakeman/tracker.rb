@@ -168,6 +168,15 @@ class Brakeman::Tracker
     @template_cache.clear
   end
 
+  #Clear information related to template
+  def reset_template name
+    name = name.to_sym
+    @templates.delete name
+    @processed = nil
+    @rest = nil
+  end
+
+  #Clear information about routes
   def reset_routes
     @routes = {}
   end
