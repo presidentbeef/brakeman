@@ -159,7 +159,7 @@ class Brakeman::Report
   end
 
   #Generate table of model warnings or return nil if no warnings
-  def generate_model_warnings html
+  def generate_model_warnings html = false
     unless checks.model_warnings.empty?
       table = Ruport::Data::Table(["Confidence", "Model", "Warning Type", "Message"])
       checks.model_warnings.each do |warning|
