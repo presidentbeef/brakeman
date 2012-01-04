@@ -45,6 +45,14 @@ class Brakeman::Warning
     end
   end
 
+  def hash
+    self.format_message.hash
+  end
+
+  def eql? other_warning
+    self.hash == other_warning.hash
+  end
+
   #Returns name of a view, including where it was rendered from
   def view_name
     return @view_name if @view_name
