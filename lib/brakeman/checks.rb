@@ -46,6 +46,23 @@ class Brakeman::Checks
     end
   end
 
+  #Return a hash of arrays of new and fixed warnings
+  #
+  #    diff = checks.diff old_checks
+  #    diff[:fixed]  # [...]
+  #    diff[:new]    # [...]
+  def diff other_checks
+    my_warnings = self.all_warnings
+    other_warnings = other_checks.all_warnings
+
+    diff = {}
+
+    diff[:fixed] = other_warnings - my_warnings
+    diff[:new] = my_warnings - other_warnings
+
+    diff
+  end
+
   #Return an array of all warnings found.
   def all_warnings
     @warnings + @template_warnings + @controller_warnings + @model_warnings
