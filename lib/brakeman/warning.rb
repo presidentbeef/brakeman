@@ -71,37 +71,41 @@ class Brakeman::Warning
 
   #Return formatted warning message
   def format_message
-    message = self.message
+    return @format_message if @format_message
+
+    @format_message = self.message.dup
 
     if self.line
-      message << " near line #{self.line}"
+      @format_message << " near line #{self.line}"
     end
 
     if self.code
-      message << ": #{format_code}"
+      @format_message << ": #{format_code}"
     end
 
-    message
+    @format_message
   end
 
   #Generates a hash suitable for inserting into a Ruport table
   def to_row type = :warning
-    row = { "Confidence" => self.confidence,
+    return @row if @row
+
+    @row = { "Confidence" => self.confidence,
       "Warning Type" => self.warning_type.to_s,
       "Message" => self.format_message }
 
     case type
     when :template
-      row["Template"] = self.view_name.to_s
+      @row["Template"] = self.view_name.to_s
     when :model
-      row["Model"] = self.model.to_s
+      @row["Model"] = self.model.to_s
     when :controller
-      row["Controller"] = self.controller.to_s
+      @row["Controller"] = self.controller.to_s
     when :warning
-      row["Class"] = self.class.to_s
-      row["Method"] = self.method.to_s
+      @row["Class"] = self.class.to_s
+      @row["Method"] = self.method.to_s
     end
 
-    row
+    @row
   end
 end
