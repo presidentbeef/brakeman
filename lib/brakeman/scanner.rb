@@ -384,6 +384,8 @@ class Brakeman::Scanner
       tracker.reset_templates :only_rendered => true
       process_routes
       process_controllers
+    when :gemfile
+      process_gems
     else
       raise "Cannot scan file: #{path}"
     end
@@ -477,6 +479,8 @@ class Brakeman::Scanner
       :routes
     when /\/config/
       :config
+    when /Gemfile/
+      :gemfile
     else
       :unknown
     end
