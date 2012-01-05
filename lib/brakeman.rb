@@ -36,6 +36,7 @@ module Brakeman
   #  * :skip_libs - do not process lib/ directory (default: false)
   #  * :skip_checks - checks not to run (run all if not specified)
   #
+  #Alternatively, just supply a path as a string.
   def self.run options
     options = set_options options
 
@@ -48,6 +49,10 @@ module Brakeman
   end
 
   def self.set_options options
+    if options.is_a? String
+      options = { :app_path => options }
+    end
+
     options = load_options(options[:config_file]).merge! options
     options = get_defaults.merge! options
     options[:output_format] = get_output_format options
