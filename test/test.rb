@@ -16,8 +16,7 @@ module BrakemanTester
 
       announce "Processing #{name} application..."
 
-      tracker = Brakeman.run opts
-      Brakeman::Report.new(tracker).to_test
+      Brakeman.run(opts).report.to_test
     end
 
     #Make an announcement

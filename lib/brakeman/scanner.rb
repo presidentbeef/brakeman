@@ -30,12 +30,12 @@ class Brakeman::Scanner
   RUBY_1_9 = !!(RUBY_VERSION =~ /^1\.9/)
 
   #Pass in path to the root of the Rails application
-  def initialize options
+  def initialize options, processor = nil
     @options = options
     @report_progress = options[:report_progress]
     @path = options[:app_path]
     @app_path = File.join(@path, "app")
-    @processor = Brakeman::Processor.new options
+    @processor = processor || Brakeman::Processor.new(options)
 
     if RUBY_1_9
       @ruby_parser = ::Ruby19Parser
@@ -124,13 +124,18 @@ class Brakeman::Scanner
   #Adds parsed information to tracker.initializers
   def process_initializers
     Dir.glob(@path + "/config/initializers/**/*.rb").sort.each do |f|
-      begin
-        @processor.process_initializer(f, parse_ruby(File.read(f)))
-      rescue Racc::ParseError => e
-        tracker.error e, "could not parse #{f}. There is probably a typo in the file. Test it with 'ruby_parse #{f}'"
-      rescue Exception => e
-        tracker.error e.exception(e.message + "\nWhile processing #{f}"), e.backtrace
-      end
+      process_initializer f
+    end
+  end
+
+  #Process an initializer
+  def process_initializer path
+    begin
+      @processor.process_initializer(path, parse_ruby(File.read(path)))
+    rescue Racc::ParseError => e
+      tracker.error e, "could not parse #{path}. There is probably a typo in the file. Test it with 'ruby_parse #{path}'"
+    rescue Exception => e
+      tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
     end
   end
 
@@ -154,13 +159,18 @@ class Brakeman::Scanner
         current += 1
       end
 
-      begin
-        @processor.process_lib parse_ruby(File.read(f)), f
-      rescue Racc::ParseError => e
-        tracker.error e, "could not parse #{f}. There is probably a typo in the file. Test it with 'ruby_parse #{f}'"
-      rescue Exception => e
-        tracker.error e.exception(e.message + "\nWhile processing #{f}"), e.backtrace
-      end
+      process_lib f
+    end
+  end
+
+  #Process a library
+  def process_lib path
+    begin
+      @processor.process_lib parse_ruby(File.read(path)), path
+    rescue Racc::ParseError => e
+      tracker.error e, "could not parse #{path}. There is probably a typo in the file. Test it with 'ruby_parse #{path}'"
+    rescue Exception => e
+      tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
     end
   end
 
@@ -196,13 +206,7 @@ class Brakeman::Scanner
         current += 1
       end
 
-      begin
-        @processor.process_controller(parse_ruby(File.read(f)), f)
-      rescue Racc::ParseError => e
-        tracker.error e, "could not parse #{f}. There is probably a typo in the file. Test it with 'ruby_parse #{f}'"
-      rescue Exception => e
-        tracker.error e.exception(e.message + "\nWhile processing #{f}"), e.backtrace
-      end
+      process_controller f
     end
 
     current = 0
@@ -220,6 +224,16 @@ class Brakeman::Scanner
     end
   end
 
+  def process_controller path
+    begin
+      @processor.process_controller(parse_ruby(File.read(path)), path)
+    rescue Racc::ParseError => e
+      tracker.error e, "could not parse #{path}. There is probably a typo in the file. Test it with 'ruby_parse #{path}'"
+    rescue Exception => e
+      tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
+    end
+  end
+
   #Process all views and partials in views/
   #
   #Adds processed views to tracker.views
@@ -232,52 +246,13 @@ class Brakeman::Scanner
     template_files = Dir.glob(views_path).sort
     total = template_files.length
 
-    template_files.each do |f|
+    template_files.each do |path|
       if @report_progress
         $stderr.print " #{count}/#{total} files processed\r"
         count += 1
       end
 
-      type = f.match(/.*\.(erb|haml|rhtml)$/)[1].to_sym
-      type = :erb if type == :rhtml
-      name = template_path_to_name f
-      text = File.read f
-
-      begin
-        if type == :erb
-          if tracker.config[:escape_html]
-            type = :erubis
-            if options[:rails3]
-              src = Brakeman::RailsXSSErubis.new(text).src
-            else
-              src = Brakeman::ErubisEscape.new(text).src
-            end
-          elsif tracker.config[:erubis]
-            type = :erubis
-            src = Brakeman::ScannerErubis.new(text).src
-          else
-            src = ERB.new(text, nil, "-").src
-            src.sub!(/^#.*\n/, '') if RUBY_1_9
-          end
-
-          parsed = parse_ruby src
-        elsif type == :haml
-          src = Haml::Engine.new(text,
-                                 :escape_html => !!tracker.config[:escape_html]).precompiled
-          parsed = parse_ruby src
-        else
-          tracker.error "Unkown template type in #{f}"
-        end
-
-        @processor.process_template(name, parsed, type, nil, f)
-
-      rescue Racc::ParseError => e
-        tracker.error e, "could not parse #{f}"
-      rescue Haml::Error => e
-        tracker.error e, ["While compiling HAML in #{f}"] << e.backtrace
-      rescue Exception => e
-        tracker.error e.exception(e.message + "\nWhile processing #{f}"), e.backtrace
-      end
+      process_template path
     end
 
     total = tracker.templates.length
@@ -293,7 +268,49 @@ class Brakeman::Scanner
 
       @processor.process_template_alias tracker.templates[name]
     end
+  end
 
+  def process_template path
+    type = path.match(/.*\.(erb|haml|rhtml)$/)[1].to_sym
+    type = :erb if type == :rhtml
+    name = template_path_to_name path
+    text = File.read path
+
+    begin
+      if type == :erb
+        if tracker.config[:escape_html]
+          type = :erubis
+          if options[:rails3]
+            src = Brakeman::RailsXSSErubis.new(text).src
+          else
+            src = Brakeman::ErubisEscape.new(text).src
+          end
+        elsif tracker.config[:erubis]
+          type = :erubis
+          src = Brakeman::ScannerErubis.new(text).src
+        else
+          src = ERB.new(text, nil, "-").src
+          src.sub!(/^#.*\n/, '') if RUBY_1_9
+        end
+
+        parsed = parse_ruby src
+      elsif type == :haml
+        src = Haml::Engine.new(text,
+                               :escape_html => !!tracker.config[:escape_html]).precompiled
+        parsed = parse_ruby src
+      else
+        tracker.error "Unkown template type in #{path}"
+      end
+
+      @processor.process_template(name, parsed, type, nil, path)
+
+    rescue Racc::ParseError => e
+      tracker.error e, "could not parse #{path}"
+    rescue Haml::Error => e
+      tracker.error e, ["While compiling HAML in #{path}"] << e.backtrace
+    rescue Exception => e
+      tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
+    end
   end
 
   #Convert path/filename to view name
@@ -320,13 +337,18 @@ class Brakeman::Scanner
         current += 1
       end
 
-      begin
-        @processor.process_model(parse_ruby(File.read(f)), f)
-      rescue Racc::ParseError => e
-        tracker.error e, "could not parse #{f}"
-      rescue Exception => e
-        tracker.error e.exception(e.message + "\nWhile processing #{f}"), e.backtrace
-      end
+      process_model f
+
+    end
+  end
+
+  def process_model path
+    begin
+      @processor.process_model(parse_ruby(File.read(path)), path)
+    rescue Racc::ParseError => e
+      tracker.error e, "could not parse #{path}"
+    rescue Exception => e
+      tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
     end
   end
 
@@ -336,6 +358,132 @@ class Brakeman::Scanner
 
   def parse_ruby input
     @ruby_parser.new.parse input
+  end
+
+  def rescan_file path
+    tracker.template_cache.clear
+
+    case file_type path
+    when :controller
+      rescan_controller path
+    when :template
+      rescan_template path
+    when :model
+      rescan_model path
+    when :lib
+      process_library path
+    when :config
+      process_config
+    when :initializer
+      process_initializer path
+    when :routes
+      # Routes affect which controller methods are treated as actions
+      # which affects which templates are rendered, so routes, controllers,
+      # and templates rendered from controllers must be rescanned
+      tracker.reset_routes
+      tracker.reset_templates :only_rendered => true
+      process_routes
+      process_controllers
+    when :gemfile
+      process_gems
+    else
+      raise "Cannot scan file: #{path}"
+    end
+
+    index_call_sites
+  end
+
+  def rescan_controller path
+    #Process source
+    process_controller path
+
+    #Process data flow and template rendering
+    #from the controller
+    tracker.controllers.each do |name, controller|
+      if controller[:file] == path
+        @processor.process_controller_alias controller[:src]
+      end
+    end
+  end
+
+  def rescan_template path
+    template_name = template_path_to_name(path)
+
+    tracker.reset_template template_name
+    process_template path
+
+    @processor.process_template_alias tracker.templates[template_name]
+
+    rescan = Set.new
+
+    rendered_from_controller = /^#{template_name}\.(.+Controller)#(.+)/
+    rendered_from_view = /^#{template_name}\.Template:(.+)/
+
+    #Search for processed template and process it.
+    #Search for rendered versions of template and re-render (if necessary)
+    tracker.templates.each do |name, template|
+      if template[:file] == path or template[:file].nil?
+       name = name.to_s
+
+       if name.match(rendered_from_controller)
+         #Rendered from controller, so reprocess controller
+
+         rescan << [:controller, $1.to_sym, $2.to_sym]
+       elsif name.match(rendered_from_view)
+         #Rendered from another template, so reprocess that template
+
+         rescan << [:template, $1.to_sym]
+       end
+      end
+    end
+
+    rescan.each do |r|
+      if r[0] == :controller
+        controller = tracker.controllers[r[1]]
+
+        @processor.process_controller_alias controller[:src], r[2]
+      elsif r[0] == :template
+        template = tracker.templates[r[1]]
+
+        rescan_template template[:file]
+      end
+    end
+  end
+
+  def rescan_model path
+    num_models = tracker.models.length
+    tracker.reset_model path
+    process_model path if File.exists? path
+
+    #Only need to rescan other things if a model is added or removed
+    if num_models != tracker.models.length
+      process_controllers
+      process_templates
+    end
+  end
+
+  #Guess at what kind of file the path contains
+  def file_type path
+    case path
+    when /\/app\/controllers/
+      :controller
+    when /\/app\/views/
+      :template
+    when /\/app\/models/
+      :model
+    when /\/lib/
+      :lib
+    when /\/config\/initializers/
+      :initializer
+    when /config\/routes\.rb/
+      :routes
+    when /\/config/
+      :config
+    when /Gemfile/
+      :gemfile
+    else
+      :unknown
+    end
   end
 end
 

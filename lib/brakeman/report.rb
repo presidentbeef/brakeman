@@ -36,7 +36,7 @@ class Brakeman::Report
   end
 
   #Generate summary table of what was parsed
-  def generate_overview
+  def generate_overview html = false
     templates = Set.new(@tracker.templates.map {|k,v| v[:name].to_s[/[^.]+/]}).length
     warnings = checks.warnings.length +
                 checks.controller_warnings.length +
@@ -49,7 +49,7 @@ class Brakeman::Report
     unless tracker.options[:output_format] == :to_csv
       summary = warnings_summary
 
-      if tracker.options[:output_format] == :to_html
+      if html
         warnings = "#{warnings} <span class='high-confidence'>(#{summary[:high_confidence]})</span>"
       else
         warnings = "#{warnings} (#{summary[:high_confidence]})"
@@ -77,7 +77,7 @@ class Brakeman::Report
   end
 
   #Generate table of errors or return nil if no errors
-  def generate_errors
+  def generate_errors html = false
     unless tracker.errors.empty?
       table = Ruport::Data::Table(["Error", "Location"])
       
@@ -85,7 +85,7 @@ class Brakeman::Report
       tracker.errors.each do |w|
         p w if tracker.options[:debug]
 
-        if tracker.options[:output_format] == :to_html
+        if html
           w[:error] = CGI.escapeHTML w[:error]
         end
 
@@ -99,13 +99,13 @@ class Brakeman::Report
   end
 
   #Generate table of general security warnings
-  def generate_warnings
+  def generate_warnings html = false
     table = Ruport::Data::Table(["Confidence", "Class", "Method", "Warning Type", "Message"])
     checks.warnings.each do |warning|
       next if warning.confidence > tracker.options[:min_confidence]
       w = warning.to_row
 
-      if tracker.options[:output_format] == :to_html
+      if html
         w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
         w["Message"] = with_context warning, w["Message"]
       else
@@ -128,14 +128,14 @@ class Brakeman::Report
   end
 
   #Generate table of template warnings or return nil if no warnings
-  def generate_template_warnings
+  def generate_template_warnings html = false
     unless checks.template_warnings.empty?
       table = Ruport::Data::Table(["Confidence", "Template", "Warning Type", "Message"])
       checks.template_warnings.each do |warning|
         next if warning.confidence > tracker.options[:min_confidence]
         w = warning.to_row :template
 
-        if tracker.options[:output_format] == :to_html
+        if html
           w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
           w["Message"] = with_context warning, w["Message"]
         else
@@ -159,14 +159,14 @@ class Brakeman::Report
   end
 
   #Generate table of model warnings or return nil if no warnings
-  def generate_model_warnings
+  def generate_model_warnings html = false
     unless checks.model_warnings.empty?
       table = Ruport::Data::Table(["Confidence", "Model", "Warning Type", "Message"])
       checks.model_warnings.each do |warning|
         next if warning.confidence > tracker.options[:min_confidence]
         w = warning.to_row :model
 
-        if tracker.options[:output_format] == :to_html
+        if html
           w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
           w["Message"] = with_context warning, w["Message"]
         else
@@ -190,14 +190,14 @@ class Brakeman::Report
   end
 
   #Generate table of controller warnings or nil if no warnings
-  def generate_controller_warnings
+  def generate_controller_warnings html = false
     unless checks.controller_warnings.empty?
       table = Ruport::Data::Table(["Confidence", "Controller", "Warning Type", "Message"])
       checks.controller_warnings.each do |warning|
         next if warning.confidence > tracker.options[:min_confidence]
         w = warning.to_row :controller
 
-        if tracker.options[:output_format] == :to_html
+        if html
           w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
           w["Message"] = with_context warning, w["Message"]
         else
@@ -257,14 +257,14 @@ class Brakeman::Report
   end
 
   #Generate listings of templates and their output
-  def generate_templates
+  def generate_templates html = false
     out_processor = Brakeman::OutputProcessor.new
     table = Ruport::Data::Table(["Name", "Output"])
     tracker.templates.each do |name, template|
       unless template[:outputs].empty?
         template[:outputs].each do |out|
           out = out_processor.format out
-          out = CGI.escapeHTML(out) if tracker.options[:output_format] == :to_html
+          out = CGI.escapeHTML(out) if html
           table << { "Name" => name,
             "Output" => out.gsub("\n", ";").gsub(/\s+/, " ") }
         end
@@ -277,7 +277,7 @@ class Brakeman::Report
   def to_html
     out = html_header <<
     "<h2 id='summary'>Summary</h2>" <<
-    generate_overview.to_html << "<br/>" <<
+    generate_overview(true).to_html << "<br/>" <<
     generate_warning_overview.to_html
 
     if tracker.options[:report_routes] or tracker.options[:debug]
@@ -287,24 +287,24 @@ class Brakeman::Report
 
     if tracker.options[:debug]
       out << "<h2>Templates</h2>" <<
-      generate_templates.to_html
+      generate_templates(true).to_html
     end
 
-    res = generate_errors
+    res = generate_errors(true)
     if res
         out << "<div onClick=\"toggle('errors_table');\">  <h2>Exceptions raised during the analysis (click to see them)</h2 ></div> <div id='errors_table' style='display:none'>" << res.to_html << '</div>'
     end
 
-    res = generate_warnings
+    res = generate_warnings(true)
     out << "<h2>Security Warnings</h2>" << res.to_html if res
 
-    res = generate_controller_warnings
+    res = generate_controller_warnings(true)
     out << res.to_html if res
 
-    res = generate_model_warnings 
+    res = generate_model_warnings(true)
     out << res.to_html if res
 
-    res = generate_template_warnings
+    res = generate_template_warnings(true)
     out << res.to_html if res
 
     out << "</body></html>"

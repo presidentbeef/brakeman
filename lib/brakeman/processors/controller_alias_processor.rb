@@ -6,8 +6,12 @@ require 'brakeman/processors/lib/render_helper'
 class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   include Brakeman::RenderHelper
 
-  def initialize tracker
+  #If only_method is specified, only that method will be processed,
+  #other methods will be skipped.
+  #This is for rescanning just a single action.
+  def initialize tracker, only_method = nil
     super()
+    @only_method = only_method
     @tracker = tracker
     @rendered = false
     @current_class = @current_module = @current_method = nil
@@ -26,6 +30,10 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #Processes a method definition, which may include
   #processing any rendered templates.
   def process_methdef exp
+    #Skip if instructed to only process a specific method
+    #(but don't skip if this method was called from elsewhere)
+    return exp if @current_method.nil? and @only_method and @only_method != exp[1]
+
     is_route = route? exp[1]
     other_method = @current_method
     @current_method = exp[1]

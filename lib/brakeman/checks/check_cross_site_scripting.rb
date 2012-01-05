@@ -14,21 +14,8 @@ require 'set'
 class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
-  #Ignore these methods and their arguments.
-  #It is assumed they will take care of escaping their output.
-  IGNORE_METHODS = Set.new([:button_to, :check_box, :escapeHTML, :escape_once,
-                           :field_field, :fields_for, :h, :hidden_field,
-                           :hidden_field, :hidden_field_tag, :image_tag, :label,
-                           :link_to, :mail_to, :radio_button, :select,
-                           :submit_tag, :text_area, :text_field, 
-                           :text_field_tag, :url_encode, :url_for,
-                           :will_paginate] )
-
   #Model methods which are known to be harmless
   IGNORE_MODEL_METHODS = Set.new([:average, :count, :maximum, :minimum, :sum])
-
-  #Methods known to not escape their input
-  KNOWN_DANGEROUS = Set.new([:truncate, :concat])
 
   MODEL_METHODS = Set.new([:all, :find, :first, :last, :new])
 
@@ -46,7 +33,14 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   #Run check
   def run_check 
-    IGNORE_METHODS.merge tracker.options[:safe_methods]
+    @ignore_methods = Set.new([:button_to, :check_box, :escapeHTML, :escape_once,
+                           :field_field, :fields_for, :h, :hidden_field,
+                           :hidden_field, :hidden_field_tag, :image_tag, :label,
+                           :link_to, :mail_to, :radio_button, :select,
+                           :submit_tag, :text_area, :text_field,
+                           :text_field_tag, :url_encode, :url_for,
+                           :will_paginate] ).merge tracker.options[:safe_methods]
+
     @models = tracker.models.keys
     @inspect_arguments = tracker.options[:check_arguments]
 
@@ -54,10 +48,12 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     link_to_check.run_check
     warnings.concat link_to_check.warnings unless link_to_check.warnings.empty?
 
+    @known_dangerous = Set.new([:truncate, :concat])
+
     if version_between? "2.0.0", "3.0.5"
-      KNOWN_DANGEROUS << :auto_link
+      @known_dangerous << :auto_link
     elsif version_between? "3.0.6", "3.0.99"
-      IGNORE_METHODS << :auto_link
+      @ignore_methods << :auto_link
     end
 
     tracker.each_template do |name, template|
@@ -170,7 +166,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       if message and not duplicate? exp
         add_result exp
 
-        if exp[1].nil? and KNOWN_DANGEROUS.include? exp[2]
+        if exp[1].nil? and @known_dangerous.include? exp[2]
           confidence = CONFIDENCE[:high]
         else
           confidence = CONFIDENCE[:low]
@@ -201,15 +197,15 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     args = exp[3]
 
     #Ignore safe items
-    if (target.nil? and (IGNORE_METHODS.include? method or method.to_s =~ IGNORE_LIKE)) or
+    if (target.nil? and (@ignore_methods.include? method or method.to_s =~ IGNORE_LIKE)) or
       (@matched == :model and IGNORE_MODEL_METHODS.include? method) or
       (target == HAML_HELPERS and method == :html_escape) or
       ((target == URI or target == CGI) and method == :escape) or
       (target == XML_HELPER and method == :escape_xml) or
-      (target == FORM_BUILDER and IGNORE_METHODS.include? method) or
+      (target == FORM_BUILDER and @ignore_methods.include? method) or
       (method.to_s[-1,1] == "?")
 
-      exp[0] = :ignore
+      #exp[0] = :ignore #should not be necessary
       @matched = false
     elsif sexp? exp[1] and model_name? exp[1][1]
       @matched = :model
@@ -269,9 +265,9 @@ end
 
 #This _only_ checks calls to link_to
 class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
-  IGNORE_METHODS = IGNORE_METHODS - [:link_to]
-
   def run_check
+    @ignore_methods = []
+    @known_dangerous = []
     #Ideally, I think this should also check to see if people are setting
     #:escape => false
     methods = tracker.find_call :target => false, :method => :link_to 
