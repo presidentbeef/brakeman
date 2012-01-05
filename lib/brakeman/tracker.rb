@@ -176,6 +176,20 @@ class Brakeman::Tracker
     @rest = nil
   end
 
+  #Clear information related to model
+  def reset_model path
+    model_name = nil
+
+    @models.each do |name, model|
+      if model[:file] == path
+        model_name = name
+        break
+      end
+    end
+
+    @models.delete model_name
+  end
+
   #Clear information about routes
   def reset_routes
     @routes = {}
