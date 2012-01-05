@@ -448,6 +448,18 @@ class Brakeman::Scanner
     end
   end
 
+  def rescan_model path
+    num_models = tracker.models.length
+    tracker.reset_model path
+    process_model path if File.exists? path
+
+    #Only need to rescan other things if a model is added or removed
+    if num_models != tracker.models.length
+      process_controllers
+      process_templates
+    end
+  end
+
   #Guess at what kind of file the path contains
   def file_type path
     case path
