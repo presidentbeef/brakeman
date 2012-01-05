@@ -255,10 +255,14 @@ module Brakeman
   def self.rescan tracker, files
     scanner = Scanner.new tracker.options, tracker.processor
 
+    changed = false
+
     files.each do |path|
-      scanner.rescan_file File.expand_path(path)
+      if scanner.rescan_file File.expand_path(path)
+        changed = true
+      end
     end
 
-    tracker
+    changed
   end
 end

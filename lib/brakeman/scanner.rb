@@ -387,10 +387,12 @@ class Brakeman::Scanner
     when :gemfile
       process_gems
     else
-      raise "Cannot scan file: #{path}"
+      return false #Nothing to do, file hopefully does not need to be rescanned
     end
 
     index_call_sites
+
+    true
   end
 
   def rescan_controller path
