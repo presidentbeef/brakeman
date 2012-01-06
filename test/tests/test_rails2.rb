@@ -50,7 +50,7 @@ class Rails2Tests < Test::Unit::TestCase
       :warning_type => "Command Injection",
       :line => 34,
       :message => /^Possible command injection/,
-      :confidence => 1,
+      :confidence => 0,
       :file => /home_controller\.rb/
   end
 

@@ -37,7 +37,7 @@ class Rails3Tests < Test::Unit::TestCase
       :warning_type => "Command Injection",
       :line => 34,
       :message => /^Possible command injection near line 34:/,
-      :confidence => 1,
+      :confidence => 0,
       :file => /home_controller\.rb/
   end
 
