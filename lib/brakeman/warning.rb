@@ -43,6 +43,9 @@ class Brakeman::Warning
         @warning_set = :warning
       end
     end
+
+    @format_message = nil
+    @row = nil
   end
 
   def hash
