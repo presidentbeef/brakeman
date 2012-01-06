@@ -11,13 +11,13 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 16,
+        :template => 17,
         :warning => 18 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 16,
+        :template => 17,
         :warning => 19 }
     end
   end
@@ -372,6 +372,15 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Unescaped cookie value/,
       :confidence => 0,
       :file => /test_cookie\.html\.erb/
+  end
+
+  def test_xss_in_unused_template
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => "Unescaped parameter value near line 1: params[:blah]",
+      :confidence => 0,
+      :file => /not_used\.html\.erb/
   end
 end
 
