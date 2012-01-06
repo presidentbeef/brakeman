@@ -118,7 +118,7 @@ class Brakeman::Tracker
   #    User.human.active.all(...)
   #
   def find_call options
-    index_calls unless @call_index
+    index_call_sites unless @call_index
     @call_index.find_calls options
   end
 
