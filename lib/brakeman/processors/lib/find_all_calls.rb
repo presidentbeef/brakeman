@@ -65,6 +65,24 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
     exp
   end
 
+  #Technically, `` is call to Kernel#`
+  #But we just need them in the call cache for speed
+  def process_dxstr exp
+    process exp[-1] if sexp? exp[-1]
+
+    call = { :target => nil, :method => :`, :call => exp, :nested => false }
+
+    if @current_template
+      call[:location] = [:template, @current_template]
+    else
+      call[:location] = [:class, @current_class, @current_method]
+    end
+
+    $stderr.puts "Adding #{call.inspect}"
+    @calls << call
+
+    exp
+  end
   #Process an assignment like a call
   def process_attrasgn exp
     process_call exp

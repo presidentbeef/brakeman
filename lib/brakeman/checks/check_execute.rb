@@ -60,29 +60,18 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
   #
   # `rm -rf #{params[:file]}`
   def check_for_backticks tracker
-    tracker.each_method do |exp, set_name, method_name|
-      @current_set = set_name
-      @current_method = method_name
-
-      process exp
-    end 
-
-    @current_set = nil
-
-    tracker.each_template do |name, template|
-      @current_template = template
-
-      process template[:src]
+    tracker.find_call(:target => nil, :method => :`).each do |result|
+      process_backticks result
     end
-
-    @current_template = nil
   end
 
   #Processes backticks.
-  def process_dxstr exp
-    return exp if duplicate? exp 
+  def process_backticks result
+    return if duplicate? result
 
-    add_result exp
+    add_result result
+
+    exp = result[:call]
 
     if include_user_input? exp
       confidence = CONFIDENCE[:high]
@@ -96,15 +85,13 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       :code => exp,
       :confidence => confidence }
 
-    if @current_template
-      warning[:template] = @current_template
+    if result[:location][0] == :template
+      warning[:template] = result[:location][1]
     else
-      warning[:class] = @current_set
-      warning[:method] = @current_method
+      warning[:class] = result[:location][1]
+      warning[:method] = result[:location][2]
     end
 
     warn warning
-
-    exp
   end
 end
