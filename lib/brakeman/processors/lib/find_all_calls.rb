@@ -96,7 +96,6 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
       call[:location] = [:class, @current_class, @current_method]
     end
 
-    $stderr.puts "Adding #{call.inspect}"
     @calls << call
 
     exp
