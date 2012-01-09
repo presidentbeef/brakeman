@@ -7,6 +7,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     @paths = files                 #Files to rescan
     @old_results = tracker.checks  #Old warnings from previous scan
     @changes = nil                 #True if files had to be rescanned
+    @reindex = Set.new
   end
 
 
@@ -29,7 +30,9 @@ class Brakeman::Rescanner < Brakeman::Scanner
       end
     end
 
-    index_call_sites
+    if @changes and not @reindex.empty?
+      tracker.reindex_call_sites @reindex
+    end
 
     self
   end
@@ -38,8 +41,10 @@ class Brakeman::Rescanner < Brakeman::Scanner
     case file_type path
     when :controller
       rescan_controller path
+      @reindex << :controllers << :templates
     when :template
       rescan_template path
+      @reindex << :templates
     when :model
       rescan_model path
     when :lib
@@ -56,6 +61,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
       tracker.reset_templates :only_rendered => true
       process_routes
       process_controllers
+      @reindex << :controllers << :templates
     when :gemfile
       process_gems
     else
@@ -141,7 +147,10 @@ class Brakeman::Rescanner < Brakeman::Scanner
     if num_models != tracker.models.length
       process_templates
       process_controllers
+      @reindex << :templates << :controllers
     end
+
+    @reindex << :models
   end
 
   #Guess at what kind of file the path contains
