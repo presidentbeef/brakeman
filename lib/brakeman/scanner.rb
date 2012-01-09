@@ -425,13 +425,13 @@ class Brakeman::Rescanner < Brakeman::Scanner
     #from the controller
     tracker.controllers.each do |name, controller|
       if controller[:file] == path
-        @processor.process_controller_alias controller[:src]
-
-        tracker.templates.keys.each do |name|
-          if name.match /(.+)\.#{name}#/
-            tracker.templates.delete $1
+        tracker.templates.keys.each do |template_name|
+          if template_name.to_s.match /(.+)\.#{name}#/
+            tracker.templates.delete template_name
           end
         end
+
+        @processor.process_controller_alias controller[:src]
       end
     end
   end
