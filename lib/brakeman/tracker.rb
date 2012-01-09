@@ -67,7 +67,7 @@ class Brakeman::Tracker
     [self.controllers, self.models].each do |set|
       set.each do |set_name, info|
         [:private, :public, :protected].each do |visibility|
-          info[visibility].each do |method_name, definition|    
+          info[visibility].each do |method_name, definition|
             if definition.node_type == :selfdef
               method_name = "#{definition[1]}.#{method_name}"
             end
@@ -150,6 +150,64 @@ class Brakeman::Tracker
     end
 
     @call_index = Brakeman::CallIndex.new finder.calls
+  end
+
+  #Reindex call sites
+  #
+  #Takes a set of symbols which can include :templates, :models,
+  #or :controllers
+  #
+  #This will limit reindexing to the given sets
+  def reindex_call_sites locations
+    #If reindexing templates, models, and controllers, just redo
+    #everything
+    if locations.length == 3
+      return index_call_sites
+    end
+
+    if locations.include? :templates
+      @call_index.remove_template_indexes
+    end
+
+    classes_to_reindex = Set.new
+    method_sets = []
+
+    if locations.include? :models
+      classes_to_reindex.merge self.models.keys
+      method_sets << self.models
+    end
+
+    if locations.include? :controllers
+      classes_to_reindex.merge self.controllers.keys
+      method_sets << self.controllers
+    end
+
+    @call_index.remove_indexes_by_class classes_to_reindex
+
+    finder = Brakeman::FindAllCalls.new self
+
+    method_sets.each do |set|
+      set.each do |set_name, info|
+        [:private, :public, :protected].each do |visibility|
+          info[visibility].each do |method_name, definition|
+            if definition.node_type == :selfdef
+              method_name = "#{definition[1]}.#{method_name}"
+            end
+
+            finder.process_source definition, set_name, method_name
+
+          end
+        end
+      end
+    end
+
+    if locations.include? :templates
+      self.each_template do |name, template|
+        finder.process_source template[:src], nil, nil, template
+      end
+    end
+
+    @call_index.index_calls finder.calls
   end
 
   #Clear information related to templates.

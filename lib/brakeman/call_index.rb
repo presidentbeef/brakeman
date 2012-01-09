@@ -67,7 +67,41 @@ class Brakeman::CallIndex
     calls
   end
 
-  private
+  def remove_template_indexes
+    @calls_by_method.each do |name, calls|
+      calls.delete_if do |call|
+        call[:location][0] == :template
+      end
+
+      @methods.delete name.to_s if calls.empty?
+    end
+
+    @calls_by_target.each do |name, calls|
+      calls.delete_if do |call|
+        call[:location][0] == :template
+      end
+
+      @targets.delete name.to_s if calls.empty?
+    end
+  end
+
+  def remove_indexes_by_class classes
+    @calls_by_method.each do |name, calls|
+      calls.delete_if do |call|
+        call[:location][0] == :class and classes.include? call[:location][1]
+      end
+
+      @methods.delete name.to_s if calls.empty?
+    end
+
+    @calls_by_target.each do |name, calls|
+      calls.delete_if do |call|
+        call[:location][0] == :class and classes.include? call[:location][1]
+      end
+
+      @targets.delete name.to_s if calls.empty?
+    end
+  end
 
   def index_calls calls
     calls.each do |call|
@@ -77,6 +111,8 @@ class Brakeman::CallIndex
       @calls_by_target[call[:target]] << call
     end
   end
+
+  private
 
   def find_chain options
     target = options[:target] || options[:targets]
