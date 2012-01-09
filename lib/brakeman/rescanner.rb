@@ -175,7 +175,18 @@ class Brakeman::RescanReport
   def initialize old_results, new_results
     @old_results = old_results
     @new_results = new_results
+    @all_warnings = nil
     @diff = nil
+  end
+
+  #Returns true if any warnings were found (new or old)
+  def any_warnings?
+    not all_warnings.empty?
+  end
+
+  #Returns an array of all warnings found
+  def all_warnings
+    @all_warnings ||= new_results.all_warnings
   end
 
   #Returns an array of warnings which were in the old report but are not in the
