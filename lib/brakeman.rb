@@ -253,8 +253,6 @@ module Brakeman
   end
 
   def self.rescan tracker, files
-    scanner = Rescanner.new tracker.options, tracker.processor
-
-    scanner.rescan_files files
+    Rescanner.new(tracker.options, tracker.processor, files).recheck
   end
 end

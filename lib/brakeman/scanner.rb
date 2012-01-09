@@ -359,31 +359,40 @@ class Brakeman::Scanner
   def parse_ruby input
     @ruby_parser.new.parse input
   end
-
-
 end
 
 class Brakeman::Rescanner < Brakeman::Scanner
-  def initialize *args
-    super
+  def initialize options, processor, files
+    super(options, processor)
+
+    @paths = files                 #Files to rescan
+    @old_results = tracker.checks  #Old warnings from previous scan
+    @changes = nil                 #True if files had to be rescanned
   end
 
-  def rescan_files paths
-    paths = paths.to_set
 
+  def recheck
+    rescan if @changes.nil?
+
+    tracker.run_checks if @changes
+
+    Brakeman::RescanReport.new @old_results, tracker.checks
+  end
+
+  def rescan
     tracker.template_cache.clear
 
-    changes = false
+    @changes = false
 
-    paths.each do |path|
+    @paths.each do |path|
       if rescan_file path
-        changes = true
+        @changes = true
       end
     end
 
     index_call_sites
 
-    changes
+    self
   end
 
   def rescan_file path
@@ -413,7 +422,6 @@ class Brakeman::Rescanner < Brakeman::Scanner
     else
       return false #Nothing to do, file hopefully does not need to be rescanned
     end
-
 
     true
   end
@@ -472,7 +480,11 @@ class Brakeman::Rescanner < Brakeman::Scanner
       if r[0] == :controller
         controller = tracker.controllers[r[1]]
 
-        @processor.process_controller_alias controller[:src], r[2]
+        if @paths.include? controller[:file]
+          rescan_controller controller[:file]
+        else
+          @processor.process_controller_alias controller[:src], r[2]
+        end
       elsif r[0] == :template
         template = tracker.templates[r[1]]
 
@@ -515,6 +527,38 @@ class Brakeman::Rescanner < Brakeman::Scanner
     else
       :unknown
     end
+  end
+end
+
+class Brakeman::RescanReport
+  attr_reader :old_results, :new_results
+
+  def initialize old_results, new_results
+    @old_results = old_results
+    @new_results = new_results
+    @diff = nil
+  end
+
+  #Returns an array of warnings which were in the old report but are not in the
+  #new report after rescanning
+  def fixed_warnings
+    diff[:fixed]
+  end
+
+  #Returns an array of warnings which were in the new report but were not in
+  #the old report
+  def new_warnings
+    diff[:new]
+  end
+
+  #Returns true if there are any new or fixed warnings
+  def warnings_changed?
+    not (diff[:new].empty? and diff[:fixed].empty?)
+  end
+
+  #Returns a hash of arrays for :new and :fixed warnings
+  def diff
+    @diff ||= @old_results.diff(@new_results)
   end
 end
 
