@@ -217,6 +217,6 @@ class Brakeman::RescanReport
 
   #Returns a hash of arrays for :new and :fixed warnings
   def diff
-    @diff ||= @old_results.diff(@new_results)
+    @diff ||= @new_results.diff(@old_results)
   end
 end
