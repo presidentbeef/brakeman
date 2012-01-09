@@ -360,9 +360,31 @@ class Brakeman::Scanner
     @ruby_parser.new.parse input
   end
 
-  def rescan_file path
+
+end
+
+class Brakeman::Rescanner < Brakeman::Scanner
+  def initialize *args
+    super
+  end
+
+  def rescan_files paths
+    paths = paths.to_set
+
     tracker.template_cache.clear
 
+    changes = false
+
+    paths.each do |path|
+      if rescan_file path
+        changes = true
+      end
+    end
+
+    changes
+  end
+
+  def rescan_file path
     case file_type path
     when :controller
       rescan_controller path
@@ -404,6 +426,12 @@ class Brakeman::Scanner
     tracker.controllers.each do |name, controller|
       if controller[:file] == path
         @processor.process_controller_alias controller[:src]
+
+        tracker.templates.keys.each do |name|
+          if name.match /(.+)\.#{name}#/
+            tracker.templates.delete $1
+          end
+        end
       end
     end
   end
@@ -459,8 +487,8 @@ class Brakeman::Scanner
 
     #Only need to rescan other things if a model is added or removed
     if num_models != tracker.models.length
-      process_controllers
       process_templates
+      process_controllers
     end
   end
 

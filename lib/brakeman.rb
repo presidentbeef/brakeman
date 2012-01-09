@@ -253,16 +253,8 @@ module Brakeman
   end
 
   def self.rescan tracker, files
-    scanner = Scanner.new tracker.options, tracker.processor
+    scanner = Rescanner.new tracker.options, tracker.processor
 
-    changed = false
-
-    files.each do |path|
-      if scanner.rescan_file File.expand_path(path)
-        changed = true
-      end
-    end
-
-    changed
+    scanner.rescan_files files
   end
 end
