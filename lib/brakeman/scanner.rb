@@ -381,6 +381,8 @@ class Brakeman::Rescanner < Brakeman::Scanner
       end
     end
 
+    index_call_sites
+
     changes
   end
 
@@ -412,7 +414,6 @@ class Brakeman::Rescanner < Brakeman::Scanner
       return false #Nothing to do, file hopefully does not need to be rescanned
     end
 
-    index_call_sites
 
     true
   end
