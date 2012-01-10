@@ -40,7 +40,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
     SCAN_ORDER.each do |type|
       paths_by_type[type].each do |path|
-        if rescan_file path
+        if rescan_file path, type
           @changes = true
         end
       end
