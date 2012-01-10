@@ -1,20 +1,23 @@
 require 'brakeman/scanner'
 
+#Class for rescanning changed files after an initial scan
 class Brakeman::Rescanner < Brakeman::Scanner
 
   SCAN_ORDER = [:config, :gemfile, :initializer, :lib, :routes, :template,
     :model, :controller]
 
-  def initialize options, processor, files
+  #Create new Rescanner to scan changed files
+  def initialize options, processor, changed_files
     super(options, processor)
 
-    @paths = files                 #Files to rescan
+    @paths = changed_files         #Files to rescan
     @old_results = tracker.checks  #Old warnings from previous scan
     @changes = nil                 #True if files had to be rescanned
     @reindex = Set.new
   end
 
-
+  #Runs checks.
+  #Will rescan files if they have not already been scanned
   def recheck
     rescan if @changes.nil?
 
@@ -23,6 +26,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     Brakeman::RescanReport.new @old_results, tracker.checks
   end
 
+  #Rescans changed files
   def rescan
     tracker.template_cache.clear
 
@@ -53,6 +57,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     self
   end
 
+  #Rescans a single file
   def rescan_file path, type = nil
     type ||= file_type path
 
@@ -194,6 +199,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 end
 
+#Class to make reporting of rescan results simpler to deal with
 class Brakeman::RescanReport
   attr_reader :old_results, :new_results
 
