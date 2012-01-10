@@ -1,6 +1,10 @@
 require 'brakeman/scanner'
 
 class Brakeman::Rescanner < Brakeman::Scanner
+
+  SCAN_ORDER = [:config, :gemfile, :initializer, :lib, :routes, :template,
+    :model, :controller]
+
   def initialize options, processor, files
     super(options, processor)
 
@@ -22,11 +26,23 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def rescan
     tracker.template_cache.clear
 
-    @changes = false
+    paths_by_type = {}
+
+    SCAN_ORDER.each do |type|
+      paths_by_type[type] = []
+    end
 
     @paths.each do |path|
-      if rescan_file path
-        @changes = true
+      paths_by_type[file_type path] << path
+    end
+
+    @changes = false
+
+    SCAN_ORDER.each do |type|
+      paths_by_type[type].each do |path|
+        if rescan_file path
+          @changes = true
+        end
       end
     end
 
@@ -37,8 +53,12 @@ class Brakeman::Rescanner < Brakeman::Scanner
     self
   end
 
-  def rescan_file path
-    case file_type path
+  def rescan_file path, type = nil
+    puts "Rescan #{path}"
+
+    type ||= file_type path
+
+    case type
     when :controller
       rescan_controller path
       @reindex << :controllers << :templates
@@ -125,9 +145,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
       if r[0] == :controller
         controller = tracker.controllers[r[1]]
 
-        if @paths.include? controller[:file]
-          rescan_controller controller[:file]
-        else
+        unless @paths.include? controller[:file]
           @processor.process_controller_alias controller[:src], r[2]
         end
       elsif r[0] == :template
