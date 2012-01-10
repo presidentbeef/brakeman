@@ -54,8 +54,6 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def rescan_file path, type = nil
-    puts "Rescan #{path}"
-
     type ||= file_type path
 
     case type
