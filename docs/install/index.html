@@ -103,12 +103,25 @@
     <h1 class="entry-title">Installing Brakeman</h1>
   </header>
   
-  <p>Brakeman is best installed via <a href="http://rubygems.org/">RubyGems</a>:</p>
+  <h3>gem install</h3>
+
+<p>Brakeman is best installed via <a href="http://rubygems.org/">RubyGems</a>:</p>
 
 <pre><code>gem install brakeman
 </code></pre>
 
 <p>This will provide the <code>brakeman</code> executable.</p>
+
+<h3>bundler</h3>
+
+<p>Brakeman can be added to a Gemfile:</p>
+
+<pre><code>gem "brakeman"
+</code></pre>
+
+<p>It is recommended to <em>always</em> use the latest version of Brakeman.</p>
+
+<h3>git clone</h3>
 
 <p>If you must have the latest and greatest, then you can build the gem yourself:</p>
 

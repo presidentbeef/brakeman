@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Documentation</title>
+  <title>Brakeman: Brakeman as a Library</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/brakeman_as_a_library/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -100,44 +100,61 @@
 <article>
   
   <header>
-    <h1 class="entry-title">Documentation</h1>
+    <h1 class="entry-title">Brakeman as a Library</h1>
   </header>
   
-  <h2>Getting Started</h2>
+  <p>Brakeman was initially designed to be used a command-line application. Recently, there have been some changes to allow it to be used as a library as well. Future releases will likely make it even easier to use.</p>
+
+<h3>Simple Example</h3>
+
+<p>Here is a simple example:</p>
+
+<pre><code>require 'brakeman'
+
+tracker = Brakeman.run "my/app"
+
+puts tracker.report
+</code></pre>
+
+<p>This runs Brakeman against the Rails application in <code>my/app</code> and prints out the report. This is essentially equivalent to running Brakeman with no options.</p>
+
+<p><code>Brakeman.run</code> returns a <code>Tracker</code> object (<a href="http://rubydoc.info/github/presidentbeef/brakeman/master/frames">doc</a>) which contains all the information from the scan. <code>Tracker#checks</code> (<a href="http://rubydoc.info/github/presidentbeef/brakeman/master/frames">doc</a>) holds the results from running the checks.</p>
+
+<h3>Using Options</h3>
+
+<p>Most of the command-line options for Brakeman can be used with <code>Brakeman.run</code>, but the names may be slightly different.</p>
+
+<p>If an options hash is used, then <code>:app_path</code> must be specified instead of just a string for the path:</p>
+
+<pre><code>Brakeman.run :app_path =&gt; "my/app"
+</code></pre>
+
+<p>Here is a list of options:</p>
 
 <ul>
-<li><a href="/docs/introduction">Introduction</a></li>
-<li><a href="/docs/install">Installation</a></li>
-<li><a href="/docs/running">Running Brakeman</a></li>
-<li><a href="/docs/options">Brakeman Options</a></li>
-</ul>
-
-
-<h2>Next Steps</h2>
-
-<ul>
-<li><a href="/docs/confidence">Confidence Levels</a></li>
-<li><a href="/docs/warning_types">Warning Types</a></li>
-<li><a href="/docs/reducing_false_positives">Reducing False Positives</a></li>
-<li><a href="/docs/brakeman_as_a_library">Using Brakeman as a Library</a></li>
-</ul>
-
-
-<h2>More Information</h2>
-
-<ul>
-<li><a href="/docs/video">Video</a></li>
-<li><a href="/docs/presentations">Presentations</a></li>
-<li><a href="/docs/faq">FAQ</a></li>
-</ul>
-
-
-<h2>Hudson/Jenkins Integration</h2>
-
-<ul>
-<li><a href="/docs/jenkins">Introduction</a></li>
-<li><a href="/docs/jenkins/installation">Installation</a></li>
-<li><a href="/docs/jenkins/setup">Job Setup</a></li>
+<li>:app_path - path to root of Rails app (required)</li>
+<li>:assume_all_routes - assume all methods are routes (default: false)</li>
+<li>:check_arguments - check arguments of methods (default: true)</li>
+<li>:collapse_mass_assignment - report unprotected models in single warning (default: true)</li>
+<li>:combine_locations - combine warning locations (default: true)</li>
+<li>:config_file - configuration file</li>
+<li>:escape_html - escape HTML by default (automatic)</li>
+<li>:exit_on_warn - return false if warnings found, true otherwise. Not recommended for library use (default: false)</li>
+<li>:html_style - path to CSS file</li>
+<li>:ignore_model_output - consider models safe (default: false)</li>
+<li>:message_limit - limit length of messages</li>
+<li>:min_confidence - minimum confidence (0-2, 0 is highest)</li>
+<li>:output_file - file for output</li>
+<li>:output_format - format for output (:to_s, :to_tabs, :to_csv, :to_html)</li>
+<li>:parallel_checks - run checks in parallel (default: true)</li>
+<li>:print_report - if no output file specified, print to stdout (default: false)</li>
+<li>:quiet - suppress most messages (default: true)</li>
+<li>:rails3 - force Rails 3 mode (automatic)</li>
+<li>:report_routes - show found routes on controllers (default: false)</li>
+<li>:run_checks - array of checks to run (run all if not specified)</li>
+<li>:safe_methods - array of methods to consider safe</li>
+<li>:skip_libs - do not process lib/ directory (default: false)</li>
+<li>:skip_checks - checks not to run (run all if not specified)</li>
 </ul>
 
 
