@@ -31,17 +31,47 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     debug_info "Finding possible SQL calls using constantized()"
     calls.concat tracker.find_call(:method => /^(find.*|last|first|all|count|sum|average|minumum|maximum|count_by_sql)$/).select { |result| constantize_call? result }
 
+    debug_info "Finding calls to named_scope or scope"
+    calls.concat find_scope_calls
+
     debug_info "Processing possible SQL calls"
     calls.each do |c|
       process_result c
     end
   end
 
+  #Find calls to named_scope() or scope() in models
+  def find_scope_calls
+    scope_calls = []
+
+    if version_between? "2.1.0", "3.0.9"
+      tracker.models.each do |name, model|
+        if model[:options][:named_scope]
+          model[:options][:named_scope].each do |args|
+            call = Sexp.new(:call, nil, :named_scope, args).line(args.line)
+            scope_calls << { :call => call, :location => [:class, name ] }
+          end
+        end
+       end
+    elsif version_between? "3.1.0", "3.9.9"
+      tracker.models.each do |name, model|
+        if model[:options][:scope]
+          model[:options][:scope].each do |args|
+            call = Sexp.new(:call, nil, :scope, args).line(args.line)
+            scope_calls << { :call => call, :location => [:class, name ] }
+          end
+        end
+      end
+    end
+
+    scope_calls
+  end
+
   #Process result from Tracker#find_call.
   def process_result result
     call = result[:call]
 
-    args = process call[3]
+    args = call[3]
 
     if call[2] == :find_by_sql or call[2] == :count_by_sql
       failed = check_arguments args[1]
@@ -94,7 +124,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         end
       when :array
         return check_arguments(arg[1])
-      when :string_interp
+      when :string_interp, :dstr
         return true if check_string_interp arg
       when :call
         return check_call(arg)
@@ -112,7 +142,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     arg.each do |exp|
       #For now, don't warn on interpolation of Model.table_name
       #but check for other 'safe' things in the future
-      if sexp? exp and exp.node_type == :string_eval
+      if sexp? exp and (exp.node_type == :string_eval or exp.node_type == :evstr)
         if call? exp[1] and (model_name?(exp[1][1]) or exp[1][1].nil?) and exp[1][2] == :table_name
           return false
         end
@@ -125,6 +155,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     target = exp[1]
     method = exp[2]
     args = exp[3]
+
     if sexp? target and 
       (method == :+ or method == :<< or method == :concat) and 
       (string? target or include_user_input? exp)
@@ -132,6 +163,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       true
     elsif call? target
       check_call target
+    elsif target == nil and tracker.options[:rails3] and method.to_s.match /^first|last|all|where|order|group|having$/
+      check_arguments args
     else
       false
     end
