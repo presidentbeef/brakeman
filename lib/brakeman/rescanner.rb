@@ -4,7 +4,7 @@ require 'brakeman/scanner'
 class Brakeman::Rescanner < Brakeman::Scanner
 
   SCAN_ORDER = [:config, :gemfile, :initializer, :lib, :routes, :template,
-    :model, :controller]
+    :model, :controller, :unknown]
 
   #Create new Rescanner to scan changed files
   def initialize options, processor, changed_files
