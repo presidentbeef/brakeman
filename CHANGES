@@ -1,3 +1,10 @@
+## 1.2.0
+
+ * Speed improvements for CheckExecute and CheckRender
+ * Add --rake option to create rake task to run Brakeman
+ * Add experimental support for rescanning a subset of files
+ * Fix a problem with Rails 3 routes
+
 ## 1.1.0
 
  * Relax required versions for dependencies
