@@ -186,4 +186,110 @@ module Brakeman::Util
   def sexp? exp
     exp.is_a? Sexp
   end
+
+  #Return file name related to given warning. Uses +warning.file+ if it exists
+  def file_for warning, tracker = nil
+    if tracker.nil?
+      tracker = @tracker || self.tracker
+    end
+
+    if warning.file
+      File.expand_path warning.file, tracker.options[:app_path]
+    else
+      case warning.warning_set
+      when :controller
+        file_by_name warning.controller, :controller, tracker
+      when :template
+        file_by_name warning.template[:name], :template, tracker
+      when :model
+        file_by_name warning.model, :model, tracker
+      when :warning
+        file_by_name warning.class, nil, tracker
+      else
+        nil
+      end
+    end
+  end
+
+  #Attempt to determine path to context file based on the reported name
+  #in the warning.
+  #
+  #For example,
+  #
+  #  file_by_name FileController #=> "/rails/root/app/controllers/file_controller.rb
+  def file_by_name name, type, tracker = nil
+    return nil unless name
+    string_name = name.to_s
+    name = name.to_sym
+
+    unless type
+      if string_name =~ /Controller$/
+        type = :controller
+      elsif camelize(string_name) == string_name
+        type = :model
+      else
+        type = :template
+      end
+    end
+
+    path = tracker.options[:app_path]
+
+    case type
+    when :controller
+      if tracker.controllers[name] and tracker.controllers[name][:file]
+        path = tracker.controllers[name][:file]
+      else
+        path += "/app/controllers/#{underscore(string_name)}.rb"
+      end
+    when :model
+      if tracker.models[name] and tracker.models[name][:file]
+        path = tracker.models[name][:file]
+      else
+        path += "/app/controllers/#{underscore(string_name)}.rb"
+      end
+    when :template
+      if tracker.templates[name] and tracker.templates[name][:file]
+        path = tracker.templates[name][:file]
+      elsif string_name.include? " "
+        name = string_name.split[0].to_sym
+        path = file_for tracker, name, :template
+      else
+        path = nil
+      end
+    end
+
+    path
+  end
+
+  #Return array of lines surrounding the warning location from the original
+  #file.
+  def context_for warning, tracker = nil
+    file = file_for warning, tracker
+    context = []
+    return context unless warning.line and file and File.exist? file
+
+    current_line = 0
+    start_line = warning.line - 5
+    end_line = warning.line + 5
+
+    start_line = 1 if start_line < 0
+
+    File.open file do |f|
+      f.each_line do |line|
+        current_line += 1
+
+        next if line.strip == ""
+
+        if current_line > end_line
+          break
+        end
+
+        if current_line >= start_line
+          context << [current_line, line]
+        end
+      end
+    end
+
+    context
+  end
 end
