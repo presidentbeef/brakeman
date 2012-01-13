@@ -73,7 +73,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
         else
           if @model
             @model[:options][method] ||= []
-            @model[:options][method] << process(args)
+            @model[:options][method] << args
           end
         end
       end
