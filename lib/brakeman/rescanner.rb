@@ -4,7 +4,7 @@ require 'brakeman/scanner'
 class Brakeman::Rescanner < Brakeman::Scanner
 
   SCAN_ORDER = [:config, :gemfile, :initializer, :lib, :routes, :template,
-    :model, :controller, :unknown]
+    :model, :controller]
 
   #Create new Rescanner to scan changed files
   def initialize options, processor, changed_files
@@ -37,7 +37,8 @@ class Brakeman::Rescanner < Brakeman::Scanner
     end
 
     @paths.each do |path|
-      paths_by_type[file_type path] << path
+      type = file_type(path)
+      paths_by_type[type] << path unless type == :unknown
     end
 
     @changes = false
