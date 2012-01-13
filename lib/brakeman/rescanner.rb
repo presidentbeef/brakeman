@@ -10,7 +10,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def initialize options, processor, changed_files
     super(options, processor)
 
-    @paths = changed_files.map {|f| File.expand_path f } #Files to rescan
+    @paths = changed_files.map {|f| File.expand_path f, tracker.options[:app_path] }
     @old_results = tracker.checks  #Old warnings from previous scan
     @changes = nil                 #True if files had to be rescanned
     @reindex = Set.new
