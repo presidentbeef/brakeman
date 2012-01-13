@@ -95,7 +95,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       when :array
         return check_arguments(arg[1])
       when :string_interp
-        return true
+        return true if check_string_interp arg
       when :call
         return check_call(arg)
       else
@@ -106,6 +106,18 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     end
 
     false
+  end
+
+  def check_string_interp arg
+    arg.each do |exp|
+      #For now, don't warn on interpolation of Model.table_name
+      #but check for other 'safe' things in the future
+      if sexp? exp and exp.node_type == :string_eval
+        if call? exp[1] and (model_name?(exp[1][1]) or exp[1][1].nil?) and exp[1][2] == :table_name
+          return false
+        end
+      end
+    end
   end
 
   #Check call for user input and string building
