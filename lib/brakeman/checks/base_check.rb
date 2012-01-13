@@ -92,7 +92,10 @@ class Brakeman::BaseCheck < SexpProcessor
 
   #Report a warning 
   def warn options
-    @warnings << Brakeman::Warning.new(options.merge({ :check => self.class.to_s }))
+    warning = Brakeman::Warning.new(options.merge({ :check => self.class.to_s }))
+    warning.file = file_for warning
+
+    @warnings << warning 
   end 
 
   #Run _exp_ through OutputProcessor to get a nice String.
