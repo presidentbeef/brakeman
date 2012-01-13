@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 0,
       :template => 0,
       :controller => 1,
-      :warning => 3 }
+      :warning => 7 }
   end
 
   def test_without_protection
@@ -60,5 +60,41 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Versions before 3.1.2 have a vulnerability/,
       :confidence => 0,
       :file => /Gemfile/
+  end
+
+  def test_sql_injection_scope_lambda
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 4,
+      :message => /^Possible SQL injection near line 4: scope\(:tall, lambda/,
+      :confidence => 0,
+      :file => /user\.rb/
+  end
+
+  def test_sql_injection_scope
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 10,
+      :message => /^Possible SQL injection near line 10: scope\(:phooey, :condition =>/,
+      :confidence => 0,
+      :file => /user\.rb/
+  end
+
+  def test_sql_injection_scope_where
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 6,
+      :message => /^Possible SQL injection near line 6: scope\(:blah, where/,
+      :confidence => 1,
+      :file => /user\.rb/
+  end
+
+  def test_sql_injection_scope_lambda_hash
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 8,
+      :message => /^Possible SQL injection/,
+      :confidence => 1,
+      :file => /user\.rb/
   end
 end
