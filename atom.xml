@@ -4,7 +4,7 @@
   <title>Brakeman</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-01-13T22:45:28-08:00</updated>
+  <updated>2012-01-13T22:52:02-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -30,6 +30,8 @@
 &lt;li&gt;Fix a problem with Rails 3 routes&lt;/li&gt;
 &lt;/ul&gt;
 
+
+&lt;p&gt;Besides those, there has also been quite a bit of code improvement internally.&lt;/p&gt;
 
 &lt;h3&gt;Speed Improvements&lt;/h3&gt;
 
