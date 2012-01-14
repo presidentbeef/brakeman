@@ -4,13 +4,79 @@
   <title>Brakeman</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-01-10T11:42:09-08:00</updated>
+  <updated>2012-01-13T22:45:28-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 1.2 Released</title>
+    <link href="http://brakemanscanner.org/blog/2012/01/13/brakeman-1-dot-2-released/"/>
+    <updated>2012-01-13T22:00:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2012/01/13/brakeman-1-dot-2-released</id>
+    <content type="html">&lt;p&gt;First Brakeman release of 2012!&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 1.1:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Speed improvements for CheckExecute and CheckRender&lt;/li&gt;
+&lt;li&gt;Check &lt;code&gt;named_scope&lt;/code&gt; and &lt;code&gt;scope&lt;/code&gt; for SQL injection&lt;/li&gt;
+&lt;li&gt;Add &lt;code&gt;--rake&lt;/code&gt; option to create rake task to run Brakeman&lt;/li&gt;
+&lt;li&gt;Add &lt;code&gt;--summary&lt;/code&gt; option to only output summary&lt;/li&gt;
+&lt;li&gt;Add experimental support for rescanning a subset of files&lt;/li&gt;
+&lt;li&gt;Fix a problem with Rails 3 routes&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Speed Improvements&lt;/h3&gt;
+
+&lt;p&gt;The checks for command injection and dynamic render paths should be considerably faster now.&lt;/p&gt;
+
+&lt;h3&gt;More SQL Injection Checks&lt;/h3&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/30&quot;&gt;a5sk4s&lt;/a&gt; for pointing out that Brakeman was not checking &lt;code&gt;named_scope&lt;/code&gt; for SQL injection. This has been rectified. For Rails 3.1 and up, &lt;code&gt;scope&lt;/code&gt; will be checked.&lt;/p&gt;
+
+&lt;p&gt;Also, it seems common to use &lt;code&gt;Model.table_name&lt;/code&gt; inside SQL statements. This will no longer raise a warning.&lt;/p&gt;
+
+&lt;h3&gt;Brakeman Rake Task&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code&gt;--rake&lt;/code&gt; option can now be used to install a Rake task for running Brakeman. The task will be copied to &lt;code&gt;lib/tasks/brakeman.rake&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;To use, run this from the root of the Rails app:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brakeman --rake
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, to run Brakeman:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rake brakeman:run
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Naturally, this requires Rake to be installed.&lt;/p&gt;
+
+&lt;p&gt;To output to a specific file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rake brakeman:run[&quot;report.html&quot;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;More actions may be added in the future.&lt;/p&gt;
+
+&lt;h3&gt;Summary Option&lt;/h3&gt;
+
+&lt;p&gt;Sometimes the specifics of a scan are not needed. The &lt;code&gt;--summary&lt;/code&gt; option will limit the report output to just the summary section.&lt;/p&gt;
+
+&lt;h3&gt;Rescan for Subset of Files&lt;/h3&gt;
+
+&lt;p&gt;This release adds experimental support for rescanning a subset of paths in a Rails application. Please see this &lt;a href=&quot;https://gist.github.com/1563286&quot;&gt;example&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report &lt;em&gt;any&lt;/em&gt; problems or questions on &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;GitHub&lt;/a&gt; or send a tweet to &lt;a href=&quot;https://twitter.com/#!/brakemanscanner&quot;&gt;@BrakemanScanner&lt;/a&gt;!&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 1.1 Released</title>

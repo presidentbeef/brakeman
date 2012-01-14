@@ -104,6 +104,92 @@
     
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/01/13/brakeman-1-dot-2-released/">Brakeman 1.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-01-13 22:00:00 -0800" pubdate  updated >Jan 13<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>First Brakeman release of 2012!</p>
+
+<p><em>Changes since 1.1:</em></p>
+
+<ul>
+<li>Speed improvements for CheckExecute and CheckRender</li>
+<li>Check <code>named_scope</code> and <code>scope</code> for SQL injection</li>
+<li>Add <code>--rake</code> option to create rake task to run Brakeman</li>
+<li>Add <code>--summary</code> option to only output summary</li>
+<li>Add experimental support for rescanning a subset of files</li>
+<li>Fix a problem with Rails 3 routes</li>
+</ul>
+
+
+<h3>Speed Improvements</h3>
+
+<p>The checks for command injection and dynamic render paths should be considerably faster now.</p>
+
+<h3>More SQL Injection Checks</h3>
+
+<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/30">a5sk4s</a> for pointing out that Brakeman was not checking <code>named_scope</code> for SQL injection. This has been rectified. For Rails 3.1 and up, <code>scope</code> will be checked.</p>
+
+<p>Also, it seems common to use <code>Model.table_name</code> inside SQL statements. This will no longer raise a warning.</p>
+
+<h3>Brakeman Rake Task</h3>
+
+<p>The <code>--rake</code> option can now be used to install a Rake task for running Brakeman. The task will be copied to <code>lib/tasks/brakeman.rake</code>.</p>
+
+<p>To use, run this from the root of the Rails app:</p>
+
+<pre><code>brakeman --rake
+</code></pre>
+
+<p>Then, to run Brakeman:</p>
+
+<pre><code>rake brakeman:run
+</code></pre>
+
+<p>Naturally, this requires Rake to be installed.</p>
+
+<p>To output to a specific file:</p>
+
+<pre><code>rake brakeman:run["report.html"]
+</code></pre>
+
+<p>More actions may be added in the future.</p>
+
+<h3>Summary Option</h3>
+
+<p>Sometimes the specifics of a scan are not needed. The <code>--summary</code> option will limit the report output to just the summary section.</p>
+
+<h3>Rescan for Subset of Files</h3>
+
+<p>This release adds experimental support for rescanning a subset of paths in a Rails application. Please see this <a href="https://gist.github.com/1563286">example</a>.</p>
+
+<h3>Issues</h3>
+
+<p>Please report <em>any</em> problems or questions on <a href="https://github.com/presidentbeef/brakeman/issues">GitHub</a> or send a tweet to <a href="https://twitter.com/#!/brakemanscanner">@BrakemanScanner</a>!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2011/12/21/brakeman-1-dot-1-released/">Brakeman 1.1 Released</a></h1>
     
     
@@ -665,45 +751,10 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/08/27/one-year-anniversary-and-a-website/">One Year Anniversary</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-08-27 01:00:00 -0700" pubdate  updated >Aug 27<span>th</span>, 2011</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>One year ago, Brakeman 0.0.1 was released as a gem. Then it was promptly yanked and replaced with <a href="http://rubygems.org/gems/brakeman/versions/0.0.2">Brakeman 0.0.2</a>.</p>
-
-<p>In celebration of this grand anniversary, there have been several new releases today.</p>
-
-<p>The first is <a href="http://rubygems.org/gems/brakeman/versions/0.7.2">Brakeman 0.7.2</a>, a minor release adding CVE numbers for the <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/f878a33159ac9967">latest vulnerabilities</a> and fixing how nested params/cookie accesses are handled (e.g., <code>params[:user][:name]</code> is now considered a direct use of a parameter).</p>
-
-<p>Next up, Brakeman has its own Twitter feed <a href="https://twitter.com/brakemanscanner">@BrakemanScanner</a>.</p>
-
-<p>Lastly, there is this new website. Look forward to tutorials and more in-depth information about how to use Brakeman effectively.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -750,6 +801,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/01/13/brakeman-1-dot-2-released/">Brakeman 1.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2011/12/21/brakeman-1-dot-1-released/">Brakeman 1.1 Released</a>
       </li>
     
@@ -763,10 +818,6 @@ end
     
       <li class="post">
         <a href="/blog/2011/11/18/brakeman-0-dot-9-1-released/">Brakeman 0.9.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2011/11/16/brakeman-0-dot-9-0-released/">Brakeman 0.9.0 Released</a>
       </li>
     
   </ul>

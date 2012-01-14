@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Reducing False Positives</title>
+  <title>Brakeman</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/reducing_false_positives/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/page/2/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -96,75 +96,67 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article>
-  
+      <div class="blog-index">
+
+
+
+  <article>
+    
   <header>
-    <h1 class="entry-title">Reducing False Positives</h1>
-  </header>
-  
-  <p>By default, Brakeman reports as much as possible. Because there is no way for Brakeman to know if certain items are actually safe or not, it errs on the side of reporting <em>too much</em> rather than possibly not reporting a real problem. Sometimes, though, these false positives can become overwhelming. While there is no method currently for marking a specific warning as a false positive, Brakeman does provide options for customizing reports.</p>
-
-<p>It is recommended to always run Brakeman with the default settings first (and then periodically after that), but it is possible to narrow down the results to make them less annoying.</p>
-
-<h3>Specify Checks to Run</h3>
-
-<p>When running Brakeman, one can specify a set of checks to run or a set to exclude using the <code>--test</code> or <code>--except</code>, respectively. These options take a comma-separated list of check names, which are case-sensitive. Use <code>brakeman --checks</code> to get a list of the exact check names.</p>
-
-<p>For example, to only check for SQL injection and cross-site scripting:</p>
-
-<pre><code>brakeman --test CheckSQL,CheckCrossSiteScripting
-</code></pre>
-
-<p><em>(&#8216;Check&#8217; can actually be omitted from the names.)</em></p>
-
-<p>To exclude checks for dynamic render paths:</p>
-
-<pre><code>brakeman --except CheckRender
-</code></pre>
-
-<h3>Set Confidence Threshold</h3>
-
-<p>Getting a ton of weak confidence warnings? Use <code>-w3</code> to only report high confidence warnings or <code>-w2</code> to only report high and medium confidence warnings.</p>
-
-<p>(Use of <code>-w3</code> is not recommended, however.)</p>
-
-<h3>Mark Methods as Safe</h3>
-
-<p>If an applications has custome sanitizing methods or just methods which are known to be safe, then the <code>--safe-methods</code> option can be used to ignore those methods. Specify the methods as a comma-separated list.</p>
-
-<p>For example:</p>
-
-<pre><code>brakeman --safe-methods this_one,that_one,totally_safe,my_sanitizer
-</code></pre>
-
-<h3>Only Reporting Direct Vulnerabilities</h3>
-
-<p>With the default settings, Brakeman will report cross-site scripting vulnerabilities if the return value of a method where user input is a <em>parameter</em> is output.</p>
-
-<p>For example, this will raise a warning unless <code>some_method</code> is marked as safe like above:</p>
-
-<pre><code>&lt;%= some_method(params[:blah]) %&gt;
-</code></pre>
-
-<p>To ignore this kind of output, use the <code>--report-direct</code> option. This also applies to some other situations, such as checking calls to <code>redirect_to</code>.</p>
-
-<h3>Ignoring Model Attributes</h3>
-
-<p>Brakeman assumes database values are suspect (and so should you). But for some applications this does not make sense. Use the <code>--ignore-model-output</code> option to suppress reporting model attributes as cross-site scripting vulnerabilities.</p>
-
-  
-    <footer>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/27/one-year-anniversary-and-a-website/">One Year Anniversary</a></h1>
+    
+    
       <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+
+
+
+<time datetime="2011-08-27 01:00:00 -0700" pubdate  updated >Aug 27<span>th</span>, 2011</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One year ago, Brakeman 0.0.1 was released as a gem. Then it was promptly yanked and replaced with <a href="http://rubygems.org/gems/brakeman/versions/0.0.2">Brakeman 0.0.2</a>.</p>
+
+<p>In celebration of this grand anniversary, there have been several new releases today.</p>
+
+<p>The first is <a href="http://rubygems.org/gems/brakeman/versions/0.7.2">Brakeman 0.7.2</a>, a minor release adding CVE numbers for the <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/f878a33159ac9967">latest vulnerabilities</a> and fixing how nested params/cookie accesses are handled (e.g., <code>params[:user][:name]</code> is now considered a direct use of a parameter).</p>
+
+<p>Next up, Brakeman has its own Twitter feed <a href="https://twitter.com/brakemanscanner">@BrakemanScanner</a>.</p>
+
+<p>Lastly, there is this new website. Look forward to tutorials and more in-depth information about how to use Brakeman effectively.</p>
+</div>
   
-</article>
+  
+
+
+  </article>
+
+<nav role="pagination">
+  <div>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
+</nav>
+
+<script type="text/javascript">
+    var disqus_shortname = 'brakeman';
+    (function () {
+      var s = document.createElement('script'); s.async = true;
+      s.type = 'text/javascript';
+      s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+      (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
 
 </div>
-
 <aside role=sidebar>
   
     <section>
@@ -235,7 +227,6 @@
 
   
 </aside>
-
 
     </div>
   </div>
