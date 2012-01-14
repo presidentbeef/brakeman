@@ -280,6 +280,11 @@ class Brakeman::Report
     generate_overview(true).to_html << "<br/>" <<
     generate_warning_overview.to_html
 
+    #Return early if only summarizing
+    if tracker.options[:summary_only]
+      return out
+    end
+
     if tracker.options[:report_routes] or tracker.options[:debug]
       out << "<h2>Controllers</h2>" <<
       generate_controllers.to_html
@@ -317,6 +322,11 @@ class Brakeman::Report
     generate_overview.to_s << "\n" <<
     generate_warning_overview.to_s << "\n"
 
+    #Return output early if only summarizing
+    if tracker.options[:summary_only]
+      return out
+    end
+
     if tracker.options[:report_routes] or tracker.options[:debug]
       out << "+CONTROLLERS+\n" <<
       generate_controllers.to_s << "\n"
@@ -351,6 +361,11 @@ class Brakeman::Report
     "\nSUMMARY\n" <<
     generate_overview.to_csv << "\n" <<
     generate_warning_overview.to_csv << "\n"
+
+    #Return output early if only summarizing
+    if tracker.options[:summary_only]
+      return out
+    end
 
     if tracker.options[:report_routes] or tracker.options[:debug]
       out << "CONTROLLERS\n" <<

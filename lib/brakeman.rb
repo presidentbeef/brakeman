@@ -35,6 +35,8 @@ module Brakeman
   #  * :safe_methods - array of methods to consider safe
   #  * :skip_libs - do not process lib/ directory (default: false)
   #  * :skip_checks - checks not to run (run all if not specified)
+  #  * :summary_only - only output summary section of report 
+  #                    (does not apply to tabs format)
   #
   #Alternatively, just supply a path as a string.
   def self.run options

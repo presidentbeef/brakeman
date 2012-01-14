@@ -146,6 +146,10 @@ module Brakeman::Options
           options[:collapse_mass_assignment] = false
         end
 
+        opts.on "--summary", "Only output summary of warnings" do
+          options[:summary_only] = true
+        end
+
         opts.on "-w", 
           "--confidence-level LEVEL", 
           ["1", "2", "3"], 
