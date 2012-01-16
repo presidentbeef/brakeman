@@ -8,6 +8,9 @@ module Brakeman
   #option is set
   Warnings_Found_Exit_Code = 3
 
+  @debug = false
+  @quiet = false
+
   #Run Brakeman scan. Returns Tracker object.
   #
   #Options:
@@ -42,10 +45,10 @@ module Brakeman
   def self.run options
     options = set_options options
 
-    if options[:quiet]
-      options[:report_progress] = false
-      $VERBOSE = nil
-    end
+    @quiet = !!options[:quiet]
+    @debug = !!options[:debug]
+
+    options[:report_progress] = !@quiet
 
     scan options
   end
@@ -68,7 +71,7 @@ module Brakeman
 
     if File.exist? app_path + "/script/rails"
       options[:rails3] = true
-      warn "[Notice] Detected Rails 3 application" 
+      notify "[Notice] Detected Rails 3 application"
     end
 
     options
@@ -86,7 +89,7 @@ module Brakeman
       "#{File.expand_path(File.dirname(__FILE__))}/../lib/config.yaml"].each do |f|
 
       if File.exist? f and not File.directory? f
-        warn "[Notice] Using configuration in #{f}" unless options[:quiet]
+        notify "[Notice] Using configuration in #{f}"
         options = YAML.load_file f
         options.each do |k,v|
           if v.is_a? Array
@@ -173,7 +176,7 @@ module Brakeman
     require 'fileutils'
 
     if not File.exists? "lib/tasks"
-      warn "Creating lib/tasks"
+      notify "Creating lib/tasks"
       FileUtils.mkdir_p "lib/tasks"
     end
 
@@ -182,10 +185,10 @@ module Brakeman
     FileUtils.cp "#{path}/brakeman/brakeman.rake", "lib/tasks/brakeman.rake"
 
     if File.exists? "lib/tasks/brakeman.rake"
-      warn "Task created in lib/tasks/brakeman.rake"
-      warn "Usage: rake brakeman:run[output_file]"
+      notify "Task created in lib/tasks/brakeman.rake"
+      notify "Usage: rake brakeman:run[output_file]"
     else
-      warn "Could not create task"
+      notify "Could not create task"
     end
   end
 
@@ -219,7 +222,7 @@ module Brakeman
   #Run a scan. Generally called from Brakeman.run instead of directly.
   def self.scan options
     #Load scanner
-    warn "Loading scanner..."
+    notify "Loading scanner..."
 
     begin
       require 'brakeman/scanner'
@@ -230,27 +233,27 @@ module Brakeman
     #Start scanning
     scanner = Scanner.new options
 
-    warn "[Notice] Using Ruby #{RUBY_VERSION}. Please make sure this matches the one used to run your Rails application."
+    notify "[Notice] Using Ruby #{RUBY_VERSION}. Please make sure this matches the one used to run your Rails application."
 
-    warn "Processing application in #{options[:app_path]}"
+    notify "Processing application in #{options[:app_path]}"
     tracker = scanner.process
 
     if options[:parallel_checks]
-      warn "Running checks in parallel..."
+      notify "Running checks in parallel..."
     else
-      warn "Runnning checks..."
+      notify "Runnning checks..."
     end
     tracker.run_checks
 
     if options[:output_file]
-      warn "Generating report..."
+      notify "Generating report..."
 
       File.open options[:output_file], "w" do |f|
         f.puts tracker.report.send(options[:output_format])
       end
-      warn "Report saved in '#{options[:output_file]}'"
+      notify "Report saved in '#{options[:output_file]}'"
     elsif options[:print_report]
-      warn "Generating report..."
+      notify "Generating report..."
 
       puts tracker.report.send(options[:output_format])
     end
@@ -273,11 +276,27 @@ module Brakeman
   #The returned Tracker object from Brakeman.run is used as a starting point
   #for the rescan.
   #
+  #Options may be given as a hash with the same values as Brakeman.run.
+  #Note that these options will be merged into the Tracker.
+  #
   #This method returns a RescanReport object with information about the scan.
   #However, the Tracker object will also be modified as the scan is run.
-  def self.rescan tracker, files
+  def self.rescan tracker, files, options = {}
     require 'brakeman/rescanner'
 
+    tracker.options.merge! options
+
+    @quiet = !!tracker.options[:quiet]
+    @debug = !!tracker.options[:debug]
+
     Rescanner.new(tracker.options, tracker.processor, files).recheck
+  end
+
+  def self.notify message
+    $stderr.puts message unless @quiet
+  end
+
+  def self.debug message
+    $stderr.puts message if @debug
   end
 end

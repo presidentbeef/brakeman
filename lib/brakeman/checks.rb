@@ -89,7 +89,7 @@ class Brakeman::Checks
       unless tracker.options[:skip_checks].include? check_name or 
         (tracker.options[:run_checks] and not tracker.options[:run_checks].include? check_name)
 
-        warn " - #{check_name}"
+        Brakeman.notify " - #{check_name}"
 
         check = c.new(tracker)
         check.run_check
@@ -120,7 +120,7 @@ class Brakeman::Checks
       unless tracker.options[:skip_checks].include? check_name or 
         (tracker.options[:run_checks] and not tracker.options[:run_checks].include? check_name)
 
-        warn " - #{check_name}"
+        Brakeman.notify " - #{check_name}"
 
         threads << Thread.new do
           begin
@@ -128,7 +128,7 @@ class Brakeman::Checks
             check.run_check
             check.warnings
           rescue Exception => e
-            warn "[#{check_name}] #{e}"
+            Brakeman.notify "[#{check_name}] #{e}"
             []
           end
         end
@@ -141,7 +141,7 @@ class Brakeman::Checks
 
     threads.each { |t| t.join }
 
-    warn "Checks finished, collecting results..."
+    Brakeman.notify "Checks finished, collecting results..."
 
     #Collect results
     threads.each do |thread|

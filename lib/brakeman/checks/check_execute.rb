@@ -13,13 +13,13 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
 
   #Check models, controllers, and views for command injection.
   def run_check
-    debug_info "Finding system calls using ``"
+    Brakeman.debug "Finding system calls using ``"
     check_for_backticks tracker
 
-    debug_info "Finding other system calls"
+    Brakeman.debug "Finding other system calls"
     calls = tracker.find_call :targets => [:IO, :Open3, :Kernel, nil], :methods => [:exec, :popen, :popen3, :syscall, :system]
 
-    debug_info "Processing system calls"
+    Brakeman.debug "Processing system calls"
     calls.each do |result|
       process_result result
     end

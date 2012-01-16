@@ -45,7 +45,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
     SCAN_ORDER.each do |type|
       paths_by_type[type].each do |path|
-        warn "Rescanning #{path} as #{type}" if tracker.options[:debug]
+        Brakeman.debug "Rescanning #{path} as #{type}"
 
         if rescan_file path, type
           @changes = true

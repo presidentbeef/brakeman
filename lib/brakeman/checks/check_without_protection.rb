@@ -23,7 +23,7 @@ class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
 
     @results = Set.new
 
-    debug_info "Finding all mass assignments"
+    Brakeman.debug "Finding all mass assignments"
     calls = tracker.find_call :targets => models, :methods => [:new,
       :attributes=, 
       :update_attribute, 
@@ -32,7 +32,7 @@ class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
       :create,
       :create!]
 
-    debug_info "Processing all mass assignments"
+    Brakeman.debug "Processing all mass assignments"
     calls.each do |result|
       process_result result
     end

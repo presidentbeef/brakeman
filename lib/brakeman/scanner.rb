@@ -51,23 +51,23 @@ class Brakeman::Scanner
 
   #Process everything in the Rails application
   def process
-    warn "Processing configuration..."
+    Brakeman.notify "Processing configuration..."
     process_config
-    warn "Processing gems..."
+    Brakeman.notify "Processing gems..."
     process_gems
-    warn "Processing initializers..."
+    Brakeman.notify "Processing initializers..."
     process_initializers
-    warn "Processing libs..."
+    Brakeman.notify "Processing libs..."
     process_libs
-    warn "Processing routes...        "
+    Brakeman.notify "Processing routes...        "
     process_routes
-    warn "Processing templates...     "
+    Brakeman.notify "Processing templates...     "
     process_templates
-    warn "Processing models...        "
+    Brakeman.notify "Processing models...        "
     process_models
-    warn "Processing controllers...   "
+    Brakeman.notify "Processing controllers...   "
     process_controllers
-    warn "Indexing call sites...      "
+    Brakeman.notify "Indexing call sites...      "
     index_call_sites
     tracker
   end
@@ -89,7 +89,7 @@ class Brakeman::Scanner
       (File.exists? "#@path/Gemfile" and File.read("#@path/Gemfile").include? "rails_xss")
 
       tracker.config[:escape_html] = true
-      warn "[Notice] Escaping HTML by default"
+      Brakeman.notify "[Notice] Escaping HTML by default"
     end
   end
 
@@ -99,7 +99,7 @@ class Brakeman::Scanner
     end
 
   rescue Exception => e
-    warn "[Notice] Error while processing config/#{file}"
+    Brakeman.notify "[Notice] Error while processing config/#{file}"
     tracker.error e.exception(e.message + "\nwhile processing Gemfile"), e.backtrace
   end
 
@@ -115,7 +115,7 @@ class Brakeman::Scanner
       end
     end
   rescue Exception => e
-    warn "[Notice] Error while processing Gemfile."
+    Brakeman.notify "[Notice] Error while processing Gemfile."
     tracker.error e.exception(e.message + "\nWhile processing Gemfile"), e.backtrace
   end
 
@@ -144,7 +144,7 @@ class Brakeman::Scanner
   #Adds parsed information to tracker.libs.
   def process_libs
     if options[:skip_libs]
-      warn '[Skipping]'
+      Brakeman.notify '[Skipping]'
       return
     end
 
@@ -153,7 +153,7 @@ class Brakeman::Scanner
     current = 0
 
     lib_files.each do |f|
-      warn "Processing #{f}" if options[:debug]
+      Brakeman.debug "Processing #{f}"
       if @report_progress
         $stderr.print " #{current}/#{total} files processed\r"
         current += 1
@@ -183,11 +183,11 @@ class Brakeman::Scanner
         @processor.process_routes parse_ruby(File.read("#@path/config/routes.rb"))
       rescue Exception => e
         tracker.error e.exception(e.message + "\nWhile processing routes.rb"), e.backtrace
-        warn "[Notice] Error while processing routes - assuming all public controller methods are actions."
+        Brakeman.notify "[Notice] Error while processing routes - assuming all public controller methods are actions."
         options[:assume_all_routes] = true
       end
     else
-      warn "[Notice] No route information found"
+      Brakeman.notify "[Notice] No route information found"
     end
   end
 
@@ -200,7 +200,7 @@ class Brakeman::Scanner
     current = 0
 
     controller_files.each do |f|
-      warn "Processing #{f}" if options[:debug]
+      Brakeman.debug "Processing #{f}"
       if @report_progress
         $stderr.print " #{current}/#{total} files processed\r"
         current += 1
@@ -212,7 +212,7 @@ class Brakeman::Scanner
     current = 0
     total = tracker.controllers.length
 
-    warn "Processing data flow in controllers..."
+    Brakeman.notify "Processing data flow in controllers..."
 
     tracker.controllers.each do |name, controller|
       if @report_progress
@@ -258,7 +258,7 @@ class Brakeman::Scanner
     total = tracker.templates.length
     count = 0
 
-    warn "Processing data flow in templates..."
+    Brakeman.notify "Processing data flow in templates..."
 
     tracker.templates.keys.dup.each do |name|
       if @report_progress

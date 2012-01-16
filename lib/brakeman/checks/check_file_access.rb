@@ -6,16 +6,16 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
   def run_check
-    debug_info "Finding possible file access"
+    Brakeman.debug "Finding possible file access"
     methods = tracker.find_call :targets => [:Dir, :File, :IO, :Kernel, :"Net::FTP", :"Net::HTTP", :PStore, :Pathname, :Shell, :YAML], :methods => [:[], :chdir, :chroot, :delete, :entries, :foreach, :glob, :install, :lchmod, :lchown, :link, :load, :load_file, :makedirs, :move, :new, :open, :read, :read_lines, :rename, :rmdir, :safe_unlink, :symlink, :syscopy, :sysopen, :truncate, :unlink]
 
-    debug_info "Finding calls to load()"
+    Brakeman.debug "Finding calls to load()"
     methods.concat tracker.find_call :target => false, :method => :load
 
-    debug_info "Finding calls using FileUtils"
+    Brakeman.debug "Finding calls using FileUtils"
     methods.concat tracker.find_call :target => :FileUtils
 
-    debug_info "Processing found calls"
+    Brakeman.debug "Processing found calls"
     methods.each do |call|
       process_result call
     end

@@ -7,10 +7,10 @@ class Brakeman::CheckEvaluation < Brakeman::BaseCheck
 
   #Process calls
   def run_check
-    debug_info "Finding eval-like calls"
+    Brakeman.debug "Finding eval-like calls"
     calls = tracker.find_call :method => [:eval, :instance_eval, :class_eval, :module_eval]
 
-    debug_info "Processing eval-like calls"
+    Brakeman.debug "Processing eval-like calls"
     calls.each do |call|
       process_result call
     end

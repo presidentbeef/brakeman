@@ -22,7 +22,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
   #s(:class, NAME, PARENT, s(:scope ...))
   def process_class exp
     if @controller
-      warn "[Notice] Skipping inner class: #{class_name exp[1]}" if @tracker.options[:debug]
+      Brakeman.debug "[Notice] Skipping inner class: #{class_name exp[1]}"
       return ignore
     end
 
@@ -83,7 +83,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
             unless Dir.glob("#{@tracker.options[:app_path]}/app/views/layouts/#{name}.html.{erb,haml}").empty?
               @controller[:layout] = "layouts/#{name}"
             else
-              warn "[Notice] Layout not found: #{name}" if @tracker.options[:debug]
+              Brakeman.debug "[Notice] Layout not found: #{name}"
             end
           elsif sexp? args[-1] and (args[-1][0] == :nil or args[-1][0] == :false)
             #layout :false or layout nil

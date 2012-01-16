@@ -19,7 +19,7 @@ class Brakeman::OutputProcessor < Ruby2Ruby
     begin
       super exp if sexp? exp and not exp.empty?
     rescue Exception => e
-      warn "While formatting #{exp}: #{e}\n#{e.backtrace.join("\n")}" if @tracker.options[:debug]
+      Brakeman.debug "While formatting #{exp}: #{e}\n#{e.backtrace.join("\n")}"
     end
   end
 

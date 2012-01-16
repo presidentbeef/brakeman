@@ -83,7 +83,7 @@ class Brakeman::Report
       
      
       tracker.errors.each do |w|
-        p w if tracker.options[:debug]
+        Brakeman.debug w.inspect
 
         if html
           w[:error] = CGI.escapeHTML w[:error]

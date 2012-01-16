@@ -37,7 +37,7 @@ class Brakeman::Rails2ConfigProcessor < Brakeman::BaseProcessor
     target = process target if sexp? target
 
     if exp[2] == :gem and exp[3][1][1] == "erubis"
-      warn "[Notice] Using Erubis for ERB templates"
+      Brakeman.notify "[Notice] Using Erubis for ERB templates"
       @tracker.config[:erubis] = true
     end
 

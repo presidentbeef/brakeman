@@ -14,7 +14,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def run_check
     @rails_version = tracker.config[:rails_version]
 
-    debug_info "Finding possible SQL calls on models"
+    Brakeman.debug "Finding possible SQL calls on models"
     if tracker.options[:rails3]
       calls = tracker.find_call :targets => tracker.models.keys,
         :methods => /^(find.*|first|last|all|where|order|group|having)$/,
@@ -25,16 +25,16 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         :chained => true
     end
 
-    debug_info "Finding possible SQL calls with no target"
+    Brakeman.debug "Finding possible SQL calls with no target"
     calls.concat tracker.find_call(:target => nil, :method => /^(find.*|last|first|all|count|sum|average|minumum|maximum|count_by_sql)$/)
 
-    debug_info "Finding possible SQL calls using constantized()"
+    Brakeman.debug "Finding possible SQL calls using constantized()"
     calls.concat tracker.find_call(:method => /^(find.*|last|first|all|count|sum|average|minumum|maximum|count_by_sql)$/).select { |result| constantize_call? result }
 
-    debug_info "Finding calls to named_scope or scope"
+    Brakeman.debug "Finding calls to named_scope or scope"
     calls.concat find_scope_calls
 
-    debug_info "Processing possible SQL calls"
+    Brakeman.debug "Processing possible SQL calls"
     calls.each do |c|
       process_result c
     end

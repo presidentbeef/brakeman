@@ -87,7 +87,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     method = find_method name, @current_class    
 
     if method.nil?
-      warn "[Notice] Could not find filter #{name}" if @tracker.options[:debug]
+      Brakeman.debug "[Notice] Could not find filter #{name}"
       return
     end
 
@@ -207,7 +207,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       when :lit, :str
         filter[option] = value[1]
       else
-        warn "[Notice] Unknown before_filter value: #{option} => #{value}" if @tracker.options[:debug]
+        Brakeman.debug "[Notice] Unknown before_filter value: #{option} => #{value}"
       end
     else
       filter[:all] = true

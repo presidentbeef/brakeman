@@ -6,7 +6,7 @@ class Brakeman::CheckSendFile < Brakeman::CheckFileAccess
   Brakeman::Checks.add self
 
   def run_check
-    debug_info "Finding all calls to send_file()"
+    Brakeman.debug "Finding all calls to send_file()"
 
     methods = tracker.find_call :target => false, :method => :send_file
 

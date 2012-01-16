@@ -15,7 +15,7 @@ class Brakeman::CheckDefaultRoutes < Brakeman::BaseCheck
         :confidence => CONFIDENCE[:high],
         :file => "#{tracker.options[:app_path]}/config/routes.rb"
     else #Report each controller separately
-      debug_info "Checking each controller for default routes"
+      Brakeman.debug "Checking each controller for default routes"
 
       tracker.routes.each do |name, actions|
         if actions.is_a? Array and actions[0] == :allow_all_actions
