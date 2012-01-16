@@ -50,6 +50,7 @@ module Brakeman
     scan options
   end
 
+  #Sets up options for run, checks given application path
   def self.set_options options
     if options.is_a? String
       options = { :app_path => options }
@@ -73,6 +74,7 @@ module Brakeman
     options
   end
 
+  #Load options from YAML file
   def self.load_options config_file
     config_file ||= ""
 
@@ -99,6 +101,7 @@ module Brakeman
     return {}
   end
 
+  #Default set of options
   def self.get_defaults
     { :skip_checks => Set.new, 
       :check_arguments => true, 
@@ -116,6 +119,8 @@ module Brakeman
     }
   end
 
+  #Determine output format based on options[:output_format]
+  #or options[:output_file]
   def self.get_output_format options
     #Set output format
     if options[:output_format]
@@ -147,6 +152,7 @@ module Brakeman
     end
   end
 
+  #Output list of checks (for `-k` option)
   def self.list_checks
     require 'brakeman/scanner'
     $stderr.puts "Available Checks:"
@@ -154,6 +160,9 @@ module Brakeman
     $stderr.puts Checks.checks.map { |c| c.to_s.match(/^Brakeman::(.*)$/)[1] }.sort.join "\n"
   end
 
+  #Installs Rake task for running Brakeman,
+  #which basically means copying `lib/brakeman/brakeman.rake` to
+  #`lib/tasks/brakeman.rake` in the current Rails application.
   def self.install_rake_task
     if not File.exists? "Rakefile"
       abort "No Rakefile detected"
@@ -180,6 +189,7 @@ module Brakeman
     end
   end
 
+  #Output configuration to YAML
   def self.dump_config options
     if options[:create_config].is_a? String
       file = options[:create_config]
@@ -206,6 +216,7 @@ module Brakeman
     exit
   end
 
+  #Run a scan. Generally called from Brakeman.run instead of directly.
   def self.scan options
     #Load scanner
     warn "Loading scanner..."
@@ -256,6 +267,14 @@ module Brakeman
     tracker
   end
 
+  #Rescan a subset of files in a Rails application.
+  #
+  #A full scan must have been run already to use this method.
+  #The returned Tracker object from Brakeman.run is used as a starting point
+  #for the rescan.
+  #
+  #This method returns a RescanReport object with information about the scan.
+  #However, the Tracker object will also be modified as the scan is run.
   def self.rescan tracker, files
     require 'brakeman/rescanner'
 
