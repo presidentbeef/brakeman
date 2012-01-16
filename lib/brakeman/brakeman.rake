@@ -3,11 +3,7 @@ namespace :brakeman do
   desc "Run Brakeman"
   task :run, :output_file do |t, args|
     require 'brakeman'
-
-    tracker = Brakeman.run :app_path => ".", :output_file => args[:output_file]
-
-    if args[:output_file].nil?
-      puts tracker.report
-    end
+    
+    Brakeman.run :app_path => ".", :output_file => args[:output_file], :print_report => true
   end
 end
