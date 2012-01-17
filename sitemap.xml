@@ -54,7 +54,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/faq/</loc>
-        <lastmod>2011-11-09T14:11:10-08:00</lastmod>
+        <lastmod>2012-01-16T16:21:33-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/install/</loc>
@@ -62,7 +62,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/</loc>
-        <lastmod>2012-01-10T11:42:08-08:00</lastmod>
+        <lastmod>2012-01-16T16:27:11-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/confidence/</loc>
@@ -82,7 +82,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/brakeman_as_a_library/</loc>
-        <lastmod>2012-01-10T11:33:40-08:00</lastmod>
+        <lastmod>2012-01-16T16:21:49-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/dynamic_render_path/</loc>
@@ -146,7 +146,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/reducing_false_positives/</loc>
-        <lastmod>2012-01-10T10:48:07-08:00</lastmod>
+        <lastmod>2012-01-16T16:22:44-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/running/</loc>
@@ -159,6 +159,10 @@
     <url>
         <loc>http://brakemanscanner.org/docs/contributing/</loc>
         <lastmod>2011-11-28T16:56:17-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/rake/</loc>
+        <lastmod>2012-01-16T16:21:08-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/introduction/</loc>
