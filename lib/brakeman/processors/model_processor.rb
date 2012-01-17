@@ -56,6 +56,8 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
         case method
         when :private, :protected, :public
           @visibility = method
+        when :attr_accessible
+          @model[:attr_accessible] ||= []
         else
           #??
         end
