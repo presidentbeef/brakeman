@@ -3,3 +3,5 @@
 Hello, <%= @name %>!
 
 Very likely bad: <%= truncate User.profile %>
+
+Bad for 2.x: <%= link_to User.first.name, "some_url" %>

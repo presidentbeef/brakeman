@@ -250,6 +250,15 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /test_model\.html\.erb/
   end
 
+  def test_model_in_link_to
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 8,
+      :message => /^Unescaped model attribute in link_to/,
+      :confidence => 0,
+      :file => /test_model\.html\.erb/
+  end
+
   def test_file_access_in_template
     assert_warning :type => :template,
       :warning_type => "File Access",
