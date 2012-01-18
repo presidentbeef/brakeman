@@ -44,9 +44,11 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     @models = tracker.models.keys
     @inspect_arguments = tracker.options[:check_arguments]
 
-    link_to_check = Brakeman::CheckLinkTo.new(tracker)
-    link_to_check.run_check
-    warnings.concat link_to_check.warnings unless link_to_check.warnings.empty?
+    if version_between?("2.0.0", "2.9.9") and not tracker.options[:escape_html]
+      link_to_check = Brakeman::CheckLinkTo.new(tracker)
+      link_to_check.run_check
+      warnings.concat link_to_check.warnings unless link_to_check.warnings.empty?
+    end
 
     @known_dangerous = Set.new([:truncate, :concat])
 
