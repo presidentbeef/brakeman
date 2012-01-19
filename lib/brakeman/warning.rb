@@ -5,6 +5,8 @@ class Brakeman::Warning
 
   attr_accessor :code, :context, :file, :message
 
+  TEXT_CONFIDENCE = [ "High", "Medium", "Weak" ]
+
   #+options[:result]+ can be a result from Tracker#find_call. Otherwise, it can be +nil+.
   def initialize options = {}
     @view_name = nil
@@ -110,5 +112,14 @@ class Brakeman::Warning
     end
 
     @row
+  end
+
+  def to_s
+   output =  "(#{TEXT_CONFIDENCE[self.confidence]}) #{self.warning_type} - #{self.message}"
+   output << " near line #{self.line}" if self.line
+   output << " in #{self.file}" if self.file
+   output << ": #{self.format_code}" if self.code
+
+   output
   end
 end
