@@ -6,3 +6,5 @@ Jello, <%= @name %>
 More: <%= @indirect %>
 
 And: <%= params[:x][:y] %>
+
+Should not warn: <%= link_to h(params[:blah]), "some_url" %>

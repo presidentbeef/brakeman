@@ -280,6 +280,16 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /test_model\.html\.erb/
   end
 
+  def test_escaped_parameter_in_link_to
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 10,
+      :message => /^Unescaped parameter value in link_to/,
+      :confidence => 1,
+      :file => /test_params\.html\.erb/
+  end
+
+
   def test_filter
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
