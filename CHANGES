@@ -1,3 +1,15 @@
+## 1.2.1
+
+ * Remove link_to warning for Rails 3.x or when using rails_xss
+ * Don't warn if first argument to link_to is escaped
+ * Detect usage of attr_accessible with no arguments
+ * Fix error when rendering a partial from a view but not through a controller
+ * Fix some issues with rails_xss, CheckCrossSiteScripting, and CheckTranslateBug
+ * Simplify Brakeman Rake task
+ * Avoid modifying $VERBOSE
+ * Add Brakeman::RescanReport#to_s
+ * Add Brakeman::Warning#to_s
+
 ## 1.2.0
 
  * Speed improvements for CheckExecute and CheckRender
