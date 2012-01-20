@@ -11,7 +11,9 @@ For even more continuous testing, try the [Guard plugin](https://github.com/oreo
 # Homepage/News
 
 Website: http://brakemanscanner.org/
+
 Twitter: http://twitter.com/brakemanscanner
+
 Mailing list: brakeman@librelist.com
 
 # Installation
