@@ -6,9 +6,13 @@ It targets Rails versions 2.x and 3.x.
  
 There is also a [plugin available](http://brakemanscanner.org/docs/jenkins/) for Jenkins/Hudson.
 
-# Homepage
+For even more continuous testing, try the [Guard plugin](https://github.com/oreoshake/guard-brakeman).
 
-http://brakemanscanner.org/
+# Homepage/News
+
+Website: http://brakemanscanner.org/
+Twitter: http://twitter.com/brakemanscanner
+Mailing list: brakeman@librelist.com
 
 # Installation
 
