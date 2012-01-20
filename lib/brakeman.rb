@@ -48,7 +48,9 @@ module Brakeman
     @quiet = !!options[:quiet]
     @debug = !!options[:debug]
 
-    options[:report_progress] = !@quiet
+    if @quiet
+      options[:report_progress] = false
+    end
 
     scan options
   end
