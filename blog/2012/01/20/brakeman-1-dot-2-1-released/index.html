@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Session Settings</title>
+  <title>Brakeman: Brakeman 1.2.1 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/session_settings/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2012/01/20/brakeman-1-dot-2-1-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -98,33 +98,134 @@
   <div id="main">
     <div id="content">
       <div>
-<article>
+<article class="hentry">
   
   <header>
-    <h1 class="entry-title">Session Settings</h1>
-  </header>
-  
-  <h3>HTTP Only</h3>
-
-<p>It is recommended that session cookies be set to &#8220;http-only&#8221;. This helps prevent stealing of cookies via cross site scripting.</p>
-
-<h3>Secret Length</h3>
-
-<p>Brakeman will warn if the key length for the session cookies is less than 30 characters.</p>
-
-<hr />
-
-<p>Back to <a href="/docs/warning_types">Warning Types</a></p>
-
-  
-    <footer>
+    
+      <h1 class="entry-title">Brakeman 1.2.1 Released</h1>
+    
+    
       <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+
+
+
+<time datetime="2012-01-20 12:16:00 -0800" pubdate  updated >Jan 20<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This is essentially just a bugfix release, but due to the fixes for <code>link_to</code> warnings, there is a good possibility the number of reported warnings will decrease when upgrading to this version.</p>
+
+<p>Changes since 1.2.0:</p>
+
+<ul>
+<li>Remove link_to warning for Rails 3.x or when using rails_xss</li>
+<li>Don&#8217;t warn if first argument to link_to is escaped</li>
+<li>Detect usage of attr_accessible with no arguments</li>
+<li>Fix error when rendering a partial from a view but not through a controller</li>
+<li>Fix some issues with rails_xss, CheckCrossSiteScripting, and CheckTranslateBug</li>
+<li>Simplify Brakeman Rake task</li>
+<li>Avoid modifying $VERBOSE</li>
+<li>Add Brakeman::RescanReport#to_s</li>
+<li>Add Brakeman::Warning#to_s</li>
+</ul>
+
+
+<h3>link_to Changes</h3>
+
+<p>Prior to Rails 3.0, there <a href="https://rails.lighthouseapp.com/projects/8994/tickets/3518-link_to-doesnt-escape-its-input">was a bug</a> in <code>link_to</code> that caused the body of the link tag to be output without escaping. While this was fixed in Rails 3.0, Brakeman has still been warning on it. This was also fixed in the <a href="https://github.com/rails/rails_xss/commit/afc1610fe4b94150faee98c16f15a24290d20900">rails_xss</a>, so Brakeman should no longer warn on <code>link_to</code> for Rails 2.x when using the rails_xss plugin.</p>
+
+<p>Brakeman was also warning on <code>link_to</code> even if the body argument was manually escaped. This should be resolved now.</p>
+
+<p>One other related issue was a silly bug causing Brakeman to sometimes ignore <code>--escape-html</code> or the rails_xss plugin, leading to some confusing output. This is fixed.</p>
+
+<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/32">Neil Matatall</a> for reporting the <code>link_to</code> issue and <a href="https://github.com/a5sk4s">Andreas</a> for reporting the rails_xss problems.</p>
+
+<h3>attr_accessible with No Arguments</h3>
+
+<p>Brakeman was not detecting the case where <code>attr_accessible</code> is called with zero arguments, causing spurious mass assignment warnings.</p>
+
+<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/31">Justin Wiley</a> for reporting this.</p>
+
+<h3>Brakeman Rake Task</h3>
+
+<p>The Brakeman Rake task (installed via <code>--rake</code>) is even <a href="/docs/rake">simpler now</a>.</p>
+
+<h3>$VERBOSE</h3>
+
+<p>Brakeman was using <code>$VERBOSE</code> and <code>Kernel.warn</code> for controlling debug output. This has changed and <code>$VERBOSE</code> will no longer be modified when using Brakeman.</p>
+
+<h3>Rails 3.2 Support</h3>
+
+<p>So far, there have not been any issues with Brakeman and Rails 3.2. Please <a href="https://github.com/presidentbeef/brakeman/issues">report</a> any that come up!</p>
+
+<h3>JRuby Performance</h3>
+
+<p>Prior to Brakeman 1.2, <a href="http://jruby.org/">JRuby</a> was very slow when running Brakeman. This has changed, and now JRuby is probably the fastest option for scanning large applications. Give it a try, especially if you are using Ruby 1.8.7!</p>
+
+<h3>Mailing List</h3>
+
+<p>There is now a Brakeman mailing list on <a href="http://librelist.com/browser/brakeman/">librelist</a>.</p>
+
+<p>To subscribe, send any email to <a href='&#109;ailto&#58;b&#114;%&#54;1k&#37;65m&#37;&#54;1n&#64;&#37;6Ci&#98;%&#55;2&#101;l%&#54;&#57;st&#46;com'>brakeman&#64;libr&#101;&#108;ist&#46;com</a>. You will be asked to confirm your subscription.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
+
+      
+
+
+
+
+<time datetime="2012-01-20 12:16:00 -0800" pubdate  updated >Jan 20<span>th</span>, 2012</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2012/01/20/brakeman-1-dot-2-1-released/" data-via="BrakemanScanner" data-counturl="http://brakemanscanner.org/blog/2012/01/20/brakeman-1-dot-2-1-released/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread"><div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'brakeman';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2012/01/20/brakeman-1-dot-2-1-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2012/01/20/brakeman-1-dot-2-1-released/';
+  //var disqus_developer = 1;
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 

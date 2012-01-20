@@ -49,6 +49,10 @@
         <lastmod>2012-01-13T22:51:50-08:00</lastmod>
     </url>
     <url>
+        <loc>http://brakemanscanner.org/blog/2012/01/20/brakeman-1-dot-2-1-released/</loc>
+        <lastmod>2012-01-20T13:02:15-08:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/docs/options/</loc>
         <lastmod>2011-12-22T13:35:14-08:00</lastmod>
     </url>
@@ -162,7 +166,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/rake/</loc>
-        <lastmod>2012-01-16T16:21:08-08:00</lastmod>
+        <lastmod>2012-01-20T12:15:51-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/introduction/</loc>
@@ -177,11 +181,15 @@
         <lastmod>2011-12-22T13:35:28-08:00</lastmod>
     </url>
     <url>
+        <loc>http://brakemanscanner.org/contact/</loc>
+        <lastmod>2012-01-20T12:43:54-08:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/</loc>
-        <lastmod>2012-01-13T22:51:50-08:00</lastmod>
+        <lastmod>2012-01-20T13:02:15-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/blog/archives/</loc>
-        <lastmod>2012-01-13T22:51:50-08:00</lastmod>
+        <lastmod>2012-01-20T13:02:15-08:00</lastmod>
     </url>
 </urlset>
