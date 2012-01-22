@@ -111,7 +111,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
     hash_iterate(exp) do |option, value|
       case option[1]
       when :controller, :requirements, :singular, :path_prefix, :as,
-        :path_names, :shallow, :name_prefix
+        :path_names, :shallow, :name_prefix, :member_path, :nested_member_path
         #should be able to skip
       when :collection, :member, :new
         process_collection value
