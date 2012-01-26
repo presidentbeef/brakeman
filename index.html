@@ -105,6 +105,56 @@
     
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/01/26/brakeman-1-dot-2-2-released/">Brakeman 1.2.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-01-26 13:58:00 -0800" pubdate  updated >Jan 26<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>Changes since 1.2.1:</em></p>
+
+<ul>
+<li>&#8211;no-progress works again</li>
+<li>Make CheckLinkTo a separate check</li>
+<li>Don&#8217;t fail on unknown options to resource(s)</li>
+<li>Handle empty resource(s) blocks</li>
+<li>Add RescanReport#existing_warnings</li>
+</ul>
+
+
+<h3>No Progress Option</h3>
+
+<p>The last release broke the <code>--no-progress</code> option for hiding the <code>1/100 files processed</code> type messages. Now it works again!</p>
+
+<h3>Separate Check for link_to</h3>
+
+<p>For no great reason, <code>CheckLinkTo</code> was bundled with <code>CheckCrossSiteScripting</code>. It has now been moved out to a separate file, allowing it to be treated as a regular check. This means it can be explicitly skipped using <code>-x CheckLinkTo</code> (if desired).</p>
+
+<h3>Better Rails 2 Route Handling</h3>
+
+<p>Brakeman was raising an exception if a hash option to <code>resource</code> or <code>resources</code> did not match a set of known options. Now it will only warn instead of aborting route processing.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/01/20/brakeman-1-dot-2-1-released/">Brakeman 1.2.1 Released</a></h1>
     
     
@@ -175,6 +225,8 @@
 <p>There is now a Brakeman mailing list on <a href="http://librelist.com/browser/brakeman/">librelist</a>.</p>
 
 <p>To subscribe, send any email to <a href='&#109;ailto&#58;b&#114;%&#54;1k&#37;65m&#37;&#54;1n&#64;&#37;6Ci&#98;%&#55;2&#101;l%&#54;&#57;st&#46;com'>brakeman&#64;libr&#101;&#108;ist&#46;com</a>. You will be asked to confirm your subscription.</p>
+
+<p>Archives are available for browsing on <a href="http://www.mail-archive.com/brakeman@librelist.com/maillist.html">The Mail Archive</a>.</p>
 </div>
   
   
@@ -706,43 +758,6 @@ Brakeman.run :app_path =&gt; 'my_app'
 
   </article>
 
-
-  <article>
-    
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/10/21/brakeman-plugin-officially-available-for-jenkins/">Brakeman Plugin &#8216;Officially&#8217; Available for Jenkins</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-10-21 11:54:00 -0700" pubdate  updated >Oct 21<span>st</span>, 2011</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>While a Brakeman plugin for the <a href="http://jenkins-ci.org">Jenkins</a>/<a href="http://hudson-ci.org">Hudson</a> continuous integration tool has been available since January, thanks to <a href="https://github.com/presidentbeef/brakeman-jenkins-plugin/issues/1">some prodding</a> the plugin is now available through the official Jenkins plugin manager.</p>
-
-<p><img src="/images/brakeman_trend_graph.png" title="Example Plugin Graph" alt="Example Plugin Graph" /></p>
-
-<p>Installation of the plugin is no longer an arduous manual process. Just go to <code>Manage Jenkins -&gt; Manage Plugins -&gt; Available</code> and search for &#8220;Brakeman&#8221;. Check the box and then click the &#8220;Install&#8221; button down at the bottom of the page.</p>
-
-<p>Some more information about the plugin can be found on the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Brakeman+Plugin">Jenkins wiki</a>.</p>
-
-<p>See the <a href="docs/jenkins/setup">instructions</a> for how to set up a job to use the Brakeman plugin.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -793,6 +808,10 @@ Brakeman.run :app_path =&gt; 'my_app'
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/01/26/brakeman-1-dot-2-2-released/">Brakeman 1.2.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/01/20/brakeman-1-dot-2-1-released/">Brakeman 1.2.1 Released</a>
       </li>
     
@@ -806,10 +825,6 @@ Brakeman.run :app_path =&gt; 'my_app'
     
       <li class="post">
         <a href="/blog/2011/12/05/brakeman-1-dot-0-release-candidate-available/">Brakeman 1.0 Release Candidate Available</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2011/11/21/brakeman-0-dot-9-2-released/">Brakeman 0.9.2 Released</a>
       </li>
     
   </ul>

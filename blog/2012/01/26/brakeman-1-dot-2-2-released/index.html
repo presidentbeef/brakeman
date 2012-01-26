@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Mass Assignment</title>
+  <title>Brakeman: Brakeman 1.2.2 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/mass_assignment/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2012/01/26/brakeman-1-dot-2-2-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -98,62 +98,102 @@
   <div id="main">
     <div id="content">
       <div>
-<article>
+<article class="hentry">
   
   <header>
-    <h1 class="entry-title">Mass Assignment</h1>
-  </header>
-  
-  <p>Mass assignment is a feature of Rails which allows an application to create a record from the values of a hash.</p>
-
-<p>Example:</p>
-
-<pre><code>User.new(params[:user])
-</code></pre>
-
-<p>Unfortunately, if there is a user field called <code>admin</code> which controls administrator access, now any user can make themselves an administrator.</p>
-
-<p><code>attr_accessible</code> and <code>attr_protected</code> can be used to limit mass assignment. However, Brakeman will warn unless <code>attr_accessible</code> is used, or mass assignment is completely disabled.</p>
-
-<p>There are two different mass assignment warnings which can arise. The first is when mass assignment actually occurs, such as the example above. This results in a warning like</p>
-
-<pre><code>Unprotected mass assignment near line 61: User.new(params[:user])
-</code></pre>
-
-<p>The other warning is raised whenever a model is found which does not use <code>attr_accessible</code>. This produces generic warnings like</p>
-
-<pre><code>Mass assignment is not restricted using attr_accessible
-</code></pre>
-
-<p>with a list of affected models.</p>
-
-<p>In Rails 3.1 and newer, mass assignment can easily be disabled:</p>
-
-<pre><code>config.active_record.whitelist_attributes = true
-</code></pre>
-
-<p>Unfortunately, it can also easily be bypassed:</p>
-
-<pre><code>User.new(params[:user], :without_protection =&gt; true
-</code></pre>
-
-<p>Brakeman will warn on uses of <code>without_protection</code>.</p>
-
-<p>Please see <a href="http://railspikes.com/2008/9/22/is-your-rails-application-safe-from-mass-assignment">this page</a> for more details.</p>
-
-<hr />
-
-<p>Back to <a href="/docs/warning_types">Warning Types</a></p>
-
-  
-    <footer>
+    
+      <h1 class="entry-title">Brakeman 1.2.2 Released</h1>
+    
+    
       <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+
+
+
+<time datetime="2012-01-26 13:58:00 -0800" pubdate  updated >Jan 26<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+<div class="entry-content"><p><em>Changes since 1.2.1:</em></p>
+
+<ul>
+<li>&#8211;no-progress works again</li>
+<li>Make CheckLinkTo a separate check</li>
+<li>Don&#8217;t fail on unknown options to resource(s)</li>
+<li>Handle empty resource(s) blocks</li>
+<li>Add RescanReport#existing_warnings</li>
+</ul>
+
+
+<h3>No Progress Option</h3>
+
+<p>The last release broke the <code>--no-progress</code> option for hiding the <code>1/100 files processed</code> type messages. Now it works again!</p>
+
+<h3>Separate Check for link_to</h3>
+
+<p>For no great reason, <code>CheckLinkTo</code> was bundled with <code>CheckCrossSiteScripting</code>. It has now been moved out to a separate file, allowing it to be treated as a regular check. This means it can be explicitly skipped using <code>-x CheckLinkTo</code> (if desired).</p>
+
+<h3>Better Rails 2 Route Handling</h3>
+
+<p>Brakeman was raising an exception if a hash option to <code>resource</code> or <code>resources</code> did not match a set of known options. Now it will only warn instead of aborting route processing.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
+
+      
+
+
+
+
+<time datetime="2012-01-26 13:58:00 -0800" pubdate  updated >Jan 26<span>th</span>, 2012</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2012/01/26/brakeman-1-dot-2-2-released/" data-via="BrakemanScanner" data-counturl="http://brakemanscanner.org/blog/2012/01/26/brakeman-1-dot-2-2-released/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread"><div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'brakeman';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2012/01/26/brakeman-1-dot-2-2-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2012/01/26/brakeman-1-dot-2-2-released/';
+  //var disqus_developer = 1;
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 

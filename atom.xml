@@ -4,13 +4,43 @@
   <title>Brakeman</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-01-20T13:05:14-08:00</updated>
+  <updated>2012-01-26T14:27:11-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 1.2.2 Released</title>
+    <link href="http://brakemanscanner.org/blog/2012/01/26/brakeman-1-dot-2-2-released/"/>
+    <updated>2012-01-26T13:58:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2012/01/26/brakeman-1-dot-2-2-released</id>
+    <content type="html">&lt;p&gt;&lt;em&gt;Changes since 1.2.1:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;--no-progress works again&lt;/li&gt;
+&lt;li&gt;Make CheckLinkTo a separate check&lt;/li&gt;
+&lt;li&gt;Don't fail on unknown options to resource(s)&lt;/li&gt;
+&lt;li&gt;Handle empty resource(s) blocks&lt;/li&gt;
+&lt;li&gt;Add RescanReport#existing_warnings&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;No Progress Option&lt;/h3&gt;
+
+&lt;p&gt;The last release broke the &lt;code&gt;--no-progress&lt;/code&gt; option for hiding the &lt;code&gt;1/100 files processed&lt;/code&gt; type messages. Now it works again!&lt;/p&gt;
+
+&lt;h3&gt;Separate Check for link_to&lt;/h3&gt;
+
+&lt;p&gt;For no great reason, &lt;code&gt;CheckLinkTo&lt;/code&gt; was bundled with &lt;code&gt;CheckCrossSiteScripting&lt;/code&gt;. It has now been moved out to a separate file, allowing it to be treated as a regular check. This means it can be explicitly skipped using &lt;code&gt;-x CheckLinkTo&lt;/code&gt; (if desired).&lt;/p&gt;
+
+&lt;h3&gt;Better Rails 2 Route Handling&lt;/h3&gt;
+
+&lt;p&gt;Brakeman was raising an exception if a hash option to &lt;code&gt;resource&lt;/code&gt; or &lt;code&gt;resources&lt;/code&gt; did not match a set of known options. Now it will only warn instead of aborting route processing.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 1.2.1 Released</title>
@@ -71,6 +101,8 @@
 &lt;p&gt;There is now a Brakeman mailing list on &lt;a href=&quot;http://librelist.com/browser/brakeman/&quot;&gt;librelist&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;To subscribe, send any email to &lt;a href='&amp;#109;ailto&amp;#58;b&amp;#114;%&amp;#54;1k&amp;#37;65m&amp;#37;&amp;#54;1n&amp;#64;&amp;#37;6Ci&amp;#98;%&amp;#55;2&amp;#101;l%&amp;#54;&amp;#57;st&amp;#46;com'&gt;brakeman&amp;#64;libr&amp;#101;&amp;#108;ist&amp;#46;com&lt;/a&gt;. You will be asked to confirm your subscription.&lt;/p&gt;
+
+&lt;p&gt;Archives are available for browsing on &lt;a href=&quot;http://www.mail-archive.com/brakeman@librelist.com/maillist.html&quot;&gt;The Mail Archive&lt;/a&gt;.&lt;/p&gt;
 </content>
   </entry>
   
