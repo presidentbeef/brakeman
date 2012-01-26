@@ -245,6 +245,14 @@ class Brakeman::RescanReport
     @diff ||= @new_results.diff(@old_results)
   end
 
+  #Returns an array of warnings which were in the old report and the new report
+  def existing_warnings
+    @old ||= all_warnings.select do |w|
+      not new_warnings.include? w
+    end
+  end
+
+  #Output total, fixed, and new warnings
   def to_s
     <<-OUTPUT
 Total warnings: #{all_warnings.length}
