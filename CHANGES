@@ -1,3 +1,11 @@
+# 1.2.2
+
+ * --no-progress works again
+ * Make CheckLinkTo a separate check
+ * Don't fail on unknown options to resource(s)
+ * Handle empty resource(s) blocks
+ * Add RescanReport#existing_warnings
+
 ## 1.2.1
 
  * Remove link_to warning for Rails 3.x or when using rails_xss
