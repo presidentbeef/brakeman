@@ -12,7 +12,7 @@ For even more continuous testing, try the [Guard plugin](https://github.com/oreo
 
 Website: http://brakemanscanner.org/
 
-Twitter: http://twitter.com/brakemanscanner
+Twitter: http://twitter.com/brakeman
 
 Mailing list: brakeman@librelist.com
 
