@@ -4,7 +4,7 @@
   <title>Brakeman</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-01-28T22:06:23-08:00</updated>
+  <updated>2012-01-30T11:51:17-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -170,7 +170,7 @@
 
 &lt;h3&gt;Issues&lt;/h3&gt;
 
-&lt;p&gt;Please report &lt;em&gt;any&lt;/em&gt; problems or questions on &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;GitHub&lt;/a&gt; or send a tweet to &lt;a href=&quot;https://twitter.com/#!/brakemanscanner&quot;&gt;@BrakemanScanner&lt;/a&gt;!&lt;/p&gt;
+&lt;p&gt;Please report &lt;em&gt;any&lt;/em&gt; problems or questions on &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;GitHub&lt;/a&gt; or send a tweet to &lt;a href=&quot;https://twitter.com/#!/brakemanscanner&quot;&gt;@Brakeman&lt;/a&gt;!&lt;/p&gt;
 </content>
   </entry>
   
