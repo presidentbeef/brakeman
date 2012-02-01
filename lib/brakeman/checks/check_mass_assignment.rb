@@ -12,7 +12,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
 
     models = []
     tracker.models.each do |name, m|
-      if parent?(tracker, m, :"ActiveRecord::Base") and m[:attr_accessible].nil?
+      if parent?(m, :"ActiveRecord::Base") and m[:attr_accessible].nil?
         models << name
       end
     end

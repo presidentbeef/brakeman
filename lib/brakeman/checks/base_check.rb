@@ -103,13 +103,13 @@ class Brakeman::BaseCheck < SexpProcessor
   end
 
   #Checks if the model inherits from parent,
-  def parent? tracker, model, parent
+  def parent? model, parent
     if model == nil
       false
     elsif model[:parent] == parent
       true
     elsif model[:parent]
-      parent? tracker, tracker.models[model[:parent]], parent
+      parent? tracker.models[model[:parent]], parent
     else
       false
     end

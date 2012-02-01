@@ -14,7 +14,7 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
     names = []
 
     tracker.models.each do |name, model|
-      if model[:attr_accessible].nil? and parent? tracker, model, :"ActiveRecord::Base"
+      if model[:attr_accessible].nil? and parent? model, :"ActiveRecord::Base"
         if tracker.options[:collapse_mass_assignment]
           names << name.to_s
         else
