@@ -31,4 +31,8 @@ class User < ActiveRecord::Base
 
     User.where(x)
   end
+
+  def safe_sql
+    User.where "something = ?", "#{params[:awesome]}"
+  end
 end
