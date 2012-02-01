@@ -11,26 +11,49 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
   def run_check
     return if mass_assign_disabled?
 
-
+    #Roll warnings into one warning for all models
     if tracker.options[:collapse_mass_assignment]
-      names = []
+      no_accessible_names = []
+      protected_names = []
 
-      check_models do |name|
-        names << name.to_s
+      check_models do |name, model|
+        if model[:options][:attr_protected].nil?
+          no_accessible_names << name.to_s
+        else
+          protected_names << name.to_s
+        end
       end
 
-      unless names.empty?
-        warn :model => names.sort.join(", "),
+      unless no_accessible_names.empty?
+        warn :model => no_accessible_names.sort.join(", "),
           :warning_type => "Attribute Restriction",
           :message => "Mass assignment is not restricted using attr_accessible",
           :confidence => CONFIDENCE[:high]
       end
-    else
-      check_models do |name|
-        warn :model => name,
+
+      unless protected_names.empty?
+        warn :model => protected_names.sort.join(", "),
           :warning_type => "Attribute Restriction",
-          :message => "Mass assignment is not restricted using attr_accessible",
-          :confidence => CONFIDENCE[:high]
+          :message => "attr_accessible is recommended over attr_protected",
+          :confidence => CONFIDENCE[:low]
+      end
+    else #Output one warning per model
+
+      check_models do |name, model|
+        if model[:options][:attr_protected].nil?
+          warn :model => name,
+            :file => model[:file],
+            :warning_type => "Attribute Restriction",
+            :message => "Mass assignment is not restricted using attr_accessible",
+            :confidence => CONFIDENCE[:high]
+        else
+          warn :model => name,
+            :file => model[:file],
+            :line => model[:options][:attr_protected].first.line,
+            :warning_type => "Attribute Restriction",
+            :message => "attr_accessible is recommended over attr_protected",
+            :confidence => CONFIDENCE[:low]
+        end
       end
     end
   end
@@ -38,7 +61,7 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
   def check_models
     tracker.models.each do |name, model|
       if model[:attr_accessible].nil? and parent? model, :"ActiveRecord::Base"
-        yield name
+        yield name, model
       end
     end
   end

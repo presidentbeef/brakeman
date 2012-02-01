@@ -45,7 +45,11 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
     if check and not @results.include? call
       @results << call
 
-      if include_user_input? call[3] and not hash? call[3][1]
+      model = tracker.models[res[:chain].first]
+
+      attr_protected = (model and model[:options][:attr_protected])
+
+      if include_user_input? call[3] and not hash? call[3][1] and not attr_protected
         confidence = CONFIDENCE[:high]
       else
         confidence = CONFIDENCE[:low]
