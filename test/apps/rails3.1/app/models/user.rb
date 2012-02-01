@@ -8,4 +8,12 @@ class User < ActiveRecord::Base
   scope :dah, lambda {|*args| { :condition => "dah = '#{args[1]}'"}}
   
   scope :phooey, :condition => "phoeey = '#{User.phooey}'"
+
+  scope :this_is_safe, lambda { |name|
+    where("name = ?", "%#{name.downcase}%")
+  }
+
+  scope :this_is_also_safe, where("name = ?", "%#{name.downcase}%")
+
+  scope :should_not_warn, :condition => ["name = ?", "%#{name.downcase}%"]
 end

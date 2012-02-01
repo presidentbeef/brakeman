@@ -49,7 +49,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         if model[:options][:named_scope]
           model[:options][:named_scope].each do |args|
             call = Sexp.new(:call, nil, :named_scope, args).line(args.line)
-            scope_calls << { :call => call, :location => [:class, name ] }
+            scope_calls << { :call => call, :location => [:class, name ], :method => :named_scope }
           end
         end
        end
@@ -57,8 +57,18 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       tracker.models.each do |name, model|
         if model[:options][:scope]
           model[:options][:scope].each do |args|
-            call = Sexp.new(:call, nil, :scope, args).line(args.line)
-            scope_calls << { :call => call, :location => [:class, name ] }
+            second_arg = args[2]
+
+            if second_arg.node_type == :iter and
+              (second_arg[-1].node_type == :block or second_arg[-1].node_type == :call)
+              process_scope_with_block name, args
+            elsif second_arg.node_type == :call
+              call = second_arg
+              scope_calls << { :call => call, :location => [:class, name ], :method => call[2] }
+            else
+              call = Sexp.new(:call, nil, :scope, args).line(args.line)
+              scope_calls << { :call => call, :location => [:class, name ], :method => :scope }
+            end
           end
         end
       end
@@ -67,8 +77,32 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     scope_calls
   end
 
+  def process_scope_with_block model_name, args
+    scope_name = args[1][1]
+    block = args[-1][-1]
+
+    #Search lambda for calls to query methods
+    if block.node_type == :block
+      find_calls = Brakeman::FindAllCalls.new tracker
+
+      find_calls.process_source block, model_name, scope_name
+
+      find_calls.calls.each do |call|
+        if call[:method].to_s =~ /^(find.*|first|last|all|where|order|group|having)$/
+          puts "Looks like #{call.inspect}"
+          process_result call
+        end
+      end
+    elsif block.node_type == :call
+      process_result :target => block[1], :method => block[2], :call => block, :location => [:class, model_name, scope_name]
+    end
+  end
+
   #Process result from Tracker#find_call.
   def process_result result
+    #TODO: I don't like this method at all. It's a pain to figure out what
+    #it is actually doing...
+
     call = result[:call]
 
     args = call[3]
@@ -77,6 +111,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       failed = check_arguments args[1]
     elsif call[2].to_s =~ /^find/
       failed = (args.length > 2 and check_arguments args[-1])
+    elsif tracker.options[:rails3] and result[:method] != :scope
+      #This is for things like where("query = ?")
+      failed = check_arguments args[1]
     else
       failed = (args.length > 1 and check_arguments args[-1])
     end
