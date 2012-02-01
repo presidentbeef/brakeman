@@ -13,9 +13,9 @@ class Rails3Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :controller => 1,
-      :model => 4,
+      :model => 5,
       :template => 18,
-      :warning => 18
+      :warning => 21
     }
   end
 
@@ -77,6 +77,24 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /home_controller\.rb/
   end
 
+  def test_protected_mass_assignment
+    assert_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :line => 43,
+      :message => /^Unprotected mass assignment near line 43: Product.new/,
+      :confidence => 2,
+      :file => /products_controller\.rb/
+  end
+
+  def test_protected_mass_assignment_update
+    assert_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :line => 62,
+      :message => /^Unprotected mass assignment near line 62: Product.find/,
+      :confidence => 2,
+      :file => /products_controller\.rb/
+  end
+
   def test_redirect
     assert_warning :type => :warning,
       :warning_type => "Redirect",
@@ -84,6 +102,15 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Possible unprotected redirect near line /,
       :confidence => 0,
       :file => /home_controller\.rb/
+  end
+
+  def test_redirect_to_model
+    assert_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 63,
+      :message => /^Possible unprotected redirect near line 63: redirect_to/,
+      :confidence => 2,
+      :file => /products_controller\.rb/
   end
 
   def test_render_path
@@ -145,6 +172,14 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Mass assignment is not restricted using /,
       :confidence => 0,
       :file => /account, user\.rb/
+  end
+
+  def test_attr_protected
+    assert_warning :type => :model,
+      :warning_type => "Attribute Restriction",
+      :message => /^attr_accessible is recommended over attr_protected/,
+      :confidence => 2,
+      :file => /product\.rb/
   end
 
   def test_format_validation
@@ -391,7 +426,7 @@ class Rails3Tests < Test::Unit::TestCase
 
   def test_default_routes
     assert_warning :warning_type => "Default Routes",
-      :line => 93,
+      :line => 95,
       :message => /All public methods in controllers are available as actions/,
       :file => /routes\.rb/
   end
@@ -420,4 +455,3 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /Gemfile/
   end
 end
-

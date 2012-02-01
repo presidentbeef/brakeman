@@ -1,4 +1,6 @@
 Rails3::Application.routes.draw do
+  resources :products
+
   get "other/test_locals"
 
   get "other/test_object"
