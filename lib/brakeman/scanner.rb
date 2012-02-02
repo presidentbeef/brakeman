@@ -36,6 +36,13 @@ class Brakeman::Scanner
     @path = options[:app_path]
     @app_path = File.join(@path, "app")
     @processor = processor || Brakeman::Processor.new(options)
+    @skip_files = nil
+
+    #Convert files into Regexp for matching
+    if options[:skip_files]
+      list = "(?:" << options[:skip_files].map { |f| Regexp.escape f }.join("|") << ")$"
+      @skip_files = Regexp.new(list)
+    end
 
     if RUBY_1_9
       @ruby_parser = ::Ruby19Parser
@@ -123,7 +130,10 @@ class Brakeman::Scanner
   #
   #Adds parsed information to tracker.initializers
   def process_initializers
-    Dir.glob(@path + "/config/initializers/**/*.rb").sort.each do |f|
+    initializer_files = Dir.glob(@path + "/config/initializers/**/*.rb").sort
+    initializer_files.reject! { |f| @skip_files.match f } if @skip_files
+
+    initializer_files.each do |f|
       process_initializer f
     end
   end
@@ -149,6 +159,8 @@ class Brakeman::Scanner
     end
 
     lib_files = Dir.glob(@path + "/lib/**/*.rb").sort
+    lib_files.reject! { |f| @skip_files.match f } if @skip_files
+
     total = lib_files.length
     current = 0
 
@@ -196,6 +208,8 @@ class Brakeman::Scanner
   #Adds processed controllers to tracker.controllers
   def process_controllers
     controller_files = Dir.glob(@app_path + "/controllers/**/*.rb").sort
+    controller_files.reject! { |f| @skip_files.match f } if @skip_files
+
     total = controller_files.length * 2
     current = 0
 
@@ -244,6 +258,8 @@ class Brakeman::Scanner
     count = 0
 
     template_files = Dir.glob(views_path).sort
+    template_files.reject! { |f| @skip_files.match f } if @skip_files
+
     total = template_files.length
 
     template_files.each do |path|
@@ -327,6 +343,7 @@ class Brakeman::Scanner
   #Adds the processed models to tracker.models
   def process_models
     model_files = Dir.glob(@app_path + "/models/*.rb").sort
+    model_files.reject! { |f| @skip_files.match f } if @skip_files
 
     total = model_files.length
     current = 0
