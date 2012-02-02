@@ -24,6 +24,8 @@ module Brakeman::ProcessorHelper
         "::#{exp[1]}".to_sym
       when :call
         process exp
+      when :self
+        @current_class || @current_module || nil
       else
         raise "Error: Cannot get class name from #{exp}"
       end
