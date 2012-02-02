@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 2,
         :template => 18,
-        :warning => 21 }
+        :warning => 22 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
         :template => 18,
-        :warning => 22 }
+        :warning => 23 }
     end
   end
 
@@ -197,6 +197,15 @@ class Rails2Tests < Test::Unit::TestCase
       :warning_type => "SQL Injection",
       :line => 6,
       :message => /^Possible SQL injection near line 6: named_scope\(:with_state, lambda/,
+      :confidence => 1,
+      :file => /user\.rb/
+  end
+
+  def test_sql_injection_in_self_call
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 15,
+      :message => /^Possible SQL injection near line 15: self\.find/,
       :confidence => 1,
       :file => /user\.rb/
   end
