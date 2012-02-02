@@ -17,7 +17,7 @@ class Brakeman::AliasProcessor < SexpProcessor
   #The recommended usage is:
   #
   # AliasProcessor.new.process_safely src
-  def initialize
+  def initialize tracker = nil
     super()
     self.strict = false
     self.auto_shift_type = false
@@ -27,7 +27,7 @@ class Brakeman::AliasProcessor < SexpProcessor
     @env = SexpProcessor::Environment.new
     @inside_if = false
     @ignore_ifs = false
-    @tracker = nil #set in subclass as necessary
+    @tracker = tracker #set in subclass as necessary
     set_env_defaults
   end
 

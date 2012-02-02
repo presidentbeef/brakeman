@@ -23,7 +23,7 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
 
   #Use this method to process configuration file
   def process_config src
-    res = Brakeman::AliasProcessor.new.process_safely(src)
+    res = Brakeman::AliasProcessor.new(@tracker).process_safely(src)
     process res
   end
 

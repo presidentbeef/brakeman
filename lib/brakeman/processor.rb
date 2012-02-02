@@ -47,7 +47,7 @@ module Brakeman
     #Process a model source
     def process_model src, file_name
       result = ModelProcessor.new(@tracker).process_model src, file_name
-      AliasProcessor.new.process result
+      AliasProcessor.new(@tracker).process result
     end
 
     #Process either an ERB or HAML template
@@ -81,7 +81,7 @@ module Brakeman
     #Process source for initializing files
     def process_initializer name, src
       res = BaseProcessor.new(@tracker).process src
-      res = AliasProcessor.new.process res
+      res = AliasProcessor.new(@tracker).process res
       @tracker.initializers[Pathname.new(name).basename.to_s] = res
     end
 

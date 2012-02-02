@@ -91,7 +91,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       return
     end
 
-    processor = Brakeman::AliasProcessor.new
+    processor = Brakeman::AliasProcessor.new @tracker
     processor.process_safely(method[3])
 
     processor.only_ivars.all.each do |variable, value|

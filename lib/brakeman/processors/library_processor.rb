@@ -7,7 +7,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
   def initialize tracker
     super
     @file_name = nil
-    @alias_processor = Brakeman::AliasProcessor.new
+    @alias_processor = Brakeman::AliasProcessor.new tracker
   end
 
   def process_library src, file_name = nil
