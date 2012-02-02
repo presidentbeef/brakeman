@@ -120,7 +120,11 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
       when :lit
         exp[1]
       when :colon2
-        class_name exp
+        begin
+          class_name exp
+        rescue StandardError
+          exp
+        end
       when :self
         @current_class || @current_module || nil
       else
