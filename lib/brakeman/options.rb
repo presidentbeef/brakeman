@@ -54,10 +54,6 @@ module Brakeman::Options
           options[:assume_all_routes] = true
         end
 
-        opts.on "--ignore-model-output", "Consider model attributes XSS-safe" do
-          options[:ignore_model_output] = true
-        end
-
         opts.on "-e", "--escape-html", "Escape HTML by default" do
           options[:escape_html] = true
         end
@@ -65,6 +61,14 @@ module Brakeman::Options
         opts.on "--faster", "Faster, but less accurate scan" do
           options[:ignore_ifs] = true
           options[:skip_libs] = true
+        end
+
+        opts.on "--ignore-model-output", "Consider model attributes XSS-safe" do
+          options[:ignore_model_output] = true
+        end
+
+        opts.on "--ignore-protected", "Consider models with attr_protected safe" do
+          options[:ignore_attr_protected] = true
         end
 
         opts.on "--no-branching", "Disable flow sensitivity on conditionals" do

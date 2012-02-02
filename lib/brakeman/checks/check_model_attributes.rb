@@ -19,7 +19,7 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
       check_models do |name, model|
         if model[:options][:attr_protected].nil?
           no_accessible_names << name.to_s
-        else
+        elsif not tracker.options[:ignore_attr_protected]
           protected_names << name.to_s
         end
       end
@@ -46,7 +46,7 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
             :warning_type => "Attribute Restriction",
             :message => "Mass assignment is not restricted using attr_accessible",
             :confidence => CONFIDENCE[:high]
-        else
+        elsif not tracker.options[:ignore_attr_protected]
           warn :model => name,
             :file => model[:file],
             :line => model[:options][:attr_protected].first.line,
