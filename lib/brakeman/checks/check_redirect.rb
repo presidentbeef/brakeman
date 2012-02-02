@@ -8,6 +8,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckRedirect < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Looks for calls to redirect_to with user input as arguments"
+
   def run_check
     Brakeman.debug "Finding calls to redirect_to()"
 

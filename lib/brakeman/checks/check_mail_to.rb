@@ -7,6 +7,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckMailTo < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Checks for mail_to XSS vulnerability in certain versions"
+
   def run_check
     if (version_between? "2.3.0", "2.3.10" or version_between? "3.0.0", "3.0.3") and result = mail_to_javascript?
       message = "Vulnerability in mail_to using javascript encoding (CVE-2011-0446). Upgrade to Rails version "

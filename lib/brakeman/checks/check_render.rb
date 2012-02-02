@@ -4,6 +4,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckRender < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Finds calls to render that might allow file access"
+
   def run_check
     tracker.find_call(:target => nil, :method => :render).each do |result|
       process_render result

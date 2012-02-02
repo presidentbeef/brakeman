@@ -5,6 +5,8 @@ require 'brakeman/processors/lib/processor_helper'
 class Brakeman::CheckSendFile < Brakeman::CheckFileAccess
   Brakeman::Checks.add self
 
+  @description = "Check for user input in uses of send_file"
+
   def run_check
     Brakeman.debug "Finding all calls to send_file()"
 

@@ -396,4 +396,8 @@ class Brakeman::BaseCheck < SexpProcessor
       "config/environment.rb"
     end
   end
+
+  def self.description
+    @description
+  end
 end

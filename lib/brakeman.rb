@@ -162,7 +162,9 @@ module Brakeman
     require 'brakeman/scanner'
     $stderr.puts "Available Checks:"
     $stderr.puts "-" * 30
-    $stderr.puts Checks.checks.map { |c| c.to_s.match(/^Brakeman::(.*)$/)[1] }.sort.join "\n"
+    $stderr.puts Checks.checks.map { |c|
+      c.to_s.match(/^Brakeman::(.*)$/)[1].ljust(27) << c.description
+    }.sort.join "\n"
   end
 
   #Installs Rake task for running Brakeman,

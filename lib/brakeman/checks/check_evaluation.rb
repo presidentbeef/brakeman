@@ -5,6 +5,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckEvaluation < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Searches for evaluation of user input"
+
   #Process calls
   def run_check
     Brakeman.debug "Finding eval-like calls"

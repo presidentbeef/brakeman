@@ -7,6 +7,8 @@ require 'brakeman/checks/check_cross_site_scripting'
 class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
   Brakeman::Checks.add self
 
+  @description = "Checks for XSS in link_to in versions before 3.0"
+
   def run_check
     return unless version_between?("2.0.0", "2.9.9") and not tracker.config[:escape_html]
 

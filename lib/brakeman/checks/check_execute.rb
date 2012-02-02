@@ -11,6 +11,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckExecute < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Finds instances of possible command injection"
+
   #Check models, controllers, and views for command injection.
   def run_check
     Brakeman.debug "Finding system calls using ``"

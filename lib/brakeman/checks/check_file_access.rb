@@ -5,6 +5,8 @@ require 'brakeman/processors/lib/processor_helper'
 class Brakeman::CheckFileAccess < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Finds possible file access using user input"
+
   def run_check
     Brakeman.debug "Finding possible file access"
     methods = tracker.find_call :targets => [:Dir, :File, :IO, :Kernel, :"Net::FTP", :"Net::HTTP", :PStore, :Pathname, :Shell, :YAML], :methods => [:[], :chdir, :chroot, :delete, :entries, :foreach, :glob, :install, :lchmod, :lchown, :link, :load, :load_file, :makedirs, :move, :new, :open, :read, :read_lines, :rename, :rmdir, :safe_unlink, :symlink, :syscopy, :sysopen, :truncate, :unlink]

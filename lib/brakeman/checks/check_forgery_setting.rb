@@ -7,6 +7,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Verifies that protect_from_forgery is enabled in ApplicationController"
+
   def run_check
     app_controller = tracker.controllers[:ApplicationController]
     if tracker.config[:rails][:action_controller] and

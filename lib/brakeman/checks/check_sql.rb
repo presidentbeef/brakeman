@@ -11,6 +11,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckSQL < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Check for SQL injection"
+
   def run_check
     @rails_version = tracker.config[:rails_version]
 

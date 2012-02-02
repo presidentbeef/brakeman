@@ -5,6 +5,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckStripTags < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Report strip_tags vulnerability in versions before 2.3.13 and 3.0.10"
+
   def run_check
     if (version_between?('2.0.0', '2.3.12') or 
         version_between?('3.0.0', '3.0.9')) and uses_strip_tags?

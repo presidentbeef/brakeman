@@ -4,6 +4,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Checks for session key length and http_only settings"
+
   def initialize *args
     super
 

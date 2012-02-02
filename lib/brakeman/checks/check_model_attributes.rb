@@ -8,6 +8,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Reports models which do not use attr_restricted and warns on models that use attr_protected"
+
   def run_check
     return if mass_assign_disabled?
 

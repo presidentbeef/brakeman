@@ -10,6 +10,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckValidationRegex < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Report uses of validates_format_of with improper anchors"
+
   WITH = Sexp.new(:lit, :with)
 
   def run_check

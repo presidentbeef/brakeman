@@ -5,6 +5,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckFilterSkipping < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Checks for versions 3.0-3.0.9 which had a vulnerability in filters"
+
   def run_check
     if version_between?('3.0.0', '3.0.9') and uses_arbitrary_actions?
 

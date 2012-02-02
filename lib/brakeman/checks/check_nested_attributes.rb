@@ -5,6 +5,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckNestedAttributes < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Checks for nested attributes vulnerability in Rails 2.3.9 and 3.0.0"
+
   def run_check
     version = tracker.config[:rails_version]
 

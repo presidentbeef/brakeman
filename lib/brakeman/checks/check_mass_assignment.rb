@@ -7,6 +7,8 @@ require 'set'
 class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Finds instances of mass assignment"
+
   def run_check
     return if mass_assign_disabled?
 

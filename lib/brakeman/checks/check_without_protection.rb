@@ -7,6 +7,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Check for mass assignment using without_protection"
+
   def run_check
     if version_between? "0.0.0", "3.0.99"
       return

@@ -14,6 +14,8 @@ require 'set'
 class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Checks for unescaped output in views"
+
   #Model methods which are known to be harmless
   IGNORE_MODEL_METHODS = Set.new([:average, :count, :maximum, :minimum, :sum])
 

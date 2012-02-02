@@ -5,6 +5,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckEscapeFunction < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Checks for versions before 2.3.14 which have a vulnerable escape method"
+
   def run_check
     if version_between?('2.0.0', '2.3.13') and RUBY_VERSION < '1.9.0' 
 

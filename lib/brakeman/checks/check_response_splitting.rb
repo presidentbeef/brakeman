@@ -5,6 +5,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckResponseSplitting < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Report response splitting in Rails 2.3.0 - 2.3.13"
+
   def run_check
     if version_between?('2.3.0', '2.3.13')
 

@@ -4,6 +4,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckDefaultRoutes < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Checks for default routes"
+
   #Checks for :allow_all_actions globally and for individual routes
   #if it is not enabled globally.
   def run_check

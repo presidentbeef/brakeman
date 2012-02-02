@@ -5,6 +5,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckTranslateBug < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Report XSS vulnerability in translate helper"
+
   def run_check
     if (version_between?('2.3.0', '2.3.99') and tracker.config[:escape_html]) or
         version_between?('3.0.0', '3.0.10') or

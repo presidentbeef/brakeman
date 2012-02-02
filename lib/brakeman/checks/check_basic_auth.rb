@@ -7,6 +7,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckBasicAuth < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  @description = "Checks for the use of http_basic_authenticate_with"
+
   def run_check
     return if version_between? "0.0.0", "3.0.99"
 
