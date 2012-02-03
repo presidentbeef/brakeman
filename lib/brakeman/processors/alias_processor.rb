@@ -211,10 +211,13 @@ class Brakeman::AliasProcessor < SexpProcessor
   # x = 1
   def process_lasgn exp
     exp[2] = process exp[2] if sexp? exp[2]
+    return exp if exp[2].nil?
+
     local = Sexp.new(:lvar, exp[1]).line(exp.line || -2)
 
     if @inside_if and val = env[local]
-      if val != exp[2] #avoid setting to value it already is (e.g. "1 or 1")
+      #avoid setting to value it already is (e.g. "1 or 1")
+      if val != exp[2] and val[1] != exp[2] and val[2] != exp[2]
         env[local] = Sexp.new(:or, val, exp[2]).line(exp.line || -2)
       end
     else
