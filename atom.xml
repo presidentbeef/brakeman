@@ -4,7 +4,7 @@
   <title>Brakeman</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-01-30T11:51:17-08:00</updated>
+  <updated>2012-02-04T01:39:58-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -219,6 +219,163 @@
 &lt;h3&gt;Problems&lt;/h3&gt;
 
 &lt;p&gt;If you run into any problems, don't hesitate to send a tweet to &lt;a href=&quot;http://twitter.com/brakemanscanner&quot;&gt;@Brakemanscanner&lt;/a&gt; or &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;file an issue&lt;/a&gt; on GitHub!&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Brakeman 1.0 Released!</title>
+    <link href="http://brakemanscanner.org/blog/2011/12/08/brakeman-1-dot-0-released/"/>
+    <updated>2011-12-08T01:35:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2011/12/08/brakeman-1-dot-0-released</id>
+    <content type="html">&lt;p&gt;While the step up to 1.0 was essentially forced by major changes since 0.9.2, this is still an important release for Brakeman. Internally, Brakeman is no longer reliant on a global options variable, allowing it to be used as a library inside other applications. Also, all Brakeman modules, classes, and constants have been placed inside the Brakeman namespace.&lt;/p&gt;
+
+
+
+
+&lt;p&gt;Support for Rails 3 is continuing to improve, although it is probably a good idea to run Brakeman with the &lt;code&gt;-m&lt;/code&gt; option to see what routes it is seeing. If you receive a message that says &amp;#8220;Error while processing routes - assuming all public controller methods are actions,&amp;#8221; please consider opening an issue and (if possible) providing your &lt;code&gt;routes.rb&lt;/code&gt; file as evidence.&lt;/p&gt;
+
+
+
+
+&lt;p&gt;The performance of vulnerability checks that search for calls to specific methods (CheckExecute, CheckFileAccess, CheckSQL, etc.) has been drastically improved with the introduction of a call site index. If your scans were spending a lot of time running checks, you should see significant decrease in run time (although memory use may be slightly higher).&lt;/p&gt;
+
+
+
+
+&lt;p&gt;If you are looking for an introduction to Brakeman, there are some &lt;a href=&quot;http://brakemanscanner.org/docs/presentations/&quot;&gt;presentations available&lt;/a&gt; to watch or read.&lt;/p&gt;
+
+
+
+
+&lt;p&gt;As usual, please &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;report&lt;/a&gt; any issues! You can also send a tweet to &lt;a href=&quot;http://twitter.com/brakemanscanner&quot;&gt;@BrakemanScanner&lt;/a&gt; if you have any questions.&lt;/p&gt;
+
+
+
+
+&lt;p&gt;&lt;em&gt;Changes since 1.0rc1:&lt;/em&gt;&lt;/p&gt;
+
+
+
+
+&lt;ul&gt;
+&lt;li&gt;Better handling of assignments inside ifs&lt;/li&gt;
+&lt;li&gt;Check more expressions for SQL injection&lt;/li&gt;
+&lt;li&gt;Use latest ruby_parser for better 1.9 syntax support&lt;/li&gt;
+&lt;li&gt;Better behavior for Brakeman as a library&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+
+&lt;h3&gt;Assignments Inside &amp;#8216;if&amp;#8217; Branches&lt;/h3&gt;
+
+
+
+
+&lt;p&gt;Brakeman is now a little smarter about handling assignments inside &lt;code&gt;if&lt;/code&gt;.&lt;/p&gt;
+
+
+
+
+&lt;p&gt;For example:&lt;/p&gt;
+
+
+
+
+&lt;pre&gt;&lt;code&gt;if some_condition
+  x = params[:blah]
+else
+  x = &quot;no blah&quot;
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+
+
+
+&lt;p&gt;Previously, &lt;code&gt;x&lt;/code&gt; would end up with the last value encountered, with no regard for execution branches. In this release, Brakeman will now combine the branches (unfortunately, Brakeman still operates along a &amp;#8216;no branching&amp;#8217; policy) and &lt;code&gt;x&lt;/code&gt; will be given the value of &lt;code&gt;params[:blah] or &quot;no blah&quot;&lt;/code&gt;.&lt;/p&gt;
+
+
+
+
+&lt;p&gt;While not strictly semantically sound (and, trust me, Brakeman does many things that are not), it will still catch problems like&lt;/p&gt;
+
+
+
+
+&lt;pre&gt;&lt;code&gt;User.all(conditions =&amp;gt; &quot;blah = '#{x}'&quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+
+
+
+&lt;p&gt;Thanks to &lt;a href=&quot;http://osdir.com/ml/RubyonRails:Core/2011-11/msg00098.html&quot;&gt;this message&lt;/a&gt; on Rails Core for mentioning this problem.&lt;/p&gt;
+
+
+
+
+&lt;h3&gt;Use Latest ruby_parser&lt;/h3&gt;
+
+
+
+
+&lt;p&gt;A few releases ago, Brakeman included a slightly modified version of &lt;a href=&quot;https://github.com/seattlerb/ruby_parser&quot;&gt;ruby_parser&lt;/a&gt; to help with Ruby 1.9 syntax issues.&lt;/p&gt;
+
+
+
+
+&lt;p&gt;The very latest ruby_parser source has much better 1.9 support, but there has been no official release yet. So Brakeman comes with the latest code. This is necessary because Rails 3 will generate 1.9 syntax if you happen to run it with Ruby 1.9 when generating code.&lt;/p&gt;
+
+
+
+
+&lt;h3&gt;Brakeman as a Library&lt;/h3&gt;
+
+
+
+
+&lt;p&gt;While it is now possible to use Brakeman as a library (essentially just &lt;code&gt;Brakeman.run&lt;/code&gt;), it is not very well polished. This release improves it slightly from the release candidate.&lt;/p&gt;
+
+
+
+
+&lt;h3&gt;More SQL Injection&lt;/h3&gt;
+
+
+
+
+&lt;p&gt;&lt;code&gt;CheckSQL&lt;/code&gt; will now search most expressions inside a SQL call for user input and string interpolation.&lt;/p&gt;
+
+
+
+
+&lt;h3&gt;Changes Since 0.9.2&lt;/h3&gt;
+
+
+
+
+&lt;p&gt;As a summary, here are the changes since 0.9.2:&lt;/p&gt;
+
+
+
+
+&lt;ul&gt;
+&lt;li&gt;Brakeman can now be used as a library&lt;/li&gt;
+&lt;li&gt;Faster call search&lt;/li&gt;
+&lt;li&gt;Add option to return error code if warnings are found (tw-ngreen)&lt;/li&gt;
+&lt;li&gt;Allow truncated messages to be expanded in HTML&lt;/li&gt;
+&lt;li&gt;Keep expanded context in view in HTML output&lt;/li&gt;
+&lt;li&gt;Fix summary when using warning thresholds&lt;/li&gt;
+&lt;li&gt;Better support for Rails 3 routes&lt;/li&gt;
+&lt;li&gt;Reduce SQL injection duplicate warnings&lt;/li&gt;
+&lt;li&gt;Lower confidence on mass assignment with no user input&lt;/li&gt;
+&lt;li&gt;Ignore mass assignment using all literal arguments&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+
+&lt;p&gt;See the &lt;a href=&quot;http://brakemanscanner.org/blog/2011/12/05/brakeman-1-dot-0-release-candidate-available/&quot;&gt;earlier post&lt;/a&gt; for more details.&lt;/p&gt;
+
 </content>
   </entry>
   
