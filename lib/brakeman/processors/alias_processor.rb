@@ -403,12 +403,18 @@ class Brakeman::AliasProcessor < SexpProcessor
     else
       exps = exp[2..-1]
     end
-    
+
     was_inside = @inside_if
     @inside_if = !@ignore_ifs
 
     exps.each do |e|
-      process e if sexp? e
+      if sexp? e
+        if e.node_type == :block
+          process_default e #avoid creating new scope
+        else
+          process e
+        end
+      end
     end
 
     @inside_if = was_inside
