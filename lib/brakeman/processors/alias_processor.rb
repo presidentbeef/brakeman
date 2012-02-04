@@ -116,12 +116,24 @@ class Brakeman::AliasProcessor < SexpProcessor
         joined = join_arrays target, args[1] 
         joined.line(exp.line)
         exp = joined
-      elsif string? target and string? args[1]
-        joined = join_strings target, args[1]
-        joined.line(exp.line)
-        exp = joined
-      elsif number? target and number? args[1]
-        exp = Sexp.new(:lit, target[1] + args[1][1])
+      elsif string? args[1]
+        if string? target # "blah" + "blah"
+          joined = join_strings target, args[1]
+          joined.line(exp.line)
+          exp = joined
+        elsif call? target and target[2] == :+ and string? target[3][1]
+          joined = join_strings target[3][1], args[1]
+          joined.line(exp.line)
+          target[3][1] = joined
+          exp = target
+        end
+      elsif number? args[1]
+        if number? target
+          exp = Sexp.new(:lit, target[1] + args[1][1])
+        elsif target[2] == :+ and number? target[3][1]
+          target[3][1] = Sexp.new(:lit, target[3][1][1] + args[1][1])
+          exp = target
+        end
       end
     when :-
       if number? target and number? args[1]
