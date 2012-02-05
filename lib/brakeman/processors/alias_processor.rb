@@ -384,6 +384,10 @@ class Brakeman::AliasProcessor < SexpProcessor
     exp
   end
 
+  def process_svalue exp
+    exp[1]
+  end
+
   #Constant assignments like
   # BIG_CONSTANT = 234810983
   def process_cdecl exp
