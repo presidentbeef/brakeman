@@ -298,6 +298,7 @@ class Brakeman::AliasProcessor < SexpProcessor
     tar_variable = exp[1]
     target = exp[1] = process(exp[1])
     method = exp[2]
+
     if method == :[]=
       index = exp[3][1] = process(exp[3][1])
       value = exp[3][2] = process(exp[3][2])
