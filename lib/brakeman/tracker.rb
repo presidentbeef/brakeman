@@ -9,7 +9,7 @@ require 'brakeman/processors/lib/find_all_calls'
 class Brakeman::Tracker
   attr_accessor :controllers, :templates, :models, :errors,
     :checks, :initializers, :config, :routes, :processor, :libs,
-    :template_cache, :options
+    :template_cache, :options, :filter_cache
 
   #Place holder when there should be a model, but it is not
   #clear what model it will be.
@@ -42,6 +42,7 @@ class Brakeman::Tracker
     @checks = nil
     @processed = nil
     @template_cache = Set.new
+    @filter_cache = {}
     @call_index = nil
   end
 

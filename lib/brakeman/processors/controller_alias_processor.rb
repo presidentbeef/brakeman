@@ -84,18 +84,30 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #Basically, adds any instance variable assignments to the environment.
   #TODO: method arguments?
   def process_before_filter name 
-    method = find_method name, @current_class    
+    filter = find_method name, @current_class
 
-    if method.nil?
+    if filter.nil?
       Brakeman.debug "[Notice] Could not find filter #{name}"
       return
     end
 
-    processor = Brakeman::AliasProcessor.new @tracker
-    processor.process_safely(method[3])
+    method = filter[:method]
 
-    processor.only_ivars.all.each do |variable, value|
-      env[variable] = value
+    if ivars = @tracker.filter_cache[[filter[:controller], name]]
+      ivars.each do |variable, value|
+        env[variable] = value
+      end
+    else
+      processor = Brakeman::AliasProcessor.new @tracker
+      processor.process_safely(method[3])
+
+      ivars = processor.only_ivars.all
+
+      @tracker.filter_cache[[filter[:controller], name]] = ivars
+
+      ivars.each do |variable, value|
+        env[variable] = value
+      end
     end
   end
 
@@ -217,6 +229,10 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   end
 
   #Finds a method in the given class or a parent class
+  #
+  #Returns nil if the method could not be found.
+  #
+  #If found, returns hash table with controller name and method sexp.
   def find_method method_name, klass
     return nil if sexp? method_name
     method_name = method_name.to_sym
@@ -231,12 +247,14 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       if method.nil?
         controller[:includes].each do |included|
           method = find_method method_name, included
-          return method if method
+          if method
+            return { :controller => controller[:name], :method => method }
+          end
         end
 
         find_method method_name, controller[:parent]
       else
-        method
+        { :controller => controller[:name], :method => method }
       end
     else
       nil

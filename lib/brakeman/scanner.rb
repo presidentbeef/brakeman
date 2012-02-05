@@ -236,6 +236,9 @@ class Brakeman::Scanner
 
       @processor.process_controller_alias controller[:src]
     end
+
+    #No longer need these processed filter methods
+    tracker.filter_cache.clear
   end
 
   def process_controller path
