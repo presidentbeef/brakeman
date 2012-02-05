@@ -206,7 +206,9 @@ class Brakeman::OutputProcessor < Ruby2Ruby
       exp.clear
       "(Unresolved Model)"
     else
-      super exp
+      out = exp[0].to_s
+      exp.clear
+      out
     end
   end
 
