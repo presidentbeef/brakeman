@@ -60,6 +60,11 @@ p {
    background-color: white;
  }
 
+ table caption {
+   background-color: #FFE;
+   padding: 2px;
+ }
+
  table.context {
    margin-top: 5px;
    margin-bottom: 5px;

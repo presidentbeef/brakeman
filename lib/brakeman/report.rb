@@ -528,7 +528,8 @@ class Brakeman::Report
     else
       CGI.escapeHTML(message)
     end <<
-    "<table id='#{code_id}' class='context' style='display:none'>"
+    "<table id='#{code_id}' class='context' style='display:none'>" <<
+    "<caption>#{(warning.file || '').gsub(tracker.options[:app_path], "")}</caption>"
 
     unless context.empty?
       if warning.line - 1 == 1 or warning.line + 1 == 1
