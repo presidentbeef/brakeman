@@ -1,3 +1,13 @@
+# 1.3.0
+
+ * Add file paths to HTML report
+ * Add caching of filters
+ * Add --skip-files option
+ * Add support for attr_protected
+ * Descriptions of checks in -k output
+ * Improved processing of named scopes
+ * Table output option for rescan reports
+
 # 1.2.2
 
  * --no-progress works again
