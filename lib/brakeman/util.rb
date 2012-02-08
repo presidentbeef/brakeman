@@ -11,6 +11,8 @@ module Brakeman::Util
 
   REQUEST_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request, Sexp.new(:arglist)), :request_parameters, Sexp.new(:arglist))
 
+  REQUEST_ENV = Sexp.new(:call, Sexp.new(:call, nil, :request, Sexp.new(:arglist)), :env, Sexp.new(:arglist))
+
   PARAMETERS = Sexp.new(:call, nil, :params, Sexp.new(:arglist))
 
   COOKIES = Sexp.new(:call, nil, :cookies, Sexp.new(:arglist))
@@ -179,7 +181,10 @@ module Brakeman::Util
     end
 
     false
+  end
 
+  def request_env? exp
+    call? exp and (exp == REQUEST_ENV or exp[1] == REQUEST_ENV)
   end
 
   #Check if _exp_ is a Sexp.

@@ -86,6 +86,8 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
         message = "Unescaped parameter value"
       when :cookies
         message = "Unescaped cookie value"
+      when :request
+        message = "Unescaped request value"
       else
         message = "Unescaped user input value"
       end

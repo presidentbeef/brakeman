@@ -68,6 +68,8 @@ class Brakeman::BaseCheck < SexpProcessor
       @has_user_input = :params
     elsif cookies? exp[1]
       @has_user_input = :cookies
+    elsif request_env? exp[1]
+      @has_user_input = :request
     elsif sexp? exp[1] and model_name? exp[1][1]
       @has_user_input = :model
     end
@@ -209,6 +211,8 @@ class Brakeman::BaseCheck < SexpProcessor
         return :params, exp
       elsif cookies? exp[1]
         return :cookies, exp
+      elsif request_env? exp[1]
+        return :request, exp
       else
         false
       end
