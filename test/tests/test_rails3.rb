@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 18,
-      :warning => 21
+      :warning => 22
     }
   end
 

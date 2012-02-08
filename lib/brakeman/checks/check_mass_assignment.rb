@@ -30,7 +30,8 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
       :update_attributes, 
       :update_attributes!,
       :create,
-      :create!]
+      :create!,
+      :build]
 
     Brakeman.debug "Processing possible mass assignment calls"
     calls.each do |result|
