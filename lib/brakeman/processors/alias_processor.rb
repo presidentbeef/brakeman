@@ -89,7 +89,7 @@ class Brakeman::AliasProcessor < SexpProcessor
     end
 
     #Generic replace
-    if replacement = env[exp]
+    if replacement = env[exp] and not sexp_includes?(replacement, exp)
       set_line replacement.deep_clone, exp.line
     else
       exp
@@ -512,5 +512,21 @@ class Brakeman::AliasProcessor < SexpProcessor
     else
       exp
     end
+  end
+
+  def sexp_includes? exp, search_term
+    search_queue = [exp]
+
+    until search_queue.empty?
+      node = search_queue.shift
+
+      if node == search_term
+        return true
+      elsif sexp? node
+        search_queue.concat node
+      end
+    end
+
+    false
   end
 end
