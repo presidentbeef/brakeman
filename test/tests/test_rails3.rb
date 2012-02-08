@@ -454,4 +454,12 @@ class Rails3Tests < Test::Unit::TestCase
       :confidence => 1,
       :file => /Gemfile/
   end
+
+  def test_model_build
+    assert_warning :warning_type => "Mass Assignment",
+      :line => 73,
+      :message => /^Unprotected mass assignment near line 73: User.new.something.something/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
 end

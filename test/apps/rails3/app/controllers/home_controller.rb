@@ -68,6 +68,11 @@ class HomeController < ApplicationController
     RandomClass.load params[:file]
   end
 
+  def test_model_build
+    current_user = User.new
+    current_user.something.something.build(params[:awesome_user])
+  end
+
   private
 
   def filter_it
