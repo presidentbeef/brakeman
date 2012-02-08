@@ -11,13 +11,13 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 18,
+        :template => 19,
         :warning => 22 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 18,
+        :template => 19,
         :warning => 23 }
     end
   end
@@ -242,6 +242,15 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Unescaped parameter value/,
       :confidence => 0,
       :file => /index\.html\.erb/
+  end
+
+  def test_unescaped_request_env
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped request value/,
+      :confidence => 0,
+      :file => /test_env\.html\.erb/
   end
 
   def test_params_from_controller
