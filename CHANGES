@@ -4,8 +4,10 @@
  * Add caching of filters
  * Add --skip-files option
  * Add support for attr_protected
+ * Add detection of request.env as user input
  * Descriptions of checks in -k output
  * Improved processing of named scopes
+ * Better variable substitution
  * Table output option for rescan reports
 
 # 1.2.2
