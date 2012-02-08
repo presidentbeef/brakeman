@@ -7,6 +7,7 @@
  * Add detection of request.env as user input
  * Descriptions of checks in -k output
  * Improved processing of named scopes
+ * Check for mass assignment in ActiveRecord::Associations::AssociationCollection#build
  * Better variable substitution
  * Table output option for rescan reports
 
