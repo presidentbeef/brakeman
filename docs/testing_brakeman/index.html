@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Brakeman 0.8.3 Released</title>
+  <title>Brakeman: Testing Brakeman</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/blog/2011/10/25/brakeman-0-dot-8-3-released/"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/testing_brakeman/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -98,124 +98,120 @@
   <div id="main">
     <div id="content">
       <div>
-<article class="hentry">
+<article>
   
   <header>
-    
-      <h1 class="entry-title">Brakeman 0.8.3 Released</h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-10-25 10:00:00 -0700" pubdate  updated >Oct 25<span>th</span>, 2011</time>
-
-
-</p>
-    
+    <h1 class="entry-title">Testing Brakeman</h1>
   </header>
+  
+  <p>Tests for Brakeman are written using the standard library&#8217;s <a href="http://rubydoc.info/stdlib/test/1.8.7/Test/Unit">test/unit</a>.</p>
 
+<p>The main test file is in <code>test/test.rb</code>. It can be run using <code>ruby test/test.rb</code> (or from any directory).</p>
 
-<div class="entry-content"><p>Changes for 0.8.3:</p>
+<h3>Structure</h3>
+
+<p>Brakeman is tested by running it against full Rails applications and then checking the reported warnings.</p>
+
+<pre><code>test/test.rb #Main test runner
+test/apps/   #Apps to check against
+test/tests/  #Actual tests
+</code></pre>
+
+<p>There are currently three Rails applications:</p>
+
+<pre><code>test/apps/rails2    #Rails 2.3.11
+test/apps/rails3    #Rails 3.0.5
+test/apps/rails3.1  #Rails 3.1.0
+</code></pre>
+
+<p>There are corresponding sets of tests for each application:</p>
+
+<pre><code>test/tests/test_rails2.rb
+test/tests/test_rails3.rb
+test/tests/test_rails31.rb
+</code></pre>
+
+<h3>Test Setup</h3>
+
+<p>Each of the test files starts off like this:</p>
+
+<pre><code>Rails3 = BrakemanTester.run_scan "rails3", "Rails 3", :rails3 =&gt; true
+
+class Rails3Tests &lt; Test::Unit::TestCase
+  include BrakemanTester::FindWarning
+  include BrakemanTester::CheckExpected
+
+  def report
+    Rails3
+  end
+
+  def expected
+    @expected ||= {
+      :controller =&gt; 1,
+      :model =&gt; 5,
+      :template =&gt; 18,
+      :warning =&gt; 22
+    }
+  end
+</code></pre>
+
+<p>The first line runs the main test runner against a given application. The first argument is the directory of the application, assumed to be under <code>test/apps/</code>. The second argument is just a name for the application. After that, any options that would normally be given to <code>Brakeman.run</code> can be provided.</p>
+
+<p>The result of <code>BrakemanTester.run_scan</code> is a big hash of the warnings found during the scan. This is generated using <code>Brakeman::Report#to_test</code>.</p>
+
+<p>After running the scan, the code sets up the test suite. Two modules are included. <code>FindWarning</code> provides a search capability for finding warnings in the report. <code>CheckExpected</code> calls <code>expected</code> and checks the numbers there against the actual report.</p>
+
+<p>The <code>report</code> method should return the result of <code>BrakemanTester.run_scan</code>. This is used by <code>FindWarning</code> for accessing the report.</p>
+
+<h3>Testing a Warning</h3>
+
+<p>To test for the presence of a warning, use the <code>assert_warning</code> method. This method takes a hash of options describing the warning:</p>
+
+<pre><code>def test_eval_params
+  assert_warning :type =&gt; :warning,
+    :warning_type =&gt; "Dangerous Eval",
+    :line =&gt; 41,
+    :message =&gt; /^User input in eval near line 41: eval\(pa/,
+    :confidence =&gt; 0,
+    :file =&gt; /home_controller\.rb/
+end
+</code></pre>
+
+<p>Each key in the hash is a method on <code>Brakeman::Warning</code>, except <code>:type</code>. The value will be tested using <code>===</code> against the result of calling the method. This means regular expressions can be used to match against strings.</p>
+
+<p>It is best to be as specific as possible, because <code>assert_warning</code> expects <em>exactly</em> one warning to match.</p>
+
+<p>Options:</p>
 
 <ul>
-<li>Respect -w flag in .tabs format (<a href="https://github.com/tw-ngreen">tw-ngreen</a>)</li>
-<li>Escape HTML output of error messages</li>
-<li>Add &#8211;skip-libs option</li>
+<li><code>:type</code> - This determines which category of warnings to search (controller, model, template, or just &#8216;warning&#8217;)</li>
+<li><code>:warning_type</code> - This matches against the type of warning</li>
+<li><code>:line</code> - The line number reported in the warning</li>
+<li><code>:message</code> - The text of the warning message</li>
+<li><code>:confidence</code> - Confidence level (0 - high, 1 - medium, 3 - weak)</li>
+<li><code>:file</code> - File where warning was found</li>
 </ul>
 
 
-<p>Changes since 0.8.0:</p>
+<p>For the message matching, it is generally enough to just include the first part of the message, instead of trying for an exact match.</p>
 
-<ul>
-<li>Run checks in parallel threads by default</li>
-<li>Fix compatibility with ruby_parser 2.3.1</li>
-<li>Add option to assume all controller methods are actions</li>
-<li>Recover from errors when parsing routes</li>
-</ul>
+<p>For the file name, generally just the name of the file (without the path) is used, although it is matched against the full path.</p>
 
+<hr />
 
-<h3>Fix for .tabs Format</h3>
+<p><a href="/docs">More documentation</a></p>
 
-<p>Brakeman will now pay attention to the <code>-w</code> flag (setting minimum confidence levels) when using the <code>.tabs</code> format.</p>
+<p><a href="/docs/contributing/adding_tests">Adding tests</a></p>
 
-<h3>Escape Error Messages in HTML</h3>
-
-<p>Error message will now be escaped in the HTML output so they do not mess up the formatting.</p>
-
-<h3>&#8211;skip-libs Option</h3>
-
-<p>The <code>--skip-libs</code> option will cause Brakeman to not process the files in the <code>lib</code> directory. At the moment, the results from this directory are only used in a couple places, so it is unlikely that skipping them will cause any problems.</p>
-
-<h3>Parallel Checks</h3>
-
-<p>Checks are now run in separate threads by default. Thus far, there does not seem to be a big difference between using threads and the sequential approach. To turn off threads, use the <code>-n</code> option.</p>
-
-<h3>ruby_parser Compatibility</h3>
-
-<p>This is a stop-gap measure until <a href="https://github.com/seattlerb/ruby_parser">ruby_parser</a> supports Ruby 1.9, which is getting closer to reality.</p>
-
-<h3>Route Processing</h3>
-
-<p>Brakeman will no longer crash if there are problems parsing <code>routes.rb</code>. Instead, it will assume all public methods on controllers are actions. The <code>-a</code> option will also turn this behavior on.</p>
-
-<p>Rails 3.1 route parsing is still a work in progress, so this should at least allow analysis of 3.1 apps, even if it means slightly reduced accuracy.</p>
-</div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
-
-      
-
-
-
-
-<time datetime="2011-10-25 10:00:00 -0700" pubdate  updated >Oct 25<span>th</span>, 2011</time>
-
-
-
-      
-
-
-    </p>
-    
-      <div class="sharing">
+    <footer>
+      <p class="meta">
+        
+        
+      </p>
+    </footer>
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2011/10/25/brakeman-0-dot-8-3-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2011/10/25/brakeman-0-dot-8-3-released/" >Tweet</a>
-  
-  
-  <g:plusone size="medium"></g:plusone>
-  
-</div>
-
-    
-  </footer>
 </article>
-
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread"><div id="disqus_thread"></div>
-<script type="text/javascript">
-  var disqus_shortname = 'brakeman';
-  var disqus_identifier = 'http://brakemanscanner.org/blog/2011/10/25/brakeman-0-dot-8-3-released/';
-  var disqus_url = 'http://brakemanscanner.org/blog/2011/10/25/brakeman-0-dot-8-3-released/';
-  //var disqus_developer = 1;
-  (function() {
-    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-  </section>
 
 </div>
 

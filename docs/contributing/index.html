@@ -108,12 +108,6 @@
 
 <p>Suggestions are welcome, too!</p>
 
-<h3>Creating New Checks</h3>
-
-<p>Each check that Brakeman runs is a separate class contained in <code>lib/brakeman/checks/check_*.rb</code>. Some of these are very simple. For example, see the <a href="https://github.com/presidentbeef/brakeman/blob/master/lib/brakeman/checks/check_strip_tags.rb">StripTags</a> check.</p>
-
-<p>New checks can be added simply by writing a new check and placing it in that directory. For best results, subclass from <code>BaseCheck</code> and follow the naming convention of starting the class name with <code>Check</code>.</p>
-
 <h3>Testing on Different Platforms</h3>
 
 <p>Brakeman should work on most platforms without a problem. It is typically tested against MRI 1.8.7 and 1.9.3, so any problems outside those two should definitely be <a href="http://github.com/presidentbeef/brakeman/issues">reported</a>.</p>
@@ -126,9 +120,17 @@
 
 <p>If you have code that raises warnings when it shouldn&#8217;t, or does not raise warnings when it should, please consider reporting them with code which reproduces the problem.</p>
 
+<p>See <a href="/docs/contributing/adding_tests">here</a> for how to add tests to demonstrate these issues.</p>
+
+<h3>Creating New Checks</h3>
+
+<p>Each check that Brakeman runs is a separate class contained in <code>lib/brakeman/checks/check_*.rb</code>. Some of these are very simple. For example, see the <a href="https://github.com/presidentbeef/brakeman/blob/master/lib/brakeman/checks/check_strip_tags.rb">StripTags</a> check.</p>
+
+<p>New checks can be added simply by writing a new check and placing it in that directory. For best results, subclass from <code>BaseCheck</code> and follow the naming convention of starting the class name with <code>Check</code>.</p>
+
 <h3>Reporting Success</h3>
 
-<p>If you are happily using Brakeman, consider sending a tweet to <a href="http://twitter.com/#!/brakemanscanner">@BrakemanScanner</a>.</p>
+<p>If you are happily using Brakeman, consider sending a tweet to <a href="http://twitter.com/#!/brakeman">@Brakeman</a>.</p>
 
   
     <footer>
@@ -146,7 +148,7 @@
   
     <section>
   <p></p>
-  <p>Brakeman is a vulnerability scanner specifically designed for Ruby on Rails applications. It statically analyzes Rails application code to find security issues at any stage of development.</p>
+  <p>Brakeman is an open source vulnerability scanner specifically designed for Ruby on Rails applications. It statically analyzes Rails application code to find security issues at any stage of development.</p>
 </section>
 <section>
 <script type='text/javascript'>
