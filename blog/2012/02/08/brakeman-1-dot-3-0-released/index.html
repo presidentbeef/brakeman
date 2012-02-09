@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Video Documentation</title>
+  <title>Brakeman: Brakeman 1.3.0 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/video/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2012/02/08/brakeman-1-dot-3-0-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -98,33 +98,166 @@
   <div id="main">
     <div id="content">
       <div>
-<article>
+<article class="hentry">
   
   <header>
-    <h1 class="entry-title">Video Documentation</h1>
+    
+      <h1 class="entry-title">Brakeman 1.3.0 Released</h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-02-08 15:11:00 -0800" pubdate  updated >Feb 8<span>th</span>, 2012</time>
+
+
+</p>
+    
   </header>
-  
-  <ul>
-<li><a href="/docs/video/intro">Starting off with Brakeman</a></li>
-<li><a href="http://vimeo.com/35766582">Brakeman Tech Talk at Highgroove Studios</a></li>
-<li><a href="http://vimeo.com/32850101">OC Rails Presentation</a></li>
-<li><a href="http://vimeo.com/32696936">AppSec USA 2011 Presentation</a></li>
+
+
+<div class="entry-content"><p>Thanks to everyone who reported problems and suggestions this time around!</p>
+
+<p>This release includes some new features, better performance on large projects, and more detection criteria. Warnings reported may change after upgrading.</p>
+
+<p><em>Changes since 1.2.2:</em></p>
+
+<ul>
+<li>Add file paths to HTML report</li>
+<li>Add caching of filters</li>
+<li>Add <code>--skip-files</code> option</li>
+<li>Add support for <code>attr_protected</code></li>
+<li>Add detection of request.env as user input</li>
+<li>Descriptions of checks in <code>-k</code> output</li>
+<li>Improved processing of named scopes</li>
+<li>Check for mass assignment in <code>ActiveRecord::Associations::AssociationCollection#build</code></li>
+<li>Better variable substitution</li>
+<li>Table output option for rescan reports</li>
 </ul>
 
 
-<hr />
+<h3>File Paths in HTML Report</h3>
 
-<p><a href="/docs">More documentation</a></p>
+<p>In the HTML output, any warning which has context associated with it (visible when clicking on the warning message) will now include the file name at the top of the code snippet.</p>
 
+<h3>Filter Caching</h3>
+
+<p>Filters (using <code>before_filter</code>) are now only parsed once, instead of for everytime they are used. This has greatly improved performance when scanning some large projects.</p>
+
+<h3>Option to Skip Files</h3>
+
+<p>A list of files to skip can be provided with the <code>--skip-files</code> option. This will skip any initializers, libraries, controllers, models, or views that match the file names provided. The file names to skip are matched against the end of the absolute path. That is, <code>blah.rb</code> will skip <em>any</em> file with a name ending in <code>blah.rb</code>. This means it is not necessary to provide the full path to a file.</p>
+
+<h3>Support for Blacklisting Attributes</h3>
+
+<p>Previously, Brakeman ignored uses of <code>attr_protected</code>. Ideally, <code>attr_accessible</code> should always be used to whitelist attributes that can be set using mass assignment. This way, attributes can never be &#8220;accidentally&#8221; exposed. However, it can also be tedious for large models.</p>
+
+<p>With this release, Brakeman will downgrade mass assignment warnings to &#8220;weak&#8221; confidence if <code>attr_protected</code> is used, as well as suggesting that <code>attr_accessible</code> be used instead.</p>
+
+<p>The <code>--ignore-protected</code> option can be used to suppress any warnings for models that use <code>attr_protected</code>.</p>
+
+<h3>Request Environment is User Input</h3>
+
+<p><code>request.env</code> will now be treated as user input.</p>
+
+<h3>Check Descriptions</h3>
+
+<p>The <code>-k</code> option now includes descriptions of each check.</p>
+
+<h3>Named Scope Improvements</h3>
+
+<p>The 1.2.0 release added checking for SQL injection in named scopes, but it was not very accurate. This has been improved.</p>
+
+<h3>Better Variable Substitution</h3>
+
+<p>Variable substitution would sometimes &#8220;explode&#8221; if a set of code was processed for aliasing several times.</p>
+
+<p>For example,</p>
+
+<pre><code>x = clean(x)
+
+puts x
+</code></pre>
+
+<p>Might become</p>
+
+<pre><code>x = clean(x)
+
+puts clean(clean(clean(clean(x))))
+</code></pre>
+
+<p>This should now be prevented, so it would just become</p>
+
+<pre><code>x = clean(x)
+
+puts clean(x)
+</code></pre>
+
+<p>There may be subtle issues with this code (although I have not seen any yet), but it&#8217;s better than creating a bunch of useless substitutions.</p>
+
+<h3>Table Output for Rescan Reports</h3>
+
+<p><code>RescanReport#to_s(true)</code> will now output formatted tables, thanks to <a href="https://github.com/presidentbeef/brakeman/pull/33">Dave Worth</a>.</p>
+
+<h3>Issues?</h3>
+
+<p>As usual, please report any issues on <a href="https://github.com/presidentbeef/brakeman/issues">GitHub</a>, send a tweet to <a href="https://twitter.com/brakeman">@Brakeman</a>, or send an email to the <a href="http://librelist.com/browser/brakeman/">mailing list</a>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-    <footer>
-      <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
+
+      
+
+
+
+
+<time datetime="2012-02-08 15:11:00 -0800" pubdate  updated >Feb 8<span>th</span>, 2012</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
   
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2012/02/08/brakeman-1-dot-3-0-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2012/02/08/brakeman-1-dot-3-0-released/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread"><div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'brakeman';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2012/02/08/brakeman-1-dot-3-0-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2012/02/08/brakeman-1-dot-3-0-released/';
+  //var disqus_developer = 1;
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 

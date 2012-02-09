@@ -4,13 +4,107 @@
   <title>Brakeman</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-02-04T01:41:46-08:00</updated>
+  <updated>2012-02-08T16:11:05-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 1.3.0 Released</title>
+    <link href="http://brakemanscanner.org/blog/2012/02/08/brakeman-1-dot-3-0-released/"/>
+    <updated>2012-02-08T15:11:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2012/02/08/brakeman-1-dot-3-0-released</id>
+    <content type="html">&lt;p&gt;Thanks to everyone who reported problems and suggestions this time around!&lt;/p&gt;
+
+&lt;p&gt;This release includes some new features, better performance on large projects, and more detection criteria. Warnings reported may change after upgrading.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 1.2.2:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add file paths to HTML report&lt;/li&gt;
+&lt;li&gt;Add caching of filters&lt;/li&gt;
+&lt;li&gt;Add &lt;code&gt;--skip-files&lt;/code&gt; option&lt;/li&gt;
+&lt;li&gt;Add support for &lt;code&gt;attr_protected&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Add detection of request.env as user input&lt;/li&gt;
+&lt;li&gt;Descriptions of checks in &lt;code&gt;-k&lt;/code&gt; output&lt;/li&gt;
+&lt;li&gt;Improved processing of named scopes&lt;/li&gt;
+&lt;li&gt;Check for mass assignment in &lt;code&gt;ActiveRecord::Associations::AssociationCollection#build&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Better variable substitution&lt;/li&gt;
+&lt;li&gt;Table output option for rescan reports&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;File Paths in HTML Report&lt;/h3&gt;
+
+&lt;p&gt;In the HTML output, any warning which has context associated with it (visible when clicking on the warning message) will now include the file name at the top of the code snippet.&lt;/p&gt;
+
+&lt;h3&gt;Filter Caching&lt;/h3&gt;
+
+&lt;p&gt;Filters (using &lt;code&gt;before_filter&lt;/code&gt;) are now only parsed once, instead of for everytime they are used. This has greatly improved performance when scanning some large projects.&lt;/p&gt;
+
+&lt;h3&gt;Option to Skip Files&lt;/h3&gt;
+
+&lt;p&gt;A list of files to skip can be provided with the &lt;code&gt;--skip-files&lt;/code&gt; option. This will skip any initializers, libraries, controllers, models, or views that match the file names provided. The file names to skip are matched against the end of the absolute path. That is, &lt;code&gt;blah.rb&lt;/code&gt; will skip &lt;em&gt;any&lt;/em&gt; file with a name ending in &lt;code&gt;blah.rb&lt;/code&gt;. This means it is not necessary to provide the full path to a file.&lt;/p&gt;
+
+&lt;h3&gt;Support for Blacklisting Attributes&lt;/h3&gt;
+
+&lt;p&gt;Previously, Brakeman ignored uses of &lt;code&gt;attr_protected&lt;/code&gt;. Ideally, &lt;code&gt;attr_accessible&lt;/code&gt; should always be used to whitelist attributes that can be set using mass assignment. This way, attributes can never be &quot;accidentally&quot; exposed. However, it can also be tedious for large models.&lt;/p&gt;
+
+&lt;p&gt;With this release, Brakeman will downgrade mass assignment warnings to &quot;weak&quot; confidence if &lt;code&gt;attr_protected&lt;/code&gt; is used, as well as suggesting that &lt;code&gt;attr_accessible&lt;/code&gt; be used instead.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;--ignore-protected&lt;/code&gt; option can be used to suppress any warnings for models that use &lt;code&gt;attr_protected&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Request Environment is User Input&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;request.env&lt;/code&gt; will now be treated as user input.&lt;/p&gt;
+
+&lt;h3&gt;Check Descriptions&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code&gt;-k&lt;/code&gt; option now includes descriptions of each check.&lt;/p&gt;
+
+&lt;h3&gt;Named Scope Improvements&lt;/h3&gt;
+
+&lt;p&gt;The 1.2.0 release added checking for SQL injection in named scopes, but it was not very accurate. This has been improved.&lt;/p&gt;
+
+&lt;h3&gt;Better Variable Substitution&lt;/h3&gt;
+
+&lt;p&gt;Variable substitution would sometimes &quot;explode&quot; if a set of code was processed for aliasing several times.&lt;/p&gt;
+
+&lt;p&gt;For example,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;x = clean(x)
+
+puts x
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Might become&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;x = clean(x)
+
+puts clean(clean(clean(clean(x))))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This should now be prevented, so it would just become&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;x = clean(x)
+
+puts clean(x)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There may be subtle issues with this code (although I have not seen any yet), but it's better than creating a bunch of useless substitutions.&lt;/p&gt;
+
+&lt;h3&gt;Table Output for Rescan Reports&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;RescanReport#to_s(true)&lt;/code&gt; will now output formatted tables, thanks to &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/33&quot;&gt;Dave Worth&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Issues?&lt;/h3&gt;
+
+&lt;p&gt;As usual, please report any issues on &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;GitHub&lt;/a&gt;, send a tweet to &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@Brakeman&lt;/a&gt;, or send an email to the &lt;a href=&quot;http://librelist.com/browser/brakeman/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 1.2.2 Released</title>
