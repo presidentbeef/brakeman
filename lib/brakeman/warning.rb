@@ -147,4 +147,10 @@ class Brakeman::Warning
       :confidence => TEXT_CONFIDENCE[self.confidence]
     }
   end
+
+  def to_json
+    require 'json'
+
+    JSON.dump self.to_hash
+  end
 end
