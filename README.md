@@ -93,6 +93,14 @@ By default, Brakeman will return 0 as an exit code unless something went very wr
 
     brakeman -z
 
+To skip certain files that Brakeman may have trouble parsing, use:
+
+    brakeman --skip-files file1,file2,etc
+
+Brakeman will raise warnings on models that use `attr_protected`. To suppress these warnings:
+
+    brakeman --ignore-protected
+
 # Warning information
 
 See WARNING_TYPES for more information on the warnings reported by this tool.
