@@ -122,4 +122,29 @@ class Brakeman::Warning
 
    output
   end
+
+  def to_hash
+    case @warning_set
+    when :template
+      location = { :type => :template, :template => self.view_name }
+    when :model
+      location = { :type => :model, :model => self.model }
+    when :controller
+      location = { :type => :controller, :controller => self.controller }
+    when :warning
+      if self.class
+        location = { :type => :method, :class => self.class, :method => self.method }
+      else
+        location = nil
+      end
+    end
+
+    { :warning_type => self.warning_type,
+      :message => self.message,
+      :file => self.file,
+      :code => (@code && self.format_code),
+      :location => location,
+      :confidence => TEXT_CONFIDENCE[self.confidence]
+    }
+  end
 end
