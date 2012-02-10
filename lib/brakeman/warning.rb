@@ -51,7 +51,7 @@ class Brakeman::Warning
   end
 
   def hash
-    self.format_message.hash
+    self.to_s.hash
   end
 
   def eql? other_warning
