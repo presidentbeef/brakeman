@@ -618,4 +618,10 @@ class Brakeman::Report
       
     report
   end
+
+  def to_json
+    require 'json'
+
+    @checks.all_warnings.map { |w| w.to_hash }.to_json
+  end
 end
