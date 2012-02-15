@@ -71,6 +71,8 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   end
 
   def check_for_immediate_xss exp
+    return if duplicate? exp
+
     if exp[0] == :output
       out = exp[1]
     elsif exp[0] == :escaped_output and raw_call? exp
@@ -79,7 +81,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
     type, match = has_immediate_user_input? out
 
-    if type and not duplicate? exp
+    if type
       add_result exp
       case type
       when :params
@@ -102,7 +104,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(out)
       method = match[2]
 
-      unless duplicate? out or IGNORE_MODEL_METHODS.include? method
+      unless IGNORE_MODEL_METHODS.include? method
         add_result out
 
         if MODEL_METHODS.include? method or method.to_s =~ /^find_by/

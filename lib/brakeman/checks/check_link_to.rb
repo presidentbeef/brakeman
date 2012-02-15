@@ -34,6 +34,8 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
   end
 
   def process_result result
+    return if duplicate? result
+
     #Have to make a copy of this, otherwise it will be changed to
     #an ignored method call by the code above.
     call = result[:call] = result[:call].dup
@@ -58,19 +60,15 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
         message = "Unescaped user input value in link_to"
       end
 
-      unless duplicate? result
-        add_result result
-
-        warn :result => result,
-          :warning_type => "Cross Site Scripting", 
-          :message => message,
-          :confidence => CONFIDENCE[:high]
-      end
-
+      add_result result
+      warn :result => result,
+        :warning_type => "Cross Site Scripting", 
+        :message => message,
+        :confidence => CONFIDENCE[:high]
     elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(first_arg)
       method = match[2]
 
-      unless duplicate? result or IGNORE_MODEL_METHODS.include? method
+      unless IGNORE_MODEL_METHODS.include? method
         add_result result
 
         if MODEL_METHODS.include? method or method.to_s =~ /^find_by/
@@ -92,7 +90,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
         message = "Unescaped parameter value in link_to"
       end
 
-      if message and not duplicate? result
+      if message
         add_result result
 
         warn :result => result, 
