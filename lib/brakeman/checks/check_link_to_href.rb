@@ -1,0 +1,79 @@
+require 'brakeman/checks/check_cross_site_scripting'
+
+#Checks for calls to link_to which pass in potentially hazardous data
+#to the second argument.  While this argument must be html_safe to not break 
+#the html, it must also be url safe as determined by calling a 
+#:url_safe_method.  This prevents attacks such as javascript:evil() or 
+#data:<encoded XSS> which is html_safe, but not safe as an href
+#Props to Nick Green for the idea.
+class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
+  Brakeman::Checks.add self
+                        
+  @description = "Checks to see if values used for hrefs are sanitized using a :url_safe_method to protect against javascript:/data: XSS"
+
+  def run_check
+    @ignore_methods = IGNORE_METHODS.merge(tracker.options[:url_safe_methods] || []).reject{|item| [:h, :escapeHTML, :escape_once].include? item}
+
+    @models = tracker.models.keys
+    @inspect_arguments = tracker.options[:check_arguments]
+
+    methods = tracker.find_call :target => false, :method => :link_to 
+    methods.each do |call|
+      process_result call
+    end
+  end
+
+  def process_result result
+    #Have to make a copy of this, otherwise it will be changed to
+    #an ignored method call by the code above.
+    call = result[:call] = result[:call].dup
+    @matched = false
+    url_arg = process call[3][2]
+    type, match = has_immediate_user_input? url_arg
+
+    if type
+      case type
+      when :params
+        message = "Unsafe parameter value in link_to href"
+      when :cookies
+        message = "Unsafe cookie value in link_to href"
+      else
+        message = "Unsafe user input value in link_to href"
+      end
+
+      unless duplicate? result
+        add_result result
+        warn :result => result,
+          :warning_type => "Cross Site Scripting", 
+          :message => message,
+          :confidence => CONFIDENCE[:high]
+      end
+    elsif has_immediate_model? url_arg
+
+      # Decided NOT warn on models.  polymorphic_path is called it a model is 
+      # passed to link_to (which passes it to url_for)
+
+    elsif hash? url_arg
+
+      # url_for uses the key/values pretty carefully and I don't see a risk.
+      # IF you have default routes AND you accept user input for :controller
+      # and :only_path, then MAYBE you could trigger a javascript:/data: 
+      # attack. 
+
+    elsif @matched
+      if @matched == :model and not tracker.options[:ignore_model_output]
+        message = "Unsafe model attribute in link_to href"
+      elsif @matched == :params
+        message = "Unsafe parameter value in link_to href"
+      end
+
+      if message and not duplicate? result
+        add_result result
+        warn :result => result, 
+          :warning_type => "Cross Site Scripting", 
+          :message => message,
+          :confidence => CONFIDENCE[:med]
+      end
+    end
+  end
+end

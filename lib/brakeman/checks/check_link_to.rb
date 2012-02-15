@@ -6,19 +6,20 @@ require 'brakeman/checks/check_cross_site_scripting'
 #See https://rails.lighthouseapp.com/projects/8994/tickets/3518-link_to-doesnt-escape-its-input
 class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
   Brakeman::Checks.add self
+  IGNORE_METHODS = Set.new([:button_to, :check_box, :escapeHTML, :escape_once,
+                           :field_field, :fields_for, :h, :hidden_field,
+                           :hidden_field, :hidden_field_tag, :image_tag, :label,
+                           :mail_to, :radio_button, :select,
+                           :submit_tag, :text_area, :text_field,
+                           :text_field_tag, :url_encode, :url_for,
+                           :will_paginate] )
 
   @description = "Checks for XSS in link_to in versions before 3.0"
 
   def run_check
     return unless version_between?("2.0.0", "2.9.9") and not tracker.config[:escape_html]
 
-    @ignore_methods = Set.new([:button_to, :check_box, :escapeHTML, :escape_once,
-                           :field_field, :fields_for, :h, :hidden_field,
-                           :hidden_field, :hidden_field_tag, :image_tag, :label,
-                           :mail_to, :radio_button, :select,
-                           :submit_tag, :text_area, :text_field,
-                           :text_field_tag, :url_encode, :url_for,
-                           :will_paginate] ).merge tracker.options[:safe_methods]
+    @ignore_methods = IGNORE_METHODS.merge tracker.options[:safe_methods]
 
     @known_dangerous = []
     #Ideally, I think this should also check to see if people are setting
