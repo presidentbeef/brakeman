@@ -84,6 +84,11 @@ module Brakeman::Options
           options[:safe_methods].merge methods.map {|e| e.to_sym }
         end
 
+        opts.on "--url-safe-methods method1,method2,etc", Array, "Do not warn of XSS if the link_to href parameter is wrapped in a safe method" do |methods|
+          options[:url_safe_methods] ||= Set.new
+          options[:url_safe_methods].merge methods.map {|e| e.to_sym }
+        end        
+
         opts.on "--skip-files file1,file2,etc", Array, "Skip processing of these files" do |files|
           options[:skip_files] ||= Set.new
           options[:skip_files].merge files.map {|f| f.to_sym }

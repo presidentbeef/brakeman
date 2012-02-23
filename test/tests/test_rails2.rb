@@ -11,13 +11,13 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 19,
+        :template => 22,
         :warning => 22 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 19,
+        :template => 22,
         :warning => 23 }
     end
   end
@@ -307,6 +307,37 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /test_params\.html\.erb/
   end
 
+  def test_encoded_href_parameter_in_link_to
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 12,
+      :message => /^Unsafe parameter value in link_to href/,
+      :confidence => 0,
+      :file => /test_params\.html\.erb/
+  end  
+
+  def test_href_parameter_in_link_to
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 14,
+      :message => /^Unsafe parameter value in link_to href/,
+      :confidence => 0,
+      :file => /test_params\.html\.erb/
+
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 16,
+      :message => /^Unsafe parameter value in link_to href/,
+      :confidence => 1,
+      :file => /test_params\.html\.erb/      
+
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 18,
+      :message => /^Unsafe parameter value in link_to href/,
+      :confidence => 1,
+      :file => /test_params\.html\.erb/            
+  end
 
   def test_filter
     assert_warning :type => :template,
