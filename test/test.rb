@@ -12,7 +12,8 @@ module BrakemanTester
     #Run scan on app at the given path
     def run_scan path, name = nil, opts = {}
       opts.merge! :app_path => "#{TEST_PATH}/apps/#{path}",
-        :quiet => false
+        :quiet => false,
+        :url_safe_methods => [:ensure_valid_proto!]
 
       announce "Processing #{name} application..."
 
