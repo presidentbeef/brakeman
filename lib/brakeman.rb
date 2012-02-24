@@ -262,10 +262,6 @@ module Brakeman
       puts tracker.report.send(options[:output_format])
     end
 
-    if options[:exit_on_warn] and not tracker.checks.all_warnings.empty?
-      return false
-    end
-
     tracker
   end
 
