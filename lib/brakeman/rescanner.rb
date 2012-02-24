@@ -256,30 +256,34 @@ class Brakeman::RescanReport
   #Output total, fixed, and new warnings
   def to_s(verbose = false)
     if !verbose
-    <<-OUTPUT
+      <<-OUTPUT
 Total warnings: #{all_warnings.length}
 Fixed warnings: #{fixed_warnings.length}
 New warnings: #{new_warnings.length}
-    OUTPUT
+      OUTPUT
     else
-      existing_warnings = all_warnings - new_warnings
+      #Eventually move this to different method, or make default to_s
+      out = ""
 
-      "".tap do |out|
-        {:fixed => fixed_warnings, :new => new_warnings, :existing => existing_warnings}.each do |warning_type, warnings|
-          if warnings.length > 0
-            out << "#{warning_type.to_s.titleize} warnings: #{warnings.length}\n"
-            table = Ruport::Data::Table(["Confidence", "Class", "Method", "Warning Type", "Message"])
-            warnings.sort_by{|w| w.confidence}.each do |warning|
-              w = warning.to_row
-              w["Confidence"] = Brakeman::Report::TEXT_CONFIDENCE[w["Confidence"]] if w["Confidence"].is_a?(Numeric)
-              table << warning.to_row
-            end
-            out << table.to_s
+      {:fixed => fixed_warnings, :new => new_warnings, :existing => existing_warnings}.each do |warning_type, warnings|
+        if warnings.length > 0
+          out << "#{warning_type.to_s.titleize} warnings: #{warnings.length}\n"
+
+          table = Ruport::Data::Table(["Confidence", "Class", "Method", "Warning Type", "Message"])
+
+          warnings.sort_by { |w| w.confidence}.each do |warning|
+            w = warning.to_row
+
+            w["Confidence"] = Brakeman::Report::TEXT_CONFIDENCE[w["Confidence"]]
+
+            table << w
           end
 
+          out << table.to_s
         end
       end
 
+      out
     end
   end
 end
