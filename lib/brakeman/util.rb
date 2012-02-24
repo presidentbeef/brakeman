@@ -192,6 +192,11 @@ module Brakeman::Util
     exp.is_a? Sexp
   end
 
+  #Check if _exp_ is a Sexp and the node type matches one of the given types.
+  def node_type? exp, *types
+    exp.is_a? Sexp and types.include? exp.node_type
+  end
+
   #Return file name related to given warning. Uses +warning.file+ if it exists
   def file_for warning, tracker = nil
     if tracker.nil?
