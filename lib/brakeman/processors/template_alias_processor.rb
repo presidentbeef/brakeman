@@ -40,7 +40,7 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
 
     #Check for e.g. Model.find.each do ... end
     if method == :each and args and block and model = get_model_target(target)
-      if sexp? args and args.node_type == :lasgn
+      if node_type? args, :lasgn
         if model == target[1]
           env[Sexp.new(:lvar, args[1])] = Sexp.new(:call, model, :new, Sexp.new(:arglist))
         else
@@ -50,7 +50,7 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
         process block if sexp? block
       end
     elsif FORM_METHODS.include? method
-      if sexp? args and args.node_type == :lasgn
+      if node_type? args, :lasgn
         env[Sexp.new(:lvar, args[1])] = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new, Sexp.new(:arglist)) 
 
         process block if sexp? block

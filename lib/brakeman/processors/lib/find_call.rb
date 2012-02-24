@@ -107,7 +107,7 @@ class Brakeman::FindCall < Brakeman::BaseProcessor
     #  User.find(:first, :conditions => "user = '#{params['user']}').name
     #
     #A search for User.find will not match this unless @in_depth is true.
-    if @in_depth and sexp? exp[1] and exp[1][0] == :call
+    if @in_depth and node_type? exp[1], :call
       process exp[1]
     end
 

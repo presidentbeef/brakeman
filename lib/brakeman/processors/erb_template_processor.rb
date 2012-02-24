@@ -68,7 +68,7 @@ class Brakeman::ErbTemplateProcessor < Brakeman::TemplateProcessor
         res = process e
         if res.empty? or res == ignore
           nil
-        elsif sexp? res and res.node_type == :lvar and res[1] == :_erbout
+        elsif node_type?(res, :lvar) and res[1] == :_erbout
           nil
 
         else

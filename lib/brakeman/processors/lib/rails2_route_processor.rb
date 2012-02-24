@@ -89,7 +89,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
       process_resource_options exp[-1]
     else
       exp.each do |argument|
-        if sexp? argument and argument.node_type == :lit
+        if node_type? argument, :lit
           self.current_controller = exp[0][1]
           add_resources_routes
           process_resource_options exp[-1]
@@ -165,7 +165,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
       process_resource_options exp[-1]
     else
       exp.each do |argument|
-        if sexp? argument and argument.node_type == :lit
+        if node_type? argument, :lit
           self.current_controller = pluralize(exp[0][1].to_s)
           add_resource_routes
           process_resource_options exp[-1]

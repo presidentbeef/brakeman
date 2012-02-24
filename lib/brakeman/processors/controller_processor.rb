@@ -85,7 +85,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
             else
               Brakeman.debug "[Notice] Layout not found: #{name}"
             end
-          elsif sexp? args[-1] and (args[-1][0] == :nil or args[-1][0] == :false)
+          elsif node_type? args[-1], :nil, :false
             #layout :false or layout nil
             @controller[:layout] = false
           end
@@ -181,7 +181,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
       block_variable = :temp
     end
 
-    if sexp? exp[3] and exp[3].node_type == :block
+    if node_type? exp[3], :block
       block_inner = exp[3][1..-1]
     else
       block_inner = [exp[3]]

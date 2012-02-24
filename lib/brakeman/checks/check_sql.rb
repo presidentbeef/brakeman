@@ -181,7 +181,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     arg.each do |exp|
       #For now, don't warn on interpolation of Model.table_name
       #but check for other 'safe' things in the future
-      if sexp? exp and (exp.node_type == :string_eval or exp.node_type == :evstr)
+      if node_type? exp, :string_eval, :evstr
         if call? exp[1] and (model_name?(exp[1][1]) or exp[1][1].nil?) and exp[1][2] == :table_name
           return false
         end

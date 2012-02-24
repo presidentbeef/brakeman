@@ -35,7 +35,11 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     call = result[:call] = result[:call].dup
     @matched = false
     url_arg = process call[3][2]
-    return if sexp?(url_arg) && url_arg.node_type == :string_interp && !url_arg[1].chomp.empty?
+
+    #Ignore situations where the href is an interpolated string
+    #with something before the user input
+    return if node_type?(url_arg, :string_interp) && !url_arg[1].chomp.empty?
+
     type, match = has_immediate_user_input? url_arg
 
     if type

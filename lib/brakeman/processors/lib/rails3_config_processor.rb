@@ -29,7 +29,7 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
 
   #Look for MyApp::Application.configure do ... end
   def process_iter exp
-    if sexp?(exp[1][1]) and exp[1][1][0] == :colon2 and exp[1][1][2] == :Application
+    if node_type?(exp[1][1], :colon2) and exp[1][1][2] == :Application
       @inside_config = true
       process exp[-1] if sexp? exp[-1]
       @inside_config = false
@@ -100,7 +100,7 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
   #
   #  [:action_controller, :session_store]
   def get_rails_config exp
-    if sexp? exp and exp.node_type == :attrasgn
+    if node_type? exp, :attrasgn
       attribute = exp[2].to_s[0..-2].to_sym
       get_rails_config(exp[1]) << attribute
     elsif call? exp
