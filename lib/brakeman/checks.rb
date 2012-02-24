@@ -20,7 +20,13 @@ class Brakeman::Checks
   end
 
   #No need to use this directly.
-  def initialize
+  def initialize options = { }
+    if options[:min_confidence]
+      @min_confidence = options[:min_confidence]
+    else
+      @min_confidence = Brakeman.get_defaults[:min_confidence]
+    end
+
     @warnings = []
     @template_warnings = []
     @model_warnings = []
@@ -31,18 +37,22 @@ class Brakeman::Checks
   #Add Warning to list of warnings to report.
   #Warnings are split into four different arrays
   #for template, controller, model, and generic warnings.
+  #
+  #Will not add warnings which are below the minimum confidence level.
   def add_warning warning
-    case warning.warning_set
-    when :template
-      @template_warnings << warning
-    when :warning
-      @warnings << warning
-    when :controller
-      @controller_warnings << warning
-    when :model
-      @model_warnings << warning
-    else
-      raise "Unknown warning: #{warning.warning_set}"
+    unless warning.confidence > @min_confidence
+      case warning.warning_set
+      when :template
+        @template_warnings << warning
+      when :warning
+        @warnings << warning
+      when :controller
+        @controller_warnings << warning
+      when :model
+        @model_warnings << warning
+      else
+        raise "Unknown warning: #{warning.warning_set}"
+      end
     end
   end
 
@@ -80,7 +90,7 @@ class Brakeman::Checks
 
   #Run checks sequentially
   def self.run_checks_sequential tracker
-    check_runner = self.new
+    check_runner = self.new :min_confidence => tracker.options[:min_confidence]
 
     @checks.each do |c|
       check_name = get_check_name c
@@ -111,7 +121,7 @@ class Brakeman::Checks
   def self.run_checks_parallel tracker
     threads = []
     
-    check_runner = self.new
+    check_runner = self.new :min_confidence => tracker.options[:min_confidence]
 
     @checks.each do |c|
       check_name = get_check_name c

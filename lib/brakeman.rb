@@ -262,13 +262,8 @@ module Brakeman
       puts tracker.report.send(options[:output_format])
     end
 
-    if options[:exit_on_warn]
-      tracker.checks.all_warnings.each do |warning|
-        next if warning.confidence > options[:min_confidence]
-        return false
-      end
-      
-      return true
+    if options[:exit_on_warn] and not tracker.checks.all_warnings.empty?
+      return false
     end
 
     tracker

@@ -102,7 +102,6 @@ class Brakeman::Report
   def generate_warnings html = false
     table = Ruport::Data::Table(["Confidence", "Class", "Method", "Warning Type", "Message"])
     checks.warnings.each do |warning|
-      next if warning.confidence > tracker.options[:min_confidence]
       w = warning.to_row
 
       if html
@@ -132,7 +131,6 @@ class Brakeman::Report
     unless checks.template_warnings.empty?
       table = Ruport::Data::Table(["Confidence", "Template", "Warning Type", "Message"])
       checks.template_warnings.each do |warning|
-        next if warning.confidence > tracker.options[:min_confidence]
         w = warning.to_row :template
 
         if html
@@ -163,7 +161,6 @@ class Brakeman::Report
     unless checks.model_warnings.empty?
       table = Ruport::Data::Table(["Confidence", "Model", "Warning Type", "Message"])
       checks.model_warnings.each do |warning|
-        next if warning.confidence > tracker.options[:min_confidence]
         w = warning.to_row :model
 
         if html
@@ -194,7 +191,6 @@ class Brakeman::Report
     unless checks.controller_warnings.empty?
       table = Ruport::Data::Table(["Confidence", "Controller", "Warning Type", "Message"])
       checks.controller_warnings.each do |warning|
-        next if warning.confidence > tracker.options[:min_confidence]
         w = warning.to_row :controller
 
         if html
@@ -483,13 +479,10 @@ class Brakeman::Report
         checks.template_warnings].each do |warnings|
 
       warnings.each do |warning|
-        unless warning.confidence > tracker.options[:min_confidence]
+        summary[warning.warning_type.to_s] += 1
 
-          summary[warning.warning_type.to_s] += 1
-
-          if warning.confidence == 0
-            high_confidence_warnings += 1
-          end
+        if warning.confidence == 0
+          high_confidence_warnings += 1
         end
       end
     end
@@ -586,7 +579,6 @@ class Brakeman::Report
       [:model_warnings, "Model"], [:template_warnings, "Template"]].map do |meth, category|
 
       checks.send(meth).map do |w|
-        next if w.confidence > tracker.options[:min_confidence]
         line = w.line || 0
         w.warning_type.gsub!(/[^\w\s]/, ' ')
         "#{file_for w}\t#{line}\t#{w.warning_type}\t#{category}\t#{w.format_message}\t#{TEXT_CONFIDENCE[w.confidence]}"

@@ -270,7 +270,6 @@ New warnings: #{new_warnings.length}
             out << "#{warning_type.to_s.titleize} warnings: #{warnings.length}\n"
             table = Ruport::Data::Table(["Confidence", "Class", "Method", "Warning Type", "Message"])
             warnings.sort_by{|w| w.confidence}.each do |warning|
-              next if warning.confidence > @tracker.options[:min_confidence]
               w = warning.to_row
               w["Confidence"] = Brakeman::Report::TEXT_CONFIDENCE[w["Confidence"]] if w["Confidence"].is_a?(Numeric)
               table << warning.to_row
