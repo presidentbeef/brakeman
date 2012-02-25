@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Contact</title>
+  <title>Brakeman: Brakeman 1.4.0 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/contact/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2012/02/25/brakeman-1-dot-4-0-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -98,37 +98,116 @@
   <div id="main">
     <div id="content">
       <div>
-<article>
+<article class="hentry">
   
   <header>
-    <h1 class="entry-title">Contact</h1>
-  </header>
-  
-  <h3>GitHub Issues</h3>
-
-<p>For any issues, bugs, or problems, please consider filing an <a href="https://github.com/presidentbeef/brakeman/issues">issue</a> on GitHub.</p>
-
-<h3>Mailing List</h3>
-
-<p>For questions, comments, suggestions, or general discussion, there is a mailing list available via librelist.</p>
-
-<p>To subscribe, send any email to <a href='&#109;ailto&#58;b&#114;%&#54;1k&#37;65m&#37;&#54;1n&#64;&#37;6Ci&#98;%&#55;2&#101;l%&#54;&#57;st&#46;com'>brakeman&#64;libr&#101;&#108;ist&#46;com</a>. An email requesting confirmation will be sent in response.</p>
-
-<p>Archives are available for browsing on <a href="http://www.mail-archive.com/brakeman@librelist.com/maillist.html">The Mail Archive</a> or <a href="http://librelist.com/browser/brakeman/">librelist.com</a>.</p>
-
-<h3>Twitter</h3>
-
-<p>Follow Brakeman on Twitter <a href="http://twitter.com/brakeman">@Brakeman</a> for news and announcements.</p>
-
-  
-    <footer>
+    
+      <h1 class="entry-title">Brakeman 1.4.0 Released</h1>
+    
+    
       <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+
+
+
+<time datetime="2012-02-25 09:57:00 -0800" pubdate  updated >Feb 25<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This is not a big release, but it does add a new check. Also, processing for ERB templates with the <code>rails_xss</code> plugin has changed, so there is the possibility that line numbers for reported warnings will shift.</p>
+
+<p><em>Changes since 1.3.0:</em></p>
+
+<ul>
+<li>Add check for user input in link_to href parameter</li>
+<li>Match ERB processing to rails_xss plugin when plugin used</li>
+<li>Add Brakeman::Report#to_json, Brakeman::Warning#to_json</li>
+<li>Warnings below minimum confidence are dropped completely</li>
+<li>Brakeman.run will now always return a Tracker</li>
+</ul>
+
+
+<h3>New Check for link_to</h3>
+
+<p><a href="https://github.com/oreoshake">Neil Matatall</a> has contributed a new check for the href parameter in <code>link_to</code>. Even if HTML escaped, some values can be dangerous, so this check will warn for user input in that parameter. See <a href="https://github.com/presidentbeef/brakeman/pull/45">here</a> for more details.</p>
+
+<p>The <code>--url-safe-methods</code> option can be used to specify escaping methods which are safe for urls.</p>
+
+<h3>ERB and rails_xss</h3>
+
+<p>The <code>rails_xss</code> plugin has some fixes for how Erbuis handles certain input. Brakeman now matches those changes, which fixes some parsing errors.</p>
+
+<h3>Internal Changes</h3>
+
+<p>There have been some changes which only impact those working with Brakeman as a library.</p>
+
+<p>First, there is now json output for reports. This actually should be an output format option, but I did not realize it until writing this post. The next release will include this, though!</p>
+
+<p>The way Brakeman handles the <code>--confidence-level</code> option has also changed. In the past, warnings would be filtered when output in a report. This meant, for example, that <code>tracker.checks.all_warnings</code> would still return warnings below the specified confidence level. It also caused problems because there were many places in the code where the warnings needed to be filtered. With this release, warnings below the confidence level will be dropped as soon as they are found and will not need to be filtered at any later point.</p>
+
+<p>Lastly, <code>Brakeman.run</code> would return <code>false</code> if <code>--exit-on-warn</code> was set, and a <code>Tracker</code> object otherwise. This has changed. <code>Brakeman.run</code> will now always return a <code>Tracker</code> object and the logic for <code>--exit-on-warn</code> was pushed out to the Brakeman executable.</p>
+
+<h3>Report Issues</h3>
+
+<p>As usual, please <a href="https://github.com/presidentbeef/brakeman/issues">report any issues</a>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
+
+      
+
+
+
+
+<time datetime="2012-02-25 09:57:00 -0800" pubdate  updated >Feb 25<span>th</span>, 2012</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2012/02/25/brakeman-1-dot-4-0-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2012/02/25/brakeman-1-dot-4-0-released/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread"><div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'brakeman';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2012/02/25/brakeman-1-dot-4-0-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2012/02/25/brakeman-1-dot-4-0-released/';
+  //var disqus_developer = 1;
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 

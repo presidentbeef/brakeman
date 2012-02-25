@@ -4,13 +4,57 @@
   <title>Brakeman</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-02-09T11:28:23-08:00</updated>
+  <updated>2012-02-25T11:26:29-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 1.4.0 Released</title>
+    <link href="http://brakemanscanner.org/blog/2012/02/25/brakeman-1-dot-4-0-released/"/>
+    <updated>2012-02-25T09:57:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2012/02/25/brakeman-1-dot-4-0-released</id>
+    <content type="html">&lt;p&gt;This is not a big release, but it does add a new check. Also, processing for ERB templates with the &lt;code&gt;rails_xss&lt;/code&gt; plugin has changed, so there is the possibility that line numbers for reported warnings will shift.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 1.3.0:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add check for user input in link_to href parameter&lt;/li&gt;
+&lt;li&gt;Match ERB processing to rails_xss plugin when plugin used&lt;/li&gt;
+&lt;li&gt;Add Brakeman::Report#to_json, Brakeman::Warning#to_json&lt;/li&gt;
+&lt;li&gt;Warnings below minimum confidence are dropped completely&lt;/li&gt;
+&lt;li&gt;Brakeman.run will now always return a Tracker&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;New Check for link_to&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/oreoshake&quot;&gt;Neil Matatall&lt;/a&gt; has contributed a new check for the href parameter in &lt;code&gt;link_to&lt;/code&gt;. Even if HTML escaped, some values can be dangerous, so this check will warn for user input in that parameter. See &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/45&quot;&gt;here&lt;/a&gt; for more details.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;--url-safe-methods&lt;/code&gt; option can be used to specify escaping methods which are safe for urls.&lt;/p&gt;
+
+&lt;h3&gt;ERB and rails_xss&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code&gt;rails_xss&lt;/code&gt; plugin has some fixes for how Erbuis handles certain input. Brakeman now matches those changes, which fixes some parsing errors.&lt;/p&gt;
+
+&lt;h3&gt;Internal Changes&lt;/h3&gt;
+
+&lt;p&gt;There have been some changes which only impact those working with Brakeman as a library.&lt;/p&gt;
+
+&lt;p&gt;First, there is now json output for reports. This actually should be an output format option, but I did not realize it until writing this post. The next release will include this, though!&lt;/p&gt;
+
+&lt;p&gt;The way Brakeman handles the &lt;code&gt;--confidence-level&lt;/code&gt; option has also changed. In the past, warnings would be filtered when output in a report. This meant, for example, that &lt;code&gt;tracker.checks.all_warnings&lt;/code&gt; would still return warnings below the specified confidence level. It also caused problems because there were many places in the code where the warnings needed to be filtered. With this release, warnings below the confidence level will be dropped as soon as they are found and will not need to be filtered at any later point.&lt;/p&gt;
+
+&lt;p&gt;Lastly, &lt;code&gt;Brakeman.run&lt;/code&gt; would return &lt;code&gt;false&lt;/code&gt; if &lt;code&gt;--exit-on-warn&lt;/code&gt; was set, and a &lt;code&gt;Tracker&lt;/code&gt; object otherwise. This has changed. &lt;code&gt;Brakeman.run&lt;/code&gt; will now always return a &lt;code&gt;Tracker&lt;/code&gt; object and the logic for &lt;code&gt;--exit-on-warn&lt;/code&gt; was pushed out to the Brakeman executable.&lt;/p&gt;
+
+&lt;h3&gt;Report Issues&lt;/h3&gt;
+
+&lt;p&gt;As usual, please &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;report any issues&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 1.3.0 Released</title>
