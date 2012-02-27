@@ -138,6 +138,8 @@ module Brakeman
         :to_pdf
       when :tabs, :to_tabs
         :to_tabs
+      when :json, :to_json
+        :to_json
       else
         :to_s
       end
@@ -151,6 +153,8 @@ module Brakeman
         :to_pdf
       when /\.tabs$/i
         :to_tabs
+      when /\.json$/i
+        :to_json
       else
         :to_s
       end
