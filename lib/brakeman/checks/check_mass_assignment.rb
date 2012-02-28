@@ -85,7 +85,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
     end
   end
 
-  LITERALS = Set.new([:lit, :true, :false, :nil, :string]) 
+  LITERALS = Set[:lit, :true, :false, :nil, :string]
 
   def all_literals? args
     args.all? do |arg|
