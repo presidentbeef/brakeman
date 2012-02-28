@@ -23,12 +23,19 @@ module Brakeman::RouteHelper
 
   #Add default routes
   def add_resources_routes
-    @tracker.routes[@current_controller].merge [:index, :new, :create, :show, :edit, :update, :destroy]
-  end
+    existing_routes = @tracker.routes[@current_controller]
 
+    unless existing_routes.is_a? Array and existing_routes.first == :allow_all_actions
+      existing_routes.merge [:index, :new, :create, :show, :edit, :update, :destroy]
+    end
+  end
 
   #Add default routes minus :index
   def add_resource_routes
-    @tracker.routes[@current_controller].merge [:new, :create, :show, :edit, :update, :destroy]
+    existing_routes = @tracker.routes[@current_controller]
+
+    unless existing_routes.is_a? Array and existing_routes.first == :allow_all_actions
+      existing_routes.merge [:new, :create, :show, :edit, :update, :destroy]
+    end
   end
 end
