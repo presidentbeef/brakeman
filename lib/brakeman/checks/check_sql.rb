@@ -16,22 +16,22 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def run_check
     @rails_version = tracker.config[:rails_version]
 
-    Brakeman.debug "Finding possible SQL calls on models"
     if tracker.options[:rails3]
-      calls = tracker.find_call :targets => tracker.models.keys,
-        :methods => /^(find.*|first|last|all|where|order|group|having)$/,
-        :chained => true
+      @sql_targets = /^(find.*|last|first|all|count|sum|average|minumum|maximum|count_by_sql|where|order|group|having)$/
     else
-      calls = tracker.find_call :targets => tracker.models.keys,
-        :methods => /^(find.*|first|last|all)$/,
-        :chained => true
+      @sql_targets = /^(find.*|last|first|all|count|sum|average|minumum|maximum|count_by_sql)$/
     end
 
+    Brakeman.debug "Finding possible SQL calls on models"
+    calls = tracker.find_call :targets => tracker.models.keys,
+      :methods => @sql_targets,
+      :chained => true
+
     Brakeman.debug "Finding possible SQL calls with no target"
-    calls.concat tracker.find_call(:target => nil, :method => /^(find.*|last|first|all|count|sum|average|minumum|maximum|count_by_sql)$/)
+    calls.concat tracker.find_call(:target => nil, :method => @sql_targets)
 
     Brakeman.debug "Finding possible SQL calls using constantized()"
-    calls.concat tracker.find_call(:method => /^(find.*|last|first|all|count|sum|average|minumum|maximum|count_by_sql)$/).select { |result| constantize_call? result }
+    calls.concat tracker.find_call(:method => @sql_targets).select { |result| constantize_call? result }
 
     Brakeman.debug "Finding calls to named_scope or scope"
     calls.concat find_scope_calls
@@ -90,8 +90,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       find_calls.process_source block, model_name, scope_name
 
       find_calls.calls.each do |call|
-        if call[:method].to_s =~ /^(find.*|first|last|all|where|order|group|having)$/
-          puts "Looks like #{call.inspect}"
+        if call[:method].to_s =~ @sql_targets
           process_result call
         end
       end
