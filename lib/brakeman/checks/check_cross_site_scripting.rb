@@ -17,7 +17,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   @description = "Checks for unescaped output in views"
 
   #Model methods which are known to be harmless
-  IGNORE_MODEL_METHODS = Set[:average, :count, :maximum, :minimum, :sum]
+  IGNORE_MODEL_METHODS = Set[:average, :count, :maximum, :minimum, :sum, :id]
 
   MODEL_METHODS = Set[:all, :find, :first, :last, :new]
 
