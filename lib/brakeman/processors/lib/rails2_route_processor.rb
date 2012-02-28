@@ -30,9 +30,8 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
   def process_call exp
     target = exp[1]
 
-    if target == map or target == nested
+    if target == map or (not target.nil? and target == nested)
       process_map exp
-
     else
       process_default exp
     end
@@ -193,7 +192,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
     #This -seems- redundant, but people might connect actions
     #to a controller which already allows them all
     return if @tracker.routes[@current_controller].is_a? Array and @tracker.routes[@current_controller][0] == :allow_all_actions
-  
+
     exp[-1].each_with_index do |e,i|
       if symbol? e and e[1] == :action
         @tracker.routes[@current_controller] << exp[-1][i + 1][1].to_sym
