@@ -15,7 +15,7 @@ class Brakeman::ParamsProcessor < SexpProcessor
     @result = []
     @matched = false
     @mark = false
-    @watch_nodes = Set.new([:call, :iasgn, :lasgn, :gasgn, :cvasgn, :return, :attrasgn])
+    @watch_nodes = Set[:call, :iasgn, :lasgn, :gasgn, :cvasgn, :return, :attrasgn]
     @params = Sexp.new(:call, nil, :params, Sexp.new(:arglist))
   end
 

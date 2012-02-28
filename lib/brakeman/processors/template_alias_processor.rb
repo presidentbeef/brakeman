@@ -7,7 +7,7 @@ require 'brakeman/processors/lib/render_helper'
 class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
   include Brakeman::RenderHelper
 
-  FORM_METHODS = Set.new([:form_for, :remote_form_for, :form_remote_for])
+  FORM_METHODS = Set[:form_for, :remote_form_for, :form_remote_for]
 
   def initialize tracker, template
     super()

@@ -19,7 +19,7 @@ module Brakeman::Util
 
   SESSION = Sexp.new(:call, nil, :session, Sexp.new(:arglist))
 
-  ALL_PARAMETERS = Set.new([PARAMETERS, QUERY_PARAMETERS, PATH_PARAMETERS, REQUEST_PARAMETERS])
+  ALL_PARAMETERS = Set[PARAMETERS, QUERY_PARAMETERS, PATH_PARAMETERS, REQUEST_PARAMETERS]
 
   #Convert a string from "something_like_this" to "SomethingLikeThis"
   #

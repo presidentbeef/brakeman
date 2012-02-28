@@ -17,9 +17,9 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   @description = "Checks for unescaped output in views"
 
   #Model methods which are known to be harmless
-  IGNORE_MODEL_METHODS = Set.new([:average, :count, :maximum, :minimum, :sum])
+  IGNORE_MODEL_METHODS = Set[:average, :count, :maximum, :minimum, :sum]
 
-  MODEL_METHODS = Set.new([:all, :find, :first, :last, :new])
+  MODEL_METHODS = Set[:all, :find, :first, :last, :new]
 
   IGNORE_LIKE = /^link_to_|(_path|_tag|_url)$/
 
@@ -35,18 +35,18 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   #Run check
   def run_check 
-    @ignore_methods = Set.new([:button_to, :check_box, :escapeHTML, :escape_once,
+    @ignore_methods = Set[:button_to, :check_box, :escapeHTML, :escape_once,
                            :field_field, :fields_for, :h, :hidden_field,
                            :hidden_field, :hidden_field_tag, :image_tag, :label,
                            :link_to, :mail_to, :radio_button, :select,
                            :submit_tag, :text_area, :text_field,
                            :text_field_tag, :url_encode, :url_for,
-                           :will_paginate] ).merge tracker.options[:safe_methods]
+                           :will_paginate].merge tracker.options[:safe_methods]
 
     @models = tracker.models.keys
     @inspect_arguments = tracker.options[:check_arguments]
 
-    @known_dangerous = Set.new([:truncate, :concat])
+    @known_dangerous = Set[:truncate, :concat]
 
     if version_between? "2.0.0", "3.0.5"
       @known_dangerous << :auto_link
