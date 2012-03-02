@@ -84,4 +84,6 @@ class UsersController < ApplicationController
       format.json { head :ok }
     end
   end
+
+  skip_before_filter :verify_authenticity_token, :except => [:create, :edit]
 end
