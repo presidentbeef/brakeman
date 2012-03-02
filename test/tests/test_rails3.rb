@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 21,
-      :warning => 22
+      :warning => 23
     }
   end
 
@@ -493,5 +493,13 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Unprotected mass assignment near line 73: User.new.something.something/,
       :confidence => 0,
       :file => /home_controller\.rb/
+  end
+
+  def test_string_buffer_manipulation_bug
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^Rails 3.0.5 has a vulnerabilty in SafeBuffer. Upgrade to 3.0.12/,
+      :confidence => 1,
+      :file => /Gemfile/
   end
 end
