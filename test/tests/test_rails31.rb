@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 0,
       :template => 1,
       :controller => 1,
-      :warning => 7 }
+      :warning => 8 }
   end
 
   def test_without_protection
@@ -105,5 +105,13 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Upgrade to Rails 3.1.4, 3.1.0 select\(\) helper is vulnerable/,
       :confidence => 1,
       :file => /edit\.html\.erb/
+  end
+
+  def test_string_buffer_manipulation_bug
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^Rails 3.1.0 has a vulnerabilty in SafeBuffer. Upgrade to 3.1.4/,
+      :confidence => 1,
+      :file => /Gemfile/
   end
 end
