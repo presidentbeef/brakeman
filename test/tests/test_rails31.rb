@@ -13,7 +13,7 @@ class Rails31Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :model => 0,
-      :template => 0,
+      :template => 1,
       :controller => 1,
       :warning => 7 }
   end
@@ -96,5 +96,14 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Possible SQL injection/,
       :confidence => 1,
       :file => /user\.rb/
+  end
+
+  def test_select_vulnerability
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 2,
+      :message => /^Upgrade to Rails 3.1.4, 3.1.0 select\(\) helper is vulnerable/,
+      :confidence => 0,
+      :file => /edit\.html\.erb/
   end
 end

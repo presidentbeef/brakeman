@@ -1,5 +1,7 @@
 <h1>Editing user</h1>
 
+<%= select('post', 'author_id', "<option value='#{@user.id}'>#{@user.name}</option>") %>
+
 <%= render 'form' %>
 
 <%= link_to 'Show', @user %> |
