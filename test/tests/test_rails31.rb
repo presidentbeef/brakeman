@@ -103,7 +103,7 @@ class Rails31Tests < Test::Unit::TestCase
       :warning_type => "Cross Site Scripting",
       :line => 2,
       :message => /^Upgrade to Rails 3.1.4, 3.1.0 select\(\) helper is vulnerable/,
-      :confidence => 0,
+      :confidence => 1,
       :file => /edit\.html\.erb/
   end
 end
