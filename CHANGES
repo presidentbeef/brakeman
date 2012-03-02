@@ -1,3 +1,14 @@
+# 1.5.0
+
+ * Add version check for SafeBuffer vulnerability
+ * Add check for select vulnerability in Rails 3
+ * select() is no longer considered safe in Rails 2
+ * Add check for skipping CSRF protection with a blacklist
+ * Add JSON report format
+ * Model#id should not be considered XSS
+ * Standardize methods to check for SQL injection
+ * Fix Rails 2 route parsing issue with nested routes
+
 # 1.4.0
 
  * Add check for user input in link_to href parameter
