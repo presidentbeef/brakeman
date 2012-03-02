@@ -39,7 +39,7 @@ To specify an output file for the results:
 
     brakeman -o output_file
 
-The output format is determined by the file extension or by using the `-f` option. Current options are: `text`, `html`, `csv`, and `tabs`.
+The output format is determined by the file extension or by using the `-f` option. Current options are: `text`, `html`, `tabs`, `json` and `csv`.
 
 To suppress informational warnings and just output the report:
 
@@ -103,7 +103,7 @@ Brakeman will raise warnings on models that use `attr_protected`. To suppress th
 
 # Warning information
 
-See WARNING_TYPES for more information on the warnings reported by this tool.
+See WARNING\_TYPES for more information on the warnings reported by this tool.
 
 # Warning context
 
@@ -140,6 +140,7 @@ The `-c` option can be used to specify a configuration file to use.
 The MIT License
 
 Copyright (c) 2010-2012, YELLOWPAGES.COM, LLC
+
 Copyright (c) 2012, Twitter, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
