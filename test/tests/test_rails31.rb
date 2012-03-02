@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 0,
       :template => 1,
       :controller => 1,
-      :warning => 8 }
+      :warning => 9 }
   end
 
   def test_without_protection
@@ -113,5 +113,14 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Rails 3.1.0 has a vulnerabilty in SafeBuffer. Upgrade to 3.1.4/,
       :confidence => 1,
       :file => /Gemfile/
+  end
+
+  def test_cross_site_request_forgery
+    assert_warning :type => :warning,
+      :warning_type => "Cross-Site Request Forgery",
+      :line => 89,
+      :message => /^Use\ whitelist\ \(:only\ =>\ \[\.\.\]\)\ when\ skipp/,
+      :confidence => 1,
+      :file => /users_controller\.rb/
   end
 end
