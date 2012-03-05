@@ -21,6 +21,7 @@ class Brakeman::BaseCheck < SexpProcessor
     @string_interp = false
     @current_set = nil
     @current_template = @current_module = @current_class = @current_method = nil
+    @mass_assign_disabled = nil
     self.strict = false
     self.auto_shift_type = false
     self.require_empty = false
@@ -119,18 +120,21 @@ class Brakeman::BaseCheck < SexpProcessor
 
   #Checks if mass assignment is disabled globally in an initializer.
   def mass_assign_disabled?
+    return @mass_assign_disabled unless @mass_assign_disabled.nil?
+
     if version_between?("3.1.0", "4.0.0") and 
       tracker.config[:rails][:active_record] and 
       tracker.config[:rails][:active_record][:whitelist_attributes] == Sexp.new(:true)
 
-      return true
+      @mass_assign_disabled = true
     else
       matches = tracker.check_initializers(:"ActiveRecord::Base", :send)
       if matches.empty?
-        false
+        @mass_assign_disabled = false
       else
         matches.each do |result|
           if result[3][3] == Sexp.new(:arg_list, Sexp.new(:lit, :attr_accessible), Sexp.new(:nil))
+            @mass_assign_disabled = true
             return true
           end
         end
