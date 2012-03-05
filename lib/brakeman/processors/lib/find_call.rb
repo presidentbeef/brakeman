@@ -96,7 +96,7 @@ class Brakeman::FindCall < Brakeman::BaseProcessor
       if @current_template
         @calls << Sexp.new(:result, @current_template, exp).line(exp.line)
       else
-        @calls << Sexp.new(:result, @current_class, @current_method, exp).line(exp.line)
+        @calls << Sexp.new(:result, @current_module, @current_class, @current_method, exp).line(exp.line)
       end
 
     end
