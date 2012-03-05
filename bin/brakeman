@@ -8,6 +8,9 @@ require 'brakeman/version'
 
 trap("INT") do
   $stderr.puts "\nInterrupted - exiting."
+  if RUBY_VERSION.include? "1.9"
+    $stderr.puts Thread.current.backtrace
+  end
   exit!
 end
 
