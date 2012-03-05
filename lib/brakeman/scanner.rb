@@ -229,6 +229,7 @@ class Brakeman::Scanner
     Brakeman.notify "Processing data flow in controllers..."
 
     tracker.controllers.each do |name, controller|
+      Brakeman.debug "Processing #{name}"
       if @report_progress
         $stderr.print " #{current}/#{total} controllers processed\r"
         current += 1
@@ -266,6 +267,7 @@ class Brakeman::Scanner
     total = template_files.length
 
     template_files.each do |path|
+      Brakeman.debug "Processing #{path}"
       if @report_progress
         $stderr.print " #{count}/#{total} files processed\r"
         count += 1
@@ -280,6 +282,7 @@ class Brakeman::Scanner
     Brakeman.notify "Processing data flow in templates..."
 
     tracker.templates.keys.dup.each do |name|
+      Brakeman.debug "Processing #{name}"
       if @report_progress
         count += 1
         $stderr.print " #{count}/#{total} templates processed\r"
@@ -352,6 +355,7 @@ class Brakeman::Scanner
     current = 0
 
     model_files.each do |f|
+      Brakeman.debug "Processing #{f}"
       if @report_progress
         $stderr.print " #{current}/#{total} files processed\r"
         current += 1
