@@ -49,6 +49,7 @@ module Brakeman::RenderHelper
   #Processes a template, adding any instance variables
   #to its environment.
   def process_template name, args, called_from = nil
+    Brakeman.debug "Rendering #{name} (#{called_from})"
     #Get scanned source for this template
     name = name.to_s.gsub(/^\//, "")
     template = @tracker.templates[name.to_sym]
