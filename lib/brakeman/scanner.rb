@@ -452,11 +452,6 @@ class Brakeman::Rails2XSSErubis < ::Erubis::Eruby
     #src << "@output_buffer = ActiveSupport::SafeBuffer.new;"
   end
 
-  def add_text(src, text)
-    return if text.empty?
-    src << "@output_buffer.safe_concat('" << escape_text(text) << "');"
-  end
-
   #This is different from rails_xss - fixes some line number issues
   def add_text(src, text)
     if text == "\n"
