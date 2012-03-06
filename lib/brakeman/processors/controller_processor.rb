@@ -28,7 +28,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
     name = class_name(exp[1])
     if @current_module
-      name = (@current_module + "::" + name.to_s).to_sym
+      name = (@current_module.to_s + "::" + name.to_s).to_sym
     end
     @controller = { :name => name,
                     :parent => class_name(exp[2]),
