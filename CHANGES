@@ -1,3 +1,13 @@
+# 1.5.1
+
+ * Fix detection of global mass assignment setting
+ * Fix partial rendering in Rails 3
+ * Show backtrace when interrupt received (Ruby 1.9 only)
+ * More debug output
+ * Remove duplicate method in Brakeman::Rails2XSSErubis
+ * Add tracking of module and class to Brakeman::BaseProcessor
+ * Report module when using Brakeman::FindCall
+
 # 1.5.0
 
  * Add version check for SafeBuffer vulnerability
