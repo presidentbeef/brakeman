@@ -14,7 +14,7 @@ class Rails3Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 5,
-      :template => 21,
+      :template => 22,
       :warning => 23
     }
   end
@@ -501,5 +501,14 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Rails 3.0.5 has a vulnerabilty in SafeBuffer. Upgrade to 3.0.12/,
       :confidence => 1,
       :file => /Gemfile/
+  end
+
+  def test_rails3_render_partial
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 15,
+      :message => /^Unescaped model attribute near line 15: Product/,
+      :confidence => 0,
+      :file => /_form\.html\.erb/
   end
 end
