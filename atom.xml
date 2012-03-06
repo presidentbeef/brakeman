@@ -4,7 +4,7 @@
   <title>Brakeman</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-03-05T20:12:04-08:00</updated>
+  <updated>2012-03-05T20:19:07-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -20,6 +20,8 @@
     <content type="html">&lt;p&gt;After the excitment yesterday with a mass assignment vulnerability being exploited in a very public manner on &lt;a href=&quot;https://gist.github.com/1978249&quot;&gt;Github&lt;/a&gt;, interest in Brakeman has skyrocketed.&lt;/p&gt;
 
 &lt;p&gt;This lead to re-examination of Brakeman's code for detecting that mass assignment has been globally disabled - and it turns out there was a bug or two. So here is a bug-fix release of Brakeman to correct that and some other minor issues.&lt;/p&gt;
+
+&lt;p&gt;Upgrading to 1.5.1 may increase the number of warnings reported.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 1.5.0&lt;/em&gt;:&lt;/p&gt;
 
