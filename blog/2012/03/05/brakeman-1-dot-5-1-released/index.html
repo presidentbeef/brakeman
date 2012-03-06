@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Brakeman with Rake</title>
+  <title>Brakeman: Brakeman 1.5.1 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/rake/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2012/03/05/brakeman-1-dot-5-1-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -98,59 +98,150 @@
   <div id="main">
     <div id="content">
       <div>
-<article>
+<article class="hentry">
   
   <header>
-    <h1 class="entry-title">Brakeman With Rake</h1>
+    
+      <h1 class="entry-title">Brakeman 1.5.1 Released</h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-03-05 18:50:00 -0800" pubdate  updated >Mar 5<span>th</span>, 2012</time>
+
+
+</p>
+    
   </header>
-  
-  <p>Brakeman can generate and install a basic Rake task for a Rails application.</p>
 
-<p>To do so, just run this at the root directory of the Rails application:</p>
 
-<pre><code>brakeman --rake
+<div class="entry-content"><p>After the excitment yesterday with a mass assignment vulnerability being exploited in a very public manner on <a href="https://gist.github.com/1978249">Github</a>, interest in Brakeman has skyrocketed.</p>
+
+<p>This lead to re-examination of Brakeman&#8217;s code for detecting that mass assignment has been globally disabled - and it turns out there was a bug or two. So here is a bug-fix release of Brakeman to correct that and some other minor issues.</p>
+
+<p><em>Changes since 1.5.0</em>:</p>
+
+<ul>
+<li>Fix detection of global mass assignment setting</li>
+<li>Fix partial rendering in Rails 3</li>
+<li>Show backtrace when interrupt received (Ruby 1.9 only)</li>
+<li>More debug output</li>
+<li>Internal fixes:
+
+<ul>
+<li>Remove duplicate method in Brakeman::Rails2XSSErubis</li>
+<li>Add tracking of module and class to Brakeman::BaseProcessor</li>
+<li>Report module when using Brakeman::FindCall</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Mass Assignment</h3>
+
+<p>Mass assignment is not a particularly new issue, but the amount of attention suddenly focused on it this weekend was amazing.</p>
+
+<p>This release of Brakeman can detect three different methods for defaulting all models to a whitelist of allowed attributes that can be mass assigned.</p>
+
+<p>The first is probably the most widely-seen version. In an intializer, do</p>
+
+<pre><code>ActiveRecord::Base.send(:attr_accessible, nil)
 </code></pre>
 
-<p>This will create a task in <code>lib/tasks/brakeman.rake</code> that looks like this:</p>
+<p>The second is essentially equivalent, but 1.5.1 adds support for it as well:</p>
 
-<pre><code>namespace :brakeman do
-
-  desc "Run Brakeman"
-  task :run, :output_file do |t, args|
-    require 'brakeman'
-
-    Brakeman.run :app_path =&gt; ".", :output_file =&gt; args[:output_file], :print_report =&gt; true
+<pre><code>module ActiveRecord
+  class Base
+    attr_accessible nil
   end
 end
 </code></pre>
 
-<p>This task will run Brakeman with no options. If given an output file, it will save the report in that file. Otherwise, it will print the report out to the console.</p>
+<p>The third option is only available for Rails 3.1.0 and newer. The following configuration setting can be added to <code>application.rb</code>:</p>
 
-<p>To use this task:</p>
-
-<pre><code>rake brakeman:run
+<pre><code>config.active_record.whitelist_attributes = true
 </code></pre>
 
-<p>or</p>
+<p>Brakeman should correctly detect all of these.</p>
 
-<pre><code>rake brakeman:run[report.html]
-</code></pre>
+<p><a href="http://pragtob.wordpress.com/2012/03/06/secure-your-rails-apps/">This is a very nice post</a> explaining the dangers of mass assignment (mentioning Brakeman is nice, too.)</p>
 
-<p>This task can easily be customized. See <a href="/docs/brakeman_as_a_library">Brakeman as a Library</a> for more information.</p>
+<h3>Partials in Rails 3</h3>
 
-<hr />
+<p>In Rails 3, <code>render 'blah'</code> is now equivalent to <code>render :partial =&gt; 'blah'</code> when used inside a template.</p>
 
-<p><a href="/docs">More documentation</a></p>
+<p>Brakeman now supports this correctly.</p>
 
+<h3>Debug Output</h3>
+
+<p>More debugging output has been added for use with the <code>-d</code> option.</p>
+
+<p>Additionally, when interrupting the application (for example, with <code>^C</code>), a stack trace will be output. Please note, however, that this only works with Ruby 1.9.</p>
+
+<h3>Internal Changes</h3>
+
+<p>There have been a few internal changes. There is a possibility that these will affect some warnings. However, it should only result in accurate reporting of class names.</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any problems on <a href="https://github.com/presidentbeef/brakeman/issues">Github</a>!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-    <footer>
-      <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
+
+      
+
+
+
+
+<time datetime="2012-03-05 18:50:00 -0800" pubdate  updated >Mar 5<span>th</span>, 2012</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
   
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2012/03/05/brakeman-1-dot-5-1-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2012/03/05/brakeman-1-dot-5-1-released/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread"><div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'brakeman';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2012/03/05/brakeman-1-dot-5-1-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2012/03/05/brakeman-1-dot-5-1-released/';
+  //var disqus_developer = 1;
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 

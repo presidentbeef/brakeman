@@ -4,13 +4,91 @@
   <title>Brakeman</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-03-01T21:03:44-08:00</updated>
+  <updated>2012-03-05T20:12:04-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 1.5.1 Released</title>
+    <link href="http://brakemanscanner.org/blog/2012/03/05/brakeman-1-dot-5-1-released/"/>
+    <updated>2012-03-05T18:50:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2012/03/05/brakeman-1-dot-5-1-released</id>
+    <content type="html">&lt;p&gt;After the excitment yesterday with a mass assignment vulnerability being exploited in a very public manner on &lt;a href=&quot;https://gist.github.com/1978249&quot;&gt;Github&lt;/a&gt;, interest in Brakeman has skyrocketed.&lt;/p&gt;
+
+&lt;p&gt;This lead to re-examination of Brakeman's code for detecting that mass assignment has been globally disabled - and it turns out there was a bug or two. So here is a bug-fix release of Brakeman to correct that and some other minor issues.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 1.5.0&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fix detection of global mass assignment setting&lt;/li&gt;
+&lt;li&gt;Fix partial rendering in Rails 3&lt;/li&gt;
+&lt;li&gt;Show backtrace when interrupt received (Ruby 1.9 only)&lt;/li&gt;
+&lt;li&gt;More debug output&lt;/li&gt;
+&lt;li&gt;Internal fixes:
+
+&lt;ul&gt;
+&lt;li&gt;Remove duplicate method in Brakeman::Rails2XSSErubis&lt;/li&gt;
+&lt;li&gt;Add tracking of module and class to Brakeman::BaseProcessor&lt;/li&gt;
+&lt;li&gt;Report module when using Brakeman::FindCall&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Mass Assignment&lt;/h3&gt;
+
+&lt;p&gt;Mass assignment is not a particularly new issue, but the amount of attention suddenly focused on it this weekend was amazing.&lt;/p&gt;
+
+&lt;p&gt;This release of Brakeman can detect three different methods for defaulting all models to a whitelist of allowed attributes that can be mass assigned.&lt;/p&gt;
+
+&lt;p&gt;The first is probably the most widely-seen version. In an intializer, do&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ActiveRecord::Base.send(:attr_accessible, nil)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The second is essentially equivalent, but 1.5.1 adds support for it as well:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;module ActiveRecord
+  class Base
+    attr_accessible nil
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The third option is only available for Rails 3.1.0 and newer. The following configuration setting can be added to &lt;code&gt;application.rb&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;config.active_record.whitelist_attributes = true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Brakeman should correctly detect all of these.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://pragtob.wordpress.com/2012/03/06/secure-your-rails-apps/&quot;&gt;This is a very nice post&lt;/a&gt; explaining the dangers of mass assignment (mentioning Brakeman is nice, too.)&lt;/p&gt;
+
+&lt;h3&gt;Partials in Rails 3&lt;/h3&gt;
+
+&lt;p&gt;In Rails 3, &lt;code&gt;render 'blah'&lt;/code&gt; is now equivalent to &lt;code&gt;render :partial =&amp;gt; 'blah'&lt;/code&gt; when used inside a template.&lt;/p&gt;
+
+&lt;p&gt;Brakeman now supports this correctly.&lt;/p&gt;
+
+&lt;h3&gt;Debug Output&lt;/h3&gt;
+
+&lt;p&gt;More debugging output has been added for use with the &lt;code&gt;-d&lt;/code&gt; option.&lt;/p&gt;
+
+&lt;p&gt;Additionally, when interrupting the application (for example, with &lt;code&gt;^C&lt;/code&gt;), a stack trace will be output. Please note, however, that this only works with Ruby 1.9.&lt;/p&gt;
+
+&lt;h3&gt;Internal Changes&lt;/h3&gt;
+
+&lt;p&gt;There have been a few internal changes. There is a possibility that these will affect some warnings. However, it should only result in accurate reporting of class names.&lt;/p&gt;
+
+&lt;h3&gt;Report Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any problems on &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;Github&lt;/a&gt;!&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 1.5.0 Released</title>

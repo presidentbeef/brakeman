@@ -73,8 +73,12 @@
         <lastmod>2012-03-01T21:03:41-08:00</lastmod>
     </url>
     <url>
+        <loc>http://brakemanscanner.org/blog/2012/03/05/brakeman-1-dot-5-1-released/</loc>
+        <lastmod>2012-03-05T20:12:00-08:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/blog/archives/</loc>
-        <lastmod>2012-03-01T21:03:41-08:00</lastmod>
+        <lastmod>2012-03-05T20:12:00-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/contact/</loc>
@@ -218,6 +222,6 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/</loc>
-        <lastmod>2012-03-01T21:03:41-08:00</lastmod>
+        <lastmod>2012-03-05T20:12:00-08:00</lastmod>
     </url>
 </urlset>
