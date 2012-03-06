@@ -235,8 +235,13 @@ class Brakeman::BaseProcessor < SexpProcessor
 
     #Look for render :action, ... or render "action", ...
     if string? args[1] or symbol? args[1]
-      type = :action
-      value = args[1]
+      if @current_template and @tracker.options[:rails3]
+        type = :partial
+        value = args[1]
+      else
+        type = :action
+        value = args[1]
+      end
     elsif args[1].is_a? Symbol or args[1].is_a? String
       type = :action
       value = Sexp.new(:lit, args[1].to_sym)
