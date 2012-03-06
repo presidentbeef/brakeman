@@ -54,7 +54,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       @ignore_methods << :auto_link
     end
 
-    if tracker.config[:rails3]
+    if tracker.options[:rails3]
       @ignore_methods << :select
     end
 
