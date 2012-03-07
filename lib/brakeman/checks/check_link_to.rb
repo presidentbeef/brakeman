@@ -42,13 +42,25 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
 
     @matched = false
 
-    return if call[3][1].nil?
+    #Skip if no arguments(?) or first argument is a hash
+    return if call[3][1].nil? or hash? call[3][1]
 
-    #Only check first argument for +link_to+, as the second
-    #will *usually* be a record or escaped.
-    first_arg = process call[3][1]
+    if version_between? "2.0.0", "2.2.99"
+      check_argument result, call[3][1]
 
-    type, match = has_immediate_user_input? first_arg
+      if call[3][2] and not  hash? call[3][2]
+        check_argument result, call[3][2]
+      end
+    elsif call[3][2]
+      #Only check first argument if there is a second argument
+      #in Rails 2.3.x
+      check_argument result, call[3][1]
+    end
+  end
+
+  def check_argument result, exp
+    arg = process exp
+    type, match = has_immediate_user_input? arg
 
     if type
       case type
@@ -65,7 +77,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
         :warning_type => "Cross Site Scripting", 
         :message => message,
         :confidence => CONFIDENCE[:high]
-    elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(first_arg)
+    elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(arg)
       method = match[2]
 
       unless IGNORE_MODEL_METHODS.include? method
