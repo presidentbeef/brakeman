@@ -1,0 +1,7 @@
+<%= link_to :action => "should_not_warn", :q => params[:q] %>
+
+<% link_to(params[:evil_url]) do %>
+  <b>Something!</b>
+<% end %>
+
+<%= link_to params[:evil], "http://brakemanscanner.org" %>
