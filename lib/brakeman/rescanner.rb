@@ -74,7 +74,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     when :model
       rescan_model path
     when :lib
-      process_library path
+      process_lib path
     when :config
       process_config
     when :initializer
