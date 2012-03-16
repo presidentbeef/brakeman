@@ -10,7 +10,15 @@ trap("INT") do
   $stderr.puts "\nInterrupted - exiting."
   if RUBY_VERSION.include? "1.9"
     $stderr.puts Thread.current.backtrace
+  else
+    #There has to be a better way to do this
+    begin
+      raise Exception
+    rescue Exception => e
+      $stderr.puts e.backtrace
+    end
   end
+
   exit!
 end
 
