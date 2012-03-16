@@ -6,22 +6,6 @@ require 'brakeman'
 require 'brakeman/options'
 require 'brakeman/version'
 
-trap("INT") do
-  $stderr.puts "\nInterrupted - exiting."
-  if RUBY_VERSION.include? "1.9"
-    $stderr.puts Thread.current.backtrace
-  else
-    #There has to be a better way to do this
-    begin
-      raise Exception
-    rescue Exception => e
-      $stderr.puts e.backtrace
-    end
-  end
-
-  exit!
-end
-
 #Parse options
 options, parser = Brakeman::Options.parse! ARGV
 
@@ -50,6 +34,16 @@ unless options[:app_path]
   else
     options[:app_path] = File.expand_path ARGV[-1]
   end
+end
+
+trap("INT") do
+  $stderr.puts "\nInterrupted - exiting."
+
+  if options[:debug]
+    $stderr.puts caller
+  end
+
+  exit!
 end
 
 #Run scan and output a report
