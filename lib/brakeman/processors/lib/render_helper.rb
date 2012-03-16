@@ -11,12 +11,23 @@ module Brakeman::RenderHelper
     when :action
       process_action exp[2][1], exp[3]
     when :default
-      process_template template_name, exp[3]
-    when :partial
+      begin
+        process_template template_name, exp[3]
+      rescue ArgumentError => e
+        $stderr.puts e
+        $stderr.puts self.class
+        $stderr.puts @template[:name]
+        $stderr.puts "Problem processing render: #{exp}"
+      end
+    when :partial, :layout
       process_partial exp[2], exp[3]
     when :nothing
     end
     exp
+  end
+
+  def process_layout_in_view exp
+    $stderr.puts exp.inspect
   end
 
   #Processes layout
