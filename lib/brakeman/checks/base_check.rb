@@ -78,6 +78,18 @@ class Brakeman::BaseCheck < SexpProcessor
     exp
   end
 
+  def process_if exp
+    #This is to ignore user input in condition
+    current_user_input = @has_user_input
+    process exp[1]
+    @has_user_input = current_user_input
+
+    process exp[2] if sexp? exp[2]
+    process exp[3] if sexp? exp[3]
+
+    exp
+  end
+
   #Note that params are included in current expression
   def process_params exp
     @has_user_input = :params
