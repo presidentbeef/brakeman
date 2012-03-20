@@ -91,7 +91,7 @@ module Brakeman::Options
 
         opts.on "--skip-files file1,file2,etc", Array, "Skip processing of these files" do |files|
           options[:skip_files] ||= Set.new
-          options[:skip_files].merge files.map {|f| f.to_sym }
+          options[:skip_files].merge files
         end
 
         opts.on "--skip-libs", "Skip processing lib directory" do
