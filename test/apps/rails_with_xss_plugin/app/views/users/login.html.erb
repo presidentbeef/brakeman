@@ -1,0 +1,21 @@
+<h1>Login</h1>
+
+<% form_for(:user, :url => { :action => :login_user }) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :user_name %><br />
+    <%= f.text_field :user_name %>
+  </p>
+  <p>
+  <p>
+    <%= f.label :password %><br />
+    <%= f.password_field :password %>
+    <%= hidden_field_tag :page, params[:page] %>
+  </p>
+  <p>
+    <%= f.submit 'Login' %>
+  </p>
+<% end %>
+
+<%= link_to 'Create new user', new_user_path %>
