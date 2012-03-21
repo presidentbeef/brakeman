@@ -1,0 +1,26 @@
+<h1>Topics</h1>
+
+<table>
+  <% unless @posts.empty? %>
+    <tr>
+      <th>User</th>
+      <th>Title</th>
+      <th></th>
+    </tr>
+  <% end %>
+  <% @posts.each do |post| %>
+    <tr>
+      <td><%=h User.find(post.user_id).user_name %></td>
+      <td><%=h post.title %></td>
+      <td><%= link_to 'View', post %></td>
+      <% if author_of? post %>
+        <td><%= link_to 'Edit', edit_post_path(post) %></td>
+        <td><%= link_to 'Delete', post, :method => :delete %></td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+
+<br />
+
+<%= link_to 'New post', new_post_path %>

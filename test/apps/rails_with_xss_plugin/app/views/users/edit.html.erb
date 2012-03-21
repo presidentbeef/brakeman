@@ -1,0 +1,25 @@
+<h1>Edit Account</h1>
+
+<% form_for(@user) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :display_name %><br />
+    <%= f.text_field :display_name %>
+  </p>
+  <p>
+    <%= f.label :password %><br />
+    <%= f.password_field :password %>
+  </p>
+  <% if @current_user and @current_user.admin? %>
+  <p>
+    <%= f.label :admin %><br />
+    <%= f.check_box :admin %><br />
+  </p>
+  <% end %>
+  <p>
+    <%= f.submit 'Save' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', users_path %>

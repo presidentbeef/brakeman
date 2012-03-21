@@ -1,0 +1,10 @@
+<p>
+Results for <b><%= params[:query] %></b>:
+</p>
+<% if @users.empty? %>
+  No results.
+<% else %>
+  <% @users.each do |user| %>
+    <%= render user, :object => user %>
+  <% end %>
+<% end %>
