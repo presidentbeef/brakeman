@@ -12,16 +12,22 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
     method = exp[2]
 
     #_buf is the default output variable for Erubis
-    if target and (target[1] == :_buf or target[1] == :output_buffer)
+    if target and (target[1] == :_buf or target[1] == :@output_buffer)
       if method == :<< or method == :safe_concat
         args = exp[3][1] = process(exp[3][1])
 
-        if args.node_type == :call and args[2] == :to_s #just calling to_s on inner code 
+        #We want the actual content
+        if args.node_type == :call and (args[2] == :to_s or args[2] == :html_safe!)
           args = args[1]
         end
 
         if args.node_type == :str #ignore plain strings
           ignore
+        elsif target[1] == :@output_buffer
+          s = Sexp.new :escaped_output, args
+          s.line(exp.line)
+          @current_template[:outputs] << s
+          s
         else
           s = Sexp.new :output, args
           s.line(exp.line)
@@ -31,7 +37,7 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
       elsif method == :to_s
         ignore
       else
-        abort "Unrecognized action on _buf: #{method}"
+        abort "Unrecognized action on buffer: #{method}"
       end
     elsif target == nil and method == :render
       exp[3] = process exp[3]

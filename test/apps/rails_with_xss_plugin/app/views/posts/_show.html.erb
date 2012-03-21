@@ -1,0 +1,19 @@
+<p>
+  <b>User:</b>
+  <%=h @post.user_id %>
+</p>
+
+<p>
+  <b>Title:</b>
+  <%=h @post.title %>
+</p>
+
+<p>
+  <b>Body:</b>
+  <%=h @post.body %>
+</p>
+
+<% if @user == @post.user_id %>
+<%= link_to 'Edit', edit_post_path(@post) %> |
+<% end %>
+<%= link_to 'Back', posts_path %>
