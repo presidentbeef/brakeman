@@ -29,30 +29,44 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
   def check_for_dynamic_path result
     view = result[:call][2]
 
-    if sexp? view and view.node_type != :str and view.node_type != :lit and not duplicate? result
-
+    if sexp? view and not duplicate? result
       add_result result
 
-      if include_user_input? view
+      type, match = has_immediate_user_input? view
+
+      if type
         confidence = CONFIDENCE[:high]
+      elsif type = include_user_input?(view)
+        if node_type? view, :string_interp, :dstr
+          confidence = CONFIDENCE[:med]
+        else
+          confidence = CONFIDENCE[:low]
+        end
       else
-        confidence = CONFIDENCE[:low]
+        return
       end
 
-      warning = { :warning_type => "Dynamic Render Path",
-        :message => "Render path is dynamic",
-        :line => result[:call].line,
-        :code => result[:call],
-        :confidence => confidence }
+      message = "Render path contains "
 
-      if result[:location][0] == :template
-        warning[:template] = result[:location][1]
+      case type
+      when :params
+        message << "parameter value"
+      when :cookies
+        message << "cookie value"
+      when :request
+        message << "request value"
+      when :model
+        #Skip models
+        return
       else
-        warning[:class] = result[:location][1]
-        warning[:method] = result[:location][2]
+        message << "user input value"
       end
 
-      warn warning
+
+      warn :result => result,
+        :warning_type => "Dynamic Render Path",
+        :message => message,
+        :confidence => confidence
     end
   end
 end 
