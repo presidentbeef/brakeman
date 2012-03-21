@@ -117,8 +117,8 @@ class Rails3Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Dynamic Render Path",
       :line => 64,
-      :message => /^Render path is dynamic near line 64: ren/,
-      :confidence => 0,
+      :message => /^Render path contains parameter value near line 64: render/,
+      :confidence => 1,
       :file => /home_controller\.rb/
   end
 
