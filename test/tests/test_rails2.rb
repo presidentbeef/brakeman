@@ -11,14 +11,14 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 24,
-        :warning => 22 }
+        :template => 25,
+        :warning => 23 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 24,
-        :warning => 23 }
+        :template => 25,
+        :warning => 24 }
     end
   end
 
@@ -95,7 +95,16 @@ class Rails2Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Dynamic Render Path",
       :line => 60,
-      :message => /^Render path is dynamic/,
+      :message => /^Render path contains parameter value near line 60: render/,
+      :confidence => 1,
+      :file => /home_controller\.rb/
+  end
+
+  def test_dynamic_render_path_high_confidence
+    assert_warning :type => :warning,
+      :warning_type => "Dynamic Render Path",
+      :line => 78,
+      :message => /^Render path contains parameter value near line 78: render/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end

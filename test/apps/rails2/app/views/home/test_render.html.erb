@@ -1,0 +1,8 @@
+Should not raise a warning:
+<%= render :partial => (params[:awesome] ? 'awesome' : 'not_awesome') %>
+
+Also should not raise a warning:
+<%= render :partial => User.find(params[:user][:id]) %>
+
+Should raise a warning:
+<%= render :file => "/tmp/#{params[:file]}" %>

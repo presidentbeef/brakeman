@@ -73,6 +73,10 @@ class HomeController < ApplicationController
     User.humans.alive.find(:all, :conditions => "age > #{params[:age]}")
   end
 
+  def test_another_dynamic_render
+    render :action => params[:action]
+  end
+
   private
 
   def filter_it
