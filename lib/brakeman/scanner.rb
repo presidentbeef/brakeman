@@ -1,7 +1,11 @@
 require 'rubygems'
 begin
-  #Load our own version of ruby_parser :'(
-  require 'ruby_parser/ruby_parser.rb'
+  if RUBY_VERSION =~ /^1\.9/
+    #Load our own version of ruby_parser :'(
+    require 'ruby_parser/ruby_parser.rb'
+  else
+    require 'ruby_parser'
+  end
 
   require 'haml'
   require 'sass'
@@ -47,7 +51,7 @@ class Brakeman::Scanner
     if RUBY_1_9
       @ruby_parser = ::Ruby19Parser
     else
-      @ruby_parser = ::Ruby18Parser
+      @ruby_parser = ::RubyParser
     end
   end
 
