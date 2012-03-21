@@ -10,7 +10,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 3,
-      :template => 4,
+      :template => 3,
       :warning => 13 }
   end
 
@@ -159,7 +159,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
 
 
   def test_dynamic_render_path_15 
-    assert_warning :type => :template,
+    assert_no_warning :type => :template,
       :warning_type => "Dynamic Render Path",
       :line => 8,
       :message => /^Render\ path\ is\ dynamic/,
