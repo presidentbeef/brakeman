@@ -1,0 +1,17 @@
+<h1>Listing users</h1>
+
+<table>
+<% @users.each do |user| %>
+  <tr>
+    <td><%= raw link_to user.display_name, user %></td>
+    <% if @current_user and (user.id == @current_user.id or @current_user.admin?) %>
+    <td>| <%= link_to 'Edit', edit_user_path(user) %></td>
+    <td><%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% end %>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New user', new_user_path %>
