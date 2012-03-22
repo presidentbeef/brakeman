@@ -4,13 +4,87 @@
   <title>Brakeman</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-03-05T20:19:07-08:00</updated>
+  <updated>2012-03-22T14:23:16-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 1.5.2 Released - Important Fixes</title>
+    <link href="http://brakemanscanner.org/blog/2012/03/22/brakeman-1-dot-5-2-released-important-fixes/"/>
+    <updated>2012-03-22T13:34:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2012/03/22/brakeman-1-dot-5-2-released-important-fixes</id>
+    <content type="html">&lt;p&gt;This is update includes some important fixes. All users of the &lt;code&gt;rails_xss&lt;/code&gt; plugin are particularly encouraged to upgrade.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 1.5.1:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fix handling of views when using &lt;code&gt;rails_xss&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Fix rescanning of lib files (Neil Matatall)&lt;/li&gt;
+&lt;li&gt;Fix &lt;code&gt;link_to&lt;/code&gt; checks for Rails 2.0 and 2.3&lt;/li&gt;
+&lt;li&gt;Revert to &lt;code&gt;ruby_parser&lt;/code&gt; 2.3.1 for Ruby 1.8 parsing&lt;/li&gt;
+&lt;li&gt;Only warn on user input in render paths&lt;/li&gt;
+&lt;li&gt;Output stack trace on interrupt when debugging&lt;/li&gt;
+&lt;li&gt;Ignore user input in if statement conditions&lt;/li&gt;
+&lt;li&gt;Fix --skip-files option with Ruby 1.8&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Views with rails_xss&lt;/h3&gt;
+
+&lt;p&gt;Some previous changes to make sure Brakeman was processing ERB views the same way as the &lt;code&gt;rails_xss&lt;/code&gt; plugin unfortunately broke the processing of those views.&lt;/p&gt;
+
+&lt;p&gt;These changes caused Brakeman to not report &lt;em&gt;any&lt;/em&gt; output from ERB views when the &lt;code&gt;rails_xss&lt;/code&gt; plugin was in use, hiding any XSS vulnerabilities in those views.&lt;/p&gt;
+
+&lt;p&gt;This now fixed, so if you are using the &lt;code&gt;rails_xss&lt;/code&gt; plugin, it is highly recommended to upgrade.&lt;/p&gt;
+
+&lt;h3&gt;Rescanning lib/ Files&lt;/h3&gt;
+
+&lt;p&gt;Rescanning changed files in the &lt;code&gt;lib&lt;/code&gt; directory was broken, but Neil fixed it!&lt;/p&gt;
+
+&lt;h3&gt;link_to Checks&lt;/h3&gt;
+
+&lt;p&gt;In Rails 2.3, the URL is escaped, but not the body of the link. In Rails 2.0, neither argument is escaped.&lt;/p&gt;
+
+&lt;p&gt;In this release, the check for XSS in &lt;code&gt;link_to&lt;/code&gt; has been updated to handle &lt;code&gt;link_to&lt;/code&gt; with blocks and to warn in Rails 2.0.x if any user input is used as an argument.&lt;/p&gt;
+
+&lt;h3&gt;Revert to ruby_parser for Ruby 1.8&lt;/h3&gt;
+
+&lt;p&gt;Brakeman has been using a vendored version of &lt;a href=&quot;https://github.com/seattlerb/ruby_parser&quot;&gt;ruby_parser&lt;/a&gt; with some updates to Ruby 1.9 syntax parsing. Unfortunately, that version also introduced some regressions for parsing Ruby 1.8 syntax.&lt;/p&gt;
+
+&lt;p&gt;To handle this, Brakeman will now only use the vendored version for 1.9 parsing, but the regular gem version for 1.8 syntax parsing. This should fix some parse errors people are seeing for Ruby 1.8 apps.&lt;/p&gt;
+
+&lt;h3&gt;Dynamic Render Path Updates&lt;/h3&gt;
+
+&lt;p&gt;The check for dynamic render paths was not very good, but it is better now. &quot;Dynamic Render Path&quot; warnings should only be raised when user input is actually used to determine what view, partial, or file to render.&lt;/p&gt;
+
+&lt;h3&gt;Stacktrace Output&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will now output a stacktrace if interrupted while running with the &lt;code&gt;-d&lt;/code&gt; option. This is mostly helpful when Brakeman appears to &quot;hang&quot;.&lt;/p&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt;!&lt;/p&gt;
+
+&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Brakeman Jenkins Plugin 0.7 Released</title>
+    <link href="http://brakemanscanner.org/blog/2012/03/22/brakeman-jenkins-plugin-0-dot-7-released/"/>
+    <updated>2012-03-22T13:27:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2012/03/22/brakeman-jenkins-plugin-0-dot-7-released</id>
+    <content type="html">&lt;p&gt;The &lt;a href=&quot;http://jenkins-ci.org&quot;&gt;Jenkins&lt;/a&gt;/&lt;a href=&quot;http://hudson-ci.org&quot;&gt;Hudson&lt;/a&gt; plugin which tracks, displays, and alerts on Brakeman warnings has been updated to work with the latest static analysis core plugin. In particular, this means warning thresholds for new warnings will no longer disappear.&lt;/p&gt;
+
+&lt;p&gt;See &lt;a href=&quot;https://wiki.jenkins-ci.org/display/JENKINS/Brakeman+Plugin&quot;&gt;here&lt;/a&gt; for more information about the plugin.&lt;/p&gt;
+
+&lt;p&gt;Thanks to Nick Green for fixing this!&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 1.5.1 Released</title>
