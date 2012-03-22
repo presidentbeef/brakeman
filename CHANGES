@@ -1,3 +1,14 @@
+# 1.5.2
+
+ * Fix link_to checks for Rails 2.0 and 2.3
+ * Fix rescanning of lib files (Neil Matatall)
+ * Output stack trace on interrupt when debugging
+ * Ignore user input in if statement conditions
+ * Fix --skip-files option
+ * Only warn on user input in render paths
+ * Fix handling of views when using rails_xss
+ * Revert to ruby_parser 2.3.1 for Ruby 1.8 parsing
+
 # 1.5.1
 
  * Fix detection of global mass assignment setting
