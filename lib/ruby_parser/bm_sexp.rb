@@ -31,7 +31,7 @@ class Sexp
   alias :old_find_node :find_node
 
   def initialize *args
-    old_init *args
+    old_init(*args)
     @original_line = nil
     @my_hash_value = nil
   end
@@ -55,17 +55,17 @@ class Sexp
 
   def line *args
     @my_hash_value = nil
-    old_line *args
+    old_line(*args)
   end
 
   def line= *args
     @my_hash_value = nil
-    old_line_set *args
+    old_line_set(*args)
   end
 
   def file= *args
     @my_hash_value = nil
-    old_file_set *args
+    old_file_set(*args)
   end
 
   def compact
@@ -75,12 +75,12 @@ class Sexp
 
   def find_and_replace_all *args
     @my_hash_value = nil
-    old_fara *args
+    old_fara(*args)
   end
 
   def find_node *args
     @my_hash_value = nil
-    old_find_node *args
+    old_find_node(*args)
   end
 
   def paren= arg
@@ -90,7 +90,7 @@ class Sexp
 
   def comments= *args
     @my_hash_value = nil
-    old_comments_set *args
+    old_comments_set(*args)
   end
 end
 
