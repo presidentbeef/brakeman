@@ -5,6 +5,7 @@ begin
     require 'ruby_parser/ruby_parser.rb'
   else
     require 'ruby_parser'
+    require 'ruby_parser/bm_sexp.rb'
   end
 
   require 'haml'
