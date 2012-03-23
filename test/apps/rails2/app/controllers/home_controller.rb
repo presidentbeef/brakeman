@@ -77,6 +77,16 @@ class HomeController < ApplicationController
     render :action => params[:action]
   end
 
+  def test_send_first_param
+    method = params["method"]
+    @result = User.send(method.to_sym)
+  end
+
+  def test_send_second_param
+    args = params["args"] || []
+    @result = User.send(:method, *args)
+  end
+
   private
 
   def filter_it
