@@ -13,19 +13,13 @@ begin
   require 'erb'
   require 'erubis'
   require 'brakeman/processor'
+  require 'brakeman/parsers/rails2_erubis'
+  require 'brakeman/parsers/rails2_xss_plugin_erubis'
+  require 'brakeman/parsers/rails3_erubis'
 rescue LoadError => e
   $stderr.puts e.message
   $stderr.puts "Please install the appropriate dependency."
   exit
-end
-
-#Erubis processor which ignores any output which is plain text.
-class Brakeman::ScannerErubis < Erubis::Eruby
-  include Erubis::NoTextEnhancer
-end
-
-class Brakeman::ErubisEscape < Brakeman::ScannerErubis
-  include Erubis::EscapeEnhancer
 end
 
 #Scans the Rails application.
@@ -308,9 +302,9 @@ class Brakeman::Scanner
         if tracker.config[:escape_html]
           type = :erubis
           if options[:rails3]
-            src = Brakeman::Rails3XSSErubis.new(text).src
+            src = Brakeman::Rails3Erubis.new(text).src
           else
-            src = Brakeman::Rails2XSSErubis.new(text).src
+            src = Brakeman::Rails2XSSPluginErubis.new(text).src
           end
         elsif tracker.config[:erubis]
           type = :erubis
@@ -387,113 +381,5 @@ class Brakeman::Scanner
 
   def parse_ruby input
     @ruby_parser.new.parse input
-  end
-end
-
-#This is from Rails 3 version of the Erubis handler
-class Brakeman::Rails3XSSErubis < ::Erubis::Eruby
-
-  def add_preamble(src)
-    # src << "_buf = ActionView::SafeBuffer.new;\n"
-  end
-
-  #This is different from Rails 3 - fixes some line number issues
-  def add_text(src, text)
-    if text == "\n"
-      src << "\n"
-    elsif text.include? "\n"
-      lines = text.split("\n")
-      if text.match(/\n\z/)
-        lines.each do |line|
-          src << "@output_buffer << ('" << escape_text(line) << "'.html_safe!);\n"
-        end
-      else
-        lines[0..-2].each do |line|
-          src << "@output_buffer << ('" << escape_text(line) << "'.html_safe!);\n"
-        end
-
-        src << "@output_buffer << ('" << escape_text(lines.last) << "'.html_safe!);"
-      end
-    else
-      src << "@output_buffer << ('" << escape_text(text) << "'.html_safe!);"
-    end
-  end
-
-  BLOCK_EXPR = /\s+(do|\{)(\s*\|[^|]*\|)?\s*\Z/
-
-  def add_expr_literal(src, code)
-    if code =~ BLOCK_EXPR
-      src << '@output_buffer.append= ' << code
-    else
-      src << '@output_buffer.append= (' << code << ');'
-    end
-  end
-
-  def add_stmt(src, code)
-    if code =~ BLOCK_EXPR
-      src << '@output_buffer.append_if_string= ' << code
-    else
-      super
-    end
-  end
-
-  def add_expr_escaped(src, code)
-    if code =~ BLOCK_EXPR
-      src << "@output_buffer.safe_append= " << code
-    else
-      src << "@output_buffer.safe_concat(" << code << ");"
-    end
-  end
-
-  #Add code to output buffer.
-  def add_postamble(src)
-    # src << '_buf.to_s'
-  end
-end
-
-#This is from the rails_xss plugin for Rails 2
-class Brakeman::Rails2XSSErubis < ::Erubis::Eruby
-  def add_preamble(src)
-    #src << "@output_buffer = ActiveSupport::SafeBuffer.new;"
-  end
-
-  #This is different from rails_xss - fixes some line number issues
-  def add_text(src, text)
-    if text == "\n"
-      src << "\n"
-    elsif text.include? "\n"
-      lines = text.split("\n")
-      if text.match(/\n\z/)
-        lines.each do |line|
-          src << "@output_buffer.safe_concat('" << escape_text(line) << "');\n"
-        end
-      else
-        lines[0..-2].each do |line|
-          src << "@output_buffer.safe_concat('" << escape_text(line) << "');\n"
-        end
-
-        src << "@output_buffer.safe_concat('" << escape_text(lines.last) << "');"
-      end
-    else
-      src << "@output_buffer.safe_concat('" << escape_text(text) << "');"
-    end
-  end
-
-  BLOCK_EXPR = /\s+(do|\{)(\s*\|[^|]*\|)?\s*\Z/
-
-  def add_expr_literal(src, code)
-    if code =~ BLOCK_EXPR
-      src << "@output_buffer.safe_concat((" << $1 << ").to_s);"
-    else
-      src << '@output_buffer << ((' << code << ').to_s);'
-    end
-  end
-
-  def add_expr_escaped(src, code)
-    src << '@output_buffer << ' << escaped_expr(code) << ';'
-  end
-
-  def add_postamble(src)
-    #src << '@output_buffer.to_s'
   end
 end
