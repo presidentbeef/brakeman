@@ -17,11 +17,23 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     @current_class = @current_module = @current_method = nil
   end
 
+  def process_controller name, src
+    if not node_type? src, :class
+      Brakeman.debug "#{name} is not a class, it's a #{src.node_type}"
+      return
+    else
+      @current_class = name
+      process_default src
+    end
+  end
+
   #Processes a class which is probably a controller.
+  #(This method should be retired - only classes should ever be processed
+  # and @current_module will never be set, leading to inaccurate class names)
   def process_class exp
     @current_class = class_name(exp[1])
     if @current_module
-      @current_class = (@current_module + "::" + @current_class.to_s).to_sym
+      @current_class = ("#@current_module::#@current_class").to_sym
     end
 
     process_default exp

@@ -234,7 +234,7 @@ class Brakeman::Scanner
         current += 1
       end
 
-      @processor.process_controller_alias controller[:src]
+      @processor.process_controller_alias name, controller[:src]
     end
 
     #No longer need these processed filter methods
