@@ -65,15 +65,15 @@ class Brakeman::Scanner
     process_initializers
     Brakeman.notify "Processing libs..."
     process_libs
-    Brakeman.notify "Processing routes...        "
+    Brakeman.notify "Processing routes...          "
     process_routes
-    Brakeman.notify "Processing templates...     "
+    Brakeman.notify "Processing templates...       "
     process_templates
-    Brakeman.notify "Processing models...        "
+    Brakeman.notify "Processing models...          "
     process_models
-    Brakeman.notify "Processing controllers...   "
+    Brakeman.notify "Processing controllers...     "
     process_controllers
-    Brakeman.notify "Indexing call sites...      "
+    Brakeman.notify "Indexing call sites...        "
     index_call_sites
     tracker
   end
