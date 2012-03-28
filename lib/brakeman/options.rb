@@ -31,6 +31,10 @@ module Brakeman::Options
           options[:report_progress] = progress
         end
 
+        opts.on "--[no-]check-updates", "Check for updates" do |updates|
+          options[:check_updates] = updates
+        end
+
         opts.on "-p", "--path PATH", "Specify path to Rails application" do |path|
           options[:app_path] = File.expand_path path
         end
@@ -39,7 +43,7 @@ module Brakeman::Options
           options[:quiet] = quiet
         end
 
-        opts.on( "-z", "--exit-on-warn", "Exit code is non-zero if warnings found") do
+        opts.on "-z", "--exit-on-warn", "Exit code is non-zero if warnings found" do
           options[:exit_on_warn] = true
         end
 
