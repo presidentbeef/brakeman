@@ -209,7 +209,7 @@ class Brakeman::Scanner
     controller_files = Dir.glob(@app_path + "/controllers/**/*.rb").sort
     controller_files.reject! { |f| @skip_files.match f } if @skip_files
 
-    total = controller_files.length * 2
+    total = controller_files.length
     current = 0
 
     controller_files.each do |f|
