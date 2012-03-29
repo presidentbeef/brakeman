@@ -32,14 +32,6 @@ class Brakeman::BaseProcessor < SexpProcessor
     exp
   end
 
-  def process_module exp
-    current_module = @current_module
-    @current_module = class_name exp[1]
-    process exp[2]
-    @current_module = current_module
-    exp
-  end
-
   #Process a new scope. Removes expressions that are set to nil.
   def process_scope exp
     exp = exp.dup
