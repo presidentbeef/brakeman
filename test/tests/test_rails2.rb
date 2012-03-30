@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 2,
         :template => 25,
-        :warning => 23 }
+        :warning => 25 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
         :template => 25,
-        :warning => 24 }
+        :warning => 26 }
     end
   end
 
@@ -503,6 +503,22 @@ class Rails2Tests < Test::Unit::TestCase
       :message => "Unescaped parameter value near line 1: params[:blah]",
       :confidence => 0,
       :file => /not_used\.html\.erb/
+  end
+
+  def test_check_send
+    assert_warning :type => :warning,
+      :warning_type => "Dangerous Send",
+      :line => 83,
+      :message => /\AUser controlled method execution/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+
+    assert_warning :type => :warning,
+      :warning_type => "Dangerous Send",
+      :line => 90,
+      :message => /\AUser defined target of method invocation/,
+      :confidence => 1,
+      :file => /home_controller\.rb/
   end
 end
 
