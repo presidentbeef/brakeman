@@ -33,6 +33,7 @@ class Brakeman::Scanner
   attr_reader :options
 
   RUBY_1_9 = !!(RUBY_VERSION =~ /^1\.9/)
+  KNOWN_TEMPLATE_EXTENSIONS = /.*\.(erb|haml|rhtml)$/
 
   #Pass in path to the root of the Rails application
   def initialize options, processor = nil
@@ -298,7 +299,7 @@ class Brakeman::Scanner
   end
 
   def process_template path
-    type = path.match(/.*\.(erb|haml|rhtml)$/)[1].to_sym
+    type = path.match(KNOWN_TEMPLATE_EXTENSIONS)[1].to_sym
     type = :erb if type == :rhtml
     name = template_path_to_name path
     text = File.read path
