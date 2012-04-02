@@ -117,6 +117,8 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def rescan_template path
+    return unless path.match KNOWN_TEMPLATE_EXTENSIONS
+
     template_name = template_path_to_name(path)
 
     tracker.reset_template template_name
