@@ -33,7 +33,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   def process_class exp
     @current_class = class_name(exp[1])
     if @current_module
-      @current_class = ("#@current_module::#@current_class").to_sym
+      @current_class = ("#{@current_module}::#{@current_class}").to_sym
     end
 
     process_default exp
