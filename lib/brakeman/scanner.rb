@@ -348,7 +348,7 @@ class Brakeman::Scanner
   #
   #Adds the processed models to tracker.models
   def process_models
-    model_files = Dir.glob(@app_path + "/models/*.rb").sort
+    model_files = Dir.glob(@app_path + "/models/**/*.rb").sort
     model_files.reject! { |f| @skip_files.match f } if @skip_files
 
     total = model_files.length
