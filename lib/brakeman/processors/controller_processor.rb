@@ -130,7 +130,13 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     name = exp[2]
 
     if exp[1].node_type == :self
-      target = @controller[:name]
+      if @controller
+        target = @controller[:name]
+      elsif @current_module
+        target = @current_module
+      else
+        target = nil
+      end
     else
       target = class_name exp[1]
     end
