@@ -1,3 +1,5 @@
+require 'digest/md5'
+
 #The Warning class stores information about warnings
 class Brakeman::Warning
   attr_reader :called_from, :check, :class, :confidence, :controller,
@@ -150,5 +152,17 @@ class Brakeman::Warning
     require 'json'
 
     JSON.dump self.to_hash
+  end
+
+  def to_annotation
+    clean_annotation.merge({hash: annotation_hash, note: ""})
+  end
+
+  def clean_annotation
+    to_hash.merge line: line
+  end
+
+  def annotation_hash
+    Digest::MD5.hexdigest(clean_annotation.to_yaml)
   end
 end
