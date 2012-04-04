@@ -140,6 +140,8 @@ module Brakeman
         :to_tabs
       when :json, :to_json
         :to_json
+      when :annotation, :to_annotation
+        :to_annotation
       else
         :to_s
       end
@@ -253,17 +255,22 @@ module Brakeman
     end
     tracker.run_checks
 
+    reporter = tracker.report
+    reporter.filter_by_annotations(options[:annotations_file]) if options[:annotations_file]
+
+    report_output = reporter.send(options[:output_format])
+
     if options[:output_file]
       notify "Generating report..."
 
       File.open options[:output_file], "w" do |f|
-        f.puts tracker.report.send(options[:output_format])
+        f.puts report_output
       end
       notify "Report saved in '#{options[:output_file]}'"
     elsif options[:print_report]
       notify "Generating report..."
 
-      puts tracker.report.send(options[:output_format])
+      puts report_output
     end
 
     tracker

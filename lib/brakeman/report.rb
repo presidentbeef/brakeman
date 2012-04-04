@@ -33,6 +33,7 @@ class Brakeman::Report
     @checks = tracker.checks
     @element_id = 0 #Used for HTML ids
     @warnings_summary = nil
+    @ignored_summary = nil
   end
 
   #Generate summary table of what was parsed
@@ -42,6 +43,8 @@ class Brakeman::Report
                 checks.controller_warnings.length +
                 checks.model_warnings.length +
                 checks.template_warnings.length
+
+    ignored_warnings = checks.ignored_warnings
 
     #Add number of high confidence warnings in summary.
     #Skipping for CSV because it makes the cell text instead of
@@ -63,15 +66,18 @@ class Brakeman::Report
     table << { "Scanned/Reported" => "Templates", "Total" => templates }
     table << { "Scanned/Reported" => "Errors", "Total" => tracker.errors.length }
     table << { "Scanned/Reported" => "Security Warnings", "Total" => warnings}
+    table << { "Scanned/Reported" => "Ignored warnings due to annotations", "Total" => ignored_warnings.length} if ignored_warnings
   end
 
   #Generate table of how many warnings of each warning type were reported
   def generate_warning_overview
     table = Ruport::Data::Table(["Warning Type", "Total"])
-    types = warnings_summary.keys
+    types = warnings_summary.keys | ignored_summary.keys
     types.delete :high_confidence
     types.sort.each do |warning_type|
-      table << { "Warning Type" => warning_type, "Total" => warnings_summary[warning_type] }
+      type_count = warnings_summary[warning_type].to_s
+      type_count << " (#{ignored_summary[warning_type]})" if checks.ignored_warnings && ignored_summary[warning_type] > 0
+      table << { "Warning Type" => warning_type, "Total" => type_count }
     end
     table
   end
@@ -491,6 +497,14 @@ class Brakeman::Report
     @warnings_summary = summary
   end
 
+  def ignored_summary
+    return @ignored_summary if @ignored_summary
+    summary = Hash.new(0)
+    checks.ignored_warnings.each do |warning|
+      summary[warning.warning_type.to_s] += 1
+    end
+    @ignored_summary = summary
+  end
 
   #Generate HTML for warnings, including context show/hidden via Javascript
   def with_context warning, message
@@ -615,5 +629,26 @@ class Brakeman::Report
     require 'json'
 
     @checks.all_warnings.map { |w| w.to_hash }.to_json
+  end
+
+  def to_annotation
+    warnings = @checks.all_warnings
+    warnings.map(&:to_annotation).to_yaml
+  end
+
+  def filter_by_annotations annotations_file
+    load_annotations annotations_file
+    @checks.filter_by_annotations(@annotations)
+  end
+
+  def load_annotations annotations_file
+    annotations_file ||= ""
+
+    [File.expand_path(annotations_file), File.expand_path("./.brakeman_annotations.yaml")].each do |f|
+      if File.exist? f and not File.directory? f
+        #notify "[Notice] Using annotations in #{f}"
+        @annotations = YAML::load_file f
+      end
+    end
   end
 end

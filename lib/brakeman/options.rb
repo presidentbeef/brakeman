@@ -129,7 +129,7 @@ module Brakeman::Options
 
         opts.on "-f", 
           "--format TYPE", 
-          [:pdf, :text, :html, :csv, :tabs, :json],
+          [:pdf, :text, :html, :csv, :tabs, :json, :annotation],
           "Specify output format. Default is text" do |type|
 
           type = "s" if type == :text
@@ -154,6 +154,10 @@ module Brakeman::Options
 
         opts.on "-o", "--output FILE", "Specify file for output. Defaults to stdout" do |file|
           options[:output_file] = file
+        end
+
+        opts.on "-A", "--use_annotations FILE", "Use annotations file" do |file|
+          options[:annotations_file] = file
         end
 
         opts.on "--separate-models", "Warn on each model without attr_accessible" do

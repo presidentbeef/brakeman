@@ -8,7 +8,7 @@ require 'thread'
 class Brakeman::Checks
   @checks = []
 
-  attr_reader :warnings, :controller_warnings, :model_warnings, :template_warnings, :checks_run
+  attr_reader :warnings, :controller_warnings, :model_warnings, :template_warnings, :ignored_warnings, :checks_run
 
   #Add a check. This will call +_klass_.new+ when running tests
   def self.add klass
@@ -31,6 +31,7 @@ class Brakeman::Checks
     @template_warnings = []
     @model_warnings = []
     @controller_warnings = []
+    @ignored_warnings = nil
     @checks_run = []
   end
 
@@ -54,6 +55,17 @@ class Brakeman::Checks
         raise "Unknown warning: #{warning.warning_set}"
       end
     end
+  end
+
+  def filter_by_annotations(annotations)
+    ignored_warning_hashes = annotations.map { |a| a[:hash] }
+    @ignored_warnings = warnings.select { |w| ignored_warning_hashes.include? w.annotation_hash }
+
+    [@warnings, @template_warnings, @controller_warnings, @model_warnings].each do |warning_group|
+      warning_group.reject! { |w| ignored_warning_hashes.include? w.annotation_hash }
+    end
+
+    puts "Ignoring #{@ignored_warnings.size}"
   end
 
   #Return a hash of arrays of new and fixed warnings
