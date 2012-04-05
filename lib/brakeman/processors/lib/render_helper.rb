@@ -58,7 +58,7 @@ module Brakeman::RenderHelper
       return 
     end
 
-    template_env = only_ivars
+    template_env = only_ivars(:include_request_vars)
 
     #Hash the environment and the source of the template to avoid
     #pointlessly processing templates, which can become prohibitively
