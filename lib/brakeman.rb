@@ -27,8 +27,8 @@ module Brakeman
   #  * :ignore_model_output - consider models safe (default: false)
   #  * :message_limit - limit length of messages
   #  * :min_confidence - minimum confidence (0-2, 0 is highest)
-  #  * :output_file - file for output
-  #  * :output_format - format for output (:to_s, :to_tabs, :to_csv, :to_html)
+  #  * :output_files - files for output
+  #  * :output_formats - formats for output (:to_s, :to_tabs, :to_csv, :to_html)
   #  * :parallel_checks - run checks in parallel (default: true)
   #  * :print_report - if no output file specified, print to stdout (default: false)
   #  * :quiet - suppress most messages (default: true)
@@ -65,7 +65,7 @@ module Brakeman
 
     options = load_options(options[:config_file]).merge! options
     options = get_defaults.merge! options
-    options[:output_format] = get_output_format options
+    options[:output_formats] = get_output_formats options
 
     app_path = options[:app_path]
 
@@ -124,39 +124,47 @@ module Brakeman
     }
   end
 
-  #Determine output format based on options[:output_format]
-  #or options[:output_file]
-  def self.get_output_format options
+  #Determine output formats based on options[:output_formats]
+  #or options[:output_files]
+  def self.get_output_formats options
     #Set output format
+    if options[:output_format] && options[:output_files] && options[:output_files].size > 1
+      raise ArgumentError, "Cannot specify output format if multiple output files specified"
+    end
     if options[:output_format]
-      case options[:output_format]
-      when :html, :to_html
-        :to_html
-      when :csv, :to_csv
-        :to_csv
-      when :pdf, :to_pdf
-        :to_pdf
-      when :tabs, :to_tabs
-        :to_tabs
-      when :json, :to_json
-        :to_json
-      else
-        :to_s
-      end
+      [
+        case options[:output_format]
+        when :html, :to_html
+          :to_html
+        when :csv, :to_csv
+          :to_csv
+        when :pdf, :to_pdf
+          :to_pdf
+        when :tabs, :to_tabs
+          :to_tabs
+        when :json, :to_json
+          :to_json
+        else
+          :to_s
+        end
+      ]
     else
-      case options[:output_file]
-      when /\.html$/i
-        :to_html
-      when /\.csv$/i
-        :to_csv
-      when /\.pdf$/i
-        :to_pdf
-      when /\.tabs$/i
-        :to_tabs
-      when /\.json$/i
-        :to_json
-      else
-        :to_s
+      return [:to_s] unless options[:output_files]
+      options[:output_files].map do |output_file|
+        case output_file
+        when /\.html$/i
+          :to_html
+        when /\.csv$/i
+          :to_csv
+        when /\.pdf$/i
+          :to_pdf
+        when /\.tabs$/i
+          :to_tabs
+        when /\.json$/i
+          :to_json
+        else
+          :to_s
+        end
       end
     end
   end
@@ -253,17 +261,21 @@ module Brakeman
     end
     tracker.run_checks
 
-    if options[:output_file]
+    if options[:output_files]
       notify "Generating report..."
 
-      File.open options[:output_file], "w" do |f|
-        f.puts tracker.report.send(options[:output_format])
+      options[:output_files].each_with_index do |output_file, idx|
+        File.open output_file, "w" do |f|
+          f.write tracker.report.send(options[:output_formats][idx])
+        end
+        notify "Report saved in '#{output_file}'"
       end
-      notify "Report saved in '#{options[:output_file]}'"
     elsif options[:print_report]
       notify "Generating report..."
 
-      puts tracker.report.send(options[:output_format])
+      options[:output_formats].each do |output_format|
+        puts tracker.report.send(output_format)
+      end
     end
 
     tracker
