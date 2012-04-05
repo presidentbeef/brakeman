@@ -204,6 +204,13 @@ module Brakeman::Util
     call? exp and (exp == REQUEST_ENV or exp[1] == REQUEST_ENV)
   end
 
+  #Check if exp is params, cookies, or request_env
+  def request_value? exp
+    params? exp or
+    cookies? exp or
+    request_env? exp
+  end
+
   #Check if _exp_ is a Sexp.
   def sexp? exp
     exp.is_a? Sexp
