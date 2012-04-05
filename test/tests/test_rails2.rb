@@ -271,7 +271,7 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /test_params\.html\.erb/
   end
 
-  def test_sanitized_params_from_controller
+  def test_unrendered_sanitized_params_from_controller
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 1,
