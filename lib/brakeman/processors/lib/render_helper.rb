@@ -14,20 +14,14 @@ module Brakeman::RenderHelper
       begin
         process_template template_name, exp[3]
       rescue ArgumentError => e
-        $stderr.puts e
-        $stderr.puts self.class
-        $stderr.puts @template[:name]
-        $stderr.puts "Problem processing render: #{exp}"
+        Brakeman.debug "Problem processing render: #{exp}"
+        raise e
       end
     when :partial, :layout
       process_partial exp[2], exp[3]
     when :nothing
     end
     exp
-  end
-
-  def process_layout_in_view exp
-    $stderr.puts exp.inspect
   end
 
   #Processes layout
