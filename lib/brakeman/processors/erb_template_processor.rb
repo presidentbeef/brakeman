@@ -44,7 +44,7 @@ class Brakeman::ErbTemplateProcessor < Brakeman::TemplateProcessor
       end
     elsif target == nil and method == :render
       exp[3] = process(exp[3])
-      make_render exp
+      make_render_in_view exp
     else
       args = exp[3] = process(exp[3])
       call = Sexp.new :call, target, method, args
