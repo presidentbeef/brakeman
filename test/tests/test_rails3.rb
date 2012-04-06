@@ -32,6 +32,15 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /home_controller\.rb/
   end
 
+  def test_class_eval_false_positive
+    assert_no_warning :type => :warning,
+      :warning_type => "Dangerous Eval",
+      :line => 13,
+      :message => /^User input in eval/,
+      :confidence => 0,
+      :file => /account\.rb/
+  end
+
   def test_command_injection_params_interpolation
     assert_warning :type => :warning,
       :warning_type => "Command Injection",

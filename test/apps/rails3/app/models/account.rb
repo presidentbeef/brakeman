@@ -8,4 +8,11 @@ class Account < ActiveRecord::Base
   def mass_assign_it
     Account.new(params[:account_info]).some_other_method
   end
+
+  def test_class_eval
+    #Should not raise a warning
+    User.class_eval do
+      attr_reader :some_private_thing
+    end
+  end
 end
