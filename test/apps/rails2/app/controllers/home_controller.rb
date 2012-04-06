@@ -108,6 +108,10 @@ class HomeController < ApplicationController
     @result = target.send(:method, *args)
   end    
 
+  def test_sanitized_param
+    params["something"] = h(params["something"])
+  end
+
   private
 
   def filter_it
