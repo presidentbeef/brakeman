@@ -85,6 +85,10 @@ module BrakemanTester::CheckExpected
       assert_equal number, warnings.length, "Expected #{number} #{type} warnings, but found #{warnings.length}"
     end
   end
+
+  def test_zero_errors
+    assert_equal 0, report[:errors].length 
+  end
 end
 
 Dir.glob "#{TEST_PATH}/tests/*.rb" do |file|
