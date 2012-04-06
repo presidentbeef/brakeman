@@ -3,9 +3,19 @@ module Brakeman::ProcessorHelper
 
   #Sets the current module.
   def process_module exp
-    @current_module = class_name(exp[1]).to_s
-    process exp[2] 
-    @current_module = nil
+    module_name = class_name(exp[1]).to_s
+    prev_module = @current_module
+
+    if prev_module
+      @current_module = "#{prev_module}::#{module_name}"
+    else
+      @current_module = module_name
+    end
+
+    process exp[2]
+
+    @current_module = prev_module
+
     exp
   end
 

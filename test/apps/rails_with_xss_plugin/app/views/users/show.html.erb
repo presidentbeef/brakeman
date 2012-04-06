@@ -1,0 +1,22 @@
+<p>
+  <b>Display name:</b>
+  <%=h @user.display_name %>
+</p>
+
+<p>
+  <b>User name:</b>
+  <%=h @user.user_name %>
+</p>
+
+<p>
+  <b>Bio:</b>
+  <%= raw @user.bio %>
+</p>
+<p>
+  <b>Bad:</b> <%= @evil_input %>
+</p>
+
+<% if @current_user and (@current_user.id == @user.id or @current_user.admin?) %>
+<%= link_to 'Edit', edit_user_path(@user) %> |
+<% end %>
+<%= link_to 'Back', users_path %>

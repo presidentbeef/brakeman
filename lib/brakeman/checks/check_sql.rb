@@ -201,7 +201,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       true
     elsif call? target
       check_call target
-    elsif target == nil and tracker.options[:rails3] and method.to_s.match /^first|last|all|where|order|group|having$/
+    elsif target == nil and tracker.options[:rails3] and method.to_s.match(/^first|last|all|where|order|group|having$/)
       check_arguments args
     else
       false

@@ -80,6 +80,23 @@ module Brakeman::Util
     hash
   end
 
+  #Get value from hash using key.
+  #
+  #If _key_ is a Symbol, it will be converted to a Sexp(:lit, key).
+  def hash_access hash, key
+    if key.is_a? Symbol
+      key = Sexp.new(:lit, key)
+    end
+
+    hash_iterate hash do |k, v|
+      if k == key
+        return v
+      end
+    end
+
+    nil
+  end
+
   #Adds params, session, and cookies to environment
   #so they can be replaced by their respective Sexps.
   def set_env_defaults

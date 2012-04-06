@@ -73,6 +73,41 @@ class HomeController < ApplicationController
     User.humans.alive.find(:all, :conditions => "age > #{params[:age]}")
   end
 
+  def test_another_dynamic_render
+    render :action => params[:action]
+  end
+
+  # not safe
+  def test_send_first_param
+    method = params["method"]
+    @result = User.send(method.to_sym)
+  end
+
+  # not that safe
+  def test_send_target
+    table = params["table"]
+    model = table.classify.constantize
+    @result = model.send(:method)
+  end
+
+  # safe
+  def test_send_second_param
+    args = params["args"] || []
+    @result = User.send(:method, *args)
+  end
+
+  # safe
+  def test_send_second_param
+    method = params["method"] == 1 ? :method_a : :method_b
+    @result = User.send(method, *args)
+  end  
+
+  # safe
+  def test_send_second_param
+    target = params["target"] == 1 ? Account : User
+    @result = target.send(:method, *args)
+  end    
+
   private
 
   def filter_it

@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <title>Users: <%= controller.action_name %></title>
+  <%= stylesheet_link_tag 'scaffold' %>
+</head>
+<body>
+
+<p style="color: green"><%= notice %></p>
+
+<%= yield %>
+
+<br />
+<hr />
+<ul>
+  <li><%= link_to 'Posts', posts_url %></li>
+  <li><%= link_to 'Users', users_url %></li>
+  <li><%= link_to 'Search Users', '/search' %></li>
+<% if @current_user %>
+  <li><%= link_to 'Edit User', :controller => 'users', :action => 'edit', :id => @current_user %>
+  <li><%= link_to 'Logout', '/logout' %></li>
+<% else %>
+  <li><%= link_to 'Login', '/login' %></li>
+<% end %>
+</ul>
+</body>
+</html>
