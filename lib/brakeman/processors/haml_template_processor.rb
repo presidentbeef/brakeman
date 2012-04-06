@@ -92,7 +92,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
     elsif target == nil and method == :render
       #Process call to render()
       exp[3] = process exp[3]
-      make_render exp
+      make_render_in_view exp
     else
       args = process exp[3]
       call = Sexp.new :call, target, method, args

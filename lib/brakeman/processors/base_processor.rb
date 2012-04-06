@@ -202,9 +202,14 @@ class Brakeman::BaseProcessor < SexpProcessor
     exp
   end
 
+  #Convenience method for `make_render exp, true`
+  def make_render_in_view exp
+    make_render exp, true
+  end
+
   #Generates :render node from call to render.
-  def make_render exp
-    render_type, value, rest = find_render_type exp[3]
+  def make_render exp, in_view = false 
+    render_type, value, rest = find_render_type exp[3], in_view
     rest = process rest
     result = Sexp.new(:render, render_type, value, rest)
     result.line(exp.line)
@@ -214,9 +219,11 @@ class Brakeman::BaseProcessor < SexpProcessor
   #Determines the type of a call to render.
   #
   #Possible types are:
-  #:action, :default :file, :inline, :js, :json, :nothing, :partial,
+  #:action, :default, :file, :inline, :js, :json, :nothing, :partial,
   #:template, :text, :update, :xml
-  def find_render_type args
+  #
+  #And also :layout for inside templates
+  def find_render_type args, in_view = false
     rest = Sexp.new(:hash)
     type = nil
     value = nil
@@ -244,10 +251,18 @@ class Brakeman::BaseProcessor < SexpProcessor
       value = args[1]
     end
 
+    types_in_hash = Set[:action, :file, :inline, :js, :json, :nothing, :partial, :text, :update, :xml]
+
+    #render :layout => "blah" means something else when in a template
+    if in_view
+      types_in_hash << :layout
+    end
+
+    #Look for "type" of render in options hash
+    #For example, render :file => "blah"
     if hash? args[-1]
       hash_iterate(args[-1]) do |key, val|
-        case key[1]
-        when :action, :file, :inline, :js, :json, :nothing, :partial, :text, :update, :xml
+        if types_in_hash.include? key[1]
           type = key[1]
           value = val
         else  

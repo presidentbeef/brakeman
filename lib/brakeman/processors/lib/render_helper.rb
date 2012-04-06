@@ -11,8 +11,13 @@ module Brakeman::RenderHelper
     when :action
       process_action exp[2][1], exp[3]
     when :default
-      process_template template_name, exp[3]
-    when :partial
+      begin
+        process_template template_name, exp[3]
+      rescue ArgumentError => e
+        Brakeman.debug "Problem processing render: #{exp}"
+        raise e
+      end
+    when :partial, :layout
       process_partial exp[2], exp[3]
     when :nothing
     end
