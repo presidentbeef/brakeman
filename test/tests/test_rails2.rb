@@ -507,14 +507,14 @@ class Rails2Tests < Test::Unit::TestCase
 
   def test_check_send
     assert_warning :type => :warning,
-      :warning_type => "Dangerous use of send",
+      :warning_type => "Dangerous Send",
       :line => 83,
       :message => /\AUser controlled method execution/,
       :confidence => 0,
       :file => /home_controller\.rb/
 
     assert_warning :type => :warning,
-      :warning_type => "Dangerous use of send",
+      :warning_type => "Dangerous Send",
       :line => 90,
       :message => /\AUser defined target of method invocation/,
       :confidence => 1,
