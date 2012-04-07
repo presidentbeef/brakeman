@@ -101,31 +101,6 @@ Brakeman will raise warnings on models that use `attr_protected`. To suppress th
 
     brakeman --ignore-protected
 
-## Using annotations to ignore false positives
-
-Brakeman can now produce an "annotation" output format via `-f annotation`.  The output of this format is a YAML file which marks up the various warnings produced in a brakeman run.  The intention of this format is to extract the various warnings your security team has identified as technically a vulnerability but one that will not affect the system's integrity or that the service owner has accepted risk on (for you ITIL types).  The general workflow for using annotations is as follows:
-
-1. Run brakeman with `-f annotation -o brakeman_annotations.yaml` options.
-2. Extract the warnings you wish to ignore as false-positives from `brakeman_annotations.yaml` into `.brakeman_annotations.yaml` noting the differing leading periods.  The `-A` flag defaults to using the `.brakeman_annotations.yaml` filename but another could just as easily be used.  Also make sure the leading three dashes (part of the YAML markup) remain in place.  Do not rearrange the lines of the YAML encoded hash before the `hash` attribute but you may edit everything occurring after the `hash` attribute.  For instance you might edit the note attribute to indicate why you have chosen to ignore that mass-assignment warning we've created for you.
-
-```yaml
-    ---
-    - :warning_type: Mass Assignment
-      :message: Unprotected mass assignment
-      :file: /Users/mrdev/Documents/my/app/controllers/vulernablity_controller.rb
-      :code: Vulnerability.new(params[:vulnerability])
-      :location:
-        :type: :method
-        :class: :VulnerabilityController
-        :method: :not_create
-      :confidence: High
-      :line: 51
-      :hash: 29d2d5ec2b388060c746d6901e477ef9
-      :note: 'We ignore this because this action does not have a route'
-```
-3. Run Brakeman with the `-A <filename>` option where the filename is the name of your new annotations file if you haven't used the default name.  The warnings from your annotation file should be ignored with a note to that effect in the report.
-
-
 # Warning information
 
 See WARNING\_TYPES for more information on the warnings reported by this tool.
