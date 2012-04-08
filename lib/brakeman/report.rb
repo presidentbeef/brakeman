@@ -35,11 +35,13 @@ class Brakeman::Report
     @element_id = 0 #Used for HTML ids
     @warnings_summary = nil
     @highlight_user_input = tracker.options[:highlight_user_input]
+    @ignored_summary = nil
   end
 
   #Generate summary table of what was parsed
   def generate_overview html = false
     warnings = all_warnings.length
+    ignored_warnings = checks.ignored_warnings
 
     if html
       load_and_render_erb('overview', binding)
@@ -56,7 +58,7 @@ class Brakeman::Report
 
   #Generate table of how many warnings of each warning type were reported
   def generate_warning_overview html = false
-    types = warnings_summary.keys
+    types = warnings_summary.keys | ignored_summary.keys
     types.delete :high_confidence
 
     if html
@@ -490,6 +492,15 @@ class Brakeman::Report
     @warnings_summary = summary
   end
 
+  def ignored_summary
+    return @ignored_summary if @ignored_summary
+    summary = Hash.new(0)
+    checks.ignored_warnings.each do |warning|
+      summary[warning.warning_type.to_s] += 1
+    end
+    @ignored_summary = summary
+  end
+
   #Escape warning message and highlight user input in text output
   def text_message warning, message
     if @highlight_user_input and warning.user_input
@@ -674,5 +685,26 @@ class Brakeman::Report
     content = File.read(File.expand_path("templates/#{file}.html.erb", File.dirname(__FILE__)))
     template = ERB.new(content)
     template.result(bind)
+  end
+
+  def to_annotation
+    warnings = @checks.all_warnings
+    warnings.map(&:to_annotation).to_yaml
+  end
+
+  def filter_by_annotations annotations_file
+    load_annotations annotations_file
+    @checks.filter_by_annotations(@annotations)
+  end
+
+  def load_annotations annotations_file
+    annotations_file ||= ""
+
+    [File.expand_path(annotations_file), File.expand_path("./.brakeman_annotations.yaml")].each do |f|
+      if File.exist? f and not File.directory? f
+        #notify "[Notice] Using annotations in #{f}"
+        @annotations = YAML::load_file f
+      end
+    end
   end
 end
