@@ -85,5 +85,12 @@ class UsersController < ApplicationController
     end
   end
 
+  def circular_render
+  end
+
   skip_before_filter :verify_authenticity_token, :except => [:create, :edit]
+
+  def show_something_cool
+    @x = 1
+  end
 end
