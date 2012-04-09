@@ -122,7 +122,7 @@ module Brakeman::RenderHelper
       #Run source through AliasProcessor with instance variables from the
       #current environment.
       #TODO: Add in :locals => { ... } to environment
-      src = Brakeman::TemplateAliasProcessor.new(@tracker, template).process_safely(template[:src], template_env)
+      src = Brakeman::TemplateAliasProcessor.new(@tracker, template, called_from).process_safely(template[:src], template_env)
 
       #Run alias-processed src through the template processor to pull out
       #information and outputs.
