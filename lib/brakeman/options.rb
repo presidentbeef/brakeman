@@ -161,7 +161,7 @@ module Brakeman::Options
           options[:output_files].push(file)
         end
 
-        opts.on "-A", "--use_annotations FILE", "Use annotations file" do |file|
+        opts.on "-A", "--use-annotations FILE", "Use annotations file" do |file|
           options[:annotations_file] = file
         end
 

@@ -139,6 +139,8 @@ Brakeman can now produce an "annotation" output format via `-f annotation`.  The
 ```
 3. Run Brakeman with the `-A <filename>` option where the filename is the name of your new annotations file if you haven't used the default name.  The warnings from your annotation file should be ignored with a note to that effect in the report.
 
+For best results use the `--separate-models` option to brakeman.  That way you can ignore a single mass-assignment vulnerability (for example) and not ignore _all_ mass-assignments vulnerabilities which would be The Wrong Thing :TM:
+
 # Warning information
 
 See WARNING\_TYPES for more information on the warnings reported by this tool.

@@ -133,6 +133,7 @@ module Brakeman
       raise ArgumentError, "Cannot specify output format if multiple output files specified"
     end
     if options[:output_format]
+      [
       case options[:output_format]
       when :html, :to_html
         :to_html
@@ -149,6 +150,7 @@ module Brakeman
       else
         :to_s
       end
+      ]
     else
       return [:to_s] unless options[:output_files]
       options[:output_files].map do |output_file|

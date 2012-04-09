@@ -32,7 +32,7 @@ class Brakeman::Checks
     @template_warnings = []
     @model_warnings = []
     @controller_warnings = []
-    @ignored_warnings = nil
+    @ignored_warnings = []
     @checks_run = []
   end
 
