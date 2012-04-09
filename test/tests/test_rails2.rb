@@ -11,13 +11,13 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 25,
+        :template => 26,
         :warning => 25 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 25,
+        :template => 26,
         :warning => 26 }
     end
   end
@@ -269,6 +269,24 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Unescaped parameter value/,
       :confidence => 0,
       :file => /test_params\.html\.erb/
+  end
+
+  def test_unrendered_sanitized_params_from_controller
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped parameter value/,
+      :confidence => 0,
+      :file => /test_sanitized_param\.html\.erb/
+  end
+
+  def test_sanitized_params_from_controller
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 5,
+      :message => /^Unescaped parameter value/,
+      :confidence => 0,
+      :file => /test_sanitized_param\.html\.erb/
   end
 
   def test_indirect_xss

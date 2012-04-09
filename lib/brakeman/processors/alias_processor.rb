@@ -492,12 +492,25 @@ class Brakeman::AliasProcessor < SexpProcessor
 
   #Returns a new SexpProcessor::Environment containing only instance variables.
   #This is useful, for example, when processing views.
-  def only_ivars
+  def only_ivars include_request_vars = false
     res = SexpProcessor::Environment.new
-    env.all.each do |k, v|
-      #TODO Why would this have nil values?
-      res[k] = v.dup if k.node_type == :ivar and not v.nil?
+
+    if include_request_vars
+      env.all.each do |k, v|
+        #TODO Why would this have nil values?
+        if (k.node_type == :ivar or request_value? k) and not v.nil?
+          res[k] = v.dup
+        end
+      end
+    else
+      env.all.each do |k, v|
+        #TODO Why would this have nil values?
+        if k.node_type == :ivar and not v.nil?
+          res[k] = v.dup
+        end
+      end
     end
+
     res
   end
 
