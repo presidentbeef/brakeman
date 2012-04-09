@@ -1,5 +1,6 @@
 require 'thread'
 require 'brakeman/differ'
+require 'set'
 
 #Collects up results from running different checks.
 #
@@ -59,14 +60,12 @@ class Brakeman::Checks
   end
 
   def filter_by_annotations(annotations)
-    ignored_warning_hashes = annotations.map { |a| a[:hash] }
+    ignored_warning_hashes = Set.new annotations.map { |a| a[:hash] }
     @ignored_warnings = warnings.select { |w| ignored_warning_hashes.include? w.annotation_hash }
 
     [@warnings, @template_warnings, @controller_warnings, @model_warnings].each do |warning_group|
       warning_group.reject! { |w| ignored_warning_hashes.include? w.annotation_hash }
     end
-
-    puts "Ignoring #{@ignored_warnings.size}"
   end
 
   #Return a hash of arrays of new and fixed warnings
