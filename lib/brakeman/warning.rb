@@ -167,11 +167,11 @@ class Brakeman::Warning
   end
 
   def to_annotation
-    clean_annotation.merge({hash: annotation_hash, note: ""})
+    clean_annotation.merge({:hash => annotation_hash, :note => ""})
   end
 
   def clean_annotation
-    to_hash.merge line: line
+    to_hash.merge :line => line
   end
 
   def annotation_hash
