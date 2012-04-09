@@ -9,14 +9,19 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
 
   FORM_METHODS = Set[:form_for, :remote_form_for, :form_remote_for]
 
-  def initialize tracker, template
-    super()
-    @tracker = tracker
+  def initialize tracker, template, called_from = nil
+    super tracker
     @template = template
+    @called_from = called_from
   end
 
   #Process template
   def process_template name, args
+    if @called_from and @called_from.match(/Template:#{name}$/)
+      Brakeman.debug "Skipping circular render from #{@template[:name]} to #{name}"
+      return
+    end
+
     super name, args, "Template:#{@template[:name]}"
   end
 
