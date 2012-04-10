@@ -41,6 +41,10 @@ To specify an output file for the results:
 
 The output format is determined by the file extension or by using the `-f` option. Current options are: `text`, `html`, `tabs`, `json` and `csv`.
 
+Multiple output files can be specified:
+
+    brakeman -o output.html -o output.json
+
 To suppress informational warnings and just output the report:
 
     brakeman -q
