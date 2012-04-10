@@ -1,3 +1,17 @@
+# 1.5.3
+
+ * Add check for user input in Object#send (Neil Matatall)
+ * Handle render :layout in views
+ * Support output to multiple formats (Nick Green)
+ * Prevent infinite loops in mutually recursive templates
+ * Only check eval arguments for user input, not targets
+ * Search subdirectories for models
+ * Set values in request hashes and propagate to views
+ * Add rake task file to gemspec (Anton Ageev)
+ * Filter rescanning of templates (Neil Matatall)
+ * Improve handling of modules and nesting
+ * Test for zero errors in test reports
+
 # 1.5.2
 
  * Fix link_to checks for Rails 2.0 and 2.3
