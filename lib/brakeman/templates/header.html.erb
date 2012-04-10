@@ -1,0 +1,38 @@
+<!DOCTYPE HTML SYSTEM>
+<html>
+<head>
+<title>Brakeman Report</title>
+  <script>
+    function toggle(context) {
+      var elem = document.getElementById(context);
+
+      if (elem.style.display != "block")
+        elem.style.display = "block";
+      else
+        elem.style.display = "none";
+        
+      elem.parentNode.scrollIntoView();
+    }
+  </script>
+  <style>
+    <%= css %>
+  </style>
+</head>
+<body>
+
+<h1>Brakeman Report</h1>
+<table>
+  <tr>
+    <th>Application Path</th>
+    <th>Rails Version</th>
+    <th>Report Generation Time</th>
+    <th>Checks Performed</th>
+  </tr>
+  <tr>
+    <td><%= File.expand_path tracker.options[:app_path] %></td>
+    <td><%= rails_version %></td>
+    <td><%= Time.now %></td>
+    <td><%= checks.checks_run.sort.join(", ") %></td>
+  </tr>
+</table>
+<br>
