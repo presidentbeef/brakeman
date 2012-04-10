@@ -162,8 +162,8 @@ class Brakeman::Report
 
   #Generate table of model warnings or return nil if no warnings
   def generate_model_warnings html = false
-    unless checks.model_warnings.empty?
-      table = Ruport::Data::Table(["Confidence", "Model", "Warning Type", "Message"])
+    if checks.model_warnings.any?
+      warnings = []
       checks.model_warnings.each do |warning|
         w = warning.to_row :model
 
@@ -174,16 +174,20 @@ class Brakeman::Report
           w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
         end
 
-        table << w
+        warnings << w
       end
 
-      if table.empty?
-        nil
+      return nil if warnings.empty?
+      warnings = warnings.sort_by{|row| row["Model"]}.sort_by{|row| row["Warning Type"]}.sort_by{|row| row["Confidence"]}
+
+      if html
+        load_and_render_erb('model_warnings', binding)
       else
-        table.sort_rows_by! "Model"
-        table.sort_rows_by! "Warning Type"
-        table.sort_rows_by! "Confidence"
-        table.to_group "Model Warnings"
+        Terminal::Table.new(:headings => ["Confidence", "Model", "Warning Type", "Message"]) do |t|
+          warnings.each do |warning|
+            t.add_row [warning["Confidence"], warning["Model"], warning["Warning Type"], warning["Message"]]
+          end
+        end
       end
     else
       nil

@@ -1,0 +1,17 @@
+<p>Controller Warnings</p>
+<table>
+  <tr>
+    <th>Confidence</th>
+    <th>Model</th>
+    <th>Warning Type</th>
+    <th>Message</th>
+  </tr>
+<% warnings.each do |warning| %>
+  <tr>
+    <td><%= warning['Confidence']%></td>
+    <td><%= warning['Model']%></td>
+    <td><%= warning['Warning']%></td>
+    <td><%= warning['Message']%></td>
+  </tr>
+<% end %>
+</table>
