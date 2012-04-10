@@ -80,7 +80,7 @@ class Brakeman::Report
       if html
         load_and_render_erb('error_overview', binding)
       else
-        table = Terminal::Table.new(:headings => ['Error', 'Location']) do |t|
+        Terminal::Table.new(:headings => ['Error', 'Location']) do |t|
           tracker.errors.each do |error|
             t.add_row [error[:error], error[:backtrace][0]]
           end
@@ -128,8 +128,8 @@ class Brakeman::Report
 
   #Generate table of template warnings or return nil if no warnings
   def generate_template_warnings html = false
-    unless checks.template_warnings.empty?
-      table = Ruport::Data::Table(["Confidence", "Template", "Warning Type", "Message"])
+    if checks.template_warnings.any?
+      warnings = Ruport::Data::Table(["Confidence", "Template", "Warning Type", "Message"])
       checks.template_warnings.each do |warning|
         w = warning.to_row :template
 
@@ -140,16 +140,20 @@ class Brakeman::Report
           w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
         end
 
-        table << w
+        warnings << w
       end
 
-      if table.empty?
-        nil
+      return nil if warnings.empty?
+
+      warnings = warnings.sort_by{|row| row["Template"]}.sort_by{|row| row["Warning Type"]}.sort_by{|row| row["Confidence"]}
+      if html
+        load_and_render_erb('view_warnings', binding)
       else
-        table.sort_rows_by! "Template"
-        table.sort_rows_by! "Warning Type"
-        table.sort_rows_by! "Confidence"
-        table.to_group "View Warnings"
+        Terminal::Table.new(:headings => ["Confidence", "Template", "Warning Type", "Message"]) do |t|
+          warnings.each do |warning|
+            t.add_row [warning["Confidence"], warning["Template"], warning["Warning Type"], warning["Message"]]
+          end
+        end
       end
     else
       nil
@@ -189,7 +193,7 @@ class Brakeman::Report
   #Generate table of controller warnings or nil if no warnings
   def generate_controller_warnings html = false
     unless checks.controller_warnings.empty?
-      table = Ruport::Data::Table(["Confidence", "Controller", "Warning Type", "Message"])
+      warnings = []
       checks.controller_warnings.each do |warning|
         w = warning.to_row :controller
 
@@ -200,16 +204,21 @@ class Brakeman::Report
           w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
         end
 
-        table << w
+        warnings << w
       end
 
-      if table.empty?
-        nil
+      return nil if warnings.empty?
+      
+      warnings = warnings.sort_by{|row| row["Controller"]}.sort_by{|row| row["Warning Type"]}.sort_by{|row| row["Confidence"]}
+
+      if html
+        load_and_render_erb('controller_warnings', binding)
       else
-        table.sort_rows_by! "Controller"
-        table.sort_rows_by! "Warning Type"
-        table.sort_rows_by! "Confidence"
-        table.to_group "Controller Warnings"
+        Terminal::Table.new(:headings => ["Confidence", "Controller", "Warning Type", "Message"]) do |t|
+          warnings.each do |warning|
+            t.add_row [warning["Confidence"], warning["Controller"], warning["Warning Type"], warning["Message"]]
+          end
+        end
       end
     else
       nil
@@ -310,7 +319,7 @@ class Brakeman::Report
     end
 
     if tracker.options[:report_routes] or tracker.options[:debug]
-      out << generate_controllers(true)
+      out << generate_controllers(true).to_s
     end
 
     if tracker.options[:debug]
@@ -319,17 +328,11 @@ class Brakeman::Report
 
     out << generate_errors(true).to_s
     out << generate_warnings(true).to_s
+    out << generate_controller_warnings(true).to_s
+    out << generate_model_warnings(true).to_s
+    out << generate_template_warnings(true)
 
-    # res = generate_controller_warnings(true)
-    # out << res.to_html if res
-
-    # res = generate_model_warnings(true)
-    # out << res.to_html if res
-
-    # res = generate_template_warnings(true)
-    # out << res.to_html if res
-
-    # out << "</body></html>"
+    out << "</body></html>"
   end
 
   #Output text version of the report
@@ -354,19 +357,20 @@ class Brakeman::Report
       generate_templates.to_s << "\n"
     end
 
-    out << generate_errors.to_s
+    res = generate_errors
+    out << "+Errors+\n" << res.to_s if res
 
     res = generate_warnings
     out << "+SECURITY WARNINGS+\n" << res.to_s << "\n" if res
 
-    # res = generate_controller_warnings
-    # out << res.to_s << "\n" if res
+    res = generate_controller_warnings
+    out << res.to_s << "\n" if res
 
-    # res = generate_model_warnings 
-    # out << res.to_s << "\n" if res
+    res = generate_model_warnings 
+    out << res.to_s << "\n" if res
 
-    # res = generate_template_warnings
-    # out << res.to_s << "\n" if res
+    res = generate_template_warnings
+    out << "View Warnings:\n\n" << res.to_s << "\n" if res
 
     out
   end
