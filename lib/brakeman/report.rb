@@ -49,11 +49,11 @@ class Brakeman::Report
       load_and_render_erb('overview', binding)
     else
       table = build_text_table(['Scanned/Reported', 'Total']) do |t|
-        t << ['Controllers', tracker.controllers.length]
-        t << ['Models', tracker.models.length - 1]
-        t << ['Templates', templates]
-        t << ['Errors', tracker.errors.length]
-        t << ['Security Warnings', "#{warnings} (#{warnings_summary[:high_confidence]})"]
+        t.add_row ['Controllers', tracker.controllers.length]
+        t.add_row ['Models', tracker.models.length - 1]
+        t.add_row ['Templates', templates]
+        t.add_row ['Errors', tracker.errors.length]
+        t.add_row ['Security Warnings', "#{warnings} (#{warnings_summary[:high_confidence]})"]
       end
     end
   end
@@ -68,7 +68,7 @@ class Brakeman::Report
     else
       table = build_text_table(['Warning Type', 'Total']) do |t|
         types.sort.each do |warning_type|
-          t << [warning_type, warnings_summary[warning_type]]
+          t.add_row [warning_type, warnings_summary[warning_type]]
         end
       end
     end
@@ -82,8 +82,8 @@ class Brakeman::Report
       else
         table = build_text_table(['Error', 'Location']) do |t|
           tracker.errors.each do |error|
-            t << error[:error]
-            t << error[:backtrace][0]
+            t.add_row error[:error]
+            t.add_row error[:backtrace][0]
           end
         end
       end
@@ -250,7 +250,7 @@ class Brakeman::Report
     else
       table = build_text_table(['Name', 'Parent', 'Includes', 'Routes']) do |t|
         contoller_rows.each do |row|
-          t << [row['Name'], row['Parent'], row['Includes'], row['Routes']]
+          t.add_row [row['Name'], row['Parent'], row['Includes'], row['Routes']]
         end
       end
     end
@@ -281,7 +281,7 @@ class Brakeman::Report
         output << template_name.to_s << "\n\n" 
         table = build_text_table(['Output']) do |t|
           calls.each do |v|
-            t << v
+            t.add_row v
           end
         end
 
@@ -604,8 +604,8 @@ class Brakeman::Report
 
   def build_text_table(header, &block)
     table = Terminal::Table.new do |t|
-      t << header
-      t << :separator
+      t.add_row header
+      t.add_separator
       yield t
     end
   end
