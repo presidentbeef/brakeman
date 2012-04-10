@@ -48,9 +48,7 @@ class Brakeman::Report
     if html
       load_and_render_erb('overview', binding)
     else
-      table = Terminal::Table.new do |t|
-        t << ['Scanned/Reported', 'Total']
-        t << :separator
+      table = build_text_table(['Scanned/Reported', 'Total']) do |t|
         t << ['Controllers', tracker.controllers.length]
         t << ['Models', tracker.models.length - 1]
         t << ['Templates', templates]
@@ -68,10 +66,7 @@ class Brakeman::Report
     if html
       load_and_render_erb('warning_overview', binding)
     else
-      table = Terminal::Table.new do |t|
-        t << ['Warning Type', 'Total']
-        t << :separator
-
+      table = build_text_table(['Warning Type', 'Total']) do |t|
         types.sort.each do |warning_type|
           t << [warning_type, warnings_summary[warning_type]]
         end
@@ -85,10 +80,7 @@ class Brakeman::Report
       if html
         load_and_render_erb('error_overview', binding)
       else
-        table = Terminal::Table.new do |t|
-          t << ['Error', 'Location']
-          t << :separator
-
+        table = build_text_table(['Error', 'Location']) do |t|
           tracker.errors.each do |error|
             t << error[:error]
             t << error[:backtrace][0]
@@ -256,10 +248,7 @@ class Brakeman::Report
     if html
       load_and_render_erb('controller_overview', binding)
     else
-      table = Terminal::Table.new do |t|
-        t << ['Name', 'Parent', 'Includes', 'Routes']
-        t << :separator
-
+      table = build_text_table(['Name', 'Parent', 'Includes', 'Routes']) do |t|
         contoller_rows.each do |row|
           t << [row['Name'], row['Parent'], row['Includes'], row['Routes']]
         end
@@ -290,10 +279,7 @@ class Brakeman::Report
       output = ''
       template_rows.each_pair do |template_name, calls|
         output << template_name.to_s << "\n\n" 
-        table = Terminal::Table.new do |t|
-          t << ['Output']
-          t << :separator
-
+        table = build_text_table(['Output']) do |t|
           calls.each do |v|
             t << v
           end
@@ -346,7 +332,7 @@ class Brakeman::Report
   def to_s
     out = text_header <<
     "\n+SUMMARY+\n" <<
-    generate_overview.to_s << "\n" <<
+    generate_overview.to_s << "\n\n" <<
     generate_warning_overview.to_s << "\n"
 
     #Return output early if only summarizing
@@ -355,12 +341,12 @@ class Brakeman::Report
     end
 
     if tracker.options[:report_routes] or tracker.options[:debug]
-      out << "+CONTROLLERS+\n" <<
+      out << "\n+CONTROLLERS+\n" <<
       generate_controllers.to_s << "\n"
     end
 
     if tracker.options[:debug]
-      out << "+TEMPLATES+\n\n" <<
+      out << "\n+TEMPLATES+\n\n" <<
       generate_templates.to_s << "\n"
     end
 
@@ -614,5 +600,13 @@ class Brakeman::Report
     content = File.read(File.expand_path("templates/#{file}.html.erb", File.dirname(__FILE__)))
     template = ERB.new(content)
     template.result(bind)
+  end
+
+  def build_text_table(header, &block)
+    table = Terminal::Table.new do |t|
+      t << header
+      t << :separator
+      yield t
+    end
   end
 end
