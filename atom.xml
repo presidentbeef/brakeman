@@ -4,13 +4,119 @@
   <title>Brakeman</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-03-22T14:23:16-07:00</updated>
+  <updated>2012-04-10T14:13:51-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 1.5.3 Released</title>
+    <link href="http://brakemanscanner.org/blog/2012/04/10/brakeman-1-dot-5-3-released/"/>
+    <updated>2012-04-10T13:18:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2012/04/10/brakeman-1-dot-5-3-released</id>
+    <content type="html">&lt;p&gt;A considerable number of bugs and odd cases have been fixed with this release, and one new check has been added. Upgrading is &lt;em&gt;always&lt;/em&gt; recommended!&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 1.5.2:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add check for user input in &lt;code&gt;Object#send&lt;/code&gt; (Neil Matatall)&lt;/li&gt;
+&lt;li&gt;Support output to multiple formats (Nick Green)&lt;/li&gt;
+&lt;li&gt;Prevent infinite loops in mutually recursive templates&lt;/li&gt;
+&lt;li&gt;Only check &lt;code&gt;eval&lt;/code&gt; arguments for user input, not the call target&lt;/li&gt;
+&lt;li&gt;Handle &lt;code&gt;render :layout&lt;/code&gt; in views&lt;/li&gt;
+&lt;li&gt;Search subdirectories for models&lt;/li&gt;
+&lt;li&gt;Set values in request hashes and propagate to views&lt;/li&gt;
+&lt;li&gt;Add rake task file to gemspec (Anton Ageev)&lt;/li&gt;
+&lt;li&gt;Filter rescanning of templates (Neil Matatall)&lt;/li&gt;
+&lt;li&gt;Improve handling of modules and nesting&lt;/li&gt;
+&lt;li&gt;Test for zero errors in test reports&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;New Check for User Input in Object#send&lt;/h3&gt;
+
+&lt;p&gt;This new check looks for instances where user input can be used to control the method called using &lt;code&gt;send&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;user = User.find(params[:user][:id])
+method = params[:user][:action].to_sym
+user.send(method)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Support for Multiple Output Formats&lt;/h3&gt;
+
+&lt;p&gt;Brakeman can now accept multiple &lt;code&gt;-o&lt;/code&gt; arguments in order to produce more than one report from the same scan:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brakeman -o report.html -o report.json
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Handle Mutually Recursive Templates&lt;/h3&gt;
+
+&lt;p&gt;In some cases where two templates would render each other as partials, it would cause infinite loops in Brakeman. This is now fixed, at least for the simple common case:&lt;/p&gt;
+
+&lt;p&gt;_one.erb.html:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;%= render :partial =&amp;gt; 'two' %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;_two.erb.html:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;%= render :partial =&amp;gt; 'one' %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Only Check &lt;code&gt;eval&lt;/code&gt; Arguments&lt;/h3&gt;
+
+&lt;p&gt;Previously, Brakeman was checking the entire call to methods like &lt;code&gt;eval&lt;/code&gt; or &lt;code&gt;class_eval&lt;/code&gt; for user input. This led to false positives when &lt;code&gt;class_eval&lt;/code&gt; was being called on a model.&lt;/p&gt;
+
+&lt;p&gt;Now Brakeman only checks the arguments or block provided to the &lt;code&gt;eval&lt;/code&gt; call.&lt;/p&gt;
+
+&lt;h3&gt;Handle render :layout in views&lt;/h3&gt;
+
+&lt;p&gt;Brakeman was not handling &lt;code&gt;render :layout =&amp;gt; &quot;...&quot;&lt;/code&gt; in views properly. This led to errors like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;wrong number of arguments (0 for 1): /Users/collins/work/brakeman/lib/brakeman/processors/lib/render_helper.rb:14:in `template_name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;render :layout&lt;/code&gt; is now handled just like rendering a partial.&lt;/p&gt;
+
+&lt;h3&gt;Search for Models in Subdirectories&lt;/h3&gt;
+
+&lt;p&gt;Brakeman was only searching &lt;code&gt;app/models/&lt;/code&gt; for models, but not any subdirectories. Now it does!&lt;/p&gt;
+
+&lt;h3&gt;Propagate Request Values&lt;/h3&gt;
+
+&lt;p&gt;While Brakeman has always detected request values (e.g., query parameters) in views, it would not propagate values stored IN those request hashes.&lt;/p&gt;
+
+&lt;p&gt;For example, if an action in a controller did this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;params[:input] = some_random_value
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That value would not be propagated to the view if the view used &lt;code&gt;params[:input]&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Add Rake Task to Gemspec&lt;/h3&gt;
+
+&lt;p&gt;In 1.2.0, Brakeman added the &lt;code&gt;--rake&lt;/code&gt; option to add a Rake task to a Rails application, but the actual task itself was not included in the gem!&lt;/p&gt;
+
+&lt;p&gt;Thanks to Anton Ageev for pointing this out. Either no one else tried this option, or a lot of people were very disappointed.&lt;/p&gt;
+
+&lt;h3&gt;Filter Templates When Rescanning&lt;/h3&gt;
+
+&lt;p&gt;When rescanning (for example, with &lt;a href=&quot;https://github.com/guard/guard-brakeman&quot;&gt;guard-brakeman&lt;/a&gt;), Brakeman was assuming any files in &lt;code&gt;app/views&lt;/code&gt; is a template, but this isn't always true.&lt;/p&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt;!&lt;/p&gt;
+
+&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+
+&lt;p&gt;And don't forget to check out the Brakeman talk at &lt;a href=&quot;http://railsconf2012.com/sessions/44&quot;&gt;RailsConf&lt;/a&gt; later this month.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 1.5.2 Released - Important Fixes</title>
@@ -1090,23 +1196,6 @@ end
 &lt;h2&gt;Next Version&lt;/h2&gt;
 
 &lt;p&gt;The main area of focus for the next (major) release will be Rails 3.x routing. Brakeman is currently quite limited in what kinds of routes in understands.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>One Year Anniversary</title>
-    <link href="http://brakemanscanner.org/blog/2011/08/27/one-year-anniversary-and-a-website/"/>
-    <updated>2011-08-27T01:00:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2011/08/27/one-year-anniversary-and-a-website</id>
-    <content type="html">&lt;p&gt;One year ago, Brakeman 0.0.1 was released as a gem. Then it was promptly yanked and replaced with &lt;a href=&quot;http://rubygems.org/gems/brakeman/versions/0.0.2&quot;&gt;Brakeman 0.0.2&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;In celebration of this grand anniversary, there have been several new releases today.&lt;/p&gt;
-
-&lt;p&gt;The first is &lt;a href=&quot;http://rubygems.org/gems/brakeman/versions/0.7.2&quot;&gt;Brakeman 0.7.2&lt;/a&gt;, a minor release adding CVE numbers for the &lt;a href=&quot;http://groups.google.com/group/rubyonrails-security/browse_thread/thread/f878a33159ac9967&quot;&gt;latest vulnerabilities&lt;/a&gt; and fixing how nested params/cookie accesses are handled (e.g., &lt;code&gt;params[:user][:name]&lt;/code&gt; is now considered a direct use of a parameter).&lt;/p&gt;
-
-&lt;p&gt;Next up, Brakeman has its own Twitter feed &lt;a href=&quot;https://twitter.com/brakemanscanner&quot;&gt;@BrakemanScanner&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Lastly, there is this new website. Look forward to tutorials and more in-depth information about how to use Brakeman effectively.&lt;/p&gt;
 </content>
   </entry>
   

@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Mass Assignment</title>
+  <title>Brakeman</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/mass_assignment/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/page/3/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -97,66 +97,67 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article>
-  
+      <div class="blog-index">
+
+
+
+  <article>
+    
   <header>
-    <h1 class="entry-title">Mass Assignment</h1>
-  </header>
-  
-  <p>Mass assignment is a feature of Rails which allows an application to create a record from the values of a hash.</p>
-
-<p>Example:</p>
-
-<pre><code>User.new(params[:user])
-</code></pre>
-
-<p>Unfortunately, if there is a user field called <code>admin</code> which controls administrator access, now any user can make themselves an administrator.</p>
-
-<p><code>attr_accessible</code> and <code>attr_protected</code> can be used to limit mass assignment. However, Brakeman will warn unless <code>attr_accessible</code> is used, or mass assignment is completely disabled.</p>
-
-<p>There are two different mass assignment warnings which can arise. The first is when mass assignment actually occurs, such as the example above. This results in a warning like</p>
-
-<pre><code>Unprotected mass assignment near line 61: User.new(params[:user])
-</code></pre>
-
-<p>The other warning is raised whenever a model is found which does not use <code>attr_accessible</code>. This produces generic warnings like</p>
-
-<pre><code>Mass assignment is not restricted using attr_accessible
-</code></pre>
-
-<p>with a list of affected models.</p>
-
-<p>In Rails 3.1 and newer, mass assignment can easily be disabled:</p>
-
-<pre><code>config.active_record.whitelist_attributes = true
-</code></pre>
-
-<p>Unfortunately, it can also easily be bypassed:</p>
-
-<pre><code>User.new(params[:user], :without_protection =&gt; true
-</code></pre>
-
-<p>Brakeman will warn on uses of <code>without_protection</code>.</p>
-
-<p>Please see <a href="http://railspikes.com/2008/9/22/is-your-rails-application-safe-from-mass-assignment">this page</a> for more details.</p>
-
-<hr />
-
-<p>Back to <a href="/docs/warning_types">Warning Types</a></p>
-
-  
-    <footer>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/27/one-year-anniversary-and-a-website/">One Year Anniversary</a></h1>
+    
+    
       <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+
+
+
+<time datetime="2011-08-27 01:00:00 -0700" pubdate  updated >Aug 27<span>th</span>, 2011</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One year ago, Brakeman 0.0.1 was released as a gem. Then it was promptly yanked and replaced with <a href="http://rubygems.org/gems/brakeman/versions/0.0.2">Brakeman 0.0.2</a>.</p>
+
+<p>In celebration of this grand anniversary, there have been several new releases today.</p>
+
+<p>The first is <a href="http://rubygems.org/gems/brakeman/versions/0.7.2">Brakeman 0.7.2</a>, a minor release adding CVE numbers for the <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/f878a33159ac9967">latest vulnerabilities</a> and fixing how nested params/cookie accesses are handled (e.g., <code>params[:user][:name]</code> is now considered a direct use of a parameter).</p>
+
+<p>Next up, Brakeman has its own Twitter feed <a href="https://twitter.com/brakemanscanner">@BrakemanScanner</a>.</p>
+
+<p>Lastly, there is this new website. Look forward to tutorials and more in-depth information about how to use Brakeman effectively.</p>
+</div>
   
-</article>
+  
+
+
+  </article>
+
+<nav role="pagination">
+  <div>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/2/">Newer &rarr;</a>
+    
+  </div>
+</nav>
+
+<script type="text/javascript">
+    var disqus_shortname = 'brakeman';
+    (function () {
+      var s = document.createElement('script'); s.async = true;
+      s.type = 'text/javascript';
+      s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+      (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
 
 </div>
-
 <aside role=sidebar>
   
     <section>
@@ -227,7 +228,6 @@
 
   
 </aside>
-
 
     </div>
   </div>
