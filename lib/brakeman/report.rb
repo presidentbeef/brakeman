@@ -46,7 +46,7 @@ class Brakeman::Report
     if html
       load_and_render_erb('overview', binding)
     else
-      table = Terminal::Table.new(:headings => ['Scanned/Reported', 'Total']) do |t|
+      Terminal::Table.new(:headings => ['Scanned/Reported', 'Total']) do |t|
         t.add_row ['Controllers', tracker.controllers.length]
         t.add_row ['Models', tracker.models.length - 1]
         t.add_row ['Templates', templates]
@@ -64,7 +64,7 @@ class Brakeman::Report
     if html
       load_and_render_erb('warning_overview', binding)
     else
-      table = Terminal::Table.new(:headings => ['Warning Type', 'Total']) do |t|
+      Terminal::Table.new(:headings => ['Warning Type', 'Total']) do |t|
         types.sort.each do |warning_type|
           t.add_row [warning_type, warnings_summary[warning_type]]
         end
@@ -363,16 +363,16 @@ class Brakeman::Report
     out << "+Errors+\n" << res.to_s if res
 
     res = generate_warnings
-    out << "\n\n+SECURITY WARNINGS+\n\n" << truncate(res.to_s) if res
+    out << "\n\n+SECURITY WARNINGS+\n\n" << truncate_table(res.to_s) if res
 
     res = generate_controller_warnings
-    out << "\n\n\nController Warnings:\n\n" << truncate(res.to_s) if res
+    out << "\n\n\nController Warnings:\n\n" << truncate_table(res.to_s) if res
 
     res = generate_model_warnings 
-    out << "\n\n\nModel Warnings:\n\n" << truncate(res.to_s) if res
+    out << "\n\n\nModel Warnings:\n\n" << truncate_table(res.to_s) if res
 
     res = generate_template_warnings
-    out << "\n\nView Warnings:\n\n" << truncate(res.to_s) if res
+    out << "\n\nView Warnings:\n\n" << truncate_table(res.to_s) if res
 
     out
   end

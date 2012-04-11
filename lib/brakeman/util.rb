@@ -325,7 +325,7 @@ module Brakeman::Util
     context
   end
 
-  def truncate str
+  def truncate_table str
     @terminal_width ||= ::HighLine::SystemExtensions::terminal_size[0]
     lines = str.lines
 

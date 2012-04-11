@@ -91,7 +91,7 @@ class Brakeman::Warning
     @format_message
   end
 
-  #Generates a hash suitable for inserting into a Ruport table
+  #Generates a hash suitable for inserting into a table
   def to_row type = :warning
     @row = { "Confidence" => self.confidence,
       "Warning Type" => self.warning_type.to_s,
