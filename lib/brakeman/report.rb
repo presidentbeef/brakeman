@@ -112,7 +112,7 @@ class Brakeman::Report
     else
       if warning_messages.empty?
         Terminal::Table.new(:headings => ['General Warnings']) do |t|
-          t.add_row '[NONE]'
+          t.add_row ['[NONE]']
         end
       else
         Terminal::Table.new(:headings => ["Confidence", "Class", "Method", "Warning Type", "Message"]) do |t|
@@ -298,7 +298,7 @@ class Brakeman::Report
         output << template_name.to_s << "\n\n" 
         table = Terminal::Table.new(:headings => ['Output']) do |t|
           calls.each do |v|
-            t.add_row v
+            t.add_row [v]
           end
         end
 
@@ -332,7 +332,7 @@ class Brakeman::Report
     out << generate_warnings(true).to_s
     out << generate_controller_warnings(true).to_s
     out << generate_model_warnings(true).to_s
-    out << generate_template_warnings(true)
+    out << generate_template_warnings(true).to_s
 
     out << "</body></html>"
   end
@@ -341,8 +341,8 @@ class Brakeman::Report
   def to_s
     out = text_header <<
     "\n\n+SUMMARY+\n\n" <<
-    generate_overview.to_s << "\n\n" <<
-    generate_warning_overview.to_s << "\n"
+    truncate_table(generate_overview.to_s) << "\n\n" <<
+    truncate_table(generate_warning_overview.to_s) << "\n"
 
     #Return output early if only summarizing
     if tracker.options[:summary_only]
@@ -351,16 +351,16 @@ class Brakeman::Report
 
     if tracker.options[:report_routes] or tracker.options[:debug]
       out << "\n+CONTROLLERS+\n" <<
-      generate_controllers.to_s << "\n"
+      truncate_table(generate_controllers.to_s) << "\n"
     end
 
     if tracker.options[:debug]
       out << "\n+TEMPLATES+\n\n" <<
-      generate_templates.to_s << "\n"
+      truncate_table(generate_templates.to_s) << "\n"
     end
 
     res = generate_errors
-    out << "+Errors+\n" << res.to_s if res
+    out << "+Errors+\n" << truncate_table(res.to_s) if res
 
     res = generate_warnings
     out << "\n\n+SECURITY WARNINGS+\n\n" << truncate_table(res.to_s) if res
@@ -374,6 +374,7 @@ class Brakeman::Report
     res = generate_template_warnings
     out << "\n\nView Warnings:\n\n" << truncate_table(res.to_s) if res
 
+    out << "\n"
     out
   end
 
