@@ -1,21 +1,17 @@
 require 'cgi'
 require 'set'
-require 'ruport'
 require 'brakeman/processors/output_processor'
 require 'brakeman/util'
 require 'terminal-table'
 require 'highline/system_extensions'
-
-
-#Fix for Ruport under 1.9
-#as reported here: https://github.com/ruport/ruport/pull/7
-module Ruport
-  class Formatter::CSV < Formatter
-    def csv_writer
-      @csv_writer ||= options.formatter ||
-        FCSV.instance(output, options.format_options || {})
-    end
-  end
+require "csv"
+if CSV.const_defined? :Reader
+  # Ruby 1.8 compatible
+  require 'fastercsv'
+  Object.send(:remove_const, :CSV)
+  CSV = FasterCSV
+else
+  # CSV is now FasterCSV in ruby 1.9
 end
 
 #Generates a report based on the Tracker and the results of
@@ -130,7 +126,7 @@ class Brakeman::Report
   #Generate table of template warnings or return nil if no warnings
   def generate_template_warnings html = false
     if checks.template_warnings.any?
-      warnings = Ruport::Data::Table(["Confidence", "Template", "Warning Type", "Message"])
+      warnings = []
       checks.template_warnings.each do |warning|
         w = warning.to_row :template
 
@@ -268,7 +264,7 @@ class Brakeman::Report
     if html
       load_and_render_erb('controller_overview', binding)
     else
-      table = Terminal::Table.new(:headings => ['Name', 'Parent', 'Includes', 'Routes']) do |t|
+      Terminal::Table.new(:headings => ['Name', 'Parent', 'Includes', 'Routes']) do |t|
         contoller_rows.each do |row|
           t.add_row [row['Name'], row['Parent'], row['Includes'], row['Routes']]
         end
@@ -382,42 +378,47 @@ class Brakeman::Report
 
   #Generate CSV output
   def to_csv
-    out = csv_header <<
-    "\nSUMMARY\n" <<
-    generate_overview.to_csv << "\n" <<
-    generate_warning_overview.to_csv << "\n"
+    output = csv_header 
+    output << "\nSUMMARY\n" 
+
+    output << table_to_csv(generate_overview) << "\n"
+
+    output << table_to_csv(generate_warning_overview) << "\n"
 
     #Return output early if only summarizing
     if tracker.options[:summary_only]
-      return out
+      return output
     end
 
     if tracker.options[:report_routes] or tracker.options[:debug]
-      out << "CONTROLLERS\n" <<
-      generate_controllers.to_csv << "\n"
+      output << "CONTROLLERS\n"
+      output << table_to_csv(generate_controllers) << "\n"
     end
 
     if tracker.options[:debug]
-      out << "TEMPLATES\n\n" <<
-      generate_templates.to_csv << "\n"
+      output << "TEMPLATES\n\n"
+      output << table_to_csv(generate_templates) << "\n"
     end
 
     res = generate_errors
-    out << "ERRORS\n" << res.to_csv << "\n" if res
+    output << "ERRORS\n" << table_to_csv(res) << "\n" if res
 
     res = generate_warnings
-    out << "SECURITY WARNINGS\n" << res.to_csv << "\n" if res
+    output << "SECURITY WARNINGS\n" << table_to_csv(res) << "\n" if res
 
+    output << "Controller Warnings\n"
     res = generate_controller_warnings
-    out << res.to_csv << "\n" if res
+    output << table_to_csv(res) << "\n" if res
 
+    output << "Model Warnings\n"
     res = generate_model_warnings 
-    out << res.to_csv << "\n" if res
+    output << table_to_csv(res) << "\n" if res
 
     res = generate_template_warnings
-    out << res.to_csv << "\n" if res
+    output << "Template Warnings\n"
+    output << table_to_csv(res) << "\n" if res
 
-    out
+    output
   end
 
   #Not yet implemented
@@ -453,9 +454,9 @@ class Brakeman::Report
 
   #Generate header for CSV output
   def csv_header
-    header = Ruport::Data::Table(["Application Path", "Report Generation Time", "Checks Performed", "Rails Version"])
-    header << [File.expand_path(tracker.options[:app_path]), Time.now.to_s, checks.checks_run.sort.join(", "), rails_version]
-    "BRAKEMAN REPORT\n\n" << header.to_csv
+    header = CSV.generate_line(["Application Path", "Report Generation Time", "Checks Performed", "Rails Version"])
+    header << CSV.generate_line([File.expand_path(tracker.options[:app_path]), Time.now.to_s, checks.checks_run.sort.join(", "), rails_version])
+    "BRAKEMAN REPORT\n\n" + header
   end
 
   #Return summary of warnings in hash and store in @warnings_summary
@@ -609,6 +610,8 @@ class Brakeman::Report
     @checks.all_warnings.map { |w| w.to_hash }.to_json
   end
 
+  private
+
   def load_and_render_erb file, bind
     content = File.read(File.expand_path("templates/#{file}.html.erb", File.dirname(__FILE__)))
     template = ERB.new(content)
@@ -626,5 +629,14 @@ class Brakeman::Report
         line
       end
     end.join
+  end
+
+  # rely on Terminal::Table to build the structure, extract the data out in CSV format
+  def table_to_csv table
+    output = CSV.generate_line(table.headings.cells.map{|cell| cell.to_s.strip})
+    table.rows.each do |row|
+      output << CSV.generate_line(row.cells.map{|cell| cell.to_s.strip})
+    end
+    output
   end
 end
