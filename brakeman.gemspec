@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.add_dependency "ruby2ruby", "~>1.2"
   s.add_dependency "ruport", "~>1.6"
   s.add_dependency "terminal-table", "~>1.4"
+  s.add_dependency "highline", "~>1.6"
   s.add_dependency "erubis", "~>2.6"
   s.add_dependency "haml", "~>3.0"
   s.add_dependency "sass", "~>3.0"

@@ -4,6 +4,7 @@ require 'ruport'
 require 'brakeman/processors/output_processor'
 require 'brakeman/util'
 require 'terminal-table'
+require 'highline/system_extensions'
 
 
 #Fix for Ruport under 1.9
@@ -342,7 +343,7 @@ class Brakeman::Report
   #Output text version of the report
   def to_s
     out = text_header <<
-    "\n+SUMMARY+\n" <<
+    "\n\n+SUMMARY+\n\n" <<
     generate_overview.to_s << "\n\n" <<
     generate_warning_overview.to_s << "\n"
 
@@ -365,16 +366,16 @@ class Brakeman::Report
     out << "+Errors+\n" << res.to_s if res
 
     res = generate_warnings
-    out << "+SECURITY WARNINGS+\n" << res.to_s << "\n" if res
+    out << "\n\n+SECURITY WARNINGS+\n\n" << truncate(res.to_s) if res
 
     res = generate_controller_warnings
-    out << res.to_s << "\n" if res
+    out << "\n\n\nController Warnings:\n\n" << truncate(res.to_s) if res
 
     res = generate_model_warnings 
-    out << res.to_s << "\n" if res
+    out << "\n\n\nModel Warnings:\n\n" << truncate(res.to_s) if res
 
     res = generate_template_warnings
-    out << "View Warnings:\n\n" << res.to_s << "\n" if res
+    out << "\n\nView Warnings:\n\n" << truncate(res.to_s) if res
 
     out
   end
@@ -612,5 +613,18 @@ class Brakeman::Report
     content = File.read(File.expand_path("templates/#{file}.html.erb", File.dirname(__FILE__)))
     template = ERB.new(content)
     template.result(bind)
+  end
+
+  def truncate str
+    @terminal_width ||= ::HighLine::SystemExtensions::terminal_size[0]
+    lines = str.lines
+
+    lines.map do |line|
+      if line.chomp.length > @terminal_width
+        line[0..(@terminal_width - 3)] + ">>"
+      else
+        line
+      end
+    end.join
   end
 end
