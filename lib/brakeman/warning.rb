@@ -140,6 +140,7 @@ class Brakeman::Warning
     { :warning_type => self.warning_type,
       :message => self.message,
       :file => self.file,
+      :line => self.line,
       :code => (@code && self.format_code),
       :location => location,
       :confidence => TEXT_CONFIDENCE[self.confidence]
