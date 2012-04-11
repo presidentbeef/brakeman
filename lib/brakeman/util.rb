@@ -324,4 +324,26 @@ module Brakeman::Util
 
     context
   end
+
+  def truncate str
+    @terminal_width ||= ::HighLine::SystemExtensions::terminal_size[0]
+    lines = str.lines
+
+    lines.map do |line|
+      if line.chomp.length > @terminal_width
+        line[0..(@terminal_width - 3)] + ">>"
+      else
+        line
+      end
+    end.join
+  end
+
+  # rely on Terminal::Table to build the structure, extract the data out in CSV format
+  def table_to_csv table
+    output = CSV.generate_line(table.headings.cells.map{|cell| cell.to_s.strip})
+    table.rows.each do |row|
+      output << CSV.generate_line(row.cells.map{|cell| cell.to_s.strip})
+    end
+    output
+  end  
 end
