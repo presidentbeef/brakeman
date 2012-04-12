@@ -111,7 +111,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
           end
         end
 
-        @processor.process_controller_alias controller[:src]
+        @processor.process_controller_alias controller[:name], controller[:src]
       end
     end
   end
@@ -154,7 +154,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
         controller = tracker.controllers[r[1]]
 
         unless @paths.include? controller[:file]
-          @processor.process_controller_alias controller[:src], r[2]
+          @processor.process_controller_alias controller[:name], controller[:src], r[2]
         end
       elsif r[0] == :template
         template = tracker.templates[r[1]]
