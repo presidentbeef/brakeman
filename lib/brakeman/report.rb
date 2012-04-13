@@ -4,8 +4,9 @@ require 'brakeman/processors/output_processor'
 require 'brakeman/util'
 require 'terminal-table'
 require 'highline/system_extensions'
-
 require "csv"
+require 'brakeman/version'
+
 if CSV.const_defined? :Reader
   # Ruby 1.8 compatible
   require 'fastercsv'
@@ -607,7 +608,29 @@ class Brakeman::Report
   def to_json
     require 'json'
 
-    @checks.all_warnings.map { |w| w.to_hash }.to_json
+    errors = tracker.errors.map{|e| { :error => e[:error], :location => e[:backtrace][0] }}
+    warnings = all_warnings.map { |w| w.to_hash }
+    scan_info = {
+      :app_path => File.expand_path(tracker.options[:app_path]),
+      :rails_version => rails_version,
+      :security_warnings => all_warnings.length,
+      :timestamp => Time.now,
+      :checks_performed => checks.checks_run.sort,
+      :number_of_controllers =>tracker.controllers.length,
+      # ignore the "fake" model
+      :number_of_models => tracker.models.length - 1,
+      :number_of_templates => number_of_templates(@tracker),
+      :ruby_version => RUBY_VERSION,
+      :brakeman_version => Brakeman::Version
+    }
+
+    JSON.pretty_generate({
+      :scan_info => scan_info,
+      :warnings => warnings,
+      :errors => errors
+    })
+  end
+
   def all_warnings
     @all_warnings ||= @checks.all_warnings
   end
