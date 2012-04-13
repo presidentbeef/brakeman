@@ -37,11 +37,7 @@ class Brakeman::Report
 
   #Generate summary table of what was parsed
   def generate_overview html = false
-    templates = Set.new(@tracker.templates.map {|k,v| v[:name].to_s[/[^.]+/]}).length
-    warnings = checks.warnings.length +
-                checks.controller_warnings.length +
-                checks.model_warnings.length +
-                checks.template_warnings.length
+    warnings = all_warnings.length
 
     if html
       load_and_render_erb('overview', binding)
@@ -473,10 +469,7 @@ class Brakeman::Report
     summary = Hash.new(0)
     high_confidence_warnings = 0
 
-    [checks.warnings, 
-        checks.controller_warnings, 
-        checks.model_warnings, 
-        checks.template_warnings].each do |warnings|
+    [all_warnings].each do |warnings|
 
       warnings.each do |warning|
         summary[warning.warning_type.to_s] += 1
@@ -615,6 +608,12 @@ class Brakeman::Report
     require 'json'
 
     @checks.all_warnings.map { |w| w.to_hash }.to_json
+  def all_warnings
+    @all_warnings ||= @checks.all_warnings
+  end
+
+  def number_of_templates tracker
+    Set.new(tracker.templates.map {|k,v| v[:name].to_s[/[^.]+/]}).length
   end
 
   private
