@@ -52,8 +52,14 @@ trap("INT") do
   exit!
 end
 
-#Run scan and output a report
-tracker = Brakeman.run options.merge(:print_report => true, :quiet => options[:quiet])
+tracker = if options[:previous_results_json]
+  vulns = Brakeman.compare options
+  # puts JSON.pretty_generate(vulns)
+else
+  #Run scan and output a report
+  Brakeman.run options.merge(:print_report => true, :quiet => options[:quiet])
+end
+
 
 #Return error code if --exit-on-warn is used and warnings were found
 if options[:exit_on_warn] and not tracker.checks.all_warnings.empty?

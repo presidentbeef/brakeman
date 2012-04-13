@@ -51,7 +51,6 @@ module Brakeman
     if @quiet
       options[:report_progress] = false
     end
-
     scan options
   end
 
@@ -309,5 +308,21 @@ module Brakeman
 
   def self.debug message
     $stderr.puts message if @debug
+  end
+
+  # Compare JSON ouptut from a previous scan and return the diff of the two scans
+  def self.compare options
+    require 'json'
+    raise ArgumentError.new("Comparison file doesn't exist") unless File.exists? options[:previous_results_json]
+
+    previous_results = JSON::load(File::open(options[:previous_results_json]))['warnings']
+
+    tracker = run(options)
+    new_results = JSON.parse(tracker.report.to_json)['warnings']
+
+    vulns = {}
+    vulns[:new] = new_results - previous_results
+    vulns[:fixed] = previous_results - new_results
+    vulns
   end
 end
