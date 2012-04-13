@@ -7,7 +7,13 @@ require 'brakeman/options'
 require 'brakeman/version'
 
 #Parse options
-options, parser = Brakeman::Options.parse! ARGV
+begin
+  options, parser = Brakeman::Options.parse! ARGV
+rescue OptionParser::ParseError => e
+  $stderr.puts e.message.capitalize
+  $stderr.puts "Please see `brakeman --help` for valid options"
+  exit
+end
 
 #Exit early for these options
 if options[:list_checks]
