@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.executables = ["brakeman"]
   s.add_dependency "activesupport"
   s.add_dependency "i18n"
+  s.add_dependency "ruby_parser", "2.3.1"
   s.add_dependency "ruby2ruby", "~>1.2"
   s.add_dependency "ruport", "~>1.6"
   s.add_dependency "erubis", "~>2.6"
