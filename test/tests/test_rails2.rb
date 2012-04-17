@@ -219,6 +219,15 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /user\.rb/
   end
 
+  def test_sql_user_input_in_find_by
+    assert_no_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 116,
+      :message => /^Possible SQL injection near line 116: User.find_or_create_by_name/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
   def test_csrf_protection
     assert_warning :type => :controller,
       :warning_type => "Cross-Site Request Forgery",
