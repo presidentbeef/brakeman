@@ -72,7 +72,15 @@ class Brakeman::FindReturnValue
       elsif exp[3].nil?
         last_value exp[2]
       else
-        Sexp.new(:or, last_value(exp[2]), last_value(exp[3]))
+        true_branch = last_value exp[2]
+        false_branch = last_value exp[3]
+
+        if true_branch and false_branch
+          value = Sexp.new(:or, last_value(exp[2]), last_value(exp[3]))
+          value
+        else
+          true_branch or false_branch
+        end
       end
     when :return
       exp[-1]
