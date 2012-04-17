@@ -90,7 +90,26 @@ class UsersController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, :except => [:create, :edit]
 
-  def show_something_cool
-    @x = 1
+  def test_simple_helper
+    @user = simple_helper
+  end
+
+  def test_less_simple_helpers
+    @input = less_simple_helper
+    @other_thing = simple_helper_with_args(:x)
+  end
+
+  private
+
+  def simple_helper
+    User.find(params[:id])
+  end
+
+  def less_simple_helper
+    params[:input]
+  end
+
+  def simple_helper_with_args arg
+    params[arg]
   end
 end
