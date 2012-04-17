@@ -47,9 +47,9 @@ class Sexp
     @my_hash_value ||= super
   end
 
-  def line *args
-    @my_hash_value = nil
-    old_line(*args)
+  def line num = nil
+    @my_hash_value = nil if num
+    old_line(num)
   end
 
   def line= *args
