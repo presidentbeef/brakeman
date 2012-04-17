@@ -19,11 +19,15 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   end
 
   def process_result result
+    return if duplicate? result
+
     call = result[:call]
 
     method = call[2]
 
     if method == :redirect_to and not only_path?(call) and res = include_user_input?(call)
+      add_result result
+
       if res == :immediate
         confidence = CONFIDENCE[:high]
       else
