@@ -92,12 +92,11 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
   def process_defn exp
     exp[0] = :methdef
-    exp[3] = @alias_processor.process exp[3]
 
     if @current_class
-      @current_class[:public][exp[1]] = exp[3]
+      @current_class[:public][exp[1]] = exp
     elsif @current_module
-      @current_module[:public][exp[1]] = exp[3]
+      @current_module[:public][exp[1]] = exp
     end
 
     exp
@@ -105,12 +104,11 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
   def process_defs exp
     exp[0] = :selfdef
-    exp[4] = @alias_processor.process exp[4]
 
     if @current_class
-      @current_class[:public][exp[2]] = exp[4]
+      @current_class[:public][exp[2]] = exp
     elsif @current_module
-      @current_module[:public][exp[3]] = exp[4]
+      @current_module[:public][exp[3]] = exp
     end
 
     exp

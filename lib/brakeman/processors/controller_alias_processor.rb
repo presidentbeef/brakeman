@@ -15,6 +15,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     @tracker = tracker
     @rendered = false
     @current_class = @current_module = @current_method = nil
+    @method_cache = {} #Cache method lookups
   end
 
   def process_controller name, src
@@ -248,6 +249,11 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   def find_method method_name, klass
     return nil if sexp? method_name
     method_name = method_name.to_sym
+
+    if method = @method_cache[method_name]
+      return method
+    end
+
     controller = @tracker.controllers[klass]
     controller ||= @tracker.libs[klass]
 
@@ -260,13 +266,14 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
         controller[:includes].each do |included|
           method = find_method method_name, included
           if method
-            return { :controller => controller[:name], :method => method }
+            @method_cache[method_name] = method
+            return method
           end
         end
 
-        find_method method_name, controller[:parent]
+        @method_cache[method_name] = find_method method_name, controller[:parent]
       else
-        { :controller => controller[:name], :method => method }
+        @method_cache[method_name] = { :controller => controller[:name], :method => method }
       end
     else
       nil
