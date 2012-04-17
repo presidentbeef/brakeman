@@ -40,6 +40,7 @@ class Sexp
     if line
       @my_hash_value = nil
       @original_line = line
+      self
     else
       @original_line
     end
