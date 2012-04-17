@@ -64,7 +64,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
 
     call[3].each do |arg|
       if call? arg 
-        if ALL_PARAMETERS.include? arg or arg[2] == COOKIES 
+        if request_value? arg or request_value? arg[1]
           return :immediate
         elsif arg[2] == :url_for and include_user_input? arg
           return :immediate
@@ -72,7 +72,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
         elsif arg[2].to_s =~ /_(url|path)$/
           return false
         end
-      elsif params? arg or cookies? arg
+      elsif request_value? arg
         return :immediate
       end
     end
