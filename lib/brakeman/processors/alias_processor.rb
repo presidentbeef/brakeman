@@ -28,6 +28,7 @@ class Brakeman::AliasProcessor < SexpProcessor
     @inside_if = false
     @ignore_ifs = false
     @exp_context = []
+    @current_module = nil
     @tracker = tracker #set in subclass as necessary
     set_env_defaults
   end
