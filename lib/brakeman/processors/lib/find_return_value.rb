@@ -22,7 +22,9 @@ class Brakeman::FindReturnValue
   #Find return value of Sexp. Takes an optional starting environment.
   def get_return_value exp, env = nil
     process_method exp, env
-    make_return_value
+    value = make_return_value
+    value.original_line(exp.line)
+    value
   end
 
   #Process method (or, actually, any Sexp) for return value.
@@ -77,14 +79,16 @@ class Brakeman::FindReturnValue
 
         if true_branch and false_branch
           value = Sexp.new(:or, last_value(exp[2]), last_value(exp[3]))
+          value.original_line(value[2].line)
           value
         else
           true_branch or false_branch
         end
       end
     when :return
-      exp[-1]
+      exp[1]
     else
+      exp.original_line(exp.line) unless exp.original_line
       exp
     end
   end
