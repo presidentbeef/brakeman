@@ -320,9 +320,31 @@ module Brakeman
     tracker = run(options)
     new_results = JSON.parse(tracker.report.to_json)['warnings']
 
-    vulns = {}
-    vulns[:new] = new_results - previous_results
-    vulns[:fixed] = previous_results - new_results
-    vulns
+    warnings = {}
+    warnings[:new] = new_results - previous_results
+    warnings[:fixed] = previous_results - new_results
+
+    # second pass to cleanup any vulns which have changed in line number only
+    warnings[:new].each_with_index do |new_warning, new_warning_id|
+      warnings[:fixed].each_with_index do |fixed_warning, fixed_warning_id|
+        if matches_except_line new_warning, fixed_warning
+          warnings[:new].delete_at new_warning_id
+          warnings[:fixed].delete_at fixed_warning_id
+        end
+      end
+    end
+
+    warnings
+  end
+
+  private
+
+  def self.matches_except_line new_vuln, fixed_vuln
+    new_vuln.keys.reject{|k,v| k == 'line'}.each do |attr|
+      if new_vuln[attr] != fixed_vuln[attr]
+        return false 
+      end
+    end
+    true
   end
 end
