@@ -83,6 +83,9 @@ class Brakeman::FindReturnValue
 
   #Turns the array of return values into an :or Sexp
   def make_return_value
+    @return_values.compact!
+    @return_values.uniq!
+
     if @return_values.empty?
       Sexp.new(:nil)
     elsif @return_values.length == 1
