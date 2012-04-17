@@ -1,5 +1,6 @@
 require 'brakeman/processors/alias_processor'
 require 'brakeman/processors/lib/render_helper'
+require 'brakeman/processors/lib/find_return_value'
 
 #Processes aliasing in controllers, but includes following
 #renders in routes and putting variables into templates
@@ -78,8 +79,38 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
 
     if exp[2] == :head
       @rendered = true
+    elsif @current_method and call? exp and (exp[1] == nil or exp[1].node_type == :self)
+      #Look for helper methods and see if we can get a return value
+      if found_method = find_method(exp[2], @current_class)
+        method = found_method[:method]
+
+        if sexp? method
+          meth_env = only_ivars(:include_request_vars)
+          assign_args method, exp[3], meth_env
+          value = Brakeman::FindReturnValue.return_value(found_method[:method], meth_env)
+          value.line(exp.line)
+          #puts "Found return value: #{value.inspect}"
+          return value
+        else
+          puts "What is #{found_method}"
+        end
+      end
     end
+
     exp
+  end
+
+  def assign_args method_exp, arg_list, meth_env = SexpProcessor::Environment.new
+    formal_args = method_exp[2][1..-1]
+    arg_list = arg_list[1..-1]
+
+    formal_args.each_with_index do |arg, index|
+      if arg.is_a? Symbol and sexp? arg_list[index]
+        meth_env[Sexp.new(:lvar, arg)] = arg_list[index]
+      end
+    end
+
+    meth_env
   end
 
   #Check for +respond_to+
