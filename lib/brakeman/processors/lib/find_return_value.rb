@@ -54,7 +54,7 @@ class Brakeman::FindReturnValue
       current = todo.shift
 
       if node_type? current, :return
-        @return_values << current[1]
+        @return_values << current[1] unless current[1].nil?
       elsif sexp? current
         todo = current[1..-1].concat todo
       end
