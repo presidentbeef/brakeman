@@ -12,7 +12,7 @@ class Brakeman::FindReturnValue
   #
   #If multiple return values are possible, returns all values in an :or Sexp.
   def self.return_value exp, env = nil
-    self.new.get_return_value exp, env = nil
+    self.new.get_return_value exp, env
   end
 
   def initialize
