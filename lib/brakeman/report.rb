@@ -105,7 +105,8 @@ class Brakeman::Report
       warning_messages << w
     end
 
-    warning_messages = warning_messages.sort_by{|row| row['Class']}.sort_by{|row| row['Warning Type']}.sort_by{|row| row['Confidence']}
+    stabilizer = 0
+    warning_messages = warning_messages.sort_by{|row| stabilizer += 1; [row['Confidence'], row['Warning Type'], row['Class'], stabilizer]}
 
     if html
       load_and_render_erb('security_warnings', binding)
@@ -142,8 +143,9 @@ class Brakeman::Report
       end
 
       return nil if warnings.empty?
-
-      warnings = warnings.sort_by{|row| row["Template"]}.sort_by{|row| row["Warning Type"]}.sort_by{|row| row["Confidence"]}
+      
+      stabilizer = 0
+      warnings = warnings.sort_by{|row| stabilizer += 1; [row["Confidence"], row["Warning Type"], row["Template"], stabilizer]}
       if html
         load_and_render_erb('view_warnings', binding)
       else
@@ -176,7 +178,8 @@ class Brakeman::Report
       end
 
       return nil if warnings.empty?
-      warnings = warnings.sort_by{|row| row["Model"]}.sort_by{|row| row["Warning Type"]}.sort_by{|row| row["Confidence"]}
+      stabilizer = 0
+      warnings = warnings.sort_by{|row| stabilizer +=1; [row["Confidence"],row["Warning Type"], row["Model"], stabilizer]}
 
       if html
         load_and_render_erb('model_warnings', binding)
@@ -211,7 +214,8 @@ class Brakeman::Report
 
       return nil if warnings.empty?
       
-      warnings = warnings.sort_by{|row| row["Controller"]}.sort_by{|row| row["Warning Type"]}.sort_by{|row| row["Confidence"]}
+      stabilizer = 0
+      warnings = warnings.sort_by{|row| stabilizer +=1; [row["Confidence"], row["Warning Type"], row["Controller"], stabilizer]}
 
       if html
         load_and_render_erb('controller_warnings', binding)
@@ -260,7 +264,7 @@ class Brakeman::Report
         "Routes" => routes
       }
     end
-    contoller_rows.sort_by{|row| row['Name']}
+    controller_rows = contoller_rows.sort_by{|row| row['Name']}
 
     if html
       load_and_render_erb('controller_overview', binding)
@@ -288,16 +292,17 @@ class Brakeman::Report
       end
     end
 
-    template_rows = Hash[template_rows.sort_by{|name, value| name.to_s}]
+    template_rows = template_rows.sort_by{|name, value| name.to_s}
 
     if html
       load_and_render_erb('template_overview', binding)
     else
       output = ''
-      template_rows.each_pair do |template_name, calls|
-        output << template_name.to_s << "\n\n" 
+      template_rows.each do |template|
+        output << template.first.to_s << "\n\n" 
         table = Terminal::Table.new(:headings => ['Output']) do |t|
-          calls.each do |v|
+          # template[1] is an array of calls
+          template[1].each do |v|
             t.add_row [v]
           end
         end
