@@ -88,10 +88,8 @@ module Brakeman::Util
       key = Sexp.new(:lit, key)
     end
 
-    hash_iterate hash do |k, v|
-      if k == key
-        return v
-      end
+    if index = hash.find_index(key) and index > 0
+      return hash[index + 1]
     end
 
     nil
