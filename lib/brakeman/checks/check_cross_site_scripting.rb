@@ -83,11 +83,10 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       out = exp[1][3][1]
     end
 
-    type, match = has_immediate_user_input? out
-
-    if type
+    if input = has_immediate_user_input?(out)
       add_result exp
-      case type
+
+      case input.type
       when :params
         message = "Unescaped parameter value"
       when :cookies
@@ -101,8 +100,8 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       warn :template => @current_template, 
         :warning_type => "Cross Site Scripting",
         :message => message,
-        :line => match.line,
-        :code => match,
+        :line => input.match.line,
+        :code => input.match,
         :confidence => CONFIDENCE[:high]
 
     elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(out)

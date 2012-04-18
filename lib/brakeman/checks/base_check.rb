@@ -219,8 +219,13 @@ class Brakeman::BaseCheck < SexpProcessor
     @string_interp
   end
 
-  #Checks if _exp_ includes parameters or cookies, but this only works 
-  #with the base process_default.
+  #Checks if _exp_ includes user input in the form of cookies, parameters,
+  #request environment, or model attributes.
+  #
+  #If found, returns a struct containing a type (:cookies, :params, :request, :model) and
+  #the matching expression (Match#type and Match#match).
+  #
+  #Returns false otherwise.
   def include_user_input? exp
     @has_user_input = false
     process exp
@@ -229,24 +234,24 @@ class Brakeman::BaseCheck < SexpProcessor
 
   #This is used to check for user input being used directly.
   #
-  #Returns false if none is found, otherwise it returns an array
-  #where the first element is the type of user input 
-  #(either :params or :cookies) and the second element is the matching 
-  #expression
+  ##If found, returns a struct containing a type (:cookies, :params, :request) and
+  #the matching expression (Match#type and Match#match).
+  #
+  #Returns false otherwise.
   def has_immediate_user_input? exp
     if exp.nil?
       false
     elsif params? exp
-      return :params, exp
+      return Match.new(:params, exp)
     elsif cookies? exp
-      return :cookies, exp
+      return Match.new(:cookies, exp)
     elsif call? exp
       if params? exp[1]
-        return :params, exp
+        return Match.new(:params, exp)
       elsif cookies? exp[1]
-        return :cookies, exp
+        return Match.new(:cookies, exp)
       elsif request_env? exp[1]
-        return :request, exp
+        return Match.new(:request, exp)
       else
         false
       end
@@ -255,10 +260,8 @@ class Brakeman::BaseCheck < SexpProcessor
       when :string_interp
         exp.each do |e|
           if sexp? e
-            type, match = has_immediate_user_input?(e)
-            if type
-              return type, match
-            end
+            match = has_immediate_user_input?(e)
+            return match if match
           end
         end
         false
@@ -267,10 +270,8 @@ class Brakeman::BaseCheck < SexpProcessor
           if exp[1].node_type == :rlist
             exp[1].each do |e|
               if sexp? e
-                type, match = has_immediate_user_input?(e)
-                if type
-                  return type, match
-                end
+                match = has_immediate_user_input?(e)
+                return match if match
               end
             end
             false

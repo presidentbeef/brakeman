@@ -60,10 +60,9 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
 
   def check_argument result, exp
     arg = process exp
-    type, match = has_immediate_user_input? arg
 
-    if type
-      case type
+    if input = has_immediate_user_input?(arg)
+      case input.type
       when :params
         message = "Unescaped parameter value in link_to"
       when :cookies

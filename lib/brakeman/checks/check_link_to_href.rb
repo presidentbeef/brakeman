@@ -40,10 +40,9 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     #with something before the user input
     return if node_type?(url_arg, :string_interp) && !url_arg[1].chomp.empty?
 
-    type, match = has_immediate_user_input? url_arg
 
-    if type
-      case type
+    if input = has_immediate_user_input?(url_arg)
+      case input.type
       when :params
         message = "Unsafe parameter value in link_to href"
       when :cookies
