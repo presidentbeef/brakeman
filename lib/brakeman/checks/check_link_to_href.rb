@@ -71,9 +71,9 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
       # attack. 
 
     elsif @matched
-      if @matched == :model and not tracker.options[:ignore_model_output]
+      if @matched.type == :model and not tracker.options[:ignore_model_output]
         message = "Unsafe model attribute in link_to href"
-      elsif @matched == :params
+      elsif @matched.type == :params
         message = "Unsafe parameter value in link_to href"
       end
 
