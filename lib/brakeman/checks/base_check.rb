@@ -208,11 +208,13 @@ class Brakeman::BaseCheck < SexpProcessor
 
   #Does not actually process string interpolation, but notes that it occurred.
   def process_string_interp exp
-    @string_interp = true
+    @string_interp = Match.new(:interp, exp)
     exp
   end
 
   #Checks if an expression contains string interpolation.
+  #
+  #Returns Match with :interp type if found.
   def include_interp? exp
     @string_interp = false
     process exp
