@@ -73,6 +73,10 @@ class HomeController < ApplicationController
     current_user.something.something.build(params[:awesome_user])
   end
 
+  def test_only_path
+    redirect_to params[:user], :only_path => true
+  end
+
   private
 
   def filter_it
