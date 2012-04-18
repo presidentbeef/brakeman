@@ -56,6 +56,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
         warn :result => result,
           :warning_type => "Cross Site Scripting", 
           :message => message,
+          :user_input => input.match,
           :confidence => CONFIDENCE[:high]
       end
     elsif has_immediate_model? url_arg
@@ -82,6 +83,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
         warn :result => result, 
           :warning_type => "Cross Site Scripting", 
           :message => message,
+          :user_input => @matched.match,
           :confidence => CONFIDENCE[:med]
       end
     end

@@ -186,6 +186,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
             :message => message,
             :line => exp.line,
             :code => exp,
+            :user_input => @matched.match,
             :confidence => confidence
         end
       end

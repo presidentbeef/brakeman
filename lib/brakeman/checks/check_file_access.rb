@@ -48,7 +48,8 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
           :message => message, 
           :confidence => CONFIDENCE[:high],
           :line => call.line,
-          :code => call
+          :code => call,
+          :user_input => input.match
       end
     end
   end

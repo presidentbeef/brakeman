@@ -54,6 +54,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
         :message => "Possible command injection",
         :line => call.line,
         :code => call,
+        :user_input => failure.match,
         :confidence => confidence
     end
   end

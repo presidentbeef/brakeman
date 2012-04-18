@@ -1,7 +1,7 @@
 #The Warning class stores information about warnings
 class Brakeman::Warning
   attr_reader :called_from, :check, :class, :confidence, :controller,
-    :line, :method, :model, :template, :warning_set, :warning_type
+    :line, :method, :model, :template, :user_input, :warning_set, :warning_type
 
   attr_accessor :code, :context, :file, :message
 
@@ -12,7 +12,7 @@ class Brakeman::Warning
     @view_name = nil
 
     [:called_from, :check, :class, :code, :confidence, :controller, :file, :line,
-      :message, :method, :model, :template, :warning_set, :warning_type].each do |option|
+      :message, :method, :model, :template, :user_input, :warning_set, :warning_type].each do |option|
 
       self.instance_variable_set("@#{option}", options[option])
     end

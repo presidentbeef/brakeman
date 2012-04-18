@@ -75,7 +75,9 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
       warn :result => result,
         :warning_type => "Cross Site Scripting", 
         :message => message,
+        :highlight => input.match,
         :confidence => CONFIDENCE[:high]
+
     elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(arg)
       method = match[2]
 
@@ -91,6 +93,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
         warn :result => result,
           :warning_type => "Cross Site Scripting", 
           :message => "Unescaped model attribute in link_to",
+          :user_input => match,
           :confidence => confidence
       end
 
@@ -107,6 +110,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
         warn :result => result, 
           :warning_type => "Cross Site Scripting", 
           :message => message,
+          :user_input => @matched.match,
           :confidence => CONFIDENCE[:med]
       end
     end

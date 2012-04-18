@@ -48,10 +48,12 @@ class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
         if true? value
           add_result res
 
-          if include_user_input? call[3]
+          if input = include_user_input?(call[3])
             confidence = CONFIDENCE[:high]
+            user_input = input.match
           else
             confidence = CONFIDENCE[:med]
+            user_input = nil
           end
 
           warn :result => res, 
@@ -59,6 +61,7 @@ class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
             :message => "Unprotected mass assignment",
             :line => call.line,
             :code => call, 
+            :user_input => user_input,
             :confidence => confidence
 
         end
