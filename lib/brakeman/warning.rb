@@ -152,15 +152,4 @@ class Brakeman::Warning
 
     JSON.dump self.to_hash
   end
-
-  def matches_except_line other_warning
-    other_warning_hash = other_warning.to_hash
-    self_hash = self.to_hash
-    self_hash.keys.reject{|k,v| k == :line}.each do |attr|
-      if self_hash[attr] != other_warning_hash[attr]
-        return false 
-      end
-    end
-    true
-  end
 end

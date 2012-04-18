@@ -313,38 +313,14 @@ module Brakeman
   # Compare JSON ouptut from a previous scan and return the diff of the two scans
   def self.compare options
     require 'json'
+    require 'brakeman/differ'
     raise ArgumentError.new("Comparison file doesn't exist") unless File.exists? options[:previous_results_json]
 
-    previous_results = JSON::load(File::open(options[:previous_results_json]))['warnings']
+    previous_results = JSON.parse(File::open(options[:previous_results_json]).read, :symbolize_names =>true)[:warnings]
 
     tracker = run(options)
-    new_results = JSON.parse(tracker.report.to_json)['warnings']
+    new_results = JSON.parse(tracker.report.to_json, :symbolize_names =>true)[:warnings]
 
-    warnings = {}
-    warnings[:new] = new_results - previous_results
-    warnings[:fixed] = previous_results - new_results
-
-    # second pass to cleanup any vulns which have changed in line number only
-    warnings[:new].each_with_index do |new_warning, new_warning_id|
-      warnings[:fixed].each_with_index do |fixed_warning, fixed_warning_id|
-        if matches_except_line new_warning, fixed_warning
-          warnings[:new].delete_at new_warning_id
-          warnings[:fixed].delete_at fixed_warning_id
-        end
-      end
-    end
-
-    warnings
-  end
-
-  private
-
-  def self.matches_except_line new_vuln, fixed_vuln
-    new_vuln.keys.reject{|k,v| k == 'line'}.each do |attr|
-      if new_vuln[attr] != fixed_vuln[attr]
-        return false 
-      end
-    end
-    true
+    Brakeman::Differ.new(new_results, previous_results).diff
   end
 end
