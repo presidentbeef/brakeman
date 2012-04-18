@@ -21,7 +21,6 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
 
     return if models.empty?
 
-    @results = Set.new
 
     Brakeman.debug "Finding possible mass assignment calls on #{models.length} models"
     calls = tracker.find_call :chained => true, :targets => models, :methods => [:new,
@@ -45,7 +44,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
 
     check = check_call call
 
-    if check and not @results.include? call
+    if check and not duplicate? res
       @results << call
 
       model = tracker.models[res[:chain].first]
