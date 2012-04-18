@@ -38,12 +38,6 @@ class Brakeman::CheckBasicAuth < Brakeman::BaseCheck
 
     return false if args.nil? or not hash? args
 
-    hash_iterate(args) do |k, v|
-      if symbol? k and k[1] == :password
-        return v
-      end
-    end
-
-    nil
+    hash_access(args, :password)
   end
 end

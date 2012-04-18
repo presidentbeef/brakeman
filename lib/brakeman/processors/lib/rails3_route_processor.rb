@@ -70,14 +70,12 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   def process_root exp
     args = exp[3][1..-1]
 
-    hash_iterate args[0] do |k, v|
-      if symbol? k and k[1] == :to and string? v[1]
+    if value = hash_access(args[0], :to)
+      if string? value[1]
         controller, action = extract_action v[1]
 
         self.current_controller = controller
         @tracker.routes[@current_controller] << action.to_sym
-
-        break
       end
     end
 

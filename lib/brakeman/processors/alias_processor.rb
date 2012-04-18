@@ -463,14 +463,11 @@ class Brakeman::AliasProcessor < SexpProcessor
   def process_hash_access target, args
     if args.length == 1
       index = args[0]
-      hash_iterate(target) do |key, value|
-        if key == index
-          return value
-        end
-      end
-    end
 
-    nil
+      hash_access(target, index)
+    else
+      nil
+    end
   end
 
   #Join two array literals into one.

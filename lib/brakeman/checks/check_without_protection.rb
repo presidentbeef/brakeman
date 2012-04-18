@@ -45,8 +45,8 @@ class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
 
     if hash? last_arg and not duplicate? res
 
-      hash_iterate(last_arg) do |k,v|
-        if symbol? k and k[1] == :without_protection and v[0] == :true
+      if value = hash_access(last_arg, :without_protection)
+        if true? value
           @results << call
 
           if include_user_input? call[3]
@@ -62,7 +62,6 @@ class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
             :code => call, 
             :confidence => confidence
 
-          break
         end
       end
     end
