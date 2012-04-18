@@ -36,7 +36,10 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
 
       if type
         confidence = CONFIDENCE[:high]
-      elsif type = include_user_input?(view)
+      elsif input = include_user_input?(view)
+        type = input.type
+        match = input.match
+
         if node_type? view, :string_interp, :dstr
           confidence = CONFIDENCE[:med]
         else

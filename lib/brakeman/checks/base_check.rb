@@ -12,6 +12,8 @@ class Brakeman::BaseCheck < SexpProcessor
 
   CONFIDENCE = { :high => 0, :med => 1, :low => 2 }
 
+  Match = Struct.new(:type, :match)
+
   #Initialize Check with Checks.
   def initialize tracker
     super()
@@ -66,13 +68,13 @@ class Brakeman::BaseCheck < SexpProcessor
     process exp[3]
 
     if params? exp[1]
-      @has_user_input = :params
+      @has_user_input = Match.new(:params, exp)
     elsif cookies? exp[1]
-      @has_user_input = :cookies
+      @has_user_input = Match.new(:cookies, exp)
     elsif request_env? exp[1]
-      @has_user_input = :request
+      @has_user_input = Match.new(:request, exp)
     elsif sexp? exp[1] and model_name? exp[1][1]
-      @has_user_input = :model
+      @has_user_input = Match.new(:model, exp)
     end
 
     exp
@@ -92,13 +94,13 @@ class Brakeman::BaseCheck < SexpProcessor
 
   #Note that params are included in current expression
   def process_params exp
-    @has_user_input = :params
+    @has_user_input = Match.new(:params, exp)
     exp
   end
 
   #Note that cookies are included in current expression
   def process_cookies exp
-    @has_user_input = :cookies
+    @has_user_input = Match.new(:cookies, exp)
     exp
   end
 
