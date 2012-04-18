@@ -258,12 +258,8 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
   #Otherwise, returns nil.
   def check_for_controller_name args
     args.each do |a|
-      if hash? a
-        hash_iterate(a) do |k, v|
-          if k[1] == :controller
-            return v[1]
-          end 
-        end
+      if hash? a and value = hash_access(a, :controller)
+        return value[1]
       end
     end
 

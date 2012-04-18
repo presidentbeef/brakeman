@@ -28,10 +28,8 @@ class Brakeman::CheckValidationRegex < Brakeman::BaseCheck
 
   #Check validates_format_of
   def process_validator validator
-    hash_iterate(validator[-1]) do |key, value|
-      if key == WITH
-        check_regex value, validator
-      end
+    if value = hash_access(validator[-1], WITH)
+      check_regex value, validator
     end
   end
 

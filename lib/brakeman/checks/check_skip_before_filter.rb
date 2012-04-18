@@ -39,10 +39,8 @@ class Brakeman::CheckSkipBeforeFilter < Brakeman::BaseCheck
     args = filter[3]
 
     if symbol? args[1] and args[1][1] == :verify_authenticity_token and hash? args.last
-      hash_iterate args.last do |k, v|
-        if symbol? k and k[1] == :except
-          return true
-        end
+      if hash_access(args.last, :except)
+        return true
       end
     end
 

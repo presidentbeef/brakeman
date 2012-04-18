@@ -89,10 +89,8 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   def only_path? call
     call[3].each do |arg|
       if hash? arg
-        hash_iterate(arg) do |k,v|
-          if symbol? k and k[1] == :only_path and v.is_a? Sexp and v[0] == :true
-            return true
-          end
+        if value = hash_access(arg, :only_path)
+          return true if true?(value)
         end
       elsif call? arg and arg[2] == :url_for
         return check_url_for(arg)
@@ -107,10 +105,8 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   def check_url_for call
     call[3].each do |arg|
       if hash? arg
-        hash_iterate(arg) do |k,v|
-          if symbol? k and k[1] == :only_path and v.is_a? Sexp and v[0] == :false
-            return false
-          end
+        if value = hash_access(arg, :only_path)
+          return false if false?(value)
         end
       end
     end
