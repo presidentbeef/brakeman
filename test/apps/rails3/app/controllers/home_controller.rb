@@ -77,6 +77,12 @@ class HomeController < ApplicationController
     redirect_to params[:user], :only_path => true
   end
 
+  def test_url_for_only_path
+    url = params
+    url[:only_path] = false
+    redirect_to url_for(url)
+  end
+
   private
 
   def filter_it
