@@ -11,7 +11,7 @@ class Brakeman::Differ
 
   def diff
     # get the type of elements
-    return DEFAULT_HASH if @old_warnings.empty? && @new_warnings.empty?
+    return DEFAULT_HASH if @new_warnings.empty?
 
     warnings = {}
     warnings[:new] = @new_warnings - @old_warnings
@@ -20,14 +20,17 @@ class Brakeman::Differ
     second_pass(warnings)
   end
 
-  # second pass to cleanup any vulns which have changed in line number only
+  # second pass to cleanup any vulns which have changed in line number only.
+  # Given a list of new warnings, delete pairs of new/fixed vulns that differ
+  # only by line number.
   # Horrible O(n^2) performance.  Keep n small :-/
   def second_pass(warnings)
     # keep track of the number of elements deleted because the index numbers
     # won't update as the list is modified
     elements_deleted_offset = 0
 
-    # dup this list since we will be deleting from it and the iterator gets confused
+    # dup this list since we will be deleting from it and the iterator gets confused.
+    # use _with_index for fast deletion as opposed to .reject!{|obj| obj == *_warning}
     warnings[:new].dup.each_with_index do |new_warning, new_warning_id|
       warnings[:fixed].each_with_index do |fixed_warning, fixed_warning_id|
         if eql_except_line_number new_warning, fixed_warning
