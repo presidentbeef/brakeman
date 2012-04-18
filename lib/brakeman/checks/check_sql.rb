@@ -17,9 +17,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     @rails_version = tracker.config[:rails_version]
 
     if tracker.options[:rails3]
-      @sql_targets = /^(find.*|last|first|all|count|sum|average|minumum|maximum|count_by_sql|where|order|group|having)$/
+      @sql_targets = /^(find|find_by_sql|last|first|all|count|sum|average|minumum|maximum|count_by_sql|where|order|group|having)$/
     else
-      @sql_targets = /^(find.*|last|first|all|count|sum|average|minumum|maximum|count_by_sql)$/
+      @sql_targets = /^(find|find_by_sql|last|first|all|count|sum|average|minumum|maximum|count_by_sql)$/
     end
 
     Brakeman.debug "Finding possible SQL calls on models"
