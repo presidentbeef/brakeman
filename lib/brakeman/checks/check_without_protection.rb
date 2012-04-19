@@ -23,8 +23,6 @@ class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
 
     return if models.empty?
 
-    @results = Set.new
-
     Brakeman.debug "Finding all mass assignments"
     calls = tracker.find_call :targets => models, :methods => [:new,
       :attributes=, 
@@ -45,7 +43,7 @@ class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
     call = res[:call]
     last_arg = call[3][-1]
 
-    if hash? last_arg and not @results.include? call
+    if hash? last_arg and not duplicate? res
 
       if value = hash_access(last_arg, :without_protection)
         if true? value

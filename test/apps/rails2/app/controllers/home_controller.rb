@@ -112,6 +112,10 @@ class HomeController < ApplicationController
     params["something"] = h(params["something"])
   end
 
+  def test_safe_find_by
+    User.find_or_create_by_name(params[:name], :code => (params[:x] + "code"))
+  end
+
   private
 
   def filter_it
