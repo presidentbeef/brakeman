@@ -75,7 +75,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
       warn :result => result,
         :warning_type => "Cross Site Scripting", 
         :message => message,
-        :highlight => input.match,
+        :user_input => input.match,
         :confidence => CONFIDENCE[:high]
 
     elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(arg)
