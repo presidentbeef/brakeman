@@ -54,7 +54,7 @@ end
 
 tracker = if options[:previous_results_json]
   vulns = Brakeman.compare options
-  # puts JSON.pretty_generate(vulns)
+  puts JSON.pretty_generate(vulns)
 else
   #Run scan and output a report
   Brakeman.run options.merge(:print_report => true, :quiet => options[:quiet])
