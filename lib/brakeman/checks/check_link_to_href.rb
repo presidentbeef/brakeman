@@ -40,10 +40,9 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     #with something before the user input
     return if node_type?(url_arg, :string_interp) && !url_arg[1].chomp.empty?
 
-    type, match = has_immediate_user_input? url_arg
 
-    if type
-      case type
+    if input = has_immediate_user_input?(url_arg)
+      case input.type
       when :params
         message = "Unsafe parameter value in link_to href"
       when :cookies
@@ -57,6 +56,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
         warn :result => result,
           :warning_type => "Cross Site Scripting", 
           :message => message,
+          :user_input => input.match,
           :confidence => CONFIDENCE[:high]
       end
     elsif has_immediate_model? url_arg
@@ -72,9 +72,9 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
       # attack. 
 
     elsif @matched
-      if @matched == :model and not tracker.options[:ignore_model_output]
+      if @matched.type == :model and not tracker.options[:ignore_model_output]
         message = "Unsafe model attribute in link_to href"
-      elsif @matched == :params
+      elsif @matched.type == :params
         message = "Unsafe parameter value in link_to href"
       end
 
@@ -83,6 +83,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
         warn :result => result, 
           :warning_type => "Cross Site Scripting", 
           :message => message,
+          :user_input => @matched.match,
           :confidence => CONFIDENCE[:med]
       end
     end

@@ -83,11 +83,10 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       out = exp[1][3][1]
     end
 
-    type, match = has_immediate_user_input? out
-
-    if type
+    if input = has_immediate_user_input?(out)
       add_result exp
-      case type
+
+      case input.type
       when :params
         message = "Unescaped parameter value"
       when :cookies
@@ -101,8 +100,8 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       warn :template => @current_template, 
         :warning_type => "Cross Site Scripting",
         :message => message,
-        :line => match.line,
-        :code => match,
+        :line => input.match.line,
+        :code => input.match,
         :confidence => CONFIDENCE[:high]
 
     elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(out)
@@ -161,29 +160,35 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       actually_process_call exp
       message = nil
 
-      if @matched == :model and not tracker.options[:ignore_model_output]
-        message = "Unescaped model attribute" 
-      elsif @matched == :params
-        message = "Unescaped parameter value" 
-      elsif @matched == :cookies
-        message = "Unescaped cookie value" 
-      end
-
-      if message and not duplicate? exp
-        add_result exp
-
-        if exp[1].nil? and @known_dangerous.include? exp[2]
-          confidence = CONFIDENCE[:high]
-        else
-          confidence = CONFIDENCE[:low]
+      if @matched
+        case @matched.type
+        when :model
+          unless tracker.options[:ignore_model_output]
+            message = "Unescaped model attribute"
+          end
+        when :params
+          message = "Unescaped parameter value"
+        when :cookies
+          message = "Unescaped cookie value"
         end
 
-        warn :template => @current_template,
-          :warning_type => "Cross Site Scripting", 
-          :message => message,
-          :line => exp.line,
-          :code => exp,
-          :confidence => confidence
+        if message and not duplicate? exp
+          add_result exp
+
+          if exp[1].nil? and @known_dangerous.include? exp[2]
+            confidence = CONFIDENCE[:high]
+          else
+            confidence = CONFIDENCE[:low]
+          end
+
+          warn :template => @current_template,
+            :warning_type => "Cross Site Scripting", 
+            :message => message,
+            :line => exp.line,
+            :code => exp,
+            :user_input => @matched.match,
+            :confidence => confidence
+        end
       end
 
       @mark = @matched = false
@@ -204,7 +209,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
     #Ignore safe items
     if (target.nil? and (@ignore_methods.include? method or method.to_s =~ IGNORE_LIKE)) or
-      (@matched == :model and IGNORE_MODEL_METHODS.include? method) or
+      (@matched and @matched.type == :model and IGNORE_MODEL_METHODS.include? method) or
       (target == HAML_HELPERS and method == :html_escape) or
       ((target == URI or target == CGI) and method == :escape) or
       (target == XML_HELPER and method == :escape_xml) or
@@ -214,11 +219,11 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       #exp[0] = :ignore #should not be necessary
       @matched = false
     elsif sexp? exp[1] and model_name? exp[1][1]
-      @matched = :model
+      @matched = Match.new(:model, exp)
     elsif cookies? exp
-      @matched = :cookies
+      @matched = Match.new(:cookies, exp)
     elsif @inspect_arguments and params? exp
-      @matched = :params
+      @matched = Match.new(:params, exp)
     elsif @inspect_arguments
       process args
     end
@@ -226,13 +231,13 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   #Note that params have been found
   def process_params exp
-    @matched = :params
+    @matched = Match.new(:params, exp)
     exp
   end
 
   #Note that cookies have been found
   def process_cookies exp
-    @matched = :cookies
+    @matched = Match.new(:cookies, exp)
     exp
   end
 

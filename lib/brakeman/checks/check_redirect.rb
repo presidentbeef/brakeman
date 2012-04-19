@@ -28,7 +28,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     if method == :redirect_to and not only_path?(call) and res = include_user_input?(call)
       add_result result
 
-      if res == :immediate
+      if res.type == :immediate
         confidence = CONFIDENCE[:high]
       else
         confidence = CONFIDENCE[:low]
@@ -39,6 +39,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
         :message => "Possible unprotected redirect",
         :line => call.line,
         :code => call,
+        :user_input => res.match,
         :confidence => confidence
     end
   end
@@ -64,16 +65,18 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
 
     call[3].each do |arg|
       if call? arg 
-        if request_value? arg or request_value? arg[1]
-          return :immediate
+        if request_value? arg
+          return Match.new(:immediate, arg)
+        elsif request_value? arg[1]
+          return Match.new(:immediate, arg[1])
         elsif arg[2] == :url_for and include_user_input? arg
-          return :immediate
+          return Match.new(:immediate, arg)
           #Ignore helpers like some_model_url?
         elsif arg[2].to_s =~ /_(url|path)$/
           return false
         end
       elsif request_value? arg
-        return :immediate
+        return Match.new(:immediate, arg)
       end
     end
 

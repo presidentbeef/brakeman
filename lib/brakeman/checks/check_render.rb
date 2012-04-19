@@ -32,11 +32,10 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
     if sexp? view and not duplicate? result
       add_result result
 
-      type, match = has_immediate_user_input? view
 
-      if type
+      if input = has_immediate_user_input?(view)
         confidence = CONFIDENCE[:high]
-      elsif type = include_user_input?(view)
+      elsif input = include_user_input?(view)
         if node_type? view, :string_interp, :dstr
           confidence = CONFIDENCE[:med]
         else
@@ -48,7 +47,7 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
 
       message = "Render path contains "
 
-      case type
+      case input.type
       when :params
         message << "parameter value"
       when :cookies
@@ -66,6 +65,7 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
       warn :result => result,
         :warning_type => "Dynamic Render Path",
         :message => message,
+        :user_input => input.match,
         :confidence => confidence
     end
   end

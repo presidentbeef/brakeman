@@ -1,7 +1,7 @@
 #The Warning class stores information about warnings
 class Brakeman::Warning
   attr_reader :called_from, :check, :class, :confidence, :controller,
-    :line, :method, :model, :template, :warning_set, :warning_type
+    :line, :method, :model, :template, :user_input, :warning_set, :warning_type
 
   attr_accessor :code, :context, :file, :message
 
@@ -12,7 +12,7 @@ class Brakeman::Warning
     @view_name = nil
 
     [:called_from, :check, :class, :code, :confidence, :controller, :file, :line,
-      :message, :method, :model, :template, :warning_set, :warning_type].each do |option|
+      :message, :method, :model, :template, :user_input, :warning_set, :warning_type].each do |option|
 
       self.instance_variable_set("@#{option}", options[option])
     end
@@ -72,6 +72,12 @@ class Brakeman::Warning
   #stripped of newlines and tabs.
   def format_code
     Brakeman::OutputProcessor.new.format(self.code).gsub(/(\t|\r|\n)+/, " ")
+  end
+
+  #Return String of the user input formatted and
+  #stripped of newlines and tabs.
+  def format_user_input
+    Brakeman::OutputProcessor.new.format(self.user_input).gsub(/(\t|\r|\n)+/, " ")
   end
 
   #Return formatted warning message
@@ -143,6 +149,7 @@ class Brakeman::Warning
       :line => self.line,
       :code => (@code && self.format_code),
       :location => location,
+      :user_input => (@user_input && self.format_user_input),
       :confidence => TEXT_CONFIDENCE[self.confidence]
     }
   end

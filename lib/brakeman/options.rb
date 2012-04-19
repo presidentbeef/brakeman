@@ -144,6 +144,10 @@ module Brakeman::Options
           options[:combine_locations] = combine
         end
 
+        opts.on "--[no-]highlights", "Highlight user input in report" do |highlight|
+          options[:highlight_user_input] = highlight
+        end
+
         opts.on "-m", "--routes", "Report controller information" do
           options[:report_routes] = true
         end

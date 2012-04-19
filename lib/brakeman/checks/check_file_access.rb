@@ -28,13 +28,14 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
 
     file_name = call[3][1]
 
-    if check = include_user_input?(file_name)
+    if input = include_user_input?(file_name)
       unless duplicate? result
         add_result result
 
-        if check == :params
+        case input.type
+        when :params
           message = "Parameter"
-        elsif check == :cookies
+        when :cookies
           message = "Cookie"
         else
           message = "User input"
@@ -47,7 +48,8 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
           :message => message, 
           :confidence => CONFIDENCE[:high],
           :line => call.line,
-          :code => call
+          :code => call,
+          :user_input => input.match
       end
     end
   end
