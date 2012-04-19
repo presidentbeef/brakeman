@@ -1,0 +1,28 @@
+<h2>Security Warnings</h2>  
+<table>
+<% if warning_messages.any? %>
+  <tr>
+    <th>Confidence</th>
+    <th>Class</th>
+    <th>Method</th>
+    <th>Warning Type</th>
+    <th>Message</th>
+  </tr>
+  <% warning_messages.each do |warning| %>
+  <tr>
+    <td><%= warning['Confidence']%></td>
+    <td><%= warning['Class']%></td>
+    <td><%= warning['Method']%></td>
+    <td><%= warning['Warning Type']%></td>
+    <td><%= warning['Message']%></td>
+  </tr>
+  <% end %>
+<% else %>
+  <tr>
+    <th>General Warnings</th>
+  </tr>
+  <tr>
+    <td>[NONE]</td>
+  </tr>
+<% end %>
+</table>

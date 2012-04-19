@@ -1,4 +1,6 @@
 require 'brakeman/scanner'
+require 'terminal-table'
+require 'brakeman/util'
 
 #Class for rescanning changed files after an initial scan
 class Brakeman::Rescanner < Brakeman::Scanner
@@ -306,6 +308,7 @@ end
 
 #Class to make reporting of rescan results simpler to deal with
 class Brakeman::RescanReport
+  include Brakeman::Util
   attr_reader :old_results, :new_results
 
   def initialize old_results, tracker
@@ -371,17 +374,16 @@ New warnings: #{new_warnings.length}
         if warnings.length > 0
           out << "#{warning_type.to_s.titleize} warnings: #{warnings.length}\n"
 
-          table = Ruport::Data::Table(["Confidence", "Class", "Method", "Warning Type", "Message"])
+          table = Terminal::Table.new(:headings => ["Confidence", "Class", "Method", "Warning Type", "Message"]) do |t|
+            warnings.sort_by { |w| w.confidence}.each do |warning|
+              w = warning.to_row
 
-          warnings.sort_by { |w| w.confidence}.each do |warning|
-            w = warning.to_row
+              w["Confidence"] = Brakeman::Report::TEXT_CONFIDENCE[w["Confidence"]]
 
-            w["Confidence"] = Brakeman::Report::TEXT_CONFIDENCE[w["Confidence"]]
-
-            table << w
+              t << [w["Confidence"], w["Class"], w["Method"], w["Warning Type"], w["Message"]]
+            end            
           end
-
-          out << table.to_s
+          out << truncate_table(table.to_s)
         end
       end
 
