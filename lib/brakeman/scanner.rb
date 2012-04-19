@@ -227,7 +227,7 @@ class Brakeman::Scanner
 
     Brakeman.notify "Processing data flow in controllers..."
 
-    tracker.controllers.each do |name, controller|
+    tracker.controllers.sort_by{|name| name.to_s}.each do |name, controller|
       Brakeman.debug "Processing #{name}"
       if @report_progress
         $stderr.print " #{current}/#{total} controllers processed\r"
@@ -280,7 +280,7 @@ class Brakeman::Scanner
 
     Brakeman.notify "Processing data flow in templates..."
 
-    tracker.templates.keys.dup.each do |name|
+    tracker.templates.keys.dup.sort_by{|name| name.to_s}.each do |name|
       Brakeman.debug "Processing #{name}"
       if @report_progress
         count += 1
