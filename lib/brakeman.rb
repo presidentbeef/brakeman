@@ -18,6 +18,7 @@ module Brakeman
   #  * :app_path - path to root of Rails app (required)
   #  * :assume_all_routes - assume all methods are routes (default: false)
   #  * :check_arguments - check arguments of methods (default: true)
+  #  * :check_updates - check for newer version of Brakeman (default: false)
   #  * :collapse_mass_assignment - report unprotected models in single warning (default: true)
   #  * :combine_locations - combine warning locations (default: true)
   #  * :config_file - configuration file
@@ -45,11 +46,16 @@ module Brakeman
   def self.run options
     options = set_options options
 
+
     @quiet = !!options[:quiet]
     @debug = !!options[:debug]
 
     if @quiet
       options[:report_progress] = false
+    end
+
+    if options[:check_updates]
+      self.warn_on_outdated
     end
 
     scan options
@@ -120,7 +126,8 @@ module Brakeman
       :parallel_checks => true,
       :quiet => true,
       :report_progress => true,
-      :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css" 
+      :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css",
+      :check_updates => false
     }
   end
 
@@ -301,6 +308,79 @@ module Brakeman
     @debug = !!tracker.options[:debug]
 
     Rescanner.new(tracker.options, tracker.processor, files).recheck
+  end
+
+  #Check for a newer version of Brakeman. If found, suggest updating.
+  #
+  #Results of this check are stored in ~/.brakeman/update_check, and should
+  #only update once per 24 hours.
+  #
+  #This check is ON by default when running Brakeman from the command line,
+  #but OFF by default when using Brakeman as a library.
+  #
+  #~/.brakeman/update_check contains a version number on the first line and
+  #a timestamp on the second line.
+  def self.warn_on_outdated
+    require 'date'
+
+    brakeman_path = File.expand_path "~/.brakeman"
+    last_check_file = File.join(brakeman_path, "update_check")
+    current_time = DateTime.now
+    last_time = 0
+
+    if File.exist? last_check_file
+      latest, last_time = File.readlines(last_check_file)
+      latest.strip!
+      last_time.strip!
+
+      begin
+        last_time = DateTime.parse last_time
+      rescue ArgumentError
+        last_time = nil
+      end
+    elsif not File.exist? brakeman_path
+      #If we can't create a file to keep track of when the version was last
+      #checked, then don't warn at all
+      begin
+        Dir.mkdir brakeman_path
+      rescue Errno::EACCES
+        return
+      end
+    end
+
+    if latest.nil? or last_time - current_time > 86400
+      latest = self.latest_version
+
+      File.open last_check_file, "w" do |f|
+        f.puts latest
+        f.puts current_time
+      end
+    end
+
+    if latest > Brakeman::Version
+      Brakeman.notify "[Notice] Please upgrade to latest version: #{latest}"
+    end
+
+  rescue Exception => e
+    notify "[Notice] Error while checking latest version information: #{e}"
+    puts e.backtrace
+  end
+
+  #Returns latest version of Brakeman
+  def self.latest_version
+    Brakeman.notify "Checking for latest Brakeman version..."
+    current_version = Brakeman::Version
+    brakeman_dependency = Gem::Dependency.new("brakeman", ">#{current_version}")
+    specs = Gem::SpecFetcher.new.find_matching(brakeman_dependency)
+
+    if specs.empty?
+      current_version
+    else
+      specs[0][0][1].version
+    end
+  rescue Exception => e
+    notify "[Notice] Error while fetching latest version information: #{e}"
+    current_version
   end
 
   def self.notify message

@@ -42,6 +42,11 @@ unless options[:app_path]
   end
 end
 
+#Check for updates by default
+unless options.has_key? :check_updates
+  options[:check_updates] = true
+end
+
 trap("INT") do
   $stderr.puts "\nInterrupted - exiting."
 
