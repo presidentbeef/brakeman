@@ -43,11 +43,11 @@ class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
     call = res[:call]
     last_arg = call[3][-1]
 
-    if hash? last_arg and not duplicate? res
+    if hash? last_arg and not call.original_line and not duplicate? res
 
       if value = hash_access(last_arg, :without_protection)
         if true? value
-          @results << call
+          add_result res
 
           if include_user_input? call[3]
             confidence = CONFIDENCE[:high]

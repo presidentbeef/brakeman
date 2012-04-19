@@ -46,8 +46,10 @@ class Brakeman::ErbTemplateProcessor < Brakeman::TemplateProcessor
       exp[3] = process(exp[3])
       make_render_in_view exp
     else
+      #TODO: Is it really necessary to create a new Sexp here?
       args = exp[3] = process(exp[3])
       call = Sexp.new :call, target, method, args
+      call.original_line(exp.original_line)
       call.line(exp.line)
       call
     end

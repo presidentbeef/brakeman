@@ -10,7 +10,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 3,
-      :template => 3,
+      :template => 1,
       :warning => 13 }
   end
 
@@ -169,7 +169,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
 
 
   def test_sql_injection_16 
-    assert_warning :type => :template,
+    assert_no_warning :type => :template,
       :warning_type => "SQL Injection",
       :line => 4,
       :message => /^Possible\ SQL\ injection/,
@@ -179,7 +179,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
 
 
   def test_sql_injection_17 
-    assert_warning :type => :template,
+    assert_no_warning :type => :template,
       :warning_type => "SQL Injection",
       :line => 7,
       :message => /^Possible\ SQL\ injection/,

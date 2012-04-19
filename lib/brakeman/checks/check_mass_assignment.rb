@@ -44,8 +44,8 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
 
     check = check_call call
 
-    if check and not duplicate? res
-      @results << call
+    if check and not call.original_line and not duplicate? res
+      add_result res
 
       model = tracker.models[res[:chain].first]
 
