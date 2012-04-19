@@ -76,16 +76,19 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
 
     exp = result[:call]
 
-    if include_user_input? exp
+    if input = include_user_input?(exp)
       confidence = CONFIDENCE[:high]
+      user_input = input.match
     else
       confidence = CONFIDENCE[:med]
+      user_input = nil
     end
 
     warning = { :warning_type => "Command Injection",
       :message => "Possible command injection",
       :line => exp.line,
       :code => exp,
+      :user_input => user_input,
       :confidence => confidence }
 
     if result[:location][0] == :template
