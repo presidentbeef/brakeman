@@ -173,6 +173,10 @@ module Brakeman::Options
           options[:min_confidence] =  3 - level.to_i
         end
 
+        opts.on "--compare FILE", "Compare the results of a previous brakeman scan (only JSON is supported)" do |file|
+          options[:previous_results_json] = File.expand_path(file)
+        end
+
         opts.separator ""
         opts.separator "Configuration files:"
 

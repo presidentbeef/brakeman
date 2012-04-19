@@ -4,8 +4,9 @@ require 'brakeman/processors/output_processor'
 require 'brakeman/util'
 require 'terminal-table'
 require 'highline/system_extensions'
-
 require "csv"
+require 'brakeman/version'
+
 if CSV.const_defined? :Reader
   # Ruby 1.8 compatible
   require 'fastercsv'
@@ -37,11 +38,7 @@ class Brakeman::Report
 
   #Generate summary table of what was parsed
   def generate_overview html = false
-    templates = Set.new(@tracker.templates.map {|k,v| v[:name].to_s[/[^.]+/]}).length
-    warnings = checks.warnings.length +
-                checks.controller_warnings.length +
-                checks.model_warnings.length +
-                checks.template_warnings.length
+    warnings = all_warnings.length
 
     if html
       load_and_render_erb('overview', binding)
@@ -49,7 +46,7 @@ class Brakeman::Report
       Terminal::Table.new(:headings => ['Scanned/Reported', 'Total']) do |t|
         t.add_row ['Controllers', tracker.controllers.length]
         t.add_row ['Models', tracker.models.length - 1]
-        t.add_row ['Templates', templates]
+        t.add_row ['Templates', number_of_templates(@tracker)]
         t.add_row ['Errors', tracker.errors.length]
         t.add_row ['Security Warnings', "#{warnings} (#{warnings_summary[:high_confidence]})"]
       end
@@ -473,10 +470,7 @@ class Brakeman::Report
     summary = Hash.new(0)
     high_confidence_warnings = 0
 
-    [checks.warnings, 
-        checks.controller_warnings, 
-        checks.model_warnings, 
-        checks.template_warnings].each do |warnings|
+    [all_warnings].each do |warnings|
 
       warnings.each do |warning|
         summary[warning.warning_type.to_s] += 1
@@ -614,7 +608,35 @@ class Brakeman::Report
   def to_json
     require 'json'
 
-    @checks.all_warnings.map { |w| w.to_hash }.to_json
+    errors = tracker.errors.map{|e| { :error => e[:error], :location => e[:backtrace][0] }}
+    warnings = all_warnings.map { |w| w.to_hash }.sort_by{|w| w[:file]}
+    scan_info = {
+      :app_path => File.expand_path(tracker.options[:app_path]),
+      :rails_version => rails_version,
+      :security_warnings => all_warnings.length,
+      :timestamp => Time.now,
+      :checks_performed => checks.checks_run.sort,
+      :number_of_controllers =>tracker.controllers.length,
+      # ignore the "fake" model
+      :number_of_models => tracker.models.length - 1,
+      :number_of_templates => number_of_templates(@tracker),
+      :ruby_version => RUBY_VERSION,
+      :brakeman_version => Brakeman::Version
+    }
+
+    JSON.pretty_generate({
+      :scan_info => scan_info,
+      :warnings => warnings,
+      :errors => errors
+    })
+  end
+
+  def all_warnings
+    @all_warnings ||= @checks.all_warnings
+  end
+
+  def number_of_templates tracker
+    Set.new(tracker.templates.map {|k,v| v[:name].to_s[/[^.]+/]}).length
   end
 
   private
