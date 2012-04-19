@@ -34,6 +34,7 @@ class Brakeman::Report
     @checks = tracker.checks
     @element_id = 0 #Used for HTML ids
     @warnings_summary = nil
+    @highlight_user_input = tracker.options[:highlight_user_input]
   end
 
   #Generate summary table of what was parsed
@@ -491,7 +492,7 @@ class Brakeman::Report
 
   #Escape warning message and highlight user input in text output
   def text_message warning, message
-    if warning.user_input
+    if @highlight_user_input and warning.user_input
       user_input = Brakeman::OutputProcessor.new.format(warning.user_input)
       message.gsub(user_input, "+#{user_input}+")
     else
@@ -502,7 +503,8 @@ class Brakeman::Report
   #Escape warning message and highlight user input in HTML output
   def html_message warning, message
     message = CGI.escapeHTML(message)
-    if warning.user_input
+
+    if @highlight_user_input and warning.user_input
       user_input = CGI.escapeHTML(Brakeman::OutputProcessor.new.format(warning.user_input))
 
       message.gsub!(user_input, "<span class=\"user_input\">#{user_input}</span>")
