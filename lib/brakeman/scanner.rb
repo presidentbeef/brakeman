@@ -92,8 +92,7 @@ class Brakeman::Scanner
     end
 
     if File.exists? "#@path/vendor/plugins/rails_xss" or
-      options[:rails3] or options[:escape_html] or
-      (File.exists? "#@path/Gemfile" and File.read("#@path/Gemfile").include? "rails_xss")
+      options[:rails3] or options[:escape_html]
 
       tracker.config[:escape_html] = true
       Brakeman.notify "[Notice] Escaping HTML by default"
