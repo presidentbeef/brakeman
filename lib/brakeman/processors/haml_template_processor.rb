@@ -94,8 +94,10 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       exp[3] = process exp[3]
       make_render_in_view exp
     else
+      #TODO: Do we really need a new Sexp here?
       args = process exp[3]
       call = Sexp.new :call, target, method, args
+      call.original_line(exp.original_line)
       call.line(exp.line)
       call
     end
