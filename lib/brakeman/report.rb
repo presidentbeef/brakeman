@@ -485,6 +485,17 @@ class Brakeman::Report
     @warnings_summary = summary
   end
 
+  #Escape warning message and highlight user input
+  def html_message warning, message
+    message = CGI.escapeHTML(message)
+    if warning.user_input
+      user_input = CGI.escapeHTML(Brakeman::OutputProcessor.new.format(warning.user_input))
+
+      message.gsub!(user_input, "<span class=\"user_input\">#{user_input}</span>")
+    end
+
+    message
+  end
 
   #Generate HTML for warnings, including context show/hidden via Javascript
   def with_context warning, message
@@ -495,12 +506,14 @@ class Brakeman::Report
       tracker.options[:message_limit] > 0 and 
       message.length > tracker.options[:message_limit]
 
-      full_message = message
+      full_message = html_message(warning, message)
       message = message[0..tracker.options[:message_limit]] << "..."
     end
 
+    message = html_message(warning, message)
+
     if context.empty? and not full_message
-      return CGI.escapeHTML(message)
+      return message
     end
 
     @element_id += 1
@@ -510,10 +523,10 @@ class Brakeman::Report
     alt = false
     output = "<div class='warning_message' onClick=\"toggle('#{code_id}');toggle('#{message_id}');toggle('#{full_message_id}')\" >" <<
     if full_message
-      "<span id='#{message_id}' style='display:block' >#{CGI.escapeHTML(message)}</span>" <<
-      "<span id='#{full_message_id}' style='display:none'>#{CGI.escapeHTML(full_message)}</span>"
+      "<span id='#{message_id}' style='display:block' >#{message}</span>" <<
+      "<span id='#{full_message_id}' style='display:none'>#{full_message}</span>"
     else
-      CGI.escapeHTML(message)
+      message
     end <<
     "<table id='#{code_id}' class='context' style='display:none'>" <<
     "<caption>#{(warning.file || '').gsub(tracker.options[:app_path], "")}</caption>"
