@@ -93,6 +93,10 @@ class Brakeman::Rescanner < Brakeman::Scanner
       process_controllers
       @reindex << :controllers << :templates
     when :gemfile
+      if tracker.config[:gems][:rails_xss] and tracker.config[:escape_html]
+        tracker.config[:escape_html] = false
+      end
+
       process_gems
     else
       return false #Nothing to do, file hopefully does not need to be rescanned

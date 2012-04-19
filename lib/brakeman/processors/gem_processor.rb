@@ -17,6 +17,12 @@ class Brakeman::GemProcessor < Brakeman::BaseProcessor
     elsif @tracker.config[:gems][:rails] =~ /(\d+.\d+.\d+)/
       @tracker.config[:rails_version] = $1
     end
+
+    if @tracker.config[:gems][:rails_xss]
+      @tracker.config[:escape_html] = true
+
+      Brakeman.notify "[Notice] Escaping HTML by default"
+    end
   end
 
   def process_call exp
@@ -25,6 +31,8 @@ class Brakeman::GemProcessor < Brakeman::BaseProcessor
 
       if sexp? args[1]
         @tracker.config[:gems][args[0][1].to_sym] = args[1][1]
+      else
+        @tracker.config[:gems][args[0][1].to_sym] = ">=0.0.0"
       end
     end
 
