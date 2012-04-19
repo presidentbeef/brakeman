@@ -14,7 +14,7 @@ class Rails3Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 5,
-      :template => 22,
+      :template => 21,
       :warning => 24
     }
   end
@@ -426,7 +426,8 @@ class Rails3Tests < Test::Unit::TestCase
   end
 
   def test_sql_injection_in_template
-    assert_warning :type => :template,
+    #SQL injection in controllers should not warn again in views
+    assert_no_warning :type => :template,
       :warning_type => "SQL Injection",
       :line => 3, #This should be line 4 :(
       :message => /^Possible SQL injection/,
