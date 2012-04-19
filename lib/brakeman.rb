@@ -318,7 +318,12 @@ module Brakeman
     require 'brakeman/differ'
     raise ArgumentError.new("Comparison file doesn't exist") unless File.exists? options[:previous_results_json]
 
-    previous_results = JSON.parse(File::open(options[:previous_results_json]).read, :symbolize_names =>true)[:warnings]
+    begin
+      previous_results = JSON.parse(File.read(options[:previous_results_json]), :symbolize_names =>true)[:warnings]
+    rescue JSON::ParserError
+      self.notify "Error parsing comparison file: #{options[:previous_results_json]}"
+      exit!
+    end
 
     tracker = run(options)
     new_results = JSON.parse(tracker.report.to_json, :symbolize_names =>true)[:warnings]
