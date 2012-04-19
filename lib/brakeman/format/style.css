@@ -108,3 +108,7 @@ p {
  pre.context {
    margin-bottom: 1px;
  }
+
+ .user_input {
+   background-color: #fcecab;
+ }

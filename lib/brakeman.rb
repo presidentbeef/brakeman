@@ -23,6 +23,7 @@ module Brakeman
   #  * :config_file - configuration file
   #  * :escape_html - escape HTML by default (automatic)
   #  * :exit_on_warn - return false if warnings found, true otherwise. Not recommended for library use (default: false)
+  #  * :highlight_user_input - highlight user input in reported warnings (default: true)
   #  * :html_style - path to CSS file
   #  * :ignore_model_output - consider models safe (default: false)
   #  * :message_limit - limit length of messages
@@ -113,6 +114,7 @@ module Brakeman
       :min_confidence => 2,
       :combine_locations => true,
       :collapse_mass_assignment => true,
+      :highlight_user_input => true,
       :ignore_redirect_to_model => true,
       :ignore_model_output => false,
       :message_limit => 100,

@@ -52,10 +52,17 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
 
       if attr_protected and tracker.options[:ignore_attr_protected]
         return
-      elsif include_user_input? call[3] and not hash? call[3][1] and not attr_protected
-        confidence = CONFIDENCE[:high]
+      elsif input = include_user_input?(call[3])
+        if not hash? call[3][1] and not attr_protected
+          confidence = CONFIDENCE[:high]
+          user_input = input.match
+        else
+          confidence = CONFIDENCE[:low]
+          user_input = input.match
+        end
       else
         confidence = CONFIDENCE[:low]
+        user_input = nil
       end
       
       warn :result => res, 
@@ -63,6 +70,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
         :message => "Unprotected mass assignment",
         :line => call.line,
         :code => call, 
+        :user_input => user_input,
         :confidence => confidence
     end
 

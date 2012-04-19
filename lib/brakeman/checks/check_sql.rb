@@ -122,15 +122,18 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     if failed and not call.original_line and not duplicate? result
       add_result result
 
-      if include_user_input? args[-1]
+      if input = include_user_input?(args[-1])
         confidence = CONFIDENCE[:high]
+        user_input = input.match
       else
         confidence = CONFIDENCE[:med]
+        user_input = nil
       end
 
       warn :result => result,
         :warning_type => "SQL Injection",
         :message => "Possible SQL injection",
+        :user_input => user_input,
         :confidence => confidence
     end
 
