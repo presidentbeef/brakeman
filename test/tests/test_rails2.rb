@@ -82,6 +82,15 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /home_controller\.rb/
   end
 
+  def test_update_attribute_no_mass_assignment
+    assert_no_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :line => 26,
+      :message => /^Unprotected mass assignment/,
+      :confidence => 0,
+      :file => /other_controller\.rb/
+  end
+
   def test_redirect
     assert_warning :type => :warning,
       :warning_type => "Redirect",

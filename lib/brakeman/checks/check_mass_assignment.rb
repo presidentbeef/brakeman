@@ -25,7 +25,6 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
     Brakeman.debug "Finding possible mass assignment calls on #{models.length} models"
     calls = tracker.find_call :chained => true, :targets => models, :methods => [:new,
       :attributes=, 
-      :update_attribute, 
       :update_attributes, 
       :update_attributes!,
       :create,
