@@ -74,6 +74,12 @@ class Brakeman::Warning
     Brakeman::OutputProcessor.new.format(self.code).gsub(/(\t|\r|\n)+/, " ")
   end
 
+  #Return String of the user input formatted and
+  #stripped of newlines and tabs.
+  def format_user_input
+    Brakeman::OutputProcessor.new.format(self.user_input).gsub(/(\t|\r|\n)+/, " ")
+  end
+
   #Return formatted warning message
   def format_message
     return @format_message if @format_message
@@ -143,6 +149,7 @@ class Brakeman::Warning
       :line => self.line,
       :code => (@code && self.format_code),
       :location => location,
+      :user_input => (@user_input && self.format_user_input),
       :confidence => TEXT_CONFIDENCE[self.confidence]
     }
   end
