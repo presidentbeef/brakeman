@@ -115,7 +115,9 @@ module Brakeman::RenderHelper
       #that values came from another file
       template_env.all.each do |var, value|
         unless value.original_line
-          value.original_line = value.line
+          #TODO: This has been broken for a while now and no one noticed
+          #so maybe we can skip it
+          value.original_line(value.line)
         end
       end
 
