@@ -26,7 +26,6 @@ class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
     Brakeman.debug "Finding all mass assignments"
     calls = tracker.find_call :targets => models, :methods => [:new,
       :attributes=, 
-      :update_attribute, 
       :update_attributes, 
       :update_attributes!,
       :create,
