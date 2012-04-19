@@ -1,4 +1,5 @@
 require 'thread'
+require 'brakeman/differ'
 
 #Collects up results from running different checks.
 #
@@ -64,13 +65,7 @@ class Brakeman::Checks
   def diff other_checks
     my_warnings = self.all_warnings
     other_warnings = other_checks.all_warnings
-
-    diff = {}
-
-    diff[:fixed] = other_warnings - my_warnings
-    diff[:new] = my_warnings - other_warnings
-
-    diff
+    Brakeman::Differ.new(my_warnings, other_warnings).diff
   end
 
   #Return an array of all warnings found.
