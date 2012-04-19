@@ -85,7 +85,7 @@ class Brakeman::Tracker
   #Prioritizes templates which have been rendered.
   def each_template
     if @processed.nil?
-      @processed, @rest = templates.keys.partition { |k| k.to_s.include? "." }
+      @processed, @rest = templates.keys.sort_by{|template| template.to_s}.partition { |k| k.to_s.include? "." }
     end
 
     @processed.each do |k|
