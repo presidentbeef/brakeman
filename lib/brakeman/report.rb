@@ -97,6 +97,7 @@ class Brakeman::Report
         w["Message"] = with_context warning, w["Message"]
       else
         w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
+        w["Message"] = text_message warning, w["Message"]
       end
 
       warning_messages << w
@@ -134,6 +135,7 @@ class Brakeman::Report
           w["Message"] = with_context warning, w["Message"]
         else
           w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
+          w["Message"] = text_message warning, w["Message"]
         end
 
         warnings << w
@@ -169,6 +171,7 @@ class Brakeman::Report
           w["Message"] = with_context warning, w["Message"]
         else
           w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
+          w["Message"] = text_message warning, w["Message"]
         end
 
         warnings << w
@@ -204,6 +207,7 @@ class Brakeman::Report
           w["Message"] = with_context warning, w["Message"]
         else
           w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
+          w["Message"] = text_message warning, w["Message"]
         end
 
         warnings << w
@@ -485,7 +489,17 @@ class Brakeman::Report
     @warnings_summary = summary
   end
 
-  #Escape warning message and highlight user input
+  #Escape warning message and highlight user input in text output
+  def text_message warning, message
+    if warning.user_input
+      user_input = Brakeman::OutputProcessor.new.format(warning.user_input)
+      message.gsub(user_input, "+#{user_input}+")
+    else
+      message
+    end
+  end
+
+  #Escape warning message and highlight user input in HTML output
   def html_message warning, message
     message = CGI.escapeHTML(message)
     if warning.user_input
