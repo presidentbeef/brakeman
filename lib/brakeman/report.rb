@@ -493,7 +493,7 @@ class Brakeman::Report
   #Escape warning message and highlight user input in text output
   def text_message warning, message
     if @highlight_user_input and warning.user_input
-      user_input = Brakeman::OutputProcessor.new.format(warning.user_input)
+      user_input = warning.format_user_input
       message.gsub(user_input, "+#{user_input}+")
     else
       message
@@ -505,7 +505,7 @@ class Brakeman::Report
     message = CGI.escapeHTML(message)
 
     if @highlight_user_input and warning.user_input
-      user_input = CGI.escapeHTML(Brakeman::OutputProcessor.new.format(warning.user_input))
+      user_input = warning.format_user_input
 
       message.gsub!(user_input, "<span class=\"user_input\">#{user_input}</span>")
     end
