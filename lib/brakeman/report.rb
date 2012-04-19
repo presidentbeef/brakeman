@@ -233,7 +233,7 @@ class Brakeman::Report
 
   #Generate table of controllers and routes found for those controllers
   def generate_controllers html=false
-    contoller_rows = []
+    controller_rows = []
     tracker.controllers.keys.map{|k| k.to_s}.sort.each do |name|
       name = name.to_sym
       c = tracker.controllers[name]
@@ -258,19 +258,19 @@ class Brakeman::Report
         routes = "[None]"
       end
 
-      contoller_rows << { "Name" => name.to_s,
+      controller_rows << { "Name" => name.to_s,
         "Parent" => c[:parent].to_s,
         "Includes" => c[:includes].join(", "),
         "Routes" => routes
       }
     end
-    controller_rows = contoller_rows.sort_by{|row| row['Name']}
+    controller_rows = controller_rows.sort_by{|row| row['Name']}
 
     if html
       load_and_render_erb('controller_overview', binding)
     else
       Terminal::Table.new(:headings => ['Name', 'Parent', 'Includes', 'Routes']) do |t|
-        contoller_rows.each do |row|
+        controller_rows.each do |row|
           t.add_row [row['Name'], row['Parent'], row['Includes'], row['Routes']]
         end
       end
