@@ -46,7 +46,7 @@ class Brakeman::Report
       Terminal::Table.new(:headings => ['Scanned/Reported', 'Total']) do |t|
         t.add_row ['Controllers', tracker.controllers.length]
         t.add_row ['Models', tracker.models.length - 1]
-        t.add_row ['Templates', templates]
+        t.add_row ['Templates', number_of_templates(@tracker)]
         t.add_row ['Errors', tracker.errors.length]
         t.add_row ['Security Warnings', "#{warnings} (#{warnings_summary[:high_confidence]})"]
       end
