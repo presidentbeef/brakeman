@@ -105,6 +105,12 @@ Brakeman will raise warnings on models that use `attr_protected`. To suppress th
 
     brakeman --ignore-protected
 
+To compare results of a scan with a previous scan, use the JSON output option and then:
+
+    brakeman --compare old_report.json
+
+This will output JSON with two lists: one of fixed warnings and one of new warnings.
+
 # Warning information
 
 See WARNING\_TYPES for more information on the warnings reported by this tool.
