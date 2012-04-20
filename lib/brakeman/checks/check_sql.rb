@@ -218,7 +218,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def check_for_limit_or_offset_vulnerability options
     return false if @rails_version.nil? or @rails_version >= "2.1.1" or not hash? options
 
-    if hash_access(options, :limit) or hash_access(options[:offset])
+    if hash_access(options, :limit) or hash_access(options, :offset)
       return true
     end
 
