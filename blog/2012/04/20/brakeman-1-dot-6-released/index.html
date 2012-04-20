@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Brakeman 1.2.1 Released</title>
+  <title>Brakeman: Brakeman 1.6 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/blog/2012/01/20/brakeman-1-dot-2-1-released/"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2012/04/20/brakeman-1-dot-6-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -102,7 +102,7 @@
   
   <header>
     
-      <h1 class="entry-title">Brakeman 1.2.1 Released</h1>
+      <h1 class="entry-title">Brakeman 1.6 Released</h1>
     
     
       <p class="meta">
@@ -110,7 +110,7 @@
 
 
 
-<time datetime="2012-01-20 12:16:00 -0800" pubdate  updated >Jan 20<span>th</span>, 2012</time>
+<time datetime="2012-04-20 10:22:00 -0700" pubdate  updated >Apr 20<span>th</span>, 2012</time>
 
 
 </p>
@@ -118,62 +118,84 @@
   </header>
 
 
-<div class="entry-content"><p>This is essentially just a bugfix release, but due to the fixes for <code>link_to</code> warnings, there is a good possibility the number of reported warnings will decrease when upgrading to this version.</p>
+<div class="entry-content"><p>A lot of code has changed in this release, particularly with the removal of the Ruport library for reporting. While Ruport worked pretty well, it caused some issues just due to the large number of (out-dated) dependencies it brought with it.</p>
 
-<p>Changes since 1.2.0:</p>
+<p>Also, this release changes the JSON report output. This is an backwards <em>incompatible</em> change. But, given how useless the previous JSON reports were, hopefully this will not affect too many people.</p>
+
+<p><em>Changes since 1.5.3:</em></p>
 
 <ul>
-<li>Remove link_to warning for Rails 3.x or when using rails_xss</li>
-<li>Don&#8217;t warn if first argument to link_to is escaped</li>
-<li>Detect usage of attr_accessible with no arguments</li>
-<li>Fix error when rendering a partial from a view but not through a controller</li>
-<li>Fix some issues with rails_xss, CheckCrossSiteScripting, and CheckTranslateBug</li>
-<li>Simplify Brakeman Rake task</li>
-<li>Avoid modifying $VERBOSE</li>
-<li>Add Brakeman::RescanReport#to_s</li>
-<li>Add Brakeman::Warning#to_s</li>
+<li>Remove the Ruport dependency (Neil Matatall)</li>
+<li>Add more informational JSON output (Neil Matatall)</li>
+<li>Add comparison to previous JSON report (Neil Matatall)</li>
+<li>Add highlighting of dangerous values in HTML/text reports</li>
+<li><code>Model#update_attribute</code> should not raise mass assignment warning (Dave Worth)</li>
+<li>Don&#8217;t check <code>find_by_*</code> method for SQL injection</li>
+<li>Fix duplicate reporting of mass assignment and SQL injection</li>
+<li>Fix rescanning of deleted files</li>
+<li>Properly check for <code>rails_xss</code> in Gemfile</li>
 </ul>
 
 
-<h3>link_to Changes</h3>
+<h3>No More Ruport</h3>
 
-<p>Prior to Rails 3.0, there <a href="https://rails.lighthouseapp.com/projects/8994/tickets/3518-link_to-doesnt-escape-its-input">was a bug</a> in <code>link_to</code> that caused the body of the link tag to be output without escaping. While this was fixed in Rails 3.0, Brakeman has still been warning on it. This was also fixed in the <a href="https://github.com/rails/rails_xss/commit/afc1610fe4b94150faee98c16f15a24290d20900">rails_xss</a>, so Brakeman should no longer warn on <code>link_to</code> for Rails 2.x when using the rails_xss plugin.</p>
+<p>Ruport is a nice library, but it also has not been updated in over two years and its dependency tree was ridiculous.</p>
 
-<p>Brakeman was also warning on <code>link_to</code> even if the body argument was manually escaped. This should be resolved now.</p>
+<p>Thanks to Neil Matatall, Brakeman no longer depends on Ruport, but the reports should look essentially the same. The HTML reports are now rendered through ERB templates, so it should not be too difficult to customize the reports if desired.</p>
 
-<p>One other related issue was a silly bug causing Brakeman to sometimes ignore <code>--escape-html</code> or the rails_xss plugin, leading to some confusing output. This is fixed.</p>
+<h3>Better JSON Output</h3>
 
-<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/32">Neil Matatall</a> for reporting the <code>link_to</code> issue and <a href="https://github.com/a5sk4s">Andreas</a> for reporting the rails_xss problems.</p>
+<p>JSON output now includes meta-information about the scan, errors raised during the scan, and line numbers for each warning.</p>
 
-<h3>attr_accessible with No Arguments</h3>
+<h3>JSON Report Comparison</h3>
 
-<p>Brakeman was not detecting the case where <code>attr_accessible</code> is called with zero arguments, causing spurious mass assignment warnings.</p>
+<p>Being able to compare Brakeman reports is essential for tracking warnings over time. Prior to this release, the only decent way of doing that was via the <a href="http://brakemanscanner.org/docs/jenkins/">Jenkins plugin</a>. But now Brakeman can compare results to the JSON report from a previous scan.</p>
 
-<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/31">Justin Wiley</a> for reporting this.</p>
+<p>For example:</p>
 
-<h3>Brakeman Rake Task</h3>
+<pre><code>brakeman -o report.json
+brakeman --compare report.json
+</code></pre>
 
-<p>The Brakeman Rake task (installed via <code>--rake</code>) is even <a href="/docs/rake">simpler now</a>.</p>
+<p>This will run another scan, then output a comparison of the reports (in JSON). The report includes a list of fixed warnings and a list of new warnings that were found.</p>
 
-<h3>$VERBOSE</h3>
+<h3>User Input Highlighted in Reports</h3>
 
-<p>Brakeman was using <code>$VERBOSE</code> and <code>Kernel.warn</code> for controlling debug output. This has changed and <code>$VERBOSE</code> will no longer be modified when using Brakeman.</p>
+<p>Sometimes it is unclear exactly what value has caused Brakeman to issue a particular warning. This release adds highlighting the detected user input in most warnings. (Some warnings, the code that is reported <em>is</em> the detected user input). This information is also available in the JSON reports.</p>
 
-<h3>Rails 3.2 Support</h3>
+<p><img src="/images/user_input_highlight.png" title="Example of User Input Highlighting" alt="User Input Highlight" /></p>
 
-<p>So far, there have not been any issues with Brakeman and Rails 3.2. Please <a href="https://github.com/presidentbeef/brakeman/issues">report</a> any that come up!</p>
+<h3>Fewer Mass Assignment and SQL Injection Methods</h3>
 
-<h3>JRuby Performance</h3>
+<p>Dave Worth pointed out that Brakeman was a little overzealous in which methods it considered susceptible to mass assignment and SQL injection attacks.</p>
 
-<p>Prior to Brakeman 1.2, <a href="http://jruby.org/">JRuby</a> was very slow when running Brakeman. This has changed, and now JRuby is probably the fastest option for scanning large applications. Give it a try, especially if you are using Ruby 1.8.7!</p>
+<p>Brakeman will no longer check <code>update_attribute</code> for mass assignment or the <code>find_by_*</code> dynamic methods for SQL injection.</p>
 
-<h3>Mailing List</h3>
+<h3>Fewer Mass Assignment and SQL Injection Duplicates</h3>
 
-<p>There is now a Brakeman mailing list on <a href="http://librelist.com/browser/brakeman/">librelist</a>.</p>
+<p>Pesky duplicate reports of mass assignment and SQL injection were turning up as template warnings. This occurred when the results of the mass assignment or SQL query were assigned to a variable which was then used in a template. This should now be fixed.</p>
 
-<p>To subscribe, send any email to <a href='&#109;ailto&#58;b&#114;%&#54;1k&#37;65m&#37;&#54;1n&#64;&#37;6Ci&#98;%&#55;2&#101;l%&#54;&#57;st&#46;com'>brakeman&#64;libr&#101;&#108;ist&#46;com</a>. You will be asked to confirm your subscription.</p>
+<p>More details than are probably desired are available <a href="https://github.com/presidentbeef/brakeman/pull/82">here</a>.</p>
 
-<p>Archives are available for browsing on <a href="http://www.mail-archive.com/brakeman@librelist.com/maillist.html">The Mail Archive</a>.</p>
+<h3>Rescanning Fixes</h3>
+
+<p>Rescanning of deleted files is now supported, and there some other issues with rescanning that are now resolved as well.</p>
+
+<h3>New Logo</h3>
+
+<p>Brakeman has a sweet new logo, thanks to <a href="http://janellelawless.com/">Janelle Lawless</a>!</p>
+
+<p><img src="/images/logo_medium.png" alt="Brakeman Logo" /></p>
+
+<p>Updates to the website to reflect this awesomeness are coming soon.</p>
+
+<h3>Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+
+<p>And don&#8217;t forget to check out the Brakeman talk at <a href="http://railsconf2012.com/sessions/44">RailsConf</a> in a few days.</p>
 </div>
 
 
@@ -189,7 +211,7 @@
 
 
 
-<time datetime="2012-01-20 12:16:00 -0800" pubdate  updated >Jan 20<span>th</span>, 2012</time>
+<time datetime="2012-04-20 10:22:00 -0700" pubdate  updated >Apr 20<span>th</span>, 2012</time>
 
 
 
@@ -200,7 +222,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2012/01/20/brakeman-1-dot-2-1-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2012/01/20/brakeman-1-dot-2-1-released/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2012/04/20/brakeman-1-dot-6-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2012/04/20/brakeman-1-dot-6-released/" >Tweet</a>
   
   
   <g:plusone size="medium"></g:plusone>
@@ -216,8 +238,8 @@
     <div id="disqus_thread"><div id="disqus_thread"></div>
 <script type="text/javascript">
   var disqus_shortname = 'brakeman';
-  var disqus_identifier = 'http://brakemanscanner.org/blog/2012/01/20/brakeman-1-dot-2-1-released/';
-  var disqus_url = 'http://brakemanscanner.org/blog/2012/01/20/brakeman-1-dot-2-1-released/';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2012/04/20/brakeman-1-dot-6-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2012/04/20/brakeman-1-dot-6-released/';
   //var disqus_developer = 1;
   (function() {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
