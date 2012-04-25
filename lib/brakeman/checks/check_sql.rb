@@ -105,8 +105,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     #it is actually doing...
 
     call = result[:call]
-
     args = call[3]
+    failed = nil
 
     if call[2] == :find_by_sql or call[2] == :count_by_sql
       failed = check_arguments args[1]
@@ -114,7 +114,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       failed = (args.length > 2 and check_arguments args[-1])
     elsif tracker.options[:rails3] and result[:method] != :scope
       #This is for things like where("query = ?")
-      failed = check_arguments args[1]
+      failed = check_arguments args[1] unless hash? args[1]
     else
       failed = (args.length > 1 and check_arguments args[-1])
     end
