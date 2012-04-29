@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>Brakeman</title>
+  <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-04-20T11:26:32-07:00</updated>
+  <updated>2012-04-29T10:53:01-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -19,7 +19,7 @@
     <id>http://brakemanscanner.org/blog/2012/04/20/brakeman-1-dot-6-released</id>
     <content type="html">&lt;p&gt;A lot of code has changed in this release, particularly with the removal of the Ruport library for reporting. While Ruport worked pretty well, it caused some issues just due to the large number of (out-dated) dependencies it brought with it.&lt;/p&gt;
 
-&lt;p&gt;Also, this release changes the JSON report output. This is an backwards &lt;em&gt;incompatible&lt;/em&gt; change. But, given how useless the previous JSON reports were, hopefully this will not affect too many people.&lt;/p&gt;
+&lt;p&gt;Also, this release changes the JSON report output. This is a backwards &lt;em&gt;incompatible&lt;/em&gt; change. But, given how useless the previous JSON reports were, hopefully this will not affect too many people.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 1.5.3:&lt;/em&gt;&lt;/p&gt;
 
