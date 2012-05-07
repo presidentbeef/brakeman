@@ -11,13 +11,13 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 26,
+        :template => 27,
         :warning => 25 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 26,
+        :template => 27,
         :warning => 26 }
     end
   end
@@ -539,6 +539,15 @@ class Rails2Tests < Test::Unit::TestCase
       :message => "Unescaped parameter value near line 1: params[:blah]",
       :confidence => 0,
       :file => /not_used\.html\.erb/
+  end
+
+  def test_explicit_render_template
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 2,
+      :message => /^Unescaped parameter value near line 2: params\[:ba/,
+      :confidence => 0,
+      :file => /home\/test_render_template\.html\.haml/
   end
 
   def test_check_send

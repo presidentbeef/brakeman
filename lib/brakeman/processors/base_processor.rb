@@ -251,7 +251,7 @@ class Brakeman::BaseProcessor < SexpProcessor
       value = args[1]
     end
 
-    types_in_hash = Set[:action, :file, :inline, :js, :json, :nothing, :partial, :text, :update, :xml]
+    types_in_hash = Set[:action, :file, :inline, :js, :json, :nothing, :partial, :template, :text, :update, :xml]
 
     #render :layout => "blah" means something else when in a template
     if in_view
