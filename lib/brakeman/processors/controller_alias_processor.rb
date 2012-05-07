@@ -24,7 +24,30 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       return
     else
       @current_class = name
+
       process_default src
+
+      process_mixins
+    end
+  end
+
+  #Process modules mixed into the controller, in case they contain actions.
+  def process_mixins
+    controller = @tracker.controllers[@current_class]
+
+    controller[:includes].each do |i|
+      mixin = @tracker.libs[i]
+
+      next unless mixin
+
+      mixin[:public].each do |name, meth|
+        #Need to process the method like it was in a controller in order
+        #to get the renders set
+        meth = Brakeman::ControllerProcessor.new(@tracker).process meth
+
+        #Then process it like any other method in the controller
+        process_safely meth
+      end
     end
   end
 
