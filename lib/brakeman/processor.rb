@@ -10,6 +10,8 @@ module Brakeman
   #The ControllerProcessor, TemplateProcessor, and ModelProcessor will
   #update the Tracker with information about what is parsed.
   class Processor
+    include Util
+
     def initialize options
       @tracker = Tracker.new self, options
     end
@@ -35,7 +37,11 @@ module Brakeman
 
     #Process controller source. +file_name+ is used for reporting
     def process_controller src, file_name
-      ControllerProcessor.new(@tracker).process_controller src, file_name
+      if contains_class? src
+        ControllerProcessor.new(@tracker).process_controller src, file_name
+      else
+        LibraryProcessor.new(@tracker).process_library src, file_name
+      end
     end
 
     #Process variable aliasing in controller source and save it in the
