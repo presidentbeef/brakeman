@@ -40,10 +40,13 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
 
       next unless mixin
 
-      mixin[:public].each do |name, meth|
+      #Process methods in alphabetical order for consistency
+      methods = mixin[:public].keys.map { |n| n.to_s }.sort.map { |n| n.to_sym }
+
+      methods.each do |name|
         #Need to process the method like it was in a controller in order
         #to get the renders set
-        meth = Brakeman::ControllerProcessor.new(@tracker).process meth
+        meth = Brakeman::ControllerProcessor.new(@tracker).process mixin[:public][name]
 
         #Then process it like any other method in the controller
         process_safely meth
