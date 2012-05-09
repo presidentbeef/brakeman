@@ -46,10 +46,18 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       methods.each do |name|
         #Need to process the method like it was in a controller in order
         #to get the renders set
-        meth = Brakeman::ControllerProcessor.new(@tracker).process mixin[:public][name]
+        processor = Brakeman::ControllerProcessor.new(@tracker)
+        method = mixin[:public][name]
+
+        if node_type? method, :methdef
+          method = processor.process_defn method
+        else
+          #Should be a methdef, but this will catch other cases
+          method = processor.process method
+        end
 
         #Then process it like any other method in the controller
-        process_safely meth
+        process method
       end
     end
   end
