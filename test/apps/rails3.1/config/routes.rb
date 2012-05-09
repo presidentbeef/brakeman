@@ -1,5 +1,8 @@
 Rails31::Application.routes.draw do
-  resources :users
+  resources :users do
+    get 'mixin_action'
+    get 'mixin_default'
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

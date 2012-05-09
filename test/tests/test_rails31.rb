@@ -13,7 +13,7 @@ class Rails31Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :model => 0,
-      :template => 3,
+      :template => 4,
       :controller => 1,
       :warning => 9 }
   end
@@ -131,5 +131,14 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Unescaped parameter value near line 1: params\[:bad\]/,
       :confidence => 0,
       :file => /users\/mixin_template\.html\.erb/
+  end
+
+  def test_controller_mixin_default_render
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped parameter value near line 1: params\[:bad\]/,
+      :confidence => 0,
+      :file => /users\/mixin_default\.html\.erb/
   end
 end
