@@ -219,6 +219,25 @@ module Brakeman::Util
     exp.is_a? Sexp and types.include? exp.node_type
   end
 
+  #Returns true if the given _exp_ contains a :class node.
+  #
+  #Useful for checking if a module is just a module or if it is a namespace.
+  def contains_class? exp
+    todo = [exp]
+
+    until todo.empty?
+      current = todo.shift
+
+      if node_type? current, :class
+        return true
+      elsif sexp? current
+        todo = current[1..-1].concat todo
+      end
+    end
+
+    false
+  end
+
   #Return file name related to given warning. Uses +warning.file+ if it exists
   def file_for warning, tracker = nil
     if tracker.nil?
