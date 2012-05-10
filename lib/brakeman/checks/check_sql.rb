@@ -19,7 +19,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     @sql_targets = [:all, :average, :calculate, :count, :count_by_sql, :exists?, :find, :find_by_sql, :first, :last, :maximum, :minumum, :sum]
 
     if tracker.options[:rails3]
-      @sql_targets.concat [:group, :having, :joins, :lock, :order, :reorder, :where]
+      @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :where]
     end
 
     Brakeman.debug "Finding possible SQL calls on models"
@@ -157,6 +157,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                         check_order_arguments args
                       when :joins
                         check_joins_arguments args[1]
+                      when :from
+                        unsafe_sql? args[1]
                       when :lock
                         check_lock_arguments args[1]
                       else
@@ -165,8 +167,6 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
     if dangerous_value
       add_result result
-
-      puts "Dangerous value: #{dangerous_value}"
 
       if input = include_user_input?(dangerous_value)
         confidence = CONFIDENCE[:high]
@@ -367,6 +367,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                    check_joins_arguments value
                  when :lock
                    check_lock_arguments value
+                 when :from
+                   unsafe_sql? value
                  else
                    nil
                  end
