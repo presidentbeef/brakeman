@@ -16,10 +16,10 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def run_check
     @rails_version = tracker.config[:rails_version]
 
+    @sql_targets = [:all, :average, :calculate, :count, :count_by_sql, :exists?, :find, :find_by_sql, :first, :last, :maximum, :minumum, :sum]
+
     if tracker.options[:rails3]
-      @sql_targets = /^(find|find_by_sql|last|first|all|count|sum|average|minumum|maximum|count_by_sql|where|order|group|having)$/
-    else
-      @sql_targets = /^(find|find_by_sql|last|first|all|count|sum|average|minumum|maximum|count_by_sql)$/
+      @sql_targets.concat [:group, :having, :joins, :lock, :order, :reorder, :where]
     end
 
     Brakeman.debug "Finding possible SQL calls on models"
@@ -38,7 +38,12 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
     Brakeman.debug "Processing possible SQL calls"
     calls.each do |c|
-      process_result c
+      begin
+        process_result c
+      rescue Exception => e
+        p e
+        puts e.backtrace
+      end
     end
   end
 
@@ -99,8 +104,296 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     end
   end
 
-  #Process result from Tracker#find_call.
+  #Process possible SQL injection sites:
+  #
+  # Model#find
+  #
+  # Model#(named_)scope
+  #
+  # Model#(find|count)_by_sql
+  #
+  # Model#all
+  #
+  ### Rails 3
+  #
+  # Model#(where|having)
+  # Model#(order|group)
+  #
+  ### Find Options Hash
+  #
+  # Dangerous keys that accept SQL:
+  #
+  # * conditions
+  # * order
+  # * having
+  # * joins
+  # * select
+  # * from
+  # * lock
+  #
   def process_result result
+    return if duplicate? result or result[:call].original_line
+
+    call = result[:call]
+    method = call[2]
+    args = call[3]
+
+    dangerous_value = case method
+                      when :find
+                        check_find_arguments args[2]
+                      when :exists?
+                        check_find_arguments args[1]
+                      when :named_scope, :scope
+                        check_scope_arguments args
+                      when :find_by_sql, :count_by_sql
+                        check_by_sql_arguments args[1]
+                      when :calculate
+                        check_find_arguments args[3]
+                      when :last, :first, :all, :count, :sum, :average, :maximum, :minimum
+                        check_find_arguments args[1]
+                      when :where, :having
+                        check_query_arguments args
+                      when :order, :group, :reorder
+                        check_order_arguments args
+                      when :joins
+                        check_joins_arguments args[1]
+                      when :lock
+                        check_lock_arguments args[1]
+                      else
+                        Brakeman.notify "Method: #{method}"
+                      end
+
+    if dangerous_value
+      add_result result
+
+      puts "Dangerous value: #{dangerous_value}"
+
+      if input = include_user_input?(dangerous_value)
+        confidence = CONFIDENCE[:high]
+        user_input = input.match
+      else
+        confidence = CONFIDENCE[:med]
+        user_input = dangerous_value
+      end
+
+      warn :result => result,
+        :warning_type => "SQL Injection",
+        :message => "Possible SQL injection",
+        :user_input => user_input,
+        :confidence => confidence
+    end
+
+    if check_for_limit_or_offset_vulnerability args[-1]
+      if include_user_input? args[-1]
+        confidence = CONFIDENCE[:high]
+      else
+        confidence = CONFIDENCE[:low]
+      end
+
+      warn :result => result,
+        :warning_type => "SQL Injection",
+        :message => "Upgrade to Rails >= 2.1.2 to escape :limit and :offset. Possible SQL injection",
+        :confidence => confidence
+    end
+  end
+
+  #The 'find' methods accept a number of different types of parameters:
+  #
+  # * The first argument might be :all, :first, or :last
+  # * The first argument might be an integer ID or an array of IDs
+  # * The second argument might be a hash of options, some of which are
+  #   dangerous and some of which are not
+  # * The second argument might contain SQL fragments as values
+  # * The second argument might contain properly parameterized SQL fragments in arrays
+  # * The second argument might contain improperly parameterized SQL fragments in arrays
+  #
+  #This method should only be passed the second argument.
+  def check_find_arguments arg
+    if not sexp? arg or node_type? arg, :lit, :string, :str, :true, :false, :nil
+      return nil
+    end
+
+    unsafe_sql? arg
+  end
+
+  def check_scope_arguments args
+    return unless node_type? args, :arglist
+
+    if node_type? args[2], :iter
+      args[2][-1].find do |arg|
+        unsafe_sql? arg
+      end
+    else
+      p args[2]
+      unsafe_sql? args[2]
+    end
+  end
+
+  def check_query_arguments arg
+    return unless sexp? arg
+
+    if node_type? arg, :arglist
+      if arg.length > 2 and node_type? arg[1], :string_interp, :dstr
+        # Model.where("blah = ?", blah)
+        return string_interp arg[1]
+      else
+        arg = arg[1]
+      end
+    end
+
+    if request_value? arg
+      # Model.where(params[:where])
+      arg
+    elsif hash? arg
+      #This is generally going to be a hash of column names and values, which
+      #would escape the values. But the keys _could_ be user input.
+      check_hash_keys arg
+    elsif node_type? arg, :lit, :str
+      nil
+    else
+      #Hashes are safe...but we check above for hash, so...?
+      unsafe_sql? arg, :ignore_hash
+    end
+  end
+
+  #Checks each argument to order/reorder/group for possible SQL.
+  #Anything used with these methods is passed in verbatim.
+  def check_order_arguments args
+    return unless sexp? args
+
+    args.each do |arg|
+      if unsafe_arg = unsafe_sql?(arg)
+        return unsafe_arg
+      end
+    end
+
+    nil
+  end
+
+  #find_by_sql and count_by_sql can take either a straight SQL string
+  #or an array with values to bind.
+  def check_by_sql_arguments arg
+    return unless sexp? arg
+
+    #This is kind of necessary, because unsafe_sql? will handle an array
+    #correctly, but might be better to be explicit.
+    if array? arg
+      unsafe_sql? arg[1]
+    else
+      unsafe_sql? arg
+    end
+  end
+
+  #joins can take a string, hash of associations, or an array of both(?)
+  #We only care about the possible string values.
+  def check_joins_arguments arg
+    return unless sexp? arg and not node_type? arg, :hash, :string, :str
+
+    if array? arg
+      arg.each do |a|
+        if unsafe = check_joins_arguments(a)
+          return unsafe
+        end
+      end
+
+      nil
+    else
+      unsafe_sql? arg
+    end
+  end
+
+  #Model#lock essentially only cares about strings. But those strings can be
+  #any SQL fragment. This does not apply to all databases. (For those who do not
+  #support it, the lock method does nothing).
+  def check_lock_arguments arg
+    return unless sexp? arg and not node_type? arg, :hash, :array, :string, :str
+
+    unsafe_sql? arg, :ignore_hash
+  end
+
+  def unsafe_sql? exp, ignore_hash = false
+    return unless sexp? exp
+
+    case exp.node_type
+    #when :lit, :str
+    #  false
+    when :array
+      #Assume this is an array like
+      #
+      #  ["blah = ? AND thing = ?", ...]
+      #
+      #and check first value
+
+      unsafe_sql? exp[1]
+    when :string_interp, :dstr
+      check_string_interp exp
+    when :hash
+      check_hash_values exp unless ignore_hash
+    when :call
+      #check_for_string_building exp
+    when :or
+      if unsafe = (unsafe_sql?(exp[1]) || unsafe_sql?(exp[2]))
+        return unsafe
+      else
+        nil
+      end
+    else
+      if has_immediate_user_input? exp or has_immediate_model? exp
+        exp
+      else
+        puts "unsafe? #{exp.inspect}"
+      end
+    end
+  end
+
+  #Checks hash values associated with these keys:
+  #
+  # * conditions
+  # * order
+  # * having
+  # * joins
+  # * select
+  # * from
+  # * lock
+  def check_hash_values exp
+    hash_iterate(exp) do |key, value|
+      if symbol? key
+        unsafe = case key[1]
+                 when :conditions, :having, :select
+                   check_query_arguments value
+                 when :order, :group
+                   check_order_arguments value
+                 when :joins
+                   check_joins_arguments value
+                 when :lock
+                   check_lock_arguments value
+                 else
+                   nil
+                 end
+
+        return unsafe if unsafe
+      end
+    end
+
+    false
+  end
+
+  #Check hash keys for user input.
+  #(Seems unlikely, but if a user can control the column names queried, that
+  #could be bad)
+  def check_hash_keys exp
+    hash_iterate(exp) do |key, value|
+      unless symbol? key
+        if unsafe_key = unsafe_sql?(value)
+          return unsafe_key
+        end
+      end
+    end
+
+    false
+  end
+
+=begin
     #TODO: I don't like this method at all. It's a pain to figure out what
     #it is actually doing...
 
@@ -144,12 +437,13 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         confidence = CONFIDENCE[:low]
       end
 
-      warn :result => result, 
-        :warning_type => "SQL Injection", 
+      warn :result => result,
+        :warning_type => "SQL Injection",
         :message => "Upgrade to Rails >= 2.1.2 to escape :limit and :offset. Possible SQL injection",
         :confidence => confidence
     end
   end
+=end
 
   private
 
@@ -183,9 +477,12 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     arg.each do |exp|
       #For now, don't warn on interpolation of Model.table_name
       #but check for other 'safe' things in the future
-      if node_type? exp, :string_eval, :evstr
-        if call? exp[1] and (model_name?(exp[1][1]) or exp[1][1].nil?) and exp[1][2] == :table_name
-          return false
+      if sexp? exp
+        case exp.node_type
+        when :string_eval, :evstr
+          if call? exp[1] and (model_name?(exp[1][1]) or exp[1][1].nil?) and exp[1][2] == :table_name
+           return false
+          end
         end
       end
     end
@@ -197,8 +494,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     method = exp[2]
     args = exp[3]
 
-    if sexp? target and 
-      (method == :+ or method == :<< or method == :concat) and 
+    if sexp? target and
+      (method == :+ or method == :<< or method == :concat) and
       (string? target or include_user_input? exp)
 
       true
@@ -231,7 +528,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #
   # s(:call,
   #   s(:call,
-  #     s(:call, 
+  #     s(:call,
   #       s(:call, nil, :params, s(:arglist)),
   #       :[],
   #       s(:arglist, s(:lit, :x))),
