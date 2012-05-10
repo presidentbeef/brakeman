@@ -314,9 +314,19 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def unsafe_sql? exp, ignore_hash = false
     return unless sexp? exp
 
+    dangerous_value = find_dangerous_value exp, ignore_hash
+
+    if safe_value? dangerous_value
+      false
+    else
+      dangerous_value
+    end
+  end
+
+  def find_dangerous_value exp, ignore_hash
     case exp.node_type
-    #when :lit, :str
-    #  false
+    when :lit, :str, :const, :colon2
+      nil
     when :array
       #Assume this is an array like
       #
@@ -404,24 +414,32 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     false
   end
 
+  #Check an interpolated string for dangerous values.
+  #
+  #This method assumes values interpolated into strings are unsafe by default,
+  #unless safe_value? explicitly returns true.
+  def check_string_interp arg
+    arg.each do |exp|
+      if node_type?(exp, :string_eval, :evstr) and not safe_value? exp[1]
+        return exp[1]
       end
     end
 
+    nil
   end
 
+  IGNORE_METHODS_IN_SQL = Set[:id, :table_name]
 
-  def check_string_interp arg
-    arg.each do |exp|
-      #For now, don't warn on interpolation of Model.table_name
-      #but check for other 'safe' things in the future
-      if sexp? exp
-        case exp.node_type
-        when :string_eval, :evstr
-          if call? exp[1] and (model_name?(exp[1][1]) or exp[1][1].nil?) and exp[1][2] == :table_name
-           return false
-          end
-        end
-      end
+  def safe_value? exp
+    return true unless sexp? exp
+
+    case exp.node_type
+    when :str, :lit, :const, :colon2
+      true
+    when :call
+      IGNORE_METHODS_IN_SQL.include? exp[3]
+    else
+      false
     end
   end
 
