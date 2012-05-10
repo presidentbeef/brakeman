@@ -5,9 +5,9 @@ class User < ActiveRecord::Base
 
   scope :blah, where("thinger = '#{BLAH}'")
 
-  scope :dah, lambda {|*args| { :condition => "dah = '#{args[1]}'"}}
+  scope :dah, lambda {|*args| { :conditions => "dah = '#{args[1]}'"}}
   
-  scope :phooey, :condition => "phoeey = '#{User.phooey}'"
+  scope :phooey, :conditions => "phoeey = '#{User.phooey}'"
 
   scope :this_is_safe, lambda { |name|
     where("name = ?", "%#{name.downcase}%")
@@ -15,5 +15,5 @@ class User < ActiveRecord::Base
 
   scope :this_is_also_safe, where("name = ?", "%#{name.downcase}%")
 
-  scope :should_not_warn, :condition => ["name = ?", "%#{name.downcase}%"]
+  scope :should_not_warn, :conditions => ["name = ?", "%#{name.downcase}%"]
 end

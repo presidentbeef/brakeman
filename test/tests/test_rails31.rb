@@ -75,7 +75,7 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
       :line => 10,
-      :message => /^Possible SQL injection near line 10: scope\(:phooey, :condition =>/,
+      :message => /^Possible SQL injection near line 10: scope\(:phooey, :conditions =>/,
       :confidence => 0,
       :file => /user\.rb/
   end
