@@ -330,7 +330,16 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     when :hash
       check_hash_values exp unless ignore_hash
     when :call
-      #check_for_string_building exp
+      if has_immediate_user_input? exp or has_immediate_model? exp
+        exp
+      else
+        nil
+      end
+      #elsif unsafe = check_for_string_building exp
+      #  return unsafe
+      #else
+      #  nil
+      #end
     when :or
       if unsafe = (unsafe_sql?(exp[1]) || unsafe_sql?(exp[2]))
         return unsafe
