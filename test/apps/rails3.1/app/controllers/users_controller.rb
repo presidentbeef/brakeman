@@ -90,4 +90,5 @@ class UsersController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, :except => [:create, :edit]
 
+  include UserMixin
 end
