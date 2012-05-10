@@ -16,7 +16,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def run_check
     @rails_version = tracker.config[:rails_version]
 
-    @sql_targets = [:all, :average, :calculate, :count, :count_by_sql, :exists?, :find, :find_by_sql, :first, :last, :maximum, :minumum, :sum]
+    @sql_targets = [:all, :average, :calculate, :count, :count_by_sql, :exists?,
+      :find, :find_by_sql, :first, :last, :maximum, :minumum, :sum]
 
     if tracker.options[:rails3]
       @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :where]
@@ -224,7 +225,6 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         unsafe_sql? arg
       end
     else
-      p args[2]
       unsafe_sql? args[2]
     end
   end
@@ -404,85 +404,11 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     false
   end
 
-=begin
-    #TODO: I don't like this method at all. It's a pain to figure out what
-    #it is actually doing...
-
-    call = result[:call]
-    args = call[3]
-    failed = nil
-
-    if call[2] == :find_by_sql or call[2] == :count_by_sql
-      failed = check_arguments args[1]
-    elsif call[2].to_s =~ /^find/
-      failed = (args.length > 2 and check_arguments args[-1])
-    elsif tracker.options[:rails3] and result[:method] != :scope
-      #This is for things like where("query = ?")
-      failed = check_arguments args[1] unless hash? args[1]
-    else
-      failed = (args.length > 1 and check_arguments args[-1])
-    end
-
-    if failed and not call.original_line and not duplicate? result
-      add_result result
-
-      if input = include_user_input?(args[-1])
-        confidence = CONFIDENCE[:high]
-        user_input = input.match
-      else
-        confidence = CONFIDENCE[:med]
-        user_input = nil
       end
-
-      warn :result => result,
-        :warning_type => "SQL Injection",
-        :message => "Possible SQL injection",
-        :user_input => user_input,
-        :confidence => confidence
     end
 
-    if check_for_limit_or_offset_vulnerability args[-1]
-      if include_user_input? args[-1]
-        confidence = CONFIDENCE[:high]
-      else
-        confidence = CONFIDENCE[:low]
-      end
-
-      warn :result => result,
-        :warning_type => "SQL Injection",
-        :message => "Upgrade to Rails >= 2.1.2 to escape :limit and :offset. Possible SQL injection",
-        :confidence => confidence
-    end
   end
-=end
 
-  private
-
-  #Check arguments for any string interpolation
-  def check_arguments arg
-    if sexp? arg
-      case arg.node_type
-      when :hash
-        hash_iterate(arg) do |key, value|
-          if check_arguments value
-            return true
-          end
-        end
-      when :array
-        return check_arguments(arg[1])
-      when :string_interp, :dstr
-        return true if check_string_interp arg
-      when :call
-        return check_call(arg)
-      else
-        return arg.any? do |a|
-          check_arguments(a)
-        end
-      end
-    end
-
-    false
-  end
 
   def check_string_interp arg
     arg.each do |exp|
