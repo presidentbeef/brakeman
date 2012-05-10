@@ -311,6 +311,40 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     unsafe_sql? arg, :ignore_hash
   end
 
+
+  #Check hash keys for user input.
+  #(Seems unlikely, but if a user can control the column names queried, that
+  #could be bad)
+  def check_hash_keys exp
+    hash_iterate(exp) do |key, value|
+      unless symbol? key
+        if unsafe_key = unsafe_sql?(value)
+          return unsafe_key
+        end
+      end
+    end
+
+    false
+  end
+
+  #Check an interpolated string for dangerous values.
+  #
+  #This method assumes values interpolated into strings are unsafe by default,
+  #unless safe_value? explicitly returns true.
+  def check_string_interp arg
+    arg.each do |exp|
+      if node_type?(exp, :string_eval, :evstr) and not safe_value? exp[1]
+        return exp[1]
+      end
+    end
+
+    nil
+  end
+
+  #Checks the given expression for unsafe SQL values. If an unsafe value is
+  #found, returns that value (may be the given _exp_ or a subexpression).
+  #
+  #Otherwise, returns false/nil.
   def unsafe_sql? exp, ignore_hash = false
     return unless sexp? exp
 
@@ -323,9 +357,10 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     end
   end
 
+  #Check _exp_ for dangerous values. Used by unsafe_sql?
   def find_dangerous_value exp, ignore_hash
     case exp.node_type
-    when :lit, :str, :const, :colon2
+    when :lit, :str, :const, :colon2, :true, :false, :nil
       nil
     when :array
       #Assume this is an array like
@@ -401,34 +436,6 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     false
   end
 
-  #Check hash keys for user input.
-  #(Seems unlikely, but if a user can control the column names queried, that
-  #could be bad)
-  def check_hash_keys exp
-    hash_iterate(exp) do |key, value|
-      unless symbol? key
-        if unsafe_key = unsafe_sql?(value)
-          return unsafe_key
-        end
-      end
-    end
-
-    false
-  end
-
-  #Check an interpolated string for dangerous values.
-  #
-  #This method assumes values interpolated into strings are unsafe by default,
-  #unless safe_value? explicitly returns true.
-  def check_string_interp arg
-    arg.each do |exp|
-      if node_type?(exp, :string_eval, :evstr) and not safe_value? exp[1]
-        return exp[1]
-      end
-    end
-
-    nil
-  end
 
   IGNORE_METHODS_IN_SQL = Set[:id, :table_name]
 
