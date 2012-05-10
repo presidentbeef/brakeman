@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
 
   scope :tall, lambda {|*args| where("height > '#{User.average_height}'") }
 
-  scope :blah, where("thinger = '#{BLAH}'")
+  scope :blah, where("thinger = '#{BLAH}'") #No longer warns on constants
 
   scope :dah, lambda {|*args| { :conditions => "dah = '#{args[1]}'"}}
   
