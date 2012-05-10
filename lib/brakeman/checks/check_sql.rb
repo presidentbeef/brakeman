@@ -380,13 +380,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       if has_immediate_user_input? exp or has_immediate_model? exp
         exp
       else
-        nil
+        check_call exp
       end
-      #elsif unsafe = check_for_string_building exp
-      #  return unsafe
-      #else
-      #  nil
-      #end
     when :or
       if unsafe = (unsafe_sql?(exp[1]) || unsafe_sql?(exp[2]))
         return unsafe
@@ -436,6 +431,23 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     false
   end
 
+  STRING_METHODS = Set[:<<, :+, :concat, :prepend]
+
+  def check_for_string_building exp
+    return unless call? exp
+
+    target = exp[1]
+    method = exp[2]
+    args = exp[3]
+
+    if string? target or string? args[1]
+      if STRING_METHODS.include? method
+        return exp
+      end
+    elsif STRING_METHODS.include? method and call? target
+      unsafe_sql? target
+    end
+  end
 
   IGNORE_METHODS_IN_SQL = Set[:id, :table_name]
 
@@ -454,21 +466,17 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
   #Check call for user input and string building
   def check_call exp
+    return unless call? exp
+
     target = exp[1]
-    method = exp[2]
     args = exp[3]
 
-    if sexp? target and
-      (method == :+ or method == :<< or method == :concat) and
-      (string? target or include_user_input? exp)
-
-      true
+    if unsafe = check_for_string_building(exp)
+      unsafe
     elsif call? target
       check_call target
-    elsif target == nil and tracker.options[:rails3] and method.to_s.match(/^first|last|all|where|order|group|having$/)
-      check_arguments args
     else
-      false
+      nil
     end
   end
 

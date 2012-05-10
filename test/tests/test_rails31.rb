@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 0,
       :template => 2,
       :controller => 1,
-      :warning => 25 }
+      :warning => 27 }
   end
 
   def test_without_protection
@@ -258,6 +258,24 @@ class Rails31Tests < Test::Unit::TestCase
       :line => 81,
       :message => /^Possible\ SQL\ injection/,
       :confidence => 1,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_string_concat_select
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 50,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_string_concat_having
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 26,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
       :file => /product\.rb/
   end
 
