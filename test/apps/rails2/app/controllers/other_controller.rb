@@ -25,4 +25,10 @@ class OtherController < ApplicationController
     @user = User.first
     @user.update_attribute(:attr, params[:attr])
   end
+
+  def test_render_template
+    @something_bad = params[:bad]
+
+    render :template => 'home/test_render_template'
+  end
 end
