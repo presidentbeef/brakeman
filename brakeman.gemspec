@@ -19,4 +19,5 @@ Gem::Specification.new do |s|
   s.add_dependency "erubis", "~>2.6"
   s.add_dependency "haml", "~>3.0"
   s.add_dependency "sass", "~>3.0"
+  s.add_dependency "json_pure"
 end
