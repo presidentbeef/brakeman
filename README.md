@@ -1,3 +1,5 @@
+![Travis CI Status](https://secure.travis-ci.org/presidentbeef/brakeman.png)
+
 # Brakeman
 
 Brakeman is a static analysis tool which checks Ruby on Rails applications for security vulnerabilities.
