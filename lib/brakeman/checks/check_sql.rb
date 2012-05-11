@@ -449,7 +449,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     end
   end
 
-  IGNORE_METHODS_IN_SQL = Set[:id, :table_name]
+  IGNORE_METHODS_IN_SQL = Set[:id, :table_name, :to_i]
 
   def safe_value? exp
     return true unless sexp? exp
@@ -458,7 +458,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     when :str, :lit, :const, :colon2
       true
     when :call
-      IGNORE_METHODS_IN_SQL.include? exp[3]
+      IGNORE_METHODS_IN_SQL.include? exp[2]
     when :if
       safe_value? exp[2] and safe_value? exp[3]
     else
@@ -466,7 +466,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     end
   end
 
-  #Check call for user input and string building
+  #Check call for user input(?) and string building
   def check_call exp
     return unless call? exp
 
