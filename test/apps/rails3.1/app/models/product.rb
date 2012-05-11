@@ -92,4 +92,12 @@ class Product < ActiveRecord::Base
     #Should warn, medium confidence
     Product.first("blah = #{local_var}")
   end
+
+  def test_conditional_args_in_sql
+    #Should warn
+    Product.last("blah = '#{something ? params[:blah] : TOTALLY_SAFE}'")
+
+    #Should not warn
+    Product.last("blah = '#{params[:blah] ? 1 : 0}'")
+  end
 end

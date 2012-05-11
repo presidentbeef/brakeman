@@ -459,6 +459,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       true
     when :call
       IGNORE_METHODS_IN_SQL.include? exp[3]
+    when :if
+      safe_value? exp[2] and safe_value? exp[3]
     else
       false
     end
