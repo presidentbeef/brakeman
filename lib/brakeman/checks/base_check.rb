@@ -132,6 +132,26 @@ class Brakeman::BaseCheck < SexpProcessor
     end
   end
 
+  def unprotected_model? model
+    model[:attr_accessible].nil? and !parent_classes_protected?(model) and parent?(model, :"ActiveRecord::Base")
+  end
+
+  # go up the chain of parent classes to see if any have attr_accessible
+  # (except when the parent is ActiveRecord::Base)
+  def parent_classes_protected? model
+    if model[:attr_accessible]
+      true
+    elsif parent = find_parent(model)
+      parent_classes_protected? parent[1]
+    else
+      false
+    end
+  end
+
+  def find_parent model
+    tracker.models.select{|k, v| k == model[:parent] }.first if model[:parent]
+  end
+
   #Checks if mass assignment is disabled globally in an initializer.
   def mass_assign_disabled?
     return @mass_assign_disabled unless @mass_assign_disabled.nil?
