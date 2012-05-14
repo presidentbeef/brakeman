@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 0,
       :template => 2,
       :controller => 1,
-      :warning => 28 }
+      :warning => 30 }
   end
 
   def test_without_protection
