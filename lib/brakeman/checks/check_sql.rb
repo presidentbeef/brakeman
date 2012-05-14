@@ -388,6 +388,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       else
         nil
       end
+    when :block, :rlist
+      unsafe_sql? exp[-1]
     else
       if has_immediate_user_input? exp or has_immediate_model? exp
         exp
@@ -461,6 +463,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       IGNORE_METHODS_IN_SQL.include? exp[2]
     when :if
       safe_value? exp[2] and safe_value? exp[3]
+    when :block, :rlist
+      safe_value? exp[-1]
     else
       false
     end

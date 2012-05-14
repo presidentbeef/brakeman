@@ -288,6 +288,15 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /product\.rb/
   end
 
+  def test_sql_injection_with_if_statements
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 130,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
   def test_select_vulnerability
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
