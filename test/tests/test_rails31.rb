@@ -288,6 +288,15 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /product\.rb/
   end
 
+  def test_sql_injection_in_method_args
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 106,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
   def test_sql_injection_with_if_statements
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",

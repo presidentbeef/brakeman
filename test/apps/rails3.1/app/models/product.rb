@@ -100,6 +100,13 @@ class Product < ActiveRecord::Base
     #Should not warn
     Product.last("blah = '#{params[:blah] ? 1 : 0}'")
   end
+
+  def test_params_in_args
+    #Should warn
+    Product.last("blah = '#{something(params[:blah])}'")
+  end
+
+
   def test_more_if_statements
     if some_condition
       x = params[:x]
@@ -121,4 +128,5 @@ class Product < ActiveRecord::Base
     #Should not warn
     Product.last("blah = '#{y}'")
     Product.where("blah = 1").group(y)
+  end
 end
