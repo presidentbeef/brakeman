@@ -106,6 +106,10 @@ class Product < ActiveRecord::Base
     Product.last("blah = '#{something(params[:blah])}'")
   end
 
+  def test_params_to_i
+    #Should not warn
+    Product.last("blah = '#{params[:id].to_i}'")
+  end
 
   def test_more_if_statements
     if some_condition
