@@ -133,4 +133,13 @@ class Product < ActiveRecord::Base
     Product.last("blah = '#{y}'")
     Product.where("blah = 1").group(y)
   end
+
+  def test_calculations
+    #Should warn
+    Product.calculate(:count, :all, :conditions => "blah = '#{params[:blah]}'")
+    Product.minimum(:price, :conditions => "blah = #{params[:blach]}")
+    Product.maximum(:price, :group => params[:columns])
+    Product.average(:price, :conditions => ["blah = #{params[:columns]} and x = ?", x])
+    Product.sum(params[:columns])
+  end
 end

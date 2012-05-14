@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 0,
       :template => 2,
       :controller => 1,
-      :warning => 30 }
+      :warning => 35 }
   end
 
   def test_without_protection
@@ -301,6 +301,51 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
       :line => 130,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_in_calculate
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 139,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_in_minimum
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 140,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_in_maximum
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 141,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_in_average
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 142,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_in_sum
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 143,
       :message => /^Possible\ SQL\ injection/,
       :confidence => 0,
       :file => /product\.rb/
