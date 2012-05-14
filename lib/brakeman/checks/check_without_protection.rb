@@ -16,7 +16,7 @@ class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
 
     models = []
     tracker.models.each do |name, m|
-      if parent? m, :"ActiveRecord::Base"
+      if ancestor? m, :"ActiveRecord::Base"
         models << name
       end
     end
