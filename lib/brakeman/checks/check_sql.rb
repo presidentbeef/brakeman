@@ -17,7 +17,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     @rails_version = tracker.config[:rails_version]
 
     @sql_targets = [:all, :average, :calculate, :count, :count_by_sql, :exists?,
-      :find, :find_by_sql, :first, :last, :maximum, :minumum, :sum]
+      :find, :find_by_sql, :first, :last, :maximum, :minimum, :sum]
 
     if tracker.options[:rails3]
       @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :where]
