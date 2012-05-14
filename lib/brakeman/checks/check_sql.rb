@@ -145,8 +145,14 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                         check_by_sql_arguments args[1]
                       when :calculate
                         check_find_arguments args[3]
-                      when :last, :first, :all, :count, :sum, :average, :maximum, :minimum
+                      when :last, :first, :all
                         check_find_arguments args[1]
+                      when :average, :count, :maximum, :minimum, :sum
+                        if args.length > 2
+                          unsafe_sql?(args[1]) or check_find_arguments(args[-1])
+                        else
+                          check_find_arguments args[-1]
+                        end
                       when :where, :having
                         check_query_arguments args
                       when :order, :group, :reorder
