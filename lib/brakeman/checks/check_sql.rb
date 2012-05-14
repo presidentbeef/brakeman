@@ -20,7 +20,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       :find, :find_by_sql, :first, :last, :maximum, :minimum, :sum]
 
     if tracker.options[:rails3]
-      @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :where]
+      @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :select, :where]
     end
 
     Brakeman.debug "Finding possible SQL calls on models"
@@ -159,7 +159,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                         check_order_arguments args
                       when :joins
                         check_joins_arguments args[1]
-                      when :from
+                      when :from, :select
                         unsafe_sql? args[1]
                       when :lock
                         check_lock_arguments args[1]

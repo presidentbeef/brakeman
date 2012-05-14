@@ -142,4 +142,12 @@ class Product < ActiveRecord::Base
     Product.average(:price, :conditions => ["blah = #{params[:columns]} and x = ?", x])
     Product.sum(params[:columns])
   end
+
+  def test_select
+    #Should not warn
+    Product.select([:price, :sku])
+
+    #Should warn
+    Product.select params[:columns]
+  end
 end
