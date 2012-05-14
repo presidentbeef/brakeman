@@ -39,12 +39,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
     Brakeman.debug "Processing possible SQL calls"
     calls.each do |c|
-      begin
-        process_result c
-      rescue Exception => e
-        p e
-        puts e.backtrace
-      end
+      process_result c
     end
   end
 
@@ -394,7 +389,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       if has_immediate_user_input? exp or has_immediate_model? exp
         exp
       else
-        puts "unsafe? #{exp.inspect}"
+        nil
       end
     end
   end
@@ -470,7 +465,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     end
   end
 
-  #Check call for user input(?) and string building
+  #Check call for string building
   def check_call exp
     return unless call? exp
 
