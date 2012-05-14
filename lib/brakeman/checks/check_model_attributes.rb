@@ -62,7 +62,7 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
 
   def check_models
     tracker.models.each do |name, model|
-      if model[:attr_accessible].nil? and parent? model, :"ActiveRecord::Base"
+      if unprotected_model? model
         yield name, model
       end
     end

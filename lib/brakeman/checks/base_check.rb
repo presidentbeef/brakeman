@@ -120,13 +120,28 @@ class Brakeman::BaseCheck < SexpProcessor
   end
 
   #Checks if the model inherits from parent,
-  def parent? model, parent
+  def ancestor? model, parent
     if model == nil
       false
     elsif model[:parent] == parent
       true
     elsif model[:parent]
-      parent? tracker.models[model[:parent]], parent
+      ancestor? tracker.models[model[:parent]], parent
+    else
+      false
+    end
+  end
+
+  def unprotected_model? model
+    model[:attr_accessible].nil? and !parent_classes_protected?(model) and ancestor?(model, :"ActiveRecord::Base")
+  end
+
+  # go up the chain of parent classes to see if any have attr_accessible
+  def parent_classes_protected? model
+    if model[:attr_accessible]
+      true
+    elsif parent = tracker.models[model[:parent]]
+      parent_classes_protected? parent
     else
       false
     end
