@@ -150,4 +150,13 @@ class Product < ActiveRecord::Base
     #Should warn
     Product.select params[:columns]
   end
+
+  def test_conditional_in_options
+    x = params[:x] == y ? "created_at ASC" : "created_at DESC"
+    z = params[:y] == y ? "safe" : "totally safe"
+
+    #Should not warn
+    Product.all(:order => x, :having => z, :select => z, :from => z,
+                :group => z)
+  end
 end
