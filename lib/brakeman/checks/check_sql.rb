@@ -262,13 +262,17 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def check_order_arguments args
     return unless sexp? args
 
-    args.each do |arg|
-      if unsafe_arg = unsafe_sql?(arg)
-        return unsafe_arg
+    if node_type? args, :arglist
+      args.each do |arg|
+        if unsafe_arg = unsafe_sql?(arg)
+          return unsafe_arg
+        end
       end
-    end
 
-    nil
+      nil
+    else
+      unsafe_sql? args
+    end
   end
 
   #find_by_sql and count_by_sql can take either a straight SQL string
