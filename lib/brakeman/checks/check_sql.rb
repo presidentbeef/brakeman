@@ -91,7 +91,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       find_calls.process_source block, model_name, scope_name
 
       find_calls.calls.each do |call|
-        if call[:method].to_s =~ @sql_targets
+        if @sql_targets.include? call[:method]
           process_result call
         end
       end
@@ -222,9 +222,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     return unless node_type? args, :arglist
 
     if node_type? args[2], :iter
-      args[2][-1].find do |arg|
-        unsafe_sql? arg
-      end
+      unsafe_sql? args[2][-1]
     else
       unsafe_sql? args[2]
     end
