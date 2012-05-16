@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 0,
       :template => 2,
       :controller => 1,
-      :warning => 36 }
+      :warning => 37 }
   end
 
   def test_without_protection
@@ -94,6 +94,15 @@ class Rails31Tests < Test::Unit::TestCase
       :warning_type => "SQL Injection",
       :line => 8,
       :message => /^Possible SQL injection/,
+      :confidence => 1,
+      :file => /user\.rb/
+  end
+
+  def test_sql_injection_scope_multiline_lambda_where
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 22,
+      :message => /^Possible\ SQL\ injection/,
       :confidence => 1,
       :file => /user\.rb/
   end

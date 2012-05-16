@@ -16,4 +16,9 @@ class User < ActiveRecord::Base
   scope :this_is_also_safe, where("name = ?", "%#{name.downcase}%")
 
   scope :should_not_warn, :conditions => ["name = ?", "%#{name.downcase}%"]
+
+  scope :unsafe_multiline_scope, lambda {
+    something = something_helper
+    where("something = #{something}")
+  }
 end
