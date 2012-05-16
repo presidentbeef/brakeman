@@ -164,7 +164,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                       when :lock
                         check_lock_arguments args[1]
                       else
-                        Brakeman.notify "Method: #{method}"
+                        Brakeman.debug "Unhandled SQL method: #{method}"
                       end
 
     if dangerous_value
