@@ -11,13 +11,13 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 26,
+        :template => 27,
         :warning => 25 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 26,
+        :template => 27,
         :warning => 26 }
     end
   end
@@ -80,6 +80,15 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Unprotected mass assignment/,
       :confidence => 0,
       :file => /home_controller\.rb/
+  end
+
+  def test_update_attribute_no_mass_assignment
+    assert_no_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :line => 26,
+      :message => /^Unprotected mass assignment/,
+      :confidence => 0,
+      :file => /other_controller\.rb/
   end
 
   def test_redirect
@@ -217,6 +226,15 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Possible SQL injection near line 15: self\.find/,
       :confidence => 1,
       :file => /user\.rb/
+  end
+
+  def test_sql_user_input_in_find_by
+    assert_no_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 116,
+      :message => /^Possible SQL injection near line 116: User.find_or_create_by_name/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
   end
 
   def test_csrf_protection
@@ -521,6 +539,15 @@ class Rails2Tests < Test::Unit::TestCase
       :message => "Unescaped parameter value near line 1: params[:blah]",
       :confidence => 0,
       :file => /not_used\.html\.erb/
+  end
+
+  def test_explicit_render_template
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 2,
+      :message => /^Unescaped parameter value near line 2: params\[:ba/,
+      :confidence => 0,
+      :file => /home\/test_render_template\.html\.haml/
   end
 
   def test_check_send

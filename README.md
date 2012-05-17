@@ -1,3 +1,7 @@
+![Brakeman Logo](http://brakemanscanner.org/images/logo_medium.png)
+
+![Travis CI Status](https://secure.travis-ci.org/presidentbeef/brakeman.png)
+
 # Brakeman
 
 Brakeman is a static analysis tool which checks Ruby on Rails applications for security vulnerabilities.
@@ -104,6 +108,12 @@ To skip certain files that Brakeman may have trouble parsing, use:
 Brakeman will raise warnings on models that use `attr_protected`. To suppress these warnings:
 
     brakeman --ignore-protected
+
+To compare results of a scan with a previous scan, use the JSON output option and then:
+
+    brakeman --compare old_report.json
+
+This will output JSON with two lists: one of fixed warnings and one of new warnings.
 
 # Warning information
 

@@ -60,10 +60,9 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
 
   def check_argument result, exp
     arg = process exp
-    type, match = has_immediate_user_input? arg
 
-    if type
-      case type
+    if input = has_immediate_user_input?(arg)
+      case input.type
       when :params
         message = "Unescaped parameter value in link_to"
       when :cookies
@@ -76,7 +75,9 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
       warn :result => result,
         :warning_type => "Cross Site Scripting", 
         :message => message,
+        :user_input => input.match,
         :confidence => CONFIDENCE[:high]
+
     elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(arg)
       method = match[2]
 
@@ -92,13 +93,14 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
         warn :result => result,
           :warning_type => "Cross Site Scripting", 
           :message => "Unescaped model attribute in link_to",
+          :user_input => match,
           :confidence => confidence
       end
 
     elsif @matched
-      if @matched == :model and not tracker.options[:ignore_model_output]
+      if @matched.type == :model and not tracker.options[:ignore_model_output]
         message = "Unescaped model attribute in link_to"
-      elsif @matched == :params
+      elsif @matched.type == :params
         message = "Unescaped parameter value in link_to"
       end
 
@@ -108,6 +110,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
         warn :result => result, 
           :warning_type => "Cross Site Scripting", 
           :message => message,
+          :user_input => @matched.match,
           :confidence => CONFIDENCE[:med]
       end
     end

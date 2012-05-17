@@ -3,6 +3,11 @@ Rails31::Application.routes.draw do
   match 'users/test_simple_helper' => "users#test_simple_helper"
   match 'users/test_less_simple_helpers' => "users#test_less_simple_helpers"
 
+  resources :users do
+    get 'mixin_action'
+    get 'mixin_default'
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

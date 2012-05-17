@@ -14,8 +14,8 @@ class Rails3Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 5,
-      :template => 22,
-      :warning => 23
+      :template => 21,
+      :warning => 24
     }
   end
 
@@ -104,6 +104,15 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /products_controller\.rb/
   end
 
+  def test_update_attribute_no_mass_assignment
+    assert_no_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :line => 26,
+      :message => /^Unprotected mass assignment near line 26/,
+      :confidence => 0,
+      :file => /other_controller\.rb/
+  end
+
   def test_redirect
     assert_warning :type => :warning,
       :warning_type => "Redirect",
@@ -120,6 +129,24 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Possible unprotected redirect near line 63: redirect_to/,
       :confidence => 2,
       :file => /products_controller\.rb/
+  end
+
+  def test_redirect_only_path
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 78,
+      :message => /^Possible unprotected redirect near line 78: redirect_to\(params\[/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_redirect_url_for_not_only_path
+    assert_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 84,
+      :message => /^Possible unprotected redirect near line 84: redirect_to\(url_for/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
   end
 
   def test_render_path
@@ -408,7 +435,8 @@ class Rails3Tests < Test::Unit::TestCase
   end
 
   def test_sql_injection_in_template
-    assert_warning :type => :template,
+    #SQL injection in controllers should not warn again in views
+    assert_no_warning :type => :template,
       :warning_type => "SQL Injection",
       :line => 3, #This should be line 4 :(
       :message => /^Possible SQL injection/,

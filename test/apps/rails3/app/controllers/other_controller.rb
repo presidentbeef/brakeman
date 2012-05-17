@@ -20,4 +20,9 @@ class OtherController < ApplicationController
   def test_send_file
     send_file params[:file]
   end
+
+  def test_update_attribute
+    @user = User.first
+    @user.update_attribute(:attr, params[:attr])
+  end
 end

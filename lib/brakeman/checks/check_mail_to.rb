@@ -38,10 +38,8 @@ class Brakeman::CheckMailTo < Brakeman::BaseCheck
 
       args.each do |arg|
         if hash? arg
-          hash_iterate arg do |k, v|
-            if symbol? v and v[-1] == :javascript
-              return result
-            end
+          if hash_access(arg, :javascript)
+            return result
           end
         end
       end

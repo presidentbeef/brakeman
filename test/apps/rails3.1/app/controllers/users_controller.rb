@@ -112,4 +112,6 @@ class UsersController < ApplicationController
   def simple_helper_with_args arg
     params[arg]
   end
+
+  include UserMixin
 end

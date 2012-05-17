@@ -88,10 +88,8 @@ module Brakeman::Util
       key = Sexp.new(:lit, key)
     end
 
-    hash_iterate hash do |k, v|
-      if k == key
-        return v
-      end
+    if index = hash.find_index(key) and index > 0
+      return hash[index + 1]
     end
 
     nil
@@ -221,6 +219,25 @@ module Brakeman::Util
     exp.is_a? Sexp and types.include? exp.node_type
   end
 
+  #Returns true if the given _exp_ contains a :class node.
+  #
+  #Useful for checking if a module is just a module or if it is a namespace.
+  def contains_class? exp
+    todo = [exp]
+
+    until todo.empty?
+      current = todo.shift
+
+      if node_type? current, :class
+        return true
+      elsif sexp? current
+        todo = current[1..-1].concat todo
+      end
+    end
+
+    false
+  end
+
   #Return file name related to given warning. Uses +warning.file+ if it exists
   def file_for warning, tracker = nil
     if tracker.nil?
@@ -326,4 +343,26 @@ module Brakeman::Util
 
     context
   end
+
+  def truncate_table str
+    @terminal_width ||= ::HighLine::SystemExtensions::terminal_size[0]
+    lines = str.lines
+
+    lines.map do |line|
+      if line.chomp.length > @terminal_width
+        line[0..(@terminal_width - 3)] + ">>"
+      else
+        line
+      end
+    end.join
+  end
+
+  # rely on Terminal::Table to build the structure, extract the data out in CSV format
+  def table_to_csv table
+    output = CSV.generate_line(table.headings.cells.map{|cell| cell.to_s.strip})
+    table.rows.each do |row|
+      output << CSV.generate_line(row.cells.map{|cell| cell.to_s.strip})
+    end
+    output
+  end  
 end

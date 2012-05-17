@@ -144,6 +144,10 @@ module Brakeman::Options
           options[:combine_locations] = combine
         end
 
+        opts.on "--[no-]highlights", "Highlight user input in report" do |highlight|
+          options[:highlight_user_input] = highlight
+        end
+
         opts.on "-m", "--routes", "Report controller information" do
           options[:report_routes] = true
         end
@@ -171,6 +175,10 @@ module Brakeman::Options
           "Set minimal confidence level (1 - 3)" do |level|
 
           options[:min_confidence] =  3 - level.to_i
+        end
+
+        opts.on "--compare FILE", "Compare the results of a previous brakeman scan (only JSON is supported)" do |file|
+          options[:previous_results_json] = File.expand_path(file)
         end
 
         opts.separator ""

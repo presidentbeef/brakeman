@@ -92,8 +92,7 @@ class Brakeman::Scanner
     end
 
     if File.exists? "#@path/vendor/plugins/rails_xss" or
-      options[:rails3] or options[:escape_html] or
-      (File.exists? "#@path/Gemfile" and File.read("#@path/Gemfile").include? "rails_xss")
+      options[:rails3] or options[:escape_html]
 
       tracker.config[:escape_html] = true
       Brakeman.notify "[Notice] Escaping HTML by default"
@@ -228,7 +227,7 @@ class Brakeman::Scanner
 
     Brakeman.notify "Processing data flow in controllers..."
 
-    tracker.controllers.each do |name, controller|
+    tracker.controllers.sort_by{|name| name.to_s}.each do |name, controller|
       Brakeman.debug "Processing #{name}"
       if @report_progress
         $stderr.print " #{current}/#{total} controllers processed\r"
@@ -281,7 +280,7 @@ class Brakeman::Scanner
 
     Brakeman.notify "Processing data flow in templates..."
 
-    tracker.templates.keys.dup.each do |name|
+    tracker.templates.keys.dup.sort_by{|name| name.to_s}.each do |name|
       Brakeman.debug "Processing #{name}"
       if @report_progress
         count += 1

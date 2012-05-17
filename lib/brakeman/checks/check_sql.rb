@@ -17,9 +17,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     @rails_version = tracker.config[:rails_version]
 
     if tracker.options[:rails3]
-      @sql_targets = /^(find.*|last|first|all|count|sum|average|minumum|maximum|count_by_sql|where|order|group|having)$/
+      @sql_targets = /^(find|find_by_sql|last|first|all|count|sum|average|minumum|maximum|count_by_sql|where|order|group|having)$/
     else
-      @sql_targets = /^(find.*|last|first|all|count|sum|average|minumum|maximum|count_by_sql)$/
+      @sql_targets = /^(find|find_by_sql|last|first|all|count|sum|average|minumum|maximum|count_by_sql)$/
     end
 
     Brakeman.debug "Finding possible SQL calls on models"
@@ -122,15 +122,18 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     if failed and not call.original_line and not duplicate? result
       add_result result
 
-      if include_user_input? args[-1]
+      if input = include_user_input?(args[-1])
         confidence = CONFIDENCE[:high]
+        user_input = input.match
       else
         confidence = CONFIDENCE[:med]
+        user_input = nil
       end
 
       warn :result => result,
         :warning_type => "SQL Injection",
         :message => "Possible SQL injection",
+        :user_input => user_input,
         :confidence => confidence
     end
 
@@ -215,10 +218,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def check_for_limit_or_offset_vulnerability options
     return false if @rails_version.nil? or @rails_version >= "2.1.1" or not hash? options
 
-    hash_iterate(options) do |key, value|
-      if symbol? key
-        return (key[1] == :limit or key[1] == :offset)
-      end
+    if hash_access(options, :limit) or hash_access(options, :offset)
+      return true
     end
 
     false

@@ -1,4 +1,6 @@
 require 'brakeman/scanner'
+require 'terminal-table'
+require 'brakeman/util'
 
 #Class for rescanning changed files after an initial scan
 class Brakeman::Rescanner < Brakeman::Scanner
@@ -64,6 +66,10 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def rescan_file path, type = nil
     type ||= file_type path
 
+    unless File.exist? path
+      return rescan_deleted_file path, type
+    end
+
     case type
     when :controller
       rescan_controller path
@@ -89,6 +95,10 @@ class Brakeman::Rescanner < Brakeman::Scanner
       process_controllers
       @reindex << :controllers << :templates
     when :gemfile
+      if tracker.config[:gems][:rails_xss] and tracker.config[:escape_html]
+        tracker.config[:escape_html] = false
+      end
+
       process_gems
     else
       return false #Nothing to do, file hopefully does not need to be rescanned
@@ -117,7 +127,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def rescan_template path
-    return unless path.match KNOWN_TEMPLATE_EXTENSIONS
+    return unless path.match KNOWN_TEMPLATE_EXTENSIONS and File.exist? path
 
     template_name = template_path_to_name(path)
 
@@ -179,6 +189,98 @@ class Brakeman::Rescanner < Brakeman::Scanner
     @reindex << :models
   end
 
+  #Handle rescanning when a file is deleted
+  def rescan_deleted_file path, type
+    case type
+    when :controller
+      rescan_deleted_controller path
+    when :template
+      rescan_deleted_template path
+    when :model
+      rescan_model path
+    when :lib
+      rescan_deleted_lib path
+    when :initializer
+      rescan_deleted_initializer path
+    else
+      if remove_deleted_file path
+        return true
+      else
+        Brakeman.notify "Ignoring deleted file: #{path}"
+      end
+    end
+
+    true
+  end
+
+  def rescan_deleted_controller path
+    #Remove from controller
+    tracker.controllers.delete_if do |name, controller|
+      if controller[:file] == path
+        template_matcher = /(.+)\.#{name}#/
+
+        #Remove templates rendered from this controller
+        tracker.templates.keys.each do |template_name|
+          if template_name.to_s.match template_matcher
+            tracker.templates.delete template_name
+          end
+        end
+
+        true
+      end
+    end
+  end
+
+  def rescan_deleted_template path
+    return unless path.match KNOWN_TEMPLATE_EXTENSIONS
+
+    template_name = template_path_to_name(path)
+
+    #Remove template
+    tracker.reset_template template_name
+
+    rendered_from_controller = /^#{template_name}\.(.+Controller)#(.+)/
+    rendered_from_view = /^#{template_name}\.Template:(.+)/
+
+    #Remove any rendered versions, or partials rendered from it
+    tracker.templates.delete_if do |name, template|
+      if template[:file] == path
+        true
+      elsif template[:file].nil?
+        name = name.to_s
+
+        name.match(rendered_from_controller) or name.match(rendered_from_view)
+      end
+    end
+  end
+
+  def rescan_deleted_lib path
+    tracker.libs.delete_if do |name, lib|
+      lib[:path] == path
+    end
+  end
+
+  def rescan_deleted_initializer path
+    tracker.initializers.delete Pathname.new(path).basename.to_s
+  end
+
+  #Check controllers, templates, models and libs for data from file
+  #and delete it.
+  def remove_deleted_file path
+    deleted = false
+
+    [:controllers, :templates, :models, :libs].each do |collection|
+      tracker.send(collection).delete_if do |name, data|
+        if data[:file] == path
+          deleted = true
+          true
+        end
+      end
+    end
+
+    deleted
+  end
+
   #Guess at what kind of file the path contains
   def file_type path
     case path
@@ -206,6 +308,7 @@ end
 
 #Class to make reporting of rescan results simpler to deal with
 class Brakeman::RescanReport
+  include Brakeman::Util
   attr_reader :old_results, :new_results
 
   def initialize old_results, tracker
@@ -271,17 +374,16 @@ New warnings: #{new_warnings.length}
         if warnings.length > 0
           out << "#{warning_type.to_s.titleize} warnings: #{warnings.length}\n"
 
-          table = Ruport::Data::Table(["Confidence", "Class", "Method", "Warning Type", "Message"])
+          table = Terminal::Table.new(:headings => ["Confidence", "Class", "Method", "Warning Type", "Message"]) do |t|
+            warnings.sort_by { |w| w.confidence}.each do |warning|
+              w = warning.to_row
 
-          warnings.sort_by { |w| w.confidence}.each do |warning|
-            w = warning.to_row
+              w["Confidence"] = Brakeman::Report::TEXT_CONFIDENCE[w["Confidence"]]
 
-            w["Confidence"] = Brakeman::Report::TEXT_CONFIDENCE[w["Confidence"]]
-
-            table << w
+              t << [w["Confidence"], w["Class"], w["Method"], w["Warning Type"], w["Message"]]
+            end            
           end
-
-          out << table.to_s
+          out << truncate_table(table.to_s)
         end
       end
 

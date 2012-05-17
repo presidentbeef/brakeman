@@ -28,6 +28,7 @@ class Brakeman::AliasProcessor < SexpProcessor
     @inside_if = false
     @ignore_ifs = false
     @exp_context = []
+    @current_module = nil
     @tracker = tracker #set in subclass as necessary
     set_env_defaults
   end
@@ -462,14 +463,11 @@ class Brakeman::AliasProcessor < SexpProcessor
   def process_hash_access target, args
     if args.length == 1
       index = args[0]
-      hash_iterate(target) do |key, value|
-        if key == index
-          return value
-        end
-      end
-    end
 
-    nil
+      hash_access(target, index)
+    else
+      nil
+    end
   end
 
   #Join two array literals into one.

@@ -20,7 +20,6 @@ class Sexp
   alias :node_type :sexp_type
   alias :values :sexp_body # TODO: retire
 
-  alias :old_init :initialize
   alias :old_push :<<
   alias :old_line :line
   alias :old_line_set :line=
@@ -30,19 +29,13 @@ class Sexp
   alias :old_fara :find_and_replace_all
   alias :old_find_node :find_node
 
-  def initialize *args
-    old_init(*args)
-    @original_line = nil
-    @my_hash_value = nil
-  end
-
   def original_line line = nil
     if line
       @my_hash_value = nil
       @original_line = line
       self
     else
-      @original_line
+      @original_line ||= nil
     end
   end
 
@@ -54,9 +47,9 @@ class Sexp
     @my_hash_value ||= super
   end
 
-  def line *args
-    @my_hash_value = nil
-    old_line(*args)
+  def line num = nil
+    @my_hash_value = nil if num
+    old_line(num)
   end
 
   def line= *args

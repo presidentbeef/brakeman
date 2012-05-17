@@ -1,3 +1,15 @@
+# 1.6.0
+
+ * Remove the Ruport dependency (Neil Matatall)
+ * Add more informational JSON output (Neil Matatall)
+ * Add comparison to previous JSON report (Neil Matatall)
+ * Add highlighting of dangerous values in HTML/text reports
+ * Model#update_attribute should not raise mass assignment warning (Dave Worth)
+ * Don't check `find_by_*` method for SQL injection
+ * Fix duplicate reporting of mass assignment and SQL injection
+ * Fix rescanning of deleted files 
+ * Properly check for rails_xss in Gemfile
+
 # 1.5.3
 
  * Add check for user input in Object#send (Neil Matatall)

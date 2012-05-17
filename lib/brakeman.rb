@@ -23,6 +23,7 @@ module Brakeman
   #  * :config_file - configuration file
   #  * :escape_html - escape HTML by default (automatic)
   #  * :exit_on_warn - return false if warnings found, true otherwise. Not recommended for library use (default: false)
+  #  * :highlight_user_input - highlight user input in reported warnings (default: true)
   #  * :html_style - path to CSS file
   #  * :ignore_model_output - consider models safe (default: false)
   #  * :message_limit - limit length of messages
@@ -51,7 +52,6 @@ module Brakeman
     if @quiet
       options[:report_progress] = false
     end
-
     scan options
   end
 
@@ -114,6 +114,7 @@ module Brakeman
       :min_confidence => 2,
       :combine_locations => true,
       :collapse_mass_assignment => true,
+      :highlight_user_input => true,
       :ignore_redirect_to_model => true,
       :ignore_model_output => false,
       :message_limit => 100,
@@ -309,5 +310,24 @@ module Brakeman
 
   def self.debug message
     $stderr.puts message if @debug
+  end
+
+  # Compare JSON ouptut from a previous scan and return the diff of the two scans
+  def self.compare options
+    require 'json'
+    require 'brakeman/differ'
+    raise ArgumentError.new("Comparison file doesn't exist") unless File.exists? options[:previous_results_json]
+
+    begin
+      previous_results = JSON.parse(File.read(options[:previous_results_json]), :symbolize_names =>true)[:warnings]
+    rescue JSON::ParserError
+      self.notify "Error parsing comparison file: #{options[:previous_results_json]}"
+      exit!
+    end
+
+    tracker = run(options)
+    new_results = JSON.parse(tracker.report.to_json, :symbolize_names =>true)[:warnings]
+
+    Brakeman::Differ.new(new_results, previous_results).diff
   end
 end
