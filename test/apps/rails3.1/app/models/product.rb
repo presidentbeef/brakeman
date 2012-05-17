@@ -165,4 +165,8 @@ class Product < ActiveRecord::Base
     Product.where("blah = #{1 or 2}")
   end
 
+  def test_params_to_f
+    #Should not warn
+    Product.last("blah = '#{params[:id].to_f}'")
+  end
 end
