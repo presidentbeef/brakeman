@@ -159,4 +159,10 @@ class Product < ActiveRecord::Base
     Product.all(:order => x, :having => z, :select => z, :from => z,
                 :group => z)
   end
+
+  def test_or_interpolation
+    #Should not warn
+    Product.where("blah = #{1 or 2}")
+  end
+
 end
