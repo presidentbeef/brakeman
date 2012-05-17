@@ -468,6 +468,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       safe_value? exp[2] and safe_value? exp[3]
     when :block, :rlist
       safe_value? exp[-1]
+    when :or
+      safe_value? exp[1] and safe_value? exp[2]
     else
       false
     end
