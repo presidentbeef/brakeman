@@ -454,7 +454,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     end
   end
 
-  IGNORE_METHODS_IN_SQL = Set[:id, :table_name, :to_i]
+  IGNORE_METHODS_IN_SQL = Set[:id, :table_name, :to_i, :to_f]
 
   def safe_value? exp
     return true unless sexp? exp
