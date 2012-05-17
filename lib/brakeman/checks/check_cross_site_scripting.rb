@@ -100,7 +100,6 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       warn :template => @current_template, 
         :warning_type => "Cross Site Scripting",
         :message => message,
-        :line => input.match.line,
         :code => input.match,
         :confidence => CONFIDENCE[:high]
 
@@ -120,7 +119,6 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
         warn :template => @current_template,
           :warning_type => "Cross Site Scripting", 
           :message => "Unescaped model attribute",
-          :line => code.line,
           :code => code,
           :confidence => confidence
       end
@@ -184,7 +182,6 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
           warn :template => @current_template,
             :warning_type => "Cross Site Scripting", 
             :message => message,
-            :line => exp.line,
             :code => exp,
             :user_input => @matched.match,
             :confidence => confidence
