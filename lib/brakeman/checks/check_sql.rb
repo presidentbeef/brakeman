@@ -463,7 +463,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     return true unless sexp? exp
 
     case exp.node_type
-    when :str, :lit, :const, :colon2
+    when :str, :lit, :const, :colon2, :nil, :true, :false
       true
     when :call
       IGNORE_METHODS_IN_SQL.include? exp[2]
