@@ -380,10 +380,12 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     when :if
       unsafe_sql? exp[2] or unsafe_sql? exp[3]
     when :call
-      if has_immediate_user_input? exp or has_immediate_model? exp
-        exp
-      else
-        check_call exp
+      unless IGNORE_METHODS_IN_SQL.include? exp[2]
+        if has_immediate_user_input? exp or has_immediate_model? exp
+          exp
+        else
+          check_call exp
+        end
       end
     when :or
       if unsafe = (unsafe_sql?(exp[1]) || unsafe_sql?(exp[2]))
