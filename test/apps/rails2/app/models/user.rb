@@ -14,4 +14,11 @@ class User < ActiveRecord::Base
   def get_something x
     self.find(:all, :conditions => "where blah = #{x}")
   end
+
+  def test_merge_conditions
+    #Should not warn
+    User.find(:all, :conditions => merge_conditions(some_conditions))
+    User.find(:all, :conditions => self.merge_conditions(some_conditions))
+    find(:all, :conditions => User.merge_conditions(some_conditions))
+  end
 end
