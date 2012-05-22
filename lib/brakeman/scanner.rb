@@ -9,7 +9,6 @@ begin
   end
 
   require 'haml'
-  require 'sass'
   require 'erb'
   require 'erubis'
   require 'brakeman/processor'
