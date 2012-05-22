@@ -26,8 +26,8 @@ class Rails3Tests < Test::Unit::TestCase
   def test_eval_params
     assert_warning :type => :warning,
       :warning_type => "Dangerous Eval",
-      :line => 41,
-      :message => /^User input in eval near line 41: eval\(pa/,
+      :line => 40,
+      :message => /^User input in eval near line 40: eval\(pa/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end
@@ -53,8 +53,8 @@ class Rails3Tests < Test::Unit::TestCase
   def test_command_injection_system_params
     assert_warning :type => :warning,
       :warning_type => "Command Injection",
-      :line => 37,
-      :message => /^Possible command injection near line 37:/,
+      :line => 36,
+      :message => /^Possible command injection near line 36:/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end
@@ -71,7 +71,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_file_access_load
     assert_warning :type => :warning,
       :warning_type => "File Access",
-      :line => 68,
+      :line => 67,
       :message => /^Parameter value used in file name near l/,
       :confidence => 0,
       :file => /home_controller\.rb/
@@ -143,8 +143,8 @@ class Rails3Tests < Test::Unit::TestCase
   def test_redirect_url_for_not_only_path
     assert_warning :type => :warning,
       :warning_type => "Redirect",
-      :line => 84,
-      :message => /^Possible unprotected redirect near line 84: redirect_to\(url_for/,
+      :line => 83,
+      :message => /^Possible unprotected redirect near line 83: redirect_to\(url_for/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end
@@ -152,8 +152,8 @@ class Rails3Tests < Test::Unit::TestCase
   def test_render_path
     assert_warning :type => :warning,
       :warning_type => "Dynamic Render Path",
-      :line => 64,
-      :message => /^Render path contains parameter value near line 64: render/,
+      :line => 63,
+      :message => /^Render path contains parameter value near line 63: render/,
       :confidence => 1,
       :file => /home_controller\.rb/
   end
@@ -161,7 +161,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_file_access_send_file
     assert_warning :type => :warning,
       :warning_type => "File Access",
-      :line => 22,
+      :line => 21,
       :message => /^Parameter value used in file name near l/,
       :confidence => 0,
       :file => /other_controller\.rb/

@@ -27,7 +27,6 @@ class Brakeman::CheckSkipBeforeFilter < Brakeman::BaseCheck
       warn :class => controller[:name],
         :warning_type => "Cross-Site Request Forgery",
         :message => "Use whitelist (:only => [..]) when skipping CSRF check",
-        :line => filter.line,
         :code => filter,
         :confidence => CONFIDENCE[:med]
     end

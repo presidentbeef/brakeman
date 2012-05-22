@@ -121,7 +121,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   def test_redirect_11 
     assert_warning :type => :warning,
       :warning_type => "Redirect",
-      :line => 96,
+      :line => 95,
       :message => /^Possible\ unprotected\ redirect/,
       :confidence => 0,
       :file => /users_controller\.rb/
