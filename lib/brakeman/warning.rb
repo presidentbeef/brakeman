@@ -32,7 +32,7 @@ class Brakeman::Warning
     if not @line
       if @user_input and @user_input.respond_to? :line
         @line = @user_input.line
-      elsif @code and not @line and @code.respond_to? :line
+      elsif @code and @code.respond_to? :line
         @line = @code.line
       end
     end
