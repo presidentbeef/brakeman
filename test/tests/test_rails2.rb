@@ -474,6 +474,15 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /home_controller\.rb/ 
   end
 
+  def test_sql_injection_merge_conditions
+    assert_no_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 22,
+      :message => /^Possible SQL injection near line 22: find/,
+      :confidence => 0,
+      :file => /user\.rb/
+  end
+
   def test_escape_once
     results = find :type => :template,
       :warning_type => "Cross Site Scripting",
