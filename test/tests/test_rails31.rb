@@ -5,7 +5,7 @@ Rails31 = BrakemanTester.run_scan "rails3.1", "Rails 3.1", :rails3 => true
 class Rails31Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
   include BrakemanTester::CheckExpected
-  
+
   def report
     Rails31
   end
@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 0,
       :template => 4,
       :controller => 1,
-      :warning => 9 }
+      :warning => 37 }
   end
 
   def test_without_protection
@@ -24,7 +24,7 @@ class Rails31Tests < Test::Unit::TestCase
       :line => 47,
       :message => /^Unprotected mass assignment/,
       :confidence => 0,
-      :file => /users_controller\.rb/ 
+      :file => /users_controller\.rb/
   end
 
   def test_unprotected_redirect
@@ -33,7 +33,7 @@ class Rails31Tests < Test::Unit::TestCase
       :line => 67,
       :message => /^Possible unprotected redirect/,
       :confidence => 2,
-      :file => /users_controller\.rb/ 
+      :file => /users_controller\.rb/
   end
 
   def test_whitelist_attributes
@@ -51,7 +51,7 @@ class Rails31Tests < Test::Unit::TestCase
       :line => 6,
       :message => /^Basic authentication password stored in source code/,
       :confidence => 0,
-      :file => /users_controller\.rb/ 
+      :file => /users_controller\.rb/
   end
 
   def test_translate_bug
@@ -75,13 +75,13 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
       :line => 10,
-      :message => /^Possible SQL injection near line 10: scope\(:phooey, :condition =>/,
+      :message => /^Possible SQL injection near line 10: scope\(:phooey, :conditions =>/,
       :confidence => 0,
       :file => /user\.rb/
   end
 
   def test_sql_injection_scope_where
-    assert_warning :type => :warning,
+    assert_no_warning :type => :warning,
       :warning_type => "SQL Injection",
       :line => 6,
       :message => /^Possible SQL injection near line 6: where/,
@@ -96,6 +96,277 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Possible SQL injection/,
       :confidence => 1,
       :file => /user\.rb/
+  end
+
+  def test_sql_injection_scope_multiline_lambda_where
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 22,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :file => /user\.rb/
+  end
+
+  def test_sql_injection_in_order_param
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 4,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /user\.rb/
+  end
+
+  def test_sql_injection_in_group_param
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 10,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_interpolated_group_param
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 11,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_in_lock_param
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 67,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_interpolated_lock_param
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 68,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_interpolated_having
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 16,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_interpolated_having_array
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 25,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_interpolated_joins
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 34,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_interpolated_joins_array
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 40,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_in_order_param
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 4,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_interpolated_order
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 5,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_in_select_param
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 48,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_interpolated_select
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 49,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+
+  def test_sql_injection_in_from_param
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 58,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_interpolated_from
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 59,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_local_interpolation
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 93,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_interpolated_where
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 80,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_interpolated_where_array
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 81,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_string_concat_select
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 50,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_string_concat_having
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 26,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_with_conditional
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 98,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_in_method_args
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 106,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_with_if_statements
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 130,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_in_calculate
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 139,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_in_minimum
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 140,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_in_maximum
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 141,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_in_average
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 142,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_in_sum
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 143,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_in_select
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 151,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
   end
 
   def test_select_vulnerability

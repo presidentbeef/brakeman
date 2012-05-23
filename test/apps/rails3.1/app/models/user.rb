@@ -3,11 +3,11 @@ class User < ActiveRecord::Base
 
   scope :tall, lambda {|*args| where("height > '#{User.average_height}'") }
 
-  scope :blah, where("thinger = '#{BLAH}'")
+  scope :blah, where("thinger = '#{BLAH}'") #No longer warns on constants
 
-  scope :dah, lambda {|*args| { :condition => "dah = '#{args[1]}'"}}
+  scope :dah, lambda {|*args| { :conditions => "dah = '#{args[1]}'"}}
   
-  scope :phooey, :condition => "phoeey = '#{User.phooey}'"
+  scope :phooey, :conditions => "phoeey = '#{User.phooey}'"
 
   scope :this_is_safe, lambda { |name|
     where("name = ?", "%#{name.downcase}%")
@@ -15,5 +15,10 @@ class User < ActiveRecord::Base
 
   scope :this_is_also_safe, where("name = ?", "%#{name.downcase}%")
 
-  scope :should_not_warn, :condition => ["name = ?", "%#{name.downcase}%"]
+  scope :should_not_warn, :conditions => ["name = ?", "%#{name.downcase}%"]
+
+  scope :unsafe_multiline_scope, lambda {
+    something = something_helper
+    where("something = #{something}")
+  }
 end
