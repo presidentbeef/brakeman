@@ -1,3 +1,13 @@
+# 1.6.1
+
+ * Major rewrite of CheckSQL
+ * Fix rescanning of deleted templates
+ * Process actions mixed into controllers
+ * Handle `render :template => ...`
+ * Check for inherited attr_accessible (Neil Matatall)
+ * Fix highlighting of HTML escaped values in HTML report
+ * Report line number of highlighted value, if available
+
 # 1.6.0
 
  * Remove the Ruport dependency (Neil Matatall)
