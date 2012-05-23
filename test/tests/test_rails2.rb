@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 2,
         :template => 27,
-        :warning => 25 }
+        :warning => 26 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
         :template => 27,
-        :warning => 26 }
+        :warning => 27 }
     end
   end
 
@@ -236,6 +236,17 @@ class Rails2Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /home_controller\.rb/
   end
+
+  # ensure that the warning is generated for the line which contains the input, not
+  # the line of the beginning of the string
+  def test_sql_user_input_multiline
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 121,
+      :message => /^Possible SQL injection near line 121: User.find_by_sql/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end  
 
   def test_csrf_protection
     assert_warning :type => :controller,

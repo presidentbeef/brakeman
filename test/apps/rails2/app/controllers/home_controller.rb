@@ -116,6 +116,13 @@ class HomeController < ApplicationController
     User.find_or_create_by_name(params[:name], :code => (params[:x] + "code"))
   end
 
+  def test_user_input_on_multiline
+    User.find_by_sql "select * from users where something = 'something safe' AND " + 
+      "something_not_safe = #{params[:unsafe]} AND " + 
+      "something_else_that_is_safe = 'something else safe'"
+    SQL
+  end
+
   private
 
   def filter_it
