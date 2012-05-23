@@ -29,8 +29,12 @@ class Brakeman::Warning
       end
     end
 
-    if @code and not @line and @code.respond_to? :line
-      @line = @code.line
+    if not @line
+      if @user_input and @user_input.respond_to? :line
+        @line = @user_input.line
+      elsif @code and @code.respond_to? :line
+        @line = @code.line
+      end
     end
 
     unless @warning_set

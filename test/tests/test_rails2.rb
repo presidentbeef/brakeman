@@ -32,7 +32,7 @@ class Rails2Tests < Test::Unit::TestCase
 
   def test_eval
     assert_warning :warning_type => "Dangerous Eval",
-      :line => 41,
+      :line => 40,
       :message => /^User input in eval/,
       :code => /eval\(params\[:dangerous_input\]\)/,
       :file => /home_controller.rb/
@@ -57,7 +57,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_command_injection_direct
     assert_warning :type => :warning,
       :warning_type => "Command Injection",
-      :line => 37,
+      :line => 36,
       :message => /^Possible command injection/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -103,8 +103,8 @@ class Rails2Tests < Test::Unit::TestCase
   def test_dynamic_render_path
     assert_warning :type => :warning,
       :warning_type => "Dynamic Render Path",
-      :line => 60,
-      :message => /^Render path contains parameter value near line 60: render/,
+      :line => 59,
+      :message => /^Render path contains parameter value near line 59: render/,
       :confidence => 1,
       :file => /home_controller\.rb/
   end
@@ -112,8 +112,8 @@ class Rails2Tests < Test::Unit::TestCase
   def test_dynamic_render_path_high_confidence
     assert_warning :type => :warning,
       :warning_type => "Dynamic Render Path",
-      :line => 78,
-      :message => /^Render path contains parameter value near line 78: render/,
+      :line => 77,
+      :message => /^Render path contains parameter value near line 77: render/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end
@@ -121,7 +121,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_file_access
     assert_warning :type => :warning,
       :warning_type => "File Access",
-      :line => 22,
+      :line => 21,
       :message => /^Parameter value used in file name/,
       :confidence => 0,
       :file => /other_controller\.rb/
@@ -130,7 +130,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_file_access_with_load
     assert_warning :type => :warning,
       :warning_type => "File Access",
-      :line => 64,
+      :line => 63,
       :message => /^Parameter value used in file name/,
       :confidence => 0,
       :file => /home_controller\.rb/
@@ -139,7 +139,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_file_access_load_false
     warnings = find :type => :warning,
       :warning_type => "File Access",
-      :line => 65,
+      :line => 64,
       :message => /^Parameter value used in file name/,
       :confidence => 0,
       :file => /home_controller\.rb/
