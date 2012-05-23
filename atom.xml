@@ -4,13 +4,79 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-04-29T10:53:01-07:00</updated>
+  <updated>2012-05-23T12:41:14-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 1.6.1 Released</title>
+    <link href="http://brakemanscanner.org/blog/2012/05/23/brakeman-1-dot-6-1-released/"/>
+    <updated>2012-05-23T17:45:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2012/05/23/brakeman-1-dot-6-1-released</id>
+    <content type="html">&lt;p&gt;Wow, it's been over a month since the last release!&lt;/p&gt;
+
+&lt;p&gt;The major change in this version is a rewrite of the SQL injection check. Many more methods are covered, and there should be a reduction of false positives as well.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 1.6.0&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Major rewrite of CheckSQL&lt;/li&gt;
+&lt;li&gt;Process actions mixed into controllers&lt;/li&gt;
+&lt;li&gt;Check for inherited &lt;code&gt;attr_accessible&lt;/code&gt; (Neil Matatall)&lt;/li&gt;
+&lt;li&gt;Handle &lt;code&gt;render :template =&amp;gt; ...&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Report line number of highlighted value, if available&lt;/li&gt;
+&lt;li&gt;Fix highlighting of HTML escaped values in HTML report&lt;/li&gt;
+&lt;li&gt;Fix rescanning of deleted templates&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Updated SQL Injection Check&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;CheckSQL&lt;/code&gt; has been completely revamped. Brakeman now has a much better understanding of the various ActiveRecord::FinderMethods and ActiveRecord::QueryMethods, as well as their options.&lt;/p&gt;
+
+&lt;p&gt;The check is also more conservative about what it warns on. Previously, since string interpolation is the main entry point for SQL injection in Rails, any interpolated value in a query would generate a warning. Now, &quot;safe&quot; sanitization methods, obviously safe methods like &lt;code&gt;to_i&lt;/code&gt; and &lt;code&gt;id&lt;/code&gt;, constants, strings, and other literal values should not cause warnings.&lt;/p&gt;
+
+&lt;p&gt;The &quot;highlighted&quot; value (or &quot;user input&quot;) reported for SQL warnings should be much more accurate now, making it easier to determine why a warning was reported.&lt;/p&gt;
+
+&lt;h3&gt;Controller Mixins&lt;/h3&gt;
+
+&lt;p&gt;Methods on controller mixins that are used as actions should now be processed properly.&lt;/p&gt;
+
+&lt;h3&gt;Check for Inherited Mass Assignment Protection&lt;/h3&gt;
+
+&lt;p&gt;Since mass assignment protection via &lt;code&gt;attr_accessible&lt;/code&gt; is inheritable, Brakeman will no longer warn about models whose parent uses &lt;code&gt;attr_accessible&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Template Option in Render&lt;/h3&gt;
+
+&lt;p&gt;Somehow, the &lt;code&gt;:template&lt;/code&gt; option for &lt;code&gt;render&lt;/code&gt; has been ignored this whole time. Sorry!&lt;/p&gt;
+
+&lt;h3&gt;Better Line Numbers&lt;/h3&gt;
+
+&lt;p&gt;Warnings which have a &lt;code&gt;:user_input&lt;/code&gt; field use that value to &quot;highlight&quot; part of the code in the reported warning. This value usually corresponds to the code which actually caused the warning to be generated.&lt;/p&gt;
+
+&lt;p&gt;If a warning has this field, the line number of that code is used, instead of the starting line number of the entire piece of code. This often leads to more accurate and helpful line numbers.&lt;/p&gt;
+
+&lt;h3&gt;Highlighted Values in HTML Reports&lt;/h3&gt;
+
+&lt;p&gt;Since the warnings output in HTML reports are HTML-escaped, there was a sometimes mismatch between the value that needed to be highlighted and the HTML warning output, causing nothing to be highlighted. This is fixed now.&lt;/p&gt;
+
+&lt;h3&gt;Rescanning of Deleted Templates&lt;/h3&gt;
+
+&lt;p&gt;In the rescanning logic, templates which are related to a changed file (a view or partial that is rendered, usually) will be rescanned. However, there is the possibility that the template which needs to be rescanned as a related file has been deleted as part of the set of changes. This caused the rescanning to blow up, but that has been fixed now.&lt;/p&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release!&lt;/p&gt;
+
+&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+
+&lt;p&gt;Don't forget to check out the &lt;a href=&quot;https://speakerdeck.com/u/presidentbeef/p/keeping-rails-applications-on-track-with-brakeman&quot;&gt;RailsConf Brakeman presentation slides&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 1.6 Released</title>
@@ -1192,23 +1258,6 @@ Brakeman.run :app_path =&amp;gt; 'my_app'
 &lt;p&gt;Brakeman will no longer crash if there are problems parsing &lt;code&gt;routes.rb&lt;/code&gt;. Instead, it will assume all public methods on controllers are actions. The &lt;code&gt;-a&lt;/code&gt; option will also turn this behavior on.&lt;/p&gt;
 
 &lt;p&gt;Rails 3.1 route parsing is still a work in progress, so this should at least allow analysis of 3.1 apps, even if it means slightly reduced accuracy.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman Plugin 'Officially' Available for Jenkins</title>
-    <link href="http://brakemanscanner.org/blog/2011/10/21/brakeman-plugin-officially-available-for-jenkins/"/>
-    <updated>2011-10-21T11:54:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2011/10/21/brakeman-plugin-officially-available-for-jenkins</id>
-    <content type="html">&lt;p&gt;While a Brakeman plugin for the &lt;a href=&quot;http://jenkins-ci.org&quot;&gt;Jenkins&lt;/a&gt;/&lt;a href=&quot;http://hudson-ci.org&quot;&gt;Hudson&lt;/a&gt; continuous integration tool has been available since January, thanks to &lt;a href=&quot;https://github.com/presidentbeef/brakeman-jenkins-plugin/issues/1&quot;&gt;some prodding&lt;/a&gt; the plugin is now available through the official Jenkins plugin manager.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://brakemanscanner.org/images/brakeman_trend_graph.png&quot; title=&quot;Example Plugin Graph&quot; alt=&quot;Example Plugin Graph&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Installation of the plugin is no longer an arduous manual process. Just go to &lt;code&gt;Manage Jenkins -&amp;gt; Manage Plugins -&amp;gt; Available&lt;/code&gt; and search for &quot;Brakeman&quot;. Check the box and then click the &quot;Install&quot; button down at the bottom of the page.&lt;/p&gt;
-
-&lt;p&gt;Some more information about the plugin can be found on the &lt;a href=&quot;https://wiki.jenkins-ci.org/display/JENKINS/Brakeman+Plugin&quot;&gt;Jenkins wiki&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;See the &lt;a href=&quot;docs/jenkins/setup&quot;&gt;instructions&lt;/a&gt; for how to set up a job to use the Brakeman plugin.&lt;/p&gt;
 </content>
   </entry>
   
