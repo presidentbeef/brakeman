@@ -219,13 +219,21 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
 
   #Returns an array of filter names
   def get_before_filters method, controller
-    filters = []
-    return filters unless controller[:options]
-    filter_list = controller[:options][:before_filters]
-    return filters unless filter_list
+    return [] unless controller[:options] and controller[:options][:before_filters]
 
-    filter_list.each do |filter|
-      f = before_filter_to_hash filter
+    filters = []
+
+    if controller[:before_filter_cache].nil?
+      filter_cache = []
+
+      controller[:options][:before_filters].each do |filter|
+        filter_cache << before_filter_to_hash(filter)
+      end
+
+      controller[:before_filter_cache] = filter_cache
+    end
+
+    controller[:before_filter_cache].each do |f|
       if f[:all] or 
         (f[:only] == method) or
         (f[:only].is_a? Array and f[:only].include? method) or 
