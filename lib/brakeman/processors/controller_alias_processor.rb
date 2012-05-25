@@ -254,7 +254,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     filter[:methods] = [args[0][1]]
 
     args[1..-1].each do |a|
-      filter[:methods] << a[1] unless a.node_type == :hash
+      filter[:methods] << a[1] if a.node_type == :lit
     end
 
     if args[-1].node_type == :hash
