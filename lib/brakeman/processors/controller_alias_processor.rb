@@ -237,7 +237,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       if f[:all] or 
         (f[:only] == method) or
         (f[:only].is_a? Array and f[:only].include? method) or 
-        (f[:except] == method) or
+        (f[:except].is_a? Symbol and f[:except] != method) or
         (f[:except].is_a? Array and not f[:except].include? method)
 
         filters.concat f[:methods]
