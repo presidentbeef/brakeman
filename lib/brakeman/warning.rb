@@ -175,6 +175,10 @@ class Brakeman::Warning
   end
 
   def annotation_digest
-    Digest::MD5.hexdigest(self.clean_annotation.to_yaml)
+    digest = Digest::MD5.hexdigest(self.clean_annotation.to_yaml)
+    if RUBY_VERSION >= "1.9"
+      digest.force_encoding("UTF-8")
+    end
+    digest
   end
 end
