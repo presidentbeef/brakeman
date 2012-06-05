@@ -30,6 +30,9 @@ class Rails31Tests < Test::Unit::TestCase
   def test_unprotected_redirect
     assert_warning :type => :warning,
       :warning_type => "Redirect",
+  def test_redirect_with_model_instance
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
       :line => 67,
       :message => /^Possible unprotected redirect/,
       :confidence => 2,

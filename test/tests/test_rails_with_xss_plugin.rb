@@ -11,7 +11,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :controller => 1,
       :model => 3,
       :template => 1,
-      :warning => 13 }
+      :warning => 11 }
   end
 
   def report
@@ -98,8 +98,8 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_redirect_9 
-    assert_warning :type => :warning,
+  def test_redirect_to_model_instance
+    assert_no_warning :type => :warning,
       :warning_type => "Redirect",
       :line => 68,
       :message => /^Possible\ unprotected\ redirect/,
@@ -108,8 +108,8 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_redirect_10 
-    assert_warning :type => :warning,
+  def test_another_redirect_to_model_instance
+    assert_no_warning :type => :warning,
       :warning_type => "Redirect",
       :line => 72,
       :message => /^Possible\ unprotected\ redirect/,
