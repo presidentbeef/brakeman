@@ -93,5 +93,10 @@ class UsersController < ApplicationController
   def redirect_to_new_user
     redirect_to User.new
   end
+
+  def redirect_to_user_url
+    redirect_to User.find(1).url
+  end
+
   include UserMixin
 end

@@ -63,7 +63,9 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     end
 
     call[3].each do |arg|
-      if call? arg 
+      if res = has_immediate_model?(arg)
+        return Match.new(:immediate, res)
+      elsif call? arg
         if request_value? arg
           return Match.new(:immediate, arg)
         elsif request_value? arg[1]

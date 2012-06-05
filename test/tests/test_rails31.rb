@@ -27,9 +27,15 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /users_controller\.rb/
   end
 
-  def test_unprotected_redirect
+  def test_redirect_to_model_attribute
     assert_warning :type => :warning,
       :warning_type => "Redirect",
+      :line => 98,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
+  end
+
   def test_redirect_with_model_instance
     assert_no_warning :type => :warning,
       :warning_type => "Redirect",
