@@ -13,6 +13,12 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   def run_check
     Brakeman.debug "Finding calls to redirect_to()"
 
+    @model_find_calls = Set[:all, :find, :find_by_sql, :first, :last, :new]
+
+    if tracker.options[:rails3]
+      @model_find_calls.merge [:from, :group, :having, :joins, :lock, :order, :reorder, :select, :where]
+    end
+
     @tracker.find_call(:target => false, :method => :redirect_to).each do |res|
       process_result res
     end
@@ -50,20 +56,19 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   def include_user_input? call
     Brakeman.debug "Checking if call includes user input"
 
-    if tracker.options[:ignore_redirect_to_model] and call? call[3][1] and 
-      call[3][1][2] == :new and call[3][1][1]
+    args = call[3]
 
-      begin
-        target = class_name call[3][1][1]
-        if @tracker.models.include? target
-          return false
-        end
-      rescue
-      end
+    if tracker.options[:ignore_redirect_to_model] and call? args[1] and
+      (@model_find_calls.include? args[1][2] or args[1][2].to_s.match(/^find_by_/)) and
+      model_name? args[1][1]
+
+      return false
     end
 
-    call[3].each do |arg|
-      if call? arg 
+    args.each do |arg|
+      if res = has_immediate_model?(arg)
+        return Match.new(:immediate, res)
+      elsif call? arg
         if request_value? arg
           return Match.new(:immediate, arg)
         elsif request_value? arg[1]
