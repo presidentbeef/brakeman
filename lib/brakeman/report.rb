@@ -52,6 +52,7 @@ class Brakeman::Report
         t.add_row ['Templates', number_of_templates(@tracker)]
         t.add_row ['Errors', tracker.errors.length]
         t.add_row ['Security Warnings', "#{warnings} (#{warnings_summary[:high_confidence]})"]
+        t.add_row ['Ignored Warnings', ignored_warnings.length]
       end
     end
   end
@@ -318,6 +319,31 @@ class Brakeman::Report
     end
   end
 
+  def generate_ignored_notes html = false
+    if checks.ignored_warnings
+      warnings = []
+      checks.ignored_warnings.each do |warning|
+        annotation =  @annotations.find{|a| a[:digest] == warning.annotation_digest}
+        if annotation[:note] && annotation[:note].length > 0
+          warnings << {"Warning" => "#{warning.warning_type} (#{File.basename(warning.file)}:#{warning.line})",
+                       "Note" => annotation[:note] }
+        end
+      end
+
+      if warnings.length > 0
+        if html
+          load_and_render_erb("ignored_notes", binding)
+        else
+          Terminal::Table.new(:headings => ['Warning', 'Note']) do |t|
+            warnings.each do |warning|
+              t.add_row [warning["Warning"], warning["Note"]]
+            end
+          end
+        end
+      end
+    end
+  end
+
   #Generate HTML output
   def to_html
     out = html_header <<
@@ -342,6 +368,7 @@ class Brakeman::Report
     out << generate_controller_warnings(true).to_s
     out << generate_model_warnings(true).to_s
     out << generate_template_warnings(true).to_s
+    out << generate_ignored_notes(true).to_s
 
     out << "</body></html>"
   end
@@ -382,6 +409,9 @@ class Brakeman::Report
 
     res = generate_template_warnings
     out << "\n\nView Warnings:\n\n" << truncate_table(res.to_s) if res
+
+    res = generate_ignored_notes
+    out << "\n\nIgnored Warnings Notes:\n\n" << truncate_table(res.to_s) if res
 
     out << "\n"
     out
@@ -679,6 +709,11 @@ class Brakeman::Report
     Set.new(tracker.templates.map {|k,v| v[:name].to_s[/[^.]+/]}).length
   end
 
+  def filter_by_annotations annotations_file
+    load_annotations annotations_file
+    @checks.filter_by_annotations(@annotations)
+  end
+
   private
 
   def load_and_render_erb file, bind
@@ -689,12 +724,7 @@ class Brakeman::Report
 
   def to_annotation
     warnings = @checks.all_warnings
-    warnings.map(&:to_annotation).to_yaml
-  end
-
-  def filter_by_annotations annotations_file
-    load_annotations annotations_file
-    @checks.filter_by_annotations(@annotations)
+    warnings.map { |warning| warning.to_annotation }.to_yaml
   end
 
   def load_annotations annotations_file
