@@ -45,6 +45,15 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /users_controller\.rb/
   end
 
+  def test_redirect_to_find_by
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 102,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
+  end
+
   def test_whitelist_attributes
     assert_no_warning :type => :model,
       :warning_type => "Attribute Restriction",
