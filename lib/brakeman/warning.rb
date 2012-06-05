@@ -167,14 +167,14 @@ class Brakeman::Warning
   end
 
   def to_annotation
-    clean_annotation.merge({:hash => annotation_hash, :note => ""})
+    clean_annotation.merge({:digest => self.annotation_digest, :note => ""})
   end
 
   def clean_annotation
-    to_hash.merge :line => line
+    self.to_hash.merge :line => line
   end
 
-  def annotation_hash
-    Digest::MD5.hexdigest(clean_annotation.to_yaml)
+  def annotation_digest
+    Digest::MD5.hexdigest(self.clean_annotation.to_yaml)
   end
 end
