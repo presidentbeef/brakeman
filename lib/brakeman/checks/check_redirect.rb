@@ -56,13 +56,16 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   def include_user_input? call
     Brakeman.debug "Checking if call includes user input"
 
-    if tracker.options[:ignore_redirect_to_model] and call? call[3][1] and 
-      @model_find_calls.include? call[3][1][2] and model_name? call[3][1][1]
+    args = call[3]
+
+    if tracker.options[:ignore_redirect_to_model] and call? args[1] and
+      (@model_find_calls.include? args[1][2] or args[1][2].to_s.match(/^find_by_/)) and
+      model_name? args[1][1]
 
       return false
     end
 
-    call[3].each do |arg|
+    args.each do |arg|
       if res = has_immediate_model?(arg)
         return Match.new(:immediate, res)
       elsif call? arg
