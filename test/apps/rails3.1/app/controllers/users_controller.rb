@@ -98,5 +98,9 @@ class UsersController < ApplicationController
     redirect_to User.find(1).url
   end
 
+  def redirect_to_user_find_by
+    redirect_to User.find_by_name(params[:name])
+  end
+
   include UserMixin
 end
