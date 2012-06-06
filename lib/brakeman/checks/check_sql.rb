@@ -37,6 +37,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     Brakeman.debug "Finding calls to named_scope or scope"
     calls.concat find_scope_calls
 
+    Brakeman.debug "Checking version of SQLi"
+    check_rails_version_for_sqli
+
     Brakeman.debug "Processing possible SQL calls"
     calls.each do |c|
       process_result c
@@ -78,6 +81,15 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     end
 
     scope_calls
+  end
+
+  def check_rails_version_for_sqli
+    if version_between?("3.0.0", "3.0.12") || version_between?("3.1.0", "3.1.4") || version_between?("3.2.0", "3.2.3")
+      warn :warning_type => 'SQL Injection',
+        :message => 'Versions 3.0.0-3.0.12, 3.2.0-3.2.3, and 3.1.0-3.1.4 contain a SQL Injection Vulnerability: CVE-2012-2661; Upgrade to 3.2.5, 3.1.5, 3.0.13',
+        :confidence => CONFIDENCE[:high],
+        :file => gemfile_or_environment
+    end
   end
 
   def process_scope_with_block model_name, args
