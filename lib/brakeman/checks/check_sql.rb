@@ -1,4 +1,5 @@
 require 'brakeman/checks/base_check'
+require 'pry'
 
 #This check tests for find calls which do not use Rails' auto SQL escaping
 #
@@ -37,8 +38,11 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     Brakeman.debug "Finding calls to named_scope or scope"
     calls.concat find_scope_calls
 
-    Brakeman.debug "Checking version of SQLi"
-    check_rails_version_for_sqli
+    Brakeman.debug "Checking version of Rails for CVE-2012-2660"
+    check_rails_version_for_cve_2012_2660
+
+    Brakeman.debug "Checking version of Rails for CVE-2012-2661"
+    check_rails_version_for_cve_2012_2661
 
     Brakeman.debug "Processing possible SQL calls"
     calls.each do |c|
@@ -83,10 +87,19 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     scope_calls
   end
 
-  def check_rails_version_for_sqli
+  def check_rails_version_for_cve_2012_2660
+    if version_between?("2.0.0", "3.0.0") || version_between?("3.0.0", "3.0.12") || version_between?("3.1.0", "3.1.4") || version_between?("3.2.0", "3.2.3")
+      warn :warning_type => 'SQL Injection',
+        :message => 'All versions of Rails before 3.0.13, 3.1.5, and 3.2.5 contain a SQL Query Generation Vulnerability: CVE-2012-2660; Upgrade to 3.2.5, 3.1.5, 3.0.13',
+        :confidence => CONFIDENCE[:high],
+        :file => gemfile_or_environment
+    end
+  end
+
+  def check_rails_version_for_cve_2012_2661
     if version_between?("3.0.0", "3.0.12") || version_between?("3.1.0", "3.1.4") || version_between?("3.2.0", "3.2.3")
       warn :warning_type => 'SQL Injection',
-        :message => 'Versions 3.0.0-3.0.12, 3.2.0-3.2.3, and 3.1.0-3.1.4 contain a SQL Injection Vulnerability: CVE-2012-2661; Upgrade to 3.2.5, 3.1.5, 3.0.13',
+        :message => 'All versions of Rails before 3.0.13, 3.1.5, and 3.2.5 contain a SQL Injection Vulnerability: CVE-2012-2661; Upgrade to 3.2.5, 3.1.5, 3.0.13',
         :confidence => CONFIDENCE[:high],
         :file => gemfile_or_environment
     end
