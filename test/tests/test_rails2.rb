@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 2,
         :template => 27,
-        :warning => 26 }
+        :warning => 28 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
         :template => 27,
-        :warning => 27 }
+        :warning => 29 }
     end
   end
 
@@ -97,6 +97,38 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 46,
       :message => /^Possible unprotected redirect/,
       :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_redirect_notice
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 129,
+      :message => /^Possible\ unprotected\ redirect/,
+      :file => /home_controller\.rb/
+  end
+
+  def test_redirect_error
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 133,
+      :message => /^Possible\ unprotected\ redirect/,
+      :file => /home_controller\.rb/
+  end
+
+  def test_redirect_notice_xss
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :line => 129,
+      :message => /^Notice or error message interpolates input from params/,
+      :file => /home_controller\.rb/
+  end
+
+  def test_redirect_error_xss
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :line => 133,
+      :message => /^Notice or error message interpolates input from params/,
       :file => /home_controller\.rb/
   end
 

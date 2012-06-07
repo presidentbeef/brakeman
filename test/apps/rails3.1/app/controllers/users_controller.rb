@@ -90,5 +90,27 @@ class UsersController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, :except => [:create, :edit]
 
+  def redirect_to_new_user
+    redirect_to User.new
+  end
+
+  def redirect_to_user_url
+    redirect_to User.find(1).url
+  end
+
+  def redirect_to_user_find_by
+    redirect_to User.find_by_name(params[:name])
+  end
+
+  def redirect_notice_xss
+    user_owned = params[:input1]
+    redirect_to :back, :notice => "Here is your notice with user input #{user_owned}"
+  end
+
+  def redirect_alert_xss
+    redirect_to :back, :error => "Here is your error with user input #{params[:input1]} and #{params[:input2]}"
+  end
+
+
   include UserMixin
 end

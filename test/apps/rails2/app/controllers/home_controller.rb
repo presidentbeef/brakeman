@@ -123,6 +123,15 @@ class HomeController < ApplicationController
     SQL
   end
 
+  def test_redirect_notice_xss
+    user_owned = params[:input1]
+    redirect_to :back, :notice => "Here is your notice with user input #{user_owned}"
+  end
+
+  def test_redirect_alert_xss
+    redirect_to :back, :error => "Here is your error with user input #{params[:input1]} and #{params[:input2]}"
+  end
+
   private
 
   def filter_it
