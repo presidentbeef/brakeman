@@ -53,7 +53,7 @@ trap("INT") do
 end
 
 if options[:previous_results_json]
-  vulns = Brakeman.compare options
+  vulns = Brakeman.compare options.merge(:quiet => options[:quiet])
   puts JSON.pretty_generate(vulns)
 else
   #Run scan and output a report
