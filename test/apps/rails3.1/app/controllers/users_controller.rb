@@ -102,5 +102,15 @@ class UsersController < ApplicationController
     redirect_to User.find_by_name(params[:name])
   end
 
+  def redirect_notice_xss
+    user_owned = params[:input1]
+    redirect_to :back, :notice => "Here is your notice with user input #{user_owned}"
+  end
+
+  def redirect_alert_xss
+    redirect_to :back, :error => "Here is your error with user input #{params[:input1]} and #{params[:input2]}"
+  end
+
+
   include UserMixin
 end

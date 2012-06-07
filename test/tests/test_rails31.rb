@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 0,
       :template => 4,
       :controller => 1,
-      :warning => 37 }
+      :warning => 39 }
   end
 
   def test_without_protection
@@ -51,6 +51,38 @@ class Rails31Tests < Test::Unit::TestCase
       :line => 102,
       :message => /^Possible\ unprotected\ redirect/,
       :confidence => 0,
+      :file => /users_controller\.rb/
+  end
+
+  def test_redirect_notice
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 108,
+      :message => /^Possible\ unprotected\ redirect/,
+      :file => /users_controller\.rb/
+  end
+
+  def test_redirect_notice_xss
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :line => 108,
+      :message => /^Notice or error message interpolates input from params/,
+      :file => /users_controller\.rb/
+  end
+
+  def test_redirect_error
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 112,
+      :message => /^Notice or error message interpolates input from params/,
+      :file => /users_controller\.rb/
+  end
+
+  def test_redirect_error_xss
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :line => 112,
+      :message => /^Notice or error message interpolates input from params/,
       :file => /users_controller\.rb/
   end
 
