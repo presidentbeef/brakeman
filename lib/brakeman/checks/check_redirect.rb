@@ -31,21 +31,30 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
 
     method = call[2]
 
-    if method == :redirect_to and not only_path?(call) and res = include_user_input?(call)
+    if method == :redirect_to && !only_path?(call) && res = include_user_input?(call)
       add_result result
 
-      if res.type == :immediate
+      if res.type == :immediate || res.type == :params
         confidence = CONFIDENCE[:high]
       else
         confidence = CONFIDENCE[:low]
       end
 
-      warn :result => result,
-        :warning_type => "Redirect",
-        :message => "Possible unprotected redirect",
+      if message_string_interpolation_from_params? res
+        warning_type = "Cross Site Scripting"
+        message = "Notice or error message interpolates input from params"
+      else
+        warning_type = "Redirect"
+        message = "Possible unprotected redirect"
+      end
+
+      warn( :result => result,
+        :warning_type => warning_type,
+        :message => message,
         :code => call,
         :user_input => res.match,
-        :confidence => confidence
+        :confidence => confidence)
+
     end
   end
 
@@ -63,6 +72,15 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
       model_name? args[1][1]
 
       return false
+    end
+
+    if hash? args[-1]
+      [:notice, :error].each do |alert_type|
+        if hash_access(args[-1], alert_type)
+          super_match = super(hash_access(args[-1], alert_type))
+          return Match.new(super_match.type, args[-1]) if super_match.type == :params
+        end
+      end
     end
 
     args.each do |arg|
@@ -119,5 +137,11 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     end
 
     true
+  end
+
+  def message_string_interpolation_from_params? res
+    res.type == :params &&
+      ( hash_access(res.match, :notice) && node_type?(hash_access(res.match, :notice), :string_interp) ||
+        hash_access(res.match, :error)  && node_type?(hash_access(res.match, :error),  :string_interp) )
   end
 end
