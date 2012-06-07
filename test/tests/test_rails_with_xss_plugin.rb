@@ -11,7 +11,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :controller => 1,
       :model => 3,
       :template => 1,
-      :warning => 11 }
+      :warning => 13 }
   end
 
   def report
@@ -127,6 +127,41 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :file => /users_controller\.rb/
   end
 
+  def test_redirect_notice
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 132,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
+  end
+
+  def test_redirect_notice_xss
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :line => 132,
+      :message => /^Notice or error message interpolates input from params/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
+  end
+
+  def test_redirect_error
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 136,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
+  end
+
+  def test_redirect_error_xss
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :line => 136,
+      :message => /^Notice or error message interpolates input from params/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
+  end
 
   def test_sql_injection_12 
     assert_warning :type => :warning,
