@@ -1,4 +1,5 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
+require "pry" 
 
 Rails3 = BrakemanTester.run_scan "rails3", "Rails 3", :rails3 => true
 
@@ -15,7 +16,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 21,
-      :warning => 23
+      :warning => 25
     }
   end
 
@@ -146,6 +147,38 @@ class Rails3Tests < Test::Unit::TestCase
       :line => 83,
       :message => /^Possible unprotected redirect near line 83: redirect_to\(url_for/,
       :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_redirect_notice
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 89,
+      :message => /^Possible\ unprotected\ redirect/,
+      :file => /home_controller\.rb/
+  end
+
+  def test_redirect_error
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 93,
+      :message => /^Possible\ unprotected\ redirect/,
+      :file => /home_controller\.rb/
+  end
+
+  def test_redirect_notice_xss
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :line => 89,
+      :message => /^Notice or error message interpolates input from params/,
+      :file => /home_controller\.rb/
+  end
+
+  def test_redirect_error_xss
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :line => 93,
+      :message => /^Notice or error message interpolates input from params/,
       :file => /home_controller\.rb/
   end
 
