@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 22,
-      :warning => 24
+      :warning => 23
     }
   end
 
@@ -122,8 +122,8 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /home_controller\.rb/
   end
 
-  def test_redirect_to_model
-    assert_warning :type => :warning,
+  def test_redirect_to_model_instance
+    assert_no_warning :type => :warning,
       :warning_type => "Redirect",
       :line => 63,
       :message => /^Possible unprotected redirect near line 63: redirect_to/,
