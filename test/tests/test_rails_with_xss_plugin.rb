@@ -11,7 +11,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :controller => 1,
       :model => 3,
       :template => 1,
-      :warning => 11 }
+      :warning => 12 }
   end
 
   def report
@@ -127,6 +127,14 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :file => /users_controller\.rb/
   end
 
+
+  def test_rails_cve_2012_2660
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /CVE-2012-2660/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
 
   def test_sql_injection_12 
     assert_warning :type => :warning,
