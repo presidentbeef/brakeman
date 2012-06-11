@@ -14,7 +14,7 @@ class Rails3Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 5,
-      :template => 21,
+      :template => 22,
       :warning => 24
     }
   end
@@ -547,5 +547,14 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Unescaped model attribute near line 15: Product/,
       :confidence => 0,
       :file => /_form\.html\.erb/
+  end
+
+  def test_cross_site_scripting_request_parameters
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 20,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_params\.html\.erb/
   end
 end
