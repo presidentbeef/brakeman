@@ -11,6 +11,8 @@ module Brakeman::Util
 
   REQUEST_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request, Sexp.new(:arglist)), :request_parameters, Sexp.new(:arglist))
 
+  REQUEST_PARAMS = Sexp.new(:call, Sexp.new(:call, nil, :request, Sexp.new(:arglist)), :parameters, Sexp.new(:arglist))
+
   REQUEST_ENV = Sexp.new(:call, Sexp.new(:call, nil, :request, Sexp.new(:arglist)), :env, Sexp.new(:arglist))
 
   PARAMETERS = Sexp.new(:call, nil, :params, Sexp.new(:arglist))
@@ -19,7 +21,7 @@ module Brakeman::Util
 
   SESSION = Sexp.new(:call, nil, :session, Sexp.new(:arglist))
 
-  ALL_PARAMETERS = Set[PARAMETERS, QUERY_PARAMETERS, PATH_PARAMETERS, REQUEST_PARAMETERS]
+  ALL_PARAMETERS = Set[PARAMETERS, QUERY_PARAMETERS, PATH_PARAMETERS, REQUEST_PARAMETERS, REQUEST_PARAMS]
 
   #Convert a string from "something_like_this" to "SomethingLikeThis"
   #
