@@ -96,6 +96,7 @@ class Brakeman::Report
       if html
         w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
         w["Message"] = with_context warning, w["Message"]
+        w["Warning Type"] = w["Warning Link"]
       else
         w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
         w["Message"] = text_message warning, w["Message"]
@@ -134,6 +135,7 @@ class Brakeman::Report
         if html
           w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
           w["Message"] = with_context warning, w["Message"]
+          w["Warning Type"] = w["Warning Link"]
         else
           w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
           w["Message"] = text_message warning, w["Message"]
@@ -170,6 +172,7 @@ class Brakeman::Report
         if html
           w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
           w["Message"] = with_context warning, w["Message"]
+          w["Warning Type"] = w["Warning Link"]
         else
           w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
           w["Message"] = text_message warning, w["Message"]
@@ -206,6 +209,7 @@ class Brakeman::Report
         if html
           w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
           w["Message"] = with_context warning, w["Message"]
+          w["Warning Type"] = w["Warning Link"]
         else
           w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
           w["Message"] = text_message warning, w["Message"]

@@ -101,10 +101,25 @@ class Brakeman::Warning
     @format_message
   end
 
+  def warning_link
+    special_cases = { 'Unsafe Redirects' => 'redirect',
+      'Format Validation' => 'model_validation',
+      'Dynamic Render Paths' => 'dynamic_render_path',
+      'Dangerous Evalutation' => 'evaluation',
+      'Basic Authentication' => 'basic_auth'
+    }
+
+    warning_text = self.warning_type.to_s
+    warning_path = special_cases[warning_text] || warning_text.downcase.gsub(/\s+/, '_') + "/"
+    url = "http://brakemanscanner.org/docs/warning_types/#{warning_path}"
+    "<a href='#{url}'>#{warning_type}</a>"
+  end
+
   #Generates a hash suitable for inserting into a table
   def to_row type = :warning
     @row = { "Confidence" => self.confidence,
       "Warning Type" => self.warning_type.to_s,
+      "Warning Link" => self.warning_link,
       "Message" => self.format_message }
 
     case type
