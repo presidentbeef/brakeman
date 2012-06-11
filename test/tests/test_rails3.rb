@@ -14,8 +14,8 @@ class Rails3Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 5,
-      :template => 21,
-      :warning => 24
+      :template => 22,
+      :warning => 25
     }
   end
 
@@ -122,8 +122,8 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /home_controller\.rb/
   end
 
-  def test_redirect_to_model
-    assert_warning :type => :warning,
+  def test_redirect_to_model_instance
+    assert_no_warning :type => :warning,
       :warning_type => "Redirect",
       :line => 63,
       :message => /^Possible unprotected redirect near line 63: redirect_to/,
@@ -165,6 +165,22 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Parameter value used in file name near l/,
       :confidence => 0,
       :file => /other_controller\.rb/
+  end
+
+  def test_rails_cve_2012_2660
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /CVE-2012-2660/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_rails_cve_2012_2661
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /CVE-2012-2661/,
+      :confidence => 0,
+      :file => /Gemfile/
   end
 
   def test_sql_injection_find_by_sql
@@ -547,5 +563,14 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Unescaped model attribute near line 15: Product/,
       :confidence => 0,
       :file => /_form\.html\.erb/
+  end
+
+  def test_cross_site_scripting_request_parameters
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 20,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_params\.html\.erb/
   end
 end

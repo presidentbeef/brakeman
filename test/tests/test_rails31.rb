@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 0,
       :template => 4,
       :controller => 1,
-      :warning => 37 }
+      :warning => 39 }
   end
 
   def test_without_protection
@@ -27,12 +27,30 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /users_controller\.rb/
   end
 
-  def test_unprotected_redirect
+  def test_redirect_to_model_attribute
     assert_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 98,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
+  end
+
+  def test_redirect_with_model_instance
+    assert_no_warning :type => :warning,
       :warning_type => "Redirect",
       :line => 67,
       :message => /^Possible unprotected redirect/,
       :confidence => 2,
+      :file => /users_controller\.rb/
+  end
+
+  def test_redirect_to_find_by
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 102,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
       :file => /users_controller\.rb/
   end
 
@@ -58,6 +76,22 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Cross Site Scripting",
       :message => /^Versions before 3.1.2 have a vulnerability/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_rails_cve_2012_2660
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /CVE-2012-2660/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_rails_cve_2012_2661
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /CVE-2012-2661/,
       :confidence => 0,
       :file => /Gemfile/
   end

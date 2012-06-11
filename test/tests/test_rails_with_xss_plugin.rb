@@ -11,7 +11,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :controller => 1,
       :model => 3,
       :template => 1,
-      :warning => 13 }
+      :warning => 12 }
   end
 
   def report
@@ -98,8 +98,8 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_redirect_9 
-    assert_warning :type => :warning,
+  def test_redirect_to_model_instance
+    assert_no_warning :type => :warning,
       :warning_type => "Redirect",
       :line => 68,
       :message => /^Possible\ unprotected\ redirect/,
@@ -108,8 +108,8 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_redirect_10 
-    assert_warning :type => :warning,
+  def test_another_redirect_to_model_instance
+    assert_no_warning :type => :warning,
       :warning_type => "Redirect",
       :line => 72,
       :message => /^Possible\ unprotected\ redirect/,
@@ -127,6 +127,14 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :file => /users_controller\.rb/
   end
 
+
+  def test_rails_cve_2012_2660
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /CVE-2012-2660/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
 
   def test_sql_injection_12 
     assert_warning :type => :warning,

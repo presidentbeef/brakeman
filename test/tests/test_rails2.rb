@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 2,
         :template => 27,
-        :warning => 26 }
+        :warning => 27 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
         :template => 27,
-        :warning => 27 }
+        :warning => 28 }
     end
   end
 
@@ -163,6 +163,13 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Session cookies should be set to HTTP on/,
       :confidence => 0,
       :file => /session_store\.rb/
+  end
+
+  def test_rails_cve_2012_2660
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /CVE-2012-2660/,
+      :confidence => 0
   end
 
   def test_sql_injection_find_by_sql
