@@ -43,6 +43,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     Brakeman.debug "Checking version of Rails for CVE-2012-2661"
     check_rails_version_for_cve_2012_2661
 
+    Brakeman.debug "Checking version of Rails for CVE-2012-2695"
+    check_rails_version_for_cve_2012_2695
+
     Brakeman.debug "Processing possible SQL calls"
     calls.each do |c|
       process_result c
@@ -99,6 +102,15 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     if version_between?("3.0.0", "3.0.12") || version_between?("3.1.0", "3.1.4") || version_between?("3.2.0", "3.2.3")
       warn :warning_type => 'SQL Injection',
         :message => 'All versions of Rails before 3.0.13, 3.1.5, and 3.2.5 contain a SQL Injection Vulnerability: CVE-2012-2661; Upgrade to 3.2.5, 3.1.5, 3.0.13',
+        :confidence => CONFIDENCE[:high],
+        :file => gemfile_or_environment
+    end
+  end
+
+  def check_rails_version_for_cve_2012_2695
+    if version_between?("2.0.0", "3.0.0") || version_between?("3.0.0", "3.0.13") || version_between?("3.1.0", "3.1.5") || version_between?("3.2.0", "3.2.5")
+      warn :warning_type => 'SQL Injection',
+        :message => 'All versions of Rails before 3.0.14, 3.1.6, and 3.2.6 contain a SQL Injection Vulnerability: CVE-2012-2695; Upgrade to 3.2.6, 3.1.6, 3.0.14',
         :confidence => CONFIDENCE[:high],
         :file => gemfile_or_environment
     end

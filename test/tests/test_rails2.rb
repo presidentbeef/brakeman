@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 2,
         :template => 27,
-        :warning => 27 }
+        :warning => 28 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
         :template => 27,
-        :warning => 28 }
+        :warning => 29 }
     end
   end
 
@@ -169,6 +169,13 @@ class Rails2Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
       :message => /CVE-2012-2660/,
+      :confidence => 0
+  end
+
+  def test_rails_cve_2012_2695
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /CVE-2012-2695/,
       :confidence => 0
   end
 
