@@ -1,3 +1,14 @@
+# 1.6.2
+
+ * Add checks for CVE-2012-2660, CVE-2012-2661, CVE-2012-2694, CVE-2012-2695 (Dave Worth)
+ * Avoid warning when redirecting to a model instance
+ * Add `request.parameters` as a parameters hash
+ * Raise confidence level for model attributes in redirects
+ * Return non-zero exit code when missing dependencies
+ * Fix `before_filter :except` logic
+ * Only accept symbol literals as before_filter names
+ * Cache before_filter lookups
+
 # 1.6.1
 
  * Major rewrite of CheckSQL
