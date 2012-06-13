@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-05-23T12:41:14-07:00</updated>
+  <updated>2012-06-12T17:42:46-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -13,9 +13,77 @@
 
   
   <entry>
+    <title>Brakeman 1.6.2 Released</title>
+    <link href="http://brakemanscanner.org/blog/2012/06/12/brakeman-1-dot-6-2-released/"/>
+    <updated>2012-06-12T17:07:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2012/06/12/brakeman-1-dot-6-2-released</id>
+    <content type="html">&lt;p&gt;Besides checks for the latest CVEs, this release includes a slightly improved redirect check, noiser output with &lt;code&gt;--compare&lt;/code&gt;, and better handling of &lt;code&gt;before_filter&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 1.6.1&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add checks for CVE-2012-2660, CVE-2012-2661, CVE-2012-2694, CVE-2012-2695 (Dave Worth)&lt;/li&gt;
+&lt;li&gt;Avoid warning when redirecting to a model instance&lt;/li&gt;
+&lt;li&gt;Raise confidence level for model attributes in redirects&lt;/li&gt;
+&lt;li&gt;Add &lt;code&gt;request.parameters&lt;/code&gt; as a parameters hash&lt;/li&gt;
+&lt;li&gt;Return non-zero exit code when missing dependencies&lt;/li&gt;
+&lt;li&gt;Fix &lt;code&gt;before_filter :except&lt;/code&gt; logic&lt;/li&gt;
+&lt;li&gt;Only accept symbol literals as before_filter names&lt;/li&gt;
+&lt;li&gt;Cache before_filter lookups&lt;/li&gt;
+&lt;li&gt;Turn off quiet mode by default for &lt;code&gt;--compare&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Latest CVEs&lt;/h3&gt;
+
+&lt;p&gt;A number of Rails vulnerabilities were announced recently, although there are really only two issues.&lt;/p&gt;
+
+&lt;p&gt;One issue is that query parameters like &lt;code&gt;?name[]&lt;/code&gt; and &lt;code&gt;?name[]=1&amp;amp;name[]&lt;/code&gt; get converted to &lt;code&gt;{&quot;name&quot; =&amp;gt; [nil]}&lt;/code&gt; and &lt;code&gt;{&quot;name&quot; =&amp;gt; [&quot;1&quot;, nil]}&lt;/code&gt;. This, in turn, causes ActiveRecord to produce SQL queries with either &lt;code&gt;IS NULL&lt;/code&gt; or &lt;code&gt;IN ('1', NULL)&lt;/code&gt;. This is probably unexpected behavior.&lt;/p&gt;
+
+&lt;p&gt;The other issue is that query parameters like &lt;code&gt;?name[users.id]=1&lt;/code&gt; or &lt;code&gt;?name[users][id]=1&lt;/code&gt; get converted to &lt;code&gt;{&quot;name&quot; =&amp;gt; { &quot;users.id&quot; =&amp;gt; 1 }}&lt;/code&gt; or &lt;code&gt;{&quot;name&quot; =&amp;gt; { &quot;users&quot; =&amp;gt; { &quot;id&quot; =&amp;gt; 1 }}}&lt;/code&gt;. ActiveRecord interprets &lt;code&gt;&quot;users.id&quot;&lt;/code&gt; and &lt;code&gt;&quot;users&quot; =&amp;gt; { &quot;id&quot; ...}&lt;/code&gt; as &lt;code&gt;&quot;users&quot;.&quot;id&quot;&lt;/code&gt; in the WHERE clause, allowing an attacker to control the table/columns being queried.&lt;/p&gt;
+
+&lt;p&gt;Updated versions for Rails 3.x have been released.&lt;/p&gt;
+
+&lt;p&gt;For Rails 2.3, I believe &lt;a href=&quot;https://github.com/presidentbeef/rails/pull/1/files&quot;&gt;these changes&lt;/a&gt; will fix the first issue, and there is another &lt;a href=&quot;https://rubyonrails-security.googlegroups.com/attach/aee3413fb038bf56/2-3-sql-injection.patch?view=1&amp;amp;part=3&quot;&gt;patch available&lt;/a&gt; for the second issue.&lt;/p&gt;
+
+&lt;p&gt;Older versions of Rails 2.x may be vulnerable to the &quot;NULL&quot; issue, but not to the nested hashes problem.&lt;/p&gt;
+
+&lt;h3&gt;Unprotected Redirect Check&lt;/h3&gt;
+
+&lt;p&gt;There have been some minor changes to &lt;code&gt;CheckRedirect&lt;/code&gt;. In most cases, it should no longer warn when redirecting to a model instance. If there are still false positives with this scenario, please report them.&lt;/p&gt;
+
+&lt;p&gt;The other change is that redirects to model attributes will now be marked as high confidence, instead of weak.&lt;/p&gt;
+
+&lt;h3&gt;Exit Code on Missing Dependencies&lt;/h3&gt;
+
+&lt;p&gt;Brakeman catches errors from missing dependencies in order to show a nicer error message. Unfortunately, it was also returning &lt;code&gt;0&lt;/code&gt; on exit. This is undesirable behavior when chaining commands together.&lt;/p&gt;
+
+&lt;p&gt;This has been changed to return a non-zero exit code.&lt;/p&gt;
+
+&lt;h3&gt;Before Filter Changes&lt;/h3&gt;
+
+&lt;p&gt;There were some isues with how &lt;code&gt;before_filter&lt;/code&gt; was being handled. The logic when using &lt;code&gt;:except&lt;/code&gt; was broken, causing Brakeman to treat it like &lt;code&gt;:only&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The other issue caused Brakeman to interpret arguments such as method calls as method names. For example, &lt;code&gt;before_filter blah&lt;/code&gt; would be treated like &lt;code&gt;before_filter :blah&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;While dealing with this, caching of filter lookups was also added for a minor performance improvement.&lt;/p&gt;
+
+&lt;h3&gt;Noisier &lt;code&gt;--compare&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Using the &lt;code&gt;--compare&lt;/code&gt; option now shows the same output as a regular scan. If you are piping the output of &lt;code&gt;--compare&lt;/code&gt; to a file or elsewhere, you may wish to use the &lt;code&gt;--quiet&lt;/code&gt; option.&lt;/p&gt;
+
+&lt;h3&gt;Report Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release!&lt;/p&gt;
+
+&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
     <title>Brakeman 1.6.1 Released</title>
     <link href="http://brakemanscanner.org/blog/2012/05/23/brakeman-1-dot-6-1-released/"/>
-    <updated>2012-05-23T17:45:00-07:00</updated>
+    <updated>2012-05-23T12:45:00-07:00</updated>
     <id>http://brakemanscanner.org/blog/2012/05/23/brakeman-1-dot-6-1-released</id>
     <content type="html">&lt;p&gt;Wow, it's been over a month since the last release!&lt;/p&gt;
 
@@ -44,7 +112,7 @@
 
 &lt;h3&gt;Controller Mixins&lt;/h3&gt;
 
-&lt;p&gt;Methods on controller mixins that are used as actions should now be processed properly.&lt;/p&gt;
+&lt;p&gt;Methods on controller mixins that are used as actions should now be processed as if they were defined in the controller itself.&lt;/p&gt;
 
 &lt;h3&gt;Check for Inherited Mass Assignment Protection&lt;/h3&gt;
 
@@ -1206,58 +1274,6 @@ Brakeman.run :app_path =&amp;gt; 'my_app'
 &lt;h3&gt;&quot;Like&quot; Brakeman on Ruby Toolbox&lt;/h3&gt;
 
 &lt;p&gt;Please consider 'liking' Brakeman on the &lt;a href=&quot;https://www.ruby-toolbox.com/projects/brakeman&quot;&gt;Ruby Toolbox&lt;/a&gt;!&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 0.8.3 Released</title>
-    <link href="http://brakemanscanner.org/blog/2011/10/25/brakeman-0-dot-8-3-released/"/>
-    <updated>2011-10-25T10:00:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2011/10/25/brakeman-0-dot-8-3-released</id>
-    <content type="html">&lt;p&gt;Changes for 0.8.3:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Respect -w flag in .tabs format (&lt;a href=&quot;https://github.com/tw-ngreen&quot;&gt;tw-ngreen&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Escape HTML output of error messages&lt;/li&gt;
-&lt;li&gt;Add --skip-libs option&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;p&gt;Changes since 0.8.0:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Run checks in parallel threads by default&lt;/li&gt;
-&lt;li&gt;Fix compatibility with ruby_parser 2.3.1&lt;/li&gt;
-&lt;li&gt;Add option to assume all controller methods are actions&lt;/li&gt;
-&lt;li&gt;Recover from errors when parsing routes&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;Fix for .tabs Format&lt;/h3&gt;
-
-&lt;p&gt;Brakeman will now pay attention to the &lt;code&gt;-w&lt;/code&gt; flag (setting minimum confidence levels) when using the &lt;code&gt;.tabs&lt;/code&gt; format.&lt;/p&gt;
-
-&lt;h3&gt;Escape Error Messages in HTML&lt;/h3&gt;
-
-&lt;p&gt;Error message will now be escaped in the HTML output so they do not mess up the formatting.&lt;/p&gt;
-
-&lt;h3&gt;--skip-libs Option&lt;/h3&gt;
-
-&lt;p&gt;The &lt;code&gt;--skip-libs&lt;/code&gt; option will cause Brakeman to not process the files in the &lt;code&gt;lib&lt;/code&gt; directory. At the moment, the results from this directory are only used in a couple places, so it is unlikely that skipping them will cause any problems.&lt;/p&gt;
-
-&lt;h3&gt;Parallel Checks&lt;/h3&gt;
-
-&lt;p&gt;Checks are now run in separate threads by default. Thus far, there does not seem to be a big difference between using threads and the sequential approach. To turn off threads, use the &lt;code&gt;-n&lt;/code&gt; option.&lt;/p&gt;
-
-&lt;h3&gt;ruby_parser Compatibility&lt;/h3&gt;
-
-&lt;p&gt;This is a stop-gap measure until &lt;a href=&quot;https://github.com/seattlerb/ruby_parser&quot;&gt;ruby_parser&lt;/a&gt; supports Ruby 1.9, which is getting closer to reality.&lt;/p&gt;
-
-&lt;h3&gt;Route Processing&lt;/h3&gt;
-
-&lt;p&gt;Brakeman will no longer crash if there are problems parsing &lt;code&gt;routes.rb&lt;/code&gt;. Instead, it will assume all public methods on controllers are actions. The &lt;code&gt;-a&lt;/code&gt; option will also turn this behavior on.&lt;/p&gt;
-
-&lt;p&gt;Rails 3.1 route parsing is still a work in progress, so this should at least allow analysis of 3.1 apps, even if it means slightly reduced accuracy.&lt;/p&gt;
 </content>
   </entry>
   
