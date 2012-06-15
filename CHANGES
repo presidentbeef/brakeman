@@ -8,6 +8,7 @@
  * Fix `before_filter :except` logic
  * Only accept symbol literals as before_filter names
  * Cache before_filter lookups
+ * Turn off quiet mode by default for `--compare`
 
 # 1.6.1
 
