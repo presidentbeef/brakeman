@@ -15,7 +15,7 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
       tracker.config[:rails][:action_controller][:allow_forgery_protection] == Sexp.new(:false)
 
       warn :controller => :ApplicationController,
-        :warning_type => "Cross Site Request Forgery",
+        :warning_type => "Cross-Site Request Forgery",
         :message => "Forgery protection is disabled", 
         :confidence => CONFIDENCE[:high]
 
