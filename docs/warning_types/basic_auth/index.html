@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Basic Auth</title>
+  <title>Brakeman - Rails Security Scanner: Basic Authentication</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -101,27 +101,15 @@
 <article>
   
   <header>
-    <h1 class="entry-title">Basic Auth</h1>
+    <h1 class="entry-title">Basic Authentication</h1>
   </header>
   
-  <p>In Rails 3.1, a new feature was added to simplify basic authentication.</p>
+  <script>
+window.location.replace("basic_authentication/");
+</script>
 
-<p>The example provided in the official <a href="http://guides.rubyonrails.org/getting_started.html">Rails Guide</a> looks like this:</p>
 
-<pre><code>class PostsController &lt; ApplicationController
-
-  http_basic_authenticate_with :name =&gt; "dhh", :password =&gt; "secret", :except =&gt; :index
-
-  #...
-
-end
-</code></pre>
-
-<p>This warning will be raised if <code>http_basic_authenticate_with</code> is used and the password is found to be a string (i.e., stored somewhere in the code).</p>
-
-<hr />
-
-<p>Back to <a href="/docs/warning_types">Warning Types</a></p>
+<p>Content moved to <a href="basic_authentication/">Basic Authentication</a>.</p>
 
   
     <footer>

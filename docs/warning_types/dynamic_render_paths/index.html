@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Warning Types</title>
+  <title>Brakeman - Rails Security Scanner: Dynamic Render Path</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/dynamic_render_paths/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -101,34 +101,18 @@
 <article>
   
   <header>
-    <h1 class="entry-title">Warning Types</h1>
+    <h1 class="entry-title">Dynamic Render Path</h1>
   </header>
   
-  <p>Read more about the different warnings Brakeman reports:</p>
+  <p>When a call to <code>render</code> uses a dynamically generated path, template name, file name, or action, there is the possibility that a user can access templates that should be restricted. The issue may be worse if those templates execute code or modify the database.</p>
 
-<ul>
-<li><a href="/docs/warning_types/cross_site_scripting">Cross Site Scripting</a></li>
-<li><a href="/docs/warning_types/sql_injection">SQL Injection</a></li>
-<li><a href="/docs/warning_types/command_injection">Command Injection</a></li>
-<li><a href="/docs/warning_types/mass_assignment">Mass Assignment</a></li>
-<li><a href="/docs/warning_types/attribute_restriction">Attribute Restriction</a></li>
-<li><a href="/docs/warning_types/cross_site_request_forgery">Cross-Site Request Forgery</a></li>
-<li><a href="/docs/warning_types/redirect">Unsafe Redirects</a></li>
-<li><a href="/docs/warning_types/default_routes">Default Routes</a></li>
-<li><a href="/docs/warning_types/format_validation">Format Validation</a></li>
-<li><a href="/docs/warning_types/dynamic_render_paths">Dynamic Render Paths</a></li>
-<li><a href="/docs/warning_types/dangerous_evaluation">Dangerous Evaluation</a></li>
-<li><a href="/docs/warning_types/file_access">File Access</a></li>
-<li><a href="/docs/warning_types/basic_authentication">Basic Authentication</a></li>
-<li><a href="/docs/warning_types/session_settings">Session Settings</a></li>
-<li><a href="/docs/warning_types/dangerous_send">Dangerous Send</a></li>
-<li><a href="/docs/warning_types/CVE-2011-0446">Mail Link</a></li>
-</ul>
+<p>This warning is shown whenever the path to be rendered is not a static string or symbol.</p>
 
+<p>These warnings are often false positives, however, because it can be difficult to manipulate Rails&#8217; assumptions about paths to perform malicious behavior. Reports of dynamic render paths should be checked carefully to see if they can actually be manipulated maliciously by the user.</p>
 
 <hr />
 
-<p><a href="/docs">More Documentation</a></p>
+<p>Back to <a href="/docs/warning_types">Warning Types</a></p>
 
   
     <footer>

@@ -194,7 +194,11 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/basic_auth/</loc>
-        <lastmod>2012-02-25T11:16:11-08:00</lastmod>
+        <lastmod>2012-06-19T16:47:09-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/basic_authentication/</loc>
+        <lastmod>2012-06-19T16:44:15-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/command_injection/</loc>
@@ -209,24 +213,52 @@
         <lastmod>2012-02-25T11:16:11-08:00</lastmod>
     </url>
     <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/CVE-2010-3933/</loc>
+        <lastmod>2012-06-19T17:04:32-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/CVE-2011-0446/</loc>
+        <lastmod>2012-06-19T17:04:50-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/CVE-2011-3186/</loc>
+        <lastmod>2012-06-19T17:04:51-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/dangerous_evaluation/</loc>
+        <lastmod>2012-06-19T16:43:13-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/dangerous_send/</loc>
+        <lastmod>2012-06-19T16:57:56-07:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/docs/warning_types/default_routes/</loc>
         <lastmod>2012-02-25T11:16:11-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/dynamic_render_path/</loc>
-        <lastmod>2012-02-25T11:16:11-08:00</lastmod>
+        <lastmod>2012-06-19T16:41:00-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/dynamic_render_paths/</loc>
+        <lastmod>2012-06-19T16:26:37-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/evaluation/</loc>
-        <lastmod>2012-02-25T11:16:11-08:00</lastmod>
+        <lastmod>2012-06-19T16:42:55-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/file_access/</loc>
         <lastmod>2012-02-25T11:16:11-08:00</lastmod>
     </url>
     <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/format_validation/</loc>
+        <lastmod>2012-06-19T16:33:51-07:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/docs/warning_types/</loc>
-        <lastmod>2012-02-25T11:16:11-08:00</lastmod>
+        <lastmod>2012-06-19T16:55:34-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/mass_assignment/</loc>
@@ -234,7 +266,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/model_validation/</loc>
-        <lastmod>2012-02-25T11:16:11-08:00</lastmod>
+        <lastmod>2012-06-19T16:33:13-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/redirect/</loc>
