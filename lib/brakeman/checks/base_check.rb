@@ -456,4 +456,10 @@ class Brakeman::BaseCheck < SexpProcessor
   def self.description
     @description
   end
+
+  def active_record_models
+    @active_record_models ||= tracker.models.select do |name, model|
+      ancestor? model, :"ActiveRecord::Base"
+    end
+  end
 end
