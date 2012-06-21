@@ -25,4 +25,8 @@ class OtherController < ApplicationController
     @user = User.first
     @user.update_attribute(:attr, params[:attr])
   end
+
+  def test_sql_with_non_active_record_model
+    User.where(params[:bad_stuff])
+  end
 end
