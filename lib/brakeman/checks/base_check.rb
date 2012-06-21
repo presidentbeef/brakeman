@@ -458,8 +458,16 @@ class Brakeman::BaseCheck < SexpProcessor
   end
 
   def active_record_models
-    @active_record_models ||= tracker.models.select do |name, model|
-      ancestor? model, :"ActiveRecord::Base"
+    return @active_record_models if @active_record_models
+
+    @active_record_models = {}
+
+    tracker.models.each do |name, model|
+      if ancestor? model, :"ActiveRecord::Base"
+        @active_record_models[name] = model
+      end
     end
+
+    @active_record_models
   end
 end
