@@ -27,6 +27,6 @@ class OtherController < ApplicationController
   end
 
   def test_sql_with_non_active_record_model
-    User.where(params[:bad_stuff])
+    Noticia.where(params[:bad_stuff])
   end
 end
