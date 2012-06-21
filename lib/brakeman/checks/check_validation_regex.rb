@@ -15,7 +15,7 @@ class Brakeman::CheckValidationRegex < Brakeman::BaseCheck
   WITH = Sexp.new(:lit, :with)
 
   def run_check
-    tracker.models.each do |name, model|
+    active_record_models.each do |name, model|
       @current_model = name
       format_validations = model[:options][:validates_format_of]
       if format_validations
