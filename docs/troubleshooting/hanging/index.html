@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Documentation</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman Hangs</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/troubleshooting/hanging/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -101,50 +101,40 @@
 <article>
   
   <header>
-    <h1 class="entry-title">Documentation</h1>
+    <h1 class="entry-title">Brakeman Hangs</h1>
   </header>
   
-  <h2>Getting Started</h2>
+  <p>Sometimes Brakeman appears to &#8220;hang&#8221; while processing. Memory usage typically climbs until it has exhausted all resources.</p>
 
-<ul>
-<li><a href="/docs/introduction">Introduction</a></li>
-<li><a href="/docs/install">Installation</a></li>
-<li><a href="/docs/running">Running Brakeman</a></li>
-<li><a href="/docs/options">Brakeman Options</a></li>
-</ul>
+<p>The steps below should help pinpoint the problem.</p>
 
+<h3>Run in Debug Mode</h3>
 
-<h2>Next Steps</h2>
+<p>Run Brakeman with the <code>-d</code> option which will output the name of each file as it is processed.</p>
 
-<ul>
-<li><a href="/docs/confidence">Confidence Levels</a></li>
-<li><a href="/docs/warning_types">Warning Types</a></li>
-<li><a href="/docs/reducing_false_positives">Reducing False Positives</a></li>
-<li><a href="/docs/brakeman_as_a_library">Using Brakeman as a Library</a></li>
-<li><a href="/docs/rake">Brakeman and Rake</a></li>
-</ul>
+<p>This usually pinpoints a single file which is causing the problem. In rare cases, Brakeman might be looping between two files.</p>
 
+<p>Additionally, the <code>-d</code> option will cause Brakeman to output a stack trace when the process is stopped with an interrupt (e.g., pressing Ctrl-c).</p>
 
-<h2>More Information</h2>
+<h3>Run in &#8216;Fast&#8217; Mode</h3>
 
-<ul>
-<li><a href="/docs/video">Video</a></li>
-<li><a href="/docs/presentations">Presentations</a></li>
-<li><a href="/docs/faq">FAQ</a></li>
-<li><a href="/docs/troubleshooting">Troubleshooting</a></li>
-<li><a href="/docs/testing_brakeman">Testing Brakeman</a></li>
-<li><a href="/docs/contributing">Contributing</a></li>
-</ul>
+<p>Run Brakeman with the <code>--fast</code> option to turn off some features which have historically had some problems.</p>
 
+<p>In particular, if Brakeman appears to hang while processing &#8220;data flow&#8221;, this may be an issue with how branching in <code>if</code> statements is handled.</p>
 
-<h2>Hudson/Jenkins Integration</h2>
+<h3>Skip Problem Files</h3>
 
-<ul>
-<li><a href="/docs/jenkins">Introduction</a></li>
-<li><a href="/docs/jenkins/installation">Installation</a></li>
-<li><a href="/docs/jenkins/setup">Job Setup</a></li>
-</ul>
+<p>Run Brakeman with <code>--skip-files</code> and skip the file(s) which is suspected of causing the hang.</p>
 
+<p>If this works, then the problem is definitely narrowed down to that file(s).</p>
+
+<h3>Report an Issue</h3>
+
+<p>Please file <a href="https://github.com/presidentbeef/brakeman/issues">an issue</a> so the problem can be fixed. Include a stack trace and, if possible, the contents of the file. The file can also be shared privately.</p>
+
+<hr />
+
+<p><a href="/docs/troubleshooting">Other Problems</a></p>
 
   
     <footer>

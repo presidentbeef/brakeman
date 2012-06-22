@@ -130,11 +130,11 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/faq/</loc>
-        <lastmod>2012-02-25T11:16:11-08:00</lastmod>
+        <lastmod>2012-06-22T09:33:02-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/</loc>
-        <lastmod>2012-02-25T11:16:11-08:00</lastmod>
+        <lastmod>2012-06-22T11:15:54-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/install/</loc>
@@ -179,6 +179,18 @@
     <url>
         <loc>http://brakemanscanner.org/docs/testing_brakeman/</loc>
         <lastmod>2012-02-25T11:16:11-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/troubleshooting/hanging/</loc>
+        <lastmod>2012-06-22T11:19:31-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/troubleshooting/</loc>
+        <lastmod>2012-06-22T11:17:41-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/troubleshooting/parse_errors/</loc>
+        <lastmod>2012-06-22T11:28:06-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/video/</loc>

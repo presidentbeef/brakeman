@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Documentation</title>
+  <title>Brakeman - Rails Security Scanner: Parsing Errors</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/troubleshooting/parse_errors/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -101,50 +101,48 @@
 <article>
   
   <header>
-    <h1 class="entry-title">Documentation</h1>
+    <h1 class="entry-title">Parsing Errors</h1>
   </header>
   
-  <h2>Getting Started</h2>
+  <p>Brakeman relies on <a href="https://github.com/seattlerb/ruby_parser">ruby_parser</a> for parsing Ruby code. Support for Ruby 1.9 syntax is still in development, so Brakeman cannot handle all the new 1.9 syntax changes. Unfortunately, the next version of ruby_parser (3.0) makes some large, incompatible changes which will also require major changes in Brakeman. This means some syntax may go unsupported for a while.</p>
 
-<ul>
-<li><a href="/docs/introduction">Introduction</a></li>
-<li><a href="/docs/install">Installation</a></li>
-<li><a href="/docs/running">Running Brakeman</a></li>
-<li><a href="/docs/options">Brakeman Options</a></li>
-</ul>
+<p>The steps below should help narrow down the source of the problem.</p>
 
+<h3>Check Ruby Syntax</h3>
 
-<h2>Next Steps</h2>
+<p>If the file is a Ruby file, then the syntax can be checked directly.</p>
 
-<ul>
-<li><a href="/docs/confidence">Confidence Levels</a></li>
-<li><a href="/docs/warning_types">Warning Types</a></li>
-<li><a href="/docs/reducing_false_positives">Reducing False Positives</a></li>
-<li><a href="/docs/brakeman_as_a_library">Using Brakeman as a Library</a></li>
-<li><a href="/docs/rake">Brakeman and Rake</a></li>
-</ul>
+<p>Run <code>ruby -c</code> against the file that caused the error to check the syntax of the file using the Ruby interpreter.</p>
 
+<p>Run <code>ruby_parse</code> against the file that caused the error to check the syntax of the file using ruby_parser.</p>
 
-<h2>More Information</h2>
+<h3>Check ERB Output</h3>
 
-<ul>
-<li><a href="/docs/video">Video</a></li>
-<li><a href="/docs/presentations">Presentations</a></li>
-<li><a href="/docs/faq">FAQ</a></li>
-<li><a href="/docs/troubleshooting">Troubleshooting</a></li>
-<li><a href="/docs/testing_brakeman">Testing Brakeman</a></li>
-<li><a href="/docs/contributing">Contributing</a></li>
-</ul>
+<p>If the file is an ERB template, then the output of <code>erb</code> or <code>erubis</code> must be checked.</p>
 
+<p>Run <code>erb -x file_name.html.erb | ruby -c</code> to check using ERB.</p>
 
-<h2>Hudson/Jenkins Integration</h2>
+<p>Run <code>erubis -x file_name.html.erb | ruby -c</code> to check using Erubis. Use this for Rails 3 or when using the <code>rails_xss</code> gem.</p>
 
-<ul>
-<li><a href="/docs/jenkins">Introduction</a></li>
-<li><a href="/docs/jenkins/installation">Installation</a></li>
-<li><a href="/docs/jenkins/setup">Job Setup</a></li>
-</ul>
+<p><em>Important:</em> Rails uses a slightly modified version of ERB, so the output from these tools is not exactly the same as what Rails sees. Brakeman attempts to emulate the Rails version.</p>
 
+<h3>Check Haml Output</h3>
+
+<p>If the file is a Haml template, then the output of <code>haml</code> needs to be checked.</p>
+
+<p>Run <code>haml -e --debug file_name.html.haml</code> to check the output. Note that this will attempt to execute the code, which will likely fail. However, it will also indicate syntax problems.</p>
+
+<h3>Remove Ruby 1.9 Syntax</h3>
+
+<p>If the file contains Ruby 1.9 syntax, try changing it to 1.8 syntax. If this resolves the problem, then it is definitely a ruby_parse issue. Note, however, that it may already be fixed in the master branch.</p>
+
+<h3>File an Issue</h3>
+
+<p>Please file <a href="https://github.com/presidentbeef/brakeman/issues">an issue</a> with an example of the syntax which fails to parse. While these are usually ruby_parser problems, it never hurts to look into it.</p>
+
+<hr />
+
+<p><a href="/docs/troubleshooting">Other Problems</a></p>
 
   
     <footer>
