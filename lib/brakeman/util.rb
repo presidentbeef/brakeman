@@ -1,4 +1,3 @@
-require 'sexp_processor'
 require 'set'
 require 'active_support/inflector'
 

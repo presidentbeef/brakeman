@@ -1,11 +1,10 @@
-require 'sexp_processor'
 require 'brakeman/processors/output_processor'
 require 'brakeman/processors/lib/processor_helper'
 require 'brakeman/warning'
 require 'brakeman/util'
 
 #Basis of vulnerability checks.
-class Brakeman::BaseCheck < SexpProcessor
+class Brakeman::BaseCheck < Brakeman::SexpProcessor
   include Brakeman::ProcessorHelper
   include Brakeman::Util
   attr_reader :tracker, :warnings
@@ -24,11 +23,6 @@ class Brakeman::BaseCheck < SexpProcessor
     @current_set = nil
     @current_template = @current_module = @current_class = @current_method = nil
     @mass_assign_disabled = nil
-    self.strict = false
-    self.auto_shift_type = false
-    self.require_empty = false
-    self.default_method = :process_default
-    self.warn_on_default = false
   end
 
   #Add result to result list, which is used to check for duplicates

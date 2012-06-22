@@ -1,12 +1,11 @@
-require 'rubygems'
-require 'sexp_processor'
 require 'brakeman/util'
+require 'ruby_parser/bm_sexp_processor'
 require 'brakeman/processors/lib/processor_helper'
 
 #Returns an s-expression with aliases replaced with their value.
 #This does not preserve semantics (due to side effects, etc.), but it makes
 #processing easier when searching for various things.
-class Brakeman::AliasProcessor < SexpProcessor
+class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   include Brakeman::ProcessorHelper
   include Brakeman::Util
 
@@ -19,11 +18,6 @@ class Brakeman::AliasProcessor < SexpProcessor
   # AliasProcessor.new.process_safely src
   def initialize tracker = nil
     super()
-    self.strict = false
-    self.auto_shift_type = false
-    self.require_empty = false
-    self.default_method = :process_default
-    self.warn_on_default = false
     @env = SexpProcessor::Environment.new
     @inside_if = false
     @ignore_ifs = false

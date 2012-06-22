@@ -8,6 +8,8 @@ begin
     require 'ruby_parser/bm_sexp.rb'
   end
 
+  require 'ruby_parser/bm_sexp_processor.rb'
+
   require 'haml'
   require 'sass'
   require 'erb'
