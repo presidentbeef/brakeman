@@ -1,10 +1,8 @@
-require 'rubygems'
-require 'sexp_processor'
 require 'brakeman/processors/lib/processor_helper'
 require 'brakeman/util'
 
 #Base processor for most processors.
-class Brakeman::BaseProcessor < SexpProcessor
+class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   include Brakeman::ProcessorHelper
   include Brakeman::Util
 
@@ -13,11 +11,6 @@ class Brakeman::BaseProcessor < SexpProcessor
   #Return a new Processor.
   def initialize tracker
     super()
-    self.strict = false
-    self.auto_shift_type = false
-    self.require_empty = false
-    self.default_method = :process_default
-    self.warn_on_default = false
     @last = nil
     @tracker = tracker
     @ignore = Sexp.new :ignore
@@ -50,7 +43,7 @@ class Brakeman::BaseProcessor < SexpProcessor
   #Default processing.
   def process_default exp
     exp = exp.dup
-    type = exp.shift
+
     exp.each_with_index do |e, i|
       if sexp? e and not e.empty?
         exp[i] = process e
@@ -58,8 +51,8 @@ class Brakeman::BaseProcessor < SexpProcessor
         e
       end
     end
-  ensure
-    exp.unshift type
+
+    exp
   end
 
   #Process an if statement.

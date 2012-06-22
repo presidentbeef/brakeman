@@ -20,7 +20,6 @@ class Brakeman::TemplateProcessor < Brakeman::BaseProcessor
     tracker.templates[template_name] = @current_template
 
     @inside_concat = false
-    self.warn_on_default = false
   end
 
   #Process the template Sexp.
