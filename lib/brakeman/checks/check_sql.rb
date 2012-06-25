@@ -24,7 +24,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     end
 
     Brakeman.debug "Finding possible SQL calls on models"
-    calls = tracker.find_call :targets => tracker.models.keys,
+    calls = tracker.find_call :targets => active_record_models.keys,
       :methods => @sql_targets,
       :chained => true
 
@@ -57,7 +57,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     scope_calls = []
 
     if version_between? "2.1.0", "3.0.9"
-      tracker.models.each do |name, model|
+      active_record_models.each do |name, model|
         if model[:options][:named_scope]
           model[:options][:named_scope].each do |args|
             call = Sexp.new(:call, nil, :named_scope, args).line(args.line)
@@ -66,7 +66,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         end
        end
     elsif version_between? "3.1.0", "3.9.9"
-      tracker.models.each do |name, model|
+      active_record_models.each do |name, model|
         if model[:options][:scope]
           model[:options][:scope].each do |args|
             second_arg = args[2]

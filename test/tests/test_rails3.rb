@@ -218,6 +218,15 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /home_controller\.rb/
   end
 
+  def test_sql_injection_non_active_record_model
+    assert_no_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 30,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /other_controller\.rb/
+  end
+
   def test_csrf_protection
     assert_warning :type => :controller,
       :warning_type => "Cross-Site Request Forgery",

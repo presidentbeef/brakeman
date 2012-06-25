@@ -14,17 +14,10 @@ class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
       return
     end
 
-    models = []
-    tracker.models.each do |name, m|
-      if ancestor? m, :"ActiveRecord::Base"
-        models << name
-      end
-    end
-
-    return if models.empty?
+    return if active_record_models.empty?
 
     Brakeman.debug "Finding all mass assignments"
-    calls = tracker.find_call :targets => models, :methods => [:new,
+    calls = tracker.find_call :targets => active_record_models.keys, :methods => [:new,
       :attributes=, 
       :update_attributes, 
       :update_attributes!,

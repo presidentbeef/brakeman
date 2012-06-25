@@ -450,4 +450,18 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   def self.description
     @description
   end
+
+  def active_record_models
+    return @active_record_models if @active_record_models
+
+    @active_record_models = {}
+
+    tracker.models.each do |name, model|
+      if ancestor? model, :"ActiveRecord::Base"
+        @active_record_models[name] = model
+      end
+    end
+
+    @active_record_models
+  end
 end
