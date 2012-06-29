@@ -351,7 +351,7 @@ module Brakeman::Util
 
     lines.map do |line|
       if line.chomp.length > @terminal_width
-        line[0..(@terminal_width - 3)] + ">>"
+        line[0..(@terminal_width - 3)] + ">>\n"
       else
         line
       end
