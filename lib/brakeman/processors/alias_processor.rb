@@ -362,7 +362,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     match = Sexp.new(:call, target, :[], Sexp.new(:arglist, index))
 
     unless env[match]
-      env[match] = value
+      if request_value? target
+        env[match] = Sexp.new(:or, match, value)
+      else
+        env[match] = value
+      end
     end
 
     exp
