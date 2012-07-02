@@ -1,8 +1,8 @@
 class HomeController < ApplicationController
   before_filter :filter_it, :only => :test_filter
+  before_filter :or_equals, :only => :test_mass_assign_with_or_equals
 
-  def index
-  end
+  def index; end
 
   def test_params
     @name = params[:name]
@@ -123,9 +123,17 @@ class HomeController < ApplicationController
     SQL
   end
 
+  def test_mass_assign_with_or_equals
+    User.new(params[:still_bad])
+  end
+
   private
 
   def filter_it
     @filtered = params[:evil_input]
+  end
+
+  def or_equals
+    params[:still_bad] ||= {}
   end
 end

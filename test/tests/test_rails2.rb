@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 2,
         :template => 27,
-        :warning => 28 }
+        :warning => 29 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
         :template => 27,
-        :warning => 29 }
+        :warning => 30 }
     end
   end
 
@@ -89,6 +89,15 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Unprotected mass assignment/,
       :confidence => 0,
       :file => /other_controller\.rb/
+  end
+
+  def test_mass_assignment_with_or_equals_in_filter
+    assert_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :line => 127,
+      :message => /^Unprotected\ mass\ assignment/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
   end
 
   def test_redirect
