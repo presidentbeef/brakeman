@@ -96,6 +96,7 @@ class Brakeman::Report
       if html
         w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
         w["Message"] = with_context warning, w["Message"]
+        w["Warning Type"] = with_link warning, w["Warning Type"]
       else
         w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
         w["Message"] = text_message warning, w["Message"]
@@ -134,6 +135,7 @@ class Brakeman::Report
         if html
           w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
           w["Message"] = with_context warning, w["Message"]
+          w["Warning Type"] = with_link warning, w["Warning Type"]
         else
           w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
           w["Message"] = text_message warning, w["Message"]
@@ -170,6 +172,7 @@ class Brakeman::Report
         if html
           w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
           w["Message"] = with_context warning, w["Message"]
+          w["Warning Type"] = with_link warning, w["Warning Type"]
         else
           w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
           w["Message"] = text_message warning, w["Message"]
@@ -206,6 +209,7 @@ class Brakeman::Report
         if html
           w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
           w["Message"] = with_context warning, w["Message"]
+          w["Warning Type"] = with_link warning, w["Warning Type"]
         else
           w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
           w["Message"] = text_message warning, w["Message"]
@@ -593,6 +597,10 @@ class Brakeman::Report
     end
 
     output << "</table></div>"
+  end
+
+  def with_link warning, message
+    "<a href=\"#{warning.link}\">#{message}</a>"
   end
 
   #Generated tab-separated output suitable for the Jenkins Brakeman Plugin:
