@@ -20,7 +20,8 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
       warn :warning_type => "Cross Site Scripting",
         :message => message,
         :confidence => CONFIDENCE[:high],
-        :file => gemfile_or_environment
+        :file => gemfile_or_environment,
+        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/K5EwdJt06hI/discussion"
     end
   end
 
