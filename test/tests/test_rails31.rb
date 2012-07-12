@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 0,
       :template => 4,
       :controller => 1,
-      :warning => 40 }
+      :warning => 44 }
   end
 
   def test_without_protection
@@ -453,5 +453,42 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Unescaped parameter value near line 1: params\[:bad\]/,
       :confidence => 0,
       :file => /users\/mixin_default\.html\.erb/
+  end
+
+
+  def test_file_access_indirect_user_input
+    assert_warning :type => :warning,
+      :warning_type => "File Access",
+      :line => 106,
+      :message => /^Parameter\ value\ used\ in\ file\ name/,
+      :confidence => 2,
+      :file => /users_controller\.rb/
+  end
+
+  def test_file_access_in_string_interpolation
+    assert_warning :type => :warning,
+      :warning_type => "File Access",
+      :line => 107,
+      :message => /^Cookie\ value\ used\ in\ file\ name/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
+  end
+
+  def test_file_access_direct_user_input
+    assert_warning :type => :warning,
+      :warning_type => "File Access",
+      :line => 108,
+      :message => /^Parameter\ value\ used\ in\ file\ name/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
+  end
+
+  def test_file_access_model_attribute
+    assert_warning :type => :warning,
+      :warning_type => "File Access",
+      :line => 109,
+      :message => /^User\ input\ value\ used\ in\ file\ name/,
+      :confidence => 1,
+      :file => /users_controller\.rb/
   end
 end
