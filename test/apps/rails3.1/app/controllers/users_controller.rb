@@ -102,5 +102,12 @@ class UsersController < ApplicationController
     redirect_to User.find_by_name(params[:name])
   end
 
+  def test_file_access_params
+    File.unlink(blah(params[:file]))
+    Pathname.readlines("blah/#{cookies[:file]}")
+    File.delete(params[:file])
+    IO.read(User.find_by_name('bob').file_path)
+  end
+
   include UserMixin
 end
