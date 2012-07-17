@@ -32,6 +32,7 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
     if match = has_immediate_user_input?(file_name)
       confidence = CONFIDENCE[:high]
     elsif match = has_immediate_model?(file_name)
+      match = Match.new(:model, match)
       confidence = CONFIDENCE[:med]
     elsif tracker.options[:check_arguments] and
       match = include_user_input?(file_name)
