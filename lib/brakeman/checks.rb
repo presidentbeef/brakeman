@@ -97,7 +97,12 @@ class Brakeman::Checks
         Brakeman.notify " - #{check_name}"
 
         check = c.new(tracker)
-        check.run_check
+
+        begin
+          check.run_check
+        rescue Exception => e
+          tracker.error e
+        end
 
         check.warnings.each do |w|
           check_runner.add_warning w
@@ -115,6 +120,7 @@ class Brakeman::Checks
   #Run checks in parallel threads
   def self.run_checks_parallel tracker
     threads = []
+    error_mutex = Mutex.new
     
     check_runner = self.new :min_confidence => tracker.options[:min_confidence]
 
@@ -128,14 +134,17 @@ class Brakeman::Checks
         Brakeman.notify " - #{check_name}"
 
         threads << Thread.new do
+          check = c.new(tracker)
+
           begin
-            check = c.new(tracker)
             check.run_check
-            check.warnings
           rescue Exception => e
-            Brakeman.notify "[#{check_name}] #{e}"
-            []
+            error_mutex.synchronize do
+              tracker.error e
+            end
           end
+
+          check.warnings
         end
 
         #Maintain list of which checks were run
