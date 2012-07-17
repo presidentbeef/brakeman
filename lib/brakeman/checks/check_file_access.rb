@@ -9,7 +9,7 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
 
   def run_check
     Brakeman.debug "Finding possible file access"
-    methods = tracker.find_call :targets => [:Dir, :File, :IO, :Kernel, :"Net::FTP", :"Net::HTTP", :PStore, :Pathname, :Shell, :YAML], :methods => [:[], :chdir, :chroot, :delete, :entries, :foreach, :glob, :install, :lchmod, :lchown, :link, :load, :load_file, :makedirs, :move, :new, :open, :read, :read_lines, :rename, :rmdir, :safe_unlink, :symlink, :syscopy, :sysopen, :truncate, :unlink]
+    methods = tracker.find_call :targets => [:Dir, :File, :IO, :Kernel, :"Net::FTP", :"Net::HTTP", :PStore, :Pathname, :Shell, :YAML], :methods => [:[], :chdir, :chroot, :delete, :entries, :foreach, :glob, :install, :lchmod, :lchown, :link, :load, :load_file, :makedirs, :move, :new, :open, :read, :readlines, :rename, :rmdir, :safe_unlink, :symlink, :syscopy, :sysopen, :truncate, :unlink]
 
     Brakeman.debug "Finding calls to load()"
     methods.concat tracker.find_call :target => false, :method => :load
@@ -24,32 +24,48 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
   end
 
   def process_result result
+    return if duplicate? result
+    add_result result
     call = result[:call]
-
     file_name = call[3][1]
 
-    if input = include_user_input?(file_name)
-      unless duplicate? result
-        add_result result
+    if match = has_immediate_user_input?(file_name)
+      confidence = CONFIDENCE[:high]
+    elsif match = has_immediate_model?(file_name)
+      confidence = CONFIDENCE[:med]
+    elsif tracker.options[:check_arguments] and
+      match = include_user_input?(file_name)
 
-        case input.type
-        when :params
-          message = "Parameter"
-        when :cookies
-          message = "Cookie"
-        else
-          message = "User input"
-        end
-
-        message << " value used in file name"
-
-        warn :result => result,
-          :warning_type => "File Access",
-          :message => message, 
-          :confidence => CONFIDENCE[:high],
-          :code => call,
-          :user_input => input.match
+      #Check for string building in file name
+      if call?(file_name) and (file_name[2] == :+ or file_name[2] == :<<)
+        confidence = CONFIDENCE[:high]
+      else
+        confidence = CONFIDENCE[:low]
       end
+    end
+
+    if match
+      case match.type
+      when :params
+        message = "Parameter"
+      when :cookies
+        message = "Cookie"
+      when :request
+        message = "Request"
+      when :model
+        message = "Model attribute"
+      else
+        message = "User input"
+      end
+
+      message << " value used in file name"
+
+      warn :result => result,
+        :warning_type => "File Access",
+        :message => message,
+        :confidence => confidence,
+        :code => call,
+        :user_input => match.match
     end
   end
 end
