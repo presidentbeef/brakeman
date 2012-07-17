@@ -91,6 +91,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
   end
 
   def process_defn exp
+    exp = @alias_processor.process exp
     exp[0] = :methdef
 
     if @current_class
@@ -103,6 +104,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
   end
 
   def process_defs exp
+    exp = @alias_processor.process exp
     exp[0] = :selfdef
 
     if @current_class
