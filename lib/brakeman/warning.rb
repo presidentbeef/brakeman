@@ -11,7 +11,7 @@ class Brakeman::Warning
   def initialize options = {}
     @view_name = nil
 
-    [:called_from, :check, :class, :code, :confidence, :controller, :file, :line,
+    [:called_from, :check, :class, :code, :confidence, :controller, :file, :line, :link_path,
       :message, :method, :model, :template, :user_input, :warning_set, :warning_type].each do |option|
 
       self.instance_variable_set("@#{option}", options[option])
@@ -101,6 +101,23 @@ class Brakeman::Warning
     @format_message
   end
 
+  def link
+    return @link if @link
+
+    if @link_path
+      if @link_path.start_with? "http"
+        @link = @link_path
+      else
+        @link = "http://brakemanscanner.org/docs/warning_types/#{@link_path}"
+      end
+    else
+      warning_path = self.warning_type.to_s.downcase.gsub(/\s+/, '_') + "/"
+      @link = "http://brakemanscanner.org/docs/warning_types/#{warning_path}"
+    end
+
+    @link
+  end
+
   #Generates a hash suitable for inserting into a table
   def to_row type = :warning
     @row = { "Confidence" => self.confidence,
@@ -151,6 +168,7 @@ class Brakeman::Warning
       :message => self.message,
       :file => self.file,
       :line => self.line,
+      :link => self.link,
       :code => (@code && self.format_code),
       :location => location,
       :user_input => (@user_input && self.format_user_input),

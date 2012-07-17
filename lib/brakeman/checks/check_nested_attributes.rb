@@ -22,7 +22,8 @@ class Brakeman::CheckNestedAttributes < Brakeman::BaseCheck
       warn :warning_type => "Nested Attributes",
         :message => message,
         :confidence => CONFIDENCE[:high],
-        :file => gemfile_or_environment
+        :file => gemfile_or_environment,
+        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/-fkT0yja_gw/discussion"
     end
   end
 
