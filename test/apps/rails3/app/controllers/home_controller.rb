@@ -83,6 +83,11 @@ class HomeController < ApplicationController
     redirect_to url_for(url)
   end
 
+  def test_render_a_method_call
+    @user = User.find(params['user']).name
+    render :test_render
+  end
+
   private
 
   def filter_it
