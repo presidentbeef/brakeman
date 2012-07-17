@@ -487,7 +487,7 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "File Access",
       :line => 109,
-      :message => /^User\ input\ value\ used\ in\ file\ name/,
+      :message => /^Model attribute\ value\ used\ in\ file\ name/,
       :confidence => 1,
       :file => /users_controller\.rb/
   end
