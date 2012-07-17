@@ -94,7 +94,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       warn :warning_type => 'SQL Injection',
         :message => 'All versions of Rails before 3.0.13, 3.1.5, and 3.2.5 contain a SQL Query Generation Vulnerability: CVE-2012-2660; Upgrade to 3.2.5, 3.1.5, 3.0.13',
         :confidence => CONFIDENCE[:high],
-        :file => gemfile_or_environment
+        :file => gemfile_or_environment,
+        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/8SA-M3as7A8/discussion"
     end
   end
 
@@ -103,7 +104,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       warn :warning_type => 'SQL Injection',
         :message => 'All versions of Rails before 3.0.13, 3.1.5, and 3.2.5 contain a SQL Injection Vulnerability: CVE-2012-2661; Upgrade to 3.2.5, 3.1.5, 3.0.13',
         :confidence => CONFIDENCE[:high],
-        :file => gemfile_or_environment
+        :file => gemfile_or_environment,
+        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/dUaiOOGWL1k/discussion"
     end
   end
 
@@ -112,7 +114,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       warn :warning_type => 'SQL Injection',
         :message => 'All versions of Rails before 3.0.14, 3.1.6, and 3.2.6 contain SQL Injection Vulnerabilities: CVE-2012-2694 and CVE-2012-2695; Upgrade to 3.2.6, 3.1.6, 3.0.14',
         :confidence => CONFIDENCE[:high],
-        :file => gemfile_or_environment
+        :file => gemfile_or_environment,
+        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/l4L0TEVAz1k/discussion"
     end
   end
 
