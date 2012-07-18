@@ -74,8 +74,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
       if string? value[1]
         controller, action = extract_action v[1]
 
-        self.current_controller = controller
-        @tracker.routes[@current_controller] << action.to_sym
+        add_route action, controller
       end
     end
 
@@ -105,10 +104,9 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
         if string? k and string? v
           controller, action = extract_action v[1]
 
-          self.current_controller = controller
-          @tracker.routes[@current_controller] << action.to_sym if action
+          add_route action if action
         elsif symbol? k and k[1] == :action
-          @tracker.routes[@current_controller] << v[1].to_sym
+          add_route action
           action_variable = false
         end
       end
@@ -125,23 +123,21 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     args = exp[3][1..-1]
 
     if symbol? args[0] and not hash? args[1]
-      @tracker.routes[@current_controller] << args[0][1]
+      add_route args[0]
     elsif hash? args[1]
       hash_iterate args[1] do |k, v|
         if symbol? k and k[1] == :to and string? v
           controller, action = extract_action v[1]
 
-          self.current_controller = controller
-          @tracker.routes[@current_controller] << action.to_sym
+          add_route action, controller
         end
       end
     elsif string? args[0]
       route = args[0][1].split "/"
       if route.length != 2
-        @tracker.routes[@current_controller] << route[0].to_sym
+        add_route route[0]
       else
-        self.current_controller = route[0]
-        @tracker.routes[@current_controller] << route[1].to_sym
+        add_route route[1], route[0]
         @current_controller = nil
       end
     else hash? args[0]
@@ -149,8 +145,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
         if string? v
           controller, action = extract_action v[1]
 
-          self.current_controller = controller
-          @tracker.routes[@current_controller] << action.to_sym
+          add_route action, controller
           break
         end
       end
