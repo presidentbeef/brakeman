@@ -48,7 +48,9 @@ module Brakeman::RenderHelper
 
   #Processes a given action
   def process_action name, args
-    process_template template_name(name), args
+    if name.is_a? String or name.is_a? Symbol
+      process_template template_name(name), args
+    end
   end
 
   #Processes a template, adding any instance variables
