@@ -165,6 +165,8 @@ module Brakeman
           :to_tabs
         when /\.json$/i
           :to_json
+        when /\.annotations/
+          :to_annotation
         else
           :to_s
         end
