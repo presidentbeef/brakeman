@@ -135,6 +135,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
       @tracker.routes[@current_controller] = :allow_all_actions
     end
 
+    @current_controller = nil unless in_controller_block?
     exp
   end
 
@@ -171,7 +172,6 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
         add_route route[0]
       else
         add_route route[1], route[0]
-        @current_controller = nil
       end
     elsif in_controller_block? and symbol? args[0]
       add_route args[0]
@@ -187,6 +187,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
       end
     end
 
+    @current_controller = nil unless in_controller_block?
     exp
   end
 
@@ -202,6 +203,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
       end
     end
 
+    @current_controller = nil unless in_controller_block?
     exp
   end
 
@@ -217,26 +219,27 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
       end
     end
 
+    @current_controller = nil unless in_controller_block?
     exp
   end
 
   def process_resources_block exp
-    process_resources exp[1]
-
     in_controller_block do
+      process_resources exp[1]
       process exp[3]
     end
 
+    @current_controller = nil
     exp
   end
 
   def process_resource_block exp
-    process_resource exp[1]
-
     in_controller_block do
+      process_resource exp[1]
       process exp[3]
     end
 
+    @current_controller = nil
     exp
   end
 
@@ -254,6 +257,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
       process exp[-1] if exp[-1]
     end
 
+    @current_controller = nil
     exp
   end
 
