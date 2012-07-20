@@ -4,6 +4,19 @@ Rails31::Application.routes.draw do
     get 'mixin_default'
   end
 
+  resources :other do
+    get :a
+    delete 'f'
+  end
+
+  controller :other do
+    get 'b'
+    post 'something' => 'c'
+    put 'dee', :to => :d
+  end
+
+  match 'e', :to => 'other#e', :as => 'eeeee'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
