@@ -14,6 +14,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     @prefix = [] #Controller name prefix (a module name, usually)
     @current_controller = nil
     @with_options = nil #For use inside map.with_options
+    @controller_block = false
   end
 
   def process_routes exp
@@ -49,6 +50,8 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
       process_resources_block exp
     when :scope
       process_scope_block exp
+    when :controller
+      process_controller_block exp
     else
       super
     end
@@ -96,6 +99,8 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
         return exp
       elsif matcher.include? ':action'
         action_variable = true
+      elsif args[1].nil? and in_controller_block? and not matcher.include? ":"
+        add_route matcher
       end
     end
 
@@ -140,6 +145,8 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
         add_route route[1], route[0]
         @current_controller = nil
       end
+    elsif in_controller_block? and symbol? args[0]
+      add_route args[0]
     else hash? args[0]
       hash_iterate args[0] do |k, v|
         if string? v
@@ -186,13 +193,21 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
 
   def process_resources_block exp
     process_resources exp[1]
-    process exp[3]
+
+    in_controller_block do
+      process exp[3]
+    end
+
     exp
   end
 
   def process_resource_block exp
     process_resource exp[1]
-    process exp[3]
+
+    in_controller_block do
+      process exp[3]
+    end
+
     exp
   end
 
@@ -202,7 +217,29 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     exp
   end
 
+  def process_controller_block exp
+    args = exp[1][3]
+    self.current_controller = args[1][1]
+
+    in_controller_block do
+      process exp[-1] if exp[-1]
+    end
+
+    exp
+  end
+
   def extract_action str
     str.split "#"
+  end
+
+  def in_controller_block?
+    @controller_block
+  end
+
+  def in_controller_block
+    prev_block = @controller_block
+    @controller_block = true
+    yield
+    @controller_block = prev_block
   end
 end
