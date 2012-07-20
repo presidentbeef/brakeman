@@ -167,7 +167,7 @@ class Brakeman::Warning
   end
 
   def to_annotation
-    clean_for_annotation.merge({:digest => self.annotation_digest, :note => ""})
+    self.to_hash.merge({:digest => self.annotation_digest, :note => ""})
   end
 
   def clean_for_annotation
