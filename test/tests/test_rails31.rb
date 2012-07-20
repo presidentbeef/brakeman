@@ -13,7 +13,7 @@ class Rails31Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :model => 0,
-      :template => 10,
+      :template => 11,
       :controller => 1,
       :warning => 44 }
   end
@@ -507,6 +507,15 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
       :file => /\/f\.html\.erb/
+  end
+
+  def test_route_hash_shorthand
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /\/g\.html\.erb/
   end
 
   def test_file_access_indirect_user_input

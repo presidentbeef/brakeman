@@ -17,6 +17,8 @@ Rails31::Application.routes.draw do
 
   match 'e', :to => 'other#e', :as => 'eeeee'
 
+  get 'g' => 'other#g'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
