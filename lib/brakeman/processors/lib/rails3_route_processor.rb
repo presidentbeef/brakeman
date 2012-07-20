@@ -74,10 +74,8 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     args = exp[3][1..-1]
 
     if value = hash_access(args[0], :to)
-      if string? value[1]
-        controller, action = extract_action v[1]
-
-        add_route action, controller
+      if string? value
+        add_route_from_string value
       end
     end
 
@@ -106,11 +104,12 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
 
     if hash? args[-1]
       hash_iterate args[-1] do |k, v|
-        if string? k and string? v
-          controller, action = extract_action v[1]
-
-          add_route action if action
-        elsif symbol? k and k[1] == :action
+        if string? k
+          if string? v
+            add_route_from_string v[1]
+          elsif in_controller_block? and symbol? v
+            add_route v
+          end
           add_route action
           action_variable = false
         end
@@ -124,6 +123,18 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     exp
   end
 
+  def add_route_from_string value
+    value = value[1] if string? value
+
+    controller, action = extract_action value
+
+    if action
+      add_route action, controller
+    elsif in_controller_block?
+      add_route value
+    end
+  end
+
   def process_verb exp
     args = exp[3][1..-1]
 
@@ -131,10 +142,12 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
       add_route args[0]
     elsif hash? args[1]
       hash_iterate args[1] do |k, v|
-        if symbol? k and k[1] == :to and string? v
-          controller, action = extract_action v[1]
-
-          add_route action, controller
+        if symbol? k and k[1] == :to
+          if string? v
+            add_route_from_string v[1]
+          elsif in_controller_block? and symbol? v
+            add_route v
+          end
         end
       end
     elsif string? args[0]
@@ -149,11 +162,19 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
       add_route args[0]
     else hash? args[0]
       hash_iterate args[0] do |k, v|
-        if string? v
-          controller, action = extract_action v[1]
+        if string? k
+          if string? v
+            controller, action = extract_action v[1]
 
-          add_route action, controller
-          break
+            if action
+              add_route action, controller
+              break
+            elsif in_controller_block?
+              add_route v
+            end
+          elsif in_controller_block?
+            add_route v
+          end
         end
       end
     end
