@@ -113,7 +113,12 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
         elsif symbol? k
          case k[1]
          when :action
-          add_route action
+          if string? v
+            add_route_from_string v
+          else
+            add_route v
+          end
+
           action_variable = false
          when :to
            if string? v
