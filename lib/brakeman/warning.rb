@@ -178,8 +178,9 @@ class Brakeman::Warning
 
   def annotation_digest
     digested = ""
-    clean_for_annotation.keys.map(&:to_s).sort.each do |k|
-      digested << k << self.to_hash[k.to_sym].to_s
+    clean_annotation = clean_for_annotation
+    clean_annotation.keys.map(&:to_s).sort.each do |k|
+      digested << k << clean_annotation[k.to_sym].to_s
     end
 
     digest = Digest::MD5.hexdigest(digested)
