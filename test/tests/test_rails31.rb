@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 0,
       :template => 4,
       :controller => 1,
-      :warning => 44 }
+      :warning => 45 }
   end
 
   def test_without_protection
@@ -406,6 +406,15 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
       :line => 151,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
+  def test_sql_injection_interpolation_in_first_arg
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 174,
       :message => /^Possible\ SQL\ injection/,
       :confidence => 0,
       :file => /product\.rb/

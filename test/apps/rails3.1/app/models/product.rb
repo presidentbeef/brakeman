@@ -169,4 +169,8 @@ class Product < ActiveRecord::Base
     #Should not warn
     Product.last("blah = '#{params[:id].to_f}'")
   end
+
+  def test_interpolation_in_first_arg
+    Product.where("x = #{params[:x]} AND y = ?", y)
+  end
 end
