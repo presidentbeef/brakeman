@@ -110,8 +110,18 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
           elsif in_controller_block? and symbol? v
             add_route v
           end
+        elsif symbol? k
+         case k[1]
+         when :action
           add_route action
           action_variable = false
+         when :to
+           if string? v
+             add_route_from_string v[1]
+           elsif in_controller_block? and symbol? v
+             add_route v
+           end
+         end
         end
       end
     end
