@@ -174,14 +174,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
       hash_iterate args[0] do |k, v|
         if string? k
           if string? v
-            controller, action = extract_action v[1]
-
-            if action
-              add_route action, controller
-              break
-            elsif in_controller_block?
-              add_route v
-            end
+            add_route_from_string v
           elsif in_controller_block?
             add_route v
           end
