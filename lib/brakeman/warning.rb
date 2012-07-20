@@ -167,15 +167,22 @@ class Brakeman::Warning
   end
 
   def to_annotation
-    clean_annotation.merge({:digest => self.annotation_digest, :note => ""})
+    clean_for_annotation.merge({:digest => self.annotation_digest, :note => ""})
   end
 
-  def clean_annotation
-    self.to_hash.merge :line => line
+  def clean_for_annotation
+    h = self.to_hash
+    h.delete(:line)
+    h
   end
 
   def annotation_digest
-    digest = Digest::MD5.hexdigest(self.clean_annotation.to_yaml)
+    digested = ""
+    clean_for_annotation.keys.map(&:to_s).sort.each do |k|
+      digested << k << self.to_hash[k.to_sym].to_s
+    end
+
+    digest = Digest::MD5.hexdigest(digested)
     if RUBY_VERSION >= "1.9"
       digest.force_encoding("UTF-8")
     end
