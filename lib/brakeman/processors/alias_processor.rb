@@ -452,11 +452,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       index = args[0][1]
 
       #Have to do this because first element is :array and we have to skip it
-      if index >= 0
-        target[index + 1]
-      else
-        target[index - 1]
-      end
+      target[1..-1][index + 1]
     else
       nil
     end
