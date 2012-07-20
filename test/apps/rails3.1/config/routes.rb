@@ -19,6 +19,8 @@ Rails31::Application.routes.draw do
 
   get 'g' => 'other#g'
 
+  match 'blah/:id', :action => 'blarg' 
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
