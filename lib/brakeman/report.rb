@@ -586,7 +586,7 @@ class Brakeman::Report
       message
     end <<
     "<table id='#{code_id}' class='context' style='display:none'>" <<
-    "<caption>#{(warning.file || '').gsub(tracker.options[:app_path], "")}</caption>"
+    "<caption>#{warning_file_to_relative_path(warning.file)}</caption>"
 
     unless context.empty?
       if warning.line - 1 == 1 or warning.line + 1 == 1
@@ -724,7 +724,10 @@ class Brakeman::Report
 
   def to_annotation
     warnings = @checks.all_warnings
-    warnings.map { |warning| warning.to_annotation }.to_yaml
+    warnings.map do |warning|
+      warning.file = warning_file_to_relative_path(warning.file)
+      warning.to_annotation
+    end.to_yaml
   end
 
   def load_annotations annotations_file
@@ -736,5 +739,9 @@ class Brakeman::Report
         @annotations = YAML::load_file f
       end
     end
+  end
+
+  def warning_file_to_relative_path(warning_file)
+    (warning_file || '').gsub(tracker.options[:app_path], "").gsub(/^\//, '')
   end
 end
