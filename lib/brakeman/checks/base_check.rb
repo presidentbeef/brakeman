@@ -295,6 +295,9 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       when :if
         (sexp? exp[2] and has_immediate_user_input? exp[2]) or 
         (sexp? exp[3] and has_immediate_user_input? exp[3])
+      when :or
+        has_immediate_user_input? exp[1] or
+        has_immediate_user_input? exp[2]
       else
         false
       end
