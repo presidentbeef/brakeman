@@ -19,3 +19,25 @@ class UtilTests < Test::Unit::TestCase
     assert util.params?(@ruby_parser.new.parse 'params[:x][:y][:z]')
   end
 end
+
+class SexpTests < Test::Unit::TestCase
+  def setup
+    if RUBY_VERSION =~ /^1\.9/
+      @ruby_parser = Ruby19Parser
+    else
+      @ruby_parser = RubyParser
+    end
+  end
+
+  def parse src
+    @ruby_parser.parse src    
+  end
+
+  def sexp_call
+    call = parse "x()"
+
+    assert_equal call.method, :x
+    assert_nil call.target
+    assert_equal call.args, []
+  end
+end

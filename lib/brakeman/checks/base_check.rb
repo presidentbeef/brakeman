@@ -58,16 +58,18 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
   #Process calls and check if they include user input
   def process_call exp
-    process exp[1] if sexp? exp[1]
-    process exp[3]
+    process exp.target if sexp? exp.target
+    process_all exp.args
 
-    if params? exp[1]
+    target = exp.target
+
+    if params? target
       @has_user_input = Match.new(:params, exp)
-    elsif cookies? exp[1]
+    elsif cookies? target
       @has_user_input = Match.new(:cookies, exp)
-    elsif request_env? exp[1]
+    elsif request_env? target
       @has_user_input = Match.new(:request, exp)
-    elsif sexp? exp[1] and model_name? exp[1][1]
+    elsif sexp? target and model_name? target.target
       @has_user_input = Match.new(:model, exp)
     end
 
@@ -77,11 +79,11 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   def process_if exp
     #This is to ignore user input in condition
     current_user_input = @has_user_input
-    process exp[1]
+    process exp.condition
     @has_user_input = current_user_input
 
-    process exp[2] if sexp? exp[2]
-    process exp[3] if sexp? exp[3]
+    process exp.then_clause if sexp? exp.then_clause
+    process exp.else_clause if sexp? exp.else_clause
 
     exp
   end
@@ -257,11 +259,11 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     elsif cookies? exp
       return Match.new(:cookies, exp)
     elsif call? exp
-      if params? exp[1]
+      if params? exp.target
         return Match.new(:params, exp)
-      elsif cookies? exp[1]
+      elsif cookies? exp.target
         return Match.new(:cookies, exp)
-      elsif request_env? exp[1]
+      elsif request_env? exp.target
         return Match.new(:request, exp)
       else
         false
@@ -291,10 +293,10 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
           end
         end
       when :format
-        has_immediate_user_input? exp[1]
+        has_immediate_user_input? exp.value
       when :if
-        (sexp? exp[2] and has_immediate_user_input? exp[2]) or 
-        (sexp? exp[3] and has_immediate_user_input? exp[3])
+        (sexp? exp.then_clause and has_immediate_user_input? exp.then_clause) or 
+        (sexp? exp.else_clause and has_immediate_user_input? exp.else_clause)
       else
         false
       end

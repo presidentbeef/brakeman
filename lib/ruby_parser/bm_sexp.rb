@@ -86,6 +86,38 @@ class Sexp
     @my_hash_value = nil
     old_comments_set(*args)
   end
+
+  def target
+    self[1]
+  end
+
+  def method
+    self[2]
+  end
+
+  def args
+    if self[3]
+      self[3..-1]
+    else
+      []
+    end
+  end
+
+  def condition
+    self[1]
+  end
+
+  def then_clause
+    self[2]
+  end
+
+  def else_clause
+    self[3]
+  end
+
+  def value
+    self[-1]
+  end
 end
 
 #Invalidate hash cache if the Sexp changes
