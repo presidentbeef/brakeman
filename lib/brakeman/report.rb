@@ -735,7 +735,7 @@ class Brakeman::Report
 
     [File.expand_path(annotations_file), File.expand_path("./.brakeman_annotations.yaml")].each do |f|
       if File.exist? f and not File.directory? f
-        #notify "[Notice] Using annotations in #{f}"
+        notify "[Notice] Using annotations in #{f}"
         @annotations = YAML::load_file f
       end
     end
