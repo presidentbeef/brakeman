@@ -61,7 +61,7 @@ class Brakeman::Checks
 
   def filter_by_annotations(annotations)
     ignored_warning_digests = Set.new(annotations.map { |a| a[:digest] })
-    @ignored_warnings = warnings.select { |w| ignored_warning_digests.include? w.annotation_digest }
+    @ignored_warnings = all_warnings.select { |w| ignored_warning_digests.include? w.annotation_digest }
 
     [@warnings, @template_warnings, @controller_warnings, @model_warnings].each do |warning_group|
       warning_group.reject! { |w| ignored_warning_digests.include? w.annotation_digest }
