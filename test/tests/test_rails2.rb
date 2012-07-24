@@ -11,13 +11,13 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 27,
+        :template => 31,
         :warning => 29 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 27,
+        :template => 31,
         :warning => 30 }
     end
   end
@@ -591,6 +591,42 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Unescaped parameter value near line 2: params\[:ba/,
       :confidence => 0,
       :file => /home\/test_render_template\.html\.haml/
+  end
+
+  def test_xss_with_or_in_view
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_xss_with_or\.html\.erb/
+  end
+
+  def test_xss_with_or_from_action
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_xss_with_or\.html\.erb/
+  end
+
+  def test_xss_with_or_from_if_branches
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 5,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_xss_with_or\.html\.erb/
+  end
+
+  def test_xss_with_nested_or
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 7,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_xss_with_or\.html\.erb/
   end
 
   def test_check_send
