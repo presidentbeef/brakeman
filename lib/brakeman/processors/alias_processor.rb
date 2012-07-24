@@ -450,7 +450,13 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def process_array_access target, args
     if args.length == 1 and integer? args[0]
       index = args[0][1]
-      target[index + 1]
+
+      #Have to do this because first element is :array and we have to skip it
+      if index >= 0
+        target[index + 1]
+      else
+        target[index - 1]
+      end
     else
       nil
     end
