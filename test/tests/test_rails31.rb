@@ -13,7 +13,7 @@ class Rails31Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :model => 0,
-      :template => 4,
+      :template => 11,
       :controller => 1,
       :warning => 45 }
   end
@@ -464,6 +464,68 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /users\/mixin_default\.html\.erb/
   end
 
+  def test_get_in_resources_block
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /\/a\.html\.erb/
+  end
+
+  def test_get_in_controller_block
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /\/b\.html\.erb/
+  end
+
+  def test_post_with_just_hash_in_controller_block
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /\/c\.html\.erb/
+  end
+
+  def test_put_to_in_controller_block
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /\/d\.html\.erb/
+  end
+
+  def test_match_to_route
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /\/e\.html\.erb/
+  end
+
+  def test_delete_in_resources_block
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /\/f\.html\.erb/
+  end
+
+  def test_route_hash_shorthand
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /\/g\.html\.erb/
+  end
 
   def test_file_access_indirect_user_input
     assert_warning :type => :warning,
