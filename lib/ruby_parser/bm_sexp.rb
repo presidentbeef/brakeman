@@ -92,36 +92,78 @@ class Sexp
       yield e if Sexp === e
     end
   end
+
+  def expect *types
+    unless types.include? self.node_type
+      raise WrongSexpError, "Expected #{types.join ' or '} but given #{self.node_type}", caller[1..-1]
+    end
+  end
+
   def target
+    expect :call
     self[1]
   end
 
   def method
+    expect :call
     self[2]
   end
 
   def args
+    expect :call
+    #For new ruby_parser
+    #if self[3]
+    #  self[3..-1]
+    #else
+    #  []
+    #end
+
+    #For old ruby_parser
     if self[3]
-      self[3..-1]
+      self[3][1..-1]
     else
       []
     end
   end
 
   def condition
+    expect :if
     self[1]
   end
 
   def then_clause
+    expect :if
     self[2]
   end
 
   def else_clause
+    expect :if
     self[3]
   end
 
-  def value
+  def block_call
+    expect :iter, :call_with_block
+    self[1]
+  end
+
+  def block
+    expect :iter, :call_with_block
     self[-1]
+  end
+
+  def block_args
+    expect :iter, :call_with_block
+    self[2]
+  end
+
+  def lhs
+    expect :lasgn
+    self[1]
+  end
+
+  def rhs
+    expect :lasgn
+    self[2]
   end
 end
 
@@ -140,4 +182,4 @@ end
     RUBY
 end
 
-
+class WrongSexpError < RuntimeError; end
