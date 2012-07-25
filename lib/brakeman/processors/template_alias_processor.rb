@@ -38,27 +38,30 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
     process_default exp
     
     call = exp.block_call
-    target = call.target
-    method = call.method
-    args = exp.block_args
-    block = exp.block
 
-    #Check for e.g. Model.find.each do ... end
-    if method == :each and args and block and model = get_model_target(target)
-      if node_type? args, :lasgn
-        if model == target.target
-          env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, model, :new, Sexp.new(:arglist))
-        else
-          env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, Sexp.new(:const, Brakeman::Tracker::UNKNOWN_MODEL), :new, Sexp.new(:arglist))
+    if call? call
+      target = call.target
+      method = call.method
+      args = exp.block_args
+      block = exp.block
+
+      #Check for e.g. Model.find.each do ... end
+      if method == :each and args and block and model = get_model_target(target)
+        if node_type? args, :lasgn
+          if model == target.target
+            env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, model, :new, Sexp.new(:arglist))
+          else
+            env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, Sexp.new(:const, Brakeman::Tracker::UNKNOWN_MODEL), :new, Sexp.new(:arglist))
+          end
+
+          process block if sexp? block
         end
-        
-        process block if sexp? block
-      end
-    elsif FORM_METHODS.include? method
-      if node_type? args, :lasgn
-        env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new, Sexp.new(:arglist)) 
+      elsif FORM_METHODS.include? method
+        if node_type? args, :lasgn
+          env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new, Sexp.new(:arglist)) 
 
-        process block if sexp? block
+          process block if sexp? block
+        end
       end
     end
 
