@@ -1,5 +1,10 @@
 #Contains a couple shared methods for Processors.
 module Brakeman::ProcessorHelper
+  def process_all exp
+    exp.each_sexp do |e|
+      process e
+    end
+  end
 
   #Sets the current module.
   def process_module exp

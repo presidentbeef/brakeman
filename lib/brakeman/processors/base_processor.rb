@@ -17,12 +17,6 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     @current_template = @current_module = @current_class = @current_method = nil
   end
 
-  def process_all exp
-    exp.each do |e|
-      process e if sexp? e
-    end
-  end
-
   def process_class exp
     current_class = @current_class
     @current_class = class_name exp[1]
