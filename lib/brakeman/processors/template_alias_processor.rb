@@ -37,26 +37,26 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
   def process_call_with_block exp
     process_default exp
     
-    call = exp[1]
-    target = call[1]
-    method = call[2]
-    args = exp[2]
-    block = exp[3]
+    call = exp.block_call
+    target = call.target
+    method = call.method
+    args = exp.block_args
+    block = exp.block
 
     #Check for e.g. Model.find.each do ... end
     if method == :each and args and block and model = get_model_target(target)
       if node_type? args, :lasgn
-        if model == target[1]
-          env[Sexp.new(:lvar, args[1])] = Sexp.new(:call, model, :new, Sexp.new(:arglist))
+        if model == target.target
+          env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, model, :new, Sexp.new(:arglist))
         else
-          env[Sexp.new(:lvar, args[1])] = Sexp.new(:call, Sexp.new(:const, Brakeman::Tracker::UNKNOWN_MODEL), :new, Sexp.new(:arglist))
+          env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, Sexp.new(:const, Brakeman::Tracker::UNKNOWN_MODEL), :new, Sexp.new(:arglist))
         end
         
         process block if sexp? block
       end
     elsif FORM_METHODS.include? method
       if node_type? args, :lasgn
-        env[Sexp.new(:lvar, args[1])] = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new, Sexp.new(:arglist)) 
+        env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new, Sexp.new(:arglist)) 
 
         process block if sexp? block
       end
@@ -70,9 +70,9 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
   #Checks if +exp+ is a call to Model.all or Model.find*
   def get_model_target exp
     if call? exp
-      target = exp[1]
+      target = exp.target
 
-      if exp[2] == :all or exp[2].to_s[0,4] == "find"
+      if exp.method == :all or exp.method.to_s[0,4] == "find"
         models = Set.new @tracker.models.keys
 
         begin
@@ -91,9 +91,9 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
 
   def find_push_target exp
     if sexp? exp
-      if exp.node_type == :lvar and (exp[1] == :_buf or exp[1] == :_erbout)
+      if exp.node_type == :lvar and (exp.target == :_buf or exp.target == :_erbout)
         return nil
-      elsif exp.node_type == :ivar and exp[1] == :@output_buffer
+      elsif exp.node_type == :ivar and exp.value == :@output_buffer
         return nil
       end
     end
