@@ -87,6 +87,11 @@ class Sexp
     old_comments_set(*args)
   end
 
+  def each_sexp
+    self.each do |e|
+      yield e if Sexp === e
+    end
+  end
   def target
     self[1]
   end
