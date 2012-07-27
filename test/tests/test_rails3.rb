@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 22,
-      :warning => 26
+      :warning => 27
     }
   end
 
@@ -593,5 +593,13 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
       :file => /test_params\.html\.erb/
+  end
+
+  def test_CVE_2012_3424
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :message => /^Vulnerability\ in\ digest\ authentication\ \(/,
+      :confidence => 0,
+      :file => /Gemfile/
   end
 end
