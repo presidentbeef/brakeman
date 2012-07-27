@@ -16,7 +16,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
   end
 
   def process_class exp
-    name = class_name(exp[1])
+    name = class_name(exp.class_name)
     
     if @current_class
       outer_class = @current_class
@@ -31,7 +31,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
       @current_class = @tracker.libs[name]
     else
       @current_class = { :name => name,
-                    :parent => class_name(exp[2]),
+                    :parent => class_name(exp.class_name),
                     :includes => [],
                     :public => {},
                     :private => {},
@@ -42,7 +42,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
       @tracker.libs[name] = @current_class
     end
 
-    exp[3] = process exp[3]
+    exp.body = process exp.body
 
     if outer_class
       @current_class = outer_class
@@ -54,7 +54,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
   end
 
   def process_module exp
-    name = class_name(exp[1])
+    name = class_name(exp.class_name)
 
     if @current_module
       outer_class = @current_module
@@ -79,7 +79,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
       @tracker.libs[name] = @current_module
     end
 
-    exp[2] = process exp[2]
+    exp.body = process exp.body
 
     if outer_class
       @current_module = outer_class
@@ -92,12 +92,12 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
   def process_defn exp
     exp = @alias_processor.process exp
-    exp[0] = :methdef
+    exp.node_type = :methdef
 
     if @current_class
-      @current_class[:public][exp[1]] = exp
+      @current_class[:public][exp.meth_name] = exp
     elsif @current_module
-      @current_module[:public][exp[1]] = exp
+      @current_module[:public][exp.meth_name] = exp
     end
 
     exp
@@ -105,12 +105,12 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
   def process_defs exp
     exp = @alias_processor.process exp
-    exp[0] = :selfdef
+    exp.node_type = :selfdef
 
     if @current_class
-      @current_class[:public][exp[2]] = exp
+      @current_class[:public][exp.meth_name] = exp
     elsif @current_module
-      @current_module[:public][exp[3]] = exp
+      @current_module[:public][exp.meth_name] = exp
     end
 
     exp
