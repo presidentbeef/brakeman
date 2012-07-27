@@ -279,23 +279,21 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
         end
         false
       when :string_eval
-        if sexp? exp[1]
-          if exp[1].node_type == :rlist
-            exp[1].each do |e|
-              if sexp? e
-                match = has_immediate_user_input?(e)
-                return match if match
-              end
+        if sexp? exp.value
+          if exp.value.node_type == :rlist
+            exp.value.each_exp do |e|
+              match = has_immediate_user_input?(e)
+              return match if match
             end
             false
           else
-            has_immediate_user_input? exp[1]
+            has_immediate_user_input? exp.value
           end
         end
       when :format
         has_immediate_user_input? exp.value
       when :if
-        (sexp? exp.then_clause and has_immediate_user_input? exp.then_clause) or 
+        (sexp? exp.then_clause and has_immediate_user_input? exp.then_clause) or
         (sexp? exp.else_clause and has_immediate_user_input? exp.else_clause)
       else
         false
@@ -309,12 +307,12 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     out = exp if out.nil?
 
     if sexp? exp and exp.node_type == :output
-      exp = exp[1]
+      exp = exp.value
     end
 
     if call? exp
-      target = exp[1]
-      method = exp[2]
+      target = exp.target
+      method = exp.method
 
       if call? target and not method.to_s[-1,1] == "?"
         has_immediate_model? target, out
@@ -333,23 +331,23 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
         end
         false
       when :string_eval
-        if sexp? exp[1]
-          if exp[1].node_type == :rlist
-            exp[1].each do |e|
-              if sexp? e and match = has_immediate_model?(e, out)
+        if sexp? exp.value
+          if exp.value.node_type == :rlist
+            exp.value.each_sexp do |e|
+              if match = has_immediate_model?(e, out)
                 return match
               end
             end
             false
           else
-            has_immediate_model? exp[1], out
+            has_immediate_model? exp.value, out
           end
         end
       when :format
-        has_immediate_model? exp[1], out
+        has_immediate_model? exp.value, out
       when :if
-        ((sexp? exp[2] and has_immediate_model? exp[2], out) or 
-         (sexp? exp[3] and has_immediate_model? exp[3], out))
+        ((sexp? exp.then_clause and has_immediate_model? exp.then_clause, out) or
+         (sexp? exp.else_clause and has_immediate_model? exp.else_clause, out))
       else
         false
       end
@@ -385,7 +383,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
     case exp.node_type
     when :output, :format
-      find_chain exp[1], target
+      find_chain exp.value, target
     when :call
       if exp == target or include_target? exp, target
         return exp 
