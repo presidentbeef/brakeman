@@ -40,7 +40,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
             when :open_tag
               Sexp.new(:tag, process(exp.arglist))
             else
-              arg = exp.args.first
+              arg = exp.first_arg
 
               if arg
                 @inside_concat = true

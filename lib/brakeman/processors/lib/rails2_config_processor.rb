@@ -36,7 +36,7 @@ class Brakeman::Rails2ConfigProcessor < Brakeman::BaseProcessor
     target = exp.target
     target = process target if sexp? target
 
-    if exp.method == :gem and exp.args.first.value == "erubis"
+    if exp.method == :gem and exp.first_arg.value == "erubis"
       Brakeman.notify "[Notice] Using Erubis for ERB templates"
       @tracker.config[:erubis] = true
     end
@@ -53,7 +53,7 @@ class Brakeman::Rails2ConfigProcessor < Brakeman::BaseProcessor
         #Multiple arguments?...not sure if this will ever happen
         @tracker.config[:rails][attribute] = exp.args
       else
-        @tracker.config[:rails][attribute] = exp.args.first
+        @tracker.config[:rails][attribute] = exp.first_arg
       end
     elsif include_rails_config? exp
       options = get_rails_config exp
@@ -63,7 +63,7 @@ class Brakeman::Rails2ConfigProcessor < Brakeman::BaseProcessor
         level = level[o]
       end
 
-      level[options.last] = exp.args.first
+      level[options.last] = exp.first_arg
     end
 
     exp

@@ -53,7 +53,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
       if attr_protected and tracker.options[:ignore_attr_protected]
         return
       elsif input = include_user_input?(call.arglist)
-        if not hash? call.args.first and not attr_protected
+        if not hash? call.first_arg and not attr_protected
           confidence = CONFIDENCE[:high]
           user_input = input.match
         else
@@ -79,6 +79,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
   #Want to ignore calls to Model.new that have no arguments
   def check_call call
     args = process_all call.args
+
     if args.empty? #empty new()
       false
     elsif hash? args.first and not include_user_input? args.first

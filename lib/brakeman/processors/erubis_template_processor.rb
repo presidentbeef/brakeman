@@ -16,7 +16,7 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
       if method == :<< or method == :safe_concat
         exp.arglist = process exp.arglist
 
-        arg = exp.args.first
+        arg = exp.first_arg
 
         #We want the actual content
         if arg.node_type == :call and (arg.method == :to_s or arg.method == :html_safe!)
@@ -76,8 +76,7 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
   def process_attrasgn exp
     if exp.target.node_type == :ivar and exp.target.value == :@output_buffer
       if exp.method == :append= or exp.method == :safe_append=
-        exp.arglist[1] = process(exp.arglist[1])
-        arg = exp.args.first
+        arg = exp.first_arg = process(exp.first_arg)
 
         if arg.node_type == :str
           ignore

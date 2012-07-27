@@ -108,7 +108,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     target = exp.target
     method = exp.method
     args = exp[3]
-    first_arg = exp.args.first
+    first_arg = exp.first_arg
 
     #See if it is possible to simplify some basic cases
     #of addition/concatenation.
@@ -123,17 +123,17 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
           joined = join_strings target, first_arg
           joined.line(exp.line)
           exp = joined
-        elsif call? target and target.method == :+ and string? target.args.first
-          joined = join_strings target.args.first, first_arg
+        elsif call? target and target.method == :+ and string? target.first_arg
+          joined = join_strings target.first_arg, first_arg
           joined.line(exp.line)
-          target.arglist[1] = joined
+          target.first_arg = joined
           exp = target
         end
       elsif number? first_arg
         if number? target
           exp = Sexp.new(:lit, target.value + first_arg.value)
-        elsif call? target and target.method == :+ and number? target.args.first
-          target.arglist[1] = Sexp.new(:lit, target.args.first + first_arg.value)
+        elsif call? target and target.method == :+ and number? target.first_arg
+          target.first_arg = Sexp.new(:lit, target.first_arg + first_arg.value)
           exp = target
         end
       end
@@ -303,8 +303,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     args = exp.args
 
     if method == :[]=
-      index = exp.arglist[1] = process(args.first) #RP 3 TODO
-      value = exp.arglist[2] = process(args.second)    #RP 3 TODO
+      index = exp.first_arg = process(args.first)
+      value = exp.second_arg = process(args.second)
       match = Sexp.new(:call, target, :[], Sexp.new(:arglist, index))
       env[match] = value
 
@@ -312,7 +312,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         env[tar_variable] = hash_insert target.deep_clone, index, value
       end
     elsif method.to_s[-1,1] == "="
-      value = exp.arglist[1] = process(args.first)
+      value = exp.first_arg = process(args.first)
       #This is what we'll replace with the value
       match = Sexp.new(:call, target, method.to_s[0..-2].to_sym, Sexp.new(:arglist))
 

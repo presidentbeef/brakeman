@@ -80,7 +80,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     if exp.node_type == :output
       out = exp.value
     elsif exp.node_type == :escaped_output and raw_call? exp
-      out = exp.value.args.first
+      out = exp.value.first_arg
     end
 
     if input = has_immediate_user_input?(out)
@@ -138,7 +138,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   def process_escaped_output exp
     unless check_for_immediate_xss exp
       if raw_call? exp
-        process exp.value.args.first
+        process exp.value.first_arg
       end
     end
     exp

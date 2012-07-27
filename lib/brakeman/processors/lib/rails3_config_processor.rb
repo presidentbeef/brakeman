@@ -60,7 +60,7 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
         #Multiple arguments?...not sure if this will ever happen
         @tracker.config[:rails][attribute] = exp.args
       else
-        @tracker.config[:rails][attribute] = exp.args.first
+        @tracker.config[:rails][attribute] = exp.first_arg
       end
     elsif include_rails_config? exp
       options = get_rails_config exp
@@ -70,7 +70,7 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
         level = level[o]
       end
 
-      level[options.last] = exp.args.first
+      level[options.last] = exp.first_arg
     end
 
     exp

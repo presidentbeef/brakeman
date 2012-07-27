@@ -27,7 +27,7 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
     return if duplicate? result
     add_result result
     call = result[:call]
-    file_name = call.args.first
+    file_name = call.first_arg
 
     if match = has_immediate_user_input?(file_name)
       confidence = CONFIDENCE[:high]

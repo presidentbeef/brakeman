@@ -169,6 +169,34 @@ class Sexp
     end
   end
 
+  def first_arg
+    expect :call, :attrasgn
+    if self[3]
+      self[3][1]
+    end
+  end
+
+  def first_arg= exp
+    expect :call, :attrasgn
+    if self[3]
+      self[3][1] = exp
+    end
+  end
+
+  def second_arg
+    expect :call, :attrasgn
+    if self[3]
+      self[3][2]
+    end
+  end
+
+  def second_arg= exp
+    expect :call, :attrasgn
+    if self[3]
+      self[3][2] = exp
+    end
+  end
+
   def condition
     expect :if
     self[1]

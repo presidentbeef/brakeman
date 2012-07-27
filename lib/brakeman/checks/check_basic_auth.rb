@@ -33,10 +33,10 @@ class Brakeman::CheckBasicAuth < Brakeman::BaseCheck
   end
 
   def get_password call
-    args = call.args.first
+    arg = call.first_arg
 
-    return false if args.nil? or not hash? args
+    return false if arg.nil? or not hash? arg
 
-    hash_access(args, :password)
+    hash_access(arg, :password)
   end
 end
