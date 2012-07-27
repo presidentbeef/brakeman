@@ -66,7 +66,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #(This method should be retired - only classes should ever be processed
   # and @current_module will never be set, leading to inaccurate class names)
   def process_class exp
-    @current_class = class_name(exp[1])
+    @current_class = class_name(exp.class_name)
     if @current_module
       @current_class = ("#@current_module::#@current_class").to_sym
     end
@@ -77,13 +77,15 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #Processes a method definition, which may include
   #processing any rendered templates.
   def process_methdef exp
+    meth_name = exp.meth_name
+
     #Skip if instructed to only process a specific method
     #(but don't skip if this method was called from elsewhere)
-    return exp if @current_method.nil? and @only_method and @only_method != exp[1]
+    return exp if @current_method.nil? and @only_method and @only_method != meth_name
 
-    is_route = route? exp[1]
+    is_route = route? meth_name
     other_method = @current_method
-    @current_method = exp[1]
+    @current_method = meth_name
     @rendered = false if is_route
 
     env.scope do
@@ -95,7 +97,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
         end
       end
 
-      process exp[3]
+      process exp.body
 
       if is_route and not @rendered
         process_default_render exp
@@ -110,7 +112,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   def process_call exp
     exp = super
 
-    if exp[2] == :head
+    if call? exp and exp.method == :head
       @rendered = true
     end
     exp
@@ -120,7 +122,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   def process_call_with_block exp
     process_default exp
 
-    if exp[1][2] == :respond_to
+    if exp.block_call.method == :respond_to
       @rendered = true
     end
 
@@ -146,7 +148,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       end
     else
       processor = Brakeman::AliasProcessor.new @tracker
-      processor.process_safely(method[3])
+      processor.process_safely(method.body)
 
       ivars = processor.only_ivars(:include_request_vars).all
 
