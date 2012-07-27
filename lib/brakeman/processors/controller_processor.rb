@@ -21,17 +21,18 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
   #s(:class, NAME, PARENT, s(:scope ...))
   def process_class exp
+    name = class_name(exp.class_name)
+
     if @controller
-      Brakeman.debug "[Notice] Skipping inner class: #{class_name exp[1]}"
+      Brakeman.debug "[Notice] Skipping inner class: #{name}"
       return ignore
     end
 
-    name = class_name(exp[1])
     if @current_module
       name = (@current_module.to_s + "::" + name.to_s).to_sym
     end
     @controller = { :name => name,
-                    :parent => class_name(exp[2]),
+                    :parent => class_name(exp.parent_name),
                     :includes => [],
                     :public => {},
                     :private => {},
@@ -40,7 +41,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
                     :src => exp,
                     :file => @file_name }
     @tracker.controllers[@controller[:name]] = @controller
-    exp[3] = process exp[3]
+    exp[3] = process exp.body
     set_layout_name
     @controller = nil
     exp
@@ -48,18 +49,18 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
   #Look for specific calls inside the controller
   def process_call exp
-    target = exp[1]
+    target = exp.target
     if sexp? target
       target = process target
     end
 
-    method = exp[2]
-    args = exp[3]
+    method = exp.method
+    args = exp.args
 
     #Methods called inside class definition
     #like attr_* and other settings
     if @current_method.nil? and target.nil? and @controller
-      if args.length == 1 #actually, empty
+      if args.empty?
         case method
         when :private, :protected, :public
           @visibility = method
@@ -71,21 +72,21 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
       else
         case method
         when :include
-          @controller[:includes] << class_name(args[1]) if @controller
+          @controller[:includes] << class_name(args.first) if @controller
         when :before_filter
           @controller[:options][:before_filters] ||= []
-          @controller[:options][:before_filters] << args[1..-1]
+          @controller[:options][:before_filters] << args
         when :layout
-          if string? args[-1]
+          if string? args.last
             #layout "some_layout"
 
-            name = args[-1][1].to_s
+            name = args.last.value.to_s
             unless Dir.glob("#{@tracker.options[:app_path]}/app/views/layouts/#{name}.html.{erb,haml}").empty?
               @controller[:layout] = "layouts/#{name}"
             else
               Brakeman.debug "[Notice] Layout not found: #{name}"
             end
-          elsif node_type? args[-1], :nil, :false
+          elsif node_type? args.last, :nil, :false
             #layout :false or layout nil
             @controller[:layout] = false
           end
@@ -107,7 +108,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
       call.line(exp.line)
       call
     else
-      call = Sexp.new :call, target, method, process(args)
+      call = Sexp.new :call, target, method, process(exp.arglist) #RP 3 TODO
       call.line(exp.line)
       call
     end
@@ -115,9 +116,9 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
   #Process method definition and store in Tracker
   def process_defn exp
-    name = exp[1]
+    name = exp.meth_name
     @current_method = name
-    res = Sexp.new :methdef, name, process(exp[2]), process(exp[3][1])
+    res = Sexp.new :methdef, name, process(exp[2]), process(exp.body[1])
     res.line(exp.line)
     @current_method = nil
     @controller[@visibility][name] = res unless @controller.nil?
@@ -127,7 +128,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
   #Process self.method definition and store in Tracker
   def process_defs exp
-    name = exp[2]
+    name = exp.meth_name
 
     if exp[1].node_type == :self
       if @controller
@@ -142,7 +143,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     end
 
     @current_method = name
-    res = Sexp.new :selfdef, target, name, process(exp[3]), process(exp[4][1])
+    res = Sexp.new :selfdef, target, name, process(exp[3]), process(exp.body[1])
     res.line(exp.line)
     @current_method = nil
     @controller[@visibility][name] = res unless @controller.nil?
@@ -152,7 +153,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
   #Look for before_filters and add fake ones if necessary
   def process_iter exp
-    if exp[1][2] == :before_filter
+    if exp.block_call.name == :before_filter
       add_fake_filter exp
     else
       super
@@ -177,20 +178,20 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
   #methods and filters.
   def add_fake_filter exp
     filter_name = ("fake_filter" + rand.to_s[/\d+$/]).to_sym
-    args = exp[1][3]
+    args = exp.block_call.arglist
     args.insert(1, Sexp.new(:lit, filter_name))
     before_filter_call = Sexp.new(:call, nil, :before_filter, args)
 
-    if exp[2]
-      block_variable = exp[2][1]
+    if exp.block_args
+      block_variable = exp.block_args[1]
     else
       block_variable = :temp
     end
 
-    if node_type? exp[3], :block
-      block_inner = exp[3][1..-1]
+    if node_type? exp.block, :block
+      block_inner = exp.block[1..-1]
     else
-      block_inner = [exp[3]]
+      block_inner = [exp.block]
     end
 
     #Build Sexp for filter method
