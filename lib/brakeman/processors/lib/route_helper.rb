@@ -26,7 +26,7 @@ module Brakeman::RouteHelper
   #If no controller is specified, uses current controller value.
   def add_route route, controller = nil
     if node_type? route, :str, :lit
-      route = route[1]
+      route = route.value
     end
 
     route = route.to_sym
