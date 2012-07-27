@@ -77,10 +77,10 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   def check_for_immediate_xss exp
     return if duplicate? exp
 
-    if exp[0] == :output
-      out = exp[1]
-    elsif exp[0] == :escaped_output and raw_call? exp
-      out = exp[1][3][1]
+    if exp.node_type == :output
+      out = exp.value
+    elsif exp.node_type == :escaped_output and raw_call? exp
+      out = exp.value.args.first
     end
 
     if input = has_immediate_user_input?(out)
@@ -130,7 +130,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   #Process an output Sexp
   def process_output exp
-    process exp[1].dup
+    process exp.value.dup
   end
 
   #Look for calls to raw()
@@ -138,7 +138,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   def process_escaped_output exp
     unless check_for_immediate_xss exp
       if raw_call? exp
-        process exp[1][3][1]
+        process exp.value.args.first
       end
     end
     exp
@@ -173,7 +173,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
         if message and not duplicate? exp
           add_result exp
 
-          if exp[1].nil? and @known_dangerous.include? exp[2]
+          if exp.target.nil? and @known_dangerous.include? exp.method
             confidence = CONFIDENCE[:high]
           else
             confidence = CONFIDENCE[:low]
@@ -196,12 +196,12 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   def actually_process_call exp
     return if @matched
-    target = exp[1]
+    target = exp.target
     if sexp? target
       target = process target
     end
 
-    method = exp[2]
+    method = exp.method
     args = exp[3]
 
     #Ignore safe items
@@ -215,7 +215,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
       #exp[0] = :ignore #should not be necessary
       @matched = false
-    elsif sexp? exp[1] and model_name? exp[1][1]
+    elsif sexp? target and model_name? target[1]
       @matched = Match.new(:model, exp)
     elsif cookies? exp
       @matched = Match.new(:cookies, exp)
@@ -267,6 +267,6 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   end
 
   def raw_call? exp
-    exp[1].node_type == :call and exp[1][2] == :raw
+    exp.value.node_type == :call and exp.value.method == :raw
   end
 end
