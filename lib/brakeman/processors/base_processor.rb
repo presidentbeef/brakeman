@@ -58,9 +58,9 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   #Process an if statement.
   def process_if exp
     exp = exp.dup
-    exp[1] = process exp[1]
-    exp[2] = process exp[2] if exp[2]
-    exp[3] = process exp[3] if exp[3]
+    exp[1] = process exp.condition
+    exp[2] = process exp.then_clause if exp.then_clause
+    exp[3] = process exp.else_clause if exp.else_clause
     exp
   end
 
@@ -69,16 +69,16 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   #s(:iter, CALL, {:lasgn|:masgn}, BLOCK)
   def process_iter exp
     exp = exp.dup
-    call = process exp[1]
+    call = process exp.block_call
     #deal with assignments somehow
-    if exp[3]
-      block = process exp[3]
+    if exp.block
+      block = process exp.block
       block = nil if block.empty?
     else
       block = nil
     end
 
-    call = Sexp.new(:call_with_block, call, exp[2], block).compact
+    call = Sexp.new(:call_with_block, call, exp.block_args, block).compact
     call.line(exp.line)
     call
   end
@@ -90,8 +90,8 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     exp.map! do |e|
       if e.is_a? String
         e
-      elsif e[1].is_a? String
-        e[1]
+      elsif e.value.is_a? String
+        e.value
       else
         res = process e
         if res.empty?
@@ -126,22 +126,6 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     exp
   end
 
-  #Processes an or keyword
-  def process_or exp
-    exp = exp.dup
-    exp[1] = process exp[1]
-    exp[2] = process exp[2]
-    exp
-  end
-
-  #Processes an and keyword
-  def process_and exp
-    exp = exp.dup
-    exp[1] = process exp[1]
-    exp[2] = process exp[2]
-    exp
-  end
-
   #Processes a hash
   def process_hash exp
     exp = exp.dup
@@ -171,22 +155,24 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   #Processes a local assignment
   def process_lasgn exp
     exp = exp.dup
-    exp[2] = process exp[2]
+    exp.rhs = process exp.rhs
     exp
   end
+
+  alias :process_iasgn :process_lasgn
 
   #Processes an instance variable assignment
   def process_iasgn exp
     exp = exp.dup
-    exp[2] = process exp[2]
+    exp.rhs = process exp.rhs
     exp
   end
 
   #Processes an attribute assignment, which can be either x.y = 1 or x[:y] = 1
   def process_attrasgn exp
     exp = exp.dup
-    exp[1] = process exp[1]
-    exp[3] = process exp[3]
+    exp[1] = process exp.target
+    exp[3] = process exp.arglist
     exp
   end
 
@@ -202,7 +188,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
 
   #Generates :render node from call to render.
   def make_render exp, in_view = false 
-    render_type, value, rest = find_render_type exp[3], in_view
+    render_type, value, rest = find_render_type exp.args, in_view
     rest = process rest
     result = Sexp.new(:render, render_type, value, rest)
     result.line(exp.line)
@@ -220,28 +206,29 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     rest = Sexp.new(:hash)
     type = nil
     value = nil
+    first_arg = args.first
 
-    if args.length == 2 and args[-1] == Sexp.new(:lit, :update)
-      return :update, nil, args[0..-2]
+    if args.length == 1 and first_arg == Sexp.new(:lit, :update)
+      return :update, nil, args[0..-2] #TODO HUH?
     end
 
     #Look for render :action, ... or render "action", ...
-    if string? args[1] or symbol? args[1]
+    if string? first_arg or symbol? first_arg
       if @current_template and @tracker.options[:rails3]
         type = :partial
-        value = args[1]
+        value = first_arg
       else
         type = :action
-        value = args[1]
+        value = first_arg
       end
-    elsif args[1].is_a? Symbol or args[1].is_a? String
+    elsif first_arg.is_a? Symbol or first_arg.is_a? String
       type = :action
-      value = Sexp.new(:lit, args[1].to_sym)
-		elsif args[1].nil?
+      value = Sexp.new(:lit, first_arg.to_sym)
+		elsif first_arg.nil?
 			type = :default
-    elsif not hash? args[1]
+    elsif not hash? first_arg
       type = :action
-      value = args[1]
+      value = first_arg
     end
 
     types_in_hash = Set[:action, :file, :inline, :js, :json, :nothing, :partial, :template, :text, :update, :xml]
@@ -253,10 +240,10 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
 
     #Look for "type" of render in options hash
     #For example, render :file => "blah"
-    if hash? args[-1]
-      hash_iterate(args[-1]) do |key, val|
-        if types_in_hash.include? key[1]
-          type = key[1]
+    if hash? args.last
+      hash_iterate(args.last) do |key, val|
+        if types_in_hash.include? key.value
+          type = key.value
           value = val
         else  
           rest << key << val
@@ -266,7 +253,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
 
     type ||= :default
     value ||= :default
-    args[-1] = rest
+    args.last = rest
     return type, value, rest
   end
 end
