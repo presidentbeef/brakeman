@@ -30,14 +30,14 @@ class SexpTests < Test::Unit::TestCase
   end
 
   def parse src
-    @ruby_parser.parse src    
+    @ruby_parser.new.parse src
   end
 
-  def sexp_call
+  def test_sexp_call
     call = parse "x()"
 
     assert_equal call.method, :x
     assert_nil call.target
-    assert_equal call.args, []
+    assert_equal call.args, Sexp.new()
   end
 end
