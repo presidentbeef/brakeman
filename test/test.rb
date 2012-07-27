@@ -2,6 +2,13 @@
 TEST_PATH = File.expand_path(File.dirname(__FILE__))
 $LOAD_PATH.unshift "#{TEST_PATH}/../lib"
 
+begin
+  require 'simplecov'
+  SimpleCov.start
+rescue LoadError => e
+  $stderr.puts "Install simplecov for test coverage report"
+end
+
 require 'brakeman'
 require 'brakeman/scanner'
 require 'test/unit'
