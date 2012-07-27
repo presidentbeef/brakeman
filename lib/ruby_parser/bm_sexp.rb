@@ -3,6 +3,7 @@
 #of a Sexp.
 class Sexp
   attr_reader :paren
+  ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cdecl, :or, :and]
 
   def paren
     @paren ||= false
@@ -13,8 +14,16 @@ class Sexp
     last
   end
 
+  def second
+    self[1]
+  end
+
   def to_sym
     self.value.to_sym
+  end
+
+  def node_type= type
+    self[0] = type
   end
 
   alias :node_type :sexp_type
@@ -95,22 +104,51 @@ class Sexp
 
   def expect *types
     unless types.include? self.node_type
-      raise WrongSexpError, "Expected #{types.join ' or '} but given #{self.node_type}", caller[1..-1]
+      raise WrongSexpError, "Expected #{types.join ' or '} but given #{self.inspect}", caller[1..-1]
     end
   end
 
+  #Returns target of a method call
+  #
+  #s(:call, s(:call, nil, :x, s(:arglist)), :y, s(:arglist, s(:lit, 1)))
+  #         ^-----------target-----------^
   def target
-    expect :call
+    expect :call, :attrasgn
     self[1]
   end
 
+  #Returns method of a method call
+  #
+  #s(:call, s(:call, nil, :x, s(:arglist)), :y, s(:arglist, s(:lit, 1)))
+  #                        ^- method
   def method
-    expect :call
+    expect :call, :attrasgn
     self[2]
   end
 
-  def args
+  def arglist= exp
     expect :call
+    self[3] = exp
+    #RP 3 TODO
+  end
+
+  #Returns arglist for method call. This differs from Sexp#args, as Sexp#args
+  #does not return a 'real' Sexp (it does not have a node type) but
+  #Sexp#arglist returns a s(:arglist, ...)
+  def arglist
+    expect :call, :attrasgn
+    self[3]
+
+    #For new ruby_parser
+    #Sexp.new(:arglist, *self[3..-1])
+  end
+
+  #Returns argument list of a method call
+  #
+  #s(:call, s(:call, nil, :x, s(:arglist)), :y, s(:arglist, s(:lit, 1)))
+  #                                                         ^--args--^
+  def args
+    expect :call, :attrasgn
     #For new ruby_parser
     #if self[3]
     #  self[3..-1]
@@ -141,28 +179,125 @@ class Sexp
     self[3]
   end
 
+  #Method call associated with a block
+  #
+  #s(:iter,
+  # s(:call, nil, :x, s(:arglist)), <- block_call
+  #  s(:lasgn, :y),
+  #   s(:block, s(:lvar, :y), s(:call, nil, :z, s(:arglist))))
   def block_call
     expect :iter, :call_with_block
     self[1]
   end
 
+  #Block of a call with a block.
+  #Could be a single expression or a block
+  #
+  #s(:iter,
+  # s(:call, nil, :x, s(:arglist)),
+  #  s(:lasgn, :y),
+  #   s(:block, s(:lvar, :y), s(:call, nil, :z, s(:arglist))))
+  #   ^-------------------- block --------------------------^
   def block
     expect :iter, :call_with_block
-    self[-1]
+    self[3]
   end
 
+  #Returns parameters for a block
+  #
+  #s(:iter,
+  # s(:call, nil, :x, s(:arglist)),
+  #  s(:lasgn, :y), <- block_args
+  #   s(:call, nil, :p, s(:arglist, s(:lvar, :y))))
   def block_args
     expect :iter, :call_with_block
     self[2]
   end
 
+  #Returns left side (variable) of assignment:
+  #
+  #s(:lasgn, :x, s(:lit, 1))
+  #           ^--lhs
+  def lhs= exp
+    expect *ASSIGNMENT_BOOL
+    self[1] = exp
+  end
+
   def lhs
-    expect :lasgn
+    expect *ASSIGNMENT_BOOL
     self[1]
   end
 
+  def rhs= exp
+    expect *ASSIGNMENT_BOOL
+    self[2] = exp
+  end
+
+  
+  #Returns right side (value) of assignment:
+  #
+  #s(:lasgn, :x, s(:lit, 1))
+  #              ^--rhs---^
   def rhs
-    expect :lasgn
+    expect *ASSIGNMENT_BOOL
+    self[2]
+  end
+
+  def meth_name
+    expect :defn, :defs, :methdef, :selfdef
+
+    case self.node_type
+    when :defn, :methdef
+      self[1]
+    when :defs, :selfdef
+      self[2]
+    end
+  end
+
+  def body= exp
+    expect :defn, :defs, :methdef, :selfdef, :class, :module
+    
+    case self.node_type
+    when :defn, :methdef, :class
+      self[3] = exp
+    when :defs, :selfdef
+      self[4] = exp
+    when :module
+      self[2] = exp
+    end
+  end
+
+  #Returns body of a method definition:
+  #
+  #s(:defn,
+  # :x,
+  #  s(:args, :y),
+  #   s(:scope, s(:block, s(:call, nil, :z, s(:arglist))))) <-body
+  def body
+    expect :defn, :defs, :methdef, :selfdef, :class, :module
+
+    case self.node_type
+    when :defn, :methdef, :class
+      self[3]
+    when :defs, :selfdef
+      self[4]
+    when :module
+      self[2]
+    end
+  end
+
+  def render_type
+    expect :render
+    self[1]
+  end
+
+  def class_name
+    expect :class, :module
+    self[1]
+  end
+
+  def parent_name
+    expect :class
     self[2]
   end
 end
