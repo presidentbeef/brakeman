@@ -4,6 +4,7 @@ module Brakeman::ProcessorHelper
     exp.each_sexp do |e|
       process e
     end
+    exp
   end
 
   #Sets the current module.
