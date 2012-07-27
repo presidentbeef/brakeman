@@ -28,7 +28,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
 
   #Looking for mapping of routes
   def process_call exp
-    target = exp[1]
+    target = exp.target
 
     if target == map or (not target.nil? and target == nested)
       process_map exp
@@ -42,9 +42,9 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
   #Process a map.something call
   #based on the method used
   def process_map exp
-    args = exp[3][1..-1]
+    args = exp.args
 
-    case exp[2]
+    case exp.method
     when :resource
       process_resource args
     when :resources
@@ -61,14 +61,16 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
   #Look for map calls that take a block.
   #Otherwise, just do the default processing.
   def process_iter exp
-    if exp[1][1] == map or exp[1][1] == nested
-      method = exp[1][2]
+    target = exp.block_call.target
+
+    if target == map or target == nested
+      method = target.method
       case method
       when :namespace
         process_namespace exp
       when :resources, :resource
-        process_resources exp[1][3][1..-1]
-        process_default exp[3] if exp[3]
+        process_resources exp.target.args
+        process_default exp.block if exp.block
       when :with_options
         process_with_options exp
       end
@@ -89,9 +91,9 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
     else
       exp.each do |argument|
         if node_type? argument, :lit
-          self.current_controller = exp[0][1]
+          self.current_controller = exp.first.value
           add_resources_routes
-          process_resource_options exp[-1]
+          process_resource_options exp.last
         end
       end
     end
@@ -141,7 +143,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
 
     if exp.node_type == :array
       exp[1..-1].each do |e|
-        routes << e[1]
+        routes << e.value
       end
     end
   end
@@ -152,7 +154,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
     routes = @tracker.routes[@current_controller]
 
     exp[1..-1].each do |e|
-      routes.delete e[1]
+      routes.delete e.value
     end
   end
 
@@ -161,13 +163,13 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
     controller = check_for_controller_name exp
     if controller
       self.current_controller = controller
-      process_resource_options exp[-1]
+      process_resource_options exp.last
     else
       exp.each do |argument|
         if node_type? argument, :lit
-          self.current_controller = pluralize(exp[0][1].to_s)
+          self.current_controller = pluralize(exp.first[0].value.to_s)
           add_resource_routes
-          process_resource_options exp[-1]
+          process_resource_options exp.last
         end
       end
     end
@@ -180,10 +182,10 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
     self.current_controller = controller if controller
     
     #Check for default route
-    if string? exp[0]
-      if exp[0][1] == ":controller/:action/:id"
-        @tracker.routes[:allow_all_actions] = exp[0]
-      elsif exp[0][1].include? ":action"
+    if string? exp.first
+      if exp.first.value == ":controller/:action/:id"
+        @tracker.routes[:allow_all_actions] = exp.first
+      elsif exp.first.value.include? ":action"
         @tracker.routes[@current_controller] = [:allow_all_actions, exp.line]
         return
       end
@@ -193,9 +195,9 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
     #to a controller which already allows them all
     return if @tracker.routes[@current_controller].is_a? Array and @tracker.routes[@current_controller][0] == :allow_all_actions
 
-    exp[-1].each_with_index do |e,i|
-      if symbol? e and e[1] == :action
-        @tracker.routes[@current_controller] << exp[-1][i + 1][1].to_sym
+    exp.last.each_with_index do |e,i|
+      if symbol? e and e.value == :action
+        @tracker.routes[@current_controller] << exp.last[i + 1].value.to_sym
         return
       end
     end
@@ -205,13 +207,13 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
   #   something.resources :blah
   # end
   def process_with_options exp
-    @with_options = exp[1][3][-1]
-    @nested = Sexp.new(:lvar, exp[2][1])
+    @with_options = exp.block_call.args.last
+    @nested = Sexp.new(:lvar, exp.block_args.lhs)
 
-    self.current_controller = check_for_controller_name exp[1][3]
+    self.current_controller = check_for_controller_name exp.block_call.args
     
     #process block
-    process exp[3] 
+    process exp.block 
 
     @with_options = nil
     @nested = nil
@@ -221,13 +223,13 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
   #   something.resources :blah
   # end
   def process_namespace exp
-    call = exp[1]
-    formal_args = exp[2]
-    block = exp[3]
+    call = exp.block_call
+    formal_args = exp.block_args
+    block = exp.block
 
-    @prefix << camelize(call[3][1][1])
+    @prefix << camelize(call.args.first.value)
 
-    @nested = Sexp.new(:lvar, formal_args[1])
+    @nested = Sexp.new(:lvar, formal_args.lhs)
 
     process block
 
@@ -246,7 +248,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
     routes = @tracker.routes[@current_controller]
 
     hash_iterate(exp) do |action, type|
-      routes << action[1]
+      routes << action.value
     end
   end
 
@@ -259,7 +261,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
   def check_for_controller_name args
     args.each do |a|
       if hash? a and value = hash_access(a, :controller)
-        return value[1]
+        return value.value
       end
     end
 
@@ -278,8 +280,8 @@ class Brakeman::RouteAliasProcessor < Brakeman::AliasProcessor
   def process_call exp
     process_default exp
     
-    if hash? exp[1] and exp[2] == :keys
-        keys = get_keys exp[1] 
+    if hash? exp.target and exp.method == :keys
+      keys = get_keys exp.target
       exp.clear
       keys.each_with_index do |e,i|
         exp[i] = e
