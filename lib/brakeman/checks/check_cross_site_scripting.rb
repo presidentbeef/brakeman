@@ -202,7 +202,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     end
 
     method = exp.method
-    args = exp[3]
+    args = exp.arglist
 
     #Ignore safe items
     if (target.nil? and (@ignore_methods.include? method or method.to_s =~ IGNORE_LIKE)) or
