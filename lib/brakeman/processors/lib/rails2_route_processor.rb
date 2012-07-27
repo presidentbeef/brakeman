@@ -213,7 +213,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
     self.current_controller = check_for_controller_name exp.block_call.args
     
     #process block
-    process exp.block 
+    process exp.block
 
     @with_options = nil
     @nested = nil
