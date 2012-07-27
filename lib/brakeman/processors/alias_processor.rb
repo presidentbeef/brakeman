@@ -123,17 +123,17 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
           joined = join_strings target, first_arg
           joined.line(exp.line)
           exp = joined
-        elsif call? target and target[2] == :+ and string? target[3][1]
-          joined = join_strings target[3][1], first_arg
+        elsif call? target and target.method == :+ and string? target.args.first
+          joined = join_strings target.args.first, first_arg
           joined.line(exp.line)
-          target[3][1] = joined
+          target.arglist[1] = joined
           exp = target
         end
       elsif number? first_arg
         if number? target
-          exp = Sexp.new(:lit, target[1] + first_arg[1])
-        elsif target[2] == :+ and number? target[3][1]
-          target[3][1] = Sexp.new(:lit, target[3][1][1] + first_arg[1])
+          exp = Sexp.new(:lit, target.value + first_arg.value)
+        elsif call? target and target.method == :+ and number? target.args.first
+          target.arglist[1] = Sexp.new(:lit, target.args.first + first_arg.value)
           exp = target
         end
       end
@@ -151,10 +151,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       end
     when :[]
       if array? target
-        temp_exp = process_array_access target, args[1..-1] #RP3 TODO
+        temp_exp = process_array_access target, exp.args
         exp = temp_exp if temp_exp
       elsif hash? target
-        temp_exp = process_hash_access target, args[1..-1]  #RP3 TODO
+        temp_exp = process_hash_access target, exp.args
         exp = temp_exp if temp_exp
       end
     when :merge!, :update
@@ -188,7 +188,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #Process a new scope.
   def process_scope exp
     env.scope do
-      process exp[1]
+      process exp.block
     end
     exp
   end
@@ -224,7 +224,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #Local assignment
   # x = 1
   def process_lasgn exp
-    exp[2] = process exp.rhs if sexp? exp.rhs
+    exp.rhs = process exp.rhs if sexp? exp.rhs
     return exp if exp.rhs.nil?
 
     local = Sexp.new(:lvar, exp.lhs).line(exp.line || -2)
@@ -262,7 +262,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   # $x = 1
   def process_gasgn exp
     match = Sexp.new(:gvar, exp.lhs)
-    value = exp[2] = process(exp.rhs)
+    value = exp.rhs = process(exp.rhs)
 
     if @inside_if and val = env[match]
       if val != value
@@ -298,13 +298,13 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   # x[:y] = 1
   def process_attrasgn exp
     tar_variable = exp.target
-    target = exp[1] = process(exp.target)
+    target = exp.target = process(exp.target)
     method = exp.method
     args = exp.args
 
     if method == :[]=
-      index = exp[3][1] = process(args.first) #RP 3 TODO
-      value = exp[3][2] = process(args[1])    #RP 3 TODO
+      index = exp.arglist[1] = process(args.first) #RP 3 TODO
+      value = exp.arglist[2] = process(args.second)    #RP 3 TODO
       match = Sexp.new(:call, target, :[], Sexp.new(:arglist, index))
       env[match] = value
 
@@ -312,7 +312,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         env[tar_variable] = hash_insert target.deep_clone, index, value
       end
     elsif method.to_s[-1,1] == "="
-      value = exp[3][1] = process(args.first)
+      value = exp.arglist[1] = process(args.first)
       #This is what we'll replace with the value
       match = Sexp.new(:call, target, method.to_s[0..-2].to_sym, Sexp.new(:arglist))
 
