@@ -132,7 +132,7 @@ class Sexp
   end
 
   def arglist= exp
-    expect :call
+    expect :call, :attrasgn
     self[3] = exp
     #RP 3 TODO
   end
