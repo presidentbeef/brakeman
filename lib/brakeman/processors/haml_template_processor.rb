@@ -127,7 +127,11 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
   end
 
   #Checks if the buffer is the target in a method call Sexp.
+  #TODO: Test this
   def is_buffer_target? exp
-    exp.node_type == :call and exp[1] == :_hamlout and exp[2] == :buffer
+    exp.node_type == :call and
+    node_type? exp.target, :lvar and
+    exp.target.value == :_hamlout and
+    exp.method == :buffer
   end
 end
