@@ -171,8 +171,8 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   #Processes an attribute assignment, which can be either x.y = 1 or x[:y] = 1
   def process_attrasgn exp
     exp = exp.dup
-    exp[1] = process exp.target
-    exp[3] = process exp.arglist
+    exp.target = process exp.target
+    exp.arglist = process exp.arglist
     exp
   end
 
