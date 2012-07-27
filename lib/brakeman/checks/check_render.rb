@@ -13,7 +13,7 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
   end
 
   def process_render result
-    case result[:call][1]
+    case result[:call].render_type
     when :partial, :template, :action, :file
       check_for_dynamic_path result
     when :inline
