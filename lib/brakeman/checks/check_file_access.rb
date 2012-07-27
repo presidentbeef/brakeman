@@ -27,7 +27,7 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
     return if duplicate? result
     add_result result
     call = result[:call]
-    file_name = call[3][1]
+    file_name = call.args.first
 
     if match = has_immediate_user_input?(file_name)
       confidence = CONFIDENCE[:high]
@@ -38,7 +38,7 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
       match = include_user_input?(file_name)
 
       #Check for string building in file name
-      if call?(file_name) and (file_name[2] == :+ or file_name[2] == :<<)
+      if call?(file_name) and (file_name.method == :+ or file_name.method == :<<)
         confidence = CONFIDENCE[:high]
       else
         confidence = CONFIDENCE[:low]
