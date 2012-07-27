@@ -22,29 +22,29 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
 
   #Processes call, looking for template output
   def process_call exp
-    target = exp[1]
+    target = exp.target
     if sexp? target
       target = process target
     end
 
-    method = exp[2]
+    method = exp.method
 
-    if (sexp? target and target[2] == :_hamlout) or target == :_hamlout
+    if (call? target and target.method == :_hamlout) or target == :_hamlout
       res = case method
             when :adjust_tabs, :rstrip!, :attributes #Check attributes, maybe?
               ignore
             when :options
-              Sexp.new :call, :_hamlout, :options, exp[3]
+              Sexp.new :call, :_hamlout, :options, exp.arglist
             when :buffer
-              Sexp.new :call, :_hamlout, :buffer, exp[3]
+              Sexp.new :call, :_hamlout, :buffer, exp.arglist
             when :open_tag
-              Sexp.new(:tag, process(exp[3]))
+              Sexp.new(:tag, process(exp.arglist))
             else
-              arg = exp[3][1]
+              arg = exp.args.first
 
               if arg
                 @inside_concat = true
-                out = exp[3][1] = process(arg)
+                out = exp.arglist[1] = process(arg)
                 @inside_concat = false
               else
                 raise Exception.new("Empty _hamlout.#{method}()?")
@@ -78,7 +78,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       #This seems to be used rarely, but directly appends args to output buffer
     elsif sexp? target and method == :<< and is_buffer_target? target
       @inside_concat = true
-      out = exp[3][1] = process(exp[3][1])
+      out = exp.arglist[1] = process(exp.arglist[1])
       @inside_concat = false
 
       if out.node_type == :str #ignore plain strings
@@ -91,11 +91,11 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       end
     elsif target == nil and method == :render
       #Process call to render()
-      exp[3] = process exp[3]
+      exp.arglist = process exp.arglist
       make_render_in_view exp
     else
       #TODO: Do we really need a new Sexp here?
-      args = process exp[3]
+      args = process exp.arglist
       call = Sexp.new :call, target, method, args
       call.original_line(exp.original_line)
       call.line(exp.line)
