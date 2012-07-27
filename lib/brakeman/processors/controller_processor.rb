@@ -41,7 +41,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
                     :src => exp,
                     :file => @file_name }
     @tracker.controllers[@controller[:name]] = @controller
-    exp[3] = process exp.body
+    exp.body = process exp.body
     set_layout_name
     @controller = nil
     exp
@@ -118,7 +118,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
   def process_defn exp
     name = exp.meth_name
     @current_method = name
-    res = Sexp.new :methdef, name, process(exp[2]), process(exp.body[1])
+    res = Sexp.new :methdef, name, process(exp[2]), process(exp.body.block)
     res.line(exp.line)
     @current_method = nil
     @controller[@visibility][name] = res unless @controller.nil?
@@ -143,7 +143,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     end
 
     @current_method = name
-    res = Sexp.new :selfdef, target, name, process(exp[3]), process(exp.body[1])
+    res = Sexp.new :selfdef, target, name, process(exp[3]), process(exp.body.block)
     res.line(exp.line)
     @current_method = nil
     @controller[@visibility][name] = res unless @controller.nil?
