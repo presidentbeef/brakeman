@@ -117,6 +117,11 @@ class Sexp
     self[1]
   end
 
+  def target= exp
+    expect :call, :attrasgn
+    self[1] = exp
+  end
+
   #Returns method of a method call
   #
   #s(:call, s(:call, nil, :x, s(:arglist)), :y, s(:arglist, s(:lit, 1)))
