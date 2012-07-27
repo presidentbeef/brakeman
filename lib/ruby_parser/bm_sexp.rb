@@ -204,8 +204,14 @@ class Sexp
   #   s(:block, s(:lvar, :y), s(:call, nil, :z, s(:arglist))))
   #   ^-------------------- block --------------------------^
   def block
-    expect :iter, :call_with_block
-    self[3]
+    expect :iter, :call_with_block, :scope
+
+    case self.node_type
+    when :iter, :call_with_block
+      self[3]
+    when :scope
+      self[1]
+    end
   end
 
   #Returns parameters for a block
