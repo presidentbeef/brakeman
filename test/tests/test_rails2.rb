@@ -30,6 +30,10 @@ class Rails2Tests < Test::Unit::TestCase
     assert_equal 0, report[:errors].length
   end
 
+  def test_config_sanity
+    assert_equal 'UTC', report[:config][:rails][:time_zone].value
+  end
+
   def test_eval
     assert_warning :warning_type => "Dangerous Eval",
       :line => 40,

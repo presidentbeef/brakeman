@@ -23,6 +23,10 @@ class Rails3Tests < Test::Unit::TestCase
     assert_equal 0, report[:errors].length
   end
 
+  def test_config_sanity
+    assert_equal 'utf-8', report[:config][:rails][:encoding].value
+  end
+
   def test_eval_params
     assert_warning :type => :warning,
       :warning_type => "Dangerous Eval",
