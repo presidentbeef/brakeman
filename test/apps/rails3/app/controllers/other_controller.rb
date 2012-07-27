@@ -29,4 +29,10 @@ class OtherController < ApplicationController
   def test_sql_with_non_active_record_model
     Noticia.where(params[:bad_stuff])
   end
+
+  def test_http_digest
+    authenticate_or_request_with_http_digest do
+      something
+    end
+  end
 end

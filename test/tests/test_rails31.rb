@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 0,
       :template => 11,
       :controller => 1,
-      :warning => 45 }
+      :warning => 46 }
   end
 
   def test_without_protection
@@ -561,5 +561,13 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Model attribute\ value\ used\ in\ file\ name/,
       :confidence => 1,
       :file => /users_controller\.rb/
+  end
+
+  def test_CVE_2012_3424
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :message => /^Vulnerability\ in\ digest\ authentication\ \(/,
+      :confidence => 2,
+      :file => /Gemfile/
   end
 end
