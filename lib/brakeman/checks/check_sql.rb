@@ -375,8 +375,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #unless safe_value? explicitly returns true.
   def check_string_interp arg
     arg.each do |exp|
-      if node_type?(exp, :string_eval, :evstr) and not safe_value? exp[1]
-        return exp[1]
+      if node_type?(exp, :string_eval, :evstr) and not safe_value? exp.value
+        return exp.value
       end
     end
 
