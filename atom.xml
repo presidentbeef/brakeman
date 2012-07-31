@@ -4,13 +4,110 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-07-16T19:02:00-07:00</updated>
+  <updated>2012-07-31T11:26:19-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 1.7.0 Released</title>
+    <link href="http://brakemanscanner.org/blog/2012/07/31/brakeman-1-dot-7-0-released/"/>
+    <updated>2012-07-31T17:44:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2012/07/31/brakeman-1-dot-7-0-released</id>
+    <content type="html">&lt;p&gt;This release includes improvements to Rails 3 route processing, better performance, several bug fixes, and more!&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 1.6.2&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add check for CVE-2012-3424&lt;/li&gt;
+&lt;li&gt;Link report types to descriptions on website&lt;/li&gt;
+&lt;li&gt;Report errors raised while running check&lt;/li&gt;
+&lt;li&gt;Improve processing of Rails 3 routes&lt;/li&gt;
+&lt;li&gt;Improve file access check&lt;/li&gt;
+&lt;li&gt;Avoid warning on non-ActiveModel models&lt;/li&gt;
+&lt;li&gt;Fix how &lt;code&gt;params[:x] ||=&lt;/code&gt; is handled&lt;/li&gt;
+&lt;li&gt;Treat user input in &lt;code&gt;or&lt;/code&gt; expressions as immediate values&lt;/li&gt;
+&lt;li&gt;Fix processing of negative array indexes&lt;/li&gt;
+&lt;li&gt;Fix &quot;empty char-class&quot; error&lt;/li&gt;
+&lt;li&gt;Speed improvements by stripping down SexpProcessor&lt;/li&gt;
+&lt;li&gt;Add line breaks to truncated table rows&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Check for HTTP Auth Digest DoS&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/vxJjrc15qYM/discussion&quot;&gt;CVE-2012-3424&lt;/a&gt;, a potential denial of service vulnerability in how Rails handles HTTP authentication digest parameters, was recently announced. It affects Rails 3.x, and is fixed in 3.0.16, 3.1.7, and 3.2.7.&lt;/p&gt;
+
+&lt;p&gt;Brakeman will generate a warning for the Rails versions affected, but will only report a high confidence warning if &lt;code&gt;authenticate_or_request_with_http_digest&lt;/code&gt; or &lt;code&gt;authenticate_with_http_digest&lt;/code&gt; methods are called.&lt;/p&gt;
+
+&lt;h3&gt;Links to Warning Information&lt;/h3&gt;
+
+&lt;p&gt;HTML reports now link warning types to descriptions on the Brakeman website. JSON reports will also include the link information. Due to this change, it is not possible to compare JSON reports from previous versions using the &lt;code&gt;--compare&lt;/code&gt; option.&lt;/p&gt;
+
+&lt;p&gt;Suggestions and &lt;a href=&quot;https://github.com/presidentbeef/brakeman-site&quot;&gt;pull requests&lt;/a&gt; for improving the documention are welcome!&lt;/p&gt;
+
+&lt;h3&gt;Report Check Errors&lt;/h3&gt;
+
+&lt;p&gt;Previously, errors encounted while running checks were not included in reports. This has been fixed.&lt;/p&gt;
+
+&lt;h3&gt;Better Rails 3 Route Processing&lt;/h3&gt;
+
+&lt;p&gt;Even the simple information Brakeman uses (which methods are routes) is difficult to extract from Rails 3 routes due to all the different options it offers. This release should decrease the number of &quot;Error while processing routes&quot; messages that come up.&lt;/p&gt;
+
+&lt;p&gt;See &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/116&quot;&gt;this pull request&lt;/a&gt; for more information about specific fixes.&lt;/p&gt;
+
+&lt;h3&gt;Improved File Access Check&lt;/h3&gt;
+
+&lt;p&gt;The check for user input in file access calls has been improved so the confidence of the warnings will vary according to how the user input is used, like most other checks.&lt;/p&gt;
+
+&lt;p&gt;Additionally, the check will now respect the &lt;code&gt;--report-direct&lt;/code&gt; option.&lt;/p&gt;
+
+&lt;h3&gt;No SQLi Warnings for Non-ActiveModel&lt;/h3&gt;
+
+&lt;p&gt;Models which do not inherit from &lt;code&gt;ActiveRecord::Base&lt;/code&gt; will no longer be reported in SQL injection warnings.&lt;/p&gt;
+
+&lt;h3&gt;Default Assignment to &lt;code&gt;params&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Normally, when Brakeman processes an assignment like &lt;code&gt;x ||= y&lt;/code&gt;, it will assign &lt;code&gt;y&lt;/code&gt; to &lt;code&gt;x&lt;/code&gt; if no previous value is found for &lt;code&gt;x&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;However, in this case:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;params[:x] ||= y
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The information that the left hand side is a &lt;code&gt;params&lt;/code&gt; hash is lost.&lt;/p&gt;
+
+&lt;p&gt;This has been changed so default assignment to a &lt;code&gt;params&lt;/code&gt; hash will not replace the entire value, but will handle it as &lt;code&gt;params[:x] || y&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3&gt;User Input in &lt;code&gt;or&lt;/code&gt; Expressions&lt;/h3&gt;
+
+&lt;p&gt;Previously, unescaped output like&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;%= params[:x] || z %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;would have been reported as a weak confidence warning. This has been changed so that any user input in an &lt;code&gt;or&lt;/code&gt; expression will be considered immediate (versus &quot;indirect&quot;) output and will likely result in high confidence warnings.&lt;/p&gt;
+
+&lt;h3&gt;Speed Improvements&lt;/h3&gt;
+
+&lt;p&gt;Scan times should decrease by 15-25% with this release. This is mostly due to stripping unused bits out of SexpProcessor.&lt;/p&gt;
+
+&lt;h3&gt;Bug Fixes&lt;/h3&gt;
+
+&lt;p&gt;Besides errors raised when processing Rails 3 routes, the &lt;code&gt;Result must be a Sexp, was Symbol::array&lt;/code&gt; and &lt;code&gt;empty char-class&lt;/code&gt; errors should be resolved now.&lt;/p&gt;
+
+&lt;p&gt;Please report any errors raised when performing scans, as they are usually bugs.&lt;/p&gt;
+
+&lt;h3&gt;Report Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release!&lt;/p&gt;
+
+&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 1.6.2 Released</title>
@@ -1225,55 +1322,6 @@ Brakeman.run :app_path =&amp;gt; 'my_app'
 &lt;p&gt;Brakeman reports using the CSV format should work once again.&lt;/p&gt;
 
 &lt;p&gt;There is a bug in Ruport when using Ruby 1.9.2 and CSV output. A temporary patch has been added until this is resolved.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 0.8.4 Released</title>
-    <link href="http://brakemanscanner.org/blog/2011/11/04/brakeman-0-dot-8-4-released/"/>
-    <updated>2011-11-04T14:58:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2011/11/04/brakeman-0-dot-8-4-released</id>
-    <content type="html">&lt;p&gt;Changes:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Option for separate attr_accessible warnings&lt;/li&gt;
-&lt;li&gt;Option to set CSS file for HTML output&lt;/li&gt;
-&lt;li&gt;Add file names for version-specific warnings&lt;/li&gt;
-&lt;li&gt;Add line number for default routes in a controller&lt;/li&gt;
-&lt;li&gt;Fix hash_insert()&lt;/li&gt;
-&lt;li&gt;Remove use of Queue from threaded checks&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;Separate attr_accessible Warnings&lt;/h3&gt;
-
-&lt;p&gt;The current default is to roll all controllers lacking &lt;code&gt;attr_accessible&lt;/code&gt; into a single warning. This is convenient when manually looking at HTML or text output, but for Jenkins/Hudson it is better to have each be a separate warning. That way it is easier to track new and fixed warnings.&lt;/p&gt;
-
-&lt;p&gt;To turn on this behavior, use &lt;code&gt;--separate-models&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h3&gt;Custom CSS for HTML Output&lt;/h3&gt;
-
-&lt;p&gt;Use the &lt;code&gt;--css-file&lt;/code&gt; option to set a custom CSS file for styling HTML output. This file is copied directly into the report.&lt;/p&gt;
-
-&lt;h3&gt;File Names for Version-Specific Warnings&lt;/h3&gt;
-
-&lt;p&gt;Previously, there would be no file name associated with warnings about certain versions of Rails. This caused the warnings to not show up in the Jenkins/Hudson plugin. Now either &lt;code&gt;Gemfile&lt;/code&gt; or &lt;code&gt;config/environment.rb&lt;/code&gt; will be used as the file name for warnings based on the detected Rails version.&lt;/p&gt;
-
-&lt;h3&gt;Line Number for Default Routes&lt;/h3&gt;
-
-&lt;p&gt;When default routes were detected for specific controllers, there will now be a line number (from &lt;code&gt;routes.rb&lt;/code&gt;) associated with the warning.&lt;/p&gt;
-
-&lt;h3&gt;hash_insert() Fixed&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;hash_insert&lt;/code&gt; was broken and would cause some spurious warnings. For example, sometimes &lt;code&gt;only_path =&amp;gt; true&lt;/code&gt; would be set in &lt;code&gt;params&lt;/code&gt;, but Brakeman would mess up the &lt;code&gt;params&lt;/code&gt; hash and a redirect warning would still be created.&lt;/p&gt;
-
-&lt;h3&gt;Threaded Checks No Longer Use Queue&lt;/h3&gt;
-
-&lt;p&gt;When using threaded checks, the resulting warnings were stored in a thread-safe Queue. This has been removed, and the resulting value from each thread will be used instead. This should avoid some (small) locking overhead and is just simpler.&lt;/p&gt;
-
-&lt;h3&gt;&quot;Like&quot; Brakeman on Ruby Toolbox&lt;/h3&gt;
-
-&lt;p&gt;Please consider 'liking' Brakeman on the &lt;a href=&quot;https://www.ruby-toolbox.com/projects/brakeman&quot;&gt;Ruby Toolbox&lt;/a&gt;!&lt;/p&gt;
 </content>
   </entry>
   

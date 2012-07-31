@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Brakeman Jenkins Plugin 0.7 Released</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman 1.7.0 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/blog/2012/03/22/brakeman-jenkins-plugin-0-dot-7-released/"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2012/07/31/brakeman-1-dot-7-0-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -102,7 +102,7 @@
   
   <header>
     
-      <h1 class="entry-title">Brakeman Jenkins Plugin 0.7 Released</h1>
+      <h1 class="entry-title">Brakeman 1.7.0 Released</h1>
     
     
       <p class="meta">
@@ -110,7 +110,7 @@
 
 
 
-<time datetime="2012-03-22 13:27:00 -0700" pubdate  updated >Mar 22<span>nd</span>, 2012</time>
+<time datetime="2012-07-31 17:44:00 -0700" pubdate  updated >Jul 31<span>st</span>, 2012</time>
 
 
 </p>
@@ -118,11 +118,95 @@
   </header>
 
 
-<div class="entry-content"><p>The <a href="http://jenkins-ci.org">Jenkins</a>/<a href="http://hudson-ci.org">Hudson</a> plugin which tracks, displays, and alerts on Brakeman warnings has been updated to work with the latest static analysis core plugin. In particular, this means warning thresholds for new warnings will no longer disappear.</p>
+<div class="entry-content"><p>This release includes improvements to Rails 3 route processing, better performance, several bug fixes, and more!</p>
 
-<p>See <a href="https://wiki.jenkins-ci.org/display/JENKINS/Brakeman+Plugin">here</a> for more information about the plugin.</p>
+<p><em>Changes since 1.6.2</em>:</p>
 
-<p>Thanks to Nick Green for fixing this!</p>
+<ul>
+<li>Add check for CVE-2012-3424</li>
+<li>Link report types to descriptions on website</li>
+<li>Report errors raised while running check</li>
+<li>Improve processing of Rails 3 routes</li>
+<li>Improve file access check</li>
+<li>Avoid warning on non-ActiveModel models</li>
+<li>Fix how <code>params[:x] ||=</code> is handled</li>
+<li>Treat user input in <code>or</code> expressions as immediate values</li>
+<li>Fix processing of negative array indexes</li>
+<li>Fix &#8220;empty char-class&#8221; error</li>
+<li>Speed improvements by stripping down SexpProcessor</li>
+<li>Add line breaks to truncated table rows</li>
+</ul>
+
+
+<h3>Check for HTTP Auth Digest DoS</h3>
+
+<p><a href="https://groups.google.com/d/topic/rubyonrails-security/vxJjrc15qYM/discussion">CVE-2012-3424</a>, a potential denial of service vulnerability in how Rails handles HTTP authentication digest parameters, was recently announced. It affects Rails 3.x, and is fixed in 3.0.16, 3.1.7, and 3.2.7.</p>
+
+<p>Brakeman will generate a warning for the Rails versions affected, but will only report a high confidence warning if <code>authenticate_or_request_with_http_digest</code> or <code>authenticate_with_http_digest</code> methods are called.</p>
+
+<h3>Links to Warning Information</h3>
+
+<p>HTML reports now link warning types to descriptions on the Brakeman website. JSON reports will also include the link information. Due to this change, it is not possible to compare JSON reports from previous versions using the <code>--compare</code> option.</p>
+
+<p>Suggestions and <a href="https://github.com/presidentbeef/brakeman-site">pull requests</a> for improving the documention are welcome!</p>
+
+<h3>Report Check Errors</h3>
+
+<p>Previously, errors encounted while running checks were not included in reports. This has been fixed.</p>
+
+<h3>Better Rails 3 Route Processing</h3>
+
+<p>Even the simple information Brakeman uses (which methods are routes) is difficult to extract from Rails 3 routes due to all the different options it offers. This release should decrease the number of &#8220;Error while processing routes&#8221; messages that come up.</p>
+
+<p>See <a href="https://github.com/presidentbeef/brakeman/pull/116">this pull request</a> for more information about specific fixes.</p>
+
+<h3>Improved File Access Check</h3>
+
+<p>The check for user input in file access calls has been improved so the confidence of the warnings will vary according to how the user input is used, like most other checks.</p>
+
+<p>Additionally, the check will now respect the <code>--report-direct</code> option.</p>
+
+<h3>No SQLi Warnings for Non-ActiveModel</h3>
+
+<p>Models which do not inherit from <code>ActiveRecord::Base</code> will no longer be reported in SQL injection warnings.</p>
+
+<h3>Default Assignment to <code>params</code></h3>
+
+<p>Normally, when Brakeman processes an assignment like <code>x ||= y</code>, it will assign <code>y</code> to <code>x</code> if no previous value is found for <code>x</code>.</p>
+
+<p>However, in this case:</p>
+
+<pre><code>params[:x] ||= y
+</code></pre>
+
+<p>The information that the left hand side is a <code>params</code> hash is lost.</p>
+
+<p>This has been changed so default assignment to a <code>params</code> hash will not replace the entire value, but will handle it as <code>params[:x] || y</code>.</p>
+
+<h3>User Input in <code>or</code> Expressions</h3>
+
+<p>Previously, unescaped output like</p>
+
+<pre><code>&lt;%= params[:x] || z %&gt;
+</code></pre>
+
+<p>would have been reported as a weak confidence warning. This has been changed so that any user input in an <code>or</code> expression will be considered immediate (versus &#8220;indirect&#8221;) output and will likely result in high confidence warnings.</p>
+
+<h3>Speed Improvements</h3>
+
+<p>Scan times should decrease by 15-25% with this release. This is mostly due to stripping unused bits out of SexpProcessor.</p>
+
+<h3>Bug Fixes</h3>
+
+<p>Besides errors raised when processing Rails 3 routes, the <code>Result must be a Sexp, was Symbol::array</code> and <code>empty char-class</code> errors should be resolved now.</p>
+
+<p>Please report any errors raised when performing scans, as they are usually bugs.</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
 </div>
 
 
@@ -138,7 +222,7 @@
 
 
 
-<time datetime="2012-03-22 13:27:00 -0700" pubdate  updated >Mar 22<span>nd</span>, 2012</time>
+<time datetime="2012-07-31 17:44:00 -0700" pubdate  updated >Jul 31<span>st</span>, 2012</time>
 
 
 
@@ -149,7 +233,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2012/03/22/brakeman-jenkins-plugin-0-dot-7-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2012/03/22/brakeman-jenkins-plugin-0-dot-7-released/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2012/07/31/brakeman-1-dot-7-0-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2012/07/31/brakeman-1-dot-7-0-released/" >Tweet</a>
   
   
   <g:plusone size="medium"></g:plusone>
@@ -165,8 +249,8 @@
     <div id="disqus_thread"><div id="disqus_thread"></div>
 <script type="text/javascript">
   var disqus_shortname = 'brakeman';
-  var disqus_identifier = 'http://brakemanscanner.org/blog/2012/03/22/brakeman-jenkins-plugin-0-dot-7-released/';
-  var disqus_url = 'http://brakemanscanner.org/blog/2012/03/22/brakeman-jenkins-plugin-0-dot-7-released/';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2012/07/31/brakeman-1-dot-7-0-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2012/07/31/brakeman-1-dot-7-0-released/';
   //var disqus_developer = 1;
   (function() {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
