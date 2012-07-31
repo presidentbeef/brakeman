@@ -1,3 +1,18 @@
+# 1.7.0
+
+ * Add check for CVE-2012-3424
+ * Link report types to descriptions on website
+ * Report errors raised while running check
+ * Improve processing of Rails 3 routes
+ * Fix "empty char-class" error
+ * Improve file access check
+ * Avoid warning on non-ActiveModel models
+ * Speed improvements by stripping down SexpProcessor
+ * Fix how `params[:x] ||=` is handled
+ * Treat user input in `or` expressions as immediate values
+ * Fix processing of negative array indexes
+ * Add line breaks to truncated table rows
+
 # 1.6.2
 
  * Add checks for CVE-2012-2660, CVE-2012-2661, CVE-2012-2694, CVE-2012-2695 (Dave Worth)
