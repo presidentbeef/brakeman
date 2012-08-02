@@ -122,7 +122,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   def process_call_with_block exp
     process_default exp
 
-    if exp.block_call.method == :respond_to
+    if call? exp.block_call and exp.block_call.method == :respond_to
       @rendered = true
     end
 
