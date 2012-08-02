@@ -10,7 +10,7 @@ class Sexp
   end
 
   def value
-    raise "multi item sexp" if size > 2
+    raise WrongSexpError, "Sexp#value called on multi-item Sexp", caller[1..-1] if size > 2
     last
   end
 
