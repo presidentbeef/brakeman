@@ -253,7 +253,6 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
 
     type ||= :default
     value ||= :default
-    args.last = rest
     return type, value, rest
   end
 end
