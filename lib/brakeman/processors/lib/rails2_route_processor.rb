@@ -261,7 +261,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
   def check_for_controller_name args
     args.each do |a|
       if hash? a and value = hash_access(a, :controller)
-        return value.value
+        return value.value if string? value or symbol? value
       end
     end
 
