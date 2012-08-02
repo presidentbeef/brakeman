@@ -7,6 +7,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.connect 'something', :controller => "something#{dynamic}"
 
+  map.resource :users
+
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:
