@@ -273,7 +273,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     if node_type? arg, :arglist
       if arg.length > 2 and node_type? arg[1], :string_interp, :dstr
         # Model.where("blah = ?", blah)
-        return string_interp arg[1]
+        return check_string_interp arg[1]
       else
         arg = arg[1]
       end

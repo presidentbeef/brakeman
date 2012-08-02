@@ -31,8 +31,16 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     if @current_module
       name = (@current_module.to_s + "::" + name.to_s).to_sym
     end
+
+    begin
+      parent = class_name exp.parent_name
+    rescue StandardError => e
+      Brakeman.debug e
+      parent = nil
+    end
+
     @controller = { :name => name,
-                    :parent => class_name(exp.parent_name),
+                    :parent => parent,
                     :includes => [],
                     :public => {},
                     :private => {},

@@ -127,6 +127,18 @@ class HomeController < ApplicationController
     User.new(params[:still_bad])
   end
 
+  def test_xss_with_or
+    @params_or_something = params[:x] || something
+
+    if some_condition
+      @user_input = true
+    else
+      @user_input = params[:y]
+    end
+
+    @more_user_input = x || params[:z] || z
+  end
+
   private
 
   def filter_it

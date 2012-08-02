@@ -24,8 +24,15 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
       Brakeman.debug "[Notice] Skipping inner class: #{name}"
       ignore
     else
+      begin
+        parent = class_name exp.parent_name
+      rescue StandardError => e
+        Brakeman.debug e
+        parent = nil
+      end
+
       @model = { :name => name,
-        :parent => class_name(exp.parent_name),
+        :parent => parent,
         :includes => [],
         :public => {},
         :private => {},

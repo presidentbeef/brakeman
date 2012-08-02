@@ -150,6 +150,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     @mass_assign_disabled = false
 
     if version_between?("3.1.0", "4.0.0") and 
+      tracker.config[:rails] and
       tracker.config[:rails][:active_record] and 
       tracker.config[:rails][:active_record][:whitelist_attributes] == Sexp.new(:true)
 
@@ -295,6 +296,9 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       when :if
         (sexp? exp.then_clause and has_immediate_user_input? exp.then_clause) or
         (sexp? exp.else_clause and has_immediate_user_input? exp.else_clause)
+      when :or
+        has_immediate_user_input? exp.lhs or
+        has_immediate_user_input? exp.rhs
       else
         false
       end

@@ -30,8 +30,15 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
     if @tracker.libs[name]
       @current_class = @tracker.libs[name]
     else
+      begin
+        parent = class_name exp.parent_name
+      rescue StandardError => e
+        Brakeman.debug e
+        parent = nil
+      end
+
       @current_class = { :name => name,
-                    :parent => class_name(exp.class_name),
+                    :parent => parent,
                     :includes => [],
                     :public => {},
                     :private => {},

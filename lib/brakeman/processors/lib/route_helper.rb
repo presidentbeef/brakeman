@@ -35,7 +35,11 @@ module Brakeman::RouteHelper
       self.current_controller = controller
     end
 
-    @tracker.routes[@current_controller] << route
+    routes = @tracker.routes[@current_controller]
+    
+    if routes and routes != :allow_all_actions
+      routes << route
+    end
   end
 
   #Add default routes

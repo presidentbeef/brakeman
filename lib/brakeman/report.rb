@@ -638,6 +638,8 @@ class Brakeman::Report
         w.file = file_for w
       end
     end
+
+    report[:config] = tracker.config
       
     report
   end

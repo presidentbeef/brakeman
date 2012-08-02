@@ -13,9 +13,9 @@ class Rails31Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :model => 0,
-      :template => 4,
+      :template => 11,
       :controller => 1,
-      :warning => 44 }
+      :warning => 46 }
   end
 
   def test_without_protection
@@ -411,6 +411,15 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /product\.rb/
   end
 
+  def test_sql_injection_interpolation_in_first_arg
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 174,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
   def test_select_vulnerability
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
@@ -455,6 +464,68 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /users\/mixin_default\.html\.erb/
   end
 
+  def test_get_in_resources_block
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /\/a\.html\.erb/
+  end
+
+  def test_get_in_controller_block
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /\/b\.html\.erb/
+  end
+
+  def test_post_with_just_hash_in_controller_block
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /\/c\.html\.erb/
+  end
+
+  def test_put_to_in_controller_block
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /\/d\.html\.erb/
+  end
+
+  def test_match_to_route
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /\/e\.html\.erb/
+  end
+
+  def test_delete_in_resources_block
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /\/f\.html\.erb/
+  end
+
+  def test_route_hash_shorthand
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /\/g\.html\.erb/
+  end
 
   def test_file_access_indirect_user_input
     assert_warning :type => :warning,
@@ -490,5 +561,13 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Model attribute\ value\ used\ in\ file\ name/,
       :confidence => 1,
       :file => /users_controller\.rb/
+  end
+
+  def test_CVE_2012_3424
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :message => /^Vulnerability\ in\ digest\ authentication\ \(/,
+      :confidence => 2,
+      :file => /Gemfile/
   end
 end
