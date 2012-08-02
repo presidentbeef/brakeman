@@ -1,4 +1,10 @@
 ActionController::Routing::Routes.draw do |map|
+  #Default routes are set for everything,
+  #so these routes are testing for specific problems
+  map.with_options :controller => 'other', :action => 'nothing' do |r|
+    r.connect 'blah'
+  end
+
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:
