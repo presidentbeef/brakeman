@@ -209,7 +209,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     first_arg = args.first
 
     if args.length == 1 and first_arg == Sexp.new(:lit, :update)
-      return :update, nil, args[0..-2] #TODO HUH?
+      return :update, nil, Sexp.new(:arglist, *args[0..-2]) #TODO HUH?
     end
 
     #Look for render :action, ... or render "action", ...
