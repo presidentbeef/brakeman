@@ -69,7 +69,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
       when :namespace
         process_namespace exp
       when :resources, :resource
-        process_resources exp.target.args
+        process_resources exp.block_call.args
         process_default exp.block if exp.block
       when :with_options
         process_with_options exp
