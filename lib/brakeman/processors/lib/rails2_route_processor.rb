@@ -64,7 +64,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
     target = exp.block_call.target
 
     if target == map or target == nested
-      method = target.method
+      method = exp.block_call.method
       case method
       when :namespace
         process_namespace exp
