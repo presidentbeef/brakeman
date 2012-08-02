@@ -167,7 +167,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
     else
       exp.each do |argument|
         if node_type? argument, :lit
-          self.current_controller = pluralize(exp.first[0].value.to_s)
+          self.current_controller = pluralize(exp.first.value.to_s)
           add_resource_routes
           process_resource_options exp.last
         end
