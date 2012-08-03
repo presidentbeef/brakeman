@@ -35,4 +35,8 @@ class OtherController < ApplicationController
       something
     end
   end
+
+  def test_render_with_nonsymbol_key
+    render x => :y
+  end
 end
