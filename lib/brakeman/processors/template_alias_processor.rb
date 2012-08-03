@@ -94,7 +94,7 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
 
   def find_push_target exp
     if sexp? exp
-      if exp.node_type == :lvar and (exp.target == :_buf or exp.target == :_erbout)
+      if exp.node_type == :lvar and (exp.value == :_buf or exp.value == :_erbout)
         return nil
       elsif exp.node_type == :ivar and exp.value == :@output_buffer
         return nil
