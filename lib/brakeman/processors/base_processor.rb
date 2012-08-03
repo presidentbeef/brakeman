@@ -242,7 +242,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     #For example, render :file => "blah"
     if hash? args.last
       hash_iterate(args.last) do |key, val|
-        if types_in_hash.include? key.value
+        if symbol? key and types_in_hash.include? key.value
           type = key.value
           value = val
         else  
