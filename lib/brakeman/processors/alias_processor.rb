@@ -133,7 +133,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         if number? target
           exp = Sexp.new(:lit, target.value + first_arg.value)
         elsif call? target and target.method == :+ and number? target.first_arg
-          target.first_arg = Sexp.new(:lit, target.first_arg + first_arg.value)
+          target.first_arg = Sexp.new(:lit, target.first_arg.value + first_arg.value)
           exp = target
         end
       end
