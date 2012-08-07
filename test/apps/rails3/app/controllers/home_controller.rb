@@ -88,6 +88,10 @@ class HomeController < ApplicationController
     render :test_render
   end
 
+  def test_number_alias
+    y + 1 + 2
+  end
+
   private
 
   def filter_it
