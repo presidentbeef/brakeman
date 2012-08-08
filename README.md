@@ -1,6 +1,6 @@
 ![Brakeman Logo](http://brakemanscanner.org/images/logo_medium.png)
 
-![Travis CI Status](https://secure.travis-ci.org/presidentbeef/brakeman.png)
+![Travis CI Status](https://secure.travis-ci.org/presidentbeef/brakeman.png) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/presidentbeef/brakeman)
 
 # Brakeman
 
