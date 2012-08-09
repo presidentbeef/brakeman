@@ -54,6 +54,10 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       @ignore_methods << :auto_link
     end
 
+    if version_between? "2.0.0", "2.3.14"
+      @known_dangerous << :strip_tags
+    end
+
     if tracker.options[:rails3]
       @ignore_methods << :select
     end

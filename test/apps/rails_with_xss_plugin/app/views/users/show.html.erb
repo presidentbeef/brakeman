@@ -16,6 +16,8 @@
   <b>Bad:</b> <%= @evil_input %>
 </p>
 
+<%= strip_tags @user.profile %>
+
 <% if @current_user and (@current_user.id == @user.id or @current_user.admin?) %>
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <% end %>
