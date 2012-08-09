@@ -11,7 +11,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :controller => 1,
       :model => 3,
       :template => 1,
-      :warning => 13 }
+      :warning => 14 }
   end
 
   def report
@@ -243,4 +243,11 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :file => /user\.rb/
   end
 
+  def test_strip_tags_CVE_2012_3464
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^All\ Rails\ 2\.x\ versions\ have\ a\ vulnerabil/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
 end
