@@ -666,7 +666,7 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /environment\.rb/
   end
 
-  def test_strip_tags_CVE_2012_3464_high
+  def test_strip_tags_CVE_2012_3465_high
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 3,

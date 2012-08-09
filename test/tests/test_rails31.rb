@@ -571,7 +571,7 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /Gemfile/
   end
 
-  def test_strip_tags_CVE_2012_3464
+  def test_strip_tags_CVE_2012_3465
     assert_warning :type => :warning,
       :warning_type => "Cross Site Scripting",
       :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ strip/,
