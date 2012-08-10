@@ -13,7 +13,7 @@ class Rails31Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :model => 0,
-      :template => 11,
+      :template => 12,
       :controller => 1,
       :warning => 46 }
   end
@@ -525,6 +525,15 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
       :file => /\/g\.html\.erb/
+  end
+
+  def test_cross_site_scripting_select_tag_CVE_2012_3463
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Upgrade\ to\ Rails\ 3\.1\.8,\ 3\.1\.0\ select_tag/,
+      :confidence => 0,
+      :file => /test_select_tag\.html\.erb/
   end
 
   def test_file_access_indirect_user_input
