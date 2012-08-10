@@ -14,7 +14,7 @@ class Brakeman::CheckSelectTag < Brakeman::BaseCheck
     elsif version_between? "3.1.0", "3.1.7"
       suggested_version = "3.1.8"
     elsif version_between? "3.2.0", "3.2.7"
-      suggested_version = "3.2.7"
+      suggested_version = "3.2.8"
     else
       return
     end
