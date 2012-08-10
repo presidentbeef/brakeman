@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 0,
       :template => 11,
       :controller => 1,
-      :warning => 46 }
+      :warning => 47 }
   end
 
   def test_without_protection
@@ -525,6 +525,14 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
       :file => /\/g\.html\.erb/
+  end
+
+  def test_cross_site_scripting_single_quotes_CVE_2012_3464
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^Rails\ 3\.1\.0\ does\ not\ escape\ single\ quote/,
+      :confidence => 1,
+      :file => /Gemfile/
   end
 
   def test_file_access_indirect_user_input
