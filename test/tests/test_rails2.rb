@@ -582,9 +582,9 @@ class Rails2Tests < Test::Unit::TestCase
   def test_select_vulnerability
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
-      :line => 1,
-      :message => "Unescaped parameter value near line 1: params[:blah]",
-      :confidence => 0,
+      :line => 3,
+      :message => /^Upgrade\ to\ Rails\ 3\ or\ use\ options_for_se/,
+      :confidence => 1,
       :file => /not_used\.html\.erb/
   end
 
