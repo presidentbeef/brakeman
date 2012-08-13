@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 2,
         :template => 32,
-        :warning => 30 }
+        :warning => 31 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
         :template => 32,
-        :warning => 31 }
+        :warning => 32 }
     end
   end
 
@@ -640,6 +640,14 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
       :file => /test_strip_tags\.html\.erb/
+  end
+
+  def test_cross_site_scripting_single_quotes_CVE_2012_3464
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^All\ Rails\ 2\.x\ versions\ do\ not\ escape\ sin/,
+      :confidence => 1,
+      :file => /environment\.rb/
   end
 
   def test_check_send

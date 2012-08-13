@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 23,
-      :warning => 28
+      :warning => 29
     }
   end
 
@@ -602,6 +602,14 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Upgrade\ to\ Rails\ 3\.0\.17,\ 3\.0\.5\ select_ta/,
       :confidence => 0,
       :file => /test_select_tag\.html\.erb/
+  end
+
+  def test_cross_site_scripting_single_quotes_CVE_2012_3464
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^Rails\ 3\.0\.5\ does\ not\ escape\ single\ quote/,
+      :confidence => 1,
+      :file => /Gemfile/
   end
 
   def test_CVE_2012_3424
