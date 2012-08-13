@@ -4,13 +4,67 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-07-31T11:26:19-07:00</updated>
+  <updated>2012-08-13T11:35:45-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 1.7.1 Released</title>
+    <link href="http://brakemanscanner.org/blog/2012/08/13/brakeman-1-dot-7-1-released/"/>
+    <updated>2012-08-13T11:04:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2012/08/13/brakeman-1-dot-7-1-released</id>
+    <content type="html">&lt;p&gt;This is a small release to add checks for the &lt;a href=&quot;http://weblog.rubyonrails.org/2012/8/9/ann-rails-3-2-8-has-been-released/&quot;&gt;Rails vulnerabilities reported last week&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 1.7.0&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add check for &lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/fV3QUToSMSw/discussion&quot;&gt;CVE-2012-3463&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Add check for &lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/kKGNeMrnmiY/discussion&quot;&gt;CVE-2012-3464&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Add check for &lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/FgVEtBajcTY/discussion&quot;&gt;CVE-2012-3465&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Add charset to HTML report (&lt;a href=&quot;https://github.com/hooopo&quot;&gt;hooopo&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Report XSS in select() for Rails 2&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;CVE-2012-3463 - XSS in select_tag Prompt&lt;/h3&gt;
+
+&lt;p&gt;In Rails 3.x, values supplied to the &lt;code&gt;:prompt&lt;/code&gt; option in the &lt;code&gt;select_tag&lt;/code&gt; helper are not escaped, leading to a cross-site scripting vulnerability.&lt;/p&gt;
+
+&lt;p&gt;Brakeman will warn on all uses of &lt;code&gt;select_tag&lt;/code&gt; with unescaped user input in the &lt;code&gt;:prompt&lt;/code&gt; option.&lt;/p&gt;
+
+&lt;h3&gt;CVE-2012-3464 - Single Quotes are Unescaped&lt;/h3&gt;
+
+&lt;p&gt;This is pretty much a known issue (&lt;a href=&quot;http://www.ruby-forum.com/topic/166894&quot;&gt;example from 2008&lt;/a&gt;), but Rails 3.2.8 fixes it.&lt;/p&gt;
+
+&lt;p&gt;Single quotes are most dangerous when interpolating values into HTML attributes that use single quotes, which is why it is often recommended to always use double quotes in HTML.&lt;/p&gt;
+
+&lt;p&gt;There is a &lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/kKGNeMrnmiY/discussion&quot;&gt;provided workaround&lt;/a&gt; for earlier versions of Rails which replaces &lt;code&gt;ERB::Util.html_escape&lt;/code&gt; with &lt;code&gt;Rack::Utils.escape_html&lt;/code&gt;. This method adds escaping for both single quotes (&lt;code&gt;'&lt;/code&gt;) and forward slashes (&lt;code&gt;/&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;If the provided workaround is used in an initializer, as suggested, then Brakeman will not generate a warning for this vulnerability. Otherwise, Brakeman will generate a warning for affected versions.&lt;/p&gt;
+
+&lt;h3&gt;CVE-2012-3465 - XSS in strip_tags&lt;/h3&gt;
+
+&lt;p&gt;Another vulnerability has been reported for &lt;code&gt;strip_tags&lt;/code&gt; (earlier report was &lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/K5EwdJt06hI/discussion&quot;&gt;CVE-2011-2931&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;Brakeman will warn on affected versions if uses of &lt;code&gt;strip_tags&lt;/code&gt; are detected.&lt;/p&gt;
+
+&lt;h3&gt;XSS in select Helper&lt;/h3&gt;
+
+&lt;p&gt;This vulnerability was &lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/CdoMUVpsRmQ/discussion&quot;&gt;reported a while ago&lt;/a&gt;, but it was unclear if it applied to Rails 2.x or just Rails 3. Thanks to Neil Matatall, it has been confirmed to be an issue in Rails 2.x as well.&lt;/p&gt;
+
+&lt;p&gt;Therefore, Brakeman will be reporting the vulnerability (&lt;code&gt;select&lt;/code&gt; does not escape options list if supplied as a straight string) for Rails 2.x as well.&lt;/p&gt;
+
+&lt;h3&gt;Report Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release!&lt;/p&gt;
+
+&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 1.7.0 Released</title>
@@ -1278,50 +1332,6 @@ Brakeman.run :app_path =&amp;gt; 'my_app'
 &lt;p&gt;This vulnerability affects Rails 2.3.x when using the rails_xss plugin, Rails 3.0 - 3.0.10, and Rails 3.1 - 3.1.1.&lt;/p&gt;
 
 &lt;p&gt;The only change in the 0.9.1 release is a check for this new vulnerability.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 0.9.0 Released</title>
-    <link href="http://brakemanscanner.org/blog/2011/11/16/brakeman-0-dot-9-0-released/"/>
-    <updated>2011-11-16T16:23:00-08:00</updated>
-    <id>http://brakemanscanner.org/blog/2011/11/16/brakeman-0-dot-9-0-released</id>
-    <content type="html">&lt;p&gt;Changes:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Process Rails 3 configuration files&lt;/li&gt;
-&lt;li&gt;Check for config.active_record.whitelist_attributes = true&lt;/li&gt;
-&lt;li&gt;Always produce a warning for without_protection =&gt; true&lt;/li&gt;
-&lt;li&gt;Fix CSV output&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;p&gt;This is just a small release on the way to 1.0.&lt;/p&gt;
-
-&lt;h3&gt;Rails 3 Configs&lt;/h3&gt;
-
-&lt;p&gt;Configurations in &lt;code&gt;config/application&lt;/code&gt; and &lt;code&gt;config/environments/production.rb&lt;/code&gt; will now be parsed.&lt;/p&gt;
-
-&lt;h3&gt;Check for Disabled Mass Assignment&lt;/h3&gt;
-
-&lt;p&gt;A new option was added in Rails 3.1 to globally disable mass assignment using &lt;code&gt;config.active_record.whitelist_attributes = true&lt;/code&gt;. Brakeman will now turn off mass assignment warnings if this configuration setting is detected.&lt;/p&gt;
-
-&lt;h3&gt;Always Warn on without_protection&lt;/h3&gt;
-
-&lt;p&gt;Rails 3.1 adds a way to bypass attribute protection when doing mass assignment.&lt;/p&gt;
-
-&lt;p&gt;For example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;User.new(params, :without_protection =&amp;gt; true)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Brakeman will now &lt;em&gt;always&lt;/em&gt; warn when &lt;code&gt;without_protection&lt;/code&gt; is used, even if mass assignment is disabled or attributes are protected on that model.&lt;/p&gt;
-
-&lt;h3&gt;Fix CSV Output&lt;/h3&gt;
-
-&lt;p&gt;Brakeman reports using the CSV format should work once again.&lt;/p&gt;
-
-&lt;p&gt;There is a bug in Ruport when using Ruby 1.9.2 and CSV output. A temporary patch has been added until this is resolved.&lt;/p&gt;
 </content>
   </entry>
   
