@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 23,
-      :warning => 27
+      :warning => 28
     }
   end
 
@@ -608,6 +608,14 @@ class Rails3Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Denial of Service",
       :message => /^Vulnerability\ in\ digest\ authentication\ \(/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_strip_tags_CVE_2012_3465
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^Versions\ before\ 3\.0\.10\ have\ a\ vulnerabil/,
       :confidence => 0,
       :file => /Gemfile/
   end
