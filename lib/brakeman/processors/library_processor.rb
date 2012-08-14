@@ -61,7 +61,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
   end
 
   def process_module exp
-    name = class_name(exp.class_name)
+    name = class_name(exp.module_name)
 
     if @current_module
       outer_class = @current_module

@@ -365,6 +365,8 @@ class Sexp
     self[1]
   end
 
+  alias module_name class_name
+
   def parent_name
     expect :class
     self[2]

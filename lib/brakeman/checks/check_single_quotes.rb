@@ -63,7 +63,7 @@ class Brakeman::CheckSingleQuotes < Brakeman::BaseCheck
   #
   #    module Util
   def process_module exp
-    if @inside_erb and exp.class_name == :Util
+    if @inside_erb and exp.module_name == :Util
       @inside_util = true
       process exp.body
       @inside_util = false
