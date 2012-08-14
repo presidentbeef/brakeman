@@ -316,7 +316,7 @@ class Sexp
   end
 
   #Returns name of method being defined in a method definition.
-  def meth_name
+  def method_name
     expect :defn, :defs, :methdef, :selfdef
 
     case self.node_type

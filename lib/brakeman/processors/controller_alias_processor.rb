@@ -77,7 +77,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #Processes a method definition, which may include
   #processing any rendered templates.
   def process_methdef exp
-    meth_name = exp.meth_name
+    meth_name = exp.method_name
 
     #Skip if instructed to only process a specific method
     #(but don't skip if this method was called from elsewhere)

@@ -124,7 +124,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
   #Process method definition and store in Tracker
   def process_defn exp
-    name = exp.meth_name
+    name = exp.method_name
     @current_method = name
     res = Sexp.new :methdef, name, process(exp[2]), process(exp.body.block)
     res.line(exp.line)
@@ -136,7 +136,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
   #Process self.method definition and store in Tracker
   def process_defs exp
-    name = exp.meth_name
+    name = exp.method_name
 
     if exp[1].node_type == :self
       if @controller

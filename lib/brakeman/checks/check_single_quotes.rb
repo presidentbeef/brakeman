@@ -76,7 +76,7 @@ class Brakeman::CheckSingleQuotes < Brakeman::BaseCheck
   #
   #    def html_escape
   def process_defn exp
-    if @inside_util and exp.meth_name == :html_escape
+    if @inside_util and exp.method_name == :html_escape
       @inside_html_escape = true
       process exp.body
       @inside_html_escape = false

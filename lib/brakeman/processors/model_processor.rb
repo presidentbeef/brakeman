@@ -99,7 +99,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
   #Add method definition to tracker
   def process_defn exp
     return exp unless @model
-    name = exp.meth_name
+    name = exp.method_name
 
     @current_method = name
     res = Sexp.new :methdef, name, exp[2], process(exp.body.value)
@@ -115,7 +115,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
   #Add method definition to tracker
   def process_defs exp
     return exp unless @model
-    name = exp.meth_name
+    name = exp.method_name
 
     if exp[1].node_type == :self
       target = @model[:name]
