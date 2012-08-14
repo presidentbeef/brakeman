@@ -4,6 +4,10 @@
 class Sexp
   attr_reader :paren
 
+  def method_missing name, *args
+    raise NoMethodError.new("No method '#{name}' for Sexp", name, args)
+  end
+
   def paren
     @paren ||= false
   end
