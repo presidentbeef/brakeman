@@ -11,14 +11,14 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 31,
-        :warning => 29 }
+        :template => 32,
+        :warning => 31 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 31,
-        :warning => 30 }
+        :template => 32,
+        :warning => 32 }
     end
   end
 
@@ -582,9 +582,9 @@ class Rails2Tests < Test::Unit::TestCase
   def test_select_vulnerability
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
-      :line => 1,
-      :message => "Unescaped parameter value near line 1: params[:blah]",
-      :confidence => 0,
+      :line => 3,
+      :message => /^Upgrade\ to\ Rails\ 3\ or\ use\ options_for_se/,
+      :confidence => 1,
       :file => /not_used\.html\.erb/
   end
 
@@ -633,6 +633,23 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /test_xss_with_or\.html\.erb/
   end
 
+  def test_cross_site_scripting_strip_tags
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_strip_tags\.html\.erb/
+  end
+
+  def test_cross_site_scripting_single_quotes_CVE_2012_3464
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^All\ Rails\ 2\.x\ versions\ do\ not\ escape\ sin/,
+      :confidence => 1,
+      :file => /environment\.rb/
+  end
+
   def test_check_send
     assert_warning :type => :warning,
       :warning_type => "Dangerous Send",
@@ -647,6 +664,23 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /\AUser defined target of method invocation/,
       :confidence => 1,
       :file => /home_controller\.rb/
+  end
+
+  def test_strip_tags_CVE_2011_2931
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^Versions\ before\ 2\.3\.13\ have\ a\ vulnerabil/,
+      :confidence => 0,
+      :file => /environment\.rb/
+  end
+
+  def test_strip_tags_CVE_2012_3465_high
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_strip_tags\.html\.erb/
   end
 end
 

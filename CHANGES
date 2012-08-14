@@ -1,3 +1,11 @@
+# 1.7.1
+
+ * Add check for CVE-2012-3463
+ * Add check for CVE-2012-3464
+ * Add check for CVE-2012-3465
+ * Add charset to HTML report (hooopo)
+ * Report XSS in select() for Rails 2
+
 # 1.7.0
 
  * Add check for CVE-2012-3424

@@ -38,7 +38,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     @ignore_methods = Set[:button_to, :check_box, :content_tag, :escapeHTML, :escape_once,
                            :field_field, :fields_for, :h, :hidden_field,
                            :hidden_field, :hidden_field_tag, :image_tag, :label,
-                           :link_to, :mail_to, :radio_button,
+                           :link_to, :mail_to, :radio_button, :select,
                            :submit_tag, :text_area, :text_field,
                            :text_field_tag, :url_encode, :url_for,
                            :will_paginate].merge tracker.options[:safe_methods]
@@ -54,8 +54,8 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       @ignore_methods << :auto_link
     end
 
-    if tracker.options[:rails3]
-      @ignore_methods << :select
+    if version_between? "2.0.0", "2.3.14"
+      @known_dangerous << :strip_tags
     end
 
     tracker.each_template do |name, template|

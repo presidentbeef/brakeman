@@ -13,9 +13,9 @@ class Rails31Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :model => 0,
-      :template => 11,
+      :template => 12,
       :controller => 1,
-      :warning => 46 }
+      :warning => 48 }
   end
 
   def test_without_protection
@@ -527,6 +527,23 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /\/g\.html\.erb/
   end
 
+  def test_cross_site_scripting_select_tag_CVE_2012_3463
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Upgrade\ to\ Rails\ 3\.1\.8,\ 3\.1\.0\ select_tag/,
+      :confidence => 0,
+      :file => /test_select_tag\.html\.erb/
+  end
+
+  def test_cross_site_scripting_single_quotes_CVE_2012_3464
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^Rails\ 3\.1\.0\ does\ not\ escape\ single\ quote/,
+      :confidence => 1,
+      :file => /Gemfile/
+  end
+
   def test_file_access_indirect_user_input
     assert_warning :type => :warning,
       :warning_type => "File Access",
@@ -568,6 +585,14 @@ class Rails31Tests < Test::Unit::TestCase
       :warning_type => "Denial of Service",
       :message => /^Vulnerability\ in\ digest\ authentication\ \(/,
       :confidence => 2,
+      :file => /Gemfile/
+  end
+
+  def test_strip_tags_CVE_2012_3465
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ strip/,
+      :confidence => 0,
       :file => /Gemfile/
   end
 end

@@ -14,8 +14,8 @@ class Rails3Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 5,
-      :template => 22,
-      :warning => 27
+      :template => 23,
+      :warning => 29
     }
   end
 
@@ -595,10 +595,35 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /test_params\.html\.erb/
   end
 
+  def test_cross_site_scripting_select_tag_CVE_2012_3463
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Upgrade\ to\ Rails\ 3\.0\.17,\ 3\.0\.5\ select_ta/,
+      :confidence => 0,
+      :file => /test_select_tag\.html\.erb/
+  end
+
+  def test_cross_site_scripting_single_quotes_CVE_2012_3464
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^Rails\ 3\.0\.5\ does\ not\ escape\ single\ quote/,
+      :confidence => 1,
+      :file => /Gemfile/
+  end
+
   def test_CVE_2012_3424
     assert_warning :type => :warning,
       :warning_type => "Denial of Service",
       :message => /^Vulnerability\ in\ digest\ authentication\ \(/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_strip_tags_CVE_2012_3465
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^Versions\ before\ 3\.0\.10\ have\ a\ vulnerabil/,
       :confidence => 0,
       :file => /Gemfile/
   end
