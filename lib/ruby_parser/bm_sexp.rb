@@ -5,6 +5,11 @@ class Sexp
   attr_reader :paren
 
   def method_missing name, *args
+    #Brakeman does not use this functionality,
+    #so overriding it to raise a NoMethodError.
+    #
+    #The original functionality calls find_node and optionally
+    #deletes the node if found.
     raise NoMethodError.new("No method '#{name}' for Sexp", name, args)
   end
 
@@ -19,6 +24,12 @@ class Sexp
 
   def to_sym
     self.value.to_sym
+  end
+
+ def resbody delete = false
+    #RubyParser relies on method_missing for this, but since we don't want to use
+    #method_missing, here's a real method.
+    find_node :resbody, delete
   end
 
   alias :node_type :sexp_type
