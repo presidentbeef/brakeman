@@ -137,6 +137,8 @@ class HomeController < ApplicationController
     end
 
     @more_user_input = x || params[:z] || z
+
+    @user = User.find(current_user)
   end
 
   private
