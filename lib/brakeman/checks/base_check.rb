@@ -352,6 +352,9 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       when :if
         ((sexp? exp[2] and has_immediate_model? exp[2], out) or 
          (sexp? exp[3] and has_immediate_model? exp[3], out))
+      when :or
+        has_immediate_model? exp[1] or
+        has_immediate_model? exp[2]
       else
         false
       end
