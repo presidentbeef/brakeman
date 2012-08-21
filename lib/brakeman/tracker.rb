@@ -54,6 +54,9 @@ class Brakeman::Tracker
       backtrace = [ backtrace ]
     end
 
+    Brakeman.debug exception
+    Brakeman.debug backtrace
+
     @errors << { :error => exception.to_s.gsub("\n", " "), :backtrace => backtrace }
   end
 
