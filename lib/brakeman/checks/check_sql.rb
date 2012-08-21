@@ -53,6 +53,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   end
 
   #Find calls to named_scope() or scope() in models
+  #RP 3 TODO
   def find_scope_calls
     scope_calls = []
 
@@ -71,12 +72,11 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
           model[:options][:scope].each do |args|
             second_arg = args[2]
 
-            if second_arg.node_type == :iter and
-              (second_arg[-1].node_type == :block or second_arg[-1].node_type == :call)
+            if second_arg.node_type == :iter and node_type? second_arg.block, :block, :call
               process_scope_with_block name, args
             elsif second_arg.node_type == :call
               call = second_arg
-              scope_calls << { :call => call, :location => [:class, name ], :method => call[2] }
+              scope_calls << { :call => call, :location => [:class, name ], :method => call.method }
             else
               call = Sexp.new(:call, nil, :scope, args).line(args.line)
               scope_calls << { :call => call, :location => [:class, name ], :method => :scope }
@@ -135,7 +135,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         end
       end
     elsif block.node_type == :call
-      process_result :target => block[1], :method => block[2], :call => block, :location => [:class, model_name, scope_name]
+      process_result :target => block.target, :method => block.method, :call => block, :location => [:class, model_name, scope_name]
     end
   end
 
@@ -170,38 +170,38 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     return if duplicate? result or result[:call].original_line
 
     call = result[:call]
-    method = call[2]
-    args = call[3]
+    method = call.method
+    args = call.args
 
     dangerous_value = case method
                       when :find
-                        check_find_arguments args[2]
+                        check_find_arguments args.second
                       when :exists?
-                        check_find_arguments args[1]
+                        check_find_arguments args.first
                       when :named_scope, :scope
-                        check_scope_arguments args
+                        check_scope_arguments call.arglist
                       when :find_by_sql, :count_by_sql
-                        check_by_sql_arguments args[1]
+                        check_by_sql_arguments args.first
                       when :calculate
-                        check_find_arguments args[3]
+                        check_find_arguments args[2]
                       when :last, :first, :all
-                        check_find_arguments args[1]
+                        check_find_arguments args.first
                       when :average, :count, :maximum, :minimum, :sum
                         if args.length > 2
-                          unsafe_sql?(args[1]) or check_find_arguments(args[-1])
+                          unsafe_sql?(args.first) or check_find_arguments(args.last)
                         else
-                          check_find_arguments args[-1]
+                          check_find_arguments args.last
                         end
                       when :where, :having
-                        check_query_arguments args
+                        check_query_arguments call.arglist
                       when :order, :group, :reorder
-                        check_order_arguments args
+                        check_order_arguments call.arglist
                       when :joins
-                        check_joins_arguments args[1]
+                        check_joins_arguments args.first
                       when :from, :select
-                        unsafe_sql? args[1]
+                        unsafe_sql? args.first
                       when :lock
-                        check_lock_arguments args[1]
+                        check_lock_arguments args.first
                       else
                         Brakeman.debug "Unhandled SQL method: #{method}"
                       end
@@ -375,8 +375,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #unless safe_value? explicitly returns true.
   def check_string_interp arg
     arg.each do |exp|
-      if node_type?(exp, :string_eval, :evstr) and not safe_value? exp[1]
-        return exp[1]
+      if node_type?(exp, :string_eval, :evstr) and not safe_value? exp.value
+        return exp.value
       end
     end
 
@@ -417,9 +417,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     when :hash
       check_hash_values exp unless ignore_hash
     when :if
-      unsafe_sql? exp[2] or unsafe_sql? exp[3]
+      unsafe_sql? exp.then_clause or unsafe_sql? exp.else_clause
     when :call
-      unless IGNORE_METHODS_IN_SQL.include? exp[2]
+      unless IGNORE_METHODS_IN_SQL.include? exp.method
         if has_immediate_user_input? exp or has_immediate_model? exp
           exp
         else
@@ -427,13 +427,13 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         end
       end
     when :or
-      if unsafe = (unsafe_sql?(exp[1]) || unsafe_sql?(exp[2]))
+      if unsafe = (unsafe_sql?(exp.lhs) || unsafe_sql?(exp.rhs))
         return unsafe
       else
         nil
       end
     when :block, :rlist
-      unsafe_sql? exp[-1]
+      unsafe_sql? exp.last
     else
       if has_immediate_user_input? exp or has_immediate_model? exp
         exp
@@ -482,11 +482,11 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def check_for_string_building exp
     return unless call? exp
 
-    target = exp[1]
-    method = exp[2]
-    args = exp[3]
+    target = exp.target
+    method = exp.method
+    args = exp.args
 
-    if string? target or string? args[1]
+    if string? target or string? args.first
       if STRING_METHODS.include? method
         return exp
       end
@@ -507,13 +507,13 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     when :str, :lit, :const, :colon2, :nil, :true, :false
       true
     when :call
-      IGNORE_METHODS_IN_SQL.include? exp[2]
+      IGNORE_METHODS_IN_SQL.include? exp.method
     when :if
-      safe_value? exp[2] and safe_value? exp[3]
+      safe_value? exp.then_clause and safe_value? exp.else_clause
     when :block, :rlist
-      safe_value? exp[-1]
+      safe_value? exp.last
     when :or
-      safe_value? exp[1] and safe_value? exp[2]
+      safe_value? exp.lhs and safe_value? exp.rhs
     else
       false
     end
@@ -523,13 +523,10 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def check_call exp
     return unless call? exp
 
-    target = exp[1]
-    args = exp[3]
-
     if unsafe = check_for_string_building(exp)
       unsafe
-    elsif call? target
-      check_call target
+    elsif call? exp.target
+      check_call exp.target
     else
       nil
     end
@@ -565,6 +562,6 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #   s(:arglist, s(:str, "something")))
   def constantize_call? result
     call = result[:call]
-    call? call[1] and call[1][2] == :constantize
+    call? call.target and call.target.method == :constantize
   end
 end

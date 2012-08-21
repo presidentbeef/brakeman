@@ -35,19 +35,19 @@ class Brakeman::TemplateProcessor < Brakeman::BaseProcessor
 
   #Ignore initial variable assignment
   def process_lasgn exp
-    if exp[1] == :_erbout and exp[2].node_type == :str  #ignore
+    if exp.lhs == :_erbout and exp.rhs.node_type == :str  #ignore
       ignore
-    elsif exp[1] == :_buf and exp[2].node_type == :str
+    elsif exp.lhs == :_buf and exp.rhs.node_type == :str
       ignore
     else
-      exp[2] = process exp[2]
+      exp.rhs = process exp.rhs
       exp
     end
   end
 
   #Adds output to the list of outputs.
   def process_output exp
-    process exp[1]
+    process exp.value
     @current_template[:outputs] << exp
     exp
   end

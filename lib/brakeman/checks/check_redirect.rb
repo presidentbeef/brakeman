@@ -29,7 +29,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
 
     call = result[:call]
 
-    method = call[2]
+    method = call.method
 
     if method == :redirect_to and not only_path?(call) and res = include_user_input?(call)
       add_result result
@@ -56,11 +56,12 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   def include_user_input? call
     Brakeman.debug "Checking if call includes user input"
 
-    args = call[3]
+    args = call.args
+    first_arg = call.first_arg
 
-    if tracker.options[:ignore_redirect_to_model] and call? args[1] and
-      (@model_find_calls.include? args[1][2] or args[1][2].to_s.match(/^find_by_/)) and
-      model_name? args[1][1]
+    if tracker.options[:ignore_redirect_to_model] and call? first_arg and
+      (@model_find_calls.include? first_arg.method or first_arg.method.to_s.match(/^find_by_/)) and
+      model_name? first_arg.target
 
       return false
     end
@@ -94,12 +95,12 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   #Checks +redirect_to+ arguments for +only_path => true+ which essentially
   #nullifies the danger posed by redirecting with user input
   def only_path? call
-    call[3].each do |arg|
+    call.args.each do |arg|
       if hash? arg
         if value = hash_access(arg, :only_path)
           return true if true?(value)
         end
-      elsif call? arg and arg[2] == :url_for
+      elsif call? arg and arg.method == :url_for
         return check_url_for(arg)
       end
     end
@@ -110,7 +111,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   #+url_for+ is only_path => true by default. This checks to see if it is
   #set to false for some reason.
   def check_url_for call
-    call[3].each do |arg|
+    call.args.each do |arg|
       if hash? arg
         if value = hash_access(arg, :only_path)
           return false if false?(value)

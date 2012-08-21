@@ -29,9 +29,9 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
 
   #Look for MyApp::Application.configure do ... end
   def process_iter exp
-    if node_type?(exp[1][1], :colon2) and exp[1][1][2] == :Application
+    if node_type?(exp.block_call.target, :colon2) and exp.block_call.method == :Application
       @inside_config = true
-      process exp[-1] if sexp? exp[-1]
+      process exp.body if sexp? exp.body
       @inside_config = false
     end
 
@@ -40,9 +40,9 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
 
   #Look for class Application < Rails::Application
   def process_class exp
-    if exp[1] == :Application
+    if exp.class_name == :Application
       @inside_config = true
-      process exp[-1] if sexp? exp[-1]
+      process exp.body if sexp? exp.body
       @inside_config = false
     end
 
@@ -53,14 +53,14 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
   def process_attrasgn exp
     return exp unless @inside_config
 
-    if exp[1] == Brakeman::RAILS_CONFIG
+    if exp.target == Brakeman::RAILS_CONFIG
       #Get rid of '=' at end
-      attribute = exp[2].to_s[0..-2].to_sym
-      if exp[3].length > 2
+      attribute = exp.method.to_s[0..-2].to_sym
+      if exp.args.length > 1
         #Multiple arguments?...not sure if this will ever happen
-        @tracker.config[:rails][attribute] = exp[3][1..-1]
+        @tracker.config[:rails][attribute] = exp.args
       else
-        @tracker.config[:rails][attribute] = exp[3][1]
+        @tracker.config[:rails][attribute] = exp.first_arg
       end
     elsif include_rails_config? exp
       options = get_rails_config exp
@@ -70,7 +70,7 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
         level = level[o]
       end
 
-      level[options.last] = exp[3][1]
+      level[options.last] = exp.first_arg
     end
 
     exp
@@ -78,9 +78,9 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
 
   #Check if an expression includes a call to set Rails config
   def include_rails_config? exp
-    target = exp[1]
+    target = exp.target
     if call? target
-      if target[1] == Brakeman::RAILS_CONFIG
+      if target.target == Brakeman::RAILS_CONFIG
         true
       else
         include_rails_config? target
@@ -101,13 +101,13 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
   #  [:action_controller, :session_store]
   def get_rails_config exp
     if node_type? exp, :attrasgn
-      attribute = exp[2].to_s[0..-2].to_sym
-      get_rails_config(exp[1]) << attribute
+      attribute = exp.method.to_s[0..-2].to_sym
+      get_rails_config(exp.target) << attribute
     elsif call? exp
-      if exp[1] == Brakeman::RAILS_CONFIG
-        [exp[2]]
+      if exp.target == Brakeman::RAILS_CONFIG
+        [exp.method]
       else
-        get_rails_config(exp[1]) << exp[2]
+        get_rails_config(exp.target) << exp.method
       end
     else
       raise "WHAT"

@@ -31,8 +31,8 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   #Looks for ActionController::Base.session = { ... }
   #in Rails 2.x apps
   def process_attrasgn exp
-    if not tracker.options[:rails3] and exp[1] == @session_settings and exp[2] == :session=
-      check_for_issues exp[3][1], "#{tracker.options[:app_path]}/config/initializers/session_store.rb"
+    if not tracker.options[:rails3] and exp.target == @session_settings and exp.method == :session=
+      check_for_issues exp.first_arg, "#{tracker.options[:app_path]}/config/initializers/session_store.rb"
     end
       
     exp
@@ -41,8 +41,8 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   #Looks for Rails3::Application.config.session_store :cookie_store, { ... }
   #in Rails 3.x apps
   def process_call exp
-    if tracker.options[:rails3] and exp[1] == @session_settings and exp[2] == :session_store
-        check_for_issues exp[3][2], "#{tracker.options[:app_path]}/config/initializers/session_store.rb"
+    if tracker.options[:rails3] and exp.target == @session_settings and exp.method == :session_store
+        check_for_issues exp.args.second, "#{tracker.options[:app_path]}/config/initializers/session_store.rb"
     end
       
     exp
@@ -63,7 +63,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
       end
 
       if value = hash_access(settings, :secret)
-        if string? value and value[1].length < 30
+        if string? value and value.value.length < 30
 
           warn :warning_type => "Session Setting",
             :message => "Session secret should be at least 30 characters long",

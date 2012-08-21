@@ -38,12 +38,12 @@ class Brakeman::CheckSelectTag < Brakeman::BaseCheck
     add_result result
 
     #Only concerned if user input is supplied for :prompt option
-    last_arg = result[:call][3][-1]
+    last_arg = result[:call].arglist.last
 
     if hash? last_arg
       prompt_option = hash_access last_arg, :prompt
 
-      if call? prompt_option and @ignore_methods.include? prompt_option[2]
+      if call? prompt_option and @ignore_methods.include? prompt_option.method
         return
       elsif sexp? prompt_option and input = include_user_input?(prompt_option)
 

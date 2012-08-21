@@ -33,7 +33,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
 
     args = process call[3]
 
-    case call[2]
+    case call.method
     when :system, :exec
       failure = include_user_input?(args[1]) || include_interp?(args[1])
     else

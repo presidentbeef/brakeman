@@ -26,13 +26,13 @@ class Brakeman::GemProcessor < Brakeman::BaseProcessor
   end
 
   def process_call exp
-    if exp[1] == nil and exp[2] == :gem
-      args = exp[3][1..-1]
+    if exp.target == nil and exp.method == :gem
+      args = exp.args
 
-      if sexp? args[1]
-        @tracker.config[:gems][args[0][1].to_sym] = args[1][1]
+      if string? args.second
+        @tracker.config[:gems][args.first.value.to_sym] = args.second.value
       else
-        @tracker.config[:gems][args[0][1].to_sym] = ">=0.0.0"
+        @tracker.config[:gems][args.first.value.to_sym] = ">=0.0.0"
       end
     end
 
