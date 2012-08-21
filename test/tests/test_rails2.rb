@@ -11,13 +11,13 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 32,
-        :warning => 31 }
+        :template => 33,
+        :warning => 31}
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 32,
+        :template => 33,
         :warning => 32 }
     end
   end
@@ -629,6 +629,15 @@ class Rails2Tests < Test::Unit::TestCase
       :warning_type => "Cross Site Scripting",
       :line => 7,
       :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_xss_with_or\.html\.erb/
+  end
+
+  def test_xss_with_model_in_or
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 9,
+      :message => /^Unescaped\ model\ attribute/,
       :confidence => 0,
       :file => /test_xss_with_or\.html\.erb/
   end
