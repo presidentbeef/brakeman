@@ -6,33 +6,33 @@ class Brakeman::ErbTemplateProcessor < Brakeman::TemplateProcessor
   
   #s(:call, TARGET, :method, s(:arglist))
   def process_call exp
-    target = exp[1]
+    target = exp.target
     if sexp? target
       target = process target
     end
-    method = exp[2]
+    method = exp.method
     
     #_erbout is the default output variable for erb
-    if target and target[1] == :_erbout
+    if node_type? target, :lvar and target.value == :_erbout
       if method == :concat
         @inside_concat = true
-        args = exp[3] = process(exp[3])
+        args = exp.arglist = process(exp.arglist)
         @inside_concat = false
 
         if args.length > 2
           raise Exception.new("Did not expect more than a single argument to _erbout.concat")
         end
 
-        args = args[1]
+        arg = args[1]
 
-        if args.node_type == :call and args[2] == :to_s #erb always calls to_s on output
-          args = args[1]
+        if arg.node_type == :call and arg.method == :to_s #erb always calls to_s on output
+          arg = arg.target
         end
 
-        if args.node_type == :str #ignore plain strings
+        if arg.node_type == :str #ignore plain strings
           ignore
         else
-          s = Sexp.new :output, args
+          s = Sexp.new :output, arg
           s.line(exp.line)
           @current_template[:outputs] << s
           s
@@ -43,11 +43,11 @@ class Brakeman::ErbTemplateProcessor < Brakeman::TemplateProcessor
         abort "Unrecognized action on _erbout: #{method}"
       end
     elsif target == nil and method == :render
-      exp[3] = process(exp[3])
+      exp.arglist = process(exp.arglist)
       make_render_in_view exp
     else
       #TODO: Is it really necessary to create a new Sexp here?
-      args = exp[3] = process(exp[3])
+      args = exp.arglist = process(exp.arglist)
       call = Sexp.new :call, target, method, args
       call.original_line(exp.original_line)
       call.line(exp.line)
@@ -70,7 +70,7 @@ class Brakeman::ErbTemplateProcessor < Brakeman::TemplateProcessor
         res = process e
         if res.empty? or res == ignore
           nil
-        elsif node_type?(res, :lvar) and res[1] == :_erbout
+        elsif node_type?(res, :lvar) and res.value == :_erbout
           nil
 
         else

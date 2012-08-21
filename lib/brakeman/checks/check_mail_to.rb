@@ -34,7 +34,7 @@ class Brakeman::CheckMailTo < Brakeman::BaseCheck
 
     tracker.find_call(:target => false, :method => :mail_to).each do |result|
       call = result[:call]
-      args = call[-1]
+      args = call.args
 
       args.each do |arg|
         if hash? arg

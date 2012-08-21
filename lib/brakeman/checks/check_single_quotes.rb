@@ -50,9 +50,9 @@ class Brakeman::CheckSingleQuotes < Brakeman::BaseCheck
   #
   #    class ERB
   def process_class exp
-    if exp[1] == :ERB
+    if exp.class_name == :ERB
       @inside_erb = true
-      process exp[-1]
+      process exp.body
       @inside_erb = false
     end
 
@@ -63,9 +63,9 @@ class Brakeman::CheckSingleQuotes < Brakeman::BaseCheck
   #
   #    module Util
   def process_module exp
-    if @inside_erb and exp[1] == :Util
+    if @inside_erb and exp.module_name == :Util
       @inside_util = true
-      process exp[-1]
+      process exp.body
       @inside_util = false
     end
 
@@ -76,9 +76,9 @@ class Brakeman::CheckSingleQuotes < Brakeman::BaseCheck
   #
   #    def html_escape
   def process_defn exp
-    if @inside_util and exp[1] == :html_escape
+    if @inside_util and exp.method_name == :html_escape
       @inside_html_escape = true
-      process exp[-1]
+      process exp.body
       @inside_html_escape = false
     end
 
@@ -89,10 +89,10 @@ class Brakeman::CheckSingleQuotes < Brakeman::BaseCheck
   #
   #    Rack::Utils.escape_html
   def process_call exp
-    if @inside_html_escape and exp[1] == RACK_UTILS and exp[2] == :escape_html
+    if @inside_html_escape and exp.target == RACK_UTILS and exp.method == :escape_html
       @uses_rack_escape = true
     else
-      process exp[1] if exp[1]
+      process exp.target if exp.target
     end
 
     exp

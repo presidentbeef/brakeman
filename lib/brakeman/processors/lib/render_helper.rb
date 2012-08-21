@@ -3,11 +3,11 @@ require 'digest/sha1'
 #Processes a call to render() in a controller or template
 module Brakeman::RenderHelper
 
-  #Process s(:render, TYPE, OPTIONS)
+  #Process s(:render, TYPE, OPTION?, OPTIONS)
   def process_render exp
     process_default exp
     @rendered = true
-    case exp[1]
+    case exp.render_type
     when :action, :template
       process_action exp[2][1], exp[3]
     when :default
@@ -40,7 +40,7 @@ module Brakeman::RenderHelper
       return
     end
 
-    names = name[1].to_s.split("/")
+    names = name.value.to_s.split("/")
     names[-1] = "_" + names[-1]
     process_template template_name(names.join("/")), args
   end
@@ -92,7 +92,7 @@ module Brakeman::RenderHelper
 
       if hash? options[:locals]
         hash_iterate options[:locals] do |key, value|
-          template_env[Sexp.new(:call, nil, key[1], Sexp.new(:arglist))] = value
+          template_env[Sexp.new(:call, nil, key.value, Sexp.new(:arglist))] = value
         end
       end
 
@@ -105,7 +105,7 @@ module Brakeman::RenderHelper
         #Unless the :as => :variable_name option is used
         if options[:as]
           if string? options[:as] or symbol? options[:as]
-            variable = options[:as][1].to_sym
+            variable = options[:as].value.to_sym
           end
         end
 
@@ -148,7 +148,7 @@ module Brakeman::RenderHelper
 
     hash_iterate args do |key, value|
       if symbol? key
-        options[key[1]] = value
+        options[key.value] = value
       end
     end
 

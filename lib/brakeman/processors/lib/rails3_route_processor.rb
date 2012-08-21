@@ -22,7 +22,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_call exp
-    case exp[2]
+    case exp.method
     when :resources
       process_resources exp
     when :resource
@@ -41,7 +41,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_iter exp
-    case exp[1][2]
+    case exp.block_call.method
     when :namespace
       process_namespace exp
     when :resource
@@ -58,8 +58,8 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_namespace exp
-    name = exp[1][3][1][1]
-    block = exp[3]
+    name = exp.block_call.first_arg.value
+    block = exp.block
 
     @prefix << camelize(name)
 
@@ -70,10 +70,11 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     exp
   end
 
+  #TODO: Need test for this
   def process_root exp
-    args = exp[3][1..-1]
+    args = exp.args
 
-    if value = hash_access(args[0], :to)
+    if value = hash_access(args.first, :to)
       if string? value
         add_route_from_string value
       end
@@ -83,17 +84,17 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_match exp
-    args = exp[3][1..-1]
+    args = exp.args
 
     #Check if there is an unrestricted action parameter
     action_variable = false
 
-    if string? args[0]
-      matcher = args[0][1]
+    if string? args.first
+      matcher = args.first.value
 
       if matcher == ':controller(/:action(/:id(.:format)))' or
         matcher.include? ':controller' and matcher.include? ':action' #Default routes
-        @tracker.routes[:allow_all_actions] = args[0]
+        @tracker.routes[:allow_all_actions] = args.first
         return exp
       elsif matcher.include? ':action'
         action_variable = true
@@ -102,16 +103,16 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
       end
     end
 
-    if hash? args[-1]
-      hash_iterate args[-1] do |k, v|
+    if hash? args.last
+      hash_iterate args.last do |k, v|
         if string? k
           if string? v
-            add_route_from_string v[1]
+            add_route_from_string v
           elsif in_controller_block? and symbol? v
             add_route v
           end
         elsif symbol? k
-         case k[1]
+         case k.value
          when :action
           if string? v
             add_route_from_string v
@@ -152,31 +153,32 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_verb exp
-    args = exp[3][1..-1]
+    args = exp.args
+    first_arg = args.first
 
-    if symbol? args[0] and not hash? args[1]
-      add_route args[0]
-    elsif hash? args[1]
-      hash_iterate args[1] do |k, v|
-        if symbol? k and k[1] == :to
+    if symbol? first_arg and not hash? args.second
+      add_route first_arg
+    elsif hash? args.second
+      hash_iterate args.second do |k, v|
+        if symbol? k and k.value == :to
           if string? v
-            add_route_from_string v[1]
+            add_route_from_string v
           elsif in_controller_block? and symbol? v
             add_route v
           end
         end
       end
-    elsif string? args[0]
-      route = args[0][1].split "/"
+    elsif string? first_arg
+      route = first_arg.value.split "/"
       if route.length != 2
         add_route route[0]
       else
         add_route route[1], route[0]
       end
-    elsif in_controller_block? and symbol? args[0]
-      add_route args[0]
-    else hash? args[0]
-      hash_iterate args[0] do |k, v|
+    elsif in_controller_block? and symbol? first_arg
+      add_route first_arg
+    else hash? first_arg
+      hash_iterate first_arg do |k, v|
         if string? k
           if string? v
             add_route_from_string v
@@ -192,13 +194,13 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_resources exp
-    if exp[3] and exp[3][2] and exp[3][2][0] == :hash
-      self.current_controller = exp[3][1][1]
+    if exp.args and exp.args.second and exp.args.second.node_type == :hash
+      self.current_controller = exp.first_arg.value
       #handle hash
       add_resources_routes
-    elsif exp[3][1..-1].all? { |s| symbol? s }
-      exp[3][1..-1].each do |s|
-        self.current_controller = s[1]
+    elsif exp.args.all? { |s| symbol? s }
+      exp.args.each do |s|
+        self.current_controller = s.value
         add_resources_routes
       end
     end
@@ -209,9 +211,9 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
 
   def process_resource exp
     #Does resource even take more than one controller name?
-    exp[3][1..-1].each do |s|
+    exp.args.each do |s|
       if symbol? s
-        self.current_controller = pluralize(s[1].to_s)
+        self.current_controller = pluralize(s.value.to_s)
         add_resource_routes
       else
         #handle something else, like options
@@ -225,8 +227,8 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
 
   def process_resources_block exp
     in_controller_block do
-      process_resources exp[1]
-      process exp[3]
+      process_resources exp.block_call
+      process exp.block
     end
 
     @current_controller = nil
@@ -235,8 +237,8 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
 
   def process_resource_block exp
     in_controller_block do
-      process_resource exp[1]
-      process exp[3]
+      process_resource exp.block_call
+      process exp.block
     end
 
     @current_controller = nil
@@ -245,7 +247,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
 
   def process_scope_block exp
     #How to deal with options?
-    process exp[3]
+    process exp.block
     exp
   end
 
