@@ -346,7 +346,11 @@ module Brakeman::Util
   end
 
   def truncate_table str
-    @terminal_width ||= ::HighLine::SystemExtensions::terminal_size[0]
+    @terminal_width ||= if $stdin && $stdin.tty?
+                          ::HighLine::SystemExtensions::terminal_size[0]
+                        else
+                          80
+                        end
     lines = str.lines
 
     lines.map do |line|
