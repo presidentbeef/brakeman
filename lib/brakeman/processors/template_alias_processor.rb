@@ -17,12 +17,16 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
 
   #Process template
   def process_template name, args
-    if @called_from and @called_from.match(/Template:#{name}$/)
-      Brakeman.debug "Skipping circular render from #{@template[:name]} to #{name}"
-      return
-    end
+    if @called_from
+      unless @called_from.grep(/Template:#{name}$/).empty?
+        Brakeman.debug "Skipping circular render from #{@template[:name]} to #{name}"
+        return
+      end
 
-    super name, args, "Template:#{@template[:name]}"
+      super name, args, @called_from + ["Template:#{@template[:name]}"]
+    else
+      super name, args, ["Template:#{@template[:name]}"]
+    end
   end
 
   #Determine template name

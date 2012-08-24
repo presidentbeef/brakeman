@@ -168,7 +168,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
 
   #Process template and add the current class and method name as called_from info
   def process_template name, args
-    super name, args, "#@current_class##@current_method"
+    super name, args, ["#@current_class##@current_method"]
   end
 
   #Turns a method name into a template name

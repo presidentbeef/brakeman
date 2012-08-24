@@ -136,6 +136,8 @@ class Brakeman::Report
           w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
           w["Message"] = with_context warning, w["Message"]
           w["Warning Type"] = with_link warning, w["Warning Type"]
+          w["Called From"] = warning.called_from
+          w["Template Name"] = warning.template[:name]
         else
           w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
           w["Message"] = text_message warning, w["Message"]

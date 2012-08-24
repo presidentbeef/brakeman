@@ -13,6 +13,8 @@ Rails31::Application.routes.draw do
     get 'b'
     post 'something' => 'c'
     put 'dee', :to => :d
+    get 'test_partial1'
+    get 'test_partial2'
   end
 
   match 'e', :to => 'other#e', :as => 'eeeee'
