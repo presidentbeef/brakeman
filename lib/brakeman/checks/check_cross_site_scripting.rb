@@ -137,7 +137,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   #Otherwise, ignore
   def process_escaped_output exp
     unless check_for_immediate_xss exp
-      if raw_call? exp
+      if raw_call? exp and not duplicate? exp
         process exp.value.first_arg
       end
     end

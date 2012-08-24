@@ -26,4 +26,14 @@ class OtherController < ApplicationController
   def g
     @g = params[:bad]
   end
+
+  def test_partial1
+    @a = params[:bad!]
+    render :test_partial
+  end
+
+  def test_partial2
+    @b = params[:badder!]
+    render :test_partial
+  end
 end

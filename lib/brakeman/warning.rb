@@ -66,7 +66,7 @@ class Brakeman::Warning
   def view_name
     return @view_name if @view_name
     if called_from
-      @view_name = "#{template[:name]} (#{called_from})"
+      @view_name = "#{template[:name]} (#{called_from.last})"
     else
       @view_name = template[:name]
     end
