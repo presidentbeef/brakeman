@@ -72,7 +72,7 @@ module Brakeman
       #Each template which is rendered is stored separately
       #with a new name.
       if called_from
-        name = (name.to_s + "." + called_from.to_s).to_sym
+        name = ("#{name}.#{called_from}").to_sym
       end
 
       @tracker.templates[name][:src] = result
