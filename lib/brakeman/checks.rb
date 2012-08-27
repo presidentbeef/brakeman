@@ -1,5 +1,6 @@
 require 'thread'
 require 'brakeman/differ'
+require 'set'
 
 #Collects up results from running different checks.
 #
@@ -9,7 +10,7 @@ require 'brakeman/differ'
 class Brakeman::Checks
   @checks = []
 
-  attr_reader :warnings, :controller_warnings, :model_warnings, :template_warnings, :checks_run
+  attr_reader :warnings, :controller_warnings, :model_warnings, :template_warnings, :ignored_warnings, :checks_run
 
   #Add a check. This will call +_klass_.new+ when running tests
   def self.add klass
@@ -32,6 +33,7 @@ class Brakeman::Checks
     @template_warnings = []
     @model_warnings = []
     @controller_warnings = []
+    @ignored_warnings = []
     @checks_run = []
   end
 
@@ -54,6 +56,15 @@ class Brakeman::Checks
       else
         raise "Unknown warning: #{warning.warning_set}"
       end
+    end
+  end
+
+  def filter_by_annotations(annotations)
+    ignored_warning_digests = Set.new(annotations.map { |a| a[:digest] })
+    @ignored_warnings = all_warnings.select { |w| ignored_warning_digests.include? w.annotation_digest }
+
+    [@warnings, @template_warnings, @controller_warnings, @model_warnings].each do |warning_group|
+      warning_group.reject! { |w| ignored_warning_digests.include? w.annotation_digest }
     end
   end
 

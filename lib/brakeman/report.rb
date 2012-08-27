@@ -35,11 +35,13 @@ class Brakeman::Report
     @element_id = 0 #Used for HTML ids
     @warnings_summary = nil
     @highlight_user_input = tracker.options[:highlight_user_input]
+    @ignored_summary = nil
   end
 
   #Generate summary table of what was parsed
   def generate_overview html = false
     warnings = all_warnings.length
+    ignored_warnings = checks.ignored_warnings
 
     if html
       load_and_render_erb('overview', binding)
@@ -50,13 +52,14 @@ class Brakeman::Report
         t.add_row ['Templates', number_of_templates(@tracker)]
         t.add_row ['Errors', tracker.errors.length]
         t.add_row ['Security Warnings', "#{warnings} (#{warnings_summary[:high_confidence]})"]
+        t.add_row ['Ignored Warnings', ignored_warnings.length]
       end
     end
   end
 
   #Generate table of how many warnings of each warning type were reported
   def generate_warning_overview html = false
-    types = warnings_summary.keys
+    types = warnings_summary.keys | ignored_summary.keys
     types.delete :high_confidence
 
     if html
@@ -322,6 +325,31 @@ class Brakeman::Report
     end
   end
 
+  def generate_ignored_notes html = false
+    if checks.ignored_warnings
+      warnings = []
+      checks.ignored_warnings.each do |warning|
+        annotation =  @annotations.find{|a| a[:digest] == warning.annotation_digest}
+        if annotation[:note] && annotation[:note].length > 0
+          warnings << {"Warning" => "#{warning.warning_type} (#{File.basename(warning.file)}:#{warning.line})",
+                       "Note" => annotation[:note] }
+        end
+      end
+
+      if warnings.length > 0
+        if html
+          load_and_render_erb("ignored_notes", binding)
+        else
+          Terminal::Table.new(:headings => ['Warning', 'Note']) do |t|
+            warnings.each do |warning|
+              t.add_row [warning["Warning"], warning["Note"]]
+            end
+          end
+        end
+      end
+    end
+  end
+
   #Generate HTML output
   def to_html
     out = html_header <<
@@ -346,6 +374,7 @@ class Brakeman::Report
     out << generate_controller_warnings(true).to_s
     out << generate_model_warnings(true).to_s
     out << generate_template_warnings(true).to_s
+    out << generate_ignored_notes(true).to_s
 
     out << "</body></html>"
   end
@@ -386,6 +415,9 @@ class Brakeman::Report
 
     res = generate_template_warnings
     out << "\n\nView Warnings:\n\n" << truncate_table(res.to_s) if res
+
+    res = generate_ignored_notes
+    out << "\n\nIgnored Warnings Notes:\n\n" << truncate_table(res.to_s) if res
 
     out << "\n"
     out
@@ -496,6 +528,15 @@ class Brakeman::Report
     @warnings_summary = summary
   end
 
+  def ignored_summary
+    return @ignored_summary if @ignored_summary
+    summary = Hash.new(0)
+    checks.ignored_warnings.each do |warning|
+      summary[warning.warning_type.to_s] += 1
+    end
+    @ignored_summary = summary
+  end
+
   #Escape warning message and highlight user input in text output
   def text_message warning, message
     if @highlight_user_input and warning.user_input
@@ -551,7 +592,7 @@ class Brakeman::Report
       message
     end <<
     "<table id='#{code_id}' class='context' style='display:none'>" <<
-    "<caption>#{(warning.file || '').gsub(tracker.options[:app_path], "")}</caption>"
+    "<caption>#{warning_file_to_relative_path(warning.file)}</caption>"
 
     unless context.empty?
       if warning.line - 1 == 1 or warning.line + 1 == 1
@@ -680,11 +721,39 @@ class Brakeman::Report
     Set.new(tracker.templates.map {|k,v| v[:name].to_s[/[^.]+/]}).length
   end
 
+  def filter_by_annotations annotations_file
+    load_annotations annotations_file
+    @checks.filter_by_annotations(@annotations)
+  end
+
   private
 
   def load_and_render_erb file, bind
     content = File.read(File.expand_path("templates/#{file}.html.erb", File.dirname(__FILE__)))
     template = ERB.new(content)
     template.result(bind)
+  end
+
+  def to_annotation
+    warnings = @checks.all_warnings
+    warnings.map do |warning|
+      warning.file = warning_file_to_relative_path(warning.file)
+      warning.to_annotation
+    end.to_yaml
+  end
+
+  def load_annotations annotations_file
+    annotations_file ||= ""
+
+    [File.expand_path(annotations_file), File.expand_path("./.brakeman_annotations.yaml")].each do |f|
+      if File.exist? f and not File.directory? f
+        notify "[Notice] Using annotations in #{f}"
+        @annotations = YAML::load_file f
+      end
+    end
+  end
+
+  def warning_file_to_relative_path(warning_file)
+    (warning_file || '').gsub(tracker.options[:app_path], "").gsub(/^\//, '')
   end
 end

@@ -134,20 +134,22 @@ module Brakeman
     end
     if options[:output_format]
       [
-        case options[:output_format]
-        when :html, :to_html
-          :to_html
-        when :csv, :to_csv
-          :to_csv
-        when :pdf, :to_pdf
-          :to_pdf
-        when :tabs, :to_tabs
-          :to_tabs
-        when :json, :to_json
-          :to_json
-        else
-          :to_s
-        end
+      case options[:output_format]
+      when :html, :to_html
+        :to_html
+      when :csv, :to_csv
+        :to_csv
+      when :pdf, :to_pdf
+        :to_pdf
+      when :tabs, :to_tabs
+        :to_tabs
+      when :json, :to_json
+        :to_json
+      when :annotation, :to_annotation
+        :to_annotation
+      else
+        :to_s
+      end
       ]
     else
       return [:to_s] unless options[:output_files]
@@ -163,6 +165,8 @@ module Brakeman
           :to_tabs
         when /\.json$/i
           :to_json
+        when /\.annotations/
+          :to_annotation
         else
           :to_s
         end
@@ -262,12 +266,15 @@ module Brakeman
     end
     tracker.run_checks
 
+    reporter = tracker.report
+    reporter.filter_by_annotations(options[:annotations_file]) if options[:annotations_file]
+
     if options[:output_files]
       notify "Generating report..."
 
       options[:output_files].each_with_index do |output_file, idx|
         File.open output_file, "w" do |f|
-          f.write tracker.report.send(options[:output_formats][idx])
+          f.write reporter.send(options[:output_formats][idx])
         end
         notify "Report saved in '#{output_file}'"
       end
@@ -275,7 +282,7 @@ module Brakeman
       notify "Generating report..."
 
       options[:output_formats].each do |output_format|
-        puts tracker.report.send(output_format)
+        puts reporter.send(output_format)
       end
     end
 

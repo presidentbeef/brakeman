@@ -1,0 +1,13 @@
+<p>Ignored Warnings Notes</p>
+<table>
+  <tr>
+    <th>Warning</th>
+    <th>Note</th>
+  </tr>
+<% warnings.each do |warning| %>
+  <tr>
+    <td><%= warning["Warning"] %></td>
+    <td><%= warning["Note"] %></td>
+  </tr>
+<% end %>
+</table>
