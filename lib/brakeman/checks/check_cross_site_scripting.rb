@@ -63,6 +63,9 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
     if !json_escape_on or version_between? "0.0.0", "2.0.99"
       @known_dangerous << :to_json
+      Brakeman.debug("Automatic to_json escaping not enabled, consider to_json dangerous"
+    else
+      Brakeman.debug("Automatic to_json escaping is enabled.")
     end
 
     tracker.each_template do |name, template|
@@ -188,16 +191,15 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
         if message and not duplicate? exp
           add_result exp
 
+          link_path = "cross_site_scripting"
           if @known_dangerous.include? exp.method
             confidence = CONFIDENCE[:high]
+            if exp.method == :to_json
+              message += " in JSON hash"
+              link_path += "_to_json"
+            end
           else
             confidence = CONFIDENCE[:low]
-          end
-
-          link_path = "cross_site_scripting"
-          if exp.method == :to_json
-            message += " in JSON hash"
-            link_path += "_to_json"
           end
 
           warn :template => @current_template,
