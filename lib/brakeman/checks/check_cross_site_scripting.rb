@@ -63,7 +63,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
     if !json_escape_on or version_between? "0.0.0", "2.0.99"
       @known_dangerous << :to_json
-      Brakeman.debug("Automatic to_json escaping not enabled, consider to_json dangerous"
+      Brakeman.debug("Automatic to_json escaping not enabled, consider to_json dangerous")
     else
       Brakeman.debug("Automatic to_json escaping is enabled.")
     end
