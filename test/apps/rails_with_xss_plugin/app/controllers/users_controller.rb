@@ -125,4 +125,8 @@ class UsersController < ApplicationController
   def results
     @users = User.all(:conditions => "display_name like '%#{params[:query]}%'")
   end
+
+  def to_json
+
+  end
 end
