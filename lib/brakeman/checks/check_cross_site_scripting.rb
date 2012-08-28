@@ -34,7 +34,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   FORM_BUILDER = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new, Sexp.new(:arglist)) 
 
   #Run check
-  def run_check 
+  def run_check
     @ignore_methods = Set[:button_to, :check_box, :content_tag, :escapeHTML, :escape_once,
                            :field_field, :fields_for, :h, :hidden_field,
                            :hidden_field, :hidden_field_tag, :image_tag, :label,
@@ -56,6 +56,13 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
     if version_between? "2.0.0", "2.3.14"
       @known_dangerous << :strip_tags
+    end
+
+    matches = tracker.check_initializers :ActiveSupport, :escape_html_entities_in_json=
+    json_escape_on = matches.detect {|result| result[-1].first_arg.value == :true}
+
+    if !json_escape_on or version_between? "0.0.0", "2.0.99"
+      @known_dangerous << :to_json
     end
 
     tracker.each_template do |name, template|
@@ -115,10 +122,15 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
           confidence = CONFIDENCE[:med]
         end
 
+        message = "Unescaped model attribute"
+        if [:call, :attrasgn].include?(out.node_type) && out.method == :to_json
+          message += " in JSON hash" 
+        end
+
         code = find_chain out, match
         warn :template => @current_template,
           :warning_type => "Cross Site Scripting", 
-          :message => "Unescaped model attribute",
+          :message => message,
           :code => code,
           :confidence => confidence
       end
@@ -173,11 +185,13 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
         if message and not duplicate? exp
           add_result exp
 
-          if exp.target.nil? and @known_dangerous.include? exp.method
+          if @known_dangerous.include? exp.method
             confidence = CONFIDENCE[:high]
           else
             confidence = CONFIDENCE[:low]
           end
+
+          message += " in JSON hash" if exp.method == :to_json
 
           warn :template => @current_template,
             :warning_type => "Cross Site Scripting", 

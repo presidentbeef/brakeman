@@ -11,13 +11,13 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 33,
+        :template => 36,
         :warning => 31}
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 33,
+        :template => 36,
         :warning => 32 }
     end
   end
@@ -690,6 +690,33 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
       :file => /test_strip_tags\.html\.erb/
+  end
+
+  def test_to_json
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped model attribute in JSON hash/,
+      :confidence => 0,
+      :file => /test_to_json\.html\.erb/
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 7,
+      :message => /^Unescaped parameter value in JSON hash/,
+      :confidence => 0,
+      :file => /test_to_json\.html\.erb/
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 11,
+      :message => /^Unescaped parameter value in JSON hash/,
+      :confidence => 0,
+      :file => /test_to_json\.html\.erb/
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 14,
+      :message => /^Unescaped parameter value in JSON hash/,
+      :confidence => 0,
+      :file => /test_to_json\.html\.erb/
   end
 end
 
