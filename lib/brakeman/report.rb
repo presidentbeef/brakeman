@@ -552,7 +552,7 @@ class Brakeman::Report
       message
     end <<
     "<table id='#{code_id}' class='context' style='display:none'>" <<
-    "<caption>#{(warning.file || '').gsub(tracker.options[:app_path], "")}</caption>"
+    "<caption>#{warning_file(warning, :relative) || ''}</caption>"
 
     unless context.empty?
       if warning.line - 1 == 1 or warning.line + 1 == 1
