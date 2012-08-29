@@ -615,7 +615,7 @@ class Brakeman::Report
       checks.send(meth).map do |w|
         line = w.line || 0
         w.warning_type.gsub!(/[^\w\s]/, ' ')
-        "#{file_for w}\t#{line}\t#{w.warning_type}\t#{category}\t#{w.format_message}\t#{TEXT_CONFIDENCE[w.confidence]}"
+        "#{warning_file w}\t#{line}\t#{w.warning_type}\t#{category}\t#{w.format_message}\t#{TEXT_CONFIDENCE[w.confidence]}"
       end.join "\n"
 
     end.join "\n"
