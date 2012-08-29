@@ -169,8 +169,8 @@ module Brakeman::Options
           options[:summary_only] = true
         end
 
-        opts.on "--relative-path", "Output relative file path (only JSON is supported)" do
-          options[:relative_path] = true
+        opts.on "--relative-paths", "Output relative file paths in reports" do
+          options[:relative_paths] = true
         end
 
         opts.on "-w", 
