@@ -638,7 +638,6 @@ class Brakeman::Report
           w.code = ""
         end
         w.context = context_for(w).join("\n")
-        w.file = file_for w
       end
     end
 
