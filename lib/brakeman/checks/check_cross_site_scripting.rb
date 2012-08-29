@@ -59,7 +59,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     end
 
     matches = tracker.check_initializers :ActiveSupport, :escape_html_entities_in_json=
-    json_escape_on = matches.detect {|result| result[-1].first_arg.value == :true}
+    json_escape_on = matches.detect {|result| true? result[-1].first_arg}
 
     if !json_escape_on or version_between? "0.0.0", "2.0.99"
       @known_dangerous << :to_json
@@ -127,7 +127,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
         message = "Unescaped model attribute"
         link_path = "cross_site_scripting"
-        if [:call, :attrasgn].include?(out.node_type) && out.method == :to_json
+        if node_type?(out, :call, :attrasgn) && out.method == :to_json
           message += " in JSON hash" 
           link_path += "_to_json"
         end
