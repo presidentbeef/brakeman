@@ -10,7 +10,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 3,
-      :template => 1,
+      :template => 2,
       :warning => 14 }
   end
 
@@ -257,4 +257,13 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :confidence => 0,
       :file => /Gemfile/
   end
+
+  def test_to_json
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped parameter value in JSON hash/,
+      :confidence => 0,
+      :file => /users\/to_json\.html\.erb/
+  end  
 end

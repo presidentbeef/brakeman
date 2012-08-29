@@ -34,7 +34,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   FORM_BUILDER = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new, Sexp.new(:arglist)) 
 
   #Run check
-  def run_check 
+  def run_check
     @ignore_methods = Set[:button_to, :check_box, :content_tag, :escapeHTML, :escape_once,
                            :field_field, :fields_for, :h, :hidden_field,
                            :hidden_field, :hidden_field_tag, :image_tag, :label,
@@ -56,6 +56,16 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
     if version_between? "2.0.0", "2.3.14"
       @known_dangerous << :strip_tags
+    end
+
+    matches = tracker.check_initializers :ActiveSupport, :escape_html_entities_in_json=
+    json_escape_on = matches.detect {|result| true? result[-1].first_arg}
+
+    if !json_escape_on or version_between? "0.0.0", "2.0.99"
+      @known_dangerous << :to_json
+      Brakeman.debug("Automatic to_json escaping not enabled, consider to_json dangerous")
+    else
+      Brakeman.debug("Automatic to_json escaping is enabled.")
     end
 
     tracker.each_template do |name, template|
@@ -115,12 +125,20 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
           confidence = CONFIDENCE[:med]
         end
 
+        message = "Unescaped model attribute"
+        link_path = "cross_site_scripting"
+        if node_type?(out, :call, :attrasgn) && out.method == :to_json
+          message += " in JSON hash" 
+          link_path += "_to_json"
+        end
+
         code = find_chain out, match
         warn :template => @current_template,
           :warning_type => "Cross Site Scripting", 
-          :message => "Unescaped model attribute",
+          :message => message,
           :code => code,
-          :confidence => confidence
+          :confidence => confidence,
+          :link_path => link_path
       end
 
     else
@@ -173,8 +191,13 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
         if message and not duplicate? exp
           add_result exp
 
-          if exp.target.nil? and @known_dangerous.include? exp.method
+          link_path = "cross_site_scripting"
+          if @known_dangerous.include? exp.method
             confidence = CONFIDENCE[:high]
+            if exp.method == :to_json
+              message += " in JSON hash"
+              link_path += "_to_json"
+            end
           else
             confidence = CONFIDENCE[:low]
           end
@@ -184,7 +207,8 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
             :message => message,
             :code => exp,
             :user_input => @matched.match,
-            :confidence => confidence
+            :confidence => confidence,
+            :link_path => link_path
         end
       end
 
