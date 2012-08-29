@@ -650,7 +650,17 @@ class Brakeman::Report
     require 'json'
 
     errors = tracker.errors.map{|e| { :error => e[:error], :location => e[:backtrace][0] }}
-    warnings = all_warnings.map { |w| w.to_hash }.sort_by{|w| w[:file]}
+    app_path = tracker.options[:app_path]
+    if tracker.options[:relative_path]
+      warnings = all_warnings.map { |w| 
+        hash = w.to_hash 
+        if file = hash[:file]
+          hash.update :file => file.sub( /^#{app_path}/,'.' )
+        end
+      }.sort_by{|w| w[:file]}
+    else
+      warnings = all_warnings.map { |w| w.to_hash }.sort_by{|w| w[:file]}
+    end
     scan_info = {
       :app_path => File.expand_path(tracker.options[:app_path]),
       :rails_version => rails_version,
