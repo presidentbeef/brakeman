@@ -169,6 +169,10 @@ module Brakeman::Options
           options[:summary_only] = true
         end
 
+        opts.on "--relative-path", "Output relative file path (only JSON is supported)" do
+          options[:relative_path] = true
+        end
+
         opts.on "-w", 
           "--confidence-level LEVEL", 
           ["1", "2", "3"], 
