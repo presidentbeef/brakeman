@@ -1,5 +1,6 @@
 require 'cgi'
 require 'set'
+require 'pathname'
 require 'brakeman/processors/output_processor'
 require 'brakeman/util'
 require 'terminal-table'
@@ -651,16 +652,13 @@ class Brakeman::Report
 
     errors = tracker.errors.map{|e| { :error => e[:error], :location => e[:backtrace][0] }}
     app_path = tracker.options[:app_path]
-    if tracker.options[:relative_path]
-      warnings = all_warnings.map { |w| 
-        hash = w.to_hash 
-        if file = hash[:file]
-          hash.update :file => file.sub( /^#{app_path}/,'.' )
-        end
-      }.sort_by{|w| w[:file]}
-    else
-      warnings = all_warnings.map { |w| w.to_hash }.sort_by{|w| w[:file]}
-    end
+
+    warnings = all_warnings.map do |w|
+      hash = w.to_hash
+      hash[:file] = warning_file w
+      hash
+    end.sort_by { |w| w[:file] }
+
     scan_info = {
       :app_path => File.expand_path(tracker.options[:app_path]),
       :rails_version => rails_version,
@@ -688,6 +686,16 @@ class Brakeman::Report
 
   def number_of_templates tracker
     Set.new(tracker.templates.map {|k,v| v[:name].to_s[/[^.]+/]}).length
+  end
+
+  def warning_file warning, relative = false
+    return nil if warning.file.nil?
+
+    if @tracker.options[:relative_paths] or relative
+      Pathname.new(warning.file).relative_path_from(Pathname.new(tracker.options[:app_path])).to_s
+    else
+      warning.file
+    end
   end
 
   private
