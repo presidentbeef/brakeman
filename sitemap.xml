@@ -233,6 +233,10 @@
         <lastmod>2012-07-16T18:41:56-07:00</lastmod>
     </url>
     <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/cross_site_scripting_to_json/</loc>
+        <lastmod>2012-08-29T18:25:17-07:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/docs/warning_types/CVE-2010-3933/</loc>
         <lastmod>2012-07-16T18:41:56-07:00</lastmod>
     </url>
@@ -278,7 +282,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/</loc>
-        <lastmod>2012-07-16T18:41:56-07:00</lastmod>
+        <lastmod>2012-08-29T18:25:44-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/link_to/</loc>
