@@ -141,6 +141,10 @@ class HomeController < ApplicationController
     @user = User.find(current_user)
   end
 
+  def test_content_tag
+    @user = User.find(current_user)
+  end
+
   private
 
   def filter_it

@@ -14,7 +14,7 @@ class Rails3Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 5,
-      :template => 23,
+      :template => 27,
       :warning => 29
     }
   end
@@ -585,6 +585,42 @@ class Rails3Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /_form\.html\.erb/
   end
+
+  def test_xss_content_tag_raw_content
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 8,
+      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :confidence => 0,
+      :file => /test_content_tag\.html\.erb/
+  end
+
+  def test_xss_content_tag_attribute_name
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 14,
+      :message => /^Unescaped\ cookie\ value\ in\ content_tag/,
+      :confidence => 0,
+      :file => /test_content_tag\.html\.erb/
+  end
+
+  def test_xss_content_tag_attribute_name_even_with_escape
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 20,
+      :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
+      :confidence => 0,
+      :file => /test_content_tag\.html\.erb/
+  end
+
+  def test_xss_content_tag_unescaped_attribute
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 26,
+      :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
+      :confidence => 0,
+      :file => /test_content_tag\.html\.erb/
+  end 
 
   def test_cross_site_scripting_request_parameters
     assert_warning :type => :template,
