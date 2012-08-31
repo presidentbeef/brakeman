@@ -35,13 +35,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   #Run check
   def run_check
-    @ignore_methods = Set[:button_to, :check_box, :content_tag, :escapeHTML, :escape_once,
-                           :field_field, :fields_for, :h, :hidden_field,
-                           :hidden_field, :hidden_field_tag, :image_tag, :label,
-                           :link_to, :mail_to, :radio_button, :select,
-                           :submit_tag, :text_area, :text_field,
-                           :text_field_tag, :url_encode, :url_for,
-                           :will_paginate].merge tracker.options[:safe_methods]
+    @ignore_methods = ignore_methods(tracker.options[:safe_methods].merge(:link_to))
 
     @models = tracker.models.keys
     @inspect_arguments = tracker.options[:check_arguments]
@@ -292,5 +286,15 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   def raw_call? exp
     exp.value.node_type == :call and exp.value.method == :raw
+  end
+
+  def ignore_methods extras
+    Set[:button_to, :check_box, :content_tag, :escapeHTML, :escape_once,
+      :field_field, :fields_for, :h, :hidden_field,
+      :hidden_field, :hidden_field_tag, :image_tag, :label,
+      :mail_to, :radio_button, :select,
+      :submit_tag, :text_area, :text_field,
+      :text_field_tag, :url_encode, :url_for,
+      :will_paginate].merge(extras)
   end
 end
