@@ -11,8 +11,8 @@ require 'brakeman/checks/check_cross_site_scripting'
 #    content_tag, :tag, body, attribute => value
 #                                            ^
 #                                            |
-#           Unescaped by default in 2.x, escaped by default in 3.x,
-#           can be set by passing in fourth argument
+#            Escaped by default, can be explicitly escaped
+#            or not by passing in (true|false) as fourth argument
 class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
   Brakeman::Checks.add self
 
