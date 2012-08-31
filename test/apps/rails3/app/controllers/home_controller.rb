@@ -73,8 +73,8 @@ class HomeController < ApplicationController
     current_user.something.something.build(params[:awesome_user])
   end
 
-  def test_only_path
-    redirect_to params[:user], :only_path => true
+  def test_only_path_wrong
+    redirect_to params[:user], :only_path => true #This should still warn
   end
 
   def test_url_for_only_path
@@ -91,6 +91,12 @@ class HomeController < ApplicationController
   def test_number_alias
     y + 1 + 2
   end
+
+  def test_only_path_correct
+    params.merge! :only_path => true
+    redirect_to params
+  end
+
 
   private
 

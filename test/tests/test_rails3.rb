@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 23,
-      :warning => 29
+      :warning => 30
     }
   end
 
@@ -135,11 +135,11 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /products_controller\.rb/
   end
 
-  def test_redirect_only_path
-    assert_no_warning :type => :warning,
+  def test_redirect_only_path_in_wrong_argument
+    assert_warning :type => :warning,
       :warning_type => "Redirect",
-      :line => 78,
-      :message => /^Possible unprotected redirect near line 78: redirect_to\(params\[/,
+      :line => 77,
+      :message => /^Possible unprotected redirect near line 77: redirect_to\(params\[/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end
