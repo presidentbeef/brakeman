@@ -95,14 +95,14 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   #Checks +redirect_to+ arguments for +only_path => true+ which essentially
   #nullifies the danger posed by redirecting with user input
   def only_path? call
-    call.args.each do |arg|
-      if hash? arg
-        if value = hash_access(arg, :only_path)
-          return true if true?(value)
-        end
-      elsif call? arg and arg.method == :url_for
-        return check_url_for(arg)
+    arg = call.first_arg
+
+    if hash? arg
+      if value = hash_access(arg, :only_path)
+        return true if true?(value)
       end
+    elsif call? arg and arg.method == :url_for
+      return check_url_for(arg)
     end
 
     false
@@ -111,11 +111,11 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   #+url_for+ is only_path => true by default. This checks to see if it is
   #set to false for some reason.
   def check_url_for call
-    call.args.each do |arg|
-      if hash? arg
-        if value = hash_access(arg, :only_path)
-          return false if false?(value)
-        end
+    arg = call.first_arg
+
+    if hash? arg
+      if value = hash_access(arg, :only_path)
+        return false if false?(value)
       end
     end
 
