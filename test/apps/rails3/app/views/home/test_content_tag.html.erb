@@ -1,0 +1,35 @@
+Should not warn
+<%= content_tag :p, h(params[:something]) %>
+
+Should not warn
+<%= content_tag :span, @user.name %>
+
+Should warn
+<%= content_tag :span, raw(params[:blah]) %>
+
+Should not warn
+<%= content_tag :div, "Blah!", { :class => params[:class] }, true %>
+
+Should warn
+<%= content_tag :div, "Blah!", { cookies[:weird] => "bad idea" } %>
+
+Should not warn
+<%= content_tag :h1, params[:x] == 1 ? "totally" : "safe" %>
+
+Should still warn
+<%= content_tag :div, "Blah!", { @user.something => "bad idea"}, true %>
+
+Should not warn
+<%= content_tag :div, "Blah!", { :class => params[:class] } %>
+
+Should warn
+<%= content_tag :div, "Blah!", { :id => @user.name }, false %>
+
+Should not warn
+<%= content_tag :div, x(params[:maybe_bad]) %>
+
+Should warn
+<%= content_tag params[:whyyy], "Don't do this" %>
+
+Should warn
+<%= content_tag @user.preferred_markup, "Seriously" %>

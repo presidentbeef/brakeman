@@ -11,13 +11,13 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 36,
+        :template => 41,
         :warning => 31}
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
-        :template => 36,
+        :template => 41,
         :warning => 32 }
     end
   end
@@ -649,6 +649,69 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
       :file => /test_strip_tags\.html\.erb/
+  end
+
+  def test_xss_content_tag_body
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 5,
+      :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
+      :confidence => 0,
+      :file => /test_content_tag\.html\.erb/
+  end
+
+  def test_xss_content_tag_escaped
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 8,
+      :message => /^Unescaped\ cookie\ value\ in\ content_tag/,
+      :confidence => 0,
+      :file => /test_content_tag\.html\.erb/
+  end
+
+  def test_xss_content_tag_attribute_name
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 11,
+      :message => /^Unescaped\ cookie\ value\ in\ content_tag/,
+      :confidence => 0,
+      :file => /test_content_tag\.html\.erb/
+  end
+
+  def test_xss_content_tag_attribute_name_even_with_escape_set
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 17,
+      :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
+      :confidence => 0,
+      :file => /test_content_tag\.html\.erb/
+  end
+
+  def test_cross_site_scripting_escaped_by_default
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 20,
+      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :confidence => 0,
+      :file => /test_content_tag\.html\.erb/
+  end
+
+  def test_xss_content_tag_unescaped_on_purpose
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 23,
+      :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
+      :confidence => 0,
+      :file => /test_content_tag\.html\.erb/
+  end
+
+  def test_xss_content_tag_indirect_body
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 26,
+      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :confidence => 1,
+      :file => /test_content_tag\.html\.erb/
   end
 
   def test_cross_site_scripting_single_quotes_CVE_2012_3464

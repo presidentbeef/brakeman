@@ -147,6 +147,10 @@ class HomeController < ApplicationController
     @json = {:json_thing => params[:json_thing]}.to_json
   end
 
+  def test_content_tag
+    @user = User.find(current_user)
+  end
+
   private
 
   def filter_it
