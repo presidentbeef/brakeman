@@ -282,7 +282,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       when :string_eval
         if sexp? exp.value
           if exp.value.node_type == :rlist
-            exp.value.each_exp do |e|
+            exp.value.each_sexp do |e|
               match = has_immediate_user_input?(e)
               return match if match
             end
