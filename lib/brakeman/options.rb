@@ -169,6 +169,10 @@ module Brakeman::Options
           options[:summary_only] = true
         end
 
+        opts.on "--relative-paths", "Output relative file paths in reports" do
+          options[:relative_paths] = true
+        end
+
         opts.on "-w", 
           "--confidence-level LEVEL", 
           ["1", "2", "3"], 

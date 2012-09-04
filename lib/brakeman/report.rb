@@ -1,5 +1,6 @@
 require 'cgi'
 require 'set'
+require 'pathname'
 require 'brakeman/processors/output_processor'
 require 'brakeman/util'
 require 'terminal-table'
@@ -551,7 +552,7 @@ class Brakeman::Report
       message
     end <<
     "<table id='#{code_id}' class='context' style='display:none'>" <<
-    "<caption>#{(warning.file || '').gsub(tracker.options[:app_path], "")}</caption>"
+    "<caption>#{warning_file(warning, :relative) || ''}</caption>"
 
     unless context.empty?
       if warning.line - 1 == 1 or warning.line + 1 == 1
@@ -614,7 +615,7 @@ class Brakeman::Report
       checks.send(meth).map do |w|
         line = w.line || 0
         w.warning_type.gsub!(/[^\w\s]/, ' ')
-        "#{file_for w}\t#{line}\t#{w.warning_type}\t#{category}\t#{w.format_message}\t#{TEXT_CONFIDENCE[w.confidence]}"
+        "#{warning_file w}\t#{line}\t#{w.warning_type}\t#{category}\t#{w.format_message}\t#{TEXT_CONFIDENCE[w.confidence]}"
       end.join "\n"
 
     end.join "\n"
@@ -637,7 +638,6 @@ class Brakeman::Report
           w.code = ""
         end
         w.context = context_for(w).join("\n")
-        w.file = file_for w
       end
     end
 
@@ -650,7 +650,14 @@ class Brakeman::Report
     require 'json'
 
     errors = tracker.errors.map{|e| { :error => e[:error], :location => e[:backtrace][0] }}
-    warnings = all_warnings.map { |w| w.to_hash }.sort_by{|w| w[:file]}
+    app_path = tracker.options[:app_path]
+
+    warnings = all_warnings.map do |w|
+      hash = w.to_hash
+      hash[:file] = warning_file w
+      hash
+    end.sort_by { |w| w[:file] }
+
     scan_info = {
       :app_path => File.expand_path(tracker.options[:app_path]),
       :rails_version => rails_version,
@@ -678,6 +685,16 @@ class Brakeman::Report
 
   def number_of_templates tracker
     Set.new(tracker.templates.map {|k,v| v[:name].to_s[/[^.]+/]}).length
+  end
+
+  def warning_file warning, relative = false
+    return nil if warning.file.nil?
+
+    if @tracker.options[:relative_paths] or relative
+      Pathname.new(warning.file).relative_path_from(Pathname.new(tracker.options[:app_path])).to_s
+    else
+      warning.file
+    end
   end
 
   private

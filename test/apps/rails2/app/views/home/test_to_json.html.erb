@@ -1,0 +1,14 @@
+Detection of to_json
+
+<%= @model_json %>
+
+In the view
+
+<%= @not_json.to_json %>
+
+In the controller
+
+<%= @json %>
+
+You would break the json formatting by doing this, but it's technically safe...
+<%= h(@json) %>

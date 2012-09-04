@@ -141,6 +141,12 @@ class HomeController < ApplicationController
     @user = User.find(current_user)
   end
 
+  def test_to_json
+    @model_json = User.find(current_user).to_json
+    @not_json = {:thing => params[:thing]}
+    @json = {:json_thing => params[:json_thing]}.to_json
+  end
+
   def test_content_tag
     @user = User.find(current_user)
   end
