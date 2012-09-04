@@ -229,7 +229,9 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
 
     @prefix << camelize(call.first_arg.value)
 
-    @nested = Sexp.new(:lvar, formal_args.lhs)
+    if formal_args
+      @nested = Sexp.new(:lvar, formal_args.lhs)
+    end
 
     process block
 
