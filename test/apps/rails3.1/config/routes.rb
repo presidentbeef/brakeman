@@ -15,6 +15,7 @@ Rails31::Application.routes.draw do
     put 'dee', :to => :d
     get 'test_partial1'
     get 'test_partial2'
+    get 'test_string_interp'
   end
 
   match 'e', :to => 'other#e', :as => 'eeeee'

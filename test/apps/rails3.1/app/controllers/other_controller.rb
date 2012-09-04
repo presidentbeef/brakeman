@@ -36,4 +36,9 @@ class OtherController < ApplicationController
     @b = params[:badder!]
     render :test_partial
   end
+
+  def test_string_interp
+    @user = User.find(current_user)
+    @greeting = "Hello, #{greeted += 1; @user.name}!"
+  end
 end
