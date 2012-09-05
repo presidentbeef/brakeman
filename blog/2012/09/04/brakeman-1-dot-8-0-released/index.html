@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Brakeman 0.9.2 Released</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman 1.8.0 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/blog/2011/11/21/brakeman-0-dot-9-2-released/"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2012/09/04/brakeman-1-dot-8-0-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -103,7 +103,7 @@
   
   <header>
     
-      <h1 class="entry-title">Brakeman 0.9.2 Released</h1>
+      <h1 class="entry-title">Brakeman 1.8.0 Released</h1>
     
     
       <p class="meta">
@@ -111,7 +111,7 @@
 
 
 
-<time datetime="2011-11-21 17:12:00 -0800" pubdate  updated >Nov 21<span>st</span>, 2011</time>
+<time datetime="2012-09-04 11:26:00 -0700" pubdate  updated >Sep 4<span>th</span>, 2012</time>
 
 
 </p>
@@ -119,23 +119,92 @@
   </header>
 
 
-<div class="entry-content"><p>Changes:</p>
+<div class="entry-content"><p><em>Changes since 1.7.1</em>:</p>
 
 <ul>
-<li>Fix Rails 3 configuration parsing</li>
-<li>Check both t() and translate() for cross-site scripting bug</li>
+<li>Support relative paths in reports (fsword)</li>
+<li>Allow Brakeman to be run without tty (fsword)</li>
+<li>Fix exit code with <code>--compare</code> (fsword)</li>
+<li>Fix <code>--rake</code> option (Deepak Kumar)</li>
+<li>Add high confidence warnings for <code>to_json</code> XSS (Neil Matatall)</li>
+<li>Fix <code>redirect_to</code> false negative</li>
+<li>Fix duplicate warnings with <code>raw</code> calls</li>
+<li>Fix shadowing of rendered partials</li>
+<li>Add &#8220;render chain&#8221; to HTML reports</li>
+<li>Add check for XSS in <code>content_tag</code></li>
+<li>Add full backtrace for errors in debug mode</li>
+<li>Treat model attributes in <code>or</code> expressions as immediate values</li>
+<li>Switch to method access for Sexp nodes</li>
 </ul>
 
 
-<p>Just a small release to get the Rails 3 config fix out.</p>
+<h3>Relative Paths in Reports</h3>
 
-<h3>Rails 3 Configuration Parsing</h3>
+<p>The <code>--relative-paths</code> option will now cause Brakeman to output relative paths for warnings in reports in either JSON or tabs format. This is useful when comparing reports run on different machines or just in different directories.</p>
 
-<p>There was an issue that would cause Brakeman to crash on certain configurations. This has been fixed.</p>
+<h3>Brakeman without TTY</h3>
 
-<h3>Look for t()</h3>
+<p>Thanks to <a href="http://fsword.github.com/">fsword</a>, Brakeman can now run without a TTY available.</p>
 
-<p>Both the <code>translate</code> and its shorter alias <code>t</code> will cause the warning about the cross-site scripting bug in them to be set to high confidence. If neither of these functions are found in the application, the confidence is set to medium.</p>
+<h3>Exit Code for Compare</h3>
+
+<p>Also thanks to fsword, Brakeman will return a proper exit code when run with <code>-z --compare</code>. If any changes are found, the exit code will be nonzero.</p>
+
+<h3>Rake Task Generation Fixed</h3>
+
+<p>The <code>--rake</code> option was broken, but <a href="https://github.com/deepakinseattle">Deepak Kumar</a> noticed and fixed it!</p>
+
+<h3>High Confidence Warnings for JSON</h3>
+
+<p>Older versions of Rails default to not escaping <code>to_json</code> calls, leading to <a href="http://brakemanscanner.org/docs/warning_types/cross_site_scripting_to_json/">cross site scripting problems</a>. Since Rails 2.1.0, Rails has provided an option to escape JSON output by default. Brakeman will check this option, and warn on unescaped <code>to_json</code> calls.</p>
+
+<h3>Fix Redirect False Negative</h3>
+
+<p>Brakeman was incorrectly checking for <code>:only_path =&gt; true</code> in <em>any</em> argument to <code>redirect_to</code>. However, it is only valid as part of the first argument.</p>
+
+<h3>Fix Duplicate Warnings on Raw Calls</h3>
+
+<p>A logic mistake sometimes caused a high and weak confidence warning to be reported for the same code using <code>raw</code>. This has been fixed.</p>
+
+<h3>Fix Shadowing of Rendered Partials</h3>
+
+<p>Due to the way Brakeman was storing rendered partials, a view that was rendered multiple times via different code paths would only store a single instance of the rendered view. This could result in some vulnerabilities not being reported.</p>
+
+<p>To fix this, Brakeman now stores the entire &#8220;render chain&#8221; (that is, each location of a <code>render</code>). This ensures a unique key for each rendered template.</p>
+
+<h3>Report Render Chain in HTML</h3>
+
+<p>HTML reports now have a new feature that reports the &#8220;render chain&#8221; for view warnings (if the chain is more than a single call deep).</p>
+
+<p>A warning like this:</p>
+
+<p><img src="/images/unexpanded_call_chain.png" alt="Unexpanded" /></p>
+
+<p>Might expand to show this chain:</p>
+
+<p><img src="/images/expanded_call_chain.png" alt="Expanded" /></p>
+
+<h3>Check for XSS in <code>content_tag</code></h3>
+
+<p><code>content_tag</code> is a view helper for generating HTML tags containing some content. In Rails 2.x, <code>content_tag</code> did not escape this content. In Rails 3.x, this changed so that now it is escaped. While <code>content_tag</code> does have an <code>escape</code> parameter (true by default), this only applies to the tag attribute <em>values</em>.</p>
+
+<p>Brakeman now warns on possible cross site scripting via <code>content_tag</code> calls. <a href="/docs/warning_types/content_tag">See here</a> for more details.</p>
+
+<h3>Backtraces in Debug Mode</h3>
+
+<p>By default, Brakeman tries its best to recover from errors and produce a report. However, this can sometimes make it difficult to track down the sources of errors. Now, with the <code>-d</code> option, Brakeman will report backtraces for errors encountered while running, as well as including backtraces in HTML reports.</p>
+
+<h3>Convenience Methods for Sexp Access</h3>
+
+<p>Previously, all code dealing with <a href="https://en.wikipedia.org/wiki/S-exp">s-expressions</a> in the <code>Sexp</code> class accessed nodes via array access, e.g. <code>exp[1]</code> or <code>exp[2]</code>. This led to hard-to-read code like <code>exp[2][3][1][1..-1]</code>. This release includes convenience methods to replace those types of calls. Available methods are <a href="http://rdoc.info/gems/brakeman/Sexp">documented here</a>.</p>
+
+<p>Hopefully this leads to code that is both easier to read and easier to write.</p>
+
+<h3>Reporting Problems</h3>
+
+<p>This release touches a lot of code (76 changed files with 1,515 additions and 598 deletions), so there is ample opportunity for bugs to sneak in. Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a>!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> and following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
 </div>
 
 
@@ -151,7 +220,7 @@
 
 
 
-<time datetime="2011-11-21 17:12:00 -0800" pubdate  updated >Nov 21<span>st</span>, 2011</time>
+<time datetime="2012-09-04 11:26:00 -0700" pubdate  updated >Sep 4<span>th</span>, 2012</time>
 
 
 
@@ -162,7 +231,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2011/11/21/brakeman-0-dot-9-2-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2011/11/21/brakeman-0-dot-9-2-released/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2012/09/04/brakeman-1-dot-8-0-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2012/09/04/brakeman-1-dot-8-0-released/" >Tweet</a>
   
   
   <g:plusone size="medium"></g:plusone>
@@ -178,8 +247,8 @@
     <div id="disqus_thread"><div id="disqus_thread"></div>
 <script type="text/javascript">
   var disqus_shortname = 'brakeman';
-  var disqus_identifier = 'http://brakemanscanner.org/blog/2011/11/21/brakeman-0-dot-9-2-released/';
-  var disqus_url = 'http://brakemanscanner.org/blog/2011/11/21/brakeman-0-dot-9-2-released/';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2012/09/04/brakeman-1-dot-8-0-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2012/09/04/brakeman-1-dot-8-0-released/';
   //var disqus_developer = 1;
   (function() {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

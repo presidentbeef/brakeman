@@ -4,13 +4,107 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-08-30T11:50:20-07:00</updated>
+  <updated>2012-09-04T12:54:01-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 1.8.0 Released</title>
+    <link href="http://brakemanscanner.org/blog/2012/09/04/brakeman-1-dot-8-0-released/"/>
+    <updated>2012-09-04T11:26:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2012/09/04/brakeman-1-dot-8-0-released</id>
+    <content type="html">&lt;p&gt;&lt;em&gt;Changes since 1.7.1&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Support relative paths in reports (fsword)&lt;/li&gt;
+&lt;li&gt;Allow Brakeman to be run without tty (fsword)&lt;/li&gt;
+&lt;li&gt;Fix exit code with &lt;code&gt;--compare&lt;/code&gt; (fsword)&lt;/li&gt;
+&lt;li&gt;Fix &lt;code&gt;--rake&lt;/code&gt; option (Deepak Kumar)&lt;/li&gt;
+&lt;li&gt;Add high confidence warnings for &lt;code&gt;to_json&lt;/code&gt; XSS (Neil Matatall)&lt;/li&gt;
+&lt;li&gt;Fix &lt;code&gt;redirect_to&lt;/code&gt; false negative&lt;/li&gt;
+&lt;li&gt;Fix duplicate warnings with &lt;code&gt;raw&lt;/code&gt; calls&lt;/li&gt;
+&lt;li&gt;Fix shadowing of rendered partials&lt;/li&gt;
+&lt;li&gt;Add &quot;render chain&quot; to HTML reports&lt;/li&gt;
+&lt;li&gt;Add check for XSS in &lt;code&gt;content_tag&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Add full backtrace for errors in debug mode&lt;/li&gt;
+&lt;li&gt;Treat model attributes in &lt;code&gt;or&lt;/code&gt; expressions as immediate values&lt;/li&gt;
+&lt;li&gt;Switch to method access for Sexp nodes&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Relative Paths in Reports&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code&gt;--relative-paths&lt;/code&gt; option will now cause Brakeman to output relative paths for warnings in reports in either JSON or tabs format. This is useful when comparing reports run on different machines or just in different directories.&lt;/p&gt;
+
+&lt;h3&gt;Brakeman without TTY&lt;/h3&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;http://fsword.github.com/&quot;&gt;fsword&lt;/a&gt;, Brakeman can now run without a TTY available.&lt;/p&gt;
+
+&lt;h3&gt;Exit Code for Compare&lt;/h3&gt;
+
+&lt;p&gt;Also thanks to fsword, Brakeman will return a proper exit code when run with &lt;code&gt;-z --compare&lt;/code&gt;. If any changes are found, the exit code will be nonzero.&lt;/p&gt;
+
+&lt;h3&gt;Rake Task Generation Fixed&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code&gt;--rake&lt;/code&gt; option was broken, but &lt;a href=&quot;https://github.com/deepakinseattle&quot;&gt;Deepak Kumar&lt;/a&gt; noticed and fixed it!&lt;/p&gt;
+
+&lt;h3&gt;High Confidence Warnings for JSON&lt;/h3&gt;
+
+&lt;p&gt;Older versions of Rails default to not escaping &lt;code&gt;to_json&lt;/code&gt; calls, leading to &lt;a href=&quot;http://brakemanscanner.org/docs/warning_types/cross_site_scripting_to_json/&quot;&gt;cross site scripting problems&lt;/a&gt;. Since Rails 2.1.0, Rails has provided an option to escape JSON output by default. Brakeman will check this option, and warn on unescaped &lt;code&gt;to_json&lt;/code&gt; calls.&lt;/p&gt;
+
+&lt;h3&gt;Fix Redirect False Negative&lt;/h3&gt;
+
+&lt;p&gt;Brakeman was incorrectly checking for &lt;code&gt;:only_path =&amp;gt; true&lt;/code&gt; in &lt;em&gt;any&lt;/em&gt; argument to &lt;code&gt;redirect_to&lt;/code&gt;. However, it is only valid as part of the first argument.&lt;/p&gt;
+
+&lt;h3&gt;Fix Duplicate Warnings on Raw Calls&lt;/h3&gt;
+
+&lt;p&gt;A logic mistake sometimes caused a high and weak confidence warning to be reported for the same code using &lt;code&gt;raw&lt;/code&gt;. This has been fixed.&lt;/p&gt;
+
+&lt;h3&gt;Fix Shadowing of Rendered Partials&lt;/h3&gt;
+
+&lt;p&gt;Due to the way Brakeman was storing rendered partials, a view that was rendered multiple times via different code paths would only store a single instance of the rendered view. This could result in some vulnerabilities not being reported.&lt;/p&gt;
+
+&lt;p&gt;To fix this, Brakeman now stores the entire &quot;render chain&quot; (that is, each location of a &lt;code&gt;render&lt;/code&gt;). This ensures a unique key for each rendered template.&lt;/p&gt;
+
+&lt;h3&gt;Report Render Chain in HTML&lt;/h3&gt;
+
+&lt;p&gt;HTML reports now have a new feature that reports the &quot;render chain&quot; for view warnings (if the chain is more than a single call deep).&lt;/p&gt;
+
+&lt;p&gt;A warning like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://brakemanscanner.org/images/unexpanded_call_chain.png&quot; alt=&quot;Unexpanded&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Might expand to show this chain:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://brakemanscanner.org/images/expanded_call_chain.png&quot; alt=&quot;Expanded&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Check for XSS in &lt;code&gt;content_tag&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;content_tag&lt;/code&gt; is a view helper for generating HTML tags containing some content. In Rails 2.x, &lt;code&gt;content_tag&lt;/code&gt; did not escape this content. In Rails 3.x, this changed so that now it is escaped. While &lt;code&gt;content_tag&lt;/code&gt; does have an &lt;code&gt;escape&lt;/code&gt; parameter (true by default), this only applies to the tag attribute &lt;em&gt;values&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Brakeman now warns on possible cross site scripting via &lt;code&gt;content_tag&lt;/code&gt; calls. &lt;a href=&quot;http://brakemanscanner.org/docs/warning_types/content_tag&quot;&gt;See here&lt;/a&gt; for more details.&lt;/p&gt;
+
+&lt;h3&gt;Backtraces in Debug Mode&lt;/h3&gt;
+
+&lt;p&gt;By default, Brakeman tries its best to recover from errors and produce a report. However, this can sometimes make it difficult to track down the sources of errors. Now, with the &lt;code&gt;-d&lt;/code&gt; option, Brakeman will report backtraces for errors encountered while running, as well as including backtraces in HTML reports.&lt;/p&gt;
+
+&lt;h3&gt;Convenience Methods for Sexp Access&lt;/h3&gt;
+
+&lt;p&gt;Previously, all code dealing with &lt;a href=&quot;https://en.wikipedia.org/wiki/S-exp&quot;&gt;s-expressions&lt;/a&gt; in the &lt;code&gt;Sexp&lt;/code&gt; class accessed nodes via array access, e.g. &lt;code&gt;exp[1]&lt;/code&gt; or &lt;code&gt;exp[2]&lt;/code&gt;. This led to hard-to-read code like &lt;code&gt;exp[2][3][1][1..-1]&lt;/code&gt;. This release includes convenience methods to replace those types of calls. Available methods are &lt;a href=&quot;http://rdoc.info/gems/brakeman/Sexp&quot;&gt;documented here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Hopefully this leads to code that is both easier to read and easier to write.&lt;/p&gt;
+
+&lt;h3&gt;Reporting Problems&lt;/h3&gt;
+
+&lt;p&gt;This release touches a lot of code (76 changed files with 1,515 additions and 598 deletions), so there is ample opportunity for bugs to sneak in. Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt;!&lt;/p&gt;
+
+&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; and following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 1.7.1 Released</title>
@@ -1319,19 +1413,6 @@ Brakeman.run :app_path =&amp;gt; 'my_app'
 &lt;h3&gt;Look for t()&lt;/h3&gt;
 
 &lt;p&gt;Both the &lt;code&gt;translate&lt;/code&gt; and its shorter alias &lt;code&gt;t&lt;/code&gt; will cause the warning about the cross-site scripting bug in them to be set to high confidence. If neither of these functions are found in the application, the confidence is set to medium.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 0.9.1 Released</title>
-    <link href="http://brakemanscanner.org/blog/2011/11/18/brakeman-0-dot-9-1-released/"/>
-    <updated>2011-11-18T10:41:00-08:00</updated>
-    <id>http://brakemanscanner.org/blog/2011/11/18/brakeman-0-dot-9-1-released</id>
-    <content type="html">&lt;p&gt;&lt;a href=&quot;http://groups.google.com/group/rubyonrails-security/browse_thread/thread/2b61d70fb73c7cc5&quot;&gt;A new vulnerability was disclosed&lt;/a&gt; yesterday in the Rails &lt;a href=&quot;http://api.rubyonrails.org/classes/ActionView/Helpers/TranslationHelper.html#method-i-translate&quot;&gt;translate helper&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;This vulnerability affects Rails 2.3.x when using the rails_xss plugin, Rails 3.0 - 3.0.10, and Rails 3.1 - 3.1.1.&lt;/p&gt;
-
-&lt;p&gt;The only change in the 0.9.1 release is a check for this new vulnerability.&lt;/p&gt;
 </content>
   </entry>
   
