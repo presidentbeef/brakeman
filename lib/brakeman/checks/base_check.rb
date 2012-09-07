@@ -428,17 +428,17 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     high_version = high_version.split(".").map! { |n| n.to_i }
 
     version.each_with_index do |v, i|
-      if v < low_version[i]
+      if v < low_version.fetch(i, 0)
         return false
-      elsif v > low_version[i]
+      elsif v > low_version.fetch(i, 0)
         break
       end
     end
 
     version.each_with_index do |v, i|
-      if v > high_version[i]
+      if v > high_version.fetch(i, 0)
         return false
-      elsif v < high_version[i]
+      elsif v < high_version.fetch(i, 0)
         break
       end
     end
