@@ -227,4 +227,20 @@ class SexpTests < Test::Unit::TestCase
       exp.method
     end
   end
+
+  def test_zsuper_call
+    exp = parse 'super'
+
+    assert_equal :super, exp.method
+    assert_equal s(:arglist), exp.arglist
+    assert_equal s(), exp.args
+  end
+
+  def test_super_call
+    exp = parse 'super 1'
+
+    assert_equal :super, exp.method
+    assert_equal s(:arglist, s(:lit, 1)), exp.arglist
+    assert_equal s(s(:lit, 1)), exp.args
+  end
 end
