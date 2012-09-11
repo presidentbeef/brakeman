@@ -121,7 +121,21 @@
 <pre><code>Possible unprotected redirect near line 46: redirect_to(params)
 </code></pre>
 
-<p>To protect these redirects, use <code>:only_path =&gt; true</code> to limit the redirect to the current host or specify the host.</p>
+<p>This is because <code>params</code> could contain <code>:host =&gt; 'evilsite.com'</code> which would redirect away from your site and to a malicious site.</p>
+
+<p>If the first argument to <code>redirect_to</code> is a hash, then adding <code>:only_path =&gt; true</code> will limit the redirect to the current host. Another option is to specify the host explicitly.</p>
+
+<pre><code>redirect_to params.merge(:only_path =&gt; true)
+
+redirect_to params.merge(:host =&gt; 'myhost.com')
+</code></pre>
+
+<p>If the first argument is a string, then it is possible to parse the string and extract the path:</p>
+
+<pre><code>redirect_to URI.parse(some_url).path 
+</code></pre>
+
+<p>If the URL does not contain a protocol (e.g., <code>http://</code>), then you will probably get unexpected results, as <code>redirect_to</code> will prepend the current host name and a protocol.</p>
 
 <hr />
 
