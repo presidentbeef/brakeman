@@ -147,8 +147,14 @@ class Sexp
   #s(:call, s(:call, nil, :x, s(:arglist)), :y, s(:arglist, s(:lit, 1)))
   #                        ^- method
   def method
-    expect :call, :attrasgn
-    self[2]
+    expect :call, :attrasgn, :super, :zsuper
+
+    case self.node_type
+    when :call, :attrasgn
+      self[2]
+    when :super, :zsuper
+      :super
+    end
   end
 
   #Sets the arglist in a method call.
@@ -165,8 +171,18 @@ class Sexp
   #    s(:call, s(:call, nil, :x, s(:arglist)), :y, s(:arglist, s(:lit, 1), s(:lit, 2)))
   #                                                 ^------------ arglist ------------^
   def arglist
-    expect :call, :attrasgn
-    self[3]
+    expect :call, :attrasgn, :super, :zsuper
+
+    case self.node_type
+    when :call, :attrasgn
+      self[3]
+    when :super, :zsuper
+      if self[1]
+        Sexp.new(:arglist).concat self[1..-1]
+      else
+        Sexp.new(:arglist)
+      end
+    end
 
     #For new ruby_parser
     #Sexp.new(:arglist, *self[3..-1])
@@ -177,7 +193,7 @@ class Sexp
   #    s(:call, s(:call, nil, :x, s(:arglist)), :y, s(:arglist, s(:lit, 1), s(:lit, 2)))
   #                                                             ^--------args--------^
   def args
-    expect :call, :attrasgn
+    expect :call, :attrasgn, :super, :zsuper
     #For new ruby_parser
     #if self[3]
     #  self[3..-1]
@@ -185,11 +201,20 @@ class Sexp
     #  []
     #end
 
-    #For old ruby_parser
-    if self[3]
-      self[3][1..-1]
-    else
-      []
+    case self.node_type
+    when :call, :attrasgn
+      #For old ruby_parser
+      if self[3]
+        self[3][1..-1]
+      else
+        []
+      end
+    when :super, :zsuper
+      if self[1]
+        self[1..-1]
+      else
+        []
+      end
     end
   end
 
@@ -345,7 +370,7 @@ class Sexp
   #Sets body
   def body= exp
     expect :defn, :defs, :methdef, :selfdef, :class, :module
-    
+
     case self.node_type
     when :defn, :methdef, :class
       self[3] = exp
@@ -392,7 +417,7 @@ end
 [:[]=, :clear, :collect!, :compact!, :concat, :delete, :delete_at,
   :delete_if, :drop, :drop_while, :fill, :flatten!, :replace, :insert,
   :keep_if, :map!, :pop, :push, :reject!, :replace, :reverse!, :rotate!,
-  :select!, :shift, :shuffle!, :slice!, :sort!, :sort_by!, :transpose, 
+  :select!, :shift, :shuffle!, :slice!, :sort!, :sort_by!, :transpose,
   :uniq!, :unshift].each do |method|
 
   Sexp.class_eval <<-RUBY

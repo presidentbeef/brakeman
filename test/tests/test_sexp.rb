@@ -233,7 +233,7 @@ class SexpTests < Test::Unit::TestCase
 
     assert_equal :super, exp.method
     assert_equal s(:arglist), exp.arglist
-    assert_equal s(), exp.args
+    assert_equal [], exp.args
   end
 
   def test_super_call
