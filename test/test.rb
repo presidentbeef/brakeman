@@ -4,7 +4,12 @@ $LOAD_PATH.unshift "#{TEST_PATH}/../lib"
 
 begin
   require 'simplecov'
-  SimpleCov.start
+  SimpleCov.start do
+    add_filter 'lib/ruby_parser/ruby18_parser.rb'
+    add_filter 'lib/ruby_parser/ruby19_parser.rb'
+    add_filter 'lib/ruby_parser/ruby_lexer.rb'
+    add_filter 'lib/ruby_parser/ruby_parser_extras.rb'
+  end
 rescue LoadError => e
   $stderr.puts "Install simplecov for test coverage report"
 end
