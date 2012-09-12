@@ -14,7 +14,7 @@ class Rails3Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 5,
-      :template => 29,
+      :template => 30,
       :warning => 30
     }
   end
@@ -532,7 +532,7 @@ class Rails3Tests < Test::Unit::TestCase
 
   def test_default_routes
     assert_warning :warning_type => "Default Routes",
-      :line => 95,
+      :line => 97,
       :message => /All public methods in controllers are available as actions/,
       :file => /routes\.rb/
   end
@@ -572,7 +572,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_string_buffer_manipulation_bug
     assert_warning :type => :warning,
       :warning_type => "Cross Site Scripting",
-      :message => /^Rails 3.0.5 has a vulnerabilty in SafeBuffer. Upgrade to 3.0.12/,
+      :message => /^Rails 3.0.3 has a vulnerabilty in SafeBuffer. Upgrade to 3.0.12/,
       :confidence => 1,
       :file => /Gemfile/
   end
@@ -653,7 +653,7 @@ class Rails3Tests < Test::Unit::TestCase
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 3,
-      :message => /^Upgrade\ to\ Rails\ 3\.0\.17,\ 3\.0\.5\ select_ta/,
+      :message => /^Upgrade\ to\ Rails\ 3\.0\.17,\ 3\.0\.3\ select_ta/,
       :confidence => 0,
       :file => /test_select_tag\.html\.erb/
   end
@@ -661,7 +661,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_cross_site_scripting_single_quotes_CVE_2012_3464
     assert_warning :type => :warning,
       :warning_type => "Cross Site Scripting",
-      :message => /^Rails\ 3\.0\.5\ does\ not\ escape\ single\ quote/,
+      :message => /^Rails\ 3\.0\.3\ does\ not\ escape\ single\ quote/,
       :confidence => 1,
       :file => /Gemfile/
   end
@@ -678,6 +678,15 @@ class Rails3Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Cross Site Scripting",
       :message => /^Versions\ before\ 3\.0\.10\ have\ a\ vulnerabil/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_mail_link_CVE_2011_0446
+    assert_warning :type => :template,
+      :warning_type => "Mail Link",
+      :line => 1,
+      :message => /^Vulnerability\ in\ mail_to\ using\ javascrip/,
       :confidence => 0,
       :file => /Gemfile/
   end

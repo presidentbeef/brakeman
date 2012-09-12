@@ -11,6 +11,8 @@ Rails3::Application.routes.draw do
 
   get "other/test_send_file"
 
+  get "other/test_mail_to"
+
   get "home/index"
 
   get "home/test_params"
