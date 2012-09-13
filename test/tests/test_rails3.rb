@@ -572,7 +572,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_string_buffer_manipulation_bug
     assert_warning :type => :warning,
       :warning_type => "Cross Site Scripting",
-      :message => /^Rails 3.0.3 has a vulnerabilty in SafeBuffer. Upgrade to 3.0.12/,
+      :message => /^Rails 3\.\d\.\d has a vulnerabilty in SafeBuffer. Upgrade to 3.0.12/,
       :confidence => 1,
       :file => /Gemfile/
   end
