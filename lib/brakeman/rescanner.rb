@@ -117,7 +117,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
       if controller[:file] == path
         tracker.templates.keys.each do |template_name|
           if template_name.to_s.match /(.+)\.#{name}#/
-            tracker.templates.delete template_name
+            tracker.reset_template template_name
           end
         end
 
@@ -222,7 +222,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
         #Remove templates rendered from this controller
         tracker.templates.keys.each do |template_name|
           if template_name.to_s.match template_matcher
-            tracker.templates.delete template_name
+            tracker.reset_template template_name
           end
         end
 
