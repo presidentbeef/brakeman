@@ -39,4 +39,8 @@ class OtherController < ApplicationController
   def test_render_with_nonsymbol_key
     render x => :y
   end
+
+  def test_mail_to
+    @user = User.find(current_user)
+  end
 end
