@@ -450,11 +450,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #
   #Returns the value inside the array, if possible.
   def process_array_access target, args
-    if args.length == 1 and integer? args[0]
-      index = args[0][1]
+    if args.length == 1 and integer? args.first
+      index = args.first.value
 
       #Have to do this because first element is :array and we have to skip it
-      target[1..-1][index + 1]
+      target[1..-1][index]
     else
       nil
     end
