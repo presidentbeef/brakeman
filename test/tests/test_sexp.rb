@@ -243,4 +243,30 @@ class SexpTests < Test::Unit::TestCase
     assert_equal s(:arglist, s(:lit, 1)), exp.arglist
     assert_equal s(s(:lit, 1)), exp.args
   end
+
+  def test_resbody_block
+    #Ruby2Ruby has calls like this which need to be supported
+    #for Brakeman::OutputProcessor
+    exp = parse "begin; rescue; end"
+
+    assert_nil exp.resbody.block
+  end
+
+  def test_lasgn
+    #Ruby2Ruby has calls like this which need to be supported
+    #for Brakeman::OutputProcessor
+    exp = parse "blah; x = 1"
+
+    assert_equal s(:lasgn, :x, s(:lit, 1)), exp.lasgn(true)
+    assert_equal nil, exp.lasgn #Was deleted
+  end
+
+  def test_iasgn
+    #Ruby2Ruby has calls like this which need to be supported
+    #for Brakeman::OutputProcessor
+    exp = parse "blah; @x = 1"
+
+    assert_equal s(:iasgn, :@x, s(:lit, 1)), exp.iasgn(true)
+    assert_equal nil, exp.iasgn #Was deleted
+  end
 end
