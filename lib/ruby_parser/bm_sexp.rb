@@ -35,10 +35,24 @@ class Sexp
     self[0] = type
   end
 
+  #Don't use this, please.
+  #:nodoc:
   def resbody delete = false
-    #RubyParser relies on method_missing for this, but since we don't want to use
-    #method_missing, here's a real method.
+    #RubyParser and Ruby2Ruby rely on method_missing for this, but since we
+    #don't want to use method_missing, here's a real method.
     find_node :resbody, delete
+  end
+
+  #Don't use this, please.
+  #:nodoc:
+  def lasgn delete = false
+    find_node :lasgn, delete
+  end
+
+  #Don't use this, please.
+  #:nodoc:
+  def iasgn delete = false
+    find_node :iasgn, delete
   end
 
   alias :node_type :sexp_type
@@ -304,13 +318,16 @@ class Sexp
   #       s(:block, s(:lvar, :y), s(:call, nil, :z, s(:arglist))))
   #       ^-------------------- block --------------------------^
   def block
-    expect :iter, :call_with_block, :scope
+    expect :iter, :call_with_block, :scope, :resbody
 
     case self.node_type
     when :iter, :call_with_block
       self[3]
     when :scope
       self[1]
+    when :resbody
+      #This is for Ruby2Ruby ONLY
+      find_node :block
     end
   end
 
