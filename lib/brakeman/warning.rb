@@ -75,13 +75,13 @@ class Brakeman::Warning
   #Return String of the code output from the OutputProcessor and
   #stripped of newlines and tabs.
   def format_code
-    Brakeman::OutputProcessor.new.format(self.code).gsub(/(\t|\r|\n)+/, " ")
+    Brakeman::OutputProcessor.new.format(self.code).to_s.gsub(/(\t|\r|\n)+/, " ")
   end
 
   #Return String of the user input formatted and
   #stripped of newlines and tabs.
   def format_user_input
-    Brakeman::OutputProcessor.new.format(self.user_input).gsub(/(\t|\r|\n)+/, " ")
+    Brakeman::OutputProcessor.new.format(self.user_input).to_s.gsub(/(\t|\r|\n)+/, " ")
   end
 
   #Return formatted warning message
