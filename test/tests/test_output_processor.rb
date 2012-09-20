@@ -17,8 +17,8 @@ class OutputProcessorTests < Test::Unit::TestCase
     assert_output "", Sexp.new(Sexp.new(:str, 'x'))
   end
 
-  def test_output_bad_input
-    assert_output "", Sexp.new(:call, "what is this doing here", Sexp.new(:huh))
+  def test_output_bad_node_type
+    assert_output "", Sexp.new(:bad_node_type)
   end
 
   def test_output_local_variable
