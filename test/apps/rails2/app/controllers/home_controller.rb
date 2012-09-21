@@ -160,4 +160,16 @@ class HomeController < ApplicationController
   def or_equals
     params[:still_bad] ||= {}
   end
+
+  def test_safe_model_redirect
+    redirect_to User.find(1)
+  end
+
+  def test_safe_mode_array_redirect
+    redirect_to [User.find(1), User.find(2)]
+  end
+
+  def test_model_attributes_badness
+    redirect_to User.new.donkey
+  end
 end
