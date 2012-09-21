@@ -59,6 +59,10 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     args = call.args
     first_arg = call.first_arg
 
+    # if the first argument is an array, rails assumes you are building a
+    # polymorphic route, which will never jump off-host
+    return false if array? first_arg
+
     if tracker.options[:ignore_redirect_to_model] and call? first_arg and
       (@model_find_calls.include? first_arg.method or first_arg.method.to_s.match(/^find_by_/)) and
       model_name? first_arg.target
