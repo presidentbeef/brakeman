@@ -10,7 +10,7 @@ class Brakeman::OutputProcessor < Ruby2Ruby
 
   #Copies +exp+ and then formats it.
   def format exp
-    process exp.deep_clone
+    process(exp.deep_clone) || "[Format Error]"
   end
 
   alias process_safely format
