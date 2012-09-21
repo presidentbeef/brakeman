@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 2,
         :template => 41,
-        :warning => 31}
+        :warning => 34}
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
         :template => 41,
-        :warning => 32 }
+        :warning => 35 }
     end
   end
 
@@ -108,6 +108,27 @@ class Rails2Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Redirect",
       :line => 46,
+      :message => /^Possible unprotected redirect/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+
+    assert_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 173,
+      :message => /^Possible unprotected redirect/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+
+    assert_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 177,
+      :message => /^Possible unprotected redirect/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+
+    assert_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 181,
       :message => /^Possible unprotected redirect/,
       :confidence => 0,
       :file => /home_controller\.rb/

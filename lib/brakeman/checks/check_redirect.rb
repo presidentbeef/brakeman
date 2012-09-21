@@ -66,9 +66,30 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
       return false
     end
 
+    # if the first argument is an array, rails assumes you are building a polymorphic route.
+    # therefore, if each value is a model, we're safe.  You can guess a url if there are user
+    # supplied values in the array so long as something resposnds to <parameter_value>_path,
+    # so we still need to consider anything other than a model as dangerous.
+    if array? first_arg
+      args.first.each do |arg|
+        next if arg == :array #wtf bugfix?
+
+        unless is_immediate_model? arg
+          return Match.new(:immediate, arg)
+        end
+      end
+
+      return false
+    end
+
     args.each do |arg|
       if res = has_immediate_model?(arg)
-        return Match.new(:immediate, res)
+        # polymorphic routes are assumed to be safe
+        if is_immediate_model? arg
+          return false
+        else
+          return Match.new(:immediate, res)
+        end
       elsif call? arg
         if request_value? arg
           return Match.new(:immediate, arg)

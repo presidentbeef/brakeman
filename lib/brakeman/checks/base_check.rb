@@ -305,6 +305,10 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     end
   end
 
+  def is_immediate_model? exp, out = nil
+    exp == has_immediate_model?(exp, out)
+  end
+
   #Checks for a model attribute at the top level of the
   #expression.
   def has_immediate_model? exp, out = nil
