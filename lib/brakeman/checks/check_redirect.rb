@@ -72,12 +72,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
 
     args.each do |arg|
       if res = has_immediate_model?(arg)
-        # polymorphic routes are assumed to be safe
-        if is_immediate_model? arg
-          return false
-        else
-          return Match.new(:immediate, res)
-        end
+        return Match.new(:immediate, res)
       elsif call? arg
         if request_value? arg
           return Match.new(:immediate, arg)
