@@ -23,36 +23,6 @@ class Brakeman::OutputProcessor < Ruby2Ruby
     end
   end
 
-  def process_call exp
-    if exp[0].is_a? Symbol
-      target = exp[0]
-
-      method = exp[1]
-
-      args = process exp[2]
-
-      out = nil
-
-      if method == :[]
-        if target
-          out = "#{target}[#{args}]"
-        else
-          raise Exception.new("Not sure what to do with access and no target: #{exp}")
-        end
-      else
-        if target
-          out = "#{target}.#{method}(#{args})"
-        else
-          out = "#{method}(#{args})"
-        end
-      end
-      exp.clear
-      out
-    else
-      super exp
-    end
-  end
-
   def process_lvar exp
     out = "(local #{exp[0]})"
     exp.clear
