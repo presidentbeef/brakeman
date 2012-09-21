@@ -59,25 +59,13 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     args = call.args
     first_arg = call.first_arg
 
+    # if the first argument is an array, rails assumes you are building a
+    # polymorphic route, which will never jump off-host
+    return false if array? first_arg
+
     if tracker.options[:ignore_redirect_to_model] and call? first_arg and
       (@model_find_calls.include? first_arg.method or first_arg.method.to_s.match(/^find_by_/)) and
       model_name? first_arg.target
-
-      return false
-    end
-
-    # if the first argument is an array, rails assumes you are building a polymorphic route.
-    # therefore, if each value is a model, we're safe.  You can guess a url if there are user
-    # supplied values in the array so long as something resposnds to <parameter_value>_path,
-    # so we still need to consider anything other than a model as dangerous.
-    if array? first_arg
-      args.first.each do |arg|
-        next if arg == :array #wtf bugfix?
-
-        unless is_immediate_model? arg
-          return Match.new(:immediate, arg)
-        end
-      end
 
       return false
     end
