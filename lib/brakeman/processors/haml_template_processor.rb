@@ -29,16 +29,15 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
 
     method = exp.method
 
-    if (call? target and target.method == :_hamlout) or target == :_hamlout
+    if (call? target and target.method == :_hamlout)
       res = case method
             when :adjust_tabs, :rstrip!, :attributes #Check attributes, maybe?
               ignore
-            when :options
-              Sexp.new :call, :_hamlout, :options, exp.arglist
-            when :buffer
-              Sexp.new :call, :_hamlout, :buffer, exp.arglist
+            when :options, :buffer
+              exp
             when :open_tag
-              Sexp.new(:tag, process(exp.arglist))
+              process(exp.arglist)
+              exp
             else
               arg = exp.first_arg
 
