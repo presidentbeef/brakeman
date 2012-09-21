@@ -169,11 +169,7 @@ class HomeController < ApplicationController
     redirect_to [User.find(1), User.find(2)]
   end
 
-  def test_model_attr_badness
-    redirect_to [User.new.donkey]
-  end
-
-  def test_model_attributes
+  def test_model_attributes_badness
     redirect_to User.new.donkey
   end
 end
