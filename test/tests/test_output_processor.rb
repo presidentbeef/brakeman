@@ -6,19 +6,19 @@ class OutputProcessorTests < Test::Unit::TestCase
   end
 
   def test_output_nil
-    assert_output "", nil
+    assert_output "[Format Error]", nil
   end
 
   def test_output_empty_sexp
-    assert_output "", Sexp.new
+    assert_output "[Format Error]", Sexp.new
   end
 
   def test_output_missing_node_type
-    assert_output "", Sexp.new(Sexp.new(:str, 'x'))
+    assert_output "[Format Error]", Sexp.new(Sexp.new(:str, 'x'))
   end
 
   def test_output_bad_node_type
-    assert_output "", Sexp.new(:bad_node_type)
+    assert_output "[Format Error]", Sexp.new(:bad_node_type)
   end
 
   def test_output_local_variable
