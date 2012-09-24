@@ -1,3 +1,31 @@
+# 1.8.1
+
+ * Recover from errors in output formatting
+ * Fix false positive in redirect_to (Neil Matatall)
+ * Fix problems with removal of `Sexp#method_missing`
+ * Fix array indexing in alias processing
+ * Fix old mail_to vulnerability check
+ * Fix rescans when only controller action changes
+ * Allow comparison of versions with unequal lengths
+ * Handle super calls with blocks
+ * Respect `-q` flag for "Rails 3 detected" message
+
+# 1.8.0
+
+ * Support relative paths in reports (fsword)
+ * Allow Brakeman to be run without tty (fsword)
+ * Fix exit code with `--compare` (fsword)
+ * Fix `--rake` option (Deepak Kumar)
+ * Add high confidence warnings for `to_json` XSS (Neil Matatall)
+ * Fix `redirect_to` false negative
+ * Fix duplicate warnings with `raw` calls
+ * Fix shadowing of rendered partials
+ * Add "render chain" to HTML reports
+ * Add check for XSS in `content_tag`
+ * Add full backtrace for errors in debug mode
+ * Treat model attributes in `or` expressions as immediate values
+ * Switch to method access for Sexp nodes
+
 # 1.7.1
 
  * Add check for CVE-2012-3463
