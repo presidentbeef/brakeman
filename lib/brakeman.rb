@@ -74,7 +74,7 @@ module Brakeman
 
     if File.exist? app_path + "/script/rails"
       options[:rails3] = true
-      notify "[Notice] Detected Rails 3 application"
+      notify "[Notice] Detected Rails 3 application" unless options[:quiet]
     end
 
     options
