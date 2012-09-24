@@ -157,7 +157,7 @@
 
 <p>When <code>redirect_to</code> is given an array, Rails eventually falls through to <code>polymorphic_path</code>, which will only return a path, not a full URL. Brakeman only checks for redirects that can redirect to a different host, so this is considered safe.</p>
 
-<h3>Sexp and <code>method\_missing</code></h3>
+<h3>Sexp and <code>method_missing</code></h3>
 
 <p>The original <code>Sexp</code> code from RubyParser uses <code>method_missing</code> to find and optionally delete nodes. This functionality is not used very often (never in Brakeman) but has covered up bugs that would otherwise been found. Therefore, <code>Sexp#method_missing</code> has been removed in Brakeman. However, it turns out that <a href="https://github.com/seattlerb/ruby2ruby">Ruby2Ruby</a> uses it in a couple places. Brakeman uses Ruby2Ruby to covert s-expressions back to readable Ruby code, particularly when generating reports. This lead to some crashes.</p>
 

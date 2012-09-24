@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-09-24T13:44:51-07:00</updated>
+  <updated>2012-09-24T13:48:36-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -52,7 +52,7 @@
 
 &lt;p&gt;When &lt;code&gt;redirect_to&lt;/code&gt; is given an array, Rails eventually falls through to &lt;code&gt;polymorphic_path&lt;/code&gt;, which will only return a path, not a full URL. Brakeman only checks for redirects that can redirect to a different host, so this is considered safe.&lt;/p&gt;
 
-&lt;h3&gt;Sexp and &lt;code&gt;method\_missing&lt;/code&gt;&lt;/h3&gt;
+&lt;h3&gt;Sexp and &lt;code&gt;method_missing&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;The original &lt;code&gt;Sexp&lt;/code&gt; code from RubyParser uses &lt;code&gt;method_missing&lt;/code&gt; to find and optionally delete nodes. This functionality is not used very often (never in Brakeman) but has covered up bugs that would otherwise been found. Therefore, &lt;code&gt;Sexp#method_missing&lt;/code&gt; has been removed in Brakeman. However, it turns out that &lt;a href=&quot;https://github.com/seattlerb/ruby2ruby&quot;&gt;Ruby2Ruby&lt;/a&gt; uses it in a couple places. Brakeman uses Ruby2Ruby to covert s-expressions back to readable Ruby code, particularly when generating reports. This lead to some crashes.&lt;/p&gt;
 
