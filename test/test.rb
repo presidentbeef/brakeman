@@ -100,6 +100,14 @@ module BrakemanTester::CheckExpected
 
   def test_zero_errors
     assert_equal 0, report[:errors].length 
+
+module BrakemanTester::DiffHelper
+  def assert_fixed expected, diff = @diff
+    assert_equal expected, diff[:fixed].length, "Expected #{expected} fixed warnings, but found #{diff[:fixed].length}"
+  end
+
+  def assert_new expected, diff = @diff
+    assert_equal expected, diff[:new].length, "Expected #{expected} new warnings, but found #{diff[:new].length}"
   end
 end
 

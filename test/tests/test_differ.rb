@@ -3,20 +3,14 @@ require 'brakeman/differ'
 DiffRun = Brakeman.run :app_path => "#{TEST_PATH}/apps/rails2"
 
 class DifferTests < Test::Unit::TestCase
+  include BrakemanTester::DiffHelper
+
   def setup
     @warnings = DiffRun.checks.all_warnings
   end
 
   def diff new, old
     @diff = Brakeman::Differ.new(new, old).diff
-  end
-
-  def assert_fixed expected, diff = @diff
-    assert_equal expected, diff[:fixed].length, "Expected #{expected} fixed warnings, but found #{diff[:fixed].length}"
-  end
-
-  def assert_new expected, diff = @diff
-    assert_equal expected, diff[:new].length, "Expected #{expected} new warnings, but found #{diff[:new].length}"
   end
 
   def test_sanity
