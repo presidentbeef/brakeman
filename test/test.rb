@@ -258,8 +258,6 @@ module BrakemanTester::RescanTestHelper
     end
   end
 end
-  end
-end
 
 Dir.glob "#{TEST_PATH}/tests/*.rb" do |file|
   require file
