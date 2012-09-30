@@ -109,7 +109,9 @@ module Brakeman::RenderHelper
           end
         end
 
-        template_env[Sexp.new(:call, nil, variable, Sexp.new(:arglist))] = Sexp.new(:call, Sexp.new(:const, Brakeman::Tracker::UNKNOWN_MODEL), :new, Sexp.new(:arglist))
+        collection = get_class_target(options[:collection]) || Brakeman::Tracker::UNKNOWN_MODEL
+
+        template_env[Sexp.new(:call, nil, variable, Sexp.new(:arglist))] = Sexp.new(:call, Sexp.new(:const, collection), :new, Sexp.new(:arglist))
       end
 
       #Set original_line for values so it is clear
@@ -153,5 +155,17 @@ module Brakeman::RenderHelper
     end
 
     options
+  end
+
+  def get_class_target sexp
+    if call? sexp
+      get_class_target sexp.target
+    else
+      begin
+        class_name sexp
+      rescue
+        nil
+      end
+    end
   end
 end
