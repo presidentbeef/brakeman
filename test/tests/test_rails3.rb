@@ -335,7 +335,7 @@ class Rails3Tests < Test::Unit::TestCase
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 1,
-      :message => /^Unescaped model attribute near line 1: \(/,
+      :message => /^Unescaped model attribute near line 1: User.new.first_name/,
       :confidence => 0,
       :file => /_user\.html\.erb/
   end
