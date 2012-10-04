@@ -21,4 +21,6 @@ class User < ActiveRecord::Base
     something = something_helper
     where("something = #{something}")
   }
+
+  scope :all
 end
