@@ -72,6 +72,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
           model[:options][:scope].each do |args|
             second_arg = args[2]
 
+            next unless sexp? second_arg
+
             if second_arg.node_type == :iter and node_type? second_arg.block, :block, :call
               process_scope_with_block name, args
             elsif second_arg.node_type == :call
