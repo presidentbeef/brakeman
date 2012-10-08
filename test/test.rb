@@ -199,16 +199,6 @@ module BrakemanTester::RescanTestHelper
     end
   end
 
-  def replace file, pattern, replacement
-    path = full_path file
-    input = File.read path
-    input.sub! pattern, replacement
-
-    File.open path, "w" do |f|
-      f.puts input
-    end
-  end
-
   def write_file file, content
     File.open full_path(file), "w+" do |f|
       f.puts content
