@@ -31,7 +31,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   CGI = Sexp.new(:const, :CGI)
 
-  FORM_BUILDER = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new, Sexp.new(:arglist)) 
+  FORM_BUILDER = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new, Sexp.new(:arglist))
 
   #Run check
   def run_check
@@ -58,8 +58,9 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       @known_dangerous << :strip_tags
     end
 
-    matches = tracker.check_initializers :ActiveSupport, :escape_html_entities_in_json=
-    json_escape_on = matches.detect {|result| true? result[-1].first_arg}
+    json_escape_on = false
+    initializers = tracker.check_initializers :ActiveSupport, :escape_html_entities_in_json=
+    initializers.each {|result| json_escape_on = true? (result[-1].first_arg) }
 
     if !json_escape_on or version_between? "0.0.0", "2.0.99"
       @known_dangerous << :to_json
@@ -107,7 +108,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
         message = "Unescaped user input value"
       end
 
-      warn :template => @current_template, 
+      warn :template => @current_template,
         :warning_type => "Cross Site Scripting",
         :message => message,
         :code => input.match,
@@ -128,13 +129,13 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
         message = "Unescaped model attribute"
         link_path = "cross_site_scripting"
         if node_type?(out, :call, :attrasgn) && out.method == :to_json
-          message += " in JSON hash" 
+          message += " in JSON hash"
           link_path += "_to_json"
         end
 
         code = find_chain out, match
         warn :template => @current_template,
-          :warning_type => "Cross Site Scripting", 
+          :warning_type => "Cross Site Scripting",
           :message => message,
           :code => code,
           :confidence => confidence,
@@ -203,7 +204,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
           end
 
           warn :template => @current_template,
-            :warning_type => "Cross Site Scripting", 
+            :warning_type => "Cross Site Scripting",
             :message => message,
             :code => exp,
             :user_input => @matched.match,

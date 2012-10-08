@@ -13,7 +13,7 @@ class Rails31Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :model => 0,
-      :template => 15,
+      :template => 17,
       :controller => 1,
       :warning => 48 }
   end
@@ -527,6 +527,15 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /\/g\.html\.erb/
   end
 
+  def test_model_name_in_collection_xss
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped model attribute near line 1: User\.new\.bio/,
+      :confidence => 0,
+      :file => /_bio\.html\.erb/
+  end
+
   def test_xss_multiple_exp_in_string_interpolation
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
@@ -603,5 +612,14 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ strip/,
       :confidence => 0,
       :file => /Gemfile/
+  end
+
+  def test_to_json_with_overwritten_config
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :message => /^Unescaped parameter value in JSON hash/,
+      :confidence => 0,
+      :line => 1,
+      :file => /json_test\.html\.erb/
   end
 end
