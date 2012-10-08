@@ -84,7 +84,7 @@ class Brakeman::Tracker
     end
   end
 
-  #Iterates over each template, yielding the name and the template. 
+  #Iterates over each template, yielding the name and the template.
   #Prioritizes templates which have been rendered.
   def each_template
     if @processed.nil?
@@ -130,7 +130,7 @@ class Brakeman::Tracker
   def check_initializers target, method
     finder = Brakeman::FindCall.new target, method, self
 
-    initializers.each do |name, initializer|
+    initializers.sort.each do |name, initializer|
       finder.process_source initializer
     end
 
