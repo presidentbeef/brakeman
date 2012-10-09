@@ -214,21 +214,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def rescan_deleted_controller path
-    #Remove from controller
-    tracker.controllers.delete_if do |name, controller|
-      if controller[:file] == path
-        template_matcher = /(.+)\.#{name}#/
-
-        #Remove templates rendered from this controller
-        tracker.templates.keys.each do |template_name|
-          if template_name.to_s.match template_matcher
-            tracker.reset_template template_name
-          end
-        end
-
-        true
-      end
-    end
+    tracker.reset_controller path
   end
 
   def rescan_deleted_template path

@@ -96,7 +96,7 @@ class RescannerTests < Test::Unit::TestCase
       remove controller
     end
 
-    assert_reindex :controllers, :templates
+    assert_reindex :none
     assert_changes
     assert_new 0
     assert_fixed 3
