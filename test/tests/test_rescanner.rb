@@ -115,6 +115,19 @@ class RescannerTests < Test::Unit::TestCase
     assert_fixed 0
   end
 
+  def test_partial_template_add_line
+    template = "app/views/users/_form.html.erb"
+
+    before_rescan_of template do
+      append template, "<%= raw @user.thing %>"
+    end
+
+    assert_reindex :templates
+    assert_changes
+    assert_new 1
+    assert_fixed 0
+  end
+
   def test_delete_model
     model = "app/models/user.rb"
 
