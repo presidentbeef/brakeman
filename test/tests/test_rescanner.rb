@@ -99,7 +99,7 @@ class RescannerTests < Test::Unit::TestCase
     assert_reindex :none
     assert_changes
     assert_new 0
-    assert_fixed 3
+    assert_fixed 4
   end
 
   def test_template_add_line
@@ -157,5 +157,18 @@ class RescannerTests < Test::Unit::TestCase
     assert_changes 
     assert_new 2
     assert_fixed 0
+  end
+
+  def test_remove_route
+    routes = "config/routes.rb"
+
+    before_rescan_of routes do
+      replace routes, "match 'implicit' => 'removal#implicit_render'", ""
+    end
+
+    assert_reindex :controllers, :templates
+    assert_changes
+    assert_new 0
+    assert_fixed 1
   end
 end

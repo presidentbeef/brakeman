@@ -2,6 +2,7 @@ Rails32::Application.routes.draw do
   resources :users
   
   match 'remove' => 'removal#remove_this_too'
+  match 'implicit' => 'removal#implicit_render'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

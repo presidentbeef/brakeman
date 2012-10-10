@@ -20,4 +20,8 @@ class RemovalController < ApplicationController
 
     render 'removal/controller_removed'
   end
+
+  def implicit_render
+    @bad_stuff = raw params[:bad_stuff]
+  end
 end
