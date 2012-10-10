@@ -138,24 +138,23 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
     rescan = Set.new
 
-    rendered_from_controller = /^#{template_name}\.(.+Controller)#(.+)/
-    rendered_from_view = /^#{template_name}\.Template:(.+)/
+    template_matcher = /^Template:(.+)/
+    controller_matcher = /^(.+Controller)#(.+)/
+    template_name_matcher = /^#{template_name}\./
 
     #Search for processed template and process it.
     #Search for rendered versions of template and re-render (if necessary)
     tracker.templates.each do |name, template|
       if template[:file] == path or template[:file].nil?
-       name = name.to_s
+        next unless template[:caller] and name.to_s.match(template_name_matcher)
 
-       if name.match(rendered_from_controller)
-         #Rendered from controller, so reprocess controller
-
-         rescan << [:controller, $1.to_sym, $2.to_sym]
-       elsif name.match(rendered_from_view)
-         #Rendered from another template, so reprocess that template
-
-         rescan << [:template, $1.to_sym]
-       end
+        template[:caller].each do |from|
+          if from.match(template_matcher)
+            rescan << [:template, $1.to_sym]
+          elsif from.match(controller_matcher)
+            rescan << [:controller, $1.to_sym, $2.to_sym]
+          end
+        end
       end
     end
 
