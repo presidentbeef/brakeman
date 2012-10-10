@@ -4,7 +4,12 @@ $LOAD_PATH.unshift "#{TEST_PATH}/../lib"
 
 begin
   require 'simplecov'
-  SimpleCov.start
+  SimpleCov.start do
+    add_filter 'lib/ruby_parser/ruby18_parser.rb'
+    add_filter 'lib/ruby_parser/ruby19_parser.rb'
+    add_filter 'lib/ruby_parser/ruby_lexer.rb'
+    add_filter 'lib/ruby_parser/ruby_parser_extras.rb'
+  end
 rescue LoadError => e
   $stderr.puts "Install simplecov for test coverage report"
 end
@@ -42,7 +47,7 @@ module BrakemanTester::FindWarning
     warnings = find opts
     assert_not_equal 0, warnings.length, "No warning found"
     assert_equal 1, warnings.length, "Matched more than one warning"
-  end 
+  end
 
   def assert_no_warning opts
     warnings = find opts
@@ -94,7 +99,168 @@ module BrakemanTester::CheckExpected
   end
 
   def test_zero_errors
-    assert_equal 0, report[:errors].length 
+    assert_equal 0, report[:errors].length
+  end
+end
+
+module BrakemanTester::RescanTestHelper
+  attr_reader :original, :rescan, :rescanner
+
+  #Takes care of copying files to a temporary directory, scanning the files,
+  #performing operations in the block (if provided), then rescanning the files
+  #given in `changed`.
+  #
+  #Provide an array of changed files for rescanning.
+  def before_rescan_of changed
+    changed = [changed] unless changed.is_a? Array
+
+    Dir.mktmpdir do |dir|
+      @dir = dir
+
+      FileUtils.cp_r "#{TEST_PATH}/apps/rails3.2/.", dir
+      @original = Brakeman.run :app_path => dir, :debug => false
+
+      yield dir if block_given?
+
+      @rescanner = Brakeman::Rescanner.new(@original.options, @original.processor, changed)
+      @rescan = @rescanner.recheck
+
+      assert_existing
+    end
+  end
+
+  def fixed
+    rescan.fixed_warnings
+  end
+
+  def new
+    rescan.new_warnings
+  end
+
+  def existing
+    rescan.existing_warnings
+  end
+
+  #Check how many fixed warnings were reported
+  def assert_fixed expected
+    assert_equal expected, fixed.length, "Expected #{expected} fixed warnings, but found #{fixed.length}"
+  end
+
+  #Check how many new warnings were reported
+  def assert_new expected
+    assert_equal expected, new.length, "Expected #{expected} new warnings, but found #{new.length}"
+  end
+
+  #Check how many existing warnings were reported
+  def assert_existing
+    expected = (@rescan.old_results.all_warnings.length - fixed.length)
+
+    assert_equal expected, existing.length, "Expected #{expected} existing warnings, but found #{existing.length}"
+  end
+
+  def assert_changes expected = true
+    assert_equal expected, rescanner.changes
+  end
+
+  def assert_reindex *types
+    if types == [:none]
+      assert rescanner.reindex.empty?
+    else
+      assert_equal Set.new(types), rescanner.reindex
+    end
+  end
+
+  def full_path file
+    File.expand_path file, @dir
+  end
+
+  def remove file
+    path = full_path file
+
+    assert File.exist? path
+    File.delete path
+    assert_equal false, File.exist?(path)
+  end
+
+  def append file, code
+    File.open full_path(file), "a" do |f|
+      f.puts code
+    end
+  end
+
+  def replace_with_sexp file
+    path = full_path file
+    parsed = parse File.read path
+
+    output = yield parsed
+
+    File.open path, "w" do |f|
+      f.puts Ruby2Ruby.new.process output
+    end
+  end
+
+  def write_file file, content
+    File.open full_path(file), "w+" do |f|
+      f.puts content
+    end
+  end
+
+  def remove_method file, method_name
+    replace_with_sexp file do |parsed|
+      class_body = parsed.body
+
+      if class_body[1].node_type == :block
+        class_body[1].reject! do |node|
+          node.is_a? Sexp and
+          node.node_type == :defn and
+          node.method_name == method_name
+        end
+      elsif class_body[1].node_type == :defn and
+        class_body[1].method_name == method_name
+
+        class_body[1] = nil
+      end
+
+      parsed
+    end
+  end
+
+  def add_method file, code
+    parsed_method = parse code
+
+    replace_with_sexp file do |parsed|
+      class_body = parsed.body
+
+      if class_body[1].node_type == :block
+        class_body[1] << parsed_method
+      elsif class_body[1]
+        class_body[1] = s(:block,
+                          class_body[1],
+                          parsed_method)
+      else
+        class_body[1] = parsed_method
+      end
+
+      parsed
+    end
+  end
+
+  def parse code
+    if RUBY_VERSION =~ /^1\.9/
+      Ruby19Parser.new.parse code
+    else
+      RubyParser.new.parse code
+    end
+  end
+end
+
+module BrakemanTester::DiffHelper
+  def assert_fixed expected, diff = @diff
+    assert_equal expected, diff[:fixed].length, "Expected #{expected} fixed warnings, but found #{diff[:fixed].length}"
+  end
+
+  def assert_new expected, diff = @diff
+    assert_equal expected, diff[:new].length, "Expected #{expected} new warnings, but found #{diff[:new].length}"
   end
 end
 
