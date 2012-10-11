@@ -236,6 +236,7 @@ class Brakeman::Tracker
     @templates.delete name
     @processed = nil
     @rest = nil
+    @template_cache.clear
   end
 
   #Clear information related to model
