@@ -237,4 +237,19 @@ class RescannerTests < Test::Unit::TestCase
     assert_new 0
     assert_fixed 1
   end
+
+  def test_gemfile_rails_version_change
+    gemfile = "Gemfile.lock"
+
+    before_rescan_of gemfile do
+      replace gemfile, "rails (3.2.8)", "rails (3.2.6)"
+    end
+
+    #@original is actually modified
+    assert @original.config[:rails_version], "3.2.6"
+    assert_reindex :none
+    assert_changes
+    assert_new 1
+    assert_fixed 0
+  end
 end
