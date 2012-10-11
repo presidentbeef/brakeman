@@ -211,4 +211,17 @@ class RescannerTests < Test::Unit::TestCase
     assert_new 0
     assert_fixed 1
   end
+
+  def test_remove_route_from_mixin
+    lib = 'lib/user_controller_mixin.rb'
+
+    before_rescan_of lib do
+      remove_method lib, :mixed_in
+    end
+
+    assert_reindex :controllers, :templates
+    assert_changes
+    assert_new 0
+    assert_fixed 1
+  end
 end
