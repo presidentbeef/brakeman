@@ -137,8 +137,8 @@ class RescannerTests < Test::Unit::TestCase
 
     assert_reindex :templates, :models, :controllers
     assert_changes
-    assert_new 4 #User is no longer a model, causing MORE warnings
-    assert_fixed 1
+    assert_new 5 #User is no longer a model, causing MORE warnings
+    assert_fixed 2
   end
 
   def test_add_method_to_model
@@ -184,6 +184,7 @@ class RescannerTests < Test::Unit::TestCase
     assert_new 0
     assert_fixed 1
   end
+
   def test_remove_initializer
     #Should probably remove initializer that actually affects something
     initializer = "config/initializers/wrap_parameters.rb"
@@ -196,5 +197,18 @@ class RescannerTests < Test::Unit::TestCase
     assert_changes
     assert_new 0
     assert_fixed 0
+  end
+
+  def test_remove_mixin
+    lib = 'lib/user_controller_mixin.rb'
+
+    before_rescan_of lib do
+      remove lib
+    end
+
+    assert_reindex :controllers, :templates
+    assert_changes
+    assert_new 0
+    assert_fixed 1
   end
 end
