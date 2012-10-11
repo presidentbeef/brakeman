@@ -102,6 +102,19 @@ class RescannerTests < Test::Unit::TestCase
     assert_fixed 4
   end
 
+  def test_controller_escape_params
+    controller = "app/controllers/users_controller.rb"
+
+    before_rescan_of controller do
+      replace controller, "@user_data = raw params[:user_data]", "@user_data = params[:user_data]"
+    end
+
+    assert_reindex :controllers, :templates
+    assert_changes
+    assert_new 0
+    assert_fixed 1
+  end
+
   def test_template_add_line
     template = "app/views/users/show.html.erb"
 
