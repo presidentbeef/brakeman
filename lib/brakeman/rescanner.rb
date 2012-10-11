@@ -80,7 +80,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     when :model
       rescan_model path
     when :lib
-      process_lib path
+      rescan_lib path
     when :config
       process_config
     when :initializer
@@ -115,8 +115,9 @@ class Brakeman::Rescanner < Brakeman::Scanner
     #from the controller
     tracker.controllers.each do |name, controller|
       if controller[:file] == path
-        tracker.templates.keys.each do |template_name|
-          if template_name.to_s.match /(.+)\.#{name}#/
+        tracker.templates.each do |template_name, template|
+          next unless template[:caller]
+          unless template[:caller].grep(/^#{name}#/).empty?
             tracker.reset_template template_name
           end
         end
@@ -138,24 +139,23 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
     rescan = Set.new
 
-    rendered_from_controller = /^#{template_name}\.(.+Controller)#(.+)/
-    rendered_from_view = /^#{template_name}\.Template:(.+)/
+    template_matcher = /^Template:(.+)/
+    controller_matcher = /^(.+Controller)#(.+)/
+    template_name_matcher = /^#{template_name}\./
 
     #Search for processed template and process it.
     #Search for rendered versions of template and re-render (if necessary)
     tracker.templates.each do |name, template|
       if template[:file] == path or template[:file].nil?
-       name = name.to_s
+        next unless template[:caller] and name.to_s.match(template_name_matcher)
 
-       if name.match(rendered_from_controller)
-         #Rendered from controller, so reprocess controller
-
-         rescan << [:controller, $1.to_sym, $2.to_sym]
-       elsif name.match(rendered_from_view)
-         #Rendered from another template, so reprocess that template
-
-         rescan << [:template, $1.to_sym]
-       end
+        template[:caller].each do |from|
+          if from.match(template_matcher)
+            rescan << [:template, $1.to_sym]
+          elsif from.match(controller_matcher)
+            rescan << [:controller, $1.to_sym, $2.to_sym]
+          end
+        end
       end
     end
 
@@ -189,6 +189,21 @@ class Brakeman::Rescanner < Brakeman::Scanner
     @reindex << :models
   end
 
+  def rescan_lib path
+    process_lib path if File.exists? path
+
+    lib = nil
+
+    tracker.libs.each do |name, library|
+      if library[:file] == path
+        lib = library
+        break
+      end
+    end
+
+    rescan_mixin lib if lib
+  end
+
   #Handle rescanning when a file is deleted
   def rescan_deleted_file path, type
     case type
@@ -214,21 +229,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def rescan_deleted_controller path
-    #Remove from controller
-    tracker.controllers.delete_if do |name, controller|
-      if controller[:file] == path
-        template_matcher = /(.+)\.#{name}#/
-
-        #Remove templates rendered from this controller
-        tracker.templates.keys.each do |template_name|
-          if template_name.to_s.match template_matcher
-            tracker.reset_template template_name
-          end
-        end
-
-        true
-      end
-    end
+    tracker.reset_controller path
   end
 
   def rescan_deleted_template path
@@ -255,9 +256,16 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def rescan_deleted_lib path
+    deleted_lib = nil
+
     tracker.libs.delete_if do |name, lib|
-      lib[:path] == path
+      if lib[:file] == path
+        deleted_lib = lib
+        true
+      end
     end
+
+    rescan_mixin deleted_lib if deleted_lib
   end
 
   def rescan_deleted_initializer path
@@ -302,6 +310,51 @@ class Brakeman::Rescanner < Brakeman::Scanner
       :gemfile
     else
       :unknown
+    end
+  end
+
+  def rescan_mixin lib
+    method_names = []
+
+    [:public, :private, :protected].each do |access|
+      lib[access].each do |name, meth|
+        method_names << name
+      end
+    end
+
+    method_matcher = /##{method_names.join('|')}$/
+
+    #Rescan controllers that mixed in library
+    tracker.controllers.each do |name, controller|
+      if controller[:includes].include? lib[:name]
+        unless @paths.include? controller[:file]
+          rescan_file controller[:file]
+        end
+      end
+    end
+
+    to_rescan = []
+
+    #Check if a method from this mixin was used to render a template.
+    #This is not precise, because a different controller might have the
+    #same method...
+    tracker.templates.each do |name, template|
+      next unless template[:caller]
+
+      unless template[:caller].grep(method_matcher).empty?
+        name.to_s.match /^([^.]+)/
+
+        original = tracker.templates[$1.to_sym]
+
+        if original
+          to_rescan << [name, original[:file]]
+        end
+      end
+    end
+
+    to_rescan.each do |template|
+      tracker.reset_template template[0]
+      rescan_file template[1]
     end
   end
 end
@@ -381,7 +434,7 @@ New warnings: #{new_warnings.length}
               w["Confidence"] = Brakeman::Report::TEXT_CONFIDENCE[w["Confidence"]]
 
               t << [w["Confidence"], w["Class"], w["Method"], w["Warning Type"], w["Message"]]
-            end            
+            end
           end
           out << truncate_table(table.to_s)
         end

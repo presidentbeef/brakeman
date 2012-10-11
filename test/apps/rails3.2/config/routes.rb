@@ -1,7 +1,10 @@
 Rails32::Application.routes.draw do
-  resources :users
+  resources :users do
+    get 'mixed_in'
+  end
   
   match 'remove' => 'removal#remove_this_too'
+  match 'implicit' => 'removal#implicit_render'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

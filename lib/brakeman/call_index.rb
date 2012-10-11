@@ -67,10 +67,10 @@ class Brakeman::CallIndex
     calls
   end
 
-  def remove_template_indexes
+  def remove_template_indexes template_name = nil
     @calls_by_method.each do |name, calls|
       calls.delete_if do |call|
-        call[:location][0] == :template
+        from_template call, template_name
       end
 
       @methods.delete name.to_s if calls.empty?
@@ -78,7 +78,7 @@ class Brakeman::CallIndex
 
     @calls_by_target.each do |name, calls|
       calls.delete_if do |call|
-        call[:location][0] == :template
+        from_template call, template_name
       end
 
       @targets.delete name.to_s if calls.empty?
@@ -236,5 +236,11 @@ class Brakeman::CallIndex
         call[:chain].first == target
       end
     end
+  end
+
+  def from_template call, template_name
+    return false unless call[:location][0] == :template
+    return true if template_name.nil?
+    call[:location][1] == template_name
   end
 end

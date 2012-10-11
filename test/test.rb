@@ -164,7 +164,7 @@ module BrakemanTester::RescanTestHelper
 
   def assert_reindex *types
     if types == [:none]
-      assert rescanner.reindex.empty?
+      assert rescanner.reindex.empty?, "Expected no reindexing, got #{rescanner.reindex.inspect}"
     else
       assert_equal Set.new(types), rescanner.reindex
     end
@@ -177,7 +177,7 @@ module BrakemanTester::RescanTestHelper
   def remove file
     path = full_path file
 
-    assert File.exist? path
+    assert File.exist?(path), "Could not find #{path} to delete"
     File.delete path
     assert_equal false, File.exist?(path)
   end
@@ -196,6 +196,16 @@ module BrakemanTester::RescanTestHelper
 
     File.open path, "w" do |f|
       f.puts Ruby2Ruby.new.process output
+    end
+  end
+
+  def replace file, pattern, replacement
+    path = full_path file
+    input = File.read path
+    input.sub! pattern, replacement
+
+    File.open path, "w" do |f|
+      f.puts input
     end
   end
 
@@ -218,7 +228,7 @@ module BrakemanTester::RescanTestHelper
       elsif class_body[1].node_type == :defn and
         class_body[1].method_name == method_name
 
-        class_body[1] = nil
+        class_body.delete_at 1
       end
 
       parsed
