@@ -4,7 +4,12 @@ $LOAD_PATH.unshift "#{TEST_PATH}/../lib"
 
 begin
   require 'simplecov'
-  SimpleCov.start
+  SimpleCov.start do
+    add_filter 'lib/ruby_parser/ruby18_parser.rb'
+    add_filter 'lib/ruby_parser/ruby19_parser.rb'
+    add_filter 'lib/ruby_parser/ruby_lexer.rb'
+    add_filter 'lib/ruby_parser/ruby_parser_extras.rb'
+  end
 rescue LoadError => e
   $stderr.puts "Install simplecov for test coverage report"
 end
@@ -256,6 +261,16 @@ module BrakemanTester::RescanTestHelper
     else
       RubyParser.new.parse code
     end
+  end
+end
+
+module BrakemanTester::DiffHelper
+  def assert_fixed expected, diff = @diff
+    assert_equal expected, diff[:fixed].length, "Expected #{expected} fixed warnings, but found #{diff[:fixed].length}"
+  end
+
+  def assert_new expected, diff = @diff
+    assert_equal expected, diff[:new].length, "Expected #{expected} new warnings, but found #{diff[:new].length}"
   end
 end
 
