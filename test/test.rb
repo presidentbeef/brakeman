@@ -223,7 +223,7 @@ module BrakemanTester::RescanTestHelper
       elsif class_body[1].node_type == :defn and
         class_body[1].method_name == method_name
 
-        class_body[1] = nil
+        class_body.delete_at 1
       end
 
       parsed
