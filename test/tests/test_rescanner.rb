@@ -184,4 +184,17 @@ class RescannerTests < Test::Unit::TestCase
     assert_new 0
     assert_fixed 1
   end
+  def test_remove_initializer
+    #Should probably remove initializer that actually affects something
+    initializer = "config/initializers/wrap_parameters.rb"
+
+    before_rescan_of initializer do
+      remove initializer
+    end
+
+    assert_reindex :none
+    assert_changes
+    assert_new 0
+    assert_fixed 0
+  end
 end
