@@ -159,7 +159,7 @@ module BrakemanTester::RescanTestHelper
 
   def assert_reindex *types
     if types == [:none]
-      assert rescanner.reindex.empty?
+      assert rescanner.reindex.empty?, "Expected no reindexing, got #{rescanner.reindex.inspect}"
     else
       assert_equal Set.new(types), rescanner.reindex
     end
@@ -172,7 +172,7 @@ module BrakemanTester::RescanTestHelper
   def remove file
     path = full_path file
 
-    assert File.exist? path
+    assert File.exist?(path), "Could not find #{path} to delete"
     File.delete path
     assert_equal false, File.exist?(path)
   end
