@@ -115,8 +115,9 @@ class Brakeman::Rescanner < Brakeman::Scanner
     #from the controller
     tracker.controllers.each do |name, controller|
       if controller[:file] == path
-        tracker.templates.keys.each do |template_name|
-          if template_name.to_s.match /(.+)\.#{name}#/
+        tracker.templates.each do |template_name, template|
+          next unless template[:caller]
+          unless template[:caller].grep(/^#{name}#/).empty?
             tracker.reset_template template_name
           end
         end
