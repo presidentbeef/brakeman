@@ -80,7 +80,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     when :model
       rescan_model path
     when :lib
-      process_lib path
+      rescan_lib path
     when :config
       process_config
     when :initializer
@@ -188,6 +188,21 @@ class Brakeman::Rescanner < Brakeman::Scanner
     @reindex << :models
   end
 
+  def rescan_lib path
+    process_lib path if File.exists? path
+
+    lib = nil
+
+    tracker.libs.each do |name, library|
+      if library[:file] == path
+        lib = library
+        break
+      end
+    end
+
+    rescan_mixin lib if lib
+  end
+
   #Handle rescanning when a file is deleted
   def rescan_deleted_file path, type
     case type
@@ -240,9 +255,16 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def rescan_deleted_lib path
+    deleted_lib = nil
+
     tracker.libs.delete_if do |name, lib|
-      lib[:path] == path
+      if lib[:file] == path
+        deleted_lib = lib
+        true
+      end
     end
+
+    rescan_mixin deleted_lib if deleted_lib
   end
 
   def rescan_deleted_initializer path
@@ -287,6 +309,51 @@ class Brakeman::Rescanner < Brakeman::Scanner
       :gemfile
     else
       :unknown
+    end
+  end
+
+  def rescan_mixin lib
+    method_names = []
+
+    [:public, :private, :protected].each do |access|
+      lib[access].each do |name, meth|
+        method_names << name
+      end
+    end
+
+    method_matcher = /##{method_names.join('|')}$/
+
+    #Rescan controllers that mixed in library
+    tracker.controllers.each do |name, controller|
+      if controller[:includes].include? lib[:name]
+        unless @paths.include? controller[:file]
+          rescan_file controller[:file]
+        end
+      end
+    end
+
+    to_rescan = []
+
+    #Check if a method from this mixin was used to render a template.
+    #This is not precise, because a different controller might have the
+    #same method...
+    tracker.templates.each do |name, template|
+      next unless template[:caller]
+
+      unless template[:caller].grep(method_matcher).empty?
+        name.to_s.match /^([^.]+)/
+
+        original = tracker.templates[$1.to_sym]
+
+        if original
+          to_rescan << [name, original[:file]]
+        end
+      end
+    end
+
+    to_rescan.each do |template|
+      tracker.reset_template template[0]
+      rescan_file template[1]
     end
   end
 end
@@ -366,7 +433,7 @@ New warnings: #{new_warnings.length}
               w["Confidence"] = Brakeman::Report::TEXT_CONFIDENCE[w["Confidence"]]
 
               t << [w["Confidence"], w["Class"], w["Method"], w["Warning Type"], w["Message"]]
-            end            
+            end
           end
           out << truncate_table(table.to_s)
         end
