@@ -1,3 +1,5 @@
+require 'multi_json'
+
 #The Warning class stores information about warnings
 class Brakeman::Warning
   attr_reader :called_from, :check, :class, :confidence, :controller,
@@ -177,8 +179,6 @@ class Brakeman::Warning
   end
 
   def to_json
-    require 'json'
-
-    JSON.dump self.to_hash
+    MultiJson.dump self.to_hash
   end
 end

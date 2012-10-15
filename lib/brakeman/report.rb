@@ -6,6 +6,7 @@ require 'brakeman/util'
 require 'terminal-table'
 require 'highline/system_extensions'
 require "csv"
+require 'multi_json'
 require 'brakeman/version'
 
 if CSV.const_defined? :Reader
@@ -647,8 +648,6 @@ class Brakeman::Report
   end
 
   def to_json
-    require 'json'
-
     errors = tracker.errors.map{|e| { :error => e[:error], :location => e[:backtrace][0] }}
     app_path = tracker.options[:app_path]
 
@@ -672,11 +671,11 @@ class Brakeman::Report
       :brakeman_version => Brakeman::Version
     }
 
-    JSON.pretty_generate({
+    MultiJson.dump({
       :scan_info => scan_info,
       :warnings => warnings,
       :errors => errors
-    })
+    }, :pretty => true)
   end
 
   def all_warnings
