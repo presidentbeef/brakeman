@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  include UserControllerMixin
+
   # GET /users
   # GET /users.json
   def index
