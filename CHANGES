@@ -1,3 +1,12 @@
+# 1.8.2
+
+ * Fixed rescanning problems caused by 1.8.0 changes
+ * Fix scope calls with single argument
+ * Report specific model name in rendered collections
+ * Handle overwritten JSON escape settings
+ * Much improved test coverage
+ * Add CHANGES to gemspec
+
 # 1.8.1
 
  * Recover from errors in output formatting
