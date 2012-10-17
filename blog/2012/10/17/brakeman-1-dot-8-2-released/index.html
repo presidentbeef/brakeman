@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Cross Site Scripting: link to</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman 1.8.2 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails application."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/link_to/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2012/10/17/brakeman-1-dot-8-2-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -99,34 +99,148 @@
   <div id="main">
     <div id="content">
       <div>
-<article>
+<article class="hentry">
   
   <header>
-    <h1 class="entry-title">Cross Site Scripting: Link to</h1>
+    
+      <h1 class="entry-title">Brakeman 1.8.2 Released</h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-10-17 10:44:00 -0700" pubdate  updated >Oct 17<span>th</span>, 2012</time>
+
+
+</p>
+    
   </header>
-  
-  <p>In the 2.x versions of Rails, <code>link_to</code> would not escape the body of the HREF.</p>
 
-<p>For example, this will popup an alert box:</p>
 
-<pre><code>link_to "&lt;script&gt;alert(1)&lt;/script&gt;", "http://google.com"
+<div class="entry-content"><p>This is a bugfix release, in particular fixing rescanning (used by <a href="https://github.com/guard/guard-brakeman">guard-brakeman</a>).</p>
+
+<p><em>Changes since 1.8.1</em>:</p>
+
+<ul>
+<li>Fixed rescanning problems caused by 1.8.0 changes</li>
+<li>Fix scope calls with single argument</li>
+<li>Report specific model name in rendered collections</li>
+<li>Handle overwritten JSON escape settings (Neil Matatall)</li>
+<li>Add CHANGES to gemspec</li>
+</ul>
+
+
+<h3>Rescan Fixes</h3>
+
+<p>Brakeman supports rescanning a subset of files in an application, with the caveat that the previous scan must still be in memory. This functionality was broken in the the 1.8.0 release, due to the lack of tests.</p>
+
+<p>This release updates rescanning to be more robust and work with the 1.8.0 changes to how &#8220;render paths&#8221; are stored. Also, a number of tests were added to help prevent breakage in the future.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/165">changes</a>)</p>
+
+<h3>Scope Calls with One Argument</h3>
+
+<p>Calls to <code>scope</code> with a single argument were causing errors in Brakeman&#8217;s SQL injection check.</p>
+
+<p>The fixed error looked like:</p>
+
+<pre><code>undefined method `node_type' for nil:NilClass  /something/brakeman/lib/brakeman/checks/check_sql.rb:75:in `block (2 levels) in find_scope_calls'
 </code></pre>
 
-<p>Brakeman warns on cases where the first parameter contains user input.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/157">changes</a>)</p>
 
-<hr />
+<h3>Model Names for Rendered Collections</h3>
 
-<p>Back to <a href="/docs/warning_types">Warning Types</a></p>
+<p>In cases like below, where a collection of models is being rendered and the model name could be known, any resulting warnings will now reference the actual model name.</p>
 
+<div>
+  <pre>
+    <code class='ruby'>&lt;%= render 'user', :collection =&gt; User.all %&gt;</code>
+  </pre>
+</div>
+
+
+<p>Previously, Brakeman would report warnings with <code>UnknownModel</code>, whether or not the model name was actually known.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/155">changes</a>)</p>
+
+<h3>Overwritten JSON Escape Config</h3>
+
+<p>It is possible that a config setting in one initializer overrides a setting in a different initializer. This is now handled for the JSON escape settings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/154">changes</a>)</p>
+
+<h3>CHANGES File in Gem</h3>
+
+<p>The <a href="https://github.com/presidentbeef/brakeman/blob/master/CHANGES">CHANGES</a> file is now included in the gem file as requested.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/issues/153">changes</a>)</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+
+<h3>Brakeman Roadmap</h3>
+
+<p>A rough guide to Brakeman 1.9 and 2.0 has been <a href="https://github.com/presidentbeef/brakeman/wiki/Roadmap">posted here</a>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-    <footer>
-      <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
+
+      
+
+
+
+
+<time datetime="2012-10-17 10:44:00 -0700" pubdate  updated >Oct 17<span>th</span>, 2012</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
   
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2012/10/17/brakeman-1-dot-8-2-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2012/10/17/brakeman-1-dot-8-2-released/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread"><div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'brakeman';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2012/10/17/brakeman-1-dot-8-2-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2012/10/17/brakeman-1-dot-8-2-released/';
+  //var disqus_developer = 1;
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 

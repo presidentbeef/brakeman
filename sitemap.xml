@@ -121,8 +121,12 @@
         <lastmod>2012-09-24T13:48:29-07:00</lastmod>
     </url>
     <url>
+        <loc>http://brakemanscanner.org/blog/2012/10/17/brakeman-1-dot-8-2-released/</loc>
+        <lastmod>2012-10-17T13:15:30-07:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/blog/archives/</loc>
-        <lastmod>2012-09-24T13:48:29-07:00</lastmod>
+        <lastmod>2012-10-17T13:15:30-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/contact/</loc>
@@ -326,6 +330,6 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/</loc>
-        <lastmod>2012-09-24T13:48:29-07:00</lastmod>
+        <lastmod>2012-10-17T13:15:30-07:00</lastmod>
     </url>
 </urlset>

@@ -4,13 +4,89 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-10-17T13:05:45-07:00</updated>
+  <updated>2012-10-17T13:58:23-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 1.8.2 Released</title>
+    <link href="http://brakemanscanner.org/blog/2012/10/17/brakeman-1-dot-8-2-released/"/>
+    <updated>2012-10-17T10:44:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2012/10/17/brakeman-1-dot-8-2-released</id>
+    <content type="html">&lt;p&gt;This is a bugfix release, in particular fixing rescanning (used by &lt;a href=&quot;https://github.com/guard/guard-brakeman&quot;&gt;guard-brakeman&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 1.8.1&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fixed rescanning problems caused by 1.8.0 changes&lt;/li&gt;
+&lt;li&gt;Fix scope calls with single argument&lt;/li&gt;
+&lt;li&gt;Report specific model name in rendered collections&lt;/li&gt;
+&lt;li&gt;Handle overwritten JSON escape settings (Neil Matatall)&lt;/li&gt;
+&lt;li&gt;Add CHANGES to gemspec&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Rescan Fixes&lt;/h3&gt;
+
+&lt;p&gt;Brakeman supports rescanning a subset of files in an application, with the caveat that the previous scan must still be in memory. This functionality was broken in the the 1.8.0 release, due to the lack of tests.&lt;/p&gt;
+
+&lt;p&gt;This release updates rescanning to be more robust and work with the 1.8.0 changes to how &quot;render paths&quot; are stored. Also, a number of tests were added to help prevent breakage in the future.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/165&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Scope Calls with One Argument&lt;/h3&gt;
+
+&lt;p&gt;Calls to &lt;code&gt;scope&lt;/code&gt; with a single argument were causing errors in Brakeman's SQL injection check.&lt;/p&gt;
+
+&lt;p&gt;The fixed error looked like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;undefined method `node_type' for nil:NilClass  /something/brakeman/lib/brakeman/checks/check_sql.rb:75:in `block (2 levels) in find_scope_calls'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/157&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Model Names for Rendered Collections&lt;/h3&gt;
+
+&lt;p&gt;In cases like below, where a collection of models is being rendered and the model name could be known, any resulting warnings will now reference the actual model name.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;pre&gt;
+    &lt;code class='ruby'&gt;&amp;lt;%= render 'user', :collection =&amp;gt; User.all %&amp;gt;&lt;/code&gt;
+  &lt;/pre&gt;
+&lt;/div&gt;
+
+
+&lt;p&gt;Previously, Brakeman would report warnings with &lt;code&gt;UnknownModel&lt;/code&gt;, whether or not the model name was actually known.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/155&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Overwritten JSON Escape Config&lt;/h3&gt;
+
+&lt;p&gt;It is possible that a config setting in one initializer overrides a setting in a different initializer. This is now handled for the JSON escape settings.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/154&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;CHANGES File in Gem&lt;/h3&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://github.com/presidentbeef/brakeman/blob/master/CHANGES&quot;&gt;CHANGES&lt;/a&gt; file is now included in the gem file as requested.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/153&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Report Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+
+&lt;h3&gt;Brakeman Roadmap&lt;/h3&gt;
+
+&lt;p&gt;A rough guide to Brakeman 1.9 and 2.0 has been &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/Roadmap&quot;&gt;posted here&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 1.8.1 Released</title>
@@ -1391,71 +1467,6 @@ end
 
 &lt;p&gt;See the &lt;a href=&quot;http://brakemanscanner.org/blog/2011/12/05/brakeman-1-dot-0-release-candidate-available/&quot;&gt;earlier post&lt;/a&gt; for more details.&lt;/p&gt;
 
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 1.0 Release Candidate Available</title>
-    <link href="http://brakemanscanner.org/blog/2011/12/05/brakeman-1-dot-0-release-candidate-available/"/>
-    <updated>2011-12-05T14:04:00-08:00</updated>
-    <id>http://brakemanscanner.org/blog/2011/12/05/brakeman-1-dot-0-release-candidate-available</id>
-    <content type="html">&lt;p&gt;Because there have been some major changes since 0.9.2, I have released a release candidate just in case there are problems. Please try it out and report any issues!&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;gem install brakeman --pre
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;strong&gt;Changes:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Brakeman can now be used as a library&lt;/li&gt;
-&lt;li&gt;Faster call search&lt;/li&gt;
-&lt;li&gt;Add option to return error code if warnings are found (tw-ngreen)&lt;/li&gt;
-&lt;li&gt;Allow truncated messages to be expanded in HTML&lt;/li&gt;
-&lt;li&gt;Keep expanded context in HTML output&lt;/li&gt;
-&lt;li&gt;Fix summary when using warning thresholds&lt;/li&gt;
-&lt;li&gt;Better support for Rails 3 routes&lt;/li&gt;
-&lt;li&gt;Reduce SQL injection duplicate warnings&lt;/li&gt;
-&lt;li&gt;Lower confidence on mass assignment with no user input&lt;/li&gt;
-&lt;li&gt;Ignore mass assignment using all literal arguments&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;Brakeman as a Library&lt;/h3&gt;
-
-&lt;p&gt;After some re-factoring, Brakeman can now be used as a library.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;require 'brakeman'
-
-Brakeman.run :app_path =&amp;gt; 'my_app'
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3&gt;Faster Call Search&lt;/h3&gt;
-
-&lt;p&gt;Searching for calls, like many of the checks do, is significantly faster now. Any scans that spend the majority of the time running checks should be much quicker.&lt;/p&gt;
-
-&lt;h3&gt;Option to Return Error Code&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;--exit-on-warn&lt;/code&gt; will cause Brakeman to exit with an error code if any warnings are found.&lt;/p&gt;
-
-&lt;h3&gt;Fix Context in HTML Report&lt;/h3&gt;
-
-&lt;p&gt;Truncated messages with no context are now able to be expanded when clicked.&lt;/p&gt;
-
-&lt;p&gt;Expanded context should remain visible in the browser, instead of sometimes scrolling out of view.&lt;/p&gt;
-
-&lt;h3&gt;Fix Report Summary&lt;/h3&gt;
-
-&lt;p&gt;The summary in reports with warnings below the specified threshold will now only show the number of warnings in the actual report.&lt;/p&gt;
-
-&lt;h3&gt;Reduce Duplicate SQL Warnings&lt;/h3&gt;
-
-&lt;p&gt;There should be fewer duplicate SQL injection warnings now.&lt;/p&gt;
-
-&lt;h2&gt;1.0 Release&lt;/h2&gt;
-
-&lt;p&gt;Next up is fixing Rubinius support, making Brakeman more useful as a library, and improving Rails 3 route processing.&lt;/p&gt;
-
-&lt;p&gt;If all is well, the 1.0 release will be ready in a couple days! Report bugs if you got 'em!&lt;/p&gt;
 </content>
   </entry>
   
