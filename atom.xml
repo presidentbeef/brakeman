@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-10-17T13:58:23-07:00</updated>
+  <updated>2012-10-17T14:00:05-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -53,12 +53,8 @@
 
 &lt;p&gt;In cases like below, where a collection of models is being rendered and the model name could be known, any resulting warnings will now reference the actual model name.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;pre&gt;
-    &lt;code class='ruby'&gt;&amp;lt;%= render 'user', :collection =&amp;gt; User.all %&amp;gt;&lt;/code&gt;
-  &lt;/pre&gt;
-&lt;/div&gt;
-
+&lt;pre&gt;&lt;code&gt;&amp;lt;%= render 'user', :collection =&amp;gt; User.all %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Previously, Brakeman would report warnings with &lt;code&gt;UnknownModel&lt;/code&gt;, whether or not the model name was actually known.&lt;/p&gt;
 

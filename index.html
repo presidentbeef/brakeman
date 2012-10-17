@@ -158,12 +158,8 @@
 
 <p>In cases like below, where a collection of models is being rendered and the model name could be known, any resulting warnings will now reference the actual model name.</p>
 
-<div>
-  <pre>
-    <code class='ruby'>&lt;%= render 'user', :collection =&gt; User.all %&gt;</code>
-  </pre>
-</div>
-
+<pre><code>&lt;%= render 'user', :collection =&gt; User.all %&gt;
+</code></pre>
 
 <p>Previously, Brakeman would report warnings with <code>UnknownModel</code>, whether or not the model name was actually known.</p>
 
