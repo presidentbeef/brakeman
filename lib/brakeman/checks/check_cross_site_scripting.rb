@@ -60,7 +60,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
     json_escape_on = false
     initializers = tracker.check_initializers :ActiveSupport, :escape_html_entities_in_json=
-    initializers.each {|result| json_escape_on = true? (result[-1].first_arg) }
+    initializers.each {|result| json_escape_on = true?(result[-1].first_arg) }
 
     if !json_escape_on or version_between? "0.0.0", "2.0.99"
       @known_dangerous << :to_json
