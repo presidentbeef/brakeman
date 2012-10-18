@@ -661,7 +661,7 @@ class Brakeman::Report
       :app_path => File.expand_path(tracker.options[:app_path]),
       :rails_version => rails_version,
       :security_warnings => all_warnings.length,
-      :timestamp => Time.now,
+      :timestamp => Time.now.to_s,
       :checks_performed => checks.checks_run.sort,
       :number_of_controllers =>tracker.controllers.length,
       # ignore the "fake" model
