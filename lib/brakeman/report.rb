@@ -18,6 +18,15 @@ else
   # CSV is now FasterCSV in ruby 1.9
 end
 
+#This is so OkJson will work with symbol values
+if MultiJson.engine == MultiJson::Adapters::OkJson
+  class Symbol
+    def to_json
+      self.to_s.inspect
+    end
+  end
+end
+
 #Generates a report based on the Tracker and the results of
 #Tracker#run_checks. Be sure to +run_checks+ before generating
 #a report.
