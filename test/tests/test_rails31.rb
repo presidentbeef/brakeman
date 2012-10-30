@@ -13,7 +13,7 @@ class Rails31Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :model => 0,
-      :template => 20,
+      :template => 21,
       :controller => 1,
       :warning => 48 }
   end
