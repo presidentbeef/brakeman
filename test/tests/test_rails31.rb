@@ -536,6 +536,42 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /_bio\.html\.erb/
   end
 
+  def test_xss_helper_params_return
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_less_simple_helpers\.html\.erb/
+  end
+
+  def test_xss_helper_with_args
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_less_simple_helpers\.html\.erb/
+  end
+
+  def test_xss_helper_assign_ivar
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 5,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_less_simple_helpers\.html\.erb/
+  end
+
+  def test_xss_helper_model_return
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :file => /test_simple_helper\.html\.erb/
+  end
+
   def test_xss_multiple_exp_in_string_interpolation
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",

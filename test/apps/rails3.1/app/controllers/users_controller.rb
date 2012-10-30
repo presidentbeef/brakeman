@@ -114,8 +114,9 @@ class UsersController < ApplicationController
   end
 
   def test_less_simple_helpers
+    assign_ivar
     @input = less_simple_helper
-    @other_thing = simple_helper_with_args(:x)
+    @other_thing = simple_helper_with_args(params[:x])
   end
 
   private
@@ -129,7 +130,11 @@ class UsersController < ApplicationController
   end
 
   def simple_helper_with_args arg
-    params[arg]
+    arg
+  end
+
+  def assign_ivar
+    @some_value = params[:badthing]
   end
 
   include UserMixin
