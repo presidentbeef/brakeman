@@ -514,6 +514,25 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     res
   end
 
+  def process_helper_method method_exp, args
+    meth_env = only_ivars(:include_request_vars)
+    assign_args method_exp, args, meth_env
+    Brakeman::FindReturnValue.return_value(method_exp, meth_env)
+  end
+
+  def assign_args method_exp, arg_list, meth_env = SexpProcessor::Environment.new
+    formal_args = method_exp[2][1..-1]
+    arg_list = arg_list[1..-1]
+
+    formal_args.each_with_index do |arg, index|
+      if arg.is_a? Symbol and sexp? arg_list[index]
+        meth_env[Sexp.new(:lvar, arg)] = arg_list[index]
+      end
+    end
+
+    meth_env
+  end
+
   #Set line nunber for +exp+ and every Sexp it contains. Used when replacing
   #expressions, so warnings indicate the correct line.
   def set_line exp, line_number

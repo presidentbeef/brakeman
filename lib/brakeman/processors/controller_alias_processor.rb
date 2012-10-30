@@ -121,11 +121,8 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
         method = found_method[:method]
 
         if sexp? method
-          meth_env = only_ivars(:include_request_vars)
-          assign_args method, exp[3], meth_env
-          value = Brakeman::FindReturnValue.return_value(found_method[:method], meth_env)
+          value = process_helper_method method, exp[3]
           value.line(exp.line)
-          #puts "Found return value: #{value.inspect}"
           return value
         else
           puts "What is #{found_method}"
@@ -134,19 +131,6 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     end
 
     exp
-  end
-
-  def assign_args method_exp, arg_list, meth_env = SexpProcessor::Environment.new
-    formal_args = method_exp[2][1..-1]
-    arg_list = arg_list[1..-1]
-
-    formal_args.each_with_index do |arg, index|
-      if arg.is_a? Symbol and sexp? arg_list[index]
-        meth_env[Sexp.new(:lvar, arg)] = arg_list[index]
-      end
-    end
-
-    meth_env
   end
 
   #Check for +respond_to+
