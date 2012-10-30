@@ -18,12 +18,21 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
 
   #s(:class, NAME, PARENT, s(:scope ...))
   def process_class exp
+    name = class_name exp.class_name
+
     if @model
-      Brakeman.debug "[Notice] Skipping inner class: #{class_name exp[1]}"
+      Brakeman.debug "[Notice] Skipping inner class: #{name}"
       ignore
     else
-      @model = { :name => class_name(exp[1]),
-        :parent => class_name(exp[2]),
+      begin
+        parent = class_name exp.parent_name
+      rescue StandardError => e
+        Brakeman.debug e
+        parent = nil
+      end
+
+      @model = { :name => name,
+        :parent => parent,
         :includes => [],
         :public => {},
         :private => {},
@@ -31,7 +40,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
         :options => {},
         :file => @file_name }
       @tracker.models[@model[:name]] = @model
-      res = process exp[3]
+      res = process exp.body
       @model = nil
       res
     end
@@ -41,18 +50,18 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
   #such as include, attr_accessible, private, etc.
   def process_call exp
     return exp unless @model
-    target = exp[1]
+    target = exp.target
     if sexp? target
       target = process target
     end
 
-    method = exp[2]
-    args = exp[3]
+    method = exp.method
+    args = exp.args
 
     #Methods called inside class definition
     #like attr_* and other settings
     if @current_method.nil? and target.nil?
-      if args.length == 1 #actually, empty
+      if args.empty?
         case method
         when :private, :protected, :public
           @visibility = method
@@ -64,10 +73,10 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
       else
         case method
         when :include
-          @model[:includes] << class_name(args[1]) if @model
+          @model[:includes] << class_name(args.first) if @model
         when :attr_accessible
           @model[:attr_accessible] ||= []
-          args = args[1..-1].map do |e|
+          args = args.map do |e|
             e[1]
           end
 
@@ -75,13 +84,13 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
         else
           if @model
             @model[:options][method] ||= []
-            @model[:options][method] << args
+            @model[:options][method] << exp.arglist
           end
         end
       end
       ignore
     else
-      call = Sexp.new :call, target, method, process(args)
+      call = Sexp.new :call, target, method, process(exp.arglist)
       call.line(exp.line)
       call
     end
@@ -90,10 +99,10 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
   #Add method definition to tracker
   def process_defn exp
     return exp unless @model
-    name = exp[1]
+    name = exp.method_name
 
     @current_method = name
-    res = Sexp.new :methdef, name, process(exp[2]), process(exp[3][1])
+    res = Sexp.new :methdef, name, exp[2], process(exp.body.value)
     res.line(exp.line)
     @current_method = nil
     if @model
@@ -106,7 +115,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
   #Add method definition to tracker
   def process_defs exp
     return exp unless @model
-    name = exp[2]
+    name = exp.method_name
 
     if exp[1].node_type == :self
       target = @model[:name]
@@ -115,7 +124,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     end
 
     @current_method = name
-    res = Sexp.new :selfdef, target, name, process(exp[3]), process(exp[4][1])
+    res = Sexp.new :selfdef, target, name, exp[3], process(exp.body.value)
     res.line(exp.line)
     @current_method = nil
     if @model

@@ -5,6 +5,10 @@ body {
   color: #161616;
 }
 
+a {
+  color: #161616;
+}
+
 p {
   font-weight: bold;
   font-size: 11pt;
@@ -111,4 +115,19 @@ p {
 
  .user_input {
    background-color: #fcecab;
+ }
+
+ div.render_path {
+   display: none;
+   background-color: #ffe;
+   padding: 5px;
+   margin: 2px 0px 2px 0px;
+ }
+
+ div.template_name {
+   cursor: pointer;
+ }
+
+ div.template_name:hover {
+   background-color: white;
  }

@@ -10,7 +10,7 @@ class Brakeman::OutputProcessor < Ruby2Ruby
 
   #Copies +exp+ and then formats it.
   def format exp
-    process exp.deep_clone
+    process(exp.deep_clone) || "[Format Error]"
   end
 
   alias process_safely format
@@ -20,36 +20,6 @@ class Brakeman::OutputProcessor < Ruby2Ruby
       super exp if sexp? exp and not exp.empty?
     rescue Exception => e
       Brakeman.debug "While formatting #{exp}: #{e}\n#{e.backtrace.join("\n")}"
-    end
-  end
-
-  def process_call exp
-    if exp[0].is_a? Symbol
-      target = exp[0]
-
-      method = exp[1]
-
-      args = process exp[2]
-
-      out = nil
-
-      if method == :[]
-        if target
-          out = "#{target}[#{args}]"
-        else
-          raise Exception.new("Not sure what to do with access and no target: #{exp}")
-        end
-      else
-        if target
-          out = "#{target}.#{method}(#{args})"
-        else
-          out = "#{method}(#{args})"
-        end
-      end
-      exp.clear
-      out
-    else
-      super exp
     end
   end
 

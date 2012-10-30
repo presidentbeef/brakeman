@@ -15,7 +15,7 @@ class Brakeman::CheckValidationRegex < Brakeman::BaseCheck
   WITH = Sexp.new(:lit, :with)
 
   def run_check
-    tracker.models.each do |name, model|
+    active_record_models.each do |name, model|
       @current_model = name
       format_validations = model[:options][:validates_format_of]
       if format_validations
@@ -28,7 +28,7 @@ class Brakeman::CheckValidationRegex < Brakeman::BaseCheck
 
   #Check validates_format_of
   def process_validator validator
-    if value = hash_access(validator[-1], WITH)
+    if value = hash_access(validator.last, WITH)
       check_regex value, validator
     end
   end
@@ -38,12 +38,12 @@ class Brakeman::CheckValidationRegex < Brakeman::BaseCheck
   def check_regex value, validator
     return unless regexp? value
 
-    regex = value[1].inspect
+    regex = value.value.inspect
     if regex =~ /^\/(.{2}).*(.{2})\/(m|i|x|n|e|u|s|o)*\z/
       if $1 != "\\A" or ($2 != "\\Z" and $2 != "\\z")
         warn :model => @current_model,
           :warning_type => "Format Validation", 
-          :message => "Insufficient validation for '#{get_name validator}' using #{value[1].inspect}. Use \\A and \\z as anchors",
+          :message => "Insufficient validation for '#{get_name validator}' using #{value.value.inspect}. Use \\A and \\z as anchors",
           :line => value.line,
           :confidence => CONFIDENCE[:high] 
       end

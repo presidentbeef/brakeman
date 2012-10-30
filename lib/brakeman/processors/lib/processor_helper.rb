@@ -1,9 +1,15 @@
 #Contains a couple shared methods for Processors.
 module Brakeman::ProcessorHelper
+  def process_all exp
+    exp.each_sexp do |e|
+      process e
+    end
+    exp
+  end
 
   #Sets the current module.
   def process_module exp
-    module_name = class_name(exp[1]).to_s
+    module_name = class_name(exp.class_name).to_s
     prev_module = @current_module
 
     if prev_module
@@ -12,7 +18,7 @@ module Brakeman::ProcessorHelper
       @current_module = module_name
     end
 
-    process exp[2]
+    process exp.body
 
     @current_module = prev_module
 
@@ -25,13 +31,13 @@ module Brakeman::ProcessorHelper
     when Sexp
       case exp.node_type
       when :const
-        exp[1]
+        exp.value
       when :lvar
-        exp[1].to_sym
+        exp.value.to_sym
       when :colon2
         "#{class_name(exp[1])}::#{exp[2]}".to_sym
       when :colon3
-        "::#{exp[1]}".to_sym
+        "::#{exp.value}".to_sym
       when :call
         process exp
       when :self

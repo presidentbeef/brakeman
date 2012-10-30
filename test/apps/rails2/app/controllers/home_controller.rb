@@ -1,8 +1,8 @@
 class HomeController < ApplicationController
   before_filter :filter_it, :only => :test_filter
+  before_filter :or_equals, :only => :test_mass_assign_with_or_equals
 
-  def index
-  end
+  def index; end
 
   def test_params
     @name = params[:name]
@@ -116,9 +116,60 @@ class HomeController < ApplicationController
     User.find_or_create_by_name(params[:name], :code => (params[:x] + "code"))
   end
 
+  def test_user_input_on_multiline
+    User.find_by_sql "select * from users where something = 'something safe' AND " + 
+      "something_not_safe = #{params[:unsafe]} AND " + 
+      "something_else_that_is_safe = 'something else safe'"
+    SQL
+  end
+
+  def test_mass_assign_with_or_equals
+    User.new(params[:still_bad])
+  end
+
+  def test_xss_with_or
+    @params_or_something = params[:x] || something
+
+    if some_condition
+      @user_input = true
+    else
+      @user_input = params[:y]
+    end
+
+    @more_user_input = x || params[:z] || z
+
+    @user = User.find(current_user)
+  end
+
+  def test_to_json
+    @model_json = User.find(current_user).to_json
+    @not_json = {:thing => params[:thing]}
+    @json = {:json_thing => params[:json_thing]}.to_json
+  end
+
+  def test_content_tag
+    @user = User.find(current_user)
+  end
+
   private
 
   def filter_it
     @filtered = params[:evil_input]
+  end
+
+  def or_equals
+    params[:still_bad] ||= {}
+  end
+
+  def test_safe_model_redirect
+    redirect_to User.find(1)
+  end
+
+  def test_safe_mode_array_redirect
+    redirect_to [User.find(1), User.find(2)]
+  end
+
+  def test_model_attributes_badness
+    redirect_to User.new.donkey
   end
 end

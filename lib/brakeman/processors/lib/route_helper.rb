@@ -21,6 +21,27 @@ module Brakeman::RouteHelper
     @tracker.routes[@current_controller] ||= Set.new
   end
 
+  #Add route to controller. If a controller is specified,
+  #the current controller will be set to that controller.
+  #If no controller is specified, uses current controller value.
+  def add_route route, controller = nil
+    if node_type? route, :str, :lit
+      route = route.value
+    end
+
+    route = route.to_sym
+
+    if controller
+      self.current_controller = controller
+    end
+
+    routes = @tracker.routes[@current_controller]
+    
+    if routes and routes != :allow_all_actions
+      routes << route
+    end
+  end
+
   #Add default routes
   def add_resources_routes
     existing_routes = @tracker.routes[@current_controller]

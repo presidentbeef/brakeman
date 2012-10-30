@@ -8,6 +8,26 @@ Rails31::Application.routes.draw do
     get 'mixin_default'
   end
 
+  resources :other do
+    get :a
+    delete 'f'
+  end
+
+  controller :other do
+    get 'b'
+    post 'something' => 'c'
+    put 'dee', :to => :d
+    get 'test_partial1'
+    get 'test_partial2'
+    get 'test_string_interp'
+  end
+
+  match 'e', :to => 'other#e', :as => 'eeeee'
+
+  get 'g' => 'other#g'
+
+  match 'blah/:id', :action => 'blarg' 
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

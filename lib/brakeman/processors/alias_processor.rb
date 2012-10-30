@@ -1,12 +1,11 @@
-require 'rubygems'
-require 'sexp_processor'
 require 'brakeman/util'
+require 'ruby_parser/bm_sexp_processor'
 require 'brakeman/processors/lib/processor_helper'
 
 #Returns an s-expression with aliases replaced with their value.
 #This does not preserve semantics (due to side effects, etc.), but it makes
 #processing easier when searching for various things.
-class Brakeman::AliasProcessor < SexpProcessor
+class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   include Brakeman::ProcessorHelper
   include Brakeman::Util
 
@@ -19,11 +18,6 @@ class Brakeman::AliasProcessor < SexpProcessor
   # AliasProcessor.new.process_safely src
   def initialize tracker = nil
     super()
-    self.strict = false
-    self.auto_shift_type = false
-    self.require_empty = false
-    self.default_method = :process_default
-    self.warn_on_default = false
     @env = SexpProcessor::Environment.new
     @inside_if = false
     @ignore_ifs = false
@@ -103,7 +97,7 @@ class Brakeman::AliasProcessor < SexpProcessor
 
   #Process a method call.
   def process_call exp
-    target_var = exp[1]
+    target_var = exp.target
     exp = process_default exp
 
     #In case it is replaced with something else
@@ -111,74 +105,75 @@ class Brakeman::AliasProcessor < SexpProcessor
       return exp
     end
 
-    target = exp[1]
-    method = exp[2]
+    target = exp.target
+    method = exp.method
     args = exp[3]
+    first_arg = exp.first_arg
 
     #See if it is possible to simplify some basic cases
     #of addition/concatenation.
     case method
     when :+
-      if array? target and array? args[1]
-        joined = join_arrays target, args[1] 
+      if array? target and array? first_arg
+        joined = join_arrays target, first_arg 
         joined.line(exp.line)
         exp = joined
-      elsif string? args[1]
+      elsif string? first_arg
         if string? target # "blah" + "blah"
-          joined = join_strings target, args[1]
+          joined = join_strings target, first_arg
           joined.line(exp.line)
           exp = joined
-        elsif call? target and target[2] == :+ and string? target[3][1]
-          joined = join_strings target[3][1], args[1]
+        elsif call? target and target.method == :+ and string? target.first_arg
+          joined = join_strings target.first_arg, first_arg
           joined.line(exp.line)
-          target[3][1] = joined
+          target.first_arg = joined
           exp = target
         end
-      elsif number? args[1]
+      elsif number? first_arg
         if number? target
-          exp = Sexp.new(:lit, target[1] + args[1][1])
-        elsif target[2] == :+ and number? target[3][1]
-          target[3][1] = Sexp.new(:lit, target[3][1][1] + args[1][1])
+          exp = Sexp.new(:lit, target.value + first_arg.value)
+        elsif call? target and target.method == :+ and number? target.first_arg
+          target.first_arg = Sexp.new(:lit, target.first_arg.value + first_arg.value)
           exp = target
         end
       end
     when :-
-      if number? target and number? args[1]
-        exp = Sexp.new(:lit, target[1] - args[1][1])
+      if number? target and number? first_arg
+        exp = Sexp.new(:lit, target.value - first_arg.value)
       end
     when :*
-      if number? target and number? args[1]
-        exp = Sexp.new(:lit, target[1] * args[1][1])
+      if number? target and number? first_arg
+        exp = Sexp.new(:lit, target.value * first_arg.value)
       end
     when :/
-      if number? target and number? args[1]
-        exp = Sexp.new(:lit, target[1] / args[1][1])
+      if number? target and number? first_arg
+        exp = Sexp.new(:lit, target.value / first_arg.value)
       end
     when :[]
       if array? target
-        temp_exp = process_array_access target, args[1..-1]
+        temp_exp = process_array_access target, exp.args
         exp = temp_exp if temp_exp
       elsif hash? target
-        temp_exp = process_hash_access target, args[1..-1]
+        temp_exp = process_hash_access target, exp.args
         exp = temp_exp if temp_exp
       end
     when :merge!, :update
-      if hash? target and hash? args[1]
-         target = process_hash_merge! target, args[1]
+      if hash? target and hash? first_arg
+         target = process_hash_merge! target, first_arg
          env[target_var] = target
          return target
       end
     when :merge
-      if hash? target and hash? args[1]
-        return process_hash_merge(target, args[1])
+      if hash? target and hash? first_arg
+        return process_hash_merge(target, first_arg)
       end
     when :<<
-      if string? target and string? args[1]
-        target[1] << args[1][1]
+      if string? target and string? first_arg
+        target.value << first_arg.value
         env[target_var] = target
         return target
       elsif array? target
-        target << args[1]
+        target << first_arg
         env[target_var] = target
         return target
       else
@@ -193,7 +188,7 @@ class Brakeman::AliasProcessor < SexpProcessor
   #Process a new scope.
   def process_scope exp
     env.scope do
-      process exp[1]
+      process exp.block
     end
     exp
   end
@@ -209,7 +204,7 @@ class Brakeman::AliasProcessor < SexpProcessor
   def process_methdef exp
     env.scope do
       set_env_defaults
-      process exp[3]
+      process exp.body
     end
     exp
   end
@@ -218,7 +213,7 @@ class Brakeman::AliasProcessor < SexpProcessor
   def process_selfdef exp
     env.scope do
       set_env_defaults
-      process exp[4]
+      process exp.body
     end
     exp
   end
@@ -229,18 +224,18 @@ class Brakeman::AliasProcessor < SexpProcessor
   #Local assignment
   # x = 1
   def process_lasgn exp
-    exp[2] = process exp[2] if sexp? exp[2]
-    return exp if exp[2].nil?
+    exp.rhs = process exp.rhs if sexp? exp.rhs
+    return exp if exp.rhs.nil?
 
-    local = Sexp.new(:lvar, exp[1]).line(exp.line || -2)
+    local = Sexp.new(:lvar, exp.lhs).line(exp.line || -2)
 
     if @inside_if and val = env[local]
       #avoid setting to value it already is (e.g. "1 or 1")
-      if val != exp[2] and val[1] != exp[2] and val[2] != exp[2]
-        env[local] = Sexp.new(:or, val, exp[2]).line(exp.line || -2)
+      if val != exp.rhs and val[1] != exp.rhs and val[2] != exp.rhs
+        env[local] = Sexp.new(:or, val, exp.rhs).line(exp.line || -2)
       end
     else
-      env[local] = exp[2]
+      env[local] = exp.rhs
     end
 
     exp
@@ -249,15 +244,15 @@ class Brakeman::AliasProcessor < SexpProcessor
   #Instance variable assignment
   # @x = 1
   def process_iasgn exp
-    exp[2] = process exp[2]
-    ivar = Sexp.new(:ivar, exp[1]).line(exp.line)
+    exp.rhs = process exp.rhs
+    ivar = Sexp.new(:ivar, exp.lhs).line(exp.line)
 
     if @inside_if and val = env[ivar]
-      if val != exp[2]
-        env[ivar] = Sexp.new(:or, val, exp[2]).line(exp.line)
+      if val != exp.rhs
+        env[ivar] = Sexp.new(:or, val, exp.rhs).line(exp.line)
       end
     else
-      env[ivar] = exp[2]
+      env[ivar] = exp.rhs
     end
 
     exp
@@ -266,8 +261,8 @@ class Brakeman::AliasProcessor < SexpProcessor
   #Global assignment
   # $x = 1
   def process_gasgn exp
-    match = Sexp.new(:gvar, exp[1])
-    value = exp[2] = process(exp[2])
+    match = Sexp.new(:gvar, exp.lhs)
+    value = exp.rhs = process(exp.rhs)
 
     if @inside_if and val = env[match]
       if val != value
@@ -283,8 +278,8 @@ class Brakeman::AliasProcessor < SexpProcessor
   #Class variable assignment
   # @@x = 1
   def process_cvdecl exp
-    match = Sexp.new(:cvar, exp[1])
-    value = exp[2] = process(exp[2])
+    match = Sexp.new(:cvar, exp.lhs)
+    value = exp.rhs = process(exp.rhs)
     
     if @inside_if and val = env[match]
       if val != value
@@ -302,13 +297,14 @@ class Brakeman::AliasProcessor < SexpProcessor
   #or
   # x[:y] = 1
   def process_attrasgn exp
-    tar_variable = exp[1]
-    target = exp[1] = process(exp[1])
-    method = exp[2]
+    tar_variable = exp.target
+    target = exp.target = process(exp.target)
+    method = exp.method
+    args = exp.args
 
     if method == :[]=
-      index = exp[3][1] = process(exp[3][1])
-      value = exp[3][2] = process(exp[3][2])
+      index = exp.first_arg = process(args.first)
+      value = exp.second_arg = process(args.second)
       match = Sexp.new(:call, target, :[], Sexp.new(:arglist, index))
       env[match] = value
 
@@ -316,7 +312,7 @@ class Brakeman::AliasProcessor < SexpProcessor
         env[tar_variable] = hash_insert target.deep_clone, index, value
       end
     elsif method.to_s[-1,1] == "="
-      value = exp[3][1] = process(exp[3][1])
+      value = exp.first_arg = process(args.first)
       #This is what we'll replace with the value
       match = Sexp.new(:call, target, method.to_s[0..-2].to_sym, Sexp.new(:arglist))
 
@@ -368,7 +364,11 @@ class Brakeman::AliasProcessor < SexpProcessor
     match = Sexp.new(:call, target, :[], Sexp.new(:arglist, index))
 
     unless env[match]
-      env[match] = value
+      if request_value? target
+        env[match] = Sexp.new(:or, match, value)
+      else
+        env[match] = value
+      end
     end
 
     exp
@@ -399,17 +399,17 @@ class Brakeman::AliasProcessor < SexpProcessor
   #Constant assignments like
   # BIG_CONSTANT = 234810983
   def process_cdecl exp
-    if sexp? exp[2]
-      exp[2] = process exp[2]
+    if sexp? exp.rhs
+      exp.rhs = process exp.rhs
     end
 
-    if exp[1].is_a? Symbol
-      match = Sexp.new(:const, exp[1])
+    if exp.lhs.is_a? Symbol
+      match = Sexp.new(:const, exp.lhs)
     else
-      match = exp[1]
+      match = exp.lhs
     end
 
-    env[match] = exp[2]
+    env[match] = exp.rhs
 
     exp
   end
@@ -418,10 +418,10 @@ class Brakeman::AliasProcessor < SexpProcessor
   def process_if exp
     @ignore_ifs ||= @tracker && @tracker.options[:ignore_ifs]
 
-    condition = process exp[1]
+    condition = process exp.condition
 
     if true? condition
-      exps = [exp[2]]
+      exps = [exp.then_clause]
     elsif false? condition
       exps = exp[3..-1]
     else
@@ -450,9 +450,11 @@ class Brakeman::AliasProcessor < SexpProcessor
   #
   #Returns the value inside the array, if possible.
   def process_array_access target, args
-    if args.length == 1 and integer? args[0]
-      index = args[0][1]
-      target[index + 1]
+    if args.length == 1 and integer? args.first
+      index = args.first.value
+
+      #Have to do this because first element is :array and we have to skip it
+      target[1..-1][index]
     else
       nil
     end

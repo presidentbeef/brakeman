@@ -10,8 +10,8 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 3,
-      :template => 1,
-      :warning => 13 }
+      :template => 2,
+      :warning => 14 }
   end
 
   def report
@@ -98,8 +98,8 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_redirect_9 
-    assert_warning :type => :warning,
+  def test_redirect_to_model_instance
+    assert_no_warning :type => :warning,
       :warning_type => "Redirect",
       :line => 68,
       :message => /^Possible\ unprotected\ redirect/,
@@ -108,8 +108,8 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_redirect_10 
-    assert_warning :type => :warning,
+  def test_another_redirect_to_model_instance
+    assert_no_warning :type => :warning,
       :warning_type => "Redirect",
       :line => 72,
       :message => /^Possible\ unprotected\ redirect/,
@@ -121,12 +121,28 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   def test_redirect_11 
     assert_warning :type => :warning,
       :warning_type => "Redirect",
-      :line => 96,
+      :line => 95,
       :message => /^Possible\ unprotected\ redirect/,
       :confidence => 0,
       :file => /users_controller\.rb/
   end
 
+
+  def test_rails_cve_2012_2660
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /CVE-2012-2660/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_rails_cve_2012_2695
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /CVE-2012-2695/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
 
   def test_sql_injection_12 
     assert_warning :type => :warning,
@@ -157,6 +173,13 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :file => /show\.html\.erb/
   end
 
+  def test_cross_site_scripting_single_quotes_CVE_2012_3464
+    assert_no_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^All\ Rails\ 2\.x\ versions\ do\ not\ escape\ sin/,
+      :confidence => 1,
+      :file => /environment\.rb/
+  end
 
   def test_dynamic_render_path_15 
     assert_no_warning :type => :template,
@@ -227,4 +250,20 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :file => /user\.rb/
   end
 
+  def test_strip_tags_CVE_2012_3465
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^All\ Rails\ 2\.x\ versions\ have\ a\ vulnerabil/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_to_json
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped parameter value in JSON hash/,
+      :confidence => 0,
+      :file => /users\/to_json\.html\.erb/
+  end  
 end

@@ -3,11 +3,11 @@ require 'digest/sha1'
 #Processes a call to render() in a controller or template
 module Brakeman::RenderHelper
 
-  #Process s(:render, TYPE, OPTIONS)
+  #Process s(:render, TYPE, OPTION?, OPTIONS)
   def process_render exp
     process_default exp
     @rendered = true
-    case exp[1]
+    case exp.render_type
     when :action, :template
       process_action exp[2][1], exp[3]
     when :default
@@ -15,7 +15,6 @@ module Brakeman::RenderHelper
         process_template template_name, exp[3]
       rescue ArgumentError => e
         Brakeman.debug "Problem processing render: #{exp}"
-        raise e
       end
     when :partial, :layout
       process_partial exp[2], exp[3]
@@ -41,14 +40,16 @@ module Brakeman::RenderHelper
       return
     end
 
-    names = name[1].to_s.split("/")
+    names = name.value.to_s.split("/")
     names[-1] = "_" + names[-1]
     process_template template_name(names.join("/")), args
   end
 
   #Processes a given action
   def process_action name, args
-    process_template template_name(name), args
+    if name.is_a? String or name.is_a? Symbol
+      process_template template_name(name), args
+    end
   end
 
   #Processes a template, adding any instance variables
@@ -91,7 +92,7 @@ module Brakeman::RenderHelper
 
       if hash? options[:locals]
         hash_iterate options[:locals] do |key, value|
-          template_env[Sexp.new(:call, nil, key[1], Sexp.new(:arglist))] = value
+          template_env[Sexp.new(:call, nil, key.value, Sexp.new(:arglist))] = value
         end
       end
 
@@ -104,11 +105,13 @@ module Brakeman::RenderHelper
         #Unless the :as => :variable_name option is used
         if options[:as]
           if string? options[:as] or symbol? options[:as]
-            variable = options[:as][1].to_sym
+            variable = options[:as].value.to_sym
           end
         end
 
-        template_env[Sexp.new(:call, nil, variable, Sexp.new(:arglist))] = Sexp.new(:call, Sexp.new(:const, Brakeman::Tracker::UNKNOWN_MODEL), :new, Sexp.new(:arglist))
+        collection = get_class_target(options[:collection]) || Brakeman::Tracker::UNKNOWN_MODEL
+
+        template_env[Sexp.new(:call, nil, variable, Sexp.new(:arglist))] = Sexp.new(:call, Sexp.new(:const, collection), :new, Sexp.new(:arglist))
       end
 
       #Set original_line for values so it is clear
@@ -147,10 +150,22 @@ module Brakeman::RenderHelper
 
     hash_iterate args do |key, value|
       if symbol? key
-        options[key[1]] = value
+        options[key.value] = value
       end
     end
 
     options
+  end
+
+  def get_class_target sexp
+    if call? sexp
+      get_class_target sexp.target
+    else
+      begin
+        class_name sexp
+      rescue
+        nil
+      end
+    end
   end
 end

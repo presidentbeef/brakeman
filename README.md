@@ -1,6 +1,6 @@
 ![Brakeman Logo](http://brakemanscanner.org/images/logo_medium.png)
 
-![Travis CI Status](https://secure.travis-ci.org/presidentbeef/brakeman.png)
+![Travis CI Status](https://secure.travis-ci.org/presidentbeef/brakeman.png) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/presidentbeef/brakeman)
 
 # Brakeman
 
@@ -153,9 +153,9 @@ The `-c` option can be used to specify a configuration file to use.
 
 The MIT License
 
-Copyright (c) 2010-2012, YELLOWPAGES.COM, LLC
-
 Copyright (c) 2012, Twitter, Inc.
+
+Copyright (c) 2010-2012, YELLOWPAGES.COM, LLC
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

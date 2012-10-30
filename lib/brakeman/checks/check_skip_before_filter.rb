@@ -27,7 +27,6 @@ class Brakeman::CheckSkipBeforeFilter < Brakeman::BaseCheck
       warn :class => controller[:name],
         :warning_type => "Cross-Site Request Forgery",
         :message => "Use whitelist (:only => [..]) when skipping CSRF check",
-        :line => filter.line,
         :code => filter,
         :confidence => CONFIDENCE[:med]
     end
@@ -36,9 +35,9 @@ class Brakeman::CheckSkipBeforeFilter < Brakeman::BaseCheck
   def skip_verify_except? filter
     return false unless call? filter
 
-    args = filter[3]
+    args = filter.args
 
-    if symbol? args[1] and args[1][1] == :verify_authenticity_token and hash? args.last
+    if symbol? args.first and args.first.value == :verify_authenticity_token and hash? args.last
       if hash_access(args.last, :except)
         return true
       end

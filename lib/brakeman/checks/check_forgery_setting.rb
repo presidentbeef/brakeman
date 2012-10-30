@@ -11,11 +11,12 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
 
   def run_check
     app_controller = tracker.controllers[:ApplicationController]
-    if tracker.config[:rails][:action_controller] and
+    if tracker.config[:rails] and
+      tracker.config[:rails][:action_controller] and
       tracker.config[:rails][:action_controller][:allow_forgery_protection] == Sexp.new(:false)
 
       warn :controller => :ApplicationController,
-        :warning_type => "Cross Site Request Forgery",
+        :warning_type => "Cross-Site Request Forgery",
         :message => "Forgery protection is disabled", 
         :confidence => CONFIDENCE[:high]
 
@@ -32,7 +33,8 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
         :warning_type => "Cross-Site Request Forgery",
         :message => "CSRF protection is flawed in unpatched versions of Rails #{tracker.config[:rails_version]} (CVE-2011-0447). Upgrade to 2.3.11 or apply patches as needed",
         :confidence => CONFIDENCE[:high],
-        :file => gemfile_or_environment
+        :file => gemfile_or_environment,
+        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/LZWjzCPgNmU/discussion"
 
     elsif version_between? "3.0.0", "3.0.3"
 
@@ -40,7 +42,8 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
         :warning_type => "Cross-Site Request Forgery",
         :message => "CSRF protection is flawed in unpatched versions of Rails #{tracker.config[:rails_version]} (CVE-2011-0447). Upgrade to 3.0.4 or apply patches as needed",
         :confidence => CONFIDENCE[:high],
-        :file => gemfile_or_environment
+        :file => gemfile_or_environment,
+        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/LZWjzCPgNmU/discussion"
     end
   end
 end

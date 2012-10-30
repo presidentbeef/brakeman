@@ -33,7 +33,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
 
     args = process call[3]
 
-    case call[2]
+    case call.method
     when :system, :exec
       failure = include_user_input?(args[1]) || include_interp?(args[1])
     else
@@ -52,7 +52,6 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       warn :result => result,
         :warning_type => "Command Injection", 
         :message => "Possible command injection",
-        :line => call.line,
         :code => call,
         :user_input => failure.match,
         :confidence => confidence
@@ -86,7 +85,6 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
 
     warning = { :warning_type => "Command Injection",
       :message => "Possible command injection",
-      :line => exp.line,
       :code => exp,
       :user_input => user_input,
       :confidence => confidence }

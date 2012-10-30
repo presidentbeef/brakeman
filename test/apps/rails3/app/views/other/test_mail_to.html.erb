@@ -1,0 +1,4 @@
+<%= mail_to @user.email, @user.name, :encode => :javascript %>
+
+Should not warn:
+<%= mail_to @user.email, @user.name, :encode => :hex %>

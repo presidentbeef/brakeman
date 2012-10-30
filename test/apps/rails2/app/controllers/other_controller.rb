@@ -31,4 +31,10 @@ class OtherController < ApplicationController
 
     render :template => 'home/test_render_template'
   end
+
+  def test_render_update
+    render :update do |page|
+      do_something
+    end
+  end
 end

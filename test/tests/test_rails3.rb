@@ -14,8 +14,8 @@ class Rails3Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 5,
-      :template => 21,
-      :warning => 24
+      :template => 30,
+      :warning => 30
     }
   end
 
@@ -23,11 +23,15 @@ class Rails3Tests < Test::Unit::TestCase
     assert_equal 0, report[:errors].length
   end
 
+  def test_config_sanity
+    assert_equal 'utf-8', report[:config][:rails][:encoding].value
+  end
+
   def test_eval_params
     assert_warning :type => :warning,
       :warning_type => "Dangerous Eval",
-      :line => 41,
-      :message => /^User input in eval near line 41: eval\(pa/,
+      :line => 40,
+      :message => /^User input in eval near line 40: eval\(pa/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end
@@ -53,8 +57,8 @@ class Rails3Tests < Test::Unit::TestCase
   def test_command_injection_system_params
     assert_warning :type => :warning,
       :warning_type => "Command Injection",
-      :line => 37,
-      :message => /^Possible command injection near line 37:/,
+      :line => 36,
+      :message => /^Possible command injection near line 36:/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end
@@ -71,7 +75,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_file_access_load
     assert_warning :type => :warning,
       :warning_type => "File Access",
-      :line => 68,
+      :line => 67,
       :message => /^Parameter value used in file name near l/,
       :confidence => 0,
       :file => /home_controller\.rb/
@@ -122,8 +126,8 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /home_controller\.rb/
   end
 
-  def test_redirect_to_model
-    assert_warning :type => :warning,
+  def test_redirect_to_model_instance
+    assert_no_warning :type => :warning,
       :warning_type => "Redirect",
       :line => 63,
       :message => /^Possible unprotected redirect near line 63: redirect_to/,
@@ -131,11 +135,11 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /products_controller\.rb/
   end
 
-  def test_redirect_only_path
-    assert_no_warning :type => :warning,
+  def test_redirect_only_path_in_wrong_argument
+    assert_warning :type => :warning,
       :warning_type => "Redirect",
-      :line => 78,
-      :message => /^Possible unprotected redirect near line 78: redirect_to\(params\[/,
+      :line => 77,
+      :message => /^Possible unprotected redirect near line 77: redirect_to\(params\[/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end
@@ -143,8 +147,8 @@ class Rails3Tests < Test::Unit::TestCase
   def test_redirect_url_for_not_only_path
     assert_warning :type => :warning,
       :warning_type => "Redirect",
-      :line => 84,
-      :message => /^Possible unprotected redirect near line 84: redirect_to\(url_for/,
+      :line => 83,
+      :message => /^Possible unprotected redirect near line 83: redirect_to\(url_for/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end
@@ -152,8 +156,8 @@ class Rails3Tests < Test::Unit::TestCase
   def test_render_path
     assert_warning :type => :warning,
       :warning_type => "Dynamic Render Path",
-      :line => 64,
-      :message => /^Render path contains parameter value near line 64: render/,
+      :line => 63,
+      :message => /^Render path contains parameter value near line 63: render/,
       :confidence => 1,
       :file => /home_controller\.rb/
   end
@@ -161,10 +165,34 @@ class Rails3Tests < Test::Unit::TestCase
   def test_file_access_send_file
     assert_warning :type => :warning,
       :warning_type => "File Access",
-      :line => 22,
+      :line => 21,
       :message => /^Parameter value used in file name near l/,
       :confidence => 0,
       :file => /other_controller\.rb/
+  end
+
+  def test_rails_cve_2012_2660
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /CVE-2012-2660/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_rails_cve_2012_2661
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /CVE-2012-2661/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_rails_cve_2012_2695
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /CVE-2012-2695/,
+      :confidence => 0,
+      :file => /Gemfile/
   end
 
   def test_sql_injection_find_by_sql
@@ -192,6 +220,15 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Possible SQL injection near line 30: Use/,
       :confidence => 0,
       :file => /home_controller\.rb/
+  end
+
+  def test_sql_injection_non_active_record_model
+    assert_no_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 30,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /other_controller\.rb/
   end
 
   def test_csrf_protection
@@ -298,7 +335,7 @@ class Rails3Tests < Test::Unit::TestCase
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 1,
-      :message => /^Unescaped model attribute near line 1: \(/,
+      :message => /^Unescaped model attribute near line 1: User.new.first_name/,
       :confidence => 0,
       :file => /_user\.html\.erb/
   end
@@ -495,7 +532,7 @@ class Rails3Tests < Test::Unit::TestCase
 
   def test_default_routes
     assert_warning :warning_type => "Default Routes",
-      :line => 95,
+      :line => 97,
       :message => /All public methods in controllers are available as actions/,
       :file => /routes\.rb/
   end
@@ -535,7 +572,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_string_buffer_manipulation_bug
     assert_warning :type => :warning,
       :warning_type => "Cross Site Scripting",
-      :message => /^Rails 3.0.5 has a vulnerabilty in SafeBuffer. Upgrade to 3.0.12/,
+      :message => /^Rails 3\.\d\.\d has a vulnerabilty in SafeBuffer. Upgrade to 3.0.12/,
       :confidence => 1,
       :file => /Gemfile/
   end
@@ -547,5 +584,110 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Unescaped model attribute near line 15: Product/,
       :confidence => 0,
       :file => /_form\.html\.erb/
+  end
+
+  def test_xss_content_tag_raw_content
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 8,
+      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :confidence => 0,
+      :file => /test_content_tag\.html\.erb/
+  end
+
+  def test_xss_content_tag_attribute_name
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 14,
+      :message => /^Unescaped\ cookie\ value\ in\ content_tag/,
+      :confidence => 0,
+      :file => /test_content_tag\.html\.erb/
+  end
+
+  def test_xss_content_tag_attribute_name_even_with_escape
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 20,
+      :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
+      :confidence => 0,
+      :file => /test_content_tag\.html\.erb/
+  end
+
+  def test_xss_content_tag_unescaped_attribute
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 26,
+      :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
+      :confidence => 0,
+      :file => /test_content_tag\.html\.erb/
+  end 
+
+  def test_xss_content_tag_in_tag_name
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 32,
+      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :confidence => 0,
+      :file => /test_content_tag\.html\.erb/
+  end
+
+  def test_cross_site_scripting_model_in_tag_name
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 35,
+      :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
+      :confidence => 0,
+      :file => /test_content_tag\.html\.erb/
+  end
+
+  def test_cross_site_scripting_request_parameters
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 20,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_params\.html\.erb/
+  end
+
+  def test_cross_site_scripting_select_tag_CVE_2012_3463
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Upgrade\ to\ Rails\ 3\.0\.17,\ 3\.0\.3\ select_ta/,
+      :confidence => 0,
+      :file => /test_select_tag\.html\.erb/
+  end
+
+  def test_cross_site_scripting_single_quotes_CVE_2012_3464
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^Rails\ 3\.0\.3\ does\ not\ escape\ single\ quote/,
+      :confidence => 1,
+      :file => /Gemfile/
+  end
+
+  def test_CVE_2012_3424
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :message => /^Vulnerability\ in\ digest\ authentication\ \(/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_strip_tags_CVE_2012_3465
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :message => /^Versions\ before\ 3\.0\.10\ have\ a\ vulnerabil/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_mail_link_CVE_2011_0446
+    assert_warning :type => :template,
+      :warning_type => "Mail Link",
+      :line => 1,
+      :message => /^Vulnerability\ in\ mail_to\ using\ javascrip/,
+      :confidence => 0,
+      :file => /Gemfile/
   end
 end

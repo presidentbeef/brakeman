@@ -14,6 +14,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     @prefix = [] #Controller name prefix (a module name, usually)
     @current_controller = nil
     @with_options = nil #For use inside map.with_options
+    @controller_block = false
   end
 
   def process_routes exp
@@ -21,7 +22,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_call exp
-    case exp[2]
+    case exp.method
     when :resources
       process_resources exp
     when :resource
@@ -40,7 +41,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_iter exp
-    case exp[1][2]
+    case exp.block_call.method
     when :namespace
       process_namespace exp
     when :resource
@@ -49,14 +50,16 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
       process_resources_block exp
     when :scope
       process_scope_block exp
+    when :controller
+      process_controller_block exp
     else
       super
     end
   end
 
   def process_namespace exp
-    name = exp[1][3][1][1]
-    block = exp[3]
+    name = exp.block_call.first_arg.value
+    block = exp.block
 
     @prefix << camelize(name)
 
@@ -67,15 +70,13 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     exp
   end
 
+  #TODO: Need test for this
   def process_root exp
-    args = exp[3][1..-1]
+    args = exp.args
 
-    if value = hash_access(args[0], :to)
-      if string? value[1]
-        controller, action = extract_action v[1]
-
-        self.current_controller = controller
-        @tracker.routes[@current_controller] << action.to_sym
+    if value = hash_access(args.first, :to)
+      if string? value
+        add_route_from_string value
       end
     end
 
@@ -83,33 +84,50 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_match exp
-    args = exp[3][1..-1]
+    args = exp.args
 
     #Check if there is an unrestricted action parameter
     action_variable = false
 
-    if string? args[0]
-      matcher = args[0][1]
+    if string? args.first
+      matcher = args.first.value
 
       if matcher == ':controller(/:action(/:id(.:format)))' or
         matcher.include? ':controller' and matcher.include? ':action' #Default routes
-        @tracker.routes[:allow_all_actions] = args[0]
+        @tracker.routes[:allow_all_actions] = args.first
         return exp
       elsif matcher.include? ':action'
         action_variable = true
+      elsif args[1].nil? and in_controller_block? and not matcher.include? ":"
+        add_route matcher
       end
     end
 
-    if hash? args[-1]
-      hash_iterate args[-1] do |k, v|
-        if string? k and string? v
-          controller, action = extract_action v[1]
+    if hash? args.last
+      hash_iterate args.last do |k, v|
+        if string? k
+          if string? v
+            add_route_from_string v
+          elsif in_controller_block? and symbol? v
+            add_route v
+          end
+        elsif symbol? k
+         case k.value
+         when :action
+          if string? v
+            add_route_from_string v
+          else
+            add_route v
+          end
 
-          self.current_controller = controller
-          @tracker.routes[@current_controller] << action.to_sym if action
-        elsif symbol? k and k[1] == :action
-          @tracker.routes[@current_controller] << v[1].to_sym
           action_variable = false
+         when :to
+           if string? v
+             add_route_from_string v[1]
+           elsif in_controller_block? and symbol? v
+             add_route v
+           end
+         end
         end
       end
     end
@@ -118,67 +136,84 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
       @tracker.routes[@current_controller] = :allow_all_actions
     end
 
+    @current_controller = nil unless in_controller_block?
     exp
   end
 
+  def add_route_from_string value
+    value = value[1] if string? value
+
+    controller, action = extract_action value
+
+    if action
+      add_route action, controller
+    elsif in_controller_block?
+      add_route value
+    end
+  end
+
   def process_verb exp
-    args = exp[3][1..-1]
+    args = exp.args
+    first_arg = args.first
 
-    if symbol? args[0] and not hash? args[1]
-      @tracker.routes[@current_controller] << args[0][1]
-    elsif hash? args[1]
-      hash_iterate args[1] do |k, v|
-        if symbol? k and k[1] == :to and string? v
-          controller, action = extract_action v[1]
-
-          self.current_controller = controller
-          @tracker.routes[@current_controller] << action.to_sym
+    if symbol? first_arg and not hash? args.second
+      add_route first_arg
+    elsif hash? args.second
+      hash_iterate args.second do |k, v|
+        if symbol? k and k.value == :to
+          if string? v
+            add_route_from_string v
+          elsif in_controller_block? and symbol? v
+            add_route v
+          end
         end
       end
-    elsif string? args[0]
-      route = args[0][1].split "/"
+    elsif string? first_arg
+      route = first_arg.value.split "/"
       if route.length != 2
-        @tracker.routes[@current_controller] << route[0].to_sym
+        add_route route[0]
       else
-        self.current_controller = route[0]
-        @tracker.routes[@current_controller] << route[1].to_sym
-        @current_controller = nil
+        add_route route[1], route[0]
       end
-    else hash? args[0]
-      hash_iterate args[0] do |k, v|
-        if string? v
-          controller, action = extract_action v[1]
-
-          self.current_controller = controller
-          @tracker.routes[@current_controller] << action.to_sym
-          break
+    elsif in_controller_block? and symbol? first_arg
+      add_route first_arg
+    else hash? first_arg
+      hash_iterate first_arg do |k, v|
+        if string? k
+          if string? v
+            add_route_from_string v
+          elsif in_controller_block?
+            add_route v
+          end
         end
       end
     end
 
+    @current_controller = nil unless in_controller_block?
     exp
   end
 
   def process_resources exp
-    if exp[3] and exp[3][2] and exp[3][2][0] == :hash
-      self.current_controller = exp[3][1][1]
+    if exp.args and exp.args.second and exp.args.second.node_type == :hash
+      self.current_controller = exp.first_arg.value
       #handle hash
       add_resources_routes
-    elsif exp[3][1..-1].all? { |s| symbol? s }
-      exp[3][1..-1].each do |s|
-        self.current_controller = s[1]
+    elsif exp.args.all? { |s| symbol? s }
+      exp.args.each do |s|
+        self.current_controller = s.value
         add_resources_routes
       end
     end
 
+    @current_controller = nil unless in_controller_block?
     exp
   end
 
   def process_resource exp
     #Does resource even take more than one controller name?
-    exp[3][1..-1].each do |s|
+    exp.args.each do |s|
       if symbol? s
-        self.current_controller = pluralize(s[1].to_s)
+        self.current_controller = pluralize(s.value.to_s)
         add_resource_routes
       else
         #handle something else, like options
@@ -186,28 +221,60 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
       end
     end
 
+    @current_controller = nil unless in_controller_block?
     exp
   end
 
   def process_resources_block exp
-    process_resources exp[1]
-    process exp[3]
+    in_controller_block do
+      process_resources exp.block_call
+      process exp.block
+    end
+
+    @current_controller = nil
     exp
   end
 
   def process_resource_block exp
-    process_resource exp[1]
-    process exp[3]
+    in_controller_block do
+      process_resource exp.block_call
+      process exp.block
+    end
+
+    @current_controller = nil
     exp
   end
 
   def process_scope_block exp
     #How to deal with options?
-    process exp[3]
+    process exp.block
+    exp
+  end
+
+  def process_controller_block exp
+    args = exp[1][3]
+    self.current_controller = args[1][1]
+
+    in_controller_block do
+      process exp[-1] if exp[-1]
+    end
+
+    @current_controller = nil
     exp
   end
 
   def extract_action str
     str.split "#"
+  end
+
+  def in_controller_block?
+    @controller_block
+  end
+
+  def in_controller_block
+    prev_block = @controller_block
+    @controller_block = true
+    yield
+    @controller_block = prev_block
   end
 end

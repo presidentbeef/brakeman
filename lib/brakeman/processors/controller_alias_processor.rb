@@ -67,7 +67,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #(This method should be retired - only classes should ever be processed
   # and @current_module will never be set, leading to inaccurate class names)
   def process_class exp
-    @current_class = class_name(exp[1])
+    @current_class = class_name(exp.class_name)
     if @current_module
       @current_class = ("#@current_module::#@current_class").to_sym
     end
@@ -78,13 +78,15 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #Processes a method definition, which may include
   #processing any rendered templates.
   def process_methdef exp
+    meth_name = exp.method_name
+
     #Skip if instructed to only process a specific method
     #(but don't skip if this method was called from elsewhere)
-    return exp if @current_method.nil? and @only_method and @only_method != exp[1]
+    return exp if @current_method.nil? and @only_method and @only_method != meth_name
 
-    is_route = route? exp[1]
+    is_route = route? meth_name
     other_method = @current_method
-    @current_method = exp[1]
+    @current_method = meth_name
     @rendered = false if is_route
 
     env.scope do
@@ -96,7 +98,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
         end
       end
 
-      process exp[3]
+      process exp.body
 
       if is_route and not @rendered
         process_default_render exp
@@ -111,7 +113,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   def process_call exp
     exp = super
 
-    if exp[2] == :head
+    if call? exp and exp.method == :head
       @rendered = true
     elsif @current_method and call? exp and (exp[1] == nil or exp[1].node_type == :self)
       #Look for helper methods and see if we can get a return value
@@ -151,7 +153,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   def process_call_with_block exp
     process_default exp
 
-    if exp[1][2] == :respond_to
+    if call? exp.block_call and exp.block_call.method == :respond_to
       @rendered = true
     end
 
@@ -177,7 +179,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       end
     else
       processor = Brakeman::AliasProcessor.new @tracker
-      processor.process_safely(method[3])
+      processor.process_safely(method.body)
 
       ivars = processor.only_ivars(:include_request_vars).all
 
@@ -197,7 +199,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
 
   #Process template and add the current class and method name as called_from info
   def process_template name, args
-    super name, args, "#@current_class##@current_method"
+    super name, args, ["#@current_class##@current_method"]
   end
 
   #Turns a method name into a template name
@@ -250,17 +252,25 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
 
   #Returns an array of filter names
   def get_before_filters method, controller
-    filters = []
-    return filters unless controller[:options]
-    filter_list = controller[:options][:before_filters]
-    return filters unless filter_list
+    return [] unless controller[:options] and controller[:options][:before_filters]
 
-    filter_list.each do |filter|
-      f = before_filter_to_hash filter
+    filters = []
+
+    if controller[:before_filter_cache].nil?
+      filter_cache = []
+
+      controller[:options][:before_filters].each do |filter|
+        filter_cache << before_filter_to_hash(filter)
+      end
+
+      controller[:before_filter_cache] = filter_cache
+    end
+
+    controller[:before_filter_cache].each do |f|
       if f[:all] or 
         (f[:only] == method) or
         (f[:only].is_a? Array and f[:only].include? method) or 
-        (f[:except] == method) or
+        (f[:except].is_a? Symbol and f[:except] != method) or
         (f[:except].is_a? Array and not f[:except].include? method)
 
         filters.concat f[:methods]
@@ -285,7 +295,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     filter[:methods] = [args[0][1]]
 
     args[1..-1].each do |a|
-      filter[:methods] << a[1] unless a.node_type == :hash
+      filter[:methods] << a[1] if a.node_type == :lit
     end
 
     if args[-1].node_type == :hash

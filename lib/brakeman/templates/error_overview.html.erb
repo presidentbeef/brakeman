@@ -7,7 +7,15 @@
 <% tracker.errors.each do |warning| %>
   <tr>
     <td><%= CGI.escapeHTML warning[:error] %></td>
-    <td><%= warning[:backtrace][0] %></td>
+    <td>
+      <% if tracker.options[:debug] %>
+        <% warning[:backtrace].each do |line| %>
+          <%= line %><br/>
+        <% end %>
+      <% else %>
+        <%= warning[:backtrace][0] %>
+      <% end %>
+    </td>
   </tr>
 <% end %>
 </table>

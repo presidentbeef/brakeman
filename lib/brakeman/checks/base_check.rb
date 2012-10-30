@@ -1,11 +1,10 @@
-require 'sexp_processor'
 require 'brakeman/processors/output_processor'
 require 'brakeman/processors/lib/processor_helper'
 require 'brakeman/warning'
 require 'brakeman/util'
 
 #Basis of vulnerability checks.
-class Brakeman::BaseCheck < SexpProcessor
+class Brakeman::BaseCheck < Brakeman::SexpProcessor
   include Brakeman::ProcessorHelper
   include Brakeman::Util
   attr_reader :tracker, :warnings
@@ -24,11 +23,6 @@ class Brakeman::BaseCheck < SexpProcessor
     @current_set = nil
     @current_template = @current_module = @current_class = @current_method = nil
     @mass_assign_disabled = nil
-    self.strict = false
-    self.auto_shift_type = false
-    self.require_empty = false
-    self.default_method = :process_default
-    self.warn_on_default = false
   end
 
   #Add result to result list, which is used to check for duplicates
@@ -64,16 +58,18 @@ class Brakeman::BaseCheck < SexpProcessor
 
   #Process calls and check if they include user input
   def process_call exp
-    process exp[1] if sexp? exp[1]
-    process exp[3]
+    process exp.target if sexp? exp.target
+    process_all exp.args
 
-    if params? exp[1]
+    target = exp.target
+
+    if params? target
       @has_user_input = Match.new(:params, exp)
-    elsif cookies? exp[1]
+    elsif cookies? target
       @has_user_input = Match.new(:cookies, exp)
-    elsif request_env? exp[1]
+    elsif request_env? target
       @has_user_input = Match.new(:request, exp)
-    elsif sexp? exp[1] and model_name? exp[1][1]
+    elsif sexp? target and model_name? target[1]
       @has_user_input = Match.new(:model, exp)
     end
 
@@ -83,11 +79,11 @@ class Brakeman::BaseCheck < SexpProcessor
   def process_if exp
     #This is to ignore user input in condition
     current_user_input = @has_user_input
-    process exp[1]
+    process exp.condition
     @has_user_input = current_user_input
 
-    process exp[2] if sexp? exp[2]
-    process exp[3] if sexp? exp[3]
+    process exp.then_clause if sexp? exp.then_clause
+    process exp.else_clause if sexp? exp.else_clause
 
     exp
   end
@@ -154,6 +150,7 @@ class Brakeman::BaseCheck < SexpProcessor
     @mass_assign_disabled = false
 
     if version_between?("3.1.0", "4.0.0") and 
+      tracker.config[:rails] and
       tracker.config[:rails][:active_record] and 
       tracker.config[:rails][:active_record][:whitelist_attributes] == Sexp.new(:true)
 
@@ -263,11 +260,11 @@ class Brakeman::BaseCheck < SexpProcessor
     elsif cookies? exp
       return Match.new(:cookies, exp)
     elsif call? exp
-      if params? exp[1]
+      if params? exp.target
         return Match.new(:params, exp)
-      elsif cookies? exp[1]
+      elsif cookies? exp.target
         return Match.new(:cookies, exp)
-      elsif request_env? exp[1]
+      elsif request_env? exp.target
         return Match.new(:request, exp)
       else
         false
@@ -283,24 +280,25 @@ class Brakeman::BaseCheck < SexpProcessor
         end
         false
       when :string_eval
-        if sexp? exp[1]
-          if exp[1].node_type == :rlist
-            exp[1].each do |e|
-              if sexp? e
-                match = has_immediate_user_input?(e)
-                return match if match
-              end
+        if sexp? exp.value
+          if exp.value.node_type == :rlist
+            exp.value.each_sexp do |e|
+              match = has_immediate_user_input?(e)
+              return match if match
             end
             false
           else
-            has_immediate_user_input? exp[1]
+            has_immediate_user_input? exp.value
           end
         end
       when :format
-        has_immediate_user_input? exp[1]
+        has_immediate_user_input? exp.value
       when :if
-        (sexp? exp[2] and has_immediate_user_input? exp[2]) or 
-        (sexp? exp[3] and has_immediate_user_input? exp[3])
+        (sexp? exp.then_clause and has_immediate_user_input? exp.then_clause) or
+        (sexp? exp.else_clause and has_immediate_user_input? exp.else_clause)
+      when :or
+        has_immediate_user_input? exp.lhs or
+        has_immediate_user_input? exp.rhs
       else
         false
       end
@@ -313,12 +311,12 @@ class Brakeman::BaseCheck < SexpProcessor
     out = exp if out.nil?
 
     if sexp? exp and exp.node_type == :output
-      exp = exp[1]
+      exp = exp.value
     end
 
     if call? exp
-      target = exp[1]
-      method = exp[2]
+      target = exp.target
+      method = exp.method
 
       if call? target and not method.to_s[-1,1] == "?"
         has_immediate_model? target, out
@@ -337,23 +335,26 @@ class Brakeman::BaseCheck < SexpProcessor
         end
         false
       when :string_eval
-        if sexp? exp[1]
-          if exp[1].node_type == :rlist
-            exp[1].each do |e|
-              if sexp? e and match = has_immediate_model?(e, out)
+        if sexp? exp.value
+          if exp.value.node_type == :rlist
+            exp.value.each_sexp do |e|
+              if match = has_immediate_model?(e, out)
                 return match
               end
             end
             false
           else
-            has_immediate_model? exp[1], out
+            has_immediate_model? exp.value, out
           end
         end
       when :format
-        has_immediate_model? exp[1], out
+        has_immediate_model? exp.value, out
       when :if
-        ((sexp? exp[2] and has_immediate_model? exp[2], out) or 
-         (sexp? exp[3] and has_immediate_model? exp[3], out))
+        ((sexp? exp.then_clause and has_immediate_model? exp.then_clause, out) or
+         (sexp? exp.else_clause and has_immediate_model? exp.else_clause, out))
+      when :or
+        has_immediate_model? exp.lhs or
+        has_immediate_model? exp.rhs
       else
         false
       end
@@ -389,7 +390,7 @@ class Brakeman::BaseCheck < SexpProcessor
 
     case exp.node_type
     when :output, :format
-      find_chain exp[1], target
+      find_chain exp.value, target
     when :call
       if exp == target or include_target? exp, target
         return exp 
@@ -427,17 +428,17 @@ class Brakeman::BaseCheck < SexpProcessor
     high_version = high_version.split(".").map! { |n| n.to_i }
 
     version.each_with_index do |v, i|
-      if v < low_version[i]
+      if v < low_version.fetch(i, 0)
         return false
-      elsif v > low_version[i]
+      elsif v > low_version.fetch(i, 0)
         break
       end
     end
 
     version.each_with_index do |v, i|
-      if v > high_version[i]
+      if v > high_version.fetch(i, 0)
         return false
-      elsif v < high_version[i]
+      elsif v < high_version.fetch(i, 0)
         break
       end
     end
@@ -455,5 +456,19 @@ class Brakeman::BaseCheck < SexpProcessor
 
   def self.description
     @description
+  end
+
+  def active_record_models
+    return @active_record_models if @active_record_models
+
+    @active_record_models = {}
+
+    tracker.models.each do |name, model|
+      if ancestor? model, :"ActiveRecord::Base"
+        @active_record_models[name] = model
+      end
+    end
+
+    @active_record_models
   end
 end

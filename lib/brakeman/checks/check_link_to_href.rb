@@ -34,7 +34,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     #an ignored method call by the code above.
     call = result[:call] = result[:call].dup
     @matched = false
-    url_arg = process call[3][2]
+    url_arg = process call.args.second
 
     #Ignore situations where the href is an interpolated string
     #with something before the user input
@@ -57,7 +57,8 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
           :warning_type => "Cross Site Scripting", 
           :message => message,
           :user_input => input.match,
-          :confidence => CONFIDENCE[:high]
+          :confidence => CONFIDENCE[:high],
+          :link_path => "link_to_href"
       end
     elsif has_immediate_model? url_arg
 
@@ -84,7 +85,8 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
           :warning_type => "Cross Site Scripting", 
           :message => message,
           :user_input => @matched.match,
-          :confidence => CONFIDENCE[:med]
+          :confidence => CONFIDENCE[:med],
+          :link_path => "link_to_href"
       end
     end
   end

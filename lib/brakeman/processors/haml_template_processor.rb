@@ -22,29 +22,28 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
 
   #Processes call, looking for template output
   def process_call exp
-    target = exp[1]
+    target = exp.target
     if sexp? target
       target = process target
     end
 
-    method = exp[2]
+    method = exp.method
 
-    if (sexp? target and target[2] == :_hamlout) or target == :_hamlout
+    if (call? target and target.method == :_hamlout)
       res = case method
             when :adjust_tabs, :rstrip!, :attributes #Check attributes, maybe?
               ignore
-            when :options
-              Sexp.new :call, :_hamlout, :options, exp[3]
-            when :buffer
-              Sexp.new :call, :_hamlout, :buffer, exp[3]
+            when :options, :buffer
+              exp
             when :open_tag
-              Sexp.new(:tag, process(exp[3]))
+              process(exp.arglist)
+              exp
             else
-              arg = exp[3][1]
+              arg = exp.first_arg
 
               if arg
                 @inside_concat = true
-                out = exp[3][1] = process(arg)
+                out = exp.arglist[1] = process(arg)
                 @inside_concat = false
               else
                 raise Exception.new("Empty _hamlout.#{method}()?")
@@ -78,7 +77,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       #This seems to be used rarely, but directly appends args to output buffer
     elsif sexp? target and method == :<< and is_buffer_target? target
       @inside_concat = true
-      out = exp[3][1] = process(exp[3][1])
+      out = exp.arglist[1] = process(exp.arglist[1])
       @inside_concat = false
 
       if out.node_type == :str #ignore plain strings
@@ -91,11 +90,11 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       end
     elsif target == nil and method == :render
       #Process call to render()
-      exp[3] = process exp[3]
+      exp.arglist = process exp.arglist
       make_render_in_view exp
     else
       #TODO: Do we really need a new Sexp here?
-      args = process exp[3]
+      args = process exp.arglist
       call = Sexp.new :call, target, method, args
       call.original_line(exp.original_line)
       call.line(exp.line)
@@ -127,7 +126,11 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
   end
 
   #Checks if the buffer is the target in a method call Sexp.
+  #TODO: Test this
   def is_buffer_target? exp
-    exp.node_type == :call and exp[1] == :_hamlout and exp[2] == :buffer
+    exp.node_type == :call and
+    node_type? exp.target, :lvar and
+    exp.target.value == :_hamlout and
+    exp.method == :buffer
   end
 end

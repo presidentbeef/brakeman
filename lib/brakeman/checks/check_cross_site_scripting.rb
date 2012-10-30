@@ -31,14 +31,14 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   CGI = Sexp.new(:const, :CGI)
 
-  FORM_BUILDER = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new, Sexp.new(:arglist)) 
+  FORM_BUILDER = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new, Sexp.new(:arglist))
 
   #Run check
-  def run_check 
+  def run_check
     @ignore_methods = Set[:button_to, :check_box, :content_tag, :escapeHTML, :escape_once,
                            :field_field, :fields_for, :h, :hidden_field,
                            :hidden_field, :hidden_field_tag, :image_tag, :label,
-                           :link_to, :mail_to, :radio_button,
+                           :link_to, :mail_to, :radio_button, :select,
                            :submit_tag, :text_area, :text_field,
                            :text_field_tag, :url_encode, :url_for,
                            :will_paginate].merge tracker.options[:safe_methods]
@@ -54,8 +54,19 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       @ignore_methods << :auto_link
     end
 
-    if tracker.options[:rails3]
-      @ignore_methods << :select
+    if version_between? "2.0.0", "2.3.14"
+      @known_dangerous << :strip_tags
+    end
+
+    json_escape_on = false
+    initializers = tracker.check_initializers :ActiveSupport, :escape_html_entities_in_json=
+    initializers.each {|result| json_escape_on = true?(result[-1].first_arg) }
+
+    if !json_escape_on or version_between? "0.0.0", "2.0.99"
+      @known_dangerous << :to_json
+      Brakeman.debug("Automatic to_json escaping not enabled, consider to_json dangerous")
+    else
+      Brakeman.debug("Automatic to_json escaping is enabled.")
     end
 
     tracker.each_template do |name, template|
@@ -77,10 +88,10 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   def check_for_immediate_xss exp
     return if duplicate? exp
 
-    if exp[0] == :output
-      out = exp[1]
-    elsif exp[0] == :escaped_output and raw_call? exp
-      out = exp[1][3][1]
+    if exp.node_type == :output
+      out = exp.value
+    elsif exp.node_type == :escaped_output and raw_call? exp
+      out = exp.value.first_arg
     end
 
     if input = has_immediate_user_input?(out)
@@ -97,10 +108,9 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
         message = "Unescaped user input value"
       end
 
-      warn :template => @current_template, 
+      warn :template => @current_template,
         :warning_type => "Cross Site Scripting",
         :message => message,
-        :line => input.match.line,
         :code => input.match,
         :confidence => CONFIDENCE[:high]
 
@@ -116,13 +126,20 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
           confidence = CONFIDENCE[:med]
         end
 
+        message = "Unescaped model attribute"
+        link_path = "cross_site_scripting"
+        if node_type?(out, :call, :attrasgn) && out.method == :to_json
+          message += " in JSON hash"
+          link_path += "_to_json"
+        end
+
         code = find_chain out, match
         warn :template => @current_template,
-          :warning_type => "Cross Site Scripting", 
-          :message => "Unescaped model attribute",
-          :line => code.line,
+          :warning_type => "Cross Site Scripting",
+          :message => message,
           :code => code,
-          :confidence => confidence
+          :confidence => confidence,
+          :link_path => link_path
       end
 
     else
@@ -132,15 +149,15 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   #Process an output Sexp
   def process_output exp
-    process exp[1].dup
+    process exp.value.dup
   end
 
   #Look for calls to raw()
   #Otherwise, ignore
   def process_escaped_output exp
     unless check_for_immediate_xss exp
-      if raw_call? exp
-        process exp[1][3][1]
+      if raw_call? exp and not duplicate? exp
+        process exp.value.first_arg
       end
     end
     exp
@@ -175,19 +192,24 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
         if message and not duplicate? exp
           add_result exp
 
-          if exp[1].nil? and @known_dangerous.include? exp[2]
+          link_path = "cross_site_scripting"
+          if @known_dangerous.include? exp.method
             confidence = CONFIDENCE[:high]
+            if exp.method == :to_json
+              message += " in JSON hash"
+              link_path += "_to_json"
+            end
           else
             confidence = CONFIDENCE[:low]
           end
 
           warn :template => @current_template,
-            :warning_type => "Cross Site Scripting", 
+            :warning_type => "Cross Site Scripting",
             :message => message,
-            :line => exp.line,
             :code => exp,
             :user_input => @matched.match,
-            :confidence => confidence
+            :confidence => confidence,
+            :link_path => link_path
         end
       end
 
@@ -199,13 +221,13 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   def actually_process_call exp
     return if @matched
-    target = exp[1]
+    target = exp.target
     if sexp? target
       target = process target
     end
 
-    method = exp[2]
-    args = exp[3]
+    method = exp.method
+    args = exp.arglist
 
     #Ignore safe items
     if (target.nil? and (@ignore_methods.include? method or method.to_s =~ IGNORE_LIKE)) or
@@ -218,7 +240,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
       #exp[0] = :ignore #should not be necessary
       @matched = false
-    elsif sexp? exp[1] and model_name? exp[1][1]
+    elsif sexp? target and model_name? target[1]
       @matched = Match.new(:model, exp)
     elsif cookies? exp
       @matched = Match.new(:cookies, exp)
@@ -270,6 +292,6 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   end
 
   def raw_call? exp
-    exp[1].node_type == :call and exp[1][2] == :raw
+    exp.value.node_type == :call and exp.value.method == :raw
   end
 end

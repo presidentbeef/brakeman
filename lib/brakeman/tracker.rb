@@ -54,6 +54,9 @@ class Brakeman::Tracker
       backtrace = [ backtrace ]
     end
 
+    Brakeman.debug exception
+    Brakeman.debug backtrace
+
     @errors << { :error => exception.to_s.gsub("\n", " "), :backtrace => backtrace }
   end
 
@@ -81,7 +84,7 @@ class Brakeman::Tracker
     end
   end
 
-  #Iterates over each template, yielding the name and the template. 
+  #Iterates over each template, yielding the name and the template.
   #Prioritizes templates which have been rendered.
   def each_template
     if @processed.nil?
@@ -127,7 +130,7 @@ class Brakeman::Tracker
   def check_initializers target, method
     finder = Brakeman::FindCall.new target, method, self
 
-    initializers.each do |name, initializer|
+    initializers.sort.each do |name, initializer|
       finder.process_source initializer
     end
 
@@ -233,6 +236,7 @@ class Brakeman::Tracker
     @templates.delete name
     @processed = nil
     @rest = nil
+    @template_cache.clear
   end
 
   #Clear information related to model
@@ -247,6 +251,28 @@ class Brakeman::Tracker
     end
 
     @models.delete model_name
+  end
+
+  def reset_controller path
+    #Remove from controller
+    @controllers.delete_if do |name, controller|
+      if controller[:file] == path
+        template_matcher = /^#{name}#/
+
+        #Remove templates rendered from this controller
+        @templates.each do |template_name, template|
+          if template[:caller] and not template[:caller].grep(template_matcher).empty?
+            reset_template template_name
+            @call_index.remove_template_indexes template_name
+          end
+        end
+
+        #Remove calls indexed from this controller
+        @call_index.remove_indexes_by_class [name]
+
+        true
+      end
+    end
   end
 
   #Clear information about routes

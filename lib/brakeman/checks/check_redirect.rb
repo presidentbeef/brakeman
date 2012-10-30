@@ -13,6 +13,12 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   def run_check
     Brakeman.debug "Finding calls to redirect_to()"
 
+    @model_find_calls = Set[:all, :find, :find_by_sql, :first, :last, :new]
+
+    if tracker.options[:rails3]
+      @model_find_calls.merge [:from, :group, :having, :joins, :lock, :order, :reorder, :select, :where]
+    end
+
     @tracker.find_call(:target => false, :method => :redirect_to).each do |res|
       process_result res
     end
@@ -23,7 +29,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
 
     call = result[:call]
 
-    method = call[2]
+    method = call.method
 
     if method == :redirect_to and not only_path?(call) and res = include_user_input?(call)
       add_result result
@@ -37,7 +43,6 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
       warn :result => result,
         :warning_type => "Redirect",
         :message => "Possible unprotected redirect",
-        :line => call.line,
         :code => call,
         :user_input => res.match,
         :confidence => confidence
@@ -51,20 +56,24 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   def include_user_input? call
     Brakeman.debug "Checking if call includes user input"
 
-    if tracker.options[:ignore_redirect_to_model] and call? call[3][1] and 
-      call[3][1][2] == :new and call[3][1][1]
+    args = call.args
+    first_arg = call.first_arg
 
-      begin
-        target = class_name call[3][1][1]
-        if @tracker.models.include? target
-          return false
-        end
-      rescue
-      end
+    # if the first argument is an array, rails assumes you are building a
+    # polymorphic route, which will never jump off-host
+    return false if array? first_arg
+
+    if tracker.options[:ignore_redirect_to_model] and call? first_arg and
+      (@model_find_calls.include? first_arg.method or first_arg.method.to_s.match(/^find_by_/)) and
+      model_name? first_arg.target
+
+      return false
     end
 
-    call[3].each do |arg|
-      if call? arg 
+    args.each do |arg|
+      if res = has_immediate_model?(arg)
+        return Match.new(:immediate, res)
+      elsif call? arg
         if request_value? arg
           return Match.new(:immediate, arg)
         elsif request_value? arg[1]
@@ -90,14 +99,14 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   #Checks +redirect_to+ arguments for +only_path => true+ which essentially
   #nullifies the danger posed by redirecting with user input
   def only_path? call
-    call[3].each do |arg|
-      if hash? arg
-        if value = hash_access(arg, :only_path)
-          return true if true?(value)
-        end
-      elsif call? arg and arg[2] == :url_for
-        return check_url_for(arg)
+    arg = call.first_arg
+
+    if hash? arg
+      if value = hash_access(arg, :only_path)
+        return true if true?(value)
       end
+    elsif call? arg and arg.method == :url_for
+      return check_url_for(arg)
     end
 
     false
@@ -106,11 +115,11 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   #+url_for+ is only_path => true by default. This checks to see if it is
   #set to false for some reason.
   def check_url_for call
-    call[3].each do |arg|
-      if hash? arg
-        if value = hash_access(arg, :only_path)
-          return false if false?(value)
-        end
+    arg = call.first_arg
+
+    if hash? arg
+      if value = hash_access(arg, :only_path)
+        return false if false?(value)
       end
     end
 

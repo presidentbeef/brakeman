@@ -23,7 +23,6 @@ class Brakeman::CheckBasicAuth < Brakeman::BaseCheck
           warn :controller => name,
               :warning_type => "Basic Auth", 
               :message => "Basic authentication password stored in source code",
-              :line => call.line,
               :code => call, 
               :confidence => 0
 
@@ -34,10 +33,10 @@ class Brakeman::CheckBasicAuth < Brakeman::BaseCheck
   end
 
   def get_password call
-    args = call[3][1]
+    arg = call.first_arg
 
-    return false if args.nil? or not hash? args
+    return false if arg.nil? or not hash? arg
 
-    hash_access(args, :password)
+    hash_access(arg, :password)
   end
 end

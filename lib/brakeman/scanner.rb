@@ -8,6 +8,8 @@ begin
     require 'ruby_parser/bm_sexp.rb'
   end
 
+  require 'ruby_parser/bm_sexp_processor.rb'
+
   require 'haml'
   require 'sass'
   require 'erb'
@@ -19,7 +21,7 @@ begin
 rescue LoadError => e
   $stderr.puts e.message
   $stderr.puts "Please install the appropriate dependency."
-  exit
+  exit -1
 end
 
 #Scans the Rails application.

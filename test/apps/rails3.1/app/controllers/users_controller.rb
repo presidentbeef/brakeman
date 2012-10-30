@@ -90,6 +90,25 @@ class UsersController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, :except => [:create, :edit]
 
+  def redirect_to_new_user
+    redirect_to User.new
+  end
+
+  def redirect_to_user_url
+    redirect_to User.find(1).url
+  end
+
+  def redirect_to_user_find_by
+    redirect_to User.find_by_name(params[:name])
+  end
+
+  def test_file_access_params
+    File.unlink(blah(params[:file]))
+    Pathname.readlines("blah/#{cookies[:file]}")
+    File.delete(params[:file])
+    IO.read(User.find_by_name('bob').file_path)
+  end
+
   def test_simple_helper
     @user = simple_helper
   end

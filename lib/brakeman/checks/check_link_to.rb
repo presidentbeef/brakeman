@@ -40,21 +40,23 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
     #an ignored method call by the code above.
     call = result[:call] = result[:call].dup
 
+    args = call.args
+
     @matched = false
 
     #Skip if no arguments(?) or first argument is a hash
-    return if call[3][1].nil? or hash? call[3][1]
+    return if args.first.nil? or hash? args.first
 
     if version_between? "2.0.0", "2.2.99"
-      check_argument result, call[3][1]
+      check_argument result, args.first
 
-      if call[3][2] and not  hash? call[3][2]
-        check_argument result, call[3][2]
+      if args.second and not hash? args.second
+        check_argument result, args.second
       end
-    elsif call[3][2]
+    elsif args.second
       #Only check first argument if there is a second argument
       #in Rails 2.3.x
-      check_argument result, call[3][1]
+      check_argument result, args.first
     end
   end
 
@@ -76,7 +78,8 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
         :warning_type => "Cross Site Scripting", 
         :message => message,
         :user_input => input.match,
-        :confidence => CONFIDENCE[:high]
+        :confidence => CONFIDENCE[:high],
+        :link_path => "link_to"
 
     elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(arg)
       method = match[2]
@@ -94,7 +97,8 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
           :warning_type => "Cross Site Scripting", 
           :message => "Unescaped model attribute in link_to",
           :user_input => match,
-          :confidence => confidence
+          :confidence => confidence,
+          :link_path => "link_to"
       end
 
     elsif @matched
@@ -111,7 +115,8 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
           :warning_type => "Cross Site Scripting", 
           :message => message,
           :user_input => @matched.match,
-          :confidence => CONFIDENCE[:med]
+          :confidence => CONFIDENCE[:med],
+          :link_path => "link_to"
       end
     end
   end
@@ -125,7 +130,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
   def actually_process_call exp
     return if @matched
 
-    target = exp[1]
+    target = exp.target
     if sexp? target
       target = process target.dup
     end
