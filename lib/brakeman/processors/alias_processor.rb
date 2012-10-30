@@ -518,7 +518,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def process_helper_method method_exp, args
     meth_env = only_ivars(:include_request_vars)
     assign_args method_exp, args, meth_env
-    Brakeman::FindReturnValue.return_value(method_exp, meth_env)
+    value = Brakeman::FindReturnValue.return_value(method_exp.body, meth_env)
+    only_ivars(false, meth_env).all.each do |var, val|
+      env[var] = val
+    end
+    value
   end
 
   def assign_args method_exp, arg_list, meth_env = SexpProcessor::Environment.new
