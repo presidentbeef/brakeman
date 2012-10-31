@@ -1,10 +1,6 @@
 class UtilTests < Test::Unit::TestCase
   def setup
-    if RUBY_VERSION =~ /^1\.9/
-      @ruby_parser = Ruby19Parser
-    else
-      @ruby_parser = RubyParser
-    end
+    @ruby_parser = RubyParser
   end
 
   def util

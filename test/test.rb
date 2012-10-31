@@ -256,11 +256,7 @@ module BrakemanTester::RescanTestHelper
   end
 
   def parse code
-    if RUBY_VERSION =~ /^1\.9/
-      Ruby19Parser.new.parse code
-    else
-      RubyParser.new.parse code
-    end
+    RubyParser.new.parse code
   end
 end
 

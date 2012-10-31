@@ -1,12 +1,7 @@
 class AliasProcessorTests < Test::Unit::TestCase
   def assert_alias expected, original
-    if RUBY_VERSION =~ /^1\.9/
-      original_sexp = Ruby19Parser.new.parse original
-      expected_sexp = Ruby19Parser.new.parse expected
-    else
-      original_sexp = RubyParser.new.parse original
-      expected_sexp = RubyParser.new.parse expected
-    end
+    original_sexp = RubyParser.new.parse original
+    expected_sexp = RubyParser.new.parse expected
 
     processed_sexp = Brakeman::AliasProcessor.new.process_safely original_sexp
     result = processed_sexp.last

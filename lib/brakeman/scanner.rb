@@ -1,13 +1,7 @@
 require 'rubygems'
 begin
-  if RUBY_VERSION =~ /^1\.9/
-    #Load our own version of ruby_parser :'(
-    require 'ruby_parser/ruby_parser.rb'
-  else
-    require 'ruby_parser'
-    require 'ruby_parser/bm_sexp.rb'
-  end
-
+  require 'ruby_parser'
+  require 'ruby_parser/bm_sexp.rb'
   require 'ruby_parser/bm_sexp_processor.rb'
 
   require 'haml'
@@ -46,11 +40,7 @@ class Brakeman::Scanner
       @skip_files = Regexp.new(list)
     end
 
-    if RUBY_1_9
-      @ruby_parser = ::Ruby19Parser
-    else
-      @ruby_parser = ::RubyParser
-    end
+    @ruby_parser = ::RubyParser
   end
 
   #Returns the Tracker generated from the scan
