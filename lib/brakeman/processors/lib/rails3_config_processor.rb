@@ -1,4 +1,4 @@
-Brakeman::RAILS_CONFIG = Sexp.new(:call, nil, :config, Sexp.new(:arglist))
+Brakeman::RAILS_CONFIG = Sexp.new(:call, nil, :config)
   
 #Processes configuration. Results are put in tracker.config.
 #

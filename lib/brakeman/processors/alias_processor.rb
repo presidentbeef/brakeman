@@ -305,7 +305,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     if method == :[]=
       index = exp.first_arg = process(args.first)
       value = exp.second_arg = process(args.second)
-      match = Sexp.new(:call, target, :[], Sexp.new(:arglist, index))
+      match = Sexp.new(:call, target, :[], index)
       env[match] = value
 
       if hash? target
@@ -314,7 +314,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     elsif method.to_s[-1,1] == "="
       value = exp.first_arg = process(args.first)
       #This is what we'll replace with the value
-      match = Sexp.new(:call, target, method.to_s[0..-2].to_sym, Sexp.new(:arglist))
+      match = Sexp.new(:call, target, method.to_s[0..-2].to_sym)
 
       if @inside_if and val = env[match]
         if val != value
@@ -336,7 +336,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     hash = hash.deep_clone
     hash_iterate args do |key, replacement|
       hash_insert hash, key, replacement
-      match = Sexp.new(:call, hash, :[], Sexp.new(:arglist, key))
+      match = Sexp.new(:call, hash, :[], key)
       env[match] = replacement
     end
     hash
@@ -361,7 +361,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     target = exp[1] = process(exp[1])
     index = exp[2][1] = process(exp[2][1])
     value = exp[4] = process(exp[4])
-    match = Sexp.new(:call, target, :[], Sexp.new(:arglist, index))
+    match = Sexp.new(:call, target, :[], index)
 
     unless env[match]
       if request_value? target
@@ -383,7 +383,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     value = exp[4] = process(exp[4])
     method = exp[2]
 
-    match = Sexp.new(:call, target, method.to_s[0..-2].to_sym, Sexp.new(:arglist))
+    match = Sexp.new(:call, target, method.to_s[0..-2].to_sym)
 
     unless env[match]
       env[match] = value

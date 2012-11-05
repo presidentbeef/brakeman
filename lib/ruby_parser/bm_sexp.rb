@@ -174,8 +174,19 @@ class Sexp
   #Sets the arglist in a method call.
   def arglist= exp
     expect :call, :attrasgn
-    self[3] = exp
-    #RP 3 TODO
+    start_index = 3
+
+    if exp.is_a? Sexp and exp.node_type == :arglist
+      exp = exp[1..-1]
+    end
+
+    exp.each_with_index do |e, i|
+      self[start_index + i] = e
+    end
+  end
+
+  def set_args *exp
+    self.arglist = exp
   end
 
   #Returns arglist for method call. This differs from Sexp#args, as Sexp#args
@@ -189,17 +200,14 @@ class Sexp
 
     case self.node_type
     when :call, :attrasgn
-      self[3]
+      self[3..-1].unshift :arglist
     when :super, :zsuper
       if self[1]
-        Sexp.new(:arglist).concat self[1..-1]
+        self[1..-1].unshift :arglist
       else
         Sexp.new(:arglist)
       end
     end
-
-    #For new ruby_parser
-    #Sexp.new(:arglist, *self[3..-1])
   end
 
   #Returns arguments of a method call. This will be an 'untyped' Sexp.
@@ -208,26 +216,19 @@ class Sexp
   #                                                             ^--------args--------^
   def args
     expect :call, :attrasgn, :super, :zsuper
-    #For new ruby_parser
-    #if self[3]
-    #  self[3..-1]
-    #else
-    #  []
-    #end
 
     case self.node_type
     when :call, :attrasgn
-      #For old ruby_parser
       if self[3]
-        self[3][1..-1]
+        self[3..-1]
       else
-        []
+        Sexp.new
       end
     when :super, :zsuper
       if self[1]
         self[1..-1]
       else
-        []
+        Sexp.new
       end
     end
   end
@@ -235,33 +236,25 @@ class Sexp
   #Returns first argument of a method call.
   def first_arg
     expect :call, :attrasgn
-    if self[3]
-      self[3][1]
-    end
+    self[3]
   end
 
   #Sets first argument of a method call.
   def first_arg= exp
     expect :call, :attrasgn
-    if self[3]
-      self[3][1] = exp
-    end
+    self[3] = exp
   end
 
   #Returns second argument of a method call.
   def second_arg
     expect :call, :attrasgn
-    if self[3]
-      self[3][2]
-    end
+    self[4]
   end
 
   #Sets second argument of a method call.
   def second_arg= exp
     expect :call, :attrasgn
-    if self[3]
-      self[3][2] = exp
-    end
+    self[4] = exp
   end
 
   #Returns condition of an if expression:

@@ -31,7 +31,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   CGI = Sexp.new(:const, :CGI)
 
-  FORM_BUILDER = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new, Sexp.new(:arglist))
+  FORM_BUILDER = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new)
 
   #Run check
   def run_check

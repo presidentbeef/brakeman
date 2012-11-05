@@ -4,21 +4,21 @@ require 'active_support/inflector'
 #This is a mixin containing utility methods.
 module Brakeman::Util
 
-  QUERY_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request, Sexp.new(:arglist)), :query_parameters, Sexp.new(:arglist))
+  QUERY_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request), :query_parameters)
 
-  PATH_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request, Sexp.new(:arglist)), :path_parameters, Sexp.new(:arglist))
+  PATH_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request), :path_parameters)
 
-  REQUEST_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request, Sexp.new(:arglist)), :request_parameters, Sexp.new(:arglist))
+  REQUEST_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request), :request_parameters)
 
-  REQUEST_PARAMS = Sexp.new(:call, Sexp.new(:call, nil, :request, Sexp.new(:arglist)), :parameters, Sexp.new(:arglist))
+  REQUEST_PARAMS = Sexp.new(:call, Sexp.new(:call, nil, :request), :parameters)
 
-  REQUEST_ENV = Sexp.new(:call, Sexp.new(:call, nil, :request, Sexp.new(:arglist)), :env, Sexp.new(:arglist))
+  REQUEST_ENV = Sexp.new(:call, Sexp.new(:call, nil, :request), :env)
 
-  PARAMETERS = Sexp.new(:call, nil, :params, Sexp.new(:arglist))
+  PARAMETERS = Sexp.new(:call, nil, :params)
 
-  COOKIES = Sexp.new(:call, nil, :cookies, Sexp.new(:arglist))
+  COOKIES = Sexp.new(:call, nil, :cookies)
 
-  SESSION = Sexp.new(:call, nil, :session, Sexp.new(:arglist))
+  SESSION = Sexp.new(:call, nil, :session)
 
   ALL_PARAMETERS = Set[PARAMETERS, QUERY_PARAMETERS, PATH_PARAMETERS, REQUEST_PARAMETERS, REQUEST_PARAMS]
 

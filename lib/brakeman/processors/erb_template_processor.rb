@@ -4,7 +4,7 @@ require 'brakeman/processors/template_processor'
 #(those ending in .html.erb or .rthml).
 class Brakeman::ErbTemplateProcessor < Brakeman::TemplateProcessor
   
-  #s(:call, TARGET, :method, s(:arglist))
+  #s(:call, TARGET, :method, ARGS)
   def process_call exp
     target = exp.target
     if sexp? target

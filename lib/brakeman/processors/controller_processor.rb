@@ -2,7 +2,7 @@ require 'brakeman/processors/base_processor'
 
 #Processes controller. Results are put in tracker.controllers
 class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
-  FORMAT_HTML = Sexp.new(:call, Sexp.new(:lvar, :format), :html, Sexp.new(:arglist))
+  FORMAT_HTML = Sexp.new(:call, Sexp.new(:lvar, :format), :html)
 
   def initialize tracker
     super 
@@ -206,7 +206,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     body = Sexp.new(:scope, 
             Sexp.new(:block,
               Sexp.new(:lasgn, block_variable, 
-                Sexp.new(:call, Sexp.new(:const, @controller[:name]), :new, Sexp.new(:arglist)))).concat(block_inner))
+                Sexp.new(:call, Sexp.new(:const, @controller[:name]), :new))).concat(block_inner))
 
     filter_method = Sexp.new(:defn, filter_name, Sexp.new(:args), body).line(exp.line)
 

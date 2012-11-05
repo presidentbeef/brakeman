@@ -92,7 +92,7 @@ module Brakeman::RenderHelper
 
       if hash? options[:locals]
         hash_iterate options[:locals] do |key, value|
-          template_env[Sexp.new(:call, nil, key.value, Sexp.new(:arglist))] = value
+          template_env[Sexp.new(:call, nil, key.value)] = value
         end
       end
 
@@ -111,7 +111,7 @@ module Brakeman::RenderHelper
 
         collection = get_class_target(options[:collection]) || Brakeman::Tracker::UNKNOWN_MODEL
 
-        template_env[Sexp.new(:call, nil, variable, Sexp.new(:arglist))] = Sexp.new(:call, Sexp.new(:const, collection), :new, Sexp.new(:arglist))
+        template_env[Sexp.new(:call, nil, variable)] = Sexp.new(:call, Sexp.new(:const, collection), :new)
       end
 
       #Set original_line for values so it is clear

@@ -84,13 +84,13 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
         else
           if @model
             @model[:options][method] ||= []
-            @model[:options][method] << exp.arglist
+            @model[:options][method] << exp.arglist.line(exp.line)
           end
         end
       end
       ignore
     else
-      call = Sexp.new :call, target, method, process(exp.arglist)
+      call = Sexp.new :call, target, method, *process_all(exp.arglist)
       call.line(exp.line)
       call
     end

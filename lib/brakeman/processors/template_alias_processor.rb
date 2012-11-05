@@ -40,7 +40,7 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
   #Looks for form methods and iterating over collections of Models
   def process_call_with_block exp
     process_default exp
-    
+
     call = exp.block_call
 
     if call? call
@@ -53,16 +53,16 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
       if method == :each and args and block and model = get_model_target(target)
         if node_type? args, :lasgn
           if model == target.target
-            env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, model, :new, Sexp.new(:arglist))
+            env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, model, :new)
           else
-            env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, Sexp.new(:const, Brakeman::Tracker::UNKNOWN_MODEL), :new, Sexp.new(:arglist))
+            env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, Sexp.new(:const, Brakeman::Tracker::UNKNOWN_MODEL), :new)
           end
 
           process block if sexp? block
         end
       elsif FORM_METHODS.include? method
         if node_type? args, :lasgn
-          env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new, Sexp.new(:arglist)) 
+          env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new)
 
           process block if sexp? block
         end
