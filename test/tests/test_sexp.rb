@@ -12,7 +12,7 @@ class SexpTests < Test::Unit::TestCase
   def test_method_call_with_no_args
     exp = parse "x.y"
 
-    assert_equal s(:call, nil, :x, s(:arglist)), exp.target
+    assert_equal s(:call, nil, :x), exp.target
     assert_equal :y, exp.method
     assert_equal s(), exp.args
     assert_equal s(:arglist), exp.arglist
@@ -23,7 +23,7 @@ class SexpTests < Test::Unit::TestCase
   def test_method_call_with_args
     exp = parse 'x.y(1, 2, 3)'
 
-    assert_equal s(:call, nil, :x, s(:arglist)), exp.target
+    assert_equal s(:call, nil, :x), exp.target
     assert_equal :y, exp.method
     assert_equal s(s(:lit, 1), s(:lit, 2), s(:lit, 3)), exp.args
     assert_equal s(:arglist, s(:lit, 1), s(:lit, 2), s(:lit, 3)), exp.arglist
@@ -49,7 +49,7 @@ class SexpTests < Test::Unit::TestCase
     assert_equal :z, exp.target
   end
 
-  def test_method_call_set_args
+  def test_method_call_set_arglist
     exp = parse 'x.y'
     exp.arglist = s(:arglist, s(:lit, 1), s(:lit, 2))
 
@@ -59,15 +59,27 @@ class SexpTests < Test::Unit::TestCase
     assert_equal s(s(:lit, 1), s(:lit, 2)), exp.args
   end
 
+  def test_method_call_set_args
+    exp = parse "x.y"
+
+    assert_equal s(), exp.args
+
+    exp.set_args s(:lit, 1), s(:lit, 2)
+
+    assert_equal s(s(:lit, 1), s(:lit, 2)), exp.args
+    assert_equal s(:lit,1), exp.first_arg
+    assert_equal s(:lit, 2), exp.second_arg
+  end
+
   def test_method_call_with_block
     exp = parse "x do |z|; blah z; end"
     block = exp.block
     call = exp.block_call
     args = exp.block_args
 
-    assert_equal s(:call, nil, :x, s(:arglist)), call
-    assert_equal s(:lasgn, :z), args
-    assert_equal s(:call, nil, :blah, s(:arglist, s(:lvar, :z))), block
+    assert_equal s(:call, nil, :x), call
+    assert_equal s(:args, :z), args
+    assert_equal s(:call, nil, :blah, s(:lvar, :z)), block
   end
 
   def test_or
@@ -93,9 +105,9 @@ class SexpTests < Test::Unit::TestCase
     end
     RUBY
 
-    assert_equal s(:call, nil, :x, s(:arglist)), exp.condition
-    assert_equal s(:call, nil, :y, s(:arglist)), exp.then_clause
-    assert_equal s(:call, nil, :z, s(:arglist)), exp.else_clause
+    assert_equal s(:call, nil, :x), exp.condition
+    assert_equal s(:call, nil, :y), exp.then_clause
+    assert_equal s(:call, nil, :z), exp.else_clause
   end
 
   def test_local_assignment
@@ -229,7 +241,7 @@ class SexpTests < Test::Unit::TestCase
 
     assert_equal :super, exp.method
     assert_equal s(:arglist), exp.arglist
-    assert_equal [], exp.args
+    assert_equal s(), exp.args
   end
 
   def test_super_call
