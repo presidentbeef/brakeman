@@ -188,7 +188,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     filter_name = ("fake_filter" + rand.to_s[/\d+$/]).to_sym
     args = exp.block_call.arglist
     args.insert(1, Sexp.new(:lit, filter_name))
-    before_filter_call = Sexp.new(:call, nil, :before_filter, args)
+    before_filter_call = make_call(nil, :before_filter, args)
 
     if exp.block_args
       block_variable = exp.block_args[1]

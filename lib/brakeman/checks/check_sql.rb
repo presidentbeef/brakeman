@@ -61,7 +61,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       active_record_models.each do |name, model|
         if model[:options][:named_scope]
           model[:options][:named_scope].each do |args|
-            call = Sexp.new(:call, nil, :named_scope, args).line(args.line)
+            call = make_call(nil, :named_scope, args).line(args.line)
             scope_calls << { :call => call, :location => [:class, name ], :method => :named_scope }
           end
         end
@@ -80,7 +80,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
               call = second_arg
               scope_calls << { :call => call, :location => [:class, name ], :method => call.method }
             else
-              call = Sexp.new(:call, nil, :scope, args).line(args.line)
+              call = make_call(nil, :scope, args).line(args.line)
               scope_calls << { :call => call, :location => [:class, name ], :method => :scope }
             end
           end

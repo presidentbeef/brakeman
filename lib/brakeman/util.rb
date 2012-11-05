@@ -239,6 +239,22 @@ module Brakeman::Util
     false
   end
 
+  def make_call target, method, *args
+    call = Sexp.new(:call, target, method)
+
+    if args.empty?
+      #nothing to do
+    elsif node_type? args.first, :arglist
+      call.concat args.first[1..-1]
+    elsif args.first.node_type.is_a? Sexp #just a list of args
+      call.concat args.first
+    else
+      call.concat args
+    end
+
+    call
+  end
+
   #Return file name related to given warning. Uses +warning.file+ if it exists
   def file_for warning, tracker = nil
     if tracker.nil?
