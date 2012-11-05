@@ -31,7 +31,7 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
   def process_iter exp
     if node_type?(exp.block_call.target, :colon2) and exp.block_call.method == :Application
       @inside_config = true
-      process exp.body if sexp? exp.body
+      process_all exp.body if sexp? exp.body
       @inside_config = false
     end
 
@@ -42,7 +42,7 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
   def process_class exp
     if exp.class_name == :Application
       @inside_config = true
-      process exp.body if sexp? exp.body
+      process_all exp.body if sexp? exp.body
       @inside_config = false
     end
 

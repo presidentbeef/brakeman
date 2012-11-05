@@ -16,7 +16,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     process src
   end
 
-  #s(:class, NAME, PARENT, s(:scope ...))
+  #s(:class, NAME, PARENT, BODY)
   def process_class exp
     name = class_name exp.class_name
 
@@ -40,9 +40,9 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
         :options => {},
         :file => @file_name }
       @tracker.models[@model[:name]] = @model
-      res = process exp.body
+      process_all exp.body
       @model = nil
-      res
+      exp
     end
   end
 
@@ -102,7 +102,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     name = exp.method_name
 
     @current_method = name
-    res = Sexp.new :methdef, name, exp[2], process(exp.body.value)
+    res = Sexp.new :methdef, name, exp[2], *process_all(exp.body)
     res.line(exp.line)
     @current_method = nil
     if @model
@@ -124,7 +124,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     end
 
     @current_method = name
-    res = Sexp.new :selfdef, target, name, exp[3], process(exp.body.value)
+    res = Sexp.new :selfdef, target, name, exp[3], *process_all(exp.body)
     res.line(exp.line)
     @current_method = nil
     if @model

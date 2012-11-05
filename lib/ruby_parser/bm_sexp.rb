@@ -317,7 +317,11 @@ class Sexp
   #      s(:lasgn, :y),
   #       s(:block, s(:lvar, :y), s(:call, nil, :z, s(:arglist))))
   #       ^-------------------- block --------------------------^
-  def block
+  def block delete = nil
+    unless delete.nil? #this is from RubyParser
+      return find_node :block, delete
+    end
+
     expect :iter, :call_with_block, :scope, :resbody
 
     case self.node_type
@@ -390,26 +394,38 @@ class Sexp
 
     case self.node_type
     when :defn, :methdef, :class
-      self[3] = exp
+      index = 3
     when :defs, :selfdef
-      self[4] = exp
+      index = 4
     when :module
-      self[2] = exp
+      index = 2
+    end
+
+    exp.each do |e|
+      self[index] = e
+      index += 1
     end
   end
 
   #Returns body of a method definition, class, or module.
+  #This will be an untyped Sexp containing a list of Sexps from the body.
   def body
     expect :defn, :defs, :methdef, :selfdef, :class, :module
 
     case self.node_type
     when :defn, :methdef, :class
-      self[3]
+      self[3..-1]
     when :defs, :selfdef
-      self[4]
+      self[4..-1]
     when :module
-      self[2]
+      self[2..-1]
     end
+  end
+
+  #Like Sexp#body, except the returned Sexp is of type :rlist
+  #instead of untyped.
+  def body_list
+    self.body.unshift :rlist
   end
 
   def render_type

@@ -18,7 +18,7 @@ module Brakeman::ProcessorHelper
       @current_module = module_name
     end
 
-    process exp.body
+    process_all exp.body
 
     @current_module = prev_module
 

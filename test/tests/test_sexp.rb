@@ -163,7 +163,7 @@ class SexpTests < Test::Unit::TestCase
     end
     RUBY
 
-    assert_equal s(:scope, s(:rlist, s(:call, nil, :z, s(:arglist)), s(:lvar, :y))), exp.body
+    assert_equal s(s(:call, nil, :z), s(:lvar, :y)), exp.body
   end
 
   def test_method_def_body_single_line
@@ -173,7 +173,7 @@ class SexpTests < Test::Unit::TestCase
     end
     RUBY
 
-    assert_equal s(:scope, s(:rlist, s(:lvar, :y))), exp.body
+    assert_equal s(s(:lvar, :y)), exp.body
   end
 
   def test_class_body
@@ -184,7 +184,7 @@ class SexpTests < Test::Unit::TestCase
     end
     RUBY
 
-    assert_equal s(:scope, s(:defn, :y, s(:args), s(:scope, s(:block, s(:nil))))), exp.body
+    assert_equal s(s(:defn, :y, s(:args), s(:nil))), exp.body
   end
 
   def test_module_body
@@ -195,7 +195,7 @@ class SexpTests < Test::Unit::TestCase
     end
     RUBY
 
-    assert_equal s(:scope, s(:defn, :y, s(:args), s(:scope, s(:block, s(:nil))))), exp.body
+    assert_equal s(s(:defn, :y, s(:args), s(:nil))), exp.body
   end
 
   def test_class_name
