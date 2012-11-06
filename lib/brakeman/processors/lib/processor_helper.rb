@@ -7,6 +7,16 @@ module Brakeman::ProcessorHelper
     exp
   end
 
+  def process_all! exp
+    exp.each_with_index do |e, i|
+      if sexp? e
+        exp[i] = e
+      end
+    end
+
+    exp
+  end
+
   #Sets the current module.
   def process_module exp
     module_name = class_name(exp.class_name).to_s
