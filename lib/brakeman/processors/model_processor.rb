@@ -90,7 +90,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
       end
       ignore
     else
-      call = Sexp.new :call, target, method, *process_all(exp.arglist)
+      call = make_call target, method, process_all!(exp.args)
       call.line(exp.line)
       call
     end

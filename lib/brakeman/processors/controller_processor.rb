@@ -116,7 +116,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
       call.line(exp.line)
       call
     else
-      call = Sexp.new :call, target, method, process(exp.arglist) #RP 3 TODO
+      call = make_call target, method, process_all!(exp.args)
       call.line(exp.line)
       call
     end
