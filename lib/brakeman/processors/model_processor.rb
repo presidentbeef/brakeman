@@ -77,7 +77,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
         when :attr_accessible
           @model[:attr_accessible] ||= []
           args = args.map do |e|
-            e[1]
+            e.value
           end
 
           @model[:attr_accessible].concat args

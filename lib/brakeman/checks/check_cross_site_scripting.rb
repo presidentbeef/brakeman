@@ -240,7 +240,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
       #exp[0] = :ignore #should not be necessary
       @matched = false
-    elsif sexp? target and model_name? target[1]
+    elsif sexp? target and model_name? target[1] #TODO: use method call?
       @matched = Match.new(:model, exp)
     elsif cookies? exp
       @matched = Match.new(:cookies, exp)
@@ -285,9 +285,8 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   #Ignore condition in if Sexp
   def process_if exp
-    exp[2..-1].each do |e|
-      process e if sexp? e
-    end
+    process exp.then_clause if sexp? exp.then_clause
+    process exp.else_clause if sexp? exp.else_clause
     exp
   end
 

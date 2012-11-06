@@ -69,7 +69,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       @has_user_input = Match.new(:cookies, exp)
     elsif request_env? target
       @has_user_input = Match.new(:request, exp)
-    elsif sexp? target and model_name? target[1]
+    elsif sexp? target and model_name? target[1] #TODO: Can this be target.target?
       @has_user_input = Match.new(:model, exp)
     end
 

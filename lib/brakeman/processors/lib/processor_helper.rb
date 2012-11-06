@@ -45,7 +45,7 @@ module Brakeman::ProcessorHelper
       when :lvar
         exp.value.to_sym
       when :colon2
-        "#{class_name(exp[1])}::#{exp[2]}".to_sym
+        "#{class_name(exp.lhs)}::#{exp.rhs}".to_sym
       when :colon3
         "::#{exp.value}".to_sym
       when :call

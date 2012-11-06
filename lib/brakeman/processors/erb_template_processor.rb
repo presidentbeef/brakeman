@@ -16,14 +16,14 @@ class Brakeman::ErbTemplateProcessor < Brakeman::TemplateProcessor
     if node_type? target, :lvar and target.value == :_erbout
       if method == :concat
         @inside_concat = true
-        args = exp.arglist = process(exp.arglist)
+        exp.arglist = process(exp.arglist)
         @inside_concat = false
 
-        if args.length > 2
+        if exp.args.length > 2
           raise Exception.new("Did not expect more than a single argument to _erbout.concat")
         end
 
-        arg = args[1]
+        arg = exp.first_arg
 
         if arg.node_type == :call and arg.method == :to_s #erb always calls to_s on output
           arg = arg.target
@@ -63,7 +63,7 @@ class Brakeman::ErbTemplateProcessor < Brakeman::TemplateProcessor
         process e
       end
       @inside_concat = true
-      process exp[-1]
+      process exp.last
     else
       exp.map! do |e|
         res = process e

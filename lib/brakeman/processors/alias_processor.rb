@@ -107,7 +107,6 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
     target = exp.target
     method = exp.method
-    args = exp[3]
     first_arg = exp.first_arg
 
     #See if it is possible to simplify some basic cases
@@ -154,7 +153,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         temp_exp = process_array_access target, exp.args
         exp = temp_exp if temp_exp
       elsif hash? target
-        temp_exp = process_hash_access target, exp.args
+        temp_exp = process_hash_access target, first_arg
         exp = temp_exp if temp_exp
       end
     when :merge!, :update
@@ -231,8 +230,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
     if @inside_if and val = env[local]
       #avoid setting to value it already is (e.g. "1 or 1")
-      if val != exp.rhs and val[1] != exp.rhs and val[2] != exp.rhs
-        env[local] = Sexp.new(:or, val, exp.rhs).line(exp.line || -2)
+      if val != exp.rhs
+        unless node_type?(val, :or) and (val.rhs == exp.rhs or val.lhs == exp.rhs)
+          env[local] = Sexp.new(:or, val, exp.rhs).line(exp.line || -2)
+        end
       end
     else
       env[local] = exp.rhs
@@ -392,8 +393,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     exp
   end
 
+  #This is the right hand side value of a multiple assignment,
+  #like `x = y, z`
   def process_svalue exp
-    exp[1]
+    exp.value
   end
 
   #Constant assignments like
@@ -423,9 +426,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     if true? condition
       exps = [exp.then_clause]
     elsif false? condition
-      exps = exp[3..-1]
+      exps = [exp.else_clause]
     else
-      exps = exp[2..-1]
+      exps = [exp.then_clause, exp.else_clause]
     end
 
     was_inside = @inside_if
@@ -530,8 +533,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   #Finds the inner most call target which is not the target of a call to <<
   def find_push_target exp
-    if call? exp and exp[2] == :<<
-      find_push_target exp[1]
+    if call? exp and exp.method == :<<
+      find_push_target exp.target
     else
       exp
     end

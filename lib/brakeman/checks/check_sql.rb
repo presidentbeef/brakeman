@@ -226,8 +226,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         :confidence => confidence
     end
 
-    if check_for_limit_or_offset_vulnerability args[-1]
-      if include_user_input? args[-1]
+    if check_for_limit_or_offset_vulnerability args.last
+      if include_user_input? args.last
         confidence = CONFIDENCE[:high]
       else
         confidence = CONFIDENCE[:low]
@@ -263,7 +263,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     return unless node_type? args, :arglist
 
     if node_type? args[2], :iter
-      unsafe_sql? args[2][-1]
+      unsafe_sql? args[2].block
     else
       unsafe_sql? args[2]
     end
@@ -457,7 +457,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def check_hash_values exp
     hash_iterate(exp) do |key, value|
       if symbol? key
-        unsafe = case key[1]
+        unsafe = case key.value
                  when :conditions, :having, :select
                    check_query_arguments value
                  when :order, :group
