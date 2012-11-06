@@ -3,7 +3,7 @@
 #of a Sexp.
 class Sexp
   attr_reader :paren
-  ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cdecl, :or, :and]
+  ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cdecl, :or, :and, :colon2]
 
   def method_missing name, *args
     #Brakeman does not use this functionality,
@@ -378,6 +378,17 @@ class Sexp
       self[1]
     when :defs, :selfdef
       self[2]
+    end
+  end
+
+  def formal_args
+    expect :defn, :defs, :methdef, :selfdef
+
+    case self.node_type
+    when :defn, :methdef
+      self[2]
+    when :defs, :selfdef
+      self[3]
     end
   end
 
