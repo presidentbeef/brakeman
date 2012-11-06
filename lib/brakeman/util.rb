@@ -242,7 +242,7 @@ module Brakeman::Util
   def make_call target, method, *args
     call = Sexp.new(:call, target, method)
 
-    if args.empty?
+    if args.empty? or args.first.empty?
       #nothing to do
     elsif node_type? args.first, :arglist
       call.concat args.first[1..-1]
