@@ -41,4 +41,8 @@ class OtherController < ApplicationController
     @user = User.find(current_user)
     @greeting = "Hello, #{greeted += 1; @user.name}!"
   end
+
+  def test_arel_table_access
+    User.where(User.arel_table[:id].eq(params[:some_id]))
+  end
 end
