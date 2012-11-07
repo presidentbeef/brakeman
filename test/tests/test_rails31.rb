@@ -622,4 +622,13 @@ class Rails31Tests < Test::Unit::TestCase
       :line => 1,
       :file => /json_test\.html\.erb/
   end
+
+  def test_arel_table_in_sql
+    assert_no_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 46,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /other_controller\.rb/
+  end
 end
