@@ -101,6 +101,14 @@ class HomeController < ApplicationController
     @user = User.find(current_user)
   end
 
+  def test_yaml_file_access
+    #Should not warn
+    YAML.load "some/path/#{params[:user][:file]}"
+
+    #Should warn
+    YAML.parse_file("whatever/" + params[:file_name])
+  end
+
   private
 
   def filter_it
