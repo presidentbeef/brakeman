@@ -242,7 +242,7 @@ class RescannerTests < Test::Unit::TestCase
     gemfile = "Gemfile.lock"
 
     before_rescan_of gemfile do
-      replace gemfile, "rails (3.2.8)", "rails (3.2.6)"
+      replace gemfile, "rails (3.2.9.rc2)", "rails (3.2.6)"
     end
 
     #@original is actually modified
