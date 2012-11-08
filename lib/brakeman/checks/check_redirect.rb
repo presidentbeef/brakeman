@@ -56,21 +56,19 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   def include_user_input? call
     Brakeman.debug "Checking if call includes user input"
 
-    args = call.args
     first_arg = call.first_arg
 
     # if the first argument is an array, rails assumes you are building a
     # polymorphic route, which will never jump off-host
     return false if array? first_arg
 
-    if tracker.options[:ignore_redirect_to_model] and call? first_arg and
-      (@model_find_calls.include? first_arg.method or first_arg.method.to_s.match(/^find_by_/)) and
-      model_name? first_arg.target
-
-      return false
+    if tracker.options[:ignore_redirect_to_model]
+      if model_instance?(first_arg) or decorated_model?(first_arg)
+        return false
+      end
     end
 
-    args.each do |arg|
+    call.args.each do |arg|
       if res = has_immediate_model?(arg)
         return Match.new(:immediate, res)
       elsif call? arg
@@ -124,5 +122,31 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     end
 
     true
+  end
+
+  #Returns true if exp is (probably) a model instance
+  def model_instance? exp
+    if node_type? exp, :or
+      model_instance? exp.lhs or model_instance? exp.rhs
+    else
+      call? exp and
+      model_name? exp.target and
+      (@model_find_calls.include? exp.method or exp.method.to_s.match(/^find_by_/))
+    end
+  end
+
+  #Returns true if exp is (probably) a decorated model instance
+  #using the Draper gem
+  def decorated_model? exp
+    if node_type? exp, :or
+      decorated_model? exp.lhs or decorated_model? exp.rhs
+    else
+      tracker.config[:gems] and
+      tracker.config[:gems][:draper] and
+      call? exp and
+      node_type?(exp.target, :const) and
+      exp.target.value.to_s.match(/Decorator$/) and
+      exp.method == :decorate
+    end
   end
 end
