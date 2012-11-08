@@ -63,6 +63,15 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /other_controller\.rb/
   end
 
+  def test_redirect_multiple_values
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 61,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :file => /other_controller\.rb/
+  end
+
   def test_whitelist_attributes
     assert_no_warning :type => :model,
       :warning_type => "Attribute Restriction",
