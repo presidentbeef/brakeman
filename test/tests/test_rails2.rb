@@ -788,5 +788,31 @@ class Rails2Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /test_to_json\.html\.erb/
   end
-end
 
+  def test_xss_with_params_to_i
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_to_i\.html\.erb/
+  end
+
+  def test_xss_with_request_env_to_i
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 5,
+      :message => /^Unescaped\ cookie\ value/,
+      :confidence => 2,
+      :file => /test_to_i\.html\.erb/
+  end
+
+  def test_xss_with_cookie_to_i
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped\ request\ value/,
+      :confidence => 0,
+      :file => /test_to_i\.html\.erb/
+  end
+end
