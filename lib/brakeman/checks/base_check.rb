@@ -23,6 +23,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     @current_set = nil
     @current_template = @current_module = @current_class = @current_method = nil
     @mass_assign_disabled = nil
+    @safe_input_attributes = Set[:to_i, :to_f, :arel_table]
   end
 
   #Add result to result list, which is used to check for duplicates
@@ -63,14 +64,16 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
     target = exp.target
 
-    if params? target
-      @has_user_input = Match.new(:params, exp)
-    elsif cookies? target
-      @has_user_input = Match.new(:cookies, exp)
-    elsif request_env? target
-      @has_user_input = Match.new(:request, exp)
-    elsif sexp? target and model_name? target[1]
-      @has_user_input = Match.new(:model, exp)
+    unless @safe_input_attributes.include? exp.method
+      if params? target
+        @has_user_input = Match.new(:params, exp)
+      elsif cookies? target
+        @has_user_input = Match.new(:cookies, exp)
+      elsif request_env? target
+        @has_user_input = Match.new(:request, exp)
+      elsif sexp? target and model_name? target[1]
+        @has_user_input = Match.new(:model, exp)
+      end
     end
 
     exp
@@ -255,19 +258,15 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   def has_immediate_user_input? exp
     if exp.nil?
       false
-    elsif params? exp
-      return Match.new(:params, exp)
-    elsif cookies? exp
-      return Match.new(:cookies, exp)
-    elsif call? exp
-      if params? exp.target
+    elsif call? exp and not @safe_input_attributes.include? exp.method
+      if params? exp
         return Match.new(:params, exp)
-      elsif cookies? exp.target
+      elsif cookies? exp
         return Match.new(:cookies, exp)
-      elsif request_env? exp.target
+      elsif request_env? exp
         return Match.new(:request, exp)
       else
-        false
+        has_immediate_user_input? exp.target
       end
     elsif sexp? exp
       case exp.node_type
@@ -318,9 +317,11 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       target = exp.target
       method = exp.method
 
-      if call? target and not method.to_s[-1,1] == "?"
+      if @safe_input_attributes.include? method
+        false
+      elsif call? target and not method.to_s[-1,1] == "?"
         has_immediate_model? target, out
-      elsif model_name? target and method != :arel_table
+      elsif model_name? target
         exp
       else
         false
