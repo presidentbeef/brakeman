@@ -815,4 +815,13 @@ class Rails2Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /test_to_i\.html\.erb/
   end
+
+  def test_xss_with_model_attribute_to_i
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 7,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 1,
+      :file => /test_to_i\.html\.erb/
+  end
 end
