@@ -236,6 +236,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       ((target == URI or target == CGI) and method == :escape) or
       (target == XML_HELPER and method == :escape_xml) or
       (target == FORM_BUILDER and @ignore_methods.include? method) or
+      (target and @safe_input_attributes.include? method) or
       (method.to_s[-1,1] == "?")
 
       #exp[0] = :ignore #should not be necessary
