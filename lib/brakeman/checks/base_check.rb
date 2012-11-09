@@ -23,7 +23,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     @current_set = nil
     @current_template = @current_module = @current_class = @current_method = nil
     @mass_assign_disabled = nil
-    @safe_input_attributes = Set[:to_i, :to_f]
+    @safe_input_attributes = Set[:to_i, :to_f, :arel_table]
   end
 
   #Add result to result list, which is used to check for duplicates
@@ -317,9 +317,11 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       target = exp.target
       method = exp.method
 
-      if call? target and not method.to_s[-1,1] == "?"
+      if @safe_input_attributes.include? method
+        false
+      elsif call? target and not method.to_s[-1,1] == "?"
         has_immediate_model? target, out
-      elsif model_name? target and method != :arel_table
+      elsif model_name? target
         exp
       else
         false
