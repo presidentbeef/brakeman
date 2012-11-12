@@ -40,7 +40,7 @@ class Brakeman::GemProcessor < Brakeman::BaseProcessor
   end
 
   def get_rails_version gem_lock
-    if gem_lock =~ /\srails \((\d+.\d+.\d+)\)$/
+    if gem_lock =~ /\srails \((\d+.\d+.\d+.*)\)$/
       @tracker.config[:rails_version] = $1
     end
   end

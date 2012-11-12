@@ -320,7 +320,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
       if call? target and not method.to_s[-1,1] == "?"
         has_immediate_model? target, out
-      elsif model_name? target 
+      elsif model_name? target and method != :arel_table
         exp
       else
         false

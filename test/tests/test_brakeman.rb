@@ -44,4 +44,8 @@ class BaseCheckTests < Test::Unit::TestCase
   def test_version_between_longer
     assert_equal false, version_between?("1.0.1.2", "1.0.0", "1.0.1")
   end
+
+  def test_version_between_pre_release
+    assert version_between?("3.2.9.rc2", "3.2.5", "4.0.0")
+  end
 end
