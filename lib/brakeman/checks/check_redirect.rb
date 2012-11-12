@@ -126,10 +126,13 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   def model_instance? exp
     if node_type? exp, :or
       model_instance? exp.lhs or model_instance? exp.rhs
-    else
-      call? exp and
-      model_name? exp.target and
-      (@model_find_calls.include? exp.method or exp.method.to_s.match(/^find_by_/))
+    elsif call? exp
+      if model_name? exp.target and
+        (@model_find_calls.include? exp.method or exp.method.to_s.match(/^find_by_/))
+        true
+      else
+        association?(exp.target, exp.method)
+      end
     end
   end
 
@@ -146,5 +149,28 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
       exp.target.value.to_s.match(/Decorator$/) and
       exp.method == :decorate
     end
+  end
+
+  #Check if method is actually an association in a Model
+  def association? model_name, meth
+    if call? model_name
+      return association? model_name.target, meth
+    elsif model_name? model_name
+      model = tracker.models[class_name(model_name)]
+    else
+      return false
+    end
+
+    return false unless model
+
+    model[:associations].each do |name, args|
+      args.each do |arg|
+        if symbol? arg and arg.value == meth
+          return true
+        end
+      end
+    end
+
+    false
   end
 end
