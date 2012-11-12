@@ -56,35 +56,33 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   def include_user_input? call
     Brakeman.debug "Checking if call includes user input"
 
-    first_arg = call.first_arg
+    arg = call.first_arg
 
     # if the first argument is an array, rails assumes you are building a
     # polymorphic route, which will never jump off-host
-    return false if array? first_arg
+    return false if array? arg
 
     if tracker.options[:ignore_redirect_to_model]
-      if model_instance?(first_arg) or decorated_model?(first_arg)
+      if model_instance?(arg) or decorated_model?(arg)
         return false
       end
     end
 
-    call.args.each do |arg|
-      if res = has_immediate_model?(arg)
-        return Match.new(:immediate, res)
-      elsif call? arg
-        if request_value? arg
-          return Match.new(:immediate, arg)
-        elsif request_value? arg[1]
-          return Match.new(:immediate, arg[1])
-        elsif arg[2] == :url_for and include_user_input? arg
-          return Match.new(:immediate, arg)
-          #Ignore helpers like some_model_url?
-        elsif arg[2].to_s =~ /_(url|path)$/
-          return false
-        end
-      elsif request_value? arg
+    if res = has_immediate_model?(arg)
+      return Match.new(:immediate, res)
+    elsif call? arg
+      if request_value? arg
         return Match.new(:immediate, arg)
+      elsif request_value? arg[1]
+        return Match.new(:immediate, arg[1])
+      elsif arg[2] == :url_for and include_user_input? arg
+        return Match.new(:immediate, arg)
+        #Ignore helpers like some_model_url?
+      elsif arg[2].to_s =~ /_(url|path)$/
+        return false
       end
+    elsif request_value? arg
+      return Match.new(:immediate, arg)
     end
 
     if tracker.options[:check_arguments]
