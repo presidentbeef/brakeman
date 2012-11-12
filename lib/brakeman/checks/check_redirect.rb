@@ -78,7 +78,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
       elsif arg[2] == :url_for and include_user_input? arg
         return Match.new(immediate, arg)
         #Ignore helpers like some_model_url?
-      elsif arg[2].to_s =~ /_(url|path)$/
+      elsif arg[2].to_s =~ /_(url|path)\z/
         return false
       end
     elsif request_value? arg
