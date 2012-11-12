@@ -45,4 +45,18 @@ class OtherController < ApplicationController
   def test_arel_table_access
     User.where(User.arel_table[:id].eq(params[:some_id]))
   end
+
+  def test_draper_redirect
+    redirect_to RecordDecorator.decorate(Record.where(:something => params[:access_key]).find(params[:id]))
+  end
+
+  def test_model_redirect_in_or
+    if something
+      user = User.find(params[:something])
+    else
+      user = User.find(params[:else])
+    end
+
+    redirect_to user
+  end
 end
