@@ -53,7 +53,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   #is being output directly. This is necessary because of tracker.options[:check_arguments]
   #which can be used to enable/disable reporting output of method calls which use
   #user input as arguments.
-  def include_user_input? call
+  def include_user_input? call, immediate = :immediate
     Brakeman.debug "Checking if call includes user input"
 
     arg = call.first_arg
@@ -69,24 +69,24 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     end
 
     if res = has_immediate_model?(arg)
-      return Match.new(:immediate, res)
+      return Match.new(immediate, res)
     elsif call? arg
       if request_value? arg
-        return Match.new(:immediate, arg)
+        return Match.new(immediate, arg)
       elsif request_value? arg[1]
-        return Match.new(:immediate, arg[1])
+        return Match.new(immediate, arg[1])
       elsif arg[2] == :url_for and include_user_input? arg
-        return Match.new(:immediate, arg)
+        return Match.new(immediate, arg)
         #Ignore helpers like some_model_url?
       elsif arg[2].to_s =~ /_(url|path)$/
         return false
       end
     elsif request_value? arg
-      return Match.new(:immediate, arg)
+      return Match.new(immediate, arg)
     end
 
-    if tracker.options[:check_arguments]
-      super
+    if tracker.options[:check_arguments] and call? arg
+      include_user_input? arg, false  #I'm doubting if this is really necessary...
     else
       false
     end
