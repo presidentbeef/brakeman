@@ -106,7 +106,7 @@ class Brakeman::CallIndex
   def index_calls calls
     calls.each do |call|
       @methods << call[:method].to_s
-      @targets << call[:target].to_s
+      @targets << call[:target].to_s if call[:target].is_a? Symbol
       @calls_by_method[call[:method]] << call
       @calls_by_target[call[:target]] << call
     end
