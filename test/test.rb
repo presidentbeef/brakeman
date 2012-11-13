@@ -219,17 +219,13 @@ module BrakemanTester::RescanTestHelper
     replace_with_sexp file do |parsed|
       class_body = parsed.body
 
-      if class_body[1].node_type == :block
-        class_body[1].reject! do |node|
-          node.is_a? Sexp and
-          node.node_type == :defn and
-          node.method_name == method_name
-        end
-      elsif class_body[1].node_type == :defn and
-        class_body[1].method_name == method_name
-
-        class_body.delete_at 1
+      class_body.reject! do |node|
+        node.is_a? Sexp and
+        node.node_type == :defn and
+        node.method_name == method_name
       end
+
+      parsed.body = class_body
 
       parsed
     end
