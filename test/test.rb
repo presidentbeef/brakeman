@@ -237,15 +237,7 @@ module BrakemanTester::RescanTestHelper
     replace_with_sexp file do |parsed|
       class_body = parsed.body
 
-      if class_body[1].node_type == :block
-        class_body[1] << parsed_method
-      elsif class_body[1]
-        class_body[1] = s(:block,
-                          class_body[1],
-                          parsed_method)
-      else
-        class_body[1] = parsed_method
-      end
+      class_body << parsed_method
 
       parsed
     end
