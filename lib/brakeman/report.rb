@@ -19,7 +19,7 @@ else
 end
 
 #This is so OkJson will work with symbol values
-if MultiJson.default_engine == :ok_json 
+if MultiJson.default_adapter == :ok_json
   class Symbol
     def to_json
       self.to_s.inspect
