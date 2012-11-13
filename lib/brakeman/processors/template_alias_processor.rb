@@ -104,7 +104,7 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
         return nil
       elsif exp.node_type == :ivar and exp.value == :@output_buffer
         return nil
-      elsif exp.node_type == :call and exp.target.node_type == :call and
+      elsif exp.node_type == :call and call? exp.target and
         exp.target.method == :_hamlout and exp.method == :buffer
 
         return nil
