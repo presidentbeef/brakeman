@@ -1,5 +1,3 @@
-Brakeman::RAILS_CONFIG = Sexp.new(:call, nil, :config)
-  
 #Processes configuration. Results are put in tracker.config.
 #
 #Configuration of Rails via Rails::Initializer are stored in tracker.config[:rails].
@@ -15,6 +13,8 @@ Brakeman::RAILS_CONFIG = Sexp.new(:call, nil, :config)
 #
 #Values for tracker.config[:rails] will still be Sexps.
 class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
+  RAILS_CONFIG = Sexp.new(:call, nil, :config)
+
   def initialize *args
     super
     @tracker.config[:rails] ||= {}
@@ -53,7 +53,7 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
   def process_attrasgn exp
     return exp unless @inside_config
 
-    if exp.target == Brakeman::RAILS_CONFIG
+    if exp.target == RAILS_CONFIG
       #Get rid of '=' at end
       attribute = exp.method.to_s[0..-2].to_sym
       if exp.args.length > 1
@@ -80,12 +80,12 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
   def include_rails_config? exp
     target = exp.target
     if call? target
-      if target.target == Brakeman::RAILS_CONFIG
+      if target.target == RAILS_CONFIG
         true
       else
         include_rails_config? target
       end
-    elsif target == Brakeman::RAILS_CONFIG
+    elsif target == RAILS_CONFIG
       true
     else
       false
@@ -104,7 +104,7 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
       attribute = exp.method.to_s[0..-2].to_sym
       get_rails_config(exp.target) << attribute
     elsif call? exp
-      if exp.target == Brakeman::RAILS_CONFIG
+      if exp.target == RAILS_CONFIG
         [exp.method]
       else
         get_rails_config(exp.target) << exp.method
