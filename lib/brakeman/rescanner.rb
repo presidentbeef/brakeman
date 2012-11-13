@@ -304,7 +304,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
       :initializer
     when /config\/routes\.rb/
       :routes
-    when /\/config/
+    when /\/config\/.+\.rb/
       :config
     when /Gemfile/
       :gemfile
