@@ -322,7 +322,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
       end
     end
 
-    method_matcher = /##{method_names.join('|')}$/
+    method_matcher = /##{method_names.map {|n| Regexp.escape(n.to_s)}.join('|')}$/
 
     #Rescan controllers that mixed in library
     tracker.controllers.each do |name, controller|
