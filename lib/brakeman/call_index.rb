@@ -138,7 +138,7 @@ class Brakeman::CallIndex
       elsif targets.length > 1
         calls_by_targets targets
       else
-        calls_by_target[targets.first]
+        @calls_by_target[targets.first]
       end
     else
       @calls_by_target[target]
