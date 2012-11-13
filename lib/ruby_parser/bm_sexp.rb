@@ -23,6 +23,12 @@ class Sexp
     last
   end
 
+  def value= exp
+    raise WrongSexpError, "Sexp#value= called on multi-item Sexp", caller[1..-1] if size > 2
+    @my_hash_value = nil
+    self[1] = exp
+  end
+
   def second
     self[1]
   end
