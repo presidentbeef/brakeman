@@ -392,7 +392,8 @@ class Sexp
     end
   end
 
-  #Sets body
+  #Sets body, which is now a complicated process because the body is no longer
+  #a separate Sexp, but just a list of Sexps.
   def body= exp
     expect :defn, :defs, :methdef, :selfdef, :class, :module
 
@@ -405,6 +406,9 @@ class Sexp
       index = 2
     end
 
+    self.slice!(index..-1) #Remove old body
+
+    #Insert new body
     exp.each do |e|
       self[index] = e
       index += 1
