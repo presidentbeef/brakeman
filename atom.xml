@@ -4,13 +4,114 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2012-10-17T14:00:05-07:00</updated>
+  <updated>2012-11-13T12:24:38-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 1.8.3 Released</title>
+    <link href="http://brakemanscanner.org/blog/2012/11/13/brakeman-1-dot-8-3-released/"/>
+    <updated>2012-11-13T09:20:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2012/11/13/brakeman-1-dot-8-3-released</id>
+    <content type="html">&lt;p&gt;This is primarily a false positive reduction release. One major change is the change in dependency from the &lt;code&gt;json_pure&lt;/code&gt; gem to &lt;code&gt;multi_json&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 1.8.2&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Use &lt;code&gt;multi_json&lt;/code&gt; gem for better harmony (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/164&quot;&gt;#164&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Performance improvement for call indexing&lt;/li&gt;
+&lt;li&gt;Fix issue with processing HAML files (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/168&quot;&gt;#168&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Handle pre-release versions when processing &lt;code&gt;Gemfile.lock&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/174&quot;&gt;#174&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Only check first argument of &lt;code&gt;redirect_to&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/98&quot;&gt;#98&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Fix false positives from &lt;code&gt;Model.arel_table&lt;/code&gt; accesses&lt;/li&gt;
+&lt;li&gt;Fix false positives on redirects to models decorated with Draper gem (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/172&quot;&gt;#172&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Fix false positive on redirect to model association (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/111&quot;&gt;#111&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Fix false positive on &lt;code&gt;YAML.load&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/142&quot;&gt;#142&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Fix false positive XSS on any &lt;code&gt;to_i&lt;/code&gt; output&lt;/li&gt;
+&lt;li&gt;Fix error on Rails 2 named routes with no args&lt;/li&gt;
+&lt;li&gt;Fix error in rescan of mixins with symbols in method name&lt;/li&gt;
+&lt;li&gt;Do not rescan non-Ruby files in config/&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Change to MultiJSON&lt;/h3&gt;
+
+&lt;p&gt;Brakeman now depends on the &lt;a href=&quot;http://rdoc.info/github/intridea/multi_json&quot;&gt;multijson&lt;/a&gt; gem instead of &lt;code&gt;json_pure&lt;/code&gt;. This should make it easier for people who include Brakeman as a dependency.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/166&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Faster Call Indexing&lt;/h3&gt;
+
+&lt;p&gt;Dumb code in the &lt;code&gt;CallIndex&lt;/code&gt; was causing call indexing to be slow on some large applications. This should now be faster and require less memory!&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/180&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Fix HAML Processing&lt;/h3&gt;
+
+&lt;p&gt;Some HAML files were causing Brakeman's alias processing to slow to a crawl. This was due to the template code (sometimes) directly appending to the output variable via &lt;code&gt;&amp;lt;&amp;lt;&lt;/code&gt;. Since Brakeman attempts to treat targets of &lt;code&gt;&amp;lt;&amp;lt;&lt;/code&gt; as arrays, Brakeman was generating large data structures each time &lt;code&gt;&amp;lt;&amp;lt;&lt;/code&gt; was encountered.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/170&quot;&gt;changes&lt;/a&gt;]&lt;/p&gt;
+
+&lt;h3&gt;Handle Pre-release Versions&lt;/h3&gt;
+
+&lt;p&gt;When a &lt;code&gt;Gemfile.lock&lt;/code&gt; file is present in a Rails application, Brakeman uses it to determine the version of Rails in use. Previous versions did not accept pre-release version numbers (like &lt;code&gt;3.1.2.rc1&lt;/code&gt;), leading to version inappropriate warnings.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/176&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Redirect False Positives&lt;/h3&gt;
+
+&lt;p&gt;Several false positives related to redirects have been fixed, and the scope of the redirect check is somewhat reduced.&lt;/p&gt;
+
+&lt;p&gt;Calls beginning with &lt;code&gt;Model.arel_table&lt;/code&gt; should no longer be treated as user input (in any context).&lt;/p&gt;
+
+&lt;p&gt;Model instances returned by the &lt;code&gt;decorate&lt;/code&gt; method in the &lt;a href=&quot;https://github.com/drapergem/draper&quot;&gt;Draper&lt;/a&gt; gem are considered safe.&lt;/p&gt;
+
+&lt;p&gt;Redirects to model associations (e.g, &lt;code&gt;belongs_to :account&lt;/code&gt;) are considered safe.&lt;/p&gt;
+
+&lt;p&gt;Redirects to method calls with safe values should no longer warn. For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redirect_to blah(User.first) #No warning
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Additionally, only the first argument of &lt;code&gt;redirect_to&lt;/code&gt; will be checked for user input.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/177&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;YAML False Positive&lt;/h3&gt;
+
+&lt;p&gt;File access warnings for YAML calls have been reduced to only those calls which actually access files.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/178&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Integer Output False Positives&lt;/h3&gt;
+
+&lt;p&gt;Calls to &lt;code&gt;to_i&lt;/code&gt; should not trigger XSS warnings.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/179&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Errors on Named Routes&lt;/h3&gt;
+
+&lt;p&gt;Rails 2 named routes with no arguments were causing errors, which have now been fixed.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/181&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Future Work&lt;/h3&gt;
+
+&lt;p&gt;Now that RubyParser 3.x is officially released, work is underway to use the new version. This will increase Ruby 1.9 syntax compatibility and remove the need to parse applications with the same Ruby version as the application uses. Additionally, it will allow us to get rid of the vendored version of RubyParser that Brakeman uses for Ruby 1.9. Unfortunately, RubyParser 3.x introduces a lot of incompatibilities and upgrading requires a significant amount of effort.&lt;/p&gt;
+
+&lt;p&gt;Another exciting feature in development is limited intra-procedural analysis. Brakeman will be able to handle simple things like calls to helper methods in controllers which set instance variables or return user input. This should help with the &quot;obvious&quot; vulnerabilities that Brakeman often misses.&lt;/p&gt;
+
+&lt;h3&gt;Report Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 1.8.2 Released</title>
@@ -1306,163 +1407,6 @@ puts clean(x)
 &lt;h3&gt;Problems&lt;/h3&gt;
 
 &lt;p&gt;If you run into any problems, don't hesitate to send a tweet to &lt;a href=&quot;http://twitter.com/brakemanscanner&quot;&gt;@Brakemanscanner&lt;/a&gt; or &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;file an issue&lt;/a&gt; on GitHub!&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 1.0 Released!</title>
-    <link href="http://brakemanscanner.org/blog/2011/12/08/brakeman-1-dot-0-released/"/>
-    <updated>2011-12-08T01:35:00-08:00</updated>
-    <id>http://brakemanscanner.org/blog/2011/12/08/brakeman-1-dot-0-released</id>
-    <content type="html">&lt;p&gt;While the step up to 1.0 was essentially forced by major changes since 0.9.2, this is still an important release for Brakeman. Internally, Brakeman is no longer reliant on a global options variable, allowing it to be used as a library inside other applications. Also, all Brakeman modules, classes, and constants have been placed inside the Brakeman namespace.&lt;/p&gt;
-
-
-
-
-&lt;p&gt;Support for Rails 3 is continuing to improve, although it is probably a good idea to run Brakeman with the &lt;code&gt;-m&lt;/code&gt; option to see what routes it is seeing. If you receive a message that says &amp;#8220;Error while processing routes - assuming all public controller methods are actions,&amp;#8221; please consider opening an issue and (if possible) providing your &lt;code&gt;routes.rb&lt;/code&gt; file as evidence.&lt;/p&gt;
-
-
-
-
-&lt;p&gt;The performance of vulnerability checks that search for calls to specific methods (CheckExecute, CheckFileAccess, CheckSQL, etc.) has been drastically improved with the introduction of a call site index. If your scans were spending a lot of time running checks, you should see significant decrease in run time (although memory use may be slightly higher).&lt;/p&gt;
-
-
-
-
-&lt;p&gt;If you are looking for an introduction to Brakeman, there are some &lt;a href=&quot;http://brakemanscanner.org/docs/presentations/&quot;&gt;presentations available&lt;/a&gt; to watch or read.&lt;/p&gt;
-
-
-
-
-&lt;p&gt;As usual, please &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;report&lt;/a&gt; any issues! You can also send a tweet to &lt;a href=&quot;http://twitter.com/brakeman&quot;&gt;@Brakeman&lt;/a&gt; if you have any questions.&lt;/p&gt;
-
-
-
-
-&lt;p&gt;&lt;em&gt;Changes since 1.0rc1:&lt;/em&gt;&lt;/p&gt;
-
-
-
-
-&lt;ul&gt;
-&lt;li&gt;Better handling of assignments inside ifs&lt;/li&gt;
-&lt;li&gt;Check more expressions for SQL injection&lt;/li&gt;
-&lt;li&gt;Use latest ruby_parser for better 1.9 syntax support&lt;/li&gt;
-&lt;li&gt;Better behavior for Brakeman as a library&lt;/li&gt;
-&lt;/ul&gt;
-
-
-
-
-&lt;h3&gt;Assignments Inside &amp;#8216;if&amp;#8217; Branches&lt;/h3&gt;
-
-
-
-
-&lt;p&gt;Brakeman is now a little smarter about handling assignments inside &lt;code&gt;if&lt;/code&gt;.&lt;/p&gt;
-
-
-
-
-&lt;p&gt;For example:&lt;/p&gt;
-
-
-
-
-&lt;pre&gt;&lt;code&gt;if some_condition
-  x = params[:blah]
-else
-  x = &quot;no blah&quot;
-end
-&lt;/code&gt;&lt;/pre&gt;
-
-
-
-
-&lt;p&gt;Previously, &lt;code&gt;x&lt;/code&gt; would end up with the last value encountered, with no regard for execution branches. In this release, Brakeman will now combine the branches (unfortunately, Brakeman still operates along a &amp;#8216;no branching&amp;#8217; policy) and &lt;code&gt;x&lt;/code&gt; will be given the value of &lt;code&gt;params[:blah] or &quot;no blah&quot;&lt;/code&gt;.&lt;/p&gt;
-
-
-
-
-&lt;p&gt;While not strictly semantically sound (and, trust me, Brakeman does many things that are not), it will still catch problems like&lt;/p&gt;
-
-
-
-
-&lt;pre&gt;&lt;code&gt;User.all(conditions =&amp;gt; &quot;blah = '#{x}'&quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-
-
-
-&lt;p&gt;Thanks to &lt;a href=&quot;http://osdir.com/ml/RubyonRails:Core/2011-11/msg00098.html&quot;&gt;this message&lt;/a&gt; on Rails Core for mentioning this problem.&lt;/p&gt;
-
-
-
-
-&lt;h3&gt;Use Latest ruby_parser&lt;/h3&gt;
-
-
-
-
-&lt;p&gt;A few releases ago, Brakeman included a slightly modified version of &lt;a href=&quot;https://github.com/seattlerb/ruby_parser&quot;&gt;ruby_parser&lt;/a&gt; to help with Ruby 1.9 syntax issues.&lt;/p&gt;
-
-
-
-
-&lt;p&gt;The very latest ruby_parser source has much better 1.9 support, but there has been no official release yet. So Brakeman comes with the latest code. This is necessary because Rails 3 will generate 1.9 syntax if you happen to run it with Ruby 1.9 when generating code.&lt;/p&gt;
-
-
-
-
-&lt;h3&gt;Brakeman as a Library&lt;/h3&gt;
-
-
-
-
-&lt;p&gt;While it is now possible to use Brakeman as a library (essentially just &lt;code&gt;Brakeman.run&lt;/code&gt;), it is not very well polished. This release improves it slightly from the release candidate.&lt;/p&gt;
-
-
-
-
-&lt;h3&gt;More SQL Injection&lt;/h3&gt;
-
-
-
-
-&lt;p&gt;&lt;code&gt;CheckSQL&lt;/code&gt; will now search most expressions inside a SQL call for user input and string interpolation.&lt;/p&gt;
-
-
-
-
-&lt;h3&gt;Changes Since 0.9.2&lt;/h3&gt;
-
-
-
-
-&lt;p&gt;As a summary, here are the changes since 0.9.2:&lt;/p&gt;
-
-
-
-
-&lt;ul&gt;
-&lt;li&gt;Brakeman can now be used as a library&lt;/li&gt;
-&lt;li&gt;Faster call search&lt;/li&gt;
-&lt;li&gt;Add option to return error code if warnings are found (tw-ngreen)&lt;/li&gt;
-&lt;li&gt;Allow truncated messages to be expanded in HTML&lt;/li&gt;
-&lt;li&gt;Keep expanded context in view in HTML output&lt;/li&gt;
-&lt;li&gt;Fix summary when using warning thresholds&lt;/li&gt;
-&lt;li&gt;Better support for Rails 3 routes&lt;/li&gt;
-&lt;li&gt;Reduce SQL injection duplicate warnings&lt;/li&gt;
-&lt;li&gt;Lower confidence on mass assignment with no user input&lt;/li&gt;
-&lt;li&gt;Ignore mass assignment using all literal arguments&lt;/li&gt;
-&lt;/ul&gt;
-
-
-
-
-&lt;p&gt;See the &lt;a href=&quot;http://brakemanscanner.org/blog/2011/12/05/brakeman-1-dot-0-release-candidate-available/&quot;&gt;earlier post&lt;/a&gt; for more details.&lt;/p&gt;
-
 </content>
   </entry>
   
