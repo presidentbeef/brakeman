@@ -178,6 +178,8 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
   #Process
   # map.connect '/something', :controller => 'blah', :action => 'whatever'
   def process_connect exp
+    return if exp.empty?
+
     controller = check_for_controller_name exp
     self.current_controller = controller if controller
     
