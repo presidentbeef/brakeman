@@ -462,15 +462,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   end
 
   #Process hash access by returning the value associated
-  #with the given arguments.
-  def process_hash_access target, args
-    if args.length == 1
-      index = args[0]
-
-      hash_access(target, index)
-    else
-      nil
-    end
+  #with the given argument.
+  def process_hash_access target, index
+    hash_access(target, index)
   end
 
   #Join two array literals into one.
