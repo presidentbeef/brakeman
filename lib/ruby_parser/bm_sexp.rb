@@ -345,6 +345,11 @@ class Sexp
     self[2]
   end
 
+  def first_param
+    expect :args
+    self[1]
+  end
+
   #Returns the left hand side of assignment or boolean:
   #
   #    s(:lasgn, :x, s(:lit, 1))
