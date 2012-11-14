@@ -235,9 +235,7 @@ module BrakemanTester::RescanTestHelper
     parsed_method = parse code
 
     replace_with_sexp file do |parsed|
-      class_body = parsed.body
-
-      class_body << parsed_method
+      parsed.body = parsed.body << parsed_method
 
       parsed
     end
