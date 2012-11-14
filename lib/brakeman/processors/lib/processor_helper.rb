@@ -8,9 +8,11 @@ module Brakeman::ProcessorHelper
   end
 
   def process_all! exp
-    exp.each_with_index do |e, i|
+    exp.map! do |e|
       if sexp? e
-        exp[i] = process e
+        process e
+      else
+        e
       end
     end
 
