@@ -126,7 +126,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
   def process_defn exp
     name = exp.method_name
     @current_method = name
-    res = Sexp.new :methdef, name, exp.formal_args, *process_all(exp.body)
+    res = Sexp.new :methdef, name, exp.formal_args, *process_all!(exp.body)
     res.line(exp.line)
     @current_method = nil
     @controller[@visibility][name] = res unless @controller.nil?
@@ -150,7 +150,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     end
 
     @current_method = name
-    res = Sexp.new :selfdef, target, name, exp.formal_args, *process_all(exp.body)
+    res = Sexp.new :selfdef, target, name, exp.formal_args, *process_all!(exp.body)
     res.line(exp.line)
     @current_method = nil
     @controller[@visibility][name] = res unless @controller.nil?
