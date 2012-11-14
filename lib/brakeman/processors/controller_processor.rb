@@ -49,7 +49,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
                     :src => exp,
                     :file => @file_name }
     @tracker.controllers[@controller[:name]] = @controller
-    exp.body = process_all exp.body
+    exp.body = process_all! exp.body
     set_layout_name
     @controller = nil
     exp
@@ -130,7 +130,6 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     res.line(exp.line)
     @current_method = nil
     @controller[@visibility][name] = res unless @controller.nil?
-
     res
   end
 
