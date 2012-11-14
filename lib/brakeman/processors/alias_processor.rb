@@ -70,11 +70,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     @exp_context.push exp
 
     begin
-      exp.each_with_index do |e, i|
-        next if i == 0
-
+      exp.map! do |e|
         if sexp? e and not e.empty?
-          exp[i] = process e
+          process e
         else
           e
         end
