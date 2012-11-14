@@ -54,7 +54,8 @@ end
 
 if options[:previous_results_json]
   vulns = Brakeman.compare options.merge(:quiet => options[:quiet])
-  puts JSON.pretty_generate(vulns)
+  puts MultiJson.dump(vulns, :pretty => true)
+
   if options[:exit_on_warn] and (vulns[:new].count + vulns[:fixed].count > 0)
     exit Brakeman::Warnings_Found_Exit_Code
   end

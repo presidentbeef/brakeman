@@ -96,11 +96,17 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
     false
   end
 
+  #Ignore `<<` calls on template variables which are used by the templating
+  #library (HAML, ERB, etc.)
   def find_push_target exp
     if sexp? exp
       if exp.node_type == :lvar and (exp.value == :_buf or exp.value == :_erbout)
         return nil
       elsif exp.node_type == :ivar and exp.value == :@output_buffer
+        return nil
+      elsif exp.node_type == :call and call? exp.target and
+        exp.target.method == :_hamlout and exp.method == :buffer
+
         return nil
       end
     end

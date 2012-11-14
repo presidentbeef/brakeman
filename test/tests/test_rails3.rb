@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 30,
-      :warning => 30
+      :warning => 31
     }
   end
 
@@ -77,6 +77,24 @@ class Rails3Tests < Test::Unit::TestCase
       :warning_type => "File Access",
       :line => 67,
       :message => /^Parameter value used in file name near l/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_file_access_yaml_load
+    assert_no_warning :type => :warning,
+      :warning_type => "File Access",
+      :line => 106,
+      :message => /^Parameter\ value\ used\ in\ file\ name/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_file_access_yaml_parse_file
+    assert_warning :type => :warning,
+      :warning_type => "File Access",
+      :line => 109,
+      :message => /^Parameter\ value\ used\ in\ file\ name/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end

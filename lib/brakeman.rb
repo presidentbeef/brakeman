@@ -314,19 +314,20 @@ module Brakeman
 
   # Compare JSON ouptut from a previous scan and return the diff of the two scans
   def self.compare options
-    require 'json'
+    require 'multi_json'
     require 'brakeman/differ'
     raise ArgumentError.new("Comparison file doesn't exist") unless File.exists? options[:previous_results_json]
 
     begin
-      previous_results = JSON.parse(File.read(options[:previous_results_json]), :symbolize_names =>true)[:warnings]
-    rescue JSON::ParserError
+      previous_results = MultiJson.load(File.read(options[:previous_results_json]), :symbolize_keys => true)[:warnings]
+    rescue MultiJson::DecodeError
       self.notify "Error parsing comparison file: #{options[:previous_results_json]}"
       exit!
     end
 
     tracker = run(options)
-    new_results = JSON.parse(tracker.report.to_json, :symbolize_names =>true)[:warnings]
+
+    new_results = MultiJson.load(tracker.report.to_json, :symbolize_keys => true)[:warnings]
 
     Brakeman::Differ.new(new_results, previous_results).diff
   end

@@ -6,6 +6,7 @@ require 'brakeman/util'
 require 'terminal-table'
 require 'highline/system_extensions'
 require "csv"
+require 'multi_json'
 require 'brakeman/version'
 
 if CSV.const_defined? :Reader
@@ -15,6 +16,15 @@ if CSV.const_defined? :Reader
   CSV = FasterCSV
 else
   # CSV is now FasterCSV in ruby 1.9
+end
+
+#This is so OkJson will work with symbol values
+if MultiJson.default_adapter == :ok_json
+  class Symbol
+    def to_json
+      self.to_s.inspect
+    end
+  end
 end
 
 #Generates a report based on the Tracker and the results of
@@ -647,8 +657,6 @@ class Brakeman::Report
   end
 
   def to_json
-    require 'json'
-
     errors = tracker.errors.map{|e| { :error => e[:error], :location => e[:backtrace][0] }}
     app_path = tracker.options[:app_path]
 
@@ -662,7 +670,7 @@ class Brakeman::Report
       :app_path => File.expand_path(tracker.options[:app_path]),
       :rails_version => rails_version,
       :security_warnings => all_warnings.length,
-      :timestamp => Time.now,
+      :timestamp => Time.now.to_s,
       :checks_performed => checks.checks_run.sort,
       :number_of_controllers =>tracker.controllers.length,
       # ignore the "fake" model
@@ -672,11 +680,11 @@ class Brakeman::Report
       :brakeman_version => Brakeman::Version
     }
 
-    JSON.pretty_generate({
+    MultiJson.dump({
       :scan_info => scan_info,
       :warnings => warnings,
       :errors => errors
-    })
+    }, :pretty => true)
   end
 
   def all_warnings

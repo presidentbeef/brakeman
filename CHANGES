@@ -1,3 +1,19 @@
+# 1.8.3
+
+ * Use `multi_json` gem for better harmony
+ * Performance improvement for call indexing
+ * Fix issue with processing HAML files
+ * Handle pre-release versions when processing `Gemfile.lock`
+ * Only check first argument of `redirect_to`
+ * Fix false positives from `Model.arel_table` accesses
+ * Fix false positives on redirects to models decorated with Draper gem
+ * Fix false positive on redirect to model association
+ * Fix false positive on `YAML.load`
+ * Fix false positive XSS on any `to_i` output
+ * Fix error on Rails 2 name routes with no args
+ * Fix error in rescan of mixins with symbols in method name
+ * Do not rescan non-Ruby files in config/
+
 # 1.8.2
 
  * Fixed rescanning problems caused by 1.8.0 changes

@@ -74,7 +74,8 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       res
 
       #_hamlout.buffer <<
-      #This seems to be used rarely, but directly appends args to output buffer
+      #This seems to be used rarely, but directly appends args to output buffer.
+      #Has something to do with values of blocks?
     elsif sexp? target and method == :<< and is_buffer_target? target
       @inside_concat = true
       out = exp.arglist[1] = process(exp.arglist[1])

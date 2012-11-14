@@ -2,6 +2,9 @@ require 'brakeman/processors/base_processor'
 
 #Processes models. Puts results in tracker.models
 class Brakeman::ModelProcessor < Brakeman::BaseProcessor
+
+  ASSOCIATIONS = Set[:belongs_to, :has_one, :has_many, :has_and_belongs_to_many]
+
   def initialize tracker
     super 
     @model = nil
@@ -38,6 +41,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
         :private => {},
         :protected => {},
         :options => {},
+        :associations => {},
         :file => @file_name }
       @tracker.models[@model[:name]] = @model
       exp.body = process_all! exp.body
@@ -83,8 +87,13 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
           @model[:attr_accessible].concat args
         else
           if @model
-            @model[:options][method] ||= []
-            @model[:options][method] << exp.arglist.line(exp.line)
+            if ASSOCIATIONS.include? method
+              @model[:associations][method] ||= []
+              @model[:associations][method].concat exp.args
+            else
+              @model[:options][method] ||= []
+              @model[:options][method] << exp.arglist.line(exp.line)
+            end
           end
         end
       end
