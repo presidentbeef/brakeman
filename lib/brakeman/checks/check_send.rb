@@ -16,7 +16,7 @@ class Brakeman::CheckSend < Brakeman::BaseCheck
   end
 
   def process_result result
-    args = process_all result[:call].args
+    args = process_all! result[:call].args
     target = process result[:call].target
 
     if input = has_immediate_user_input?(args.first)
