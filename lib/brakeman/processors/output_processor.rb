@@ -14,6 +14,7 @@ class Brakeman::OutputProcessor < Ruby2Ruby
   end
 
   alias process_safely format
+  alias process_methdef process_defn
 
   def process exp
     begin
