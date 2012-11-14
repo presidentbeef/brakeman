@@ -252,8 +252,6 @@ module Brakeman
     #Start scanning
     scanner = Scanner.new options
 
-    notify "[Notice] Using Ruby #{RUBY_VERSION}. Please make sure this matches the one used to run your Rails application."
-
     notify "Processing application in #{options[:app_path]}"
     tracker = scanner.process
 
