@@ -41,26 +41,6 @@ class Sexp
     self[0] = type
   end
 
-  #Don't use this, please.
-  #:nodoc:
-  def resbody delete = false
-    #RubyParser and Ruby2Ruby rely on method_missing for this, but since we
-    #don't want to use method_missing, here's a real method.
-    find_node :resbody, delete
-  end
-
-  #Don't use this, please.
-  #:nodoc:
-  def lasgn delete = false
-    find_node :lasgn, delete
-  end
-
-  #Don't use this, please.
-  #:nodoc:
-  def iasgn delete = false
-    find_node :iasgn, delete
-  end
-
   alias :node_type :sexp_type
   alias :values :sexp_body # TODO: retire
 
@@ -478,6 +458,19 @@ end
       super
     end
     RUBY
+end
+
+#Methods used by RubyParser which would normally go through method_missing but
+#we don't want that to happen because it hides Brakeman errors
+[:resbody, :lasgn, :iasgn, :splat].each do |method|
+  Sexp.class_eval <<-RUBY
+    def #{method} delete = false
+      if delete
+        @my_hash_value = false
+      end
+      find_node :#{method}, delete
+    end
+  RUBY
 end
 
 class WrongSexpError < RuntimeError; end
