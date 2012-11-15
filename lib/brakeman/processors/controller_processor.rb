@@ -189,7 +189,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     args.insert(1, Sexp.new(:lit, filter_name))
     before_filter_call = make_call(nil, :before_filter, args)
 
-    if exp.block_args
+    if exp.block_args.length > 1
       block_variable = exp.block_args[1]
     else
       block_variable = :temp
@@ -202,12 +202,11 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     end
 
     #Build Sexp for filter method
-    body = Sexp.new(:scope, 
-            Sexp.new(:block,
-              Sexp.new(:lasgn, block_variable, 
-                Sexp.new(:call, Sexp.new(:const, @controller[:name]), :new))).concat(block_inner))
+    body = Sexp.new(:lasgn,
+                    block_variable, 
+                    Sexp.new(:call, Sexp.new(:const, @controller[:name]), :new))
 
-    filter_method = Sexp.new(:defn, filter_name, Sexp.new(:args), body).line(exp.line)
+    filter_method = Sexp.new(:defn, filter_name, Sexp.new(:args), body).concat(block_inner).line(exp.line)
 
     vis = @visibility
     @visibility = :private
