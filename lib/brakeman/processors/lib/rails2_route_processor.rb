@@ -200,7 +200,12 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
 
     exp.last.each_with_index do |e,i|
       if symbol? e and e.value == :action
-        @tracker.routes[@current_controller] << exp.last[i + 1].value.to_sym
+        action = exp.last[i + 1]
+        
+        if node_type? action, :lit
+          @tracker.routes[@current_controller] << action.value.to_sym
+        end
+
         return
       end
     end
