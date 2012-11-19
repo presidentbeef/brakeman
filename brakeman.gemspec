@@ -9,6 +9,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://brakemanscanner.org"
   s.files = ["bin/brakeman", "CHANGES", "WARNING_TYPES", "FEATURES", "README.md"] + Dir["lib/**/*"]
   s.executables = ["brakeman"]
+  s.license = "MIT"
   s.add_dependency "activesupport"
   s.add_dependency "i18n"
   s.add_dependency "ruby_parser", "2.3.1"
