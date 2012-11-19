@@ -145,7 +145,7 @@ Brakeman options can stored and read from YAML files. To simplify the process of
 
 Options passed in on the commandline have priority over configuration files.
 
-The default config locations are `./config.yaml`, `~/.brakeman/`, and `/etc/brakeman/config.yaml`
+The default config locations are `./config/brakeman.yml`, `~/.brakeman/config.yml`, and `/etc/brakeman/config.yml`
 
 The `-c` option can be used to specify a configuration file to use.
 
