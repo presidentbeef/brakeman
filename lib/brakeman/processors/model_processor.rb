@@ -81,8 +81,12 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
         when :attr_accessible
           @model[:attr_accessible] ||= []
           args = args.map do |e|
-            e.value
-          end
+            if node_type? e, :lit
+              e.value
+            else
+              nil
+            end
+          end.compact
 
           @model[:attr_accessible].concat args
         else
