@@ -9,6 +9,10 @@ class JSONCompareTests < Test::Unit::TestCase
     @report = MultiJson.load File.read(@json_path)
   end
 
+  def teardown
+    File.delete @json_path if File.exist? @json_path
+  end
+
   def update_json
     File.open @json_path, "w" do |f|
       f.puts @report.to_json
