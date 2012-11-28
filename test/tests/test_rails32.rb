@@ -25,7 +25,7 @@ class Rails32Tests < Test::Unit::TestCase
   def test_redirect_1
     assert_warning :type => :warning,
       :warning_type => "Redirect",
-      :line => 13,
+      :line => 14,
       :message => /^Possible\ unprotected\ redirect/,
       :confidence => 0,
       :file => /removal_controller\.rb/
