@@ -500,7 +500,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   IGNORE_METHODS_IN_SQL = Set[:id, :merge_conditions, :table_name, :to_i, :to_f,
     :sanitize_sql, :sanitize_sql_array, :sanitize_sql_for_assignment,
     :sanitize_sql_for_conditions, :sanitize_sql_hash,
-    :sanitize_sql_hash_for_assignment, :sanitize_sql_hash_for_conditions]
+    :sanitize_sql_hash_for_assignment, :sanitize_sql_hash_for_conditions,
+    :to_sql]
 
   def safe_value? exp
     return true unless sexp? exp
