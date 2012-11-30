@@ -482,7 +482,8 @@ class Brakeman::Report
 Application path: #{File.expand_path tracker.options[:app_path]}
 Rails version: #{rails_version}
 Brakeman version: #{Brakeman::Version}
-Generated at #{Time.now}
+Started at #{tracker.start_time}
+Duration: #{tracker.duration} seconds
 Checks run: #{checks.checks_run.sort.join(", ")}
 HEADER
   end
@@ -679,7 +680,10 @@ HEADER
       :app_path => File.expand_path(tracker.options[:app_path]),
       :rails_version => rails_version,
       :security_warnings => all_warnings.length,
-      :timestamp => Time.now.to_s,
+      :start_time => tracker.start_time.to_s,
+      :end_time => tracker.end_time.to_s,
+      :timestamp => tracker.end_time.to_s,
+      :duration => tracker.duration,
       :checks_performed => checks.checks_run.sort,
       :number_of_controllers =>tracker.controllers.length,
       # ignore the "fake" model

@@ -9,7 +9,8 @@ require 'brakeman/processors/lib/find_all_calls'
 class Brakeman::Tracker
   attr_accessor :controllers, :templates, :models, :errors,
     :checks, :initializers, :config, :routes, :processor, :libs,
-    :template_cache, :options, :filter_cache
+    :template_cache, :options, :filter_cache, :start_time, :end_time,
+    :duration
 
   #Place holder when there should be a model, but it is not
   #clear what model it will be.
@@ -44,6 +45,9 @@ class Brakeman::Tracker
     @template_cache = Set.new
     @filter_cache = {}
     @call_index = nil
+    @start_time = Time.now
+    @end_time = nil
+    @duration = nil
   end
 
   #Add an error to the list. If no backtrace is given,
@@ -64,6 +68,10 @@ class Brakeman::Tracker
   #in Tracker#checks.
   def run_checks
     @checks = Brakeman::Checks.run_checks(self)
+
+    @end_time = Time.now
+    @duration = @end_time - @start_time
+    @checks
   end
 
   #Iterate over all methods in controllers and models.
