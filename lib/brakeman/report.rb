@@ -475,7 +475,16 @@ class Brakeman::Report
 
   #Generate header for text output
   def text_header
-    "\n+BRAKEMAN REPORT+\n\nApplication path: #{File.expand_path tracker.options[:app_path]}\nRails version: #{rails_version}\nGenerated at #{Time.now}\nChecks run: #{checks.checks_run.sort.join(", ")}\n"
+    <<-HEADER
+
++BRAKEMAN REPORT+
+
+Application path: #{File.expand_path tracker.options[:app_path]}
+Rails version: #{rails_version}
+Brakeman version: #{Brakeman::Version}
+Generated at #{Time.now}
+Checks run: #{checks.checks_run.sort.join(", ")}
+HEADER
   end
 
   #Generate header for CSV output

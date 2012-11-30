@@ -26,12 +26,14 @@
   <tr>
     <th>Application Path</th>
     <th>Rails Version</th>
+    <th>Brakeman Version</th>
     <th>Report Generation Time</th>
     <th>Checks Performed</th>
   </tr>
   <tr>
     <td><%= File.expand_path tracker.options[:app_path] %></td>
     <td><%= rails_version %></td>
+    <td><%= Brakeman::Version %>
     <td><%= Time.now %></td>
     <td><%= checks.checks_run.sort.join(", ") %></td>
   </tr>
