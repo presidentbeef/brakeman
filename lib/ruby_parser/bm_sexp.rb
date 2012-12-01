@@ -6,12 +6,20 @@ class Sexp
   ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cdecl, :or, :and, :colon2]
 
   alias :old_init :initialize
+  alias :old_access :[]
   def initialize *args
     Sexp.add_sexp args.first
     if args.first.nil?
 #      puts caller[1]
     end
     old_init *args
+  end
+
+  def [] *indexes
+    if indexes.first.is_a? Range
+      Sexp.add_sexp nil
+    end
+    old_access *indexes
   end
 
   def dup

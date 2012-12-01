@@ -277,6 +277,9 @@ module Brakeman
       end
     end
 
+    Sexp.sexps.sort_by {|a,b| b}.reverse.take(5).each {|n| puts "#{n.first.inspect} - #{n.last}" }
+    puts Sexp.total_sexps
+
     tracker
   end
 
