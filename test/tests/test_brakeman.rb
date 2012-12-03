@@ -22,10 +22,12 @@ end
 
 class BaseCheckTests < Test::Unit::TestCase
   FakeTracker = Struct.new(:config)
+  FakeAppTree = Struct.new(:root)
 
   def setup
     @tracker = FakeTracker.new
-    @check = Brakeman::BaseCheck.new @tracker
+    app_tree = FakeAppTree.new
+    @check = Brakeman::BaseCheck.new app_tree, @tracker
   end
 
   def version_between? version, high, low

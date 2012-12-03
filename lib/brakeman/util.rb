@@ -75,7 +75,7 @@ module Brakeman::Util
       end
       index += 2
     end
-      
+
     hash << key << value
 
     hash
@@ -107,8 +107,8 @@ module Brakeman::Util
   #Check if _exp_ represents a hash: s(:hash, {...})
   #This also includes pseudo hashes params, session, and cookies.
   def hash? exp
-    exp.is_a? Sexp and (exp.node_type == :hash or 
-                        exp.node_type == :params or 
+    exp.is_a? Sexp and (exp.node_type == :hash or
+                        exp.node_type == :params or
                         exp.node_type == :session or
                         exp.node_type == :cookies)
   end
@@ -315,10 +315,10 @@ module Brakeman::Util
 
   #Return array of lines surrounding the warning location from the original
   #file.
-  def context_for warning, tracker = nil
+  def context_for app_tree, warning, tracker = nil
     file = file_for warning, tracker
     context = []
-    return context unless warning.line and file and File.exist? file
+    return context unless warning.line and file and @app_tree.path_exists? file
 
     current_line = 0
     start_line = warning.line - 5
@@ -369,5 +369,5 @@ module Brakeman::Util
       output << CSV.generate_line(row.cells.map{|cell| cell.to_s.strip})
     end
     output
-  end  
+  end
 end
