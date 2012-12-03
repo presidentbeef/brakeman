@@ -166,7 +166,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
         matches.each do |result|
           if result[1] == :ActiveRecord and result[2] == :Base
-            arg = result[-1][3][1]
+            arg = result[-1][3].first_arg
 
             if arg.nil? or node_type? arg, :nil
               @mass_assign_disabled = true
@@ -176,9 +176,12 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
         end
       else
         matches.each do |result|
-          if result[-1][3] == Sexp.new(:arglist, Sexp.new(:lit, :attr_accessible), Sexp.new(:nil))
-            @mass_assign_disabled = true
-            break
+          if call? result[-1]
+            call = result[-1]
+            if call.first_arg == Sexp.new(:lit, :attr_accessible) and call.second_arg == Sexp.new(:nil)
+              @mass_assign_disabled = true
+              break
+            end
           end
         end
       end
