@@ -14,8 +14,9 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   Match = Struct.new(:type, :match)
 
   #Initialize Check with Checks.
-  def initialize tracker
+  def initialize(app_tree, tracker)
     super()
+    @app_tree = app_tree
     @results = [] #only to check for duplicates
     @warnings = []
     @tracker = tracker
@@ -105,13 +106,13 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
   private
 
-  #Report a warning 
+  #Report a warning
   def warn options
     warning = Brakeman::Warning.new(options.merge({ :check => self.class.to_s }))
     warning.file = file_for warning
 
-    @warnings << warning 
-  end 
+    @warnings << warning
+  end
 
   #Run _exp_ through OutputProcessor to get a nice String.
   def format_output exp
@@ -149,12 +150,12 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   #Checks if mass assignment is disabled globally in an initializer.
   def mass_assign_disabled?
     return @mass_assign_disabled unless @mass_assign_disabled.nil?
-        
+
     @mass_assign_disabled = false
 
-    if version_between?("3.1.0", "4.0.0") and 
+    if version_between?("3.1.0", "4.0.0") and
       tracker.config[:rails] and
-      tracker.config[:rails][:active_record] and 
+      tracker.config[:rails][:active_record] and
       tracker.config[:rails][:active_record][:whitelist_attributes] == Sexp.new(:true)
 
       @mass_assign_disabled = true
@@ -367,7 +368,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
   #Checks if +exp+ is a model name.
   #
-  #Prior to using this method, either @tracker must be set to 
+  #Prior to using this method, either @tracker must be set to
   #the current tracker, or else @models should contain an array of the model
   #names, which is available via tracker.models.keys
   def model_name? exp
@@ -390,14 +391,14 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
   #Finds entire method call chain where +target+ is a target in the chain
   def find_chain exp, target
-    return unless sexp? exp 
+    return unless sexp? exp
 
     case exp.node_type
     when :output, :format
       find_chain exp.value, target
     when :call
       if exp == target or include_target? exp, target
-        return exp 
+        return exp
       end
     else
       exp.each do |e|
@@ -451,7 +452,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   end
 
   def gemfile_or_environment
-    if File.exist? File.expand_path "#{tracker.options[:app_path]}/Gemfile"
+    if @app_tree.exists?("Gemfile")
       "Gemfile"
     else
       "config/environment.rb"

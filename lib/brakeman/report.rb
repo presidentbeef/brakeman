@@ -40,7 +40,8 @@ class Brakeman::Report
                      "<span class='med-confidence'>Medium</span>",
                      "<span class='weak-confidence'>Weak</span>" ]
 
-  def initialize tracker
+  def initialize(app_tree, tracker)
+    @app_tree = app_tree
     @tracker = tracker
     @checks = tracker.checks
     @element_id = 0 #Used for HTML ids
@@ -158,7 +159,7 @@ class Brakeman::Report
       end
 
       return nil if warnings.empty?
-      
+
       stabilizer = 0
       warnings = warnings.sort_by{|row| stabilizer += 1; [row["Confidence"], row["Warning Type"], row["Template"], stabilizer]}
       if html
@@ -232,7 +233,7 @@ class Brakeman::Report
       end
 
       return nil if warnings.empty?
-      
+
       stabilizer = 0
       warnings = warnings.sort_by{|row| stabilizer +=1; [row["Confidence"], row["Warning Type"], row["Controller"], stabilizer]}
 
@@ -318,7 +319,7 @@ class Brakeman::Report
     else
       output = ''
       template_rows.each do |template|
-        output << template.first.to_s << "\n\n" 
+        output << template.first.to_s << "\n\n"
         table = Terminal::Table.new(:headings => ['Output']) do |t|
           # template[1] is an array of calls
           template[1].each do |v|
@@ -392,7 +393,7 @@ class Brakeman::Report
     res = generate_controller_warnings
     out << "\n\n\nController Warnings:\n\n" << truncate_table(res.to_s) if res
 
-    res = generate_model_warnings 
+    res = generate_model_warnings
     out << "\n\n\nModel Warnings:\n\n" << truncate_table(res.to_s) if res
 
     res = generate_template_warnings
@@ -404,8 +405,8 @@ class Brakeman::Report
 
   #Generate CSV output
   def to_csv
-    output = csv_header 
-    output << "\nSUMMARY\n" 
+    output = csv_header
+    output << "\nSUMMARY\n"
 
     output << table_to_csv(generate_overview) << "\n"
 
@@ -437,7 +438,7 @@ class Brakeman::Report
     output << table_to_csv(res) << "\n" if res
 
     output << "Model Warnings\n"
-    res = generate_model_warnings 
+    res = generate_model_warnings
     output << table_to_csv(res) << "\n" if res
 
     res = generate_template_warnings
@@ -542,11 +543,11 @@ HEADER
 
   #Generate HTML for warnings, including context show/hidden via Javascript
   def with_context warning, message
-    context = context_for warning
+    context = context_for(@app_tree, warning)
     full_message = nil
 
     if tracker.options[:message_limit] and
-      tracker.options[:message_limit] > 0 and 
+      tracker.options[:message_limit] > 0 and
       message.length > tracker.options[:message_limit]
 
       full_message = html_message(warning, message)
@@ -657,12 +658,12 @@ HEADER
         else
           w.code = ""
         end
-        w.context = context_for(w).join("\n")
+        w.context = context_for(@app_tree, w).join("\n")
       end
     end
 
     report[:config] = tracker.config
-      
+
     report
   end
 

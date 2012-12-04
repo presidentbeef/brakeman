@@ -4,8 +4,9 @@ require 'brakeman/processors/base_processor'
 class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
   FORMAT_HTML = Sexp.new(:call, Sexp.new(:lvar, :format), :html)
 
-  def initialize tracker
-    super 
+  def initialize app_tree, tracker
+    super(tracker)
+    @app_tree = app_tree
     @controller = nil
     @current_method = nil
     @current_module = nil
@@ -89,7 +90,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
             #layout "some_layout"
 
             name = args.last.value.to_s
-            unless Dir.glob("#{@tracker.options[:app_path]}/app/views/layouts/#{name}.html.{erb,haml}").empty?
+            if @app_tree.layout_exists?(name)
               @controller[:layout] = "layouts/#{name}"
             else
               Brakeman.debug "[Notice] Layout not found: #{name}"
@@ -107,7 +108,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
       exp
     elsif target == nil and method == :render
       make_render exp
-    elsif exp == FORMAT_HTML and context[1] != :iter 
+    elsif exp == FORMAT_HTML and context[1] != :iter
       #This is an empty call to
       # format.html
       #Which renders the default template if no arguments
@@ -174,7 +175,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     name = underscore(@controller[:name].to_s.split("::")[-1].gsub("Controller", ''))
 
     #There is a layout for this Controller
-    unless Dir.glob("#{@tracker.options[:app_path]}/app/views/layouts/#{name}.html.{erb,haml}").empty?
+    if @app_tree.layout_exists?(name)
       @controller[:layout] = "layouts/#{name}"
     end
   end
