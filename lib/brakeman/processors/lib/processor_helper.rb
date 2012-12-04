@@ -1,5 +1,8 @@
 #Contains a couple shared methods for Processors.
 module Brakeman::ProcessorHelper
+  #Process each Sexp in a Sexp.
+  #Use this method if you want to do something
+  #with each Sexp, but not modify the original Sexp.
   def process_all exp
     exp.each_sexp do |e|
       process e
@@ -7,12 +10,39 @@ module Brakeman::ProcessorHelper
     exp
   end
 
+  #Process each Sexp in a Sexp, storing the result in the
+  #original Sexp.
   def process_all! exp
     exp.map! do |e|
       if sexp? e
         process e
       else
         e
+      end
+    end
+
+    exp
+  end
+
+  #Process the arguments of a method call. Does not store results.
+  #
+  #This method is used because Sexp#args and Sexp#arglist create new objects.
+  def process_call_args exp
+    exp.each_arg do |a|
+      process a if sexp? a
+    end
+
+    exp
+  end
+
+  #Process the arguments of a method call. Modifies original call Sexp with
+  #the results.
+  def process_call_args! exp
+    exp.each_arg! do |a|
+      if sexp? a
+        process a
+      else
+        a
       end
     end
 
