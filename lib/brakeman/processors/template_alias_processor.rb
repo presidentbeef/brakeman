@@ -1,6 +1,7 @@
 require 'set'
 require 'brakeman/processors/alias_processor'
 require 'brakeman/processors/lib/render_helper'
+require 'brakeman/tracker'
 
 #Processes aliasing in templates.
 #Handles calls to +render+.
@@ -37,6 +38,9 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
     name
   end
 
+  UNKNOWN_MODEL_CALL = Sexp.new(:call, Sexp.new(:const, Brakeman::Tracker::UNKNOWN_MODEL), :new)
+  FORM_BUILDER_CALL = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new)
+
   #Looks for form methods and iterating over collections of Models
   def process_call_with_block exp
     process_default exp
@@ -55,14 +59,14 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
           if model == target.target
             env[Sexp.new(:lvar, arg)] = Sexp.new(:call, model, :new)
           else
-            env[Sexp.new(:lvar, arg)] = Sexp.new(:call, Sexp.new(:const, Brakeman::Tracker::UNKNOWN_MODEL), :new)
+            env[Sexp.new(:lvar, arg)] = UNKNOWN_MODEL_CALL
           end
 
           process block if sexp? block
         end
       elsif FORM_METHODS.include? method
         if arg.is_a? Symbol
-          env[Sexp.new(:lvar, arg)] = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new)
+          env[Sexp.new(:lvar, arg)] = FORM_BUILDER_CALL
 
           process block if sexp? block
         end
