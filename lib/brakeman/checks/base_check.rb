@@ -165,8 +165,8 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
         matches = tracker.check_initializers([], :attr_accessible)
 
         matches.each do |result|
-          if result[1] == :ActiveRecord and result[2] == :Base
-            arg = result[-1][3].first_arg
+          if result[1] == "ActiveRecord" and result[2] == :Base
+            arg = result[-1].first_arg
 
             if arg.nil? or node_type? arg, :nil
               @mass_assign_disabled = true
