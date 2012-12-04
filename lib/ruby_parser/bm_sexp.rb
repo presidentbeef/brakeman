@@ -5,6 +5,33 @@ class Sexp
   attr_reader :paren
   ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cdecl, :or, :and, :colon2]
 
+  alias :old_init :initialize
+  def initialize *args
+    Sexp.add_sexp args.first
+    if args.first.nil?
+#      puts caller[1]
+    end
+    old_init *args
+  end
+
+  def dup
+    Sexp.add_sexp :dup
+    super
+  end
+
+  def self.add_sexp type
+    @sexps ||= Hash.new(0)
+    @sexps[type] += 1
+  end
+
+  def self.sexps
+    @sexps
+  end
+
+  def self.total_sexps
+    @sexps.values.reduce(:+)
+  end
+
   def method_missing name, *args
     #Brakeman does not use this functionality,
     #so overriding it to raise a NoMethodError.
@@ -217,6 +244,35 @@ class Sexp
         Sexp.new
       end
     end
+  end
+
+  def each_arg replace = false
+    expect :call, :attrasgn, :super, :zsuper
+    range = nil
+
+    case self.node_type
+    when :call, :attrasgn
+      if self[3]
+        range = (3...self.length)
+      end
+    when :super, :zsuper
+      if self[1]
+        range = (1...self.length)
+      end
+    end
+
+    if range
+      range.each do |i|
+        res = yield self[i]
+        self[i] = res if replace
+      end
+    end
+
+    self
+  end
+
+  def each_arg! &block
+    self.each_arg true, &block
   end
 
   #Returns first argument of a method call.

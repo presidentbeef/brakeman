@@ -277,4 +277,25 @@ class SexpTests < Test::Unit::TestCase
     assert_equal s(:iasgn, :@x, s(:lit, 1)), exp.iasgn(true)
     assert_equal nil, exp.iasgn #Was deleted
   end
+
+  def test_each_arg
+    exp = parse "blah 1, 2, 3"
+
+    args = []
+    exp.each_arg do |a|
+      args << a.value
+    end
+
+    assert_equal [1,2,3], args
+  end
+
+  def test_each_arg!
+    exp = parse "blah 1, 2"
+    exp.each_arg! do |a|
+      s(:lit, a.value + 1)
+    end
+
+    assert_equal s(:lit, 2), exp.first_arg
+    assert_equal s(:lit, 3), exp.second_arg
+  end
 end
