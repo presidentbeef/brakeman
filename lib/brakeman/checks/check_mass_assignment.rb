@@ -78,7 +78,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
 
   #Want to ignore calls to Model.new that have no arguments
   def check_call call
-    args = process_all call.args
+    args = process_all! call.args
 
     if args.empty? #empty new()
       false

@@ -200,7 +200,12 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
 
     exp.last.each_with_index do |e,i|
       if symbol? e and e.value == :action
-        @tracker.routes[@current_controller] << exp.last[i + 1].value.to_sym
+        action = exp.last[i + 1]
+        
+        if node_type? action, :lit
+          @tracker.routes[@current_controller] << action.value.to_sym
+        end
+
         return
       end
     end
@@ -211,7 +216,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
   # end
   def process_with_options exp
     @with_options = exp.block_call.args.last
-    @nested = Sexp.new(:lvar, exp.block_args.lhs)
+    @nested = Sexp.new(:lvar, exp.block_args.value)
 
     self.current_controller = check_for_controller_name exp.block_call.args
     
@@ -233,7 +238,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
     @prefix << camelize(call.first_arg.value)
 
     if formal_args
-      @nested = Sexp.new(:lvar, formal_args.lhs)
+      @nested = Sexp.new(:lvar, formal_args.value)
     end
 
     process block

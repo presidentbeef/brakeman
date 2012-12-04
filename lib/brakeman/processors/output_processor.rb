@@ -14,6 +14,7 @@ class Brakeman::OutputProcessor < Ruby2Ruby
   end
 
   alias process_safely format
+  alias process_methdef process_defn
 
   def process exp
     begin
@@ -100,7 +101,7 @@ class Brakeman::OutputProcessor < Ruby2Ruby
 
   def process_call_with_block exp
     call = process exp[0]
-    block = process exp[1] if exp[1]
+    block = process_rlist exp[2..-1]
     out = "#{call} do\n #{block}\n end"
     exp.clear
     out

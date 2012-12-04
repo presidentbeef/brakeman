@@ -19,7 +19,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     process src
   end
 
-  #s(:class, NAME, PARENT, s(:scope ...))
+  #s(:class, NAME, PARENT, BODY)
   def process_class exp
     name = class_name exp.class_name
 
@@ -44,9 +44,9 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
         :associations => {},
         :file => @file_name }
       @tracker.models[@model[:name]] = @model
-      res = process exp.body
+      exp.body = process_all! exp.body
       @model = nil
-      res
+      exp
     end
   end
 
@@ -81,8 +81,12 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
         when :attr_accessible
           @model[:attr_accessible] ||= []
           args = args.map do |e|
-            e[1]
-          end
+            if node_type? e, :lit
+              e.value
+            else
+              nil
+            end
+          end.compact
 
           @model[:attr_accessible].concat args
         else
@@ -92,14 +96,14 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
               @model[:associations][method].concat exp.args
             else
               @model[:options][method] ||= []
-              @model[:options][method] << exp.arglist
+              @model[:options][method] << exp.arglist.line(exp.line)
             end
           end
         end
       end
       ignore
     else
-      call = Sexp.new :call, target, method, process(exp.arglist)
+      call = make_call target, method, process_all!(exp.args)
       call.line(exp.line)
       call
     end
@@ -111,7 +115,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     name = exp.method_name
 
     @current_method = name
-    res = Sexp.new :methdef, name, exp[2], process(exp.body.value)
+    res = Sexp.new :methdef, name, exp.formal_args, *process_all!(exp.body)
     res.line(exp.line)
     @current_method = nil
     if @model
@@ -133,7 +137,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     end
 
     @current_method = name
-    res = Sexp.new :selfdef, target, name, exp[3], process(exp.body.value)
+    res = Sexp.new :selfdef, target, name, exp.formal_args, *process_all!(exp.body)
     res.line(exp.line)
     @current_method = nil
     if @model

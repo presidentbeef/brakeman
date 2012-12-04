@@ -82,7 +82,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
         :link_path => "link_to"
 
     elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(arg)
-      method = match[2]
+      method = match.method
 
       unless IGNORE_MODEL_METHODS.include? method
         add_result result

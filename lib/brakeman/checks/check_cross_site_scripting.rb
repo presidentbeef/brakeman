@@ -31,7 +31,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   CGI = Sexp.new(:const, :CGI)
 
-  FORM_BUILDER = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new, Sexp.new(:arglist))
+  FORM_BUILDER = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new)
 
   #Run check
   def run_check
@@ -115,7 +115,11 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
         :confidence => CONFIDENCE[:high]
 
     elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(out)
-      method = match[2]
+      method = if call? match
+                 match.method
+               else
+                 nil
+               end
 
       unless IGNORE_MODEL_METHODS.include? method
         add_result out
@@ -241,7 +245,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
       #exp[0] = :ignore #should not be necessary
       @matched = false
-    elsif sexp? target and model_name? target[1]
+    elsif sexp? target and model_name? target[1] #TODO: use method call?
       @matched = Match.new(:model, exp)
     elsif cookies? exp
       @matched = Match.new(:cookies, exp)
@@ -286,9 +290,8 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   #Ignore condition in if Sexp
   def process_if exp
-    exp[2..-1].each do |e|
-      process e if sexp? e
-    end
+    process exp.then_clause if sexp? exp.then_clause
+    process exp.else_clause if sexp? exp.else_clause
     exp
   end
 

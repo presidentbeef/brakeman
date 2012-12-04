@@ -30,12 +30,12 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
   #Processes results from Tracker#find_call.
   def process_result result
     call = result[:call]
-
-    args = process call[3]
+    args = call.arglist
+    first_arg = call.first_arg
 
     case call.method
     when :system, :exec
-      failure = include_user_input?(args[1]) || include_interp?(args[1])
+      failure = include_user_input?(first_arg) || include_interp?(first_arg)
     else
       failure = include_user_input?(args) || include_interp?(args)
     end
