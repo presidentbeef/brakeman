@@ -475,7 +475,17 @@ class Brakeman::Report
 
   #Generate header for text output
   def text_header
-    "\n+BRAKEMAN REPORT+\n\nApplication path: #{File.expand_path tracker.options[:app_path]}\nRails version: #{rails_version}\nGenerated at #{Time.now}\nChecks run: #{checks.checks_run.sort.join(", ")}\n"
+    <<-HEADER
+
++BRAKEMAN REPORT+
+
+Application path: #{File.expand_path tracker.options[:app_path]}
+Rails version: #{rails_version}
+Brakeman version: #{Brakeman::Version}
+Started at #{tracker.start_time}
+Duration: #{tracker.duration} seconds
+Checks run: #{checks.checks_run.sort.join(", ")}
+HEADER
   end
 
   #Generate header for CSV output
@@ -670,7 +680,10 @@ class Brakeman::Report
       :app_path => File.expand_path(tracker.options[:app_path]),
       :rails_version => rails_version,
       :security_warnings => all_warnings.length,
-      :timestamp => Time.now.to_s,
+      :start_time => tracker.start_time.to_s,
+      :end_time => tracker.end_time.to_s,
+      :timestamp => tracker.end_time.to_s,
+      :duration => tracker.duration,
       :checks_performed => checks.checks_run.sort,
       :number_of_controllers =>tracker.controllers.length,
       # ignore the "fake" model

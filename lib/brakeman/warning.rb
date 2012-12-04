@@ -76,14 +76,14 @@ class Brakeman::Warning
 
   #Return String of the code output from the OutputProcessor and
   #stripped of newlines and tabs.
-  def format_code
-    Brakeman::OutputProcessor.new.format(self.code).gsub(/(\t|\r|\n)+/, " ")
+  def format_code strip = true
+    format_ruby self.code, strip
   end
 
   #Return String of the user input formatted and
   #stripped of newlines and tabs.
-  def format_user_input
-    Brakeman::OutputProcessor.new.format(self.user_input).gsub(/(\t|\r|\n)+/, " ")
+  def format_user_input strip = true
+    format_ruby self.user_input, strip
   end
 
   #Return formatted warning message
@@ -171,14 +171,22 @@ class Brakeman::Warning
       :file => self.file,
       :line => self.line,
       :link => self.link,
-      :code => (@code && self.format_code),
+      :code => (@code && self.format_code(false)),
       :location => location,
-      :user_input => (@user_input && self.format_user_input),
+      :user_input => (@user_input && self.format_user_input(false)),
       :confidence => TEXT_CONFIDENCE[self.confidence]
     }
   end
 
   def to_json
     MultiJson.dump self.to_hash
+  end
+
+  private
+
+  def format_ruby code, strip
+    formatted = Brakeman::OutputProcessor.new.format(code)
+    formatted.gsub!(/(\t|\r|\n)+/, " ") if strip
+    formatted
   end
 end
