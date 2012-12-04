@@ -299,6 +299,16 @@ class Sexp
     self[4] = exp
   end
 
+  def last_arg
+    expect :call, :attrasgn
+
+    if self[3]
+      self[-1]
+    else
+      nil
+    end
+  end
+
   #Returns condition of an if expression:
   #
   #    s(:if,

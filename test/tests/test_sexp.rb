@@ -18,6 +18,7 @@ class SexpTests < Test::Unit::TestCase
     assert_equal s(:arglist), exp.arglist
     assert_nil exp.first_arg
     assert_nil exp.second_arg
+    assert_nil exp.last_arg
   end
 
   def test_method_call_with_args
@@ -29,6 +30,7 @@ class SexpTests < Test::Unit::TestCase
     assert_equal s(:arglist, s(:lit, 1), s(:lit, 2), s(:lit, 3)), exp.arglist
     assert_equal s(:lit, 1), exp.first_arg
     assert_equal s(:lit, 2), exp.second_arg
+    assert_equal s(:lit, 3), exp.last_arg
   end
 
   def test_method_call_no_target
@@ -40,6 +42,7 @@ class SexpTests < Test::Unit::TestCase
     assert_equal s(:arglist, s(:lit, 1), s(:lit, 2), s(:lit, 3)), exp.arglist
     assert_equal s(:lit, 1), exp.first_arg
     assert_equal s(:lit, 2), exp.second_arg
+    assert_equal s(:lit, 3), exp.last_arg
   end
 
   def test_method_call_set_target
@@ -55,6 +58,7 @@ class SexpTests < Test::Unit::TestCase
 
     assert_equal s(:lit, 1), exp.first_arg
     assert_equal s(:lit, 2), exp.second_arg
+    assert_equal s(:lit, 2), exp.last_arg
     assert_equal s(:arglist, s(:lit, 1), s(:lit, 2)), exp.arglist
     assert_equal s(s(:lit, 1), s(:lit, 2)), exp.args
   end
@@ -69,6 +73,7 @@ class SexpTests < Test::Unit::TestCase
     assert_equal s(s(:lit, 1), s(:lit, 2)), exp.args
     assert_equal s(:lit,1), exp.first_arg
     assert_equal s(:lit, 2), exp.second_arg
+    assert_equal s(:lit, 2), exp.last_arg
   end
 
   def test_method_call_with_block
