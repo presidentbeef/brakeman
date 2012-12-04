@@ -676,4 +676,13 @@ class Rails31Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /other_controller\.rb/
   end
+
+  def test_to_sql_interpolation
+    assert_no_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 181,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :file => /product\.rb/
+  end
 end
