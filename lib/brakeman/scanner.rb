@@ -15,6 +15,7 @@ begin
   require 'erb'
   require 'erubis'
   require 'brakeman/processor'
+  require 'brakeman/app_tree'
   require 'brakeman/parsers/rails2_erubis'
   require 'brakeman/parsers/rails2_xss_plugin_erubis'
   require 'brakeman/parsers/rails3_erubis'
@@ -34,17 +35,18 @@ class Brakeman::Scanner
   #Pass in path to the root of the Rails application
   def initialize options, processor = nil
     @options = options
-    @report_progress = options[:report_progress]
-    @path = options[:app_path]
-    @app_path = File.join(@path, "app")
-    @processor = processor || Brakeman::Processor.new(options)
-    @skip_files = nil
+    @app_tree = Brakeman::AppTree.from_options(options)
 
-    #Convert files into Regexp for matching
-    if options[:skip_files]
-      list = "(?:" << options[:skip_files].map { |f| Regexp.escape f }.join("|") << ")$"
-      @skip_files = Regexp.new(list)
+    if !@app_tree.root || !@app_tree.exists?("app")
+      abort("Please supply the path to a Rails application.")
     end
+
+    if @app_tree.exists?("script/rails")
+      options[:rails3] = true
+      Brakeman.notify "[Notice] Detected Rails 3 application"
+    end
+
+    @processor = processor || Brakeman::Processor.new(@app_tree, options)
 
     if RUBY_1_9
       @ruby_parser = ::Ruby19Parser
@@ -93,7 +95,7 @@ class Brakeman::Scanner
       process_config_file "gems.rb"
     end
 
-    if File.exists? "#@path/vendor/plugins/rails_xss" or
+    if @app_tree.exists?("vendor/plugins/rails_xss") or
       options[:rails3] or options[:escape_html]
 
       tracker.config[:escape_html] = true
@@ -102,8 +104,10 @@ class Brakeman::Scanner
   end
 
   def process_config_file file
-    if File.exists? "#@path/config/#{file}"
-      @processor.process_config(parse_ruby(File.read("#@path/config/#{file}")))
+    path = "config/#{file}"
+
+    if @app_tree.exists?(path)
+      @processor.process_config(parse_ruby(@app_tree.read(path)))
     end
 
   rescue Exception => e
@@ -115,11 +119,11 @@ class Brakeman::Scanner
 
   #Process Gemfile
   def process_gems
-    if File.exists? "#@path/Gemfile"
-      if File.exists? "#@path/Gemfile.lock"
-        @processor.process_gems(parse_ruby(File.read("#@path/Gemfile")), File.read("#@path/Gemfile.lock"))
+    if @app_tree.exists? "Gemfile"
+      if @app_tree.exists? "Gemfile.lock"
+        @processor.process_gems(parse_ruby(@app_tree.read("Gemfile")), @app_tree.read("Gemfile.lock"))
       else
-        @processor.process_gems(parse_ruby(File.read("#@path/Gemfile")))
+        @processor.process_gems(parse_ruby(@app_tree.read("Gemfile")))
       end
     end
   rescue Exception => e
@@ -131,10 +135,7 @@ class Brakeman::Scanner
   #
   #Adds parsed information to tracker.initializers
   def process_initializers
-    initializer_files = Dir.glob(@path + "/config/initializers/**/*.rb").sort
-    initializer_files.reject! { |f| @skip_files.match f } if @skip_files
-
-    initializer_files.each do |f|
+    @app_tree.initializer_paths.each do |f|
       process_initializer f
     end
   end
@@ -142,7 +143,7 @@ class Brakeman::Scanner
   #Process an initializer
   def process_initializer path
     begin
-      @processor.process_initializer(path, parse_ruby(File.read(path)))
+      @processor.process_initializer(path, parse_ruby(@app_tree.read_path(path)))
     rescue Racc::ParseError => e
       tracker.error e, "could not parse #{path}. There is probably a typo in the file. Test it with 'ruby_parse #{path}'"
     rescue Exception => e
@@ -159,19 +160,13 @@ class Brakeman::Scanner
       return
     end
 
-    lib_files = Dir.glob(@path + "/lib/**/*.rb").sort
-    lib_files.reject! { |f| @skip_files.match f } if @skip_files
-
-    total = lib_files.length
+    total = @app_tree.lib_paths.length
     current = 0
 
-    lib_files.each do |f|
+    @app_tree.lib_paths.each do |f|
       Brakeman.debug "Processing #{f}"
-      if @report_progress
-        $stderr.print " #{current}/#{total} files processed\r"
-        current += 1
-      end
-
+      report_progress(current, total)
+      current += 1
       process_lib f
     end
   end
@@ -179,7 +174,7 @@ class Brakeman::Scanner
   #Process a library
   def process_lib path
     begin
-      @processor.process_lib parse_ruby(File.read(path)), path
+      @processor.process_lib parse_ruby(@app_tree.read_path(path)), path
     rescue Racc::ParseError => e
       tracker.error e, "could not parse #{path}. There is probably a typo in the file. Test it with 'ruby_parse #{path}'"
     rescue Exception => e
@@ -191,9 +186,9 @@ class Brakeman::Scanner
   #
   #Adds parsed information to tracker.routes
   def process_routes
-    if File.exists? "#@path/config/routes.rb"
+    if @app_tree.exists?("config/routes.rb")
       begin
-        @processor.process_routes parse_ruby(File.read("#@path/config/routes.rb"))
+        @processor.process_routes parse_ruby(@app_tree.read("config/routes.rb"))
       rescue Exception => e
         tracker.error e.exception(e.message + "\nWhile processing routes.rb"), e.backtrace
         Brakeman.notify "[Notice] Error while processing routes - assuming all public controller methods are actions."
@@ -208,19 +203,13 @@ class Brakeman::Scanner
   #
   #Adds processed controllers to tracker.controllers
   def process_controllers
-    controller_files = Dir.glob(@app_path + "/controllers/**/*.rb").sort
-    controller_files.reject! { |f| @skip_files.match f } if @skip_files
-
-    total = controller_files.length
+    total = @app_tree.controller_paths.length
     current = 0
 
-    controller_files.each do |f|
+    @app_tree.controller_paths.each do |f|
       Brakeman.debug "Processing #{f}"
-      if @report_progress
-        $stderr.print " #{current}/#{total} files processed\r"
-        current += 1
-      end
-
+      report_progress(current, total)
+      current += 1
       process_controller f
     end
 
@@ -231,11 +220,8 @@ class Brakeman::Scanner
 
     tracker.controllers.sort_by{|name| name.to_s}.each do |name, controller|
       Brakeman.debug "Processing #{name}"
-      if @report_progress
-        $stderr.print " #{current}/#{total} controllers processed\r"
-        current += 1
-      end
-
+      report_progress(current, total, "controllers")
+      current += 1
       @processor.process_controller_alias name, controller[:src]
     end
 
@@ -245,7 +231,7 @@ class Brakeman::Scanner
 
   def process_controller path
     begin
-      @processor.process_controller(parse_ruby(File.read(path)), path)
+      @processor.process_controller(parse_ruby(@app_tree.read_path(path)), path)
     rescue Racc::ParseError => e
       tracker.error e, "could not parse #{path}. There is probably a typo in the file. Test it with 'ruby_parse #{path}'"
     rescue Exception => e
@@ -257,23 +243,15 @@ class Brakeman::Scanner
   #
   #Adds processed views to tracker.views
   def process_templates
-
-    views_path = @app_path + "/views/**/*.{html.erb,html.haml,rhtml,js.erb}"
     $stdout.sync = true
+
     count = 0
+    total = @app_tree.template_paths.length
 
-    template_files = Dir.glob(views_path).sort
-    template_files.reject! { |f| @skip_files.match f } if @skip_files
-
-    total = template_files.length
-
-    template_files.each do |path|
+    @app_tree.template_paths.each do |path|
       Brakeman.debug "Processing #{path}"
-      if @report_progress
-        $stderr.print " #{count}/#{total} files processed\r"
-        count += 1
-      end
-
+      report_progress(count, total)
+      count += 1
       process_template path
     end
 
@@ -284,11 +262,8 @@ class Brakeman::Scanner
 
     tracker.templates.keys.dup.sort_by{|name| name.to_s}.each do |name|
       Brakeman.debug "Processing #{name}"
-      if @report_progress
-        count += 1
-        $stderr.print " #{count}/#{total} templates processed\r"
-      end
-
+      report_progress(count, total, "templates")
+      count += 1
       @processor.process_template_alias tracker.templates[name]
     end
   end
@@ -297,7 +272,7 @@ class Brakeman::Scanner
     type = path.match(KNOWN_TEMPLATE_EXTENSIONS)[1].to_sym
     type = :erb if type == :rhtml
     name = template_path_to_name path
-    text = File.read path
+    text = @app_tree.read_path path
 
     begin
       if type == :erb
@@ -349,32 +324,30 @@ class Brakeman::Scanner
   #
   #Adds the processed models to tracker.models
   def process_models
-    model_files = Dir.glob(@app_path + "/models/**/*.rb").sort
-    model_files.reject! { |f| @skip_files.match f } if @skip_files
-
-    total = model_files.length
+    total = @app_tree.model_paths.length
     current = 0
 
-    model_files.each do |f|
+    @app_tree.model_paths.each do |f|
       Brakeman.debug "Processing #{f}"
-      if @report_progress
-        $stderr.print " #{current}/#{total} files processed\r"
-        current += 1
-      end
-
+      report_progress(current, total)
+      current += 1
       process_model f
-
     end
   end
 
   def process_model path
     begin
-      @processor.process_model(parse_ruby(File.read(path)), path)
+      @processor.process_model(parse_ruby(@app_tree.read_path(path)), path)
     rescue Racc::ParseError => e
       tracker.error e, "could not parse #{path}"
     rescue Exception => e
       tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
     end
+  end
+
+  def report_progress(current, total, type = "files")
+    return unless @options[:report_progress]
+    $stderr.print " #{current}/#{total} #{type} processed\r"
   end
 
   def index_call_sites

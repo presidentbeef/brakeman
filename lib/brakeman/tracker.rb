@@ -20,9 +20,11 @@ class Brakeman::Tracker
   #
   #The Processor argument is only used by other Processors
   #that might need to access it.
-  def initialize processor = nil, options = {}
+  def initialize(app_tree, processor = nil, options = {})
+    @app_tree = app_tree
     @processor = processor
     @options = options
+
     @config = {}
     @templates = {}
     @controllers = {}
@@ -67,7 +69,7 @@ class Brakeman::Tracker
   #Run a set of checks on the current information. Results will be stored
   #in Tracker#checks.
   def run_checks
-    @checks = Brakeman::Checks.run_checks(self)
+    @checks = Brakeman::Checks.run_checks(@app_tree, self)
 
     @end_time = Time.now
     @duration = @end_time - @start_time
@@ -147,7 +149,7 @@ class Brakeman::Tracker
 
   #Returns a Report with this Tracker's information
   def report
-    Brakeman::Report.new(self)
+    Brakeman::Report.new(@app_tree, self)
   end
 
   def index_call_sites

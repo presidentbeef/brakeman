@@ -75,28 +75,28 @@ class Brakeman::Checks
 
   #Run all the checks on the given Tracker.
   #Returns a new instance of Checks with the results.
-  def self.run_checks tracker
+  def self.run_checks(app_tree, tracker)
     if tracker.options[:parallel_checks]
-      self.run_checks_parallel tracker
+      self.run_checks_parallel(app_tree, tracker)
     else
-      self.run_checks_sequential tracker
+      self.run_checks_sequential(app_tree, tracker)
     end
   end
 
   #Run checks sequentially
-  def self.run_checks_sequential tracker
+  def self.run_checks_sequential(app_tree, tracker)
     check_runner = self.new :min_confidence => tracker.options[:min_confidence]
 
     @checks.each do |c|
       check_name = get_check_name c
 
       #Run or don't run check based on options
-      unless tracker.options[:skip_checks].include? check_name or 
+      unless tracker.options[:skip_checks].include? check_name or
         (tracker.options[:run_checks] and not tracker.options[:run_checks].include? check_name)
 
         Brakeman.notify " - #{check_name}"
 
-        check = c.new(tracker)
+        check = c.new(app_tree, tracker)
 
         begin
           check.run_check
@@ -118,23 +118,23 @@ class Brakeman::Checks
   end
 
   #Run checks in parallel threads
-  def self.run_checks_parallel tracker
+  def self.run_checks_parallel(app_tree, tracker)
     threads = []
     error_mutex = Mutex.new
-    
+
     check_runner = self.new :min_confidence => tracker.options[:min_confidence]
 
     @checks.each do |c|
       check_name = get_check_name c
 
       #Run or don't run check based on options
-      unless tracker.options[:skip_checks].include? check_name or 
+      unless tracker.options[:skip_checks].include? check_name or
         (tracker.options[:run_checks] and not tracker.options[:run_checks].include? check_name)
 
         Brakeman.notify " - #{check_name}"
 
         threads << Thread.new do
-          check = c.new(tracker)
+          check = c.new(app_tree, tracker)
 
           begin
             check.run_check
@@ -175,6 +175,6 @@ class Brakeman::Checks
 end
 
 #Load all files in checks/ directory
-Dir.glob("#{File.expand_path(File.dirname(__FILE__))}/checks/*.rb").sort.each do |f| 
+Dir.glob("#{File.expand_path(File.dirname(__FILE__))}/checks/*.rb").sort.each do |f|
   require f.match(/(brakeman\/checks\/.*)\.rb$/)[0]
 end

@@ -40,7 +40,7 @@ module Brakeman
   #  * :skip_libs - do not process lib/ directory (default: false)
   #  * :skip_checks - checks not to run (run all if not specified)
   #  * :relative_path - show relative path of each file(default: false)
-  #  * :summary_only - only output summary section of report 
+  #  * :summary_only - only output summary section of report
   #                    (does not apply to tabs format)
   #
   #Alternatively, just supply a path as a string.
@@ -67,15 +67,6 @@ module Brakeman
     options = load_options(options[:config_file]).merge! options
     options = get_defaults.merge! options
     options[:output_formats] = get_output_formats options
-
-    app_path = options[:app_path]
-
-    abort("Please supply the path to a Rails application.") unless app_path and File.exist? app_path + "/app"
-
-    if File.exist? app_path + "/script/rails"
-      options[:rails3] = true
-      notify "[Notice] Detected Rails 3 application" unless options[:quiet]
-    end
 
     options
   end
@@ -116,8 +107,8 @@ module Brakeman
 
   #Default set of options
   def self.get_defaults
-    { :skip_checks => Set.new, 
-      :check_arguments => true, 
+    { :skip_checks => Set.new,
+      :check_arguments => true,
       :safe_methods => Set.new,
       :min_confidence => 2,
       :combine_locations => true,
@@ -130,7 +121,7 @@ module Brakeman
       :relative_path => false,
       :quiet => true,
       :report_progress => true,
-      :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css" 
+      :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css"
     }
   end
 
