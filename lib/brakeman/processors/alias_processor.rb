@@ -477,8 +477,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #Join two string literals into one.
   def join_strings string1, string2
     result = Sexp.new(:str)
-    result[1] = string1[1] + string2[1]
-    if result[1].length > 50
+    result.value = string1.value + string2.value
+
+    if result.value.length > 50
       string1
     else
       result

@@ -115,7 +115,11 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
         :confidence => CONFIDENCE[:high]
 
     elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(out)
-      method = match[2]
+      method = if call? match
+                 match.method
+               else
+                 nil
+               end
 
       unless IGNORE_MODEL_METHODS.include? method
         add_result out

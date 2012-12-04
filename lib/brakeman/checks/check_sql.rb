@@ -261,23 +261,25 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
   def check_scope_arguments args
     return unless node_type? args, :arglist
+    scope_arg = args[2] #first arg is name of scope
 
-    if node_type? args[2], :iter
-      unsafe_sql? args[2].block
+    if node_type? scope_arg, :iter
+      unsafe_sql? scope_arg.block
     else
-      unsafe_sql? args[2]
+      unsafe_sql? scope_arg
     end
   end
 
   def check_query_arguments arg
     return unless sexp? arg
+    first_arg = arg[1]
 
     if node_type? arg, :arglist
-      if arg.length > 2 and node_type? arg[1], :string_interp, :dstr
+      if arg.length > 2 and node_type? first_arg, :string_interp, :dstr
         # Model.where("blah = ?", blah)
-        return check_string_interp arg[1]
+        return check_string_interp first_arg
       else
-        arg = arg[1]
+        arg = first_arg
       end
     end
 
@@ -319,7 +321,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def check_by_sql_arguments arg
     return unless sexp? arg
 
-    #This is kind of necessary, because unsafe_sql? will handle an array
+    #This is kind of unnecessary, because unsafe_sql? will handle an array
     #correctly, but might be better to be explicit.
     if array? arg
       unsafe_sql? arg[1]
