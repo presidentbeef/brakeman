@@ -10,7 +10,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
     super
 
     if tracker.options[:rails3]
-      @session_settings = Sexp.new(:call, Sexp.new(:colon2, Sexp.new(:const, :Rails3), :Application), :config, Sexp.new(:arglist))
+      @session_settings = Sexp.new(:call, Sexp.new(:colon2, Sexp.new(:const, :Rails3), :Application), :config)
     else
       @session_settings = Sexp.new(:colon2, Sexp.new(:const, :ActionController), :Base)
     end

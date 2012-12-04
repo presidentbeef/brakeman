@@ -61,8 +61,7 @@ class Brakeman::SexpProcessor
     result = nil
 
     type = exp.first
-    raise "type should be a Symbol, not: #{exp.first.inspect}" unless
-      Symbol === type
+    raise "Type should be a Symbol, not: #{exp.first.inspect} in #{exp.inspect}" unless Symbol === type
 
     in_context type do
       # now do a pass with the real processor (or generic)

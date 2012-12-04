@@ -54,7 +54,7 @@ module Brakeman
     #Process a model source
     def process_model src, file_name
       result = ModelProcessor.new(@tracker).process_model src, file_name
-      AliasProcessor.new(@tracker).process result
+      AliasProcessor.new(@tracker).process_all result if result
     end
 
     #Process either an ERB or HAML template

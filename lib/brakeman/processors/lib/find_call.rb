@@ -69,7 +69,7 @@ class Brakeman::FindCall < Brakeman::BaseProcessor
 
   #Process body of method
   def process_methdef exp
-    process exp.body
+    process_all exp.body
   end
 
   alias :process_selfdef :process_methdef

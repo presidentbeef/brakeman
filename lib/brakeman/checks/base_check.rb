@@ -72,7 +72,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
         @has_user_input = Match.new(:cookies, exp)
       elsif request_env? target
         @has_user_input = Match.new(:request, exp)
-      elsif sexp? target and model_name? target[1]
+      elsif sexp? target and model_name? target[1] #TODO: Can this be target.target?
         @has_user_input = Match.new(:model, exp)
       end
     end
@@ -166,8 +166,8 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
         matches = tracker.check_initializers([], :attr_accessible)
 
         matches.each do |result|
-          if result[1] == :ActiveRecord and result[2] == :Base
-            arg = result[-1][3][1]
+          if result[1] == "ActiveRecord" and result[2] == :Base
+            arg = result[-1].first_arg
 
             if arg.nil? or node_type? arg, :nil
               @mass_assign_disabled = true
@@ -177,9 +177,12 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
         end
       else
         matches.each do |result|
-          if result[-1][3] == Sexp.new(:arglist, Sexp.new(:lit, :attr_accessible), Sexp.new(:nil))
-            @mass_assign_disabled = true
-            break
+          if call? result[-1]
+            call = result[-1]
+            if call.first_arg == Sexp.new(:lit, :attr_accessible) and call.second_arg == Sexp.new(:nil)
+              @mass_assign_disabled = true
+              break
+            end
           end
         end
       end

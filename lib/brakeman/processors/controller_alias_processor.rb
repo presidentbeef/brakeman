@@ -98,7 +98,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
         end
       end
 
-      process exp.body
+      process_all exp.body
 
       if is_route and not @rendered
         process_default_render exp
@@ -149,7 +149,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       end
     else
       processor = Brakeman::AliasProcessor.new @tracker
-      processor.process_safely(method.body)
+      processor.process_safely(method.body_list)
 
       ivars = processor.only_ivars(:include_request_vars).all
 

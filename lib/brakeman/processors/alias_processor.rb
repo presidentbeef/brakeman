@@ -70,11 +70,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     @exp_context.push exp
 
     begin
-      exp.each_with_index do |e, i|
-        next if i == 0
-
+      exp.map! do |e|
         if sexp? e and not e.empty?
-          exp[i] = process e
+          process e
         else
           e
         end
@@ -107,7 +105,6 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
     target = exp.target
     method = exp.method
-    args = exp[3]
     first_arg = exp.first_arg
 
     #See if it is possible to simplify some basic cases
@@ -154,7 +151,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         temp_exp = process_array_access target, exp.args
         exp = temp_exp if temp_exp
       elsif hash? target
-        temp_exp = process_hash_access target, exp.args
+        temp_exp = process_hash_access target, first_arg
         exp = temp_exp if temp_exp
       end
     when :merge!, :update
@@ -204,7 +201,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def process_methdef exp
     env.scope do
       set_env_defaults
-      process exp.body
+      process_all exp.body
     end
     exp
   end
@@ -213,7 +210,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def process_selfdef exp
     env.scope do
       set_env_defaults
-      process exp.body
+      process_all exp.body
     end
     exp
   end
@@ -231,8 +228,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
     if @inside_if and val = env[local]
       #avoid setting to value it already is (e.g. "1 or 1")
-      if val != exp.rhs and val[1] != exp.rhs and val[2] != exp.rhs
-        env[local] = Sexp.new(:or, val, exp.rhs).line(exp.line || -2)
+      if val != exp.rhs
+        unless node_type?(val, :or) and (val.rhs == exp.rhs or val.lhs == exp.rhs)
+          env[local] = Sexp.new(:or, val, exp.rhs).line(exp.line || -2)
+        end
       end
     else
       env[local] = exp.rhs
@@ -305,7 +304,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     if method == :[]=
       index = exp.first_arg = process(args.first)
       value = exp.second_arg = process(args.second)
-      match = Sexp.new(:call, target, :[], Sexp.new(:arglist, index))
+      match = Sexp.new(:call, target, :[], index)
       env[match] = value
 
       if hash? target
@@ -314,7 +313,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     elsif method.to_s[-1,1] == "="
       value = exp.first_arg = process(args.first)
       #This is what we'll replace with the value
-      match = Sexp.new(:call, target, method.to_s[0..-2].to_sym, Sexp.new(:arglist))
+      match = Sexp.new(:call, target, method.to_s[0..-2].to_sym)
 
       if @inside_if and val = env[match]
         if val != value
@@ -336,7 +335,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     hash = hash.deep_clone
     hash_iterate args do |key, replacement|
       hash_insert hash, key, replacement
-      match = Sexp.new(:call, hash, :[], Sexp.new(:arglist, key))
+      match = Sexp.new(:call, hash, :[], key)
       env[match] = replacement
     end
     hash
@@ -361,7 +360,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     target = exp[1] = process(exp[1])
     index = exp[2][1] = process(exp[2][1])
     value = exp[4] = process(exp[4])
-    match = Sexp.new(:call, target, :[], Sexp.new(:arglist, index))
+    match = Sexp.new(:call, target, :[], index)
 
     unless env[match]
       if request_value? target
@@ -383,7 +382,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     value = exp[4] = process(exp[4])
     method = exp[2]
 
-    match = Sexp.new(:call, target, method.to_s[0..-2].to_sym, Sexp.new(:arglist))
+    match = Sexp.new(:call, target, method.to_s[0..-2].to_sym)
 
     unless env[match]
       env[match] = value
@@ -392,8 +391,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     exp
   end
 
+  #This is the right hand side value of a multiple assignment,
+  #like `x = y, z`
   def process_svalue exp
-    exp[1]
+    exp.value
   end
 
   #Constant assignments like
@@ -423,9 +424,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     if true? condition
       exps = [exp.then_clause]
     elsif false? condition
-      exps = exp[3..-1]
+      exps = [exp.else_clause]
     else
-      exps = exp[2..-1]
+      exps = [exp.then_clause, exp.else_clause]
     end
 
     was_inside = @inside_if
@@ -461,15 +462,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   end
 
   #Process hash access by returning the value associated
-  #with the given arguments.
-  def process_hash_access target, args
-    if args.length == 1
-      index = args[0]
-
-      hash_access(target, index)
-    else
-      nil
-    end
+  #with the given argument.
+  def process_hash_access target, index
+    hash_access(target, index)
   end
 
   #Join two array literals into one.
@@ -482,8 +477,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #Join two string literals into one.
   def join_strings string1, string2
     result = Sexp.new(:str)
-    result[1] = string1[1] + string2[1]
-    if result[1].length > 50
+    result.value = string1.value + string2.value
+
+    if result.value.length > 50
       string1
     else
       result
@@ -530,8 +526,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   #Finds the inner most call target which is not the target of a call to <<
   def find_push_target exp
-    if call? exp and exp[2] == :<<
-      find_push_target exp[1]
+    if call? exp and exp.method == :<<
+      find_push_target exp.target
     else
       exp
     end

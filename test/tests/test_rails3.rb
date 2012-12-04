@@ -138,7 +138,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_redirect
     assert_warning :type => :warning,
       :warning_type => "Redirect",
-      :line => 46,
+      :line => 45,
       :message => /^Possible unprotected redirect near line /,
       :confidence => 0,
       :file => /home_controller\.rb/

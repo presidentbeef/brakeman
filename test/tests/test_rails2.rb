@@ -107,7 +107,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_redirect
     assert_warning :type => :warning,
       :warning_type => "Redirect",
-      :line => 46,
+      :line => 45,
       :message => /^Possible unprotected redirect/,
       :confidence => 0,
       :file => /home_controller\.rb/
@@ -598,8 +598,8 @@ class Rails2Tests < Test::Unit::TestCase
   def test_explicit_render_template
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
-      :line => 2,
-      :message => /^Unescaped parameter value near line 2: params\[:ba/,
+      :line => 1,
+      :message => /^Unescaped parameter value near line 1: params\[:ba/,
       :confidence => 0,
       :file => /home\/test_render_template\.html\.haml/
   end
