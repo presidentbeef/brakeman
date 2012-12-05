@@ -299,6 +299,16 @@ class Sexp
     self[4] = exp
   end
 
+  def third_arg
+    expect :call, :attrasgn
+    self[5]
+  end
+
+  def third_arg= exp
+    expect :call, :attrasgn
+    self[5] = exp
+  end
+
   def last_arg
     expect :call, :attrasgn
 
