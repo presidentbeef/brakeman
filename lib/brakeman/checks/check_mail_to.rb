@@ -34,7 +34,7 @@ class Brakeman::CheckMailTo < Brakeman::BaseCheck
     Brakeman.debug "Checking calls to mail_to for javascript encoding"
 
     tracker.find_call(:target => false, :method => :mail_to).each do |result|
-      result[:call].arglist.each do |arg|
+      result[:call].each_arg do |arg|
         if hash? arg
           if option = hash_access(arg, :encode)
             return result if symbol? option and option.value == :javascript

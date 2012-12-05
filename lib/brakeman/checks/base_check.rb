@@ -61,7 +61,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   #Process calls and check if they include user input
   def process_call exp
     process exp.target if sexp? exp.target
-    process_all exp.args
+    process_call_args exp
 
     target = exp.target
 

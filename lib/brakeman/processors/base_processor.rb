@@ -165,7 +165,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   def process_attrasgn exp
     exp = exp.dup
     exp.target = process exp.target
-    exp.arglist = process exp.arglist
+    process_call_args! exp
     exp
   end
 

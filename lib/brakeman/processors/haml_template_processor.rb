@@ -36,14 +36,13 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
             when :options, :buffer
               exp
             when :open_tag
-              process(exp.arglist)
-              exp
+              process_call_args exp
             else
               arg = exp.first_arg
 
               if arg
                 @inside_concat = true
-                out = exp.arglist[1] = process(arg)
+                out = exp.first_arg = process(arg)
                 @inside_concat = false
               else
                 raise Exception.new("Empty _hamlout.#{method}()?")
@@ -78,7 +77,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       #Has something to do with values of blocks?
     elsif sexp? target and method == :<< and is_buffer_target? target
       @inside_concat = true
-      out = exp.arglist[1] = process(exp.arglist[1])
+      out = exp.first_arg = process(exp.first_arg)
       @inside_concat = false
 
       if out.node_type == :str #ignore plain strings
@@ -91,7 +90,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       end
     elsif target == nil and method == :render
       #Process call to render()
-      exp.arglist = process exp.arglist
+      process_call_args! exp
       make_render_in_view exp
     else
       #TODO: Do we really need a new Sexp here?

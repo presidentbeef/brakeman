@@ -46,7 +46,7 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
     end
 
     method = exp.method
-    process_all exp.args
+    process_call_args exp
 
     call = { :target => target, :method => method, :call => exp, :nested => @in_target, :chain => get_chain(exp) }
     

@@ -231,7 +231,6 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     end
 
     method = exp.method
-    args = exp.arglist
 
     #Ignore safe items
     if (target.nil? and (@ignore_methods.include? method or method.to_s =~ IGNORE_LIKE)) or
@@ -252,7 +251,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     elsif @inspect_arguments and params? exp
       @matched = Match.new(:params, exp)
     elsif @inspect_arguments
-      process args
+      process_call_args exp
     end
   end
 
