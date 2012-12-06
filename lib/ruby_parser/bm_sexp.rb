@@ -511,6 +511,32 @@ class Sexp
     self.body.unshift :rlist
   end
 
+  def each_body replace = false
+    expect :defn, :defs, :methdef, :selfdef, :class, :module
+
+    range = case self.node_type
+            when :defn, :methdef, :class
+              (3...self.length)
+            when :defs, :selfdef
+              (4...self.length)
+            when :module
+              (2...self.length)
+            end
+
+    if range
+      range.each do |i|
+        res = yield self[i]
+        self[i] = res if replace
+      end
+    end
+
+    self
+  end
+
+  def each_body! &block
+    each_body true, &block
+  end
+
   def render_type
     expect :render
     self[1]
