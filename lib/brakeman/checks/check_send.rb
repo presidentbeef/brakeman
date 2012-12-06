@@ -16,10 +16,10 @@ class Brakeman::CheckSend < Brakeman::BaseCheck
   end
 
   def process_result result
-    args = process_all! result[:call].args
+    process_call_args result[:call]
     target = process result[:call].target
 
-    if input = has_immediate_user_input?(args.first)
+    if input = has_immediate_user_input?(result[:call].first_arg)
       warn :result => result,
         :warning_type => "Dangerous Send",
         :message => "User controlled method execution",

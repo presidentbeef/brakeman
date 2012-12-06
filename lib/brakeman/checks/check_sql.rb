@@ -486,9 +486,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
     target = exp.target
     method = exp.method
-    args = exp.args
 
-    if string? target or string? args.first
+    if string? target or string? exp.first_arg
       if STRING_METHODS.include? method
         return exp
       end
