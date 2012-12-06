@@ -64,12 +64,13 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     end
 
     method = exp.method
-    args = exp.args
+    first_arg = exp.first_arg
+    last_arg = exp.last_arg
 
     #Methods called inside class definition
     #like attr_* and other settings
     if @current_method.nil? and target.nil? and @controller
-      if args.empty?
+      if first_arg.nil? #No args
         case method
         when :private, :protected, :public
           @visibility = method
@@ -81,21 +82,21 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
       else
         case method
         when :include
-          @controller[:includes] << class_name(args.first) if @controller
+          @controller[:includes] << class_name(first_arg) if @controller
         when :before_filter
           @controller[:options][:before_filters] ||= []
-          @controller[:options][:before_filters] << args
+          @controller[:options][:before_filters] << exp.args
         when :layout
-          if string? args.last
+          if string? last_arg
             #layout "some_layout"
 
-            name = args.last.value.to_s
+            name = last_arg.value.to_s
             if @app_tree.layout_exists?(name)
               @controller[:layout] = "layouts/#{name}"
             else
               Brakeman.debug "[Notice] Layout not found: #{name}"
             end
-          elsif node_type? args.last, :nil, :false
+          elsif node_type? last_arg, :nil, :false
             #layout :false or layout nil
             @controller[:layout] = false
           end
