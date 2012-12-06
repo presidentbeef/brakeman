@@ -49,8 +49,10 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
                     :options => {},
                     :src => exp,
                     :file => @file_name }
+
     @tracker.controllers[@controller[:name]] = @controller
-    exp.body = process_all! exp.body
+
+    process_exp_body! exp
     set_layout_name
     @controller = nil
     exp
@@ -126,11 +128,11 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
   def process_defn exp
     name = exp.method_name
     @current_method = name
-    res = Sexp.new :methdef, name, exp.formal_args, *process_all!(exp.body)
-    res.line(exp.line)
+    exp.node_type = :methdef
+    process_exp_body! exp
     @current_method = nil
-    @controller[@visibility][name] = res unless @controller.nil?
-    res
+    @controller[@visibility][name] = exp unless @controller.nil?
+    exp
   end
 
   #Process self.method definition and store in Tracker
@@ -150,12 +152,13 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     end
 
     @current_method = name
-    res = Sexp.new :selfdef, target, name, exp.formal_args, *process_all!(exp.body)
-    res.line(exp.line)
+    exp.node_type = :selfdef
+    exp[1] = target
+    process_exp_body! exp
     @current_method = nil
-    @controller[@visibility][name] = res unless @controller.nil?
+    @controller[@visibility][name] = exp unless @controller.nil?
 
-    res
+    exp
   end
 
   #Look for before_filters and add fake ones if necessary

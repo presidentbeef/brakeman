@@ -49,9 +49,24 @@ module Brakeman::ProcessorHelper
     exp
   end
 
+  #Process each expression in the given Sexp's body.
   def process_exp_body exp
     exp.each_body do |e|
       process e if sexp? e
+    end
+
+    exp
+  end
+
+  #Process each expression in the given Sexp's body,
+  #replacing the body with the results.
+  def process_exp_body! exp
+    exp.each_body! do |e|
+      if sexp? e
+        process e
+      else
+        e
+      end
     end
 
     exp

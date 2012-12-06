@@ -44,7 +44,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
         :associations => {},
         :file => @file_name }
       @tracker.models[@model[:name]] = @model
-      exp.body = process_all! exp.body
+      process_exp_body! exp
       @model = nil
       exp
     end
@@ -113,14 +113,16 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     name = exp.method_name
 
     @current_method = name
-    res = Sexp.new :methdef, name, exp.formal_args, *process_all!(exp.body)
-    res.line(exp.line)
+    exp.node_type = :methdef
+    process_exp_body! exp
     @current_method = nil
+
     if @model
       list = @model[@visibility]
-      list[name] = res
+      list[name] = exp
     end
-    res
+
+    exp
   end
 
   #Add method definition to tracker
@@ -135,13 +137,16 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     end
 
     @current_method = name
-    res = Sexp.new :selfdef, target, name, exp.formal_args, *process_all!(exp.body)
-    res.line(exp.line)
+    exp.node_type = :selfdef
+    exp[1] = target
+    process_exp_body! exp
     @current_method = nil
+
     if @model
-      @model[@visibility][name] = res unless @model.nil?
+      @model[@visibility][name] = exp
     end
-    res
+
+    exp
   end
 
 end
