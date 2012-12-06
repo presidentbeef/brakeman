@@ -49,6 +49,14 @@ module Brakeman::ProcessorHelper
     exp
   end
 
+  def process_exp_body exp
+    exp.each_body do |e|
+      process e if sexp? e
+    end
+
+    exp
+  end
+
   #Sets the current module.
   def process_module exp
     module_name = class_name(exp.class_name).to_s
@@ -60,7 +68,7 @@ module Brakeman::ProcessorHelper
       @current_module = module_name
     end
 
-    process_all exp.body
+    process_exp_body exp
 
     @current_module = prev_module
 

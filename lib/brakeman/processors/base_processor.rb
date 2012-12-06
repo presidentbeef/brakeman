@@ -23,7 +23,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   def process_class exp
     current_class = @current_class
     @current_class = class_name exp[1]
-    process_all exp.body
+    process_exp_body exp
     @current_class = current_class
     exp
   end
