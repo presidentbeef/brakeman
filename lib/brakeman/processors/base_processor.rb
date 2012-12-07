@@ -6,15 +6,18 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   include Brakeman::ProcessorHelper
   include Brakeman::Util
 
-  attr_reader :ignore
+  IGNORE = Sexp.new :ignore
 
   #Return a new Processor.
   def initialize tracker
     super()
     @last = nil
     @tracker = tracker
-    @ignore = Sexp.new :ignore
     @current_template = @current_module = @current_class = @current_method = nil
+  end
+
+  def ignore
+    IGNORE
   end
 
   def process_class exp
