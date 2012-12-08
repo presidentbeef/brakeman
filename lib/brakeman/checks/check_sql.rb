@@ -173,37 +173,36 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
     call = result[:call]
     method = call.method
-    args = call.args
 
     dangerous_value = case method
                       when :find
-                        check_find_arguments args.second
+                        check_find_arguments call.second_arg
                       when :exists?
-                        check_find_arguments args.first
+                        check_find_arguments call.first_arg
                       when :named_scope, :scope
-                        check_scope_arguments call.arglist
+                        check_scope_arguments call
                       when :find_by_sql, :count_by_sql
-                        check_by_sql_arguments args.first
+                        check_by_sql_arguments call.first_arg
                       when :calculate
-                        check_find_arguments args[2]
+                        check_find_arguments call.third_arg
                       when :last, :first, :all
-                        check_find_arguments args.first
+                        check_find_arguments call.first_arg
                       when :average, :count, :maximum, :minimum, :sum
-                        if args.length > 2
-                          unsafe_sql?(args.first) or check_find_arguments(args.last)
+                        if call.length > 5
+                          unsafe_sql?(call.first_arg) or check_find_arguments(call.last_arg)
                         else
-                          check_find_arguments args.last
+                          check_find_arguments call.last_arg
                         end
                       when :where, :having
                         check_query_arguments call.arglist
                       when :order, :group, :reorder
                         check_order_arguments call.arglist
                       when :joins
-                        check_joins_arguments args.first
+                        check_joins_arguments call.first_arg
                       when :from, :select
-                        unsafe_sql? args.first
+                        unsafe_sql? call.first_arg
                       when :lock
-                        check_lock_arguments args.first
+                        check_lock_arguments call.first_arg
                       else
                         Brakeman.debug "Unhandled SQL method: #{method}"
                       end
@@ -226,8 +225,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         :confidence => confidence
     end
 
-    if check_for_limit_or_offset_vulnerability args.last
-      if include_user_input? args.last
+    if check_for_limit_or_offset_vulnerability call.last_arg
+      if include_user_input? call.last_arg
         confidence = CONFIDENCE[:high]
       else
         confidence = CONFIDENCE[:low]
@@ -259,9 +258,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     unsafe_sql? arg
   end
 
-  def check_scope_arguments args
-    return unless node_type? args, :arglist
-    scope_arg = args[2] #first arg is name of scope
+  def check_scope_arguments call
+    scope_arg = call.second_arg #first arg is name of scope
 
     if node_type? scope_arg, :iter
       unsafe_sql? scope_arg.block
@@ -488,9 +486,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
     target = exp.target
     method = exp.method
-    args = exp.args
 
-    if string? target or string? args.first
+    if string? target or string? exp.first_arg
       if STRING_METHODS.include? method
         return exp
       end

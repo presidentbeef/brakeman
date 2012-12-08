@@ -82,27 +82,29 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_match exp
-    args = exp.args
+    first_arg = exp.first_arg
+    second_arg = exp.second_arg
+    last_arg = exp.last_arg
 
     #Check if there is an unrestricted action parameter
     action_variable = false
 
-    if string? args.first
-      matcher = args.first.value
+    if string? first_arg
+      matcher = first_arg.value
 
       if matcher == ':controller(/:action(/:id(.:format)))' or
         matcher.include? ':controller' and matcher.include? ':action' #Default routes
-        @tracker.routes[:allow_all_actions] = args.first
+        @tracker.routes[:allow_all_actions] = first_arg
         return exp
       elsif matcher.include? ':action'
         action_variable = true
-      elsif args[1].nil? and in_controller_block? and not matcher.include? ":"
+      elsif second_arg.nil? and in_controller_block? and not matcher.include? ":"
         add_route matcher
       end
     end
 
-    if hash? args.last
-      hash_iterate args.last do |k, v|
+    if hash? last_arg
+      hash_iterate last_arg do |k, v|
         if string? k
           if string? v
             add_route_from_string v
