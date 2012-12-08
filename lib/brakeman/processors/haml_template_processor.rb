@@ -36,8 +36,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
             when :options, :buffer
               exp
             when :open_tag
-              process(exp.arglist)
-              exp
+              process_call_args exp
             else
               arg = exp.first_arg
 

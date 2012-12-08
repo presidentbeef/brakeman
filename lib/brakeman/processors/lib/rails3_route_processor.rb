@@ -200,7 +200,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
       #handle hash
       add_resources_routes
     elsif exp.args.all? { |s| symbol? s }
-      exp.args.each do |s|
+      exp.each_arg do |s|
         self.current_controller = s.value
         add_resources_routes
       end
@@ -212,7 +212,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
 
   def process_resource exp
     #Does resource even take more than one controller name?
-    exp.args.each do |s|
+    exp.each_arg do |s|
       if symbol? s
         self.current_controller = pluralize(s.value.to_s)
         add_resource_routes
