@@ -35,10 +35,11 @@ class Brakeman::CheckSkipBeforeFilter < Brakeman::BaseCheck
   def skip_verify_except? filter
     return false unless call? filter
 
-    args = filter.args
+    first_arg = filter.first_arg
+    last_arg = filter.last_arg
 
-    if symbol? args.first and args.first.value == :verify_authenticity_token and hash? args.last
-      if hash_access(args.last, :except)
+    if symbol? first_arg and first_arg.value == :verify_authenticity_token and hash? last_arg
+      if hash_access(last_arg, :except)
         return true
       end
     end

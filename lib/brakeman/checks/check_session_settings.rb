@@ -42,7 +42,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   #in Rails 3.x apps
   def process_call exp
     if tracker.options[:rails3] and exp.target == @session_settings and exp.method == :session_store
-        check_for_issues exp.args.second, "#{tracker.options[:app_path]}/config/initializers/session_store.rb"
+        check_for_issues exp.second_arg, "#{tracker.options[:app_path]}/config/initializers/session_store.rb"
     end
       
     exp

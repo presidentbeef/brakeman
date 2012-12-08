@@ -72,9 +72,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
 
   #TODO: Need test for this
   def process_root exp
-    args = exp.args
-
-    if value = hash_access(args.first, :to)
+    if value = hash_access(exp.first_arg, :to)
       if string? value
         add_route_from_string value
       end
@@ -153,13 +151,13 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_verb exp
-    args = exp.args
-    first_arg = args.first
+    first_arg = exp.first_arg
+    second_arg = exp.second_arg
 
-    if symbol? first_arg and not hash? args.second
+    if symbol? first_arg and not hash? second_arg
       add_route first_arg
-    elsif hash? args.second
-      hash_iterate args.second do |k, v|
+    elsif hash? second_arg
+      hash_iterate second_arg do |k, v|
         if symbol? k and k.value == :to
           if string? v
             add_route_from_string v
@@ -194,8 +192,11 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_resources exp
-    if exp.args and exp.args.second and exp.args.second.node_type == :hash
-      self.current_controller = exp.first_arg.value
+    first_arg = exp.first_arg
+    second_arg = exp.second_arg
+
+    if second_arg and second_arg.node_type == :hash
+      self.current_controller = first_arg.value
       #handle hash
       add_resources_routes
     elsif exp.args.all? { |s| symbol? s }
