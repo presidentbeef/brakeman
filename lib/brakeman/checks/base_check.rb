@@ -138,7 +138,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
   # go up the chain of parent classes to see if any have attr_accessible
   def parent_classes_protected? model
-    if model[:attr_accessible]
+    if model[:attr_accessible] or model[:includes].include? :"ActiveModel::ForbiddenAttributesProtection"
       true
     elsif parent = tracker.models[model[:parent]]
       parent_classes_protected? parent
@@ -153,11 +153,14 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
     @mass_assign_disabled = false
 
-    if version_between?("3.1.0", "4.0.0") and
+    if version_between?("3.1.0", "3.9.9") and
       tracker.config[:rails] and
       tracker.config[:rails][:active_record] and
       tracker.config[:rails][:active_record][:whitelist_attributes] == Sexp.new(:true)
 
+      @mass_assign_disabled = true
+    elsif version_between?("4.0.0", "4.9.9")
+      #May need to revisit dependng on what Rails 4 actually does/has
       @mass_assign_disabled = true
     else
       matches = tracker.check_initializers(:"ActiveRecord::Base", :send)
