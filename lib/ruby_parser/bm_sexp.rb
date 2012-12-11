@@ -5,41 +5,6 @@ class Sexp
   attr_reader :paren
   ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cdecl, :or, :and, :colon2]
 
-  alias :old_init :initialize
-  alias :old_access :[]
-  def initialize *args
-    Sexp.add_sexp args.first
-    if args.first.nil?
-#      puts caller[1]
-    end
-    old_init *args
-  end
-
-  def [] *indexes
-    if indexes.first.is_a? Range
-      Sexp.add_sexp nil
-    end
-    old_access *indexes
-  end
-
-  def dup
-    Sexp.add_sexp :dup
-    super
-  end
-
-  def self.add_sexp type
-    @sexps ||= Hash.new(0)
-    @sexps[type] += 1
-  end
-
-  def self.sexps
-    @sexps
-  end
-
-  def self.total_sexps
-    @sexps.values.reduce(:+)
-  end
-
   def method_missing name, *args
     #Brakeman does not use this functionality,
     #so overriding it to raise a NoMethodError.
