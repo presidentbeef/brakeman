@@ -65,7 +65,7 @@ class Brakeman::CheckValidationRegex < Brakeman::BaseCheck
     return unless regexp? value
 
     regex = value.value.inspect
-    if regex =~ /^\/(.{2}).*(.{2})\/(m|i|x|n|e|u|s|o)*\z/
+    if regex =~ /^\/(.{2}).*(.{2})\/(m|i|x|n|e|u|s|o)*\z/ or regex =~ /\A\/.{0,3}\/\z/
       if $1 != "\\A" or ($2 != "\\Z" and $2 != "\\z")
         warn :model => @current_model,
           :warning_type => "Format Validation", 
