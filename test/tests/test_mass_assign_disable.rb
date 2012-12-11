@@ -36,4 +36,27 @@ class MassAssignDisableTest < Test::Unit::TestCase
       end
     RUBY
   end
+
+  def test_strong_parameters_gem
+    model = "app/models/account.rb"
+
+    before_rescan_of model, "rails3" do
+      replace_with_sexp model do |exp|
+        exp << s(:call,
+                 nil,
+                 :include,
+                 s(:colon2,
+                   s(:const, :ActiveModel),
+                   :ForbiddenAttributesProtection))
+
+        exp
+      end
+    end
+
+    assert_changes
+    assert_reindex :models
+    assert_fixed 2
+    #Not really a new warning, list of models needing attr_accessible changes
+    assert_new 1
+  end
 end
