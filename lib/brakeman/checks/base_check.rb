@@ -166,6 +166,10 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       matches = tracker.check_initializers(:"ActiveRecord::Base", :send)
 
       if matches.empty?
+        #Check for
+        #  class ActiveRecord::Base
+        #    attr_accessible nil
+        #  end
         matches = tracker.check_initializers([], :attr_accessible)
 
         matches.each do |result|
@@ -179,6 +183,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
           end
         end
       else
+        #Check for ActiveRecord::Base.send(:attr_accessible, nil)
         matches.each do |result|
           if call? result[-1]
             call = result[-1]
@@ -186,6 +191,22 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
               @mass_assign_disabled = true
               break
             end
+          end
+        end
+      end
+    end
+
+    #There is a chance someon is using Rails 3.x and the `strong_parameters`
+    #gem and still using hack above, so this is a separate check for
+    #including ActiveModel::ForbiddenAttributesProtection in
+    #ActiveRecord::Base in an initializer.
+    if not @mass_assign_disabled and version_between?("3.1.0", "3.9.9") and tracker.config[:gems][:strong_parameters]
+      matches = tracker.check_initializers([], :include)
+
+      matches.each do |result|
+        if call? result[-1]
+          if result[-1].first_arg == Sexp.new(:colon2, Sexp.new(:const, :ActiveModel), :ForbiddenAttributesProtection)
+            @mass_assign_disabled = true
           end
         end
       end
