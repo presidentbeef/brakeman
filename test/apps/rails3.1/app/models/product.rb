@@ -173,4 +173,11 @@ class Product < ActiveRecord::Base
   def test_interpolation_in_first_arg
     Product.where("x = #{params[:x]} AND y = ?", y)
   end
+
+  def test_to_sql_interpolation
+    #Should not warn
+    prices = Produt.select(:price).where("created_at < :time").to_sql
+
+    where("price IN (#{prices}) OR whatever", :price => some_price)
+  end
 end
