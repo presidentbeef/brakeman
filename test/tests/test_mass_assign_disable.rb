@@ -36,4 +36,30 @@ class MassAssignDisableTest < Test::Unit::TestCase
       end
     RUBY
   end
+
+  def test_strong_parameters_in_initializer
+    init = "config/initializers/mass_assign.rb"
+    gemfile = "Gemfile"
+    config = "config/application.rb"
+
+    before_rescan_of [init, gemfile, config], "rails3.2" do
+      write_file init, <<-RUBY
+        class ActiveRecord::Base
+          include ActiveModel::ForbiddenAttributesProtection
+        end
+      RUBY
+
+      append gemfile, "gem 'strong_parameters'"
+
+      replace config, "config.active_record.whitelist_attributes = true",
+        "config.active_record.whitelist_attributes = false"
+    end
+
+    #We disable whitelist, but add strong_parameters globally, so
+    #there should be no change.
+    assert_reindex :none
+    assert_changes
+    assert_fixed 0
+    assert_new 0
+  end
 end
