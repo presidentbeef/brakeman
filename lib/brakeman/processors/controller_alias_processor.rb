@@ -124,7 +124,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       if found_method = find_method(method, @current_class)
         helper = found_method[:method]
 
-        if sexp? method
+        if sexp? helper
           value = process_helper_method helper, exp.args
           value.line(exp.line)
           return value
