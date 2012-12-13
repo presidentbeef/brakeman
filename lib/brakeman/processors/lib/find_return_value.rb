@@ -83,7 +83,7 @@ class Brakeman::FindReturnValue
         false_branch = last_value else_clause
 
         if true_branch and false_branch
-          value = Sexp.new(:or, true_branch, false_branch)
+          value = make_or(true_branch, false_branch)
           value.original_line(value.rhs.line)
           value
         else #Unlikely?
@@ -100,6 +100,15 @@ class Brakeman::FindReturnValue
     end
   end
 
+  def make_or lhs, rhs
+    #Better checks in future
+    if lhs == rhs
+      lhs
+    else
+      Sexp.new(:or, lhs, rhs)
+    end
+  end
+
   #Turns the array of return values into an :or Sexp
   def make_return_value
     @return_values.compact!
@@ -111,7 +120,7 @@ class Brakeman::FindReturnValue
       @return_values.first
     else
       @return_values.reduce do |value, sexp|
-        Sexp.new(:or, value, sexp)
+        make_or value, sexp
       end
     end
   end
