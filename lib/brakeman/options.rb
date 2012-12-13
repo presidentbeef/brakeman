@@ -71,6 +71,10 @@ module Brakeman::Options
           options[:ignore_attr_protected] = true
         end
 
+        opts.on "--interprocedural", "Process method calls to known methods" do
+          options[:interprocedural] = true
+        end
+
         opts.on "--no-branching", "Disable flow sensitivity on conditionals" do
           options[:ignore_ifs] = true
         end
