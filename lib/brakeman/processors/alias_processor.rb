@@ -201,7 +201,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def process_methdef exp
     env.scope do
       set_env_defaults
-      process_all exp.body
+      exp.body = process_all! exp.body
     end
     exp
   end
@@ -210,7 +210,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def process_selfdef exp
     env.scope do
       set_env_defaults
-      process_all exp.body
+      exp.body = process_all! exp.body
     end
     exp
   end
