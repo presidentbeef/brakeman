@@ -111,13 +111,13 @@ module BrakemanTester::RescanTestHelper
   #given in `changed`.
   #
   #Provide an array of changed files for rescanning.
-  def before_rescan_of changed
+  def before_rescan_of changed, app = "rails3.2"
     changed = [changed] unless changed.is_a? Array
 
     Dir.mktmpdir do |dir|
       @dir = dir
 
-      FileUtils.cp_r "#{TEST_PATH}/apps/rails3.2/.", dir
+      FileUtils.cp_r "#{TEST_PATH}/apps/#{app}/.", dir
       @original = Brakeman.run :app_path => dir, :debug => false
 
       yield dir if block_given?
@@ -219,17 +219,13 @@ module BrakemanTester::RescanTestHelper
     replace_with_sexp file do |parsed|
       class_body = parsed.body
 
-      if class_body[1].node_type == :block
-        class_body[1].reject! do |node|
-          node.is_a? Sexp and
-          node.node_type == :defn and
-          node.method_name == method_name
-        end
-      elsif class_body[1].node_type == :defn and
-        class_body[1].method_name == method_name
-
-        class_body.delete_at 1
+      class_body.reject! do |node|
+        node.is_a? Sexp and
+        node.node_type == :defn and
+        node.method_name == method_name
       end
+
+      parsed.body = class_body
 
       parsed
     end
@@ -239,28 +235,14 @@ module BrakemanTester::RescanTestHelper
     parsed_method = parse code
 
     replace_with_sexp file do |parsed|
-      class_body = parsed.body
-
-      if class_body[1].node_type == :block
-        class_body[1] << parsed_method
-      elsif class_body[1]
-        class_body[1] = s(:block,
-                          class_body[1],
-                          parsed_method)
-      else
-        class_body[1] = parsed_method
-      end
+      parsed.body = parsed.body << parsed_method
 
       parsed
     end
   end
 
   def parse code
-    if RUBY_VERSION =~ /^1\.9/
-      Ruby19Parser.new.parse code
-    else
-      RubyParser.new.parse code
-    end
+    RubyParser.new.parse code
   end
 end
 

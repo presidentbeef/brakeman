@@ -112,7 +112,8 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
     hash_iterate(exp) do |option, value|
       case option[1]
       when :controller, :requirements, :singular, :path_prefix, :as,
-        :path_names, :shallow, :name_prefix, :member_path, :nested_member_path
+        :path_names, :shallow, :name_prefix, :member_path, :nested_member_path,
+        :belongs_to, :conditions, :active_scaffold
         #should be able to skip
       when :collection, :member, :new
         process_collection value
@@ -129,7 +130,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
       when :except
         process_option_except value
       else
-        Brakeman.notify "[Notice] Unhandled resource option: #{option}"
+        Brakeman.notify "[Notice] Unhandled resource option, please report: #{option}"
       end
     end
   end
@@ -178,6 +179,8 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
   #Process
   # map.connect '/something', :controller => 'blah', :action => 'whatever'
   def process_connect exp
+    return if exp.empty?
+
     controller = check_for_controller_name exp
     self.current_controller = controller if controller
     
@@ -197,7 +200,12 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
 
     exp.last.each_with_index do |e,i|
       if symbol? e and e.value == :action
-        @tracker.routes[@current_controller] << exp.last[i + 1].value.to_sym
+        action = exp.last[i + 1]
+        
+        if node_type? action, :lit
+          @tracker.routes[@current_controller] << action.value.to_sym
+        end
+
         return
       end
     end
@@ -208,7 +216,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
   # end
   def process_with_options exp
     @with_options = exp.block_call.args.last
-    @nested = Sexp.new(:lvar, exp.block_args.lhs)
+    @nested = Sexp.new(:lvar, exp.block_args.value)
 
     self.current_controller = check_for_controller_name exp.block_call.args
     
@@ -230,7 +238,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
     @prefix << camelize(call.first_arg.value)
 
     if formal_args
-      @nested = Sexp.new(:lvar, formal_args.lhs)
+      @nested = Sexp.new(:lvar, formal_args.value)
     end
 
     process block

@@ -6,6 +6,7 @@ require 'brakeman/util'
 require 'terminal-table'
 require 'highline/system_extensions'
 require "csv"
+require 'multi_json'
 require 'brakeman/version'
 
 if CSV.const_defined? :Reader
@@ -15,6 +16,15 @@ if CSV.const_defined? :Reader
   CSV = FasterCSV
 else
   # CSV is now FasterCSV in ruby 1.9
+end
+
+#This is so OkJson will work with symbol values
+if MultiJson.default_adapter == :ok_json
+  class Symbol
+    def to_json
+      self.to_s.inspect
+    end
+  end
 end
 
 #Generates a report based on the Tracker and the results of
@@ -30,7 +40,8 @@ class Brakeman::Report
                      "<span class='med-confidence'>Medium</span>",
                      "<span class='weak-confidence'>Weak</span>" ]
 
-  def initialize tracker
+  def initialize(app_tree, tracker)
+    @app_tree = app_tree
     @tracker = tracker
     @checks = tracker.checks
     @element_id = 0 #Used for HTML ids
@@ -148,7 +159,7 @@ class Brakeman::Report
       end
 
       return nil if warnings.empty?
-      
+
       stabilizer = 0
       warnings = warnings.sort_by{|row| stabilizer += 1; [row["Confidence"], row["Warning Type"], row["Template"], stabilizer]}
       if html
@@ -222,7 +233,7 @@ class Brakeman::Report
       end
 
       return nil if warnings.empty?
-      
+
       stabilizer = 0
       warnings = warnings.sort_by{|row| stabilizer +=1; [row["Confidence"], row["Warning Type"], row["Controller"], stabilizer]}
 
@@ -308,7 +319,7 @@ class Brakeman::Report
     else
       output = ''
       template_rows.each do |template|
-        output << template.first.to_s << "\n\n" 
+        output << template.first.to_s << "\n\n"
         table = Terminal::Table.new(:headings => ['Output']) do |t|
           # template[1] is an array of calls
           template[1].each do |v|
@@ -382,7 +393,7 @@ class Brakeman::Report
     res = generate_controller_warnings
     out << "\n\n\nController Warnings:\n\n" << truncate_table(res.to_s) if res
 
-    res = generate_model_warnings 
+    res = generate_model_warnings
     out << "\n\n\nModel Warnings:\n\n" << truncate_table(res.to_s) if res
 
     res = generate_template_warnings
@@ -394,8 +405,8 @@ class Brakeman::Report
 
   #Generate CSV output
   def to_csv
-    output = csv_header 
-    output << "\nSUMMARY\n" 
+    output = csv_header
+    output << "\nSUMMARY\n"
 
     output << table_to_csv(generate_overview) << "\n"
 
@@ -427,7 +438,7 @@ class Brakeman::Report
     output << table_to_csv(res) << "\n" if res
 
     output << "Model Warnings\n"
-    res = generate_model_warnings 
+    res = generate_model_warnings
     output << table_to_csv(res) << "\n" if res
 
     res = generate_template_warnings
@@ -465,7 +476,17 @@ class Brakeman::Report
 
   #Generate header for text output
   def text_header
-    "\n+BRAKEMAN REPORT+\n\nApplication path: #{File.expand_path tracker.options[:app_path]}\nRails version: #{rails_version}\nGenerated at #{Time.now}\nChecks run: #{checks.checks_run.sort.join(", ")}\n"
+    <<-HEADER
+
++BRAKEMAN REPORT+
+
+Application path: #{File.expand_path tracker.options[:app_path]}
+Rails version: #{rails_version}
+Brakeman version: #{Brakeman::Version}
+Started at #{tracker.start_time}
+Duration: #{tracker.duration} seconds
+Checks run: #{checks.checks_run.sort.join(", ")}
+HEADER
   end
 
   #Generate header for CSV output
@@ -522,11 +543,11 @@ class Brakeman::Report
 
   #Generate HTML for warnings, including context show/hidden via Javascript
   def with_context warning, message
-    context = context_for warning
+    context = context_for(@app_tree, warning)
     full_message = nil
 
     if tracker.options[:message_limit] and
-      tracker.options[:message_limit] > 0 and 
+      tracker.options[:message_limit] > 0 and
       message.length > tracker.options[:message_limit]
 
       full_message = html_message(warning, message)
@@ -637,18 +658,16 @@ class Brakeman::Report
         else
           w.code = ""
         end
-        w.context = context_for(w).join("\n")
+        w.context = context_for(@app_tree, w).join("\n")
       end
     end
 
     report[:config] = tracker.config
-      
+
     report
   end
 
   def to_json
-    require 'json'
-
     errors = tracker.errors.map{|e| { :error => e[:error], :location => e[:backtrace][0] }}
     app_path = tracker.options[:app_path]
 
@@ -662,7 +681,10 @@ class Brakeman::Report
       :app_path => File.expand_path(tracker.options[:app_path]),
       :rails_version => rails_version,
       :security_warnings => all_warnings.length,
-      :timestamp => Time.now,
+      :start_time => tracker.start_time.to_s,
+      :end_time => tracker.end_time.to_s,
+      :timestamp => tracker.end_time.to_s,
+      :duration => tracker.duration,
       :checks_performed => checks.checks_run.sort,
       :number_of_controllers =>tracker.controllers.length,
       # ignore the "fake" model
@@ -672,11 +694,11 @@ class Brakeman::Report
       :brakeman_version => Brakeman::Version
     }
 
-    JSON.pretty_generate({
+    MultiJson.dump({
       :scan_info => scan_info,
       :warnings => warnings,
       :errors => errors
-    })
+    }, :pretty => true)
   end
 
   def all_warnings

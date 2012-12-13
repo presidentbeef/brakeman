@@ -107,7 +107,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_redirect
     assert_warning :type => :warning,
       :warning_type => "Redirect",
-      :line => 46,
+      :line => 45,
       :message => /^Possible unprotected redirect/,
       :confidence => 0,
       :file => /home_controller\.rb/
@@ -598,8 +598,8 @@ class Rails2Tests < Test::Unit::TestCase
   def test_explicit_render_template
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
-      :line => 2,
-      :message => /^Unescaped parameter value near line 2: params\[:ba/,
+      :line => 1,
+      :message => /^Unescaped parameter value near line 1: params\[:ba/,
       :confidence => 0,
       :file => /home\/test_render_template\.html\.haml/
   end
@@ -788,5 +788,40 @@ class Rails2Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /test_to_json\.html\.erb/
   end
-end
 
+  def test_xss_with_params_to_i
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_to_i\.html\.erb/
+  end
+
+  def test_xss_with_request_env_to_i
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 5,
+      :message => /^Unescaped\ cookie\ value/,
+      :confidence => 2,
+      :file => /test_to_i\.html\.erb/
+  end
+
+  def test_xss_with_cookie_to_i
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped\ request\ value/,
+      :confidence => 0,
+      :file => /test_to_i\.html\.erb/
+  end
+
+  def test_xss_with_model_attribute_to_i
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 7,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 1,
+      :file => /test_to_i\.html\.erb/
+  end
+end

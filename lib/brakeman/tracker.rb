@@ -9,7 +9,8 @@ require 'brakeman/processors/lib/find_all_calls'
 class Brakeman::Tracker
   attr_accessor :controllers, :templates, :models, :errors,
     :checks, :initializers, :config, :routes, :processor, :libs,
-    :template_cache, :options, :filter_cache
+    :template_cache, :options, :filter_cache, :start_time, :end_time,
+    :duration
 
   #Place holder when there should be a model, but it is not
   #clear what model it will be.
@@ -19,9 +20,11 @@ class Brakeman::Tracker
   #
   #The Processor argument is only used by other Processors
   #that might need to access it.
-  def initialize processor = nil, options = {}
+  def initialize(app_tree, processor = nil, options = {})
+    @app_tree = app_tree
     @processor = processor
     @options = options
+
     @config = {}
     @templates = {}
     @controllers = {}
@@ -44,6 +47,9 @@ class Brakeman::Tracker
     @template_cache = Set.new
     @filter_cache = {}
     @call_index = nil
+    @start_time = Time.now
+    @end_time = nil
+    @duration = nil
   end
 
   #Add an error to the list. If no backtrace is given,
@@ -63,7 +69,11 @@ class Brakeman::Tracker
   #Run a set of checks on the current information. Results will be stored
   #in Tracker#checks.
   def run_checks
-    @checks = Brakeman::Checks.run_checks(self)
+    @checks = Brakeman::Checks.run_checks(@app_tree, self)
+
+    @end_time = Time.now
+    @duration = @end_time - @start_time
+    @checks
   end
 
   #Iterate over all methods in controllers and models.
@@ -139,7 +149,7 @@ class Brakeman::Tracker
 
   #Returns a Report with this Tracker's information
   def report
-    Brakeman::Report.new(self)
+    Brakeman::Report.new(@app_tree, self)
   end
 
   def index_call_sites

@@ -61,7 +61,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       active_record_models.each do |name, model|
         if model[:options][:named_scope]
           model[:options][:named_scope].each do |args|
-            call = Sexp.new(:call, nil, :named_scope, args).line(args.line)
+            call = make_call(nil, :named_scope, args).line(args.line)
             scope_calls << { :call => call, :location => [:class, name ], :method => :named_scope }
           end
         end
@@ -80,7 +80,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
               call = second_arg
               scope_calls << { :call => call, :location => [:class, name ], :method => call.method }
             else
-              call = Sexp.new(:call, nil, :scope, args).line(args.line)
+              call = make_call(nil, :scope, args).line(args.line)
               scope_calls << { :call => call, :location => [:class, name ], :method => :scope }
             end
           end
@@ -226,8 +226,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         :confidence => confidence
     end
 
-    if check_for_limit_or_offset_vulnerability args[-1]
-      if include_user_input? args[-1]
+    if check_for_limit_or_offset_vulnerability args.last
+      if include_user_input? args.last
         confidence = CONFIDENCE[:high]
       else
         confidence = CONFIDENCE[:low]
@@ -261,23 +261,25 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
   def check_scope_arguments args
     return unless node_type? args, :arglist
+    scope_arg = args[2] #first arg is name of scope
 
-    if node_type? args[2], :iter
-      unsafe_sql? args[2][-1]
+    if node_type? scope_arg, :iter
+      unsafe_sql? scope_arg.block
     else
-      unsafe_sql? args[2]
+      unsafe_sql? scope_arg
     end
   end
 
   def check_query_arguments arg
     return unless sexp? arg
+    first_arg = arg[1]
 
     if node_type? arg, :arglist
-      if arg.length > 2 and node_type? arg[1], :string_interp, :dstr
+      if arg.length > 2 and node_type? first_arg, :string_interp, :dstr
         # Model.where("blah = ?", blah)
-        return check_string_interp arg[1]
+        return check_string_interp first_arg
       else
-        arg = arg[1]
+        arg = first_arg
       end
     end
 
@@ -319,7 +321,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def check_by_sql_arguments arg
     return unless sexp? arg
 
-    #This is kind of necessary, because unsafe_sql? will handle an array
+    #This is kind of unnecessary, because unsafe_sql? will handle an array
     #correctly, but might be better to be explicit.
     if array? arg
       unsafe_sql? arg[1]
@@ -457,7 +459,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def check_hash_values exp
     hash_iterate(exp) do |key, value|
       if symbol? key
-        unsafe = case key[1]
+        unsafe = case key.value
                  when :conditions, :having, :select
                    check_query_arguments value
                  when :order, :group
@@ -500,7 +502,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   IGNORE_METHODS_IN_SQL = Set[:id, :merge_conditions, :table_name, :to_i, :to_f,
     :sanitize_sql, :sanitize_sql_array, :sanitize_sql_for_assignment,
     :sanitize_sql_for_conditions, :sanitize_sql_hash,
-    :sanitize_sql_hash_for_assignment, :sanitize_sql_hash_for_conditions]
+    :sanitize_sql_hash_for_assignment, :sanitize_sql_hash_for_conditions,
+    :to_sql]
 
   def safe_value? exp
     return true unless sexp? exp

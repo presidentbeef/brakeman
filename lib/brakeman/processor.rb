@@ -12,8 +12,9 @@ module Brakeman
   class Processor
     include Util
 
-    def initialize options
-      @tracker = Tracker.new self, options
+    def initialize(app_tree, options)
+      @app_tree = app_tree
+      @tracker = Tracker.new(@app_tree, self, options)
     end
 
     def tracked_events
@@ -38,7 +39,7 @@ module Brakeman
     #Process controller source. +file_name+ is used for reporting
     def process_controller src, file_name
       if contains_class? src
-        ControllerProcessor.new(@tracker).process_controller src, file_name
+        ControllerProcessor.new(@app_tree, @tracker).process_controller src, file_name
       else
         LibraryProcessor.new(@tracker).process_library src, file_name
       end
@@ -47,13 +48,13 @@ module Brakeman
     #Process variable aliasing in controller source and save it in the
     #tracker.
     def process_controller_alias name, src, only_method = nil
-      ControllerAliasProcessor.new(@tracker, only_method).process_controller name, src
+      ControllerAliasProcessor.new(@app_tree, @tracker, only_method).process_controller name, src
     end
 
     #Process a model source
     def process_model src, file_name
       result = ModelProcessor.new(@tracker).process_model src, file_name
-      AliasProcessor.new(@tracker).process result
+      AliasProcessor.new(@tracker).process_all result if result
     end
 
     #Process either an ERB or HAML template

@@ -6,7 +6,11 @@ class JSONCompareTests < Test::Unit::TestCase
     @json_path = File.join @path, "report.json"
     File.delete @json_path if File.exist? @json_path
     Brakeman.run :app_path => @path, :output_files => [@json_path]
-    @report = JSON.parse File.read(@json_path)
+    @report = MultiJson.load File.read(@json_path)
+  end
+
+  def teardown
+    File.delete @json_path if File.exist? @json_path
   end
 
   def update_json

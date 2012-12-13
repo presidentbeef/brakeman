@@ -20,24 +20,14 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   def process_class exp
     current_class = @current_class
     @current_class = class_name exp[1]
-    process exp[3]
+    process_all exp.body
     @current_class = current_class
     exp
   end
 
   #Process a new scope. Removes expressions that are set to nil.
   def process_scope exp
-    exp = exp.dup
-    exp.shift
-    exp.map! do |e|
-      res = process e
-      if res.empty?
-        res = nil
-      else
-        res
-      end
-    end.compact
-    exp.unshift :scope
+    #NOPE?
   end
 
   #Default processing.

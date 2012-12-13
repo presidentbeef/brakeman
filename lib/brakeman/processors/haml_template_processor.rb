@@ -74,7 +74,8 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       res
 
       #_hamlout.buffer <<
-      #This seems to be used rarely, but directly appends args to output buffer
+      #This seems to be used rarely, but directly appends args to output buffer.
+      #Has something to do with values of blocks?
     elsif sexp? target and method == :<< and is_buffer_target? target
       @inside_concat = true
       out = exp.arglist[1] = process(exp.arglist[1])
@@ -94,8 +95,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       make_render_in_view exp
     else
       #TODO: Do we really need a new Sexp here?
-      args = process exp.arglist
-      call = Sexp.new :call, target, method, args
+      call = make_call target, method, process_all!(exp.args)
       call.original_line(exp.original_line)
       call.line(exp.line)
       call

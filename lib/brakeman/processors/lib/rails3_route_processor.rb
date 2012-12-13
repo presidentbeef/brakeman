@@ -252,8 +252,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_controller_block exp
-    args = exp[1][3]
-    self.current_controller = args[1][1]
+    self.current_controller = exp.block_call.first_arg.value
 
     in_controller_block do
       process exp[-1] if exp[-1]

@@ -109,6 +109,18 @@ class UsersController < ApplicationController
     IO.read(User.find_by_name('bob').file_path)
   end
 
+  def redirect_to_user_as_param
+    redirect_to blah(User.find(1)) #Don't warn
+  end
+
+  def redirect_to_association
+    redirect_to User.first.account #Don't warn
+  end
+
+  def redirect_to_safe_second_param
+    redirect_to :back, :notice => "Go back, #{params[:user]}!" #Don't warn
+  end
+
   def test_simple_helper
     @user = simple_helper
   end

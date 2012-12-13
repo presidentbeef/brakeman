@@ -10,8 +10,9 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #If only_method is specified, only that method will be processed,
   #other methods will be skipped.
   #This is for rescanning just a single action.
-  def initialize tracker, only_method = nil
+  def initialize app_tree, tracker, only_method = nil
     super()
+    @app_tree = app_tree
     @only_method = only_method
     @tracker = tracker
     @rendered = false
@@ -47,7 +48,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       methods.each do |name|
         #Need to process the method like it was in a controller in order
         #to get the renders set
-        processor = Brakeman::ControllerProcessor.new(@tracker)
+        processor = Brakeman::ControllerProcessor.new(@app_tree, @tracker)
         method = mixin[:public][name]
 
         if node_type? method, :methdef
@@ -98,7 +99,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
         end
       end
 
-      process exp.body
+      process_all exp.body
 
       if is_route and not @rendered
         process_default_render exp
@@ -112,16 +113,19 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #Look for calls to head()
   def process_call exp
     exp = super
+    return exp unless call? exp
 
-    if call? exp and exp.method == :head
+    method = exp.method
+
+    if method == :head
       @rendered = true
-    elsif @current_method and call? exp and (exp[1] == nil or exp[1].node_type == :self)
+    elsif @current_method and (exp.target.nil? or exp.target.node_type == :self)
       #Look for helper methods and see if we can get a return value
-      if found_method = find_method(exp[2], @current_class)
-        method = found_method[:method]
+      if found_method = find_method(method, @current_class)
+        helper = found_method[:method]
 
         if sexp? method
-          value = process_helper_method method, exp[3]
+          value = process_helper_method helper, exp.args
           value.line(exp.line)
           return value
         else
@@ -147,7 +151,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #Processes a call to a before filter.
   #Basically, adds any instance variable assignments to the environment.
   #TODO: method arguments?
-  def process_before_filter name 
+  def process_before_filter name
     filter = find_method name, @current_class
 
     if filter.nil?
@@ -163,7 +167,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       end
     else
       processor = Brakeman::AliasProcessor.new @tracker
-      processor.process_safely(method.body)
+      processor.process_safely(method.body_list)
 
       ivars = processor.only_ivars(:include_request_vars).all
 
@@ -251,9 +255,9 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     end
 
     controller[:before_filter_cache].each do |f|
-      if f[:all] or 
+      if f[:all] or
         (f[:only] == method) or
-        (f[:only].is_a? Array and f[:only].include? method) or 
+        (f[:only].is_a? Array and f[:only].include? method) or
         (f[:except].is_a? Symbol and f[:except] != method) or
         (f[:except].is_a? Array and not f[:except].include? method)
 

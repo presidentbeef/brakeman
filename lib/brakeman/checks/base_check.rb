@@ -14,8 +14,9 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   Match = Struct.new(:type, :match)
 
   #Initialize Check with Checks.
-  def initialize tracker
+  def initialize(app_tree, tracker)
     super()
+    @app_tree = app_tree
     @results = [] #only to check for duplicates
     @warnings = []
     @tracker = tracker
@@ -23,6 +24,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     @current_set = nil
     @current_template = @current_module = @current_class = @current_method = nil
     @mass_assign_disabled = nil
+    @safe_input_attributes = Set[:to_i, :to_f, :arel_table]
   end
 
   #Add result to result list, which is used to check for duplicates
@@ -63,14 +65,16 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
     target = exp.target
 
-    if params? target
-      @has_user_input = Match.new(:params, exp)
-    elsif cookies? target
-      @has_user_input = Match.new(:cookies, exp)
-    elsif request_env? target
-      @has_user_input = Match.new(:request, exp)
-    elsif sexp? target and model_name? target[1]
-      @has_user_input = Match.new(:model, exp)
+    unless @safe_input_attributes.include? exp.method
+      if params? target
+        @has_user_input = Match.new(:params, exp)
+      elsif cookies? target
+        @has_user_input = Match.new(:cookies, exp)
+      elsif request_env? target
+        @has_user_input = Match.new(:request, exp)
+      elsif sexp? target and model_name? target[1] #TODO: Can this be target.target?
+        @has_user_input = Match.new(:model, exp)
+      end
     end
 
     exp
@@ -102,13 +106,13 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
   private
 
-  #Report a warning 
+  #Report a warning
   def warn options
     warning = Brakeman::Warning.new(options.merge({ :check => self.class.to_s }))
     warning.file = file_for warning
 
-    @warnings << warning 
-  end 
+    @warnings << warning
+  end
 
   #Run _exp_ through OutputProcessor to get a nice String.
   def format_output exp
@@ -146,12 +150,12 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   #Checks if mass assignment is disabled globally in an initializer.
   def mass_assign_disabled?
     return @mass_assign_disabled unless @mass_assign_disabled.nil?
-        
+
     @mass_assign_disabled = false
 
-    if version_between?("3.1.0", "4.0.0") and 
+    if version_between?("3.1.0", "4.0.0") and
       tracker.config[:rails] and
-      tracker.config[:rails][:active_record] and 
+      tracker.config[:rails][:active_record] and
       tracker.config[:rails][:active_record][:whitelist_attributes] == Sexp.new(:true)
 
       @mass_assign_disabled = true
@@ -162,8 +166,8 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
         matches = tracker.check_initializers([], :attr_accessible)
 
         matches.each do |result|
-          if result[1] == :ActiveRecord and result[2] == :Base
-            arg = result[-1][3][1]
+          if result[1] == "ActiveRecord" and result[2] == :Base
+            arg = result[-1].first_arg
 
             if arg.nil? or node_type? arg, :nil
               @mass_assign_disabled = true
@@ -173,9 +177,12 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
         end
       else
         matches.each do |result|
-          if result[-1][3] == Sexp.new(:arglist, Sexp.new(:lit, :attr_accessible), Sexp.new(:nil))
-            @mass_assign_disabled = true
-            break
+          if call? result[-1]
+            call = result[-1]
+            if call.first_arg == Sexp.new(:lit, :attr_accessible) and call.second_arg == Sexp.new(:nil)
+              @mass_assign_disabled = true
+              break
+            end
           end
         end
       end
@@ -255,19 +262,15 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   def has_immediate_user_input? exp
     if exp.nil?
       false
-    elsif params? exp
-      return Match.new(:params, exp)
-    elsif cookies? exp
-      return Match.new(:cookies, exp)
-    elsif call? exp
-      if params? exp.target
+    elsif call? exp and not @safe_input_attributes.include? exp.method
+      if params? exp
         return Match.new(:params, exp)
-      elsif cookies? exp.target
+      elsif cookies? exp
         return Match.new(:cookies, exp)
-      elsif request_env? exp.target
+      elsif request_env? exp
         return Match.new(:request, exp)
       else
-        false
+        has_immediate_user_input? exp.target
       end
     elsif sexp? exp
       case exp.node_type
@@ -318,9 +321,11 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       target = exp.target
       method = exp.method
 
-      if call? target and not method.to_s[-1,1] == "?"
+      if @safe_input_attributes.include? method
+        false
+      elsif call? target and not method.to_s[-1,1] == "?"
         has_immediate_model? target, out
-      elsif model_name? target and method != :arel_table
+      elsif model_name? target
         exp
       else
         false
@@ -363,7 +368,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
   #Checks if +exp+ is a model name.
   #
-  #Prior to using this method, either @tracker must be set to 
+  #Prior to using this method, either @tracker must be set to
   #the current tracker, or else @models should contain an array of the model
   #names, which is available via tracker.models.keys
   def model_name? exp
@@ -386,14 +391,14 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
   #Finds entire method call chain where +target+ is a target in the chain
   def find_chain exp, target
-    return unless sexp? exp 
+    return unless sexp? exp
 
     case exp.node_type
     when :output, :format
       find_chain exp.value, target
     when :call
       if exp == target or include_target? exp, target
-        return exp 
+        return exp
       end
     else
       exp.each do |e|
@@ -447,7 +452,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   end
 
   def gemfile_or_environment
-    if File.exist? File.expand_path "#{tracker.options[:app_path]}/Gemfile"
+    if @app_tree.exists?("Gemfile")
       "Gemfile"
     else
       "config/environment.rb"

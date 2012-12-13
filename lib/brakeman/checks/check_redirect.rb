@@ -53,44 +53,40 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   #is being output directly. This is necessary because of tracker.options[:check_arguments]
   #which can be used to enable/disable reporting output of method calls which use
   #user input as arguments.
-  def include_user_input? call
+  def include_user_input? call, immediate = :immediate
     Brakeman.debug "Checking if call includes user input"
 
-    args = call.args
-    first_arg = call.first_arg
+    arg = call.first_arg
 
     # if the first argument is an array, rails assumes you are building a
     # polymorphic route, which will never jump off-host
-    return false if array? first_arg
+    return false if array? arg
 
-    if tracker.options[:ignore_redirect_to_model] and call? first_arg and
-      (@model_find_calls.include? first_arg.method or first_arg.method.to_s.match(/^find_by_/)) and
-      model_name? first_arg.target
-
-      return false
-    end
-
-    args.each do |arg|
-      if res = has_immediate_model?(arg)
-        return Match.new(:immediate, res)
-      elsif call? arg
-        if request_value? arg
-          return Match.new(:immediate, arg)
-        elsif request_value? arg[1]
-          return Match.new(:immediate, arg[1])
-        elsif arg[2] == :url_for and include_user_input? arg
-          return Match.new(:immediate, arg)
-          #Ignore helpers like some_model_url?
-        elsif arg[2].to_s =~ /_(url|path)$/
-          return false
-        end
-      elsif request_value? arg
-        return Match.new(:immediate, arg)
+    if tracker.options[:ignore_redirect_to_model]
+      if model_instance?(arg) or decorated_model?(arg)
+        return false
       end
     end
 
-    if tracker.options[:check_arguments]
-      super
+    if res = has_immediate_model?(arg)
+      return Match.new(immediate, res)
+    elsif call? arg
+      if request_value? arg
+        return Match.new(immediate, arg)
+      elsif request_value? arg.target
+        return Match.new(immediate, arg.target)
+      elsif arg.method == :url_for and include_user_input? arg
+        return Match.new(immediate, arg)
+        #Ignore helpers like some_model_url?
+      elsif arg.method.to_s =~ /_(url|path)\z/
+        return false
+      end
+    elsif request_value? arg
+      return Match.new(immediate, arg)
+    end
+
+    if tracker.options[:check_arguments] and call? arg
+      include_user_input? arg, false  #I'm doubting if this is really necessary...
     else
       false
     end
@@ -124,5 +120,57 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     end
 
     true
+  end
+
+  #Returns true if exp is (probably) a model instance
+  def model_instance? exp
+    if node_type? exp, :or
+      model_instance? exp.lhs or model_instance? exp.rhs
+    elsif call? exp
+      if model_name? exp.target and
+        (@model_find_calls.include? exp.method or exp.method.to_s.match(/^find_by_/))
+        true
+      else
+        association?(exp.target, exp.method)
+      end
+    end
+  end
+
+  #Returns true if exp is (probably) a decorated model instance
+  #using the Draper gem
+  def decorated_model? exp
+    if node_type? exp, :or
+      decorated_model? exp.lhs or decorated_model? exp.rhs
+    else
+      tracker.config[:gems] and
+      tracker.config[:gems][:draper] and
+      call? exp and
+      node_type?(exp.target, :const) and
+      exp.target.value.to_s.match(/Decorator$/) and
+      exp.method == :decorate
+    end
+  end
+
+  #Check if method is actually an association in a Model
+  def association? model_name, meth
+    if call? model_name
+      return association? model_name.target, meth
+    elsif model_name? model_name
+      model = tracker.models[class_name(model_name)]
+    else
+      return false
+    end
+
+    return false unless model
+
+    model[:associations].each do |name, args|
+      args.each do |arg|
+        if symbol? arg and arg.value == meth
+          return true
+        end
+      end
+    end
+
+    false
   end
 end

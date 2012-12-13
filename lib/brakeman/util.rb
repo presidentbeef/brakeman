@@ -4,21 +4,21 @@ require 'active_support/inflector'
 #This is a mixin containing utility methods.
 module Brakeman::Util
 
-  QUERY_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request, Sexp.new(:arglist)), :query_parameters, Sexp.new(:arglist))
+  QUERY_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request), :query_parameters)
 
-  PATH_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request, Sexp.new(:arglist)), :path_parameters, Sexp.new(:arglist))
+  PATH_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request), :path_parameters)
 
-  REQUEST_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request, Sexp.new(:arglist)), :request_parameters, Sexp.new(:arglist))
+  REQUEST_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request), :request_parameters)
 
-  REQUEST_PARAMS = Sexp.new(:call, Sexp.new(:call, nil, :request, Sexp.new(:arglist)), :parameters, Sexp.new(:arglist))
+  REQUEST_PARAMS = Sexp.new(:call, Sexp.new(:call, nil, :request), :parameters)
 
-  REQUEST_ENV = Sexp.new(:call, Sexp.new(:call, nil, :request, Sexp.new(:arglist)), :env, Sexp.new(:arglist))
+  REQUEST_ENV = Sexp.new(:call, Sexp.new(:call, nil, :request), :env)
 
-  PARAMETERS = Sexp.new(:call, nil, :params, Sexp.new(:arglist))
+  PARAMETERS = Sexp.new(:call, nil, :params)
 
-  COOKIES = Sexp.new(:call, nil, :cookies, Sexp.new(:arglist))
+  COOKIES = Sexp.new(:call, nil, :cookies)
 
-  SESSION = Sexp.new(:call, nil, :session, Sexp.new(:arglist))
+  SESSION = Sexp.new(:call, nil, :session)
 
   ALL_PARAMETERS = Set[PARAMETERS, QUERY_PARAMETERS, PATH_PARAMETERS, REQUEST_PARAMETERS, REQUEST_PARAMS]
 
@@ -75,7 +75,7 @@ module Brakeman::Util
       end
       index += 2
     end
-      
+
     hash << key << value
 
     hash
@@ -107,8 +107,8 @@ module Brakeman::Util
   #Check if _exp_ represents a hash: s(:hash, {...})
   #This also includes pseudo hashes params, session, and cookies.
   def hash? exp
-    exp.is_a? Sexp and (exp.node_type == :hash or 
-                        exp.node_type == :params or 
+    exp.is_a? Sexp and (exp.node_type == :hash or
+                        exp.node_type == :params or
                         exp.node_type == :session or
                         exp.node_type == :cookies)
   end
@@ -239,6 +239,22 @@ module Brakeman::Util
     false
   end
 
+  def make_call target, method, *args
+    call = Sexp.new(:call, target, method)
+
+    if args.empty? or args.first.empty?
+      #nothing to do
+    elsif node_type? args.first, :arglist
+      call.concat args.first[1..-1]
+    elsif args.first.node_type.is_a? Sexp #just a list of args
+      call.concat args.first
+    else
+      call.concat args
+    end
+
+    call
+  end
+
   #Return file name related to given warning. Uses +warning.file+ if it exists
   def file_for warning, tracker = nil
     if tracker.nil?
@@ -315,10 +331,10 @@ module Brakeman::Util
 
   #Return array of lines surrounding the warning location from the original
   #file.
-  def context_for warning, tracker = nil
+  def context_for app_tree, warning, tracker = nil
     file = file_for warning, tracker
     context = []
-    return context unless warning.line and file and File.exist? file
+    return context unless warning.line and file and @app_tree.path_exists? file
 
     current_line = 0
     start_line = warning.line - 5
@@ -369,5 +385,5 @@ module Brakeman::Util
       output << CSV.generate_line(row.cells.map{|cell| cell.to_s.strip})
     end
     output
-  end  
+  end
 end

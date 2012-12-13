@@ -37,4 +37,9 @@ class OtherController < ApplicationController
       do_something
     end
   end
+
+  def test_to_i
+    @x = params[:x].to_i
+    @id = cookies[:id].to_i
+  end
 end

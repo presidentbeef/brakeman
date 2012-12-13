@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 30,
-      :warning => 30
+      :warning => 31
     }
   end
 
@@ -81,6 +81,24 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /home_controller\.rb/
   end
 
+  def test_file_access_yaml_load
+    assert_no_warning :type => :warning,
+      :warning_type => "File Access",
+      :line => 106,
+      :message => /^Parameter\ value\ used\ in\ file\ name/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_file_access_yaml_parse_file
+    assert_warning :type => :warning,
+      :warning_type => "File Access",
+      :line => 109,
+      :message => /^Parameter\ value\ used\ in\ file\ name/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
   def test_mass_assignment
     assert_warning :type => :warning,
       :warning_type => "Mass Assignment",
@@ -120,7 +138,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_redirect
     assert_warning :type => :warning,
       :warning_type => "Redirect",
-      :line => 46,
+      :line => 45,
       :message => /^Possible unprotected redirect near line /,
       :confidence => 0,
       :file => /home_controller\.rb/

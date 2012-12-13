@@ -23,4 +23,6 @@ class User < ActiveRecord::Base
   }
 
   scope :all
+
+  belongs_to :account
 end

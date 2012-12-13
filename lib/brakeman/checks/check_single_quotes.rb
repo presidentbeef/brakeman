@@ -52,7 +52,7 @@ class Brakeman::CheckSingleQuotes < Brakeman::BaseCheck
   def process_class exp
     if exp.class_name == :ERB
       @inside_erb = true
-      process exp.body
+      process_all exp.body
       @inside_erb = false
     end
 
@@ -65,7 +65,7 @@ class Brakeman::CheckSingleQuotes < Brakeman::BaseCheck
   def process_module exp
     if @inside_erb and exp.module_name == :Util
       @inside_util = true
-      process exp.body
+      process_all exp.body
       @inside_util = false
     end
 
@@ -78,7 +78,7 @@ class Brakeman::CheckSingleQuotes < Brakeman::BaseCheck
   def process_defn exp
     if @inside_util and exp.method_name == :html_escape
       @inside_html_escape = true
-      process exp.body
+      process_all exp.body
       @inside_html_escape = false
     end
 

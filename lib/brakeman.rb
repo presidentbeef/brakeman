@@ -40,7 +40,7 @@ module Brakeman
   #  * :skip_libs - do not process lib/ directory (default: false)
   #  * :skip_checks - checks not to run (run all if not specified)
   #  * :relative_path - show relative path of each file(default: false)
-  #  * :summary_only - only output summary section of report 
+  #  * :summary_only - only output summary section of report
   #                    (does not apply to tabs format)
   #
   #Alternatively, just supply a path as a string.
@@ -68,49 +68,47 @@ module Brakeman
     options = get_defaults.merge! options
     options[:output_formats] = get_output_formats options
 
-    app_path = options[:app_path]
-
-    abort("Please supply the path to a Rails application.") unless app_path and File.exist? app_path + "/app"
-
-    if File.exist? app_path + "/script/rails"
-      options[:rails3] = true
-      notify "[Notice] Detected Rails 3 application" unless options[:quiet]
-    end
-
     options
   end
 
+  DEPRECATED_CONFIG_FILES = [
+    File.expand_path("./config.yaml"),
+    File.expand_path("~/.brakeman/config.yaml"),
+    File.expand_path("/etc/brakeman/config.yaml"),
+    "#{File.expand_path(File.dirname(__FILE__))}/../lib/config.yaml"
+  ]
+
+  CONFIG_FILES = [
+    File.expand_path("./config/brakeman.yml"),
+    File.expand_path("~/.brakeman/config.yml"),
+    File.expand_path("/etc/brakeman/config.yml"),
+  ]
+
   #Load options from YAML file
-  def self.load_options config_file
-    config_file ||= ""
-
+  def self.load_options custom_location
     #Load configuration file
-    [File.expand_path(config_file),
-      File.expand_path("./config.yaml"),
-      File.expand_path("~/.brakeman/config.yaml"),
-      File.expand_path("/etc/brakeman/config.yaml"),
-      "#{File.expand_path(File.dirname(__FILE__))}/../lib/config.yaml"].each do |f|
+    if config = config_file(custom_location)
+      notify "[Notice] Using configuration in #{config}"
+      options = YAML.load_file config
+      options.each { |k, v| options[k] = Set.new v if v.is_a? Array }
+      options
+    else
+      {}
+    end
+  end
 
-      if File.exist? f and not File.directory? f
-        notify "[Notice] Using configuration in #{f}"
-        options = YAML.load_file f
-        options.each do |k,v|
-          if v.is_a? Array
-            options[k] = Set.new v
-          end
-        end
-
-        return options
-      end
-      end
-
-    return {}
+  def self.config_file(custom_location=nil)
+    DEPRECATED_CONFIG_FILES.each do |f|
+      notify "#{f} is deprecated, please use one of #{CONFIG_FILES.join(", ")}" if File.file?(f)
+    end
+    supported_locations = [File.expand_path(custom_location || "")] + DEPRECATED_CONFIG_FILES + CONFIG_FILES
+    supported_locations.detect{|f| File.file?(f) }
   end
 
   #Default set of options
   def self.get_defaults
-    { :skip_checks => Set.new, 
-      :check_arguments => true, 
+    { :skip_checks => Set.new,
+      :check_arguments => true,
       :safe_methods => Set.new,
       :min_confidence => 2,
       :combine_locations => true,
@@ -123,7 +121,7 @@ module Brakeman
       :relative_path => false,
       :quiet => true,
       :report_progress => true,
-      :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css" 
+      :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css"
     }
   end
 
@@ -252,8 +250,6 @@ module Brakeman
     #Start scanning
     scanner = Scanner.new options
 
-    notify "[Notice] Using Ruby #{RUBY_VERSION}. Please make sure this matches the one used to run your Rails application."
-
     notify "Processing application in #{options[:app_path]}"
     tracker = scanner.process
 
@@ -316,19 +312,20 @@ module Brakeman
 
   # Compare JSON ouptut from a previous scan and return the diff of the two scans
   def self.compare options
-    require 'json'
+    require 'multi_json'
     require 'brakeman/differ'
     raise ArgumentError.new("Comparison file doesn't exist") unless File.exists? options[:previous_results_json]
 
     begin
-      previous_results = JSON.parse(File.read(options[:previous_results_json]), :symbolize_names =>true)[:warnings]
-    rescue JSON::ParserError
+      previous_results = MultiJson.load(File.read(options[:previous_results_json]), :symbolize_keys => true)[:warnings]
+    rescue MultiJson::DecodeError
       self.notify "Error parsing comparison file: #{options[:previous_results_json]}"
       exit!
     end
 
     tracker = run(options)
-    new_results = JSON.parse(tracker.report.to_json, :symbolize_names =>true)[:warnings]
+
+    new_results = MultiJson.load(tracker.report.to_json, :symbolize_keys => true)[:warnings]
 
     Brakeman::Differ.new(new_results, previous_results).diff
   end

@@ -7,6 +7,18 @@ module Brakeman::ProcessorHelper
     exp
   end
 
+  def process_all! exp
+    exp.map! do |e|
+      if sexp? e
+        process e
+      else
+        e
+      end
+    end
+
+    exp
+  end
+
   #Sets the current module.
   def process_module exp
     module_name = class_name(exp.class_name).to_s
@@ -18,7 +30,7 @@ module Brakeman::ProcessorHelper
       @current_module = module_name
     end
 
-    process exp.body
+    process_all exp.body
 
     @current_module = prev_module
 
@@ -35,7 +47,7 @@ module Brakeman::ProcessorHelper
       when :lvar
         exp.value.to_sym
       when :colon2
-        "#{class_name(exp[1])}::#{exp[2]}".to_sym
+        "#{class_name(exp.lhs)}::#{exp.rhs}".to_sym
       when :colon3
         "::#{exp.value}".to_sym
       when :call

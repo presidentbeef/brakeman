@@ -12,7 +12,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def initialize options, processor, changed_files
     super(options, processor)
 
-    @paths = changed_files.map {|f| File.expand_path f, tracker.options[:app_path] }
+    @paths = changed_files.map {|f| @app_tree.expand_path(f) }
     @old_results = tracker.checks  #Old warnings from previous scan
     @changes = nil                 #True if files had to be rescanned
     @reindex = Set.new
@@ -66,7 +66,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def rescan_file path, type = nil
     type ||= file_type path
 
-    unless File.exist? path
+    unless @app_tree.path_exists?(path)
       return rescan_deleted_file path, type
     end
 
@@ -128,7 +128,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def rescan_template path
-    return unless path.match KNOWN_TEMPLATE_EXTENSIONS and File.exist? path
+    return unless path.match KNOWN_TEMPLATE_EXTENSIONS and @app_tree.path_exists?(path)
 
     template_name = template_path_to_name(path)
 
@@ -177,7 +177,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def rescan_model path
     num_models = tracker.models.length
     tracker.reset_model path
-    process_model path if File.exists? path
+    process_model path if @app_tree.path_exists?(path)
 
     #Only need to rescan other things if a model is added or removed
     if num_models != tracker.models.length
@@ -190,7 +190,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def rescan_lib path
-    process_lib path if File.exists? path
+    process_lib path if @app_tree.path_exists?(path)
 
     lib = nil
 
@@ -304,7 +304,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
       :initializer
     when /config\/routes\.rb/
       :routes
-    when /\/config/
+    when /\/config\/.+\.rb/
       :config
     when /Gemfile/
       :gemfile
@@ -322,7 +322,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
       end
     end
 
-    method_matcher = /##{method_names.join('|')}$/
+    method_matcher = /##{method_names.map {|n| Regexp.escape(n.to_s)}.join('|')}$/
 
     #Rescan controllers that mixed in library
     tracker.controllers.each do |name, controller|

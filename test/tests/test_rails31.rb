@@ -54,6 +54,51 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /users_controller\.rb/
   end
 
+  def test_redirect_to_decorated_model
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 50,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 2,
+      :file => /other_controller\.rb/
+  end
+
+  def test_redirect_multiple_values
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 61,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :file => /other_controller\.rb/
+  end
+
+  def test_redirect_to_model_as_arg
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 113,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 2,
+      :file => /users_controller\.rb/
+  end
+
+  def test_redirect_to_model_association
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 117,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
+  end
+
+  def test_redirect_to_secong_arg
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 121,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 2,
+      :file => /users_controller\.rb/
+  end
+
   def test_whitelist_attributes
     assert_no_warning :type => :model,
       :warning_type => "Attribute Restriction",
@@ -440,7 +485,7 @@ class Rails31Tests < Test::Unit::TestCase
   def test_cross_site_request_forgery
     assert_warning :type => :warning,
       :warning_type => "Cross-Site Request Forgery",
-      :line => 93,
+      :line => 91,
       :message => /^Use\ whitelist\ \(:only\ =>\ \[\.\.\]\)\ when\ skipp/,
       :confidence => 1,
       :file => /users_controller\.rb/
@@ -666,5 +711,14 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Possible\ SQL\ injection/,
       :confidence => 0,
       :file => /other_controller\.rb/
+  end
+
+  def test_to_sql_interpolation
+    assert_no_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 181,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :file => /product\.rb/
   end
 end

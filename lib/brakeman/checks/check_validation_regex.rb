@@ -53,8 +53,9 @@ class Brakeman::CheckValidationRegex < Brakeman::BaseCheck
   #Get the name of the attribute being validated.
   def get_name validator
     name = validator[1]
+
     if sexp? name
-      name[1]
+      name.value
     else
       name
     end

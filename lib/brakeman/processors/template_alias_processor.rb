@@ -40,29 +40,29 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
   #Looks for form methods and iterating over collections of Models
   def process_call_with_block exp
     process_default exp
-    
+
     call = exp.block_call
 
     if call? call
       target = call.target
       method = call.method
-      args = exp.block_args
+      arg = exp.block_args.first_param
       block = exp.block
 
       #Check for e.g. Model.find.each do ... end
-      if method == :each and args and block and model = get_model_target(target)
-        if node_type? args, :lasgn
+      if method == :each and arg and block and model = get_model_target(target)
+        if arg.is_a? Symbol
           if model == target.target
-            env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, model, :new, Sexp.new(:arglist))
+            env[Sexp.new(:lvar, arg)] = Sexp.new(:call, model, :new)
           else
-            env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, Sexp.new(:const, Brakeman::Tracker::UNKNOWN_MODEL), :new, Sexp.new(:arglist))
+            env[Sexp.new(:lvar, arg)] = Sexp.new(:call, Sexp.new(:const, Brakeman::Tracker::UNKNOWN_MODEL), :new)
           end
 
           process block if sexp? block
         end
       elsif FORM_METHODS.include? method
-        if node_type? args, :lasgn
-          env[Sexp.new(:lvar, args.lhs)] = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new, Sexp.new(:arglist)) 
+        if arg.is_a? Symbol
+          env[Sexp.new(:lvar, arg)] = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new)
 
           process block if sexp? block
         end
@@ -96,11 +96,17 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
     false
   end
 
+  #Ignore `<<` calls on template variables which are used by the templating
+  #library (HAML, ERB, etc.)
   def find_push_target exp
     if sexp? exp
       if exp.node_type == :lvar and (exp.value == :_buf or exp.value == :_erbout)
         return nil
       elsif exp.node_type == :ivar and exp.value == :@output_buffer
+        return nil
+      elsif exp.node_type == :call and call? exp.target and
+        exp.target.method == :_hamlout and exp.method == :buffer
+
         return nil
       end
     end

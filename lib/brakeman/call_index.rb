@@ -7,8 +7,6 @@ class Brakeman::CallIndex
   def initialize calls
     @calls_by_method = Hash.new { |h,k| h[k] = [] }
     @calls_by_target = Hash.new { |h,k| h[k] = [] }
-    @methods = Set.new
-    @targets = Set.new
 
     index_calls calls
   end
@@ -25,7 +23,7 @@ class Brakeman::CallIndex
     target = options[:target] || options[:targets]
     method = options[:method] || options[:methods]
     nested = options[:nested]
-    
+
     if options[:chained]
       return find_chain options
     #Find by narrowest category
@@ -72,16 +70,12 @@ class Brakeman::CallIndex
       calls.delete_if do |call|
         from_template call, template_name
       end
-
-      @methods.delete name.to_s if calls.empty?
     end
 
     @calls_by_target.each do |name, calls|
       calls.delete_if do |call|
         from_template call, template_name
       end
-
-      @targets.delete name.to_s if calls.empty?
     end
   end
 
@@ -90,25 +84,22 @@ class Brakeman::CallIndex
       calls.delete_if do |call|
         call[:location][0] == :class and classes.include? call[:location][1]
       end
-
-      @methods.delete name.to_s if calls.empty?
     end
 
     @calls_by_target.each do |name, calls|
       calls.delete_if do |call|
         call[:location][0] == :class and classes.include? call[:location][1]
       end
-
-      @targets.delete name.to_s if calls.empty?
     end
   end
 
   def index_calls calls
     calls.each do |call|
-      @methods << call[:method].to_s
-      @targets << call[:target].to_s
       @calls_by_method[call[:method]] << call
-      @calls_by_target[call[:target]] << call
+
+      unless call[:target].is_a? Sexp
+        @calls_by_target[call[:target]] << call
+      end
     end
   end
 
@@ -128,18 +119,6 @@ class Brakeman::CallIndex
   def calls_by_target target
     if target.is_a? Array
       calls_by_targets target
-    elsif target.is_a? Regexp
-      targets = @targets.select do |t|
-        t.match target
-      end
-
-      if targets.empty?
-        []
-      elsif targets.length > 1
-        calls_by_targets targets
-      else
-        calls_by_target[targets.first]
-      end
     else
       @calls_by_target[target]
     end
@@ -158,18 +137,6 @@ class Brakeman::CallIndex
   def calls_by_method method
     if method.is_a? Array
       calls_by_methods method
-    elsif method.is_a? Regexp
-      methods = @methods.select do |m|
-        m.match method
-      end
-
-      if methods.empty?
-        []
-      elsif methods.length > 1
-        calls_by_methods methods
-      else
-        @calls_by_method[methods.first.to_sym]
-      end
     else
       @calls_by_method[method.to_sym]
     end

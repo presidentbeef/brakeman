@@ -2,10 +2,11 @@ require 'brakeman/processors/base_processor'
 
 #Processes controller. Results are put in tracker.controllers
 class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
-  FORMAT_HTML = Sexp.new(:call, Sexp.new(:lvar, :format), :html, Sexp.new(:arglist))
+  FORMAT_HTML = Sexp.new(:call, Sexp.new(:lvar, :format), :html)
 
-  def initialize tracker
-    super 
+  def initialize app_tree, tracker
+    super(tracker)
+    @app_tree = app_tree
     @controller = nil
     @current_method = nil
     @current_module = nil
@@ -49,7 +50,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
                     :src => exp,
                     :file => @file_name }
     @tracker.controllers[@controller[:name]] = @controller
-    exp.body = process exp.body
+    exp.body = process_all! exp.body
     set_layout_name
     @controller = nil
     exp
@@ -89,7 +90,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
             #layout "some_layout"
 
             name = args.last.value.to_s
-            unless Dir.glob("#{@tracker.options[:app_path]}/app/views/layouts/#{name}.html.{erb,haml}").empty?
+            if @app_tree.layout_exists?(name)
               @controller[:layout] = "layouts/#{name}"
             else
               Brakeman.debug "[Notice] Layout not found: #{name}"
@@ -107,7 +108,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
       exp
     elsif target == nil and method == :render
       make_render exp
-    elsif exp == FORMAT_HTML and context[1] != :iter 
+    elsif exp == FORMAT_HTML and context[1] != :iter
       #This is an empty call to
       # format.html
       #Which renders the default template if no arguments
@@ -116,7 +117,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
       call.line(exp.line)
       call
     else
-      call = Sexp.new :call, target, method, process(exp.arglist) #RP 3 TODO
+      call = make_call target, method, process_all!(exp.args)
       call.line(exp.line)
       call
     end
@@ -126,11 +127,10 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
   def process_defn exp
     name = exp.method_name
     @current_method = name
-    res = Sexp.new :methdef, name, process(exp[2]), process(exp.body.block)
+    res = Sexp.new :methdef, name, exp.formal_args, *process_all!(exp.body)
     res.line(exp.line)
     @current_method = nil
     @controller[@visibility][name] = res unless @controller.nil?
-
     res
   end
 
@@ -151,7 +151,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     end
 
     @current_method = name
-    res = Sexp.new :selfdef, target, name, process(exp[3]), process(exp.body.block)
+    res = Sexp.new :selfdef, target, name, exp.formal_args, *process_all!(exp.body)
     res.line(exp.line)
     @current_method = nil
     @controller[@visibility][name] = res unless @controller.nil?
@@ -175,7 +175,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     name = underscore(@controller[:name].to_s.split("::")[-1].gsub("Controller", ''))
 
     #There is a layout for this Controller
-    unless Dir.glob("#{@tracker.options[:app_path]}/app/views/layouts/#{name}.html.{erb,haml}").empty?
+    if @app_tree.layout_exists?(name)
       @controller[:layout] = "layouts/#{name}"
     end
   end
@@ -188,9 +188,9 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     filter_name = ("fake_filter" + rand.to_s[/\d+$/]).to_sym
     args = exp.block_call.arglist
     args.insert(1, Sexp.new(:lit, filter_name))
-    before_filter_call = Sexp.new(:call, nil, :before_filter, args)
+    before_filter_call = make_call(nil, :before_filter, args)
 
-    if exp.block_args
+    if exp.block_args.length > 1
       block_variable = exp.block_args[1]
     else
       block_variable = :temp
@@ -203,12 +203,11 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     end
 
     #Build Sexp for filter method
-    body = Sexp.new(:scope, 
-            Sexp.new(:block,
-              Sexp.new(:lasgn, block_variable, 
-                Sexp.new(:call, Sexp.new(:const, @controller[:name]), :new, Sexp.new(:arglist)))).concat(block_inner))
+    body = Sexp.new(:lasgn,
+                    block_variable, 
+                    Sexp.new(:call, Sexp.new(:const, @controller[:name]), :new))
 
-    filter_method = Sexp.new(:defn, filter_name, Sexp.new(:args), body).line(exp.line)
+    filter_method = Sexp.new(:defn, filter_name, Sexp.new(:args), body).concat(block_inner).line(exp.line)
 
     vis = @visibility
     @visibility = :private

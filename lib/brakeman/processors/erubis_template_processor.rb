@@ -3,7 +3,7 @@ require 'brakeman/processors/template_processor'
 #Processes ERB templates using Erubis instead of erb.
 class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
   
-  #s(:call, TARGET, :method, s(:arglist))
+  #s(:call, TARGET, :method, ARGS)
   def process_call exp
     target = exp.target
     if sexp? target
@@ -46,8 +46,7 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
       make_render_in_view exp
     else
       #TODO: Is it really necessary to create a new Sexp here?
-      args = exp.arglist = process(exp.arglist)
-      call = Sexp.new :call, target, method, args
+      call = make_call target, method, process_all!(exp.args)
       call.original_line(exp.original_line)
       call.line(exp.line)
       call
