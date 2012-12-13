@@ -525,8 +525,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     formal_args = method_exp.formal_args
 
     formal_args.each_with_index do |arg, index|
-      if arg.is_a? Symbol and sexp? args[index + 1]
-        meth_env[Sexp.new(:lvar, arg)] = args[index + 1]
+      next if index == 0
+
+      if arg.is_a? Symbol and sexp? args[index - 1]
+        meth_env[Sexp.new(:lvar, arg)] = args[index - 1]
       end
     end
 
