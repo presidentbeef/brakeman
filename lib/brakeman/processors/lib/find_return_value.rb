@@ -34,8 +34,10 @@ class Brakeman::FindReturnValue
     find_explicit_return_values exp
 
     if node_type? exp, :methdef, :selfdef, :defn, :defs
-      if exp[-1]
-        @return_values << last_value(exp[-1])
+      body = exp.body
+
+      unless body.empty?
+        @return_values << last_value(body)
       else
         Brakeman.debug "FindReturnValue: Empty method? #{exp.inspect}"
       end
@@ -56,7 +58,7 @@ class Brakeman::FindReturnValue
       current = todo.shift
 
       if node_type? current, :return
-        @return_values << current[1] unless current[1].nil?
+        @return_values << current.value unless current.value.nil?
       elsif sexp? current
         todo = current[1..-1].concat todo
       end
@@ -66,29 +68,32 @@ class Brakeman::FindReturnValue
   #Determines the "last value" of an expression.
   def last_value exp
     case exp.node_type
-    when :rlist, :block, :scope
-      last_value exp[-1]
+    when :rlist, :block, :scope, Sexp
+      last_value exp.last
     when :if
-      if exp[2].nil?
-        last_value exp[3]
-      elsif exp[3].nil?
-        last_value exp[2]
+      then_clause = exp.then_clause
+      else_clause = exp.else_clause
+
+      if then_clause.nil?
+        last_value else_clause
+      elsif else_clause.nil?
+        last_value then_clause
       else
-        true_branch = last_value exp[2]
-        false_branch = last_value exp[3]
+        true_branch = last_value then_clause
+        false_branch = last_value else_clause
 
         if true_branch and false_branch
-          value = Sexp.new(:or, last_value(exp[2]), last_value(exp[3]))
-          value.original_line(value[2].line)
+          value = Sexp.new(:or, true_branch, false_branch)
+          value.original_line(value.rhs.line)
           value
-        else
+        else #Unlikely?
           true_branch or false_branch
         end
       end
     when :lasgn, :iasgn
       exp.rhs
     when :return
-      exp[1]
+      exp.value
     else
       exp.original_line(exp.line) unless exp.original_line
       exp
@@ -103,7 +108,7 @@ class Brakeman::FindReturnValue
     if @return_values.empty?
       Sexp.new(:nil)
     elsif @return_values.length == 1
-      @return_values[0]
+      @return_values.first
     else
       @return_values.reduce do |value, sexp|
         Sexp.new(:or, value, sexp)
