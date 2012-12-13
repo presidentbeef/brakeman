@@ -23,7 +23,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
     @known_dangerous = []
     #Ideally, I think this should also check to see if people are setting
     #:escape => false
-    methods = tracker.find_call :target => false, :method => :link_to 
+    methods = tracker.find_call :target => false, :method => :link_to
 
     @models = tracker.models.keys
     @inspect_arguments = tracker.options[:check_arguments]
@@ -40,23 +40,24 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
     #an ignored method call by the code above.
     call = result[:call] = result[:call].dup
 
-    args = call.args
+    first_arg = call.first_arg
+    second_arg = call.second_arg
 
     @matched = false
 
     #Skip if no arguments(?) or first argument is a hash
-    return if args.first.nil? or hash? args.first
+    return if first_arg.nil? or hash? first_arg
 
     if version_between? "2.0.0", "2.2.99"
-      check_argument result, args.first
+      check_argument result, first_arg
 
-      if args.second and not hash? args.second
-        check_argument result, args.second
+      if second_arg and not hash? second_arg
+        check_argument result, second_arg
       end
-    elsif args.second
+    elsif second_arg
       #Only check first argument if there is a second argument
       #in Rails 2.3.x
-      check_argument result, args.first
+      check_argument result, first_arg
     end
   end
 
@@ -75,7 +76,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
 
       add_result result
       warn :result => result,
-        :warning_type => "Cross Site Scripting", 
+        :warning_type => "Cross Site Scripting",
         :message => message,
         :user_input => input.match,
         :confidence => CONFIDENCE[:high],
@@ -94,7 +95,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
         end
 
         warn :result => result,
-          :warning_type => "Cross Site Scripting", 
+          :warning_type => "Cross Site Scripting",
           :message => "Unescaped model attribute in link_to",
           :user_input => match,
           :confidence => confidence,
@@ -111,8 +112,8 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
       if message
         add_result result
 
-        warn :result => result, 
-          :warning_type => "Cross Site Scripting", 
+        warn :result => result,
+          :warning_type => "Cross Site Scripting",
           :message => message,
           :user_input => @matched.match,
           :confidence => CONFIDENCE[:med],
@@ -137,6 +138,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
 
     #Bare records create links to the model resource,
     #not a string that could have injection
+    #TODO: Needs test? I think this is broken?
     if model_name? target and context == [:call, :arglist]
       return exp
     end
