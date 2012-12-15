@@ -147,13 +147,15 @@ class Sexp
   #s(:call, s(:call, nil, :x, s(:arglist)), :y, s(:arglist, s(:lit, 1)))
   #                        ^- method
   def method
-    expect :call, :attrasgn, :super, :zsuper
+    expect :call, :attrasgn, :super, :zsuper, :result
 
     case self.node_type
     when :call, :attrasgn
       self[2]
     when :super, :zsuper
       :super
+    when :result
+      self.last
     end
   end
 
@@ -441,6 +443,27 @@ class Sexp
 
   def parent_name
     expect :class
+    self[2]
+  end
+
+  #Returns the call Sexp in a result returned from FindCall
+  def call
+    expect :result
+
+    self.last
+  end
+
+  #Returns the module the call is inside
+  def module
+    expect :result
+
+    self[1]
+  end
+
+  #Return the class the call is inside
+  def result_class
+    expect :result
+
     self[2]
   end
 end
