@@ -173,8 +173,8 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
         matches = tracker.check_initializers([], :attr_accessible)
 
         matches.each do |result|
-          if result[1] == "ActiveRecord" and result[2] == :Base
-            arg = result[-1].first_arg
+          if result.module == "ActiveRecord" and result.result_class == :Base
+            arg = result.call.first_arg
 
             if arg.nil? or node_type? arg, :nil
               @mass_assign_disabled = true
@@ -185,8 +185,8 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       else
         #Check for ActiveRecord::Base.send(:attr_accessible, nil)
         matches.each do |result|
-          if call? result[-1]
-            call = result[-1]
+          call = result.call
+          if call? call
             if call.first_arg == Sexp.new(:lit, :attr_accessible) and call.second_arg == Sexp.new(:nil)
               @mass_assign_disabled = true
               break
@@ -196,7 +196,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       end
     end
 
-    #There is a chance someon is using Rails 3.x and the `strong_parameters`
+    #There is a chance someone is using Rails 3.x and the `strong_parameters`
     #gem and still using hack above, so this is a separate check for
     #including ActiveModel::ForbiddenAttributesProtection in
     #ActiveRecord::Base in an initializer.
@@ -204,8 +204,9 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       matches = tracker.check_initializers([], :include)
 
       matches.each do |result|
-        if call? result[-1]
-          if result[-1].first_arg == Sexp.new(:colon2, Sexp.new(:const, :ActiveModel), :ForbiddenAttributesProtection)
+        call = result.call
+        if call? call
+          if call.first_arg == Sexp.new(:colon2, Sexp.new(:const, :ActiveModel), :ForbiddenAttributesProtection)
             @mass_assign_disabled = true
           end
         end
