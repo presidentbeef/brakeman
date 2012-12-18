@@ -104,6 +104,12 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     exp
   end
 
+  #Does not actually process string interpolation, but notes that it occurred.
+  def process_string_interp exp
+    @string_interp = Match.new(:interp, exp)
+    process_default exp
+  end
+
   private
 
   #Report a warning
@@ -218,12 +224,6 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     end
 
     false
-  end
-
-  #Does not actually process string interpolation, but notes that it occurred.
-  def process_string_interp exp
-    @string_interp = Match.new(:interp, exp)
-    exp
   end
 
   #Checks if an expression contains string interpolation.
