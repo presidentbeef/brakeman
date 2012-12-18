@@ -6,15 +6,18 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   include Brakeman::ProcessorHelper
   include Brakeman::Util
 
-  attr_reader :ignore
+  IGNORE = Sexp.new :ignore
 
   #Return a new Processor.
   def initialize tracker
     super()
     @last = nil
     @tracker = tracker
-    @ignore = Sexp.new :ignore
     @current_template = @current_module = @current_class = @current_method = nil
+  end
+
+  def ignore
+    IGNORE
   end
 
   def process_class exp
@@ -178,7 +181,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
 
   #Generates :render node from call to render.
   def make_render exp, in_view = false 
-    render_type, value, rest = find_render_type exp.args, in_view
+    render_type, value, rest = find_render_type exp, in_view
     rest = process rest
     result = Sexp.new(:render, render_type, value, rest)
     result.line(exp.line)
@@ -192,14 +195,14 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   #:template, :text, :update, :xml
   #
   #And also :layout for inside templates
-  def find_render_type args, in_view = false
+  def find_render_type call, in_view = false
     rest = Sexp.new(:hash)
     type = nil
     value = nil
-    first_arg = args.first
+    first_arg = call.first_arg
 
-    if args.length == 1 and first_arg == Sexp.new(:lit, :update)
-      return :update, nil, Sexp.new(:arglist, *args[0..-2]) #TODO HUH?
+    if call.second_arg.nil? and first_arg == Sexp.new(:lit, :update)
+      return :update, nil, Sexp.new(:arglist, *call.args[0..-2]) #TODO HUH?
     end
 
     #Look for render :action, ... or render "action", ...
@@ -228,10 +231,12 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
       types_in_hash << :layout
     end
 
+    last_arg = call.last_arg
+
     #Look for "type" of render in options hash
     #For example, render :file => "blah"
-    if hash? args.last
-      hash_iterate(args.last) do |key, val|
+    if hash? last_arg
+      hash_iterate(last_arg) do |key, val|
         if symbol? key and types_in_hash.include? key.value
           type = key.value
           value = val

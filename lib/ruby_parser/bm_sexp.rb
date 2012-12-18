@@ -219,6 +219,35 @@ class Sexp
     end
   end
 
+  def each_arg replace = false
+    expect :call, :attrasgn, :super, :zsuper
+    range = nil
+
+    case self.node_type
+    when :call, :attrasgn
+      if self[3]
+        range = (3...self.length)
+      end
+    when :super, :zsuper
+      if self[1]
+        range = (1...self.length)
+      end
+    end
+
+    if range
+      range.each do |i|
+        res = yield self[i]
+        self[i] = res if replace
+      end
+    end
+
+    self
+  end
+
+  def each_arg! &block
+    self.each_arg true, &block
+  end
+
   #Returns first argument of a method call.
   def first_arg
     expect :call, :attrasgn
@@ -241,6 +270,26 @@ class Sexp
   def second_arg= exp
     expect :call, :attrasgn
     self[4] = exp
+  end
+
+  def third_arg
+    expect :call, :attrasgn
+    self[5]
+  end
+
+  def third_arg= exp
+    expect :call, :attrasgn
+    self[5] = exp
+  end
+
+  def last_arg
+    expect :call, :attrasgn
+
+    if self[3]
+      self[-1]
+    else
+      nil
+    end
   end
 
   #Returns condition of an if expression:

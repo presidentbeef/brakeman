@@ -299,11 +299,12 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     tar_variable = exp.target
     target = exp.target = process(exp.target)
     method = exp.method
-    args = exp.args
+    index_arg = exp.first_arg
+    value_arg = exp.second_arg
 
     if method == :[]=
-      index = exp.first_arg = process(args.first)
-      value = exp.second_arg = process(args.second)
+      index = exp.first_arg = process(index_arg)
+      value = exp.second_arg = process(value_arg)
       match = Sexp.new(:call, target, :[], index)
       env[match] = value
 
@@ -311,7 +312,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         env[tar_variable] = hash_insert target.deep_clone, index, value
       end
     elsif method.to_s[-1,1] == "="
-      value = exp.first_arg = process(args.first)
+      value = exp.first_arg = process(index_arg)
       #This is what we'll replace with the value
       match = Sexp.new(:call, target, method.to_s[0..-2].to_sym)
 

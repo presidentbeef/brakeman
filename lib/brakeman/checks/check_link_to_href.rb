@@ -34,7 +34,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     #an ignored method call by the code above.
     call = result[:call] = result[:call].dup
     @matched = false
-    url_arg = process call.args.second
+    url_arg = process call.second_arg
 
     #Ignore situations where the href is an interpolated string
     #with something before the user input

@@ -19,7 +19,7 @@ class Brakeman::ErbTemplateProcessor < Brakeman::TemplateProcessor
         exp.arglist = process(exp.arglist)
         @inside_concat = false
 
-        if exp.args.length > 2
+        if exp.second_arg
           raise Exception.new("Did not expect more than a single argument to _erbout.concat")
         end
 

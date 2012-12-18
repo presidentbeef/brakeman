@@ -60,12 +60,12 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     end
 
     method = exp.method
-    args = exp.args
+    first_arg = exp.first_arg
 
     #Methods called inside class definition
     #like attr_* and other settings
     if @current_method.nil? and target.nil?
-      if args.empty?
+      if first_arg.nil?
         case method
         when :private, :protected, :public
           @visibility = method
@@ -77,16 +77,16 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
       else
         case method
         when :include
-          @model[:includes] << class_name(args.first) if @model
+          @model[:includes] << class_name(first_arg) if @model
         when :attr_accessible
           @model[:attr_accessible] ||= []
-          args = args.map do |e|
+          args = []
+
+          exp.each_arg do |e|
             if node_type? e, :lit
-              e.value
-            else
-              nil
+              args << e.value
             end
-          end.compact
+          end
 
           @model[:attr_accessible].concat args
         else
