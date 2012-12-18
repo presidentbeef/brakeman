@@ -220,11 +220,6 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     false
   end
 
-  #Ignores ignores
-  def process_ignore exp
-    exp
-  end
-
   #Does not actually process string interpolation, but notes that it occurred.
   def process_string_interp exp
     @string_interp = Match.new(:interp, exp)
