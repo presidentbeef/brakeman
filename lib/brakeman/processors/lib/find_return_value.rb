@@ -16,7 +16,12 @@ class Brakeman::FindReturnValue
   end
 
   def initialize
+    @uses_ivars = false
     @return_values = []
+  end
+
+  def uses_ivars?
+    @uses_ivars
   end
 
   #Find return value of Sexp. Takes an optional starting environment.
@@ -56,6 +61,8 @@ class Brakeman::FindReturnValue
 
     until todo.empty?
       current = todo.shift
+
+      @uses_ivars = true if node_type? current, :ivar
 
       if node_type? current, :return
         @return_values << current.value unless current.value.nil?
