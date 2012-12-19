@@ -24,6 +24,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     @exp_context = []
     @current_module = nil
     @tracker = tracker #set in subclass as necessary
+    @helper_method_cache = {}
+    @helper_method_info = Hash.new({})
     set_env_defaults
   end
 
@@ -524,13 +526,67 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   end
 
   def process_helper_method method_exp, args
-    meth_env = only_ivars(:include_request_vars)
-    assign_args method_exp, args, meth_env
-    value = Brakeman::FindReturnValue.return_value(method_exp.body_list, meth_env)
-    only_ivars(false, meth_env).all.each do |var, val|
-      env[var] = val
+    method_name = method_exp.method_name
+    Brakeman.debug "Processing method #{method_name}"
+
+    #Method takes no arguments and does not use instance variables,
+    #so use cached return value
+    if args.length == 0 and value = @helper_method_cache[method_name]
+      return value
     end
-    value
+
+    info = @helper_method_info[method_name]
+
+    #If method uses instance variables, then include those and request
+    #variables (params, etc) in the method environment. Otherwise,
+    #only include request variables.
+    if info[:uses_ivars]
+      meth_env = only_ivars(:include_request_vars)
+    else
+      meth_env = only_request_vars
+    end
+
+    #Add arguments to method environment
+    assign_args method_exp, args, meth_env
+
+    #Serialize environment for cache key
+    meth_values = meth_env.instance_variable_get(:@env).to_a
+    meth_values.sort!
+    meth_values = meth_values.to_s
+
+    digest = Digest::SHA1.new.update(meth_values << method_name.to_s).to_s.to_sym
+
+    if value = @helper_method_cache[digest]
+      #Use values from cache
+      value[:ivar_values].each do |var, val|
+        env[var] = val
+      end
+
+      value[:return_value]
+    else
+      #Find return value for method
+      frv = Brakeman::FindReturnValue.new
+      value = frv.get_return_value(method_exp.body_list, meth_env)
+
+      ivars = {}
+
+      only_ivars(false, meth_env).all.each do |var, val|
+        env[var] = val
+        ivars[var] = val
+      end
+
+      if not frv.uses_ivars? and args.length == 0
+        #Store return value without ivars and args if they are not used
+        @helper_method_cache[method_exp.method_name] = { :return_value => value, :ivar_values => ivars }
+      else
+        @helper_method_cache[digest] = { :return_value => value, :ivar_values => ivars }
+      end
+
+      #Store information about method, just ivar usage for now
+      @helper_method_info[method_name] = { :uses_ivars => frv.uses_ivars? }
+
+      value
+    end
   end
 
   def assign_args method_exp, args, meth_env = SexpProcessor::Environment.new
