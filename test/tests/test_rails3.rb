@@ -589,6 +589,15 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /account\.rb/
   end
 
+  def test_mass_assign_with_strong_params
+    assert_no_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :line => 53,
+      :message => /^Unprotected\ mass\ assignment/,
+      :confidence => 0,
+      :file => /other_controller\.rb/
+  end
+
   def test_translate_bug
     assert_warning :type => :warning,
       :warning_type => "Cross Site Scripting",
