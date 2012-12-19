@@ -12,7 +12,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def expected
     @expected ||= {
-      :model => 0,
+      :model => 3,
       :template => 17,
       :controller => 1,
       :warning => 48 }
@@ -684,5 +684,32 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Possible\ SQL\ injection/,
       :confidence => 1,
       :file => /product\.rb/
+  end
+
+  def test_validates_format
+    assert_warning :type => :model,
+      :warning_type => "Format Validation",
+      :line => 2,
+      :message => /^Insufficient\ validation\ for\ 'username'\ u/,
+      :confidence => 0,
+      :file => /account\.rb/
+  end
+
+  def test_validates_format_with
+    assert_warning :type => :model,
+      :warning_type => "Format Validation",
+      :line => 3,
+      :message => /^Insufficient\ validation\ for\ 'phone'\ usin/,
+      :confidence => 0,
+      :file => /account\.rb/
+  end
+
+  def test_validates_format_with_short_regex
+    assert_warning :type => :model,
+      :warning_type => "Format Validation",
+      :line => 4,
+      :message => /^Insufficient\ validation\ for\ 'first_name'/,
+      :confidence => 0,
+      :file => /account\.rb/
   end
 end
