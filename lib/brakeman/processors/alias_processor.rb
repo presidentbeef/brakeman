@@ -511,6 +511,18 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     res
   end
 
+  def only_request_vars
+    res = SexpProcessor::Environment.new
+
+    env.all.each do |k, v|
+      if request_value? k and not v.nil?
+        res[k] = v.dup
+      end
+    end
+
+    res
+  end
+
   def process_helper_method method_exp, args
     meth_env = only_ivars(:include_request_vars)
     assign_args method_exp, args, meth_env
