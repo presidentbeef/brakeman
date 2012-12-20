@@ -525,6 +525,25 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     res
   end
 
+  def get_call_value call
+    method_name = call.method
+
+    #Look for helper methods and see if we can get a return value
+    if found_method = find_method(method_name, @current_class)
+      helper = found_method[:method]
+
+      if sexp? helper
+        value = process_helper_method helper, call.args
+        value.line(call.line)
+        return value
+      else
+        raise "Unexpected value for method: #{found_method}"
+      end
+    else
+      call
+    end
+  end
+
   def process_helper_method method_exp, args
     method_name = method_exp.method_name
     Brakeman.debug "Processing method #{method_name}"
@@ -634,5 +653,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
 
     false
+  end
+
+  def find_method *args
+    nil
   end
 end

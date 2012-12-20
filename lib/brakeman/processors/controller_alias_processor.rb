@@ -122,18 +122,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     elsif @tracker.options[:interprocedural] and
       @current_method and (exp.target.nil? or exp.target.node_type == :self)
 
-      #Look for helper methods and see if we can get a return value
-      if found_method = find_method(method, @current_class)
-        helper = found_method[:method]
-
-        if sexp? helper
-          value = process_helper_method helper, exp.args
-          value.line(exp.line)
-          return value
-        else
-          raise "Unexpected value for method: #{found_method}"
-        end
-      end
+      exp = get_call_value(exp)
     end
 
     exp
