@@ -529,12 +529,6 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     method_name = method_exp.method_name
     Brakeman.debug "Processing method #{method_name}"
 
-    #Method takes no arguments and does not use instance variables,
-    #so use cached return value
-    if args.length == 0 and value = @helper_method_cache[method_name]
-      return value
-    end
-
     info = @helper_method_info[method_name]
 
     #If method uses instance variables, then include those and request
@@ -549,20 +543,28 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     #Add arguments to method environment
     assign_args method_exp, args, meth_env
 
-    #Serialize environment for cache key
-    meth_values = meth_env.instance_variable_get(:@env).to_a
-    meth_values.sort!
-    meth_values = meth_values.to_s
 
-    digest = Digest::SHA1.new.update(meth_values << method_name.to_s).to_s.to_sym
+    #Find return values if method does not depend on environment/args
+    values = @helper_method_cache[method_name]
 
-    if value = @helper_method_cache[digest]
+    unless values
+      #Serialize environment for cache key
+      meth_values = meth_env.instance_variable_get(:@env).to_a
+      meth_values.sort!
+      meth_values = meth_values.to_s
+
+      digest = Digest::SHA1.new.update(meth_values << method_name.to_s).to_s.to_sym
+
+      values = @helper_method_cache[digest]
+    end
+
+    if values
       #Use values from cache
-      value[:ivar_values].each do |var, val|
+      values[:ivar_values].each do |var, val|
         env[var] = val
       end
 
-      value[:return_value]
+      values[:return_value]
     else
       #Find return value for method
       frv = Brakeman::FindReturnValue.new
