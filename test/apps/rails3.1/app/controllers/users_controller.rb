@@ -131,6 +131,10 @@ class UsersController < ApplicationController
     @other_thing = simple_helper_with_args(params[:x])
   end
 
+  def test_assign_twice
+    assign_ivar
+  end
+
   private
 
   def simple_helper

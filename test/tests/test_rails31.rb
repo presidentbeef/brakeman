@@ -608,6 +608,15 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /test_less_simple_helpers\.html\.erb/
   end
 
+  def test_xss_helper_assign_ivar_twice
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_assign_twice\.html\.erb/
+  end
+
   def test_xss_helper_model_return
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
