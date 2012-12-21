@@ -188,7 +188,7 @@ class RescannerTests < Test::Unit::TestCase
   def test_remove_route
     routes = "config/routes.rb"
 
-    before_rescan_of routes do
+    before_rescan_of routes, "rails3.2", :assume_all_routes => false do
       replace routes, "match 'implicit' => 'removal#implicit_render'", ""
     end
 

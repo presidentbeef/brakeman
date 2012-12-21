@@ -50,8 +50,8 @@ module Brakeman::Options
         opts.separator ""
         opts.separator "Scanning options:"
 
-        opts.on "-a", "--assume-routes", "Assume all controller methods are actions" do
-          options[:assume_all_routes] = true
+        opts.on "-a", "--[no-]assume-routes", "Assume all controller methods are actions (default)" do |assume|
+          options[:assume_all_routes] = assume
         end
 
         opts.on "-e", "--escape-html", "Escape HTML by default" do

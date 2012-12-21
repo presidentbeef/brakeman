@@ -16,7 +16,7 @@ module Brakeman
   #Options:
   #
   #  * :app_path - path to root of Rails app (required)
-  #  * :assume_all_routes - assume all methods are routes (default: false)
+  #  * :assume_all_routes - assume all methods are routes (default: true)
   #  * :check_arguments - check arguments of methods (default: true)
   #  * :collapse_mass_assignment - report unprotected models in single warning (default: true)
   #  * :combine_locations - combine warning locations (default: true)
@@ -107,7 +107,8 @@ module Brakeman
 
   #Default set of options
   def self.get_defaults
-    { :skip_checks => Set.new,
+    { :assume_all_routes => true,
+      :skip_checks => Set.new,
       :check_arguments => true,
       :safe_methods => Set.new,
       :min_confidence => 2,
