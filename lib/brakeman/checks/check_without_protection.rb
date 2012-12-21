@@ -33,7 +33,7 @@ class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
   #All results should be Model.new(...) or Model.attributes=() calls
   def process_result res
     call = res[:call]
-    last_arg = call.args.last
+    last_arg = call.last_arg
 
     if hash? last_arg and not call.original_line and not duplicate? res
 

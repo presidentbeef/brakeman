@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 30,
-      :warning => 31
+      :warning => 33
     }
   end
 
@@ -61,6 +61,24 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Possible command injection near line 36:/,
       :confidence => 0,
       :file => /home_controller\.rb/
+  end
+
+  def test_command_injection_non_user_input_backticks
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :line => 48,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :file => /other_controller\.rb/
+  end
+
+  def test_command_injection_non_user_input_system
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :line => 49,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :file => /other_controller\.rb/
   end
 
   def test_file_access_concatenation
@@ -569,6 +587,15 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Unprotected mass assignment near line 9: Account.new/,
       :confidence => 0,
       :file => /account\.rb/
+  end
+
+  def test_mass_assign_with_strong_params
+    assert_no_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :line => 53,
+      :message => /^Unprotected\ mass\ assignment/,
+      :confidence => 0,
+      :file => /other_controller\.rb/
   end
 
   def test_translate_bug

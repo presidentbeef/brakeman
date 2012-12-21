@@ -61,7 +61,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   #Process calls and check if they include user input
   def process_call exp
     process exp.target if sexp? exp.target
-    process_all exp.args
+    process_call_args exp
 
     target = exp.target
 
@@ -104,6 +104,12 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     exp
   end
 
+  #Does not actually process string interpolation, but notes that it occurred.
+  def process_string_interp exp
+    @string_interp = Match.new(:interp, exp)
+    process_default exp
+  end
+
   private
 
   #Report a warning
@@ -138,7 +144,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
   # go up the chain of parent classes to see if any have attr_accessible
   def parent_classes_protected? model
-    if model[:attr_accessible]
+    if model[:attr_accessible] or model[:includes].include? :"ActiveModel::ForbiddenAttributesProtection"
       true
     elsif parent = tracker.models[model[:parent]]
       parent_classes_protected? parent
@@ -153,21 +159,28 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
     @mass_assign_disabled = false
 
-    if version_between?("3.1.0", "4.0.0") and
+    if version_between?("3.1.0", "3.9.9") and
       tracker.config[:rails] and
       tracker.config[:rails][:active_record] and
       tracker.config[:rails][:active_record][:whitelist_attributes] == Sexp.new(:true)
 
       @mass_assign_disabled = true
+    elsif version_between?("4.0.0", "4.9.9")
+      #May need to revisit dependng on what Rails 4 actually does/has
+      @mass_assign_disabled = true
     else
       matches = tracker.check_initializers(:"ActiveRecord::Base", :send)
 
       if matches.empty?
+        #Check for
+        #  class ActiveRecord::Base
+        #    attr_accessible nil
+        #  end
         matches = tracker.check_initializers([], :attr_accessible)
 
         matches.each do |result|
-          if result[1] == "ActiveRecord" and result[2] == :Base
-            arg = result[-1].first_arg
+          if result.module == "ActiveRecord" and result.result_class == :Base
+            arg = result.call.first_arg
 
             if arg.nil? or node_type? arg, :nil
               @mass_assign_disabled = true
@@ -176,13 +189,31 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
           end
         end
       else
+        #Check for ActiveRecord::Base.send(:attr_accessible, nil)
         matches.each do |result|
-          if call? result[-1]
-            call = result[-1]
+          call = result.call
+          if call? call
             if call.first_arg == Sexp.new(:lit, :attr_accessible) and call.second_arg == Sexp.new(:nil)
               @mass_assign_disabled = true
               break
             end
+          end
+        end
+      end
+    end
+
+    #There is a chance someone is using Rails 3.x and the `strong_parameters`
+    #gem and still using hack above, so this is a separate check for
+    #including ActiveModel::ForbiddenAttributesProtection in
+    #ActiveRecord::Base in an initializer.
+    if not @mass_assign_disabled and version_between?("3.1.0", "3.9.9") and tracker.config[:gems][:strong_parameters]
+      matches = tracker.check_initializers([], :include)
+
+      matches.each do |result|
+        call = result.call
+        if call? call
+          if call.first_arg == Sexp.new(:colon2, Sexp.new(:const, :ActiveModel), :ForbiddenAttributesProtection)
+            @mass_assign_disabled = true
           end
         end
       end
@@ -218,17 +249,6 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     end
 
     false
-  end
-
-  #Ignores ignores
-  def process_ignore exp
-    exp
-  end
-
-  #Does not actually process string interpolation, but notes that it occurred.
-  def process_string_interp exp
-    @string_interp = Match.new(:interp, exp)
-    exp
   end
 
   #Checks if an expression contains string interpolation.

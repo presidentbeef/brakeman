@@ -215,7 +215,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BaseProcessor
   #   something.resources :blah
   # end
   def process_with_options exp
-    @with_options = exp.block_call.args.last
+    @with_options = exp.block_call.last_arg
     @nested = Sexp.new(:lvar, exp.block_args.value)
 
     self.current_controller = check_for_controller_name exp.block_call.args

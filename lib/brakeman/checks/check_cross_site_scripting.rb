@@ -60,7 +60,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
     json_escape_on = false
     initializers = tracker.check_initializers :ActiveSupport, :escape_html_entities_in_json=
-    initializers.each {|result| json_escape_on = true?(result[-1].first_arg) }
+    initializers.each {|result| json_escape_on = true?(result.call.first_arg) }
 
     if !json_escape_on or version_between? "0.0.0", "2.0.99"
       @known_dangerous << :to_json
@@ -231,7 +231,6 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     end
 
     method = exp.method
-    args = exp.arglist
 
     #Ignore safe items
     if (target.nil? and (@ignore_methods.include? method or method.to_s =~ IGNORE_LIKE)) or
@@ -252,7 +251,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     elsif @inspect_arguments and params? exp
       @matched = Match.new(:params, exp)
     elsif @inspect_arguments
-      process args
+      process_call_args exp
     end
   end
 

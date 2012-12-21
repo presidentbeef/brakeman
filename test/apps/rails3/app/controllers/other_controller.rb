@@ -43,4 +43,13 @@ class OtherController < ApplicationController
   def test_mail_to
     @user = User.find(current_user)
   end
+
+  def test_command_injection_locals
+    `#{some_command}`
+    system("ls #{some_files}")
+  end
+
+  def test_mass_assign_with_strong_params
+    Bill.create(params[:charge])
+  end
 end
