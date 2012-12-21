@@ -202,21 +202,10 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #Returns true if the given method name is also a route
   def route? method
     if @tracker.routes[:allow_all_actions] or @tracker.options[:assume_all_routes]
-      public_method? method
+      true
     else
       routes = @tracker.routes[@current_class]
       routes and (routes == :allow_all_actions or routes.include? method)
-    end
-  end
-
-  def public_method? method
-    controller = @tracker.controllers[@current_class]
-
-    if controller
-      controller[:public][method]
-    else
-      #Assume it is a public method but Brakeman messed up somewhere
-      true
     end
   end
 
