@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 30,
-      :warning => 33
+      :warning => 35
     }
   end
 
@@ -734,5 +734,23 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Vulnerability\ in\ mail_to\ using\ javascrip/,
       :confidence => 0,
       :file => /Gemfile/
+  end
+
+  def test_http_only_session_setting
+    assert_warning :type => :warning,
+      :warning_type => "Session Setting",
+      :line => 3,
+      :message => /^Session\ cookies\ should\ be\ set\ to\ HTTP\ on/,
+      :confidence => 0,
+      :file => /session_store\.rb/
+  end
+
+  def test_secure_only_session_setting
+    assert_warning :type => :warning,
+      :warning_type => "Session Setting",
+      :line => 3,
+      :message => /^Session\ cookie\ should\ be\ set\ to\ secure\ o/,
+      :confidence => 0,
+      :file => /session_store\.rb/
   end
 end
