@@ -9,10 +9,10 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   def initialize *args
     super
 
-    if tracker.options[:rails3]
-      @session_settings = Sexp.new(:call, Sexp.new(:colon2, Sexp.new(:const, :Rails3), :Application), :config)
-    else
+    unless tracker.options[:rails3]
       @session_settings = Sexp.new(:colon2, Sexp.new(:const, :ActionController), :Base)
+    else
+      @session_settings = nil
     end
   end
 
@@ -41,14 +41,21 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   #Looks for Rails3::Application.config.session_store :cookie_store, { ... }
   #in Rails 3.x apps
   def process_call exp
-    if tracker.options[:rails3] and exp.target == @session_settings and exp.method == :session_store
-        check_for_issues exp.second_arg, "#{tracker.options[:app_path]}/config/initializers/session_store.rb"
+    if tracker.options[:rails3] and settings_target?(exp.target) and exp.method == :session_store
+      check_for_issues exp.second_arg, "#{tracker.options[:app_path]}/config/initializers/session_store.rb"
     end
       
     exp
   end
 
   private
+
+  def settings_target? exp
+    call? exp and
+    exp.method == :config and
+    node_type? exp.target, :colon2 and
+    exp.target.rhs == :Application
+  end
 
   def check_for_issues settings, file
     if settings and hash? settings
