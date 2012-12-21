@@ -43,7 +43,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     if failure and not duplicate? result
       add_result result
 
-      if @string_interp
+      if failure.type == :interp #Not from user input
         confidence = CONFIDENCE[:med]
       else
         confidence = CONFIDENCE[:high]
