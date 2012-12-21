@@ -111,14 +111,15 @@ module BrakemanTester::RescanTestHelper
   #given in `changed`.
   #
   #Provide an array of changed files for rescanning.
-  def before_rescan_of changed, app = "rails3.2"
+  def before_rescan_of changed, app = "rails3.2", options = {}
     changed = [changed] unless changed.is_a? Array
 
     Dir.mktmpdir do |dir|
       @dir = dir
+      options = {:app_path => dir, :debug => false}.merge(options)
 
       FileUtils.cp_r "#{TEST_PATH}/apps/#{app}/.", dir
-      @original = Brakeman.run :app_path => dir, :debug => false
+      @original = Brakeman.run options
 
       yield dir if block_given?
 

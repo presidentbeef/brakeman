@@ -210,9 +210,12 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
 
   #Returns true if the given method name is also a route
   def route? method
-    return true if @tracker.routes[:allow_all_actions] or @tracker.options[:assume_all_routes]
-    routes = @tracker.routes[@current_class]
-    routes and (routes == :allow_all_actions or routes.include? method)
+    if @tracker.routes[:allow_all_actions] or @tracker.options[:assume_all_routes]
+      true
+    else
+      routes = @tracker.routes[@current_class]
+      routes and (routes == :allow_all_actions or routes.include? method)
+    end
   end
 
   #Get list of filters, including those that are inherited
