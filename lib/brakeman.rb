@@ -107,7 +107,8 @@ module Brakeman
 
   #Default set of options
   def self.get_defaults
-    { :skip_checks => Set.new,
+    { :assume_all_routes => true,
+      :skip_checks => Set.new,
       :check_arguments => true,
       :safe_methods => Set.new,
       :min_confidence => 2,
