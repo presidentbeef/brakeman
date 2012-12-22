@@ -26,6 +26,7 @@ module Brakeman
   #  * :highlight_user_input - highlight user input in reported warnings (default: true)
   #  * :html_style - path to CSS file
   #  * :ignore_model_output - consider models safe (default: false)
+  #  * :interprocedural - limited interprocedural processing of method calls (default: false)
   #  * :message_limit - limit length of messages
   #  * :min_confidence - minimum confidence (0-2, 0 is highest)
   #  * :output_files - files for output

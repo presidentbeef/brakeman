@@ -24,6 +24,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     @exp_context = []
     @current_module = nil
     @tracker = tracker #set in subclass as necessary
+    @helper_method_cache = {}
+    @helper_method_info = Hash.new({})
     set_env_defaults
   end
 
@@ -201,7 +203,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def process_methdef exp
     env.scope do
       set_env_defaults
-      process_all exp.body
+      exp.body = process_all! exp.body
     end
     exp
   end
@@ -210,7 +212,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def process_selfdef exp
     env.scope do
       set_env_defaults
-      process_all exp.body
+      exp.body = process_all! exp.body
     end
     exp
   end
@@ -489,18 +491,19 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   #Returns a new SexpProcessor::Environment containing only instance variables.
   #This is useful, for example, when processing views.
-  def only_ivars include_request_vars = false
+  def only_ivars include_request_vars = false, lenv = nil
+    lenv ||= env
     res = SexpProcessor::Environment.new
 
     if include_request_vars
-      env.all.each do |k, v|
+      lenv.all.each do |k, v|
         #TODO Why would this have nil values?
         if (k.node_type == :ivar or request_value? k) and not v.nil?
           res[k] = v.dup
         end
       end
     else
-      env.all.each do |k, v|
+      lenv.all.each do |k, v|
         #TODO Why would this have nil values?
         if k.node_type == :ivar and not v.nil?
           res[k] = v.dup
@@ -509,6 +512,117 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
 
     res
+  end
+
+  def only_request_vars
+    res = SexpProcessor::Environment.new
+
+    env.all.each do |k, v|
+      if request_value? k and not v.nil?
+        res[k] = v.dup
+      end
+    end
+
+    res
+  end
+
+  def get_call_value call
+    method_name = call.method
+
+    #Look for helper methods and see if we can get a return value
+    if found_method = find_method(method_name, @current_class)
+      helper = found_method[:method]
+
+      if sexp? helper
+        value = process_helper_method helper, call.args
+        value.line(call.line)
+        return value
+      else
+        raise "Unexpected value for method: #{found_method}"
+      end
+    else
+      call
+    end
+  end
+
+  def process_helper_method method_exp, args
+    method_name = method_exp.method_name
+    Brakeman.debug "Processing method #{method_name}"
+
+    info = @helper_method_info[method_name]
+
+    #If method uses instance variables, then include those and request
+    #variables (params, etc) in the method environment. Otherwise,
+    #only include request variables.
+    if info[:uses_ivars]
+      meth_env = only_ivars(:include_request_vars)
+    else
+      meth_env = only_request_vars
+    end
+
+    #Add arguments to method environment
+    assign_args method_exp, args, meth_env
+
+
+    #Find return values if method does not depend on environment/args
+    values = @helper_method_cache[method_name]
+
+    unless values
+      #Serialize environment for cache key
+      meth_values = meth_env.instance_variable_get(:@env).to_a
+      meth_values.sort!
+      meth_values = meth_values.to_s
+
+      digest = Digest::SHA1.new.update(meth_values << method_name.to_s).to_s.to_sym
+
+      values = @helper_method_cache[digest]
+    end
+
+    if values
+      #Use values from cache
+      values[:ivar_values].each do |var, val|
+        env[var] = val
+      end
+
+      values[:return_value]
+    else
+      #Find return value for method
+      frv = Brakeman::FindReturnValue.new
+      value = frv.get_return_value(method_exp.body_list, meth_env)
+
+      ivars = {}
+
+      only_ivars(false, meth_env).all.each do |var, val|
+        env[var] = val
+        ivars[var] = val
+      end
+
+      if not frv.uses_ivars? and args.length == 0
+        #Store return value without ivars and args if they are not used
+        @helper_method_cache[method_exp.method_name] = { :return_value => value, :ivar_values => ivars }
+      else
+        @helper_method_cache[digest] = { :return_value => value, :ivar_values => ivars }
+      end
+
+      #Store information about method, just ivar usage for now
+      @helper_method_info[method_name] = { :uses_ivars => frv.uses_ivars? }
+
+      value
+    end
+  end
+
+  def assign_args method_exp, args, meth_env = SexpProcessor::Environment.new
+    formal_args = method_exp.formal_args
+
+    formal_args.each_with_index do |arg, index|
+      next if index == 0
+
+      if arg.is_a? Symbol and sexp? args[index - 1]
+        meth_env[Sexp.new(:lvar, arg)] = args[index - 1]
+      end
+    end
+
+    meth_env
   end
 
   #Set line nunber for +exp+ and every Sexp it contains. Used when replacing
@@ -540,5 +654,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
 
     false
+  end
+
+  def find_method *args
+    nil
   end
 end

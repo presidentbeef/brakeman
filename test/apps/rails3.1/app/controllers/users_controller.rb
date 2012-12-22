@@ -121,5 +121,37 @@ class UsersController < ApplicationController
     redirect_to :back, :notice => "Go back, #{params[:user]}!" #Don't warn
   end
 
+  def test_simple_helper
+    @user = simple_helper
+  end
+
+  def test_less_simple_helpers
+    assign_ivar
+    @input = less_simple_helper
+    @other_thing = simple_helper_with_args(params[:x])
+  end
+
+  def test_assign_twice
+    assign_ivar
+  end
+
+  private
+
+  def simple_helper
+    User.find(params[:id])
+  end
+
+  def less_simple_helper
+    params[:input]
+  end
+
+  def simple_helper_with_args arg
+    arg
+  end
+
+  def assign_ivar
+    @some_value = params[:badthing]
+  end
+
   include UserMixin
 end
