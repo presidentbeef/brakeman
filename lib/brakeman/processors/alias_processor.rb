@@ -38,31 +38,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #This method returns a new Sexp with variables replaced with their values,
   #where possible.
   def process_safely src, set_env = nil
-    @env = Marshal.load(Marshal.dump(set_env)) if set_env
+    @env = set_env || SexpProcessor::Environment.new
     @result = src.deep_clone
     process @result
-
-    #Process again to propogate replaced variables and process more.
-    #For example,
-    #  x = [1,2]
-    #  y = [3,4]
-    #  z = x + y
-    #
-    #After first pass:
-    #
-    #  z = [1,2] + [3,4]
-    #
-    #After second pass:
-    #
-    #  z = [1,2,3,4]
-    if set_env
-      @env = set_env
-    else
-      @env = SexpProcessor::Environment.new
-    end
-
-    process @result
-
     @result
   end
 
