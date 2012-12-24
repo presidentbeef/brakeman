@@ -1,6 +1,6 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-Rails31 = BrakemanTester.run_scan "rails3.1", "Rails 3.1", :rails3 => true, :parallel_checks => false
+Rails31 = BrakemanTester.run_scan "rails3.1", "Rails 3.1", :rails3 => true, :parallel_checks => false, :interprocedural => true
 
 class Rails31Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
@@ -13,7 +13,7 @@ class Rails31Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :model => 3,
-      :template => 17,
+      :template => 22,
       :controller => 1,
       :warning => 48 }
   end
@@ -579,6 +579,51 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Unescaped model attribute near line 1: User\.new\.bio/,
       :confidence => 0,
       :file => /_bio\.html\.erb/
+  end
+
+  def test_xss_helper_params_return
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_less_simple_helpers\.html\.erb/
+  end
+
+  def test_xss_helper_with_args
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_less_simple_helpers\.html\.erb/
+  end
+
+  def test_xss_helper_assign_ivar
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 5,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_less_simple_helpers\.html\.erb/
+  end
+
+  def test_xss_helper_assign_ivar_twice
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /test_assign_twice\.html\.erb/
+  end
+
+  def test_xss_helper_model_return
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :file => /test_simple_helper\.html\.erb/
   end
 
   def test_xss_multiple_exp_in_string_interpolation

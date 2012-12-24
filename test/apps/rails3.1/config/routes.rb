@@ -1,4 +1,9 @@
 Rails31::Application.routes.draw do
+  resources :users
+  match 'users/test_simple_helper' => "users#test_simple_helper"
+  match 'users/test_less_simple_helpers' => "users#test_less_simple_helpers"
+  match 'users/test_less_simple_helpers' => "users#test_assign_twice"
+
   resources :users do
     get 'mixin_action'
     get 'mixin_default'

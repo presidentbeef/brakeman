@@ -1,5 +1,6 @@
 require 'brakeman/processors/alias_processor'
 require 'brakeman/processors/lib/render_helper'
+require 'brakeman/processors/lib/find_return_value'
 
 #Processes aliasing in controllers, but includes following
 #renders in routes and putting variables into templates
@@ -112,10 +113,18 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #Look for calls to head()
   def process_call exp
     exp = super
+    return exp unless call? exp
 
-    if call? exp and exp.method == :head
+    method = exp.method
+
+    if method == :head
       @rendered = true
+    elsif @tracker.options[:interprocedural] and
+      @current_method and (exp.target.nil? or exp.target.node_type == :self)
+
+      exp = get_call_value(exp)
     end
+
     exp
   end
 
