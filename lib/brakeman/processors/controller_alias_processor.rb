@@ -149,7 +149,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       end
     else
       processor = Brakeman::AliasProcessor.new @tracker
-      processor.process_safely(method.body_list)
+      processor.process_safely(method.body_list, only_ivars(:include_request_vars))
 
       ivars = processor.only_ivars(:include_request_vars).all
 
