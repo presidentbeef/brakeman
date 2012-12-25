@@ -1,3 +1,23 @@
+# 1.9.0
+
+ * Update to RubyParser 3
+ * Ignore route information by default
+ * Support `strong_parameters`
+ * Support newer `validates :format` call
+ * Add scan time to reports
+ * Add Brakeman version to reports
+ * Fix `CheckExecute` to warn on all string interpolation
+ * Fix false positive on `to_sql` calls
+ * Don't mangle whitespace in JSON code formatting
+ * Add AppTree as facade for filesystem (brynary)
+ * Add link for translate vulnerability warning (grosser)
+ * Rename LICENSE to MIT-LICENSE, remove from README (grosser)
+ * Add Rakefile to run tests (grosser)
+ * Better default config file locations (grosser)
+ * Reduce Sexp creation
+ * Handle empty model files
+ * Remove "find by regex" feature from `CallIndex`
+
 # 1.8.3
 
  * Use `multi_json` gem for better harmony
