@@ -115,7 +115,7 @@
 
 
 
-<time datetime="2012-12-25 09:00:00 -0800" pubdate  updated >Dec 25<span>th</span>, 2012</time>
+<time datetime="2012-12-25 11:00:00 -0800" pubdate  updated >Dec 25<span>th</span>, 2012</time>
 
 
 </p>
@@ -123,7 +123,11 @@
   </header>
 
 
-  <div class="entry-content"><p><em>Changes since 1.8.3</em>:</p>
+  <div class="entry-content"><p>Happy <a href="https://en.wikipedia.org/wiki/Eggnog_Riot">Eggnog Riot</a> day!</p>
+
+<p>This is a major release: 95 changed files with 1,775 additions and 14,484 deletions. This provides ample room for new bugs, so please report any issues.</p>
+
+<p><em>Changes since 1.8.3</em>:</p>
 
 <ul>
 <li>Update to RubyParser 3</li>
@@ -153,11 +157,15 @@
 
 <p>RubyParser 3 supports Ruby 1.9 much more fully, so there should be very few parse errors. Additionally, Brakeman no longer chooses parsers based on the current Ruby version.</p>
 
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/190">changes</a>)</p>
+
 <h3>Route Information Ignored by Default</h3>
 
 <p>Route information is only used in Brakeman to determine whether a controller method should perform an implicit render. Since determining Rails routes statically is quite difficult to get right, it is better to assume a method is a routable action. Previous versions provided the <code>-a</code> option for this, which is now on by default. To turn off this behavior (and revert to the old), use <code>--no-assume-routes</code>.</p>
 
 <p>This does not affect default route warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/219">changes</a>)</p>
 
 <h3>Optional Interprocedural Analysis for Controllers</h3>
 
@@ -190,49 +198,87 @@ end
 
 <p>Since this feature is still experimental and will definitely increase scan times, it is turned off by default. Use <code>--interprocedural</code> to enable it. (Better name pending suggestions&#8230;)</p>
 
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/218">changes</a>)</p>
+
+<h3>Pass Instance Variables between Filters</h3>
+
+<p>While instance variables set in <code>before_filters</code> were set properly, <code>before_filter</code> which used instance variables from an earlier filter could not see those variables. This has been fixed, which will likely lead to new or more accurate warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/224">changes</a>)</p>
+
 <h3>Support for <code>strong_parameters</code></h3>
 
 <p>In Rails 4, the responsibility for mass assignment protection will move from models to controllers where mass assignment is actually used. A preview of the new functionality is available in the <a href="https://github.com/rails/strong_parameters">strong_parameters</a> gem. Brakeman should no longer warn on mass assignment for models protected with <code>strong_parameters</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/204">changes</a>)</p>
 
 <h3>Support <code>validates :format</code></h3>
 
 <p>In Rails 3, format validation changed from <code>validates_format_of</code> to the more generic <code>validates</code> method. Brakeman will now check <code>validates</code> calls for proper anchors on regular expressions for <code>:format</code>.</p>
 
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/205">changes</a>)</p>
+
 <h3>Report Changes</h3>
 
 <p>Reports will now contain Brakeman version and scan duration. JSON reports contain <code>start_time</code> and <code>end_time</code> timestamps. For now, JSON reports will still have a <code>timestamp</code> key, but it will be identical to <code>end_time</code>. It will be removed in Brakeman 2.0.</p>
 
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/193">changes</a>)</p>
+
 <p>Additionally, code formatting in JSON reports has changed slightly. Previously, code was formatted with the HTML output in mind, so line breaks were removed. Now JSON reports include the code formatted from Ruby2Ruby without any mangling.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/191">changes</a>)</p>
 
 <h3>Fix Command Injection Check</h3>
 
 <p>The command injection check will now (again) warn on any form on string interpolation used for process execution, whether or not user input is involved.</p>
 
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/216">changes</a>)</p>
+
 <h3>Fix <code>to_sql</code> False Positives</h3>
 
 <p>SQL code generated from Arel&#8217;s <code>to_sql</code> method will be considered safe.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/194">changes</a>)</p>
 
 <h3>File System Facade</h3>
 
 <p>Bryan Helmkamp cleaned up Brakeman&#8217;s file access into a single object. This should simplify future changes and add some consistency to how Brakeman handles files.</p>
 
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/197">changes</a>)</p>
+
 <h3>Run Tests via Rake</h3>
 
 <p>Thanks to Michael Grosser, running <code>rake</code> will now run Brakeman&#8217;s tests.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/183">changes</a>)</p>
 
 <h3>Improved Config File Locations</h3>
 
 <p>Also thanks to Michael Grosser, Brakeman will check more sane locations for Brakeman configuration files. This version adds <code>./config/brakeman.yml</code>, <code>~/.brakeman/config.yml</code>, and <code>/etc/brakeman/config.yml</code> as default locations for configuration files. The old locations are deprecated now, and will be removed in Brakeman 2.0.</p>
 
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/182">changes</a></p>
+
 <h3>More Internal Changes</h3>
 
 <p>Call indexing performance has been given another <a href="http://blog.presidentbeef.com/">slight boost</a> with the removal of the ability to search for call targets via regular expressions (which was not being used anywhere).</p>
 
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/189">changes</a>)</p>
+
 <p>The number of s-expressions generated by Brakeman has been reduced, although this did not lead to any major performance improvement.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/207">changes</a>)</p>
 
 <p>Data-flow/alias processing was performing two passes. This has been reduced to just one.</p>
 
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/224">changes</a>)</p>
+
 <p>Empty model files will no longer cause errors.</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
 </div>
   
   
@@ -348,7 +394,7 @@ end
 
 <p>Now that RubyParser 3.x is officially released, work is underway to use the new version. This will increase Ruby 1.9 syntax compatibility and remove the need to parse applications with the same Ruby version as the application uses. Additionally, it will allow us to get rid of the vendored version of RubyParser that Brakeman uses for Ruby 1.9. Unfortunately, RubyParser 3.x introduces a lot of incompatibilities and upgrading requires a significant amount of effort.</p>
 
-<p>Another exciting feature in development is limited intra-procedural analysis. Brakeman will be able to handle simple things like calls to helper methods in controllers which set instance variables or return user input. This should help with the &#8220;obvious&#8221; vulnerabilities that Brakeman often misses.</p>
+<p>Another exciting feature in development is limited interprocedural analysis. Brakeman will be able to handle simple things like calls to helper methods in controllers which set instance variables or return user input. This should help with the &#8220;obvious&#8221; vulnerabilities that Brakeman often misses.</p>
 
 <h3>Report Issues</h3>
 

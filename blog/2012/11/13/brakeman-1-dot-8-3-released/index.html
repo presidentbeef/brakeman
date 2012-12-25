@@ -206,7 +206,7 @@
 
 <p>Now that RubyParser 3.x is officially released, work is underway to use the new version. This will increase Ruby 1.9 syntax compatibility and remove the need to parse applications with the same Ruby version as the application uses. Additionally, it will allow us to get rid of the vendored version of RubyParser that Brakeman uses for Ruby 1.9. Unfortunately, RubyParser 3.x introduces a lot of incompatibilities and upgrading requires a significant amount of effort.</p>
 
-<p>Another exciting feature in development is limited intra-procedural analysis. Brakeman will be able to handle simple things like calls to helper methods in controllers which set instance variables or return user input. This should help with the &#8220;obvious&#8221; vulnerabilities that Brakeman often misses.</p>
+<p>Another exciting feature in development is limited interprocedural analysis. Brakeman will be able to handle simple things like calls to helper methods in controllers which set instance variables or return user input. This should help with the &#8220;obvious&#8221; vulnerabilities that Brakeman often misses.</p>
 
 <h3>Report Issues</h3>
 
