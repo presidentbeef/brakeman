@@ -11,7 +11,7 @@ class Rails32Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 6,
-      :warning => 1 }
+      :warning => 2 }
   end
 
   def report
@@ -92,4 +92,13 @@ class Rails32Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /account\.rb/
   end
+
+  def test_session_secret_token
+    assert_warning :type => :warning,
+      :warning_type => "Session Setting",
+      :line => 7,
+      :message => /^Session\ secret\ should\ not\ be\ included\ in/,
+      :confidence => 0,
+      :file => /secret_token\.rb/
+  end 
 end

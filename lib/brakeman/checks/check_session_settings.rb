@@ -26,13 +26,26 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
     if tracker.initializers["session_store.rb"]
       process tracker.initializers["session_store.rb"]
     end
+
+    if tracker.initializers["secret_token.rb"]
+      process tracker.initializers["secret_token.rb"]
+    end
   end
 
   #Looks for ActionController::Base.session = { ... }
   #in Rails 2.x apps
+  #
+  #and App::Application.config.secret_token =
+  #in Rails 3.x apps
   def process_attrasgn exp
     if not tracker.options[:rails3] and exp.target == @session_settings and exp.method == :session=
       check_for_issues exp.first_arg, "#{tracker.options[:app_path]}/config/initializers/session_store.rb"
+    end
+
+    if tracker.options[:rails3] and settings_target?(exp.target) and
+      exp.method == :secret_token= and string? exp.first_arg
+
+      warn_about_secret_token exp, "#{tracker.options[:app_path]}/config/initializers/secret_token.rb"
     end
       
     exp
@@ -69,8 +82,8 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
       end
 
       if value = hash_access(settings, :secret)
-        if string? value and value.value.length < 30
-          warn_about_secret_length value, file
+        if string? value
+          warn_about_secret_token value, file
         end
       end
     end
@@ -101,9 +114,9 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
 
   end
 
-  def warn_about_secret_length value, file
+  def warn_about_secret_token value, file
     warn :warning_type => "Session Setting",
-      :message => "Session secret should be at least 30 characters long",
+      :message => "Session secret should not be included in version control",
       :confidence => CONFIDENCE[:high],
       :line => value.line,
       :file => file

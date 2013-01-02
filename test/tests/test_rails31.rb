@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 22,
       :controller => 1,
-      :warning => 48 }
+      :warning => 49 }
   end
 
   def test_without_protection
@@ -757,4 +757,13 @@ class Rails31Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /account\.rb/
   end
+
+  def test_session_secret_token
+    assert_warning :type => :warning,
+      :warning_type => "Session Setting",
+      :line => 7,
+      :message => /^Session\ secret\ should\ not\ be\ included\ in/,
+      :confidence => 0,
+      :file => /secret_token\.rb/
+  end 
 end
