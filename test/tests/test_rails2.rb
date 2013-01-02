@@ -12,7 +12,7 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 2,
         :template => 41,
-        :warning => 32}
+        :warning => 32 }
     else
       @expected ||= {
         :controller => 1,
@@ -171,7 +171,7 @@ class Rails2Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Session Setting",
       :line => 9,
-      :message => /^Session secret should be at least 30 cha/,
+      :message => /^Session\ secret\ should\ not\ be\ included\ in/,
       :confidence => 0,
       :file => /session_store\.rb/
   end

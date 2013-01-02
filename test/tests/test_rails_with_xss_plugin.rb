@@ -11,7 +11,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :controller => 1,
       :model => 3,
       :template => 2,
-      :warning => 14 }
+      :warning => 15 }
   end
 
   def report
@@ -266,4 +266,13 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :confidence => 0,
       :file => /users\/to_json\.html\.erb/
   end  
+
+  def test_session_secret_token
+    assert_warning :type => :warning,
+      :warning_type => "Session Setting",
+      :line => 9,
+      :message => /^Session\ secret\ should\ not\ be\ included\ in/,
+      :confidence => 0,
+      :file => /session_store\.rb/
+  end
 end

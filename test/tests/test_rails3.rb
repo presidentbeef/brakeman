@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 32,
-      :warning => 35
+      :warning => 36
     }
   end
 
@@ -752,5 +752,14 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Session\ cookie\ should\ be\ set\ to\ secure\ o/,
       :confidence => 0,
       :file => /session_store\.rb/
+  end
+
+  def test_session_secret_token
+    assert_warning :type => :warning,
+      :warning_type => "Session Setting",
+      :line => 7,
+      :message => /^Session\ secret\ should\ not\ be\ included\ in/,
+      :confidence => 0,
+      :file => /secret_token\.rb/
   end
 end
