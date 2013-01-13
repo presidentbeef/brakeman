@@ -5,3 +5,7 @@ Hello, <%= @name %>!
 Very likely bad: <%= truncate User.profile %>
 
 Bad for 2.x: <%= link_to User.first.name, "some_url" %>
+
+It's just a model <%= link_to "Hipster ipsum", User.first %>
+
+It's just a couple of models <%= link_to "Hipster ipsum", [Account.first, User.last] %>
