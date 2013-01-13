@@ -429,6 +429,22 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /test_params\.html\.erb/            
   end
 
+  def test_polymorphic_url_in_href
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 9,
+      :message => /^Unsafe parameter value in link_to href/,
+      :confidence => 1,
+      :file => /test_model\.html\.erb/  
+
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 11,
+      :message => /^Unsafe parameter value in link_to href/,
+      :confidence => 1,
+      :file => /test_model\.html\.erb/  
+  end
+
   def test_unescaped_body_in_link_to
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",

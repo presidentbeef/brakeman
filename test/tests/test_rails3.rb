@@ -443,6 +443,23 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /test_params\.html\.erb/            
   end  
 
+  def test_polymorphic_url_in_href
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 10,
+      :message => /^Unsafe parameter value in link_to href/,
+      :confidence => 1,
+      :file => /test_model\.html\.erb/  
+
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 12,
+      :message => /^Unsafe parameter value in link_to href/,
+      :confidence => 1,
+      :file => /test_model\.html\.erb/  
+  end
+
+
   def test_file_access_in_template
     assert_warning :type => :template,
       :warning_type => "File Access",
