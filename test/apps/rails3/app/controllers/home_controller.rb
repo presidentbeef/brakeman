@@ -109,6 +109,16 @@ class HomeController < ApplicationController
     YAML.parse_file("whatever/" + params[:file_name])
   end
 
+  def test_more_mass_assignment_methods
+    #Additional mass assignment methods
+    User.first_or_create(params[:user])
+    User.first_or_create!(:name => params[:user][:name])
+    User.first_or_initialize!(params[:user])
+    User.update(params[:id], :alive => false) #No warning
+    User.update(1, params[:update])
+    User.find(1).assign_attributes(params[:update])
+  end
+
   private
 
   def filter_it

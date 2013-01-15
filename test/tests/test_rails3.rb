@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 32,
-      :warning => 37
+      :warning => 42
     }
   end
 
@@ -621,6 +621,51 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Unprotected\ mass\ assignment/,
       :confidence => 0,
       :file => /other_controller\.rb/
+  end
+
+  def test_mass_assignment_first_or_create
+    assert_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :line => 114,
+      :message => /^Unprotected\ mass\ assignment/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_mass_assignment_first_or_create!
+    assert_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :line => 115,
+      :message => /^Unprotected\ mass\ assignment/,
+      :confidence => 2,
+      :file => /home_controller\.rb/
+  end
+
+  def test_mass_assignment_first_or_initialize!
+    assert_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :line => 116,
+      :message => /^Unprotected\ mass\ assignment/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_mass_assignment_update
+    assert_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :line => 118,
+      :message => /^Unprotected\ mass\ assignment/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_mass_assignment_assign_attributes
+    assert_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :line => 119,
+      :message => /^Unprotected\ mass\ assignment/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
   end
 
   def test_translate_bug
