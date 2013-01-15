@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 22,
       :controller => 1,
-      :warning => 49 }
+      :warning => 50 }
   end
 
   def test_without_protection
@@ -145,6 +145,14 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
       :message => /CVE-2012-2695/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_sql_injection_CVE_2012_5664
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.18,\ 3\.1/,
       :confidence => 0,
       :file => /Gemfile/
   end

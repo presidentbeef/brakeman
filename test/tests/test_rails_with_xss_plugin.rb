@@ -11,7 +11,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :controller => 1,
       :model => 3,
       :template => 2,
-      :warning => 15 }
+      :warning => 16 }
   end
 
   def report
@@ -254,6 +254,14 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Cross Site Scripting",
       :message => /^All\ Rails\ 2\.x\ versions\ have\ a\ vulnerabil/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_sql_injection_CVE_2012_5664
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.18,\ 3\.1/,
       :confidence => 0,
       :file => /Gemfile/
   end

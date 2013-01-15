@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 2,
         :template => 41,
-        :warning => 32 }
+        :warning => 33 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
         :template => 41,
-        :warning => 33 }
+        :warning => 34 }
     end
   end
 
@@ -429,6 +429,22 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /test_params\.html\.erb/            
   end
 
+  def test_polymorphic_url_in_href
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 9,
+      :message => /^Unsafe parameter value in link_to href/,
+      :confidence => 1,
+      :file => /test_model\.html\.erb/  
+
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 11,
+      :message => /^Unsafe parameter value in link_to href/,
+      :confidence => 1,
+      :file => /test_model\.html\.erb/  
+  end
+
   def test_unescaped_body_in_link_to
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
@@ -760,6 +776,14 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
       :file => /test_strip_tags\.html\.erb/
+  end
+
+  def test_sql_injection_CVE_2012_5664
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.18,\ 3\.1/,
+      :confidence => 0,
+      :file => /environment\.rb/
   end
 
   def test_to_json

@@ -11,7 +11,7 @@ class Rails32Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 6,
-      :warning => 2 }
+      :warning => 3 }
   end
 
   def report
@@ -20,6 +20,14 @@ class Rails32Tests < Test::Unit::TestCase
 
   def test_rc_version_number
     assert_equal "3.2.9.rc2", Rails32[:config][:rails_version]
+  end
+
+  def test_sql_injection_CVE_2012_5664
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.18,\ 3\.1/,
+      :confidence => 0,
+      :file => /Gemfile/
   end
 
   def test_redirect_1

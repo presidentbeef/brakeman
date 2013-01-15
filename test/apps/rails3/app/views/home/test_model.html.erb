@@ -6,3 +6,7 @@ Hello, <%= raw @name %>!
 Very likely bad: <%= raw auto_link User.profile %>
 
 Not a problem in Rails 3: <%= link_to User.first.name, "some url" %>
+
+It's just a model <%= link_to "Hipster ipsum", User.first %>
+
+It's just a couple of models <%= link_to "Hipster ipsum", [Account.first, User.last] %>

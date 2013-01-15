@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 32,
-      :warning => 41
+      :warning => 42
     }
   end
 
@@ -231,6 +231,14 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /Gemfile/
   end
 
+  def test_sql_injection_CVE_2012_5664
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.18,\ 3\.1/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
   def test_sql_injection_find_by_sql
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
@@ -434,6 +442,23 @@ class Rails3Tests < Test::Unit::TestCase
       :confidence => 1,
       :file => /test_params\.html\.erb/            
   end  
+
+  def test_polymorphic_url_in_href
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 10,
+      :message => /^Unsafe parameter value in link_to href/,
+      :confidence => 1,
+      :file => /test_model\.html\.erb/  
+
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 12,
+      :message => /^Unsafe parameter value in link_to href/,
+      :confidence => 1,
+      :file => /test_model\.html\.erb/  
+  end
+
 
   def test_file_access_in_template
     assert_warning :type => :template,
