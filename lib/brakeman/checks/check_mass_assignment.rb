@@ -29,7 +29,13 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
       :update_attributes!,
       :create,
       :create!,
-      :build]
+      :build,
+      :first_or_create,
+      :first_or_create!,
+      :first_or_initialize!,
+      :assign_attributes,
+      :update
+    ]
 
     Brakeman.debug "Processing possible mass assignment calls"
     calls.each do |result|
@@ -79,11 +85,16 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
   #Want to ignore calls to Model.new that have no arguments
   def check_call call
     process_call_args call
-    first_arg = call.first_arg
 
-    if first_arg.nil? #empty new()
+    if call.method == :update
+      arg = call.second_arg
+    else
+      arg = call.first_arg
+    end
+
+    if arg.nil? #empty new()
       false
-    elsif hash? first_arg and not include_user_input? first_arg
+    elsif hash? arg and not include_user_input? arg
       false
     elsif all_literal_args? call
       false
