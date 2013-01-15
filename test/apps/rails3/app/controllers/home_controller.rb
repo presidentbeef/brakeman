@@ -110,7 +110,7 @@ class HomeController < ApplicationController
   end
 
   def test_more_mass_assignment_methods
-    User.new(params[:user])
+    #Additional mass assignment methods
     User.first_or_create(params[:user])
     User.first_or_create!(:name => params[:user][:name])
     User.first_or_initialize!(params[:user])
