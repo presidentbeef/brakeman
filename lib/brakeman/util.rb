@@ -1,5 +1,4 @@
 require 'set'
-require 'active_support/inflector'
 
 #This is a mixin containing utility methods.
 module Brakeman::Util
@@ -40,10 +39,11 @@ module Brakeman::Util
       downcase
   end
 
-  #Use ActiveSupport::Inflector to pluralize a word.
+  # stupid simple, used to delegate to ActiveSupport
   def pluralize word
-    ActiveSupport::Inflector.pluralize word
+    word + "s"
   end
+
 
   #Takes an Sexp like
   # (:hash, (:lit, :key), (:str, "value"))
