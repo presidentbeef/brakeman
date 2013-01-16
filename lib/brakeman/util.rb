@@ -1,5 +1,4 @@
 require 'set'
-require 'active_support/inflector'
 
 #This is a mixin containing utility methods.
 module Brakeman::Util
