@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 22,
       :controller => 1,
-      :warning => 50 }
+      :warning => 51 }
   end
 
   def test_without_protection
@@ -708,6 +708,14 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Cross Site Scripting",
       :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ strip/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_sql_injection_CVE_2013_0155
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.19,\ 3\.1/,
       :confidence => 0,
       :file => /Gemfile/
   end

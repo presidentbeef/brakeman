@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 32,
-      :warning => 42
+      :warning => 43
     }
   end
 
@@ -802,6 +802,14 @@ class Rails3Tests < Test::Unit::TestCase
       :warning_type => "Mail Link",
       :line => 1,
       :message => /^Vulnerability\ in\ mail_to\ using\ javascrip/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_sql_injection_CVE_2013_0155
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.19,\ 3\.1/,
       :confidence => 0,
       :file => /Gemfile/
   end
