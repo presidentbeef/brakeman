@@ -4,13 +4,95 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2013-01-18T17:23:18-08:00</updated>
+  <updated>2013-01-18T18:15:11-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 1.9.1 Released</title>
+    <link href="http://brakemanscanner.org/blog/2013/01/18/brakeman-1-dot-9-1-released/"/>
+    <updated>2013-01-18T17:36:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2013/01/18/brakeman-1-dot-9-1-released</id>
+    <content type="html">&lt;p&gt;This released was forced due to messed up dependencies with Brakeman 1.9.0 and Ruby2Ruby - my fault entirely! As such, this release does not match the roadmap for 1.9.1, which will be changed to 1.9.2.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 1.9.0&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add check for CVE-2012-5664 - SQL Injection&lt;/li&gt;
+&lt;li&gt;Add check for CVE-2013-0155 - SQL Injection&lt;/li&gt;
+&lt;li&gt;Add check for CVE-2013-0156 - Remote Code Execution&lt;/li&gt;
+&lt;li&gt;Add check for unsafe &lt;code&gt;YAML.load&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Update to RubyParser 3.1.1 (neersighted)&lt;/li&gt;
+&lt;li&gt;Remove ActiveSupport dependency (Neil Matatall)&lt;/li&gt;
+&lt;li&gt;Do not warn on arrays passed to &lt;code&gt;link_to&lt;/code&gt; (Neil Matatall) (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/232&quot;&gt;#232&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Warn on secret tokens (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/200&quot;&gt;#200&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Warn on more mass assignment methods (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/223&quot;&gt;#223&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;CVE-2012-5664 - SQL Injection&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/DCNTNp_qjFM/discussion&quot;&gt;CVE-2012-5664&lt;/a&gt; is a vulnerability Rails' dynamic finders. While dynamic finders (such as &lt;code&gt;User.find_by_name&lt;/code&gt;) appear to take a single argument, they also accept a hash options which can be used to modify the SQL query. Normally the hash of options would be the second argument, but it can also be the first. If an application passes in user code as the first argument, it will be interpreted as the options hash, leading to SQL injection.&lt;/p&gt;
+
+&lt;p&gt;The provided fix is to only accept the hash if the dynamic finder is called with the proper number of arguments. A workaround is to always cast input to dynamic finders.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/228&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;CVE-2013-0155 - SQL Injection&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/c7jT-EeN9eI/discussion&quot;&gt;CVE-2013-0155&lt;/a&gt; is a SQL vulnerability where certain JSON input can cause &lt;code&gt;find&lt;/code&gt; methods to add &lt;code&gt;NULL&lt;/code&gt; as a valid value.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/239&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;CVE-2013-0156 - Remote Code Execution&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion&quot;&gt;CVE-2013-0156&lt;/a&gt; is the worst Rails vulnerability in recent memory. It allows attackers to easily execute arbitrary code on any Rails application.&lt;/p&gt;
+
+&lt;p&gt;Besides upgrading Rails, there are workarounds for this issue: disable XML request parsing or disable YAML/symbol types inside XML requests.&lt;/p&gt;
+
+&lt;p&gt;Exploits for this vulnerability are easily available and already in use in the wild. Please upgrade, patch, or use a workaround.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/239&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Check for &lt;code&gt;YAML.load&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;In light of &lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion&quot;&gt;CVE-2013-0156&lt;/a&gt;, Brakeman will now warn on any uses of &lt;code&gt;YAML.load&lt;/code&gt; with user input. Do not load arbitrary YAML in applications!&lt;/p&gt;
+
+&lt;h3&gt;Dependency Changes&lt;/h3&gt;
+
+&lt;p&gt;Brakeman now uses the latest RubyParser and Ruby2Ruby versions.&lt;/p&gt;
+
+&lt;p&gt;Thanks to Neil, Brakeman no longer depends on any version of ActiveSupport or i18n.&lt;/p&gt;
+
+&lt;h3&gt;Namespaced URLs in &lt;code&gt;link_to&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will no longer warn on array arguments to &lt;code&gt;link_to&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/233&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Secret Tokens&lt;/h3&gt;
+
+&lt;p&gt;Secret tokens stored in source control are bad! Doubly bad if the source code is available publicly. Anyone with access to an application's secret token can generate any session cookies they would like. See &lt;a href=&quot;http://phenoelit.org/blog/archives/2012/12/21/let_me_github_that_for_you/index.html&quot;&gt;this post&lt;/a&gt; for details.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/227&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;More Mass Assignment&lt;/h3&gt;
+
+&lt;p&gt;Bryan Helmkamp pointed out more Rails methods which perform mass assignment. The following methods have been added: &lt;code&gt;first_or_create&lt;/code&gt;, &lt;code&gt;first_or_create!&lt;/code&gt;, &lt;code&gt;first_or_initialize!&lt;/code&gt;, &lt;code&gt;assign_attributes&lt;/code&gt;, and &lt;code&gt;update&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/234&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Report Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 1.9.0 Released</title>
@@ -1455,74 +1537,6 @@ puts clean(x)
 &lt;p&gt;To subscribe, send any email to &lt;a href='&amp;#109;ailto&amp;#58;b&amp;#114;%&amp;#54;1k&amp;#37;65m&amp;#37;&amp;#54;1n&amp;#64;&amp;#37;6Ci&amp;#98;%&amp;#55;2&amp;#101;l%&amp;#54;&amp;#57;st&amp;#46;com'&gt;brakeman&amp;#64;libr&amp;#101;&amp;#108;ist&amp;#46;com&lt;/a&gt;. You will be asked to confirm your subscription.&lt;/p&gt;
 
 &lt;p&gt;Archives are available for browsing on &lt;a href=&quot;http://www.mail-archive.com/brakeman@librelist.com/maillist.html&quot;&gt;The Mail Archive&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 1.2 Released</title>
-    <link href="http://brakemanscanner.org/blog/2012/01/13/brakeman-1-dot-2-released/"/>
-    <updated>2012-01-13T22:00:00-08:00</updated>
-    <id>http://brakemanscanner.org/blog/2012/01/13/brakeman-1-dot-2-released</id>
-    <content type="html">&lt;p&gt;First Brakeman release of 2012!&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 1.1:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Speed improvements for CheckExecute and CheckRender&lt;/li&gt;
-&lt;li&gt;Check &lt;code&gt;named_scope&lt;/code&gt; and &lt;code&gt;scope&lt;/code&gt; for SQL injection&lt;/li&gt;
-&lt;li&gt;Add &lt;code&gt;--rake&lt;/code&gt; option to create rake task to run Brakeman&lt;/li&gt;
-&lt;li&gt;Add &lt;code&gt;--summary&lt;/code&gt; option to only output summary&lt;/li&gt;
-&lt;li&gt;Add experimental support for rescanning a subset of files&lt;/li&gt;
-&lt;li&gt;Fix a problem with Rails 3 routes&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;p&gt;Besides those, there has also been quite a bit of code improvement internally.&lt;/p&gt;
-
-&lt;h3&gt;Speed Improvements&lt;/h3&gt;
-
-&lt;p&gt;The checks for command injection and dynamic render paths should be considerably faster now.&lt;/p&gt;
-
-&lt;h3&gt;More SQL Injection Checks&lt;/h3&gt;
-
-&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/30&quot;&gt;a5sk4s&lt;/a&gt; for pointing out that Brakeman was not checking &lt;code&gt;named_scope&lt;/code&gt; for SQL injection. This has been rectified. For Rails 3.1 and up, &lt;code&gt;scope&lt;/code&gt; will be checked.&lt;/p&gt;
-
-&lt;p&gt;Also, it seems common to use &lt;code&gt;Model.table_name&lt;/code&gt; inside SQL statements. This will no longer raise a warning.&lt;/p&gt;
-
-&lt;h3&gt;Brakeman Rake Task&lt;/h3&gt;
-
-&lt;p&gt;The &lt;code&gt;--rake&lt;/code&gt; option can now be used to install a Rake task for running Brakeman. The task will be copied to &lt;code&gt;lib/tasks/brakeman.rake&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;To use, run this from the root of the Rails app:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;brakeman --rake
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then, to run Brakeman:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;rake brakeman:run
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Naturally, this requires Rake to be installed.&lt;/p&gt;
-
-&lt;p&gt;To output to a specific file:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;rake brakeman:run[&quot;report.html&quot;]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;More actions may be added in the future.&lt;/p&gt;
-
-&lt;h3&gt;Summary Option&lt;/h3&gt;
-
-&lt;p&gt;Sometimes the specifics of a scan are not needed. The &lt;code&gt;--summary&lt;/code&gt; option will limit the report output to just the summary section.&lt;/p&gt;
-
-&lt;h3&gt;Rescan for Subset of Files&lt;/h3&gt;
-
-&lt;p&gt;This release adds experimental support for rescanning a subset of paths in a Rails application. Please see this &lt;a href=&quot;https://gist.github.com/1563286&quot;&gt;example&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3&gt;Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report &lt;em&gt;any&lt;/em&gt; problems or questions on &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;GitHub&lt;/a&gt; or send a tweet to &lt;a href=&quot;https://twitter.com/#!/brakemanscanner&quot;&gt;@Brakeman&lt;/a&gt;!&lt;/p&gt;
 </content>
   </entry>
   
