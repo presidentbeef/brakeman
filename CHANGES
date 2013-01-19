@@ -1,3 +1,15 @@
+# 1.9.1
+
+ * Update to RubyParser 3.1.1 (neersighted)
+ * Remove ActiveSupport dependency (Neil Matatall)
+ * Do not warn on arrays passed to `link_to` (Neil Matatall)
+ * Warn on secret tokens
+ * Warn on more mass assignment methods
+ * Add check for CVE-2012-5664
+ * Add check for CVE-2013-0155
+ * Add check for CVE-2013-0156
+ * Add check for unsafe `YAML.load`
+
 # 1.9.0
 
  * Update to RubyParser 3
