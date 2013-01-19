@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 32,
-      :warning => 43
+      :warning => 47
     }
   end
 
@@ -847,5 +847,41 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Session\ secret\ should\ not\ be\ included\ in/,
       :confidence => 0,
       :file => /secret_token\.rb/
+  end
+
+  def test_remote_code_execution_yaml_load_params_interpolated
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 106,
+      :message => /^YAML\.load\ called\ with\ parameter\ value/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_remote_code_execution_yaml_load_params
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 123,
+      :message => /^YAML\.load\ called\ with\ parameter\ value/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_remote_code_execution_yaml_load_indirect_cookies
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 125,
+      :message => /^YAML\.load\ called\ with\ cookies\ value/,
+      :confidence => 1,
+      :file => /home_controller\.rb/
+  end
+
+  def test_remote_code_execution_yaml_load_model_attribue
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 126,
+      :message => /^YAML\.load\ called\ with\ model\ attribute/,
+      :confidence => 1,
+      :file => /home_controller\.rb/
   end
 end
