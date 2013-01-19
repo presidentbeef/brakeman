@@ -146,6 +146,8 @@ class Brakeman::FindCall < Brakeman::BaseProcessor
       else
         false
       end
+    when Sexp
+      search_terms == item
     when Enumerable
       if search_terms.empty?
         item == nil
