@@ -712,6 +712,14 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /Gemfile/
   end
 
+  def test_remove_code_execution_CVE_2013_0156_fix
+    assert_no_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :message => /^Rails\ 3\.1\.0\ has\ a\ remote\ code\ execution\ /,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
   def test_to_json_with_overwritten_config
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",

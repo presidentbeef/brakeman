@@ -786,6 +786,14 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /environment\.rb/
   end
 
+  def test_remote_code_execution_CVE_2013_0156
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :message => /^Rails\ 2\.3\.11\ has\ a\ remote\ code\ execution/,
+      :confidence => 0,
+      :file => /environment\.rb/
+  end
+
   def test_to_json
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",

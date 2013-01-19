@@ -806,6 +806,14 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /Gemfile/
   end
 
+  def test_remote_code_execution_CVE_2013_0156_fix
+    assert_no_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :message => /^Rails\ 3\.0\.3\ has\ a\ remote\ code\ execution\ /,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
   def test_http_only_session_setting
     assert_warning :type => :warning,
       :warning_type => "Session Setting",
