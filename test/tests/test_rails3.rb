@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 32,
-      :warning => 42
+      :warning => 47
     }
   end
 
@@ -806,6 +806,22 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /Gemfile/
   end
 
+  def test_sql_injection_CVE_2013_0155
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.19,\ 3\.1/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_remote_code_execution_CVE_2013_0156_fix
+    assert_no_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :message => /^Rails\ 3\.0\.3\ has\ a\ remote\ code\ execution\ /,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
   def test_http_only_session_setting
     assert_warning :type => :warning,
       :warning_type => "Session Setting",
@@ -831,5 +847,41 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Session\ secret\ should\ not\ be\ included\ in/,
       :confidence => 0,
       :file => /secret_token\.rb/
+  end
+
+  def test_remote_code_execution_yaml_load_params_interpolated
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 106,
+      :message => /^YAML\.load\ called\ with\ parameter\ value/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_remote_code_execution_yaml_load_params
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 123,
+      :message => /^YAML\.load\ called\ with\ parameter\ value/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_remote_code_execution_yaml_load_indirect_cookies
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 125,
+      :message => /^YAML\.load\ called\ with\ cookies\ value/,
+      :confidence => 1,
+      :file => /home_controller\.rb/
+  end
+
+  def test_remote_code_execution_yaml_load_model_attribue
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 126,
+      :message => /^YAML\.load\ called\ with\ model\ attribute/,
+      :confidence => 1,
+      :file => /home_controller\.rb/
   end
 end
