@@ -11,7 +11,7 @@ class Rails32Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 6,
-      :warning => 3 }
+      :warning => 5 }
   end
 
   def report
@@ -26,6 +26,22 @@ class Rails32Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
       :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.18,\ 3\.1/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_sql_injection_CVE_2013_0155
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.19,\ 3\.1/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_remote_code_execution_CVE_2013_0156
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :message => /^Rails\ 3\.2\.9\.rc2\ has\ a\ remote\ code\ execut/,
       :confidence => 0,
       :file => /Gemfile/
   end

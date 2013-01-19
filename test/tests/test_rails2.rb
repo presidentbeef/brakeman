@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 2,
         :template => 41,
-        :warning => 33 }
+        :warning => 35 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
         :template => 41,
-        :warning => 34 }
+        :warning => 36 }
     end
   end
 
@@ -782,6 +782,22 @@ class Rails2Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
       :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.18,\ 3\.1/,
+      :confidence => 0,
+      :file => /environment\.rb/
+  end
+
+  def test_sql_injection_CVE_2013_0155
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.19,\ 3\.1/,
+      :confidence => 0,
+      :file => /environment\.rb/
+  end
+
+  def test_remote_code_execution_CVE_2013_0156
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :message => /^Rails\ 2\.3\.11\ has\ a\ remote\ code\ execution/,
       :confidence => 0,
       :file => /environment\.rb/
   end

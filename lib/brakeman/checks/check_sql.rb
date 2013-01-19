@@ -49,6 +49,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     Brakeman.debug "Checking version of Rails for CVE-2012-5664"
     check_rails_version_for_cve_2012_5664
 
+    Brakeman.debug "Checking version of Rails for CVE-2013-0155"
+    check_rails_version_for_cve_2013_0155
+
     Brakeman.debug "Processing possible SQL calls"
     calls.each do |c|
       process_result c
@@ -131,6 +134,16 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         :confidence => CONFIDENCE[:high],
         :file => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/topic/rubyonrails-security/DCNTNp_qjFM/discussion"
+    end
+  end
+
+  def check_rails_version_for_cve_2013_0155
+    if version_between?("2.0.0", "2.3.15") || version_between?("3.0.0", "3.0.18") || version_between?("3.1.0", "3.1.9") || version_between?("3.2.0", "3.2.10")
+      warn :warning_type => 'SQL Injection',
+        :message => 'All versions of Rails before 3.0.19, 3.1.10, and 3.2.11 contain a SQL Injection Vulnerability: CVE-2013-0155; Upgrade to 3.2.11, 3.1.10, 3.0.19',
+        :confidence => CONFIDENCE[:high],
+        :file => gemfile_or_environment,
+        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/c7jT-EeN9eI/discussion"
     end
   end
 
