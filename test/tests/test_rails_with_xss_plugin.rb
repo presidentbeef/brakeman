@@ -277,7 +277,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
 
   def test_session_secret_token
     assert_warning :type => :warning,
-      :warning_type => "Session Setting",
+      :warning_type => "Session Settings",
       :line => 9,
       :message => /^Session\ secret\ should\ not\ be\ included\ in/,
       :confidence => 0,
