@@ -824,7 +824,7 @@ class Rails3Tests < Test::Unit::TestCase
 
   def test_http_only_session_setting
     assert_warning :type => :warning,
-      :warning_type => "Session Setting",
+      :warning_type => "Session Settings",
       :line => 3,
       :message => /^Session\ cookies\ should\ be\ set\ to\ HTTP\ on/,
       :confidence => 0,
@@ -833,7 +833,7 @@ class Rails3Tests < Test::Unit::TestCase
 
   def test_secure_only_session_setting
     assert_warning :type => :warning,
-      :warning_type => "Session Setting",
+      :warning_type => "Session Settings",
       :line => 3,
       :message => /^Session\ cookie\ should\ be\ set\ to\ secure\ o/,
       :confidence => 0,
@@ -842,7 +842,7 @@ class Rails3Tests < Test::Unit::TestCase
 
   def test_session_secret_token
     assert_warning :type => :warning,
-      :warning_type => "Session Setting",
+      :warning_type => "Session Settings",
       :line => 7,
       :message => /^Session\ secret\ should\ not\ be\ included\ in/,
       :confidence => 0,

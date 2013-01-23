@@ -169,7 +169,7 @@ class Rails2Tests < Test::Unit::TestCase
 
   def test_session_secret
     assert_warning :type => :warning,
-      :warning_type => "Session Setting",
+      :warning_type => "Session Settings",
       :line => 9,
       :message => /^Session\ secret\ should\ not\ be\ included\ in/,
       :confidence => 0,
@@ -178,7 +178,7 @@ class Rails2Tests < Test::Unit::TestCase
 
   def test_session_cookies
     assert_warning :type => :warning,
-      :warning_type => "Session Setting",
+      :warning_type => "Session Settings",
       :line => 10,
       :message => /^Session cookies should be set to HTTP on/,
       :confidence => 0,
