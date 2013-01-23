@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/session_settings/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/session_setting/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -105,12 +105,13 @@
     <h1 class="entry-title">Session Settings</h1>
   </header>
   
-  <script>
-window.location.replace("http://brakemanscanner.org/docs/warning_types/session_setting/");
-</script>
+  <h3>HTTP Only</h3>
 
+<p>It is recommended that session cookies be set to &#8220;http-only&#8221;. This helps prevent stealing of cookies via cross site scripting.</p>
 
-<p>Content has moved to <a href="http://brakemanscanner.org/docs/warning_types/session_setting/">Session Setting</a></p>
+<h3>Secret Length</h3>
+
+<p>Brakeman will warn if the key length for the session cookies is less than 30 characters.</p>
 
 <hr />
 

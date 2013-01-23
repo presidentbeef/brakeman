@@ -341,8 +341,12 @@
         <lastmod>2013-01-18T17:23:11-08:00</lastmod>
     </url>
     <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/session_setting/</loc>
+        <lastmod>2013-01-23T10:20:13-08:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/docs/warning_types/session_settings/</loc>
-        <lastmod>2012-07-16T18:41:56-07:00</lastmod>
+        <lastmod>2013-01-23T10:25:02-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/sql_injection/</loc>
