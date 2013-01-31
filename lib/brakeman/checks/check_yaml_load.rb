@@ -7,7 +7,9 @@ class Brakeman::CheckYAMLLoad < Brakeman::BaseCheck
   @description = "Checks for uses of YAML.load"
 
   def run_check
-    tracker.find_call(:target => :YAML, :method => :load).each do |result|
+    yaml_methods = [:load, :load_documents, :load_stream, :parse_documents, :parse_stream]
+
+    tracker.find_call(:target => :YAML, :methods => yaml_methods ).each do |result|
       check_yaml_load result
     end
   end
@@ -17,6 +19,7 @@ class Brakeman::CheckYAMLLoad < Brakeman::BaseCheck
     add_result result
 
     arg = result[:call].first_arg
+    method = result[:call].method
 
     if input = has_immediate_user_input?(arg)
       confidence = CONFIDENCE[:high]
@@ -38,7 +41,7 @@ class Brakeman::CheckYAMLLoad < Brakeman::BaseCheck
                      "user input"
                    end
 
-      message = "YAML.load called with #{input_type}"
+      message = "YAML.#{method} called with #{input_type}"
 
       warn :result => result,
         :warning_type => "Remote Code Execution",

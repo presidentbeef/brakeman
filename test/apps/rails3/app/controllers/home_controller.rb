@@ -126,6 +126,13 @@ class HomeController < ApplicationController
     YAML.load User.first.bad_stuff
   end
 
+  def test_more_yaml_methods
+    YAML.load_documents params[:input]
+    YAML.load_stream cookies[:thing]
+    YAML.parse_documents "a: #{params[:a]}"
+    YAML.parse_stream User.find(1).upload
+  end
+
   private
 
   def filter_it

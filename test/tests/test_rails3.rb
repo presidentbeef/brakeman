@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 32,
-      :warning => 47
+      :warning => 51
     }
   end
 
@@ -876,11 +876,50 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /home_controller\.rb/
   end
 
-  def test_remote_code_execution_yaml_load_model_attribue
+  def test_remote_code_execution_yaml_load_model_attribute
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 126,
       :message => /^YAML\.load\ called\ with\ model\ attribute/,
+      :confidence => 1,
+      :file => /home_controller\.rb/
+  end
+
+  def test_remote_code_execution_yaml_load_documents
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 130,
+      :message => /^YAML\.load_documents\ called\ with\ paramete/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+
+  def test_remote_code_execution_yaml_load_stream
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 131,
+      :message => /^YAML\.load_stream\ called\ with\ cookies\ val/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+
+  def test_remote_code_execution_yaml_parse_documents
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 132,
+      :message => /^YAML\.parse_documents\ called\ with\ paramet/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+
+  def test_remote_code_execution_yaml_parse_stream
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 133,
+      :message => /^YAML\.parse_stream\ called\ with\ model\ attr/,
       :confidence => 1,
       :file => /home_controller\.rb/
   end
