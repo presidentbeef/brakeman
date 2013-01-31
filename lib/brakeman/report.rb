@@ -18,8 +18,26 @@ else
   # CSV is now FasterCSV in ruby 1.9
 end
 
+#MultiJson interface changed in 1.3.0, but need
+#to support older MultiJson for Rails 3.1.
+if MultiJson.respond_to? :default_adapter
+  mj_engine = MultiJson.default_adapter
+else
+  mj_engine = MultiJson.default_engine
+
+  module MultiJson
+    def self.dump *args
+      encode *args
+    end
+
+    def self.load *args
+      decode *args
+    end
+  end
+end
+
 #This is so OkJson will work with symbol values
-if MultiJson.default_adapter == :ok_json
+if mj_engine == :ok_json
   class Symbol
     def to_json
       self.to_s.inspect
@@ -694,11 +712,13 @@ HEADER
       :brakeman_version => Brakeman::Version
     }
 
-    MultiJson.dump({
+    report_info = {
       :scan_info => scan_info,
       :warnings => warnings,
       :errors => errors
-    }, :pretty => true)
+    }
+
+    MultiJson.dump(report_info, :pretty => true)
   end
 
   def all_warnings
