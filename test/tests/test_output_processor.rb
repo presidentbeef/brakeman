@@ -104,7 +104,7 @@ class OutputProcessorTests < Test::Unit::TestCase
   end
 
 
-  def test_output_format_string_literal
+  def test_format_string_literal
     assert_output "", Sexp.new(:format, Sexp.new(:str, "hi"))
   end
 

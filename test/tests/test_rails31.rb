@@ -283,7 +283,7 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /product\.rb/
   end
 
-  def test_sql_injection_in_order_param
+  def test_sql_injection_in_order_param_product
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
       :line => 4,
