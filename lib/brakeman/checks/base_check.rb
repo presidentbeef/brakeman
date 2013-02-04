@@ -23,7 +23,9 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     @string_interp = false
     @current_set = nil
     @current_template = @current_module = @current_class = @current_method = nil
+    @active_record_models = nil
     @mass_assign_disabled = nil
+    @has_user_input = nil
     @safe_input_attributes = Set[:to_i, :to_f, :arel_table]
   end
 

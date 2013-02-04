@@ -32,6 +32,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
 
     @models = tracker.models.keys
     @inspect_arguments = tracker.options[:check_arguments]
+    @mark = nil
 
     Brakeman.debug "Checking for XSS in content_tag"
     methods.each do |call|
@@ -158,7 +159,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
         :user_input => @matched.match,
         :confidence => CONFIDENCE[:med],
         :link_path => "content_tag"
-      end
+    end
   end
 
   def process_call exp
