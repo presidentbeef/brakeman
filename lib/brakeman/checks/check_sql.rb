@@ -17,7 +17,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     @rails_version = tracker.config[:rails_version]
 
     @sql_targets = [:all, :average, :calculate, :count, :count_by_sql, :exists?,
-      :find, :find_by_sql, :first, :last, :maximum, :minimum, :sum]
+      :find, :find_by_sql, :first, :last, :maximum, :minimum, :sum, :update_all]
 
     if tracker.options[:rails3]
       @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :select, :where]
@@ -229,6 +229,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                         unsafe_sql? call.first_arg
                       when :lock
                         check_lock_arguments call.first_arg
+                      when :update_all
+                        check_update_all_arguments call.args
                       else
                         Brakeman.debug "Unhandled SQL method: #{method}"
                       end
@@ -370,6 +372,15 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     else
       unsafe_sql? arg
     end
+  end
+
+  def check_update_all_arguments args
+    args.each do |arg|
+      res = unsafe_sql? arg
+      return res if res
+    end
+
+    nil
   end
 
   #Model#lock essentially only cares about strings. But those strings can be
