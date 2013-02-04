@@ -55,7 +55,7 @@ class #{name}Tests < Test::Unit::TestCase
       :file => /#{Regexp.escape(File.basename w.file)}/
   end
       RUBY
-    end.join("\n\n")
+    end.join("\n")
 
     output << "\nend"
   end
