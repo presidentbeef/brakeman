@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 22,
       :controller => 1,
-      :warning => 51 }
+      :warning => 58 }
   end
 
   def test_without_protection
@@ -753,6 +753,69 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Possible\ SQL\ injection/,
       :confidence => 1,
       :file => /product\.rb/
+  end
+
+  def test_sql_injection_update_all
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 140,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
+  end
+
+  def test_sql_injection_update_all_interpolation
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 141,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
+  end
+
+  def test_sql_injection_update_all_interp_array
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 142,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
+  end
+
+  def test_sql_injection_update_all_order_param
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 143,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
+  end
+
+  def test_sql_injection_update_all_on_where
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 145,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
+  end
+
+  def test_sql_injection_update_all_on_where_interp
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 146,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
+  end
+
+  def test_sql_injection_update_all_where_interp_array
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 147,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
   end
 
   def test_validates_format
