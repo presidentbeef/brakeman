@@ -28,7 +28,7 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
 
   #Check if `yajl` is included in Gemfile
   def uses_yajl?
-    tracker.config[:gems] and tracker.config[:gems][:yalj]
+    tracker.config[:gems] and tracker.config[:gems][:yajl]
   end
 
   #Check for `ActiveSupport::JSON.backend = "JSONGem"`
