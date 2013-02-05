@@ -8,7 +8,7 @@ class Brakeman::CheckSend < Brakeman::BaseCheck
 
   def run_check
     Brakeman.debug("Finding instances of #send")
-    calls = tracker.find_call :method => :send
+    calls = tracker.find_call :methods => [:send, :try, :__send__, :public_send]
 
     calls.each do |call|
       process_result call
