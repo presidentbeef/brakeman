@@ -306,4 +306,12 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :message => /^Parsing\ YAML\ request\ parameters\ enables\ /,
       :confidence => 0
   end
+
+  def test_json_parsing_workaround_CVE_2013_0333
+    assert_no_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :message => /^Rails\ 2\.3\.14\ has\ a\ serious\ JSON\ parsing\ /,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
 end
