@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 32,
-      :warning => 51
+      :warning => 52
     }
   end
 
@@ -821,6 +821,14 @@ class Rails3Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /Gemfile/
   end
+
+  def test_remote_code_execution_CVE_2013_0333
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :message => /^Rails\ 3\.0\.3\ has\ a\ serious\ JSON\ parsing\ v/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end 
 
   def test_http_only_session_setting
     assert_warning :type => :warning,
