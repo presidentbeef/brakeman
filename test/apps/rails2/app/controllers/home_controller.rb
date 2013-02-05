@@ -151,6 +151,15 @@ class HomeController < ApplicationController
     @user = User.find(current_user)
   end
 
+  def test_more_send_methods
+    User.try(params[:meth])
+    self.__send__(params[:meth])
+    Account.public_send(params[:meth])
+
+    table = params["table"]
+    table.classify.constantize.try(:meth)
+  end
+
   private
 
   def filter_it

@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 2,
         :template => 41,
-        :warning => 35 }
+        :warning => 39 }
     else
       @expected ||= {
         :controller => 1,
         :model => 2,
         :template => 41,
-        :warning => 36 }
+        :warning => 40 }
     end
   end
 
@@ -114,7 +114,7 @@ class Rails2Tests < Test::Unit::TestCase
 
     assert_warning :type => :warning,
       :warning_type => "Redirect",
-      :line => 173,
+      :line => 182,
       :message => /^Possible unprotected redirect/,
       :confidence => 0,
       :file => /home_controller\.rb/
@@ -863,5 +863,41 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Unescaped\ model\ attribute/,
       :confidence => 1,
       :file => /test_to_i\.html\.erb/
+  end
+
+  def test_dangerous_send_try
+    assert_warning :type => :warning,
+      :warning_type => "Dangerous Send",
+      :line => 155,
+      :message => /^User\ controlled\ method\ execution/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_dangerous_send_underscore
+    assert_warning :type => :warning,
+      :warning_type => "Dangerous Send",
+      :line => 156,
+      :message => /^User\ controlled\ method\ execution/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_dangerous_public_send
+    assert_warning :type => :warning,
+      :warning_type => "Dangerous Send",
+      :line => 157,
+      :message => /^User\ controlled\ method\ execution/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_dangerous_try_on_user_input
+    assert_warning :type => :warning,
+      :warning_type => "Dangerous Send",
+      :line => 160,
+      :message => /^User\ defined\ target\ of\ method\ invocation/,
+      :confidence => 1,
+      :file => /home_controller\.rb/
   end
 end
