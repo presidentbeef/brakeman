@@ -38,6 +38,7 @@ class Brakeman::CheckYAMLParsing < Brakeman::BaseCheck
       warn :warning_type => "Remote Code Execution",
         :message => message,
         :confidence => CONFIDENCE[:high],
+        :file => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion"
     end
   end
