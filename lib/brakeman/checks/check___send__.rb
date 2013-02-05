@@ -1,7 +1,7 @@
 require 'brakeman/checks/base_check'
 
 #Checks if user supplied data is passed to send
-class Brakeman::CheckSend < Brakeman::BaseCheck
+class Brakeman::CheckUnderscoreSend < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
   @description = "Check for unsafe use of Object#__send__"
