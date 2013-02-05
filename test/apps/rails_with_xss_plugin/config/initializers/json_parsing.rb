@@ -1,0 +1,1 @@
+ActiveSupport::JSON.backend = "JSONGem"
