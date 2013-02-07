@@ -170,5 +170,9 @@ class UsersController < ApplicationController
     @some_value = params[:badthing]
   end
 
+  def pluck_something
+    User.pluck params[:column]
+  end
+
   include UserMixin
 end
