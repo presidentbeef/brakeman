@@ -257,8 +257,12 @@
         <lastmod>2012-09-04T12:53:54-07:00</lastmod>
     </url>
     <url>
-        <loc>http://brakemanscanner.org/docs/warning_types/cross_site_request_forgery/</loc>
+        <loc>http://brakemanscanner.org/docs/warning_types/cross-site_request_forgery/</loc>
         <lastmod>2012-07-16T18:41:56-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/cross_site_request_forgery/</loc>
+        <lastmod>2013-02-08T09:14:39-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/cross_site_scripting/</loc>
