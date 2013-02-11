@@ -59,11 +59,20 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
   def process_inside_interp exp
     exp.each do |e|
       if node_type? e, :evstr, :string_eval
-        if is_escaped? e.value
-          make_escaped_output e.value
-        else
-          make_output e.value
-        end
+        process_interp_output e.value
+      end
+    end
+  end
+
+  def process_interp_output exp
+    if sexp? exp
+      if node_type? exp, :if
+        do_output exp.then_clause
+        do_output exp.else_clause
+      elsif is_escaped? exp
+        make_escaped_output exp
+      else
+        make_output exp
       end
     end
   end
