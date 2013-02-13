@@ -11,7 +11,7 @@ class Rails32Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 6,
-      :warning => 5 }
+      :warning => 6 }
   end
 
   def report
@@ -42,6 +42,14 @@ class Rails32Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :message => /^Rails\ 3\.2\.9\.rc2\ has\ a\ remote\ code\ execut/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_remote_code_execution_CVE_2013_0269
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :message => /^json\ gem\ version\ 1\.7\.5\ has\ a\ remote\ code/,
       :confidence => 0,
       :file => /Gemfile/
   end

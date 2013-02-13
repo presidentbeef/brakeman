@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 22,
       :controller => 1,
-      :warning => 59 }
+      :warning => 60 }
   end
 
   def test_without_protection
@@ -725,6 +725,14 @@ class Rails31Tests < Test::Unit::TestCase
       :warning_type => "Remote Code Execution",
       :message => /^Rails\ 3\.1\.0\ has\ a\ remote\ code\ execution\ /,
       :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_denial_of_service_CVE_2013_0269
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :message => /^json\ gem\ version\ 1\.5\.4\ has\ a\ symbol\ crea/,
+      :confidence => 1,
       :file => /Gemfile/
   end
 
