@@ -294,8 +294,8 @@ class Rails3Tests < Test::Unit::TestCase
   def test_attr_protected
     assert_warning :type => :model,
       :warning_type => "Attribute Restriction",
-      :message => /^attr_accessible is recommended over attr_protected/,
-      :confidence => 2,
+      :message => /^attr_protected is bypassable in/,
+      :confidence => 0,
       :file => /product\.rb/
   end
 
