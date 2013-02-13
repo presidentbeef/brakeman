@@ -133,6 +133,10 @@ class HomeController < ApplicationController
     YAML.parse_stream User.find(1).upload
   end
 
+  def parse_json
+    JSON.parse params[:input]
+  end
+
   private
 
   def filter_it

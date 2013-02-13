@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 8,
       :template => 32,
-      :warning => 52
+      :warning => 53
     }
   end
 
@@ -853,6 +853,14 @@ class Rails3Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /Gemfile/
   end 
+
+  def test_denial_of_service_CVE_2013_0269
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :message => /^json_pure\ gem\ version\ 1\.6\.4\ has\ a\ symbol/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
 
   def test_http_only_session_setting
     assert_warning :type => :warning,
