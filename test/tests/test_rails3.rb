@@ -13,7 +13,7 @@ class Rails3Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :controller => 1,
-      :model => 5,
+      :model => 8,
       :template => 32,
       :warning => 51
     }
@@ -820,6 +820,30 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Rails\ 3\.0\.3\ has\ a\ remote\ code\ execution\ /,
       :confidence => 0,
       :file => /Gemfile/
+  end
+
+  def test_remote_code_execution_CVE_2013_0277_protected
+    assert_warning :type => :model,
+      :warning_type => "Remote Code Execution",
+      :message => /^Serialized\ attributes\ are\ vulnerable\ in\ /,
+      :confidence => 1,
+      :file => /product\.rb/
+  end
+
+  def test_remote_code_execution_CVE_2013_0277_accessible
+    assert_warning :type => :model,
+      :warning_type => "Remote Code Execution",
+      :message => /^Serialized\ attributes\ are\ vulnerable\ in\ /,
+      :confidence => 1,
+      :file => /purchase\.rb/
+  end
+
+  def test_remote_code_execution_CVE_2013_0277_unprotected
+    assert_warning :type => :model,
+      :warning_type => "Remote Code Execution",
+      :message => /^Serialized\ attributes\ are\ vulnerable\ in\ /,
+      :confidence => 0,
+      :file => /user\.rb/
   end
 
   def test_http_only_session_setting
