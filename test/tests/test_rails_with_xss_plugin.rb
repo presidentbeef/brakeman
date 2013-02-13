@@ -287,7 +287,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   def test_sql_injection_CVE_2013_0155
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.19,\ 3\.1/,
+      :message => /^Rails\ 2\.3\.14\ contains\ a\ SQL\ Injection\ Vu/,
       :confidence => 0,
       :file => /Gemfile/
   end
@@ -305,5 +305,13 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :warning_type => "Remote Code Execution",
       :message => /^Parsing\ YAML\ request\ parameters\ enables\ /,
       :confidence => 0
+  end
+
+  def test_json_parsing_workaround_CVE_2013_0333
+    assert_no_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :message => /^Rails\ 2\.3\.14\ has\ a\ serious\ JSON\ parsing\ /,
+      :confidence => 0,
+      :file => /Gemfile/
   end
 end
