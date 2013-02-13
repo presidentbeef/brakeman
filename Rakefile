@@ -1,3 +1,3 @@
 task :default do
-  sh "cd test && ruby test.rb"
+  sh "ruby test/test.rb"
 end
