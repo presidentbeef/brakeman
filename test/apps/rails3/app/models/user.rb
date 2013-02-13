@@ -35,4 +35,6 @@ class User < ActiveRecord::Base
   def safe_sql
     User.where "something = ?", "#{params[:awesome]}"
   end
+
+  serialize :something
 end
