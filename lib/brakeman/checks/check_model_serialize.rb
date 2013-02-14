@@ -35,7 +35,7 @@ class Brakeman::CheckModelSerialize < Brakeman::BaseCheck
       end
 
       if unsafe_attrs = model[:attr_accessible]
-        attrs.select! { |attr| unsafe_attrs.include? attr.value }
+        attrs.delete_if { |attr| not unsafe_attrs.include? attr.value }
       elsif protected_attrs = model[:options][:attr_protected]
         safe_attrs = Set.new
 
@@ -45,7 +45,7 @@ class Brakeman::CheckModelSerialize < Brakeman::BaseCheck
           end
         end
 
-        attrs.reject! { |attr| safe_attrs.include? attr }
+        attrs.delete_if { |attr| safe_attrs.include? attr }
       end
 
       if attrs.empty?
