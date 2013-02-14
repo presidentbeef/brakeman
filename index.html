@@ -107,6 +107,118 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2013/02/13/brakeman-1-dot-9-2-released/">Brakeman 1.9.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2013-02-13 15:48:00 -0800" pubdate  updated >Feb 13<span>th</span>, 2013</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release is almost entirely enhancements to old checks or new checks for recent vulnerabilities. New features in the next release, I promise.</p>
+
+<p><em>Changes since 1.9.1</em>:</p>
+
+<ul>
+<li>Add check for CVE-2013-0269</li>
+<li>Add check for CVE-2013-0276</li>
+<li>Add check for CVE-2013-0277</li>
+<li>Add check for CVE-2013-0333</li>
+<li>Check for more send-like methods (<a href="https://github.com/joernchen">joernchen</a>)</li>
+<li>Check for more SQL injection locations</li>
+<li>Check for more dangerous YAML methods (<a href="https://github.com/presidentbeef/brakeman/issues/246">#246</a>)</li>
+<li>Support MultiJSON 1.2 for Rails 3.0 and 3.1 (<a href="https://github.com/presidentbeef/brakeman/issues/247">#247</a>)</li>
+</ul>
+
+
+<h3>CVE-2013-0269 - Vulnerabilities in JSON gems</h3>
+
+<p><a href="https://groups.google.com/d/topic/rubyonrails-security/4_YvCpLzL58/discussion">CVE-2013-0269</a> is not strictly a Rails issue, but since it was announced on the Rails security list and was relatively easy to check, Brakeman will warn on it.</p>
+
+<p>Versions of the json/json_pure gem on the 1.7.x branch will raise remote code execution warnings, while any other affected version will be reported as a denial of service vulnerability.</p>
+
+<p>Applications which do not parse user input are not affected by these issues, but it is a good idea to upgrade anyway, as it should be relatively painless.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/262">changes</a>)</p>
+
+<h3>CVE-2013-0276 - attr_protected Bypass</h3>
+
+<p>Brakeman has been warning on uses of <code>attr_protected</code> since version 1.4.0, but it was reported with weak confidence, since it is really a best-practice issue.</p>
+
+<p>Now, however, uses of <code>attr_protected</code> will be reported as medium confidence unless used in a Rails version affected by <a href="https://groups.google.com/d/topic/rubyonrails-security/AFBKNY7VSH8/discussion">CVE-2013-0276</a>, in which case it will be high confidence.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/262">changes</a>)</p>
+
+<h3>CVE-2013-0277 - Serialized Attributes</h3>
+
+<p><a href="https://groups.google.com/d/topic/rubyonrails-security/KtmwSbEpzrU/discussion">CVE-2013-0277</a> allows attackers to insert malicious YAML into serialized model attributes. Using <code>attr_accessible</code> or <code>attr_protected</code> somewhat mitigates this, but it is still possible for an application to manually assign user input to a serialized attribute.</p>
+
+<p>Brakeman will warn on affected models, with confidence level depending on whether or not the attribute can be mass assigned.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/262">changes</a>)</p>
+
+<h3>CVE-2013-0333 - JSON Parsing Vulnerability</h3>
+
+<p><a href="https://groups.google.com/d/topic/rubyonrails-security/1h2DR63ViGo/discussion">CVE-2013-0333</a> is another side effect of the recent YAML vulnerabilities. Rails&#8217; default JSON request parser converted requests to YAML then parsed them as YAML.</p>
+
+<p>Brakeman will warn on affected versions unless the provided workaround (setting the JSON backend to <code>JSONGem</code>) is present.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/254">changes</a>)</p>
+
+<h3>Check for More Send-like Methods</h3>
+
+<p>Thanks to joernchen, Brakeman will now warn if user input is passed to <code>try</code>, <code>public_send</code>, or <code>__send__</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/256">changes</a>)</p>
+
+<h3>Check for More SQL Injection Sites</h3>
+
+<p>While researching for <a href="http://rails-sqli.org/">rails-sqli.org</a>, a few more methods came up for Brakeman to check.</p>
+
+<p>Brakeman will now warn on SQL injection in <code>update_all</code> and <code>pluck</code> methods.</p>
+
+<h3>Check for More Dangerous YAML Methods</h3>
+
+<p>Brakeman will now warn on dangerous uses of <code>load_documents</code>, <code>load_stream</code>, <code>parse_documents</code>, and <code>parse_stream</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/249">changes</a>)</p>
+
+<h3>Support MultiJSON 1.2</h3>
+
+<p>The MultiJSON gem changed some APIs around version 1.3. For convenience, Brakeman supported 1.3 or higher. However, for the same reason, Rails 3.0 and 3.1 are locked at versions before 1.3.</p>
+
+<p>For those using Rails 3.0 or 3.1 and including Brakeman in the Gemfile, Brakeman now supports both the old and new interfaces for MultiJSON and the depedency has been pushed back to MultiJSON 1.2.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/248">changes</a>)</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+
+<p>Finally, please check out <a href="http://rails-sqli.org/">rails-sqli.org</a> and send in any feedback. Thanks!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2013/01/18/brakeman-1-dot-9-1-released/">Brakeman 1.9.1 Released</a></h1>
     
     
@@ -1090,93 +1202,6 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/05/23/brakeman-1-dot-6-1-released/">Brakeman 1.6.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-05-23 12:45:00 -0700" pubdate  updated >May 23<span>rd</span>, 2012</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Wow, it&#8217;s been over a month since the last release!</p>
-
-<p>The major change in this version is a rewrite of the SQL injection check. Many more methods are covered, and there should be a reduction of false positives as well.</p>
-
-<p><em>Changes since 1.6.0</em>:</p>
-
-<ul>
-<li>Major rewrite of CheckSQL</li>
-<li>Process actions mixed into controllers</li>
-<li>Check for inherited <code>attr_accessible</code> (Neil Matatall)</li>
-<li>Handle <code>render :template =&gt; ...</code></li>
-<li>Report line number of highlighted value, if available</li>
-<li>Fix highlighting of HTML escaped values in HTML report</li>
-<li>Fix rescanning of deleted templates</li>
-</ul>
-
-
-<h3>Updated SQL Injection Check</h3>
-
-<p><code>CheckSQL</code> has been completely revamped. Brakeman now has a much better understanding of the various ActiveRecord::FinderMethods and ActiveRecord::QueryMethods, as well as their options.</p>
-
-<p>The check is also more conservative about what it warns on. Previously, since string interpolation is the main entry point for SQL injection in Rails, any interpolated value in a query would generate a warning. Now, &#8220;safe&#8221; sanitization methods, obviously safe methods like <code>to_i</code> and <code>id</code>, constants, strings, and other literal values should not cause warnings.</p>
-
-<p>The &#8220;highlighted&#8221; value (or &#8220;user input&#8221;) reported for SQL warnings should be much more accurate now, making it easier to determine why a warning was reported.</p>
-
-<h3>Controller Mixins</h3>
-
-<p>Methods on controller mixins that are used as actions should now be processed as if they were defined in the controller itself.</p>
-
-<h3>Check for Inherited Mass Assignment Protection</h3>
-
-<p>Since mass assignment protection via <code>attr_accessible</code> is inheritable, Brakeman will no longer warn about models whose parent uses <code>attr_accessible</code>.</p>
-
-<h3>Template Option in Render</h3>
-
-<p>Somehow, the <code>:template</code> option for <code>render</code> has been ignored this whole time. Sorry!</p>
-
-<h3>Better Line Numbers</h3>
-
-<p>Warnings which have a <code>:user_input</code> field use that value to &#8220;highlight&#8221; part of the code in the reported warning. This value usually corresponds to the code which actually caused the warning to be generated.</p>
-
-<p>If a warning has this field, the line number of that code is used, instead of the starting line number of the entire piece of code. This often leads to more accurate and helpful line numbers.</p>
-
-<h3>Highlighted Values in HTML Reports</h3>
-
-<p>Since the warnings output in HTML reports are HTML-escaped, there was a sometimes mismatch between the value that needed to be highlighted and the HTML warning output, causing nothing to be highlighted. This is fixed now.</p>
-
-<h3>Rescanning of Deleted Templates</h3>
-
-<p>In the rescanning logic, templates which are related to a changed file (a view or partial that is rendered, usually) will be rescanned. However, there is the possibility that the template which needs to be rescanned as a related file has been deleted as part of the set of changes. This caused the rescanning to blow up, but that has been fixed now.</p>
-
-<h3>Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-
-<p>Don&#8217;t forget to check out the <a href="https://speakerdeck.com/u/presidentbeef/p/keeping-rails-applications-on-track-with-brakeman">RailsConf Brakeman presentation slides</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1227,6 +1252,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/02/13/brakeman-1-dot-9-2-released/">Brakeman 1.9.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/01/18/brakeman-1-dot-9-1-released/">Brakeman 1.9.1 Released</a>
       </li>
     
@@ -1240,10 +1269,6 @@ end
     
       <li class="post">
         <a href="/blog/2012/10/17/brakeman-1-dot-8-2-released/">Brakeman 1.8.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/09/24/brakeman-1-dot-8-1-released/">Brakeman 1.8.1 Released</a>
       </li>
     
   </ul>
