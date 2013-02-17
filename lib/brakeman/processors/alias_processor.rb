@@ -87,6 +87,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     method = exp.method
     first_arg = exp.first_arg
 
+    if node_type? target, :or and [:+, :-, :*, :/].include? method
+      res = process_or_target(exp)
+      return res if res
+    end
+
     #See if it is possible to simplify some basic cases
     #of addition/concatenation.
     case method
@@ -646,5 +651,36 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         @inside_if.last << var
       end
     end
+  end
+
+  def process_or_target exp
+    return nil unless processable? exp.first_arg
+
+    target = exp.target
+    lhs = exp.dup
+    rhs = exp.dup
+    processed = false
+
+    if processable? target.lhs
+      processed = true
+      lhs.target = target.lhs
+      exp.target.lhs = process lhs
+    end
+
+    if processable? target.rhs
+      processed = true
+      rhs.target = target.rhs
+      exp.target.rhs = process rhs
+    end
+
+    if processed
+      exp.target
+    else
+      nil
+    end
+  end
+
+  def processable? exp
+    string? exp or number? exp
   end
 end
