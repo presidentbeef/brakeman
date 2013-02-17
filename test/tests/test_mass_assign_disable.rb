@@ -40,7 +40,7 @@ class MassAssignDisableTest < Test::Unit::TestCase
   def test_strong_parameters_in_initializer
     init = "config/initializers/mass_assign.rb"
     gemfile = "Gemfile"
-    config = "config/application.rb"
+    config = "config/environments/production.rb"
 
     before_rescan_of [init, gemfile, config], "rails3.2" do
       write_file init, <<-RUBY
