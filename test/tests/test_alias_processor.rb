@@ -154,4 +154,51 @@ class AliasProcessorTests < Test::Unit::TestCase
     x
     RUBY
   end
+
+  def test_multiple_assignments_in_if
+    assert_alias "1 or 4", <<-RUBY
+    x = 1
+
+    if y
+      x = 2
+      x = 3
+      x = 4
+    end
+
+    x
+    RUBY
+  end
+
+  def test_assignments_both_branches
+    assert_alias "'1234' or 6", <<-RUBY
+    if y
+      x = '1'
+      x += '2'
+      x += '3'
+      x += '4'
+    else
+      x = 5
+      x = 6
+    end
+
+    x
+    RUBY
+  end
+
+  def test_assignments_in_forced_branch
+    assert_alias "4", <<-RUBY
+    x = 1
+
+    if true
+      x = 2
+      x = 3
+      x = 4
+    else
+      x = 5
+      x = 6
+    end
+
+    x
+    RUBY
+  end
 end
