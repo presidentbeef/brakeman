@@ -14,7 +14,7 @@ class Rails31Tests < Test::Unit::TestCase
     @expected ||= {
       :model => 3,
       :template => 22,
-      :controller => 1,
+      :controller => 4,
       :warning => 60 }
   end
 
@@ -499,6 +499,33 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /users_controller\.rb/
   end
 
+  def test_authentication_skip_before_filter
+    assert_warning :type => :controller,
+      :warning_type => "Authentication",
+      :line => 3,
+      :message => /^Use\ whitelist\ \(:only\ =>\ \[\.\.\]\)\ when\ skipp/,
+      :confidence => 1,
+      :file => /admin_controller\.rb/
+  end
+
+  def test_authentication_skip_filter
+    assert_warning :type => :controller,
+      :warning_type => "Authentication",
+      :line => 5,
+      :message => /^Use\ whitelist\ \(:only\ =>\ \[\.\.\]\)\ when\ skipp/,
+      :confidence => 1,
+      :file => /admin_controller\.rb/
+  end
+
+  def test_authentication_skip_require_user
+    assert_warning :type => :controller,
+      :warning_type => "Authentication",
+      :line => 4,
+      :message => /^Use\ whitelist\ \(:only\ =>\ \[\.\.\]\)\ when\ skipp/,
+      :confidence => 1,
+      :file => /admin_controller\.rb/
+  end
+
   def test_controller_mixin
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
@@ -869,5 +896,5 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Session\ secret\ should\ not\ be\ included\ in/,
       :confidence => 0,
       :file => /secret_token\.rb/
-  end 
+  end
 end
