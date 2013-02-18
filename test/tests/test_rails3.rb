@@ -14,7 +14,7 @@ class Rails3Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 8,
-      :template => 32,
+      :template => 36,
       :warning => 53
     }
   end
@@ -744,6 +744,42 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
       :confidence => 0,
       :file => /test_content_tag\.html\.erb/
+  end
+
+  def test_cross_site_scripting_prepend_filter
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /use_filter12345\.html\.erb/
+  end
+
+  def test_cross_site_scripting_append_filter
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :file => /use_filter12345\.html\.erb/
+  end
+
+  def test_cross_site_scripting_prepend_filter_overwrite
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 5,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :file => /use_filter12345\.html\.erb/
+  end
+
+  def test_cross_site_scripting_prepend_filter_overwrite_2
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 8,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :file => /use_filter12345\.html\.erb/
   end
 
   def test_cross_site_scripting_model_in_tag_name
