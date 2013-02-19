@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 22,
       :controller => 1,
-      :warning => 58 }
+      :warning => 60 }
   end
 
   def test_without_protection
@@ -728,6 +728,14 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /Gemfile/
   end
 
+  def test_denial_of_service_CVE_2013_0269
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :message => /^json\ gem\ version\ 1\.5\.4\ has\ a\ symbol\ crea/,
+      :confidence => 1,
+      :file => /Gemfile/
+  end
+
   def test_to_json_with_overwritten_config
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
@@ -813,6 +821,15 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
       :line => 147,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /users_controller\.rb/
+  end
+
+  def test_sql_injection_in_pluck
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 174,
       :message => /^Possible\ SQL\ injection/,
       :confidence => 0,
       :file => /users_controller\.rb/

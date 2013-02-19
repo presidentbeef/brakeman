@@ -13,9 +13,9 @@ class Rails3Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :controller => 1,
-      :model => 5,
+      :model => 8,
       :template => 32,
-      :warning => 51
+      :warning => 53
     }
   end
 
@@ -294,8 +294,8 @@ class Rails3Tests < Test::Unit::TestCase
   def test_attr_protected
     assert_warning :type => :model,
       :warning_type => "Attribute Restriction",
-      :message => /^attr_accessible is recommended over attr_protected/,
-      :confidence => 2,
+      :message => /^attr_protected is bypassable in/,
+      :confidence => 0,
       :file => /product\.rb/
   end
 
@@ -818,6 +818,46 @@ class Rails3Tests < Test::Unit::TestCase
     assert_no_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :message => /^Rails\ 3\.0\.3\ has\ a\ remote\ code\ execution\ /,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_remote_code_execution_CVE_2013_0277_protected
+    assert_warning :type => :model,
+      :warning_type => "Remote Code Execution",
+      :message => /^Serialized\ attributes\ are\ vulnerable\ in\ /,
+      :confidence => 1,
+      :file => /product\.rb/
+  end
+
+  def test_remote_code_execution_CVE_2013_0277_accessible
+    assert_warning :type => :model,
+      :warning_type => "Remote Code Execution",
+      :message => /^Serialized\ attributes\ are\ vulnerable\ in\ /,
+      :confidence => 1,
+      :file => /purchase\.rb/
+  end
+
+  def test_remote_code_execution_CVE_2013_0277_unprotected
+    assert_warning :type => :model,
+      :warning_type => "Remote Code Execution",
+      :message => /^Serialized\ attributes\ are\ vulnerable\ in\ /,
+      :confidence => 0,
+      :file => /user\.rb/
+  end
+
+  def test_remote_code_execution_CVE_2013_0333
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :message => /^Rails\ 3\.0\.3\ has\ a\ serious\ JSON\ parsing\ v/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end 
+
+  def test_denial_of_service_CVE_2013_0269
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :message => /^json_pure\ gem\ version\ 1\.6\.4\ has\ a\ symbol/,
       :confidence => 0,
       :file => /Gemfile/
   end

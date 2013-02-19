@@ -34,10 +34,13 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
       end
 
       unless protected_names.empty?
+        message, confidence, link = check_for_attr_protected_bypass
+
         warn :model => protected_names.sort.join(", "),
           :warning_type => "Attribute Restriction",
-          :message => "attr_accessible is recommended over attr_protected",
-          :confidence => CONFIDENCE[:low]
+          :message => message,
+          :confidence => confidence,
+          :link => link
       end
     else #Output one warning per model
 
@@ -49,12 +52,14 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
             :message => "Mass assignment is not restricted using attr_accessible",
             :confidence => CONFIDENCE[:high]
         elsif not tracker.options[:ignore_attr_protected]
+          message, confidence, link = check_for_attr_protected_bypass
+
           warn :model => name,
             :file => model[:file],
             :line => model[:options][:attr_protected].first.line,
             :warning_type => "Attribute Restriction",
-            :message => "attr_accessible is recommended over attr_protected",
-            :confidence => CONFIDENCE[:low]
+            :message => message,
+            :confidence => confidence
         end
       end
     end
@@ -66,5 +71,32 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
         yield name, model
       end
     end
+  end
+
+  def check_for_attr_protected_bypass
+    upgrade_version = case
+                      when version_between?("2.0.0", "2.3.16")
+                        "2.3.17"
+                      when version_between?("3.0.0", "3.0.99")
+                        "3.2.11"
+                      when version_between?("3.1.0", "3.1.10")
+                        "3.1.11"
+                      when version_between?("3.2.0", "3.2.11")
+                        "3.2.12"
+                      else
+                        nil
+                      end
+
+    if upgrade_version
+      message = "attr_protected is bypassable in #{tracker.config[:rails_version]}, use attr_accessible or upgrade to #{upgrade_version}"
+      confidence = CONFIDENCE[:high]
+      link = "https://groups.google.com/d/topic/rubyonrails-security/AFBKNY7VSH8/discussion"
+    else
+      message = "attr_accessible is recommended over attr_protected"
+      confidence = CONFIDENCE[:med]
+      link = nil
+    end
+
+    return message, confidence, link
   end
 end

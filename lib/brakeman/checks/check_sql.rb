@@ -17,7 +17,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     @rails_version = tracker.config[:rails_version]
 
     @sql_targets = [:all, :average, :calculate, :count, :count_by_sql, :exists?,
-      :find, :find_by_sql, :first, :last, :maximum, :minimum, :sum, :update_all]
+      :find, :find_by_sql, :first, :last, :maximum, :minimum, :pluck, :sum, :update_all]
 
     if tracker.options[:rails3]
       @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :select, :where]
@@ -138,9 +138,15 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   end
 
   def check_rails_version_for_cve_2013_0155
-    if version_between?("2.0.0", "2.3.15") || version_between?("3.0.0", "3.0.18") || version_between?("3.1.0", "3.1.9") || version_between?("3.2.0", "3.2.10")
+    if version_between?("3.0.0", "3.0.18") || version_between?("3.1.0", "3.1.9") || version_between?("3.2.0", "3.2.10")
+      message = 'All versions of Rails before 3.0.19, 3.1.10, and 3.2.11 contain a SQL Injection Vulnerability: CVE-2013-0155; Upgrade to 3.2.11, 3.1.10, 3.0.19'
+    elsif version_between?("2.0.0", "2.3.15")
+      message = "Rails #{@rails_version} contains a SQL Injection Vulnerability: CVE-2013-0155; Upgrade to 2.3.16"
+    end
+
+    if message
       warn :warning_type => 'SQL Injection',
-        :message => 'All versions of Rails before 3.0.19, 3.1.10, and 3.2.11 contain a SQL Injection Vulnerability: CVE-2013-0155; Upgrade to 3.2.11, 3.1.10, 3.0.19',
+        :message => message,
         :confidence => CONFIDENCE[:high],
         :file => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/topic/rubyonrails-security/c7jT-EeN9eI/discussion"
@@ -229,6 +235,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                         unsafe_sql? call.first_arg
                       when :lock
                         check_lock_arguments call.first_arg
+                      when :pluck
+                        unsafe_sql? call.first_arg
                       when :update_all
                         check_update_all_arguments call.args
                       else

@@ -172,7 +172,7 @@ class RescannerTests < Test::Unit::TestCase
   end
 
   def test_change_config
-    config = "config/application.rb"
+    config = "config/environments/production.rb"
 
     before_rescan_of config do
       replace config, "config.active_record.whitelist_attributes = true",

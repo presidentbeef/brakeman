@@ -14,6 +14,7 @@ class Brakeman::GemProcessor < Brakeman::BaseProcessor
 
     if gem_lock
       get_rails_version gem_lock
+      get_json_version gem_lock
     elsif @tracker.config[:gems][:rails] =~ /(\d+.\d+.\d+)/
       @tracker.config[:rails_version] = $1
     end
@@ -40,9 +41,18 @@ class Brakeman::GemProcessor < Brakeman::BaseProcessor
     exp
   end
 
+  #Need to implement generic gem version check
+  def get_version name, gem_lock
+    match = gem_lock.match(/\s#{name} \((\d+.\d+.\d+.*)\)$/)
+    match[1] if match
+  end
+
   def get_rails_version gem_lock
-    if gem_lock =~ /\srails \((\d+.\d+.\d+.*)\)$/
-      @tracker.config[:rails_version] = $1
-    end
+    @tracker.config[:rails_version] = get_version("rails", gem_lock)
+  end
+
+  def get_json_version gem_lock
+    @tracker.config[:gems][:json] = get_version("json", gem_lock)
+    @tracker.config[:gems][:json_pure] = get_version("json_pure", gem_lock)
   end
 end

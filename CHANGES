@@ -1,3 +1,14 @@
+# 1.9.2
+
+ * Add check for CVE-2013-0269
+ * Add check for CVE-2013-0276
+ * Add check for CVE-2013-0277
+ * Add check for CVE-2013-0333
+ * Check for more send-like methods
+ * Check for more SQL injection locations
+ * Check for more dangerous YAML methods
+ * Support MultiJSON 1.2 for Rails 3.0 and 3.1
+
 # 1.9.1
 
  * Update to RubyParser 3.1.1 (neersighted)
