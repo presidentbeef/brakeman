@@ -18,6 +18,6 @@ Gem::Specification.new do |s|
   s.add_dependency "erubis", "~>2.6"
   s.add_dependency "haml", "~>3.0"
   s.add_dependency "sass", "~>3.0"
-  s.add_dependency "slim", "~1.3.6"
+  s.add_dependency "slim", "~>1.3.6"
   s.add_dependency "multi_json", "~>1.2"
 end
