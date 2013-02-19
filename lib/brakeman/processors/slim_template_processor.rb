@@ -67,8 +67,10 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
   def process_interp_output exp
     if sexp? exp
       if node_type? exp, :if
-        do_output exp.then_clause
-        do_output exp.else_clause
+        process_interp_output exp.then_clause
+        process_interp_output exp.else_clause
+      elsif exp == SAFE_BUFFER
+        ignore
       elsif is_escaped? exp
         make_escaped_output exp
       else
