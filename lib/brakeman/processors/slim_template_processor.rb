@@ -4,16 +4,15 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
   include Brakeman::RenderHelper
 
   SAFE_BUFFER = s(:call, s(:colon2, s(:const, :ActiveSupport), :SafeBuffer), :new)
+  OUTPUT_BUFFER = s(:ivar, :@output_buffer)
   TEMPLE_UTILS = s(:colon2, s(:colon3, :Temple), :Utils)
 
   def process_call exp
     target = exp.target
     method = exp.method
 
-    if target == SAFE_BUFFER and method == :safe_concat
-      @inside_concat = true
-      arg = process exp.first_arg
-      @inside_concat = false
+    if method == :safe_concat and (target == SAFE_BUFFER or target == OUTPUT_BUFFER)
+      arg = exp.first_arg
 
       if call? arg and arg.method == :to_s
         arg = arg.target
@@ -26,9 +25,13 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
       elsif node_type? arg, :interp, :dstr
         process_inside_interp arg
         ignore
+      elsif node_type? arg, :ignore
+        ignore
       else
         make_output arg
       end
+    elsif is_escaped? exp
+      make_escaped_output exp.first_arg
     elsif target == nil and method == :render
       exp.arglist = process exp.arglist
       make_render_in_view exp
@@ -62,6 +65,8 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
         process_interp_output e.value
       end
     end
+
+    ignore
   end
 
   def process_interp_output exp
