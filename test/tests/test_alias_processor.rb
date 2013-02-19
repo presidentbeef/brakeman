@@ -201,4 +201,26 @@ class AliasProcessorTests < Test::Unit::TestCase
     x
     RUBY
   end
+
+  def test_simple_or_operation_compaction
+    #Could be better, but better than it was
+    assert_alias "[0, ((1 || 2) || 3 || 4), (4 || 8)]", <<-RUBY
+    x = 1
+
+    if z
+      x += 1
+      y = 2
+      w = 10
+    else
+      x += 2
+      y = 4
+      w = 5
+    end
+
+    w = w * 0
+    y = y * 2
+
+    [w, x, y]
+    RUBY
+  end
 end

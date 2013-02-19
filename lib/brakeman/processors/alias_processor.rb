@@ -88,7 +88,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     first_arg = exp.first_arg
 
     if node_type? target, :or and [:+, :-, :*, :/].include? method
-      res = process_or_target(exp)
+      res = process_or_simple_operation(exp)
       return res if res
     end
 
@@ -653,34 +653,44 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
   end
 
-  def process_or_target exp
-    return nil unless processable? exp.first_arg
+  #If possible, distribute operation over both sides of an or.
+  #For example,
+  #
+  #    (1 or 2) * 5
+  #
+  #Becomes
+  #
+  #    (5 or 10)
+  #
+  #Only works for strings and numbers right now.
+  def process_or_simple_operation exp
+    arg = exp.first_arg
+    return nil unless string? arg or number? arg
 
     target = exp.target
-    lhs = exp.dup
-    rhs = exp.dup
-    processed = false
+    lhs = process_or_target(target.lhs, exp.dup)
+    rhs = process_or_target(target.rhs, exp.dup)
 
-    if processable? target.lhs
-      processed = true
-      lhs.target = target.lhs
-      exp.target.lhs = process lhs
-    end
-
-    if processable? target.rhs
-      processed = true
-      rhs.target = target.rhs
-      exp.target.rhs = process rhs
-    end
-
-    if processed
-      exp.target
+    if lhs and rhs
+      if same_value? lhs, rhs
+        lhs
+      else
+        exp.target.lhs = lhs
+        exp.target.rhs = rhs
+        exp.target
+      end
     else
       nil
     end
   end
 
-  def processable? exp
-    string? exp or number? exp
+  def process_or_target value, copy
+    if string? value or number? value
+      copy.target = value
+      process copy
+    else
+      false
+    end
   end
+
 end
