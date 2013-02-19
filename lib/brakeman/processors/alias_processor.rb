@@ -633,23 +633,32 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
   end
 
-  #Set variable to given value
+  #Set variable to given value.
+  #Creates "branched" versions of values when appropriate.
+  #Avoids creating multiple branched versions inside same
+  #if branch.
   def set_value var, value, line = nil
-    if @ignore_ifs
-      env[var] = value
-    elsif branch_value? var and current_val = env[var]
-      unless same_value? current_val, value
-        env[var] = Sexp.new(:or, current_val, value).line(line || var.line || -2)
-        @inside_if.last << var
+    unless @ignore_ifs
+      current_val = env[var]
+      current_if = @inside_if.last
+
+      if branch_value? var and current_val = env[var]
+        unless same_value? current_val, value
+          env[var] = Sexp.new(:or, current_val, value).line(line || var.line || -2)
+          current_if << var
+        end
+      elsif current_if and current_if.include?(var) and node_type?(current_val, :or)
+        #Replace last value instead of creating another or
+        current_val.rhs = value
+      else
+        env[var] = value
+
+        if current_if
+          current_if << var
+        end
       end
-    elsif @inside_if.last and @inside_if.last.include?(var) and current_val = env[var] and node_type? current_val, :or
-      current_val.rhs = value
     else
       env[var] = value
-
-      if @inside_if.last
-        @inside_if.last << var
-      end
     end
   end
 
