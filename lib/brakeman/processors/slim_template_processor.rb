@@ -22,6 +22,8 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
         make_escaped_output arg
       elsif string? arg
         ignore
+      elsif render? arg
+        make_output make_render_in_view arg
       elsif node_type? arg, :interp, :dstr
         process_inside_interp arg
       elsif node_type? arg, :ignore
@@ -61,7 +63,8 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
   def process_inside_interp exp
     exp.map! do |e|
       if node_type? e, :evstr, :string_eval
-        process_interp_output e.value
+        e.value = process_interp_output e.value
+        e
       else
         e
       end
@@ -77,6 +80,10 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
         process_interp_output exp.else_clause
       elsif exp == SAFE_BUFFER
         ignore
+      elsif render? exp
+        make_output make_render_in_view exp
+      elsif node_type? :output, :escaped_output
+        exp
       elsif is_escaped? exp
         make_escaped_output exp
       else
@@ -89,5 +96,17 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
     call? exp and
     exp.target == TEMPLE_UTILS and
     exp.method == :escape_html
+  end
+
+  def render? exp
+    call? exp and
+    exp.target.nil? and
+    exp.method == :render
+  end
+
+  def process_render exp
+    #Still confused as to why this is not needed in other template processors
+    #but is needed here
+    exp
   end
 end
