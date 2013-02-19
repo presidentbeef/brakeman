@@ -24,7 +24,6 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
         ignore
       elsif node_type? arg, :interp, :dstr
         process_inside_interp arg
-        ignore
       elsif node_type? arg, :ignore
         ignore
       else
@@ -60,13 +59,15 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
   #Slim likes to interpolate output into strings then pass them to safe_concat.
   #Better to pull those values out directly.
   def process_inside_interp exp
-    exp.each do |e|
+    exp.map! do |e|
       if node_type? e, :evstr, :string_eval
         process_interp_output e.value
+      else
+        e
       end
     end
 
-    ignore
+    exp
   end
 
   def process_interp_output exp
