@@ -10,37 +10,45 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckSkipBeforeFilter < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
-  @description = "Warn when skipping CSRF check by default"
+  @description = "Warn when skipping CSRF or authentication checks by default"
 
   def run_check
     tracker.controllers.each do |name, controller|
-      if filter_skips = (controller[:options][:skip_before_filter] or controller[:options][:skip_filter])
-        filter_skips.each do |filter|
-          process_skip_filter filter, controller
-        end
+      filter_skips = (controller[:options][:skip_before_filter] || []) + (controller[:options][:skip_filter] || [])
+
+      filter_skips.each do |filter|
+        process_skip_filter filter, controller
       end
     end
   end
 
   def process_skip_filter filter, controller
-    if skip_verify_except? filter
-      warn :class => controller[:name],
+    case skip_except_value filter
+    when :verify_authenticity_token
+      warn :class => controller[:name], #ugh this should be a controller warning, too
         :warning_type => "Cross-Site Request Forgery",
         :message => "Use whitelist (:only => [..]) when skipping CSRF check",
         :code => filter,
         :confidence => CONFIDENCE[:med]
+    when :login_required, :authenticate_user!, :require_user
+      warn :controller => controller[:name],
+        :warning_type => "Authentication",
+        :message => "Use whitelist (:only => [..]) when skipping authentication",
+        :code => filter,
+        :confidence => CONFIDENCE[:med],
+        :link => "authentication_whitelist"
     end
   end
 
-  def skip_verify_except? filter
+  def skip_except_value filter
     return false unless call? filter
 
     first_arg = filter.first_arg
     last_arg = filter.last_arg
 
-    if symbol? first_arg and first_arg.value == :verify_authenticity_token and hash? last_arg
+    if symbol? first_arg and hash? last_arg
       if hash_access(last_arg, :except)
-        return true
+        return first_arg.value
       end
     end
 
