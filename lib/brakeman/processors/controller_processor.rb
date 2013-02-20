@@ -46,7 +46,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
                     :public => {},
                     :private => {},
                     :protected => {},
-                    :options => {},
+                    :options => {:before_filters => []},
                     :src => exp,
                     :file => @file_name }
     @tracker.controllers[@controller[:name]] = @controller
@@ -83,9 +83,10 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
         case method
         when :include
           @controller[:includes] << class_name(first_arg) if @controller
-        when :before_filter
-          @controller[:options][:before_filters] ||= []
+        when :before_filter, :append_before_filter
           @controller[:options][:before_filters] << exp.args
+        when :prepend_before_filter
+          @controller[:options][:before_filters].unshift exp.args
         when :layout
           if string? last_arg
             #layout "some_layout"
