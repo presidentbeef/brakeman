@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 3,
         :template => 41,
-        :warning => 40 }
+        :warning => 42 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
         :template => 41,
-        :warning => 41 }
+        :warning => 43 }
     end
   end
 
@@ -914,6 +914,24 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 160,
       :message => /^User\ defined\ target\ of\ method\ invocation/,
       :confidence => 1,
+      :file => /home_controller\.rb/
+  end
+
+  def test_unsafe_reflection_constantize
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 89,
+      :message => /^Unsafe\ Reflection\ method\ constantize\ cal/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_unsafe_reflection_constantize_2
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 160,
+      :message => /^Unsafe\ Reflection\ method\ constantize\ cal/,
+      :confidence => 0,
       :file => /home_controller\.rb/
   end
 end
