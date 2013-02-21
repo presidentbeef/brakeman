@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 3,
         :template => 41,
-        :warning => 40 }
+        :warning => 41 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
         :template => 41,
-        :warning => 41 }
+        :warning => 42 }
     end
   end
 
@@ -913,6 +913,15 @@ class Rails2Tests < Test::Unit::TestCase
       :warning_type => "Dangerous Send",
       :line => 160,
       :message => /^User\ defined\ target\ of\ method\ invocation/,
+      :confidence => 1,
+      :file => /home_controller\.rb/
+  end
+
+  def test_dangerous_constantize_on_user_input
+    assert_warning :type => :warning,
+      :warning_type => "Dangerous constantize",
+      :line => 89,
+      :message => /^User\ controlled\ reflection/,
       :confidence => 1,
       :file => /home_controller\.rb/
   end
