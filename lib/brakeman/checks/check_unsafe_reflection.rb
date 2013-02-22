@@ -26,7 +26,7 @@ class Brakeman::CheckUnsafeReflection < Brakeman::BaseCheck
 
     case method
     when :constantize, :safe_constantize
-      arg = call[1]
+      arg = call.target
     else
       arg = call.first_arg
     end
