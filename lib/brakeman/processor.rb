@@ -66,6 +66,8 @@ module Brakeman
         result = HamlTemplateProcessor.new(@tracker, name, called_from, file_name).process src
       when :erubis
         result = ErubisTemplateProcessor.new(@tracker, name, called_from, file_name).process src
+      when :slim
+        result = SlimTemplateProcessor.new(@tracker, name, called_from, file_name).process src
       else
         abort "Unknown template type: #{type} (#{name})"
       end
