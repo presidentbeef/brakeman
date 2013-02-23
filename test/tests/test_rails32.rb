@@ -10,7 +10,7 @@ class Rails32Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 6,
+      :template => 10,
       :warning => 6 }
   end
 
@@ -115,6 +115,42 @@ class Rails32Tests < Test::Unit::TestCase
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
       :file => /show\.html\.erb/
+  end
+
+  def test_cross_site_scripting_in_slim_param
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /slimming\.html\.slim/
+  end
+
+  def test_cross_site_scripting_in_slim_model
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 4,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :file => /slimming\.html\.slim/
+  end
+
+  def test_cross_site_scripting_slim_partial_param
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 6,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /_slimmer\.html\.slim/
+  end
+
+  def test_cross_site_scripting_slim_partial_model
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 8,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :file => /_slimmer\.html\.slim/
   end
 
   def test_mass_assignment_default
