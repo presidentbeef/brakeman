@@ -23,7 +23,7 @@ end
 class Brakeman::Scanner
   attr_reader :options
 
-  RUBY_1_9 = !!(RUBY_VERSION =~ /^1\.9/)
+  RUBY_1_9 = !!(RUBY_VERSION >= "1.9.0")
   KNOWN_TEMPLATE_EXTENSIONS = /.*\.(erb|haml|rhtml)$/
 
   #Pass in path to the root of the Rails application
