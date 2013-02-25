@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 22,
       :controller => 4,
-      :warning => 60 }
+      :warning => 65 }
   end
 
   def test_without_protection
@@ -747,7 +747,7 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /Gemfile/
   end
 
-  def test_remove_code_execution_CVE_2013_0156_fix
+  def test_remote_code_execution_CVE_2013_0156_fix
     assert_no_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :message => /^Rails\ 3\.1\.0\ has\ a\ remote\ code\ execution\ /,
@@ -896,5 +896,51 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Session\ secret\ should\ not\ be\ included\ in/,
       :confidence => 0,
       :file => /secret_token\.rb/
+  end
+
+  def test_unsafe_reflection_constantize
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 9,
+      :message => /^Unsafe\ Reflection\ method\ constantize\ cal/,
+      :confidence => 0,
+      :file => /admin_controller\.rb/
+  end
+
+
+  def test_unsafe_reflection_safe_constantize
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 12,
+      :message => /^Unsafe\ Reflection\ method\ safe_constantiz/,
+      :confidence => 0,
+      :file => /admin_controller\.rb/
+  end
+
+  def test_unsafe_reflection_qualified_const_get
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 14,
+      :message => /^Unsafe\ Reflection\ method\ qualified_const/,
+      :confidence => 0,
+      :file => /admin_controller\.rb/
+  end
+
+
+  def test_unsafe_relection_const_get
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 16,
+      :message => /^Unsafe\ Reflection\ method\ const_get\ calle/,
+      :confidence => 0,
+      :file => /admin_controller\.rb/
+  end
+  def test_unsafe_reflection_constantize_indirect
+    assert_warning :type => :warning,
+      :warning_type => "Remote Code Execution",
+      :line => 18,
+      :message => /^Unsafe\ Reflection\ method\ constantize\ cal/,
+      :confidence => 1,
+      :file => /admin_controller\.rb/
   end
 end
