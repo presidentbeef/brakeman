@@ -366,6 +366,14 @@ module Brakeman::Util
     context
   end
 
+  def relative_path file
+    if file and not file.empty? and file.start_with? '/'
+      Pathname.new(file).relative_path_from(Pathname.new(@tracker.options[:app_path])).to_s
+    else
+      file
+    end
+  end
+
   def truncate_table str
     @terminal_width ||= if $stdin && $stdin.tty?
                           ::HighLine::SystemExtensions::terminal_size[0]
