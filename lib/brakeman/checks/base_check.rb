@@ -116,7 +116,8 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
   #Report a warning
   def warn options
-    warning = Brakeman::Warning.new(options.merge({ :check => self.class.to_s }))
+    extra_opts = { :check => self.class.to_s, :relative_file => relative_path(options[:file]) }
+    warning = Brakeman::Warning.new(options.merge(extra_opts))
     warning.file = file_for warning
 
     @warnings << warning

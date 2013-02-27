@@ -15,7 +15,7 @@ class Brakeman::Warning
     @view_name = nil
 
     [:called_from, :check, :class, :code, :confidence, :controller, :file, :line, :link_path,
-      :message, :method, :model, :template, :user_input, :warning_set, :warning_type].each do |option|
+      :message, :method, :model, :relative_path, :template, :user_input, :warning_set, :warning_type].each do |option|
 
       self.instance_variable_set("@#{option}", options[option])
     end
