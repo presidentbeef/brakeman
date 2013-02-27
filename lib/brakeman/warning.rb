@@ -1,4 +1,5 @@
 require 'multi_json'
+require 'digest/sha2'
 require 'brakeman/warning_codes'
 
 #The Warning class stores information about warnings
@@ -157,7 +158,15 @@ class Brakeman::Warning
    output
   end
 
-  def to_hash
+  def fingerprint
+    loc = self.location
+    location_string = loc && loc.sort_by { |k, v| k }.to_s
+    warning_code_string = sprintf("%03d", @warning_code)
+    code_string = @code.inspect
+    Digest::SHA2.new(256).update("#{warning_code_string}#{code_string}#{location_string}#{@relative_path}#{self.confidence}")
+  end
+
+  def location
     case @warning_set
     when :template
       location = { :type => :template, :template => self.view_name }
@@ -172,14 +181,18 @@ class Brakeman::Warning
         location = nil
       end
     end
+  end
 
+  def to_hash
     { :warning_type => self.warning_type,
+      :warning_code => @warning_code,
+      :fingerprint => self.fingerprint,
       :message => self.message,
       :file => self.file,
       :line => self.line,
       :link => self.link,
       :code => (@code && self.format_code(false)),
-      :location => location,
+      :location => self.location,
       :user_input => (@user_input && self.format_user_input(false)),
       :confidence => TEXT_CONFIDENCE[self.confidence]
     }
