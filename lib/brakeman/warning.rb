@@ -173,6 +173,7 @@ class Brakeman::Warning
       :link => self.link,
       :code => (@code && self.format_code(false)),
       :location => location,
+      :render_path => self.called_from,
       :user_input => (@user_input && self.format_user_input(false)),
       :confidence => TEXT_CONFIDENCE[self.confidence]
     }
