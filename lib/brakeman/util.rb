@@ -1,4 +1,5 @@
 require 'set'
+require 'pathname'
 
 #This is a mixin containing utility methods.
 module Brakeman::Util

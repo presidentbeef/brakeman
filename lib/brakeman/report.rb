@@ -1,6 +1,5 @@
 require 'cgi'
 require 'set'
-require 'pathname'
 require 'brakeman/processors/output_processor'
 require 'brakeman/util'
 require 'terminal-table'
