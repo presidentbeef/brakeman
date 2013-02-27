@@ -22,6 +22,7 @@ class Brakeman::CheckBasicAuth < Brakeman::BaseCheck
         if pass = get_password(call) and string? pass
           warn :controller => name,
               :warning_type => "Basic Auth", 
+              :warning_code => :basic_auth_password,
               :message => "Basic authentication password stored in source code",
               :code => call, 
               :confidence => 0

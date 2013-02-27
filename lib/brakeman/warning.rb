@@ -1,4 +1,5 @@
 require 'multi_json'
+require 'brakeman/warning_codes'
 
 #The Warning class stores information about warnings
 class Brakeman::Warning
@@ -51,6 +52,12 @@ class Brakeman::Warning
         @warning_set = :warning
       end
     end
+
+    if options[:warning_code]
+      @warning_code = Brakeman::WarningCodes.code options[:warning_code]
+    end
+
+    raise "Warning created without warning code: #{options[:warning_code]}" unless @warning_code
 
     @format_message = nil
     @row = nil
@@ -190,3 +197,4 @@ class Brakeman::Warning
     formatted
   end
 end
+

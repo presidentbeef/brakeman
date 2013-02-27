@@ -26,6 +26,7 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
       end
 
       warn :warning_type => "Cross Site Scripting",
+        :warning_code => :CVE_2011_2931,
         :message => message,
         :file => gemfile_or_environment,
         :confidence => CONFIDENCE[:high],
@@ -48,6 +49,7 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
     end
 
     warn :warning_type => "Cross Site Scripting",
+      :warning_code => :CVE_2012_3465,
       :message => message,
       :confidence => CONFIDENCE[:high],
       :file => gemfile_or_environment,

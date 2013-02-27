@@ -23,6 +23,7 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
       message = "Rails #{tracker.config[:rails_version]} has a serious JSON parsing vulnerability: upgrade to #{new_version} or patch"
 
       warn :warning_type => "Remote Code Execution",
+        :warning_code => :CVE_2013_0333,
         :message => message,
         :confidence => CONFIDENCE[:high],
         :file => gemfile_or_environment,
@@ -86,6 +87,7 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
     end
 
     warn :warning_type => warning_type,
+      :warning_code => :CVE_2013_0269,
       :message => message,
       :confidence => confidence,
       :file => gemfile_or_environment,

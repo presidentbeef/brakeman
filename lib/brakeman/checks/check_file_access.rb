@@ -65,6 +65,7 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
 
       warn :result => result,
         :warning_type => "File Access",
+        :warning_code => :file_access,
         :message => message,
         :confidence => confidence,
         :code => call,

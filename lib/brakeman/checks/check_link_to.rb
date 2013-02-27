@@ -77,6 +77,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
       add_result result
       warn :result => result,
         :warning_type => "Cross Site Scripting",
+        :warning_code => :xss_link_to,
         :message => message,
         :user_input => input.match,
         :confidence => CONFIDENCE[:high],
@@ -96,6 +97,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
 
         warn :result => result,
           :warning_type => "Cross Site Scripting",
+        :warning_code => :xss_link_to,
           :message => "Unescaped model attribute in link_to",
           :user_input => match,
           :confidence => confidence,
@@ -114,6 +116,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
 
         warn :result => result,
           :warning_type => "Cross Site Scripting",
+          :warning_code => :xss_link_to,
           :message => message,
           :user_input => @matched.match,
           :confidence => CONFIDENCE[:med],

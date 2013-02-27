@@ -27,11 +27,13 @@ class Brakeman::CheckSkipBeforeFilter < Brakeman::BaseCheck
     when :verify_authenticity_token
       warn :class => controller[:name], #ugh this should be a controller warning, too
         :warning_type => "Cross-Site Request Forgery",
+        :warning_code => :csrf_blacklist,
         :message => "Use whitelist (:only => [..]) when skipping CSRF check",
         :code => filter,
         :confidence => CONFIDENCE[:med]
     when :login_required, :authenticate_user!, :require_user
       warn :controller => controller[:name],
+        :warning_code => :auth_blacklist,
         :warning_type => "Authentication",
         :message => "Use whitelist (:only => [..]) when skipping authentication",
         :code => filter,

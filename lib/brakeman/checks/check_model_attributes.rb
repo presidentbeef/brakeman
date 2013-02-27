@@ -29,6 +29,7 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
       unless no_accessible_names.empty?
         warn :model => no_accessible_names.sort.join(", "),
           :warning_type => "Attribute Restriction",
+          :warning_code => :no_attr_accessible,
           :message => "Mass assignment is not restricted using attr_accessible",
           :confidence => CONFIDENCE[:high]
       end
@@ -36,8 +37,15 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
       unless protected_names.empty?
         message, confidence, link = check_for_attr_protected_bypass
 
+        if link
+          warning_code = :CVE_2013_0276
+        else
+          warning_code = :attr_protected_used
+        end
+
         warn :model => protected_names.sort.join(", "),
           :warning_type => "Attribute Restriction",
+          :warning_code => warning_code,
           :message => message,
           :confidence => confidence,
           :link => link
@@ -54,10 +62,17 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
         elsif not tracker.options[:ignore_attr_protected]
           message, confidence, link = check_for_attr_protected_bypass
 
+          if link
+            warning_code = :CVE_2013_0276
+          else
+            warning_code = :attr_protected_used
+          end
+
           warn :model => name,
             :file => model[:file],
             :line => model[:options][:attr_protected].first.line,
             :warning_type => "Attribute Restriction",
+            :warning_code => warning_code,
             :message => message,
             :confidence => confidence
         end
