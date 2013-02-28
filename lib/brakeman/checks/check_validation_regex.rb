@@ -68,6 +68,7 @@ class Brakeman::CheckValidationRegex < Brakeman::BaseCheck
     unless regex =~ /\A\/\\A.*\\(z|Z)\/(m|i|x|n|e|u|s|o)*\z/
       warn :model => @current_model,
       :warning_type => "Format Validation",
+      :warning_code => :validation_regex,
       :message => "Insufficient validation for '#{get_name validator}' using #{regex}. Use \\A and \\z as anchors",
       :line => value.line,
       :confidence => CONFIDENCE[:high]

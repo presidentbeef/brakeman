@@ -1,4 +1,5 @@
 require 'set'
+require 'pathname'
 
 #This is a mixin containing utility methods.
 module Brakeman::Util
@@ -364,6 +365,14 @@ module Brakeman::Util
     end
 
     context
+  end
+
+  def relative_path file
+    if file and not file.empty? and file.start_with? '/'
+      Pathname.new(file).relative_path_from(Pathname.new(@tracker.options[:app_path])).to_s
+    else
+      file
+    end
   end
 
   def truncate_table str

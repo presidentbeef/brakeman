@@ -45,6 +45,7 @@ class Brakeman::CheckYAMLLoad < Brakeman::BaseCheck
 
       warn :result => result,
         :warning_type => "Remote Code Execution",
+        :warning_code => :unsafe_deserialize,
         :message => message,
         :user_input => input.match,
         :confidence => confidence,

@@ -52,10 +52,6 @@ class Brakeman::Differ
       fixed_warning = fixed_warning.to_hash
     end
 
-    new_warning.keys.reject{|k,v| k == :line}.each do |attr|
-      return false if new_warning[attr] != fixed_warning[attr]
-    end
-
-    true
+    new_warning[:fingerprint] == fixed_warning[:fingerprint]
   end
 end

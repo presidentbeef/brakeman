@@ -48,6 +48,7 @@ class Brakeman::CheckSelectTag < Brakeman::BaseCheck
       elsif sexp? prompt_option and input = include_user_input?(prompt_option)
 
         warn :warning_type => "Cross Site Scripting",
+          :warning_code => :CVE_2012_3463,
           :result => result,
           :message => @message,
           :confidence => CONFIDENCE[:high],

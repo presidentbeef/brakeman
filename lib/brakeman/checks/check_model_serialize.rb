@@ -56,6 +56,7 @@ class Brakeman::CheckModelSerialize < Brakeman::BaseCheck
 
       warn :model => model[:name],
         :warning_type => "Remote Code Execution",
+        :warning_code => :CVE_2013_0277,
         :message => "Serialized attributes are vulnerable in Rails #{tracker.config[:rails_version]}, upgrade to #{@upgrade_version} or patch.",
         :confidence => confidence,
         :link => "https://groups.google.com/d/topic/rubyonrails-security/KtmwSbEpzrU/discussion"

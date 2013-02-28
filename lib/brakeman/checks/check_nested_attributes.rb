@@ -20,6 +20,7 @@ class Brakeman::CheckNestedAttributes < Brakeman::BaseCheck
       end
 
       warn :warning_type => "Nested Attributes",
+        :warning_code => :CVE_2010_3933,
         :message => message,
         :confidence => CONFIDENCE[:high],
         :file => gemfile_or_environment,

@@ -11,6 +11,7 @@ class Brakeman::CheckResponseSplitting < Brakeman::BaseCheck
     if version_between?('2.3.0', '2.3.13')
 
       warn :warning_type => "Response Splitting",
+        :warning_code => :CVE_2011_3186,
         :message => "Versions before 2.3.14 have a vulnerability content type handling allowing injection of headers: CVE-2011-3186",
         :confidence => CONFIDENCE[:med],
         :file => gemfile_or_environment,

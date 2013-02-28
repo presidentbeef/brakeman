@@ -51,6 +51,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
 
       warn :result => result,
         :warning_type => "Command Injection", 
+        :warning_code => :command_injection,
         :message => "Possible command injection",
         :code => call,
         :user_input => failure.match,
@@ -84,6 +85,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     end
 
     warning = { :warning_type => "Command Injection",
+      :warning_code => :command_injection,
       :message => "Possible command injection",
       :code => exp,
       :user_input => user_input,

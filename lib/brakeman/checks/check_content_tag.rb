@@ -107,6 +107,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
 
       warn :result => result,
         :warning_type => "Cross Site Scripting", 
+        :warning_code => :xss_content_tag,
         :message => message,
         :user_input => input.match,
         :confidence => CONFIDENCE[:high],
@@ -126,6 +127,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
 
         warn :result => result,
           :warning_type => "Cross Site Scripting", 
+          :warning_code => :xss_content_tag,
           :message => "Unescaped model attribute in content_tag",
           :user_input => match,
           :confidence => confidence,
@@ -155,6 +157,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
 
       warn :result => result, 
         :warning_type => "Cross Site Scripting", 
+        :warning_code => :xss_content_tag,
         :message => message,
         :user_input => @matched.match,
         :confidence => CONFIDENCE[:med],

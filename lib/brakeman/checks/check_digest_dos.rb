@@ -25,6 +25,7 @@ class Brakeman::CheckDigestDoS < Brakeman::BaseCheck
     end
 
     warn :warning_type => "Denial of Service",
+      :warning_code => :CVE_2012_3424,
       :message => message,
       :confidence => confidence,
       :link_path => "https://groups.google.com/d/topic/rubyonrails-security/vxJjrc15qYM/discussion",

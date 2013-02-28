@@ -17,10 +17,11 @@ class JSONOutputTests < Test::Unit::TestCase
   end
 
   def test_for_expected_warning_keys
-    expected = ["warning_type", "message", "file", "link", "code", "location", "render_path", "user_input", "confidence", "line"]
+    expected = ["warning_type", "message", "file", "link", "code", "location",
+      "render_path", "user_input", "confidence", "line", "warning_code", "fingerprint"]
 
     @json["warnings"].each do |warning|
-      assert (warning.keys - expected).empty?, "#{warning.keys - expected} did not match expected keys"
+      assert (warning.keys - expected).empty?, "#{(warning.keys - expected).inspect} did not match expected keys"
     end
   end
 
