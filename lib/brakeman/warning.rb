@@ -58,7 +58,7 @@ class Brakeman::Warning
       @warning_code = Brakeman::WarningCodes.code options[:warning_code]
     end
 
-    raise "Warning created without warning code: #{options[:warning_code]}" unless @warning_code
+    Brakeman.debug("Warning created without warning code: #{options[:warning_code]}") unless @warning_code
 
     @format_message = nil
     @row = nil
