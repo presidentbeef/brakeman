@@ -91,9 +91,11 @@ class Brakeman::Report
     if html
       load_and_render_erb('warning_overview', binding)
     else
-      Terminal::Table.new(:headings => ['Warning Type', 'Total']) do |t|
-        types.sort.each do |warning_type|
-          t.add_row [warning_type, warnings_summary[warning_type]]
+      unless types.empty?
+        Terminal::Table.new(:headings => ['Warning Type', 'Total']) do |t|
+          types.sort.each do |warning_type|
+            t.add_row [warning_type, warnings_summary[warning_type]]
+          end
         end
       end
     end
@@ -140,11 +142,7 @@ class Brakeman::Report
     if html
       load_and_render_erb('security_warnings', binding)
     else
-      if warning_messages.empty?
-        Terminal::Table.new(:headings => ['General Warnings']) do |t|
-          t.add_row ['[NONE]']
-        end
-      else
+      unless warning_messages.empty?
         Terminal::Table.new(:headings => ["Confidence", "Class", "Method", "Warning Type", "Message"]) do |t|
           warning_messages.each do |row|
             t.add_row [row["Confidence"], row["Class"], row["Method"], row["Warning Type"], row["Message"]]
