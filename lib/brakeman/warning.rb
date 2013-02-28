@@ -160,10 +160,10 @@ class Brakeman::Warning
 
   def fingerprint
     loc = self.location
-    location_string = loc && loc.sort_by { |k, v| k }.to_s
+    location_string = loc && loc.sort_by { |k, v| k.to_s }.to_s
     warning_code_string = sprintf("%03d", @warning_code)
     code_string = @code.inspect
-    Digest::SHA2.new(256).update("#{warning_code_string}#{code_string}#{location_string}#{@relative_path}#{self.confidence}")
+    Digest::SHA2.new(256).update("#{warning_code_string}#{code_string}#{location_string}#{@relative_path}#{self.confidence}").to_s
   end
 
   def location
