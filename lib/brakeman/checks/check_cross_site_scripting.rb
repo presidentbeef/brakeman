@@ -110,6 +110,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
       warn :template => @current_template,
         :warning_type => "Cross Site Scripting",
+        :warning_code => :cross_site_scripting,
         :message => message,
         :code => input.match,
         :confidence => CONFIDENCE[:high]
@@ -132,14 +133,18 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
         message = "Unescaped model attribute"
         link_path = "cross_site_scripting"
+        warning_code = :cross_site_scripting
+
         if node_type?(out, :call, :attrasgn) && out.method == :to_json
           message += " in JSON hash"
           link_path += "_to_json"
+          warning_code = :xss_to_json
         end
 
         code = find_chain out, match
         warn :template => @current_template,
           :warning_type => "Cross Site Scripting",
+          :warning_code => warning_code,
           :message => message,
           :code => code,
           :confidence => confidence,
@@ -209,6 +214,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
           warn :template => @current_template,
             :warning_type => "Cross Site Scripting",
+            :warning_code => :xss_to_json,
             :message => message,
             :code => exp,
             :user_input => @matched.match,

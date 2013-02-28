@@ -21,6 +21,7 @@ class Brakeman::CheckMailTo < Brakeman::BaseCheck
 
       warn :result => result,
         :warning_type => "Mail Link",
+        :warning_code => :CVE_2011_0446,
         :message => message,
         :confidence => CONFIDENCE[:high],
         :file => gemfile_or_environment,

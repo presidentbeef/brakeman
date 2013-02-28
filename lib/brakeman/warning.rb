@@ -1,4 +1,6 @@
 require 'multi_json'
+require 'digest/sha2'
+require 'brakeman/warning_codes'
 
 #The Warning class stores information about warnings
 class Brakeman::Warning
@@ -14,7 +16,7 @@ class Brakeman::Warning
     @view_name = nil
 
     [:called_from, :check, :class, :code, :confidence, :controller, :file, :line, :link_path,
-      :message, :method, :model, :template, :user_input, :warning_set, :warning_type].each do |option|
+      :message, :method, :model, :relative_path, :template, :user_input, :warning_set, :warning_type].each do |option|
 
       self.instance_variable_set("@#{option}", options[option])
     end
@@ -51,6 +53,12 @@ class Brakeman::Warning
         @warning_set = :warning
       end
     end
+
+    if options[:warning_code]
+      @warning_code = Brakeman::WarningCodes.code options[:warning_code]
+    end
+
+    Brakeman.debug("Warning created without warning code: #{options[:warning_code]}") unless @warning_code
 
     @format_message = nil
     @row = nil
@@ -150,7 +158,15 @@ class Brakeman::Warning
    output
   end
 
-  def to_hash
+  def fingerprint
+    loc = self.location
+    location_string = loc && loc.sort_by { |k, v| k.to_s }.to_s
+    warning_code_string = sprintf("%03d", @warning_code)
+    code_string = @code.inspect
+    Digest::SHA2.new(256).update("#{warning_code_string}#{code_string}#{location_string}#{@relative_path}#{self.confidence}").to_s
+  end
+
+  def location
     case @warning_set
     when :template
       location = { :type => :template, :template => self.view_name }
@@ -165,14 +181,18 @@ class Brakeman::Warning
         location = nil
       end
     end
+  end
 
+  def to_hash
     { :warning_type => self.warning_type,
+      :warning_code => @warning_code,
+      :fingerprint => self.fingerprint,
       :message => self.message,
       :file => self.file,
       :line => self.line,
       :link => self.link,
       :code => (@code && self.format_code(false)),
-      :location => location,
+      :location => self.location,
       :user_input => (@user_input && self.format_user_input(false)),
       :confidence => TEXT_CONFIDENCE[self.confidence]
     }
@@ -190,3 +210,4 @@ class Brakeman::Warning
     formatted
   end
 end
+

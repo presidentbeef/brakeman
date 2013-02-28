@@ -25,6 +25,7 @@ class Brakeman::CheckYAMLParsing < Brakeman::BaseCheck
       message = "Rails #{tracker.config[:rails_version]} has a remote code execution vulnerability: upgrade to #{new_version} or disable XML parsing"
 
       warn :warning_type => "Remote Code Execution",
+        :warning_code => :CVE_2013_0156,
         :message => message,
         :confidence => CONFIDENCE[:high],
         :file => gemfile_or_environment,
@@ -36,6 +37,7 @@ class Brakeman::CheckYAMLParsing < Brakeman::BaseCheck
       message = "Parsing YAML request parameters enables remote code execution: disable YAML parser"
 
       warn :warning_type => "Remote Code Execution",
+        :warning_code => :CVE_2013_0156,
         :message => message,
         :confidence => CONFIDENCE[:high],
         :file => gemfile_or_environment,

@@ -30,6 +30,7 @@ class Brakeman::CheckSingleQuotes < Brakeman::BaseCheck
     end
 
     warn :warning_type => "Cross Site Scripting",
+      :warning_code => :CVE_2012_3464,
       :message => message,
       :confidence => CONFIDENCE[:med],
       :file => gemfile_or_environment,

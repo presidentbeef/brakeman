@@ -29,6 +29,7 @@ class Brakeman::CheckTranslateBug < Brakeman::BaseCheck
       end
 
       warn :warning_type => "Cross Site Scripting",
+        :warning_code => :translate_vuln,
         :message => message,
         :confidence => confidence,
         :file => gemfile_or_environment,

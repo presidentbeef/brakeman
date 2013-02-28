@@ -73,6 +73,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
       
       warn :result => res, 
         :warning_type => "Mass Assignment", 
+        :warning_code => :mass_assign_call,
         :message => "Unprotected mass assignment",
         :code => call, 
         :user_input => user_input,
