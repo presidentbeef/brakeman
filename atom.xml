@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2013-03-01T11:53:15-08:00</updated>
+  <updated>2013-03-01T12:19:06-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -36,6 +36,8 @@
 
 
 &lt;h3&gt;Warning Fingerprints and New Identifiers&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;This is a breaking change: &lt;code&gt;brakeman --compare&lt;/code&gt; will not work with reports generated from earlier versions.&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;Tracking of new and fixed warnings is often required when integrating Brakeman with other tools. Current approaches rely on fragile values such as the warning messages or formatting of the code output.&lt;/p&gt;
 

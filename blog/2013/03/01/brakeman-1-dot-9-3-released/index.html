@@ -140,6 +140,8 @@
 
 <h3>Warning Fingerprints and New Identifiers</h3>
 
+<p><em>This is a breaking change: <code>brakeman --compare</code> will not work with reports generated from earlier versions.</em></p>
+
 <p>Tracking of new and fixed warnings is often required when integrating Brakeman with other tools. Current approaches rely on fragile values such as the warning messages or formatting of the code output.</p>
 
 <p>Additionally, warnings are grouped into large categories, such as &#8220;SQL Injection&#8221;. Sometimes more fine-grained categorization is required that does not rely on a value intended for display that may need to changed.</p>
