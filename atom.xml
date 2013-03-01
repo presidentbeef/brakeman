@@ -4,13 +4,149 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2013-02-13T16:50:42-08:00</updated>
+  <updated>2013-03-01T11:53:15-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 1.9.3 Released</title>
+    <link href="http://brakemanscanner.org/blog/2013/03/01/brakeman-1-dot-9-3-released/"/>
+    <updated>2013-03-01T09:22:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2013/03/01/brakeman-1-dot-9-3-released</id>
+    <content type="html">&lt;p&gt;&lt;em&gt;Changes since 1.9.2&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add warning fingerprints&lt;/li&gt;
+&lt;li&gt;Add check for unsafe reflection (&lt;a href=&quot;https://github.com/gquadros&quot;&gt;Gabriel Quadros&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add support for Slim templates (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/214&quot;&gt;#214&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add check for skipping authentication methods with blacklist (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/199&quot;&gt;#199&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add render path to JSON report&lt;/li&gt;
+&lt;li&gt;Remove empty tables from reports (&lt;a href=&quot;https://github.com/obduk&quot;&gt;Owen Ben Davies&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Handle &lt;code&gt;prepend/append_before_filter&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Performance improvements when handling branches&lt;/li&gt;
+&lt;li&gt;Fix processing of &lt;code&gt;production.rb&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/264&quot;&gt;#264&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Fix version check for Ruby 2.0&lt;/li&gt;
+&lt;li&gt;Expand HAML dependency to include 4.0 (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/263&quot;&gt;#263&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Scroll errors into view when expanding in HTML report&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Warning Fingerprints and New Identifiers&lt;/h3&gt;
+
+&lt;p&gt;Tracking of new and fixed warnings is often required when integrating Brakeman with other tools. Current approaches rely on fragile values such as the warning messages or formatting of the code output.&lt;/p&gt;
+
+&lt;p&gt;Additionally, warnings are grouped into large categories, such as &quot;SQL Injection&quot;. Sometimes more fine-grained categorization is required that does not rely on a value intended for display that may need to changed.&lt;/p&gt;
+
+&lt;p&gt;With these two issues in mind, warnings now have a &quot;warning code&quot; and a &quot;fingerprint&quot;. Warning codes are integers which will never change and provide more specific categorization of warnings. For example, each CVE has a separate code. This should make tracking and sorting warnings easier, but also allow for fixes to warning category names in the future.&lt;/p&gt;
+
+&lt;p&gt;The warning fingerprint is a SHA256 hash of five values:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Warning code&lt;/li&gt;
+&lt;li&gt;S-expression of code that caused the warning&lt;/li&gt;
+&lt;li&gt;Location (i.e., template name or class/method)&lt;/li&gt;
+&lt;li&gt;Relative file path&lt;/li&gt;
+&lt;li&gt;Confidence level&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;Note that line numbers are &lt;em&gt;not&lt;/em&gt; included. Identical warnings on different lines will have the same fingerprint. External tools can make the decision for how to handle this situation.&lt;/p&gt;
+
+&lt;p&gt;Warning fingerprints allow quick comparison of warnings (either by fingerprint, or fingerprint + line number) but are also less fragile than existing approaches. The fingerprint will not change if the warning category (meant for display) changes, if the formatting of the code changes, or if the line number changes (e.g., some blank lines are added at the top of a file).&lt;/p&gt;
+
+&lt;p&gt;If there are any issues with fingerprints, please report them before Brakeman 2.0!&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/280&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Check for Unsafe Constant Creation&lt;/h3&gt;
+
+&lt;p&gt;Gabriel Quadros has contributed a check for methods that create constants (usually classes) from user input. &lt;a href=&quot;http://blog.conviso.com.br/2013/02/exploiting-unsafe-reflection-in.html&quot;&gt;His blog post&lt;/a&gt; on the subject provides a good explanation of why this should be considered very dangerous.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/274&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Support for Slim&lt;/h3&gt;
+
+&lt;p&gt;Support for templates using &lt;a href=&quot;http://slim-lang.com/&quot;&gt;Slim&lt;/a&gt; is now here! This should be considered experimental, as it has not yet been tested on a wide set of applications. Also, thanks &lt;a href=&quot;https://github.com/tubaxenor&quot;&gt;tubaxenor&lt;/a&gt; for reporting a require issue with this change.&lt;/p&gt;
+
+&lt;p&gt;Please report any issues, especially false negatives!&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/271&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Check for Skipping of Authentication Methods&lt;/h3&gt;
+
+&lt;p&gt;The check for &lt;code&gt;skip_before_filter&lt;/code&gt;s using &lt;code&gt;except&lt;/code&gt; instead of &lt;code&gt;only&lt;/code&gt; has been expanded to include authentication filters from popular libraries.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/268&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Render Paths in JSON Reports&lt;/h3&gt;
+
+&lt;p&gt;In HTML reports, templates which have a render path longer than one entry have been &quot;expandable&quot; to show the entire render path instead of just one level up. For example, a partial is usually rendered from a view, which is rendered from a controller action.&lt;/p&gt;
+
+&lt;p&gt;JSON reports now also include this information in the &lt;code&gt;render_path&lt;/code&gt; value.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/279&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;No Empty Report Tables&lt;/h3&gt;
+
+&lt;p&gt;Owen Ben Davies contributed a patch to hide empty warning tables in the text and HTML reports. Looks much cleaner, thanks Owen!&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/282&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Handle (Pre|Ap)pended Filters&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will now recognize before filters added with &lt;code&gt;prepend_before_filter&lt;/code&gt; and &lt;code&gt;append_before_filter&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/266&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Branching Performance Improvements&lt;/h3&gt;
+
+&lt;p&gt;It is entirely embarrassing, but Brakeman stopped working on Redmine some time ago due to how assignments in &lt;code&gt;if&lt;/code&gt; expressions are handled.&lt;/p&gt;
+
+&lt;p&gt;In order to be somewhat flow sensitive, Brakeman combines variables assignments in &lt;code&gt;if&lt;/code&gt; branches into &lt;code&gt;or&lt;/code&gt; expressions. This captures the possible values a variable may have. However, Brakeman was doing that for &lt;em&gt;every&lt;/em&gt; assignment in an &lt;code&gt;if&lt;/code&gt; branch, even if there were multiple assignments to the same variable in the same branch (i.e., the value was not actually branching since the assignments were sequential). This release fixes that issue.&lt;/p&gt;
+
+&lt;p&gt;Additionally, simple arithmetic operations are now distributed across &lt;code&gt;or&lt;/code&gt; expressions containing simple values (strings or numbers at this point), providing some memory savings.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/270&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Fix Processing of Production Environment Settings&lt;/h3&gt;
+
+&lt;p&gt;Processing of &lt;code&gt;production.rb&lt;/code&gt; has been broken for some time, but poor test coverage meant it went unnoticed. But it is fixed now, so settings in &lt;code&gt;production.rb&lt;/code&gt; should override those found in &lt;code&gt;environment.rb&lt;/code&gt;. This only applies to Rails 3 applications.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/265&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Fix Version Check for Ruby 2.0&lt;/h3&gt;
+
+&lt;p&gt;Brakeman appears to work fine with Ruby 2.0, but the version check for Ruby 1.9 (which affected some behavior and checks) needed to be modified to include 2.0. Definitely report any issues with Ruby 2.0!&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/277&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Allow HAML 4.0&lt;/h3&gt;
+
+&lt;p&gt;There appear to be no changes in HAML 4.0 that affect Brakeman, so the gem dependency has been expanded to include the 4.x series.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/269&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Fix Error Show/Hide in HTML Report&lt;/h3&gt;
+
+&lt;p&gt;Now clicking on &quot;Exceptions&quot; to show or hide scan errors will keep the errors in view.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/267&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Report Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+
+&lt;h3&gt;Roadmap&lt;/h3&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/Roadmap&quot;&gt;Brakeman roadmap&lt;/a&gt; has one more release (1.9.2) planned before 2.0. The next release will likely only include bug and false positive fixes. Brakeman 2.0 will &lt;em&gt;definitely&lt;/em&gt; include breaking changes, especially for JSON reports.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 1.9.2 Released</title>
@@ -1534,36 +1670,6 @@ puts clean(x)
 &lt;h3&gt;Issues?&lt;/h3&gt;
 
 &lt;p&gt;As usual, please report any issues on &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;GitHub&lt;/a&gt;, send a tweet to &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@Brakeman&lt;/a&gt;, or send an email to the &lt;a href=&quot;http://librelist.com/browser/brakeman/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 1.2.2 Released</title>
-    <link href="http://brakemanscanner.org/blog/2012/01/26/brakeman-1-dot-2-2-released/"/>
-    <updated>2012-01-26T13:58:00-08:00</updated>
-    <id>http://brakemanscanner.org/blog/2012/01/26/brakeman-1-dot-2-2-released</id>
-    <content type="html">&lt;p&gt;&lt;em&gt;Changes since 1.2.1:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;--no-progress works again&lt;/li&gt;
-&lt;li&gt;Make CheckLinkTo a separate check&lt;/li&gt;
-&lt;li&gt;Don't fail on unknown options to resource(s)&lt;/li&gt;
-&lt;li&gt;Handle empty resource(s) blocks&lt;/li&gt;
-&lt;li&gt;Add RescanReport#existing_warnings&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;No Progress Option&lt;/h3&gt;
-
-&lt;p&gt;The last release broke the &lt;code&gt;--no-progress&lt;/code&gt; option for hiding the &lt;code&gt;1/100 files processed&lt;/code&gt; type messages. Now it works again!&lt;/p&gt;
-
-&lt;h3&gt;Separate Check for link_to&lt;/h3&gt;
-
-&lt;p&gt;For no great reason, &lt;code&gt;CheckLinkTo&lt;/code&gt; was bundled with &lt;code&gt;CheckCrossSiteScripting&lt;/code&gt;. It has now been moved out to a separate file, allowing it to be treated as a regular check. This means it can be explicitly skipped using &lt;code&gt;-x CheckLinkTo&lt;/code&gt; (if desired).&lt;/p&gt;
-
-&lt;h3&gt;Better Rails 2 Route Handling&lt;/h3&gt;
-
-&lt;p&gt;Brakeman was raising an exception if a hash option to &lt;code&gt;resource&lt;/code&gt; or &lt;code&gt;resources&lt;/code&gt; did not match a set of known options. Now it will only warn instead of aborting route processing.&lt;/p&gt;
 </content>
   </entry>
   

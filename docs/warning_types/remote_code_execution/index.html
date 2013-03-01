@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Nested Attributes (CVE-2010-3933)</title>
+  <title>Brakeman - Rails Security Scanner: Remote Code Execution</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/CVE-2010-3933/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/remote_code_execution/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -102,14 +102,16 @@
 <article>
   
   <header>
-    <h1 class="entry-title">Nested Attributes (CVE-2010-3933)</h1>
+    <h1 class="entry-title">Remote Code Execution</h1>
   </header>
   
-  <p>Rails 2.3.9 and 3.0.0 are vulnerable to an attack on nested attributes wherein a malicious user could alter data in any record in the system.</p>
+  <p>Brakeman reports on several cases of remote code execution, in which a user is able to control and execute code in ways unintended by application authors.</p>
 
-<p>It is recommended to upgrade to at least 2.3.10 or 3.0.1.</p>
+<p>The obvious form of this is the use of <code>eval</code> with user input.</p>
 
-<p>For more details see <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/f9f913d328dafe0c">CVE-2011-0446</a>.</p>
+<p>However, Brakeman also reports on dangerous uses of <code>send</code>, <code>constantize</code>, and other methods which allow creation of arbitrary objects or calling of arbitrary methods.</p>
+
+<p>Please see <a href="http://blog.conviso.com.br/2013/02/exploiting-unsafe-reflection-in.html">this blog post</a> about the dangers of <code>constantize</code> and related methods.</p>
 
 <hr />
 

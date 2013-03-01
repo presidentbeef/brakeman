@@ -141,8 +141,12 @@
         <lastmod>2013-02-13T16:43:17-08:00</lastmod>
     </url>
     <url>
+        <loc>http://brakemanscanner.org/blog/2013/03/01/brakeman-1-dot-9-3-released/</loc>
+        <lastmod>2013-03-01T11:18:15-08:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/blog/archives/</loc>
-        <lastmod>2013-02-13T16:43:17-08:00</lastmod>
+        <lastmod>2013-03-01T11:18:15-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/contact/</loc>
@@ -242,7 +246,11 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/attribute_restriction/</loc>
-        <lastmod>2013-01-18T17:20:34-08:00</lastmod>
+        <lastmod>2013-03-01T11:42:09-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/authentication_whitelist/</loc>
+        <lastmod>2013-03-01T11:38:09-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/basic_auth/</loc>
@@ -322,7 +330,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/</loc>
-        <lastmod>2013-02-08T09:20:57-08:00</lastmod>
+        <lastmod>2013-03-01T11:32:38-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/link_to/</loc>
@@ -345,6 +353,10 @@
         <lastmod>2012-09-11T10:19:14-07:00</lastmod>
     </url>
     <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/remote_code_execution/</loc>
+        <lastmod>2013-03-01T11:29:41-08:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/docs/warning_types/remote_code_execution_yaml_load/</loc>
         <lastmod>2013-01-18T17:23:11-08:00</lastmod>
     </url>
@@ -362,6 +374,6 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/</loc>
-        <lastmod>2013-02-13T16:43:17-08:00</lastmod>
+        <lastmod>2013-03-01T11:18:15-08:00</lastmod>
     </url>
 </urlset>
