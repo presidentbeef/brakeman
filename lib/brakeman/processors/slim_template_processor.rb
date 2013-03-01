@@ -1,4 +1,5 @@
 require 'brakeman/processors/template_processor'
+require 'brakeman/processors/lib/render_helper'
 
 class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
   include Brakeman::RenderHelper
