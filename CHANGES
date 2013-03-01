@@ -1,3 +1,18 @@
+# 1.9.3
+ 
+ * Add render path to JSON report
+ * Add warning fingerprints
+ * Add check for unsafe reflection (Gabriel Quadros)
+ * Add check for skipping authentication methods with blacklist
+ * Add support for Slim templates
+ * Remove empty tables from reports (Owen Ben Davies)
+ * Handle `prepend/append_before_filter`
+ * Performance improvements when handling branches
+ * Fix processing of `production.rb`
+ * Fix version check for Ruby 2.0
+ * Expand HAML dependency to include 4.0
+ * Scroll errors into view when expanding in HTML report
+
 # 1.9.2
 
  * Add check for CVE-2013-0269
