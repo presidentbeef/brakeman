@@ -1,6 +1,5 @@
 <h2>Security Warnings</h2>  
 <table>
-<% if warning_messages.any? %>
   <tr>
     <th>Confidence</th>
     <th>Class</th>
@@ -17,12 +16,4 @@
     <td><%= warning['Message']%></td>
   </tr>
   <% end %>
-<% else %>
-  <tr>
-    <th>General Warnings</th>
-  </tr>
-  <tr>
-    <td>[NONE]</td>
-  </tr>
-<% end %>
 </table>
