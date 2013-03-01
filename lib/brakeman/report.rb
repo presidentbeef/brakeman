@@ -88,10 +88,10 @@ class Brakeman::Report
     types = warnings_summary.keys
     types.delete :high_confidence
 
-    if html
-      load_and_render_erb('warning_overview', binding)
-    else
-      unless types.empty?
+    unless types.empty?
+      if html
+        load_and_render_erb('warning_overview', binding)
+      else
         Terminal::Table.new(:headings => ['Warning Type', 'Total']) do |t|
           types.sort.each do |warning_type|
             t.add_row [warning_type, warnings_summary[warning_type]]
@@ -139,10 +139,10 @@ class Brakeman::Report
     stabilizer = 0
     warning_messages = warning_messages.sort_by{|row| stabilizer += 1; [row['Confidence'], row['Warning Type'], row['Class'], stabilizer]}
 
-    if html
-      load_and_render_erb('security_warnings', binding)
-    else
-      unless warning_messages.empty?
+    unless warning_messages.empty?
+      if html
+        load_and_render_erb('security_warnings', binding)
+      else
         Terminal::Table.new(:headings => ["Confidence", "Class", "Method", "Warning Type", "Message"]) do |t|
           warning_messages.each do |row|
             t.add_row [row["Confidence"], row["Class"], row["Method"], row["Warning Type"], row["Message"]]
@@ -353,7 +353,7 @@ class Brakeman::Report
   def to_html
     out = html_header <<
     generate_overview(true) <<
-    generate_warning_overview(true)
+    generate_warning_overview(true).to_s
 
     # Return early if only summarizing
     if tracker.options[:summary_only]
