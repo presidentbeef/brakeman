@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 3,
         :template => 41,
-        :warning => 42 }
+        :warning => 40 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
         :template => 41,
-        :warning => 43 }
+        :warning => 41 }
     end
   end
 
@@ -753,7 +753,7 @@ class Rails2Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /home_controller\.rb/
 
-    assert_warning :type => :warning,
+    assert_no_warning :type => :warning,
       :warning_type => "Dangerous Send",
       :line => 90,
       :message => /\AUser defined target of method invocation/,
@@ -909,7 +909,7 @@ class Rails2Tests < Test::Unit::TestCase
   end
 
   def test_dangerous_try_on_user_input
-    assert_warning :type => :warning,
+    assert_no_warning :type => :warning,
       :warning_type => "Dangerous Send",
       :line => 160,
       :message => /^User\ defined\ target\ of\ method\ invocation/,
