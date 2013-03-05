@@ -81,4 +81,38 @@ class DifferTests < Test::Unit::TestCase
     assert_new 0
     assert_fixed 0
   end
+
+  def test_new_vs_old_warning_keys_same_warnings
+    new_keys = [:warning_code, :fingerprint, :render_path]
+
+    new = @warnings
+    old = @warnings.map do |warning|
+      warning.to_hash.reject do |k, v|
+        new_keys.include? k
+      end
+    end
+
+    diff new, old
+    assert_fixed 0
+    assert_new 0
+  end
+
+  def test_new_vs_old_warning_keys_changed_warning
+    new_keys = [:warning_code, :fingerprint, :render_path]
+
+    new = @warnings
+    old = @warnings.map do |warning|
+      warning.to_hash.reject do |k, v|
+        new_keys.include? k
+      end
+    end
+
+    changed = new.pop.to_hash
+    changed[:message] += "message has changed!"
+    new << changed #check for new warning with different message
+
+    diff new, old
+    assert_fixed 1
+    assert_new 1
+  end
 end
