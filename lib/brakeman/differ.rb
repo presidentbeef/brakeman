@@ -2,6 +2,7 @@
 # an array of Brakeman::Warnings or plain hash representations.  
 class Brakeman::Differ
   DEFAULT_HASH = {:new => [], :fixed => []}
+  OLD_WARNING_KEYS = [:warning_type, :location, :code, :message, :file, :link, :confidence, :user_input]
   attr_reader :old_warnings, :new_warnings
 
   def initialize new_warnings, old_warnings
@@ -52,6 +53,14 @@ class Brakeman::Differ
       fixed_warning = fixed_warning.to_hash
     end
 
-    new_warning[:fingerprint] == fixed_warning[:fingerprint]
+    if new_warning[:fingerprint] and fixed_warning[:fingerprint]
+      new_warning[:fingerprint] == fixed_warning[:fingerprint]
+    else
+     OLD_WARNING_KEYS.each do |attr|
+        return false if new_warning[attr] != fixed_warning[attr]
+      end
+
+      true
+    end
   end
 end
