@@ -32,9 +32,10 @@ class TestReportGeneration < Test::Unit::TestCase
   end
 
   def test_text_sanity
-    skip "Highline broken on JRuby" if RUBY_PLATFORM == "java"
-    report = Report.to_s
+    unless RUBY_PLATFORM == "java"
+      report = Report.to_s
 
-    assert report.is_a? String
+      assert report.is_a? String
+    end
   end
 end
