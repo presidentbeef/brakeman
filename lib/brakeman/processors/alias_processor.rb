@@ -63,7 +63,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
     #Generic replace
     if replacement = env[exp] and not duplicate? replacement
-      result = set_line replacement.deep_clone, exp.line
+      result = replacement.deep_clone(exp.line)
     else
       result = exp
     end
@@ -578,20 +578,6 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
 
     meth_env
-  end
-
-  #Set line nunber for +exp+ and every Sexp it contains. Used when replacing
-  #expressions, so warnings indicate the correct line.
-  def set_line exp, line_number
-    if sexp? exp
-      exp.original_line(exp.original_line || exp.line)
-      exp.line line_number
-      exp.each do |e|
-        set_line e, line_number
-      end
-    end
-
-    exp
   end
 
   #Finds the inner most call target which is not the target of a call to <<
