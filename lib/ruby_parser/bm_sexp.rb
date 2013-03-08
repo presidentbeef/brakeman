@@ -14,6 +14,30 @@ class Sexp
     raise NoMethodError.new("No method '#{name}' for Sexp", name, args)
   end
 
+  #Create clone of Sexp and nested Sexps but not their non-Sexp contents.
+  #If a line number is provided, also sets line/original_line on all Sexps.
+  def deep_clone line = nil
+    s = Sexp.new
+
+    self.each do |e|
+      if e.is_a? Sexp
+        s << e.deep_clone(line)
+      else
+        s << e
+      end
+    end
+
+    if line
+      s.original_line(self.original_line || self.line)
+      s.line(line)
+    else
+      s.original_line(self.original_line)
+      s.line(self.line)
+    end
+
+    s
+  end
+
   def paren
     @paren ||= false
   end
