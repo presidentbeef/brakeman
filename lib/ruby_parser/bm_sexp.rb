@@ -3,6 +3,7 @@
 #of a Sexp.
 class Sexp
   attr_reader :paren
+  attr_accessor :original_line
   ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cdecl, :or, :and, :colon2]
 
   def method_missing name, *args
@@ -28,10 +29,10 @@ class Sexp
     end
 
     if line
-      s.original_line(self.original_line || self.line)
+      s.original_line = self.original_line || self.line
       s.line(line)
     else
-      s.original_line(self.original_line)
+      s.original_line = self.original_line
       s.line(self.line)
     end
 
@@ -77,27 +78,12 @@ class Sexp
   alias :old_fara :find_and_replace_all
   alias :old_find_node :find_node
 
-  def original_line line = nil
-    if line
-      @my_hash_value = nil
-      @original_line = line
-      self
-    else
-      @original_line ||= nil
-    end
-  end
-
   def hash
     #There still seems to be some instances in which the hash of the
     #Sexp changes, but I have not found what method call is doing it.
     #Of course, Sexp is subclasses from Array, so who knows what might
     #be going on.
     @my_hash_value ||= super
-  end
-
-  def line num = nil
-    @my_hash_value = nil if num
-    old_line(num)
   end
 
   def line= *args

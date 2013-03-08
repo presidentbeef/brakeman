@@ -28,7 +28,7 @@ class Brakeman::FindReturnValue
   def get_return_value exp, env = nil
     process_method exp, env
     value = make_return_value
-    value.original_line(exp.line)
+    value.original_line = exp.line
     value
   end
 
@@ -91,7 +91,7 @@ class Brakeman::FindReturnValue
 
         if true_branch and false_branch
           value = make_or(true_branch, false_branch)
-          value.original_line(value.rhs.line)
+          value.original_line = value.rhs.line
           value
         else #Unlikely?
           true_branch or false_branch
@@ -102,7 +102,7 @@ class Brakeman::FindReturnValue
     when :return
       exp.value
     else
-      exp.original_line(exp.line) unless exp.original_line
+      exp.original_line = exp.line unless exp.original_line
       exp
     end
   end
