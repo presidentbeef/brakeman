@@ -6,6 +6,9 @@ class TestReportGeneration < Test::Unit::TestCase
 
     assert report.is_a? String
     assert report.match(/\A<!DOCTYPE HTML SYSTEM>.*<\/html>\z/m)
+    report.scan(/<a[^>]+>/).each do |a|
+      assert a.include?("no-referrer"), "#{a} does not include 'no-referrer'"
+    end
   end
 
   def test_json_sanity
