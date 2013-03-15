@@ -639,7 +639,7 @@ HEADER
   end
 
   def with_link warning, message
-    "<a href=\"#{warning.link}\">#{message}</a>"
+    "<a rel=\"no-referrer\" href=\"#{warning.link}\">#{message}</a>"
   end
 
   #Generated tab-separated output suitable for the Jenkins Brakeman Plugin:
