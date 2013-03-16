@@ -211,11 +211,19 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     #ActiveRecord::Base in an initializer.
     if not @mass_assign_disabled and version_between?("3.1.0", "3.9.9") and tracker.config[:gems][:strong_parameters]
       matches = tracker.check_initializers([], :include)
+      forbidden_protection = Sexp.new(:colon2, Sexp.new(:const, :ActiveModel), :ForbiddenAttributesProtection)
 
       matches.each do |result|
-        call = result.call
-        if call? call
-          if call.first_arg == Sexp.new(:colon2, Sexp.new(:const, :ActiveModel), :ForbiddenAttributesProtection)
+        if call? result.call and result.call.first_arg == forbidden_protection
+          @mass_assign_disabled = true
+        end
+      end
+
+      unless @mass_assign_disabled
+        matches = tracker.check_initializers(:"ActiveRecord::Base", :send)
+
+        matches.each do |result|
+          if call? result.call and result.call.second_arg == forbidden_protection
             @mass_assign_disabled = true
           end
         end
