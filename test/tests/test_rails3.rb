@@ -923,6 +923,14 @@ class Rails3Tests < Test::Unit::TestCase
     end
   end
 
+  def test_denial_of_service_CVE_2013_1854
+    assert_no_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :message => /^Rails\ 3\.0\.3\ has\ a\ denial\ of\ service\ vul/,
+      :confidence => 1,
+      :file => /Gemfile/
+  end
+
   def test_http_only_session_setting
     assert_warning :type => :warning,
       :warning_type => "Session Setting",

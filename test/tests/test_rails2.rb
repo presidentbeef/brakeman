@@ -11,14 +11,14 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 3,
-        :template => 42,
-        :warning => 40 }
+        :template => 43,
+        :warning => 41 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
-        :template => 42,
-        :warning => 41 }
+        :template => 43,
+        :warning => 42 }
     end
   end
 
@@ -719,6 +719,16 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /test_content_tag\.html\.erb/
   end
 
+  #Uh...maybe this shouldn't be a warning
+  def test_cross_site_scripting_in_sanitize_method
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 5,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 2,
+      :file => /not_used\.html\.erb/
+  end
+
   def test_xss_content_tag_unescaped_on_purpose
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
@@ -825,6 +835,14 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Rails\ 2\.3\.11\ has\ a\ vulnerability\ in\ sani/,
       :confidence => 0,
       :file => /not_used\.html\.erb/
+  end
+
+  def test_denial_of_service_CVE_2013_1854
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :message => /^Rails\ 2\.3\.11\ has\ a\ denial\ of\ service\ vul/,
+      :confidence => 1,
+      :file => /environment\.rb/
   end
 
   def test_to_json

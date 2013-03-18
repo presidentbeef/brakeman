@@ -11,7 +11,7 @@ class Rails32Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 11,
-      :warning => 6 }
+      :warning => 7 }
 
 
     if RUBY_PLATFORM == 'java'
@@ -78,6 +78,14 @@ class Rails32Tests < Test::Unit::TestCase
         :confidence => 0,
         :file => /Gemfile/
     end
+  end
+
+  def test_denial_of_service_CVE_2013_1854
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :message => /^Rails\ 3\.2\.9\.rc2\ has\ a\ denial\ of\ service\ vul/,
+      :confidence => 1,
+      :file => /Gemfile/
   end
 
   def test_redirect_1

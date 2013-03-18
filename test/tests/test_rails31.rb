@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 22,
       :controller => 4,
-      :warning => 67 }
+      :warning => 68 }
   end
 
   def test_without_protection
@@ -786,6 +786,14 @@ class Rails31Tests < Test::Unit::TestCase
       :warning_type => "File Access",
       :message => /^Rails\ 3\.1\.0\ with\ JRuby\ has\ a\ vulnerabili/,
       :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_denial_of_service_CVE_2013_1854
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :message => /^Rails\ 3\.1\.0\ has\ a\ denial\ of\ service\ vul/,
+      :confidence => 1,
       :file => /Gemfile/
   end
 

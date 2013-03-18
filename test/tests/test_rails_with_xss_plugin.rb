@@ -11,7 +11,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :controller => 1,
       :model => 3,
       :template => 2,
-      :warning => 19 }
+      :warning => 20 }
   end
 
   def report
@@ -320,6 +320,14 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :warning_type => "Remote Code Execution",
       :message => /^Rails\ 2\.3\.14\ has\ a\ serious\ JSON\ parsing\ /,
       :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_denial_of_service_CVE_2013_1854
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :message => /^Rails\ 2\.3\.14\ has\ a\ denial\ of\ service\ vul/,
+      :confidence => 1,
       :file => /Gemfile/
   end
 end
