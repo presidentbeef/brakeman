@@ -15,8 +15,14 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 8,
       :template => 36,
-      :warning => 53
+      :warning => 54
     }
+
+    if RUBY_PLATFORM == 'java'
+      @expected[:warning] += 1
+    end
+
+    @expected
   end
 
   def test_no_errors
@@ -895,6 +901,33 @@ class Rails3Tests < Test::Unit::TestCase
       :warning_type => "Denial of Service",
       :message => /^json_pure\ gem\ version\ 1\.6\.4\ has\ a\ symbol/,
       :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_xss_CVE_2013_1857
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :line => 40,
+      :message => /^Rails\ 3\.0\.3\ has\ a\ vulnerability\ in\ sanit/,
+      :confidence => 0,
+      :file => /user\.rb/
+  end
+
+  def test_xml_jruby_parsing_CVE_2013_1856
+    if RUBY_PLATFORM == 'java'
+      assert_warning :type => :warning,
+        :warning_type => "File Access",
+        :message => /^Rails\ 3\.0\.3\ with\ JRuby\ has\ a\ vulnerabili/,
+        :confidence => 0,
+        :file => /Gemfile/
+    end
+  end
+
+  def test_denial_of_service_CVE_2013_1854
+    assert_no_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :message => /^Rails\ 3\.0\.3\ has\ a\ denial\ of\ service\ vul/,
+      :confidence => 1,
       :file => /Gemfile/
   end
 

@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 22,
       :controller => 4,
-      :warning => 65 }
+      :warning => 68 }
   end
 
   def test_without_protection
@@ -759,6 +759,40 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Denial of Service",
       :message => /^json\ gem\ version\ 1\.5\.4\ has\ a\ symbol\ crea/,
+      :confidence => 1,
+      :file => /Gemfile/
+  end
+
+  def test_xss_sanitize_CVE_2013_1857
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :line => 64,
+      :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ sanit/,
+      :confidence => 0,
+      :file => /other_controller\.rb/
+  end
+
+  def test_xss_sanitize_css_CVE_2013_1855
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :line => 65,
+      :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ sanitize_css/,
+      :confidence => 0,
+      :file => /other_controller\.rb/
+  end
+
+  def test_xml_jruby_parsing_CVE_2013_1856_workaround
+    assert_no_warning :type => :warning,
+      :warning_type => "File Access",
+      :message => /^Rails\ 3\.1\.0\ with\ JRuby\ has\ a\ vulnerabili/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_denial_of_service_CVE_2013_1854
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :message => /^Rails\ 3\.1\.0\ has\ a\ denial\ of\ service\ vul/,
       :confidence => 1,
       :file => /Gemfile/
   end

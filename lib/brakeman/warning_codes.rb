@@ -54,7 +54,11 @@ module Brakeman::WarningCodes
     :CVE_2013_0276 => 51,
     :CVE_2013_0333 => 52,
     :xss_content_tag => 53,
-    :mass_assign_without_protection => 54
+    :mass_assign_without_protection => 54,
+    :CVE_2013_1854 => 55,
+    :CVE_2013_1855 => 56,
+    :CVE_2013_1856 => 57,
+    :CVE_2013_1857 => 58,
   }
 
   def self.code name
