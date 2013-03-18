@@ -9,8 +9,6 @@ class Brakeman::CheckJRubyXML < Brakeman::BaseCheck
     return unless RUBY_PLATFORM == "java"
 
     fix_version = case
-      when version_between?('2.0.0', '2.3.17')
-        '2.3.18'
       when version_between?('3.0.0', '3.0.99')
         '3.2.13'
       when version_between?('3.1.0', '3.1.11')
@@ -25,7 +23,7 @@ class Brakeman::CheckJRubyXML < Brakeman::BaseCheck
     tracker.check_initializers(:"ActiveSupport::XmlMini", :backend=).each do |result|
       arg = result.call.first_arg
 
-      if sexp? arg, :str and arg.value == "REXML"
+      if string? arg and arg.value == "REXML"
         return
       end
     end
