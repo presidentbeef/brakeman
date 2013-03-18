@@ -17,6 +17,12 @@ class Rails3Tests < Test::Unit::TestCase
       :template => 36,
       :warning => 54
     }
+
+    if RUBY_PLATFORM == 'java'
+      @expected[:warning] += 1
+    end
+
+    @expected
   end
 
   def test_no_errors
@@ -905,6 +911,16 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Rails\ 3\.0\.3\ has\ a\ vulnerability\ in\ sanit/,
       :confidence => 0,
       :file => /user\.rb/
+  end
+
+  def test_xml_jruby_parsing_CVE_2013_1856
+    if RUBY_PLATFORM == 'java'
+      assert_warning :type => :warning,
+        :warning_type => "File Access",
+        :message => /^Rails\ 3\.0\.3\ with\ JRuby\ has\ a\ vulnerabili/,
+        :confidence => 0,
+        :file => /Gemfile/
+    end
   end
 
   def test_http_only_session_setting

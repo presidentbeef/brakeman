@@ -781,6 +781,14 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /other_controller\.rb/
   end
 
+  def test_xml_jruby_parsing_CVE_2013_1856_workaround
+    assert_no_warning :type => :warning,
+      :warning_type => "File Access",
+      :message => /^Rails\ 3\.1\.0\ with\ JRuby\ has\ a\ vulnerabili/,
+      :confidence => 0,
+      :file => /Gemfile/
+  end
+
   def test_to_json_with_overwritten_config
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",

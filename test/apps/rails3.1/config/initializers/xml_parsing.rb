@@ -1,0 +1,1 @@
+ActiveSupport::XmlMini.backend = "REXML"

@@ -12,6 +12,13 @@ class Rails32Tests < Test::Unit::TestCase
       :model => 0,
       :template => 11,
       :warning => 6 }
+
+
+    if RUBY_PLATFORM == 'java'
+      @expected[:warning] += 1
+    end
+
+    @expected
   end
 
   def report
@@ -61,6 +68,16 @@ class Rails32Tests < Test::Unit::TestCase
       :message => /^Rails\ 3\.2\.9\.rc2\ has\ a\ vulnerability\ in\ s/,
       :confidence => 0,
       :file => /sanitized\.html\.erb/
+  end
+
+  def test_xml_jruby_parsing_CVE_2013_1856
+    if RUBY_PLATFORM == 'java'
+      assert_warning :type => :warning,
+        :warning_type => "File Access",
+        :message => /^Rails\ 3\.2\.9\.rc2 with\ JRuby\ has\ a\ vulnerabili/,
+        :confidence => 0,
+        :file => /Gemfile/
+    end
   end
 
   def test_redirect_1
