@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 22,
       :controller => 4,
-      :warning => 66 }
+      :warning => 67 }
   end
 
   def test_without_protection
@@ -768,6 +768,15 @@ class Rails31Tests < Test::Unit::TestCase
       :warning_type => "Cross Site Scripting",
       :line => 64,
       :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ sanit/,
+      :confidence => 0,
+      :file => /other_controller\.rb/
+  end
+
+  def test_xss_sanitize_css_CVE_2013_1855
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :line => 65,
+      :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ sanitize_css/,
       :confidence => 0,
       :file => /other_controller\.rb/
   end

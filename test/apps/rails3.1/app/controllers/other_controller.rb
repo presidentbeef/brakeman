@@ -62,5 +62,6 @@ class OtherController < ApplicationController
 
   def test_sanitized_medium
     sanitize something
+    @css = sanitize_css(some_css)
   end
 end

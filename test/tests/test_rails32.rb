@@ -10,7 +10,7 @@ class Rails32Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 10,
+      :template => 11,
       :warning => 6 }
   end
 
@@ -52,6 +52,15 @@ class Rails32Tests < Test::Unit::TestCase
       :message => /^json\ gem\ version\ 1\.7\.5\ has\ a\ remote\ code/,
       :confidence => 0,
       :file => /Gemfile/
+  end
+
+  def test_xss_sanitize_css_CVE_2013_1855
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 2,
+      :message => /^Rails\ 3\.2\.9\.rc2\ has\ a\ vulnerability\ in\ s/,
+      :confidence => 0,
+      :file => /sanitized\.html\.erb/
   end
 
   def test_redirect_1
