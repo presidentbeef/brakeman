@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 22,
       :controller => 4,
-      :warning => 65 }
+      :warning => 66 }
   end
 
   def test_without_protection
@@ -761,6 +761,15 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^json\ gem\ version\ 1\.5\.4\ has\ a\ symbol\ crea/,
       :confidence => 1,
       :file => /Gemfile/
+  end
+
+  def test_xss_sanitize_CVE_2013_1857
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :line => 64,
+      :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ sanit/,
+      :confidence => 0,
+      :file => /other_controller\.rb/
   end
 
   def test_to_json_with_overwritten_config

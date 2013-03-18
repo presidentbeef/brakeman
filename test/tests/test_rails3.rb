@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 8,
       :template => 36,
-      :warning => 53
+      :warning => 54
     }
   end
 
@@ -896,6 +896,15 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^json_pure\ gem\ version\ 1\.6\.4\ has\ a\ symbol/,
       :confidence => 0,
       :file => /Gemfile/
+  end
+
+  def test_xss_CVE_2013_1857
+    assert_warning :type => :warning,
+      :warning_type => "Cross Site Scripting",
+      :line => 40,
+      :message => /^Rails\ 3\.0\.3\ has\ a\ vulnerability\ in\ sanit/,
+      :confidence => 0,
+      :file => /user\.rb/
   end
 
   def test_http_only_session_setting

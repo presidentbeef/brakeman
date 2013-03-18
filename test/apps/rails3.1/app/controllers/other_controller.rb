@@ -59,4 +59,8 @@ class OtherController < ApplicationController
 
     redirect_to user
   end
+
+  def test_sanitized_medium
+    sanitize something
+  end
 end

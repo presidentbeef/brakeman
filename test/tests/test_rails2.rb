@@ -11,13 +11,13 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 3,
-        :template => 41,
+        :template => 42,
         :warning => 40 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
-        :template => 41,
+        :template => 42,
         :warning => 41 }
     end
   end
@@ -816,6 +816,15 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Rails\ 2\.3\.11\ has\ a\ serious\ JSON\ parsing\ /,
       :confidence => 0,
       :file => /environment\.rb/
+  end
+
+  def test_xss_sanitize_CVE_2013_1857
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 5,
+      :message => /^Rails\ 2\.3\.11\ has\ a\ vulnerability\ in\ sani/,
+      :confidence => 0,
+      :file => /not_used\.html\.erb/
   end
 
   def test_to_json
