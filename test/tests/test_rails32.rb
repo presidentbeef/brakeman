@@ -10,8 +10,15 @@ class Rails32Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 10,
-      :warning => 6 }
+      :template => 11,
+      :warning => 7 }
+
+
+    if RUBY_PLATFORM == 'java'
+      @expected[:warning] += 1
+    end
+
+    @expected
   end
 
   def report
@@ -51,6 +58,33 @@ class Rails32Tests < Test::Unit::TestCase
       :warning_type => "Remote Code Execution",
       :message => /^json\ gem\ version\ 1\.7\.5\ has\ a\ remote\ code/,
       :confidence => 0,
+      :file => /Gemfile/
+  end
+
+  def test_xss_sanitize_css_CVE_2013_1855
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 2,
+      :message => /^Rails\ 3\.2\.9\.rc2\ has\ a\ vulnerability\ in\ s/,
+      :confidence => 0,
+      :file => /sanitized\.html\.erb/
+  end
+
+  def test_xml_jruby_parsing_CVE_2013_1856
+    if RUBY_PLATFORM == 'java'
+      assert_warning :type => :warning,
+        :warning_type => "File Access",
+        :message => /^Rails\ 3\.2\.9\.rc2 with\ JRuby\ has\ a\ vulnerabili/,
+        :confidence => 0,
+        :file => /Gemfile/
+    end
+  end
+
+  def test_denial_of_service_CVE_2013_1854
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :message => /^Rails\ 3\.2\.9\.rc2\ has\ a\ denial\ of\ service\ vul/,
+      :confidence => 1,
       :file => /Gemfile/
   end
 

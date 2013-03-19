@@ -59,4 +59,9 @@ class OtherController < ApplicationController
 
     redirect_to user
   end
+
+  def test_sanitized_medium
+    sanitize something
+    @css = sanitize_css(some_css)
+  end
 end
