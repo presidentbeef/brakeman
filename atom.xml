@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2013-03-18T18:17:13-07:00</updated>
+  <updated>2013-03-18T18:24:09-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -27,7 +27,7 @@
 &lt;li&gt;Add check for CVE-2013-1856&lt;/li&gt;
 &lt;li&gt;Add check for CVE-2013-1857&lt;/li&gt;
 &lt;li&gt;Fix &lt;code&gt;--compare&lt;/code&gt; to work with older versions&lt;/li&gt;
-&lt;li&gt;Add &quot;no-referrer' to HTML report links&lt;/li&gt;
+&lt;li&gt;Add &quot;no-referrer&quot; to HTML report links&lt;/li&gt;
 &lt;li&gt;Don't warn when invoking &lt;code&gt;send&lt;/code&gt; on user input&lt;/li&gt;
 &lt;li&gt;Slightly faster cloning of Sexps&lt;/li&gt;
 &lt;li&gt;Detect another way to add &lt;code&gt;strong_parameters&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/288&quot;&gt;#288&lt;/a&gt;)&lt;/li&gt;
