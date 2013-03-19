@@ -37,4 +37,6 @@ class BeforeController < ApplicationController
   def filter5
     @purchase = @account.purchases.last
   end
+
+  include ControllerFilter
 end
