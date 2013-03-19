@@ -26,7 +26,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
     @models = tracker.models.keys
     @inspect_arguments = tracker.options[:check_arguments]
 
-    tracker.find_call(:target => false, :method => :link_to).map {|call| process_result call}
+    tracker.find_call(:target => false, :method => :link_to).each {|call| process_result call}
   end
 
   def process_result result
