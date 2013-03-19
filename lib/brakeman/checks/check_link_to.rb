@@ -57,21 +57,17 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
     end
   end
 
-  # TODO Guards are now spread out over this if and over the different check methods.
-  # A fall through would make more sense
+  # Check the argument for possible xss exploits
   def check_argument result, exp
-    arg = process(exp)
-    if input = has_immediate_user_input?(arg)
-      check_user_input(result, input)
-    elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(arg)
-      check_method(result, match)
-    elsif @matched
-      check_matched(result, @matched)
-    end
+    argument = process(exp)
+    !check_user_input(result, argument) && !check_method(result, argument) && !check_matched(result, @matched)
   end
 
   # Check we should warn about the user input
-  def check_user_input(result, input)
+  def check_user_input(result, argument)
+    input = has_immediate_user_input?(argument)
+    return false unless input
+
     case input.type
     when :params
       message = "Unescaped parameter value in link_to"
@@ -85,9 +81,12 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
   end
 
   # Check if we should warn about the specified method
-  def check_method(result, match)
+  def check_method(result, argument)
+    return false if tracker.options[:ignore_model_output]
+    match = has_immediate_model?(argument)
+    return false unless match
     method = match.method
-    return if IGNORE_MODEL_METHODS.include? method
+    return false if IGNORE_MODEL_METHODS.include? method
 
     confidence = CONFIDENCE[:med]
     confidence = CONFIDENCE[:high] if MODEL_METHODS.include? method or method.to_s =~ /^find_by/
@@ -95,7 +94,8 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
   end
 
   # Check if we should warn about the matched result
-  def check_matched(result, matched)
+  def check_matched(result, matched = nil)
+    return false unless matched
     message = nil
 
     if matched.type == :model and not tracker.options[:ignore_model_output]
@@ -104,7 +104,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
       message = "Unescaped parameter value in link_to"
     end
 
-    warn_xss(result, message, @matched.match, CONFIDENCE[:med]) if message
+    message ? warn_xss(result, message, @matched.match, CONFIDENCE[:med]) : false
   end
 
   # Create a warn for this xss
@@ -117,6 +117,8 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
       :user_input => user_input,
       :confidence => confidence,
       :link_path => "link_to"
+
+    true
   end
 
   def process_call exp
