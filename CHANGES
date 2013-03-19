@@ -1,3 +1,15 @@
+# 1.9.4
+ 
+ * Add check for CVE-2013-1854
+ * Add check for CVE-2013-1855
+ * Add check for CVE-2013-1856
+ * Add check for CVE-2013-1857
+ * Fix `--compare` to work with older versions
+ * Add "no-referrer' to HTML report links
+ * Don't warn when invoking `send` on user input
+ * Slightly faster cloning of Sexps
+ * Detect another way to add `strong_parameters`
+
 # 1.9.3
  
  * Add render path to JSON report
