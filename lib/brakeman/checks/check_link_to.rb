@@ -23,14 +23,10 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
     @known_dangerous = []
     #Ideally, I think this should also check to see if people are setting
     #:escape => false
-    methods = tracker.find_call :target => false, :method => :link_to
-
     @models = tracker.models.keys
     @inspect_arguments = tracker.options[:check_arguments]
 
-    methods.each do |call|
-      process_result call
-    end
+    tracker.find_call(:target => false, :method => :link_to).each {|call| process_result call}
   end
 
   def process_result result
@@ -61,68 +57,68 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
     end
   end
 
+  # Check the argument for possible xss exploits
   def check_argument result, exp
-    arg = process exp
+    argument = process(exp)
+    !check_user_input(result, argument) && !check_method(result, argument) && !check_matched(result, @matched)
+  end
 
-    if input = has_immediate_user_input?(arg)
-      case input.type
-      when :params
-        message = "Unescaped parameter value in link_to"
-      when :cookies
-        message = "Unescaped cookie value in link_to"
-      else
-        message = "Unescaped user input value in link_to"
-      end
+  # Check we should warn about the user input
+  def check_user_input(result, argument)
+    input = has_immediate_user_input?(argument)
+    return false unless input
 
-      add_result result
-      warn :result => result,
-        :warning_type => "Cross Site Scripting",
-        :warning_code => :xss_link_to,
-        :message => message,
-        :user_input => input.match,
-        :confidence => CONFIDENCE[:high],
-        :link_path => "link_to"
-
-    elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(arg)
-      method = match.method
-
-      unless IGNORE_MODEL_METHODS.include? method
-        add_result result
-
-        if MODEL_METHODS.include? method or method.to_s =~ /^find_by/
-          confidence = CONFIDENCE[:high]
-        else
-          confidence = CONFIDENCE[:med]
-        end
-
-        warn :result => result,
-          :warning_type => "Cross Site Scripting",
-        :warning_code => :xss_link_to,
-          :message => "Unescaped model attribute in link_to",
-          :user_input => match,
-          :confidence => confidence,
-          :link_path => "link_to"
-      end
-
-    elsif @matched
-      if @matched.type == :model and not tracker.options[:ignore_model_output]
-        message = "Unescaped model attribute in link_to"
-      elsif @matched.type == :params
-        message = "Unescaped parameter value in link_to"
-      end
-
-      if message
-        add_result result
-
-        warn :result => result,
-          :warning_type => "Cross Site Scripting",
-          :warning_code => :xss_link_to,
-          :message => message,
-          :user_input => @matched.match,
-          :confidence => CONFIDENCE[:med],
-          :link_path => "link_to"
-      end
+    case input.type
+    when :params
+      message = "Unescaped parameter value in link_to"
+    when :cookies
+      message = "Unescaped cookie value in link_to"
+    else
+      message = "Unescaped user input value in link_to"
     end
+
+    warn_xss(result, message, input.match, CONFIDENCE[:high])
+  end
+
+  # Check if we should warn about the specified method
+  def check_method(result, argument)
+    return false if tracker.options[:ignore_model_output]
+    match = has_immediate_model?(argument)
+    return false unless match
+    method = match.method
+    return false if IGNORE_MODEL_METHODS.include? method
+
+    confidence = CONFIDENCE[:med]
+    confidence = CONFIDENCE[:high] if MODEL_METHODS.include? method or method.to_s =~ /^find_by/
+    warn_xss(result, "Unescaped model attribute in link_to", match, confidence)
+  end
+
+  # Check if we should warn about the matched result
+  def check_matched(result, matched = nil)
+    return false unless matched
+    message = nil
+
+    if matched.type == :model and not tracker.options[:ignore_model_output]
+      message = "Unescaped model attribute in link_to"
+    elsif matched.type == :params
+      message = "Unescaped parameter value in link_to"
+    end
+
+    message ? warn_xss(result, message, @matched.match, CONFIDENCE[:med]) : false
+  end
+
+  # Create a warn for this xss
+  def warn_xss(result, message, user_input, confidence)
+    add_result(result)
+    warn :result => result,
+      :warning_type => "Cross Site Scripting",
+      :warning_code => :xss_link_to,
+      :message => message,
+      :user_input => user_input,
+      :confidence => confidence,
+      :link_path => "link_to"
+
+    true
   end
 
   def process_call exp
@@ -135,16 +131,12 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
     return if @matched
 
     target = exp.target
-    if sexp? target
-      target = process target.dup
-    end
+    target = process target.dup if sexp? target
 
     #Bare records create links to the model resource,
     #not a string that could have injection
     #TODO: Needs test? I think this is broken?
-    if model_name? target and context == [:call, :arglist]
-      return exp
-    end
+    return exp if model_name? target and context == [:call, :arglist]
 
     super
   end
