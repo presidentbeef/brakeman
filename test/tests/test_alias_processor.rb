@@ -223,4 +223,18 @@ class AliasProcessorTests < Test::Unit::TestCase
     [w, x, y]
     RUBY
   end
+
+  def test_assignment_of_simple_if_expression
+    assert_alias "1 or 2", <<-RUBY
+    x = (test ? 1 : 2)
+    x
+    RUBY
+  end
+
+  def test_assignment_of_forced_if_expression
+    assert_alias "1", <<-RUBY
+    x = (true ? 1 : 2)
+    x
+    RUBY
+  end
 end
