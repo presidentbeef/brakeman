@@ -323,4 +323,24 @@ class SexpTests < Test::Unit::TestCase
 
     assert_not_nil s.instance_variable_get(:@my_hash_value)
   end
+
+  def test_sexp_line_set
+    s = Sexp.new(:blah).line(10)
+    assert_equal 10, s.line
+
+    s.line = 100
+    assert_equal 100, s.line
+
+    s.line(0)
+    assert_equal 0, s.line
+  end
+
+  def test_sexp_original_line_set
+    s = Sexp.new(:blah)
+    s.original_line = 10
+    assert_equal 10, s.original_line
+
+    s.original_line = 100
+    assert_equal 100, s.original_line
+  end
 end
