@@ -97,6 +97,23 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
     exp
   end
 
+  #:"string" is equivalent to "string".to_sym
+  def process_dsym exp
+    exp.each { |arg| process arg if sexp? arg }
+
+    call = { :target => nil, :method => :literal_to_sym, :call => exp, :nested => false }
+
+    if @current_template
+      call[:location] = [:template, @current_template]
+    else
+      call[:location] = [:class, @current_class, @current_method]
+    end
+
+    @calls << call
+
+    exp
+  end
+
   #Process an assignment like a call
   def process_attrasgn exp
     process_call exp
