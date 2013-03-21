@@ -232,8 +232,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def process_gasgn exp
     match = Sexp.new(:gvar, exp.lhs)
     value = exp.rhs = process(exp.rhs)
+    value.line = exp.line
 
-    set_value match, value, exp.line
+    set_value match, value
 
     exp
   end
@@ -244,7 +245,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     match = Sexp.new(:cvar, exp.lhs)
     value = exp.rhs = process(exp.rhs)
 
-    set_value match, value, exp.line
+    set_value match, value
 
     exp
   end
@@ -265,7 +266,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       value = exp.second_arg = process(value_arg)
       match = Sexp.new(:call, target, :[], index)
 
-      set_value match, value, exp.line
+      set_value match, value
 
       if hash? target
         env[tar_variable] = hash_insert target.deep_clone, index, value
@@ -275,7 +276,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       #This is what we'll replace with the value
       match = Sexp.new(:call, target, method.to_s[0..-2].to_sym)
 
-      set_value match, value, exp.line
+      set_value match, value
     else
       raise "Unrecognized assignment: #{exp}"
     end
@@ -673,7 +674,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #Creates "branched" versions of values when appropriate.
   #Avoids creating multiple branched versions inside same
   #if branch.
-  def set_value var, value, line = nil
+  def set_value var, value
     if node_type? value, :if
       value = value_from_if(value)
     end
