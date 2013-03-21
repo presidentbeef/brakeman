@@ -222,7 +222,7 @@ class AliasProcessorTests < Test::Unit::TestCase
     assert_alias "1", <<-RUBY
     x = 1
 
-    y = something ? x : z
+    y = true ? x : z
     y
     RUBY
   end

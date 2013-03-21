@@ -19,7 +19,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def initialize tracker = nil
     super()
     @env = SexpProcessor::Environment.new
-    @inside_if = []
+    @inside_if = false
     @ignore_ifs = nil
     @exp_context = []
     @current_module = nil
@@ -377,34 +377,66 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
     condition = process exp.condition
 
+    #Check if a branch is obviously going to be taken
     if true? condition
       no_branch = true
-      exps = [exp.then_clause]
+      exps = [exp.then_clause, nil]
     elsif false? condition
       no_branch = true
-      exps = [exp.else_clause]
+      exps = [nil, exp.else_clause]
     else
       no_branch = false
       exps = [exp.then_clause, exp.else_clause]
     end
 
-    exps.compact!
+    if @ignore_ifs or no_branch
+      exps.each_with_index do |branch, i|
+        exp[2 + i] = process_if_branch branch
+      end
+    else
+      was_inside = @inside_if
+      @inside_if = true
 
-    exps.each do |e|
-      @inside_if << [] unless no_branch or @ignore_ifs
-
-      if sexp? e
-        if e.node_type == :block
-          process_default e #avoid creating new scope
-        else
-          process e
+      branch_scopes = []
+      exps.each_with_index do |branch, i|
+        scope do
+          exp[2 + i] = process_if_branch branch
+          branch_scopes << env.current
         end
       end
 
-      @inside_if.pop unless no_branch or @ignore_ifs
+      @inside_if = was_inside
+
+      branch_scopes.each do |s|
+        merge_if_branch s
+      end
     end
 
     exp
+  end
+
+  def process_if_branch exp
+    if sexp? exp
+      if exp.node_type == :block or exp.node_type == :rlist
+        process_default exp
+      else
+        process exp
+      end
+    end
+  end
+
+  def merge_if_branch branch_env
+    branch_env.each do |k, v|
+      current_val = env[k]
+
+      if current_val
+        unless same_value? current_val, v
+          env[k] = Sexp.new(:or, current_val, v).line(k.line || -2)
+        end
+      else
+        env[k] = v
+      end
+    end
   end
 
   #Process single integer access to an array.
@@ -603,12 +635,6 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     nil
   end
 
-  #Return true if this value should be "branched" - i.e. converted into an or
-  #expression with two or more values
-  def branch_value? exp
-    not (@inside_if.empty? or @inside_if.last.include? exp)
-  end
-
   #Return true if lhs == rhs or lhs is an or expression and
   #rhs is one of its values
   def same_value? lhs, rhs
@@ -652,27 +678,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       value = value_from_if(value)
     end
 
-    unless @ignore_ifs
-      current_val = env[var]
-      current_if = @inside_if.last
-
-      if branch_value? var and current_val = env[var]
-        unless same_value? current_val, value
-          env[var] = Sexp.new(:or, current_val, value).line(line || var.line || -2)
-          current_if << var
-        end
-      elsif current_if and current_if.include?(var) and node_type?(current_val, :or)
-        #Replace last value instead of creating another or
-        current_val.rhs = value
-      else
-        env[var] = value
-
-        if current_if
-          current_if << var
-        end
-      end
-    else
+    if @ignore_ifs or not @inside_if
       env[var] = value
+    else
+      env.current[var] = value
     end
   end
 
