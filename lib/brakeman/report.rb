@@ -7,42 +7,7 @@ require 'highline/system_extensions'
 require "csv"
 require 'multi_json'
 require 'brakeman/version'
-
-if CSV.const_defined? :Reader
-  # Ruby 1.8 compatible
-  require 'fastercsv'
-  Object.send(:remove_const, :CSV)
-  CSV = FasterCSV
-else
-  # CSV is now FasterCSV in ruby 1.9
-end
-
-#MultiJson interface changed in 1.3.0, but need
-#to support older MultiJson for Rails 3.1.
-if MultiJson.respond_to? :default_adapter
-  mj_engine = MultiJson.default_adapter
-else
-  mj_engine = MultiJson.default_engine
-
-  module MultiJson
-    def self.dump *args
-      encode *args
-    end
-
-    def self.load *args
-      decode *args
-    end
-  end
-end
-
-#This is so OkJson will work with symbol values
-if mj_engine == :ok_json
-  class Symbol
-    def to_json
-      self.to_s.inspect
-    end
-  end
-end
+Dir[File.dirname(__FILE__) + 'initializers/*.rb'].each {|file| require file}
 
 #Generates a report based on the Tracker and the results of
 #Tracker#run_checks. Be sure to +run_checks+ before generating
