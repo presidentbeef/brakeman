@@ -60,34 +60,26 @@ class Brakeman::Report
   def generate_warning_overview html = false
     types = warnings_summary.keys
     types.delete :high_confidence
+    values = types.sort.collect{|warning_type| [warning_type, warnings_summary[warning_type]] }
+    locals = {:types => types, :warnings_summary => warnings_summary}
 
-    unless types.empty?
-      if html
-        Brakeman::Renderer.new('warning_overview', :locals => {:types => types, :warnings_summary => warnings_summary}).render
-      else
-        Terminal::Table.new(:headings => ['Warning Type', 'Total']) do |t|
-          types.sort.each do |warning_type|
-            t.add_row [warning_type, warnings_summary[warning_type]]
-          end
-        end
-      end
-    end
+    render_array('warning_overview', ['Warning Type', 'Total'], values, locals, html)
   end
 
   #Generate table of errors or return nil if no errors
   def generate_errors html = false
-    if tracker.errors.any?
-      if html
-        Brakeman::Renderer.new('error_overview', :locals => {:tracker => tracker}).render
-      else
-        Terminal::Table.new(:headings => ['Error', 'Location']) do |t|
-          tracker.errors.each do |error|
-            t.add_row [error[:error], error[:backtrace][0]]
-          end
-        end
-      end
+    values = tracker.errors.collect{|error| [error[:error], error[:backtrace][0]]}
+    render_array('error_overview', ['Error', 'Location'], values, {:tracker => tracker}, html)
+  end
+
+  def render_array(template, headings, value_array, locals, html = false)
+    return if value_array.empty?
+    if html
+      Brakeman::Renderer.new(template, :locals => locals).render
     else
-      nil
+      Terminal::Table.new(:headings => headings) do |t|
+        value_array.each { |value_row| t.add_row value_row }
+      end
     end
   end
 
@@ -112,17 +104,9 @@ class Brakeman::Report
     stabilizer = 0
     warning_messages = warning_messages.sort_by{|row| stabilizer += 1; [row['Confidence'], row['Warning Type'], row['Class'], stabilizer]}
 
-    unless warning_messages.empty?
-      if html
-        Brakeman::Renderer.new('security_warnings', :locals => {:warning_messages => warning_messages}).render
-      else
-        Terminal::Table.new(:headings => ["Confidence", "Class", "Method", "Warning Type", "Message"]) do |t|
-          warning_messages.each do |row|
-            t.add_row [row["Confidence"], row["Class"], row["Method"], row["Warning Type"], row["Message"]]
-          end
-        end
-      end
-    end
+    locals = {:warning_messages => warning_messages}
+    values = warning_messages.collect{|row| [row["Confidence"], row["Class"], row["Method"], row["Warning Type"], row["Message"]] }
+    render_array('security_warnings', ["Confidence", "Class", "Method", "Warning Type", "Message"], values, locals, html)
   end
 
   #Generate table of template warnings or return nil if no warnings
@@ -150,15 +134,10 @@ class Brakeman::Report
 
       stabilizer = 0
       warnings = warnings.sort_by{|row| stabilizer += 1; [row["Confidence"], row["Warning Type"], row["Template"], stabilizer]}
-      if html
-        Brakeman::Renderer.new('view_warnings', :locals => {:warnings => warnings}).render
-      else
-        Terminal::Table.new(:headings => ["Confidence", "Template", "Warning Type", "Message"]) do |t|
-          warnings.each do |warning|
-            t.add_row [warning["Confidence"], warning["Template"], warning["Warning Type"], warning["Message"]]
-          end
-        end
-      end
+
+      locals = {:warnings => warnings}
+      values = warnings.collect{|warning| [warning["Confidence"], warning["Template"], warning["Warning Type"], warning["Message"]] }
+      render_array('view_warnings', ["Confidence", "Template", "Warning Type", "Message"], values, locals, html)
     else
       nil
     end
@@ -187,15 +166,9 @@ class Brakeman::Report
       stabilizer = 0
       warnings = warnings.sort_by{|row| stabilizer +=1; [row["Confidence"],row["Warning Type"], row["Model"], stabilizer]}
 
-      if html
-        Brakeman::Renderer.new('model_warnings', :locals => {:warnings => warnings}).render
-      else
-        Terminal::Table.new(:headings => ["Confidence", "Model", "Warning Type", "Message"]) do |t|
-          warnings.each do |warning|
-            t.add_row [warning["Confidence"], warning["Model"], warning["Warning Type"], warning["Message"]]
-          end
-        end
-      end
+      locals = {:warnings => warnings}
+      values = warnings.collect{|warning| [warning["Confidence"], warning["Model"], warning["Warning Type"], warning["Message"]] }
+      render_array('model_warnings', ["Confidence", "Model", "Warning Type", "Message"], values, locals, html)
     else
       nil
     end
@@ -225,15 +198,9 @@ class Brakeman::Report
       stabilizer = 0
       warnings = warnings.sort_by{|row| stabilizer +=1; [row["Confidence"], row["Warning Type"], row["Controller"], stabilizer]}
 
-      if html
-        Brakeman::Renderer.new('controller_warnings', :locals => {:warnings => warnings}).render
-      else
-        Terminal::Table.new(:headings => ["Confidence", "Controller", "Warning Type", "Message"]) do |t|
-          warnings.each do |warning|
-            t.add_row [warning["Confidence"], warning["Controller"], warning["Warning Type"], warning["Message"]]
-          end
-        end
-      end
+      locals = {:warnings => warnings}
+      values = warnings.collect{|warning| [warning["Confidence"], warning["Controller"], warning["Warning Type"], warning["Message"]] }
+      render_array('controller_warnings', ["Confidence", "Controller", "Warning Type", "Message"], values, locals, html)
     else
       nil
     end
@@ -274,15 +241,9 @@ class Brakeman::Report
     end
     controller_rows = controller_rows.sort_by{|row| row['Name']}
 
-    if html
-      Brakeman::Renderer.new('controller_overview', :locals => {:controller_rows => controller_rows}).render
-    else
-      Terminal::Table.new(:headings => ['Name', 'Parent', 'Includes', 'Routes']) do |t|
-        controller_rows.each do |row|
-          t.add_row [row['Name'], row['Parent'], row['Includes'], row['Routes']]
-        end
-      end
-    end
+    locals = {:controller_rows => controller_rows}
+    values = controller_rows.collect{|row| [row['Name'], row['Parent'], row['Includes'], row['Routes']] }
+    render_array('controller_overview', ['Name', 'Parent', 'Includes', 'Routes'], values, locals, html)
   end
 
   #Generate listings of templates and their output
@@ -329,24 +290,15 @@ class Brakeman::Report
     generate_warning_overview(true).to_s
 
     # Return early if only summarizing
-    if tracker.options[:summary_only]
-      return out
-    end
+    return out if tracker.options[:summary_only]
 
-    if tracker.options[:report_routes] or tracker.options[:debug]
-      out << generate_controllers(true).to_s
-    end
-
-    if tracker.options[:debug]
-      out << generate_templates(true).to_s
-    end
-
+    out << generate_controllers(true).to_s if tracker.options[:report_routes] or tracker.options[:debug]
+    out << generate_templates(true).to_s if tracker.options[:debug]
     out << generate_errors(true).to_s
     out << generate_warnings(true).to_s
     out << generate_controller_warnings(true).to_s
     out << generate_model_warnings(true).to_s
     out << generate_template_warnings(true).to_s
-
     out << "</body></html>"
   end
 
@@ -358,9 +310,7 @@ class Brakeman::Report
     truncate_table(generate_warning_overview.to_s) << "\n"
 
     #Return output early if only summarizing
-    if tracker.options[:summary_only]
-      return out
-    end
+    return out if tracker.options[:summary_only]
 
     if tracker.options[:report_routes] or tracker.options[:debug]
       out << "\n+CONTROLLERS+\n" <<
@@ -442,13 +392,9 @@ class Brakeman::Report
   end
 
   def rails_version
-    if version = tracker.config[:rails_version]
-      return version
-    elsif tracker.options[:rails3]
-      return "3.x"
-    else
-      return "Unknown"
-    end
+    return tracker.config[:rails_version] if tracker.config[:rails_version]
+    return "3.x" if tracker.options[:rails3]
+    "Unknown"
   end
 
   #Return header for HTML output. Uses CSS from tracker.options[:html_style]
@@ -500,13 +446,9 @@ HEADER
     high_confidence_warnings = 0
 
     [all_warnings].each do |warnings|
-
       warnings.each do |warning|
         summary[warning.warning_type.to_s] += 1
-
-        if warning.confidence == 0
-          high_confidence_warnings += 1
-        end
+        high_confidence_warnings += 1 if warning.confidence == 0
       end
     end
 
@@ -530,7 +472,6 @@ HEADER
 
     if @highlight_user_input and warning.user_input
       user_input = CGI.escapeHTML(warning.format_user_input)
-
       message.gsub!(user_input, "<span class=\"user_input\">#{user_input}</span>")
     end
 
@@ -542,19 +483,13 @@ HEADER
     context = context_for(@app_tree, warning)
     full_message = nil
 
-    if tracker.options[:message_limit] and
-      tracker.options[:message_limit] > 0 and
-      message.length > tracker.options[:message_limit]
-
+    if tracker.options[:message_limit] and tracker.options[:message_limit] > 0 and message.length > tracker.options[:message_limit]
       full_message = html_message(warning, message)
       message = message[0..tracker.options[:message_limit]] << "..."
     end
 
     message = html_message(warning, message)
-
-    if context.empty? and not full_message
-      return message
-    end
+    return message if context.empty? and not full_message
 
     @element_id += 1
     code_id = "context#@element_id"
