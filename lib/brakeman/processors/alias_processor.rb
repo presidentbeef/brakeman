@@ -388,6 +388,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       exps = [exp.then_clause, exp.else_clause]
     end
 
+    exps.compact!
+
     exps.each do |e|
       @inside_if << [] unless no_branch or @ignore_ifs
 
@@ -619,11 +621,37 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
   end
 
+  def value_from_if exp
+    if node_type? exp.else_clause, :block or node_type? exp.then_clause, :block
+      #If either clause is more than a single expression, just use entire
+      #if expression for now
+      exp
+    elsif exp.else_clause.nil?
+      exp.then_clause
+    elsif exp.then_clause.nil?
+      exp.else_clause
+    else
+      condition = exp.condition
+
+      if true? condition
+        exp.then_clause
+      elsif false? condition
+        exp.else_clause
+      else
+        Sexp.new(:or, exp.then_clause, exp.else_clause).line(exp.line)
+      end
+    end
+  end
+
   #Set variable to given value.
   #Creates "branched" versions of values when appropriate.
   #Avoids creating multiple branched versions inside same
   #if branch.
   def set_value var, value, line = nil
+    if node_type? value, :if
+      value = value_from_if(value)
+    end
+
     unless @ignore_ifs
       current_val = env[var]
       current_if = @inside_if.last
