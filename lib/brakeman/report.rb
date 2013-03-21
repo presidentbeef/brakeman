@@ -7,6 +7,7 @@ require 'highline/system_extensions'
 require "csv"
 require 'multi_json'
 require 'brakeman/version'
+require 'brakeman/renderer'
 Dir[File.dirname(__FILE__) + 'initializers/*.rb'].each {|file| require file}
 
 #Generates a report based on the Tracker and the results of
@@ -36,7 +37,14 @@ class Brakeman::Report
     warnings = all_warnings.length
 
     if html
-      load_and_render_erb('overview', binding)
+      locals = {
+        :tracker => tracker,
+        :warnings => warnings,
+        :warnings_summary => warnings_summary,
+        :number_of_templates => number_of_templates(@tracker),
+        }
+
+      Brakeman::Renderer.new('overview', :locals => locals).render
     else
       Terminal::Table.new(:headings => ['Scanned/Reported', 'Total']) do |t|
         t.add_row ['Controllers', tracker.controllers.length]
@@ -55,7 +63,7 @@ class Brakeman::Report
 
     unless types.empty?
       if html
-        load_and_render_erb('warning_overview', binding)
+        Brakeman::Renderer.new('warning_overview', :locals => {:types => types, :warnings_summary => warnings_summary}).render
       else
         Terminal::Table.new(:headings => ['Warning Type', 'Total']) do |t|
           types.sort.each do |warning_type|
@@ -70,7 +78,7 @@ class Brakeman::Report
   def generate_errors html = false
     if tracker.errors.any?
       if html
-        load_and_render_erb('error_overview', binding)
+        Brakeman::Renderer.new('error_overview', :locals => {:tracker => tracker}).render
       else
         Terminal::Table.new(:headings => ['Error', 'Location']) do |t|
           tracker.errors.each do |error|
@@ -106,7 +114,7 @@ class Brakeman::Report
 
     unless warning_messages.empty?
       if html
-        load_and_render_erb('security_warnings', binding)
+        Brakeman::Renderer.new('security_warnings', :locals => {:warning_messages => warning_messages}).render
       else
         Terminal::Table.new(:headings => ["Confidence", "Class", "Method", "Warning Type", "Message"]) do |t|
           warning_messages.each do |row|
@@ -143,7 +151,7 @@ class Brakeman::Report
       stabilizer = 0
       warnings = warnings.sort_by{|row| stabilizer += 1; [row["Confidence"], row["Warning Type"], row["Template"], stabilizer]}
       if html
-        load_and_render_erb('view_warnings', binding)
+        Brakeman::Renderer.new('view_warnings', :locals => {:warnings => warnings}).render
       else
         Terminal::Table.new(:headings => ["Confidence", "Template", "Warning Type", "Message"]) do |t|
           warnings.each do |warning|
@@ -180,7 +188,7 @@ class Brakeman::Report
       warnings = warnings.sort_by{|row| stabilizer +=1; [row["Confidence"],row["Warning Type"], row["Model"], stabilizer]}
 
       if html
-        load_and_render_erb('model_warnings', binding)
+        Brakeman::Renderer.new('model_warnings', :locals => {:warnings => warnings}).render
       else
         Terminal::Table.new(:headings => ["Confidence", "Model", "Warning Type", "Message"]) do |t|
           warnings.each do |warning|
@@ -218,7 +226,7 @@ class Brakeman::Report
       warnings = warnings.sort_by{|row| stabilizer +=1; [row["Confidence"], row["Warning Type"], row["Controller"], stabilizer]}
 
       if html
-        load_and_render_erb('controller_warnings', binding)
+        Brakeman::Renderer.new('controller_warnings', :locals => {:warnings => warnings}).render
       else
         Terminal::Table.new(:headings => ["Confidence", "Controller", "Warning Type", "Message"]) do |t|
           warnings.each do |warning|
@@ -267,7 +275,7 @@ class Brakeman::Report
     controller_rows = controller_rows.sort_by{|row| row['Name']}
 
     if html
-      load_and_render_erb('controller_overview', binding)
+      Brakeman::Renderer.new('controller_overview', :locals => {:controller_rows => controller_rows}).render
     else
       Terminal::Table.new(:headings => ['Name', 'Parent', 'Includes', 'Routes']) do |t|
         controller_rows.each do |row|
@@ -295,7 +303,7 @@ class Brakeman::Report
     template_rows = template_rows.sort_by{|name, value| name.to_s}
 
     if html
-      load_and_render_erb('template_overview', binding)
+      Brakeman::Renderer.new('template_overview', :locals => {:template_rows => template_rows}).render
     else
       output = ''
       template_rows.each do |template|
@@ -451,7 +459,15 @@ class Brakeman::Report
       raise "Cannot find CSS stylesheet for HTML: #{tracker.options[:html_style]}"
     end
 
-    load_and_render_erb('header', binding)
+    locals = {
+      :css => css,
+      :tracker => tracker,
+      :checks => checks,
+      :rails_version => rails_version,
+      :brakeman_version => Brakeman::Version
+      }
+
+    Brakeman::Renderer.new('header', :locals => locals).render
   end
 
   #Generate header for text output
@@ -701,11 +717,4 @@ HEADER
     end
   end
 
-  private
-
-  def load_and_render_erb file, bind
-    content = File.read(File.expand_path("templates/#{file}.html.erb", File.dirname(__FILE__)))
-    template = ERB.new(content)
-    template.result(bind)
-  end
 end
