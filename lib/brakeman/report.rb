@@ -18,13 +18,6 @@ class Brakeman::Report
 
   attr_reader :tracker, :checks
 
-  # Ruby 1.8 compatible
-  if CSV.const_defined? :Reader
-    require 'fastercsv'
-    Object.send(:remove_const, :CSV)
-    CSV = FasterCSV
-  end
-
   TEXT_CONFIDENCE = [ "High", "Medium", "Weak" ]
   HTML_CONFIDENCE = [ "<span class='high-confidence'>High</span>",
                      "<span class='med-confidence'>Medium</span>",
