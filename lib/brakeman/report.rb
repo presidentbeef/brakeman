@@ -7,8 +7,8 @@ require 'highline/system_extensions'
 require "csv"
 require 'multi_json'
 require 'brakeman/version'
-require 'brakeman/renderer'
-Dir[File.dirname(__FILE__) + 'initializers/*.rb'].each {|file| require file}
+require 'brakeman/report/renderer'
+Dir[File.dirname(__FILE__) + 'report/initializers/*.rb'].each {|file| require file}
 
 #Generates a report based on the Tracker and the results of
 #Tracker#run_checks. Be sure to +run_checks+ before generating
@@ -17,6 +17,13 @@ class Brakeman::Report
   include Brakeman::Util
 
   attr_reader :tracker, :checks
+
+  # Ruby 1.8 compatible
+  if CSV.const_defined? :Reader
+    require 'fastercsv'
+    Object.send(:remove_const, :CSV)
+    CSV = FasterCSV
+  end
 
   TEXT_CONFIDENCE = [ "High", "Medium", "Weak" ]
   HTML_CONFIDENCE = [ "<span class='high-confidence'>High</span>",
@@ -44,7 +51,7 @@ class Brakeman::Report
         :number_of_templates => number_of_templates(@tracker),
         }
 
-      Brakeman::Renderer.new('overview', :locals => locals).render
+      Brakeman::Report::Renderer.new('overview', :locals => locals).render
     else
       Terminal::Table.new(:headings => ['Scanned/Reported', 'Total']) do |t|
         t.add_row ['Controllers', tracker.controllers.length]
@@ -75,7 +82,7 @@ class Brakeman::Report
   def render_array(template, headings, value_array, locals, html = false)
     return if value_array.empty?
     if html
-      Brakeman::Renderer.new(template, :locals => locals).render
+      Brakeman::Report::Renderer.new(template, :locals => locals).render
     else
       Terminal::Table.new(:headings => headings) do |t|
         value_array.each { |value_row| t.add_row value_row }
@@ -264,7 +271,7 @@ class Brakeman::Report
     template_rows = template_rows.sort_by{|name, value| name.to_s}
 
     if html
-      Brakeman::Renderer.new('template_overview', :locals => {:template_rows => template_rows}).render
+      Brakeman::Report::Renderer.new('template_overview', :locals => {:template_rows => template_rows}).render
     else
       output = ''
       template_rows.each do |template|
@@ -413,7 +420,7 @@ class Brakeman::Report
       :brakeman_version => Brakeman::Version
       }
 
-    Brakeman::Renderer.new('header', :locals => locals).render
+    Brakeman::Report::Renderer.new('header', :locals => locals).render
   end
 
   #Generate header for text output
