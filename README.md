@@ -26,6 +26,12 @@ Using RubyGems:
 
     gem install brakeman
 
+Using Bundler, add to development group in Gemfile:
+
+    group :development do
+      gem 'brakeman', :require => false
+    end
+
 From source:
 
     gem build brakeman.gemspec
