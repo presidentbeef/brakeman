@@ -65,7 +65,7 @@ class Brakeman::Report
     def html_message warning, message
       message = CGI.escapeHTML(message)
 
-      if @highlight_user_input and warning.user_input
+      if @tracker.options[:highlight_user_input] and warning.user_input
         user_input = CGI.escapeHTML(warning.format_user_input)
         message.gsub!(user_input, "<span class=\"user_input\">#{user_input}</span>")
       end

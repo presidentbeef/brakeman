@@ -27,8 +27,6 @@ class Brakeman::Report
   def initialize(app_tree, tracker)
     @app_tree = app_tree
     @tracker = tracker
-    @checks = tracker.checks
-    @highlight_user_input = tracker.options[:highlight_user_input]
   end
 
   def report_overviews(app_tree=@app_tree, tracker=@tracker)
@@ -108,6 +106,7 @@ class Brakeman::Report
   end
 
   #Return header for HTML output. Uses CSS from tracker.options[:html_style]
+  # TODO: Move to overview
   def html_header
     if File.exist? tracker.options[:html_style]
       css = File.read tracker.options[:html_style]
@@ -137,14 +136,14 @@ Rails version: #{rails_version}
 Brakeman version: #{Brakeman::Version}
 Started at #{tracker.start_time}
 Duration: #{tracker.duration} seconds
-Checks run: #{checks.checks_run.sort.join(", ")}
+Checks run: #{tracker.checks.checks_run.sort.join(", ")}
 HEADER
   end
 
   #Generate header for CSV output
   def csv_header
     header = CSV.generate_line(["Application Path", "Report Generation Time", "Checks Performed", "Rails Version"])
-    header << CSV.generate_line([File.expand_path(tracker.options[:app_path]), Time.now.to_s, checks.checks_run.sort.join(", "), rails_version])
+    header << CSV.generate_line([File.expand_path(tracker.options[:app_path]), Time.now.to_s, tracker.checks.checks_run.sort.join(", "), rails_version])
     "BRAKEMAN REPORT\n\n" + header
   end
 
@@ -154,7 +153,7 @@ HEADER
     [[:warnings, "General"], [:controller_warnings, "Controller"],
       [:model_warnings, "Model"], [:template_warnings, "Template"]].map do |meth, category|
 
-      checks.send(meth).map do |w|
+      tracker.checks.send(meth).map do |w|
         line = w.line || 0
         w.warning_type.gsub!(/[^\w\s]/, ' ')
         "#{warning_file w}\t#{line}\t#{w.warning_type}\t#{category}\t#{w.format_message}\t#{TEXT_CONFIDENCE[w.confidence]}"
@@ -171,7 +170,7 @@ HEADER
               }
 
     [:warnings, :controller_warnings, :model_warnings, :template_warnings].each do |meth|
-      report[meth] = @checks.send(meth)
+      report[meth] = @tracker.checks.send(meth)
       report[meth].each do |w|
         w.message = w.format_message
         if w.code
@@ -206,7 +205,7 @@ HEADER
       :end_time => tracker.end_time.to_s,
       :timestamp => tracker.end_time.to_s,
       :duration => tracker.duration,
-      :checks_performed => checks.checks_run.sort,
+      :checks_performed => tracker.checks.checks_run.sort,
       :number_of_controllers =>tracker.controllers.length,
       # ignore the "fake" model
       :number_of_models => tracker.models.length - 1,
@@ -225,7 +224,7 @@ HEADER
   end
 
   def all_warnings
-    @all_warnings ||= @checks.all_warnings
+    @all_warnings ||= @tracker.checks.all_warnings
   end
 
   # Return summary of warnings in hash and store in @warnings_summary
