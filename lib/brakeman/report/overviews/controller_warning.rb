@@ -10,11 +10,11 @@ class Brakeman::Report
             w = warning.to_row :controller
 
             if html
-              w["Confidence"] = HTML_CONFIDENCE[w["Confidence"]]
+              w["Confidence"] = Brakeman::Report::HTML_CONFIDENCE[w["Confidence"]]
               w["Message"] = with_context warning, w["Message"]
               w["Warning Type"] = with_link warning, w["Warning Type"]
             else
-              w["Confidence"] = TEXT_CONFIDENCE[w["Confidence"]]
+              w["Confidence"] = Brakeman::Report::TEXT_CONFIDENCE[w["Confidence"]]
               w["Message"] = text_message warning, w["Message"]
             end
 
