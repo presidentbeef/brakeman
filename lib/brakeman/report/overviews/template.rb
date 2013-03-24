@@ -3,6 +3,7 @@ class Brakeman::Report
     class Template < Brakeman::Report::Overview
 
       def report(html = false)
+        @title = 'View warnings'
         out_processor = Brakeman::OutputProcessor.new
         template_rows = {}
         @tracker.templates.each do |name, template|

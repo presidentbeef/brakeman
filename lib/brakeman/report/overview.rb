@@ -4,16 +4,34 @@ class Brakeman::Report
   class Overview
     include Brakeman::Util
 
-    def initialize(app_tree, tracker, all_warnings)
+    def initialize(app_tree, tracker, all_warnings, warnings_summary)
       @app_tree = app_tree
       @tracker = tracker
       @all_warnings = all_warnings
-      @warnings_summary = nil
+      @warnings_summary = warnings_summary
       @element_id = 0 #Used for HTML ids
+      @title = ''
     end
 
     def report(html = false)
       raise 'this should be implemented'
+    end
+
+    def html_report
+      report(true).to_s
+    end
+
+    def string_report
+      truncate_table(report(false).to_s) + "\n"
+    end
+
+    def csv_report
+      table = report(false)
+      table_to_csv(table) if table
+    end
+
+    def title
+      @title
     end
 
     private
@@ -27,24 +45,6 @@ class Brakeman::Report
           value_array.each { |value_row| t.add_row value_row }
         end
       end
-    end
-
-    # Return summary of warnings in hash and store in @warnings_summary
-    def warnings_summary
-      return @warnings_summary if @warnings_summary
-
-      summary = Hash.new(0)
-      high_confidence_warnings = 0
-
-      [@all_warnings].each do |warnings|
-        warnings.each do |warning|
-          summary[warning.warning_type.to_s] += 1
-          high_confidence_warnings += 1 if warning.confidence == 0
-        end
-      end
-
-      summary[:high_confidence] = high_confidence_warnings
-      @warnings_summary = summary
     end
 
     def number_of_templates tracker

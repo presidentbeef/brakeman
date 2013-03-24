@@ -3,6 +3,7 @@ class Brakeman::Report
     class Model < Brakeman::Report::Overview
 
       def report(html = false)
+        @title = 'Model warnings'
         if @tracker.checks.model_warnings.any?
           warnings = []
           @tracker.checks.model_warnings.each do |warning|

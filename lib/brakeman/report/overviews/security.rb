@@ -3,6 +3,7 @@ class Brakeman::Report
     class Security < Brakeman::Report::Overview
 
       def report(html = false)
+        @title = 'Security Warnings'
         warning_messages = []
         @tracker.checks.warnings.each do |warning|
           w = warning.to_row

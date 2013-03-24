@@ -3,6 +3,7 @@ class Brakeman::Report
     class Controller < Brakeman::Report::Overview
 
       def report(html = false)
+        @title = 'Controllers'
         controller_rows = []
         tracker.controllers.keys.map{|k| k.to_s}.sort.each do |name|
           name = name.to_sym

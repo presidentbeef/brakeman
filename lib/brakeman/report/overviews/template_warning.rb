@@ -3,6 +3,7 @@ class Brakeman::Report
     class TemplateWarning < Brakeman::Report::Overview
 
       def report(html = false)
+        @title = 'Template warnings'
         if @tracker.checks.template_warnings.any?
           warnings = []
           @tracker.checks.template_warnings.each do |warning|

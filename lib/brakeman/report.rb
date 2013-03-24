@@ -28,168 +28,72 @@ class Brakeman::Report
     @app_tree = app_tree
     @tracker = tracker
     @checks = tracker.checks
-    @warnings_summary = nil
     @highlight_user_input = tracker.options[:highlight_user_input]
   end
 
-  #Generate summary table of what was parsed
-  def generate_overview html = false
-    Brakeman::Report::Overview::General.new(@app_tree, @tracker, all_warnings).report(html)
-  end
+  def report_overviews(app_tree=@app_tree, tracker=@tracker)
+    overviews = []
+    all_warning_data = all_warnings
+    warning_summary_data = warnings_summary([all_warning_data])
 
-  #Generate table of how many warnings of each warning type were reported
-  def generate_warning_overview html = false
-    Brakeman::Report::Overview::Warning.new(@app_tree, @tracker, all_warnings).report(html)
-  end
-
-  #Generate table of errors or return nil if no errors
-  def generate_errors html = false
-    Brakeman::Report::Overview::Error.new(@app_tree, @tracker, all_warnings).report(html)
-  end
-
-  # TODO: REMOVE
-  def render_array(template, headings, value_array, locals, html = false)
-    return if value_array.empty?
-    if html
-      Brakeman::Report::Renderer.new(template, :locals => locals).render
-    else
-      Terminal::Table.new(:headings => headings) do |t|
-        value_array.each { |value_row| t.add_row value_row }
-      end
+    [Brakeman::Report::Overview::General, Brakeman::Report::Overview::Warning].each do |klass|
+      overviews << klass.new(app_tree, tracker, all_warning_data, warning_summary_data)
     end
-  end
 
-  #Generate table of general security warnings
-  def generate_warnings html = false
-    Brakeman::Report::Overview::Security.new(@app_tree, @tracker, all_warnings).report(html)
-  end
+    # Return early if only summarizing
+    return overviews if tracker.options[:summary_only]
 
-  #Generate table of template warnings or return nil if no warnings
-  def generate_template_warnings html = false
-    Brakeman::Report::Overview::TemplateWarning.new(@app_tree, @tracker, all_warnings).report(html)
-  end
+    if tracker.options[:report_routes] or tracker.options[:debug]
+      overviews << Brakeman::Report::Controllers.new(app_tree, tracker, all_warning_data, warning_summary_data)
+    end
 
-  #Generate table of model warnings or return nil if no warnings
-  def generate_model_warnings html = false
-    Brakeman::Report::Overview::Model.new(@app_tree, @tracker, all_warnings).report(html)
-  end
+    if @tracker.options[:debug]
+      overviews << Brakeman::Report::Templates.new(app_tree, tracker, all_warning_data, warning_summary_data)
+    end
 
-  #Generate table of controller warnings or nil if no warnings
-  def generate_controller_warnings html = false
-    Brakeman::Report::Overview::ControllerWarning.new(@app_tree, @tracker, all_warnings).report(html)
-  end
+    [ Brakeman::Report::Overview::Error, Brakeman::Report::Overview::Security,
+      Brakeman::Report::Overview::ControllerWarning, Brakeman::Report::Overview::Model,
+      Brakeman::Report::Overview::TemplateWarning].each do |klass|
+        overviews << klass.new(app_tree, tracker, all_warning_data, warning_summary_data)
+    end
 
-  #Generate table of controllers and routes found for those controllers
-  def generate_controllers html=false
-    Brakeman::Report::Overview::Controller.new(@app_tree, @tracker, all_warnings).report(html)
-  end
-
-  #Generate listings of templates and their output
-  def generate_templates html = false
-    Brakeman::Report::Overview::Template.new(@app_tree, @tracker, all_warnings).report(html)
+    overviews
   end
 
   #Generate HTML output
   def to_html
     out = html_header
-    out << generate_overview(true)
-    out << generate_warning_overview(true).to_s
-
-    # Return early if only summarizing
-    return out if tracker.options[:summary_only]
-
-    out << generate_controllers(true).to_s if tracker.options[:report_routes] or tracker.options[:debug]
-    out << generate_templates(true).to_s if tracker.options[:debug]
-    out << generate_errors(true).to_s
-    out << generate_warnings(true).to_s
-    out << generate_controller_warnings(true).to_s
-    out << generate_model_warnings(true).to_s
-    out << generate_template_warnings(true).to_s
+    report_overviews.each do |overview|
+      out << overview.html_report
+    end
     out << "</body></html>"
   end
 
   #Output text version of the report
   def to_s
-    out = text_header <<
-    "\n\n+SUMMARY+\n\n" <<
-    truncate_table(generate_overview.to_s) << "\n\n" <<
-    truncate_table(generate_warning_overview.to_s) << "\n"
-
-    #Return output early if only summarizing
-    return out if tracker.options[:summary_only]
-
-    if tracker.options[:report_routes] or tracker.options[:debug]
-      out << "\n+CONTROLLERS+\n" <<
-      truncate_table(generate_controllers.to_s) << "\n"
+    out = text_header
+    report_overviews.each do |overview|
+      out << "\n\n#{overview.title.upcase}\n\n" if overview.title != ''
+      out << overview.string_report
     end
-
-    if tracker.options[:debug]
-      out << "\n+TEMPLATES+\n\n" <<
-      truncate_table(generate_templates.to_s) << "\n"
-    end
-
-    res = generate_errors
-    out << "+Errors+\n" << truncate_table(res.to_s) if res
-
-    res = generate_warnings
-    out << "\n\n+SECURITY WARNINGS+\n\n" << truncate_table(res.to_s) if res
-
-    res = generate_controller_warnings
-    out << "\n\n\nController Warnings:\n\n" << truncate_table(res.to_s) if res
-
-    res = generate_model_warnings
-    out << "\n\n\nModel Warnings:\n\n" << truncate_table(res.to_s) if res
-
-    res = generate_template_warnings
-    out << "\n\nView Warnings:\n\n" << truncate_table(res.to_s) if res
-
     out << "\n"
     out
   end
 
   #Generate CSV output
   def to_csv
-    output = csv_header
-    output << "\nSUMMARY\n"
+    out = csv_header
+    out << "\nSUMMARY\n"
 
-    output << table_to_csv(generate_overview) << "\n"
-
-    output << table_to_csv(generate_warning_overview) << "\n"
-
-    #Return output early if only summarizing
-    if tracker.options[:summary_only]
-      return output
+    report_overviews.each do |overview|
+      csv_data = overview.csv_report
+      if csv_data
+        out << "\n\n#{overview.title.upcase}\n\n" if overview.title != ''
+        out <<  csv_data + "\n"
+      end
     end
 
-    if tracker.options[:report_routes] or tracker.options[:debug]
-      output << "CONTROLLERS\n"
-      output << table_to_csv(generate_controllers) << "\n"
-    end
-
-    if tracker.options[:debug]
-      output << "TEMPLATES\n\n"
-      output << table_to_csv(generate_templates) << "\n"
-    end
-
-    res = generate_errors
-    output << "ERRORS\n" << table_to_csv(res) << "\n" if res
-
-    res = generate_warnings
-    output << "SECURITY WARNINGS\n" << table_to_csv(res) << "\n" if res
-
-    output << "Controller Warnings\n"
-    res = generate_controller_warnings
-    output << table_to_csv(res) << "\n" if res
-
-    output << "Model Warnings\n"
-    res = generate_model_warnings
-    output << table_to_csv(res) << "\n" if res
-
-    res = generate_template_warnings
-    output << "Template Warnings\n"
-    output << table_to_csv(res) << "\n" if res
-
-    output
+    out
   end
 
   #Not yet implemented
@@ -243,25 +147,6 @@ HEADER
     header << CSV.generate_line([File.expand_path(tracker.options[:app_path]), Time.now.to_s, checks.checks_run.sort.join(", "), rails_version])
     "BRAKEMAN REPORT\n\n" + header
   end
-
-  #Return summary of warnings in hash and store in @warnings_summary
-  def warnings_summary
-    return @warnings_summary if @warnings_summary
-
-    summary = Hash.new(0)
-    high_confidence_warnings = 0
-
-    [all_warnings].each do |warnings|
-      warnings.each do |warning|
-        summary[warning.warning_type.to_s] += 1
-        high_confidence_warnings += 1 if warning.confidence == 0
-      end
-    end
-
-    summary[:high_confidence] = high_confidence_warnings
-    @warnings_summary = summary
-  end
-
 
   #Generated tab-separated output suitable for the Jenkins Brakeman Plugin:
   #https://github.com/presidentbeef/brakeman-jenkins-plugin
@@ -342,6 +227,23 @@ HEADER
   def all_warnings
     @all_warnings ||= @checks.all_warnings
   end
+
+  # Return summary of warnings in hash and store in @warnings_summary
+  def warnings_summary(all_warnings = [@all_warnings])
+    summary = Hash.new(0)
+    high_confidence_warnings = 0
+
+    all_warnings.each do |warnings|
+      warnings.each do |warning|
+        summary[warning.warning_type.to_s] += 1
+        high_confidence_warnings += 1 if warning.confidence == 0
+      end
+    end
+
+    summary[:high_confidence] = high_confidence_warnings
+    summary
+  end
+
 
   def number_of_templates tracker
     Set.new(tracker.templates.map {|k,v| v[:name].to_s[/[^.]+/]}).length

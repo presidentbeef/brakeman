@@ -3,6 +3,7 @@ class Brakeman::Report
     class ControllerWarning < Brakeman::Report::Overview
 
       def report(html = false)
+        @title = 'Controller Warnings'
         unless @tracker.checks.controller_warnings.empty?
           warnings = []
           @tracker.checks.controller_warnings.each do |warning|
