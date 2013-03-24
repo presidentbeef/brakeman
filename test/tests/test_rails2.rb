@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 3,
         :template => 43,
-        :warning => 41 }
+        :warning => 45 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
         :template => 43,
-        :warning => 42 }
+        :warning => 46 }
     end
   end
 
@@ -961,4 +961,34 @@ class Rails2Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /home_controller\.rb/
   end
+
+  def test_unsafe_symbol_creation
+    [40,41].each do |line|
+      assert_warning :type => :warning,
+        :warning_type => "Denial of Service",
+        :line => line,
+        :message => /^Symbol\ conversion\ from\ unsafe\ string/,
+        :confidence => 0,
+        :file => /application_controller\.rb/
+     end
+  end
+
+  def test_unsafe_symbol_creation_2
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :line => 83,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_unsafe_symbol_creation_3
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :line => 29,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string/,
+      :confidence => 1,
+      :file => /application_controller\.rb/
+  end
+
 end
