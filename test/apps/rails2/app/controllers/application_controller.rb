@@ -35,4 +35,11 @@ class ApplicationController < ActionController::Base
 
     return true
   end
+
+  def decent
+    if params[:thang] && self.respond_to?(params[:thang].to_sym)
+      :"really_#{params[:thang]}"
+    end
+  end
+
 end
