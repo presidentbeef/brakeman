@@ -8,7 +8,7 @@ class Brakeman::Report
         singleton.send(:define_method, attribute_name) { attribute_value }
       end
 
-      # There are last, so as to make overwriting these using locals impossible.
+      # The template is last, as to make overwriting them using locals impossible.
       singleton.send(:define_method, 'template_file') { template_file }
       singleton.send(:define_method, 'template') {
         File.read(File.expand_path("templates/#{template_file}.html.erb", File.dirname(__FILE__)))
