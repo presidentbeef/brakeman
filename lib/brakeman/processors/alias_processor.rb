@@ -401,7 +401,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       branch_scopes = []
       exps.each_with_index do |branch, i|
         scope do
-          exp[2 + i] = process_if_branch branch
+          branch_index = 2 + i # s(:if, condition, then_branch, else_branch)
+          exp[branch_index] = process_if_branch branch
           branch_scopes << env.current
         end
       end
