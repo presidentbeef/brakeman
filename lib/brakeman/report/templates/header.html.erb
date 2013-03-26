@@ -11,7 +11,7 @@
         elem.style.display = "block";
       else
         elem.style.display = "none";
-        
+
       elem.parentNode.scrollIntoView();
     }
   </script>
@@ -33,7 +33,7 @@
   <tr>
     <td><%= File.expand_path tracker.options[:app_path] %></td>
     <td><%= rails_version %></td>
-    <td><%= Brakeman::Version %>
+    <td><%= brakeman_version %>
     <td>
       <%= tracker.start_time %><br><br>
       <%= tracker.duration %> seconds
