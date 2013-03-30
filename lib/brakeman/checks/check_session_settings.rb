@@ -35,13 +35,16 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   #
   #and App::Application.config.secret_token =
   #in Rails 3.x apps
+  #
+  #and App::Application.config.secret_key_base =
+  #in Rails 4.x apps
   def process_attrasgn exp
     if not tracker.options[:rails3] and exp.target == @session_settings and exp.method == :session=
       check_for_issues exp.first_arg, "#{tracker.options[:app_path]}/config/initializers/session_store.rb"
     end
 
     if tracker.options[:rails3] and settings_target?(exp.target) and
-      exp.method == :secret_token= and string? exp.first_arg
+      (exp.method == :secret_token= or exp.method == :secret_key_base=) and string? exp.first_arg
 
       warn_about_secret_token exp, "#{tracker.options[:app_path]}/config/initializers/secret_token.rb"
     end
