@@ -137,6 +137,11 @@ class HomeController < ApplicationController
     JSON.parse params[:input]
   end
 
+  def mass_assign_slice_only
+    Account.new(params.slice(:name, :email))
+    Account.new(params.only(:name, email))
+  end
+
   private
 
   def filter_it
