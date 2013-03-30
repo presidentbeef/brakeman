@@ -202,5 +202,5 @@ class Rails32Tests < Test::Unit::TestCase
       :message => /^Session\ secret\ should\ not\ be\ included\ in/,
       :confidence => 0,
       :file => /secret_token\.rb/
-  end 
+  end
 end
