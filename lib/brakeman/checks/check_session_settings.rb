@@ -23,12 +23,10 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
 
     check_for_issues settings, "#{tracker.options[:app_path]}/config/environment.rb"
 
-    if tracker.initializers["session_store.rb"]
-      process tracker.initializers["session_store.rb"]
-    end
-
-    if tracker.initializers["secret_token.rb"]
-      process tracker.initializers["secret_token.rb"]
+    ["session_store.rb", "secret_token.rb"].each do |file|
+      if tracker.initializers[file] and not ignored? file
+        process tracker.initializers[file]
+      end
     end
   end
 
@@ -131,5 +129,15 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
       :confidence => CONFIDENCE[:high],
       :line => value.line,
       :file => file
+  end
+
+  def ignored? file
+    if @app_tree.exists? ".gitignore"
+      input = @app_tree.read(".gitignore")
+
+      input.include? file
+    else
+      false
+    end
   end
 end
