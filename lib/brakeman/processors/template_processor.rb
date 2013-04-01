@@ -47,7 +47,7 @@ class Brakeman::TemplateProcessor < Brakeman::BaseProcessor
 
   #Adds output to the list of outputs.
   def process_output exp
-    process exp.value
+    exp.value = process exp.value
     @current_template[:outputs] << exp
     exp
   end
