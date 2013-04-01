@@ -55,6 +55,7 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
 
   #Process blocks, ignoring :ignore exps
   def process_block exp
+    exp = exp.dup
     exp.shift
     exp.map! do |e|
       res = process e
