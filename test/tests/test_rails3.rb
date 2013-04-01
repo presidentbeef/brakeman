@@ -674,6 +674,24 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /home_controller\.rb/
   end
 
+  def test_mass_assignment_with_slice
+    assert_no_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :line => 141,
+      :message => /^Unprotected\ mass\ assignment/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
+  def test_mass_assignment_with_only
+    assert_no_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :line => 142,
+      :message => /^Unprotected\ mass\ assignment/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
   def test_translate_bug
     assert_warning :type => :warning,
       :warning_type => "Cross Site Scripting",
