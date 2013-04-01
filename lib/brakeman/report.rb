@@ -8,7 +8,7 @@ require "csv"
 require 'multi_json'
 require 'brakeman/version'
 require 'brakeman/report/renderer'
-Dir[File.dirname(__FILE__) + 'report/initializers/*.rb'].each {|file| require file}
+Dir.glob(File.dirname(__FILE__) + '/report/initializers/*.rb').each {|file| require file }
 
 #Generates a report based on the Tracker and the results of
 #Tracker#run_checks. Be sure to +run_checks+ before generating
