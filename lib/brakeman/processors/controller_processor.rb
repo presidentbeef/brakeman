@@ -187,6 +187,11 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
   #We build a new method and process that the same way as usual
   #methods and filters.
   def add_fake_filter exp
+    unless @controller
+      Brakeman.debug "Skipping before_filter outside controller: #{exp}"
+      return exp
+    end
+
     filter_name = ("fake_filter" + rand.to_s[/\d+$/]).to_sym
     args = exp.block_call.arglist
     args.insert(1, Sexp.new(:lit, filter_name))
