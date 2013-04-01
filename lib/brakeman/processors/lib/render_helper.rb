@@ -120,7 +120,7 @@ module Brakeman::RenderHelper
         unless value.original_line
           #TODO: This has been broken for a while now and no one noticed
           #so maybe we can skip it
-          value.original_line(value.line)
+          value.original_line = value.line
         end
       end
 

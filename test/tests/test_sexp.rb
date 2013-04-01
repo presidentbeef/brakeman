@@ -303,4 +303,44 @@ class SexpTests < Test::Unit::TestCase
     assert_equal s(:lit, 2), exp.first_arg
     assert_equal s(:lit, 3), exp.second_arg
   end
+
+  # For performance reasons, Sexps cache their hash value. This was not being
+  # invalidated on <<
+  def test_hash_invalidation_on_push
+    s = Sexp.new(:blah)
+    s_hash = s.hash
+    s << :blah
+
+    assert_not_equal s_hash, s.hash
+  end
+
+  # Since Sexp is subclassed from Array, only changing the contents
+  # of the Sexp actually change the hash value.
+  def test_hash_invalidation_on_line_number_change
+    s = Sexp.new(:blah).line(1)
+    s_hash = s.hash
+    s.line(10)
+
+    assert_not_nil s.instance_variable_get(:@my_hash_value)
+  end
+
+  def test_sexp_line_set
+    s = Sexp.new(:blah).line(10)
+    assert_equal 10, s.line
+
+    s.line = 100
+    assert_equal 100, s.line
+
+    s.line(0)
+    assert_equal 0, s.line
+  end
+
+  def test_sexp_original_line_set
+    s = Sexp.new(:blah)
+    s.original_line = 10
+    assert_equal 10, s.original_line
+
+    s.original_line = 100
+    assert_equal 100, s.original_line
+  end
 end

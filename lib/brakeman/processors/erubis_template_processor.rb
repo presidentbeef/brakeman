@@ -47,7 +47,7 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
     else
       #TODO: Is it really necessary to create a new Sexp here?
       call = make_call target, method, process_all!(exp.args)
-      call.original_line(exp.original_line)
+      call.original_line = exp.original_line
       call.line(exp.line)
       call
     end
