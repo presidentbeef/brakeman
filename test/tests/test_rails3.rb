@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 8,
       :template => 36,
-      :warning => 54
+      :warning => 53
     }
 
     if RUBY_PLATFORM == 'java'
@@ -950,7 +950,7 @@ class Rails3Tests < Test::Unit::TestCase
   end
 
   def test_session_secret_token
-    assert_warning :type => :warning,
+    assert_no_warning :type => :warning,
       :warning_type => "Session Setting",
       :line => 7,
       :message => /^Session\ secret\ should\ not\ be\ included\ in/,
