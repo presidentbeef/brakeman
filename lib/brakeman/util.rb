@@ -172,6 +172,12 @@ module Brakeman::Util
                         exp.node_type == :nil)
   end
 
+  #Check if _exp_ represents a block of code
+  def block? exp
+    exp.is_a? Sexp and (exp.node_type == :block or
+                        exp.node_type == :rlist)
+  end
+
   #Check if _exp_ is a params hash
   def params? exp
     if exp.is_a? Sexp
