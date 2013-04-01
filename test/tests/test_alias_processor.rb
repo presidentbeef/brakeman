@@ -261,4 +261,29 @@ class AliasProcessorTests < Test::Unit::TestCase
     x
     RUBY
   end
+
+  def test_simple_block_args
+    assert_alias '1', <<-RUBY
+    y = 1
+
+    x do |y|
+      y = 2
+    end
+
+    y
+    RUBY
+  end
+
+  def test_block_arg_assignment
+    assert_alias '1 + z', <<-RUBY
+    y = 1
+
+    blah do |y = 3, x = 2|
+      y = 2
+      z = x
+    end
+
+    y + z
+    RUBY
+  end
 end
