@@ -890,7 +890,7 @@ class Rails31Tests < Test::Unit::TestCase
   def test_sql_injection_in_pluck
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :line => 174,
+      :line => 177,
       :message => /^Possible\ SQL\ injection/,
       :confidence => 0,
       :file => /users_controller\.rb/

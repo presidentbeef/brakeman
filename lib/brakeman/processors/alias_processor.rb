@@ -650,7 +650,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   end
 
   def value_from_if exp
-    if node_type? exp.else_clause, :block or node_type? exp.then_clause, :block
+    if block? exp.else_clause or block? exp.then_clause
       #If either clause is more than a single expression, just use entire
       #if expression for now
       exp

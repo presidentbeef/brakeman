@@ -152,6 +152,9 @@ class UsersController < ApplicationController
     User.update_all({:admin => true}, { :name => params[:name] }, :limit => params[:limit])
   end
 
+  def test_assign_if
+  end
+
   private
 
   def simple_helper
@@ -175,4 +178,6 @@ class UsersController < ApplicationController
   end
 
   include UserMixin
+
+  before_filter :assign_if, :only => :test_assign_if
 end

@@ -103,6 +103,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
 
   #If inside an output stream, only return the final expression
   def process_block exp
+    exp = exp.dup
     exp.shift
     if @inside_concat
       @inside_concat = false
