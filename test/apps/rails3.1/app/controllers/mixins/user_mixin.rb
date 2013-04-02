@@ -9,4 +9,11 @@ module UserMixin
   def mixin_default
     @dangerous_input = params[:bad]
   end
+
+  def assign_if
+    @value = if something
+               this
+               that
+             end
+  end
 end
