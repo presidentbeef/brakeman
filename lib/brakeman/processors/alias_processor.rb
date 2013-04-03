@@ -167,6 +167,36 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     exp
   end
 
+  def process_call_with_block exp
+    exp[1] = process_call exp.block_call
+
+    env.scope do
+      exp.block_args.each do |e|
+        #Force block arg to be local
+        if node_type? e, :lasgn
+          env.current[Sexp.new(:lvar, e.lhs)] = e.rhs
+        elsif e.is_a? Symbol
+          local = Sexp.new(:lvar, e)
+          env.current[local] = local
+        else
+          raise "I don't know what's going on"
+        end
+      end
+
+      block = exp.block
+
+      if block? block
+        process_all! block
+      else
+        exp[3] = process block
+      end
+    end
+
+    exp
+  end
+
+  alias process_iter process_call_with_block
+
   #Process a new scope.
   def process_scope exp
     env.scope do
@@ -419,7 +449,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   def process_if_branch exp
     if sexp? exp
-      if exp.node_type == :block or exp.node_type == :rlist
+      if block? exp
         process_default exp
       else
         process exp
