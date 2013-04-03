@@ -172,7 +172,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
     env.scope do
       exp.block_args.each do |e|
-         #Force block arg to be local
+        #Force block arg to be local
         if node_type? e, :lasgn
           env.current[Sexp.new(:lvar, e.lhs)] = e.rhs
         elsif e.is_a? Symbol
@@ -185,7 +185,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
       block = exp.block
 
-      if node_type? block, :block, :rlist
+      if block? block
         process_all! block
       else
         exp[3] = process block
@@ -449,7 +449,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   def process_if_branch exp
     if sexp? exp
-      if exp.node_type == :block or exp.node_type == :rlist
+      if block? exp
         process_default exp
       else
         process exp
