@@ -65,7 +65,12 @@ module Brakeman
 
     options[:app_path] = File.expand_path(options[:app_path])
 
-    options = load_options(options[:config_file]).merge! options
+    file_options = load_options(options[:config_file])
+
+    options = file_options.merge options
+
+    options[:quiet] = true if options[:quiet].nil? && file_options[:quiet]
+
     options = get_defaults.merge! options
     options[:output_formats] = get_output_formats options
 
@@ -89,9 +94,9 @@ module Brakeman
   def self.load_options custom_location
     #Load configuration file
     if config = config_file(custom_location)
-      notify "[Notice] Using configuration in #{config}"
       options = YAML.load_file config
       options.each { |k, v| options[k] = Set.new v if v.is_a? Array }
+      notify "[Notice] Using configuration in #{config}" unless options[:quiet]
       options
     else
       {}
