@@ -286,4 +286,16 @@ class AliasProcessorTests < Test::Unit::TestCase
     y + z
     RUBY
   end
+
+  def test_block_arg_destructing
+    assert_alias '1', <<-RUBY
+    y = 1
+
+    blah do |(x, y)|
+      y = 2
+    end
+
+    y
+    RUBY
+  end
 end
