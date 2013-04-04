@@ -168,18 +168,23 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   end
 
   def process_call_with_block exp
-    exp[1] = process_call exp.block_call
+    exp[1] = process exp.block_call
 
     env.scope do
       exp.block_args.each do |e|
-        #Force block arg to be local
+        #Force block arg(s) to be local
         if node_type? e, :lasgn
           env.current[Sexp.new(:lvar, e.lhs)] = e.rhs
+        elsif node_type? e, :masgn
+          e[1..-1].each do |var|
+            local = Sexp.new(:lvar, var)
+            env.current[local] = local
+          end
         elsif e.is_a? Symbol
           local = Sexp.new(:lvar, e)
           env.current[local] = local
         else
-          raise "I don't know what's going on"
+          raise "Unexpected value in block args: #{e.inspect}"
         end
       end
 
