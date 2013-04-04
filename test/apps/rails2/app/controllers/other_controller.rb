@@ -42,4 +42,8 @@ class OtherController < ApplicationController
     @x = params[:x].to_i
     @id = cookies[:id].to_i
   end
+
+  def test_to_sym
+    :"#{hello!}"
+  end
 end
