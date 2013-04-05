@@ -1,3 +1,18 @@
+# 1.9.5
+
+ * Add check for unsafe symbol creation
+ * Do not warn on mass assignment with `slice`/`only`
+ * Do not warn on session secret if in `.gitignore`
+ * Fix scoping for blocks and block arguments
+ * Fix error when modifying blocks in templates
+ * Fix session secret check for Rails 4
+ * Fix crash on `before_filter` outside controller
+ * Fix `Sexp` hash cache invalidation
+ * Respect `quiet` option in configuration file
+ * Convert assignment to simple `if` expressions to `or`
+ * More fixes for assignments inside branches
+ * Pin to ruby2ruby version 2.0.3
+
 # 1.9.4
  
  * Add check for CVE-2013-1854
