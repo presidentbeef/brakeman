@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Brakeman 1.5.1 Released</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman 1.9.5 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/blog/2012/03/05/brakeman-1-dot-5-1-released/"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2013/04/05/brakeman-1-dot-9-5-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -104,7 +104,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 1.5.1 Released</h1>
+      <h1 class="entry-title">Brakeman 1.9.5 Released</h1>
     
     
       <p class="meta">
@@ -112,7 +112,7 @@
 
 
 
-<time datetime="2012-03-05 18:50:00 -0800" pubdate  updated >Mar 5<span>th</span>, 2012</time>
+<time datetime="2013-04-05 08:42:00 -0700" pubdate  updated >Apr 5<span>th</span>, 2013</time>
 
 
 </p>
@@ -120,78 +120,98 @@
   </header>
 
 
-<div class="entry-content"><p>After the excitment yesterday with a mass assignment vulnerability being exploited in a very public manner on <a href="https://gist.github.com/1978249">Github</a>, interest in Brakeman has skyrocketed.</p>
+<div class="entry-content"><p>As planned, Brakeman 1.9.5 is mostly internal bug fixes and improvements, with the one exception being a new check for symbol creation from user input. Barring any emergencies, the next release will be 2.0.</p>
 
-<p>This lead to re-examination of Brakeman&#8217;s code for detecting that mass assignment has been globally disabled - and it turns out there was a bug or two. So here is a bug-fix release of Brakeman to correct that and some other minor issues.</p>
-
-<p>Upgrading to 1.5.1 may increase the number of warnings reported.</p>
-
-<p><em>Changes since 1.5.0</em>:</p>
+<p><em>Changes since 1.9.4</em>:</p>
 
 <ul>
-<li>Fix detection of global mass assignment setting</li>
-<li>Fix partial rendering in Rails 3</li>
-<li>Show backtrace when interrupt received (Ruby 1.9 only)</li>
-<li>More debug output</li>
-<li>Internal fixes:
-
-<ul>
-<li>Remove duplicate method in Brakeman::Rails2XSSErubis</li>
-<li>Add tracking of module and class to Brakeman::BaseProcessor</li>
-<li>Report module when using Brakeman::FindCall</li>
-</ul>
-</li>
+<li>Add check for unsafe symbol creation (<a href="https://github.com/HonoreDB">Aaron Weiner</a>)</li>
+<li>Do not warn on mass assignment with <code>slice</code>/<code>only</code> (<a href="https://github.com/presidentbeef/brakeman/issues/203">#203</a>)</li>
+<li>Do not warn on session secret if in <code>.gitignore</code> (<a href="https://github.com/presidentbeef/brakeman/issues/241">#241</a>)</li>
+<li>Fix session secret check for Rails 4</li>
+<li>Fix scoping for blocks and block arguments</li>
+<li>Fix error when modifying blocks in templates</li>
+<li>Fix crash on <code>before_filter</code> outside controller</li>
+<li>Fix <code>Sexp</code> hash cache invalidation</li>
+<li>Respect <code>quiet</code> option in configuration file (<a href="https://github.com/presidentbeef/brakeman/issues/300">#300</a>)</li>
+<li>Convert assignment to simple <code>if</code> expressions to <code>or</code></li>
+<li>More fixes for assignments inside branches</li>
+<li>Refactoring of <code>CheckLinkTo</code> and <code>Report</code> (<a href="https://github.com/barttenbrinke">Bart ten Brinke</a>)</li>
+<li>Pin ruby2ruby dependency to version 2.0.3 (<a href="https://github.com/seattlerb/ruby2ruby/issues/15">see here</a>)</li>
 </ul>
 
 
-<h3>Mass Assignment</h3>
+<h3>Symbol Creation Check</h3>
 
-<p>Mass assignment is not a particularly new issue, but the amount of attention suddenly focused on it this weekend was amazing.</p>
+<p><a href="https://github.com/HonoreDB">Aaron Weiner</a> added a check for symbol creation from user input, such as <code>params[:x].to_i</code> which can lead to Denial of Service.</p>
 
-<p>This release of Brakeman can detect three different methods for defaulting all models to a whitelist of allowed attributes that can be mass assigned.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/296">changes</a>)</p>
 
-<p>The first is probably the most widely-seen version. In an intializer, do</p>
+<h3>Mass Assignment with Select Keys</h3>
 
-<pre><code>ActiveRecord::Base.send(:attr_accessible, nil)
-</code></pre>
+<p>A common pattern to avoid mass assignment issues is to use <code>slice</code> or <code>only</code> when passing in values to mass assignment methods. Brakeman should no longer warn in these situations.</p>
 
-<p>The second is essentially equivalent, but 1.5.1 adds support for it as well:</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/303">changes</a>)</p>
 
-<pre><code>module ActiveRecord
-  class Base
-    attr_accessible nil
-  end
-end
-</code></pre>
+<h3>Ignoring Session Secrets</h3>
 
-<p>The third option is only available for Rails 3.1.0 and newer. The following configuration setting can be added to <code>application.rb</code>:</p>
+<p>Brakeman no longer warns if the config file containing the session secret key is included in <code>.gitignore</code>. This only applies if the default file names are used.</p>
 
-<pre><code>config.active_record.whitelist_attributes = true
-</code></pre>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/302">changes</a>)</p>
 
-<p>Brakeman should correctly detect all of these.</p>
+<h3>Warn on Rails 4 Session Secrets</h3>
 
-<p><a href="http://pragtob.wordpress.com/2012/03/06/secure-your-rails-apps/">This is a very nice post</a> explaining the dangers of mass assignment (mentioning Brakeman is nice, too.)</p>
+<p>Support for Rails 4 session secrets has been added, since the configuration for that changed again.</p>
 
-<h3>Partials in Rails 3</h3>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/302">changes</a>)</p>
 
-<p>In Rails 3, <code>render 'blah'</code> is now equivalent to <code>render :partial =&gt; 'blah'</code> when used inside a template.</p>
+<h3>Block Scoping</h3>
 
-<p>Brakeman now supports this correctly.</p>
+<p>Correct scope for blocks is tricky, and there are also some differences between Ruby 1.8 and 1.9 for block arguments. For the most part, Brakeman has ignored blocks, but this lead to some compounding issues with assignments in branches.</p>
 
-<h3>Debug Output</h3>
+<p>This release now treats all block arguments as local assignments <em>inside</em> the block and shadows any variables outside the block (this is Ruby 1.9 behavior). This should lead to some performance improvements where block arguments do shadow outer variables.</p>
 
-<p>More debugging output has been added for use with the <code>-d</code> option.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/305">changes and examples</a>)</p>
 
-<p>Additionally, when interrupting the application (for example, with <code>^C</code>), a stack trace will be output. Please note, however, that this only works with Ruby 1.9.</p>
+<h3>Sexp Hash Cache Invalidation</h3>
 
-<h3>Internal Changes</h3>
+<p>Since Brakeman does a ton of hash table lookups with s-expressions as keys, it caches <code>Sexp#hash</code> values. In some situations, these cached values were being invalidated when they did not need to be, and not being invalidated when they should have been.</p>
 
-<p>There have been a few internal changes. There is a possibility that these will affect some warnings. However, it should only result in accurate reporting of class names.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/294">changes</a>)</p>
+
+<h3>Quiet Option</h3>
+
+<p>Brakeman will now be quiet if the option is set in a configuration file.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/306">changes</a>)</p>
+
+<h3>Assignments of If Expressions</h3>
+
+<p>Simple if expression assigments such as <code>x = thing ? this : that</code> will now be converted to <code>x = this || that</code>. This should simplify some code reported with warnings as well as avoid warning on values in <code>if</code> conditions.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/295">changes and examples</a>)</p>
+
+<h3>Assignments in If Expressions</h3>
+
+<p>Assignments inside <code>if</code> branches cause Brakeman to &#8220;branch&#8221; the values for a variable, since it could be two or more different values. However, this branching should only occur <em>after</em> both branches have been processed. Brakeman 1.9.3 made it so values were not branched inside of a single branch, but there was still an issue where values branched in the <code>then</code> clause would be used in the <code>else</code> clause. This release fixes that issue and simplifies branching overall.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/297">changes and examples</a>)</p>
+
+<h3>Refactoring Internals</h3>
+
+<p><a href="https://github.com/barttenbrinke">Bart ten Brinke</a> has begun some work refactoring some of the many ugly parts of Brakeman. Thanks!</p>
 
 <h3>Report Issues</h3>
 
-<p>Please report any problems on <a href="https://github.com/presidentbeef/brakeman/issues">Github</a>!</p>
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+
+<h3>Roadmap</h3>
+
+<p>Next up should be <a href="https://github.com/presidentbeef/brakeman/wiki/Roadmap">Brakeman 2.0</a> unless there needs to be another emergency release. Most of the changes for 2.0 are relatively minor, but break backwards compatibility in areas that may affect external tools. This includes cleaning up warning messages, removing duplicate information from JSON output, combining some checks, changing some defaults, and so on.</p>
+
+<p>If you have suggestions for other breaking changes, please file an issue ASAP to get it into the next release!</p>
 </div>
 
 
@@ -207,7 +227,7 @@ end
 
 
 
-<time datetime="2012-03-05 18:50:00 -0800" pubdate  updated >Mar 5<span>th</span>, 2012</time>
+<time datetime="2013-04-05 08:42:00 -0700" pubdate  updated >Apr 5<span>th</span>, 2013</time>
 
 
 
@@ -218,7 +238,7 @@ end
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2012/03/05/brakeman-1-dot-5-1-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2012/03/05/brakeman-1-dot-5-1-released/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2013/04/05/brakeman-1-dot-9-5-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2013/04/05/brakeman-1-dot-9-5-released/" >Tweet</a>
   
   
   <g:plusone size="medium"></g:plusone>
@@ -234,8 +254,8 @@ end
     <div id="disqus_thread"><div id="disqus_thread"></div>
 <script type="text/javascript">
   var disqus_shortname = 'brakeman';
-  var disqus_identifier = 'http://brakemanscanner.org/blog/2012/03/05/brakeman-1-dot-5-1-released/';
-  var disqus_url = 'http://brakemanscanner.org/blog/2012/03/05/brakeman-1-dot-5-1-released/';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2013/04/05/brakeman-1-dot-9-5-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2013/04/05/brakeman-1-dot-9-5-released/';
   //var disqus_developer = 1;
   (function() {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
