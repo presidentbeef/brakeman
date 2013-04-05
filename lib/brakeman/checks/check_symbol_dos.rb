@@ -38,7 +38,7 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
     if result[:method] == :to_sym
       args = [call.target]
     else
-      args = call
+      args = call.select { |e| sexp? e }
     end
 
     if input = args.map{ |arg| has_immediate_user_input?(arg) }.compact.first
