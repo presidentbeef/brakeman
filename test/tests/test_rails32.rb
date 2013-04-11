@@ -151,6 +151,15 @@ class Rails32Tests < Test::Unit::TestCase
       :file => /show\.html\.erb/
   end
 
+  def test_escaped_params_to_json
+    assert_no_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 21,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :file => /show\.html\.erb/
+  end
+
   def test_cross_site_scripting_in_slim_param
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
