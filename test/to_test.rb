@@ -48,6 +48,8 @@ class #{name}Tests < Test::Unit::TestCase
       <<-RUBY
   def test_#{w.warning_type.to_s.downcase.tr(" -", "__")}_#{counter}
     assert_warning :type => #{w.warning_set.inspect},
+      :warning_code => #{w.warning_code},
+      :fingerprint => #{w.fingerprint.inspect},
       :warning_type => #{w.warning_type.inspect},
       #{w.line ? ":line => " : "#noline"}#{w.line},
       :message => /^#{Regexp.escape w.message[0,40]}/,
