@@ -1,6 +1,6 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-RailsWithXssPlugin = BrakemanTester.run_scan "rails_with_xss_plugin", "RailsWithXssPlugin"
+RailsWithXssPlugin = BrakemanTester.run_scan "rails_with_xss_plugin", "RailsWithXssPlugin", :absolute_paths => true
 
 class RailsWithXssPluginTests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
@@ -282,6 +282,10 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :message => /^Session\ secret\ should\ not\ be\ included\ in/,
       :confidence => 0,
       :file => /session_store\.rb/
+  end
+
+  def test_absolute_paths
+    assert report[:warnings].all? { |w| w.file.start_with? "/" }
   end
 
   def test_sql_injection_CVE_2013_0155
