@@ -77,17 +77,10 @@ module Brakeman
     options
   end
 
-  DEPRECATED_CONFIG_FILES = [
-    File.expand_path("./config.yaml"),
-    File.expand_path("~/.brakeman/config.yaml"),
-    File.expand_path("/etc/brakeman/config.yaml"),
-    "#{File.expand_path(File.dirname(__FILE__))}/../lib/config.yaml"
-  ]
-
   CONFIG_FILES = [
     File.expand_path("./config/brakeman.yml"),
     File.expand_path("~/.brakeman/config.yml"),
-    File.expand_path("/etc/brakeman/config.yml"),
+    File.expand_path("/etc/brakeman/config.yml")
   ]
 
   #Load options from YAML file
@@ -103,12 +96,9 @@ module Brakeman
     end
   end
 
-  def self.config_file(custom_location=nil)
-    DEPRECATED_CONFIG_FILES.each do |f|
-      notify "#{f} is deprecated, please use one of #{CONFIG_FILES.join(", ")}" if File.file?(f)
-    end
-    supported_locations = [File.expand_path(custom_location || "")] + DEPRECATED_CONFIG_FILES + CONFIG_FILES
-    supported_locations.detect{|f| File.file?(f) }
+  def self.config_file custom_location = nil
+    supported_locations = [File.expand_path(custom_location || "")] + CONFIG_FILES
+    supported_locations.detect {|f| File.file?(f) }
   end
 
   #Default set of options
