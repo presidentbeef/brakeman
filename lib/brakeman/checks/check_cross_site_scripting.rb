@@ -66,6 +66,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       @known_dangerous << :to_json
       Brakeman.debug("Automatic to_json escaping not enabled, consider to_json dangerous")
     else
+      @safe_input_attributes << :to_json
       Brakeman.debug("Automatic to_json escaping is enabled.")
     end
 
