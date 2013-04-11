@@ -52,7 +52,9 @@ class BaseCheckTests < Test::Unit::TestCase
   def test_version_between_pre_release
     assert version_between?("3.2.9.rc2", "3.2.5", "4.0.0")
   end
+end
 
+class ConfigTests < Test::Unit::TestCase
   def test_quiet_option_from_file
     config = Tempfile.new("config")
 
