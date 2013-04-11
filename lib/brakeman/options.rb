@@ -178,8 +178,8 @@ module Brakeman::Options
           options[:summary_only] = true
         end
 
-        opts.on "--relative-paths", "Output relative file paths in reports" do
-          options[:relative_paths] = true
+        opts.on "--absolute-paths", "Output absolute file paths in reports" do
+          options[:absolute_paths] = true
         end
 
         opts.on "-w",
