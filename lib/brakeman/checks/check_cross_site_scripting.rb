@@ -62,10 +62,17 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     initializers = tracker.check_initializers :ActiveSupport, :escape_html_entities_in_json=
     initializers.each {|result| json_escape_on = true?(result.call.first_arg) }
 
+    if tracker.config[:rails][:active_support] and
+      true? tracker.config[:rails][:active_support][:escape_html_entities_in_json]
+
+        json_escape_on = true
+    end
+
     if !json_escape_on or version_between? "0.0.0", "2.0.99"
       @known_dangerous << :to_json
       Brakeman.debug("Automatic to_json escaping not enabled, consider to_json dangerous")
     else
+      @safe_input_attributes << :to_json
       Brakeman.debug("Automatic to_json escaping is enabled.")
     end
 
