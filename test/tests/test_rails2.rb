@@ -908,6 +908,16 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /test_to_i\.html\.erb/
   end
 
+  def test_cross_site_scripting_unresolved_model_id
+    assert_no_warning :type => :template,
+      :warning_code => 2,
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :file => /_models\.html\.erb/
+  end
+
   def test_dangerous_send_try
     assert_warning :type => :warning,
       :warning_type => "Dangerous Send",
