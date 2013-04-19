@@ -57,6 +57,7 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
           warn :model => name,
             :file => model[:file],
             :warning_type => "Attribute Restriction",
+            :warning_code => :no_attr_accessible,
             :message => "Mass assignment is not restricted using attr_accessible",
             :confidence => CONFIDENCE[:high]
         elsif not tracker.options[:ignore_attr_protected]
