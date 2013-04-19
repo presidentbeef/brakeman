@@ -293,6 +293,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_attribute_restriction
     assert_warning :type => :model,
       :warning_type => "Attribute Restriction",
+      :warning_code => Brakeman::WarningCodes::Codes[:no_attr_accessible],
       :message => /^Mass assignment is not restricted using /,
       :confidence => 0,
       :file => /account, user\.rb/
@@ -1001,4 +1002,50 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /application_controller\.rb/
   end
 
+end
+
+Rails2WithOptions = BrakemanTester.run_scan "rails2", "Rails 2", :collapse_mass_assignment => false
+
+class Rails2WithOptionsTests < Test::Unit::TestCase
+  include BrakemanTester::FindWarning
+  include BrakemanTester::CheckExpected
+
+  def expected
+    if Brakeman::Scanner::RUBY_1_9
+      @expected ||= {
+        :controller => 1,
+        :model => 4,
+        :template => 43,
+        :warning => 45 }
+    else
+      @expected ||= {
+        :controller => 1,
+        :model => 4,
+        :template => 43,
+        :warning => 46 }
+    end
+  end
+
+  def report
+    Rails2WithOptions
+  end
+
+  def test_no_errors
+    assert_equal 0, report[:errors].length
+  end
+
+  def test_attribute_restriction
+    assert_warning :type => :model,
+      :warning_type => "Attribute Restriction",
+      :warning_code => Brakeman::WarningCodes::Codes[:no_attr_accessible],
+      :message => /^Mass assignment is not restricted using /,
+      :confidence => 0,
+      :file => /account\.rb/
+    assert_warning :type => :model,
+      :warning_type => "Attribute Restriction",
+      :warning_code => Brakeman::WarningCodes::Codes[:no_attr_accessible],
+      :message => /^Mass assignment is not restricted using /,
+      :confidence => 0,
+      :file => /user\.rb/
+  end
 end
