@@ -8,7 +8,7 @@ class Brakeman::Warning
     :line, :method, :model, :template, :user_input, :warning_code, :warning_set,
     :warning_type
 
-  attr_accessor :code, :context, :file, :message
+  attr_accessor :code, :context, :file, :message, :relative_path
 
   TEXT_CONFIDENCE = [ "High", "Medium", "Weak" ]
 
@@ -164,6 +164,7 @@ class Brakeman::Warning
     location_string = loc && loc.sort_by { |k, v| k.to_s }.to_s
     warning_code_string = sprintf("%03d", @warning_code)
     code_string = @code.inspect
+
     Digest::SHA2.new(256).update("#{warning_code_string}#{code_string}#{location_string}#{@relative_path}#{self.confidence}").to_s
   end
 
