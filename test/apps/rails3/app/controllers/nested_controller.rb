@@ -1,8 +1,8 @@
 class Whatever
   module Wherever
     class NestedController < ApplicationController
-      def just_testing
-        #that this does not cause errors
+      def so_nested
+        @bad_thing = params[:x]
       end
     end
   end
