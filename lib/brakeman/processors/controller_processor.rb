@@ -24,7 +24,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
   def process_class exp
     name = class_name(exp.class_name)
 
-    if not name.match(/Controller$/)
+    if not name.to_s.match(/Controller$/)
       #Skip classes that are not controllers, but treat as a module because
       #a class that is not a controller might contain a controller
       return process_module exp
