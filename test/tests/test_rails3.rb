@@ -35,6 +35,8 @@ class Rails3Tests < Test::Unit::TestCase
 
   def test_eval_params
     assert_warning :type => :warning,
+      :warning_code => 13,
+      :fingerprint => "4efdd73fb759135f5980b5da1d9804aa4eb5c7475eabfd0f0cf41299d1d7ec42",
       :warning_type => "Dangerous Eval",
       :line => 40,
       :message => /^User input in eval near line 40: eval\(pa/,
@@ -53,6 +55,8 @@ class Rails3Tests < Test::Unit::TestCase
 
   def test_command_injection_params_interpolation
     assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "eb5287a6638bce4be342627db12d03f1e5b51175ed13549920921e3659c21df4",
       :warning_type => "Command Injection",
       :line => 34,
       :message => /^Possible command injection near line 34:/,
@@ -859,6 +863,8 @@ class Rails3Tests < Test::Unit::TestCase
 
   def test_mail_link_CVE_2011_0446
     assert_warning :type => :template,
+      :warning_code => 32,
+      :fingerprint => "ca5cb14e201255ecf4904957bba2e12eab64ea2d31c26d7150a431dcdae2f206",
       :warning_type => "Mail Link",
       :line => 1,
       :message => /^Vulnerability\ in\ mail_to\ using\ javascrip/,
@@ -900,6 +906,7 @@ class Rails3Tests < Test::Unit::TestCase
 
   def test_remote_code_execution_CVE_2013_0277_unprotected
     assert_warning :type => :model,
+      :fingerprint => "b85602475eb048cfe7941b5952c3d5a09a7d9d0607f81fbf2b7578d1055fec90",
       :warning_type => "Remote Code Execution",
       :message => /^Serialized\ attributes\ are\ vulnerable\ in\ /,
       :confidence => 0,
