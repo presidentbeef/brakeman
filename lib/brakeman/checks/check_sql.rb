@@ -166,7 +166,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     if block.node_type == :block
       find_calls = Brakeman::FindAllCalls.new tracker
 
-      find_calls.process_source block, model_name, scope_name
+      find_calls.process_source block, :class => model_name, :method => scope_name
 
       find_calls.calls.each do |call|
         if @sql_targets.include? call[:method]

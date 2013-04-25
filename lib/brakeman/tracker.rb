@@ -86,7 +86,7 @@ class Brakeman::Tracker
               method_name = "#{definition[1]}.#{method_name}"
             end
 
-            yield definition, set_name, method_name
+            yield definition, set_name, method_name, info[:file]
 
           end
         end
@@ -155,12 +155,12 @@ class Brakeman::Tracker
   def index_call_sites
     finder = Brakeman::FindAllCalls.new self
 
-    self.each_method do |definition, set_name, method_name|
-      finder.process_source definition, set_name, method_name
+    self.each_method do |definition, set_name, method_name, file|
+      finder.process_source definition, :class => set_name, :method => method_name, :file => file
     end
 
     self.each_template do |name, template|
-      finder.process_source template[:src], nil, nil, template
+      finder.process_source template[:src], :template => template, :file => template[:file]
     end
 
     @call_index = Brakeman::CallIndex.new finder.calls
@@ -208,7 +208,7 @@ class Brakeman::Tracker
               method_name = "#{definition[1]}.#{method_name}"
             end
 
-            finder.process_source definition, set_name, method_name
+            finder.process_source definition, :class => set_name, :method => method_name, :file => info[:file]
 
           end
         end
@@ -217,7 +217,7 @@ class Brakeman::Tracker
 
     if locations.include? :templates
       self.each_template do |name, template|
-        finder.process_source template[:src], nil, nil, template
+        finder.process_source template[:src], :template => template, :file => template[:file]
       end
     end
 

@@ -13,10 +13,11 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
 
   #Process the given source. Provide either class and method being searched
   #or the template. These names are used when reporting results.
-  def process_source exp, klass = nil, method = nil, template = nil
-    @current_class = klass
-    @current_method = method
-    @current_template = template
+  def process_source exp, opts
+    @current_class = opts[:class]
+    @current_method = opts[:method]
+    @current_template = opts[:template]
+    @current_file = opts[:file]
     process exp
   end
 
