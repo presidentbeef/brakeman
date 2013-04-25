@@ -24,13 +24,14 @@ class Brakeman::Warning
 
     result = options[:result]
     if result
-      if result[:location][0] == :template #template result
-        @template ||= result[:location][1]
-        @code ||= result[:call]
+      @code ||= result[:call]
+      @file ||= result[:file]
+
+      if result[:location][:type] == :template #template result
+        @template ||= result[:location][:template]
       else
-        @class ||= result[:location][1]
-        @method ||= result[:location][2]
-        @code ||= result[:call]
+        @class ||= result[:location][:class]
+        @method ||= result[:location][:method]
       end
     end
 

@@ -31,7 +31,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
   #Add result to result list, which is used to check for duplicates
   def add_result result, location = nil
-    location ||= (@current_template && @current_template[:name]) || @current_class || @current_module || @current_set || result[:location][1]
+    location ||= (@current_template && @current_template[:name]) || @current_class || @current_module || @current_set || result[:location][:class] || result[:location][:template]
     location = location[:name] if location.is_a? Hash
     location = location.to_sym
 
@@ -244,7 +244,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       raise ArgumentError
     end
 
-    location ||= (@current_template && @current_template[:name]) || @current_class || @current_module || @current_set || result[:location][1]
+    location ||= (@current_template && @current_template[:name]) || @current_class || @current_module || @current_set || result[:location][:class] || result[:location][:template]
 
     location = location[:name] if location.is_a? Hash
     location = location.to_sym

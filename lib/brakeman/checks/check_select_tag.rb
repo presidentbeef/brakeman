@@ -24,7 +24,7 @@ class Brakeman::CheckSelectTag < Brakeman::BaseCheck
     @message = "Upgrade to Rails #{suggested_version}, #{tracker.config[:rails_version]} select_tag is vulnerable (CVE-2012-3463)"
 
     calls = tracker.find_call(:target => nil, :method => :select_tag).select do |result|
-      result[:location][0] == :template
+      result[:location][:type] == :template
     end
 
     calls.each do |result|

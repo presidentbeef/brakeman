@@ -82,13 +82,13 @@ class Brakeman::CallIndex
   def remove_indexes_by_class classes
     @calls_by_method.each do |name, calls|
       calls.delete_if do |call|
-        call[:location][0] == :class and classes.include? call[:location][1]
+        call[:location][:type] == :class and classes.include? call[:location][:class]
       end
     end
 
     @calls_by_target.each do |name, calls|
       calls.delete_if do |call|
-        call[:location][0] == :class and classes.include? call[:location][1]
+        call[:location][:type] == :class and classes.include? call[:location][:class]
       end
     end
   end
@@ -206,8 +206,8 @@ class Brakeman::CallIndex
   end
 
   def from_template call, template_name
-    return false unless call[:location][0] == :template
+    return false unless call[:location][:type] == :template
     return true if template_name.nil?
-    call[:location][1] == template_name
+    call[:location][:template] == template_name
   end
 end
