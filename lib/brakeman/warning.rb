@@ -161,7 +161,7 @@ class Brakeman::Warning
 
   def fingerprint
     loc = self.location
-    location_string = loc && loc.sort_by { |k, v| k.to_s }.to_s
+    location_string = loc && loc.sort_by { |k, v| k.to_s }.inspect
     warning_code_string = sprintf("%03d", @warning_code)
     code_string = @code.inspect
 
