@@ -19,7 +19,8 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
         :warning_type => "Cross-Site Request Forgery",
         :warning_code => :csrf_protection_disabled,
         :message => "Forgery protection is disabled", 
-        :confidence => CONFIDENCE[:high]
+        :confidence => CONFIDENCE[:high],
+        :file => app_controller[:file]
 
     elsif app_controller and not app_controller[:options][:protect_from_forgery]
 
@@ -27,7 +28,8 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
         :warning_type => "Cross-Site Request Forgery", 
         :warning_code => :csrf_protection_missing,
         :message => "'protect_from_forgery' should be called in ApplicationController", 
-        :confidence => CONFIDENCE[:high]
+        :confidence => CONFIDENCE[:high],
+        :file => app_controller[:file]
 
     elsif version_between? "2.1.0", "2.3.10"
       
