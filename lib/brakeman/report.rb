@@ -584,11 +584,6 @@ HEADER
       report[meth] = @checks.send(meth)
       report[meth].each do |w|
         w.message = w.format_message
-        if w.code
-          w.code = w.format_code
-        else
-          w.code = ""
-        end
         w.context = context_for(@app_tree, w).join("\n")
       end
     end
