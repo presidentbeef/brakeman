@@ -79,24 +79,22 @@ module Brakeman
     def find_paths(directory, extensions = "*.rb")
       pattern = @root + "/#{directory}/**/#{extensions}"
 
-      Dir.glob(pattern).sort.tap do |paths|
-        select_files(paths)
-      end
+      select_files(Dir.glob(pattern).sort)
     end
 
     def select_files(paths)
-      select_only_files(paths)
+      paths = select_only_files(paths)
       reject_skipped_files(paths)
     end
 
     def select_only_files(paths)
-      return unless @only_files
-      paths.select! { |f| @only_files.match f }
+      return paths unless @only_files
+      paths.select { |f| @only_files.match f }
     end
 
     def reject_skipped_files(paths)
-      return unless @skip_files
-      paths.reject! { |f| @skip_files.match f }
+      return paths unless @skip_files
+      paths.reject { |f| @skip_files.match f }
     end
 
   end
