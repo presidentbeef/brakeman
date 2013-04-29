@@ -13,10 +13,11 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
 
   #Process the given source. Provide either class and method being searched
   #or the template. These names are used when reporting results.
-  def process_source exp, klass = nil, method = nil, template = nil
-    @current_class = klass
-    @current_method = method
-    @current_template = template
+  def process_source exp, opts
+    @current_class = opts[:class]
+    @current_method = opts[:method]
+    @current_template = opts[:template]
+    @current_file = opts[:file]
     process exp
   end
 
@@ -48,15 +49,12 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
     method = exp.method
     process_call_args exp
 
-    call = { :target => target, :method => method, :call => exp, :nested => @in_target, :chain => get_chain(exp) }
-    
-    if @current_template
-      call[:location] = [:template, @current_template]
-    else
-      call[:location] = [:class, @current_class, @current_method]
-    end
-
-    @calls << call
+    @calls << { :target => target,
+                :method => method,
+                :call => exp,
+                :nested => @in_target,
+                :chain => get_chain(exp),
+                :location => make_location }
 
     exp
   end
@@ -66,15 +64,11 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
   def process_render exp
     process exp.last if sexp? exp.last
 
-    call = { :target => nil, :method => :render, :call => exp, :nested => false }
-
-    if @current_template
-      call[:location] = [:template, @current_template]
-    else
-      call[:location] = [:class, @current_class, @current_method]
-    end
-
-    @calls << call
+    @calls << { :target => nil,
+                :method => :render,
+                :call => exp,
+                :nested => false,
+                :location => make_location }
 
     exp
   end
@@ -84,15 +78,11 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
   def process_dxstr exp
     process exp.last if sexp? exp.last
 
-    call = { :target => nil, :method => :`, :call => exp, :nested => false }
-
-    if @current_template
-      call[:location] = [:template, @current_template]
-    else
-      call[:location] = [:class, @current_class, @current_method]
-    end
-
-    @calls << call
+    @calls << { :target => nil,
+                :method => :`,
+                :call => exp,
+                :nested => false,
+                :location => make_location }
 
     exp
   end
@@ -101,15 +91,11 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
   def process_dsym exp
     exp.each { |arg| process arg if sexp? arg }
 
-    call = { :target => nil, :method => :literal_to_sym, :call => exp, :nested => false }
-
-    if @current_template
-      call[:location] = [:template, @current_template]
-    else
-      call[:location] = [:class, @current_class, @current_method]
-    end
-
-    @calls << call
+    @calls << { :target => nil,
+                :method => :literal_to_sym,
+                :call => exp,
+                :nested => false,
+                :location => make_location }
 
     exp
   end
@@ -154,5 +140,19 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
     else
       [get_target(call)]
     end
+  end
+
+  def make_location
+    if @current_template
+      { :type => :template,
+        :template => @current_template,
+        :file => @current_file }
+    else
+      { :type => :class,
+        :class => @current_class,
+        :method => @current_method,
+        :file => @current_file }
+    end
+
   end
 end

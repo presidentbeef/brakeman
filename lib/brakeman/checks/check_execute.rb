@@ -84,20 +84,12 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       user_input = nil
     end
 
-    warning = { :warning_type => "Command Injection",
+    warn :result => result,
+      :warning_type => "Command Injection",
       :warning_code => :command_injection,
       :message => "Possible command injection",
       :code => exp,
       :user_input => user_input,
-      :confidence => confidence }
-
-    if result[:location][0] == :template
-      warning[:template] = result[:location][1]
-    else
-      warning[:class] = result[:location][1]
-      warning[:method] = result[:location][2]
-    end
-
-    warn warning
+      :confidence => confidence
   end
 end

@@ -68,7 +68,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         if model[:options][:named_scope]
           model[:options][:named_scope].each do |args|
             call = make_call(nil, :named_scope, args).line(args.line)
-            scope_calls << { :call => call, :location => [:class, name ], :method => :named_scope }
+            scope_calls << { :call => call, :location => { :type => :class, :class => name }, :method => :named_scope }
           end
         end
        end
@@ -84,10 +84,10 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
               process_scope_with_block name, args
             elsif second_arg.node_type == :call
               call = second_arg
-              scope_calls << { :call => call, :location => [:class, name ], :method => call.method }
+              scope_calls << { :call => call, :location => { :type => :class, :class => name }, :method => call.method }
             else
               call = make_call(nil, :scope, args).line(args.line)
-              scope_calls << { :call => call, :location => [:class, name ], :method => :scope }
+              scope_calls << { :call => call, :location => { :type => :class, :class => name }, :method => :scope }
             end
           end
         end
@@ -166,7 +166,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     if block.node_type == :block
       find_calls = Brakeman::FindAllCalls.new tracker
 
-      find_calls.process_source block, model_name, scope_name
+      find_calls.process_source block, :class => model_name, :method => scope_name
 
       find_calls.calls.each do |call|
         if @sql_targets.include? call[:method]
@@ -174,7 +174,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         end
       end
     elsif block.node_type == :call
-      process_result :target => block.target, :method => block.method, :call => block, :location => [:class, model_name, scope_name]
+      process_result :target => block.target, :method => block.method, :call => block,
+        :location => { :type => :class, :class => model_name, :method => scope_name }
     end
   end
 

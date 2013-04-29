@@ -15,7 +15,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 8,
       :template => 37,
-      :warning => 53
+      :warning => 54
     }
 
     if RUBY_PLATFORM == 'java'
@@ -555,6 +555,16 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Possible SQL injection near line 32: User.where/,
       :confidence => 0,
       :file => /user\.rb/
+  end
+
+  def test_sqli_in_unusual_model_name
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :warning_type => "SQL Injection",
+      :line => 3,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :file => /underline_model\.rb/
   end
 
   def test_escape_once
