@@ -62,16 +62,10 @@ module Brakeman
     if options.is_a? String
       options = { :app_path => options }
     end
+    
+    options = default_options.merge(load_options(options[:config_file])).merge(options)
 
     options[:app_path] = File.expand_path(options[:app_path])
-
-    file_options = load_options(options[:config_file])
-
-    options = file_options.merge options
-
-    options[:quiet] = true if options[:quiet].nil? && file_options[:quiet]
-
-    options = get_defaults.merge! options
     options[:output_formats] = get_output_formats options
 
     options
@@ -102,7 +96,7 @@ module Brakeman
   end
 
   #Default set of options
-  def self.get_defaults
+  def self.default_options
     { :assume_all_routes => true,
       :skip_checks => Set.new,
       :check_arguments => true,
@@ -130,42 +124,51 @@ module Brakeman
       raise ArgumentError, "Cannot specify output format if multiple output files specified"
     end
     if options[:output_format]
-      [
-        case options[:output_format]
-        when :html, :to_html
-          :to_html
-        when :csv, :to_csv
-          :to_csv
-        when :pdf, :to_pdf
-          :to_pdf
-        when :tabs, :to_tabs
-          :to_tabs
-        when :json, :to_json
-          :to_json
-        else
-          :to_s
-        end
-      ]
+      get_formats_from_output_format options[:output_format]
+    elsif options[:output_files]
+      get_formats_from_output_files options[:output_files]
     else
-      return [:to_s] unless options[:output_files]
-      options[:output_files].map do |output_file|
-        case output_file
-        when /\.html$/i
-          :to_html
-        when /\.csv$/i
-          :to_csv
-        when /\.pdf$/i
-          :to_pdf
-        when /\.tabs$/i
-          :to_tabs
-        when /\.json$/i
-          :to_json
-        else
-          :to_s
-        end
+      return [:to_s]
+    end
+  end
+  
+  def self.get_formats_from_output_format output_format
+    case output_format
+    when :html, :to_html
+      [:to_html]
+    when :csv, :to_csv
+      [:to_csv]
+    when :pdf, :to_pdf
+      [:to_pdf]
+    when :tabs, :to_tabs
+      [:to_tabs]
+    when :json, :to_json
+      [:to_json]
+    else
+      [:to_s]
+    end
+  end
+  private_class_method :get_formats_from_output_format
+  
+  def self.get_formats_from_output_files output_files
+    output_files.map do |output_file|
+      case output_file
+      when /\.html$/i
+        :to_html
+      when /\.csv$/i
+        :to_csv
+      when /\.pdf$/i
+        :to_pdf
+      when /\.tabs$/i
+        :to_tabs
+      when /\.json$/i
+        :to_json
+      else
+        :to_s
       end
     end
   end
+  private_class_method :get_formats_from_output_files
 
   #Output list of checks (for `-k` option)
   def self.list_checks

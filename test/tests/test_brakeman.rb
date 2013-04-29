@@ -97,4 +97,41 @@ class ConfigTests < Test::Unit::TestCase
 
     assert_nil final_options[:quiet]
   end
+  
+  def test_output_format_with_default
+    options = {}
+    
+    output_format = Brakeman.get_output_formats(options)
+    
+    assert_equal [:to_s], output_format
+  end
+  
+  def output_format_tester options, expected_options
+    output_formats = Brakeman.get_output_formats(options)
+    
+    assert_equal expected_options, output_formats
+  end
+  
+  def test_output_format
+    output_format_tester({}, [:to_s])
+    output_format_tester({:output_format => :html}, [:to_html])
+    output_format_tester({:output_format => :to_html}, [:to_html])
+    output_format_tester({:output_format => :csv}, [:to_csv])
+    output_format_tester({:output_format => :to_csv}, [:to_csv])
+    output_format_tester({:output_format => :pdf}, [:to_pdf])
+    output_format_tester({:output_format => :to_pdf}, [:to_pdf])
+    output_format_tester({:output_format => :json}, [:to_json])
+    output_format_tester({:output_format => :to_json}, [:to_json])
+    output_format_tester({:output_format => :tabs}, [:to_tabs])
+    output_format_tester({:output_format => :to_tabs}, [:to_tabs])
+    output_format_tester({:output_format => :others}, [:to_s])
+    
+    output_format_tester({:output_files => ['xx.html', 'xx.pdf']}, [:to_html, :to_pdf])
+    output_format_tester({:output_files => ['xx.pdf', 'xx.json']}, [:to_pdf, :to_json])
+    output_format_tester({:output_files => ['xx.json', 'xx.tabs']}, [:to_json, :to_tabs])
+    output_format_tester({:output_files => ['xx.tabs', 'xx.csv']}, [:to_tabs, :to_csv])
+    output_format_tester({:output_files => ['xx.csv', 'xx.xxx']}, [:to_csv, :to_s])
+    output_format_tester({:output_files => ['xx.xx', 'xx.xx']}, [:to_s, :to_s])
+    output_format_tester({:output_files => ['xx.html', 'xx.pdf', 'xx.csv', 'xx.tabs', 'xx.json']}, [:to_html, :to_pdf, :to_csv, :to_tabs, :to_json])
+  end
 end
