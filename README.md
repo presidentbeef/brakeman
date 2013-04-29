@@ -1,13 +1,16 @@
 ![Brakeman Logo](http://brakemanscanner.org/images/logo_medium.png)
 
-[![Travis CI Status](https://secure.travis-ci.org/presidentbeef/brakeman.png)](https://travis-ci.org/presidentbeef/brakeman) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/presidentbeef/brakeman)
+[![Travis CI
+Status](https://secure.travis-ci.org/presidentbeef/brakeman.png)](https://travis-ci.org/presidentbeef/brakeman)
+[![Code
+Climate](https://codeclimate.com/github/presidentbeef/brakeman.png)](https://codeclimate.com/github/presidentbeef/brakeman)
 
 # Brakeman
 
 Brakeman is a static analysis tool which checks Ruby on Rails applications for security vulnerabilities.
 
 It targets Rails versions 2.x and 3.x.
- 
+
 There is also a [plugin available](http://brakemanscanner.org/docs/jenkins/) for Jenkins/Hudson.
 
 For even more continuous testing, try the [Guard plugin](https://github.com/oreoshake/guard-brakeman).
