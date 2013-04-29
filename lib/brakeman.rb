@@ -265,22 +265,32 @@ module Brakeman
     if options[:output_files]
       notify "Generating report..."
 
-      options[:output_files].each_with_index do |output_file, idx|
-        File.open output_file, "w" do |f|
-          f.write tracker.report.send(options[:output_formats][idx])
-        end
-        notify "Report saved in '#{output_file}'"
-      end
+      write_report_to_files tracker, options[:output_files]
     elsif options[:print_report]
       notify "Generating report..."
 
-      options[:output_formats].each do |output_format|
-        puts tracker.report.send(output_format)
-      end
+      write_report_to_formats tracker, options[:output_formats]
     end
 
     tracker
   end
+  
+  def self.write_report_to_files tracker, output_files
+    output_files.each_with_index do |output_file, idx|
+      File.open output_file, "w" do |f|
+        f.write tracker.report(output_file)
+      end
+      notify "Report saved in '#{output_file}'"
+    end
+  end
+  private_class_method :write_report_to_files
+  
+  def self.write_report_to_formats tracker, output_formats
+    output_formats.each do |output_format|
+      puts tracker.report(output_format)
+    end
+  end
+  private_class_method :write_report_to_formats
 
   #Rescan a subset of files in a Rails application.
   #
@@ -327,7 +337,7 @@ module Brakeman
 
     tracker = run(options)
 
-    new_results = MultiJson.load(tracker.report.to_json, :symbolize_keys => true)[:warnings]
+    new_results = MultiJson.load(tracker.report(:to_json), :symbolize_keys => true)[:warnings]
 
     Brakeman::Differ.new(new_results, previous_results).diff
   end

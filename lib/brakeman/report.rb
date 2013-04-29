@@ -283,6 +283,26 @@ class Brakeman::Report
     end
   end
 
+  # format output from filename or format
+  def format(filename_or_format)
+    case filename_or_format
+    when /\.html/, :to_html
+      to_html
+    when /\.pdf/, :to_pdf
+      to_pdf
+    when /\.csv/, :to_csv
+      to_csv
+    when /\.json/, :to_json
+      to_json
+    when /\.tabs/, :to_tabs
+      to_tabs
+    when :to_test
+      to_test
+    else
+      to_s
+    end
+  end
+  
   #Generate HTML output
   def to_html
     out = html_header <<
