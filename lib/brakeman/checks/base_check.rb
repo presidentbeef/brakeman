@@ -26,7 +26,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     @active_record_models = nil
     @mass_assign_disabled = nil
     @has_user_input = nil
-    @safe_input_attributes = Set[:to_i, :to_f, :arel_table]
+    @safe_input_attributes = Set[:to_i, :to_f, :arel_table, :id]
   end
 
   #Add result to result list, which is used to check for duplicates
