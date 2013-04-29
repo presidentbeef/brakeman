@@ -173,11 +173,13 @@ module Brakeman
   #Output list of checks (for `-k` option)
   def self.list_checks
     require 'brakeman/scanner'
+    format_length = 30
+    
     $stderr.puts "Available Checks:"
-    $stderr.puts "-" * 30
-    $stderr.puts Checks.checks.map { |c|
-      c.to_s.match(/^Brakeman::(.*)$/)[1].ljust(27) << c.description
-    }.sort.join "\n"
+    $stderr.puts "-" * format_length
+    Checks.checks.each do |check|
+      $stderr.printf("%-#{format_length}s%s\n", check.checker_name, check.description)
+    end
   end
 
   #Installs Rake task for running Brakeman,
