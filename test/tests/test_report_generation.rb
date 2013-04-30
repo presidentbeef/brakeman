@@ -1,8 +1,8 @@
 class TestReportGeneration < Test::Unit::TestCase
-  Tracker = Brakeman.run("#{TEST_PATH}/apps/rails3.2")
+  Report = Brakeman.run("#{TEST_PATH}/apps/rails3.2").report
 
   def test_html_sanity
-    report = Tracker.report(:to_html)
+    report = Report.to_html
 
     assert report.is_a? String
     assert report.match(/\A<!DOCTYPE HTML SYSTEM>.*<\/html>\z/m)
@@ -12,7 +12,7 @@ class TestReportGeneration < Test::Unit::TestCase
   end
 
   def test_json_sanity
-    report = Tracker.report(:to_json)
+    report = Report.to_json
     expected_keys = ["scan_info", "warnings", "errors"]
 
     assert report.is_a? String
@@ -23,20 +23,20 @@ class TestReportGeneration < Test::Unit::TestCase
   end
 
   def test_csv_sanity
-    report = Tracker.report(:to_csv)
+    report = Report.to_csv
 
     assert report.is_a? String
   end
 
   def test_tabs_sanity
-    report = Tracker.report(:to_tabs)
+    report = Report.to_tabs
 
     assert report.is_a? String
   end
 
   def test_text_sanity
     unless RUBY_PLATFORM == "java"
-      report = Tracker.report(:to_s)
+      report = Report.to_s
 
       assert report.is_a? String
     end

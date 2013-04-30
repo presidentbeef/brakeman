@@ -148,10 +148,8 @@ class Brakeman::Tracker
   end
 
   #Returns a Report with this Tracker's information
-  #Return format output when pass format
-  def report(format = nil)
+  def report
     report = Brakeman::Report.new(@app_tree, self)
-    report.format(format) if format
   end
 
   def index_call_sites

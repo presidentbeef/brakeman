@@ -178,7 +178,7 @@ module Brakeman
     $stderr.puts "Available Checks:"
     $stderr.puts "-" * format_length
     Checks.checks.each do |check|
-      $stderr.printf("%-#{format_length}s%s\n", check.checker_name, check.description)
+      $stderr.printf("%-#{format_length}s%s\n", check.name, check.description)
     end
   end
 
@@ -278,7 +278,7 @@ module Brakeman
   def self.write_report_to_files tracker, output_files
     output_files.each_with_index do |output_file, idx|
       File.open output_file, "w" do |f|
-        f.write tracker.report(output_file)
+        f.write tracker.report.format(output_file)
       end
       notify "Report saved in '#{output_file}'"
     end
@@ -287,7 +287,7 @@ module Brakeman
   
   def self.write_report_to_formats tracker, output_formats
     output_formats.each do |output_format|
-      puts tracker.report(output_format)
+      puts tracker.report.format(output_format)
     end
   end
   private_class_method :write_report_to_formats
@@ -337,7 +337,7 @@ module Brakeman
 
     tracker = run(options)
 
-    new_results = MultiJson.load(tracker.report(:to_json), :symbolize_keys => true)[:warnings]
+    new_results = MultiJson.load(tracker.report.to_json, :symbolize_keys => true)[:warnings]
 
     Brakeman::Differ.new(new_results, previous_results).diff
   end

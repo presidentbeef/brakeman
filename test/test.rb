@@ -29,7 +29,7 @@ module BrakemanTester
 
       announce "Processing #{name} application..."
 
-      Brakeman.run(opts).report(:to_test)
+      Brakeman.run(opts).report.to_test
     end
 
     #Make an announcement

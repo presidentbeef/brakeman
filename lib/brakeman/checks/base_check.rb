@@ -14,10 +14,10 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   Match = Struct.new(:type, :match)
   
   class << self
-    attr_accessor :checker_name
+    attr_accessor :name
   
     def inherited(subclass)
-      subclass.checker_name = subclass.to_s.match(/^Brakeman::(.*)$/)[1]
+      subclass.name = subclass.to_s.match(/^Brakeman::(.*)$/)[1]
     end
   end
 
