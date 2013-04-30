@@ -1,3 +1,5 @@
 Gemfile.lock
 .rbx
 **/.rbx
+coverage/
+test/coverage/
