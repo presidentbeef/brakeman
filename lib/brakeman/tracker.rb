@@ -149,7 +149,7 @@ class Brakeman::Tracker
 
   #Returns a Report with this Tracker's information
   def report
-    report = Brakeman::Report.new(@app_tree, self)
+    Brakeman::Report.new(@app_tree, self)
   end
 
   def index_call_sites

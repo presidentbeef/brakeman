@@ -98,14 +98,6 @@ class ConfigTests < Test::Unit::TestCase
     assert_nil final_options[:quiet]
   end
   
-  def test_output_format_with_default
-    options = {}
-    
-    output_format = Brakeman.get_output_formats(options)
-    
-    assert_equal [:to_s], output_format
-  end
-  
   def output_format_tester options, expected_options
     output_formats = Brakeman.get_output_formats(options)
     
