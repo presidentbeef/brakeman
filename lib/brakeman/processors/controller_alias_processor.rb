@@ -64,16 +64,9 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     end
   end
 
-  #Processes a class which is probably a controller.
-  #(This method should be retired - only classes should ever be processed
-  # and @current_module will never be set, leading to inaccurate class names)
+  #Skip it, must be an inner class
   def process_class exp
-    @current_class = class_name(exp.class_name)
-    if @current_module
-      @current_class = ("#@current_module::#@current_class").to_sym
-    end
-
-    process_default exp
+    exp
   end
 
   #Processes a method definition, which may include
