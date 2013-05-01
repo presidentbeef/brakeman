@@ -324,7 +324,7 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Mass assignment is not restricted using /,
       :confidence => 0,
       :file => /account, user\.rb/,
-      :relative_path => "app/controllers/account, user.rb" #TODO: kinda broken
+      :relative_path => "app/models/account, user.rb" #TODO: kinda broken
   end
 
   def test_format_validation
