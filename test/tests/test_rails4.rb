@@ -22,9 +22,11 @@ class Rails4Tests < Test::Unit::TestCase
   def test_session_secret_token
     assert_warning :type => :warning,
       :warning_type => "Session Setting",
+      :fingerprint => "715ad9c0d76f57a6a657192574d528b620176a80fec969e2f63c88eacab0b984",
       :line => 12,
       :message => /^Session\ secret\ should\ not\ be\ included\ in/,
       :confidence => 0,
-      :file => /secret_token\.rb/
+      :file => /secret_token\.rb/,
+      :relative_path => "config/initializers/secret_token.rb"
   end
 end

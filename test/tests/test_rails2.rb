@@ -38,15 +38,17 @@ class Rails2Tests < Test::Unit::TestCase
     assert_warning :warning_type => "Dangerous Eval",
       :line => 40,
       :message => /^User input in eval/,
-      :code => /eval\(params\[:dangerous_input\]\)/,
-      :file => /home_controller.rb/
+      :format_code => /eval\(params\[:dangerous_input\]\)/,
+      :file => /home_controller.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_default_routes
     assert_warning :warning_type => "Default Routes",
       :line => 54,
       :message => /All public methods in controllers are available as actions/,
-      :file => /routes\.rb/
+      :file => /routes\.rb/,
+      :relative_path => "config/routes.rb"
   end
 
   def test_command_injection_interpolate
@@ -55,7 +57,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 34,
       :message => /^Possible command injection/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_command_injection_direct
@@ -65,7 +68,8 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Possible command injection/,
       :confidence => 0,
       :file => /home_controller\.rb/,
-      :code => /params\[:user_input\]/
+      :relative_path => "app/controllers/home_controller.rb",
+      :format_code => /params\[:user_input\]/
   end
 
   def test_file_access_concatenation
@@ -74,7 +78,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 24,
       :message => /^Parameter value used in file name/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_mass_assignment
@@ -83,7 +88,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 54,
       :message => /^Unprotected mass assignment/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_update_attribute_no_mass_assignment
@@ -92,7 +98,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 26,
       :message => /^Unprotected mass assignment/,
       :confidence => 0,
-      :file => /other_controller\.rb/
+      :file => /other_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_mass_assignment_with_or_equals_in_filter
@@ -101,7 +108,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 127,
       :message => /^Unprotected\ mass\ assignment/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_redirect
@@ -110,14 +118,16 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 45,
       :message => /^Possible unprotected redirect/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
 
     assert_warning :type => :warning,
       :warning_type => "Redirect",
       :line => 182,
       :message => /^Possible unprotected redirect/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_dynamic_render_path
@@ -126,7 +136,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 59,
       :message => /^Render path contains parameter value near line 59: render/,
       :confidence => 1,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_dynamic_render_path_high_confidence
@@ -135,7 +146,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 77,
       :message => /^Render path contains parameter value near line 77: render/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_file_access
@@ -144,7 +156,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 21,
       :message => /^Parameter value used in file name/,
       :confidence => 0,
-      :file => /other_controller\.rb/
+      :file => /other_controller\.rb/,
+      :relative_path => "app/controllers/other_controller.rb"
   end
 
   def test_file_access_with_load
@@ -153,7 +166,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 63,
       :message => /^Parameter value used in file name/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_file_access_load_false
@@ -162,7 +176,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 64,
       :message => /^Parameter value used in file name/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
 
     assert_equal 0, warnings.length, "False positive found."
   end
@@ -173,7 +188,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 9,
       :message => /^Session\ secret\ should\ not\ be\ included\ in/,
       :confidence => 0,
-      :file => /session_store\.rb/
+      :file => /session_store\.rb/,
+      :relative_path => "config/initializers/session_store.rb"
   end
 
   def test_session_cookies
@@ -182,7 +198,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 10,
       :message => /^Session cookies should be set to HTTP on/,
       :confidence => 0,
-      :file => /session_store\.rb/
+      :file => /session_store\.rb/,
+      :relative_path => "config/initializers/session_store.rb"
   end
 
   def test_rails_cve_2012_2660
@@ -205,7 +222,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 28,
       :message => /^Possible SQL injection/,
       :confidence => 1,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_sql_injection_conditions_local
@@ -214,7 +232,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 29,
       :message => /^Possible SQL injection/,
       :confidence => 1,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_sql_injection_params
@@ -223,7 +242,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 30,
       :message => /^Possible SQL injection/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_sql_injection_named_scope
@@ -232,7 +252,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 4,
       :message => /^Possible SQL injection near line 4: named_scope\(:phooey/,
       :confidence => 0,
-      :file => /user\.rb/
+      :file => /user\.rb/,
+      :relative_path => "app/models/user.rb"
   end
 
   def test_sql_injection_named_scope_lambda
@@ -241,7 +262,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 2,
       :message => /^Possible SQL injection near line 2: named_scope\(:dah, lambda/,
       :confidence => 1,
-      :file => /user\.rb/
+      :file => /user\.rb/,
+      :relative_path => "app/models/user.rb"
   end
 
   def test_sql_injection_named_scope_conditional
@@ -250,7 +272,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 6,
       :message => /^Possible SQL injection near line 6: named_scope\(:with_state, lambda/,
       :confidence => 1,
-      :file => /user\.rb/
+      :file => /user\.rb/,
+      :relative_path => "app/models/user.rb"
   end
 
   def test_sql_injection_in_self_call
@@ -259,7 +282,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 15,
       :message => /^Possible SQL injection near line 15: self\.find/,
       :confidence => 1,
-      :file => /user\.rb/
+      :file => /user\.rb/,
+      :relative_path => "app/models/user.rb"
   end
 
   def test_sql_user_input_in_find_by
@@ -268,7 +292,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 116,
       :message => /^Possible SQL injection near line 116: User.find_or_create_by_name/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   # ensure that the warning is generated for the line which contains the input, not
@@ -279,15 +304,17 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 121,
       :message => /^Possible SQL injection near line 121: User.find_by_sql/,
       :confidence => 0,
-      :file => /home_controller\.rb/
-  end  
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
+  end
 
   def test_csrf_protection
     assert_warning :type => :controller,
       :warning_type => "Cross-Site Request Forgery",
       :message => /^'protect_from_forgery' should be called /,
       :confidence => 0,
-      :file => /application_controller\.rb/
+      :file => /application_controller\.rb/,
+      :relative_path => "app/controllers/application_controller.rb"
   end
 
   def test_attribute_restriction
@@ -296,7 +323,8 @@ class Rails2Tests < Test::Unit::TestCase
       :warning_code => Brakeman::WarningCodes::Codes[:no_attr_accessible],
       :message => /^Mass assignment is not restricted using /,
       :confidence => 0,
-      :file => /account, user\.rb/
+      :file => /account, user\.rb/,
+      :relative_path => "app/controllers/account, user.rb" #TODO: kinda broken
   end
 
   def test_format_validation
@@ -305,7 +333,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 2,
       :message => /^Insufficient validation for 'name' using/,
       :confidence => 0,
-      :file => /account\.rb/
+      :file => /account\.rb/,
+      :relative_path => "app/models/account.rb"
   end
 
   def test_unescaped_parameter
@@ -314,7 +343,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 3,
       :message => /^Unescaped parameter value/,
       :confidence => 0,
-      :file => /index\.html\.erb/
+      :file => /index\.html\.erb/,
+      :relative_path => "app/views/home/index.html.erb"
   end
 
   def test_unescaped_request_env
@@ -323,7 +353,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 1,
       :message => /^Unescaped request value/,
       :confidence => 0,
-      :file => /test_env\.html\.erb/
+      :file => /test_env\.html\.erb/,
+      :relative_path => "app/views/other/test_env.html.erb"
   end
 
   def test_params_from_controller
@@ -332,7 +363,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 4,
       :message => /^Unescaped parameter value/,
       :confidence => 0,
-      :file => /test_params\.html\.erb/
+      :file => /test_params\.html\.erb/,
+      :relative_path => "app/views/home/test_params.html.erb"
   end
 
   def test_unrendered_sanitized_params_from_controller
@@ -341,7 +373,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 1,
       :message => /^Unescaped parameter value/,
       :confidence => 0,
-      :file => /test_sanitized_param\.html\.erb/
+      :file => /test_sanitized_param\.html\.erb/,
+      :relative_path => "app/views/home/test_sanitized_param.html.erb"
   end
 
   def test_sanitized_params_from_controller
@@ -350,7 +383,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 5,
       :message => /^Unescaped parameter value/,
       :confidence => 0,
-      :file => /test_sanitized_param\.html\.erb/
+      :file => /test_sanitized_param\.html\.erb/,
+      :relative_path => "app/views/home/test_sanitized_param.html.erb"
   end
 
   def test_indirect_xss
@@ -359,7 +393,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 6,
       :message => /^Unescaped parameter value/,
       :confidence => 2,
-      :file => /test_params\.html\.erb/
+      :file => /test_params\.html\.erb/,
+      :relative_path => "app/views/home/test_params.html.erb"
   end
 
   def test_model_attribute_from_controller
@@ -368,7 +403,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 3,
       :message => /^Unescaped model attribute/,
       :confidence => 0,
-      :file => /test_model\.html\.erb/
+      :file => /test_model\.html\.erb/,
+      :relative_path => "app/views/home/test_model.html.erb"
   end
 
   def test_model_from_controller_indirect_bad
@@ -377,7 +413,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 5,
       :message => /^Unescaped model attribute/,
       :confidence => 0,
-      :file => /test_model\.html\.erb/
+      :file => /test_model\.html\.erb/,
+      :relative_path => "app/views/home/test_model.html.erb"
   end
 
   def test_model_in_link_to
@@ -386,7 +423,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 7,
       :message => /^Unescaped model attribute in link_to/,
       :confidence => 0,
-      :file => /test_model\.html\.erb/
+      :file => /test_model\.html\.erb/,
+      :relative_path => "app/views/home/test_model.html.erb"
   end
 
   def test_escaped_parameter_in_link_to
@@ -395,7 +433,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 10,
       :message => /^Unescaped parameter value in link_to/,
       :confidence => 1,
-      :file => /test_params\.html\.erb/
+      :file => /test_params\.html\.erb/,
+      :relative_path => "app/views/home/test_params.html.erb"
   end
 
   def test_encoded_href_parameter_in_link_to
@@ -404,8 +443,9 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 12,
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 0,
-      :file => /test_params\.html\.erb/
-  end  
+      :file => /test_params\.html\.erb/,
+      :relative_path => "app/views/home/test_params.html.erb"
+  end
 
   def test_href_parameter_in_link_to
     assert_warning :type => :template,
@@ -413,21 +453,24 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 14,
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 0,
-      :file => /test_params\.html\.erb/
+      :file => /test_params\.html\.erb/,
+      :relative_path => "app/views/home/test_params.html.erb"
 
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 16,
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 1,
-      :file => /test_params\.html\.erb/      
+      :file => /test_params\.html\.erb/,
+      :relative_path => "app/views/home/test_params.html.erb"
 
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 18,
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 1,
-      :file => /test_params\.html\.erb/            
+      :file => /test_params\.html\.erb/,
+      :relative_path => "app/views/home/test_params.html.erb"
   end
 
   def test_polymorphic_url_in_href
@@ -436,14 +479,16 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 9,
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 1,
-      :file => /test_model\.html\.erb/  
+      :file => /test_model\.html\.erb/,
+      :relative_path => "app/views/home/test_model.html.erb"
 
     assert_no_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 11,
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 1,
-      :file => /test_model\.html\.erb/  
+      :file => /test_model\.html\.erb/,
+      :relative_path => "app/views/home/test_model.html.erb"
   end
 
   def test_unescaped_body_in_link_to
@@ -452,7 +497,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 7,
       :message => /^Unescaped parameter value in link_to/,
       :confidence => 0,
-      :file => /test_link_to\.html\.erb/
+      :file => /test_link_to\.html\.erb/,
+      :relative_path => "app/views/home/test_link_to.html.erb"
   end
 
   def test_filter
@@ -461,7 +507,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 3,
       :message => /^Unescaped parameter value/,
       :confidence => 0,
-      :file => /test_filter\.html\.erb/
+      :file => /test_filter\.html\.erb/,
+      :relative_path => "app/views/home/test_filter.html.erb"
   end
 
   def test_unescaped_model
@@ -470,7 +517,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 4,
       :message => /^Unescaped model attribute/,
       :confidence => 0,
-      :file => /test_sql\.html\.erb/
+      :file => /test_sql\.html\.erb/,
+      :relative_path => "app/views/home/test_sql.html.erb"
   end
 
   def test_param_from_filter
@@ -479,7 +527,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 5,
       :message => /^Unescaped parameter value/,
       :confidence => 0,
-      :file => /index\.html\.erb/
+      :file => /index\.html\.erb/,
+      :relative_path => "app/views/home/index.html.erb"
   end
 
   def test_params_from_locals_hash
@@ -488,7 +537,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 4,
       :message => /^Unescaped parameter value/,
       :confidence => 0,
-      :file => /test_locals\.html\.erb/
+      :file => /app\/views\/other\/test_locals\.html\.erb/,
+      :relative_path => "app/views/other/test_locals.html.erb"
   end
 
   def test_model_attribute_from_collection
@@ -497,7 +547,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 1,
       :message => /^Unescaped model attribute/,
       :confidence => 0,
-      :file => /_user\.html\.erb/
+      :file => /_user\.html\.erb/,
+      :relative_path => "app/views/other/_user.html.erb"
   end
 
   def test_model_attribute_from_iteration
@@ -506,7 +557,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 3,
       :message => /^Unescaped model attribute/,
       :confidence => 0,
-      :file => /test_iteration\.html\.erb/
+      :file => /test_iteration\.html\.erb/,
+      :relative_path => "app/views/other/test_iteration.html.erb"
   end
 
   def test_other_model_attribute_from_iteration
@@ -515,7 +567,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 4,
       :message => /^Unescaped model attribute/,
       :confidence => 0,
-      :file => /test_iteration\.html\.erb/
+      :file => /test_iteration\.html\.erb/,
+      :relative_path => "app/views/other/test_iteration.html.erb"
   end
 
   def test_sql_injection_in_template
@@ -524,7 +577,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 4,
       :message => /^Possible SQL injection/,
       :confidence => 0,
-      :file => /test_sql\.html\.erb/
+      :file => /test_sql\.html\.erb/,
+      :relative_path => "app/views/home/test_sql.html.erb"
   end
 
   def test_sql_injection_call_chain
@@ -533,7 +587,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 73,
       :message => /^Possible SQL injection near line 73: User.humans.alive.find/,
       :confidence => 0,
-      :file => /home_controller\.rb/ 
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_sql_injection_merge_conditions
@@ -542,7 +597,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 22,
       :message => /^Possible SQL injection near line 22: find/,
       :confidence => 0,
-      :file => /user\.rb/
+      :file => /user\.rb/,
+      :relative_path => "app/models/user.rb"
   end
 
   def test_escape_once
@@ -551,7 +607,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 7,
       :message => /^Unescaped parameter value/,
       :confidence => 2,
-      :file => /index\.html\.erb/
+      :file => /index\.html\.erb/,
+      :relative_path => "app/views/home/index.html.erb"
 
     assert_equal 0, results.length, "escape_once is a safe method"
   end
@@ -562,7 +619,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 5,
       :message => /^Unescaped cookie value/,
       :confidence => 2,
-      :file => /test_cookie\.html\.erb/
+      :file => /test_cookie\.html\.erb/,
+      :relative_path => "app/views/home/test_cookie.html.erb"
   end
 
   def test_cookie_from_controller
@@ -571,7 +629,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 3,
       :message => /^Unescaped cookie value/,
       :confidence => 0,
-      :file => /test_cookie\.html\.erb/
+      :file => /test_cookie\.html\.erb/,
+      :relative_path => "app/views/home/test_cookie.html.erb"
   end
 
   #Check for params that look like params[:x][:y]
@@ -581,7 +640,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 8,
       :message => /^Unescaped parameter value/,
       :confidence => 0,
-      :file => /test_params\.html\.erb/
+      :file => /test_params\.html\.erb/,
+      :relative_path => "app/views/home/test_params.html.erb"
   end
 
   #Check for cookies that look like cookies[:blah][:blah]
@@ -591,7 +651,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 7,
       :message => /^Unescaped cookie value/,
       :confidence => 0,
-      :file => /test_cookie\.html\.erb/
+      :file => /test_cookie\.html\.erb/,
+      :relative_path => "app/views/home/test_cookie.html.erb"
   end
 
   def test_xss_in_unused_template
@@ -600,7 +661,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 1,
       :message => "Unescaped parameter value near line 1: params[:blah]",
       :confidence => 0,
-      :file => /not_used\.html\.erb/
+      :file => /not_used\.html\.erb/,
+      :relative_path => "app/views/other/not_used.html.erb"
   end
 
   def test_select_vulnerability
@@ -609,7 +671,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 3,
       :message => /^Upgrade\ to\ Rails\ 3\ or\ use\ options_for_se/,
       :confidence => 1,
-      :file => /not_used\.html\.erb/
+      :file => /not_used\.html\.erb/,
+      :relative_path => "app/views/other/not_used.html.erb"
   end
 
   def test_explicit_render_template
@@ -618,7 +681,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 1,
       :message => /^Unescaped parameter value near line 1: params\[:ba/,
       :confidence => 0,
-      :file => /home\/test_render_template\.html\.haml/
+      :file => /home\/test_render_template\.html\.haml/,
+      :relative_path => "app/views/home/test_render_template.html.haml"
   end
 
   def test_xss_with_or_in_view
@@ -627,7 +691,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 1,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
-      :file => /test_xss_with_or\.html\.erb/
+      :file => /test_xss_with_or\.html\.erb/,
+      :relative_path => "app/views/home/test_xss_with_or.html.erb"
   end
 
   def test_xss_with_or_from_action
@@ -636,7 +701,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 3,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
-      :file => /test_xss_with_or\.html\.erb/
+      :file => /test_xss_with_or\.html\.erb/,
+      :relative_path => "app/views/home/test_xss_with_or.html.erb"
   end
 
   def test_xss_with_or_from_if_branches
@@ -645,7 +711,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 5,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
-      :file => /test_xss_with_or\.html\.erb/
+      :file => /test_xss_with_or\.html\.erb/,
+      :relative_path => "app/views/home/test_xss_with_or.html.erb"
   end
 
   def test_xss_with_nested_or
@@ -654,7 +721,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 7,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
-      :file => /test_xss_with_or\.html\.erb/
+      :file => /test_xss_with_or\.html\.erb/,
+      :relative_path => "app/views/home/test_xss_with_or.html.erb"
   end
 
   def test_xss_with_model_in_or
@@ -663,7 +731,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 9,
       :message => /^Unescaped\ model\ attribute/,
       :confidence => 0,
-      :file => /test_xss_with_or\.html\.erb/
+      :file => /test_xss_with_or\.html\.erb/,
+      :relative_path => "app/views/home/test_xss_with_or.html.erb"
   end
 
   def test_cross_site_scripting_strip_tags
@@ -672,7 +741,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 3,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
-      :file => /test_strip_tags\.html\.erb/
+      :file => /test_strip_tags\.html\.erb/,
+      :relative_path => "app/views/home/test_strip_tags.html.erb"
   end
 
   def test_xss_content_tag_body
@@ -681,7 +751,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 5,
       :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
       :confidence => 0,
-      :file => /test_content_tag\.html\.erb/
+      :file => /test_content_tag\.html\.erb/,
+      :relative_path => "app/views/home/test_content_tag.html.erb"
   end
 
   def test_xss_content_tag_escaped
@@ -690,7 +761,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 8,
       :message => /^Unescaped\ cookie\ value\ in\ content_tag/,
       :confidence => 0,
-      :file => /test_content_tag\.html\.erb/
+      :file => /test_content_tag\.html\.erb/,
+      :relative_path => "app/views/home/test_content_tag.html.erb"
   end
 
   def test_xss_content_tag_attribute_name
@@ -699,7 +771,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 11,
       :message => /^Unescaped\ cookie\ value\ in\ content_tag/,
       :confidence => 0,
-      :file => /test_content_tag\.html\.erb/
+      :file => /test_content_tag\.html\.erb/,
+      :relative_path => "app/views/home/test_content_tag.html.erb"
   end
 
   def test_xss_content_tag_attribute_name_even_with_escape_set
@@ -708,7 +781,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 17,
       :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
       :confidence => 0,
-      :file => /test_content_tag\.html\.erb/
+      :file => /test_content_tag\.html\.erb/,
+      :relative_path => "app/views/home/test_content_tag.html.erb"
   end
 
   def test_cross_site_scripting_escaped_by_default
@@ -717,7 +791,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 20,
       :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
       :confidence => 0,
-      :file => /test_content_tag\.html\.erb/
+      :file => /test_content_tag\.html\.erb/,
+      :relative_path => "app/views/home/test_content_tag.html.erb"
   end
 
   #Uh...maybe this shouldn't be a warning
@@ -727,7 +802,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 5,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 2,
-      :file => /not_used\.html\.erb/
+      :file => /not_used\.html\.erb/,
+      :relative_path => "app/views/other/not_used.html.erb"
   end
 
   def test_xss_content_tag_unescaped_on_purpose
@@ -736,7 +812,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 23,
       :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
       :confidence => 0,
-      :file => /test_content_tag\.html\.erb/
+      :file => /test_content_tag\.html\.erb/,
+      :relative_path => "app/views/home/test_content_tag.html.erb"
   end
 
   def test_xss_content_tag_indirect_body
@@ -745,7 +822,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 26,
       :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
       :confidence => 1,
-      :file => /test_content_tag\.html\.erb/
+      :file => /test_content_tag\.html\.erb/,
+      :relative_path => "app/views/home/test_content_tag.html.erb"
   end
 
   def test_cross_site_scripting_single_quotes_CVE_2012_3464
@@ -753,7 +831,8 @@ class Rails2Tests < Test::Unit::TestCase
       :warning_type => "Cross Site Scripting",
       :message => /^All\ Rails\ 2\.x\ versions\ do\ not\ escape\ sin/,
       :confidence => 1,
-      :file => /environment\.rb/
+      :file => /environment\.rb/,
+      :relative_path => "config/environment.rb"
   end
 
   def test_check_send
@@ -762,14 +841,16 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 83,
       :message => /\AUser controlled method execution/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
 
     assert_no_warning :type => :warning,
       :warning_type => "Dangerous Send",
       :line => 90,
       :message => /\AUser defined target of method invocation/,
       :confidence => 1,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_strip_tags_CVE_2011_2931
@@ -777,7 +858,8 @@ class Rails2Tests < Test::Unit::TestCase
       :warning_type => "Cross Site Scripting",
       :message => /^Versions\ before\ 2\.3\.13\ have\ a\ vulnerabil/,
       :confidence => 0,
-      :file => /environment\.rb/
+      :file => /environment\.rb/,
+      :relative_path => "config/environment.rb"
   end
 
   def test_strip_tags_CVE_2012_3465_high
@@ -786,7 +868,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 3,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
-      :file => /test_strip_tags\.html\.erb/
+      :file => /test_strip_tags\.html\.erb/,
+      :relative_path => "app/views/home/test_strip_tags.html.erb"
   end
 
   def test_sql_injection_CVE_2012_5664
@@ -794,7 +877,8 @@ class Rails2Tests < Test::Unit::TestCase
       :warning_type => "SQL Injection",
       :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.18,\ 3\.1/,
       :confidence => 0,
-      :file => /environment\.rb/
+      :file => /environment\.rb/,
+      :relative_path => "config/environment.rb"
   end
 
   def test_sql_injection_CVE_2013_0155
@@ -802,7 +886,8 @@ class Rails2Tests < Test::Unit::TestCase
       :warning_type => "SQL Injection",
       :message => /^Rails\ 2\.3\.11\ contains\ a\ SQL\ Injection\ Vu/,
       :confidence => 0,
-      :file => /environment\.rb/
+      :file => /environment\.rb/,
+      :relative_path => "config/environment.rb"
   end
 
   def test_remote_code_execution_CVE_2013_0156
@@ -810,7 +895,8 @@ class Rails2Tests < Test::Unit::TestCase
       :warning_type => "Remote Code Execution",
       :message => /^Rails\ 2\.3\.11\ has\ a\ remote\ code\ execution/,
       :confidence => 0,
-      :file => /environment\.rb/
+      :file => /environment\.rb/,
+      :relative_path => "config/environment.rb"
   end
 
   def test_remote_code_execution_CVE_2013_0277
@@ -818,7 +904,8 @@ class Rails2Tests < Test::Unit::TestCase
       :warning_type => "Remote Code Execution",
       :message => /^Serialized\ attributes\ are\ vulnerable\ in\ /,
       :confidence => 0,
-      :file => /unprotected\.rb/
+      :file => /unprotected\.rb/,
+      :relative_path => "app/models/unprotected.rb"
   end
 
   def test_remote_code_execution_CVE_2013_0333
@@ -826,7 +913,8 @@ class Rails2Tests < Test::Unit::TestCase
       :warning_type => "Remote Code Execution",
       :message => /^Rails\ 2\.3\.11\ has\ a\ serious\ JSON\ parsing\ /,
       :confidence => 0,
-      :file => /environment\.rb/
+      :file => /environment\.rb/,
+      :relative_path => "config/environment.rb"
   end
 
   def test_xss_sanitize_CVE_2013_1857
@@ -835,7 +923,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 5,
       :message => /^Rails\ 2\.3\.11\ has\ a\ vulnerability\ in\ sani/,
       :confidence => 0,
-      :file => /not_used\.html\.erb/
+      :file => /not_used\.html\.erb/,
+      :relative_path => "app/views/other/not_used.html.erb"
   end
 
   def test_denial_of_service_CVE_2013_1854
@@ -843,7 +932,8 @@ class Rails2Tests < Test::Unit::TestCase
       :warning_type => "Denial of Service",
       :message => /^Rails\ 2\.3\.11\ has\ a\ denial\ of\ service\ vul/,
       :confidence => 1,
-      :file => /environment\.rb/
+      :file => /environment\.rb/,
+      :relative_path => "config/environment.rb"
   end
 
   def test_to_json
@@ -852,25 +942,32 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 3,
       :message => /^Unescaped model attribute in JSON hash/,
       :confidence => 0,
-      :file => /test_to_json\.html\.erb/
+      :file => /test_to_json\.html\.erb/,
+      :relative_path => "app/views/home/test_to_json.html.erb"
+
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 7,
       :message => /^Unescaped parameter value in JSON hash/,
       :confidence => 0,
-      :file => /test_to_json\.html\.erb/
+      :file => /test_to_json\.html\.erb/,
+      :relative_path => "app/views/home/test_to_json.html.erb"
+
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 11,
       :message => /^Unescaped parameter value in JSON hash/,
       :confidence => 0,
-      :file => /test_to_json\.html\.erb/
+      :file => /test_to_json\.html\.erb/,
+      :relative_path => "app/views/home/test_to_json.html.erb"
+
     assert_no_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 14,
       :message => /^Unescaped parameter value in JSON hash/,
       :confidence => 0,
-      :file => /test_to_json\.html\.erb/
+      :file => /test_to_json\.html\.erb/,
+      :relative_path => "app/views/home/test_to_json.html.erb"
   end
 
   def test_xss_with_params_to_i
@@ -879,7 +976,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 1,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
-      :file => /test_to_i\.html\.erb/
+      :file => /test_to_i\.html\.erb/,
+      :relative_path => "app/views/home/test_to_i.html.erb"
   end
 
   def test_xss_with_request_env_to_i
@@ -888,7 +986,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 5,
       :message => /^Unescaped\ cookie\ value/,
       :confidence => 2,
-      :file => /test_to_i\.html\.erb/
+      :file => /test_to_i\.html\.erb/,
+      :relative_path => "app/views/home/test_to_i.html.erb"
   end
 
   def test_xss_with_cookie_to_i
@@ -897,7 +996,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 3,
       :message => /^Unescaped\ request\ value/,
       :confidence => 0,
-      :file => /test_to_i\.html\.erb/
+      :file => /test_to_i\.html\.erb/,
+      :relative_path => "app/views/home/test_to_i.html.erb"
   end
 
   def test_xss_with_model_attribute_to_i
@@ -906,7 +1006,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 7,
       :message => /^Unescaped\ model\ attribute/,
       :confidence => 1,
-      :file => /test_to_i\.html\.erb/
+      :file => /test_to_i\.html\.erb/,
+      :relative_path => "app/views/home/test_to_i.html.erb"
   end
 
   def test_cross_site_scripting_unresolved_model_id
@@ -925,7 +1026,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 155,
       :message => /^User\ controlled\ method\ execution/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_dangerous_send_underscore
@@ -934,7 +1036,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 156,
       :message => /^User\ controlled\ method\ execution/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_dangerous_public_send
@@ -943,7 +1046,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 157,
       :message => /^User\ controlled\ method\ execution/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_dangerous_try_on_user_input
@@ -952,7 +1056,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 160,
       :message => /^User\ defined\ target\ of\ method\ invocation/,
       :confidence => 1,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_unsafe_reflection_constantize
@@ -961,7 +1066,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 89,
       :message => /^Unsafe\ Reflection\ method\ constantize\ cal/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_unsafe_reflection_constantize_2
@@ -970,7 +1076,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 160,
       :message => /^Unsafe\ Reflection\ method\ constantize\ cal/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_unsafe_symbol_creation
@@ -980,7 +1087,8 @@ class Rails2Tests < Test::Unit::TestCase
         :line => line,
         :message => /^Symbol\ conversion\ from\ unsafe\ string/,
         :confidence => 0,
-        :file => /application_controller\.rb/
+        :file => /application_controller\.rb/,
+        :relative_path => "app/controllers/application_controller.rb"
      end
   end
 
@@ -990,7 +1098,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 83,
       :message => /^Symbol\ conversion\ from\ unsafe\ string/,
       :confidence => 0,
-      :file => /home_controller\.rb/
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_unsafe_symbol_creation_3
@@ -999,7 +1108,8 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 29,
       :message => /^Symbol\ conversion\ from\ unsafe\ string/,
       :confidence => 1,
-      :file => /application_controller\.rb/
+      :file => /application_controller\.rb/,
+      :relative_path => "app/controllers/application_controller.rb"
   end
 
 end
