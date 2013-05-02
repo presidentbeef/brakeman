@@ -84,11 +84,6 @@ module Brakeman
       options = YAML.load_file config
       options.each { |k, v| options[k] = Set.new v if v.is_a? Array }
       
-      # convert to hash with sym keys, ref: http://api.rubyonrails.org/classes/Hash.html#method-i-symbolize_keys-21
-      options.keys.each do |key|
-        options[(key.to_sym rescue key) || key] = options.delete(key)
-      end
-      
       # notify if options[:quiet] and quiet is nil||false
       notify "[Notice] Using configuration in #{config}" unless (options[:quiet] || quiet)
       options

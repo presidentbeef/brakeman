@@ -100,26 +100,6 @@ class ConfigTests < Test::Unit::TestCase
     }[1]
   end
   
-  def test_quiet_option_from_file_2
-    config = Tempfile.new("config")
-
-    config.write <<-YAML.strip
-    ---
-    quiet: true
-    YAML
-
-    config.close
-
-    options = {
-      :config_file => config.path,
-      :app_path => "/tmp" #doesn't need to be real
-    }
-    
-    assert_equal "", capture_output {
-      final_options = Brakeman.set_options(options)
-    }[1]
-  end
-  
   def test_quiet_option_from_commandline
     config = Tempfile.new("config")
 
