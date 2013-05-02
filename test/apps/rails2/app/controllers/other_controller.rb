@@ -45,5 +45,12 @@ class OtherController < ApplicationController
 
   def test_to_sym
     :"#{hello!}"
+
+    x = params[:x].to_sym
+
+    #Checking that the code below does not warn about to_sym again
+    call_something_with x
+
+    x.cool_thing?
   end
 end
