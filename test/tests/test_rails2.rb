@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 3,
         :template => 43,
-        :warning => 45 }
+        :warning => 46 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
         :template => 43,
-        :warning => 46 }
+        :warning => 47 }
     end
   end
 
@@ -1112,6 +1112,39 @@ class Rails2Tests < Test::Unit::TestCase
       :relative_path => "app/controllers/application_controller.rb"
   end
 
+  def test_unsafe_symbol_creation_from_param
+    assert_warning :type => :warning,
+      :warning_code => 59,
+      :fingerprint => "b9c29fc37080f827527feb53f29d618b91d9a5aaac9047383baf46361f08c4cc",
+      :warning_type => "Denial of Service",
+      :line => 49,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(pa/,
+      :confidence => 0,
+      :relative_path => "app/controllers/other_controller.rb"
+  end
+
+  def test_to_sym_duplicate_as_argument
+    assert_no_warning :type => :warning,
+      :warning_code => 59,
+      :fingerprint => "b9c29fc37080f827527feb53f29d618b91d9a5aaac9047383baf46361f08c4cc",
+      :warning_type => "Denial of Service",
+      :line => 53,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(pa/,
+      :confidence => 0,
+      :relative_path => "app/controllers/other_controller.rb"
+  end
+
+  def test_to_sym_duplicate_as_target
+    assert_no_warning :type => :warning,
+      :warning_code => 59,
+      :fingerprint => "b9c29fc37080f827527feb53f29d618b91d9a5aaac9047383baf46361f08c4cc",
+      :warning_type => "Denial of Service",
+      :line => 54,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(pa/,
+      :confidence => 0,
+      :relative_path => "app/controllers/other_controller.rb"
+  end
+
 end
 
 Rails2WithOptions = BrakemanTester.run_scan "rails2", "Rails 2", :collapse_mass_assignment => false
@@ -1126,13 +1159,13 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
         :controller => 1,
         :model => 4,
         :template => 43,
-        :warning => 45 }
+        :warning => 46 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
         :template => 43,
-        :warning => 46 }
+        :warning => 47 }
     end
   end
 

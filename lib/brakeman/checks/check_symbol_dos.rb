@@ -33,8 +33,12 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
   end
 
   def check_unsafe_symbol_creation result
+    return if duplicate? result or result[:call].original_line
+
+    add_result result
 
     call = result[:call]
+
     if result[:method] == :to_sym
       args = [call.target]
     else
