@@ -11,8 +11,7 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
 
   def run_check
     app_controller = tracker.controllers[:ApplicationController]
-    if tracker.config[:rails] and
-      tracker.config[:rails][:action_controller] and
+    if tracker.config[:rails][:action_controller] and
       tracker.config[:rails][:action_controller][:allow_forgery_protection] == Sexp.new(:false)
 
       warn :controller => :ApplicationController,
