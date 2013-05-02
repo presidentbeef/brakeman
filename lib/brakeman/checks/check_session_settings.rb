@@ -17,9 +17,8 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   end
 
   def run_check
-    settings = tracker.config[:rails] and
-                tracker.config[:rails][:action_controller] and
-                tracker.config[:rails][:action_controller][:session]
+    settings = tracker.config[:rails][:action_controller] &&
+               tracker.config[:rails][:action_controller][:session]
 
     check_for_issues settings, "#{tracker.options[:app_path]}/config/environment.rb"
 

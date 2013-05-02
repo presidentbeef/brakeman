@@ -165,7 +165,6 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     @mass_assign_disabled = false
 
     if version_between?("3.1.0", "3.9.9") and
-      tracker.config[:rails] and
       tracker.config[:rails][:active_record] and
       tracker.config[:rails][:active_record][:whitelist_attributes] == Sexp.new(:true)
 
