@@ -55,6 +55,27 @@ class BaseCheckTests < Test::Unit::TestCase
 end
 
 class ConfigTests < Test::Unit::TestCase
+  
+  def setup
+    Brakeman.instance_variable_set(:@quiet, false)
+  end
+  
+  # method from test-unit: http://test-unit.rubyforge.org/test-unit/en/Test/Unit/Util/Output.html#capture_output-instance_method
+  def capture_output
+    require 'stringio'
+
+    output = StringIO.new
+    error = StringIO.new
+    stdout_save, stderr_save = $stdout, $stderr
+    $stdout, $stderr = output, error
+    begin
+      yield
+      [output.string, error.string]
+    ensure
+      $stdout, $stderr = stdout_save, stderr_save
+    end
+  end
+  
   def test_quiet_option_from_file
     config = Tempfile.new("config")
 
@@ -70,11 +91,54 @@ class ConfigTests < Test::Unit::TestCase
       :app_path => "/tmp" #doesn't need to be real
     }
 
-    final_options = Brakeman.set_options(options)
+    assert_equal "", capture_output {
+      final_options = Brakeman.set_options(options)
 
-    config.unlink
+      config.unlink
 
-    assert final_options[:quiet], "Expected quiet option to be true, but was #{final_options[:quiet]}"
+      assert final_options[:quiet], "Expected quiet option to be true, but was #{final_options[:quiet]}"
+    }[1]
+  end
+  
+  def test_quiet_option_from_file_2
+    config = Tempfile.new("config")
+
+    config.write <<-YAML.strip
+    ---
+    quiet: true
+    YAML
+
+    config.close
+
+    options = {
+      :config_file => config.path,
+      :app_path => "/tmp" #doesn't need to be real
+    }
+    
+    assert_equal "", capture_output {
+      final_options = Brakeman.set_options(options)
+    }[1]
+  end
+  
+  def test_quiet_option_from_commandline
+    config = Tempfile.new("config")
+
+    config.write <<-YAML.strip
+    ---
+    app_path: "/tmp"
+    YAML
+
+    config.close
+
+    options = {
+      :config_file => config.path,
+      :quiet => true,
+      :app_path => "/tmp" #doesn't need to be real
+    }
+    
+    assert_equal "", capture_output {
+      final_options = Brakeman.set_options(options)
+    }[1]
   end
 
   def test_quiet_option_default

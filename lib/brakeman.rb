@@ -63,7 +63,7 @@ module Brakeman
       options = { :app_path => options }
     end
     
-    options = default_options.merge(load_options(options[:config_file])).merge(options)
+    options = default_options.merge(load_options(options[:config_file], options[:quiet])).merge(options)
 
     options[:app_path] = File.expand_path(options[:app_path])
     options[:output_formats] = get_output_formats options
@@ -78,12 +78,19 @@ module Brakeman
   ]
 
   #Load options from YAML file
-  def self.load_options custom_location
+  def self.load_options custom_location, quiet
     #Load configuration file
     if config = config_file(custom_location)
       options = YAML.load_file config
       options.each { |k, v| options[k] = Set.new v if v.is_a? Array }
-      notify "[Notice] Using configuration in #{config}" unless options[:quiet]
+      
+      # convert to hash with sym keys, ref: http://api.rubyonrails.org/classes/Hash.html#method-i-symbolize_keys-21
+      options.keys.each do |key|
+        options[(key.to_sym rescue key) || key] = options.delete(key)
+      end
+      
+      # notify if options[:quiet] and quiet is nil||false
+      notify "[Notice] Using configuration in #{config}" unless (options[:quiet] || quiet)
       options
     else
       {}
