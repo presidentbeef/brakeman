@@ -219,7 +219,8 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     while controller
       filters = get_before_filters(method, controller) + filters
 
-      controller = @tracker.controllers[controller[:parent]]
+      controller = @tracker.controllers[controller[:parent]] ||
+                   @tracker.libs[controller[:parent]]
     end
 
     filters
