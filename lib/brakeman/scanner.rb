@@ -104,8 +104,8 @@ class Brakeman::Scanner
     end
 
   rescue Exception => e
-    Brakeman.notify "[Notice] Error while processing config/#{file}"
-    tracker.error e.exception(e.message + "\nwhile processing Gemfile"), e.backtrace
+    Brakeman.notify "[Notice] Error while processing #{path}"
+    tracker.error e.exception(e.message + "\nwhile processing #{path}"), e.backtrace
   end
 
   private :process_config_file
