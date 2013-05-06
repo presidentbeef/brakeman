@@ -65,4 +65,9 @@ Rails32::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
   config.active_record.whitelist_attributes = true
+
+  # These configs actually resolve to values from application.rb
+  # but that's atypical, so going to skip for now or else errors
+  config.mess_things_up_in_prod.right_here = :nope_ignored
+  config.actually_a_hash[:thing] = 'cool setting'
 end
