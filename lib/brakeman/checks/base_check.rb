@@ -12,6 +12,14 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   CONFIDENCE = { :high => 0, :med => 1, :low => 2 }
 
   Match = Struct.new(:type, :match)
+  
+  class << self
+    attr_accessor :name
+  
+    def inherited(subclass)
+      subclass.name = subclass.to_s.match(/^Brakeman::(.*)$/)[1]
+    end
+  end
 
   #Initialize Check with Checks.
   def initialize(app_tree, tracker)
