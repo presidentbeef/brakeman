@@ -14,7 +14,7 @@ class Rails3Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 8,
-      :template => 37,
+      :template => 38,
       :warning => 54
     }
 
@@ -846,6 +846,17 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
       :file => /so_nested\.html\.erb/
+  end
+
+  def test_cross_site_scripting_from_parent
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "1e860da2c9a0cac3d898f3c4327877b3bdfa391048a19bfd6f55d6e283cc5b33",
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/child/action_in_child.html.erb"
   end
 
   def test_cross_site_scripting_select_tag_CVE_2012_3463

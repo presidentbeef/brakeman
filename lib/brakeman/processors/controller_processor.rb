@@ -24,21 +24,6 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
   def process_class exp
     name = class_name(exp.class_name)
 
-    if not name.to_s.match(/Controller$/)
-      #Skip classes that are not controllers, but treat as a module because
-      #a class that is not a controller might contain a controller
-      return process_module exp
-    end
-
-    if @controller
-      Brakeman.debug "[Notice] Skipping inner class: #{name}"
-      return ignore
-    end
-
-    if @current_module
-      name = (@current_module.to_s + "::" + name.to_s).to_sym
-    end
-
     begin
       parent = class_name exp.parent_name
     rescue StandardError => e
@@ -46,6 +31,59 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
       parent = nil
     end
 
+    #If inside a real controller, treat any other classes as libraries.
+    #But if not inside a controller already, then the class may include
+    #a real controller, so we can't take this shortcut.
+    if @controller and @controller[:name].to_s.end_with? "Controller"
+      Brakeman.debug "[Notice] Treating inner class as library: #{name}"
+      Brakeman::LibraryProcessor.new(@tracker).process_library exp, @file_name
+      return exp
+    end
+
+    if not name.to_s.end_with? "Controller"
+      Brakeman.debug "[Notice] Adding noncontroller as library: #{name}"
+
+      current_controller = @controller
+
+      #Set the class to be a module in order to get the right namespacing.
+      #Add class to libraries, in case it is needed later (e.g. it's used
+      #as a parent class for a controller.)
+      #However, still want to process it in this class, so have to set
+      #@controller to this not-really-a-controller thing.
+      process_module exp do
+        name = @current_module
+
+        if @tracker.libs[name.to_sym]
+          @controller = @tracker.libs[name]
+        else
+          set_controller name, parent, exp
+          @tracker.libs[name.to_sym] = @controller
+        end
+
+        process_all exp.body
+      end
+
+      @controller = current_controller
+
+      return exp
+    end
+
+    if @current_module
+      name = (@current_module.to_s + "::" + name.to_s).to_sym
+    end
+
+    set_controller name, parent, exp
+
+    @tracker.controllers[@controller[:name]] = @controller
+
+    exp.body = process_all! exp.body
+    set_layout_name
+
+    @controller = nil
+    exp
+  end
+
+  def set_controller name, parent, exp
     @controller = { :name => name,
                     :parent => parent,
                     :includes => [],
@@ -55,11 +93,6 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
                     :options => {:before_filters => []},
                     :src => exp,
                     :file => @file_name }
-    @tracker.controllers[@controller[:name]] = @controller
-    exp.body = process_all! exp.body
-    set_layout_name
-    @controller = nil
-    exp
   end
 
   #Look for specific calls inside the controller
