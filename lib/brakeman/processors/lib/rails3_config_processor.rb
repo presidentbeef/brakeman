@@ -72,6 +72,14 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
       level = @tracker.config[:rails]
       options[0..-2].each do |o|
         level[o] ||= {}
+
+        option = level[o]
+
+        if not option.is_a? Hash
+          Brakeman.debug "[Notice] Skipping config setting: #{options.map(&:to_s).join(".")}"
+          return exp
+        end
+
         level = level[o]
       end
 
