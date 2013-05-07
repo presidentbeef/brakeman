@@ -55,6 +55,27 @@ class BaseCheckTests < Test::Unit::TestCase
 end
 
 class ConfigTests < Test::Unit::TestCase
+  
+  def setup
+    Brakeman.instance_variable_set(:@quiet, false)
+  end
+  
+  # method from test-unit: http://test-unit.rubyforge.org/test-unit/en/Test/Unit/Util/Output.html#capture_output-instance_method
+  def capture_output
+    require 'stringio'
+
+    output = StringIO.new
+    error = StringIO.new
+    stdout_save, stderr_save = $stdout, $stderr
+    $stdout, $stderr = output, error
+    begin
+      yield
+      [output.string, error.string]
+    ensure
+      $stdout, $stderr = stdout_save, stderr_save
+    end
+  end
+  
   def test_quiet_option_from_file
     config = Tempfile.new("config")
 
@@ -70,11 +91,34 @@ class ConfigTests < Test::Unit::TestCase
       :app_path => "/tmp" #doesn't need to be real
     }
 
-    final_options = Brakeman.set_options(options)
+    assert_equal "", capture_output {
+      final_options = Brakeman.set_options(options)
 
-    config.unlink
+      config.unlink
 
-    assert final_options[:quiet], "Expected quiet option to be true, but was #{final_options[:quiet]}"
+      assert final_options[:quiet], "Expected quiet option to be true, but was #{final_options[:quiet]}"
+    }[1]
+  end
+  
+  def test_quiet_option_from_commandline
+    config = Tempfile.new("config")
+
+    config.write <<-YAML.strip
+    ---
+    app_path: "/tmp"
+    YAML
+
+    config.close
+
+    options = {
+      :config_file => config.path,
+      :quiet => true,
+      :app_path => "/tmp" #doesn't need to be real
+    }
+    
+    assert_equal "", capture_output {
+      final_options = Brakeman.set_options(options)
+    }[1]
   end
 
   def test_quiet_option_default
@@ -96,5 +140,34 @@ class ConfigTests < Test::Unit::TestCase
     final_options = Brakeman.set_options(options)
 
     assert_nil final_options[:quiet]
+  end
+  
+  def output_format_tester options, expected_options
+    output_formats = Brakeman.get_output_formats(options)
+    
+    assert_equal expected_options, output_formats
+  end
+  
+  def test_output_format
+    output_format_tester({}, [:to_s])
+    output_format_tester({:output_format => :html}, [:to_html])
+    output_format_tester({:output_format => :to_html}, [:to_html])
+    output_format_tester({:output_format => :csv}, [:to_csv])
+    output_format_tester({:output_format => :to_csv}, [:to_csv])
+    output_format_tester({:output_format => :pdf}, [:to_pdf])
+    output_format_tester({:output_format => :to_pdf}, [:to_pdf])
+    output_format_tester({:output_format => :json}, [:to_json])
+    output_format_tester({:output_format => :to_json}, [:to_json])
+    output_format_tester({:output_format => :tabs}, [:to_tabs])
+    output_format_tester({:output_format => :to_tabs}, [:to_tabs])
+    output_format_tester({:output_format => :others}, [:to_s])
+    
+    output_format_tester({:output_files => ['xx.html', 'xx.pdf']}, [:to_html, :to_pdf])
+    output_format_tester({:output_files => ['xx.pdf', 'xx.json']}, [:to_pdf, :to_json])
+    output_format_tester({:output_files => ['xx.json', 'xx.tabs']}, [:to_json, :to_tabs])
+    output_format_tester({:output_files => ['xx.tabs', 'xx.csv']}, [:to_tabs, :to_csv])
+    output_format_tester({:output_files => ['xx.csv', 'xx.xxx']}, [:to_csv, :to_s])
+    output_format_tester({:output_files => ['xx.xx', 'xx.xx']}, [:to_s, :to_s])
+    output_format_tester({:output_files => ['xx.html', 'xx.pdf', 'xx.csv', 'xx.tabs', 'xx.json']}, [:to_html, :to_pdf, :to_csv, :to_tabs, :to_json])
   end
 end
