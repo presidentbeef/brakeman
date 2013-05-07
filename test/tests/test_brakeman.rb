@@ -131,15 +131,38 @@ class ConfigTests < Test::Unit::TestCase
     assert final_options[:quiet], "Expected quiet option to be true, but was #{final_options[:quiet]}"
   end
 
-  def test_quiet_option_with_nil
+  def test_quiet_command_line_default
     options = {
-      :quiet => nil,
+      :quiet => :command_line,
       :app_path => "/tmp" #doesn't need to be real
     }
 
     final_options = Brakeman.set_options(options)
 
     assert_nil final_options[:quiet]
+  end
+
+  def test_quiet_inconfig_with_command_line
+    config = Tempfile.new("config")
+
+    config.write <<-YAML.strip
+    ---
+    :quiet: true
+    YAML
+
+    config.close
+
+    options = {
+      :quiet => :command_line,
+      :config_file => config.path,
+      :app_path => "#{TEST_PATH}/apps/rails4",
+      :run_checks => []
+    }
+
+    assert_equal "", capture_output {
+      Brakeman.run options
+      config.unlink
+    }[1]
   end
   
   def output_format_tester options, expected_options
