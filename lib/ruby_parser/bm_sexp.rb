@@ -371,7 +371,11 @@ class Sexp
   #       s(:call, nil, :p, s(:arglist, s(:lvar, :y))))
   def block_args
     expect :iter, :call_with_block
-    self[2]
+    if self[2] == 0 # ?! See https://github.com/presidentbeef/brakeman/issues/331
+      return Sexp.new(:args)
+    else
+      self[2]
+    end
   end
 
   def first_param
