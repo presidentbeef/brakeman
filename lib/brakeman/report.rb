@@ -629,7 +629,6 @@ HEADER
       :security_warnings => all_warnings.length,
       :start_time => tracker.start_time.to_s,
       :end_time => tracker.end_time.to_s,
-      :timestamp => tracker.end_time.to_s,
       :duration => tracker.duration,
       :checks_performed => checks.checks_run.sort,
       :number_of_controllers =>tracker.controllers.length,
