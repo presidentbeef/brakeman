@@ -42,14 +42,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
 
 
     if input = has_immediate_user_input?(url_arg)
-      case input.type
-      when :params
-        message = "Unsafe parameter value in link_to href"
-      when :cookies
-        message = "Unsafe cookie value in link_to href"
-      else
-        message = "Unsafe user input value in link_to href"
-      end
+      message = "Unsafe #{friendly_type_of input} in link_to href"
 
       unless duplicate? result
         add_result result

@@ -48,20 +48,7 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
     end
 
     if match
-      case match.type
-      when :params
-        message = "Parameter"
-      when :cookies
-        message = "Cookie"
-      when :request
-        message = "Request"
-      when :model
-        message = "Model attribute"
-      else
-        message = "User input"
-      end
-
-      message << " value used in file name"
+      message = "#{friendly_type_of(match).capitalize} used in file name"
 
       warn :result => result,
         :warning_type => "File Access",
