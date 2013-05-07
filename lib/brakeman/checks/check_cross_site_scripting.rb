@@ -104,16 +104,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     if input = has_immediate_user_input?(out)
       add_result exp
 
-      case input.type
-      when :params
-        message = "Unescaped parameter value"
-      when :cookies
-        message = "Unescaped cookie value"
-      when :request
-        message = "Unescaped request value"
-      else
-        message = "Unescaped user input value"
-      end
+      message = "Unescaped #{friendly_type_of input}"
 
       warn :template => @current_template,
         :warning_type => "Cross Site Scripting",
@@ -194,15 +185,8 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       message = nil
 
       if @matched
-        case @matched.type
-        when :model
-          unless tracker.options[:ignore_model_output]
-            message = "Unescaped model attribute"
-          end
-        when :params
-          message = "Unescaped parameter value"
-        when :cookies
-          message = "Unescaped cookie value"
+        unless @matched.type and tracker.options[:ignore_model_output]
+          message = "Unescaped #{friendly_type_of @matched}"
         end
 
         if message and not duplicate? exp
