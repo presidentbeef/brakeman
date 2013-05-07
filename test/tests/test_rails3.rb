@@ -1036,7 +1036,7 @@ class Rails3Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 125,
-      :message => /^YAML\.load\ called\ with\ cookies\ value/,
+      :message => /^YAML\.load\ called\ with\ cookie\ value/,
       :confidence => 1,
       :file => /home_controller\.rb/
   end
@@ -1064,7 +1064,7 @@ class Rails3Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 131,
-      :message => /^YAML\.load_stream\ called\ with\ cookies\ val/,
+      :message => /^YAML\.load_stream\ called\ with\ cookie\ value/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end

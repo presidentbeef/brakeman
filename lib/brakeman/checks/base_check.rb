@@ -516,4 +516,23 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
     @active_record_models
   end
+
+  def friendly_type_of input_type
+    if input_type.is_a? Match
+      input_type = input_type.type
+    end
+
+    case input_type
+    when :params
+      "parameter value"
+    when :cookies
+      "cookie value"
+    when :request
+      "request value"
+    when :model
+      "model attribute"
+    else
+      "user input"
+    end
+  end
 end
