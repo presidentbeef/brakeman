@@ -87,6 +87,15 @@ class SexpTests < Test::Unit::TestCase
     assert_equal s(:call, nil, :blah, s(:lvar, :z)), block
   end
 
+  def test_stabby_lambda_no_args
+    exp = parse "->{ hi }"
+    args = exp.block_args
+
+    assert_equal s(:call, nil, :lambda), exp.block_call
+    assert_equal s(:args), exp.block_args
+    assert_equal s(:call, nil, :hi), exp.block
+  end
+
   def test_or
     exp = parse '1 or 2'
 
