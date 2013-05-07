@@ -11,13 +11,13 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 3,
-        :template => 43,
+        :template => 44,
         :warning => 46 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
-        :template => 43,
+        :template => 44,
         :warning => 47 }
     end
   end
@@ -425,6 +425,17 @@ class Rails2Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /test_model\.html\.erb/,
       :relative_path => "app/views/home/test_model.html.erb"
+  end
+
+  def test_indirect_model_in_link_to
+    assert_warning :type => :template,
+      :warning_code => 3,
+      :fingerprint => "8941c902e7c71d0df4ebb1888c8ed9ac99affaf385be657838452ac3eefe563c",
+      :warning_type => "Cross Site Scripting",
+      :line => 9,
+      :message => /^Unescaped\ model\ attribute\ in\ l/,
+      :confidence => 1,
+      :relative_path => "app/views/home/test_link_to.html.erb"
   end
 
   def test_escaped_parameter_in_link_to
@@ -1158,13 +1169,13 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 4,
-        :template => 43,
+        :template => 44,
         :warning => 46 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
-        :template => 43,
+        :template => 44,
         :warning => 47 }
     end
   end

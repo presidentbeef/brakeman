@@ -89,7 +89,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
   # Check if we should warn about the matched result
   def check_matched(result, matched = nil)
     return false unless matched
-    return false if matched.type == :model and not tracker.options[:ignore_model_output]
+    return false if matched.type == :model and tracker.options[:ignore_model_output]
 
     message = "Unescaped #{friendly_type_of matched} in link_to"
 
