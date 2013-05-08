@@ -52,6 +52,10 @@ trap("INT") do
   exit!
 end
 
+if options[:quiet].nil?
+  options[:quiet] = :command_line
+end
+
 if options[:previous_results_json]
   vulns = Brakeman.compare options.merge(:quiet => options[:quiet])
   puts MultiJson.dump(vulns, :pretty => true)
