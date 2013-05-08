@@ -62,8 +62,17 @@ module Brakeman
     if options.is_a? String
       options = { :app_path => options }
     end
-    
+
+    if options[:quiet] == :command_line
+      command_line = true
+      options.delete :quiet
+    end
+
     options = default_options.merge(load_options(options[:config_file], options[:quiet])).merge(options)
+
+    if options[:quiet].nil? and not command_line
+      options[:quiet] = true
+    end
 
     options[:app_path] = File.expand_path(options[:app_path])
     options[:output_formats] = get_output_formats options
@@ -112,7 +121,6 @@ module Brakeman
       :message_limit => 100,
       :parallel_checks => true,
       :relative_path => false,
-      :quiet => true,
       :report_progress => true,
       :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css"
     }
