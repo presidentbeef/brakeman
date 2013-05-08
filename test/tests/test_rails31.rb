@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 22,
       :controller => 4,
-      :warning => 68 }
+      :warning => 71 }
   end
 
   def test_without_protection
@@ -969,6 +969,7 @@ class Rails31Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /admin_controller\.rb/
   end
+
   def test_unsafe_reflection_constantize_indirect
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
@@ -976,5 +977,38 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Unsafe\ Reflection\ method\ constantize\ cal/,
       :confidence => 1,
       :file => /admin_controller\.rb/
+  end
+
+  def test_csv_load
+    assert_warning :type => :warning,
+      :warning_code => 25,
+      :fingerprint => "3b58b691bf7ef0b244ee463aa812e4e6ffe3fe1075c8bd138c0cb5a77f365f41",
+      :warning_type => "Remote Code Execution",
+      :line => 69,
+      :message => /^CSV\.load\ called\ with\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/other_controller.rb"
+  end
+
+  def test_marshal_load
+    assert_warning :type => :warning,
+      :warning_code => 25,
+      :fingerprint => "ecdb984aa40fbe7d42a74ab474a412579b42b36c630bcac640d382e108109437",
+      :warning_type => "Remote Code Execution",
+      :line => 71,
+      :message => /^Marshal\.load\ called\ with\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/other_controller.rb"
+  end
+
+  def test_marshal_restore
+    assert_warning :type => :warning,
+      :warning_code => 25,
+      :fingerprint => "78ef96a81c8b02f97992a7056e4d9696ab238e12bc8a7a3204df29ef11e0a3fe",
+      :warning_type => "Remote Code Execution",
+      :line => 73,
+      :message => /^Marshal\.restore\ called\ with\ model\ attrib/,
+      :confidence => 1,
+      :relative_path => "app/controllers/other_controller.rb"
   end
 end

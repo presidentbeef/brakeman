@@ -64,4 +64,12 @@ class OtherController < ApplicationController
     sanitize something
     @css = sanitize_css(some_css)
   end
+
+  def test_deserialization
+    CSV.load params[:csv]
+
+    Marshal.load params[:object]
+
+    Marshal.restore User.find(1).cool_stored_thing
+  end
 end
