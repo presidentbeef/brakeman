@@ -40,7 +40,7 @@ module Brakeman
   #  * :safe_methods - array of methods to consider safe
   #  * :skip_libs - do not process lib/ directory (default: false)
   #  * :skip_checks - checks not to run (run all if not specified)
-  #  * :relative_path - show relative path of each file(default: false)
+  #  * :absolute_paths - show absolute path of each file (default: false)
   #  * :summary_only - only output summary section of report
   #                    (does not apply to tabs format)
   #
