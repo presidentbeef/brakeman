@@ -886,7 +886,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_sql_injection_CVE_2012_5664
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.18,\ 3\.1/,
+      :message => /CVE-2012-5664/,
       :confidence => 0,
       :file => /environment\.rb/,
       :relative_path => "config/environment.rb"
@@ -895,7 +895,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_sql_injection_CVE_2013_0155
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :message => /^Rails\ 2\.3\.11\ contains\ a\ SQL\ Injection\ Vu/,
+      :message => /CVE-2013-0155/,
       :confidence => 0,
       :file => /environment\.rb/,
       :relative_path => "config/environment.rb"

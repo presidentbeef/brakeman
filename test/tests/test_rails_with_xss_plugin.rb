@@ -261,7 +261,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   def test_sql_injection_CVE_2012_5664
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.18,\ 3\.1/,
+      :message => /CVE-2012-5664/,
       :confidence => 0,
       :file => /Gemfile/
   end
@@ -291,7 +291,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   def test_sql_injection_CVE_2013_0155
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :message => /^Rails\ 2\.3\.14\ contains\ a\ SQL\ Injection\ Vu/,
+      :message => /CVE-2013-0155/,
       :confidence => 0,
       :file => /Gemfile/
   end
