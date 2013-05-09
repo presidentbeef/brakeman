@@ -28,4 +28,8 @@ class JSONOutputTests < Test::Unit::TestCase
   def test_for_errors
     assert @json["errors"].is_a? Array
   end
+
+  def test_paths
+    assert @json["warnings"].all? { |w| not w["file"].start_with? "/" }
+  end
 end

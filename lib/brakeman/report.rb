@@ -524,7 +524,7 @@ HEADER
       message
     end <<
     "<table id='#{code_id}' class='context' style='display:none'>" <<
-    "<caption>#{warning_file(warning, :relative) || ''}</caption>"
+    "<caption>#{warning_file(warning) || ''}</caption>"
 
     unless context.empty?
       if warning.line - 1 == 1 or warning.line + 1 == 1
@@ -587,7 +587,7 @@ HEADER
       checks.send(meth).map do |w|
         line = w.line || 0
         w.warning_type.gsub!(/[^\w\s]/, ' ')
-        "#{warning_file w}\t#{line}\t#{w.warning_type}\t#{category}\t#{w.format_message}\t#{TEXT_CONFIDENCE[w.confidence]}"
+        "#{warning_file(w, :absolute)}\t#{line}\t#{w.warning_type}\t#{category}\t#{w.format_message}\t#{TEXT_CONFIDENCE[w.confidence]}"
       end.join "\n"
 
     end.join "\n"
@@ -632,7 +632,7 @@ HEADER
       :timestamp => tracker.end_time.to_s,
       :duration => tracker.duration,
       :checks_performed => checks.checks_run.sort,
-      :number_of_controllers =>tracker.controllers.length,
+      :number_of_controllers => tracker.controllers.length,
       # ignore the "fake" model
       :number_of_models => tracker.models.length - 1,
       :number_of_templates => number_of_templates(@tracker),
@@ -657,13 +657,13 @@ HEADER
     Set.new(tracker.templates.map {|k,v| v[:name].to_s[/[^.]+/]}).length
   end
 
-  def warning_file warning, relative = false
+  def warning_file warning, absolute = @tracker.options[:absolute_paths]
     return nil if warning.file.nil?
 
-    if @tracker.options[:relative_paths] or relative
-      relative_path warning.file
-    else
+    if absolute
       warning.file
+    else
+      relative_path warning.file
     end
   end
 
