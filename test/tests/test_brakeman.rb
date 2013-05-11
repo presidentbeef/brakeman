@@ -1,5 +1,13 @@
 require 'tempfile'
 
+class BrakemanTests < Test::Unit::TestCase
+  def test_exception_on_no_application
+    assert_raise Brakeman::Scanner::NoApplication do
+      Brakeman.run "/tmp#{rand}" #better not exist
+    end
+  end
+end
+
 class UtilTests < Test::Unit::TestCase
   def setup
     @ruby_parser = RubyParser
