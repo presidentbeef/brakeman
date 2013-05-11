@@ -256,7 +256,7 @@ module Brakeman
     begin
       require 'brakeman/scanner'
     rescue LoadError
-      abort "Cannot find lib/ directory."
+      raise NoBrakemanError, "Cannot find lib/ directory."
     end
 
     #Start scanning
@@ -351,4 +351,6 @@ module Brakeman
 
     Brakeman::Differ.new(new_results, previous_results).diff
   end
+
+  class NoBrakemanError < RuntimeError; end
 end
