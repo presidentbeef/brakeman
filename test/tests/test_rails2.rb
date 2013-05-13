@@ -1087,6 +1087,15 @@ class Rails2Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /home_controller\.rb/,
       :relative_path => "app/controllers/home_controller.rb"
+
+    # This is same call, copied to template
+    assert_no_warning :type => :template,
+      :warning_code => 24,
+      :warning_type => "Remote Code Execution",
+      :line => 1,
+      :message => /^Unsafe\ Reflection\ method\ constantize\ cal/,
+      :confidence => 0,
+      :relative_path => "app/views/home/test_send_target.html.erb"
   end
 
   def test_unsafe_reflection_constantize_2
