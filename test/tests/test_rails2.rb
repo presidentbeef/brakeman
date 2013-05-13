@@ -856,6 +856,14 @@ class Rails2Tests < Test::Unit::TestCase
       :relative_path => "app/controllers/home_controller.rb"
 
     assert_no_warning :type => :warning,
+      :warning_code => 23,
+      :warning_type => "Dangerous Send",
+      :line => 84,
+      :message => /^User\ controlled\ method\ execution/,
+      :confidence => 0,
+      :relative_path => "app/controllers/home_controller.rb"
+
+    assert_no_warning :type => :warning,
       :warning_type => "Dangerous Send",
       :line => 90,
       :message => /\AUser defined target of method invocation/,
