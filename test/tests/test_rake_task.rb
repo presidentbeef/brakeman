@@ -14,17 +14,20 @@ class RakeTaskTests < Test::Unit::TestCase
 
   def in_temp_app
     Dir.mktmpdir do |dir|
-      FileUtils.cp_r "#{TEST_PATH}/apps/rails3.2/.", dir
+      begin
+        FileUtils.cp_r "#{TEST_PATH}/apps/rails3.2/.", dir
 
-      @rake_task = "#{dir}/lib/tasks/brakeman.rake"
-      @rakefile = "#{dir}/Rakefile"
+        @rake_task = "#{dir}/lib/tasks/brakeman.rake"
+        @rakefile = "#{dir}/Rakefile"
 
-      current_dir = FileUtils.pwd
-      FileUtils.cd dir
+        current_dir = FileUtils.pwd
+        FileUtils.cd dir
 
-      yield dir
+        yield dir
 
-      FileUtils.cd current_dir
+      ensure
+        FileUtils.cd current_dir
+      end
     end
   end
 
@@ -40,11 +43,11 @@ class RakeTaskTests < Test::Unit::TestCase
 
   def test_rake_task_exists
     in_temp_app do
-      assert_nothing_raised SystemExit do
+      assert_nothing_raised Brakeman::RakeInstallError do
         Brakeman.install_rake_task
       end
 
-      assert_raise SystemExit do
+      assert_raise Brakeman::RakeInstallError do
         Brakeman.install_rake_task
       end
     end
@@ -54,7 +57,7 @@ class RakeTaskTests < Test::Unit::TestCase
     in_temp_app do
       File.delete @rakefile
 
-      assert_raise SystemExit do
+      assert_raise Brakeman::RakeInstallError do
         Brakeman.install_rake_task
       end
     end

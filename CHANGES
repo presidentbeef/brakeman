@@ -1,3 +1,5 @@
+ * Use exceptions instead of abort in brakeman lib
+
 # 1.9.5
 
  * Add check for unsafe symbol creation
