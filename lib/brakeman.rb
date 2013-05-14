@@ -195,11 +195,19 @@ module Brakeman
   #Installs Rake task for running Brakeman,
   #which basically means copying `lib/brakeman/brakeman.rake` to
   #`lib/tasks/brakeman.rake` in the current Rails application.
-  def self.install_rake_task
-    if not File.exists? "Rakefile"
-      abort "No Rakefile detected"
-    elsif File.exists? "lib/tasks/brakeman.rake"
-      abort "Task already exists"
+  def self.install_rake_task install_path = nil
+    if install_path
+      rake_path = File.join(install_path, "Rakefile")
+      task_path = File.join(install_path, "lib", "tasks", "brakeman.rake")
+    else
+      rake_path = "Rakefile"
+      task_path = File.join("lib", "tasks", "brakeman.rake")
+    end
+
+    if not File.exists? rake_path
+      raise RakeInstallError, "No Rakefile detected"
+    elsif File.exists? task_path
+      raise RakeInstallError, "Task already exists"
     end
 
     require 'fileutils'
@@ -211,13 +219,13 @@ module Brakeman
 
     path = File.expand_path(File.dirname(__FILE__))
 
-    FileUtils.cp "#{path}/brakeman/brakeman.rake", "lib/tasks/brakeman.rake"
+    FileUtils.cp "#{path}/brakeman/brakeman.rake", task_path
 
-    if File.exists? "lib/tasks/brakeman.rake"
-      notify "Task created in lib/tasks/brakeman.rake"
+    if File.exists? task_path
+      notify "Task created in #{task_path}"
       notify "Usage: rake brakeman:run[output_file]"
     else
-      notify "Could not create task"
+      raise RakeInstallError, "Could not create task"
     end
   end
 
@@ -256,7 +264,7 @@ module Brakeman
     begin
       require 'brakeman/scanner'
     rescue LoadError
-      abort "Cannot find lib/ directory."
+      raise NoBrakemanError, "Cannot find lib/ directory."
     end
 
     #Start scanning
@@ -351,4 +359,7 @@ module Brakeman
 
     Brakeman::Differ.new(new_results, previous_results).diff
   end
+
+  class RakeInstallError < RuntimeError; end
+  class NoBrakemanError < RuntimeError; end
 end

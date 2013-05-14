@@ -33,7 +33,7 @@ class Brakeman::Scanner
     @app_tree = Brakeman::AppTree.from_options(options)
 
     if !@app_tree.root || !@app_tree.exists?("app")
-      abort("Please supply the path to a Rails application.")
+      raise NoApplication, "Please supply the path to a Rails application."
     end
 
     if @app_tree.exists?("script/rails")
@@ -355,4 +355,6 @@ class Brakeman::Scanner
   def parse_ruby input
     @ruby_parser.new.parse input
   end
+
+  class NoApplication < RuntimeError; end
 end
