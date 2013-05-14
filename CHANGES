@@ -1,3 +1,5 @@
+ * Medium confidence for mass assignment to attr_protected models
+
 # 1.9.5
 
  * Add check for unsafe symbol creation
