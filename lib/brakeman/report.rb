@@ -3,7 +3,7 @@ require 'set'
 require 'brakeman/processors/output_processor'
 require 'brakeman/util'
 require 'terminal-table'
-require 'highline/system_extensions'
+require 'highline'
 require "csv"
 require 'multi_json'
 require 'brakeman/version'
