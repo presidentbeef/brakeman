@@ -1,5 +1,6 @@
  * Use exceptions instead of abort in brakeman lib
  * Medium confidence for mass assignment to attr_protected models
+ * Avoid duplicate "Dangerous Send" and "Unsafe Reflection" warnings
 
 # 1.9.5
 
