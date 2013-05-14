@@ -1,4 +1,5 @@
  * Use exceptions instead of abort in brakeman lib
+ * Medium confidence for mass assignment to attr_protected models
 
 # 1.9.5
 

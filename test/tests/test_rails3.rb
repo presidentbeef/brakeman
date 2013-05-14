@@ -141,7 +141,7 @@ class Rails3Tests < Test::Unit::TestCase
       :warning_type => "Mass Assignment",
       :line => 43,
       :message => /^Unprotected mass assignment near line 43: Product.new/,
-      :confidence => 2,
+      :confidence => 1,
       :file => /products_controller\.rb/
   end
 
@@ -150,7 +150,7 @@ class Rails3Tests < Test::Unit::TestCase
       :warning_type => "Mass Assignment",
       :line => 62,
       :message => /^Unprotected mass assignment near line 62: Product.find/,
-      :confidence => 2,
+      :confidence => 1,
       :file => /products_controller\.rb/
   end
 
