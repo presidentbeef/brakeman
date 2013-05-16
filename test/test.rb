@@ -68,14 +68,9 @@ module BrakemanTester::FindWarning
       warnings.select block
     else
       warnings.select do |w|
-        flag = true
-        opts.each do |k,v|
-          unless v === w.send(k)
-            flag = false
-            break
-          end
+        opts.all? do |k,v|
+          v === w.send(k)
         end
-        flag
       end
     end
 
