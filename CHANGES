@@ -1,7 +1,29 @@
- * Fix text report console output in JRuby
- * Use exceptions instead of abort in brakeman lib
- * Medium confidence for mass assignment to attr_protected models
+# 2.0.0
+  
+ * Add `--only-files` option to specify files/paths to scan (Ian Ehlert)
+ * Add Marshal/CSV deserialization check
+ * Combine deserialization checks into single check
  * Avoid duplicate "Dangerous Send" and "Unsafe Reflection" warnings
+ * Avoid duplicate results for Symbol DoS check
+ * Medium confidence for mass assignment to attr_protected models
+ * Remove "timestamp" key from JSON reports
+ * Remove deprecated config file locations
+ * Only treat classes with names containing `Controller` like controllers
+ * Better handling of classes nested inside controllers
+ * Better handling of controller classes nested in classes/modules
+ * Handle `->` lambdas with no arguments
+ * Handle explicit block argument destructuring
+ * Skip Rails config options that are real objects
+ * Detect Rails 3 JSON escape config option
+ * Much better tracking of warning file names
+ * Fix errors when using `--separate-models` (Noah Davis)
+ * Fix fingerprint generation to actually use the file path
+ * Fix text report console output in JRuby
+ * Fix false positives on `Model#id`
+ * Fix false positives on `params.to_json`
+ * Fix model path guesses to use "models/" instead of "controllers/"
+ * Clean up SQL CVE warning messages
+ * Use exceptions instead of abort in brakeman lib
 
 # 1.9.5
 
