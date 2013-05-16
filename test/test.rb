@@ -191,7 +191,7 @@ module BrakemanTester::RescanTestHelper
     output = yield parsed
 
     File.open path, "w" do |f|
-      f.puts Ruby2Ruby.new.process output
+      f.puts Brakeman::OutputProcessor.new.process output
     end
   end
 
