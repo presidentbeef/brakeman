@@ -74,6 +74,8 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   def process_methdef exp
     meth_name = exp.method_name
 
+    Brakeman.debug "Processing #{@current_class}##{meth_name}"
+
     #Skip if instructed to only process a specific method
     #(but don't skip if this method was called from elsewhere)
     return exp if @current_method.nil? and @only_method and @only_method != meth_name
