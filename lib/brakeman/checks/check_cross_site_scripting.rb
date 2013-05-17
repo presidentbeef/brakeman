@@ -77,13 +77,12 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     end
 
     tracker.each_template do |name, template|
+      Brakeman.debug "Checking #{name} for XSS"
+
       @current_template = template
+
       template[:outputs].each do |out|
-        Brakeman.debug "Checking #{name} for direct XSS"
-
         unless check_for_immediate_xss out
-          Brakeman.debug "Checking #{name} for indirect XSS"
-
           @matched = false
           @mark = false
           process out
