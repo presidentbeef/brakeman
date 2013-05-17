@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2013-04-10T09:34:26-07:00</updated>
+  <updated>2013-05-17T00:33:41-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -1655,85 +1655,78 @@ end
   
   <entry>
     <title>Brakeman 1.5.0 Released</title>
-    <link href="http://brakemanscanner.org/blog/2012/03/01/brakeman-1-dot-5-0-released/"/>
+    <link href="http://brakemanscanner.org/blog/2012/03/01/brakeman-1-dot-5-0-released.markdown/"/>
     <updated>2012-03-01T20:23:00-08:00</updated>
-    <id>http://brakemanscanner.org/blog/2012/03/01/brakeman-1-dot-5-0-released</id>
-    <content type="html">&lt;p&gt;A release was forced today because two new Rails vulnerabilities were reported (the first since November):&lt;/p&gt;
+    <id>http://brakemanscanner.org/blog/2012/03/01/brakeman-1-dot-5-0-released.markdown</id>
+    <content type="html">A release was forced today because two new Rails vulnerabilities were reported (the first since November):
 
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://groups.google.com/group/rubyonrails-security/browse_thread/thread/9da0c515a6c4664&quot;&gt;Manual options are not escaped in select()&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://groups.google.com/group/rubyonrails-security/browse_thread/thread/edd28f1e3d04e913&quot;&gt;Some operations on SafeBuffer mistakenly return strings marked as html_safe&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
+ * [Manual options are not escaped in select()](http://groups.google.com/group/rubyonrails-security/browse_thread/thread/edd28f1e3d04e913)
+ * [Some operations on SafeBuffer mistakenly return strings marked as html_safe](http://groups.google.com/group/rubyonrails-security/browse_thread/thread/9da0c515a6c4664)
 
+This release includes checks for these two vulnerabilities.
 
-&lt;p&gt;This release includes checks for these two vulnerabilities.&lt;/p&gt;
+There is also a new check for skipping CSRF token verification, and some other changes which may result in fewer or more vulnerabilities being reported.
 
-&lt;p&gt;There is also a new check for skipping CSRF token verification, and some other changes which may result in fewer or more vulnerabilities being reported.&lt;/p&gt;
+_Changes since 1.4.0:_
 
-&lt;p&gt;&lt;em&gt;Changes since 1.4.0:&lt;/em&gt;&lt;/p&gt;
+ * Add version check for SafeBuffer vulnerability
+ * Add check for select vulnerability in Rails 3
+ * select() is no longer considered safe in Rails 2
+ * Add check for skipping CSRF protection with a blacklist
+ * Add JSON report format
+ * Model#id should not be considered XSS
+ * Standardize methods to check for SQL injection
+ * Fix Rails 2 route parsing issue with nested routes
 
-&lt;ul&gt;
-&lt;li&gt;Add version check for SafeBuffer vulnerability&lt;/li&gt;
-&lt;li&gt;Add check for select vulnerability in Rails 3&lt;/li&gt;
-&lt;li&gt;select() is no longer considered safe in Rails 2&lt;/li&gt;
-&lt;li&gt;Add check for skipping CSRF protection with a blacklist&lt;/li&gt;
-&lt;li&gt;Add JSON report format&lt;/li&gt;
-&lt;li&gt;Model#id should not be considered XSS&lt;/li&gt;
-&lt;li&gt;Standardize methods to check for SQL injection&lt;/li&gt;
-&lt;li&gt;Fix Rails 2 route parsing issue with nested routes&lt;/li&gt;
-&lt;/ul&gt;
+### Check for SafeBuffer Vulnerability
 
+A new vulnerability was reported that affects strings which are marked as `html_safe` and then modified in some way. For some operations, the new, modified string will still be marked as `html_safe`. Full details [here](http://groups.google.com/group/rubyonrails-security/browse_thread/thread/edd28f1e3d04e913).
 
-&lt;h3&gt;Check for SafeBuffer Vulnerability&lt;/h3&gt;
+For this vulnerability, Brakeman only does a version check and reports if an application is used a vulnerable version of Rails. It only reports on Rails 3 applications, since Rails 3 introduced the concept of SafeBuffers.
 
-&lt;p&gt;A new vulnerability was reported that affects strings which are marked as &lt;code&gt;html_safe&lt;/code&gt; and then modified in some way. For some operations, the new, modified string will still be marked as &lt;code&gt;html_safe&lt;/code&gt;. Full details &lt;a href=&quot;http://groups.google.com/group/rubyonrails-security/browse_thread/thread/edd28f1e3d04e913&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+### Check for select Helper Vulnerability
 
-&lt;p&gt;For this vulnerability, Brakeman only does a version check and reports if an application is used a vulnerable version of Rails. It only reports on Rails 3 applications, since Rails 3 introduced the concept of SafeBuffers.&lt;/p&gt;
+Another vulnerability was reported today in the `select` form helper. Option tags built by hand (interpolating values into `&lt;option&gt;&lt;/option&gt;`) will not be escaped by `select`. Full details [here](http://groups.google.com/group/rubyonrails-security/browse_thread/thread/9da0c515a6c4664).
 
-&lt;h3&gt;Check for select Helper Vulnerability&lt;/h3&gt;
+For Rails 3 applications, Brakeman checks for uses of `select` which have user input in the `options` argument. This check may be refined in the future.
 
-&lt;p&gt;Another vulnerability was reported today in the &lt;code&gt;select&lt;/code&gt; form helper. Option tags built by hand (interpolating values into &lt;code&gt;&amp;lt;option&amp;gt;&amp;lt;/option&amp;gt;&lt;/code&gt;) will not be escaped by &lt;code&gt;select&lt;/code&gt;. Full details &lt;a href=&quot;http://groups.google.com/group/rubyonrails-security/browse_thread/thread/9da0c515a6c4664&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+For Rails 2, Brakeman no longer considers `select` a safe method when checking for cross site scripting.
 
-&lt;p&gt;For Rails 3 applications, Brakeman checks for uses of &lt;code&gt;select&lt;/code&gt; which have user input in the &lt;code&gt;options&lt;/code&gt; argument. This check may be refined in the future.&lt;/p&gt;
+### Check for CSRF Filter Skipping
 
-&lt;p&gt;For Rails 2, Brakeman no longer considers &lt;code&gt;select&lt;/code&gt; a safe method when checking for cross site scripting.&lt;/p&gt;
+When cross site request forgery protection is enabled, a `before_filter` is added called `verify_authenticity_token`. This filter checks that actions called responding to a `POST` have a correct authenticity token from the client. Since this is a regular `before_filter`, it can be skipped using `skip_before_filter`.
 
-&lt;h3&gt;Check for CSRF Filter Skipping&lt;/h3&gt;
+If `skip_before_filter` is called using an `:except` option, then the default for the controller becomes NOT checking for an authenticity token:
 
-&lt;p&gt;When cross site request forgery protection is enabled, a &lt;code&gt;before_filter&lt;/code&gt; is added called &lt;code&gt;verify_authenticity_token&lt;/code&gt;. This filter checks that actions called responding to a &lt;code&gt;POST&lt;/code&gt; have a correct authenticity token from the client. Since this is a regular &lt;code&gt;before_filter&lt;/code&gt;, it can be skipped using &lt;code&gt;skip_before_filter&lt;/code&gt;.&lt;/p&gt;
+    skip_before_filter :verify_authenticity_token, :except =&gt; [:create, :delete]
 
-&lt;p&gt;If &lt;code&gt;skip_before_filter&lt;/code&gt; is called using an &lt;code&gt;:except&lt;/code&gt; option, then the default for the controller becomes NOT checking for an authenticity token:&lt;/p&gt;
+It is recommended to use `:only` if skipping this filter is actually necessary. This way, any new actions added later will automatically fall under the CSRF protection.
 
-&lt;pre&gt;&lt;code&gt;skip_before_filter :verify_authenticity_token, :except =&amp;gt; [:create, :delete]
-&lt;/code&gt;&lt;/pre&gt;
+This check may be extended in the future to other important filters.
 
-&lt;p&gt;It is recommended to use &lt;code&gt;:only&lt;/code&gt; if skipping this filter is actually necessary. This way, any new actions added later will automatically fall under the CSRF protection.&lt;/p&gt;
+### JSON Report Format
 
-&lt;p&gt;This check may be extended in the future to other important filters.&lt;/p&gt;
+While the code for outputing JSON was in the 1.4.0 release, it was not actually added as a proper output format! This has been rectified.
 
-&lt;h3&gt;JSON Report Format&lt;/h3&gt;
+`-f json` or `-o report.json` will now produce JSON reports.
 
-&lt;p&gt;While the code for outputting JSON was in the 1.4.0 release, it was not actually added as a proper output format! This has been rectified.&lt;/p&gt;
+The information contained in these reports may change in the future, although that should only be adding more information.
 
-&lt;p&gt;&lt;code&gt;-f json&lt;/code&gt; or &lt;code&gt;-o report.json&lt;/code&gt; will now produce JSON reports.&lt;/p&gt;
+### SQL Methods
 
-&lt;p&gt;The information contained in these reports may change in the future, although that should only be adding more information.&lt;/p&gt;
+The code for finding SQL methods to check for SQL injection was a little messed up. Depending on how the method was called, different sets of methods were considered dangerous.
 
-&lt;h3&gt;SQL Methods&lt;/h3&gt;
+This has been changed for better consistency and coverage. This means reports may include new SQL injections, so keep an eye out.
 
-&lt;p&gt;The code for finding SQL methods to check for SQL injection was a little messed up. Depending on how the method was called, different sets of methods were considered dangerous.&lt;/p&gt;
+### Rails 2 Route Parsing Fix
 
-&lt;p&gt;This has been changed for better consistency and coverage. This means reports may include new SQL injections, so keep an eye out.&lt;/p&gt;
+There was a bug in the code which determined if a method was being called on `map`, which caused Brakeman to think strange methods were route definitions (for example, `require`). This has been fixed.
 
-&lt;h3&gt;Rails 2 Route Parsing Fix&lt;/h3&gt;
+### Report Problems!
 
-&lt;p&gt;There was a bug in the code which determined if a method was being called on &lt;code&gt;map&lt;/code&gt;, which caused Brakeman to think strange methods were route definitions (for example, &lt;code&gt;require&lt;/code&gt;). This has been fixed.&lt;/p&gt;
+Always [report problems](https://github.com/presidentbeef/brakeman/issues) encountered when running Brakeman.
 
-&lt;h3&gt;Report Problems!&lt;/h3&gt;
-
-&lt;p&gt;Always &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;report problems&lt;/a&gt; encountered when running Brakeman.&lt;/p&gt;
-
-&lt;p&gt;Don't forget to join the &lt;a href=&quot;http://librelist.com/browser/brakeman/&quot;&gt;mailing list&lt;/a&gt; and/or follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@Brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+Don't forget to join the [mailing list](http://librelist.com/browser/brakeman/) and/or follow [@Brakeman](https://twitter.com/brakeman) on Twitter.
 </content>
   </entry>
   
