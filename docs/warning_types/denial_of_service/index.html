@@ -111,6 +111,29 @@
 
 <p>Brakeman checks for instances of user input which is converted to a Symbol. When this is not restricted, an attacker could create an unlimited number of Symbols.</p>
 
+<p>The best approach is to simply never convert user-controlled input to a Symbol. If this cannot be avoided, use a whitelist of acceptable values.</p>
+
+<p>For example:</p>
+
+<pre><code>valid_values = ["valid", "values", "here"]
+
+if valid_values.include? params[:value]
+  symbolized = params[:value].to_sym
+end
+</code></pre>
+
+<p>However, Brakeman will still warn about this, because it cannot tell a valid guard expression has been used.</p>
+
+<p>Avoiding the warning itself becomes silly:</p>
+
+<pre><code>valid_values.each do |v|
+  if v == params[:value]
+    symbolized = v.to_sym
+    break
+  end
+end
+</code></pre>
+
 <hr />
 
 <p>Back to <a href="/docs/warning_types">Warning Types</a></p>
@@ -156,6 +179,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/05/20/brakeman-2-dot-0-0-released/">Brakeman 2.0.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/04/05/brakeman-1-dot-9-5-released/">Brakeman 1.9.5 Released</a>
       </li>
     
@@ -169,10 +196,6 @@
     
       <li class="post">
         <a href="/blog/2013/02/13/brakeman-1-dot-9-2-released/">Brakeman 1.9.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/01/18/brakeman-1-dot-9-1-released/">Brakeman 1.9.1 Released</a>
       </li>
     
   </ul>
