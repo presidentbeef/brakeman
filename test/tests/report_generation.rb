@@ -35,10 +35,8 @@ class TestReportGeneration < Test::Unit::TestCase
   end
 
   def test_text_sanity
-    unless RUBY_PLATFORM == "java"
-      report = Report.to_s
+    report = Report.to_s
 
-      assert report.is_a? String
-    end
+    assert report.is_a? String
   end
 end
