@@ -8,6 +8,8 @@
  * Medium confidence for mass assignment to attr_protected models
  * Remove "timestamp" key from JSON reports
  * Remove deprecated config file locations
+ * Relative paths are used by default in JSON reports
+ * `--absolute-paths` replaces `--relative-paths`
  * Only treat classes with names containing `Controller` like controllers
  * Better handling of classes nested inside controllers
  * Better handling of controller classes nested in classes/modules
