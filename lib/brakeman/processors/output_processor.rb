@@ -14,7 +14,6 @@ class Brakeman::OutputProcessor < Ruby2Ruby
   end
 
   alias process_safely format
-  alias process_methdef process_defn
 
   def process exp
     begin
@@ -98,6 +97,29 @@ class Brakeman::OutputProcessor < Ruby2Ruby
     exp.clear
     out
   end
+
+  def process_defn exp
+    # Copied from Ruby2Ruby except without the whole
+    # "convert methods to attr_*" stuff
+    name = exp.shift
+    args = process exp.shift
+    args = "" if args == "()"
+
+    exp.shift if exp == s(s(:nil)) # empty it out of a default nil expression
+
+    body = []
+    until exp.empty? do
+      body << indent(process(exp.shift))
+    end
+
+    body << indent("# do nothing") if body.empty?
+
+    body = body.join("\n")
+
+    return "def #{name}#{args}\n#{body}\nend".gsub(/\n\s*\n+/, "\n")
+  end
+
+  alias process_methdef process_defn
 
   def process_call_with_block exp
     call = process exp[0]
