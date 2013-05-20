@@ -24,6 +24,7 @@
  * Fix model path guesses to use "models/" instead of "controllers/"
  * Clean up SQL CVE warning messages
  * Use exceptions instead of abort in brakeman lib
+ * Update to Ruby2Ruby 2.0.5
 
 # 1.9.5
 
