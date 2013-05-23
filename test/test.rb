@@ -4,6 +4,14 @@ $LOAD_PATH.unshift "#{TEST_PATH}/../lib"
 
 begin
   require 'simplecov'
+
+  begin
+    require 'coveralls'
+    SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+  rescue LoadError => e
+    $stderr.puts "Skipping coveralls integration"
+  end
+
   SimpleCov.start do
     add_filter 'lib/ruby_parser/ruby18_parser.rb'
     add_filter 'lib/ruby_parser/ruby19_parser.rb'
