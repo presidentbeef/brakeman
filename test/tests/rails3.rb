@@ -1,6 +1,7 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-Rails3 = BrakemanTester.run_scan "rails3", "Rails 3", :rails3 => true
+Rails3 = BrakemanTester.run_scan "rails3", "Rails 3", :rails3 => true,
+  :config_file => File.join(TEST_PATH, "apps", "rails3", "config", "brakeman.yml")
 
 class Rails3Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
