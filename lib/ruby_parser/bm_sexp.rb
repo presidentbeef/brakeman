@@ -3,7 +3,7 @@
 #of a Sexp.
 class Sexp
   attr_reader :paren
-  attr_accessor :original_line
+  attr_accessor :original_line, :or_depth
   ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cdecl, :or, :and, :colon2]
 
   def method_missing name, *args
@@ -65,6 +65,17 @@ class Sexp
   def node_type= type
     @my_hash_value = nil
     self[0] = type
+  end
+
+  #Join self and exp into an :or Sexp.
+  #Sets or_depth.
+  #Used for combining "branced" values in AliasProcessor.
+  def combine exp, line = nil
+    combined = Sexp.new(:or, self, exp).line(line || -2)
+
+    combined.or_depth = [self.or_depth, exp.or_depth].compact.reduce(0, :+) + 1
+
+    combined
   end
 
   alias :node_type :sexp_type
