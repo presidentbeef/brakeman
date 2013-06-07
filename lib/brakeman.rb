@@ -91,11 +91,17 @@ module Brakeman
     #Load configuration file
     if config = config_file(custom_location)
       options = YAML.load_file config
-      options.each { |k, v| options[k] = Set.new v if v.is_a? Array }
-      
-      # notify if options[:quiet] and quiet is nil||false
-      notify "[Notice] Using configuration in #{config}" unless (options[:quiet] || quiet)
-      options
+
+      if options
+        options.each { |k, v| options[k] = Set.new v if v.is_a? Array }
+
+        # notify if options[:quiet] and quiet is nil||false
+        notify "[Notice] Using configuration in #{config}" unless (options[:quiet] || quiet)
+        options
+      else
+        notify "[Notice] Empty configuration file: #{config}" unless quiet
+        {}
+      end
     else
       {}
     end
