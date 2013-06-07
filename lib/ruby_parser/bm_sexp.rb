@@ -69,7 +69,7 @@ class Sexp
 
   #Join self and exp into an :or Sexp.
   #Sets or_depth.
-  #Used for combining "branced" values in AliasProcessor.
+  #Used for combining "branched" values in AliasProcessor.
   def combine exp, line = nil
     combined = Sexp.new(:or, self, exp).line(line || -2)
 

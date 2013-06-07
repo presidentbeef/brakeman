@@ -465,6 +465,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   def merge_if_branch branch_env
     branch_env.each do |k, v|
+      next if v.nil?
+
       current_val = env[k]
 
       if current_val
