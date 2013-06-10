@@ -296,7 +296,7 @@ module Brakeman
   def self.write_report_to_files tracker, output_files
     output_files.each_with_index do |output_file, idx|
       File.open output_file, "w" do |f|
-        f.write tracker.report.format(output_file)
+        f.write tracker.report.format(tracker.options[:output_formats][idx])
       end
       notify "Report saved in '#{output_file}'"
     end
