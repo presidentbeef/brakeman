@@ -283,23 +283,14 @@ class Brakeman::Report
     end
   end
 
-  # format output from filename or format
-  def format(filename_or_format)
-    case filename_or_format
-    when /\.html/, :to_html
-      to_html
-    when /\.pdf/, :to_pdf
-      to_pdf
-    when /\.csv/, :to_csv
-      to_csv
-    when /\.json/, :to_json
-      to_json
-    when /\.tabs/, :to_tabs
-      to_tabs
-    when :to_test
-      to_test
+  # format output
+  def format format
+    valid_formats = [:to_html, :to_pdf, :to_csv, :to_json, :to_tabs, :to_test, :to_s]
+
+    if valid_formats.include? format
+      self.send(format)
     else
-      to_s
+      raise "Invalid format: #{format}. Should be one of #{valid_formats.inspect}"
     end
   end
   
