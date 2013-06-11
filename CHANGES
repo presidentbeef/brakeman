@@ -1,3 +1,8 @@
+# Unreleased
+
+ * Fix output format detection to be more strict again
+ * Allow empty Brakeman configuration file
+
 # 2.0.0
   
  * Add `--only-files` option to specify files/paths to scan (Ian Ehlert)
