@@ -16,7 +16,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 8,
       :template => 38,
-      :warning => 54
+      :warning => 63
     }
 
     if RUBY_PLATFORM == 'java'
@@ -90,6 +90,105 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Possible\ command\ injection/,
       :confidence => 1,
       :file => /other_controller\.rb/
+  end
+
+  def test_command_injection_capture2
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "744cb371d69e757edd75bf6d58c610e3e813ff2b75b353c4c89c67274e4a35bb",
+      :warning_type => "Command Injection",
+      :line => 146,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/home_controller.rb"
+  end
+
+  def test_command_injection_capture2e
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "521c0a714d14ae878305ce737a2bdd5897dcea154c0622b14806ed6e6c60f526",
+      :warning_type => "Command Injection",
+      :line => 147,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/home_controller.rb"
+  end
+
+  def test_command_injection_capture3
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "b75a4b21f55912860d675ac300de862f6b2050688b32f745ea8944832e5e699f",
+      :warning_type => "Command Injection",
+      :line => 148,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/home_controller.rb"
+  end
+
+  def test_command_injection_pipeline
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "a72b42173ccbc912f022e73a37afc57b8099a529a9f28ebd9e3e771ad384b81c",
+      :warning_type => "Command Injection",
+      :line => 149,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/home_controller.rb"
+  end
+
+  def test_command_injection_pipeline_r
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "987aad17f377a6101d5bd3e1611ae3716b276f319c3f91b69efd93717d993ea7",
+      :warning_type => "Command Injection",
+      :line => 150,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/home_controller.rb"
+  end
+
+  def test_command_injection_pipeline_rw
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "02485597e19623e805dfa48a797f6f453d854f87ea03e51330494bf671bf5f68",
+      :warning_type => "Command Injection",
+      :line => 151,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/home_controller.rb"
+  end
+
+  def test_command_injection_pipeline_start
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "c38ddfa0340fcaaa2a626de722a7784a0448fce01b58601c9c159113d1ce6e5f",
+      :warning_type => "Command Injection",
+      :line => 152,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/home_controller.rb"
+  end
+
+  def test_command_injection_spawn
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "6b25cb3fa42bb234319ddf690a164eda038b6f000e501fbfa872fb5fa627609b",
+      :warning_type => "Command Injection",
+      :line => 153,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/home_controller.rb"
+  end
+
+  def test_command_injection_posix_spawn
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "678ea7e0c73c91df335247b2470678dd23dfe66f049add9c783e3de4fb6e5046",
+      :warning_type => "Command Injection",
+      :line => 154,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/home_controller.rb"
   end
 
   def test_file_access_concatenation
