@@ -19,7 +19,10 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     check_for_backticks tracker
 
     Brakeman.debug "Finding other system calls"
-    calls = tracker.find_call :targets => [:IO, :Open3, :Kernel, nil], :methods => [:exec, :popen, :popen3, :syscall, :system]
+    calls = tracker.find_call :targets => [:IO, :Open3, :Kernel, :'POSIX::Spawn', :Process, nil],
+      :methods => [:capture2, :capture2e, :capture3, :exec, :pipeline, :pipeline_r,
+        :pipeline_rw, :pipeline_start, :pipeline_w, :popen, :popen2, :popen2e, 
+        :popen3, :spawn, :syscall, :system]
 
     Brakeman.debug "Processing system calls"
     calls.each do |result|
