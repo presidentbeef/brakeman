@@ -807,7 +807,7 @@ class Rails31Tests < Test::Unit::TestCase
   end
 
   def test_cross_site_scripting_in_haml_interp
-    assert_warning :type => :template,
+    assert_no_warning :type => :template,
       :warning_code => 5,
       :fingerprint => "56acfae7db5bda36a971702c819899043e7f62c8623223f353a1ade876454712",
       :warning_type => "Cross Site Scripting",
