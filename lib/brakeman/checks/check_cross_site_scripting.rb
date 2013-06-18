@@ -229,16 +229,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     method = exp.method
 
     #Ignore safe items
-    if (target.nil? and (@ignore_methods.include? method or method.to_s =~ IGNORE_LIKE)) or
-      (@matched and @matched.type == :model and IGNORE_MODEL_METHODS.include? method) or
-      (target == HAML_HELPERS and method == :html_escape) or
-      ((target == URI or target == CGI) and method == :escape) or
-      (target == XML_HELPER and method == :escape_xml) or
-      (target == FORM_BUILDER and @ignore_methods.include? method) or
-      (target and @safe_input_attributes.include? method) or
-      (method.to_s[-1,1] == "?")
-
-      #exp[0] = :ignore #should not be necessary
+    if ignore_call? target, method
       @matched = false
     elsif sexp? target and model_name? target[1] #TODO: use method call?
       @matched = Match.new(:model, exp)
@@ -292,5 +283,52 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   def raw_call? exp
     exp.value.node_type == :call and exp.value.method == :raw
+  end
+
+  def ignore_call? target, method
+    ignored_method?(target, method) or
+    safe_input_attribute?(target, method) or
+    ignored_model_method?(method) or
+    form_builder_method?(target, method) or
+    haml_escaped?(target, method) or
+    boolean_method?(method) or
+    cgi_escaped?(target, method) or
+    xml_escaped?(target, method)
+  end
+
+  def ignored_model_method? method
+    @matched and
+    @matched.type == :model and
+    IGNORE_MODEL_METHODS.include? method
+  end
+
+  def ignored_method? target, method
+    target.nil? and
+    (@ignore_methods.include? method or method.to_s =~ IGNORE_LIKE)
+  end
+
+  def cgi_escaped? target, method
+    method == :escape and
+    (target == URI or target == CGI)
+  end
+
+  def haml_escaped? target, method
+    method == :html_escape and target == HAML_HELPERS
+  end
+
+  def xml_escaped? target, method
+    method == :escape_xml and target == XML_HELPER
+  end
+
+  def form_builder_method? target, method
+    target == FORM_BUILDER and @ignore_methods.include? method
+  end
+
+  def safe_input_attribute? target, method
+    target and @safe_input_attributes.include? method
+  end
+
+  def boolean_method? method
+    method.to_s.end_with? "?"
   end
 end
