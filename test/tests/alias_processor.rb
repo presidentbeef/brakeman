@@ -262,6 +262,85 @@ class AliasProcessorTests < Test::Unit::TestCase
     RUBY
   end
 
+  def test_default_branch_limit_5
+    assert_alias "(6 or 7) or 8", <<-RUBY
+    x = 0
+
+    if something
+      x = 1
+    else
+      x = 2
+    end
+
+    x = 3 unless this
+    x = 4 if that
+
+    if another_thing
+      x = 5
+    else
+      x = 6
+    end
+
+    x = 7 if getting_crazy
+    x = 8 if so_crazy
+
+    x
+    RUBY
+  end
+
+  def test_default_branch_limit_not_reached
+    assert_alias "(((1 or 2) or 3) or 4)", <<-RUBY
+    x = 1
+
+    if something
+      x = 2
+    else
+      x = 3
+    end
+
+    x = 4 unless this
+
+    x
+    RUBY
+  end
+
+  def test_default_branch_limit_before_reset_with_option
+    expected_y = RubyParser.new.parse "((((0 or 1) or 2) or 3) or 4)"
+    expected_x = RubyParser.new.parse "5 or 6"
+    original_sexp = RubyParser.new.parse <<-RUBY
+    x = 0
+
+    if something
+      x = 1
+    else
+      x = 2
+    end
+
+    if another_thing
+      x = 3
+    else
+      x = 4
+    end
+
+    y = x
+
+    x = 5 if getting_crazy
+    x = 6 if so_crazy
+
+    [x, y]
+    RUBY
+
+    tracker = Struct.new("FakeTracker", :options).new(:branch_limit => 4)
+
+    assert_equal 4, tracker.options[:branch_limit]
+
+    processed_sexp = Brakeman::AliasProcessor.new(tracker).process_safely original_sexp
+    result = processed_sexp.last
+
+    assert_equal expected_x, result[1]
+    assert_equal expected_y, result[2]
+  end
+
   def test_simple_block_args
     assert_alias '1', <<-RUBY
     y = 1

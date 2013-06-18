@@ -79,6 +79,10 @@ module Brakeman::Options
           options[:ignore_ifs] = true
         end
 
+        opts.on "--branch-limit LIMIT", Integer, "Limit depth of values in branches (-1 for no limit)" do |limit|
+          options[:branch_limit] = limit
+        end
+
         opts.on "-r", "--report-direct", "Only report direct use of untrusted data" do |option|
           options[:check_arguments] = !option
         end
