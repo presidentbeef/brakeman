@@ -290,6 +290,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     safe_input_attribute?(target, method) or
     ignored_model_method?(method) or
     form_builder_method?(target, method) or
+    haml_escaped?(target, method) or
     boolean_method?(method) or
     cgi_escaped?(target, method) or
     xml_escaped?(target, method)
@@ -309,6 +310,10 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   def cgi_escaped? target, method
     method == :escape and
     (target == URI or target == CGI)
+  end
+
+  def haml_escaped? target, method
+    method == :html_escape and target == HAML_HELPERS
   end
 
   def xml_escaped? target, method
