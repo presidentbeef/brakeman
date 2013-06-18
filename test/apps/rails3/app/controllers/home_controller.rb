@@ -142,6 +142,18 @@ class HomeController < ApplicationController
     Account.new(params.only(:name, email))
   end
 
+  def test_more_ways_to_execute
+    Open3.capture2 "ls #{params[:dir]}"
+    Open3.capture2e "ls #{params[:dir]}"
+    Open3.capture3 "ls #{params[:dir]}"
+    Open3.pipeline "sort", "uniq", :in => params[:file] 
+    Open3.pipeline_r "sort #{params[:file]}", "uniq"
+    Open3.pipeline_rw params[:cmd], "sort -g"
+    Open3.pipeline_start *params[:cmds]
+    spawn "some_cool_command #{params[:opts]}"
+    POSIX::Spawn::spawn params[:cmd]
+  end
+
   private
 
   def filter_it
