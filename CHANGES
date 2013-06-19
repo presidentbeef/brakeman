@@ -1,5 +1,7 @@
 # Unreleased
 
+ * Add `--branch-limit` option, limit to 5 by default
+ * Add more methods to check for command injection
  * Fix output format detection to be more strict again
  * Allow empty Brakeman configuration file
 
