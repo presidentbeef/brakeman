@@ -1,6 +1,6 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-Rails32 = BrakemanTester.run_scan "rails3.2", "Rails 3.2"
+Rails32 = BrakemanTester.run_scan "rails3.2", "Rails 3.2", :parallel_checks => false
 
 class Rails32Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning

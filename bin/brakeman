@@ -75,4 +75,5 @@ begin
   end
 rescue Brakeman::Scanner::NoApplication => e
   $stderr.puts e.message
+  exit 1
 end
