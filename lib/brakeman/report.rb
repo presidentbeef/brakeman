@@ -4,8 +4,9 @@ require 'brakeman/report/report_base'
 #Tracker#run_checks. Be sure to +run_checks+ before generating
 #a report.
 class Brakeman::Report
+  attr_reader :tracker
 
-  VALID_FORMATS = [:to_html, :to_pdf, :to_csv, :to_json, :to_tabs, :to_test, :to_s]
+  VALID_FORMATS = [:to_html, :to_pdf, :to_csv, :to_json, :to_tabs, :to_hash, :to_s]
 
   def initialize(app_tree, tracker)
     @app_tree = app_tree
@@ -25,9 +26,9 @@ class Brakeman::Report
     when :to_tabs
       require_report 'tabs'
       Brakeman::Report::Tabs
-    when :to_test
-      require_report 'test'
-      Brakeman::Report::Test
+    when :to_hash
+      require_report 'hash'
+      Brakeman::Report::Hash
     when :to_s
       return self.to_s
     when :to_pdf
