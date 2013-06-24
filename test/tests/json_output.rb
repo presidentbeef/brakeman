@@ -13,7 +13,7 @@ class JSONOutputTests < Test::Unit::TestCase
   end
 
   def test_for_expected_keys
-    assert (@json.keys - ["warnings", "scan_info", "errors"]).empty?
+    assert (@json.keys - ["warnings", "ignored_warnings", "scan_info", "errors"]).empty?
   end
 
   def test_for_scan_info_keys

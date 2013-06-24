@@ -8,9 +8,10 @@ class Brakeman::Report
 
   VALID_FORMATS = [:to_html, :to_pdf, :to_csv, :to_json, :to_tabs, :to_hash, :to_s]
 
-  def initialize(app_tree, tracker)
+  def initialize app_tree, tracker, ignored = nil
     @app_tree = app_tree
     @tracker = tracker
+    @ignored = ignored
   end
 
   def format format
@@ -63,6 +64,10 @@ class Brakeman::Report
   end
 
   def generate reporter
-    reporter.new(@app_tree, @tracker).generate_report
+    reporter.new(@app_tree, @tracker, @ignored).generate_report
+  end
+
+  def ignored_warning? warning
+    @ignore_warnings and @ignorer.ignored? warning
   end
 end

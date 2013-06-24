@@ -24,5 +24,11 @@
     <td>Security Warnings</td>
     <td><%= warnings %> <span class='high-confidence'>(<%= warnings_summary[:high_confidence] %>)</span></td>
   </tr>
+  <% if warnings_summary['Ignored Warnings'] %>
+  <tr>
+    <td>Ignored Warnings</td>
+    <td><%= ignored_warnings %></td>
+  </tr>
+  <% end %>
 </table>
 <br>

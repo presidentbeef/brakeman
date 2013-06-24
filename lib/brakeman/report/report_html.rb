@@ -26,6 +26,7 @@ class Brakeman::Report::HTML < Brakeman::Report::Base
     out << generate_controller_warnings.to_s
     out << generate_model_warnings.to_s
     out << generate_template_warnings.to_s
+    out << generate_ignored_warnings.to_s
     out << "</body></html>"
   end
 
@@ -35,6 +36,7 @@ class Brakeman::Report::HTML < Brakeman::Report::Base
         :warnings => all_warnings.length,
         :warnings_summary => warnings_summary,
         :number_of_templates => number_of_templates(@tracker),
+        :ignored_warnings => ignored_warnings.length
         }
 
       Brakeman::Report::Renderer.new('overview', :locals => locals).render
@@ -59,7 +61,6 @@ class Brakeman::Report::HTML < Brakeman::Report::Base
       Brakeman::Report::Renderer.new('template_overview', :locals => {:template_rows => template_rows}).render
   end
 
-
   def render_array template, headings, value_array, locals
     return if value_array.empty?
 
@@ -73,7 +74,6 @@ class Brakeman::Report::HTML < Brakeman::Report::Base
     warning
   end
 
-
   def with_link warning, message
     "<a rel=\"no-referrer\" href=\"#{warning.link}\">#{message}</a>"
   end
@@ -84,6 +84,13 @@ class Brakeman::Report::HTML < Brakeman::Report::Base
     warning["Warning Type"] = with_link original, warning["Warning Type"]
     warning["Called From"] = original.called_from
     warning["Template Name"] = original.template[:name]
+    warning
+  end
+
+  def convert_ignored_warning warning, original
+    warning = convert_warning(warning, original)
+    warning['File'] = original.relative_path
+    warning['Note'] = CGI.escapeHTML(@ignore_filter.note_for(original) || "")
     warning
   end
 

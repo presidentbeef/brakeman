@@ -48,6 +48,7 @@ class Brakeman::Report::Table < Brakeman::Report::Base
       t.add_row ['Templates', number_of_templates(@tracker)]
       t.add_row ['Errors', tracker.errors.length]
       t.add_row ['Security Warnings', "#{num_warnings} (#{warnings_summary[:high_confidence]})"]
+      t.add_row ['Ignored Warnings', ignored_warnings.length] unless ignored_warnings.empty?
     end
   end
 
