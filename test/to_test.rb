@@ -11,10 +11,13 @@
 $LOAD_PATH.unshift "#{File.expand_path(File.dirname(__FILE__))}/../lib"
 
 require 'brakeman'
+require 'ruby_parser'
+require 'ruby_parser/bm_sexp'
 require 'brakeman/options'
+require 'brakeman/report/report_base'
 
-class Brakeman::Report
-  def to_tests
+class Brakeman::Report::Tests < Brakeman::Report::Base
+  def generate_report
     counter = 0
 
     name = camelize File.basename(tracker.options[:app_path])
@@ -75,4 +78,4 @@ end
 
 tracker = Brakeman.run options
 
-puts tracker.report.to_tests
+puts Brakeman::Report::Tests.new(nil, tracker).generate_report
