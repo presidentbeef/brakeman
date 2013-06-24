@@ -120,7 +120,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
                end
 
       unless IGNORE_MODEL_METHODS.include? method
-        add_result out
+        add_result exp
 
         if MODEL_METHODS.include? method or method.to_s =~ /^find_by/
           confidence = CONFIDENCE[:high]
