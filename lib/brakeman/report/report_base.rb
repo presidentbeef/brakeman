@@ -128,7 +128,7 @@ class Brakeman::Report::Base
     rows.sort_by do |row|
       stabilizer += 1
 
-      [*row.values_at("Confidence", "Warning Type", sort_col), stabilizer]
+      row.values_at("Confidence", "Warning Type", sort_col) << stabilizer
     end
   end
 
