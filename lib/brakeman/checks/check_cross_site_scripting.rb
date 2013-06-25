@@ -92,7 +92,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   end
 
   def check_for_immediate_xss exp
-    return if duplicate? exp
+    return :duplicate if duplicate? exp
 
     if exp.node_type == :output
       out = exp.value
