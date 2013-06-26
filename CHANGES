@@ -1,5 +1,8 @@
 # Unreleased
 
+ * Fix detection of duplicate XSS warnings
+ * Refactor reports into separate classes 
+ * Allow use of Slim 2.x (Ian Zabel) 
  * Return error exit code when application path is not found
  * Add `--branch-limit` option, limit to 5 by default
  * Add more methods to check for command injection
