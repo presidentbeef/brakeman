@@ -37,7 +37,7 @@ module BrakemanTester
 
       announce "Processing #{name} application..."
 
-      Brakeman.run(opts).report.to_test
+      Brakeman.run(opts).report.to_hash
     end
 
     #Make an announcement
