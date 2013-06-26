@@ -53,4 +53,16 @@ class OtherController < ApplicationController
 
     x.cool_thing?
   end
+
+  def test_xss_duplicates1
+    @thing = params[:thing]
+
+    render :xss_dupes, :layout => 'thing'
+  end
+
+  def test_xss_duplicates2
+    @thing = blah(params[:other_thing])
+
+    render :xss_dupes, :layout => 'thing'
+  end
 end

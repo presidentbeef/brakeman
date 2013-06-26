@@ -11,13 +11,13 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 3,
-        :template => 44,
+        :template => 45,
         :warning => 46 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
-        :template => 44,
+        :template => 45,
         :warning => 47 }
     end
   end
@@ -1039,6 +1039,28 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /_models\.html\.erb/
   end
 
+  def test_cross_site_scripting_in_layout_for_dupe
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "5d9a5790dbcd6ae68a11e8cdb791a8be9585bf0f75b18ef1f763c6965f55e431",
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/layouts/thing.html.erb"
+  end
+
+  def test_cross_site_scripting_in_layout_weak_dupe
+    assert_no_warning :type => :template,
+      :warning_code => 5,
+      :fingerprint => "56fa0dc161d310062ae4717dd70515269b776fe532352e59f72ed2cdc4932153",
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 2,
+      :relative_path => "app/views/layouts/thing.html.erb"
+  end
+
   def test_dangerous_send_try
     assert_warning :type => :warning,
       :warning_type => "Dangerous Send",
@@ -1186,13 +1208,13 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 4,
-        :template => 44,
+        :template => 45,
         :warning => 46 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
-        :template => 44,
+        :template => 45,
         :warning => 47 }
     end
   end
