@@ -38,7 +38,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     check_rails_versions_against_cve_issues
 
     Brakeman.debug "Processing possible SQL calls"
-    calls.each { |c| process_result(c) }
+    calls.each { |call| process_result call }
   end
 
   #Find calls to named_scope() or scope() in models
@@ -178,7 +178,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     if dangerous_value
       add_result result
 
-      if input = include_user_input?(dangerous_value)
+      input = include_user_input? dangerous_value
+      if input
         confidence = CONFIDENCE[:high]
         user_input = input.match
       else
@@ -195,7 +196,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     end
 
     if check_for_limit_or_offset_vulnerability call.last_arg
-      if include_user_input?(call.last_arg)
+      if include_user_input? call.last_arg
         confidence = CONFIDENCE[:high]
       else
         confidence = CONFIDENCE[:low]
@@ -224,7 +225,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def check_find_arguments arg
     return nil if not sexp? arg or node_type? arg, :lit, :string, :str, :true, :false, :nil
 
-    unsafe_sql?(arg)
+    unsafe_sql? arg
   end
 
   def check_scope_arguments call
@@ -234,7 +235,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   end
 
   def check_query_arguments arg
-    return unless sexp?(arg)
+    return unless sexp? arg
     first_arg = arg[1]
 
     if node_type? arg, :arglist
@@ -246,18 +247,18 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       end
     end
 
-    if request_value?(arg)
+    if request_value? arg
       # Model.where(params[:where])
       arg
-    elsif hash?(arg)
+    elsif hash? arg
       #This is generally going to be a hash of column names and values, which
       #would escape the values. But the keys _could_ be user input.
-      check_hash_keys(arg)
+      check_hash_keys arg
     elsif node_type? arg, :lit, :str
       nil
     else
       #Hashes are safe...but we check above for hash, so...?
-      unsafe_sql?(arg, :ignore_hash)
+      unsafe_sql? arg, :ignore_hash
     end
   end
 
@@ -267,13 +268,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     return unless sexp? args
 
     if node_type? args, :arglist
-      args.each do |arg|
-        return unsafe_arg if unsafe_arg = unsafe_sql?(arg)
-      end
-
-      nil
+      check_update_all_arguments(args)
     else
-      unsafe_sql?(args)
+      unsafe_sql? args
     end
   end
 
@@ -292,22 +289,22 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def check_joins_arguments arg
     return unless sexp? arg and not node_type? arg, :hash, :string, :str
 
-    if array?(arg)
+    if array? arg
       arg.each do |a|
-        unsafe = check_joins_arguments(a)
-        return unsafe if unsafe
+        unsafe_arg = check_joins_arguments a
+        return unsafe_arg if unsafe_arg
       end
 
       nil
     else
-      unsafe_sql?(arg)
+      unsafe_sql? arg
     end
   end
 
   def check_update_all_arguments args
     args.each do |arg|
-      res = unsafe_sql?(arg)
-      return res if res
+      unsafe_arg = unsafe_sql? arg
+      return unsafe_arg if unsafe_arg
     end
 
     nil
@@ -329,7 +326,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def check_hash_keys exp
     hash_iterate(exp) do |key, value|
       unless symbol?(key)
-        unsafe_key = unsafe_sql?(value)
+        unsafe_key = unsafe_sql? value
         return unsafe_key if unsafe_key
       end
     end
@@ -371,8 +368,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       #  ["blah = ? AND thing = ?", ...]
       #
       #and check first value
-
-      unsafe_sql?(exp[1])
+      unsafe_sql? exp[1]
     when :string_interp, :dstr
       check_string_interp exp
     when :hash
@@ -447,9 +443,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     method = exp.method
 
     if string? target or string? exp.first_arg
-      return exp if STRING_METHODS.include?(method)
+      return exp if STRING_METHODS.include? method
     elsif STRING_METHODS.include? method and call? target
-      return unsafe_sql?(target)
+      return unsafe_sql? target
     end
 
     nil
@@ -483,11 +479,12 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #Check call for string building
   def check_call exp
     return unless call? exp
+    unsafe = check_for_string_building exp
 
-    if unsafe = check_for_string_building(exp)
+    if unsafe
       unsafe
     elsif call? exp.target
-      check_call(exp.target)
+      check_call exp.target
     else
       nil
     end
@@ -526,7 +523,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
   def upgrade_version? versions
     versions.each do |low, high, upgrade|
-      return upgrade if version_between?(low, high)
+      return upgrade if version_between? low, high
     end
 
     false
