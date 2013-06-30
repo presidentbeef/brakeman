@@ -18,10 +18,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
     @sql_targets = [:all, :average, :calculate, :count, :count_by_sql, :exists?,
       :find, :find_by_sql, :first, :last, :maximum, :minimum, :pluck, :sum, :update_all]
-
-    if tracker.options[:rails3]
-      @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :select, :where]
-    end
+    @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :select, :where] if tracker.options[:rails3]
 
     Brakeman.debug "Finding possible SQL calls on models"
     calls = tracker.find_call :targets => active_record_models.keys,
@@ -37,25 +34,11 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     Brakeman.debug "Finding calls to named_scope or scope"
     calls.concat find_scope_calls
 
-    Brakeman.debug "Checking version of Rails for CVE-2012-2660"
-    check_rails_version_for_cve_2012_2660
-
-    Brakeman.debug "Checking version of Rails for CVE-2012-2661"
-    check_rails_version_for_cve_2012_2661
-
-    Brakeman.debug "Checking version of Rails for CVE-2012-2695"
-    check_rails_version_for_cve_2012_2695
-
-    Brakeman.debug "Checking version of Rails for CVE-2012-5664"
-    check_rails_version_for_cve_2012_5664
-
-    Brakeman.debug "Checking version of Rails for CVE-2013-0155"
-    check_rails_version_for_cve_2013_0155
+    Brakeman.debug "Checking version of Rails for CVE issues"
+    check_rails_versions_against_cve_issues
 
     Brakeman.debug "Processing possible SQL calls"
-    calls.each do |c|
-      process_result c
-    end
+    calls.each { |call| process_result call }
   end
 
   #Find calls to named_scope() or scope() in models
@@ -63,33 +46,24 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def find_scope_calls
     scope_calls = []
 
-    if version_between? "2.1.0", "3.0.9"
-      active_record_models.each do |name, model|
-        if model[:options][:named_scope]
-          model[:options][:named_scope].each do |args|
-            call = make_call(nil, :named_scope, args).line(args.line)
-            scope_calls << { :call => call, :location => { :type => :class, :class => name }, :method => :named_scope }
-          end
-        end
-       end
-    elsif version_between? "3.1.0", "3.9.9"
-      active_record_models.each do |name, model|
-        if model[:options][:scope]
-          model[:options][:scope].each do |args|
-            second_arg = args[2]
+    if version_between?("2.1.0", "3.0.9")
+      ar_scope_calls(:named_scope) do |name, args|
+        call = make_call(nil, :named_scope, args).line(args.line)
+        scope_calls << scope_call_hash(call, name, :named_scope)
+      end
+    elsif version_between?("3.1.0", "3.9.9")
+      ar_scope_calls(:scope) do |name, args|
+        second_arg = args[2]
+        next unless sexp? second_arg
 
-            next unless sexp? second_arg
-
-            if second_arg.node_type == :iter and node_type? second_arg.block, :block, :call
-              process_scope_with_block name, args
-            elsif second_arg.node_type == :call
-              call = second_arg
-              scope_calls << { :call => call, :location => { :type => :class, :class => name }, :method => call.method }
-            else
-              call = make_call(nil, :scope, args).line(args.line)
-              scope_calls << { :call => call, :location => { :type => :class, :class => name }, :method => :scope }
-            end
-          end
+        if second_arg.node_type == :iter and node_type? second_arg.block, :block, :call
+          process_scope_with_block(name, args)
+        elsif second_arg.node_type == :call
+          call = second_arg
+          scope_calls << scope_call_hash(call, name, call.method)
+        else
+          call = make_call(nil, :scope, args).line(args.line)
+          scope_calls << scope_call_hash(call, name, :scope)
         end
       end
     end
@@ -97,66 +71,34 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     scope_calls
   end
 
-  def check_rails_version_for_cve_2012_2660
-    versions = [%w[2.0.0 2.3.14 2.3.17],
-                %w[3.0.0 3.0.12 3.0.13],
-                %w[3.1.0 3.1.4 3.1.5],
-                %w[3.2.0 3.2.3 3.2.4]]
-
-    cve_warning_for versions, "CVE-2012-2660", "https://groups.google.com/d/topic/rubyonrails-security/8SA-M3as7A8/discussion"
+  def ar_scope_calls(symbol_name = :named_scope, &block)
+    return_array = []
+    active_record_models.each do |name, model|
+      model_args = model[:options][symbol_name]
+      if model_args
+        model_args.each do |args|
+          yield name, args
+          return_array << [name, args]
+        end
+      end
+    end
+    return_array
   end
 
-  def check_rails_version_for_cve_2012_2661
-    versions = [%w[3.0.0 3.0.12 3.0.13],
-                %w[3.1.0 3.1.4 3.1.5],
-                %w[3.2.0 3.2.3 3.2.5]]
-
-    cve_warning_for versions, "CVE-2012-2661", "https://groups.google.com/d/topic/rubyonrails-security/dUaiOOGWL1k/discussion"
+  def scope_call_hash(call, name, method)
+    { :call => call, :location => { :type => :class, :class => name }, :method => :named_scope }
   end
 
-  def check_rails_version_for_cve_2012_2695
-    versions = [%w[2.0.0 2.3.14 2.3.15],
-                %w[3.0.0 3.0.13 3.0.14],
-                %w[3.1.0 3.1.5 3.1.6],
-                %w[3.2.0 3.2.5 3.2.6]]
-
-    cve_warning_for versions, "CVE-2012-2695", "https://groups.google.com/d/topic/rubyonrails-security/l4L0TEVAz1k/discussion"
-  end
-
-  def check_rails_version_for_cve_2012_5664
-    versions = [%w[2.0.0 2.3.14 2.3.15],
-                %w[3.0.0 3.0.17 3.0.18],
-                %w[3.1.0 3.1.8 3.1.9],
-                %w[3.2.0 3.2.9 3.2.18]]
-
-    cve_warning_for versions, "CVE-2012-5664", "https://groups.google.com/d/topic/rubyonrails-security/DCNTNp_qjFM/discussion"
-  end
-
-  def check_rails_version_for_cve_2013_0155
-    versions = [%w[2.0.0 2.3.15 2.3.16],
-                %w[3.0.0 3.0.18 3.0.19],
-                %w[3.1.0 3.1.9 3.1.10],
-                %w[3.2.0 3.2.10 3.2.11]]
-
-
-    cve_warning_for versions, "CVE-2013-0155", "https://groups.google.com/d/topic/rubyonrails-security/c7jT-EeN9eI/discussion"
-  end
 
   def process_scope_with_block model_name, args
     scope_name = args[1][1]
     block = args[-1][-1]
 
-    #Search lambda for calls to query methods
+    # Search lambda for calls to query methods
     if block.node_type == :block
-      find_calls = Brakeman::FindAllCalls.new tracker
-
-      find_calls.process_source block, :class => model_name, :method => scope_name
-
-      find_calls.calls.each do |call|
-        if @sql_targets.include? call[:method]
-          process_result call
-        end
-      end
+      find_calls = Brakeman::FindAllCalls.new(tracker)
+      find_calls.process_source(block, :class => model_name, :method => scope_name)
+      find_calls.calls.each { |call| process_result(call) if @sql_targets.include?(call[:method]) }
     elsif block.node_type == :call
       process_result :target => block.target, :method => block.method, :call => block,
         :location => { :type => :class, :class => model_name, :method => scope_name }
@@ -191,7 +133,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   # * lock
   #
   def process_result result
-    return if duplicate? result or result[:call].original_line
+    return if duplicate?(result) or result[:call].original_line
 
     call = result[:call]
     method = call.method
@@ -236,7 +178,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     if dangerous_value
       add_result result
 
-      if input = include_user_input?(dangerous_value)
+      input = include_user_input? dangerous_value
+      if input
         confidence = CONFIDENCE[:high]
         user_input = input.match
       else
@@ -267,6 +210,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     end
   end
 
+
   #The 'find' methods accept a number of different types of parameters:
   #
   # * The first argument might be :all, :first, or :last
@@ -279,9 +223,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #
   #This method should only be passed the second argument.
   def check_find_arguments arg
-    if not sexp? arg or node_type? arg, :lit, :string, :str, :true, :false, :nil
-      return nil
-    end
+    return nil if not sexp? arg or node_type? arg, :lit, :string, :str, :true, :false, :nil
 
     unsafe_sql? arg
   end
@@ -289,11 +231,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def check_scope_arguments call
     scope_arg = call.second_arg #first arg is name of scope
 
-    if node_type? scope_arg, :iter
-      unsafe_sql? scope_arg.block
-    else
-      unsafe_sql? scope_arg
-    end
+    node_type?(scope_arg, :iter) ? unsafe_sql?(scope_arg.block) : unsafe_sql?(scope_arg)
   end
 
   def check_query_arguments arg
@@ -330,13 +268,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     return unless sexp? args
 
     if node_type? args, :arglist
-      args.each do |arg|
-        if unsafe_arg = unsafe_sql?(arg)
-          return unsafe_arg
-        end
-      end
-
-      nil
+      check_update_all_arguments(args)
     else
       unsafe_sql? args
     end
@@ -349,11 +281,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
     #This is kind of unnecessary, because unsafe_sql? will handle an array
     #correctly, but might be better to be explicit.
-    if array? arg
-      unsafe_sql? arg[1]
-    else
-      unsafe_sql? arg
-    end
+    array?(arg) ? unsafe_sql?(arg[1]) : unsafe_sql?(arg)
   end
 
   #joins can take a string, hash of associations, or an array of both(?)
@@ -363,9 +291,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
     if array? arg
       arg.each do |a|
-        if unsafe = check_joins_arguments(a)
-          return unsafe
-        end
+        unsafe_arg = check_joins_arguments a
+        return unsafe_arg if unsafe_arg
       end
 
       nil
@@ -376,8 +303,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
   def check_update_all_arguments args
     args.each do |arg|
-      res = unsafe_sql? arg
-      return res if res
+      unsafe_arg = unsafe_sql? arg
+      return unsafe_arg if unsafe_arg
     end
 
     nil
@@ -389,7 +316,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def check_lock_arguments arg
     return unless sexp? arg and not node_type? arg, :hash, :array, :string, :str
 
-    unsafe_sql? arg, :ignore_hash
+    unsafe_sql?(arg, :ignore_hash)
   end
 
 
@@ -398,10 +325,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #could be bad)
   def check_hash_keys exp
     hash_iterate(exp) do |key, value|
-      unless symbol? key
-        if unsafe_key = unsafe_sql?(value)
-          return unsafe_key
-        end
+      unless symbol?(key)
+        unsafe_key = unsafe_sql? value
+        return unsafe_key if unsafe_key
       end
     end
 
@@ -414,9 +340,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #unless safe_value? explicitly returns true.
   def check_string_interp arg
     arg.each do |exp|
-      if node_type?(exp, :string_eval, :evstr) and not safe_value? exp.value
-        return exp.value
-      end
+      return exp.value if node_type?(exp, :string_eval, :evstr) and not safe_value?(exp.value)
     end
 
     nil
@@ -427,15 +351,10 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #
   #Otherwise, returns false/nil.
   def unsafe_sql? exp, ignore_hash = false
-    return unless sexp? exp
+    return unless sexp?(exp)
 
     dangerous_value = find_dangerous_value exp, ignore_hash
-
-    if safe_value? dangerous_value
-      false
-    else
-      dangerous_value
-    end
+    safe_value?(dangerous_value) ? false : dangerous_value
   end
 
   #Check _exp_ for dangerous values. Used by unsafe_sql?
@@ -449,7 +368,6 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       #  ["blah = ? AND thing = ?", ...]
       #
       #and check first value
-
       unsafe_sql? exp[1]
     when :string_interp, :dstr
       check_string_interp exp
@@ -467,7 +385,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       end
     when :or
       if unsafe = (unsafe_sql?(exp.lhs) || unsafe_sql?(exp.rhs))
-        return unsafe
+        unsafe
       else
         nil
       end
@@ -525,12 +443,12 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     method = exp.method
 
     if string? target or string? exp.first_arg
-      if STRING_METHODS.include? method
-        return exp
-      end
+      return exp if STRING_METHODS.include? method
     elsif STRING_METHODS.include? method and call? target
-      unsafe_sql? target
+      return unsafe_sql? target
     end
+
+    nil
   end
 
   IGNORE_METHODS_IN_SQL = Set[:id, :merge_conditions, :table_name, :to_i, :to_f,
@@ -561,8 +479,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #Check call for string building
   def check_call exp
     return unless call? exp
+    unsafe = check_for_string_building exp
 
-    if unsafe = check_for_string_building(exp)
+    if unsafe
       unsafe
     elsif call? exp.target
       check_call exp.target
@@ -576,11 +495,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #
   #http://www.rorsecurity.info/2008/09/08/sql-injection-issue-in-limit-and-offset-parameter/
   def check_for_limit_or_offset_vulnerability options
-    return false if @rails_version.nil? or @rails_version >= "2.1.1" or not hash? options
+    return false if @rails_version.nil? or @rails_version >= "2.1.1" or not hash?(options)
 
-    if hash_access(options, :limit) or hash_access(options, :offset)
-      return true
-    end
+    return true if hash_access(options, :limit) or hash_access(options, :offset)
 
     false
   end
@@ -606,12 +523,42 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
   def upgrade_version? versions
     versions.each do |low, high, upgrade|
-      if version_between? low, high
-        return upgrade
-      end
+      return upgrade if version_between? low, high
     end
 
     false
+  end
+
+def check_rails_versions_against_cve_issues
+    [
+      {
+        :cve => "CVE-2012-2660",
+        :versions => [%w[2.0.0 2.3.14 2.3.17], %w[3.0.0 3.0.12 3.0.13], %w[3.1.0 3.1.4 3.1.5], %w[3.2.0 3.2.3 3.2.4]],
+        :url => "https://groups.google.com/d/topic/rubyonrails-security/8SA-M3as7A8/discussion"
+      },
+      {
+        :cve => "CVE-2012-2661",
+        :versions => [%w[3.0.0 3.0.12 3.0.13], %w[3.1.0 3.1.4 3.1.5], %w[3.2.0 3.2.3 3.2.5]],
+        :url => "https://groups.google.com/d/topic/rubyonrails-security/dUaiOOGWL1k/discussion"
+      },
+      {
+        :cve => "CVE-2012-2695",
+        :versions => [%w[2.0.0 2.3.14 2.3.15], %w[3.0.0 3.0.13 3.0.14], %w[3.1.0 3.1.5 3.1.6], %w[3.2.0 3.2.5 3.2.6]],
+        :url => "https://groups.google.com/d/topic/rubyonrails-security/l4L0TEVAz1k/discussion"
+      },
+      {
+        :cve => "CVE-2012-5664",
+        :versions => [%w[2.0.0 2.3.14 2.3.15], %w[3.0.0 3.0.17 3.0.18], %w[3.1.0 3.1.8 3.1.9], %w[3.2.0 3.2.9 3.2.18]],
+        :url => "https://groups.google.com/d/topic/rubyonrails-security/DCNTNp_qjFM/discussion"
+      },
+      {
+        :cve => "CVE-2013-0155",
+        :versions => [%w[2.0.0 2.3.15 2.3.16], %w[3.0.0 3.0.18 3.0.19], %w[3.1.0 3.1.9 3.1.10], %w[3.2.0 3.2.10 3.2.11]],
+        :url => "https://groups.google.com/d/topic/rubyonrails-security/c7jT-EeN9eI/discussion"
+      },
+    ].each do |cve_issue|
+      cve_warning_for cve_issue[:versions], cve_issue[:cve], cve_issue[:url]
+    end
   end
 
   def cve_warning_for versions, cve, link
