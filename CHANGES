@@ -1,5 +1,6 @@
 # Unreleased
 
+ * Refactor of SQL injection check code (Bart ten Brinke)
  * Fix detection of duplicate XSS warnings
  * Refactor reports into separate classes 
  * Allow use of Slim 2.x (Ian Zabel) 
