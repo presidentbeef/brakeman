@@ -11,13 +11,13 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 3,
-        :template => 43,
+        :template => 45,
         :warning => 46 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
-        :template => 43,
+        :template => 45,
         :warning => 47 }
     end
   end
@@ -425,6 +425,17 @@ class Rails2Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /test_model\.html\.erb/,
       :relative_path => "app/views/home/test_model.html.erb"
+  end
+
+  def test_indirect_model_in_link_to
+    assert_warning :type => :template,
+      :warning_code => 3,
+      :fingerprint => "8941c902e7c71d0df4ebb1888c8ed9ac99affaf385be657838452ac3eefe563c",
+      :warning_type => "Cross Site Scripting",
+      :line => 9,
+      :message => /^Unescaped\ model\ attribute\ in\ l/,
+      :confidence => 1,
+      :relative_path => "app/views/home/test_link_to.html.erb"
   end
 
   def test_escaped_parameter_in_link_to
@@ -845,6 +856,14 @@ class Rails2Tests < Test::Unit::TestCase
       :relative_path => "app/controllers/home_controller.rb"
 
     assert_no_warning :type => :warning,
+      :warning_code => 23,
+      :warning_type => "Dangerous Send",
+      :line => 84,
+      :message => /^User\ controlled\ method\ execution/,
+      :confidence => 0,
+      :relative_path => "app/controllers/home_controller.rb"
+
+    assert_no_warning :type => :warning,
       :warning_type => "Dangerous Send",
       :line => 90,
       :message => /\AUser defined target of method invocation/,
@@ -875,7 +894,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_sql_injection_CVE_2012_5664
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.18,\ 3\.1/,
+      :message => /CVE-2012-5664/,
       :confidence => 0,
       :file => /environment\.rb/,
       :relative_path => "config/environment.rb"
@@ -884,7 +903,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_sql_injection_CVE_2013_0155
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :message => /^Rails\ 2\.3\.11\ contains\ a\ SQL\ Injection\ Vu/,
+      :message => /CVE-2013-0155/,
       :confidence => 0,
       :file => /environment\.rb/,
       :relative_path => "config/environment.rb"
@@ -1020,6 +1039,28 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /_models\.html\.erb/
   end
 
+  def test_cross_site_scripting_in_layout_for_dupe
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "5d9a5790dbcd6ae68a11e8cdb791a8be9585bf0f75b18ef1f763c6965f55e431",
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/layouts/thing.html.erb"
+  end
+
+  def test_cross_site_scripting_in_layout_weak_dupe
+    assert_no_warning :type => :template,
+      :warning_code => 5,
+      :fingerprint => "56fa0dc161d310062ae4717dd70515269b776fe532352e59f72ed2cdc4932153",
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 2,
+      :relative_path => "app/views/layouts/thing.html.erb"
+  end
+
   def test_dangerous_send_try
     assert_warning :type => :warning,
       :warning_type => "Dangerous Send",
@@ -1068,6 +1109,15 @@ class Rails2Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /home_controller\.rb/,
       :relative_path => "app/controllers/home_controller.rb"
+
+    # This is same call, copied to template
+    assert_no_warning :type => :template,
+      :warning_code => 24,
+      :warning_type => "Remote Code Execution",
+      :line => 1,
+      :message => /^Unsafe\ Reflection\ method\ constantize\ cal/,
+      :confidence => 0,
+      :relative_path => "app/views/home/test_send_target.html.erb"
   end
 
   def test_unsafe_reflection_constantize_2
@@ -1158,13 +1208,13 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 4,
-        :template => 43,
+        :template => 45,
         :warning => 46 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
-        :template => 43,
+        :template => 45,
         :warning => 47 }
     end
   end

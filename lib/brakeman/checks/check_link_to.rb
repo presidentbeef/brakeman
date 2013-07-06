@@ -68,14 +68,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
     input = has_immediate_user_input?(argument)
     return false unless input
 
-    case input.type
-    when :params
-      message = "Unescaped parameter value in link_to"
-    when :cookies
-      message = "Unescaped cookie value in link_to"
-    else
-      message = "Unescaped user input value in link_to"
-    end
+    message = "Unescaped #{friendly_type_of input} in link_to"
 
     warn_xss(result, message, input.match, CONFIDENCE[:high])
   end
@@ -96,15 +89,11 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
   # Check if we should warn about the matched result
   def check_matched(result, matched = nil)
     return false unless matched
-    message = nil
+    return false if matched.type == :model and tracker.options[:ignore_model_output]
 
-    if matched.type == :model and not tracker.options[:ignore_model_output]
-      message = "Unescaped model attribute in link_to"
-    elsif matched.type == :params
-      message = "Unescaped parameter value in link_to"
-    end
+    message = "Unescaped #{friendly_type_of matched} in link_to"
 
-    message ? warn_xss(result, message, @matched.match, CONFIDENCE[:med]) : false
+    warn_xss(result, message, @matched.match, CONFIDENCE[:med])
   end
 
   # Create a warn for this xss

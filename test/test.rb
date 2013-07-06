@@ -4,6 +4,14 @@ $LOAD_PATH.unshift "#{TEST_PATH}/../lib"
 
 begin
   require 'simplecov'
+
+  begin
+    require 'coveralls'
+    SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+  rescue LoadError => e
+    $stderr.puts "Skipping coveralls integration"
+  end
+
   SimpleCov.start do
     add_filter 'lib/ruby_parser/ruby18_parser.rb'
     add_filter 'lib/ruby_parser/ruby19_parser.rb'
@@ -29,7 +37,7 @@ module BrakemanTester
 
       announce "Processing #{name} application..."
 
-      Brakeman.run(opts).report.to_test
+      Brakeman.run(opts).report.to_hash
     end
 
     #Make an announcement
@@ -68,14 +76,9 @@ module BrakemanTester::FindWarning
       warnings.select block
     else
       warnings.select do |w|
-        flag = true
-        opts.each do |k,v|
-          unless v === w.send(k)
-            flag = false
-            break
-          end
+        opts.all? do |k,v|
+          v === w.send(k)
         end
-        flag
       end
     end
 
@@ -196,7 +199,7 @@ module BrakemanTester::RescanTestHelper
     output = yield parsed
 
     File.open path, "w" do |f|
-      f.puts Ruby2Ruby.new.process output
+      f.puts Brakeman::OutputProcessor.new.process output
     end
   end
 

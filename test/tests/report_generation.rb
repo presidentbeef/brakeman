@@ -1,5 +1,5 @@
 class TestReportGeneration < Test::Unit::TestCase
-  Report = Brakeman.run("#{TEST_PATH}/apps/rails3.2").report
+  Report = Brakeman.run(:app_path => "#{TEST_PATH}/apps/rails3.2", :quiet => true, :report_routes => true).report
 
   def test_html_sanity
     report = Report.to_html
@@ -35,10 +35,24 @@ class TestReportGeneration < Test::Unit::TestCase
   end
 
   def test_text_sanity
-    unless RUBY_PLATFORM == "java"
-      report = Report.to_s
+    report = Report.to_s
 
-      assert report.is_a? String
+    assert report.is_a? String
+  end
+
+  def test_bad_format_type
+    assert_raises RuntimeError do
+      Report.format(:to_something_else)
     end
+  end
+
+  def test_controller_output
+    text_report = Report.to_s
+    
+    assert text_report.include? "+CONTROLLERS+"
+
+    html_report = Report.to_html
+
+    assert html_report.include? "<h2>Controllers</h2>"
   end
 end

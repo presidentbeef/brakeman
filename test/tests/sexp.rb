@@ -87,6 +87,15 @@ class SexpTests < Test::Unit::TestCase
     assert_equal s(:call, nil, :blah, s(:lvar, :z)), block
   end
 
+  def test_stabby_lambda_no_args
+    exp = parse "->{ hi }"
+    args = exp.block_args
+
+    assert_equal s(:call, nil, :lambda), exp.block_call
+    assert_equal s(:args), exp.block_args
+    assert_equal s(:call, nil, :hi), exp.block
+  end
+
   def test_or
     exp = parse '1 or 2'
 
@@ -342,5 +351,16 @@ class SexpTests < Test::Unit::TestCase
 
     s.original_line = 100
     assert_equal 100, s.original_line
+  end
+
+  def test_combine_and_or_depth
+    e = Sexp.new(:lit, 0)
+
+    3.times do |i|
+      e = e.combine(Sexp.new(:lit, i))
+    end
+
+    assert_equal s(:or, s(:or, s(:or, s(:lit, 0), s(:lit, 0)), s(:lit, 1)), s(:lit, 2)), e
+    assert_equal 3, e.or_depth
   end
 end

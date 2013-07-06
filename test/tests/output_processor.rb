@@ -144,4 +144,21 @@ class OutputProcessorTests < Test::Unit::TestCase
                Sexp.new(:args),
                Sexp.new(:call, nil, :y))
   end
+
+  # Ruby2Ruby tries to convert some methods to attr_* calls,
+  # but it breaks some stuff because of how it accesses nodes.
+  # So we overwrite it.
+  def test_output_defn_not_attr
+    assert_output "def x\n  @x\nend",
+      Sexp.new(:defn,
+               :x,
+               Sexp.new(:args),
+               Sexp.new(:ivar, :@x))
+
+    assert_output "def x(y)\n  @x = (local y)\nend",
+      Sexp.new(:methdef,
+               :x,
+               Sexp.new(:args, :y),
+               Sexp.new(:iasgn, :@x, Sexp.new(:lvar, :y)))
+  end
 end

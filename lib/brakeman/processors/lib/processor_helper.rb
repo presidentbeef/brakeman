@@ -40,7 +40,11 @@ module Brakeman::ProcessorHelper
       @current_module = module_name
     end
 
-    process_all exp.body
+    if block_given?
+      yield
+    else
+      process_all exp.body
+    end
 
     @current_module = prev_module
 

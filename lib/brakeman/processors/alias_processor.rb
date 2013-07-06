@@ -26,6 +26,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     @tracker = tracker #set in subclass as necessary
     @helper_method_cache = {}
     @helper_method_info = Hash.new({})
+    @or_depth_limit = (tracker && tracker.options[:branch_limit]) || 5 #arbitrary default
     set_env_defaults
   end
 
@@ -354,7 +355,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
     unless env[match]
       if request_value? target
-        env[match] = Sexp.new(:or, match, value)
+        env[match] = match.combine(value)
       else
         env[match] = value
       end
@@ -464,16 +465,30 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   def merge_if_branch branch_env
     branch_env.each do |k, v|
+      next if v.nil?
+
       current_val = env[k]
 
       if current_val
-        unless same_value? current_val, v
-          env[k] = Sexp.new(:or, current_val, v).line(k.line || -2)
+        unless same_value?(current_val, v)
+          if too_deep? current_val
+            # Give up branching, start over with latest value
+            env[k] = v
+          else
+            env[k] = current_val.combine(v, k.line)
+          end
         end
       else
         env[k] = v
       end
     end
+  end
+
+  def too_deep? exp
+    @or_depth_limit >= 0 and
+    node_type? exp, :or and
+    exp.or_depth and
+    exp.or_depth >= @or_depth_limit
   end
 
   #Process single integer access to an array.
@@ -701,7 +716,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       elsif false? condition
         exp.else_clause
       else
-        Sexp.new(:or, exp.then_clause, exp.else_clause).line(exp.line)
+        exp.then_clause.combine(exp.else_clause, exp.line)
       end
     end
   end

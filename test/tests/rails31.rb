@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 22,
       :controller => 4,
-      :warning => 68 }
+      :warning => 71 }
   end
 
   def test_without_protection
@@ -152,7 +152,7 @@ class Rails31Tests < Test::Unit::TestCase
   def test_sql_injection_CVE_2012_5664
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.18,\ 3\.1/,
+      :message => /CVE-2012-5664/,
       :confidence => 0,
       :file => /Gemfile/
   end
@@ -718,7 +718,7 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "File Access",
       :line => 109,
-      :message => /^Model attribute\ value\ used\ in\ file\ name/,
+      :message => /^Model attribute\ used\ in\ file\ name/,
       :confidence => 1,
       :file => /users_controller\.rb/
   end
@@ -742,7 +742,7 @@ class Rails31Tests < Test::Unit::TestCase
   def test_sql_injection_CVE_2013_0155
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.19,\ 3\.1/,
+      :message => /CVE-2013-0155/,
       :confidence => 0,
       :file => /Gemfile/
   end
@@ -804,6 +804,17 @@ class Rails31Tests < Test::Unit::TestCase
       :confidence => 0,
       :line => 1,
       :file => /json_test\.html\.erb/
+  end
+
+  def test_cross_site_scripting_in_haml_interp
+    assert_no_warning :type => :template,
+      :warning_code => 5,
+      :fingerprint => "56acfae7db5bda36a971702c819899043e7f62c8623223f353a1ade876454712",
+      :warning_type => "Cross Site Scripting",
+      :line => 2,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 2,
+      :relative_path => "app/views/users/interpolated_value.html.haml"
   end
 
   def test_arel_table_in_sql
@@ -969,6 +980,7 @@ class Rails31Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /admin_controller\.rb/
   end
+
   def test_unsafe_reflection_constantize_indirect
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
@@ -976,5 +988,38 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Unsafe\ Reflection\ method\ constantize\ cal/,
       :confidence => 1,
       :file => /admin_controller\.rb/
+  end
+
+  def test_csv_load
+    assert_warning :type => :warning,
+      :warning_code => 25,
+      :fingerprint => "3b58b691bf7ef0b244ee463aa812e4e6ffe3fe1075c8bd138c0cb5a77f365f41",
+      :warning_type => "Remote Code Execution",
+      :line => 69,
+      :message => /^CSV\.load\ called\ with\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/other_controller.rb"
+  end
+
+  def test_marshal_load
+    assert_warning :type => :warning,
+      :warning_code => 25,
+      :fingerprint => "ecdb984aa40fbe7d42a74ab474a412579b42b36c630bcac640d382e108109437",
+      :warning_type => "Remote Code Execution",
+      :line => 71,
+      :message => /^Marshal\.load\ called\ with\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/other_controller.rb"
+  end
+
+  def test_marshal_restore
+    assert_warning :type => :warning,
+      :warning_code => 25,
+      :fingerprint => "78ef96a81c8b02f97992a7056e4d9696ab238e12bc8a7a3204df29ef11e0a3fe",
+      :warning_type => "Remote Code Execution",
+      :line => 73,
+      :message => /^Marshal\.restore\ called\ with\ model\ attrib/,
+      :confidence => 1,
+      :relative_path => "app/controllers/other_controller.rb"
   end
 end

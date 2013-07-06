@@ -47,22 +47,9 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
         return
       end
 
-      message = "Render path contains "
+      return if input.type == :model #skip models
 
-      case input.type
-      when :params
-        message << "parameter value"
-      when :cookies
-        message << "cookie value"
-      when :request
-        message << "request value"
-      when :model
-        #Skip models
-        return
-      else
-        message << "user input value"
-      end
-
+      message = "Render path contains #{friendly_type_of input}"
 
       warn :result => result,
         :warning_type => "Dynamic Render Path",

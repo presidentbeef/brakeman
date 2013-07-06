@@ -18,7 +18,7 @@ class Brakeman::CheckUnsafeReflection < Brakeman::BaseCheck
   end
 
   def check_unsafe_reflection result
-    return if duplicate? result
+    return if duplicate? result or result[:call].original_line
     add_result result
 
     call = result[:call] 
@@ -38,20 +38,7 @@ class Brakeman::CheckUnsafeReflection < Brakeman::BaseCheck
     end
 
     if confidence
-      input_type = case input.type
-                   when :params
-                     "parameter value"
-                   when :cookies
-                     "cookies value"
-                   when :request
-                     "request value"
-                   when :model
-                     "model attribute"
-                   else
-                     "user input"
-                   end
-
-      message = "Unsafe Reflection method #{method} called with #{input_type}"
+      message = "Unsafe Reflection method #{method} called with #{friendly_type_of input}"
 
       warn :result => result,
         :warning_type => "Remote Code Execution",

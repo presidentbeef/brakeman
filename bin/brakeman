@@ -52,22 +52,28 @@ trap("INT") do
   exit!
 end
 
-if options[:previous_results_json]
-  vulns = Brakeman.compare options.merge(:quiet => options[:quiet])
-  puts MultiJson.dump(vulns, :pretty => true)
-
-  if options[:exit_on_warn] and (vulns[:new].count + vulns[:fixed].count > 0)
-    exit Brakeman::Warnings_Found_Exit_Code
-  end
-else
-  #Run scan and output a report
-  tracker = Brakeman.run options.merge(:print_report => true, :quiet => options[:quiet])
-
-  #Return error code if --exit-on-warn is used and warnings were found
-  if options[:exit_on_warn] and not tracker.checks.all_warnings.empty?
-    exit Brakeman::Warnings_Found_Exit_Code
-  end
+if options[:quiet].nil?
+  options[:quiet] = :command_line
 end
 
+begin
+  if options[:previous_results_json]
+    vulns = Brakeman.compare options.merge(:quiet => options[:quiet])
+    puts MultiJson.dump(vulns, :pretty => true)
 
+    if options[:exit_on_warn] and (vulns[:new].count + vulns[:fixed].count > 0)
+      exit Brakeman::Warnings_Found_Exit_Code
+    end
+  else
+    #Run scan and output a report
+    tracker = Brakeman.run options.merge(:print_report => true, :quiet => options[:quiet])
 
+    #Return error code if --exit-on-warn is used and warnings were found
+    if options[:exit_on_warn] and not tracker.checks.all_warnings.empty?
+      exit Brakeman::Warnings_Found_Exit_Code
+    end
+  end
+rescue Brakeman::Scanner::NoApplication => e
+  $stderr.puts e.message
+  exit 1
+end

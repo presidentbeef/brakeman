@@ -12,6 +12,14 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   CONFIDENCE = { :high => 0, :med => 1, :low => 2 }
 
   Match = Struct.new(:type, :match)
+  
+  class << self
+    attr_accessor :name
+  
+    def inherited(subclass)
+      subclass.name = subclass.to_s.match(/^Brakeman::(.*)$/)[1]
+    end
+  end
 
   #Initialize Check with Checks.
   def initialize(app_tree, tracker)
@@ -507,5 +515,24 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     end
 
     @active_record_models
+  end
+
+  def friendly_type_of input_type
+    if input_type.is_a? Match
+      input_type = input_type.type
+    end
+
+    case input_type
+    when :params
+      "parameter value"
+    when :cookies
+      "cookie value"
+    when :request
+      "request value"
+    when :model
+      "model attribute"
+    else
+      "user input"
+    end
   end
 end

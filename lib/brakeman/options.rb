@@ -79,6 +79,10 @@ module Brakeman::Options
           options[:ignore_ifs] = true
         end
 
+        opts.on "--branch-limit LIMIT", Integer, "Limit depth of values in branches (-1 for no limit)" do |limit|
+          options[:branch_limit] = limit
+        end
+
         opts.on "-r", "--report-direct", "Only report direct use of untrusted data" do |option|
           options[:check_arguments] = !option
         end
@@ -178,8 +182,8 @@ module Brakeman::Options
           options[:summary_only] = true
         end
 
-        opts.on "--relative-paths", "Output relative file paths in reports" do
-          options[:relative_paths] = true
+        opts.on "--absolute-paths", "Output absolute file paths in reports" do
+          options[:absolute_paths] = true
         end
 
         opts.on "-w",

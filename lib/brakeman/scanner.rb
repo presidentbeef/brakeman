@@ -33,7 +33,7 @@ class Brakeman::Scanner
     @app_tree = Brakeman::AppTree.from_options(options)
 
     if !@app_tree.root || !@app_tree.exists?("app")
-      abort("Please supply the path to a Rails application.")
+      raise NoApplication, "Please supply the path to a Rails application."
     end
 
     if @app_tree.exists?("script/rails")
@@ -104,8 +104,8 @@ class Brakeman::Scanner
     end
 
   rescue Exception => e
-    Brakeman.notify "[Notice] Error while processing config/#{file}"
-    tracker.error e.exception(e.message + "\nwhile processing Gemfile"), e.backtrace
+    Brakeman.notify "[Notice] Error while processing #{path}"
+    tracker.error e.exception(e.message + "\nwhile processing #{path}"), e.backtrace
   end
 
   private :process_config_file
@@ -355,4 +355,6 @@ class Brakeman::Scanner
   def parse_ruby input
     @ruby_parser.new.parse input
   end
+
+  class NoApplication < RuntimeError; end
 end

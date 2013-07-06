@@ -11,13 +11,13 @@ Gem::Specification.new do |s|
   s.executables = ["brakeman"]
   s.license = "MIT"
   s.add_dependency "ruby_parser", "~>3.1.1"
-  s.add_dependency "ruby2ruby", "2.0.3"
+  s.add_dependency "ruby2ruby", "~>2.0.5"
   s.add_dependency "terminal-table", "~>1.4"
   s.add_dependency "fastercsv", "~>1.5"
-  s.add_dependency "highline", "~>1.6"
+  s.add_dependency "highline", "~>1.6.19"
   s.add_dependency "erubis", "~>2.6"
   s.add_dependency "haml", ">=3.0", "<5.0"
   s.add_dependency "sass", "~>3.0"
-  s.add_dependency "slim", "~>1.3.6"
+  s.add_dependency "slim", ">=1.3.6", "<3.0"
   s.add_dependency "multi_json", "~>1.2"
 end

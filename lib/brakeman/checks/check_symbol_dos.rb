@@ -52,20 +52,7 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
     end
 
     if confidence
-      input_type = case input.type
-                   when :params
-                     "parameter value"
-                   when :cookies
-                     "cookies value"
-                   when :request
-                     "request value"
-                   when :model
-                     "model attribute"
-                   else
-                     "user input"
-                   end
-
-      message = "Symbol conversion from unsafe string (#{input_type})"
+      message = "Symbol conversion from unsafe string (#{friendly_type_of input})"
 
       warn :result => result,
         :warning_type => "Denial of Service",

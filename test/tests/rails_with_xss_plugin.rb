@@ -1,6 +1,6 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-RailsWithXssPlugin = BrakemanTester.run_scan "rails_with_xss_plugin", "RailsWithXssPlugin"
+RailsWithXssPlugin = BrakemanTester.run_scan "rails_with_xss_plugin", "RailsWithXssPlugin", :absolute_paths => true
 
 class RailsWithXssPluginTests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
@@ -261,7 +261,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   def test_sql_injection_CVE_2012_5664
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :message => /^All\ versions\ of\ Rails\ before\ 3\.0\.18,\ 3\.1/,
+      :message => /CVE-2012-5664/,
       :confidence => 0,
       :file => /Gemfile/
   end
@@ -284,10 +284,14 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :file => /session_store\.rb/
   end
 
+  def test_absolute_paths
+    assert report[:warnings].all? { |w| w.file.start_with? "/" }
+  end
+
   def test_sql_injection_CVE_2013_0155
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :message => /^Rails\ 2\.3\.14\ contains\ a\ SQL\ Injection\ Vu/,
+      :message => /CVE-2013-0155/,
       :confidence => 0,
       :file => /Gemfile/
   end
