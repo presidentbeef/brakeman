@@ -9,7 +9,7 @@ class Rails32Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :controller => 0,
-      :model => 3,
+      :model => 5,
       :template => 11,
       :warning => 7 }
 
@@ -213,12 +213,43 @@ class Rails32Tests < Test::Unit::TestCase
       :file => /secret_token\.rb/
   end
 
-  def test_model_attr_accessible
-    assert_warning :type => :warning,
+  def test_model_attr_accessible_admin
+    assert_warning :type => :model,
       :warning_type => "Mass Assignment",
-      :message => /^Please\ check\ and\ protect/,
-      :confidence => 0,
+      :message => /^Please\ check\ and\ protect\ admin/,
+      :confidence => 0, #HIGH
       :file => /user\.rb/
   end 
 
+  def test_model_attr_accessible_account_id
+    assert_warning :type => :model,
+      :warning_type => "Mass Assignment",
+      :message => /^Please\ check\ and\ protect\ account_id/,
+      :confidence => 0, 
+      :file => /user\.rb/
+  end 
+
+  def test_model_attr_accessible_status_id
+    assert_warning :type => :model,
+      :warning_type => "Mass Assignment",
+      :message => /^Please\ check\ and\ protect\ status_id/,
+      :confidence => 2, #LOW
+      :file => /user\.rb/
+  end 
+
+  def test_model_attr_accessible_plan_id
+    assert_warning :type => :model,
+      :warning_type => "Mass Assignment",
+      :message => /^Please\ check\ and\ protect\ plan_id/,
+      :confidence => 2, 
+      :file => /account\.rb/
+  end 
+
+  def test_model_attr_accessible_account_banned
+    assert_warning :type => :model,
+      :warning_type => "Mass Assignment",
+      :message => /^Please\ check\ and\ protect\ banned/,
+      :confidence => 1, #MED
+      :file => /account\.rb/
+  end 
 end
