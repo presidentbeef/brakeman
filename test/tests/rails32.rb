@@ -9,7 +9,7 @@ class Rails32Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :controller => 0,
-      :model => 0,
+      :model => 3,
       :template => 11,
       :warning => 7 }
 
@@ -212,4 +212,13 @@ class Rails32Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /secret_token\.rb/
   end
+
+  def test_model_attr_accessible
+    assert_warning :type => :warning,
+      :warning_type => "Mass Assignment",
+      :message => /^Please\ check\ and\ protect/,
+      :confidence => 0,
+      :file => /user\.rb/
+  end 
+
 end

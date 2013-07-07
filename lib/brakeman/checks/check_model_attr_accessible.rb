@@ -24,8 +24,9 @@ class Brakeman::CheckModelAttrAccessible < Brakeman::BaseCheck
         SUSP_ATTRS.each do |susp_attr, confidence|
             if susp_attr.is_a?(Regexp) and susp_attr =~ attribute.to_s or susp_attr == attribute 
               warn :model => name,    
-                :file => model[:file],                              
-                :warning_type => "Cross Site Scripting",
+                :file => model[:file],                          
+                :warning_type => "Mass Assignment", 
+                :warning_code => :mass_assign_call,
                 :message => "Please check and protect #{attribute} attribute defined under attr_accessible.", 
                 :confidence => confidence 
               break # Prevent from matching single attr multiple times
