@@ -368,4 +368,5 @@ module Brakeman
 
   class RakeInstallError < RuntimeError; end
   class NoBrakemanError < RuntimeError; end
+  class NoApplication < RuntimeError; end
 end

@@ -73,7 +73,7 @@ begin
       exit Brakeman::Warnings_Found_Exit_Code
     end
   end
-rescue Brakeman::Scanner::NoApplication => e
+rescue Brakeman::NoApplication => e
   $stderr.puts e.message
   exit 1
 end
