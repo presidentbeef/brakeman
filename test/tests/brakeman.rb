@@ -2,7 +2,7 @@ require 'tempfile'
 
 class BrakemanTests < Test::Unit::TestCase
   def test_exception_on_no_application
-    assert_raise Brakeman::Scanner::NoApplication do
+    assert_raise Brakeman::NoApplication do
       Brakeman.run "/tmp#{rand}" #better not exist
     end
   end
