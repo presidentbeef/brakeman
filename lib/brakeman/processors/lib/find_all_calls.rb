@@ -37,27 +37,32 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
   end
 
   def process_call exp
-    target = get_target exp.target
-    
-    if call? target
-      already_in_target = @in_target
-      @in_target = true
-      process target
-      @in_target = already_in_target
+    @calls << create_call_hash(exp)
+    exp
+  end
+
+  def process_call_with_block exp
+    call = exp.block_call
+
+    if call.node_type == :call
+      call_hash = create_call_hash(call)
+
+      call_hash[:block] = exp.block
+      call_hash[:block_args] = exp.block_args
+
+      @calls << call_hash
+
+      process exp.block
+    else
+      #Probably a :render call with block
+      process call
+      process exp.block
     end
-
-    method = exp.method
-    process_call_args exp
-
-    @calls << { :target => target,
-                :method => method,
-                :call => exp,
-                :nested => @in_target,
-                :chain => get_chain(exp),
-                :location => make_location }
 
     exp
   end
+
+  alias process_iter process_call_with_block
 
   #Calls to render() are converted to s(:render, ...) but we would
   #like them in the call cache still for speed
@@ -154,5 +159,27 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
         :file => @current_file }
     end
 
+  end
+
+  #Return info hash for a call Sexp
+  def create_call_hash exp
+    target = get_target exp.target
+
+    if call? target
+      already_in_target = @in_target
+      @in_target = true
+      process target
+      @in_target = already_in_target
+    end
+
+    method = exp.method
+    process_call_args exp
+
+    { :target => target,
+      :method => method,
+      :call => exp,
+      :nested => @in_target,
+      :chain => get_chain(exp),
+      :location => make_location }
   end
 end
