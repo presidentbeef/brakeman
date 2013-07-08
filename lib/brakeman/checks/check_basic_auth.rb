@@ -12,6 +12,11 @@ class Brakeman::CheckBasicAuth < Brakeman::BaseCheck
   def run_check
     return if version_between? "0.0.0", "3.0.99"
 
+    check_basic_auth_filter
+    check_basic_auth_request
+  end
+
+  def check_basic_auth_filter
     controllers = tracker.controllers.select do |name, c|
       c[:options][:http_basic_authenticate_with]
     end
@@ -21,10 +26,10 @@ class Brakeman::CheckBasicAuth < Brakeman::BaseCheck
 
         if pass = get_password(call) and string? pass
           warn :controller => name,
-              :warning_type => "Basic Auth", 
+              :warning_type => "Basic Auth",
               :warning_code => :basic_auth_password,
               :message => "Basic authentication password stored in source code",
-              :code => call, 
+              :code => call,
               :confidence => 0,
               :file => controller[:file]
 
@@ -32,6 +37,46 @@ class Brakeman::CheckBasicAuth < Brakeman::BaseCheck
         end
       end
     end
+  end
+
+  # Look for
+  #  authenticate_or_request_with_http_basic do |username, password|
+  #    username == "foo" && password == "bar"
+  #  end
+  def check_basic_auth_request
+    tracker.find_call(:target => nil, :method => :authenticate_or_request_with_http_basic).each do |result|
+      if include_password_literal? result
+          warn :result => result,
+              :code => @include_password,
+              :warning_type => "Basic Auth",
+              :warning_code => :basic_auth_password,
+              :message => "Basic authentication password stored in source code",
+              :confidence => 0
+      end
+    end
+  end
+
+  # Check if the block of a result contains a comparison of password to string
+  def include_password_literal? result
+    @password_var = result[:block_args].last
+    @include_password = false
+    process result[:block]
+    @include_password
+  end
+
+  # Looks for :== calls on password var
+  def process_call exp
+    target = exp.target
+
+    if node_type?(target, :lvar) and
+      target.value == @password_var and
+      exp.method == :== and
+      string? exp.first_arg
+
+      @include_password = exp
+    end
+
+    exp
   end
 
   def get_password call

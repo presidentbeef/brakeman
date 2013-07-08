@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 22,
       :controller => 4,
-      :warning => 71 }
+      :warning => 72 }
   end
 
   def test_without_protection
@@ -115,6 +115,17 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Basic authentication password stored in source code/,
       :confidence => 0,
       :file => /users_controller\.rb/
+  end
+
+  def test_basic_auth_in_method_with_password
+    assert_warning :type => :warning,
+      :warning_code => 9,
+      :fingerprint => "f2698a4ca148f43a8f77901a57371b6253f450d50ad388de588f32b7dbeb8937",
+      :warning_type => "Basic Auth",
+      :line => 25,
+      :message => /^Basic\ authentication\ password\ stored\ in\ /,
+      :confidence => 0,
+      :relative_path => "app/controllers/admin_controller.rb"
   end
 
   def test_translate_bug
