@@ -238,6 +238,10 @@ module Brakeman::Options
         parser.parse args
       end
 
+      if options[:previous_results_json] and options[:output_files]
+        options[:comparison_output_file] = options[:output_files].shift
+      end
+
       return options, parser
     end
   end
