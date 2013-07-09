@@ -48,7 +48,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
         #Need to process the method like it was in a controller in order
         #to get the renders set
         processor = Brakeman::ControllerProcessor.new(@app_tree, @tracker)
-        method = mixin[:public][name]
+        method = mixin[:public][name].deep_clone
 
         if node_type? method, :methdef
           method = processor.process_defn method
