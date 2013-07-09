@@ -1,4 +1,4 @@
-require 'multi_json'
+Brakeman.load_dependency 'multi_json'
 require 'brakeman/report/initializers/multi_json'
 
 class Brakeman::Report::JSON < Brakeman::Report::Base

@@ -1,3 +1,5 @@
+require 'erb'
+
 class Brakeman::Report
   class Renderer
     def initialize(template_file, hash = {})
