@@ -193,7 +193,7 @@ class Brakeman::Report::Base
   end
 
   def all_warnings
-    @all_warnings ||= @checks.all_warnings
+    @all_warnings ||= @tracker.warnings
   end
 
   def number_of_templates tracker

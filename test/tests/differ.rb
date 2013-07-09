@@ -6,7 +6,7 @@ class DifferTests < Test::Unit::TestCase
   include BrakemanTester::DiffHelper
 
   def setup
-    @warnings = DiffRun.checks.all_warnings
+    @warnings = DiffRun.warnings
   end
 
   def diff new, old

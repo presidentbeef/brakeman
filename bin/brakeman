@@ -69,7 +69,7 @@ begin
     tracker = Brakeman.run options.merge(:print_report => true, :quiet => options[:quiet])
 
     #Return error code if --exit-on-warn is used and warnings were found
-    if options[:exit_on_warn] and not tracker.checks.all_warnings.empty?
+    if options[:exit_on_warn] and not tracker.warnings.empty?
       exit Brakeman::Warnings_Found_Exit_Code
     end
   end
