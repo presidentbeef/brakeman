@@ -17,4 +17,12 @@ class AdminController < ApplicationController
 
     some_method(params[:class]).constantize
   end
+
+  def authenticate_user!
+    correct_password = "7001337"
+
+    authenticate_or_request_with_http_basic do |username, password|
+      username == "foo" && password == correct_password
+    end
+  end
 end
