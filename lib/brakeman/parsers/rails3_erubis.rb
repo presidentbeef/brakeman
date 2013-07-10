@@ -1,3 +1,5 @@
+Brakeman.load_dependency 'erubis'
+
 #This is from Rails 3 version of the Erubis handler
 class Brakeman::Rails3Erubis < ::Erubis::Eruby
 

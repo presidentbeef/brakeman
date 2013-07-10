@@ -10,6 +10,7 @@ module Brakeman
 
   @debug = false
   @quiet = false
+  @loaded_dependencies = []
 
   #Run Brakeman scan. Returns Tracker object.
   #
@@ -144,7 +145,12 @@ module Brakeman
     elsif options[:output_files]
       get_formats_from_output_files options[:output_files]
     else
-      return [:to_s]
+      begin
+        require 'terminal-table'
+        return [:to_s]
+      rescue LoadError
+        return [:to_json]
+      end
     end
   end
   
@@ -366,6 +372,19 @@ module Brakeman
     Brakeman::Differ.new(new_results, previous_results).diff
   end
 
+  def self.load_dependency name
+    return if @loaded_dependencies.include? name
+
+    begin
+      require name
+    rescue LoadError => e
+      $stderr.puts e.message
+      $stderr.puts "Please install the appropriate dependency."
+      exit! -1
+    end
+  end
+
+  class DependencyError < RuntimeError; end
   class RakeInstallError < RuntimeError; end
   class NoBrakemanError < RuntimeError; end
   class NoApplication < RuntimeError; end

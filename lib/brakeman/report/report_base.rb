@@ -1,5 +1,4 @@
 require 'set'
-require 'highline'
 require 'brakeman/util'
 require 'brakeman/version'
 require 'brakeman/report/renderer'
