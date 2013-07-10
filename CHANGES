@@ -1,5 +1,9 @@
 # Unreleased
 
+ * Add brakeman-min gemspec
+ * Load gem dependencies on-demand 
+ * Output JSON diff to file if -o option is used 
+ * Add check for authenticate_or_request_with_http_basic
  * Refactor of SQL injection check code (Bart ten Brinke)
  * Fix detection of duplicate XSS warnings
  * Refactor reports into separate classes 
