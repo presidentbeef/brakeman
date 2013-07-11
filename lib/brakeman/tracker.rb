@@ -152,6 +152,10 @@ class Brakeman::Tracker
     Brakeman::Report.new(@app_tree, self)
   end
 
+  def warnings
+    self.checks.all_warnings
+  end
+
   def index_call_sites
     finder = Brakeman::FindAllCalls.new self
 
