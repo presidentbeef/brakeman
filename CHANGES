@@ -1,5 +1,6 @@
 # Unreleased
 
+ * Update to ruby_parser 3.2.2
  * Add brakeman-min gemspec
  * Load gem dependencies on-demand 
  * Output JSON diff to file if -o option is used 

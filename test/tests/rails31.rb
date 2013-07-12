@@ -111,7 +111,7 @@ class Rails31Tests < Test::Unit::TestCase
   def test_basic_auth_with_password
     assert_warning :type => :controller,
       :warning_type => "Basic Auth",
-      :line => 6,
+      :line => 4,
       :message => /^Basic authentication password stored in source code/,
       :confidence => 0,
       :file => /users_controller\.rb/

@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.files = ["bin/brakeman", "CHANGES", "WARNING_TYPES", "FEATURES", "README.md"] + Dir["lib/**/*"]
   s.executables = ["brakeman"]
   s.license = "MIT"
-  s.add_dependency "ruby_parser", "~>3.1.1"
+  s.add_dependency "ruby_parser", "~>3.2.2"
   s.add_dependency "ruby2ruby", "~>2.0.5"
   s.add_dependency "terminal-table", "~>1.4"
   s.add_dependency "fastercsv", "~>1.5"
