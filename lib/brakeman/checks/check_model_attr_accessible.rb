@@ -13,6 +13,7 @@ class Brakeman::CheckModelAttrAccessible < Brakeman::BaseCheck
   SUSP_ATTRS = {
     /admin/ => CONFIDENCE[:high], # Very dangerous unless some Rails authorization used 
     /role/ => CONFIDENCE[:med],   
+    /banned/ => CONFIDENCE[:med], 
     :account_id => CONFIDENCE[:high], 
     /\S*_id(s?)\z/ => CONFIDENCE[:low] # All other foreign keys have weak/low confidence 
   }
