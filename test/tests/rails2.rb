@@ -1195,6 +1195,27 @@ class Rails2Tests < Test::Unit::TestCase
       :relative_path => "app/controllers/other_controller.rb"
   end
 
+  def test_ignored_sql_warning
+    assert_no_warning :type => :template,
+      :warning_code => 0,
+      :fingerprint => "f2fa1da45eea252150f6920454822bda3ed5c83a2c376c1296a98037969dd45f",
+      :warning_type => "SQL Injection",
+      :line => 2,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/views/other/ignore_me.html.erb"
+  end
+
+  def test_ignored_xss_warning
+    assert_no_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "6300805e44167e6c3446efbd06b97206928855a2bfc6e1f3e61c097795956b13",
+      :warning_type => "Cross Site Scripting",
+      :line => 2,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :relative_path => "app/views/other/ignore_me.html.erb"
+  end
 end
 
 Rails2WithOptions = BrakemanTester.run_scan "rails2", "Rails 2", :collapse_mass_assignment => false
