@@ -148,8 +148,8 @@ class Brakeman::Tracker
   end
 
   #Returns a Report with this Tracker's information
-  def report filter = nil
-    Brakeman::Report.new(@app_tree, self, filter || @ignored_filter)
+  def report
+    Brakeman::Report.new(@app_tree, self)
   end
 
   def warnings

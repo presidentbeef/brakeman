@@ -12,11 +12,11 @@ class Brakeman::Report::Base
 
   TEXT_CONFIDENCE = [ "High", "Medium", "Weak" ]
 
-  def initialize app_tree, tracker, ignore_filter = nil
+  def initialize app_tree, tracker
     @app_tree = app_tree
     @tracker = tracker
     @checks = tracker.checks
-    @ignore_filter = ignore_filter
+    @ignore_filter = tracker.ignored_filter
     @highlight_user_input = tracker.options[:highlight_user_input]
     @warnings_summary = nil
   end
