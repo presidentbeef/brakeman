@@ -229,6 +229,14 @@ class Rails32Tests < Test::Unit::TestCase
       :file => /user\.rb/
   end 
 
+  def test_model_attr_accessible_account_banned
+    assert_warning :type => :model,
+      :warning_type => "Mass Assignment",
+      :message => /^Please\ check\ and\ protect\ banned/,
+      :confidence => 1, #MED
+      :file => /account\.rb/
+  end 
+
   def test_model_attr_accessible_status_id
     assert_warning :type => :model,
       :warning_type => "Mass Assignment",
@@ -245,11 +253,4 @@ class Rails32Tests < Test::Unit::TestCase
       :file => /account\.rb/
   end 
 
-  def test_model_attr_accessible_account_banned
-    assert_warning :type => :model,
-      :warning_type => "Mass Assignment",
-      :message => /^Please\ check\ and\ protect\ banned/,
-      :confidence => 1, #MED
-      :file => /account\.rb/
-  end 
 end
