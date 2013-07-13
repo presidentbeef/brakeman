@@ -208,7 +208,6 @@ q - Quit, do not update ignored warnings
     end
 
     def quit
-      puts "REST CONFIG?!"
       reset_config
       @ignore_config.read_from_file
       @ignore_config.filter_ignored
