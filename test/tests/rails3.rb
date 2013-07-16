@@ -16,11 +16,11 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 8,
       :template => 38,
-      :warning => 63
+      :generic => 63
     }
 
     if RUBY_PLATFORM == 'java'
-      @expected[:warning] += 1
+      @expected[:generic] += 1
     end
 
     @expected

@@ -11,11 +11,11 @@ class OnlyFilesOptionTests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 1,
-      :warning => 4 }
+      :generic => 4 }
 
 
     if RUBY_PLATFORM == 'java'
-      @expected[:warning] += 1
+      @expected[:generic] += 1
     end
 
     @expected

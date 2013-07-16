@@ -290,7 +290,10 @@ module Brakeman
     else
       notify "Runnning checks..."
     end
+
     tracker.run_checks
+
+    self.filter_warnings tracker, options
 
     if options[:output_files]
       notify "Generating report..."
@@ -382,6 +385,34 @@ module Brakeman
       $stderr.puts "Please install the appropriate dependency."
       exit! -1
     end
+  end
+
+  def self.filter_warnings tracker, options
+    require 'brakeman/report/ignore/config'
+
+    app_tree = Brakeman::AppTree.from_options(options)
+
+    if options[:ignore_file]
+      file = options[:ignore_file]
+    elsif app_tree.exists? "config/brakeman.ignore"
+      file = app_tree.expand_path("config/brakeman.ignore")
+    elsif not options[:interactive_ignore]
+      return
+    end
+
+    notify "Filtering warnings..."
+
+    if options[:interactive_ignore]
+      require 'brakeman/report/ignore/interactive'
+      config = InteractiveIgnorer.new(file, tracker.warnings).start
+    else
+      notify "[Notice] Using '#{file}' to filter warnings"
+      config = IgnoreConfig.new(file, tracker.warnings)
+      config.read_from_file
+      config.filter_ignored
+    end
+
+    tracker.ignored_filter = config
   end
 
   class DependencyError < RuntimeError; end

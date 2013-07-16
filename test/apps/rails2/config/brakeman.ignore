@@ -1,0 +1,42 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "6300805e44167e6c3446efbd06b97206928855a2bfc6e1f3e61c097795956b13",
+      "message": "Unescaped model attribute",
+      "file": "app/views/other/ignore_me.html.erb",
+      "line": 2,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "User.first(:conditions => (\"x = #{params[:x]}\")).bio",
+      "render_path": null,
+      "location": {
+        "type": "template",
+        "template": "other/ignore_me"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "f2fa1da45eea252150f6920454822bda3ed5c83a2c376c1296a98037969dd45f",
+      "message": "Possible SQL injection",
+      "file": "app/views/other/ignore_me.html.erb",
+      "line": 2,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "User.first(:conditions => (\"x = #{params[:x]}\"))",
+      "render_path": null,
+      "location": {
+        "type": "template",
+        "template": "other/ignore_me"
+      },
+      "user_input": "params[:x]",
+      "confidence": "High",
+      "note": "Ignoring for testing"
+    }
+  ],
+  "updated": "2013-07-12 16:58:59 -0700",
+  "brakeman_version": "2.0.0"
+}

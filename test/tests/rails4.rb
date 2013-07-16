@@ -15,12 +15,12 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 0,
-      :warning => 1
+      :generic => 1
     }
   end
 
   def test_session_secret_token
-    assert_warning :type => :warning,
+    assert_warning :type => :generic,
       :warning_type => "Session Setting",
       :fingerprint => "715ad9c0d76f57a6a657192574d528b620176a80fec969e2f63c88eacab0b984",
       :line => 12,

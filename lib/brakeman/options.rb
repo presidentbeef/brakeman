@@ -153,6 +153,14 @@ module Brakeman::Options
           options[:html_style] = File.expand_path file
         end
 
+        opts.on "-i IGNOREFILE", "--ignore-config IGNOREFILE", "Use configuration to ignore warnings" do |file|
+          options[:ignore_file] = file
+        end
+
+        opts.on "-I", "--interactive-ignore", "Interactively ignore warnings" do
+          options[:interactive_ignore] = true 
+        end
+
         opts.on "-l", "--[no-]combine-locations", "Combine warning locations (Default)" do |combine|
           options[:combine_locations] = combine
         end

@@ -65,7 +65,7 @@ module BrakemanTester::FindWarning
   def find opts = {}, &block
     t = opts[:type]
     if t.nil? or t == :warning
-      warnings = report[:warnings]
+      warnings = report[:generic_warnings]
     else
       warnings = report[(t.to_s << "_warnings").to_sym]
     end
