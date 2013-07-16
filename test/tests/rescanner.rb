@@ -151,7 +151,7 @@ class RescannerTests < Test::Unit::TestCase
     assert_reindex :templates, :models, :controllers
     assert_changes
     assert_new 7 #User is no longer a model, causing MORE warnings
-    assert_fixed 4
+    assert_fixed 7
   end
 
   def test_add_method_to_model

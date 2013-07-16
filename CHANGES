@@ -1,5 +1,6 @@
 # Unreleased
 
+ * Check for dangerous model attributes defined in attr_accessible (Paul Deardorff)
  * Update to ruby_parser 3.2.2
  * Add brakeman-min gemspec
  * Load gem dependencies on-demand 
