@@ -7,8 +7,8 @@ class Brakeman::Report::Hash < Brakeman::Report::Base
                :templates => tracker.templates
               }
 
-    [:warnings, :controller_warnings, :model_warnings, :template_warnings].each do |meth|
-      report[meth] = @checks.send(meth)
+    [:generic_warnings, :controller_warnings, :model_warnings, :template_warnings].each do |meth|
+      report[meth] = self.send(meth)
       report[meth].each do |w|
         w.message = w.format_message
         w.context = context_for(@app_tree, w).join("\n")

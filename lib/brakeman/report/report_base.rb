@@ -16,6 +16,7 @@ class Brakeman::Report::Base
     @app_tree = app_tree
     @tracker = tracker
     @checks = tracker.checks
+    @ignore_filter = tracker.ignored_filter
     @highlight_user_input = tracker.options[:highlight_user_input]
     @warnings_summary = nil
   end
@@ -79,7 +80,7 @@ class Brakeman::Report::Base
   end
 
   def generate_warnings
-    render_warnings checks.warnings,
+    render_warnings generic_warnings,
                     :warning,
                     'security_warnings',
                     ["Confidence", "Class", "Method", "Warning Type", "Message"],
@@ -88,7 +89,7 @@ class Brakeman::Report::Base
 
   #Generate table of template warnings or return nil if no warnings
   def generate_template_warnings
-    render_warnings checks.template_warnings,
+    render_warnings template_warnings,
                     :template,
                     'view_warnings',
                     ['Confidence', 'Template', 'Warning Type', 'Message'],
@@ -98,7 +99,7 @@ class Brakeman::Report::Base
 
   #Generate table of model warnings or return nil if no warnings
   def generate_model_warnings
-    render_warnings checks.model_warnings,
+    render_warnings model_warnings,
                     :model,
                     'model_warnings',
                     ['Confidence', 'Model', 'Warning Type', 'Message'],
@@ -107,11 +108,19 @@ class Brakeman::Report::Base
 
   #Generate table of controller warnings or nil if no warnings
   def generate_controller_warnings
-    render_warnings checks.controller_warnings,
+    render_warnings controller_warnings,
                     :controller,
                     'controller_warnings',
                     ['Confidence', 'Controller', 'Warning Type', 'Message'],
                     'Controller'
+  end
+
+  def generate_ignored_warnings
+    render_warnings ignored_warnings,
+                    :ignored,
+                    'ignored_warnings',
+                    ['Confidence', 'Warning Type', 'File', 'Message'],
+                    'Warning Type'
   end
 
   def render_warnings warnings, type, template, cols, sort_col
@@ -141,6 +150,8 @@ class Brakeman::Report::Base
           convert_model_warning w, warning
         when :controller
           convert_controller_warning w, warning
+        when :ignored
+          convert_ignored_warning w, warning
         end
     end
   end
@@ -163,6 +174,9 @@ class Brakeman::Report::Base
     convert_warning warning, original
   end
 
+  def convert_ignored_warning warning, original
+    convert_warning warning, original
+  end
 
   def sort rows, sort_col
     stabilizer = 0
@@ -192,7 +206,45 @@ class Brakeman::Report::Base
   end
 
   def all_warnings
-    @all_warnings ||= @tracker.warnings
+    if @ignore_filter
+      @all_warnings ||= @ignore_filter.shown_warnings
+    else
+      @all_warnings ||= tracker.checks.all_warnings
+    end
+  end
+
+  def filter_warnings warnings
+    if @ignore_filter
+      warnings.reject do |w|
+        @ignore_filter.ignored? w
+      end
+    else
+      warnings
+    end
+  end
+
+  def generic_warnings
+    filter_warnings tracker.checks.warnings
+  end
+
+  def template_warnings
+    filter_warnings tracker.checks.template_warnings
+  end
+
+  def model_warnings
+    filter_warnings tracker.checks.model_warnings
+  end
+
+  def controller_warnings
+    filter_warnings tracker.checks.controller_warnings
+  end
+
+  def ignored_warnings
+    if @ignore_filter
+      @ignore_filter.ignored_warnings
+    else
+      []
+    end
   end
 
   def number_of_templates tracker

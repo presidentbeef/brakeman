@@ -8,7 +8,7 @@ class Brakeman::Report
 
   VALID_FORMATS = [:to_html, :to_pdf, :to_csv, :to_json, :to_tabs, :to_hash, :to_s]
 
-  def initialize(app_tree, tracker)
+  def initialize app_tree, tracker
     @app_tree = app_tree
     @tracker = tracker
   end

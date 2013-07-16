@@ -6,11 +6,9 @@ class Brakeman::Report::JSON < Brakeman::Report::Base
     errors = tracker.errors.map{|e| { :error => e[:error], :location => e[:backtrace][0] }}
     app_path = tracker.options[:app_path]
 
-    warnings = all_warnings.map do |w|
-      hash = w.to_hash
-      hash[:file] = warning_file w
-      hash
-    end.sort_by { |w| w[:file] }
+    warnings = convert_to_hashes all_warnings
+
+    ignored = convert_to_hashes ignored_warnings
 
     scan_info = {
       :app_path => File.expand_path(tracker.options[:app_path]),
@@ -31,9 +29,18 @@ class Brakeman::Report::JSON < Brakeman::Report::Base
     report_info = {
       :scan_info => scan_info,
       :warnings => warnings,
+      :ignored_warnings => ignored,
       :errors => errors
     }
 
     MultiJson.dump(report_info, :pretty => true)
+  end
+
+  def convert_to_hashes warnings
+    warnings.map do |w|
+      hash = w.to_hash
+      hash[:file] = warning_file w
+      hash
+    end.sort_by { |w| w[:file] }
   end
 end

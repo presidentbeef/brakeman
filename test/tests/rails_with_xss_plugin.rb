@@ -11,7 +11,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :controller => 1,
       :model => 3,
       :template => 2,
-      :warning => 20 }
+      :generic => 20 }
   end
 
   def report
@@ -285,7 +285,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
   def test_absolute_paths
-    assert report[:warnings].all? { |w| w.file.start_with? "/" }
+    assert report[:generic_warnings].all? { |w| w.file.start_with? "/" }
   end
 
   def test_sql_injection_CVE_2013_0155
