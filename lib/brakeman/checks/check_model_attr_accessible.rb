@@ -28,7 +28,7 @@ class Brakeman::CheckModelAttrAccessible < Brakeman::BaseCheck
                 :file => model[:file],                          
                 :warning_type => "Mass Assignment", 
                 :warning_code => :mass_assign_call,
-                :message => "Please check and protect #{attribute} attribute defined under attr_accessible.", 
+                :message => "Potentially dangerous attribute #{attribute} available for mass assignment.", 
                 :confidence => confidence 
               break # Prevent from matching single attr multiple times
             end 
