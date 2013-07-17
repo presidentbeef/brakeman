@@ -1,5 +1,6 @@
-# Unreleased
+# 2.1.0
 
+ * Support non-native line endings in Gemfile.lock (Paul Deardorff)
  * Support for ignoring warnings
  * Check for dangerous model attributes defined in attr_accessible (Paul Deardorff)
  * Update to ruby_parser 3.2.2

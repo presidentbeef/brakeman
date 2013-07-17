@@ -9,7 +9,7 @@ Climate](https://codeclimate.com/github/presidentbeef/brakeman.png)](https://cod
 
 Brakeman is a static analysis tool which checks Ruby on Rails applications for security vulnerabilities.
 
-It targets Rails versions 2.x and 3.x.
+It works with Rails 2.x, 3.x, and 4.x.
 
 There is also a [plugin available](http://brakemanscanner.org/docs/jenkins/) for Jenkins/Hudson.
 
@@ -123,6 +123,11 @@ To compare results of a scan with a previous scan, use the JSON output option an
     brakeman --compare old_report.json
 
 This will output JSON with two lists: one of fixed warnings and one of new warnings.
+
+Brakeman will ignore warnings if configured to do so. By default, it looks for a configuration file in `config/brakeman.ignore`.
+To create and manage this file, use:
+
+    brakeman -I
 
 # Warning information
 
