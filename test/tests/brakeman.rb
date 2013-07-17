@@ -60,6 +60,7 @@ class BaseCheckTests < Test::Unit::TestCase
   def test_version_between_pre_release
     assert version_between?("3.2.9.rc2", "3.2.5", "4.0.0")
   end
+
 end
 
 class ConfigTests < Test::Unit::TestCase
@@ -202,3 +203,26 @@ class ConfigTests < Test::Unit::TestCase
     output_format_tester({:output_files => ['xx.html', 'xx.pdf', 'xx.csv', 'xx.tabs', 'xx.json']}, [:to_html, :to_pdf, :to_csv, :to_tabs, :to_json])
   end
 end
+
+class GemProcessorTests < Test::Unit::TestCase
+  FakeTracker = Struct.new(:config)
+
+  def setup 
+    @tracker = FakeTracker.new({}) 
+    @gem_processor = Brakeman::GemProcessor.new @tracker 
+    @eol_representations = ["\r\n", "\n"] 
+    @gem_locks = @eol_representations.inject({}) {|h, eol| 
+      h[eol] = "    paperclip (3.2.1)#    erubis (4.3.1)#     rails (3.2.1.rc2)#    simplecov (1.1)#".gsub('#', eol); h 
+    }
+  end 
+
+  def test_get_version 
+    @gem_locks.each do |eol, gem_lock|      
+      assert_equal "4.3.1", @gem_processor.get_version("erubis", gem_lock), "Couldn't match gemlock with eol: #{eol}}"
+      assert_equal "3.2.1", @gem_processor.get_version("paperclip", gem_lock), "Couldn't match gemlock with eol: #{eol}"
+      assert_equal "3.2.1.rc2", @gem_processor.get_version("rails", gem_lock), "Couldn't match gemlock with eol: #{eol}"  
+      assert_equal "1.1", @gem_processor.get_version("simplecov", gem_lock), "Couldn't match gemlock with eol: #{eol}"
+    end 
+  end 
+
+end 
