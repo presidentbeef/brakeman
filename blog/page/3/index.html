@@ -107,7 +107,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-    <h1 class="entry-title"><a href="/blog/2012/03/01/brakeman-1-dot-5-0-released.markdown/">Brakeman 1.5.0 Released</a></h1>
+    <h1 class="entry-title"><a href="/blog/2012/03/05/brakeman-1-dot-5-1-released/">Brakeman 1.5.1 Released</a></h1>
     
     
       <p class="meta">
@@ -115,7 +115,7 @@
 
 
 
-<time datetime="2012-03-01 20:23:00 -0800" pubdate  updated >Mar 1<span>st</span>, 2012</time>
+<time datetime="2012-03-05 18:50:00 -0800" pubdate  updated >Mar 5<span>th</span>, 2012</time>
 
 
 </p>
@@ -123,75 +123,78 @@
   </header>
 
 
-  <div class="entry-content">A release was forced today because two new Rails vulnerabilities were reported (the first since November):
+  <div class="entry-content"><p>After the excitment yesterday with a mass assignment vulnerability being exploited in a very public manner on <a href="https://gist.github.com/1978249">Github</a>, interest in Brakeman has skyrocketed.</p>
 
- * [Manual options are not escaped in select()](http://groups.google.com/group/rubyonrails-security/browse_thread/thread/edd28f1e3d04e913)
- * [Some operations on SafeBuffer mistakenly return strings marked as html_safe](http://groups.google.com/group/rubyonrails-security/browse_thread/thread/9da0c515a6c4664)
+<p>This lead to re-examination of Brakeman&#8217;s code for detecting that mass assignment has been globally disabled - and it turns out there was a bug or two. So here is a bug-fix release of Brakeman to correct that and some other minor issues.</p>
 
-This release includes checks for these two vulnerabilities.
+<p>Upgrading to 1.5.1 may increase the number of warnings reported.</p>
 
-There is also a new check for skipping CSRF token verification, and some other changes which may result in fewer or more vulnerabilities being reported.
+<p><em>Changes since 1.5.0</em>:</p>
 
-_Changes since 1.4.0:_
+<ul>
+<li>Fix detection of global mass assignment setting</li>
+<li>Fix partial rendering in Rails 3</li>
+<li>Show backtrace when interrupt received (Ruby 1.9 only)</li>
+<li>More debug output</li>
+<li>Internal fixes:
 
- * Add version check for SafeBuffer vulnerability
- * Add check for select vulnerability in Rails 3
- * select() is no longer considered safe in Rails 2
- * Add check for skipping CSRF protection with a blacklist
- * Add JSON report format
- * Model#id should not be considered XSS
- * Standardize methods to check for SQL injection
- * Fix Rails 2 route parsing issue with nested routes
+<ul>
+<li>Remove duplicate method in Brakeman::Rails2XSSErubis</li>
+<li>Add tracking of module and class to Brakeman::BaseProcessor</li>
+<li>Report module when using Brakeman::FindCall</li>
+</ul>
+</li>
+</ul>
 
-### Check for SafeBuffer Vulnerability
 
-A new vulnerability was reported that affects strings which are marked as `html_safe` and then modified in some way. For some operations, the new, modified string will still be marked as `html_safe`. Full details [here](http://groups.google.com/group/rubyonrails-security/browse_thread/thread/edd28f1e3d04e913).
+<h3>Mass Assignment</h3>
 
-For this vulnerability, Brakeman only does a version check and reports if an application is used a vulnerable version of Rails. It only reports on Rails 3 applications, since Rails 3 introduced the concept of SafeBuffers.
+<p>Mass assignment is not a particularly new issue, but the amount of attention suddenly focused on it this weekend was amazing.</p>
 
-### Check for select Helper Vulnerability
+<p>This release of Brakeman can detect three different methods for defaulting all models to a whitelist of allowed attributes that can be mass assigned.</p>
 
-Another vulnerability was reported today in the `select` form helper. Option tags built by hand (interpolating values into `<option></option>`) will not be escaped by `select`. Full details [here](http://groups.google.com/group/rubyonrails-security/browse_thread/thread/9da0c515a6c4664).
+<p>The first is probably the most widely-seen version. In an intializer, do</p>
 
-For Rails 3 applications, Brakeman checks for uses of `select` which have user input in the `options` argument. This check may be refined in the future.
+<pre><code>ActiveRecord::Base.send(:attr_accessible, nil)
+</code></pre>
 
-For Rails 2, Brakeman no longer considers `select` a safe method when checking for cross site scripting.
+<p>The second is essentially equivalent, but 1.5.1 adds support for it as well:</p>
 
-### Check for CSRF Filter Skipping
+<pre><code>module ActiveRecord
+  class Base
+    attr_accessible nil
+  end
+end
+</code></pre>
 
-When cross site request forgery protection is enabled, a `before_filter` is added called `verify_authenticity_token`. This filter checks that actions called responding to a `POST` have a correct authenticity token from the client. Since this is a regular `before_filter`, it can be skipped using `skip_before_filter`.
+<p>The third option is only available for Rails 3.1.0 and newer. The following configuration setting can be added to <code>application.rb</code>:</p>
 
-If `skip_before_filter` is called using an `:except` option, then the default for the controller becomes NOT checking for an authenticity token:
+<pre><code>config.active_record.whitelist_attributes = true
+</code></pre>
 
-    skip_before_filter :verify_authenticity_token, :except => [:create, :delete]
+<p>Brakeman should correctly detect all of these.</p>
 
-It is recommended to use `:only` if skipping this filter is actually necessary. This way, any new actions added later will automatically fall under the CSRF protection.
+<p><a href="http://pragtob.wordpress.com/2012/03/06/secure-your-rails-apps/">This is a very nice post</a> explaining the dangers of mass assignment (mentioning Brakeman is nice, too.)</p>
 
-This check may be extended in the future to other important filters.
+<h3>Partials in Rails 3</h3>
 
-### JSON Report Format
+<p>In Rails 3, <code>render 'blah'</code> is now equivalent to <code>render :partial =&gt; 'blah'</code> when used inside a template.</p>
 
-While the code for outputing JSON was in the 1.4.0 release, it was not actually added as a proper output format! This has been rectified.
+<p>Brakeman now supports this correctly.</p>
 
-`-f json` or `-o report.json` will now produce JSON reports.
+<h3>Debug Output</h3>
 
-The information contained in these reports may change in the future, although that should only be adding more information.
+<p>More debugging output has been added for use with the <code>-d</code> option.</p>
 
-### SQL Methods
+<p>Additionally, when interrupting the application (for example, with <code>^C</code>), a stack trace will be output. Please note, however, that this only works with Ruby 1.9.</p>
 
-The code for finding SQL methods to check for SQL injection was a little messed up. Depending on how the method was called, different sets of methods were considered dangerous.
+<h3>Internal Changes</h3>
 
-This has been changed for better consistency and coverage. This means reports may include new SQL injections, so keep an eye out.
+<p>There have been a few internal changes. There is a possibility that these will affect some warnings. However, it should only result in accurate reporting of class names.</p>
 
-### Rails 2 Route Parsing Fix
+<h3>Report Issues</h3>
 
-There was a bug in the code which determined if a method was being called on `map`, which caused Brakeman to think strange methods were route definitions (for example, `require`). This has been fixed.
-
-### Report Problems!
-
-Always [report problems](https://github.com/presidentbeef/brakeman/issues) encountered when running Brakeman.
-
-Don&#8217;t forget to join the [mailing list](http://librelist.com/browser/brakeman/) and/or follow [@Brakeman](https://twitter.com/brakeman) on Twitter.
+<p>Please report any problems on <a href="https://github.com/presidentbeef/brakeman/issues">Github</a>!</p>
 </div>
   
   
@@ -1094,6 +1097,10 @@ Brakeman.run :app_path =&gt; 'my_app'
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/17/brakeman-2-dot-1-0-released/">Brakeman 2.1.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/05/20/brakeman-2-dot-0-0-released/">Brakeman 2.0.0 Released</a>
       </li>
     
@@ -1107,10 +1114,6 @@ Brakeman.run :app_path =&gt; 'my_app'
     
       <li class="post">
         <a href="/blog/2013/03/01/brakeman-1-dot-9-3-released/">Brakeman 1.9.3 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/13/brakeman-1-dot-9-2-released/">Brakeman 1.9.2 Released</a>
       </li>
     
   </ul>
