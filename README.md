@@ -13,7 +13,7 @@ It works with Rails 2.x, 3.x, and 4.x.
 
 There is also a [plugin available](http://brakemanscanner.org/docs/jenkins/) for Jenkins/Hudson.
 
-For even more continuous testing, try the [Guard plugin](https://github.com/oreoshake/guard-brakeman).
+For even more continuous testing, try the [Guard plugin](https://github.com/guard/guard-brakeman).
 
 # Homepage/News
 
