@@ -153,7 +153,7 @@ module Brakeman
       end
     end
   end
-  
+
   def self.get_formats_from_output_format output_format
     case output_format
     when :html, :to_html
@@ -171,7 +171,7 @@ module Brakeman
     end
   end
   private_class_method :get_formats_from_output_format
-  
+
   def self.get_formats_from_output_files output_files
     output_files.map do |output_file|
       case output_file
@@ -196,7 +196,7 @@ module Brakeman
   def self.list_checks
     require 'brakeman/scanner'
     format_length = 30
-    
+
     $stderr.puts "Available Checks:"
     $stderr.puts "-" * format_length
     Checks.checks.each do |check|
@@ -307,7 +307,7 @@ module Brakeman
 
     tracker
   end
-  
+
   def self.write_report_to_files tracker, output_files
     output_files.each_with_index do |output_file, idx|
       File.open output_file, "w" do |f|
@@ -317,7 +317,7 @@ module Brakeman
     end
   end
   private_class_method :write_report_to_files
-  
+
   def self.write_report_to_formats tracker, output_formats
     output_formats.each do |output_format|
       puts tracker.report.format(output_format)
@@ -375,7 +375,7 @@ module Brakeman
     Brakeman::Differ.new(new_results, previous_results).diff
   end
 
-  def self.load_dependency name
+  def self.load_brakeman_dependency name
     return if @loaded_dependencies.include? name
 
     begin

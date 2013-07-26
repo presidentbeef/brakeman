@@ -1,4 +1,4 @@
-Brakeman.load_dependency 'terminal-table'
+Brakeman.load_brakeman_dependency 'terminal-table'
 
 class Brakeman::Report::Table < Brakeman::Report::Base
   def generate_report
