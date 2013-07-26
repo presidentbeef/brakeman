@@ -282,14 +282,14 @@ class Brakeman::Scanner
 
         parsed = parse_ruby src
       elsif type == :haml
-        Brakeman.load_dependency 'haml'
-        Brakeman.load_dependency 'sass'
+        Brakeman.load_brakeman_dependency 'haml'
+        Brakeman.load_brakeman_dependency 'sass'
 
         src = Haml::Engine.new(text,
                                :escape_html => !!tracker.config[:escape_html]).precompiled
         parsed = parse_ruby src
       elsif type == :slim
-        Brakeman.load_dependency 'slim'
+        Brakeman.load_brakeman_dependency 'slim'
 
         src = Slim::Template.new(:disable_capture => true,
                                  :generator => Temple::Generators::RailsOutputBuffer) { text }.precompiled_template
