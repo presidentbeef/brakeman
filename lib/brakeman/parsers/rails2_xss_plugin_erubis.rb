@@ -1,4 +1,4 @@
-Brakeman.load_dependency 'erubis'
+Brakeman.load_brakeman_dependency 'erubis'
 
 #This is from the rails_xss plugin for Rails 2
 class Brakeman::Rails2XSSPluginErubis < ::Erubis::Eruby

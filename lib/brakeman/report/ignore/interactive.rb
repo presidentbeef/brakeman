@@ -1,4 +1,4 @@
-Brakeman.load_dependency 'highline'
+Brakeman.load_brakeman_dependency 'highline'
 
 module Brakeman
   class InteractiveIgnorer
