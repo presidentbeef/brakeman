@@ -39,6 +39,10 @@ Rails3::Application.routes.draw do
 
   get "home/test_dynamic_render"
 
+  controller "a#{controller_name}" do
+    get "some_route"
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
