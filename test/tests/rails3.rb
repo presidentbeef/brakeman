@@ -713,7 +713,7 @@ class Rails3Tests < Test::Unit::TestCase
 
   def test_default_routes
     assert_warning :warning_type => "Default Routes",
-      :line => 97,
+      :line => 101,
       :message => /All public methods in controllers are available as actions/,
       :file => /routes\.rb/
   end
