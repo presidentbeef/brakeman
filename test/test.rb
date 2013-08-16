@@ -157,7 +157,7 @@ module BrakemanTester::RescanTestHelper
 
   #Check how many existing warnings were reported
   def assert_existing
-    expected = (@rescan.old_results.all_warnings.length - fixed.length)
+    expected = (@rescan.old_results.length - fixed.length)
 
     assert_equal expected, existing.length, "Expected #{expected} existing warnings, but found #{existing.length}"
   end

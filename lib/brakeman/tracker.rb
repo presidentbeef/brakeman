@@ -156,6 +156,16 @@ class Brakeman::Tracker
     self.checks.all_warnings
   end
 
+  def filtered_warnings
+    if self.ignored_filter
+      self.warnings.reject do |w|
+        self.ignored_filter.ignored? w
+      end
+    else
+      self.warnings
+    end
+  end
+
   def index_call_sites
     finder = Brakeman::FindAllCalls.new self
 
