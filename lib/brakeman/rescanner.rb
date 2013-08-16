@@ -1,6 +1,7 @@
 require 'brakeman/scanner'
 require 'terminal-table'
 require 'brakeman/util'
+require 'brakeman/differ'
 
 #Class for rescanning changed files after an initial scan
 class Brakeman::Rescanner < Brakeman::Scanner
@@ -13,7 +14,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     super(options, processor)
 
     @paths = changed_files.map {|f| @app_tree.expand_path(f) }
-    @old_results = tracker.checks  #Old warnings from previous scan
+    @old_results = tracker.filtered_warnings  #Old warnings from previous scan
     @changes = nil                 #True if files had to be rescanned
     @reindex = Set.new
   end
@@ -367,7 +368,6 @@ class Brakeman::RescanReport
   def initialize old_results, tracker
     @tracker = tracker
     @old_results = old_results
-    @new_results = tracker.checks
     @all_warnings = nil
     @diff = nil
   end
@@ -379,7 +379,7 @@ class Brakeman::RescanReport
 
   #Returns an array of all warnings found
   def all_warnings
-    @all_warnings ||= new_results.all_warnings
+    @all_warnings ||= @tracker.filtered_warnings
   end
 
   #Returns an array of warnings which were in the old report but are not in the
@@ -401,7 +401,7 @@ class Brakeman::RescanReport
 
   #Returns a hash of arrays for :new and :fixed warnings
   def diff
-    @diff ||= @new_results.diff(@old_results)
+    @diff ||= Brakeman::Differ.new(all_warnings, @old_results).diff
   end
 
   #Returns an array of warnings which were in the old report and the new report
