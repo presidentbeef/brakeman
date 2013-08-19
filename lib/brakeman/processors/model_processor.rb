@@ -85,6 +85,9 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
           exp.each_arg do |e|
             if node_type? e, :lit
               args << e.value
+            elsif hash? e
+              @model[:options][:role_accessible] ||= []
+              @model[:options][:role_accessible].concat args
             end
           end
 

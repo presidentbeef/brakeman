@@ -25,4 +25,6 @@ class User < ActiveRecord::Base
   scope :all
 
   belongs_to :account
+
+  attr_accessible :admin, :as => :admin
 end
