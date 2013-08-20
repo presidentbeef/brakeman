@@ -1033,4 +1033,14 @@ class Rails31Tests < Test::Unit::TestCase
       :confidence => 1,
       :relative_path => "app/controllers/other_controller.rb"
   end
+
+  def test_attr_accessible_with_role
+    assert_no_warning :type => :model,
+      :warning_code => 17,
+      :fingerprint => "77c353ad8e5fc9880775ed436bbfa37b005b43aa2978186de92b6916f46fac39",
+      :warning_type => "Mass Assignment",
+      :message => /^Potentially\ dangerous\ attribute\ admin\ av/,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb"
+  end
 end
