@@ -1,6 +1,7 @@
-# Unreleased
+# 2.1.1
 
  * New warning code for dangerous attributes in attr_accessible
+ * Do not warn on attr_accessible using roles
  * More accurate results for model attribute warnings
  * Use exit code zero with `-z` if all warnings ignored
  * Respect ignored warnings in rescans
