@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Site Content License</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman 2.1.1 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/content_license/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2013/08/21/brakeman-2-dot-1-1-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -99,27 +99,149 @@
   <div id="main">
     <div id="content">
       <div>
-<article>
+<article class="hentry">
   
   <header>
-    <h1 class="entry-title">Site Content License</h1>
-  </header>
-  
-  <p><a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/80x15.png" /></a></p>
-
-<p>This site is licensed under a <a href="http://creativecommons.org/licenses/by/3.0/" title="">Creative Commons Attribution 3.0 Unported License</a>. This means you may copy and reuse the content of this site as long as it is clearly attributed to this source (http://brakemanscanner.org).</p>
-
-<p>This license does <em>not</em> extend to the Brakeman &#8220;lantern&#8221; logo.</p>
-
-  
-    <footer>
+    <div class="articlelogo">&nbsp;</div>
+    
+      <h1 class="entry-title">Brakeman 2.1.1 Released</h1>
+    
+    
       <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+
+
+
+<time datetime="2013-08-21 12:00:00 -0700" pubdate  updated >Aug 21<span>st</span>, 2013</time>
+
+
+</p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This is a small bug fix release. The only expected changes in warnings are for dangerous attributes in <code>attr_accessible</code>
+and cross site scripting involving model attributes. Some warning fingerprints may change as a result of this update.</p>
+
+<p><em>Changes since 2.1.0</em>:</p>
+
+<ul>
+<li>More accurate results for model attribute warnings (<a href="https://github.com/presidentbeef/brakeman/issues/385">#385</a>)</li>
+<li>Do not warn on <code>attr_accessible</code> using roles (<a href="https://github.com/presidentbeef/brakeman/issues/372">#372</a>)</li>
+<li>New warning code for dangerous attributes in <code>attr_accessible</code></li>
+<li>Fix infinite loop when run as rake task (<a href="https://github.com/arkadyan">Matthew Shanley</a>)</li>
+<li>Use exit code zero with <code>-z</code> if all warnings ignored (<a href="https://github.com/presidentbeef/brakeman/issues/381">#381</a>)</li>
+<li>Respect ignored warnings in rescans (<a href="https://github.com/presidentbeef/brakeman/issues/382">#382</a>)</li>
+<li>Respect ignored warnings in tabs format reports</li>
+<li>Ignore dynamic controller names in routes</li>
+</ul>
+
+
+<h3>More Accurate Model Matching</h3>
+
+<p>Model attributes which are reported as user input should now be reported more accurately. For example, instead of reporting <code>Model.find(1)</code> as user input, the entire attribute will be reported. For example: <code>Model.find(1).name</code></p>
+
+<p>As a side effect, several methods which were already intended to be ignored (such as <code>count</code>) will actually be ignored for XSS warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/386">changes</a>)</p>
+
+<h3>attr_accessible Check Updates</h3>
+
+<p>The check for potentially dangerous attributes whitelisted in <code>attr_accessible</code> has been updated to ignore attributes protected by roles. Additionally, it now has its own warning code to separate it from regular mass assignment warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/388">warning code change</a>, <a href="https://github.com/presidentbeef/brakeman/pull/384">role change</a>)</p>
+
+<h3>Rake Task Fix</h3>
+
+<p>The last release included a method named <code>load_dependency</code> which handles calling <code>require</code> for optional dependencies. Unfortunately, Rails overrides <code>require</code> to call its own method called <code>load_dependency</code>. Rails is loaded when any <code>rake</code> command is used, so when Brakeman is run with Rake it causes an infinite loop between <code>load_dependency</code> and <code>require</code>.</p>
+
+<p>Thanks to <a href="https://github.com/arkadyan">Matthew Shanley</a> for reporting the issue and providing a fix.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/375">changes</a>)</p>
+
+<h3>Exit Code Fixed When Warnings Ignored</h3>
+
+<p>Brakeman will now return <code>0</code> when using <code>-z</code> and all reported warnings are ignored.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/375">changes</a>)</p>
+
+<h3>Ignore Warnings in Rescans</h3>
+
+<p>Ignored warnings should now be ignored during rescans (for use with <a href="https://github.com/guard/guard-brakeman">guard-brakeman</a>).</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/383">changes</a>)</p>
+
+<h3>Remove Ignored Warnings in Tabs Report</h3>
+
+<p>Ignoring warnings should now work for those using the Jenkins plugin.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/374">changes</a>)</p>
+
+<h3>Ignore Dynamic Controller Name in Routes</h3>
+
+<p>Instead of completely aborting route processing, dynamic controller names are just ignored.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/379">changes</a>)</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
+
+      
+
+
+
+
+<time datetime="2013-08-21 12:00:00 -0700" pubdate  updated >Aug 21<span>st</span>, 2013</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2013/08/21/brakeman-2-dot-1-1-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2013/08/21/brakeman-2-dot-1-1-released/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread"><div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'brakeman';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2013/08/21/brakeman-2-dot-1-1-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2013/08/21/brakeman-2-dot-1-1-released/';
+  //var disqus_developer = 1;
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 

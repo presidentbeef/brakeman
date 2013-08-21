@@ -4,13 +4,89 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2013-07-17T10:15:02-07:00</updated>
+  <updated>2013-08-21T15:05:25-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 2.1.1 Released</title>
+    <link href="http://brakemanscanner.org/blog/2013/08/21/brakeman-2-dot-1-1-released/"/>
+    <updated>2013-08-21T12:00:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2013/08/21/brakeman-2-dot-1-1-released</id>
+    <content type="html">&lt;p&gt;This is a small bug fix release. The only expected changes in warnings are for dangerous attributes in &lt;code&gt;attr_accessible&lt;/code&gt;
+and cross site scripting involving model attributes. Some warning fingerprints may change as a result of this update.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 2.1.0&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;More accurate results for model attribute warnings (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/385&quot;&gt;#385&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Do not warn on &lt;code&gt;attr_accessible&lt;/code&gt; using roles (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/372&quot;&gt;#372&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;New warning code for dangerous attributes in &lt;code&gt;attr_accessible&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Fix infinite loop when run as rake task (&lt;a href=&quot;https://github.com/arkadyan&quot;&gt;Matthew Shanley&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Use exit code zero with &lt;code&gt;-z&lt;/code&gt; if all warnings ignored (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/381&quot;&gt;#381&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Respect ignored warnings in rescans (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/382&quot;&gt;#382&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Respect ignored warnings in tabs format reports&lt;/li&gt;
+&lt;li&gt;Ignore dynamic controller names in routes&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;More Accurate Model Matching&lt;/h3&gt;
+
+&lt;p&gt;Model attributes which are reported as user input should now be reported more accurately. For example, instead of reporting &lt;code&gt;Model.find(1)&lt;/code&gt; as user input, the entire attribute will be reported. For example: &lt;code&gt;Model.find(1).name&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;As a side effect, several methods which were already intended to be ignored (such as &lt;code&gt;count&lt;/code&gt;) will actually be ignored for XSS warnings.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/386&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;attr_accessible Check Updates&lt;/h3&gt;
+
+&lt;p&gt;The check for potentially dangerous attributes whitelisted in &lt;code&gt;attr_accessible&lt;/code&gt; has been updated to ignore attributes protected by roles. Additionally, it now has its own warning code to separate it from regular mass assignment warnings.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/388&quot;&gt;warning code change&lt;/a&gt;, &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/384&quot;&gt;role change&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Rake Task Fix&lt;/h3&gt;
+
+&lt;p&gt;The last release included a method named &lt;code&gt;load_dependency&lt;/code&gt; which handles calling &lt;code&gt;require&lt;/code&gt; for optional dependencies. Unfortunately, Rails overrides &lt;code&gt;require&lt;/code&gt; to call its own method called &lt;code&gt;load_dependency&lt;/code&gt;. Rails is loaded when any &lt;code&gt;rake&lt;/code&gt; command is used, so when Brakeman is run with Rake it causes an infinite loop between &lt;code&gt;load_dependency&lt;/code&gt; and &lt;code&gt;require&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/arkadyan&quot;&gt;Matthew Shanley&lt;/a&gt; for reporting the issue and providing a fix.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/375&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Exit Code Fixed When Warnings Ignored&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will now return &lt;code&gt;0&lt;/code&gt; when using &lt;code&gt;-z&lt;/code&gt; and all reported warnings are ignored.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/375&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Ignore Warnings in Rescans&lt;/h3&gt;
+
+&lt;p&gt;Ignored warnings should now be ignored during rescans (for use with &lt;a href=&quot;https://github.com/guard/guard-brakeman&quot;&gt;guard-brakeman&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/383&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Remove Ignored Warnings in Tabs Report&lt;/h3&gt;
+
+&lt;p&gt;Ignoring warnings should now work for those using the Jenkins plugin.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/374&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Ignore Dynamic Controller Name in Routes&lt;/h3&gt;
+
+&lt;p&gt;Instead of completely aborting route processing, dynamic controller names are just ignored.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/379&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Report Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 2.1.0 Released</title>
@@ -1887,19 +1963,6 @@ user.send(method)
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt;!&lt;/p&gt;
 
 &lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman Jenkins Plugin 0.7 Released</title>
-    <link href="http://brakemanscanner.org/blog/2012/03/22/brakeman-jenkins-plugin-0-dot-7-released/"/>
-    <updated>2012-03-22T13:27:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2012/03/22/brakeman-jenkins-plugin-0-dot-7-released</id>
-    <content type="html">&lt;p&gt;The &lt;a href=&quot;http://jenkins-ci.org&quot;&gt;Jenkins&lt;/a&gt;/&lt;a href=&quot;http://hudson-ci.org&quot;&gt;Hudson&lt;/a&gt; plugin which tracks, displays, and alerts on Brakeman warnings has been updated to work with the latest static analysis core plugin. In particular, this means warning thresholds for new warnings will no longer disappear.&lt;/p&gt;
-
-&lt;p&gt;See &lt;a href=&quot;https://wiki.jenkins-ci.org/display/JENKINS/Brakeman+Plugin&quot;&gt;here&lt;/a&gt; for more information about the plugin.&lt;/p&gt;
-
-&lt;p&gt;Thanks to Nick Green for fixing this!&lt;/p&gt;
 </content>
   </entry>
   
