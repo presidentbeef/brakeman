@@ -20,8 +20,9 @@ class Brakeman::CheckModelAttrAccessible < Brakeman::BaseCheck
 
   def run_check
     check_models do |name, model|
-      accessible_attrs = model[:attr_accessible]
-      accessible_attrs.each do |attribute|
+      model[:attr_accessible].each do |attribute|
+        next if role_limited? model, attribute
+
         SUSP_ATTRS.each do |susp_attr, confidence|
             if susp_attr.is_a?(Regexp) and susp_attr =~ attribute.to_s or susp_attr == attribute 
               warn :model => name,    
@@ -37,6 +38,12 @@ class Brakeman::CheckModelAttrAccessible < Brakeman::BaseCheck
     end
   end
 
+  def role_limited? model, attribute
+    role_accessible = model[:options][:role_accessible]
+    return if role_accessible.nil?
+    role_accessible.include? attribute
+  end
+
   def check_models
     tracker.models.each do |name, model|
       if !model[:attr_accessible].nil?
@@ -44,5 +51,4 @@ class Brakeman::CheckModelAttrAccessible < Brakeman::BaseCheck
       end
     end
   end
- 
 end
