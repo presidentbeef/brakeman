@@ -13,7 +13,7 @@ class Rails31Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :model => 3,
-      :template => 22,
+      :template => 23,
       :controller => 4,
       :generic => 72 }
   end
@@ -1042,5 +1042,27 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Potentially\ dangerous\ attribute\ admin\ av/,
       :confidence => 0,
       :relative_path => "app/models/user.rb"
+  end
+
+  def test_wrong_model_attributes_in_haml
+    assert_no_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "8851713f0af477e60090607b814ba68055e4ac1cf19df0628fddd961ff87e763",
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :relative_path => "app/views/other/test_model_in_haml.html.haml"
+  end
+
+  def test_right_model_attribute_in_haml
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "3310ef4a4bde8b120fd5d421565ee416af815404e7c116a8069052e8732589d0",
+      :warning_type => "Cross Site Scripting",
+      :line => 7,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :relative_path => "app/views/other/test_model_in_haml.html.haml"
   end
 end
