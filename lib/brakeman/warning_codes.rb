@@ -59,7 +59,8 @@ module Brakeman::WarningCodes
     :CVE_2013_1855 => 56,
     :CVE_2013_1856 => 57,
     :CVE_2013_1857 => 58,
-    :unsafe_symbol_creation => 59
+    :unsafe_symbol_creation => 59,
+    :dangerous_attr_accessible => 60
   }
 
   def self.code name
