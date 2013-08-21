@@ -72,4 +72,8 @@ class OtherController < ApplicationController
 
     Marshal.restore User.find(1).cool_stored_thing
   end
+
+  def test_model_in_haml
+    @user = User.new
+  end
 end

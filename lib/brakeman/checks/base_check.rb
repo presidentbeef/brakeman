@@ -364,7 +364,11 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       if @safe_input_attributes.include? method
         false
       elsif call? target and not method.to_s[-1,1] == "?"
-        has_immediate_model? target, out
+        if res = has_immediate_model?(target, out)
+          exp
+        else
+          false
+        end
       elsif model_name? target
         exp
       else
@@ -426,28 +430,6 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       klass and @models.include? klass
     else
       false
-    end
-  end
-
-  #Finds entire method call chain where +target+ is a target in the chain
-  def find_chain exp, target
-    return unless sexp? exp
-
-    case exp.node_type
-    when :output, :format
-      find_chain exp.value, target
-    when :call
-      if exp == target or include_target? exp, target
-        return exp
-      end
-    else
-      exp.each do |e|
-        if sexp? e
-          res = find_chain e, target
-          return res if res
-        end
-      end
-      nil
     end
   end
 

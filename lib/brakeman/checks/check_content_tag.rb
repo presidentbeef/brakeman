@@ -107,12 +107,10 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
         :link_path => "content_tag"
 
     elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(arg)
-      method = match[2]
-
-      unless IGNORE_MODEL_METHODS.include? method
+      unless IGNORE_MODEL_METHODS.include? match.method
         add_result result
 
-        if MODEL_METHODS.include? method or method.to_s =~ /^find_by/
+        if likely_model_attribute? match
           confidence = CONFIDENCE[:high]
         else
           confidence = CONFIDENCE[:med]
