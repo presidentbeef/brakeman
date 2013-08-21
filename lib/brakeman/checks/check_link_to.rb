@@ -82,7 +82,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
     return false if IGNORE_MODEL_METHODS.include? method
 
     confidence = CONFIDENCE[:med]
-    confidence = CONFIDENCE[:high] if MODEL_METHODS.include? method or method.to_s =~ /^find_by/
+    confidence = CONFIDENCE[:high] if likely_model_attribute? match
     warn_xss(result, "Unescaped model attribute in link_to", match, confidence)
   end
 
