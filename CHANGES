@@ -1,5 +1,7 @@
 # Unreleased
 
+ * New warning code for dangerous attributes in attr_accessible
+ * More accurate results for model attribute warnings
  * Use exit code zero with `-z` if all warnings ignored
  * Respect ignored warnings in rescans
  * Ignore dynamic controller names in routes
