@@ -388,7 +388,7 @@ module Brakeman::Util
                           Brakeman.load_brakeman_dependency 'highline'
                           ::HighLine.new.terminal_size[0]
                         else
-                          @tracker.options[:message_limit]
+                          @tracker.options[:table_width]
                         end
     lines = str.lines
 
