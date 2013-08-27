@@ -11,9 +11,9 @@ class Brakeman::CheckModelAttrAccessible < Brakeman::BaseCheck
   @description = "Reports models which have dangerous attributes defined under the attr_accessible whitelist."
 
   SUSP_ATTRS = [
-    [/admin/, CONFIDENCE[:high]], # Very dangerous unless some Rails authorization used
-    [/role/, CONFIDENCE[:med]],
-    [/banned/, CONFIDENCE[:med]],
+    [:admin, CONFIDENCE[:high]], # Very dangerous unless some Rails authorization used
+    [:role, CONFIDENCE[:med]],
+    [:banned, CONFIDENCE[:med]],
     [:account_id, CONFIDENCE[:high]],
     [/\S*_id(s?)\z/, CONFIDENCE[:low]] # All other foreign keys have weak/low confidence
   ]
@@ -29,7 +29,7 @@ class Brakeman::CheckModelAttrAccessible < Brakeman::BaseCheck
               :file => model[:file],
               :warning_type => "Mass Assignment",
               :warning_code => :dangerous_attr_accessible,
-              :message => "Potentially dangerous attribute #{attribute} available for mass assignment.",
+              :message => "Potentially dangerous attribute '#{attribute}' available for mass assignment",
               :confidence => confidence
             break # Prevent from matching single attr multiple times
           end

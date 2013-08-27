@@ -217,7 +217,7 @@ class Rails32Tests < Test::Unit::TestCase
     assert_warning :type => :model,
       :warning_code => 60,
       :warning_type => "Mass Assignment",
-      :message => /^Potentially\ dangerous\ attribute\ admin/,
+      :message => /^Potentially\ dangerous\ attribute\ 'admin'/,
       :confidence => 0, #HIGH
       :file => /user\.rb/
   end 
@@ -227,7 +227,7 @@ class Rails32Tests < Test::Unit::TestCase
       :warning_code => 60,
       :fingerprint => "1d6615676c39afae6d749891e45d7351423542b3fe71a6eaf088bf7573e5c4b0",
       :warning_type => "Mass Assignment",
-      :message => /^Potentially\ dangerous\ attribute\ account_/,
+      :message => /^Potentially\ dangerous\ attribute\ 'account_id'/,
       :confidence => 0,
       :relative_path => "app/models/user.rb"
   end 
@@ -236,7 +236,7 @@ class Rails32Tests < Test::Unit::TestCase
     assert_warning :type => :model,
       :warning_code => 60,
       :warning_type => "Mass Assignment",
-      :message => /^Potentially\ dangerous\ attribute\ banned/,
+      :message => /^Potentially\ dangerous\ attribute\ 'banned'/,
       :confidence => 1, #MED
       :file => /account\.rb/
   end 
@@ -245,7 +245,7 @@ class Rails32Tests < Test::Unit::TestCase
     assert_warning :type => :model,
       :warning_code => 60,
       :warning_type => "Mass Assignment",
-      :message => /^Potentially\ dangerous\ attribute\ status_id/,
+      :message => /^Potentially\ dangerous\ attribute\ 'status_id'/,
       :confidence => 2, #LOW
       :file => /user\.rb/
   end 
@@ -253,7 +253,7 @@ class Rails32Tests < Test::Unit::TestCase
   def test_model_attr_accessible_plan_id
     assert_warning :type => :model,
       :warning_type => "Mass Assignment",
-      :message => /^Potentially\ dangerous\ attribute\ plan_id/,
+      :message => /^Potentially\ dangerous\ attribute\ 'plan_id'/,
       :confidence => 2, 
       :file => /account\.rb/
   end 
