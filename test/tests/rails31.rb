@@ -1044,6 +1044,16 @@ class Rails31Tests < Test::Unit::TestCase
       :relative_path => "app/models/user.rb"
   end
 
+  def test_attr_accessible_not_matching_regex
+    assert_no_warning :type => :model,
+      :warning_code => 60,
+      :fingerprint => "e933f99c33bece852891a466b5b0fc629d9f20ba80ff3bbc42adfd239d5a5b48",
+      :warning_type => "Mass Assignment",
+      :message => /^Potentially\ dangerous\ attribute\ blah_admin/,
+      :confidence => 0,
+      :relative_path => "app/models/account.rb"
+  end
+
   def test_wrong_model_attributes_in_haml
     assert_no_warning :type => :template,
       :warning_code => 2,

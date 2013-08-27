@@ -3,4 +3,5 @@ class Account < ActiveRecord::Base
   validates :phone, :format => { :with => /(\d{3})-(\d{3})-(\d{4})/, :on => :create }, :presence => true 
   validates :first_name, :format => /\w+/
   serialize :cc_info #safe from CVE-2013-0277
+  attr_accessible :blah_admin_blah
 end
