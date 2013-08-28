@@ -384,7 +384,9 @@ module Brakeman::Util
   end
 
   def truncate_table str
-    @terminal_width ||= if $stdin && $stdin.tty?
+    @terminal_width ||= if @tracker.options[:table_width]
+                          @tracker.options[:table_width]
+                        elsif $stdin && $stdin.tty?
                           Brakeman.load_brakeman_dependency 'highline'
                           ::HighLine.new.terminal_size[0]
                         else
