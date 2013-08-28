@@ -177,6 +177,10 @@ module Brakeman::Options
           options[:message_limit] = limit.to_i
         end
 
+        opts.on "--table-width WIDTH", "Limit table width in text report" do |width|
+          options[:table_width] = width.to_i
+        end
+
         opts.on "-o", "--output FILE", "Specify files for output. Defaults to stdout. Multiple '-o's allowed" do |file|
           options[:output_files] ||= []
           options[:output_files].push(file)
