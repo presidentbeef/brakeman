@@ -41,7 +41,6 @@ module Brakeman
   #  * :safe_methods - array of methods to consider safe
   #  * :skip_libs - do not process lib/ directory (default: false)
   #  * :skip_checks - checks not to run (run all if not specified)
-  #  * :table_width - limit width of table in text report
   #  * :absolute_paths - show absolute path of each file (default: false)
   #  * :summary_only - only output summary section of report
   #                    (does not apply to tabs format)
@@ -127,7 +126,6 @@ module Brakeman
       :ignore_redirect_to_model => true,
       :ignore_model_output => false,
       :message_limit => 100,
-      :table_width => 80,
       :parallel_checks => true,
       :relative_path => false,
       :report_progress => true,
