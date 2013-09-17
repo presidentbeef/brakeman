@@ -1,0 +1,7 @@
+<%= raw User.find(params[:id]).to_json %>
+
+<%= raw inside_something(User.find(params[:id]).to_json) %>
+
+<%= raw call_something(params).to_json %>
+
+<%= raw params[:stuff].to_json %>
