@@ -1,5 +1,6 @@
-# Unreleased
+# 2.1.2
 
+ * Do not attempt to load custom Haml filters
  * Do not warn about `to_json` XSS in Rails 4
  * Add --table-width option to set width of text reports (ssendev)
  * Remove fuzzy matching on dangerous attr_accessible values
