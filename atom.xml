@@ -4,13 +4,62 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2013-08-21T15:05:25-07:00</updated>
+  <updated>2013-09-18T09:14:26-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 2.1.2 Released - Important Security Update</title>
+    <link href="http://brakemanscanner.org/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/"/>
+    <updated>2013-09-18T01:38:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update</id>
+    <content type="html">&lt;p&gt;&lt;em&gt;Important&lt;/em&gt;: Contrary to the &quot;Brakeman Philosophy,&quot; there is one situation in which Brakeman attempts to load files from an application. This is a security risk since the code in the files would be executed (typical &lt;code&gt;require&lt;/code&gt; behavior). Note that this is only a real problem if running Brakeman against code outside one's control. Since most users are scanning their own code, this should not be a concern for the majority of Brakeman users.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 2.1.1:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Do not attempt to load custom Haml filters&lt;/li&gt;
+&lt;li&gt;Do not warn about &lt;code&gt;to_json&lt;/code&gt; XSS in Rails 4&lt;/li&gt;
+&lt;li&gt;Remove fuzzy matching on dangerous &lt;code&gt;attr_accessible&lt;/code&gt; values&lt;/li&gt;
+&lt;li&gt;Add --table-width option to set width of text reports (&lt;a href=&quot;https://github.com/ssendev&quot;&gt;ssendev&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Custom Haml Filters&lt;/h3&gt;
+
+&lt;p&gt;Brakeman no longer attempts to load custom Haml filters. This was a hack (from nearly three years ago) to help compile some Haml templates. It was recently noted that this introduces a security risk when scanning untrusted code.&lt;/p&gt;
+
+&lt;p&gt;For now, custom Haml filters will cause a Brakeman error and the Haml templates using them will not be scanned.&lt;/p&gt;
+
+&lt;h3&gt;JSON Output in Rails 4&lt;/h3&gt;
+
+&lt;p&gt;As of Rails 4, the output of &lt;code&gt;to_json&lt;/code&gt; is now safe by default. Brakeman should no longer warn about cross-site scripting with &lt;code&gt;to_json&lt;/code&gt; in Rails 4 applications.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/392&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Less Fuzzy Mass Assignment&lt;/h3&gt;
+
+&lt;p&gt;Brakeman no longer uses fuzzy matching for potentially dangerous model attributes allowed for mass assignment, such as any value containing &lt;code&gt;admin&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/390&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Text Report Width Option&lt;/h3&gt;
+
+&lt;p&gt;The width of text reports can now be controlled with the &lt;code&gt;--table-width&lt;/code&gt; option. For example, this can be useful when capturing text output to a file.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/387&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 2.1.1 Released</title>
@@ -1902,67 +1951,6 @@ user.send(method)
 &lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
 
 &lt;p&gt;And don't forget to check out the Brakeman talk at &lt;a href=&quot;http://railsconf2012.com/sessions/44&quot;&gt;RailsConf&lt;/a&gt; later this month.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 1.5.2 Released - Important Fixes</title>
-    <link href="http://brakemanscanner.org/blog/2012/03/22/brakeman-1-dot-5-2-released-important-fixes/"/>
-    <updated>2012-03-22T13:34:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2012/03/22/brakeman-1-dot-5-2-released-important-fixes</id>
-    <content type="html">&lt;p&gt;This is update includes some important fixes. All users of the &lt;code&gt;rails_xss&lt;/code&gt; plugin are particularly encouraged to upgrade.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 1.5.1:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Fix handling of views when using &lt;code&gt;rails_xss&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Fix rescanning of lib files (Neil Matatall)&lt;/li&gt;
-&lt;li&gt;Fix &lt;code&gt;link_to&lt;/code&gt; checks for Rails 2.0 and 2.3&lt;/li&gt;
-&lt;li&gt;Revert to &lt;code&gt;ruby_parser&lt;/code&gt; 2.3.1 for Ruby 1.8 parsing&lt;/li&gt;
-&lt;li&gt;Only warn on user input in render paths&lt;/li&gt;
-&lt;li&gt;Output stack trace on interrupt when debugging&lt;/li&gt;
-&lt;li&gt;Ignore user input in if statement conditions&lt;/li&gt;
-&lt;li&gt;Fix --skip-files option with Ruby 1.8&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;Views with rails_xss&lt;/h3&gt;
-
-&lt;p&gt;Some previous changes to make sure Brakeman was processing ERB views the same way as the &lt;code&gt;rails_xss&lt;/code&gt; plugin unfortunately broke the processing of those views.&lt;/p&gt;
-
-&lt;p&gt;These changes caused Brakeman to not report &lt;em&gt;any&lt;/em&gt; output from ERB views when the &lt;code&gt;rails_xss&lt;/code&gt; plugin was in use, hiding any XSS vulnerabilities in those views.&lt;/p&gt;
-
-&lt;p&gt;This now fixed, so if you are using the &lt;code&gt;rails_xss&lt;/code&gt; plugin, it is highly recommended to upgrade.&lt;/p&gt;
-
-&lt;h3&gt;Rescanning lib/ Files&lt;/h3&gt;
-
-&lt;p&gt;Rescanning changed files in the &lt;code&gt;lib&lt;/code&gt; directory was broken, but Neil fixed it!&lt;/p&gt;
-
-&lt;h3&gt;link_to Checks&lt;/h3&gt;
-
-&lt;p&gt;In Rails 2.3, the URL is escaped, but not the body of the link. In Rails 2.0, neither argument is escaped.&lt;/p&gt;
-
-&lt;p&gt;In this release, the check for XSS in &lt;code&gt;link_to&lt;/code&gt; has been updated to handle &lt;code&gt;link_to&lt;/code&gt; with blocks and to warn in Rails 2.0.x if any user input is used as an argument.&lt;/p&gt;
-
-&lt;h3&gt;Revert to ruby_parser for Ruby 1.8&lt;/h3&gt;
-
-&lt;p&gt;Brakeman has been using a vendored version of &lt;a href=&quot;https://github.com/seattlerb/ruby_parser&quot;&gt;ruby_parser&lt;/a&gt; with some updates to Ruby 1.9 syntax parsing. Unfortunately, that version also introduced some regressions for parsing Ruby 1.8 syntax.&lt;/p&gt;
-
-&lt;p&gt;To handle this, Brakeman will now only use the vendored version for 1.9 parsing, but the regular gem version for 1.8 syntax parsing. This should fix some parse errors people are seeing for Ruby 1.8 apps.&lt;/p&gt;
-
-&lt;h3&gt;Dynamic Render Path Updates&lt;/h3&gt;
-
-&lt;p&gt;The check for dynamic render paths was not very good, but it is better now. &quot;Dynamic Render Path&quot; warnings should only be raised when user input is actually used to determine what view, partial, or file to render.&lt;/p&gt;
-
-&lt;h3&gt;Stacktrace Output&lt;/h3&gt;
-
-&lt;p&gt;Brakeman will now output a stacktrace if interrupted while running with the &lt;code&gt;-d&lt;/code&gt; option. This is mostly helpful when Brakeman appears to &quot;hang&quot;.&lt;/p&gt;
-
-&lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt;!&lt;/p&gt;
-
-&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
 </content>
   </entry>
   

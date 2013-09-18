@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Brakeman 1.9.1 Released</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman 2.1.2 Released - Important Security Update</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/blog/2013/01/18/brakeman-1-dot-9-1-released/"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -104,7 +104,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 1.9.1 Released</h1>
+      <h1 class="entry-title">Brakeman 2.1.2 Released - Important Security Update</h1>
     
     
       <p class="meta">
@@ -112,7 +112,7 @@
 
 
 
-<time datetime="2013-01-18 17:36:00 -0800" pubdate  updated >Jan 18<span>th</span>, 2013</time>
+<time datetime="2013-09-18 01:38:00 -0700" pubdate  updated >Sep 18<span>th</span>, 2013</time>
 
 
 </p>
@@ -120,76 +120,43 @@
   </header>
 
 
-<div class="entry-content"><p>This released was forced due to messed up dependencies with Brakeman 1.9.0 and Ruby2Ruby - my fault entirely! As such, this release does not match the roadmap for 1.9.1, which will be changed to 1.9.2.</p>
+<div class="entry-content"><p><em>Important</em>: Contrary to the &#8220;Brakeman Philosophy,&#8221; there is one situation in which Brakeman attempts to load files from an application. This is a security risk since the code in the files would be executed (typical <code>require</code> behavior). Note that this is only a real problem if running Brakeman against code outside one&#8217;s control. Since most users are scanning their own code, this should not be a concern for the majority of Brakeman users.</p>
 
-<p><em>Changes since 1.9.0</em>:</p>
+<p><em>Changes since 2.1.1:</em></p>
 
 <ul>
-<li>Add check for CVE-2012-5664 - SQL Injection</li>
-<li>Add check for CVE-2013-0155 - SQL Injection</li>
-<li>Add check for CVE-2013-0156 - Remote Code Execution</li>
-<li>Add check for unsafe <code>YAML.load</code></li>
-<li>Update to RubyParser 3.1.1 (neersighted)</li>
-<li>Remove ActiveSupport dependency (Neil Matatall)</li>
-<li>Do not warn on arrays passed to <code>link_to</code> (Neil Matatall) (<a href="https://github.com/presidentbeef/brakeman/issues/232">#232</a>)</li>
-<li>Warn on secret tokens (<a href="https://github.com/presidentbeef/brakeman/issues/200">#200</a>)</li>
-<li>Warn on more mass assignment methods (<a href="https://github.com/presidentbeef/brakeman/issues/223">#223</a>)</li>
+<li>Do not attempt to load custom Haml filters</li>
+<li>Do not warn about <code>to_json</code> XSS in Rails 4</li>
+<li>Remove fuzzy matching on dangerous <code>attr_accessible</code> values</li>
+<li>Add &#8211;table-width option to set width of text reports (<a href="https://github.com/ssendev">ssendev</a>)</li>
 </ul>
 
 
-<h3>CVE-2012-5664 - SQL Injection</h3>
+<h3>Custom Haml Filters</h3>
 
-<p><a href="https://groups.google.com/d/topic/rubyonrails-security/DCNTNp_qjFM/discussion">CVE-2012-5664</a> is a vulnerability Rails&#8217; dynamic finders. While dynamic finders (such as <code>User.find_by_name</code>) appear to take a single argument, they also accept a hash options which can be used to modify the SQL query. Normally the hash of options would be the second argument, but it can also be the first. If an application passes in user code as the first argument, it will be interpreted as the options hash, leading to SQL injection.</p>
+<p>Brakeman no longer attempts to load custom Haml filters. This was a hack (from nearly three years ago) to help compile some Haml templates. It was recently noted that this introduces a security risk when scanning untrusted code.</p>
 
-<p>The provided fix is to only accept the hash if the dynamic finder is called with the proper number of arguments. A workaround is to always cast input to dynamic finders.</p>
+<p>For now, custom Haml filters will cause a Brakeman error and the Haml templates using them will not be scanned.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/228">changes</a>)</p>
+<h3>JSON Output in Rails 4</h3>
 
-<h3>CVE-2013-0155 - SQL Injection</h3>
+<p>As of Rails 4, the output of <code>to_json</code> is now safe by default. Brakeman should no longer warn about cross-site scripting with <code>to_json</code> in Rails 4 applications.</p>
 
-<p><a href="https://groups.google.com/d/topic/rubyonrails-security/c7jT-EeN9eI/discussion">CVE-2013-0155</a> is a SQL vulnerability where certain JSON input can cause <code>find</code> methods to add <code>NULL</code> as a valid value.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/392">changes</a>)</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/239">changes</a>)</p>
+<h3>Less Fuzzy Mass Assignment</h3>
 
-<h3>CVE-2013-0156 - Remote Code Execution</h3>
+<p>Brakeman no longer uses fuzzy matching for potentially dangerous model attributes allowed for mass assignment, such as any value containing <code>admin</code>.</p>
 
-<p><a href="https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion">CVE-2013-0156</a> is the worst Rails vulnerability in recent memory. It allows attackers to easily execute arbitrary code on any Rails application.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/390">changes</a>)</p>
 
-<p>Besides upgrading Rails, there are workarounds for this issue: disable XML request parsing or disable YAML/symbol types inside XML requests.</p>
+<h3>Text Report Width Option</h3>
 
-<p>Exploits for this vulnerability are easily available and already in use in the wild. Please upgrade, patch, or use a workaround.</p>
+<p>The width of text reports can now be controlled with the <code>--table-width</code> option. For example, this can be useful when capturing text output to a file.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/239">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/387">changes</a>)</p>
 
-<h3>Check for <code>YAML.load</code></h3>
-
-<p>In light of <a href="https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion">CVE-2013-0156</a>, Brakeman will now warn on any uses of <code>YAML.load</code> with user input. Do not load arbitrary YAML in applications!</p>
-
-<h3>Dependency Changes</h3>
-
-<p>Brakeman now uses the latest RubyParser and Ruby2Ruby versions.</p>
-
-<p>Thanks to Neil, Brakeman no longer depends on any version of ActiveSupport or i18n.</p>
-
-<h3>Namespaced URLs in <code>link_to</code></h3>
-
-<p>Brakeman will no longer warn on array arguments to <code>link_to</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/233">changes</a>)</p>
-
-<h3>Secret Tokens</h3>
-
-<p>Secret tokens stored in source control are bad! Doubly bad if the source code is available publicly. Anyone with access to an application&#8217;s secret token can generate any session cookies they would like. See <a href="http://phenoelit.org/blog/archives/2012/12/21/let_me_github_that_for_you/index.html">this post</a> for details.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/227">changes</a>)</p>
-
-<h3>More Mass Assignment</h3>
-
-<p>Bryan Helmkamp pointed out more Rails methods which perform mass assignment. The following methods have been added: <code>first_or_create</code>, <code>first_or_create!</code>, <code>first_or_initialize!</code>, <code>assign_attributes</code>, and <code>update</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/234">changes</a>)</p>
-
-<h3>Report Issues</h3>
+<h3>Reporting Issues</h3>
 
 <p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
 
@@ -209,7 +176,7 @@
 
 
 
-<time datetime="2013-01-18 17:36:00 -0800" pubdate  updated >Jan 18<span>th</span>, 2013</time>
+<time datetime="2013-09-18 01:38:00 -0700" pubdate  updated >Sep 18<span>th</span>, 2013</time>
 
 
 
@@ -220,7 +187,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2013/01/18/brakeman-1-dot-9-1-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2013/01/18/brakeman-1-dot-9-1-released/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/" >Tweet</a>
   
   
   <g:plusone size="medium"></g:plusone>
@@ -236,8 +203,8 @@
     <div id="disqus_thread"><div id="disqus_thread"></div>
 <script type="text/javascript">
   var disqus_shortname = 'brakeman';
-  var disqus_identifier = 'http://brakemanscanner.org/blog/2013/01/18/brakeman-1-dot-9-1-released/';
-  var disqus_url = 'http://brakemanscanner.org/blog/2013/01/18/brakeman-1-dot-9-1-released/';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/';
   //var disqus_developer = 1;
   (function() {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

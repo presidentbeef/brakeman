@@ -165,8 +165,14 @@
         <lastmod>2013-08-21T15:05:22-07:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://brakemanscanner.org/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/
+        </loc>
+        <lastmod>2013-09-18T09:14:15-07:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/blog/archives/</loc>
-        <lastmod>2013-08-21T15:05:22-07:00</lastmod>
+        <lastmod>2013-09-18T09:14:15-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/contact/</loc>
@@ -402,6 +408,6 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/</loc>
-        <lastmod>2013-08-21T15:05:22-07:00</lastmod>
+        <lastmod>2013-09-18T09:14:15-07:00</lastmod>
     </url>
 </urlset>
