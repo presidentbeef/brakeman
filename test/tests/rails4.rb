@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 0,
-      :generic => 1
+      :generic => 3
     }
   end
 
@@ -66,5 +66,26 @@ class Rails4Tests < Test::Unit::TestCase
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
       :relative_path => "app/views/users/index.html.erb"
+  end
+
+  def test_information_disclosure_local_request_config
+    assert_warning :type => :warning,
+      :warning_code => 61,
+      :fingerprint => "fd19ecddf78b117041a99cac38a3277913a1fa061367963dd7df3843d79167dd",
+      :warning_type => "Information Disclosure",
+      :message => /^Detailed\ exceptions\ are\ enabled\ in\ produ/,
+      :confidence => 0,
+      :relative_path => nil
+  end
+
+  def test_information_disclosure_detailed_exceptions_override
+    assert_warning :type => :warning,
+      :warning_code => 62,
+      :fingerprint => "c1c1c512feca03b77e560939098efabbc2ec9279ef66f75bc63a84f815b54ec2",
+      :warning_type => "Information Disclosure",
+      :line => 6,
+      :message => /^Detailed\ exceptions\ may\ be\ enabled\ in\ 's/,
+      :confidence => 0,
+      :relative_path => "app/controllers/application_controller.rb"
   end
 end
