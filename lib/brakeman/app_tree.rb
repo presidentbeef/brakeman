@@ -66,7 +66,7 @@ module Brakeman
     end
 
     def layout_exists?(name)
-      pattern = "#{@root}/app/views/layouts/#{name}.html.{erb,haml,slim}"
+      pattern = "#{@root}/{engines/*/,}app/views/layouts/#{name}.html.{erb,haml,slim}"
       !Dir.glob(pattern).empty?
     end
 
@@ -77,7 +77,7 @@ module Brakeman
   private
 
     def find_paths(directory, extensions = "*.rb")
-      pattern = @root + "/#{directory}/**/#{extensions}"
+      pattern = @root + "/{engines/*/,}#{directory}/**/#{extensions}"
 
       select_files(Dir.glob(pattern).sort)
     end
