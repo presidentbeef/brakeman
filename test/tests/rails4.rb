@@ -71,11 +71,11 @@ class Rails4Tests < Test::Unit::TestCase
   def test_information_disclosure_local_request_config
     assert_warning :type => :warning,
       :warning_code => 61,
-      :fingerprint => "fd19ecddf78b117041a99cac38a3277913a1fa061367963dd7df3843d79167dd",
+      :fingerprint => "081f5d87a244b41d3cf1d5994cb792d2cec639cd70e4e306ffe1eb8abf0f32f7",
       :warning_type => "Information Disclosure",
       :message => /^Detailed\ exceptions\ are\ enabled\ in\ produ/,
       :confidence => 0,
-      :relative_path => nil
+      :relative_path => "config/environments/production.rb"
   end
 
   def test_information_disclosure_detailed_exceptions_override
