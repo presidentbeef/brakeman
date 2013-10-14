@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 23,
       :controller => 4,
-      :generic => 72 }
+      :generic => 73 }
   end
 
   def test_without_protection
@@ -1074,5 +1074,16 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Unescaped\ model\ attribute/,
       :confidence => 0,
       :relative_path => "app/views/other/test_model_in_haml.html.haml"
+  end
+
+  def test_information_disclosure_detailed_exceptions_override
+    assert_warning :type => :warning,
+      :warning_code => 62,
+      :fingerprint => "16f60330426df3603595f5692c7b0916e38c8674a214fef45d7acf248a8db6b3",
+      :warning_type => "Information Disclosure",
+      :line => 29,
+      :message => /^Detailed\ exceptions\ may\ be\ enabled\ in\ 's/,
+      :confidence => 1,
+      :relative_path => "app/controllers/admin_controller.rb"
   end
 end

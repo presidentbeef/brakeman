@@ -25,4 +25,8 @@ class AdminController < ApplicationController
       username == "foo" && password == correct_password
     end
   end
+
+  def show_detailed_exceptions?
+    yeah_sure_they_are_an_admin_right? current_user
+  end
 end
