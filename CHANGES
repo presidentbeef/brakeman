@@ -1,3 +1,9 @@
+# Unreleased
+
+ * Ignore redirects to models using friendly_id (AJ Ostrow) 
+ * Support scanning Rails engines (Geoffrey Hichborn)
+ * Add check for detailed exceptions in production
+
 # 2.1.2
 
  * Do not attempt to load custom Haml filters
