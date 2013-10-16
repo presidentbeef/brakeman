@@ -107,6 +107,78 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/">Brakeman 2.1.2 Released - Important Security Update</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2013-09-18 01:38:00 -0700" pubdate  updated >Sep 18<span>th</span>, 2013</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>Important</em>: Contrary to the &#8220;Brakeman Philosophy,&#8221; there is one situation in which Brakeman attempts to load files from an application. This is a security risk since the code in the files would be executed (typical <code>require</code> behavior). Note that this is only a real problem if running Brakeman against code outside one&#8217;s control. Since most users are scanning their own code, this should not be a concern for the majority of Brakeman users.</p>
+
+<p><em>Changes since 2.1.1:</em></p>
+
+<ul>
+<li>Do not attempt to load custom Haml filters</li>
+<li>Do not warn about <code>to_json</code> XSS in Rails 4</li>
+<li>Remove fuzzy matching on dangerous <code>attr_accessible</code> values</li>
+<li>Add &#8211;table-width option to set width of text reports (<a href="https://github.com/ssendev">ssendev</a>)</li>
+</ul>
+
+
+<h3>Custom Haml Filters</h3>
+
+<p>Brakeman no longer attempts to load custom Haml filters. This was a hack (from nearly three years ago) to help compile some Haml templates. It was recently noted that this introduces a security risk when scanning untrusted code.</p>
+
+<p>For now, custom Haml filters will cause a Brakeman error and the Haml templates using them will not be scanned.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/commit/8a6ae98df3039bf5f3d7cc0852efb1006362f143#L1L3">changes</a>)</p>
+
+<h3>JSON Output in Rails 4</h3>
+
+<p>As of Rails 4, the output of <code>to_json</code> is now safe by default. Brakeman should no longer warn about cross-site scripting with <code>to_json</code> in Rails 4 applications.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/392">changes</a>)</p>
+
+<h3>Less Fuzzy Mass Assignment</h3>
+
+<p>Brakeman no longer uses fuzzy matching for potentially dangerous model attributes allowed for mass assignment, such as any value containing <code>admin</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/390">changes</a>)</p>
+
+<h3>Text Report Width Option</h3>
+
+<p>The width of text reports can now be controlled with the <code>--table-width</code> option. For example, this can be useful when capturing text output to a file.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/387">changes</a>)</p>
+
+<h3>Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2013/08/21/brakeman-2-dot-1-1-released/">Brakeman 2.1.1 Released</a></h1>
     
     
@@ -1371,128 +1443,6 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/11/13/brakeman-1-dot-8-3-released/">Brakeman 1.8.3 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-11-13 09:20:00 -0800" pubdate  updated >Nov 13<span>th</span>, 2012</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is primarily a false positive reduction release. One major change is the change in dependency from the <code>json_pure</code> gem to <code>multi_json</code>.</p>
-
-<p><em>Changes since 1.8.2</em>:</p>
-
-<ul>
-<li>Use <code>multi_json</code> gem for better harmony (<a href="https://github.com/presidentbeef/brakeman/issues/164">#164</a>)</li>
-<li>Performance improvement for call indexing</li>
-<li>Fix issue with processing HAML files (<a href="https://github.com/presidentbeef/brakeman/issues/168">#168</a>)</li>
-<li>Handle pre-release versions when processing <code>Gemfile.lock</code> (<a href="https://github.com/presidentbeef/brakeman/issues/174">#174</a>)</li>
-<li>Only check first argument of <code>redirect_to</code> (<a href="https://github.com/presidentbeef/brakeman/issues/98">#98</a>)</li>
-<li>Fix false positives from <code>Model.arel_table</code> accesses</li>
-<li>Fix false positives on redirects to models decorated with Draper gem (<a href="https://github.com/presidentbeef/brakeman/issues/172">#172</a>)</li>
-<li>Fix false positive on redirect to model association (<a href="https://github.com/presidentbeef/brakeman/issues/111">#111</a>)</li>
-<li>Fix false positive on <code>YAML.load</code> (<a href="https://github.com/presidentbeef/brakeman/issues/142">#142</a>)</li>
-<li>Fix false positive XSS on any <code>to_i</code> output</li>
-<li>Fix error on Rails 2 named routes with no args</li>
-<li>Fix error in rescan of mixins with symbols in method name</li>
-<li>Do not rescan non-Ruby files in config/</li>
-</ul>
-
-
-<h3>Change to MultiJSON</h3>
-
-<p>Brakeman now depends on the <a href="http://rdoc.info/github/intridea/multi_json">multijson</a> gem instead of <code>json_pure</code>. This should make it easier for people who include Brakeman as a dependency.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/166">changes</a>)</p>
-
-<h3>Faster Call Indexing</h3>
-
-<p>Dumb code in the <code>CallIndex</code> was causing call indexing to be slow on some large applications. This should now be faster and require less memory!</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/180">changes</a>)</p>
-
-<h3>Fix HAML Processing</h3>
-
-<p>Some HAML files were causing Brakeman&#8217;s alias processing to slow to a crawl. This was due to the template code (sometimes) directly appending to the output variable via <code>&lt;&lt;</code>. Since Brakeman attempts to treat targets of <code>&lt;&lt;</code> as arrays, Brakeman was generating large data structures each time <code>&lt;&lt;</code> was encountered.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/170">changes</a>]</p>
-
-<h3>Handle Pre-release Versions</h3>
-
-<p>When a <code>Gemfile.lock</code> file is present in a Rails application, Brakeman uses it to determine the version of Rails in use. Previous versions did not accept pre-release version numbers (like <code>3.1.2.rc1</code>), leading to version inappropriate warnings.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/176">changes</a>)</p>
-
-<h3>Redirect False Positives</h3>
-
-<p>Several false positives related to redirects have been fixed, and the scope of the redirect check is somewhat reduced.</p>
-
-<p>Calls beginning with <code>Model.arel_table</code> should no longer be treated as user input (in any context).</p>
-
-<p>Model instances returned by the <code>decorate</code> method in the <a href="https://github.com/drapergem/draper">Draper</a> gem are considered safe.</p>
-
-<p>Redirects to model associations (e.g, <code>belongs_to :account</code>) are considered safe.</p>
-
-<p>Redirects to method calls with safe values should no longer warn. For example:</p>
-
-<pre><code>redirect_to blah(User.first) #No warning
-</code></pre>
-
-<p>Additionally, only the first argument of <code>redirect_to</code> will be checked for user input.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/177">changes</a>)</p>
-
-<h3>YAML False Positive</h3>
-
-<p>File access warnings for YAML calls have been reduced to only those calls which actually access files.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/178">changes</a>)</p>
-
-<h3>Integer Output False Positives</h3>
-
-<p>Calls to <code>to_i</code> should not trigger XSS warnings.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/179">changes</a>)</p>
-
-<h3>Errors on Named Routes</h3>
-
-<p>Rails 2 named routes with no arguments were causing errors, which have now been fixed.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/181">changes</a>)</p>
-
-<h3>Future Work</h3>
-
-<p>Now that RubyParser 3.x is officially released, work is underway to use the new version. This will increase Ruby 1.9 syntax compatibility and remove the need to parse applications with the same Ruby version as the application uses. Additionally, it will allow us to get rid of the vendored version of RubyParser that Brakeman uses for Ruby 1.9. Unfortunately, RubyParser 3.x introduces a lot of incompatibilities and upgrading requires a significant amount of effort.</p>
-
-<p>Another exciting feature in development is limited interprocedural analysis. Brakeman will be able to handle simple things like calls to helper methods in controllers which set instance variables or return user input. This should help with the &#8220;obvious&#8221; vulnerabilities that Brakeman often misses.</p>
-
-<h3>Report Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1543,6 +1493,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/">Brakeman 2.1.2 Released - Important Security Update</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/08/21/brakeman-2-dot-1-1-released/">Brakeman 2.1.1 Released</a>
       </li>
     
@@ -1556,10 +1510,6 @@ end
     
       <li class="post">
         <a href="/blog/2013/04/05/brakeman-1-dot-9-5-released/">Brakeman 1.9.5 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/03/18/brakeman-1-dot-9-4-released/">Brakeman 1.9.4 Released</a>
       </li>
     
   </ul>

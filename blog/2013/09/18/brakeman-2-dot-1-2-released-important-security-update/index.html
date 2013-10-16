@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Brakeman 1.5.0 Released</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman 2.1.2 Released - Important Security Update</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/blog/2012/03/01/brakeman-1-dot-5-0-released.markdown/"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -104,7 +104,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 1.5.0 Released</h1>
+      <h1 class="entry-title">Brakeman 2.1.2 Released - Important Security Update</h1>
     
     
       <p class="meta">
@@ -112,7 +112,7 @@
 
 
 
-<time datetime="2012-03-01 20:23:00 -0800" pubdate  updated >Mar 1<span>st</span>, 2012</time>
+<time datetime="2013-09-18 01:38:00 -0700" pubdate  updated >Sep 18<span>th</span>, 2013</time>
 
 
 </p>
@@ -120,75 +120,49 @@
   </header>
 
 
-<div class="entry-content">A release was forced today because two new Rails vulnerabilities were reported (the first since November):
+<div class="entry-content"><p><em>Important</em>: Contrary to the &#8220;Brakeman Philosophy,&#8221; there is one situation in which Brakeman attempts to load files from an application. This is a security risk since the code in the files would be executed (typical <code>require</code> behavior). Note that this is only a real problem if running Brakeman against code outside one&#8217;s control. Since most users are scanning their own code, this should not be a concern for the majority of Brakeman users.</p>
 
- * [Manual options are not escaped in select()](http://groups.google.com/group/rubyonrails-security/browse_thread/thread/edd28f1e3d04e913)
- * [Some operations on SafeBuffer mistakenly return strings marked as html_safe](http://groups.google.com/group/rubyonrails-security/browse_thread/thread/9da0c515a6c4664)
+<p><em>Changes since 2.1.1:</em></p>
 
-This release includes checks for these two vulnerabilities.
+<ul>
+<li>Do not attempt to load custom Haml filters</li>
+<li>Do not warn about <code>to_json</code> XSS in Rails 4</li>
+<li>Remove fuzzy matching on dangerous <code>attr_accessible</code> values</li>
+<li>Add &#8211;table-width option to set width of text reports (<a href="https://github.com/ssendev">ssendev</a>)</li>
+</ul>
 
-There is also a new check for skipping CSRF token verification, and some other changes which may result in fewer or more vulnerabilities being reported.
 
-_Changes since 1.4.0:_
+<h3>Custom Haml Filters</h3>
 
- * Add version check for SafeBuffer vulnerability
- * Add check for select vulnerability in Rails 3
- * select() is no longer considered safe in Rails 2
- * Add check for skipping CSRF protection with a blacklist
- * Add JSON report format
- * Model#id should not be considered XSS
- * Standardize methods to check for SQL injection
- * Fix Rails 2 route parsing issue with nested routes
+<p>Brakeman no longer attempts to load custom Haml filters. This was a hack (from nearly three years ago) to help compile some Haml templates. It was recently noted that this introduces a security risk when scanning untrusted code.</p>
 
-### Check for SafeBuffer Vulnerability
+<p>For now, custom Haml filters will cause a Brakeman error and the Haml templates using them will not be scanned.</p>
 
-A new vulnerability was reported that affects strings which are marked as `html_safe` and then modified in some way. For some operations, the new, modified string will still be marked as `html_safe`. Full details [here](http://groups.google.com/group/rubyonrails-security/browse_thread/thread/edd28f1e3d04e913).
+<p>(<a href="https://github.com/presidentbeef/brakeman/commit/8a6ae98df3039bf5f3d7cc0852efb1006362f143#L1L3">changes</a>)</p>
 
-For this vulnerability, Brakeman only does a version check and reports if an application is used a vulnerable version of Rails. It only reports on Rails 3 applications, since Rails 3 introduced the concept of SafeBuffers.
+<h3>JSON Output in Rails 4</h3>
 
-### Check for select Helper Vulnerability
+<p>As of Rails 4, the output of <code>to_json</code> is now safe by default. Brakeman should no longer warn about cross-site scripting with <code>to_json</code> in Rails 4 applications.</p>
 
-Another vulnerability was reported today in the `select` form helper. Option tags built by hand (interpolating values into `<option></option>`) will not be escaped by `select`. Full details [here](http://groups.google.com/group/rubyonrails-security/browse_thread/thread/9da0c515a6c4664).
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/392">changes</a>)</p>
 
-For Rails 3 applications, Brakeman checks for uses of `select` which have user input in the `options` argument. This check may be refined in the future.
+<h3>Less Fuzzy Mass Assignment</h3>
 
-For Rails 2, Brakeman no longer considers `select` a safe method when checking for cross site scripting.
+<p>Brakeman no longer uses fuzzy matching for potentially dangerous model attributes allowed for mass assignment, such as any value containing <code>admin</code>.</p>
 
-### Check for CSRF Filter Skipping
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/390">changes</a>)</p>
 
-When cross site request forgery protection is enabled, a `before_filter` is added called `verify_authenticity_token`. This filter checks that actions called responding to a `POST` have a correct authenticity token from the client. Since this is a regular `before_filter`, it can be skipped using `skip_before_filter`.
+<h3>Text Report Width Option</h3>
 
-If `skip_before_filter` is called using an `:except` option, then the default for the controller becomes NOT checking for an authenticity token:
+<p>The width of text reports can now be controlled with the <code>--table-width</code> option. For example, this can be useful when capturing text output to a file.</p>
 
-    skip_before_filter :verify_authenticity_token, :except => [:create, :delete]
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/387">changes</a>)</p>
 
-It is recommended to use `:only` if skipping this filter is actually necessary. This way, any new actions added later will automatically fall under the CSRF protection.
+<h3>Reporting Issues</h3>
 
-This check may be extended in the future to other important filters.
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
 
-### JSON Report Format
-
-While the code for outputing JSON was in the 1.4.0 release, it was not actually added as a proper output format! This has been rectified.
-
-`-f json` or `-o report.json` will now produce JSON reports.
-
-The information contained in these reports may change in the future, although that should only be adding more information.
-
-### SQL Methods
-
-The code for finding SQL methods to check for SQL injection was a little messed up. Depending on how the method was called, different sets of methods were considered dangerous.
-
-This has been changed for better consistency and coverage. This means reports may include new SQL injections, so keep an eye out.
-
-### Rails 2 Route Parsing Fix
-
-There was a bug in the code which determined if a method was being called on `map`, which caused Brakeman to think strange methods were route definitions (for example, `require`). This has been fixed.
-
-### Report Problems!
-
-Always [report problems](https://github.com/presidentbeef/brakeman/issues) encountered when running Brakeman.
-
-Don&#8217;t forget to join the [mailing list](http://librelist.com/browser/brakeman/) and/or follow [@Brakeman](https://twitter.com/brakeman) on Twitter.
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
 </div>
 
 
@@ -204,7 +178,7 @@ Don&#8217;t forget to join the [mailing list](http://librelist.com/browser/brake
 
 
 
-<time datetime="2012-03-01 20:23:00 -0800" pubdate  updated >Mar 1<span>st</span>, 2012</time>
+<time datetime="2013-09-18 01:38:00 -0700" pubdate  updated >Sep 18<span>th</span>, 2013</time>
 
 
 
@@ -215,7 +189,7 @@ Don&#8217;t forget to join the [mailing list](http://librelist.com/browser/brake
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2012/03/01/brakeman-1-dot-5-0-released.markdown/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2012/03/01/brakeman-1-dot-5-0-released.markdown/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/" >Tweet</a>
   
   
   <g:plusone size="medium"></g:plusone>
@@ -231,8 +205,8 @@ Don&#8217;t forget to join the [mailing list](http://librelist.com/browser/brake
     <div id="disqus_thread"><div id="disqus_thread"></div>
 <script type="text/javascript">
   var disqus_shortname = 'brakeman';
-  var disqus_identifier = 'http://brakemanscanner.org/blog/2012/03/01/brakeman-1-dot-5-0-released.markdown/';
-  var disqus_url = 'http://brakemanscanner.org/blog/2012/03/01/brakeman-1-dot-5-0-released.markdown/';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/';
   //var disqus_developer = 1;
   (function() {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
@@ -275,6 +249,10 @@ Don&#8217;t forget to join the [mailing list](http://librelist.com/browser/brake
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/">Brakeman 2.1.2 Released - Important Security Update</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/08/21/brakeman-2-dot-1-1-released/">Brakeman 2.1.1 Released</a>
       </li>
     
@@ -288,10 +266,6 @@ Don&#8217;t forget to join the [mailing list](http://librelist.com/browser/brake
     
       <li class="post">
         <a href="/blog/2013/04/05/brakeman-1-dot-9-5-released/">Brakeman 1.9.5 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/03/18/brakeman-1-dot-9-4-released/">Brakeman 1.9.4 Released</a>
       </li>
     
   </ul>
