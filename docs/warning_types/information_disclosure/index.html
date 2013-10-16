@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Site Content License</title>
+  <title>Brakeman - Rails Security Scanner: Information Disclosure</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/content_license/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/information_disclosure/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -102,14 +102,22 @@
 <article>
   
   <header>
-    <h1 class="entry-title">Site Content License</h1>
+    <h1 class="entry-title">Information Disclosure</h1>
   </header>
   
-  <p><a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/80x15.png" /></a></p>
+  <p>Also known as <a href="https://www.owasp.org/index.php/Information_Leakage">information leakage</a> or <a href="http://cwe.mitre.org/data/definitions/200.html">information exposure</a>, this vulnerability refers to system or internal information (such as debugging output, stack traces, error messages, etc.) which is displayed to an end user.</p>
 
-<p>This site is licensed under a <a href="http://creativecommons.org/licenses/by/3.0/" title="">Creative Commons Attribution 3.0 Unported License</a>. This means you may copy and reuse the content of this site as long as it is clearly attributed to this source (http://brakemanscanner.org).</p>
+<p>For example, Rails provides detailed exception reports by default in the development environment, but it is turned off by default in production:</p>
 
-<p>This license does <em>not</em> extend to the Brakeman &#8220;lantern&#8221; logo.</p>
+<pre><code># Full error reports are disabled
+config.consider_all_requests_local = false
+</code></pre>
+
+<p>Brakeman warns if this setting is <code>true</code> in production or there is a <code>show_detailed_exceptions?</code> method in a controller which does not return <code>false</code>.</p>
+
+<hr />
+
+<p>Back to <a href="/docs/warning_types">Warning Types</a></p>
 
   
     <footer>
