@@ -1,0 +1,14 @@
+- if some_value
+  div
+    = params[:escaped]
+- else
+  span
+    == params[:unescaped]
+
+p== @user.profile
+
+- if x
+  = params[:unescaped]
+- else
+  = params[:escaped]
+
