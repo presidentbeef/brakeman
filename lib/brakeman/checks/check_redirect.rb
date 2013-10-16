@@ -128,7 +128,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     if node_type? exp, :or
       model_instance? exp.lhs or model_instance? exp.rhs
     elsif call? exp
-      if model_name? exp.target and
+      if model_name? exp.target or friendly_model? exp.target and
         (@model_find_calls.include? exp.method or exp.method.to_s.match(/^find_by_/))
         true
       else
@@ -137,6 +137,12 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     end
   end
 
+  #Returns true if exp is (probably) a friendly model instance
+  #using the FriendlyId gem
+  def friendly_model? exp
+    call? exp and model_name? exp.target and exp.method == :friendly
+  end
+  
   #Returns true if exp is (probably) a decorated model instance
   #using the Draper gem
   def decorated_model? exp
