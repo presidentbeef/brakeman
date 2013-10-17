@@ -1,6 +1,10 @@
 Rails32::Application.routes.draw do
   resources :users do
     get 'mixed_in'
+
+    member do
+      put 'update_password' => redirect('/settings/update_password')
+    end
   end
   
   match 'remove' => 'removal#remove_this_too'
