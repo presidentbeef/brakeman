@@ -47,10 +47,10 @@ class Brakeman::Scanner
 
   #Process everything in the Rails application
   def process
-    Brakeman.notify "Processing configuration..."
-    process_config
     Brakeman.notify "Processing gems..."
     process_gems
+    Brakeman.notify "Processing configuration..."
+    process_config
     Brakeman.notify "Processing initializers..."
     process_initializers
     Brakeman.notify "Processing libs..."
