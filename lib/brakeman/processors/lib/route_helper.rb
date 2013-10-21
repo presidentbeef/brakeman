@@ -29,6 +29,8 @@ module Brakeman::RouteHelper
       route = route.value
     end
 
+    return unless route.is_a? String or route.is_a? Symbol
+
     route = route.to_sym
 
     if controller
