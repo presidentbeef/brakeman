@@ -1,5 +1,7 @@
 # Unreleased
 
+ * Use Rails version from Gemfile if it is available
+ * Only add routes with actual names
  * Ignore redirects to models using friendly_id (AJ Ostrow) 
  * Support scanning Rails engines (Geoffrey Hichborn)
  * Add check for detailed exceptions in production
