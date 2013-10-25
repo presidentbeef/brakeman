@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 23,
       :controller => 4,
-      :generic => 73 }
+      :generic => 74 }
   end
 
   def test_without_protection
@@ -1083,6 +1083,62 @@ class Rails31Tests < Test::Unit::TestCase
       :warning_type => "Information Disclosure",
       :line => 29,
       :message => /^Detailed\ exceptions\ may\ be\ enabled\ in\ 's/,
+      :confidence => 1,
+      :relative_path => "app/controllers/admin_controller.rb"
+  end
+
+  def test_command_injection_interpolation_inside_interpolation
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "5ef09b79bf1d08ccd42e376238f9a618227da4990ea7702a1d4da2e83f4820fe",
+      :warning_type => "Command Injection",
+      :line => 34,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "app/controllers/admin_controller.rb",
+      :user_input => s(:call, nil, :why?)
+  end
+
+  def test_command_injection_or_literal_system
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "7de48cc753c090a61ac49a6885bc87198b1a7a72e5629eb2a188b671b95c7f13",
+      :warning_type => "Command Injection",
+      :line => 42,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "app/controllers/admin_controller.rb"
+  end
+
+  def test_command_injection_or_literal_backticks
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "a9ec8db240351f05e084a6acc9f7980d97718eb4cb386d9ea8079d224dfecef9",
+      :warning_type => "Command Injection",
+      :line => 43,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "app/controllers/admin_controller.rb"
+  end
+
+  def test_command_injection_integer_command
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "44d7403b6d2dfe4b74c32b80d924fed3d034637f0e13b3c31193ef9279a674f3",
+      :warning_type => "Command Injection",
+      :line => 45,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "app/controllers/admin_controller.rb"
+  end
+
+  def test_command_injection_integer_exec
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "11ab37cedddb3b4c9cd1c29db6b6ab8cd8a6a0063862448075cc22e9cd8b0882",
+      :warning_type => "Command Injection",
+      :line => 46,
+      :message => /^Possible\ command\ injection/,
       :confidence => 1,
       :relative_path => "app/controllers/admin_controller.rb"
   end
