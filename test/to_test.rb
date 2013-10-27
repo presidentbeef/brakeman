@@ -57,7 +57,8 @@ class #{name}Tests < Test::Unit::TestCase
       #{w.line ? ":line => " : "#noline"}#{w.line},
       :message => /^#{Regexp.escape w.message[0,40]}/,
       :confidence => #{w.confidence},
-      :relative_path => #{w.relative_path.inspect}
+      :relative_path => #{w.relative_path.inspect},
+      :user_input => #{w.user_input}
   end
       RUBY
     end.join("\n")

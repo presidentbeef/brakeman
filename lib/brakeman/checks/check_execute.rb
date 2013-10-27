@@ -13,6 +13,10 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
 
   @description = "Finds instances of possible command injection"
 
+  SAFE_VALUES = [s(:const, :RAILS_ROOT),
+                  s(:call, s(:const, :Rails), :root),
+                  s(:call, s(:const, :Rails), :env)]
+
   #Check models, controllers, and views for command injection.
   def run_check
     Brakeman.debug "Finding system calls using ``"
@@ -38,9 +42,9 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
 
     case call.method
     when :system, :exec
-      failure = include_user_input?(first_arg) || include_interp?(first_arg)
+      failure = include_user_input?(first_arg) || dangerous_interp?(first_arg)
     else
-      failure = include_user_input?(args) || include_interp?(args)
+      failure = include_user_input?(args) || dangerous_interp?(args)
     end
 
     if failure and not duplicate? result
@@ -82,9 +86,11 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     if input = include_user_input?(exp)
       confidence = CONFIDENCE[:high]
       user_input = input.match
-    else
+    elsif input = dangerous?(exp)
       confidence = CONFIDENCE[:med]
-      user_input = nil
+      user_input = input
+    else
+      return
     end
 
     warn :result => result,
@@ -94,5 +100,40 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       :code => exp,
       :user_input => user_input,
       :confidence => confidence
+  end
+
+  def dangerous? exp
+    exp.each_sexp do |e|
+      next if node_type? e, :lit, :str
+      next if SAFE_VALUES.include? e
+
+      if call? e and e.method == :to_s
+        e = e.target
+      end
+
+      if node_type? e, :or, :evstr, :string_eval, :string_interp
+        if res = dangerous?(e)
+          return res
+        end
+      else
+        return e
+      end
+    end
+
+    false
+  end
+
+  def dangerous_interp? exp
+    match = include_interp? exp
+    return unless match
+    interp = match.match
+
+    interp.each_sexp do |e|
+      if res = dangerous?(e)
+        return Match.new(:interp, res)
+      end
+    end
+
+    false
   end
 end
