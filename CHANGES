@@ -1,5 +1,6 @@
-# Unreleased
+# 2.2.0 
 
+ * Reduce command injection false positives
  * Use Rails version from Gemfile if it is available
  * Only add routes with actual names
  * Ignore redirects to models using friendly_id (AJ Ostrow) 
