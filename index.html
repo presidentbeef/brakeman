@@ -171,7 +171,14 @@
 
 <h3>Command Injection False Positives</h3>
 
-<p>There should be fewer false positives for command injection when interpolated values are literals. Also now ignores commonly used values <code>RAILS_ROOT</code>, <code>Rails.env</code>, and <code>Rails.root</code>.</p>
+<p>There should be fewer false positives for command injection when interpolated values are literals. The check also now ignores commonly used values <code>RAILS_ROOT</code>, <code>Rails.env</code>, and <code>Rails.root</code>.</p>
+
+<p>Additionally, reported &#8220;dangerous&#8221; values (<code>user_input</code> in JSON reports) for command injection are more specific. For example:</p>
+
+<pre><code>system "rm -rf #{some_var}"
+</code></pre>
+
+<p>used to report the entire string <code>"rm -rf #{some_var}"</code> as dangerous, even though it&#8217;s really warning about the interpolation of <code>some_var</code>. Now Brakeman will report the first potentially dangerous interpolated value. Note that this does not change fingerprints for existing warnings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/404">changes</a>)</p>
 

@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2013-10-28T10:35:35-07:00</updated>
+  <updated>2013-10-28T10:57:36-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -65,7 +65,14 @@
 
 &lt;h3&gt;Command Injection False Positives&lt;/h3&gt;
 
-&lt;p&gt;There should be fewer false positives for command injection when interpolated values are literals. Also now ignores commonly used values &lt;code&gt;RAILS_ROOT&lt;/code&gt;, &lt;code&gt;Rails.env&lt;/code&gt;, and &lt;code&gt;Rails.root&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;There should be fewer false positives for command injection when interpolated values are literals. The check also now ignores commonly used values &lt;code&gt;RAILS_ROOT&lt;/code&gt;, &lt;code&gt;Rails.env&lt;/code&gt;, and &lt;code&gt;Rails.root&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Additionally, reported &quot;dangerous&quot; values (&lt;code&gt;user_input&lt;/code&gt; in JSON reports) for command injection are more specific. For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;system &quot;rm -rf #{some_var}&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;used to report the entire string &lt;code&gt;&quot;rm -rf #{some_var}&quot;&lt;/code&gt; as dangerous, even though it's really warning about the interpolation of &lt;code&gt;some_var&lt;/code&gt;. Now Brakeman will report the first potentially dangerous interpolated value. Note that this does not change fingerprints for existing warnings.&lt;/p&gt;
 
 &lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/404&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
