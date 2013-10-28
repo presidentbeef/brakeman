@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2013-10-28T10:32:08-07:00</updated>
+  <updated>2013-10-28T10:35:35-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -17,7 +17,7 @@
     <link href="http://brakemanscanner.org/blog/2013/10/28/brakeman-2-dot-2-0-released/"/>
     <updated>2013-10-28T10:30:00-07:00</updated>
     <id>http://brakemanscanner.org/blog/2013/10/28/brakeman-2-dot-2-0-released</id>
-    <content type="html">&lt;p&gt;This is a small release, but it does introduce a new warning type and two warning codes.&lt;/p&gt;
+    <content type="html">&lt;p&gt;This is a small release, with some bug and false positive fixes alongside initial support for Rails engines and a new check for detailed exceptions.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 2.2.0:&lt;/em&gt;&lt;/p&gt;
 
