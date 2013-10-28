@@ -4,13 +4,141 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2013-10-16T01:07:42-07:00</updated>
+  <updated>2013-10-27T17:30:03-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 2.2.0 Released</title>
+    <link href="http://brakemanscanner.org/blog/2013/10/28/brakeman-2-dot-2-0-released.markdown/"/>
+    <updated>2013-10-28T10:30:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2013/10/28/brakeman-2-dot-2-0-released.markdown</id>
+    <content type="html">This is a small release, but it does introduce a new warning type and two warning codes.
+
+*Changes since 2.2.0:*
+
+ * Support scanning Rails engines ([Geoffrey Hichborn](https://github.com/phene))
+ * Ignore redirects to models using `friendly_id` ([AJ Ostrow](https://github.com/aj0strow))
+ * Add check for detailed exceptions in production ([#391](https://github.com/presidentbeef/brakeman/issues/391))
+ * Use Rails version from Gemfile if it is available ([#398](https://github.com/presidentbeef/brakeman/issues/398))
+ * Only add routes with actual names ([#395](https://github.com/presidentbeef/brakeman/issues/395))
+ * Reduce command injection false positives
+
+### Rails Engines
+
+[Geoffrey Hichborn](https://github.com/phene) added support for checking Rails engines paths when searching for controllers, models, and views. Please let us know if there are any issues or files missed with this change.
+
+([changes](https://github.com/presidentbeef/brakeman/pull/397))
+
+### Redirects with Friendly ID
+
+Thanks to [AJ Ostrow](https://github.com/aj0strow), Brakeman should no longer warn on redirects to models using `friendly_id`.
+
+([changes](https://github.com/presidentbeef/brakeman/pull/400))
+
+### Detailed Exceptions
+
+[Nathaniel Talbott](https://github.com/ntalbott) suggested checking that detailed exceptions (treating requests as local) are not enabled in production.
+
+Brakeman now generates a warning in a new catetory called &quot;[Information Disclosure](http://brakemanscanner.org/docs/warning_types/information_disclosure/)&quot; if `config.consider_all_requests_local` is set to `true` in production or a controller overrides `show_detailed_exceptions?` to return something other than `false`.
+
+Please see the [changes](https://github.com/presidentbeef/brakeman/pull/396) regarding the new category and two new warning codes associated with these warnings.
+
+### Better Version Detection
+
+Brakeman now uses the Rails version found in `Gemfile` or `Gemfile.lock` to determine when to enable Rails 3/4 mode, which seems obvious in retrospect. This required swapping when the `Gemfile` and the configuration files are processed.
+
+([changes](https://github.com/presidentbeef/brakeman/pull/402))
+
+### Rails 3 Routes 
+
+A small fix prevents Brakeman from raising an error when a route is a redirect or any value other than a string or symbol.
+
+([changes](https://github.com/presidentbeef/brakeman/pull/403))
+
+### Command Injection False Positives
+
+There should be fewer false positives for command injection when interpolated values are literals. Also now ignores commonly used values `RAILS_ROOT`, `Rails.env`, and `Rails.root`.
+
+([changes](https://github.com/presidentbeef/brakeman/pull/404))
+
+### Reporting Issues
+
+Please report any [issues](https://github.com/presidentbeef/brakeman/issues) with this release! Take a look at [this guide](https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue) to reporting Brakeman problems.
+
+Also consider joining the [mailing list](http://brakemanscanner.org/contact/) or following [@brakeman](https://twitter.com/brakeman) on Twitter.
+
+</content>
+  </entry>
+  
+  <entry>
+    <title>Brakeman 2.2.0 Released</title>
+    <link href="http://brakemanscanner.org/blog/2013/10/28/brakeman-2-dot-2-0-released/"/>
+    <updated>2013-10-28T10:30:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2013/10/28/brakeman-2-dot-2-0-released</id>
+    <content type="html">&lt;p&gt;This is a small release, but it does introduce a new warning type and two warning codes.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 2.2.0:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Support scanning Rails engines (&lt;a href=&quot;https://github.com/phene&quot;&gt;Geoffrey Hichborn&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Ignore redirects to models using &lt;code&gt;friendly_id&lt;/code&gt; (&lt;a href=&quot;https://github.com/aj0strow&quot;&gt;AJ Ostrow&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add check for detailed exceptions in production (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/391&quot;&gt;#391&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Use Rails version from Gemfile if it is available (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/398&quot;&gt;#398&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Only add routes with actual names (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/395&quot;&gt;#395&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Reduce command injection false positives&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Rails Engines&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/phene&quot;&gt;Geoffrey Hichborn&lt;/a&gt; added support for checking Rails engines paths when searching for controllers, models, and views. Please let us know if there are any issues or files missed with this change.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/397&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Redirects with Friendly ID&lt;/h3&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/aj0strow&quot;&gt;AJ Ostrow&lt;/a&gt;, Brakeman should no longer warn on redirects to models using &lt;code&gt;friendly_id&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/400&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Detailed Exceptions&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/ntalbott&quot;&gt;Nathaniel Talbott&lt;/a&gt; suggested checking that detailed exceptions (treating requests as local) are not enabled in production.&lt;/p&gt;
+
+&lt;p&gt;Brakeman now generates a warning in a new category called &quot;&lt;a href=&quot;http://brakemanscanner.org/docs/warning_types/information_disclosure/&quot;&gt;Information Disclosure&lt;/a&gt;&quot; if &lt;code&gt;config.consider_all_requests_local&lt;/code&gt; is set to &lt;code&gt;true&lt;/code&gt; in production or a controller overrides &lt;code&gt;show_detailed_exceptions?&lt;/code&gt; to return something other than &lt;code&gt;false&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Please see the &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/396&quot;&gt;changes&lt;/a&gt; regarding the new category and two new warning codes associated with these warnings.&lt;/p&gt;
+
+&lt;h3&gt;Better Version Detection&lt;/h3&gt;
+
+&lt;p&gt;Brakeman now uses the Rails version found in &lt;code&gt;Gemfile&lt;/code&gt; or &lt;code&gt;Gemfile.lock&lt;/code&gt; to determine when to enable Rails 3/4 mode, which seems obvious in retrospect. This required swapping when the &lt;code&gt;Gemfile&lt;/code&gt; and the configuration files are processed.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/402&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Rails 3 Routes&lt;/h3&gt;
+
+&lt;p&gt;A small fix prevents Brakeman from raising an error when a route is a redirect or any value other than a string or symbol.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/403&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Command Injection False Positives&lt;/h3&gt;
+
+&lt;p&gt;There should be fewer false positives for command injection when interpolated values are literals. Also now ignores commonly used values &lt;code&gt;RAILS_ROOT&lt;/code&gt;, &lt;code&gt;Rails.env&lt;/code&gt;, and &lt;code&gt;Rails.root&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/404&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 2.1.2 Released - Important Security Update</title>
@@ -1761,198 +1889,6 @@ end
 &lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
 
 &lt;p&gt;Don't forget to check out the &lt;a href=&quot;https://speakerdeck.com/u/presidentbeef/p/keeping-rails-applications-on-track-with-brakeman&quot;&gt;RailsConf Brakeman presentation slides&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 1.6 Released</title>
-    <link href="http://brakemanscanner.org/blog/2012/04/20/brakeman-1-dot-6-released/"/>
-    <updated>2012-04-20T10:22:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2012/04/20/brakeman-1-dot-6-released</id>
-    <content type="html">&lt;p&gt;A lot of code has changed in this release, particularly with the removal of the Ruport library for reporting. While Ruport worked pretty well, it caused some issues just due to the large number of (out-dated) dependencies it brought with it.&lt;/p&gt;
-
-&lt;p&gt;Also, this release changes the JSON report output. This is a backwards &lt;em&gt;incompatible&lt;/em&gt; change. But, given how useless the previous JSON reports were, hopefully this will not affect too many people.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 1.5.3:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Remove the Ruport dependency (Neil Matatall)&lt;/li&gt;
-&lt;li&gt;Add more informational JSON output (Neil Matatall)&lt;/li&gt;
-&lt;li&gt;Add comparison to previous JSON report (Neil Matatall)&lt;/li&gt;
-&lt;li&gt;Add highlighting of dangerous values in HTML/text reports&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Model#update_attribute&lt;/code&gt; should not raise mass assignment warning (Dave Worth)&lt;/li&gt;
-&lt;li&gt;Don't check &lt;code&gt;find_by_*&lt;/code&gt; method for SQL injection&lt;/li&gt;
-&lt;li&gt;Fix duplicate reporting of mass assignment and SQL injection&lt;/li&gt;
-&lt;li&gt;Fix rescanning of deleted files&lt;/li&gt;
-&lt;li&gt;Properly check for &lt;code&gt;rails_xss&lt;/code&gt; in Gemfile&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;No More Ruport&lt;/h3&gt;
-
-&lt;p&gt;Ruport is a nice library, but it also has not been updated in over two years and its dependency tree was ridiculous.&lt;/p&gt;
-
-&lt;p&gt;Thanks to Neil Matatall, Brakeman no longer depends on Ruport, but the reports should look essentially the same. The HTML reports are now rendered through ERB templates, so it should not be too difficult to customize the reports if desired.&lt;/p&gt;
-
-&lt;h3&gt;Better JSON Output&lt;/h3&gt;
-
-&lt;p&gt;JSON output now includes meta-information about the scan, errors raised during the scan, and line numbers for each warning.&lt;/p&gt;
-
-&lt;h3&gt;JSON Report Comparison&lt;/h3&gt;
-
-&lt;p&gt;Being able to compare Brakeman reports is essential for tracking warnings over time. Prior to this release, the only decent way of doing that was via the &lt;a href=&quot;http://brakemanscanner.org/docs/jenkins/&quot;&gt;Jenkins plugin&lt;/a&gt;. But now Brakeman can compare results to the JSON report from a previous scan.&lt;/p&gt;
-
-&lt;p&gt;For example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;brakeman -o report.json
-brakeman --compare report.json
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This will run another scan, then output a comparison of the reports (in JSON). The report includes a list of fixed warnings and a list of new warnings that were found.&lt;/p&gt;
-
-&lt;h3&gt;User Input Highlighted in Reports&lt;/h3&gt;
-
-&lt;p&gt;Sometimes it is unclear exactly what value has caused Brakeman to issue a particular warning. This release adds highlighting the detected user input in most warnings. (Some warnings, the code that is reported &lt;em&gt;is&lt;/em&gt; the detected user input). This information is also available in the JSON reports.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://brakemanscanner.org/images/user_input_highlight.png&quot; title=&quot;Example of User Input Highlighting&quot; alt=&quot;User Input Highlight&quot; /&gt;&lt;/p&gt;
-
-&lt;h3&gt;Fewer Mass Assignment and SQL Injection Methods&lt;/h3&gt;
-
-&lt;p&gt;Dave Worth pointed out that Brakeman was a little overzealous in which methods it considered susceptible to mass assignment and SQL injection attacks.&lt;/p&gt;
-
-&lt;p&gt;Brakeman will no longer check &lt;code&gt;update_attribute&lt;/code&gt; for mass assignment or the &lt;code&gt;find_by_*&lt;/code&gt; dynamic methods for SQL injection.&lt;/p&gt;
-
-&lt;h3&gt;Fewer Mass Assignment and SQL Injection Duplicates&lt;/h3&gt;
-
-&lt;p&gt;Pesky duplicate reports of mass assignment and SQL injection were turning up as template warnings. This occurred when the results of the mass assignment or SQL query were assigned to a variable which was then used in a template. This should now be fixed.&lt;/p&gt;
-
-&lt;p&gt;More details than are probably desired are available &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/82&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3&gt;Rescanning Fixes&lt;/h3&gt;
-
-&lt;p&gt;Rescanning of deleted files is now supported, and there some other issues with rescanning that are now resolved as well.&lt;/p&gt;
-
-&lt;h3&gt;New Logo&lt;/h3&gt;
-
-&lt;p&gt;Brakeman has a sweet new logo, thanks to &lt;a href=&quot;http://janellelawless.com/&quot;&gt;Janelle Lawless&lt;/a&gt;!&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://brakemanscanner.org/images/logo_medium.png&quot; alt=&quot;Brakeman Logo&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Updates to the website to reflect this awesomeness are coming soon.&lt;/p&gt;
-
-&lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release!&lt;/p&gt;
-
-&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
-
-&lt;p&gt;And don't forget to check out the Brakeman talk at &lt;a href=&quot;http://railsconf2012.com/sessions/44&quot;&gt;RailsConf&lt;/a&gt; in a few days.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 1.5.3 Released</title>
-    <link href="http://brakemanscanner.org/blog/2012/04/10/brakeman-1-dot-5-3-released/"/>
-    <updated>2012-04-10T13:18:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2012/04/10/brakeman-1-dot-5-3-released</id>
-    <content type="html">&lt;p&gt;A considerable number of bugs and odd cases have been fixed with this release, and one new check has been added. Upgrading is &lt;em&gt;always&lt;/em&gt; recommended!&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 1.5.2:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Add check for user input in &lt;code&gt;Object#send&lt;/code&gt; (Neil Matatall)&lt;/li&gt;
-&lt;li&gt;Support output to multiple formats (Nick Green)&lt;/li&gt;
-&lt;li&gt;Prevent infinite loops in mutually recursive templates&lt;/li&gt;
-&lt;li&gt;Only check &lt;code&gt;eval&lt;/code&gt; arguments for user input, not the call target&lt;/li&gt;
-&lt;li&gt;Handle &lt;code&gt;render :layout&lt;/code&gt; in views&lt;/li&gt;
-&lt;li&gt;Search subdirectories for models&lt;/li&gt;
-&lt;li&gt;Set values in request hashes and propagate to views&lt;/li&gt;
-&lt;li&gt;Add rake task file to gemspec (Anton Ageev)&lt;/li&gt;
-&lt;li&gt;Filter rescanning of templates (Neil Matatall)&lt;/li&gt;
-&lt;li&gt;Improve handling of modules and nesting&lt;/li&gt;
-&lt;li&gt;Test for zero errors in test reports&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;New Check for User Input in Object#send&lt;/h3&gt;
-
-&lt;p&gt;This new check looks for instances where user input can be used to control the method called using &lt;code&gt;send&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;For example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;user = User.find(params[:user][:id])
-method = params[:user][:action].to_sym
-user.send(method)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3&gt;Support for Multiple Output Formats&lt;/h3&gt;
-
-&lt;p&gt;Brakeman can now accept multiple &lt;code&gt;-o&lt;/code&gt; arguments in order to produce more than one report from the same scan:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;brakeman -o report.html -o report.json
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3&gt;Handle Mutually Recursive Templates&lt;/h3&gt;
-
-&lt;p&gt;In some cases where two templates would render each other as partials, it would cause infinite loops in Brakeman. This is now fixed, at least for the simple common case:&lt;/p&gt;
-
-&lt;p&gt;_one.erb.html:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;%= render :partial =&amp;gt; 'two' %&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;_two.erb.html:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;%= render :partial =&amp;gt; 'one' %&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3&gt;Only Check &lt;code&gt;eval&lt;/code&gt; Arguments&lt;/h3&gt;
-
-&lt;p&gt;Previously, Brakeman was checking the entire call to methods like &lt;code&gt;eval&lt;/code&gt; or &lt;code&gt;class_eval&lt;/code&gt; for user input. This led to false positives when &lt;code&gt;class_eval&lt;/code&gt; was being called on a model.&lt;/p&gt;
-
-&lt;p&gt;Now Brakeman only checks the arguments or block provided to the &lt;code&gt;eval&lt;/code&gt; call.&lt;/p&gt;
-
-&lt;h3&gt;Handle render :layout in views&lt;/h3&gt;
-
-&lt;p&gt;Brakeman was not handling &lt;code&gt;render :layout =&amp;gt; &quot;...&quot;&lt;/code&gt; in views properly. This led to errors like:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;wrong number of arguments (0 for 1): /Users/collins/work/brakeman/lib/brakeman/processors/lib/render_helper.rb:14:in `template_name
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;render :layout&lt;/code&gt; is now handled just like rendering a partial.&lt;/p&gt;
-
-&lt;h3&gt;Search for Models in Subdirectories&lt;/h3&gt;
-
-&lt;p&gt;Brakeman was only searching &lt;code&gt;app/models/&lt;/code&gt; for models, but not any subdirectories. Now it does!&lt;/p&gt;
-
-&lt;h3&gt;Propagate Request Values&lt;/h3&gt;
-
-&lt;p&gt;While Brakeman has always detected request values (e.g., query parameters) in views, it would not propagate values stored IN those request hashes.&lt;/p&gt;
-
-&lt;p&gt;For example, if an action in a controller did this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;params[:input] = some_random_value
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;That value would not be propagated to the view if the view used &lt;code&gt;params[:input]&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h3&gt;Add Rake Task to Gemspec&lt;/h3&gt;
-
-&lt;p&gt;In 1.2.0, Brakeman added the &lt;code&gt;--rake&lt;/code&gt; option to add a Rake task to a Rails application, but the actual task itself was not included in the gem!&lt;/p&gt;
-
-&lt;p&gt;Thanks to Anton Ageev for pointing this out. Either no one else tried this option, or a lot of people were very disappointed.&lt;/p&gt;
-
-&lt;h3&gt;Filter Templates When Rescanning&lt;/h3&gt;
-
-&lt;p&gt;When rescanning (for example, with &lt;a href=&quot;https://github.com/guard/guard-brakeman&quot;&gt;guard-brakeman&lt;/a&gt;), Brakeman was assuming any files in &lt;code&gt;app/views&lt;/code&gt; is a template, but this isn't always true.&lt;/p&gt;
-
-&lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt;!&lt;/p&gt;
-
-&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
-
-&lt;p&gt;And don't forget to check out the Brakeman talk at &lt;a href=&quot;http://railsconf2012.com/sessions/44&quot;&gt;RailsConf&lt;/a&gt; later this month.&lt;/p&gt;
 </content>
   </entry>
   
