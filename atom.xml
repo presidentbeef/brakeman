@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2013-10-28T10:57:36-07:00</updated>
+  <updated>2013-10-28T12:27:47-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -81,6 +81,13 @@
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
 &lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+
+&lt;h3&gt;Verification&lt;/h3&gt;
+
+&lt;p&gt;The SHA-1 for the Brakeman 2.2.0 gem is:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;f3a2b369bda79c677a913cdb2350cbda8bce8a90  brakeman-2.2.0.gem
+&lt;/code&gt;&lt;/pre&gt;
 </content>
   </entry>
   
