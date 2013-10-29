@@ -25,7 +25,7 @@ class Brakeman::CheckTranslateBug < Brakeman::BaseCheck
       elsif version =~ /^3\.0/
         "Versions before 3.0.11 #{description}."
       else
-        "Rails 2.3.x using the rails_xss plugin #{description}}."
+        "Rails 2.3.x using the rails_xss plugin #{description}."
       end
 
       warn :warning_type => "Cross Site Scripting",
