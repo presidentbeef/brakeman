@@ -1,13 +1,17 @@
-function getNav(){
-  var mobileNav = $('nav[role=navigation] fieldset[role=site-search]').after('<fieldset role="mobile-nav"></fieldset>').next().append('<select></select>');
-  mobileNav.children('select').append('<option value="">Navigate&hellip;</option>');
-  $($('ul[role=main-navigation] a')).each(function(link) {
-    mobileNav.children('select').append('<option value="'+link.href+'">&bull; '+link.text+'</option>')
-  });
-  mobileNav.children('select').bind('change', function(event){
-    if (event.target.value) window.location.href = event.target.value;
+function getNav() {
+  var mainNav = $('ul.main-navigation, ul[role=main-navigation]').before('<fieldset role="mobile-nav">');
+  var mobileNav = $('fieldset[role=mobile-nav]').append('<select>');
+  mobileNav.find('select').append('<option value="">Navigate&hellip;</option>');
+  var addOption = function(i, option) {
+    mobileNav.find('select').append('<option value="' + this.href + '">&raquo; ' + $(this).text() + '</option>');
+  }
+  mainNav.find('a').each(addOption);
+  $('ul.subscription a').each(addOption);
+  mobileNav.find('select').bind('change', function(event) {
+    if (event.target.value) { window.location.href = event.target.value; }
   });
 }
+
 function addSidebarToggler() {
   $('#content').append('<span class="toggle-sidebar"></span>');
   $('.toggle-sidebar').bind('click', function(e){
@@ -30,14 +34,18 @@ function addSidebarToggler() {
   }
   if(sections.length >= 3){ $('aside[role=sidebar]').addClass('thirds') }
 }
+
 function testFeatures() {
   var features = ['maskImage'];
   $(features).map(function(feature){
-    if (Modernizr.testAllProps(feature)) {
-      $('html').addClass(feature);
-    } else {
-      $('html').addClass('no-'+feature);
+    try {
+      if (Modernizr.testAllProps(feature)) {
+        $('html').addClass(feature);
+      } else {
+        $('html').addClass('no-'+feature);
+      }
     }
+    catch(err) { console.log(err);  $('html').addClass('no-'+feature); }
   });
   if ("placeholder" in document.createElement("input")) {
     $('html').addClass('placeholder');
@@ -104,7 +112,7 @@ $.domReady(function(){
   flashVideoFallback();
   addCodeLineNumbers();
   getNav();
-  addSidebarToggler();
+  //addSidebarToggler();
 });
 
 // iOS scaling bug fix
