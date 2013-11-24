@@ -13,7 +13,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   def run_check
     Brakeman.debug "Finding calls to redirect_to()"
 
-    @model_find_calls = Set[:all, :find, :find_by_sql, :first, :last, :new]
+    @model_find_calls = Set[:all, :create, :create!, :find, :find_by_sql, :first, :last, :new]
 
     if tracker.options[:rails3]
       @model_find_calls.merge [:from, :group, :having, :joins, :lock, :order, :reorder, :select, :where]

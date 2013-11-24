@@ -6,4 +6,16 @@ class ApplicationController < ActionController::Base
   def show_detailed_exceptions?
     true
   end
+
+  def redirect_to_created_model
+    if create
+      @model = User.create
+      @model.save!
+      redirect_to @model
+    else
+      @model = User.create!
+      @model.save
+      redirect_to @model
+    end
+  end
 end
