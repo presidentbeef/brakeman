@@ -84,9 +84,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     @current_method = meth_name
     @rendered = false if is_route
 
-    env.scope do
-      set_env_defaults
-
+    meth_env do
       if is_route
         before_filter_list(@current_method, @current_class).each do |f|
           process_before_filter f
