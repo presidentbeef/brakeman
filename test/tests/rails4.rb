@@ -88,4 +88,15 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/controllers/application_controller.rb"
   end
+
+  def test_redirect_with_instance_variable_from_block
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "e024f0cf67432409ec4afc80216fb2f6c9929fbbd32c2421e8867cd254f22d04",
+      :warning_type => "Redirect",
+      :line => 12,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb"
+  end
 end
