@@ -749,12 +749,14 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       else
         env[var] = value
       end
+    elsif env.current[var]
+      env.current[var] = value
+    elsif @branch_env and @branch_env[var]
+      @branch_env[var] = value
+    elsif @branch_env and @meth_env and node_type? var, :ivar
+      @branch_env[var] = value
     else
-      if @branch_env and @meth_env and node_type? var, :ivar
-        @branch_env[var] = value
-      else
-        env.current[var] = value
-      end
+      env.current[var] = value
     end
   end
 
