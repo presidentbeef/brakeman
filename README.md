@@ -163,6 +163,16 @@ The default config locations are `./config/brakeman.yml`, `~/.brakeman/config.ym
 
 The `-c` option can be used to specify a configuration file to use.
 
+# Who is Using Brakeman?
+
+* [Code Climate](https://codeclimate.com/)
+* [GitHub](https://github.com/)
+* [Groupon](http://www.groupon.com/)
+* [New Relic](http://newrelic.com)
+* [Twitter](https://twitter.com/)
+
+[..and more!](http://brakeman.org/brakeman_users)
+
 # License
 
 see MIT-LICENSE
