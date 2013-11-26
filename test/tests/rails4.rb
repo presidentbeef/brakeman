@@ -19,6 +19,28 @@ class Rails4Tests < Test::Unit::TestCase
     }
   end
 
+  def test_redirects_to_created_model_do_not_warn
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "fedba22f0fbcd96dcaa0b2628ccedba2c0880870992d05b817697efbb36e134f",
+      :warning_type => "Redirect",
+      :line => 14,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/application_controller.rb",
+      :user_input => s(:call, s(:const, :User), :create)
+
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "1d2d4b0a59ed26a6d591094714dbee81a60a3e686429a44fe2d80f87b94bc555",
+      :warning_type => "Redirect",
+      :line => 18,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/application_controller.rb",
+      :user_input => s(:call, s(:const, :User), :create!)
+  end
+
   def test_session_secret_token
     assert_warning :type => :generic,
       :warning_type => "Session Setting",
