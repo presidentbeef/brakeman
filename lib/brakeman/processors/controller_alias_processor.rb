@@ -84,9 +84,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     @current_method = meth_name
     @rendered = false if is_route
 
-    env.scope do
-      set_env_defaults
-
+    meth_env do
       if is_route
         before_filter_list(@current_method, @current_class).each do |f|
           process_before_filter f
@@ -124,7 +122,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
 
   #Check for +respond_to+
   def process_call_with_block exp
-    process_default exp
+    super
 
     if call? exp.block_call and exp.block_call.method == :respond_to
       @rendered = true

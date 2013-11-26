@@ -1,12 +1,18 @@
 class AliasProcessorTests < Test::Unit::TestCase
-  def assert_alias expected, original
+  def assert_alias expected, original, full = false
     original_sexp = RubyParser.new.parse original
     expected_sexp = RubyParser.new.parse expected
-
     processed_sexp = Brakeman::AliasProcessor.new.process_safely original_sexp
-    result = processed_sexp.last
 
-    assert_equal expected_sexp, result
+    if full
+      assert_equal expected_sexp, processed_sexp
+    else
+      assert_equal expected_sexp, processed_sexp.last
+    end
+  end
+
+  def assert_output input, output
+    assert_alias output, input, true
   end
 
   def test_addition
@@ -376,5 +382,147 @@ class AliasProcessorTests < Test::Unit::TestCase
 
     y
     RUBY
+  end
+
+  def test_block_with_local
+    assert_output <<-INPUT, <<-OUTPUT
+      def a
+        if b
+          c = nil
+          ds.each do |d|
+            e = T.new
+            c = e.map
+          end
+
+          r("f" + c.name)
+        else
+          g
+        end
+      end
+    INPUT
+      def a
+        if b
+          c = nil
+          ds.each do |d|
+            e = T.new
+            c = T.new.map
+          end
+
+          r("f" + T.new.map.name)
+        else
+          g
+        end
+      end
+    OUTPUT
+  end
+
+  def test_block_in_class_scope
+    # Make sure blocks in class do not mess up instance variable scope
+    # for subsequent methods
+    assert_output <<-INPUT, <<-OUTPUT
+      class A
+        x do
+          @a = 1
+        end
+
+        def b
+          @a
+        end
+      end
+    INPUT
+      class A
+        x do
+          @a = 1
+        end
+
+        def b
+          @a
+        end
+      end
+    OUTPUT
+  end
+
+  def test_instance_method_scope_in_block
+    # Make sure instance variables set inside blocks are set at the method
+    # scope
+    assert_output <<-INPUT, <<-OUTPUT
+      class A
+        def b
+          x do
+            @a = 1
+          end
+
+          @a
+        end
+      end
+    INPUT
+      class A
+        def b
+          x do
+            @a = 1
+          end
+
+          1
+        end
+      end
+    OUTPUT
+  end
+
+  def test_instance_method_scope_in_if_with_blocks
+    # Make sure instance variables set inside if expressions are set at the
+    # method scope after being combined
+    assert_output <<-INPUT, <<-OUTPUT
+      class A
+        def b
+          if something
+            x do
+              @a = 1
+            end
+          else
+            y do
+              @a = 2
+            end
+          end
+
+          @a
+        end
+      end
+    INPUT
+      class A
+        def b
+          if something
+            x do
+              @a = 1
+            end
+          else
+            y do
+              @a = 2
+            end
+          end
+
+          (1 or 2)
+        end
+      end
+    OUTPUT
+  end
+
+  def test_branch_env_is_closed_after_if_statement
+    assert_output <<-'INPUT', <<-'OUTPUT'
+      def a
+        if b
+          return unless c # this was causing problems
+          @d = D.find(1)
+          @d
+        end
+      end
+    INPUT
+      def a
+        if b
+          return unless c
+          @d = D.find(1)
+          D.find(1)
+       end
+      end
+    OUTPUT
   end
 end

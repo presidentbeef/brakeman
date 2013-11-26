@@ -220,11 +220,22 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   #Process a method definition.
   def process_methdef exp
-    env.scope do
-      set_env_defaults
+    meth_env do
       exp.body = process_all! exp.body
     end
     exp
+  end
+
+  def meth_env
+    begin
+      env.scope do
+        set_env_defaults
+        @meth_env = env.current
+        yield
+      end
+    ensure
+      @meth_env = nil
+    end
   end
 
   #Process a method definition on self.
@@ -437,9 +448,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       branch_scopes = []
       exps.each_with_index do |branch, i|
         scope do
+          @branch_env = env.current
           branch_index = 2 + i # s(:if, condition, then_branch, else_branch)
           exp[branch_index] = process_if_branch branch
           branch_scopes << env.current
+          @branch_env = nil
         end
       end
 
@@ -731,7 +744,17 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
 
     if @ignore_ifs or not @inside_if
-      env[var] = value
+      if @meth_env and node_type? var, :ivar and env[var].nil?
+        @meth_env[var] = value
+      else
+        env[var] = value
+      end
+    elsif env.current[var]
+      env.current[var] = value
+    elsif @branch_env and @branch_env[var]
+      @branch_env[var] = value
+    elsif @branch_env and @meth_env and node_type? var, :ivar
+      @branch_env[var] = value
     else
       env.current[var] = value
     end
@@ -776,5 +799,4 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       false
     end
   end
-
 end
