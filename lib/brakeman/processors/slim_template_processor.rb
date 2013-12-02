@@ -96,7 +96,7 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
   def is_escaped? exp
     call? exp and
     exp.target == TEMPLE_UTILS and
-    exp.method == :escape_html
+    (exp.method == :escape_html or exp.method == :escape_html_safe)
   end
 
   def render? exp
