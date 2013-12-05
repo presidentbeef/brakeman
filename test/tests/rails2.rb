@@ -1105,7 +1105,7 @@ class Rails2Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 89,
-      :message => /^Unsafe\ Reflection\ method\ constantize\ cal/,
+      :message => /^Unsafe\ reflection\ method\ constantize\ cal/,
       :confidence => 0,
       :file => /home_controller\.rb/,
       :relative_path => "app/controllers/home_controller.rb"
@@ -1115,7 +1115,7 @@ class Rails2Tests < Test::Unit::TestCase
       :warning_code => 24,
       :warning_type => "Remote Code Execution",
       :line => 1,
-      :message => /^Unsafe\ Reflection\ method\ constantize\ cal/,
+      :message => /^Unsafe\ reflection\ method\ constantize\ cal/,
       :confidence => 0,
       :relative_path => "app/views/home/test_send_target.html.erb"
   end
@@ -1124,7 +1124,7 @@ class Rails2Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 160,
-      :message => /^Unsafe\ Reflection\ method\ constantize\ cal/,
+      :message => /^Unsafe\ reflection\ method\ constantize\ cal/,
       :confidence => 0,
       :file => /home_controller\.rb/,
       :relative_path => "app/controllers/home_controller.rb"

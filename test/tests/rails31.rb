@@ -958,7 +958,7 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 9,
-      :message => /^Unsafe\ Reflection\ method\ constantize\ cal/,
+      :message => /^Unsafe\ reflection\ method\ constantize\ cal/,
       :confidence => 0,
       :file => /admin_controller\.rb/
   end
@@ -968,7 +968,7 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 12,
-      :message => /^Unsafe\ Reflection\ method\ safe_constantiz/,
+      :message => /^Unsafe\ reflection\ method\ safe_constantiz/,
       :confidence => 0,
       :file => /admin_controller\.rb/
   end
@@ -977,7 +977,7 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 14,
-      :message => /^Unsafe\ Reflection\ method\ qualified_const/,
+      :message => /^Unsafe\ reflection\ method\ qualified_const/,
       :confidence => 0,
       :file => /admin_controller\.rb/
   end
@@ -987,7 +987,7 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 16,
-      :message => /^Unsafe\ Reflection\ method\ const_get\ calle/,
+      :message => /^Unsafe\ reflection\ method\ const_get\ calle/,
       :confidence => 0,
       :file => /admin_controller\.rb/
   end
@@ -996,7 +996,7 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 18,
-      :message => /^Unsafe\ Reflection\ method\ constantize\ cal/,
+      :message => /^Unsafe\ reflection\ method\ constantize\ cal/,
       :confidence => 1,
       :file => /admin_controller\.rb/
   end
