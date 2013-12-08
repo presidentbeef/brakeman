@@ -11,4 +11,9 @@ class FriendlyController
   def some_user_thing
     redirect_to @user.url
   end
+
+  def try_and_send
+    User.stuff.try(:where, params[:query])
+    User.send(:from, params[:table]).all
+  end
 end

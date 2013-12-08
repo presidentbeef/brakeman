@@ -163,6 +163,12 @@ class Sexp
     end
   end
 
+  def method= name
+    expect :call
+
+    self[2] = name
+  end
+
   #Sets the arglist in a method call.
   def arglist= exp
     expect :call, :attrasgn
