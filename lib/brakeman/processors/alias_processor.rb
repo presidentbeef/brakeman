@@ -88,6 +88,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     method = exp.method
     first_arg = exp.first_arg
 
+    if method == :send or method == :try
+      collapse_send_call exp, first_arg
+    end
+
     if node_type? target, :or and [:+, :-, :*, :/].include? method
       res = process_or_simple_operation(exp)
       return res if res
@@ -540,6 +544,17 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       string1
     else
       result
+    end
+  end
+
+  # Change x.send(:y, 1) to x.y(1)
+  def collapse_send_call exp, first_arg
+    return unless symbol? first_arg or string? first_arg
+    exp.method = first_arg.value.to_sym
+    args = exp.args
+    exp.pop # remove last arg
+    if args.length > 1
+      exp.arglist = args[1..-1]
     end
   end
 

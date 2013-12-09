@@ -156,8 +156,29 @@ class AliasProcessorTests < Test::Unit::TestCase
 
   def test_addition_chained
     assert_alias 'y + 5', <<-RUBY
-    x = y + 2 + 3
-    x
+      x = y + 2 + 3
+      x
+    RUBY
+  end
+
+  def test_send_collapse
+    assert_alias 'x.y(1)', <<-RUBY
+      z = x.send(:y, 1)
+      z
+    RUBY
+  end
+
+  def test_send_collapse_with_no_target
+    assert_alias 'y(1)', <<-RUBY
+      x = send(:y, 1)
+      x
+    RUBY
+  end
+
+  def test_try_collapse
+    assert_alias 'x.y', <<-RUBY
+      z = x.try(:y)
+      z
     RUBY
   end
 

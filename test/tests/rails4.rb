@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 0,
-      :generic => 3
+      :generic => 5
     }
   end
 
@@ -120,5 +120,27 @@ class Rails4Tests < Test::Unit::TestCase
       :message => /^Possible\ unprotected\ redirect/,
       :confidence => 0,
       :relative_path => "app/controllers/friendly_controller.rb"
+  end
+
+  def test_try_and_send_collapsing_with_sqli
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "c96c2984c1ce4f9a0f1205c9e7ac4707253a0553ecb6c7e9d6d4b88c92db7098",
+      :warning_type => "SQL Injection",
+      :line => 17,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :table))
+
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "004e5d6afb7ce520f1a67b65ace238f763ca2feb6a7f552f7dcc86ed3f67a189",
+      :warning_type => "SQL Injection",
+      :line => 16,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :query))
   end
 end

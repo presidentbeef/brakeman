@@ -76,6 +76,16 @@ class SexpTests < Test::Unit::TestCase
     assert_equal s(:lit, 2), exp.last_arg
   end
 
+  def test_method_call_set_method
+    exp = parse "x.y"
+
+    assert_equal :y, exp.method
+    
+    exp.method = :z
+
+    assert_equal :z, exp.method
+  end
+
   def test_method_call_with_block
     exp = parse "x do |z|; blah z; end"
     block = exp.block
