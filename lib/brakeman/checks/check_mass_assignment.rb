@@ -172,16 +172,19 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
   end
 
   def warn_on_permit! result
-    return if duplicate? result or
-              result[:call].original_line or
-              not subsequent_mass_assignment? result
-
+    return if duplicate? result or result[:call].original_line
     add_result result
+
+    confidence = if subsequent_mass_assignment? result
+                   CONFIDENCE[:high]
+                 else
+                   CONFIDENCE[:med]
+                 end
 
     warn :result => result,
       :warning_type => "Mass Assignment",
       :warning_code => :mass_assign_permit!,
       :message => "Parameters should be whitelisted for mass assignment",
-      :confidence => CONFIDENCE[:high]
+      :confidence => confidence
   end
 end

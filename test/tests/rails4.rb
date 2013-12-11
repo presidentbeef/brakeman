@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 1,
-      :generic => 10
+      :generic => 13
     }
   end
 
@@ -211,33 +211,33 @@ class Rails4Tests < Test::Unit::TestCase
       :relative_path => "app/controllers/friendly_controller.rb",
       :user_input => nil
 
-    assert_no_warning :type => :warning,
+    assert_warning :type => :warning,
       :warning_code => 70,
-      :fingerprint => "cf2c82b751c8a1ce6a12ad89832cf7da43676032b058278ae65e8895bd6e8a57",
+      :fingerprint => "2f2df4aef71799a6a441783b50e7a43a9bed7da6c8d50e07e73d9d165065ceec",
       :warning_type => "Mass Assignment",
       :line => 28,
       :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
-      :confidence => 0,
+      :confidence => 1,
       :relative_path => "app/controllers/friendly_controller.rb",
       :user_input => nil
 
-    assert_no_warning :type => :warning,
+    assert_warning :type => :warning,
       :warning_code => 70,
-      :fingerprint => "5495f802e6d3851519c6b911ffb8bfb039e51a77072cf8224306d54e20cf0e9e",
+      :fingerprint => "4f6a0d82f6ddf5528f3d50545ce353f2f1658d5102a745107ea572af5c2eee4b",
       :warning_type => "Mass Assignment",
       :line => 34,
       :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
-      :confidence => 0,
+      :confidence => 1,
       :relative_path => "app/controllers/friendly_controller.rb",
       :user_input => nil
 
-    assert_no_warning :type => :warning,
+    assert_warning :type => :warning,
       :warning_code => 70,
-      :fingerprint => "f8984beda14640a9c6baa25e8046d8bd6943493425b142174292c804b7afc63e",
+      :fingerprint => "947bddec4cdd3ff8b2485eec1bd0078352c182a3bca18a5f68da0a64e87d4e80",
       :warning_type => "Mass Assignment",
       :line => 40,
       :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
-      :confidence => 0,
+      :confidence => 1,
       :relative_path => "app/controllers/friendly_controller.rb",
       :user_input => nil
   end

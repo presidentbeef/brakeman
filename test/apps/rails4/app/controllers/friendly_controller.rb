@@ -24,18 +24,18 @@ class FriendlyController
   end
 
   def mass_assign_protected_model
-    # Should not warn because Account uses attr_accessible
+    # Warns with medium confidence because Account uses attr_accessible
     params.permit!
     Account.new(params)
   end
 
   def permit_without_usage
-    # Should not warn because there is no mass assignment
+    # Warns with medium confidence because there is no mass assignment
     params.permit!
   end
 
   def permit_after_usage
-    # Should not warn because permit! is called after mass assignment
+    # Warns with medium confidence because permit! is called after mass assignment
     User.new(params)
     params.permit!
   end
