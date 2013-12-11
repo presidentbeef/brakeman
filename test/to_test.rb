@@ -54,11 +54,11 @@ class #{name}Tests < Test::Unit::TestCase
       :warning_code => #{w.warning_code},
       :fingerprint => #{w.fingerprint.inspect},
       :warning_type => #{w.warning_type.inspect},
-      #{w.line ? ":line => " : "#noline"}#{w.line},
+      :line => #{w.line.inspect},
       :message => /^#{Regexp.escape w.message[0,40]}/,
       :confidence => #{w.confidence},
       :relative_path => #{w.relative_path.inspect},
-      :user_input => #{w.user_input}
+      :user_input => #{w.user_input.inspect}
   end
       RUBY
     end.join("\n")
