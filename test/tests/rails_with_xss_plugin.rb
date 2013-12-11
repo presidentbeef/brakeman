@@ -11,7 +11,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :controller => 1,
       :model => 3,
       :template => 2,
-      :generic => 20 }
+      :generic => 22 }
   end
 
   def report
@@ -333,5 +333,29 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :message => /^Rails\ 2\.3\.14\ has\ a\ denial\ of\ service\ vul/,
       :confidence => 1,
       :file => /Gemfile/
+  end
+
+  def test_sql_injection_CVE_2013_6417
+    assert_warning :type => :warning,
+      :warning_code => 69,
+      :fingerprint => "e1b66f4311771d714a13be519693c540d7e917511a758827d9b2a0a7f958e40f",
+      :warning_type => "SQL Injection",
+      :line => nil,
+      :message => /^Rails\ 2\.3\.14\ contains\ a\ SQL\ injection\ vu/,
+      :confidence => 0,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_number_to_currency_CVE_2013_6415
+    assert_warning :type => :warning,
+      :warning_code => 65,
+      :fingerprint => "813b00b5c58567fb3f32051578b839cb25fc2d827834a30d4b213a4c126202a2",
+      :warning_type => "Cross Site Scripting",
+      :line => nil,
+      :message => /^Rails\ 2\.3\.14\ has\ a\ vulnerability\ in\ numb/,
+      :confidence => 1,
+      :relative_path => "Gemfile",
+      :user_input => nil
   end
 end

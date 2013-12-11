@@ -15,6 +15,13 @@
   <%= @user_data %>
 </p>
 
+<p>
+  <b>Stuff I like:</b>
+  <%= simple_format(@user.likes, :class => "likes") %>
+  <%= simple_format("some string", :color => params[:color]) %>
+  <%= simple_format("some string", :id => h(params[:color])) %> should not warn
+</p>
+
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>

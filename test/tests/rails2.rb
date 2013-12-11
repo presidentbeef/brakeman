@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 3,
         :template => 45,
-        :generic => 46 }
+        :generic => 48 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
         :template => 45,
-        :generic => 47 }
+        :generic => 49 }
     end
   end
 
@@ -955,6 +955,28 @@ class Rails2Tests < Test::Unit::TestCase
       :relative_path => "config/environment.rb"
   end
 
+  def test_number_to_currency_CVE_2013_6415
+    assert_warning :type => :warning,
+      :warning_code => 65,
+      :fingerprint => "1822c8179beeb0358b71c545bad0dd824104aed8b995fe0781c1b6e324417a91",
+      :warning_type => "Cross Site Scripting",
+      :message => /^Rails\ 2\.3\.11\ has\ a\ vulnerability\ in\ numb/,
+      :confidence => 1,
+      :relative_path => "config/environment.rb"
+  end
+
+  def test_sql_injection_CVE_2013_6417
+    assert_warning :type => :warning,
+      :warning_code => 69,
+      :fingerprint => "378978cda99add8404dd38db466f6ffa0b824ea8c57270d98869241a240d12a6",
+      :warning_type => "SQL Injection",
+      :line => nil,
+      :message => /^Rails\ 2\.3\.11\ contains\ a\ SQL\ injection\ vu/,
+      :confidence => 0,
+      :relative_path => "config/environment.rb",
+      :user_input => nil
+  end
+
   def test_to_json
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
@@ -1230,13 +1252,13 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
         :controller => 1,
         :model => 4,
         :template => 45,
-        :generic => 46 }
+        :generic => 48 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
         :template => 45,
-        :generic => 47 }
+        :generic => 49 }
     end
   end
 

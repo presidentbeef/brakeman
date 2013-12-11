@@ -10,12 +10,68 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
     @expected ||= {
       :controller => 0,
       :model => 5,
-      :template => 9,
-      :generic => 2 }
+      :template => 11,
+      :generic => 6 }
   end
 
   def report
     Rails4WithEngines
+  end
+
+  def test_i18n_xss_CVE_2013_4491
+    assert_warning :type => :warning,
+      :warning_code => 63,
+      :fingerprint => "de0e11056b9f9af7b8570d5354185cd7e17a18cc61d627555fe4adfff00fb447",
+      :warning_type => "Cross Site Scripting",
+      :message => /^Rails\ 4\.0\.0\ has\ an\ XSS\ vulnerability\ in\ /,
+      :confidence => 1,
+      :relative_path => "Gemfile"
+  end
+
+  def test_number_to_currency_CVE_2013_6415
+    assert_warning :type => :warning,
+      :warning_code => 65,
+      :fingerprint => "813b00b5c58567fb3f32051578b839cb25fc2d827834a30d4b213a4c126202a2",
+      :warning_type => "Cross Site Scripting",
+      :line => nil,
+      :message => /^Rails\ 4\.0\.0\ has\ a\ vulnerability\ in\ numbe/,
+      :confidence => 1,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_xss_simple_format_CVE_2013_6416
+    assert_warning :type => :template,
+      :warning_code => 68,
+      :fingerprint => "0e340cc916e7487f118dae7cf3e3c1e6763c13455ec84ad56b4d3f520de8b3cb",
+      :warning_type => "Cross Site Scripting",
+      :line => 20,
+      :message => /^Values\ passed\ to\ simple_format\ are\ not\ s/,
+      :confidence => 0,
+      :relative_path => "Gemfile",
+      :user_input => s(:call, s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))), :likes)
+
+    assert_warning :type => :template,
+      :warning_code => 68,
+      :fingerprint => "33d10865a3c6c1594ecbee5511cde466b474b0e819ef979193159559becfbd4c",
+      :warning_type => "Cross Site Scripting",
+      :line => 21,
+      :message => /^Values\ passed\ to\ simple_format\ are\ not\ s/,
+      :confidence => 0,
+      :relative_path => "Gemfile",
+      :user_input => s(:call, s(:params), :[], s(:lit, :color))
+  end
+
+  def test_sql_injection_CVE_2013_6417
+    assert_warning :type => :warning,
+      :warning_code => 69,
+      :fingerprint => "e1b66f4311771d714a13be519693c540d7e917511a758827d9b2a0a7f958e40f",
+      :warning_type => "SQL Injection",
+      :line => nil,
+      :message => /^Rails\ 4\.0\.0\ contains\ a\ SQL\ injection\ vul/,
+      :confidence => 0,
+      :relative_path => "Gemfile",
+      :user_input => nil
   end
 
   def test_redirect_1
