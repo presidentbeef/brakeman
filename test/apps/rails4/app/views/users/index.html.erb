@@ -5,3 +5,7 @@
 <%= raw call_something(params).to_json %>
 
 <%= raw params[:stuff].to_json %>
+
+<%= number_to_currency(params[:cost], params[:currency]) %>
+
+<%= number_to_currency(params[:cost], h(params[:currency])) %> Should not warn

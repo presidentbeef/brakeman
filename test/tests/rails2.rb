@@ -955,6 +955,16 @@ class Rails2Tests < Test::Unit::TestCase
       :relative_path => "config/environment.rb"
   end
 
+  def test_number_to_currency_CVE_2013_6415
+    assert_warning :type => :warning,
+      :warning_code => 65,
+      :fingerprint => "1822c8179beeb0358b71c545bad0dd824104aed8b995fe0781c1b6e324417a91",
+      :warning_type => "Cross Site Scripting",
+      :message => /^Rails\ 2\.3\.11\ has\ a\ vulnerability\ in\ numb/,
+      :confidence => 1,
+      :relative_path => "config/environment.rb"
+  end
+
   def test_to_json
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",

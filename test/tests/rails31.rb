@@ -820,6 +820,18 @@ class Rails31Tests < Test::Unit::TestCase
       :relative_path => "Gemfile"
   end
 
+  def test_number_to_currency_CVE_2013_6415
+    assert_warning :type => :warning,
+      :warning_code => 65,
+      :fingerprint => "813b00b5c58567fb3f32051578b839cb25fc2d827834a30d4b213a4c126202a2",
+      :warning_type => "Cross Site Scripting",
+      :line => nil,
+      :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ numbe/,
+      :confidence => 1,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
   def test_to_json_with_overwritten_config
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
