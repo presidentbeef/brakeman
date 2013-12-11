@@ -802,10 +802,22 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_denial_of_service_CVE_2013_1854
     assert_warning :type => :warning,
+      :warning_code => 55,
+      :fingerprint => "2746b8872d4f46676a8c490a7ac906d23f6b11c9d83b6371ff5895139ec7b43b",
       :warning_type => "Denial of Service",
       :message => /^Rails\ 3\.1\.0\ has\ a\ denial\ of\ service\ vul/,
       :confidence => 1,
       :file => /Gemfile/
+  end
+
+  def test_denial_of_service_CVE_2013_6414
+    assert_warning :type => :warning,
+      :warning_code => 64,
+      :fingerprint => "a7b00f08e4a18c09388ad017876e3f57d18040ead2816a2091f3301b6f0e5a00",
+      :warning_type => "Denial of Service",
+      :message => /^Rails\ 3\.1\.0\ has\ a\ denial\ of\ service\ vuln/,
+      :confidence => 1,
+      :relative_path => "Gemfile"
   end
 
   def test_to_json_with_overwritten_config

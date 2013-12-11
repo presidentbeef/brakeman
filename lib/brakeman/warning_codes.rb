@@ -64,6 +64,7 @@ module Brakeman::WarningCodes
     :local_request_config => 61,
     :detailed_exceptions => 62,
     :CVE_2013_4491 => 63,
+    :CVE_2013_6414 => 64,
   }
 
   def self.code name

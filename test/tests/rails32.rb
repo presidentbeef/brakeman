@@ -82,6 +82,8 @@ class Rails32Tests < Test::Unit::TestCase
 
   def test_denial_of_service_CVE_2013_1854
     assert_warning :type => :warning,
+      :warning_code => 55,
+      :fingerprint => "2746b8872d4f46676a8c490a7ac906d23f6b11c9d83b6371ff5895139ec7b43b",
       :warning_type => "Denial of Service",
       :message => /^Rails\ 3\.2\.9\.rc2\ has\ a\ denial\ of\ service\ vul/,
       :confidence => 1,

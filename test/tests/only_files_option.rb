@@ -62,4 +62,17 @@ class OnlyFilesOptionTests < Test::Unit::TestCase
       :confidence => 1,
       :relative_path => "Gemfile"
   end
+
+  def test_denial_of_service_CVE_2013_6414
+    assert_warning :type => :warning,
+      :warning_code => 64,
+      :fingerprint => "a7b00f08e4a18c09388ad017876e3f57d18040ead2816a2091f3301b6f0e5a00",
+      :warning_type => "Denial of Service",
+      :line => nil,
+      :message => /^Rails\ 3\.2\.9\.rc2\ has\ a\ denial\ of\ service\ /,
+      :confidence => 1,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
 end
