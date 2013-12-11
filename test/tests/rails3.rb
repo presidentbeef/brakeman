@@ -1111,6 +1111,18 @@ class Rails3Tests < Test::Unit::TestCase
       :user_input => nil
   end
 
+  def test_sql_injection_CVE_2013_6417
+    assert_warning :type => :warning,
+      :warning_code => 69,
+      :fingerprint => "e1b66f4311771d714a13be519693c540d7e917511a758827d9b2a0a7f958e40f",
+      :warning_type => "SQL Injection",
+      :line => nil,
+      :message => /^Rails\ 3\.0\.3\ contains\ a\ SQL\ injection\ vul/,
+      :confidence => 0,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
   def test_http_only_session_setting
     assert_warning :type => :warning,
       :warning_type => "Session Setting",

@@ -965,6 +965,18 @@ class Rails2Tests < Test::Unit::TestCase
       :relative_path => "config/environment.rb"
   end
 
+  def test_sql_injection_CVE_2013_6417
+    assert_warning :type => :warning,
+      :warning_code => 69,
+      :fingerprint => "378978cda99add8404dd38db466f6ffa0b824ea8c57270d98869241a240d12a6",
+      :warning_type => "SQL Injection",
+      :line => nil,
+      :message => /^Rails\ 2\.3\.11\ contains\ a\ SQL\ injection\ vu/,
+      :confidence => 0,
+      :relative_path => "config/environment.rb",
+      :user_input => nil
+  end
+
   def test_to_json
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
