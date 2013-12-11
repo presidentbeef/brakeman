@@ -36,9 +36,9 @@ class BaseCheckTests < Test::Unit::TestCase
     @check = Brakeman::BaseCheck.new app_tree, @tracker
   end
 
-  def version_between? version, high, low
+  def version_between? version, low, high
     @tracker.config = { :rails_version => version }
-    @check.send(:version_between?, high, low)
+    @check.send(:version_between?, low, high)
   end
 
   def test_version_between
