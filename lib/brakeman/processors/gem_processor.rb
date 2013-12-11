@@ -15,6 +15,7 @@ class Brakeman::GemProcessor < Brakeman::BaseProcessor
     if gem_lock
       get_rails_version gem_lock
       get_json_version gem_lock
+      get_i18n_version gem_lock
     elsif @tracker.config[:gems][:rails] =~ /(\d+.\d+.\d+)/
       @tracker.config[:rails_version] = $1
     end
@@ -60,5 +61,9 @@ class Brakeman::GemProcessor < Brakeman::BaseProcessor
   def get_json_version gem_lock
     @tracker.config[:gems][:json] = get_version("json", gem_lock)
     @tracker.config[:gems][:json_pure] = get_version("json_pure", gem_lock)
+  end
+
+  def get_i18n_version gem_lock
+    @tracker.config[:gems][:i18n] = get_version("i18n", gem_lock)
   end
 end

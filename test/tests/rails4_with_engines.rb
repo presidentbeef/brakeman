@@ -18,6 +18,16 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
     Rails4WithEngines
   end
 
+  def test_i18n_xss_CVE_2013_4491
+    assert_warning :type => :warning,
+      :warning_code => 63,
+      :fingerprint => "de0e11056b9f9af7b8570d5354185cd7e17a18cc61d627555fe4adfff00fb447",
+      :warning_type => "Cross Site Scripting",
+      :message => /^Rails\ 4\.0\.0\ has\ an\ XSS\ vulnerability\ in\ /,
+      :confidence => 1,
+      :relative_path => "Gemfile"
+  end
+
   def test_redirect_1
     assert_warning :type => :generic,
       :warning_code => 18,

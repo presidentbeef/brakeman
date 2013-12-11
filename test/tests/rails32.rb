@@ -88,6 +88,16 @@ class Rails32Tests < Test::Unit::TestCase
       :file => /Gemfile/
   end
 
+  def test_i18n_xss_CVE_2013_4491
+    assert_warning :type => :warning,
+      :warning_code => 63,
+      :fingerprint => "de0e11056b9f9af7b8570d5354185cd7e17a18cc61d627555fe4adfff00fb447",
+      :warning_type => "Cross Site Scripting",
+      :message => /^Rails\ 3\.2\.9\.rc2\ has\ an\ XSS\ vulnerability/,
+      :confidence => 1,
+      :relative_path => "Gemfile"
+  end
+
   def test_redirect_1
     assert_warning :type => :warning,
       :warning_type => "Redirect",
