@@ -14,8 +14,8 @@ class Rails4Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 0,
-      :generic => 5
+      :template => 1,
+      :generic => 6
     }
   end
 
