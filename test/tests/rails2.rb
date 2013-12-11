@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 3,
         :template => 45,
-        :generic => 46 }
+        :generic => 48 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
         :template => 45,
-        :generic => 47 }
+        :generic => 49 }
     end
   end
 
@@ -1252,13 +1252,13 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
         :controller => 1,
         :model => 4,
         :template => 45,
-        :generic => 46 }
+        :generic => 48 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
         :template => 45,
-        :generic => 47 }
+        :generic => 49 }
     end
   end
 

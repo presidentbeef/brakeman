@@ -11,8 +11,7 @@ class Rails32Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 5,
       :template => 11,
-      :generic => 7 }
-
+      :generic => 10 }
 
     if RUBY_PLATFORM == 'java'
       @expected[:generic] += 1

@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 1,
-      :generic => 6
+      :generic => 9
     }
   end
 

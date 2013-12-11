@@ -16,7 +16,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 8,
       :template => 38,
-      :generic => 63
+      :generic => 66
     }
 
     if RUBY_PLATFORM == 'java'
