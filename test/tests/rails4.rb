@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 1,
-      :generic => 9
+      :generic => 10
     }
   end
 
@@ -197,6 +197,48 @@ class Rails4Tests < Test::Unit::TestCase
       :message => /^Rails\ 4\.0\.0 contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_mass_assignment_with_permit!
+    assert_warning :type => :warning,
+      :warning_code => 70,
+      :fingerprint => "c2fdd36441441ef7d2aed764731c36fb9f16939ed4df582705f27d46c02fcbe3",
+      :warning_type => "Mass Assignment",
+      :line => 22,
+      :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :user_input => nil
+
+    assert_no_warning :type => :warning,
+      :warning_code => 70,
+      :fingerprint => "cf2c82b751c8a1ce6a12ad89832cf7da43676032b058278ae65e8895bd6e8a57",
+      :warning_type => "Mass Assignment",
+      :line => 28,
+      :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :user_input => nil
+
+    assert_no_warning :type => :warning,
+      :warning_code => 70,
+      :fingerprint => "5495f802e6d3851519c6b911ffb8bfb039e51a77072cf8224306d54e20cf0e9e",
+      :warning_type => "Mass Assignment",
+      :line => 34,
+      :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :user_input => nil
+
+    assert_no_warning :type => :warning,
+      :warning_code => 70,
+      :fingerprint => "f8984beda14640a9c6baa25e8046d8bd6943493425b142174292c804b7afc63e",
+      :warning_type => "Mass Assignment",
+      :line => 40,
+      :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
       :user_input => nil
   end
 end
