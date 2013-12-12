@@ -1,5 +1,14 @@
-# Unreleased
+# 2.3.0
 
+ * Add check for Parameters#permit!
+ * Add check for CVE-2013-4491 (i18n XSS)
+ * Add check for CVE-2013-6414 (header DoS)
+ * Add check for CVE-2013-6415 (number_to_currency)
+ * Add check for CVE-2013-6416 (simple_format XSS)
+ * Add check for CVE-2013-6417 (query generation) 
+ * Fix typos in reflection and translate bug messages
+ * Collapse send/try calls 
+ * Fix Slim XSS false positives (Noah Davis)
  * Whitelist `Model#create` for redirects
  * Fix scoping issues with instance variables and blocks
 
