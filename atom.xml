@@ -4,13 +4,147 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2013-12-01T16:24:03-08:00</updated>
+  <updated>2013-12-12T10:32:20-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 2.3.0 Released</title>
+    <link href="http://brakemanscanner.org/blog/2013/12/11/brakeman-2-dot-3-0-released/"/>
+    <updated>2013-12-11T12:20:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2013/12/11/brakeman-2-dot-3-0-released</id>
+    <content type="html">&lt;p&gt;This is a small release, but adds several new warning codes for the latest Rails CVEs and a new check for uses of &lt;code&gt;permit!&lt;/code&gt;. Also, this is the first signed gem release of Brakeman; see below for details.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 2.2.0:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add check for CVE-2013-4491 (i18n XSS)&lt;/li&gt;
+&lt;li&gt;Add check for CVE-2013-6414 (header DoS)&lt;/li&gt;
+&lt;li&gt;Add check for CVE-2013-6415 (&lt;code&gt;number_to_currency&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Add check for CVE-2013-6416 (&lt;code&gt;simple_format&lt;/code&gt; XSS)&lt;/li&gt;
+&lt;li&gt;Add check for CVE-2013-6417 (query generation)&lt;/li&gt;
+&lt;li&gt;Add check for &lt;code&gt;Parameters#permit!&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/281&quot;&gt;#281&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Fix Slim XSS false positives (&lt;a href=&quot;https://github.com/noahd1&quot;&gt;Noah Davis&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Whitelist &lt;code&gt;Model#create&lt;/code&gt; for redirects (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/406&quot;&gt;#406&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Collapse send/try calls&lt;/li&gt;
+&lt;li&gt;Fix scoping issues with instance variables and blocks (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/406&quot;&gt;#406&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Fix typos in reflection and translate bug messages&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;I18n XSS&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/msg/ruby-security-ann/pLrh6DUw998/2i61N5c3heUJ&quot;&gt;CVE-2013-4491&lt;/a&gt; is a possible XSS in the i18n gem. Brakeman will warn unless the i18n gem is updated to the proper version or the workaround is used.&lt;/p&gt;
+
+&lt;h3&gt;Header DoS&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/msg/ruby-security-ann/A-ebV4WxzKg/KNPTbX8XAQUJ&quot;&gt;CVE-2013-6414&lt;/a&gt; is a possible denial of service from special headers. Brakeman will warn unless the workaround is used.&lt;/p&gt;
+
+&lt;h3&gt;Currency XSS&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ&quot;&gt;CVE-2013-6415&lt;/a&gt; is an XSS in the second argument of &lt;code&gt;number_to_currency&lt;/code&gt;. Brakeman will warn on uses of &lt;code&gt;number_to_currency&lt;/code&gt; with dangerous unescaped arguments. If no dangerous uses are found, Brakeman will provide a general warning about the CVE.&lt;/p&gt;
+
+&lt;h3&gt;Simple Format XSS&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/msg/ruby-security-ann/5ZI1-H5OoIM/ZNq4FoR2GnIJ&quot;&gt;CVE-2013-6416&lt;/a&gt; is an XSS in &lt;code&gt;simple_format&lt;/code&gt;, which does not escape its output. Brakeman will warn on dangerous uses of &lt;code&gt;simple_format&lt;/code&gt;. If no uses are found, it will report a general warning.&lt;/p&gt;
+
+&lt;h3&gt;Query Generation Vulnerability&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/msg/ruby-security-ann/niK4drpSHT4/g8JW8ZsayRkJ&quot;&gt;CVE-2013-6417&lt;/a&gt; is the continuation of an old problem with SQL queries. The newest issue is caused by Rack middleware freezing the parameters before they can be cleaned up. Brakeman reports a general warning about this.&lt;/p&gt;
+
+&lt;h3&gt;Check for Permit!&lt;/h3&gt;
+
+&lt;p&gt;Brakeman now warns on uses of &lt;code&gt;Parameters#permit!&lt;/code&gt;, which bypasses mass assignment protections. If a &lt;code&gt;permit!&lt;/code&gt; is used without a subsequent mass assignment in the same method, the confidence will be medium.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/414&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Slim XSS False Positives&lt;/h3&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/noahd1&quot;&gt;Noah Davis&lt;/a&gt;) provided a fix for XSS false positives in Slim templates when ActiveRecord is loaded. While Brakeman itself does not depend on ActiveRecord, it might be loaded if Brakeman is run with Bundler or as part of a Rake task.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/410&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Whitelist Record Creation in Redirects&lt;/h3&gt;
+
+&lt;p&gt;Redirects to &lt;code&gt;Model#create&lt;/code&gt; and &lt;code&gt;Model#create!&lt;/code&gt; should no longer warn.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/408&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Collapse &lt;code&gt;try&lt;/code&gt;/&lt;code&gt;send&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;The effect of using &lt;code&gt;try(:something)&lt;/code&gt; or &lt;code&gt;send(:something)&lt;/code&gt; are essentially the same as calling &lt;code&gt;something&lt;/code&gt;, so Brakeman now converts calls to &lt;code&gt;try&lt;/code&gt;/&lt;code&gt;send&lt;/code&gt; directly to the method being called.&lt;/p&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;User.find(1).try(:name)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;is changed to&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;User.find(1).name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This can help find more vulnerabilities as well as prevent some false positives if the method name is actually something safe like &lt;code&gt;id&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/412&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Block Scoping&lt;/h3&gt;
+
+&lt;p&gt;Several issues with blocks were fixed in this release. First, no calls with blocks were being processed correctly inside controllers. Secondly, instance variable assignments inside blocks were treated like local assignments. They are now treated as &quot;method level&quot; assignments (i.e. every method has its own &quot;global&quot; scope). Finally, local assignments inside blocks to existing variables were also being treated as block-local assignments.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/407&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Warning Typos&lt;/h3&gt;
+
+&lt;p&gt;Two tiny changes have been made to warning messages. The &quot;translate bug&quot; from ages ago had an extra &lt;code&gt;}&lt;/code&gt; in the message, and the message for unsafe reflection no longer capitalizes &quot;Reflection&quot;. But since everyone is using &lt;a href=&quot;http://brakemanscanner.org/blog/2013/05/20/brakeman-2-dot-0-0-released/&quot;&gt;warning fingerprints and not relying on matching messages&lt;/a&gt;, you should be okay, right?&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/411&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Signed Gems&lt;/h3&gt;
+
+&lt;p&gt;The Brakeman gems are now signed and can be verified with &lt;a href=&quot;https://github.com/presidentbeef/brakeman/blob/master/brakeman-public_cert.pem&quot;&gt;this certificate&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;To verify on installation:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;gem cert --add &amp;lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
+gem install brakeman -P MediumSecurity
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&quot;HighSecurity&quot; requires all dependencies to be signed as well, which is unlikely.&lt;/p&gt;
+
+&lt;p&gt;Additionally, here are the SHA sums for this release:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;2ae503781c51a69a1123d37d46b4813ea91f01e8  brakeman-2.3.0.gem
+77d39eaf0e2663af526dcbf6e3b5bac16173fed1  brakeman-min-2.3.0.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Brakeman Users&lt;/h3&gt;
+
+&lt;p&gt;We have a new page on this website &lt;a href=&quot;http://brakemanscanner.org/brakeman_users/&quot;&gt;listing companies which use Brakeman&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Please contact us (&lt;a href=&quot;http://brakemanscanner.org/brakeman_users/&quot;&gt;see bottom of page&lt;/a&gt;) to have your company listed!&lt;/p&gt;
+
+&lt;h3&gt;Stickers&lt;/h3&gt;
+
+&lt;p&gt;Brakeman stickers are still available!&lt;/p&gt;
+
+&lt;blockquote class=&quot;twitter-tweet&quot; lang=&quot;en&quot;&gt;&lt;p&gt;Wish you were getting one of these? Just send your name and address to stickers@brakeman.org and you will be next! &lt;a href=&quot;http://t.co/qXdnGVo6hG&quot;&gt;pic.twitter.com/qXdnGVo6hG&lt;/a&gt;&lt;/p&gt;&amp;mdash; Brakeman Scanner (@brakeman) &lt;a href=&quot;https://twitter.com/brakeman/statuses/403546302119563264&quot;&gt;November 21, 2013&lt;/a&gt;&lt;/blockquote&gt;
+
+
+&lt;script async src=&quot;http://brakemanscanner.org//platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 2.2.0 Released</title>
@@ -1840,92 +1974,6 @@ end
 &lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
 
 &lt;p&gt;Don't forget to check out the &lt;a href=&quot;https://speakerdeck.com/u/presidentbeef/p/keeping-rails-applications-on-track-with-brakeman&quot;&gt;RailsConf Brakeman presentation slides&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 1.6 Released</title>
-    <link href="http://brakemanscanner.org/blog/2012/04/20/brakeman-1-dot-6-released/"/>
-    <updated>2012-04-20T10:22:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2012/04/20/brakeman-1-dot-6-released</id>
-    <content type="html">&lt;p&gt;A lot of code has changed in this release, particularly with the removal of the Ruport library for reporting. While Ruport worked pretty well, it caused some issues just due to the large number of (out-dated) dependencies it brought with it.&lt;/p&gt;
-
-&lt;p&gt;Also, this release changes the JSON report output. This is a backwards &lt;em&gt;incompatible&lt;/em&gt; change. But, given how useless the previous JSON reports were, hopefully this will not affect too many people.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 1.5.3:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Remove the Ruport dependency (Neil Matatall)&lt;/li&gt;
-&lt;li&gt;Add more informational JSON output (Neil Matatall)&lt;/li&gt;
-&lt;li&gt;Add comparison to previous JSON report (Neil Matatall)&lt;/li&gt;
-&lt;li&gt;Add highlighting of dangerous values in HTML/text reports&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Model#update_attribute&lt;/code&gt; should not raise mass assignment warning (Dave Worth)&lt;/li&gt;
-&lt;li&gt;Don't check &lt;code&gt;find_by_*&lt;/code&gt; method for SQL injection&lt;/li&gt;
-&lt;li&gt;Fix duplicate reporting of mass assignment and SQL injection&lt;/li&gt;
-&lt;li&gt;Fix rescanning of deleted files&lt;/li&gt;
-&lt;li&gt;Properly check for &lt;code&gt;rails_xss&lt;/code&gt; in Gemfile&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;No More Ruport&lt;/h3&gt;
-
-&lt;p&gt;Ruport is a nice library, but it also has not been updated in over two years and its dependency tree was ridiculous.&lt;/p&gt;
-
-&lt;p&gt;Thanks to Neil Matatall, Brakeman no longer depends on Ruport, but the reports should look essentially the same. The HTML reports are now rendered through ERB templates, so it should not be too difficult to customize the reports if desired.&lt;/p&gt;
-
-&lt;h3&gt;Better JSON Output&lt;/h3&gt;
-
-&lt;p&gt;JSON output now includes meta-information about the scan, errors raised during the scan, and line numbers for each warning.&lt;/p&gt;
-
-&lt;h3&gt;JSON Report Comparison&lt;/h3&gt;
-
-&lt;p&gt;Being able to compare Brakeman reports is essential for tracking warnings over time. Prior to this release, the only decent way of doing that was via the &lt;a href=&quot;http://brakemanscanner.org/docs/jenkins/&quot;&gt;Jenkins plugin&lt;/a&gt;. But now Brakeman can compare results to the JSON report from a previous scan.&lt;/p&gt;
-
-&lt;p&gt;For example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;brakeman -o report.json
-brakeman --compare report.json
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This will run another scan, then output a comparison of the reports (in JSON). The report includes a list of fixed warnings and a list of new warnings that were found.&lt;/p&gt;
-
-&lt;h3&gt;User Input Highlighted in Reports&lt;/h3&gt;
-
-&lt;p&gt;Sometimes it is unclear exactly what value has caused Brakeman to issue a particular warning. This release adds highlighting the detected user input in most warnings. (Some warnings, the code that is reported &lt;em&gt;is&lt;/em&gt; the detected user input). This information is also available in the JSON reports.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://brakemanscanner.org/images/user_input_highlight.png&quot; title=&quot;Example of User Input Highlighting&quot; alt=&quot;User Input Highlight&quot; /&gt;&lt;/p&gt;
-
-&lt;h3&gt;Fewer Mass Assignment and SQL Injection Methods&lt;/h3&gt;
-
-&lt;p&gt;Dave Worth pointed out that Brakeman was a little overzealous in which methods it considered susceptible to mass assignment and SQL injection attacks.&lt;/p&gt;
-
-&lt;p&gt;Brakeman will no longer check &lt;code&gt;update_attribute&lt;/code&gt; for mass assignment or the &lt;code&gt;find_by_*&lt;/code&gt; dynamic methods for SQL injection.&lt;/p&gt;
-
-&lt;h3&gt;Fewer Mass Assignment and SQL Injection Duplicates&lt;/h3&gt;
-
-&lt;p&gt;Pesky duplicate reports of mass assignment and SQL injection were turning up as template warnings. This occurred when the results of the mass assignment or SQL query were assigned to a variable which was then used in a template. This should now be fixed.&lt;/p&gt;
-
-&lt;p&gt;More details than are probably desired are available &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/82&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3&gt;Rescanning Fixes&lt;/h3&gt;
-
-&lt;p&gt;Rescanning of deleted files is now supported, and there some other issues with rescanning that are now resolved as well.&lt;/p&gt;
-
-&lt;h3&gt;New Logo&lt;/h3&gt;
-
-&lt;p&gt;Brakeman has a sweet new logo, thanks to &lt;a href=&quot;http://janellelawless.com/&quot;&gt;Janelle Lawless&lt;/a&gt;!&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://brakemanscanner.org/images/logo_medium.png&quot; alt=&quot;Brakeman Logo&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Updates to the website to reflect this awesomeness are coming soon.&lt;/p&gt;
-
-&lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release!&lt;/p&gt;
-
-&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
-
-&lt;p&gt;And don't forget to check out the Brakeman talk at &lt;a href=&quot;http://railsconf2012.com/sessions/44&quot;&gt;RailsConf&lt;/a&gt; in a few days.&lt;/p&gt;
 </content>
   </entry>
   
