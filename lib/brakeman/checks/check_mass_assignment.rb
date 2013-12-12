@@ -10,7 +10,12 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
   @description = "Finds instances of mass assignment"
 
   def run_check
-    return if mass_assign_disabled?
+    check_mass_assignment
+    check_permit!
+  end
+
+  def find_mass_assign_calls
+    return @mass_assign_calls if @mass_assign_calls
 
     models = []
     tracker.models.each do |name, m|
@@ -19,13 +24,12 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
       end
     end
 
-    return if models.empty?
-
+    return [] if models.empty?
 
     Brakeman.debug "Finding possible mass assignment calls on #{models.length} models"
-    calls = tracker.find_call :chained => true, :targets => models, :methods => [:new,
-      :attributes=, 
-      :update_attributes, 
+    @mass_assign_calls = tracker.find_call :chained => true, :targets => models, :methods => [:new,
+      :attributes=,
+      :update_attributes,
       :update_attributes!,
       :create,
       :create!,
@@ -36,9 +40,13 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
       :assign_attributes,
       :update
     ]
+  end
+
+  def check_mass_assignment
+    return if mass_assign_disabled?
 
     Brakeman.debug "Processing possible mass assignment calls"
-    calls.each do |result|
+    find_mass_assign_calls.each do |result|
       process_result result
     end
   end
@@ -78,12 +86,12 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
         confidence = CONFIDENCE[:low]
         user_input = nil
       end
-      
-      warn :result => res, 
-        :warning_type => "Mass Assignment", 
+
+      warn :result => res,
+        :warning_type => "Mass Assignment",
         :warning_code => :mass_assign_call,
         :message => "Unprotected mass assignment",
-        :code => call, 
+        :code => call,
         :user_input => user_input,
         :confidence => confidence
     end
@@ -139,5 +147,44 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
     else
       true
     end
+  end
+
+  # Look for and warn about uses of Parameters#permit! for mass assignment
+  def check_permit!
+    tracker.find_call(:method => :permit!).each do |result|
+      if params? result[:target]
+        warn_on_permit! result
+      end
+    end
+  end
+
+  # Look for actual use of params in mass assignment to avoid
+  # warning about uses of Parameters#permit! without any mass assignment
+  # or when mass assignment is restricted by model instead.
+  def subsequent_mass_assignment? result
+    location = result[:location]
+    line = result[:call].line
+    find_mass_assign_calls.any? do |call|
+      call[:location] == location and
+      params? call[:call].first_arg and
+      call[:call].line >= line
+    end
+  end
+
+  def warn_on_permit! result
+    return if duplicate? result or result[:call].original_line
+    add_result result
+
+    confidence = if subsequent_mass_assignment? result
+                   CONFIDENCE[:high]
+                 else
+                   CONFIDENCE[:med]
+                 end
+
+    warn :result => result,
+      :warning_type => "Mass Assignment",
+      :warning_code => :mass_assign_permit!,
+      :message => "Parameters should be whitelisted for mass assignment",
+      :confidence => confidence
   end
 end

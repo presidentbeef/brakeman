@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 1,
-      :generic => 9
+      :generic => 13
     }
   end
 
@@ -197,6 +197,48 @@ class Rails4Tests < Test::Unit::TestCase
       :message => /^Rails\ 4\.0\.0 contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_mass_assignment_with_permit!
+    assert_warning :type => :warning,
+      :warning_code => 70,
+      :fingerprint => "c2fdd36441441ef7d2aed764731c36fb9f16939ed4df582705f27d46c02fcbe3",
+      :warning_type => "Mass Assignment",
+      :line => 22,
+      :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :user_input => nil
+
+    assert_warning :type => :warning,
+      :warning_code => 70,
+      :fingerprint => "2f2df4aef71799a6a441783b50e7a43a9bed7da6c8d50e07e73d9d165065ceec",
+      :warning_type => "Mass Assignment",
+      :line => 28,
+      :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
+      :confidence => 1,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :user_input => nil
+
+    assert_warning :type => :warning,
+      :warning_code => 70,
+      :fingerprint => "4f6a0d82f6ddf5528f3d50545ce353f2f1658d5102a745107ea572af5c2eee4b",
+      :warning_type => "Mass Assignment",
+      :line => 34,
+      :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
+      :confidence => 1,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :user_input => nil
+
+    assert_warning :type => :warning,
+      :warning_code => 70,
+      :fingerprint => "947bddec4cdd3ff8b2485eec1bd0078352c182a3bca18a5f68da0a64e87d4e80",
+      :warning_type => "Mass Assignment",
+      :line => 40,
+      :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
+      :confidence => 1,
+      :relative_path => "app/controllers/friendly_controller.rb",
       :user_input => nil
   end
 end
