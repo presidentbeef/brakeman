@@ -1,4 +1,5 @@
 require './lib/brakeman/version'
+gem_priv_key = File.expand_path("~/.ssh/gem-private_key.pem")
 
 Gem::Specification.new do |s|
   s.name = %q{brakeman}
@@ -12,7 +13,7 @@ Gem::Specification.new do |s|
   s.executables = ["brakeman"]
   s.license = "MIT"
   s.cert_chain  = ['brakeman-public_cert.pem']
-  s.signing_key = File.expand_path("~/.ssh/gem-private_key.pem") if $0 =~ /gem\z/
+  s.signing_key = gem_priv_key if File.exist? gem_priv_key and $0 =~ /gem\z/
   s.add_dependency "ruby_parser", "~>3.2.2"
   s.add_dependency "ruby2ruby", "~>2.0.5"
   s.add_dependency "terminal-table", "~>1.4"
