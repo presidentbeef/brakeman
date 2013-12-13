@@ -27,7 +27,7 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
       :message => message,
       :confidence => CONFIDENCE[:med],
       :file => gemfile_or_environment,
-      :link_path => "https://groups.google.com/d/topic/rubyonrails-security/8CpI7egxX4E/discussion"
+      :link_path => "https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ"
   end
 
   def check_number_to_currency_usage
@@ -49,7 +49,7 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
       :warning_code => :CVE_2013_6415_call,
       :message => "Currency value in number_to_currency is not safe in Rails #{@tracker.config[:rails_version]}",
       :confidence => CONFIDENCE[:high],
-      :link_path => "https://groups.google.com/d/topic/rubyonrails-security/8CpI7egxX4E/discussion",
+      :link_path => "https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ",
       :user_input => match
   end
 end
