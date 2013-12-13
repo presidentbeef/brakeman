@@ -1,3 +1,8 @@
+# 2.3.1
+
+ * Fix check for CVE-2013-4491 (i18n XSS) to detect workaround
+ * Fix link for CVE-2013-6415 (number_to_currency)
+
 # 2.3.0
 
  * Add check for Parameters#permit!
