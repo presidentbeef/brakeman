@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Basic Authentication</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman 2.3.1 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/basic_authentication/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2013/12/12/brakeman-2-dot-3-1-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -100,40 +100,114 @@
   <div id="main">
     <div id="content">
       <div>
-<article>
+<article class="hentry">
   
   <header>
-    <h1 class="entry-title">Basic Authentication</h1>
+    <div class="articlelogo">&nbsp;</div>
+    
+      <h1 class="entry-title">Brakeman 2.3.1 Released</h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2013-12-12 23:24:00 -0800" pubdate  updated >Dec 12<span>th</span>, 2013</time>
+
+
+</p>
+    
   </header>
-  
-  <p>In Rails 3.1, a new feature was added to simplify basic authentication.</p>
 
-<p>The example provided in the official <a href="http://guides.rubyonrails.org/getting_started.html">Rails Guide</a> looks like this:</p>
 
-<pre><code>class PostsController &lt; ApplicationController
+<div class="entry-content"><p>Two minor bugs were fixed in this release. Please see the <a href="http://brakemanscanner.org/blog/2013/12/11/brakeman-2-dot-3-0-released/">2.3.0 release post</a> if you are upgrading from an earlier version.</p>
 
-  http_basic_authenticate_with :name =&gt; "dhh", :password =&gt; "secret", :except =&gt; :index
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/415">changes</a>)</p>
 
-  #...
+<p><em>Changes since 2.3.0</em>:</p>
 
-end
+<ul>
+<li>Fix check for CVE-2013-4491 (i18n XSS) to detect workaround</li>
+<li>Fix link for CVE-2013-6415 (number_to_currency)</li>
+</ul>
+
+
+<h3>i18n XSS Workaround</h3>
+
+<p>Brakeman 2.3.0 included a check for the <a href="https://groups.google.com/d/msg/ruby-security-ann/pLrh6DUw998/bLFEyIO4k_EJ">official i18n XSS workaround</a>, but it was commented out during testing and unfortunately left that way.</p>
+
+<h3>CVE-2013-6415 Link</h3>
+
+<p>The link provided for <a href="https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ">CVE-2013-6415</a> in Brakeman 2.3.0 was copy-pasted from an older check. This has been fixed.</p>
+
+<h3>SHAs</h3>
+
+<p>The SHA sums for this release are</p>
+
+<pre><code>469b209a4c72f5a1133d696575caeee1675837e7  brakeman-2.3.1.gem
+827e1cdefba543f59ed5070aaa3f587d8c7d9513  brakeman-min-2.3.1.gem
 </code></pre>
 
-<p>This warning will be raised if <code>http_basic_authenticate_with</code> is used and the password is found to be a string (i.e., stored somewhere in the code).</p>
+<h3>Reporting Issues</h3>
 
-<hr />
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
 
-<p>Back to <a href="/docs/warning_types">Warning Types</a></p>
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
 
+
+  <footer>
+    <p class="meta">
+      
   
-    <footer>
-      <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
+
+      
+
+
+
+
+<time datetime="2013-12-12 23:24:00 -0800" pubdate  updated >Dec 12<span>th</span>, 2013</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
   
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2013/12/12/brakeman-2-dot-3-1-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2013/12/12/brakeman-2-dot-3-1-released/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread"><div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'brakeman';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2013/12/12/brakeman-2-dot-3-1-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2013/12/12/brakeman-2-dot-3-1-released/';
+  //var disqus_developer = 1;
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 

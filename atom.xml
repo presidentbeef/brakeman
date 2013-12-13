@@ -4,13 +4,54 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2013-12-12T10:32:20-08:00</updated>
+  <updated>2013-12-12T23:33:11-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 2.3.1 Released</title>
+    <link href="http://brakemanscanner.org/blog/2013/12/12/brakeman-2-dot-3-1-released/"/>
+    <updated>2013-12-12T23:24:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2013/12/12/brakeman-2-dot-3-1-released</id>
+    <content type="html">&lt;p&gt;Two minor bugs were fixed in this release. Please see the &lt;a href=&quot;http://brakemanscanner.org/blog/2013/12/11/brakeman-2-dot-3-0-released/&quot;&gt;2.3.0 release post&lt;/a&gt; if you are upgrading from an earlier version.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/415&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 2.3.0&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fix check for CVE-2013-4491 (i18n XSS) to detect workaround&lt;/li&gt;
+&lt;li&gt;Fix link for CVE-2013-6415 (number_to_currency)&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;i18n XSS Workaround&lt;/h3&gt;
+
+&lt;p&gt;Brakeman 2.3.0 included a check for the &lt;a href=&quot;https://groups.google.com/d/msg/ruby-security-ann/pLrh6DUw998/bLFEyIO4k_EJ&quot;&gt;official i18n XSS workaround&lt;/a&gt;, but it was commented out during testing and unfortunately left that way.&lt;/p&gt;
+
+&lt;h3&gt;CVE-2013-6415 Link&lt;/h3&gt;
+
+&lt;p&gt;The link provided for &lt;a href=&quot;https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ&quot;&gt;CVE-2013-6415&lt;/a&gt; in Brakeman 2.3.0 was copy-pasted from an older check. This has been fixed.&lt;/p&gt;
+
+&lt;h3&gt;SHAs&lt;/h3&gt;
+
+&lt;p&gt;The SHA sums for this release are&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;469b209a4c72f5a1133d696575caeee1675837e7  brakeman-2.3.1.gem
+827e1cdefba543f59ed5070aaa3f587d8c7d9513  brakeman-min-2.3.1.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 2.3.0 Released</title>
@@ -1908,72 +1949,6 @@ end
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release!&lt;/p&gt;
 
 &lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 1.6.1 Released</title>
-    <link href="http://brakemanscanner.org/blog/2012/05/23/brakeman-1-dot-6-1-released/"/>
-    <updated>2012-05-23T12:45:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2012/05/23/brakeman-1-dot-6-1-released</id>
-    <content type="html">&lt;p&gt;Wow, it's been over a month since the last release!&lt;/p&gt;
-
-&lt;p&gt;The major change in this version is a rewrite of the SQL injection check. Many more methods are covered, and there should be a reduction of false positives as well.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 1.6.0&lt;/em&gt;:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Major rewrite of CheckSQL&lt;/li&gt;
-&lt;li&gt;Process actions mixed into controllers&lt;/li&gt;
-&lt;li&gt;Check for inherited &lt;code&gt;attr_accessible&lt;/code&gt; (Neil Matatall)&lt;/li&gt;
-&lt;li&gt;Handle &lt;code&gt;render :template =&amp;gt; ...&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Report line number of highlighted value, if available&lt;/li&gt;
-&lt;li&gt;Fix highlighting of HTML escaped values in HTML report&lt;/li&gt;
-&lt;li&gt;Fix rescanning of deleted templates&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;Updated SQL Injection Check&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;CheckSQL&lt;/code&gt; has been completely revamped. Brakeman now has a much better understanding of the various ActiveRecord::FinderMethods and ActiveRecord::QueryMethods, as well as their options.&lt;/p&gt;
-
-&lt;p&gt;The check is also more conservative about what it warns on. Previously, since string interpolation is the main entry point for SQL injection in Rails, any interpolated value in a query would generate a warning. Now, &quot;safe&quot; sanitization methods, obviously safe methods like &lt;code&gt;to_i&lt;/code&gt; and &lt;code&gt;id&lt;/code&gt;, constants, strings, and other literal values should not cause warnings.&lt;/p&gt;
-
-&lt;p&gt;The &quot;highlighted&quot; value (or &quot;user input&quot;) reported for SQL warnings should be much more accurate now, making it easier to determine why a warning was reported.&lt;/p&gt;
-
-&lt;h3&gt;Controller Mixins&lt;/h3&gt;
-
-&lt;p&gt;Methods on controller mixins that are used as actions should now be processed as if they were defined in the controller itself.&lt;/p&gt;
-
-&lt;h3&gt;Check for Inherited Mass Assignment Protection&lt;/h3&gt;
-
-&lt;p&gt;Since mass assignment protection via &lt;code&gt;attr_accessible&lt;/code&gt; is inheritable, Brakeman will no longer warn about models whose parent uses &lt;code&gt;attr_accessible&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h3&gt;Template Option in Render&lt;/h3&gt;
-
-&lt;p&gt;Somehow, the &lt;code&gt;:template&lt;/code&gt; option for &lt;code&gt;render&lt;/code&gt; has been ignored this whole time. Sorry!&lt;/p&gt;
-
-&lt;h3&gt;Better Line Numbers&lt;/h3&gt;
-
-&lt;p&gt;Warnings which have a &lt;code&gt;:user_input&lt;/code&gt; field use that value to &quot;highlight&quot; part of the code in the reported warning. This value usually corresponds to the code which actually caused the warning to be generated.&lt;/p&gt;
-
-&lt;p&gt;If a warning has this field, the line number of that code is used, instead of the starting line number of the entire piece of code. This often leads to more accurate and helpful line numbers.&lt;/p&gt;
-
-&lt;h3&gt;Highlighted Values in HTML Reports&lt;/h3&gt;
-
-&lt;p&gt;Since the warnings output in HTML reports are HTML-escaped, there was a sometimes mismatch between the value that needed to be highlighted and the HTML warning output, causing nothing to be highlighted. This is fixed now.&lt;/p&gt;
-
-&lt;h3&gt;Rescanning of Deleted Templates&lt;/h3&gt;
-
-&lt;p&gt;In the rescanning logic, templates which are related to a changed file (a view or partial that is rendered, usually) will be rescanned. However, there is the possibility that the template which needs to be rescanned as a related file has been deleted as part of the set of changes. This caused the rescanning to blow up, but that has been fixed now.&lt;/p&gt;
-
-&lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release!&lt;/p&gt;
-
-&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
-
-&lt;p&gt;Don't forget to check out the &lt;a href=&quot;https://speakerdeck.com/u/presidentbeef/p/keeping-rails-applications-on-track-with-brakeman&quot;&gt;RailsConf Brakeman presentation slides&lt;/a&gt;.&lt;/p&gt;
 </content>
   </entry>
   
