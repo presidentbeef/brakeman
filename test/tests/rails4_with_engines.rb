@@ -198,7 +198,7 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
   def test_mass_assignment_12
     assert_warning :type => :model,
       :warning_code => 60,
-      :fingerprint => "18df17e4364b62c4ba1c6e2849f8302592c68d196ab43f753639f9043c1e4014",
+      :fingerprint => "6eab87f7d7a130b4762ba10184614f9f8780e95625857b11e42505ee4a82d04f",
       :warning_type => "Mass Assignment",
       #noline,
       :message => /^Potentially\ dangerous\ attribute\ 'plan_id/,
@@ -209,7 +209,7 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
   def test_mass_assignment_13
     assert_warning :type => :model,
       :warning_code => 60,
-      :fingerprint => "e2fb5b0d650caf257ef86e32b101f9488738388e91039cc130c365a8df9b83fb",
+      :fingerprint => "9e552d6eac8dc68eb6e3a41cb838756802bcee812ab264e3d089d385566c4df0",
       :warning_type => "Mass Assignment",
       #noline,
       :message => /^Potentially\ dangerous\ attribute\ 'banned'/,
@@ -220,7 +220,7 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
   def test_mass_assignment_14
     assert_warning :type => :model,
       :warning_code => 60,
-      :fingerprint => "6276c85369c13ed06f18ca1dd9a7ef076077154e98f0c29b7938b5649a7d115d",
+      :fingerprint => "fab5f6c9c06598732046931ee76049f31549502dd77b70dcf93562f62e81a3c0",
       :warning_type => "Mass Assignment",
       #noline,
       :message => /^Potentially\ dangerous\ attribute\ 'account/,
@@ -231,7 +231,7 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
   def test_mass_assignment_15
     assert_warning :type => :model,
       :warning_code => 60,
-      :fingerprint => "6276c85369c13ed06f18ca1dd9a7ef076077154e98f0c29b7938b5649a7d115d",
+      :fingerprint => "9b1cfaefacee0db06a58f558fb8dd6631fc43684da3c86368f0bfaf5cb6916e0",
       :warning_type => "Mass Assignment",
       #noline,
       :message => /^Potentially\ dangerous\ attribute\ 'admin'\ /,
@@ -242,7 +242,7 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
   def test_mass_assignment_16
     assert_warning :type => :model,
       :warning_code => 60,
-      :fingerprint => "6fd655a6dcf618e378d5f7e7b3a9c038ed9b29d66ab89f9c28343265b2ff6d75",
+      :fingerprint => "1668dd521bfcd7e2b387bcd5d636a35da24a7554eb612cc6096dc6bc41bb984f",
       :warning_type => "Mass Assignment",
       #noline,
       :message => /^Potentially\ dangerous\ attribute\ 'status_/,

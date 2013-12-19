@@ -175,6 +175,7 @@ class Brakeman::Warning
       location = { :type => :template, :template => self.view_name }
     when :model
       location = { :type => :model, :model => self.model }
+      location.merge!(:method => self.method) if self.method
     when :controller
       location = { :type => :controller, :controller => self.controller }
     when :warning
