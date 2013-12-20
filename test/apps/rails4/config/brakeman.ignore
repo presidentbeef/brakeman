@@ -1,0 +1,24 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 60,
+      "fingerprint": "cd83ecf615b17f849ba28050e7faf1d54f218dfa9435c3f65f47cb378c18cf98",
+      "message": "Potentially dangerous attribute available for mass assignment",
+      "file": "app/models/account.rb",
+      "line": null,
+      "link": "http://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": ":admin",
+      "render_path": null,
+      "location": {
+        "type": "model",
+        "model": "Account"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": "skipping this for a test"
+    }
+  ],
+  "updated": "2013-12-20 22:14:42 +0200",
+  "brakeman_version": "2.3.1"
+}

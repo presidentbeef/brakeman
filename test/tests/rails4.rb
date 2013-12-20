@@ -13,7 +13,7 @@ class Rails4Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :controller => 0,
-      :model => 0,
+      :model => 1,
       :template => 1,
       :generic => 12
     }
@@ -240,5 +240,10 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 1,
       :relative_path => "app/controllers/friendly_controller.rb",
       :user_input => nil
+  end
+
+  def test_only_desired_attribute_is_ignored
+    assert_warning :type => :model, message: "Potentially dangerous attribute available for mass assignment: :account_id"
+    assert_no_warning :type => :model, message: "Potentially dangerous attribute available for mass assignment: :admin"
   end
 end
