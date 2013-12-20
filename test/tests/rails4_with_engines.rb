@@ -198,10 +198,10 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
   def test_mass_assignment_12
     assert_warning :type => :model,
       :warning_code => 60,
-      :fingerprint => "6eab87f7d7a130b4762ba10184614f9f8780e95625857b11e42505ee4a82d04f",
+      :fingerprint => "dbb51200329e5eadf073c7145497d0b18e33d903248426b6e8b97ec5d03ec23a",
       :warning_type => "Mass Assignment",
       #noline,
-      :message => /^Potentially\ dangerous\ attribute\ 'plan_id/,
+      :message => "Potentially dangerous attribute available for mass assignment: :plan_id",
       :confidence => 2,
       :relative_path => "engines/user_removal/app/models/account.rb"
   end
@@ -209,10 +209,10 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
   def test_mass_assignment_13
     assert_warning :type => :model,
       :warning_code => 60,
-      :fingerprint => "9e552d6eac8dc68eb6e3a41cb838756802bcee812ab264e3d089d385566c4df0",
+      :fingerprint => "c505002e3567c74c8197586751d0cf9ab245aee0068f05c93589959b14dc40c8",
       :warning_type => "Mass Assignment",
       #noline,
-      :message => /^Potentially\ dangerous\ attribute\ 'banned'/,
+      :message => "Potentially dangerous attribute available for mass assignment: :banned",
       :confidence => 1,
       :relative_path => "engines/user_removal/app/models/account.rb"
   end
@@ -220,10 +220,10 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
   def test_mass_assignment_14
     assert_warning :type => :model,
       :warning_code => 60,
-      :fingerprint => "fab5f6c9c06598732046931ee76049f31549502dd77b70dcf93562f62e81a3c0",
+      :fingerprint => "962a14c66f5f83ece9a22700939111a0b71ed2c925980416f1b664a601e87070",
       :warning_type => "Mass Assignment",
       #noline,
-      :message => /^Potentially\ dangerous\ attribute\ 'account/,
+      :message => "Potentially dangerous attribute available for mass assignment: :account_id",
       :confidence => 0,
       :relative_path => "engines/user_removal/app/models/user.rb"
   end
@@ -231,10 +231,10 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
   def test_mass_assignment_15
     assert_warning :type => :model,
       :warning_code => 60,
-      :fingerprint => "9b1cfaefacee0db06a58f558fb8dd6631fc43684da3c86368f0bfaf5cb6916e0",
+      :fingerprint => "fa154c3e50c02c70f4351dd6731085657dfb0b9ed73ee223ad5444b31bc1d31f",
       :warning_type => "Mass Assignment",
       #noline,
-      :message => /^Potentially\ dangerous\ attribute\ 'admin'\ /,
+      :message => "Potentially dangerous attribute available for mass assignment: :admin",
       :confidence => 0,
       :relative_path => "engines/user_removal/app/models/user.rb"
   end
@@ -242,10 +242,10 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
   def test_mass_assignment_16
     assert_warning :type => :model,
       :warning_code => 60,
-      :fingerprint => "1668dd521bfcd7e2b387bcd5d636a35da24a7554eb612cc6096dc6bc41bb984f",
+      :fingerprint => "98c24601f549d41e0d0367e8bcefc6083263fa175a2978ace0340c6446e57603",
       :warning_type => "Mass Assignment",
       #noline,
-      :message => /^Potentially\ dangerous\ attribute\ 'status_/,
+      :message => "Potentially dangerous attribute available for mass assignment: :status_id",
       :confidence => 2,
       :relative_path => "engines/user_removal/app/models/user.rb"
   end

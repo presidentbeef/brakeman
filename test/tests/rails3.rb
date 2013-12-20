@@ -1037,7 +1037,7 @@ class Rails3Tests < Test::Unit::TestCase
 
   def test_remote_code_execution_CVE_2013_0277_unprotected
     assert_warning :type => :model,
-      :fingerprint => "02022e54bf2419c752eba5d02b724bd288f96041ad8a7c9dbf3dc69bbfa385a9",
+      :fingerprint => "b85602475eb048cfe7941b5952c3d5a09a7d9d0607f81fbf2b7578d1055fec90",
       :warning_type => "Remote Code Execution",
       :message => /^Serialized\ attributes\ are\ vulnerable\ in\ /,
       :confidence => 0,
