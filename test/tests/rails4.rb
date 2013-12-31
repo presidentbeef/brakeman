@@ -255,12 +255,7 @@ class Rails4Tests < Test::Unit::TestCase
 
     assert_no_warning :type => :model,
       :warning_code => 60,
-      :fingerprint => "cd83ecf615b17f849ba28050e7faf1d54f218dfa9435c3f65f47cb378c18cf98",
-      :warning_type => "Mass Assignment",
-      :line => nil,
       :message => "Potentially dangerous attribute available for mass assignment: :admin",
-      :confidence => 0,
-      :relative_path => "app/models/account.rb",
-      :user_input => nil
+      :relative_path => "app/models/account.rb"
   end
 end
