@@ -1,3 +1,7 @@
+# Unrelease
+
+ * Fingerprint attribute warnings individually (Case Taintor)
+
 # 2.3.1
 
  * Fix check for CVE-2013-4491 (i18n XSS) to detect workaround

@@ -252,45 +252,48 @@ class Rails32Tests < Test::Unit::TestCase
     assert_warning :type => :model,
       :warning_code => 60,
       :warning_type => "Mass Assignment",
-      :message => /^Potentially\ dangerous\ attribute\ 'admin'/,
+      :message => "Potentially dangerous attribute available for mass assignment: :admin",
       :confidence => 0, #HIGH
       :file => /user\.rb/
-  end 
+  end
 
   def test_model_attr_accessible_account_id
     assert_warning :type => :model,
       :warning_code => 60,
-      :fingerprint => "1d6615676c39afae6d749891e45d7351423542b3fe71a6eaf088bf7573e5c4b0",
+      :fingerprint => "add78ac0c12cea9335ad3128f17fd0ff8b0f3772daca1d0d109f9dc02ea2df59",
       :warning_type => "Mass Assignment",
-      :message => /^Potentially\ dangerous\ attribute\ 'account_id'/,
+      :message => "Potentially dangerous attribute available for mass assignment: :account_id",
       :confidence => 0,
       :relative_path => "app/models/user.rb"
-  end 
+  end
 
   def test_model_attr_accessible_account_banned
     assert_warning :type => :model,
       :warning_code => 60,
       :warning_type => "Mass Assignment",
-      :message => /^Potentially\ dangerous\ attribute\ 'banned'/,
+      :message => "Potentially dangerous attribute available for mass assignment: :banned",
       :confidence => 1, #MED
       :file => /account\.rb/
-  end 
+  end
 
   def test_model_attr_accessible_status_id
     assert_warning :type => :model,
       :warning_code => 60,
       :warning_type => "Mass Assignment",
-      :message => /^Potentially\ dangerous\ attribute\ 'status_id'/,
+      :message => "Potentially dangerous attribute available for mass assignment: :status_id",
       :confidence => 2, #LOW
       :file => /user\.rb/
-  end 
+  end
 
   def test_model_attr_accessible_plan_id
     assert_warning :type => :model,
       :warning_type => "Mass Assignment",
-      :message => /^Potentially\ dangerous\ attribute\ 'plan_id'/,
+      :message => "Potentially dangerous attribute available for mass assignment: :plan_id",
       :confidence => 2, 
       :file => /account\.rb/
-  end 
+  end
 
+  def test_two_distinct_warnings_cant_have_same_fingerprint
+    assert_equal report[:model_warnings].map(&:fingerprint), report[:model_warnings].map(&:fingerprint).uniq
+  end
 end
