@@ -243,7 +243,24 @@ class Rails4Tests < Test::Unit::TestCase
   end
 
   def test_only_desired_attribute_is_ignored
-    assert_warning :type => :model, message: "Potentially dangerous attribute available for mass assignment: :account_id"
-    assert_no_warning :type => :model, message: "Potentially dangerous attribute available for mass assignment: :admin"
+    assert_warning :type => :model,
+      :warning_code => 60,
+      :fingerprint => "e543ea9186ed27e78ccfeee4e60ceee0c83163ffe0bf50e1ebf3d7b19793c5f4",
+      :warning_type => "Mass Assignment",
+      :line => nil,
+      :message => "Potentially dangerous attribute available for mass assignment: :account_id",
+      :confidence => 0,
+      :relative_path => "app/models/account.rb",
+      :user_input => nil
+
+    assert_no_warning :type => :model,
+      :warning_code => 60,
+      :fingerprint => "cd83ecf615b17f849ba28050e7faf1d54f218dfa9435c3f65f47cb378c18cf98",
+      :warning_type => "Mass Assignment",
+      :line => nil,
+      :message => "Potentially dangerous attribute available for mass assignment: :admin",
+      :confidence => 0,
+      :relative_path => "app/models/account.rb",
+      :user_input => nil
   end
 end
