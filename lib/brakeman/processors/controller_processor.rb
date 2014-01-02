@@ -23,13 +23,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
   #s(:class, NAME, PARENT, s(:scope ...))
   def process_class exp
     name = class_name(exp.class_name)
-
-    begin
-      parent = class_name exp.parent_name
-    rescue StandardError => e
-      Brakeman.debug e
-      parent = nil
-    end
+    parent = class_name(exp.parent_name)
 
     #If inside a real controller, treat any other classes as libraries.
     #But if not inside a controller already, then the class may include

@@ -161,9 +161,10 @@ module Brakeman::RenderHelper
     if call? sexp
       get_class_target sexp.target
     else
-      begin
-        class_name sexp
-      rescue
+      klass = class_name sexp
+      if klass.is_a? Symbol
+        klass
+      else
         nil
       end
     end
