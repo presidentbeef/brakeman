@@ -432,13 +432,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     if exp.is_a? Symbol
       @models.include? exp
     elsif sexp? exp
-      klass = nil
-      begin
-        klass = class_name exp
-      rescue StandardError
-      end
-
-      klass and @models.include? klass
+      @models.include? class_name(exp)
     else
       false
     end

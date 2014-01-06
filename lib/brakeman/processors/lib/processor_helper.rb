@@ -52,6 +52,7 @@ module Brakeman::ProcessorHelper
   end
 
   #Returns a class name as a Symbol.
+  #If class name cannot be determined, returns _exp_.
   def class_name exp
     case exp
     when Sexp
@@ -69,14 +70,14 @@ module Brakeman::ProcessorHelper
       when :self
         @current_class || @current_module || nil
       else
-        raise "Error: Cannot get class name from #{exp}"
+        exp
       end
     when Symbol
       exp
     when nil
       nil
     else
-      raise "Error: Cannot get class name from #{exp}"
+      exp
     end
   end
 end

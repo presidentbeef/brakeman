@@ -85,13 +85,8 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
 
       if exp.method == :all or exp.method.to_s[0,4] == "find"
         models = Set.new @tracker.models.keys
-
-        begin
-          name = class_name target
-          return target if models.include?(name)
-        rescue StandardError
-        end
-
+        name = class_name target
+        return target if models.include?(name)
       end
 
       return get_model_target(target)
