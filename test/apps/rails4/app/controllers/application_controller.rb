@@ -18,4 +18,9 @@ class ApplicationController < ActionController::Base
       redirect_to @model
     end
   end
+
+  def bypass_ssl_check
+    # Should warn on self.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    self.verify_mode = OpenSSL::SSL::VERIFY_NONE
+  end
 end

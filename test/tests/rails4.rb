@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 1,
-      :generic => 12
+      :generic => 13
     }
   end
 
@@ -257,5 +257,16 @@ class Rails4Tests < Test::Unit::TestCase
       :warning_code => 60,
       :message => "Potentially dangerous attribute available for mass assignment: :admin",
       :relative_path => "app/models/account.rb"
+  end
+
+  def test_ssl_verification_bypass
+    assert_warning :type => :warning,
+      :warning_code => 71,
+      :warning_type => "SSL Verification Bypass",
+      :line => 24,
+      :message => /^SSL\ certificate\ verification\ was\ bypassed/,
+      :confidence => 0,
+      :relative_path => "app/controllers/application_controller.rb",
+      :user_input => nil
   end
 end
