@@ -129,7 +129,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   # * having
   # * joins
   # * select
-  # * from
+  # * from (when in the context of an AR object)
   # * lock
   #
   def process_result result
@@ -164,7 +164,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                       when :joins
                         check_joins_arguments call.first_arg
                       when :from, :select
-                        unsafe_sql? call.first_arg
+                        active_record_model?(result) && unsafe_sql?(call.first_arg)
                       when :lock
                         check_lock_arguments call.first_arg
                       when :pluck
