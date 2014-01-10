@@ -129,11 +129,12 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   # * having
   # * joins
   # * select
-  # * from
+  # * from (when in the context of an AR object)
   # * lock
   #
   def process_result result
     return if duplicate?(result) or result[:call].original_line
+    return if result[:target].nil? && !active_record_models.include?(result[:location][:class])
 
     call = result[:call]
     method = call.method
@@ -164,7 +165,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                       when :joins
                         check_joins_arguments call.first_arg
                       when :from, :select
-                        unsafe_sql? call.first_arg
+                        unsafe_sql?(call.first_arg)
                       when :lock
                         check_lock_arguments call.first_arg
                       when :pluck
