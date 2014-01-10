@@ -134,6 +134,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #
   def process_result result
     return if duplicate?(result) or result[:call].original_line
+    return if result[:target].nil? && !active_record_models.include?(result[:location][:class])
 
     call = result[:call]
     method = call.method
