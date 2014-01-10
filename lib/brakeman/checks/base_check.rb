@@ -504,16 +504,6 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     @active_record_models
   end
 
-  def active_record_model?(result)
-    if result[:nested]
-      result[:chain].each do |m|
-        return true if active_record_models.include?(m)
-      end
-    else
-      active_record_models.include?(result[:location][:class])
-    end
-  end
-
   def friendly_type_of input_type
     if input_type.is_a? Match
       input_type = input_type.type
