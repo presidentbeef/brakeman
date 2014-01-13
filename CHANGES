@@ -1,5 +1,8 @@
-# Unrelease
+# Unreleased
 
+ * Fix false positives when SQL methods are not called on AR models (Aaron Bedra)
+ * Add check for uses of OpenSSL::SSL::VERIFY_NONE (Aaron Bedra)
+ * No longer raise exceptions if a class name cannot be determined
  * Fingerprint attribute warnings individually (Case Taintor)
 
 # 2.3.1
