@@ -35,6 +35,8 @@ class Brakeman::GemProcessor < Brakeman::BaseProcessor
   def process_call exp
     if exp.target == nil and exp.method == :gem
       gem_name = exp.first_arg
+      return exp unless string? gem_name
+
       gem_version = exp.second_arg
 
       if string? gem_version
