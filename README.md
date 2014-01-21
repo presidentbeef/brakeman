@@ -171,7 +171,7 @@ The `-c` option can be used to specify a configuration file to use.
 * [New Relic](http://newrelic.com)
 * [Twitter](https://twitter.com/)
 
-[..and more!](http://brakeman.org/brakeman_users)
+[..and more!](http://brakemanscanner.org/brakeman_users)
 
 # License
 
