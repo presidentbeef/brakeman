@@ -71,7 +71,7 @@ module Brakeman
     end
 
     def lib_paths
-      @lib_files ||= find_paths("lib")
+      @lib_files ||= find_paths("lib").reject { |path| path.include? "/generators/" }
     end
 
   private
