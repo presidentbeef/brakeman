@@ -95,7 +95,7 @@ class Brakeman::Scanner
       @processor.process_config(parse_ruby(@app_tree.read(path)))
     end
 
-  rescue Exception => e
+  rescue => e
     Brakeman.notify "[Notice] Error while processing #{path}"
     tracker.error e.exception(e.message + "\nwhile processing #{path}"), e.backtrace
   end
@@ -111,7 +111,7 @@ class Brakeman::Scanner
         @processor.process_gems(parse_ruby(@app_tree.read("Gemfile")))
       end
     end
-  rescue Exception => e
+  rescue => e
     Brakeman.notify "[Notice] Error while processing Gemfile."
     tracker.error e.exception(e.message + "\nWhile processing Gemfile"), e.backtrace
   end
@@ -131,7 +131,7 @@ class Brakeman::Scanner
       @processor.process_initializer(path, parse_ruby(@app_tree.read_path(path)))
     rescue Racc::ParseError => e
       tracker.error e, "could not parse #{path}. There is probably a typo in the file. Test it with 'ruby_parse #{path}'"
-    rescue Exception => e
+    rescue => e
       tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
     end
   end
@@ -162,7 +162,7 @@ class Brakeman::Scanner
       @processor.process_lib parse_ruby(@app_tree.read_path(path)), path
     rescue Racc::ParseError => e
       tracker.error e, "could not parse #{path}. There is probably a typo in the file. Test it with 'ruby_parse #{path}'"
-    rescue Exception => e
+    rescue => e
       tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
     end
   end
@@ -174,7 +174,7 @@ class Brakeman::Scanner
     if @app_tree.exists?("config/routes.rb")
       begin
         @processor.process_routes parse_ruby(@app_tree.read("config/routes.rb"))
-      rescue Exception => e
+      rescue => e
         tracker.error e.exception(e.message + "\nWhile processing routes.rb"), e.backtrace
         Brakeman.notify "[Notice] Error while processing routes - assuming all public controller methods are actions."
         options[:assume_all_routes] = true
@@ -219,7 +219,7 @@ class Brakeman::Scanner
       @processor.process_controller(parse_ruby(@app_tree.read_path(path)), path)
     rescue Racc::ParseError => e
       tracker.error e, "could not parse #{path}. There is probably a typo in the file. Test it with 'ruby_parse #{path}'"
-    rescue Exception => e
+    rescue => e
       tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
     end
   end
@@ -305,7 +305,7 @@ class Brakeman::Scanner
       tracker.error e, "could not parse #{path}"
     rescue Haml::Error => e
       tracker.error e, ["While compiling HAML in #{path}"] << e.backtrace
-    rescue Exception => e
+    rescue StandardError, LoadError => e
       tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
     end
   end
@@ -339,7 +339,7 @@ class Brakeman::Scanner
       @processor.process_model(parse_ruby(@app_tree.read_path(path)), path)
     rescue Racc::ParseError => e
       tracker.error e, "could not parse #{path}"
-    rescue Exception => e
+    rescue => e
       tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
     end
   end

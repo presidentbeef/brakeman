@@ -30,7 +30,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
                 out = exp.first_arg = process(arg)
                 @inside_concat = false
               else
-                raise Exception.new("Empty _hamlout.#{method}()?")
+                raise "Empty _hamlout.#{method}()?"
               end
 
               if string? out
@@ -46,7 +46,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
                     Sexp.new :format, out
                   end
                 else
-                  raise Exception.new("Unrecognized action on _hamlout: #{method}")
+                  raise "Unrecognized action on _hamlout: #{method}"
                 end
               end
 
