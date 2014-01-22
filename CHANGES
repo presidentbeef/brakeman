@@ -1,5 +1,6 @@
 # Unreleased
 
+ * Parse exact versions from Gemfile.lock for all gems
  * Ignore generators
  * Update to RubyParser 3.3.0
  * Fix false positives when SQL methods are not called on AR models (Aaron Bedra)
