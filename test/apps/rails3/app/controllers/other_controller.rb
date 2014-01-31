@@ -52,4 +52,9 @@ class OtherController < ApplicationController
   def test_mass_assign_with_strong_params
     Bill.create(params[:charge])
   end
+
+  def test_sql_deletes
+    User.delete_all("name = #{params[:name]}")
+    User.destroy_all("human = #{User.current.humanity}")
+  end
 end

@@ -11,7 +11,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :controller => 1,
       :model => 3,
       :template => 2,
-      :generic => 22 }
+      :generic => 23 }
   end
 
   def report
@@ -210,6 +210,17 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :file => /results\.html\.erb/
   end
 
+  def test_sql_injection_select_value
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "e725c387439202f28c1983bf225323d93b5891695c91b9389740e2da3d74855e",
+      :warning_type => "SQL Injection",
+      :line => 134,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :name))
+  end
 
   def test_cross_site_request_forgery_18 
     assert_warning :type => :controller,

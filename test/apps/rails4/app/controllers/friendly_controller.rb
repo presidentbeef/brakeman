@@ -39,4 +39,18 @@ class FriendlyController
     User.new(params)
     params.permit!
   end
+
+  def sql_with_exec
+    User.connection.select_values <<-SQL
+      SELECT id FROM collection_items
+        WHERE id > #{last_collection_item.id}
+          AND collection_id IN (#{destinations.map { |d| d.id}.join(',')})"
+    SQL
+
+    Account.connection.select_rows("select thing.id, count(*) from things_stuff toc
+                                     join things dotoc on (toc.id=dotoc.toc_id)
+                                     join things do on (dotoc.data_object_id=do.id)
+                                     join thing_entries dohe on do.id = dohe.data_object_id
+                                     where do.published=#{params[:published]} and dohe.visibility_id=#{something.id} group by toc.id")
+  end
 end
