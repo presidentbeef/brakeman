@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 1,
-      :generic => 13
+      :generic => 18
     }
   end
 
@@ -142,6 +142,66 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/controllers/friendly_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :query))
+  end
+
+  def test_sql_injection_connection_execute
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "4efbd2d2fc76d30296c8aa66368ddaf337b4c677778f36cddfa2290da2ec514b",
+      :warning_type => "SQL Injection",
+      :line => 8,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/account.rb",
+      :user_input => s(:call, nil, :version)
+  end
+
+  def test_sql_injection_select_rows
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "2e3c08dfb1e17f7d2e6ee5d142223477b85d27e6aa88d2d06cf0a00d04ed2d5c",
+      :warning_type => "SQL Injection",
+      :line => 50,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :published))
+  end
+
+  def test_sql_injection_select_values
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "3538776239f624a1101afe68b2e894424e8ae3f68222a6eec9fb4421d01cc557",
+      :warning_type => "SQL Injection",
+      :line => 46,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :user_input => s(:call, s(:call_with_block, s(:call, s(:call, nil, :destinations), :map), s(:args, :d), s(:call, s(:lvar, :d), :id)), :join, s(:str, ","))
+  end
+
+  def test_sql_injection_exec_query
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "59be915e75d6eb88def8fccebae1f9930bb6e50b2e598c7f04bf98c7a3235219",
+      :warning_type => "SQL Injection",
+      :line => 12,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/account.rb",
+      :user_input => s(:call, s(:self), :type)
+  end
+
+  def test_sql_injection_exec_update
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "29fac7fc616f19edf59cc230f7a86292d6c69234b5879868eaf1d954f033974f",
+      :warning_type => "SQL Injection",
+      :line => 5,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/account.rb",
+      :user_input => s(:call, s(:self), :type)
   end
 
   def test_i18n_xss_CVE_2013_4491_workaround

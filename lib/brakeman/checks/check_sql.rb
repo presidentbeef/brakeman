@@ -16,20 +16,33 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def run_check
     @rails_version = tracker.config[:rails_version]
 
-    @sql_targets = [:all, :average, :calculate, :count, :count_by_sql, :exists?,
+    @sql_targets = [:all, :average, :calculate, :count, :count_by_sql, :exists?, :delete_all, :destroy_all,
       :find, :find_by_sql, :first, :last, :maximum, :minimum, :pluck, :sum, :update_all]
     @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :select, :where] if tracker.options[:rails3]
 
+    @connection_calls = [:delete, :execute, :insert, :select_all, :select_one,
+      :select_rows, :select_value, :select_values]
+
+    if tracker.options[:rails3]
+      @connection_calls.concat [:exec_delete, :exec_insert, :exec_query, :exec_update]
+    else
+      @connection_calls.concat [:add_limit!, :add_offset_limit!, :add_lock!]
+    end
+
+    sql_methods = @sql_targets + @connection_calls
+
     Brakeman.debug "Finding possible SQL calls on models"
     calls = tracker.find_call :targets => active_record_models.keys,
-      :methods => @sql_targets,
+      :methods => sql_methods,
       :chained => true
 
     Brakeman.debug "Finding possible SQL calls with no target"
     calls.concat tracker.find_call(:target => nil, :method => @sql_targets)
 
     Brakeman.debug "Finding possible SQL calls using constantized()"
-    calls.concat tracker.find_call(:method => @sql_targets).select { |result| constantize_call? result }
+    calls.concat tracker.find_call(:method => sql_methods).select { |result| constantize_call? result }
+
+    calls.concat tracker.find_call(:methods => @connection_calls).select { |result| connect_call? result }
 
     Brakeman.debug "Finding calls to named_scope or scope"
     calls.concat find_scope_calls
@@ -136,13 +149,14 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     return if duplicate?(result) or result[:call].original_line
     return if result[:target].nil? && !active_record_models.include?(result[:location][:class])
 
+
     call = result[:call]
     method = call.method
 
     dangerous_value = case method
                       when :find
                         check_find_arguments call.second_arg
-                      when :exists?
+                      when :exists?, :delete_all, :destroy_all
                         check_find_arguments call.first_arg
                       when :named_scope, :scope
                         check_scope_arguments call
@@ -172,6 +186,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                         unsafe_sql? call.first_arg
                       when :update_all
                         check_update_all_arguments call.args
+                      when *@connection_calls
+                        check_by_sql_arguments call.first_arg
                       else
                         Brakeman.debug "Unhandled SQL method: #{method}"
                       end
@@ -465,7 +481,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     when :str, :lit, :const, :colon2, :nil, :true, :false
       true
     when :call
-      IGNORE_METHODS_IN_SQL.include? exp.method
+      IGNORE_METHODS_IN_SQL.include? exp.method or
+      quote_call? exp
     when :if
       safe_value? exp.then_clause and safe_value? exp.else_clause
     when :block, :rlist
@@ -475,6 +492,14 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     else
       false
     end
+  end
+
+  QUOTE_METHODS = [:quote, :quote_column_name, :quoted_date, :quote_string, :quote_table_name]
+
+  def quote_call? exp
+    call? exp.target and
+    exp.target.method == :connection and
+    QUOTE_METHODS.include? exp.method
   end
 
   #Check call for string building
@@ -522,6 +547,12 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     call? call.target and call.target.method == :constantize
   end
 
+  def connect_call? result
+    call = result[:call]
+    target = call.target
+    call? target and target.target.nil? and target.method == :connection
+  end
+
   def upgrade_version? versions
     versions.each do |low, high, upgrade|
       return upgrade if version_between? low, high
@@ -530,7 +561,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     false
   end
 
-def check_rails_versions_against_cve_issues
+  def check_rails_versions_against_cve_issues
     [
       {
         :cve => "CVE-2012-2660",
