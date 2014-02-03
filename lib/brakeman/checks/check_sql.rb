@@ -458,13 +458,39 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     target = exp.target
     method = exp.method
 
-    if string? target or string? exp.first_arg
-      return exp if STRING_METHODS.include? method
-    elsif STRING_METHODS.include? method and call? target
-      return unsafe_sql? target
-    end
 
-    nil
+    if STRING_METHODS.include? method
+      if string? target
+        check_string_arg exp.first_arg
+      elsif string? exp.first_arg
+        check_string_arg target
+      elsif call? target
+        check_for_string_building target
+      end
+    else
+      nil
+    end
+  end
+
+  def check_string_arg exp
+    if safe_value? exp
+      nil
+    elsif string_building? exp
+      check_for_string_building exp
+    elsif node_type? exp, :string_interp, :dstr
+      check_string_interp exp
+    else
+      exp
+    end
+  end
+
+  def string_building? exp
+    return false unless call? exp and STRING_METHODS.include? exp.method
+
+    string? exp.target or
+    string? exp.first_arg or
+    string_building? exp.target or
+    string_building? exp.first_arg
   end
 
   IGNORE_METHODS_IN_SQL = Set[:id, :merge_conditions, :table_name, :to_i, :to_f,
