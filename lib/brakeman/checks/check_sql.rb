@@ -29,20 +29,19 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       @connection_calls.concat [:add_limit!, :add_offset_limit!, :add_lock!]
     end
 
-    sql_methods = @sql_targets + @connection_calls
-
     Brakeman.debug "Finding possible SQL calls on models"
     calls = tracker.find_call :targets => active_record_models.keys,
-      :methods => sql_methods,
+      :methods => @sql_targets,
       :chained => true
 
     Brakeman.debug "Finding possible SQL calls with no target"
-    calls.concat tracker.find_call(:target => nil, :method => @sql_targets)
+    calls.concat tracker.find_call(:target => nil, :methods => @sql_targets)
 
     Brakeman.debug "Finding possible SQL calls using constantized()"
-    calls.concat tracker.find_call(:method => sql_methods).select { |result| constantize_call? result }
+    calls.concat tracker.find_call(:methods => @sql_targets).select { |result| constantize_call? result }
 
-    calls.concat tracker.find_call(:methods => @connection_calls).select { |result| connect_call? result }
+    connect_targets = active_record_models.keys << nil
+    calls.concat tracker.find_call(:targets => connect_targets, :methods => @connection_calls, :chained => true).select { |result| connect_call? result }
 
     Brakeman.debug "Finding calls to named_scope or scope"
     calls.concat find_scope_calls
@@ -547,10 +546,20 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     call? call.target and call.target.method == :constantize
   end
 
+  SELF_CLASS = s(:call, s(:self), :class)
+
   def connect_call? result
     call = result[:call]
     target = call.target
-    call? target and target.target.nil? and target.method == :connection
+
+    if call? target and target.method == :connection
+      target = target.target
+
+      target.nil? or
+      target == SELF_CLASS or
+      node_type? target, :self or
+      active_record_models.include? class_name(target)
+    end
   end
 
   def upgrade_version? versions
