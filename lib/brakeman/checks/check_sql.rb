@@ -531,7 +531,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   end
 
 def check_rails_versions_against_cve_issues
-    [
+    issues = [
       {
         :cve => "CVE-2012-2660",
         :versions => [%w[2.0.0 2.3.14 2.3.17], %w[3.0.0 3.0.12 3.0.13], %w[3.1.0 3.1.4 3.1.5], %w[3.2.0 3.2.3 3.2.4]],
@@ -557,12 +557,18 @@ def check_rails_versions_against_cve_issues
         :versions => [%w[2.0.0 2.3.15 2.3.16], %w[3.0.0 3.0.18 3.0.19], %w[3.1.0 3.1.9 3.1.10], %w[3.2.0 3.2.10 3.2.11]],
         :url => "https://groups.google.com/d/topic/rubyonrails-security/c7jT-EeN9eI/discussion"
       },
-      {
+
+    ]
+
+    unless lts_version? '2.3.18.6'
+     issues << {
         :cve => "CVE-2013-6417",
         :versions => [%w[2.0.0 3.2.15 3.2.16], %w[4.0.0 4.0.1 4.0.2]],
         :url => "https://groups.google.com/d/msg/ruby-security-ann/niK4drpSHT4/g8JW8ZsayRkJ"
-      },
-    ].each do |cve_issue|
+      }
+    end
+
+    issues.each do |cve_issue|
       cve_warning_for cve_issue[:versions], cve_issue[:cve], cve_issue[:url]
     end
   end
