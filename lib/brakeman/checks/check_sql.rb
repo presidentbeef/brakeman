@@ -458,10 +458,15 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     target = exp.target
     method = exp.method
 
-    if string? target or string? exp.first_arg
-      return exp if STRING_METHODS.include? method
-    elsif STRING_METHODS.include? method and call? target
-      return unsafe_sql? target
+    if STRING_METHODS.include? method
+      arg = exp.first_arg
+      if string? target
+        return unsafe_sql?(arg) || check_for_string_building(arg)
+      elsif string? arg
+        return unsafe_sql?(target) || check_for_string_building(target)
+      elsif call? target
+        return unsafe_sql? target
+      end
     end
 
     nil
