@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 23,
       :controller => 4,
-      :generic => 77 }
+      :generic => 78 }
   end
 
   def test_without_protection
@@ -952,6 +952,19 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Possible\ SQL\ injection/,
       :confidence => 0,
       :file => /users_controller\.rb/
+  end
+
+
+  def test_sql_injection_with_interpolated_value
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "37dc35cac607340b6244a25f7001fb6a67bf830b8c7395e4034f94c60f3d310e",
+      :warning_type => "SQL Injection",
+      :line => 33,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :user_input => s(:call, nil, :parent_id)
   end
 
   def test_validates_format

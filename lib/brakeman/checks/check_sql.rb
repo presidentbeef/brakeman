@@ -356,10 +356,36 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #unless safe_value? explicitly returns true.
   def check_string_interp arg
     arg.each do |exp|
-      return exp.value if node_type?(exp, :string_eval, :evstr) and not safe_value?(exp.value)
+      if dangerous = unsafe_string_interp?(exp)
+        return dangerous
+      end
     end
 
     nil
+  end
+
+  #Returns value if interpolated value is not something safe
+  def unsafe_string_interp? exp
+    if node_type? exp, :string_eval, :evstr
+      value = exp.value
+    else
+      value = exp
+    end
+
+    return unless sexp? value
+
+    case value.node_type
+    when :or
+      return unsafe_string_interp?(value.lhs) || unsafe_string_interp?(value.rhs)
+    when :string_interp, :dstr
+      if dangerous = check_string_interp(value)
+        return dangerous
+      end
+    else
+      if not safe_value? value
+        return value
+      end
+    end
   end
 
   #Checks the given expression for unsafe SQL values. If an unsafe value is

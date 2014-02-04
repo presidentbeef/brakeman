@@ -27,4 +27,9 @@ class User < ActiveRecord::Base
   belongs_to :account
 
   attr_accessible :admin, :as => :admin
+
+  def self.sql_stuff
+    condition = parent_id.blank? ? " IS NULL" : " = #{parent_id}"
+    self.connection.select_values("SELECT max(id) FROM content_pages WHERE parent_content_page_id #{condition}")[0].to_i
+  end
 end
