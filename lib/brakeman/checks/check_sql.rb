@@ -372,18 +372,26 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       value = exp
     end
 
-    return unless sexp? value
-
-    case value.node_type
-    when :or
-      return unsafe_string_interp?(value.lhs) || unsafe_string_interp?(value.rhs)
-    when :string_interp, :dstr
-      if dangerous = check_string_interp(value)
-        return dangerous
-      end
+    if not sexp? value
+      nil
+    elsif call? value and value.method == :to_s
+      unsafe_string_interp? value.target
     else
-      if not safe_value? value
-        return value
+      case value.node_type
+      when :or
+        unsafe_string_interp?(value.lhs) || unsafe_string_interp?(value.rhs)
+      when :string_interp, :dstr
+        if dangerous = check_string_interp(value)
+          return dangerous
+        end
+      else
+        if safe_value? value
+          nil
+        elsif string_building? value
+          check_for_string_building value
+        else
+          value
+        end
       end
     end
   end
@@ -505,6 +513,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       check_for_string_building exp
     elsif node_type? exp, :string_interp, :dstr
       check_string_interp exp
+    elsif call? exp and exp.method == :to_s
+      check_string_arg exp.target
     else
       exp
     end
@@ -532,8 +542,12 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     when :str, :lit, :const, :colon2, :nil, :true, :false
       true
     when :call
-      IGNORE_METHODS_IN_SQL.include? exp.method or
-      quote_call? exp
+      if exp.method == :to_s
+        safe_value? exp.target
+      else
+        IGNORE_METHODS_IN_SQL.include? exp.method or
+        quote_call? exp
+      end
     when :if
       safe_value? exp.then_clause and safe_value? exp.else_clause
     when :block, :rlist
