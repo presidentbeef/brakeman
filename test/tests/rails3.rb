@@ -16,7 +16,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 8,
       :template => 38,
-      :generic => 66
+      :generic => 68
     }
 
     if RUBY_PLATFORM == 'java'
@@ -669,6 +669,30 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Possible\ SQL\ injection/,
       :confidence => 1,
       :file => /underline_model\.rb/
+  end
+
+  def test_sql_injection_delete_all
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "6ae0b599e368b7658cfe3772ab0823d68247796b3718eaa6c1228897d633e0a2",
+      :warning_type => "SQL Injection",
+      :line => 57,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/other_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :name))
+  end
+
+  def test_sql_injection_destroy_all
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "0631b0564dfe4bb760c250e1de7f0678dd28e5be5c54841fa8581ac3bf2ffaaf",
+      :warning_type => "SQL Injection",
+      :line => 58,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/other_controller.rb",
+      :user_input => s(:call, s(:call, s(:const, :User), :current), :humanity)
   end
 
   def test_escape_once
