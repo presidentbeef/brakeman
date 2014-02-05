@@ -6,6 +6,8 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
   @description = "Checks for number_to_currency XSS vulnerability in certain versions"
 
   def run_check
+    return if lts_version? '2.3.18.6'
+
     if (version_between? "2.0.0", "3.2.15" or version_between? "4.0.0", "4.0.1")
       check_number_to_currency_usage
 

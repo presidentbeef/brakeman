@@ -41,6 +41,11 @@ class BaseCheckTests < Test::Unit::TestCase
     @check.send(:version_between?, low, high)
   end
 
+  def lts_version? version, low
+    @tracker.config = { :gems => { :"railslts-version" => version } }
+    @check.send(:lts_version?, low)
+  end
+
   def test_version_between
     assert version_between?("2.3.8", "2.3.0", "2.3.8")
     assert version_between?("2.3.8", "2.3.0", "2.3.14")
@@ -61,6 +66,12 @@ class BaseCheckTests < Test::Unit::TestCase
     assert version_between?("3.2.9.rc2", "3.2.5", "4.0.0")
   end
 
+  def test_lts_version
+    @tracker.config = { :rails_version => "2.3.18" }
+    assert lts_version? '2.3.18.6', '2.3.18.6'
+    assert !lts_version?('2.3.18.1', '2.3.18.6')
+    assert !lts_version?(nil, '2.3.18.6')
+  end
 end
 
 class ConfigTests < Test::Unit::TestCase
