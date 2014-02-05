@@ -173,7 +173,7 @@ class Rails4Tests < Test::Unit::TestCase
       :warning_code => 0,
       :fingerprint => "3538776239f624a1101afe68b2e894424e8ae3f68222a6eec9fb4421d01cc557",
       :warning_type => "SQL Injection",
-      :line => 44,
+      :line => 46,
       :message => /^Possible\ SQL\ injection/,
       :confidence => 1,
       :relative_path => "app/controllers/friendly_controller.rb",
