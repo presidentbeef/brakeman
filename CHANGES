@@ -1,8 +1,13 @@
-# Unreleased
+# 2.4.0 
 
+ * Detect Rails LTS versions
+ * Reduce false positives for SQL injection in string building
+ * More accurate user input marking for SQL injection warnings
+ * Detect SQL injection in `delete_all`/`destroy_all`
+ * Detect SQL injection raw SQL queries using `connection`
  * Parse exact versions from Gemfile.lock for all gems
  * Ignore generators
- * Update to RubyParser 3.3.0
+ * Update to RubyParser 3.4.0
  * Fix false positives when SQL methods are not called on AR models (Aaron Bedra)
  * Add check for uses of OpenSSL::SSL::VERIFY_NONE (Aaron Bedra)
  * No longer raise exceptions if a class name cannot be determined
