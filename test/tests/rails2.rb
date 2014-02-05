@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 3,
         :template => 45,
-        :generic => 48 }
+        :generic => 49 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
         :template => 45,
-        :generic => 49 }
+        :generic => 50 }
     end
   end
 
@@ -610,6 +610,18 @@ class Rails2Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /user\.rb/,
       :relative_path => "app/models/user.rb"
+  end
+ 
+  def test_sql_injection_active_record_base_connection
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "37885d589fc5c41553dcc38b36b506c2e508d1f37ce040eb6dca92a958f858fb",
+      :warning_type => "SQL Injection",
+      :line => 26,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :user_input => s(:lvar, :value)
   end
 
   def test_escape_once
@@ -1252,13 +1264,13 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
         :controller => 1,
         :model => 4,
         :template => 45,
-        :generic => 48 }
+        :generic => 49 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
         :template => 45,
-        :generic => 49 }
+        :generic => 50 }
     end
   end
 
