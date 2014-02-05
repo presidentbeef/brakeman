@@ -21,4 +21,13 @@ class User < ActiveRecord::Base
     User.find(:all, :conditions => self.merge_conditions(some_conditions))
     find(:all, :conditions => User.merge_conditions(some_conditions))
   end
+
+  def self.some_method(value)
+    results = ActiveRecord::Base.connection.execute(%Q(SELECT
+        id
+      FROM
+        table t
+      WHERE
+        t.something = '#{value}'))
+  end
 end
