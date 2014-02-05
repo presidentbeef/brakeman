@@ -114,6 +114,10 @@
 
 <p>Brakeman will warn if the key length for the session cookies is less than 30 characters.</p>
 
+<h3>Version control inclusion</h3>
+
+<p>Brakeman will warn if the config/initializers/secret_token.rb is included in the version control. It is recommended that secret_token.rb is excluded from version control, and included in .gitignore</p>
+
 <hr />
 
 <p>Back to <a href="/docs/warning_types">Warning Types</a></p>
@@ -159,6 +163,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/02/05/brakeman-2-dot-4-0-released/">Brakeman 2.4.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/12/12/brakeman-2-dot-3-1-released/">Brakeman 2.3.1 Released</a>
       </li>
     
@@ -172,10 +180,6 @@
     
       <li class="post">
         <a href="/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/">Brakeman 2.1.2 Released - Important Security Update</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/21/brakeman-2-dot-1-1-released/">Brakeman 2.1.1 Released</a>
       </li>
     
   </ul>

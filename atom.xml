@@ -4,13 +4,166 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2014-01-21T12:21:22-08:00</updated>
+  <updated>2014-02-05T10:40:08-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 2.4.0 Released</title>
+    <link href="http://brakemanscanner.org/blog/2014/02/05/brakeman-2-dot-4-0-released/"/>
+    <updated>2014-02-05T01:15:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2014/02/05/brakeman-2-dot-4-0-released</id>
+    <content type="html">&lt;p&gt;This is a fairly big release with some significant changes (especially for SQL injection warnings), so please test carefully. Existing warnings and fingerprints may change.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 2.3.1:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fingerprint attribute warnings individually (&lt;a href=&quot;https://github.com/ctaintor&quot;&gt;Case Taintor&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add check for uses of &lt;code&gt;OpenSSL::SSL::VERIFY_NONE&lt;/code&gt; (&lt;a href=&quot;https://github.com/abedra/&quot;&gt;Aaron Bedra&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Detect SQL injection raw SQL queries using &lt;code&gt;connection&lt;/code&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/434&quot;&gt;#434&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Fix false positives when SQL methods are not called on AR models (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/423&quot;&gt;#423&lt;/a&gt;, &lt;a href=&quot;https://github.com/abedra/&quot;&gt;Aaron Bedra&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Reduce false positives for SQL injection in string building&lt;/li&gt;
+&lt;li&gt;More accurate user input marking for SQL injection warnings&lt;/li&gt;
+&lt;li&gt;Detect SQL injection in &lt;code&gt;delete_all&lt;/code&gt;/&lt;code&gt;destroy_all&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Add support for Rails LTS versions (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/422&quot;&gt;#422&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Parse exact versions from Gemfile.lock for all gems (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/431&quot;&gt;#431&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Ignore generators in &lt;code&gt;lib/&lt;/code&gt; directory&lt;/li&gt;
+&lt;li&gt;No longer raise exceptions if a class name cannot be determined&lt;/li&gt;
+&lt;li&gt;Update to RubyParser 3.4.0&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Attribute Warning Fingerprints&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/ctaintor&quot;&gt;Case Taintor&lt;/a&gt; noted that ignoring one warning about dangerous mass assignable attributes ignored all such warnings for the same model. Then he fixed it, yay!&lt;/p&gt;
+
+&lt;p&gt;Please note this means fingerprints for warnings about &quot;dangerous attributes&quot; in &lt;code&gt;attr_accessible&lt;/code&gt; will change. If you are currently ignoring some of these warnings, you will need to re-ignore them.&lt;/p&gt;
+
+&lt;p&gt;Also, the messages for these warnings have changed and the attribute name will now be in the &quot;code&quot; value in JSON reports.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/416&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Check for SSL Verification&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/abedra/&quot;&gt;Aaron Bedra&lt;/a&gt; has contributed a new check for instances of &lt;code&gt;verify_mode&lt;/code&gt; on HTTPS connections being set to &lt;code&gt;OpenSSL::SSL::VERIFY_NONE&lt;/code&gt;. This bypasses any checks OpenSSL has for verifying the SSL certificate is legitimate, allowing easy man-in-the-middle attacks.&lt;/p&gt;
+
+&lt;p&gt;This new check has a new warning type (&quot;SSL Verification Bypass&quot;) and warning code (71).&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/419&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;SQL Injection in Raw Queries&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;ActiveRecord::Core#connection&lt;/code&gt; or &lt;code&gt;ActiveRecord::Base.connection&lt;/code&gt; or &lt;code&gt;ActiveRecord::Base#connection&lt;/code&gt; can be used to send queries directly to the database connection without any protection. There are several ways of doing this, most of which are hopefully now covered by Brakeman.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/438&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Fewer SQL Injection False Positives&lt;/h3&gt;
+
+&lt;p&gt;Many changes were made in this release to reduce false positives related to SQL injection warnings and to improve the accuracy of reported issues.&lt;/p&gt;
+
+&lt;p&gt;First, &lt;a href=&quot;https://github.com/abedra/&quot;&gt;Aaron Bedra&lt;/a&gt; fixed Brakeman to not warn about query-like methods that were innocently called on non-ActiveRecord objects. (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/426&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;For example, this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;find_by_sql(&quot;SELECT * FROM stuff WHERE thing = &quot; + self.class.sanitize_sql(thing))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;would have generated a warning which indicated &lt;code&gt;&quot;SELECT * FROM stuff WHERE thing = &quot; + self.class.sanitize_sql(thing)&lt;/code&gt; was a dangerous value. Now it will not warn at all.&lt;/p&gt;
+
+&lt;p&gt;As another example, code like this&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;options = {}
+
+if params[:sort_order] == 'ascending'
+  sort_order = 'ASC'
+else
+  sort_order = 'DESC'
+end
+
+options[:order] = 'updated_at ' + sort_order
+Test.all(options)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;would create a warning about &lt;code&gt;(&quot;updated_at &quot; + (&quot;ASC&quot; or &quot;DESC&quot;))&lt;/code&gt;. Now Brakeman will recognize that these are all just strings and not warn.&lt;/p&gt;
+
+&lt;p&gt;Many warnings will also just be more accurate:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;query = &quot;SELECT sum(stuff) &quot; +
+      &quot;FROM (SELECT other_stuff FROM #{table} WHERE id = #{id}) &quot; +
+      &quot;AS item, bgs &quot; +
+      &quot;WHERE ST_Contains(item.geometry, bgs.the_point);&quot;
+
+Test.find_by_sql(query)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This used to warn on the entire query! Now it will just warn about &lt;code&gt;table&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;#to_s&lt;/code&gt; calls are ignored now and their targets considered instead.&lt;/p&gt;
+
+&lt;p&gt;Additionally, Brakeman should no longer warn about method calls ending in &lt;code&gt;_id&lt;/code&gt;, since those generally refer to foreign keys. Note, however, that local variables ending in &lt;code&gt;_id&lt;/code&gt; will still produce warnings.&lt;/p&gt;
+
+&lt;p&gt;In general, fingerprints should not change for existing warnings, since the &lt;code&gt;user_input&lt;/code&gt; value is not included in the fingerprint.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/440&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;SQL Injection in Deletions&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will now look for SQL injection in &lt;code&gt;delete_all&lt;/code&gt; and &lt;code&gt;destroy_all&lt;/code&gt; which allow raw SQL strings.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/438&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Support for Rails LTS&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://railslts.com/&quot;&gt;RailsLTS&lt;/a&gt; provides security patch backporting to Rails 2.3.18. They now &lt;a href=&quot;http://makandracards.com/railslts/21809-how-to-find-out-your-current-rails-lts-version&quot;&gt;include an internal version number&lt;/a&gt; in &lt;code&gt;Gemfile.lock&lt;/code&gt;, which allows Brakeman to avoid warning about fixed vulnerabilities in applications using RailsLTS.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/437&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Gemfile Parsing&lt;/h3&gt;
+
+&lt;p&gt;Previously, Brakeman only checked &lt;code&gt;Gemfile.lock&lt;/code&gt; for specific gems. Now it &quot;parses&quot; the entire file and can track all gem versions. (&lt;a href=&quot;https://github.com/rubysec/bundler-audit&quot;&gt;bundler-audit&lt;/a&gt; is recommended for checking gems for vulnerable versions.) This helps when Brakeman is checking for gem usage but the gem is an indirect dependency.&lt;/p&gt;
+
+&lt;p&gt;Also, a minor issue was fixed for those &lt;code&gt;Gemfile&lt;/code&gt;s that do weird things and call &lt;code&gt;gem&lt;/code&gt; with non-string arguments.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/432&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Generators are Ignored&lt;/h3&gt;
+
+&lt;p&gt;Any path in &lt;code&gt;lib/&lt;/code&gt; containing &lt;code&gt;generators&lt;/code&gt; will now be ignored. This is mainly because there are &lt;code&gt;.rb&lt;/code&gt; files in there that are actually templates, but Brakeman tries to parse them and fails because they aren't really Ruby.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/427&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Exceptions for Class Names&lt;/h3&gt;
+
+&lt;p&gt;Previously, Brakeman actually raised and caught exceptions if a class name could not be determined from a &lt;code&gt;Sexp&lt;/code&gt;. Now it just returns &lt;code&gt;nil&lt;/code&gt;. This should remove some errors and possibly make some scans faster.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/417&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;RubyParser Update&lt;/h3&gt;
+
+&lt;p&gt;The RubyParser dependency has been updated to 3.4.0. This release is &lt;em&gt;much&lt;/em&gt; faster, along with &lt;a href=&quot;http://blog.zenspider.com/releases/2014/02/ruby_parser-version-3-4-0-has-been-released.html&quot;&gt;lots of other good changes&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;However, please note that line numbers for warnings involving heredocs may change. They will be slightly closer, but not exactly accurate.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/commit/29239377a79bafbaddfa7664e1570d4c1f3982b5&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;SHAs&lt;/h3&gt;
+
+&lt;p&gt;The SHA1 sums for this release are&lt;/p&gt;
+
+&lt;p&gt;c9d840b6fca08f61b3abbd1fa109cf66be19fccc  brakeman-2.4.0.gem
+5bad89c43f7ab78bd40dfd6f71aac3d034ccaa0a  brakeman-min-2.4.0.gem&lt;/p&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter or joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 2.3.1 Released</title>
@@ -1875,74 +2028,6 @@ end
 &lt;p&gt;Besides errors raised when processing Rails 3 routes, the &lt;code&gt;Result must be a Sexp, was Symbol::array&lt;/code&gt; and &lt;code&gt;empty char-class&lt;/code&gt; errors should be resolved now.&lt;/p&gt;
 
 &lt;p&gt;Please report any errors raised when performing scans, as they are usually bugs.&lt;/p&gt;
-
-&lt;h3&gt;Report Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release!&lt;/p&gt;
-
-&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 1.6.2 Released</title>
-    <link href="http://brakemanscanner.org/blog/2012/06/12/brakeman-1-dot-6-2-released/"/>
-    <updated>2012-06-12T17:07:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2012/06/12/brakeman-1-dot-6-2-released</id>
-    <content type="html">&lt;p&gt;Besides checks for the latest CVEs, this release includes a slightly improved redirect check, noiser output with &lt;code&gt;--compare&lt;/code&gt;, and better handling of &lt;code&gt;before_filter&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 1.6.1&lt;/em&gt;:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Add checks for CVE-2012-2660, CVE-2012-2661, CVE-2012-2694, CVE-2012-2695 (Dave Worth)&lt;/li&gt;
-&lt;li&gt;Avoid warning when redirecting to a model instance&lt;/li&gt;
-&lt;li&gt;Raise confidence level for model attributes in redirects&lt;/li&gt;
-&lt;li&gt;Add &lt;code&gt;request.parameters&lt;/code&gt; as a parameters hash&lt;/li&gt;
-&lt;li&gt;Return non-zero exit code when missing dependencies&lt;/li&gt;
-&lt;li&gt;Fix &lt;code&gt;before_filter :except&lt;/code&gt; logic&lt;/li&gt;
-&lt;li&gt;Only accept symbol literals as before_filter names&lt;/li&gt;
-&lt;li&gt;Cache before_filter lookups&lt;/li&gt;
-&lt;li&gt;Turn off quiet mode by default for &lt;code&gt;--compare&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;Latest CVEs&lt;/h3&gt;
-
-&lt;p&gt;A number of Rails vulnerabilities were announced recently, although there are really only two issues.&lt;/p&gt;
-
-&lt;p&gt;One issue is that query parameters like &lt;code&gt;?name[]&lt;/code&gt; and &lt;code&gt;?name[]=1&amp;amp;name[]&lt;/code&gt; get converted to &lt;code&gt;{&quot;name&quot; =&amp;gt; [nil]}&lt;/code&gt; and &lt;code&gt;{&quot;name&quot; =&amp;gt; [&quot;1&quot;, nil]}&lt;/code&gt;. This, in turn, causes ActiveRecord to produce SQL queries with either &lt;code&gt;IS NULL&lt;/code&gt; or &lt;code&gt;IN ('1', NULL)&lt;/code&gt;. This is probably unexpected behavior.&lt;/p&gt;
-
-&lt;p&gt;The other issue is that query parameters like &lt;code&gt;?name[users.id]=1&lt;/code&gt; or &lt;code&gt;?name[users][id]=1&lt;/code&gt; get converted to &lt;code&gt;{&quot;name&quot; =&amp;gt; { &quot;users.id&quot; =&amp;gt; 1 }}&lt;/code&gt; or &lt;code&gt;{&quot;name&quot; =&amp;gt; { &quot;users&quot; =&amp;gt; { &quot;id&quot; =&amp;gt; 1 }}}&lt;/code&gt;. ActiveRecord interprets &lt;code&gt;&quot;users.id&quot;&lt;/code&gt; and &lt;code&gt;&quot;users&quot; =&amp;gt; { &quot;id&quot; ...}&lt;/code&gt; as &lt;code&gt;&quot;users&quot;.&quot;id&quot;&lt;/code&gt; in the WHERE clause, allowing an attacker to control the table/columns being queried.&lt;/p&gt;
-
-&lt;p&gt;Updated versions for Rails 3.x have been released.&lt;/p&gt;
-
-&lt;p&gt;For Rails 2.3, I believe &lt;a href=&quot;https://github.com/presidentbeef/rails/pull/1/files&quot;&gt;these changes&lt;/a&gt; will fix the first issue, and there is another &lt;a href=&quot;https://rubyonrails-security.googlegroups.com/attach/aee3413fb038bf56/2-3-sql-injection.patch?view=1&amp;amp;part=3&quot;&gt;patch available&lt;/a&gt; for the second issue.&lt;/p&gt;
-
-&lt;p&gt;Older versions of Rails 2.x may be vulnerable to the &quot;NULL&quot; issue, but not to the nested hashes problem.&lt;/p&gt;
-
-&lt;h3&gt;Unprotected Redirect Check&lt;/h3&gt;
-
-&lt;p&gt;There have been some minor changes to &lt;code&gt;CheckRedirect&lt;/code&gt;. In most cases, it should no longer warn when redirecting to a model instance. If there are still false positives with this scenario, please report them.&lt;/p&gt;
-
-&lt;p&gt;The other change is that redirects to model attributes will now be marked as high confidence, instead of weak.&lt;/p&gt;
-
-&lt;h3&gt;Exit Code on Missing Dependencies&lt;/h3&gt;
-
-&lt;p&gt;Brakeman catches errors from missing dependencies in order to show a nicer error message. Unfortunately, it was also returning &lt;code&gt;0&lt;/code&gt; on exit. This is undesirable behavior when chaining commands together.&lt;/p&gt;
-
-&lt;p&gt;This has been changed to return a non-zero exit code.&lt;/p&gt;
-
-&lt;h3&gt;Before Filter Changes&lt;/h3&gt;
-
-&lt;p&gt;There were some isues with how &lt;code&gt;before_filter&lt;/code&gt; was being handled. The logic when using &lt;code&gt;:except&lt;/code&gt; was broken, causing Brakeman to treat it like &lt;code&gt;:only&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;The other issue caused Brakeman to interpret arguments such as method calls as method names. For example, &lt;code&gt;before_filter blah&lt;/code&gt; would be treated like &lt;code&gt;before_filter :blah&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;While dealing with this, caching of filter lookups was also added for a minor performance improvement.&lt;/p&gt;
-
-&lt;h3&gt;Noisier &lt;code&gt;--compare&lt;/code&gt;&lt;/h3&gt;
-
-&lt;p&gt;Using the &lt;code&gt;--compare&lt;/code&gt; option now shows the same output as a regular scan. If you are piping the output of &lt;code&gt;--compare&lt;/code&gt; to a file or elsewhere, you may wish to use the &lt;code&gt;--quiet&lt;/code&gt; option.&lt;/p&gt;
 
 &lt;h3&gt;Report Issues&lt;/h3&gt;
 
