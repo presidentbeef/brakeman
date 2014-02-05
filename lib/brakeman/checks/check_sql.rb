@@ -491,15 +491,20 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
     target = exp.target
     method = exp.method
-
+    arg = exp.first_arg
 
     if STRING_METHODS.include? method
       if string? target
-        check_string_arg exp.first_arg
-      elsif string? exp.first_arg
+        check_string_arg arg
+      elsif string? arg
         check_string_arg target
       elsif call? target
         check_for_string_building target
+      elsif node_type? target, :string_interp, :dstr or
+            node_type? arg, :string_interp, :dstr
+
+        check_string_arg target and
+        check_string_arg arg
       end
     else
       nil
@@ -523,8 +528,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def string_building? exp
     return false unless call? exp and STRING_METHODS.include? exp.method
 
-    string? exp.target or
-    string? exp.first_arg or
+    node_type? exp.target, :str, :dstr, :string_interp or
+    node_type? exp.first_arg, :str, :dstr, :string_interp or
     string_building? exp.target or
     string_building? exp.first_arg
   end
