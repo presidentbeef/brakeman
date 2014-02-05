@@ -551,7 +551,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         safe_value? exp.target
       else
         IGNORE_METHODS_IN_SQL.include? exp.method or
-        quote_call? exp
+        quote_call? exp or
+        exp.method.to_s.end_with? "_id"
       end
     when :if
       safe_value? exp.then_clause and safe_value? exp.else_clause

@@ -958,13 +958,25 @@ class Rails31Tests < Test::Unit::TestCase
   def test_sql_injection_with_interpolated_value
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "37dc35cac607340b6244a25f7001fb6a67bf830b8c7395e4034f94c60f3d310e",
+      :fingerprint => "fd5cc1e0538e8a08b47e85cb7a9a699358908d8049daaaa5609539aa8aa03278",
       :warning_type => "SQL Injection",
       :line => 33,
       :message => /^Possible\ SQL\ injection/,
       :confidence => 1,
       :relative_path => "app/models/user.rb",
-      :user_input => s(:call, nil, :parent_id)
+      :user_input => s(:lvar, :parent_id)
+  end
+
+  def test_sql_injection_with_id_call
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "b9ade31073676589cf3b6a88de30105f67cc8170e87f2c2fd1c972f50ad2a3b3",
+      :warning_type => "SQL Injection",
+      :line => 34,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :user_input => s(:call, nil, :child_id)
   end
 
   def test_validates_format

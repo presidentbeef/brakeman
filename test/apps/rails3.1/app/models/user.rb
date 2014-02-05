@@ -28,9 +28,10 @@ class User < ActiveRecord::Base
 
   attr_accessible :admin, :as => :admin
 
-  def self.sql_stuff
+  def self.sql_stuff parent_id
     condition = parent_id.blank? ? " IS NULL" : " = #{parent_id}"
     self.connection.select_values("SELECT max(id) FROM content_pages WHERE parent_content_page_id #{condition}")[0].to_i
+    self.connection.select_values("SELECT max(id) FROM content_pages WHERE child_content_page_id #{child_id}")[0].to_i
 
     # Should not warn
     User.where("#{table_name}.visibility = ?" +
