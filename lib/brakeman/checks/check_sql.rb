@@ -356,10 +356,44 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #unless safe_value? explicitly returns true.
   def check_string_interp arg
     arg.each do |exp|
-      return exp.value if node_type?(exp, :string_eval, :evstr) and not safe_value?(exp.value)
+      if dangerous = unsafe_string_interp?(exp)
+        return dangerous
+      end
     end
 
     nil
+  end
+
+  #Returns value if interpolated value is not something safe
+  def unsafe_string_interp? exp
+    if node_type? exp, :string_eval, :evstr
+      value = exp.value
+    else
+      value = exp
+    end
+
+    if not sexp? value
+      nil
+    elsif call? value and value.method == :to_s
+      unsafe_string_interp? value.target
+    else
+      case value.node_type
+      when :or
+        unsafe_string_interp?(value.lhs) || unsafe_string_interp?(value.rhs)
+      when :string_interp, :dstr
+        if dangerous = check_string_interp(value)
+          return dangerous
+        end
+      else
+        if safe_value? value
+          nil
+        elsif string_building? value
+          check_for_string_building value
+        else
+          value
+        end
+      end
+    end
   end
 
   #Checks the given expression for unsafe SQL values. If an unsafe value is
@@ -457,14 +491,47 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
     target = exp.target
     method = exp.method
+    arg = exp.first_arg
 
-    if string? target or string? exp.first_arg
-      return exp if STRING_METHODS.include? method
-    elsif STRING_METHODS.include? method and call? target
-      return unsafe_sql? target
+    if STRING_METHODS.include? method
+      if string? target
+        check_string_arg arg
+      elsif string? arg
+        check_string_arg target
+      elsif call? target
+        check_for_string_building target
+      elsif node_type? target, :string_interp, :dstr or
+            node_type? arg, :string_interp, :dstr
+
+        check_string_arg target and
+        check_string_arg arg
+      end
+    else
+      nil
     end
+  end
 
-    nil
+  def check_string_arg exp
+    if safe_value? exp
+      nil
+    elsif string_building? exp
+      check_for_string_building exp
+    elsif node_type? exp, :string_interp, :dstr
+      check_string_interp exp
+    elsif call? exp and exp.method == :to_s
+      check_string_arg exp.target
+    else
+      exp
+    end
+  end
+
+  def string_building? exp
+    return false unless call? exp and STRING_METHODS.include? exp.method
+
+    node_type? exp.target, :str, :dstr, :string_interp or
+    node_type? exp.first_arg, :str, :dstr, :string_interp or
+    string_building? exp.target or
+    string_building? exp.first_arg
   end
 
   IGNORE_METHODS_IN_SQL = Set[:id, :merge_conditions, :table_name, :to_i, :to_f,
@@ -480,8 +547,13 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     when :str, :lit, :const, :colon2, :nil, :true, :false
       true
     when :call
-      IGNORE_METHODS_IN_SQL.include? exp.method or
-      quote_call? exp
+      if exp.method == :to_s
+        safe_value? exp.target
+      else
+        IGNORE_METHODS_IN_SQL.include? exp.method or
+        quote_call? exp or
+        exp.method.to_s.end_with? "_id"
+      end
     when :if
       safe_value? exp.then_clause and safe_value? exp.else_clause
     when :block, :rlist
