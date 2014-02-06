@@ -3,6 +3,7 @@ require 'brakeman/processors/template_processor'
 #Processes HAML templates.
 class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
   HAML_FORMAT_METHOD = /format_script_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)/
+  HAML_HELPERS = s(:colon2, s(:const, :Haml), :Helpers)
   
   #Processes call, looking for template output
   def process_call exp
@@ -37,9 +38,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
               else
                 case method.to_s
                 when "push_text"
-                  s = Sexp.new(:output, out)
-                  @current_template[:outputs] << s
-                  s
+                  build_output_from_push_text(out)
                 when HAML_FORMAT_METHOD
                   if $4 == "true"
                     Sexp.new :format_escaped, out
@@ -116,5 +115,53 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
     node_type? exp.target, :lvar and
     exp.target.value == :_hamlout and
     exp.method == :buffer
+  end
+
+  #HAML likes to put interpolated values into _hamlout.push_text
+  #but we want to handle those individually
+  def build_output_from_push_text exp
+    if node_type? exp, :string_interp, :dstr
+      exp.map! do |e|
+        if sexp? e
+          if node_type? e, :string_eval, :evstr
+            e = e.value
+          end
+
+          get_pushed_value e
+        else
+          e
+        end
+      end
+    end
+  end
+
+  #Gets outputs from values interpolated into _hamlout.push_text
+  def get_pushed_value exp
+    return exp unless sexp? exp
+    
+    case exp.node_type
+    when :format
+      exp.node_type = :output
+      @current_template[:outputs] << exp
+      exp
+    when :format_escaped
+      exp.node_type = :escaped_output
+      @current_template[:outputs] << exp
+      exp
+    when :str, :ignore, :output, :escaped_output
+      exp
+    when :block, :rlist, :string_interp, :dstr
+      exp.map! { |e| get_pushed_value e }
+    else
+      if call? exp and exp.target == HAML_HELPERS and exp.method == :html_escape
+        s = Sexp.new(:escaped_output, exp.first_arg)
+      else
+        s = Sexp.new(:output, exp)
+      end
+
+      s.line(exp.line)
+      @current_template[:outputs] << s
+      s
+    end
   end
 end
