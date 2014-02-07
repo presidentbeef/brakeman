@@ -9,6 +9,7 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
     @current_method = nil
     @in_target = false
     @calls = []
+    @cache = {}
   end
 
   #Process the given source. Provide either class and method being searched
@@ -145,11 +146,18 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
 
   def make_location
     if @current_template
-      { :type => :template,
+      key = [@current_template, @current_file]
+      cached = @cache[key]
+      return cached if cached
+
+      @cache[key] = { :type => :template,
         :template => @current_template,
         :file => @current_file }
     else
-      { :type => :class,
+      key = [@current_class, @current_method, @current_file]
+      cached = @cache[key]
+      return cached if cached
+      @cache[key] = { :type => :class,
         :class => @current_class,
         :method => @current_method,
         :file => @current_file }
