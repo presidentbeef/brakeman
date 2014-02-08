@@ -65,4 +65,8 @@ class OtherController < ApplicationController
 
     render :xss_dupes, :layout => 'thing'
   end
+
+  def test_haml_stuff
+    render :locals => { :user => User.first }
+  end
 end
