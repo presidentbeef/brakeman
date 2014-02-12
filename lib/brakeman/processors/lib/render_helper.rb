@@ -129,6 +129,14 @@ module Brakeman::RenderHelper
       #TODO: Add in :locals => { ... } to environment
       src = Brakeman::TemplateAliasProcessor.new(@tracker, template, called_from).process_safely(template[:src], template_env)
 
+      digest = Digest::SHA1.new.update(name + src.to_s).to_s.to_sym
+
+      if @tracker.template_cache.include? digest
+        return
+      else
+        @tracker.template_cache << digest
+      end
+
       #Run alias-processed src through the template processor to pull out
       #information and outputs.
       #This information will be stored in tracker.templates, but with a name
