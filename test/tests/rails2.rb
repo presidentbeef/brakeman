@@ -11,13 +11,13 @@ class Rails2Tests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 3,
-        :template => 45,
+        :template => 47,
         :generic => 49 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
-        :template => 45,
+        :template => 47,
         :generic => 50 }
     end
   end
@@ -1119,6 +1119,30 @@ class Rails2Tests < Test::Unit::TestCase
       :relative_path => "app/views/layouts/thing.html.erb"
   end
 
+  def test_cross_site_scripting_in_haml
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "702f9bae476402bb2614794276083849342540bd8b5e8f2fc35b15b40e9f34fc",
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :relative_path => "app/views/other/test_haml_stuff.html.haml",
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_in_haml2
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "79cbc87a06ad9247362be97ba4b6cc12b9619fd0f68d468b81cbed376bfbcc5c",
+      :warning_type => "Cross Site Scripting",
+      :line => 4,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :relative_path => "app/views/other/test_haml_stuff.html.haml",
+      :user_input => nil
+  end
+
   def test_dangerous_send_try
     assert_warning :type => :warning,
       :warning_type => "Dangerous Send",
@@ -1287,13 +1311,13 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
       @expected ||= {
         :controller => 1,
         :model => 4,
-        :template => 45,
+        :template => 47,
         :generic => 49 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
-        :template => 45,
+        :template => 47,
         :generic => 50 }
     end
   end
