@@ -407,7 +407,7 @@ Test.find_by_sql(query)
 
 <h3>Slim XSS False Positives</h3>
 
-<p>(<a href="https://github.com/noahd1">Noah Davis</a>) provided a fix for XSS false positives in Slim templates when ActiveRecord is loaded. While Brakeman itself does not depend on ActiveRecord, it might be loaded if Brakeman is run with Bundler or as part of a Rake task.</p>
+<p>(<a href="https://github.com/noahd1">Noah Davis</a>) provided a fix for XSS false positives in Slim templates when ActiveSupport is loaded. While Brakeman itself does not depend on ActiveSupport, it might be loaded if Brakeman is run with Bundler or as part of a Rake task.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/410">changes</a>)</p>
 
