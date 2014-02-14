@@ -1,3 +1,10 @@
+# Unreleased
+
+ * Reuse duplicate call location information
+ * Only track original template output locations
+ * Skip identically rendered templates
+ * Fix HAML template processing
+
 # 2.4.0 
 
  * Detect Rails LTS versions
