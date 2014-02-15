@@ -10,7 +10,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 3,
-      :template => 2,
+      :template => 3,
       :generic => 23 }
   end
 
@@ -231,6 +231,29 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :file => /application_controller\.rb/
   end
 
+  def test_cross_site_scripting
+    assert_warning :type => :template,
+      :warning_code => 58,
+      :fingerprint => "3ec8749301aa7cdb1d3ec5610120492138060f05d65af0aa53dbb1a3b7c493ac",
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Rails\ 2\.3\.14\ has\ a\ vulnerability\ in\ sani/,
+      :confidence => 0,
+      :relative_path => "app/views/users/test_sanitize.html.erb",
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_sanitize_dupe
+    assert_no_warning :type => :template,
+      :warning_code => 58,
+      :fingerprint => "9d90d446941026c42502e1213ef6d9122a2ad587266cdb002d9f30bb3c77523d",
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Rails\ 2\.3\.14\ has\ a\ vulnerability\ in\ sani/,
+      :confidence => 0,
+      :relative_path => "app/views/users/test_sanitize.html.erb",
+      :user_input => nil
+  end
 
   def test_attribute_restriction_19 
     assert_warning :type => :model,
