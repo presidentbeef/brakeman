@@ -135,4 +135,8 @@ class UsersController < ApplicationController
       User.connection.execute("TRUNCATE users") #shouldn't warn
     end
   end
+
+  def test_sanitize
+    @x = params[:x]
+  end
 end

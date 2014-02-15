@@ -35,6 +35,9 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
 
   def check_for_cve method, code, link
     tracker.find_call(:target => false, :method => method).each do |result|
+      next if duplicate? result
+      add_result result
+
       message = "Rails #{tracker.config[:rails_version]} has a vulnerability in #{method}: upgrade to #{@fix_version} or patch"
 
       if include_user_input? result[:call]
