@@ -4,13 +4,69 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2014-02-12T20:27:21-08:00</updated>
+  <updated>2014-02-19T11:59:47-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 2.4.1 Released</title>
+    <link href="http://brakemanscanner.org/blog/2014/02/19/brakeman-2-dot-4-1-released/"/>
+    <updated>2014-02-19T10:53:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2014/02/19/brakeman-2-dot-4-1-released</id>
+    <content type="html">&lt;p&gt;This release only adds checks for the latest CVEs, no other changes.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 2.4.0&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add check for CVE-2014-0080&lt;/li&gt;
+&lt;li&gt;Add check for CVE-2014-0081, replaces CVE-2013-6415&lt;/li&gt;
+&lt;li&gt;Add check for CVE-2014-0082&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;CVE-2014-0080&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/Wu96YkTUR6s/pPLBMZrlwvYJ&quot;&gt;CVE-2014-0080&lt;/a&gt; is a SQL injection issue only affects applications using PostgreSQL with Rails 4.x. If Brakeman detects the &lt;code&gt;pg&lt;/code&gt; gem and an affected version, it will warn about this CVE.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/447&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;CVE-2014-0081&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/tfp6gZCtzr4/j8LUHmu7fIEJ&quot;&gt;CVE-2014-0081&lt;/a&gt; is a vulnerability in &lt;code&gt;number_to_currency&lt;/code&gt;, &lt;code&gt;number_to_percentage&lt;/code&gt;, and &lt;code&gt;number_to_human&lt;/code&gt;. Values passed in as options may not be properly escaped. It affects all previous versions of Rails.&lt;/p&gt;
+
+&lt;p&gt;Brakeman will warn on unsafe uses of these methods. If no unsafe calls are found, it will generate a generic medium confidence warning.&lt;/p&gt;
+
+&lt;p&gt;Warnings for CVE-2014-0081 replace warnings for CVE-2013-6415, which was about just &lt;code&gt;number_to_currency&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/448&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;CVE-2014-0082&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/LMxO_3_eCuc/ozGBEhKaJbIJ&quot;&gt;CVE-2014-0082&lt;/a&gt; is a potential symbol denial of service problem when handling &lt;code&gt;render :text&lt;/code&gt; in Rails 3.x.&lt;/p&gt;
+
+&lt;p&gt;Brakeman will only warn about this CVE if it detects use of &lt;code&gt;render :text&lt;/code&gt; in affected versions.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/449&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;SHAs&lt;/h3&gt;
+
+&lt;p&gt;The SHA1 sums for this release are&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;e9fb5439d5a322b4a9c9611d75d994e7df83d4d2  brakeman-2.4.1.gem
+b84ad90a7ec9b6e6bbce8fc69c50d1d8b3214d0f  brakeman-min-2.4.1.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter or joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 2.4.0 Released</title>
@@ -1931,103 +1987,6 @@ end
 &lt;p&gt;This vulnerability was &lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/CdoMUVpsRmQ/discussion&quot;&gt;reported a while ago&lt;/a&gt;, but it was unclear if it applied to Rails 2.x or just Rails 3. Thanks to Neil Matatall, it has been confirmed to be an issue in Rails 2.x as well.&lt;/p&gt;
 
 &lt;p&gt;Therefore, Brakeman will be reporting the vulnerability (&lt;code&gt;select&lt;/code&gt; does not escape options list if supplied as a straight string) for Rails 2.x as well.&lt;/p&gt;
-
-&lt;h3&gt;Report Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release!&lt;/p&gt;
-
-&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 1.7.0 Released</title>
-    <link href="http://brakemanscanner.org/blog/2012/07/31/brakeman-1-dot-7-0-released/"/>
-    <updated>2012-07-31T17:44:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2012/07/31/brakeman-1-dot-7-0-released</id>
-    <content type="html">&lt;p&gt;This release includes improvements to Rails 3 route processing, better performance, several bug fixes, and more!&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 1.6.2&lt;/em&gt;:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Add check for CVE-2012-3424&lt;/li&gt;
-&lt;li&gt;Link report types to descriptions on website&lt;/li&gt;
-&lt;li&gt;Report errors raised while running check&lt;/li&gt;
-&lt;li&gt;Improve processing of Rails 3 routes&lt;/li&gt;
-&lt;li&gt;Improve file access check&lt;/li&gt;
-&lt;li&gt;Avoid warning on non-ActiveModel models&lt;/li&gt;
-&lt;li&gt;Fix how &lt;code&gt;params[:x] ||=&lt;/code&gt; is handled&lt;/li&gt;
-&lt;li&gt;Treat user input in &lt;code&gt;or&lt;/code&gt; expressions as immediate values&lt;/li&gt;
-&lt;li&gt;Fix processing of negative array indexes&lt;/li&gt;
-&lt;li&gt;Fix &quot;empty char-class&quot; error&lt;/li&gt;
-&lt;li&gt;Speed improvements by stripping down SexpProcessor&lt;/li&gt;
-&lt;li&gt;Add line breaks to truncated table rows&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;Check for HTTP Auth Digest DoS&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/vxJjrc15qYM/discussion&quot;&gt;CVE-2012-3424&lt;/a&gt;, a potential denial of service vulnerability in how Rails handles HTTP authentication digest parameters, was recently announced. It affects Rails 3.x, and is fixed in 3.0.16, 3.1.7, and 3.2.7.&lt;/p&gt;
-
-&lt;p&gt;Brakeman will generate a warning for the Rails versions affected, but will only report a high confidence warning if &lt;code&gt;authenticate_or_request_with_http_digest&lt;/code&gt; or &lt;code&gt;authenticate_with_http_digest&lt;/code&gt; methods are called.&lt;/p&gt;
-
-&lt;h3&gt;Links to Warning Information&lt;/h3&gt;
-
-&lt;p&gt;HTML reports now link warning types to descriptions on the Brakeman website. JSON reports will also include the link information. Due to this change, it is not possible to compare JSON reports from previous versions using the &lt;code&gt;--compare&lt;/code&gt; option.&lt;/p&gt;
-
-&lt;p&gt;Suggestions and &lt;a href=&quot;https://github.com/presidentbeef/brakeman-site&quot;&gt;pull requests&lt;/a&gt; for improving the documention are welcome!&lt;/p&gt;
-
-&lt;h3&gt;Report Check Errors&lt;/h3&gt;
-
-&lt;p&gt;Previously, errors encounted while running checks were not included in reports. This has been fixed.&lt;/p&gt;
-
-&lt;h3&gt;Better Rails 3 Route Processing&lt;/h3&gt;
-
-&lt;p&gt;Even the simple information Brakeman uses (which methods are routes) is difficult to extract from Rails 3 routes due to all the different options it offers. This release should decrease the number of &quot;Error while processing routes&quot; messages that come up.&lt;/p&gt;
-
-&lt;p&gt;See &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/116&quot;&gt;this pull request&lt;/a&gt; for more information about specific fixes.&lt;/p&gt;
-
-&lt;h3&gt;Improved File Access Check&lt;/h3&gt;
-
-&lt;p&gt;The check for user input in file access calls has been improved so the confidence of the warnings will vary according to how the user input is used, like most other checks.&lt;/p&gt;
-
-&lt;p&gt;Additionally, the check will now respect the &lt;code&gt;--report-direct&lt;/code&gt; option.&lt;/p&gt;
-
-&lt;h3&gt;No SQLi Warnings for Non-ActiveModel&lt;/h3&gt;
-
-&lt;p&gt;Models which do not inherit from &lt;code&gt;ActiveRecord::Base&lt;/code&gt; will no longer be reported in SQL injection warnings.&lt;/p&gt;
-
-&lt;h3&gt;Default Assignment to &lt;code&gt;params&lt;/code&gt;&lt;/h3&gt;
-
-&lt;p&gt;Normally, when Brakeman processes an assignment like &lt;code&gt;x ||= y&lt;/code&gt;, it will assign &lt;code&gt;y&lt;/code&gt; to &lt;code&gt;x&lt;/code&gt; if no previous value is found for &lt;code&gt;x&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;However, in this case:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;params[:x] ||= y
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The information that the left hand side is a &lt;code&gt;params&lt;/code&gt; hash is lost.&lt;/p&gt;
-
-&lt;p&gt;This has been changed so default assignment to a &lt;code&gt;params&lt;/code&gt; hash will not replace the entire value, but will handle it as &lt;code&gt;params[:x] || y&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h3&gt;User Input in &lt;code&gt;or&lt;/code&gt; Expressions&lt;/h3&gt;
-
-&lt;p&gt;Previously, unescaped output like&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;%= params[:x] || z %&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;would have been reported as a weak confidence warning. This has been changed so that any user input in an &lt;code&gt;or&lt;/code&gt; expression will be considered immediate (versus &quot;indirect&quot;) output and will likely result in high confidence warnings.&lt;/p&gt;
-
-&lt;h3&gt;Speed Improvements&lt;/h3&gt;
-
-&lt;p&gt;Scan times should decrease by 15-25% with this release. This is mostly due to stripping unused bits out of SexpProcessor.&lt;/p&gt;
-
-&lt;h3&gt;Bug Fixes&lt;/h3&gt;
-
-&lt;p&gt;Besides errors raised when processing Rails 3 routes, the &lt;code&gt;Result must be a Sexp, was Symbol::array&lt;/code&gt; and &lt;code&gt;empty char-class&lt;/code&gt; errors should be resolved now.&lt;/p&gt;
-
-&lt;p&gt;Please report any errors raised when performing scans, as they are usually bugs.&lt;/p&gt;
 
 &lt;h3&gt;Report Issues&lt;/h3&gt;
 
