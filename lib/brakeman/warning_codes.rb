@@ -73,6 +73,8 @@ module Brakeman::WarningCodes
     :mass_assign_permit! => 70,
     :ssl_verification_bypass => 71,
     :CVE_2014_0080 => 72,
+    :CVE_2014_0081 => 73,
+    :CVE_2014_0081_call => 74,
   }
 
   def self.code name
