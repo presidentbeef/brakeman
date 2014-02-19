@@ -11,7 +11,7 @@ class Rails32Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 5,
       :template => 11,
-      :generic => 10 }
+      :generic => 11 }
 
     if RUBY_PLATFORM == 'java'
       @expected[:generic] += 1
@@ -99,13 +99,13 @@ class Rails32Tests < Test::Unit::TestCase
       :relative_path => "Gemfile"
   end
 
-  def test_number_to_currency_CVE_2013_6415
+  def test_number_to_currency_CVE_2014_0081
     assert_warning :type => :warning,
-      :warning_code => 65,
-      :fingerprint => "813b00b5c58567fb3f32051578b839cb25fc2d827834a30d4b213a4c126202a2",
+      :warning_code => 73,
+      :fingerprint => "f6981b9c24727ef45040450a1f4b158ae3bc31b4b0343efe853fe12c64881695",
       :warning_type => "Cross Site Scripting",
       :line => nil,
-      :message => /^Rails\ 3\.2\.9\.rc2 has\ a\ vulnerability\ in\ numbe/,
+      :message => /^Rails\ 3\.2\.9\.rc2\ has\ a\ vulnerability\ in\ n/,
       :confidence => 1,
       :relative_path => "Gemfile",
       :user_input => nil
@@ -118,6 +118,18 @@ class Rails32Tests < Test::Unit::TestCase
       :warning_type => "SQL Injection",
       :line => nil,
       :message => /^Rails\ 3\.2\.9\.rc2 contains\ a\ SQL\ injection\ vul/,
+      :confidence => 0,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_denial_of_service_CVE_2014_0082
+    assert_warning :type => :warning,
+      :warning_code => 75,
+      :fingerprint => "403a72d08a90043384fe56d3a6bc3e255b8799b380693914143d403607433db7",
+      :warning_type => "Denial of Service",
+      :line => nil,
+      :message => /^Rails\ 3\.2\.9\.rc2\ has\ a\ denial\ of\ service\ /,
       :confidence => 0,
       :relative_path => "Gemfile",
       :user_input => nil

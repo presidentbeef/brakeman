@@ -381,10 +381,10 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :user_input => nil
   end
 
-  def test_number_to_currency_CVE_2013_6415
+  def test_number_to_currency_CVE_2014_0081
     assert_warning :type => :warning,
-      :warning_code => 65,
-      :fingerprint => "813b00b5c58567fb3f32051578b839cb25fc2d827834a30d4b213a4c126202a2",
+      :warning_code => 73,
+      :fingerprint => "f6981b9c24727ef45040450a1f4b158ae3bc31b4b0343efe853fe12c64881695",
       :warning_type => "Cross Site Scripting",
       :line => nil,
       :message => /^Rails\ 2\.3\.14\ has\ a\ vulnerability\ in\ numb/,

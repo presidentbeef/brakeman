@@ -14,8 +14,8 @@ class Rails4Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 0,
       :model => 1,
-      :template => 1,
-      :generic => 18
+      :template => 2,
+      :generic => 19
     }
   end
 
@@ -224,16 +224,26 @@ class Rails4Tests < Test::Unit::TestCase
       :relative_path => "Gemfile"
   end
 
-  def test_number_to_currency_CVE_2013_6415
+  def test_number_to_currency_CVE_2014_0081
     assert_warning :type => :template,
-      :warning_code => 66,
-      :fingerprint => "0fb96b5f4b3a4dcdc677d126f492441e2f7b46880563a977b1246b30d3c117a0",
+      :warning_code => 74,
+      :fingerprint => "2d06291f03b443619407093e5921ee1e4eb77b1bf045607d776d9493da4a3f95",
       :warning_type => "Cross Site Scripting",
       :line => 9,
-      :message => /^Currency\ value\ in\ number_to_currency\ is\ /,
+      :message => /^Format\ options\ in\ number_to_currency\ are/,
       :confidence => 0,
       :relative_path => "app/views/users/index.html.erb",
       :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :currency))
+
+    assert_warning :type => :template,
+      :warning_code => 74,
+      :fingerprint => "c5f481595217e42fbeaf40f32e6407e66d64d246a9729c2c199053e64365ac96",
+      :warning_type => "Cross Site Scripting",
+      :line => 12,
+      :message => /^Format\ options\ in\ number_to_percentage\ a/,
+      :confidence => 0,
+      :relative_path => "app/views/users/index.html.erb",
+      :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :format))
   end
 
   def test_simple_format_xss_CVE_2013_6416
@@ -255,6 +265,18 @@ class Rails4Tests < Test::Unit::TestCase
       :warning_type => "SQL Injection",
       :line => nil,
       :message => /^Rails\ 4\.0\.0 contains\ a\ SQL\ injection\ vul/,
+      :confidence => 0,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_sql_injection_CVE_2014_0080
+    assert_warning :type => :warning,
+      :warning_code => 72,
+      :fingerprint => "0ba20216bdda1cc067f9e4795bdb0d9224fd23c58317ecc09db67b6b38a2d0f0",
+      :warning_type => "SQL Injection",
+      :line => nil,
+      :message => /^Rails\ 4\.0\.0\ contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",
       :user_input => nil

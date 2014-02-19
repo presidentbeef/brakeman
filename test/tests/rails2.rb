@@ -991,14 +991,16 @@ class Rails2Tests < Test::Unit::TestCase
       :relative_path => "config/environment.rb"
   end
 
-  def test_number_to_currency_CVE_2013_6415
+  def test_number_to_currency_CVE_2014_0081
     assert_warning :type => :warning,
-      :warning_code => 65,
-      :fingerprint => "1822c8179beeb0358b71c545bad0dd824104aed8b995fe0781c1b6e324417a91",
+      :warning_code => 73,
+      :fingerprint => "dd82650c29c3ec7b77437c32d394641744208b42b2aeb673d54e5f42c51e6c33",
       :warning_type => "Cross Site Scripting",
+      :line => nil,
       :message => /^Rails\ 2\.3\.11\ has\ a\ vulnerability\ in\ numb/,
       :confidence => 1,
-      :relative_path => "config/environment.rb"
+      :relative_path => "config/environment.rb",
+      :user_input => nil
   end
 
   def test_sql_injection_CVE_2013_6417

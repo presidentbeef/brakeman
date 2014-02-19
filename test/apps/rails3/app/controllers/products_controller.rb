@@ -80,4 +80,8 @@ class ProductsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
+  def render_some_text
+    render :text => "jello"
+  end
 end

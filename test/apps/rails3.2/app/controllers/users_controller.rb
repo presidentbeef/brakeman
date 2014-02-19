@@ -92,4 +92,8 @@ class UsersController < ApplicationController
   def show_detailed_exceptions?
     false # no warning
   end
+
+  def render_text
+    render :text => "oh noes my service"
+  end
 end
