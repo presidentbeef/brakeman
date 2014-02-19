@@ -265,6 +265,6 @@ class RescannerTests < Test::Unit::TestCase
     assert_reindex :none
     assert_changes
     assert_new 0
-    assert_fixed 3
+    assert_fixed 2
   end
 end
