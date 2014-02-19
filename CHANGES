@@ -1,3 +1,9 @@
+# 2.4.1
+
+ * Add check for CVE-2014-0082
+ * Add check for CVE-2014-0081, replaces CVE-2013-6415
+ * Add check for CVE-2014-0080
+
 # 2.4.0 
 
  * Detect Rails LTS versions
