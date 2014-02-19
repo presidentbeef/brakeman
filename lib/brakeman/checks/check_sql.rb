@@ -51,6 +51,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
     Brakeman.debug "Processing possible SQL calls"
     calls.each { |call| process_result call }
+
+    check_CVE_2014_0080
   end
 
   #Find calls to named_scope() or scope() in models
@@ -636,6 +638,19 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       klass == :"ActiveRecord::Base" or
       active_record_models.include? klass
     end
+  end
+
+  # TODO: Move all SQL CVE checks to separate class
+  def check_CVE_2014_0080
+    return unless version_between? "4.0.0", "4.0.2" and
+                  @tracker.config[:gems].include? :pg
+
+    warn :warning_type => 'SQL Injection',
+      :warning_code => :CVE_2014_0080,
+      :message => "Rails #{tracker.config[:rails_version]} contains a SQL injection vulnerability (CVE-2014-0080) with PostgreSQL. Upgrade to 4.0.3",
+      :confidence => CONFIDENCE[:high],
+      :file => gemfile_or_environment,
+      :link_path => "https://groups.google.com/d/msg/rubyonrails-security/Wu96YkTUR6s/pPLBMZrlwvYJ"
   end
 
   def upgrade_version? versions
