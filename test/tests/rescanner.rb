@@ -267,4 +267,23 @@ class RescannerTests < Test::Unit::TestCase
     assert_new 0
     assert_fixed 2
   end
+
+  def test_gemfile_rails_version_fix_CVE_2014_0082
+    gemfile = "Gemfile.lock"
+
+    before_rescan_of gemfile do
+      replace gemfile, "rails (3.2.9.rc2)", "rails (3.2.17)"
+    end
+
+    #@original is actually modified
+    assert @original.config[:rails_version], "3.2.17"
+    assert_reindex :none
+    assert_changes
+    assert_new 0
+    if RUBY_PLATFORM == "java"
+      assert_fixed 10
+    else
+      assert_fixed 9
+    end
+  end
 end

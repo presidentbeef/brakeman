@@ -16,7 +16,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 8,
       :template => 38,
-      :generic => 70
+      :generic => 71
     }
 
     if RUBY_PLATFORM == 'java'
@@ -1168,6 +1168,18 @@ class Rails3Tests < Test::Unit::TestCase
       :warning_type => "SQL Injection",
       :line => nil,
       :message => /^Rails\ 3\.0\.3\ contains\ a\ SQL\ injection\ vul/,
+      :confidence => 0,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_denial_of_service_CVE_2014_0082
+    assert_warning :type => :warning,
+      :warning_code => 75,
+      :fingerprint => "403a72d08a90043384fe56d3a6bc3e255b8799b380693914143d403607433db7",
+      :warning_type => "Denial of Service",
+      :line => nil,
+      :message => /^Rails\ 3\.0\.3\ has\ a\ denial\ of\ service\ vuln/,
       :confidence => 0,
       :relative_path => "Gemfile",
       :user_input => nil
