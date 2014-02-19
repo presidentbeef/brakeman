@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 1,
-      :generic => 18
+      :generic => 19
     }
   end
 
@@ -255,6 +255,18 @@ class Rails4Tests < Test::Unit::TestCase
       :warning_type => "SQL Injection",
       :line => nil,
       :message => /^Rails\ 4\.0\.0 contains\ a\ SQL\ injection\ vul/,
+      :confidence => 0,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_sql_injection_CVE_2014_0080
+    assert_warning :type => :warning,
+      :warning_code => 72,
+      :fingerprint => "0ba20216bdda1cc067f9e4795bdb0d9224fd23c58317ecc09db67b6b38a2d0f0",
+      :warning_type => "SQL Injection",
+      :line => nil,
+      :message => /^Rails\ 4\.0\.0\ contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",
       :user_input => nil
