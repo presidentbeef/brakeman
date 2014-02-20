@@ -26,7 +26,7 @@ class Brakeman::TemplateProcessor < Brakeman::BaseProcessor
   def process exp
     begin
       super
-    rescue Exception => e
+    rescue => e
       except = e.exception("Error when processing #{@current_template[:name]}: #{e.message}")
       except.set_backtrace(e.backtrace)
       raise except

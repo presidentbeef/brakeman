@@ -88,7 +88,7 @@ class Brakeman::SexpProcessor
   def error_handler(type, exp=nil) # :nodoc:
     begin
       return yield
-    rescue StandardError => err
+    rescue => err
       warn "#{err.class} Exception thrown while processing #{type} for sexp #{exp.inspect} #{caller.inspect}" if $DEBUG
       raise
     end

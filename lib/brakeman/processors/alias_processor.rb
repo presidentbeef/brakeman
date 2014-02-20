@@ -58,7 +58,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
           e
         end
       end
-    rescue Exception => err
+    rescue => err
       @tracker.error err if @tracker
     end
 
