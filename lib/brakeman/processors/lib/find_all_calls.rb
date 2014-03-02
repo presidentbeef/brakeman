@@ -106,6 +106,19 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
     exp
   end
 
+  # Process a dynamic regex like a call
+  def process_dregx exp
+    exp.each { |arg| process arg if sexp? arg }
+
+    @calls << { :target => nil,
+                :method => :regex_interp,
+                :call => exp,
+                :nested => false,
+                :location => make_location }
+
+    exp
+  end
+
   #Process an assignment like a call
   def process_attrasgn exp
     process_call exp

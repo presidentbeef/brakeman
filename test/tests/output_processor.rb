@@ -85,6 +85,13 @@ class OutputProcessorTests < Test::Unit::TestCase
                                                Sexp.new(:ivar, :@x)))
   end
 
+  def test_output_dregx
+    assert_output '/#{@x}/', Sexp.new(:dregx,
+                                      "",
+                                      Sexp.new(:string_eval,
+                                               Sexp.new(:ivar, :@x)))
+  end
+
   def test_output_format
     assert_output "[Format] @x", Sexp.new(:format, Sexp.new(:ivar, :@x))
   end
@@ -123,7 +130,7 @@ class OutputProcessorTests < Test::Unit::TestCase
       Sexp.new(:render,
                :partial,
                Sexp.new(:str, "x/y"),
-               Sexp.new(:hash, 
+               Sexp.new(:hash,
                         Sexp.new(:lit, :locals),
                         Sexp.new(:hash,
                                  Sexp.new(:lit, :user),

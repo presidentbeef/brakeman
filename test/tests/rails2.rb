@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 49 }
+        :generic => 50 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 50 }
+        :generic => 51 }
     end
   end
 
@@ -123,7 +123,7 @@ class Rails2Tests < Test::Unit::TestCase
 
     assert_warning :type => :warning,
       :warning_type => "Redirect",
-      :line => 182,
+      :line => 186,
       :message => /^Possible unprotected redirect/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -635,7 +635,7 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /user\.rb/,
       :relative_path => "app/models/user.rb"
   end
- 
+
   def test_sql_injection_active_record_base_connection
     assert_warning :type => :warning,
       :warning_code => 0,
@@ -1246,6 +1246,16 @@ class Rails2Tests < Test::Unit::TestCase
       :relative_path => "app/controllers/application_controller.rb"
   end
 
+  def test_regex_dos
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :line => 164,
+      :message => /^User input in regex/,
+      :confidence => 0,
+      :file => /home_controller\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
+  end
+
   def test_unsafe_symbol_creation_from_param
     assert_warning :type => :warning,
       :warning_code => 59,
@@ -1314,13 +1324,13 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 49 }
+        :generic => 50 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 50 }
+        :generic => 51 }
     end
   end
 

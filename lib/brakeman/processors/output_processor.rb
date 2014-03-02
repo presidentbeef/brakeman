@@ -56,10 +56,25 @@ class Brakeman::OutputProcessor < Ruby2Ruby
         out << e
       else
         res = process e
-        out << res unless res == "" 
+        out << res unless res == ""
       end
     end
     out << '"'
+    exp.clear
+    out
+  end
+
+  def process_dregx exp
+    out = '/'
+    exp.each do |e|
+      if e.is_a? String
+        out << e
+      else
+        res = process e
+        out << res unless res == ""
+      end
+    end
+    out << '/'
     exp.clear
     out
   end
