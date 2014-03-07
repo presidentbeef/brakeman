@@ -540,7 +540,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     :sanitize_sql, :sanitize_sql_array, :sanitize_sql_for_assignment,
     :sanitize_sql_for_conditions, :sanitize_sql_hash,
     :sanitize_sql_hash_for_assignment, :sanitize_sql_hash_for_conditions,
-    :to_sql]
+    :to_sql, :sanitize]
 
   def safe_value? exp
     return true unless sexp? exp
