@@ -123,7 +123,7 @@ class Rails2Tests < Test::Unit::TestCase
 
     assert_warning :type => :warning,
       :warning_type => "Redirect",
-      :line => 186,
+      :line => 182,
       :message => /^Possible unprotected redirect/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -1249,11 +1249,13 @@ class Rails2Tests < Test::Unit::TestCase
   def test_regex_dos
     assert_warning :type => :warning,
       :warning_type => "Denial of Service",
-      :line => 164,
-      :message => /^User input in regex/,
+      :line => 74,
+      :fingerprint => "4ac4f6438b6ad6deb9dfec0d96a47f071853396b4325dad85ebb6aa87b309c98",
+      :message => /^User input from parameter value in regex/,
       :confidence => 0,
-      :file => /home_controller\.rb/,
-      :relative_path => "app/controllers/home_controller.rb"
+      :file => /other_controller\.rb/,
+      :relative_path => "app/controllers/other_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :regex))
   end
 
   def test_unsafe_symbol_creation_from_param

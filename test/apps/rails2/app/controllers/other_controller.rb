@@ -69,4 +69,8 @@ class OtherController < ApplicationController
   def test_haml_stuff
     render :locals => { :user => User.first }
   end
+
+  def test_regex_dos
+    /#{params[:regex]}/
+  end
 end

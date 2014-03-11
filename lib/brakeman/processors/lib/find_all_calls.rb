@@ -111,7 +111,7 @@ class Brakeman::FindAllCalls < Brakeman::BaseProcessor
     exp.each { |arg| process arg if sexp? arg }
 
     @calls << { :target => nil,
-                :method => :regex_interp,
+                :method => :brakeman_regex_interp,
                 :call => exp,
                 :nested => false,
                 :location => make_location }
