@@ -1251,7 +1251,7 @@ class Rails2Tests < Test::Unit::TestCase
       :warning_type => "Denial of Service",
       :line => 74,
       :fingerprint => "4ac4f6438b6ad6deb9dfec0d96a47f071853396b4325dad85ebb6aa87b309c98",
-      :message => /^User input from parameter value in regex/,
+      :message => /^Parameter value used in regex/,
       :confidence => 0,
       :file => /other_controller\.rb/,
       :relative_path => "app/controllers/other_controller.rb",

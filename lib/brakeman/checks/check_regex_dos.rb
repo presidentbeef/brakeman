@@ -20,14 +20,33 @@ class Brakeman::CheckRegexDoS < Brakeman::BaseCheck
   #Warns if regex includes user input
   def process_result result
     return if duplicate? result
+    add_result result
 
-    if input = include_user_input?(result[:call])
-      warn :result => result,
-        :warning_type => "Denial of Service",
-        :warning_code => :regex_dos,
-        :message => "User input from #{friendly_type_of input} in regex",
-        :user_input => input.match,
-        :confidence => CONFIDENCE[:high]
+    call = result[:call]
+    components = call[1..-1]
+
+    components.any? do |component|
+      next unless sexp? component
+
+      if match = has_immediate_user_input?(component)
+        confidence = CONFIDENCE[:high]
+      elsif match = has_immediate_model?(component)
+        match = Match.new(:model, match)
+        confidence = CONFIDENCE[:med]
+      elsif match = include_user_input?(component)
+        confidence = CONFIDENCE[:low]
+      end
+
+      if match
+        message = "#{friendly_type_of(match).capitalize} used in regex"
+
+        warn :result => result,
+          :warning_type => "Denial of Service",
+          :warning_code => :regex_dos,
+          :message => message,
+          :confidence => confidence,
+          :user_input => match.match
+      end
     end
   end
 end
