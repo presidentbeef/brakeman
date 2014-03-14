@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 50 }
+        :generic => 51 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 51 }
+        :generic => 52 }
     end
   end
 
@@ -1248,12 +1248,24 @@ class Rails2Tests < Test::Unit::TestCase
 
   def test_regex_dos
     assert_warning :type => :warning,
+      :warning_code => 76,
+      :fingerprint => "4ac4f6438b6ad6deb9dfec0d96a47f071853396b4325dad85ebb6aa87b309c98",
       :warning_type => "Denial of Service",
       :line => 74,
-      :fingerprint => "4ac4f6438b6ad6deb9dfec0d96a47f071853396b4325dad85ebb6aa87b309c98",
-      :message => /^Parameter value used in regex/,
+      :message => /^Parameter\ value\ used\ in\ regex/,
       :confidence => 0,
-      :file => /other_controller\.rb/,
+      :relative_path => "app/controllers/other_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :regex))
+  end
+
+  def test_indirect_regex_dos
+    assert_warning :type => :warning,
+      :warning_code => 76,
+      :fingerprint => "b7a197708a04abd2d8f0ca402f3bb0e8690f57685814e09440d1946ba279b14f",
+      :warning_type => "Denial of Service",
+      :line => 82,
+      :message => /^Parameter\ value\ used\ in\ regex/,
+      :confidence => 2,
       :relative_path => "app/controllers/other_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :regex))
   end
@@ -1326,13 +1338,13 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 50 }
+        :generic => 51 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 51 }
+        :generic => 52 }
     end
   end
 

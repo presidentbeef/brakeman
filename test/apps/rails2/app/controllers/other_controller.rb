@@ -73,4 +73,12 @@ class OtherController < ApplicationController
   def test_regex_dos
     /#{params[:regex]}/
   end
+
+  def test_escaped_regex
+    /#{Regex.escape(params[:regex])}/
+  end
+
+  def test_unescaped_regex
+    /#{Rack::Utils.escape_html(params[:regex])}/
+  end
 end

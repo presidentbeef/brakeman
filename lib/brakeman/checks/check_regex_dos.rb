@@ -4,6 +4,13 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckRegexDoS < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  ESCAPES = {
+    s(:const, :Regex) => [
+      :escape,
+      :quote
+    ]
+  }
+
   @description = "Searches regexes including user input"
 
   #Process calls
@@ -48,5 +55,15 @@ class Brakeman::CheckRegexDoS < Brakeman::BaseCheck
           :user_input => match.match
       end
     end
+  end
+
+  def process_call(exp)
+    if escape_methods = ESCAPES[exp.target]
+      if escape_methods.include? exp.method
+        return exp
+      end
+    end
+
+    super
   end
 end
