@@ -1,5 +1,7 @@
-# Unreleased
+# 2.4.2
 
+ * Remove `rescue Exception`
+ * Fix duplicate warnings about sanitize CVE
  * Reuse duplicate call location information
  * Only track original template output locations
  * Skip identically rendered templates
