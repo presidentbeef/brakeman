@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Brakeman 1.0 Release Candidate Available</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman 2.4.2 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/blog/2011/12/05/brakeman-1-dot-0-release-candidate-available/"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2014/03/20/brakeman-2-dot-4-2-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -105,7 +105,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 1.0 Release Candidate Available</h1>
+      <h1 class="entry-title">Brakeman 2.4.2 Released</h1>
     
     
       <p class="meta">
@@ -113,7 +113,7 @@
 
 
 
-<time datetime="2011-12-05 14:04:00 -0800" pubdate  updated >Dec 5<span>th</span>, 2011</time>
+<time datetime="2014-03-20 22:37:00 -0700" pubdate  updated >Mar 20<span>th</span>, 2014</time>
 
 
 </p>
@@ -121,63 +121,100 @@
   </header>
 
 
-<div class="entry-content"><p>Because there have been some major changes since 0.9.2, I have released a release candidate just in case there are problems. Please try it out and report any issues!</p>
+<div class="entry-content"><p>This release is only internal changes and bug fixes, but some scans may see significant time and memory improvements.</p>
 
-<pre><code>gem install brakeman --pre
-</code></pre>
-
-<p><strong>Changes:</strong></p>
+<p><em>Changes since 2.4.1</em>:</p>
 
 <ul>
-<li>Brakeman can now be used as a library</li>
-<li>Faster call search</li>
-<li>Add option to return error code if warnings are found (tw-ngreen)</li>
-<li>Allow truncated messages to be expanded in HTML</li>
-<li>Keep expanded context in HTML output</li>
-<li>Fix summary when using warning thresholds</li>
-<li>Better support for Rails 3 routes</li>
-<li>Reduce SQL injection duplicate warnings</li>
-<li>Lower confidence on mass assignment with no user input</li>
-<li>Ignore mass assignment using all literal arguments</li>
+<li>Skip identically rendered templates</li>
+<li>Improve HAML template processing</li>
+<li>Only track original template output locations</li>
+<li>Reuse duplicate call location information</li>
+<li>Fix duplicate warnings about sanitize CVE</li>
+<li>Remove <code>rescue Exception</code></li>
 </ul>
 
 
-<h3>Brakeman as a Library</h3>
+<h3>Drop Identical Templates</h3>
 
-<p>After some re-factoring, Brakeman can now be used as a library.</p>
+<p>For a long time now Brakeman has skipped processing templates if the template had already been processed with an identical environment. However, there are many times when a template is rendered with different environments but the actual output is the same. Brakeman now drops these templates (they are rendered, then discarded if they are duplicates). This reduces peak memory overhead, sometimes drastically. It can also speed up call indexing and vulnerability checks since fewer templates are searched.</p>
 
-<pre><code>require 'brakeman'
+<p>The location and render path of template warnings may change slightly due to this change. Also, the rendered template debug output will no longer include all rendered templates since duplicates will not be tracked.</p>
 
-Brakeman.run :app_path =&gt; 'my_app'
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/442">changes</a>)</p>
+
+<h3>Better HAML Processing</h3>
+
+<p>HAML templates will be processed more accurately with this release.</p>
+
+<p>For example, a template like this</p>
+
+<pre><code>#content
+  .nav
+    = @navigation_menu
 </code></pre>
 
-<h3>Faster Call Search</h3>
+<p>used to produce output like</p>
 
-<p>Searching for calls, like many of the checks do, is significantly faster now. Any scans that spend the majority of the time running checks should be much quicker.</p>
+<pre><code>+-------------------------------------------------------------------------------------------------+
+| Output                                                                                          |
++-------------------------------------------------------------------------------------------------+
+| [Output] "&lt;div id='content'&gt;; &lt;div class='nav'&gt;; #{[Escaped] @navigation_menu}; &lt;/div&gt;;&lt;/div&gt;;" |
++-------------------------------------------------------------------------------------------------+
+</code></pre>
 
-<h3>Option to Return Error Code</h3>
+<p>but now it will look like this instead</p>
 
-<p><code>--exit-on-warn</code> will cause Brakeman to exit with an error code if any warnings are found.</p>
+<pre><code>+-----------------------------------+
+| Output                            |
++-----------------------------------+
+| [Escaped Output] @navigation_menu |
++-----------------------------------+
+</code></pre>
 
-<h3>Fix Context in HTML Report</h3>
+<p>Besides looking much nicer, this improves warnings and reduces how much code Brakeman has to search. Additionally, these <code>push_text</code> methods can often interpolate multiple values into the output string, which were not being properly detected as output. This is fixed now.</p>
 
-<p>Truncated messages with no context are now able to be expanded when clicked.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/441">changes</a>)</p>
 
-<p>Expanded context should remain visible in the browser, instead of sometimes scrolling out of view.</p>
+<h3>Duplicate Template Outputs</h3>
 
-<h3>Fix Report Summary</h3>
+<p>Aliased values in templates were being counted multiple times as output. This did not affect warnings generated, but it did create duplicate output values to check and extraneous debug output.</p>
 
-<p>The summary in reports with warnings below the specified threshold will now only show the number of warnings in the actual report.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/443">changes</a>)</p>
 
-<h3>Reduce Duplicate SQL Warnings</h3>
+<h3>Call Location Reuse</h3>
 
-<p>There should be fewer duplicate SQL injection warnings now.</p>
+<p>For large applications, many calls in the call index actually have the same location (class+method or template). Instead of creating a new location hash for each call, the locations are cached and reused.</p>
 
-<h2>1.0 Release</h2>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/444">changes</a>)</p>
 
-<p>Next up is fixing Rubinius support, making Brakeman more useful as a library, and improving Rails 3 route processing.</p>
+<h3>Sanitize CVE Duplicates</h3>
 
-<p>If all is well, the 1.0 release will be ready in a couple days! Report bugs if you got &#8216;em!</p>
+<p>Don&#8217;t worry - <a href="https://groups.google.com/d/msg/rubyonrails-security/zAAU7vGTPvI/1vZDWXqBuXgJ">CVE-2013-1857</a> is one year old this week. But Brakeman was not properly preventing duplicate warnings for it. Hopefully this was affecting exactly no one.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/445">changes</a>)</p>
+
+<h3>Narrower Exception Handling</h3>
+
+<p>All instances of <code>rescue Exception</code> were removed from Brakeman and replaced with bare <code>rescue</code>s to catch <code>StandardError</code> and subclasses. <code>Exception</code> has some unfortunate subclasses, such as <code>NoMemoryError</code> and <code>Interrupt</code> which Brakeman should not be rescuing.</p>
+
+<p>This does mean there may be some newly unhandled exceptions. Please report these so they can be rescued properly.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/446">changes</a>)</p>
+
+<h3>SHAs</h3>
+
+<p>The SHA1 sums for this release are</p>
+
+<pre><code>02842dc497bf22b5b427cfd02635c005c4fc4fd4  brakeman-2.4.2.gem
+4893cedbcb015e96c82f4777b00a49ca8d0ae22f  brakeman-min-2.4.2.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
 </div>
 
 
@@ -193,7 +230,7 @@ Brakeman.run :app_path =&gt; 'my_app'
 
 
 
-<time datetime="2011-12-05 14:04:00 -0800" pubdate  updated >Dec 5<span>th</span>, 2011</time>
+<time datetime="2014-03-20 22:37:00 -0700" pubdate  updated >Mar 20<span>th</span>, 2014</time>
 
 
 
@@ -204,7 +241,7 @@ Brakeman.run :app_path =&gt; 'my_app'
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2011/12/05/brakeman-1-dot-0-release-candidate-available/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2011/12/05/brakeman-1-dot-0-release-candidate-available/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2014/03/20/brakeman-2-dot-4-2-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2014/03/20/brakeman-2-dot-4-2-released/" >Tweet</a>
   
   
   <g:plusone size="medium"></g:plusone>
@@ -220,8 +257,8 @@ Brakeman.run :app_path =&gt; 'my_app'
     <div id="disqus_thread"><div id="disqus_thread"></div>
 <script type="text/javascript">
   var disqus_shortname = 'brakeman';
-  var disqus_identifier = 'http://brakemanscanner.org/blog/2011/12/05/brakeman-1-dot-0-release-candidate-available/';
-  var disqus_url = 'http://brakemanscanner.org/blog/2011/12/05/brakeman-1-dot-0-release-candidate-available/';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2014/03/20/brakeman-2-dot-4-2-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2014/03/20/brakeman-2-dot-4-2-released/';
   //var disqus_developer = 1;
   (function() {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

@@ -4,13 +4,115 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2014-02-19T11:59:47-08:00</updated>
+  <updated>2014-03-20T23:26:58-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 2.4.2 Released</title>
+    <link href="http://brakemanscanner.org/blog/2014/03/20/brakeman-2-dot-4-2-released/"/>
+    <updated>2014-03-20T22:37:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2014/03/20/brakeman-2-dot-4-2-released</id>
+    <content type="html">&lt;p&gt;This release is only internal changes and bug fixes, but some scans may see significant time and memory improvements.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 2.4.1&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Skip identically rendered templates&lt;/li&gt;
+&lt;li&gt;Improve HAML template processing&lt;/li&gt;
+&lt;li&gt;Only track original template output locations&lt;/li&gt;
+&lt;li&gt;Reuse duplicate call location information&lt;/li&gt;
+&lt;li&gt;Fix duplicate warnings about sanitize CVE&lt;/li&gt;
+&lt;li&gt;Remove &lt;code&gt;rescue Exception&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Drop Identical Templates&lt;/h3&gt;
+
+&lt;p&gt;For a long time now Brakeman has skipped processing templates if the template had already been processed with an identical environment. However, there are many times when a template is rendered with different environments but the actual output is the same. Brakeman now drops these templates (they are rendered, then discarded if they are duplicates). This reduces peak memory overhead, sometimes drastically. It can also speed up call indexing and vulnerability checks since fewer templates are searched.&lt;/p&gt;
+
+&lt;p&gt;The location and render path of template warnings may change slightly due to this change. Also, the rendered template debug output will no longer include all rendered templates since duplicates will not be tracked.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/442&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Better HAML Processing&lt;/h3&gt;
+
+&lt;p&gt;HAML templates will be processed more accurately with this release.&lt;/p&gt;
+
+&lt;p&gt;For example, a template like this&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#content
+  .nav
+    = @navigation_menu
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;used to produce output like&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+-------------------------------------------------------------------------------------------------+
+| Output                                                                                          |
++-------------------------------------------------------------------------------------------------+
+| [Output] &quot;&amp;lt;div id='content'&amp;gt;; &amp;lt;div class='nav'&amp;gt;; #{[Escaped] @navigation_menu}; &amp;lt;/div&amp;gt;;&amp;lt;/div&amp;gt;;&quot; |
++-------------------------------------------------------------------------------------------------+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;but now it will look like this instead&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+-----------------------------------+
+| Output                            |
++-----------------------------------+
+| [Escaped Output] @navigation_menu |
++-----------------------------------+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Besides looking much nicer, this improves warnings and reduces how much code Brakeman has to search. Additionally, these &lt;code&gt;push_text&lt;/code&gt; methods can often interpolate multiple values into the output string, which were not being properly detected as output. This is fixed now.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/441&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Duplicate Template Outputs&lt;/h3&gt;
+
+&lt;p&gt;Aliased values in templates were being counted multiple times as output. This did not affect warnings generated, but it did create duplicate output values to check and extraneous debug output.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/443&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Call Location Reuse&lt;/h3&gt;
+
+&lt;p&gt;For large applications, many calls in the call index actually have the same location (class+method or template). Instead of creating a new location hash for each call, the locations are cached and reused.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/444&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Sanitize CVE Duplicates&lt;/h3&gt;
+
+&lt;p&gt;Don't worry - &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/zAAU7vGTPvI/1vZDWXqBuXgJ&quot;&gt;CVE-2013-1857&lt;/a&gt; is one year old this week. But Brakeman was not properly preventing duplicate warnings for it. Hopefully this was affecting exactly no one.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/445&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Narrower Exception Handling&lt;/h3&gt;
+
+&lt;p&gt;All instances of &lt;code&gt;rescue Exception&lt;/code&gt; were removed from Brakeman and replaced with bare &lt;code&gt;rescue&lt;/code&gt;s to catch &lt;code&gt;StandardError&lt;/code&gt; and subclasses. &lt;code&gt;Exception&lt;/code&gt; has some unfortunate subclasses, such as &lt;code&gt;NoMemoryError&lt;/code&gt; and &lt;code&gt;Interrupt&lt;/code&gt; which Brakeman should not be rescuing.&lt;/p&gt;
+
+&lt;p&gt;This does mean there may be some newly unhandled exceptions. Please report these so they can be rescued properly.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/446&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;SHAs&lt;/h3&gt;
+
+&lt;p&gt;The SHA1 sums for this release are&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;02842dc497bf22b5b427cfd02635c005c4fc4fd4  brakeman-2.4.2.gem
+4893cedbcb015e96c82f4777b00a49ca8d0ae22f  brakeman-min-2.4.2.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 2.4.1 Released</title>
@@ -1939,60 +2041,6 @@ end
 &lt;p&gt;This release touches a lot of code (76 changed files with 1,515 additions and 598 deletions), so there is ample opportunity for bugs to sneak in. Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt;!&lt;/p&gt;
 
 &lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; and following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 1.7.1 Released</title>
-    <link href="http://brakemanscanner.org/blog/2012/08/13/brakeman-1-dot-7-1-released/"/>
-    <updated>2012-08-13T11:04:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2012/08/13/brakeman-1-dot-7-1-released</id>
-    <content type="html">&lt;p&gt;This is a small release to add checks for the &lt;a href=&quot;http://weblog.rubyonrails.org/2012/8/9/ann-rails-3-2-8-has-been-released/&quot;&gt;Rails vulnerabilities reported last week&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 1.7.0&lt;/em&gt;:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Add check for &lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/fV3QUToSMSw/discussion&quot;&gt;CVE-2012-3463&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Add check for &lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/kKGNeMrnmiY/discussion&quot;&gt;CVE-2012-3464&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Add check for &lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/FgVEtBajcTY/discussion&quot;&gt;CVE-2012-3465&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Add charset to HTML report (&lt;a href=&quot;https://github.com/hooopo&quot;&gt;hooopo&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Report XSS in select() for Rails 2&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;CVE-2012-3463 - XSS in select_tag Prompt&lt;/h3&gt;
-
-&lt;p&gt;In Rails 3.x, values supplied to the &lt;code&gt;:prompt&lt;/code&gt; option in the &lt;code&gt;select_tag&lt;/code&gt; helper are not escaped, leading to a cross-site scripting vulnerability.&lt;/p&gt;
-
-&lt;p&gt;Brakeman will warn on all uses of &lt;code&gt;select_tag&lt;/code&gt; with unescaped user input in the &lt;code&gt;:prompt&lt;/code&gt; option.&lt;/p&gt;
-
-&lt;h3&gt;CVE-2012-3464 - Single Quotes are Unescaped&lt;/h3&gt;
-
-&lt;p&gt;This is pretty much a known issue (&lt;a href=&quot;http://www.ruby-forum.com/topic/166894&quot;&gt;example from 2008&lt;/a&gt;), but Rails 3.2.8 fixes it.&lt;/p&gt;
-
-&lt;p&gt;Single quotes are most dangerous when interpolating values into HTML attributes that use single quotes, which is why it is often recommended to always use double quotes in HTML.&lt;/p&gt;
-
-&lt;p&gt;There is a &lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/kKGNeMrnmiY/discussion&quot;&gt;provided workaround&lt;/a&gt; for earlier versions of Rails which replaces &lt;code&gt;ERB::Util.html_escape&lt;/code&gt; with &lt;code&gt;Rack::Utils.escape_html&lt;/code&gt;. This method adds escaping for both single quotes (&lt;code&gt;'&lt;/code&gt;) and forward slashes (&lt;code&gt;/&lt;/code&gt;).&lt;/p&gt;
-
-&lt;p&gt;If the provided workaround is used in an initializer, as suggested, then Brakeman will not generate a warning for this vulnerability. Otherwise, Brakeman will generate a warning for affected versions.&lt;/p&gt;
-
-&lt;h3&gt;CVE-2012-3465 - XSS in strip_tags&lt;/h3&gt;
-
-&lt;p&gt;Another vulnerability has been reported for &lt;code&gt;strip_tags&lt;/code&gt; (earlier report was &lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/K5EwdJt06hI/discussion&quot;&gt;CVE-2011-2931&lt;/a&gt;).&lt;/p&gt;
-
-&lt;p&gt;Brakeman will warn on affected versions if uses of &lt;code&gt;strip_tags&lt;/code&gt; are detected.&lt;/p&gt;
-
-&lt;h3&gt;XSS in select Helper&lt;/h3&gt;
-
-&lt;p&gt;This vulnerability was &lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/CdoMUVpsRmQ/discussion&quot;&gt;reported a while ago&lt;/a&gt;, but it was unclear if it applied to Rails 2.x or just Rails 3. Thanks to Neil Matatall, it has been confirmed to be an issue in Rails 2.x as well.&lt;/p&gt;
-
-&lt;p&gt;Therefore, Brakeman will be reporting the vulnerability (&lt;code&gt;select&lt;/code&gt; does not escape options list if supplied as a straight string) for Rails 2.x as well.&lt;/p&gt;
-
-&lt;h3&gt;Report Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release!&lt;/p&gt;
-
-&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
 </content>
   </entry>
   
