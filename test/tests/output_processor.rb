@@ -161,4 +161,12 @@ class OutputProcessorTests < Test::Unit::TestCase
                Sexp.new(:args, :y),
                Sexp.new(:iasgn, :@x, Sexp.new(:lvar, :y)))
   end
+
+  def test_regexp_output_with_flags
+    assert_output '/#{x}/i',
+      s(:dregx, "",
+        s(:evstr,
+          s(:call, nil, :x)),
+          1)
+  end
 end
