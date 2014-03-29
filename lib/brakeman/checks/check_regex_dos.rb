@@ -5,7 +5,7 @@ class Brakeman::CheckRegexDoS < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
   ESCAPES = {
-    s(:const, :Regex) => [
+    s(:const, :Regexp) => [
       :escape,
       :quote
     ]
