@@ -75,7 +75,7 @@ class OtherController < ApplicationController
   end
 
   def test_escaped_regex
-    /#{Regex.escape(params[:regex])}/
+    /#{Regexp.escape(params[:regex])}/
   end
 
   def test_unescaped_regex
