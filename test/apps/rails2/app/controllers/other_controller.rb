@@ -69,4 +69,16 @@ class OtherController < ApplicationController
   def test_haml_stuff
     render :locals => { :user => User.first }
   end
+
+  def test_regex_dos
+    /#{params[:regex]}/
+  end
+
+  def test_escaped_regex
+    /#{Regexp.escape(params[:regex])}/
+  end
+
+  def test_unescaped_regex
+    /#{Rack::Utils.escape_html(params[:regex])}/
+  end
 end

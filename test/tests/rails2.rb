@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 49 }
+        :generic => 51 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 50 }
+        :generic => 52 }
     end
   end
 
@@ -635,7 +635,7 @@ class Rails2Tests < Test::Unit::TestCase
       :file => /user\.rb/,
       :relative_path => "app/models/user.rb"
   end
- 
+
   def test_sql_injection_active_record_base_connection
     assert_warning :type => :warning,
       :warning_code => 0,
@@ -1246,6 +1246,30 @@ class Rails2Tests < Test::Unit::TestCase
       :relative_path => "app/controllers/application_controller.rb"
   end
 
+  def test_regex_dos
+    assert_warning :type => :warning,
+      :warning_code => 76,
+      :fingerprint => "4ac4f6438b6ad6deb9dfec0d96a47f071853396b4325dad85ebb6aa87b309c98",
+      :warning_type => "Denial of Service",
+      :line => 74,
+      :message => /^Parameter\ value\ used\ in\ regex/,
+      :confidence => 0,
+      :relative_path => "app/controllers/other_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :regex))
+  end
+
+  def test_indirect_regex_dos
+    assert_warning :type => :warning,
+      :warning_code => 76,
+      :fingerprint => "b7a197708a04abd2d8f0ca402f3bb0e8690f57685814e09440d1946ba279b14f",
+      :warning_type => "Denial of Service",
+      :line => 82,
+      :message => /^Parameter\ value\ used\ in\ regex/,
+      :confidence => 2,
+      :relative_path => "app/controllers/other_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :regex))
+  end
+
   def test_unsafe_symbol_creation_from_param
     assert_warning :type => :warning,
       :warning_code => 59,
@@ -1314,13 +1338,13 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 49 }
+        :generic => 51 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 50 }
+        :generic => 52 }
     end
   end
 
