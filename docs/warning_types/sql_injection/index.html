@@ -139,7 +139,7 @@ User.first.where("username = '" + username + "' AND password = '" + password + "
 User.first.where((((("username = '" + params[:user][:name].downcase) + "' AND password = '") + params[:user][:password]) + "'"))
 </code></pre>
 
-<p>See <a href="http://guides.rubyonrails.org/security.html#sql-injection">the Ruby Security Guide</a> for more information.</p>
+<p>See <a href="http://guides.rubyonrails.org/security.html#sql-injection">the Ruby Security Guide</a> for more information and <a href="http://rails-sqli.org">Rails-SQLi.org</a> for many examples of SQL injection in Rails.</p>
 
 <hr />
 
