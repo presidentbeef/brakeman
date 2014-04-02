@@ -193,6 +193,11 @@ class Brakeman::Report::HTML < Brakeman::Report::Base
   def html_message warning, message
     message = CGI.escapeHTML(message)
 
+    if warning.file
+      github_url = github_url warning.file, warning.line
+      message.gsub!(/(near line \d+)/, "<a href='#{github_url}' target='_blank'>\\1</a>") if github_url
+    end
+
     if @highlight_user_input and warning.user_input
       user_input = CGI.escapeHTML(warning.format_user_input)
       message.gsub!(user_input, "<span class=\"user_input\">#{user_input}</span>")
