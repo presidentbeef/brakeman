@@ -166,6 +166,8 @@ module Brakeman
       [:to_tabs]
     when :json, :to_json
       [:to_json]
+    when :markdown, :to_markdown
+      [:to_markdown]
     else
       [:to_s]
     end
@@ -185,6 +187,8 @@ module Brakeman
         :to_tabs
       when /\.json$/i
         :to_json
+      when /\.md$/i
+        :to_markdown
       else
         :to_s
       end

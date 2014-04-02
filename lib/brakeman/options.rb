@@ -142,7 +142,7 @@ module Brakeman::Options
 
         opts.on "-f",
           "--format TYPE",
-          [:pdf, :text, :html, :csv, :tabs, :json],
+          [:pdf, :text, :html, :csv, :tabs, :json, :markdown],
           "Specify output formats. Default is text" do |type|
 
           type = "s" if type == :text
@@ -158,7 +158,7 @@ module Brakeman::Options
         end
 
         opts.on "-I", "--interactive-ignore", "Interactively ignore warnings" do
-          options[:interactive_ignore] = true 
+          options[:interactive_ignore] = true
         end
 
         opts.on "-l", "--[no-]combine-locations", "Combine warning locations (Default)" do |combine|
