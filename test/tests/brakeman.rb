@@ -75,11 +75,11 @@ class BaseCheckTests < Test::Unit::TestCase
 end
 
 class ConfigTests < Test::Unit::TestCase
-  
+
   def setup
     Brakeman.instance_variable_set(:@quiet, false)
   end
-  
+
   # method from test-unit: http://test-unit.rubyforge.org/test-unit/en/Test/Unit/Util/Output.html#capture_output-instance_method
   def capture_output
     require 'stringio'
@@ -95,7 +95,7 @@ class ConfigTests < Test::Unit::TestCase
       $stdout, $stderr = stdout_save, stderr_save
     end
   end
-  
+
   def test_quiet_option_from_file
     config = Tempfile.new("config")
 
@@ -119,7 +119,7 @@ class ConfigTests < Test::Unit::TestCase
       assert final_options[:quiet], "Expected quiet option to be true, but was #{final_options[:quiet]}"
     }[1]
   end
-  
+
   def test_quiet_option_from_commandline
     config = Tempfile.new("config")
 
@@ -135,7 +135,7 @@ class ConfigTests < Test::Unit::TestCase
       :quiet => true,
       :app_path => "/tmp" #doesn't need to be real
     }
-    
+
     assert_equal "", capture_output {
       final_options = Brakeman.set_options(options)
     }[1]
@@ -184,13 +184,13 @@ class ConfigTests < Test::Unit::TestCase
       config.unlink
     }[1]
   end
-  
+
   def output_format_tester options, expected_options
     output_formats = Brakeman.get_output_formats(options)
-    
+
     assert_equal expected_options, output_formats
   end
-  
+
   def test_output_format
     output_format_tester({}, [:to_s])
     output_format_tester({:output_format => :html}, [:to_html])
@@ -203,15 +203,18 @@ class ConfigTests < Test::Unit::TestCase
     output_format_tester({:output_format => :to_json}, [:to_json])
     output_format_tester({:output_format => :tabs}, [:to_tabs])
     output_format_tester({:output_format => :to_tabs}, [:to_tabs])
+    output_format_tester({:output_format => :markdown}, [:to_markdown])
+    output_format_tester({:output_format => :to_markdown}, [:to_markdown])
     output_format_tester({:output_format => :others}, [:to_s])
-    
+
     output_format_tester({:output_files => ['xx.html', 'xx.pdf']}, [:to_html, :to_pdf])
     output_format_tester({:output_files => ['xx.pdf', 'xx.json']}, [:to_pdf, :to_json])
     output_format_tester({:output_files => ['xx.json', 'xx.tabs']}, [:to_json, :to_tabs])
     output_format_tester({:output_files => ['xx.tabs', 'xx.csv']}, [:to_tabs, :to_csv])
     output_format_tester({:output_files => ['xx.csv', 'xx.xxx']}, [:to_csv, :to_s])
+    output_format_tester({:output_files => ['xx.md', 'xx.xxx']}, [:to_markdown, :to_s])
     output_format_tester({:output_files => ['xx.xx', 'xx.xx']}, [:to_s, :to_s])
-    output_format_tester({:output_files => ['xx.html', 'xx.pdf', 'xx.csv', 'xx.tabs', 'xx.json']}, [:to_html, :to_pdf, :to_csv, :to_tabs, :to_json])
+    output_format_tester({:output_files => ['xx.html', 'xx.pdf', 'xx.csv', 'xx.tabs', 'xx.json', 'xx.md']}, [:to_html, :to_pdf, :to_csv, :to_tabs, :to_json, :to_markdown])
   end
 end
 
@@ -222,22 +225,22 @@ class GemProcessorTests < Test::Unit::TestCase
     assert_equal version, @tracker[:config][:gems][name], msg
   end
 
-  def setup 
+  def setup
     @tracker = FakeTracker.new({}, {})
-    @gem_processor = Brakeman::GemProcessor.new @tracker 
-    @eol_representations = ["\r\n", "\n"] 
-    @gem_locks = @eol_representations.inject({}) {|h, eol| 
-      h[eol] = "    paperclip (3.2.1)#    erubis (4.3.1)#     rails (3.2.1.rc2)#    simplecov (1.1)#".gsub('#', eol); h 
+    @gem_processor = Brakeman::GemProcessor.new @tracker
+    @eol_representations = ["\r\n", "\n"]
+    @gem_locks = @eol_representations.inject({}) {|h, eol|
+      h[eol] = "    paperclip (3.2.1)#    erubis (4.3.1)#     rails (3.2.1.rc2)#    simplecov (1.1)#".gsub('#', eol); h
     }
-  end 
+  end
 
   def test_gem_lock_parsing
     @gem_locks.each do |eol, gem_lock|
       @gem_processor.process_gems Sexp.new(:block), gem_lock
       assert_version "4.3.1", :erubis, "Couldn't match gemlock with eol: #{eol}"
       assert_version "3.2.1", :paperclip, "Couldn't match gemlock with eol: #{eol}"
-      assert_version "3.2.1.rc2", :rails, "Couldn't match gemlock with eol: #{eol}"  
+      assert_version "3.2.1.rc2", :rails, "Couldn't match gemlock with eol: #{eol}"
       assert_version "1.1", :simplecov, "Couldn't match gemlock with eol: #{eol}"
-    end 
-  end 
-end 
+    end
+  end
+end
