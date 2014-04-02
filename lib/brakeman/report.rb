@@ -6,7 +6,7 @@ require 'brakeman/report/report_base'
 class Brakeman::Report
   attr_reader :tracker
 
-  VALID_FORMATS = [:to_html, :to_pdf, :to_csv, :to_json, :to_tabs, :to_hash, :to_s]
+  VALID_FORMATS = [:to_html, :to_pdf, :to_csv, :to_json, :to_tabs, :to_hash, :to_s, :to_markdown]
 
   def initialize app_tree, tracker
     @app_tree = app_tree
