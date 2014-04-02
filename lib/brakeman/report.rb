@@ -30,8 +30,7 @@ class Brakeman::Report
       require_report 'hash'
       Brakeman::Report::Hash
     when :to_markdown
-      require_report 'markdown'
-      Brakeman::Report::Markdown
+      return self.to_markdown
     when :to_s
       return self.to_s
     when :to_pdf
