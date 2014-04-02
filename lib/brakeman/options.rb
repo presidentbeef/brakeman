@@ -198,6 +198,10 @@ module Brakeman::Options
           options[:absolute_paths] = true
         end
 
+        opts.on "--github-repo USER/REPO[@REF]", "Output links to GitHub in markdown and HTML reports using specified repo" do |repo|
+          options[:github_repo] = repo
+        end
+
         opts.on "-w",
           "--confidence-level LEVEL",
           ["1", "2", "3"],
