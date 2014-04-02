@@ -1,7 +1,5 @@
 Brakeman.load_brakeman_dependency 'terminal-table'
 
-
-
 class Brakeman::Report::Markdown < Brakeman::Report::Base
 
   class MarkdownTable < Terminal::Table
@@ -24,9 +22,11 @@ class Brakeman::Report::Markdown < Brakeman::Report::Base
   end
 
   def generate_report
-    out = text_header <<
+    out = "# BRAKEMAN REPORT\n\n" <<
+    generate_metadata.to_s << "\n\n" <<
+    generate_checks.to_s << "\n\n" <<
     "### SUMMARY\n\n" <<
-    generate_overview.to_s         << "\n\n" <<
+    generate_overview.to_s << "\n\n" <<
     generate_warning_overview.to_s << "\n\n"
 
     #Return output early if only summarizing
@@ -43,21 +43,42 @@ class Brakeman::Report::Markdown < Brakeman::Report::Base
     end
 
     res = generate_errors
-    out << "### Errors\n\n" << (res.to_s << "\n\n") if res
+    out << "### Errors\n\n" << res.to_s << "\n\n" if res
 
     res = generate_warnings
-    out << "### SECURITY WARNINGS\n\n" << (res.to_s << "\n\n") if res
+    out << "### SECURITY WARNINGS\n\n" << res.to_s << "\n\n" if res
 
     res = generate_controller_warnings
-    out << "### Controller Warnings:\n\n" << (res.to_s << "\n\n") if res
+    out << "### Controller Warnings:\n\n" << res.to_s << "\n\n" if res
 
     res = generate_model_warnings
-    out << "### Model Warnings:\n\n" << (res.to_s << "\n\n") if res
+    out << "### Model Warnings:\n\n" << res.to_s << "\n\n" if res
 
     res = generate_template_warnings
-    out << "### View Warnings:\n\n" << (res.to_s << "\n\n") if res
+    out << "### View Warnings:\n\n" << res.to_s << "\n\n" if res
 
     out
+  end
+
+  def generate_metadata
+    MarkdownTable.new(
+      :headings =>
+        ['Application path', 'Rails version', 'Brakeman version', 'Started at', 'Duration']
+    ) do |t|
+      t.add_row([
+        File.expand_path(tracker.options[:app_path]),
+        rails_version,
+        Brakeman::Version,
+        tracker.start_time,
+        "#{tracker.duration} seconds",
+      ])
+    end
+  end
+
+  def generate_checks
+    MarkdownTable.new(:headings => ['Checks performed']) do |t|
+      t.add_row([checks.checks_run.sort.join(", ")])
+    end
   end
 
   def generate_overview
@@ -113,18 +134,25 @@ class Brakeman::Report::Markdown < Brakeman::Report::Base
     end
   end
 
-  #Generate header for text output
-  def text_header
-    <<-HEADER
-
-## BRAKEMAN REPORT
-
-**Application path:** #{File.expand_path tracker.options[:app_path]}
-**Rails version:** #{rails_version}
-**Brakeman version:** #{Brakeman::Version}
-**Started at:** #{tracker.start_time}
-**Duration:** #{tracker.duration} seconds
-**Checks run:** #{checks.checks_run.sort.join(", ")}
-HEADER
+  def convert_warning warning, original
+    warning["Confidence"] = TEXT_CONFIDENCE[warning["Confidence"]]
+    warning["Message"] = markdown_message original, warning["Message"]
+    warning["Warning Type"] = "[#{warning['Warning Type']}](#{original.link})" if original.link
+    warning
   end
+
+  # Escape and code format warning message
+  def markdown_message warning, message
+    if warning.file
+      github_url = github_url warning.file, warning.line
+      message.gsub!(/(near line \d+)/, "[\\1](#{github_url})") if github_url
+    end
+    if warning.code
+      code = warning.format_code
+      message.gsub(code, "`#{code.gsub('`','``').gsub(/\A``|``\z/, '` `')}`")
+    else
+      message
+    end
+  end
+
 end

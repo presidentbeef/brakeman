@@ -65,6 +65,11 @@ class Brakeman::Report
     generate Brakeman::Report::Table
   end
 
+  def to_markdown
+    require_report 'markdown'
+    generate Brakeman::Report::Markdown
+  end
+
   def generate reporter
     reporter.new(@app_tree, @tracker).generate_report
   end

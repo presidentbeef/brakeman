@@ -383,6 +383,17 @@ module Brakeman::Util
     end
   end
 
+  def github_url file, line=nil
+    if @tracker.options[:github_repo] and file and not file.empty? and file.start_with? '/'
+      repo, ref = @tracker.options[:github_repo].split('@', 2)
+      ref ||= 'master'
+      url = File.join 'https://github.com', repo, 'blob', ref, relative_path(file)
+      url << "#L#{line}" if line
+    else
+      nil
+    end
+  end
+
   def truncate_table str
     @terminal_width ||= if @tracker.options[:table_width]
                           @tracker.options[:table_width]
