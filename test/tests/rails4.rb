@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 19
+      :generic => 20
     }
   end
 
@@ -39,6 +39,38 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/controllers/application_controller.rb",
       :user_input => s(:call, s(:const, :User), :create!)
+  end
+
+  def test_redirects_with_explicit_host_do_not_warn
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "b5a1bf2d1634564c82436e569c9ea874e355d4538cdc4dc4a8e6010dc9a7c11e",
+      :warning_type => "Redirect",
+      :line => 55,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :user_input => s(:params, s(:lit, :host), s(:str, "example.com"))
+
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "d04df9716ee4c8cadcb5f046e73ee06c3f1606e8b522f6e3130ac0a33fbc4d73",
+      :warning_type => "Redirect",
+      :line => 57,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :user_input => s(:params, s(:lit, :host), s(:call, s(:const, :User), :canonical_url))
+
+    assert_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "25846ea0cd5178f2af4423a9fc1d7212983ee7f7ba4ca9f35f890e7ef00d9bf9",
+      :warning_type => "Redirect",
+      :line => 59,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :user_input => s(:params, s(:lit, :host), s(:call, s(:params), :[], s(:lit, :host)))
   end
 
   def test_session_secret_token
