@@ -1,4 +1,9 @@
 Rails4::Application.routes.draw do
+  resources not_a_symbol, :controller => :whatever
+
+  namespace also_not_a_symbol do
+    resource :thing
+  end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

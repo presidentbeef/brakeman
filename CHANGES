@@ -1,3 +1,7 @@
+# Unreleased
+
+ * Add check for regex denial of service (Ben Toews) 
+
 # 2.4.3
 
  No changes. 2.4.2 gem release was unsigned, 2.4.3 is signed.
