@@ -5,7 +5,7 @@ class TestMarkdownOutput < Test::Unit::TestCase
     if Brakeman::Scanner::RUBY_1_9
       assert_equal 164, Report.lines.to_a.count
     else
-      assert_equal 104, Report.lines.to_a.count
+      assert_equal 165, Report.lines.to_a.count
     end
   end
 end
