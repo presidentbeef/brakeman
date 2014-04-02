@@ -384,13 +384,8 @@ module Brakeman::Util
   end
 
   def github_url file, line=nil
-    if @tracker.options[:github_repo] and file and not file.empty? and file.start_with? '/'
-      full_repo, ref = @tracker.options[:github_repo].split '@', 2
-      name, repo, path = full_repo.split '/', 3
-      return nil unless name and repo
-      path.chomp '/' if path
-      ref ||= 'master'
-      url = ['https://github.com', name, repo, 'blob', ref, path, relative_path(file)].compact.join '/'
+    if repo_url = @tracker.options[:github_url] and file and not file.empty? and file.start_with? '/'
+      url = "#{repo_url}/#{relative_path(file)}"
       url << "#L#{line}" if line
     else
       nil
