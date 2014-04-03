@@ -17,6 +17,8 @@ module Brakeman
   #Options:
   #
   #  * :app_path - path to root of Rails app (required)
+  #  * :additional_checks_path - array of additional directories containing additional out-of-tree checks to run
+  #  * :additional_libs_path - array of additional application relative lib directories (ex. app/mailers) to process
   #  * :assume_all_routes - assume all methods are routes (default: true)
   #  * :check_arguments - check arguments of methods (default: true)
   #  * :collapse_mass_assignment - report unprotected models in single warning (default: false)

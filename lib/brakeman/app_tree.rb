@@ -15,6 +15,7 @@ module Brakeman
       if options[:only_files]
         init_options[:only_files] = Regexp.new("(?:" << options[:only_files].map { |f| Regexp.escape f }.join("|") << ")")
       end
+      init_options[:additional_libs_path] = options[:additional_libs_path]
       new(root, init_options)
     end
 
@@ -22,6 +23,7 @@ module Brakeman
       @root = root
       @skip_files = init_options[:skip_files]
       @only_files = init_options[:only_files]
+      @additional_libs_path = init_options[:additional_libs_path] || []
     end
 
     def expand_path(path)
@@ -71,10 +73,15 @@ module Brakeman
     end
 
     def lib_paths
-      @lib_files ||= find_paths("lib").reject { |path| path.include? "/generators/" or path.include? "lib/tasks/" }
+      @lib_files ||= find_paths("lib").reject { |path| path.include? "/generators/" or path.include? "lib/tasks/" } +
+                     find_additional_lib_paths
     end
 
   private
+
+    def find_additional_lib_paths
+      @additional_libs_path.collect{ |path| find_paths path }.flatten
+    end
 
     def find_paths(directory, extensions = "*.rb")
       pattern = @root + "/{engines/*/,}#{directory}/**/#{extensions}"

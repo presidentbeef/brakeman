@@ -124,6 +124,11 @@ module Brakeman::Options
           options[:skip_libs] = true
         end
 
+        opts.on "--add-libs-path path1,path2,etc", Array, "An application relative lib directory (ex. app/mailers) to process" do |paths|
+          options[:additional_libs_path] ||= Set.new
+          options[:additional_libs_path].merge paths
+        end
+
         opts.on "-t", "--test Check1,Check2,etc", Array, "Only run the specified checks" do |checks|
           checks.each_with_index do |s, index|
             if s[0,5] != "Check"
