@@ -71,7 +71,11 @@ module Brakeman
     end
 
     def lib_paths
-      @lib_files ||= find_paths("lib").reject { |path| path.include? "/generators/" }
+      @lib_files ||= find_paths("lib").reject { |path| path.include? "/generators/" } +
+                     find_paths("app/helpers") +
+                     find_paths("app/api") +
+                     find_paths("app/mailers") +
+                     find_paths("app/view_models")
     end
 
   private
