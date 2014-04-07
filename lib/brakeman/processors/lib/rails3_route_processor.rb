@@ -58,7 +58,10 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_namespace exp
-    name = exp.block_call.first_arg.value
+    arg = exp.block_call.first_arg
+    return exp unless symbol? arg or string? arg 
+
+    name = arg.value
     block = exp.block
 
     @prefix << camelize(name)
@@ -196,6 +199,8 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   def process_resources exp
     first_arg = exp.first_arg
     second_arg = exp.second_arg
+
+    return exp unless symbol? first_arg or string? first_arg
 
     if second_arg and second_arg.node_type == :hash
       self.current_controller = first_arg.value
