@@ -12,13 +12,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 51 }
+        :generic => 52 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 52 }
+        :generic => 53 }
     end
   end
 
@@ -1324,6 +1324,18 @@ class Rails2Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/views/other/ignore_me.html.erb"
   end
+
+  def test_unscoped_find
+    assert_warning :type => :warning,
+      :warning_code => 77,
+      :fingerprint => "37dab9cfbb8e19488040e31be4ceb4d21d0d11b6047998e80a30085a16de20f5",
+      :warning_type => "Unscoped Find",
+      :line => 3,
+      :message => /^Unscoped\ call\ to\ Email\#find/,
+      :confidence => 2,
+      :relative_path => "app/controllers/emails_controller.rb",
+      :user_input => nil
+  end
 end
 
 Rails2WithOptions = BrakemanTester.run_scan "rails2", "Rails 2", :collapse_mass_assignment => false
@@ -1338,13 +1350,13 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 51 }
+        :generic => 52 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 52 }
+        :generic => 53 }
     end
   end
 

@@ -11,7 +11,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :controller => 1,
       :model => 3,
       :template => 3,
-      :generic => 23 }
+      :generic => 27 }
   end
 
   def report
