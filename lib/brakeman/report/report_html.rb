@@ -139,7 +139,7 @@ class Brakeman::Report::HTML < Brakeman::Report::Base
       message
     end <<
     "<table id='#{code_id}' class='context' style='display:none'>" <<
-    "<caption>#{warning_file(warning) || ''}</caption>"
+    "<caption>#{CGI.escapeHTML warning_file(warning) || ''}</caption>"
 
     unless context.empty?
       if warning.line - 1 == 1 or warning.line + 1 == 1
@@ -192,6 +192,11 @@ class Brakeman::Report::HTML < Brakeman::Report::Base
   #Escape warning message and highlight user input in HTML output
   def html_message warning, message
     message = CGI.escapeHTML(message)
+
+    if warning.file
+      github_url = github_url warning.file, warning.line
+      message.gsub!(/(near line \d+)/, "<a href='#{URI.escape github_url, /'/}' target='_blank'>\\1</a>") if github_url
+    end
 
     if @highlight_user_input and warning.user_input
       user_input = CGI.escapeHTML(warning.format_user_input)

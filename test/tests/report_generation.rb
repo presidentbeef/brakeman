@@ -40,6 +40,12 @@ class TestReportGeneration < Test::Unit::TestCase
     assert report.is_a? String
   end
 
+  def test_markdown_sanity
+    report = Report.to_markdown
+
+    assert report.is_a? String
+  end
+
   def test_bad_format_type
     assert_raises RuntimeError do
       Report.format(:to_something_else)
@@ -48,7 +54,7 @@ class TestReportGeneration < Test::Unit::TestCase
 
   def test_controller_output
     text_report = Report.to_s
-    
+
     assert text_report.include? "+CONTROLLERS+"
 
     html_report = Report.to_html
