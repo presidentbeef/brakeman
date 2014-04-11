@@ -248,6 +248,28 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
   end
 
+  def test_sql_injection_sanitize
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "bf92408cc7306b3b2f74cac830b9328a1cc2cc8d7697eb904d04f5a2d46bc31c",
+      :warning_type => "SQL Injection",
+      :line => 3,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :age))
+
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "83d8270fd90fb665f2174fe170f51e94945de02879ed617f2f45d4434d5e5593",
+      :warning_type => "SQL Injection",
+      :line => 3,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :user_input => s(:call, nil, :sanitize, s(:lvar, :x))
+  end
+
   def test_i18n_xss_CVE_2013_4491_workaround
     assert_no_warning :type => :warning,
       :warning_code => 63,
