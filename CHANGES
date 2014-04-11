@@ -1,5 +1,10 @@
 # Unreleased
 
+ * Fix false positives when sanitize() is used in SQL (Jeff Yip)
+ * Add String#intern and Hash#symbolize_keys DoS check (Jan Rusnacko)
+ * Check all arguments in Model.select for SQLi
+ * Fix false positive when :host is specified in redirect
+ * Handle more non-literals in routes
  * Add check for regex denial of service (Ben Toews) 
 
 # 2.4.3
