@@ -37,9 +37,11 @@ class ApplicationController < ActionController::Base
   end
 
   def decent
+    p = params
     if params[:thang] && self.respond_to?(params[:thang].to_sym)
       :"really_#{params[:thang]}"
     end
+    p.symbolize_keys[:custom]
   end
 
 end
