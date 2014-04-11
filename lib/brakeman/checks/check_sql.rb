@@ -179,13 +179,13 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                         check_order_arguments call.arglist
                       when :joins
                         check_joins_arguments call.first_arg
-                      when :from, :select
+                      when :from
                         unsafe_sql? call.first_arg
                       when :lock
                         check_lock_arguments call.first_arg
                       when :pluck
                         unsafe_sql? call.first_arg
-                      when :update_all
+                      when :update_all, :select
                         check_update_all_arguments call.args
                       when *@connection_calls
                         check_by_sql_arguments call.first_arg
