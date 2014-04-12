@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 21
+      :generic => 22
     }
   end
 
@@ -268,6 +268,18 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 1,
       :relative_path => "app/models/user.rb",
       :user_input => s(:call, nil, :sanitize, s(:lvar, :x))
+  end
+
+  def test_sql_injection_chained_call_in_scope
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "aa073ab210f9f4a800b5595241a6274656d37087a4f433d4b596516e1227d91b",
+      :warning_type => "SQL Injection",
+      :line => 6,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :user_input => s(:lvar, :col)
   end
 
   def test_i18n_xss_CVE_2013_4491_workaround
