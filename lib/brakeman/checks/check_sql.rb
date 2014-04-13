@@ -65,7 +65,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         call = make_call(nil, :named_scope, args).line(args.line)
         scope_calls << scope_call_hash(call, name, :named_scope)
       end
-    elsif version_between?("3.1.0", "3.9.9")
+    elsif version_between?("3.1.0", "4.9.9")
       ar_scope_calls(:scope) do |name, args|
         second_arg = args[2]
         next unless sexp? second_arg
@@ -114,8 +114,12 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       find_calls.process_source(block, :class => model_name, :method => scope_name)
       find_calls.calls.each { |call| process_result(call) if @sql_targets.include?(call[:method]) }
     elsif block.node_type == :call
-      process_result :target => block.target, :method => block.method, :call => block,
-        :location => { :type => :class, :class => model_name, :method => scope_name }
+      while call? block
+        process_result :target => block.target, :method => block.method, :call => block,
+         :location => { :type => :class, :class => model_name, :method => scope_name }
+
+        block = block.target
+      end
     end
   end
 
