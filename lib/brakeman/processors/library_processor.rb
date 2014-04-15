@@ -97,8 +97,10 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
     exp.node_type = :methdef
 
     if @current_class
+      exp.body = process_all! exp.body
       @current_class[:public][exp.method_name] = exp
     elsif @current_module
+      exp.body = process_all! exp.body
       @current_module[:public][exp.method_name] = exp
     end
 
@@ -110,8 +112,10 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
     exp.node_type = :selfdef
 
     if @current_class
+      exp.body = process_all! exp.body
       @current_class[:public][exp.method_name] = exp
     elsif @current_module
+      exp.body = process_all! exp.body
       @current_module[:public][exp.method_name] = exp
     end
 
