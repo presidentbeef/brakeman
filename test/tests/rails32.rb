@@ -1,3 +1,8 @@
+# NOTE: Please do not add any further tests to the Rails 3.2 application unless
+# the issue being tested specifically applies to Rails 3.2 and not the other
+# versions.
+# If possible, please use the rails3, rails3.1, or rails4 apps.
+
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
 Rails32 = BrakemanTester.run_scan "rails3.2", "Rails 3.2"
