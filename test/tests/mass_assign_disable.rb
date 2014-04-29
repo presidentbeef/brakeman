@@ -63,6 +63,17 @@ class MassAssignDisableTest < Test::Unit::TestCase
     assert_new 0
   end
 
+  def test_protected_attributes_gem
+    before_rescan_of "Gemfile", "rails4_with_engines" do
+      append "Gemfile", "gem 'protected_attributes'"
+    end
+
+    assert_reindex :none
+    assert_changes
+    assert_fixed 0
+    assert_new 1
+  end
+
   def test_strong_parameters_with_send
     init = "config/initializers/mass_assign.rb"
     gemfile = "Gemfile"
