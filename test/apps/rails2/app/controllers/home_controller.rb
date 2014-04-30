@@ -2,6 +2,8 @@ class HomeController < ApplicationController
   before_filter :filter_it, :only => :test_filter
   before_filter :or_equals, :only => :test_mass_assign_with_or_equals
 
+  require_dependency 'home_controller/command_dependency'
+
   def index; end
 
   def test_params
@@ -66,7 +68,7 @@ class HomeController < ApplicationController
 
   def test_redirect_with_url_for
     url = url_for(params)
-    redirect_to url 
+    redirect_to url
   end
 
   def test_sql_nested
@@ -100,13 +102,13 @@ class HomeController < ApplicationController
   def test_send_second_param
     method = params["method"] == 1 ? :method_a : :method_b
     @result = User.send(method, *args)
-  end  
+  end
 
   # safe
   def test_send_second_param
     target = params["target"] == 1 ? Account : User
     @result = target.send(:method, *args)
-  end    
+  end
 
   def test_sanitized_param
     params["something"] = h(params["something"])
@@ -117,8 +119,8 @@ class HomeController < ApplicationController
   end
 
   def test_user_input_on_multiline
-    User.find_by_sql "select * from users where something = 'something safe' AND " + 
-      "something_not_safe = #{params[:unsafe]} AND " + 
+    User.find_by_sql "select * from users where something = 'something safe' AND " +
+      "something_not_safe = #{params[:unsafe]} AND " +
       "something_else_that_is_safe = 'something else safe'"
     SQL
   end
