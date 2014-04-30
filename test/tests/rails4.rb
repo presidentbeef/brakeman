@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 22
+      :generic => 25
     }
   end
 
@@ -280,6 +280,42 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 1,
       :relative_path => "app/models/user.rb",
       :user_input => s(:lvar, :col)
+  end
+
+  def test_dynamic_render_path_with_before_action
+    assert_warning :type => :warning,
+      :warning_code => 15,
+      :fingerprint => "5b2267a68b4bfada283b59bdb9f453489111a5f2c335737588f88135d99426fa",
+      :warning_type => "Dynamic Render Path",
+      :line => 14,
+      :message => /^Render\ path\ contains\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :page))
+  end
+
+  def test_dynamic_render_path_with_prepend_before_action
+    assert_warning :type => :warning,
+      :warning_code => 15,
+      :fingerprint => "fa1ad77b62059d1aeeb48217a94cc03a0109b1f17d8332c0e3a5718360de9a8c",
+      :warning_type => "Dynamic Render Path",
+      :line => 19,
+      :message => /^Render\ path\ contains\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :page))
+  end
+
+  def test_cross_site_request_forgery_with_skip_before_action
+    assert_warning :type => :warning,
+      :warning_code => 8,
+      :fingerprint => "320daba73937ffd333f10e5b578520dd90ba681962079bb92a775fb602e2d185",
+      :warning_type => "Cross-Site Request Forgery",
+      :line => 11,
+      :message => /^Use\ whitelist\ \(:only\ =>\ \[\.\.\]\)\ when\ skipp/,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => nil
   end
 
   def test_i18n_xss_CVE_2013_4491_workaround

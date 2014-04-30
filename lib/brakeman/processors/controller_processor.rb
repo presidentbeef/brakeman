@@ -116,9 +116,9 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
         case method
         when :include
           @controller[:includes] << class_name(first_arg) if @controller
-        when :before_filter, :append_before_filter
+        when :before_filter, :append_before_filter, :before_action, :append_before_action
           @controller[:options][:before_filters] << exp.args
-        when :prepend_before_filter
+        when :prepend_before_filter, :prepend_before_action
           @controller[:options][:before_filters].unshift exp.args
         when :layout
           if string? last_arg
@@ -196,7 +196,8 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
   #Look for before_filters and add fake ones if necessary
   def process_iter exp
-    if exp.block_call.method == :before_filter
+    block_call_name = exp.block_call.method
+    if block_call_name == :before_filter  or block_call_name == :before_action
       add_fake_filter exp
     else
       super
