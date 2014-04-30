@@ -24,5 +24,4 @@ Gem::Specification.new do |s|
   s.add_dependency "sass", "~>3.0"
   s.add_dependency "slim", ">=1.3.6", "<3.0"
   s.add_dependency "multi_json", "~>1.2"
-  s.add_dependency "pry-debugger"
 end
