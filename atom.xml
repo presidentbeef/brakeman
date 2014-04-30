@@ -4,13 +4,132 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2014-03-30T16:47:25-07:00</updated>
+  <updated>2014-04-30T13:04:34-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 2.5.0 Released</title>
+    <link href="http://brakemanscanner.org/blog/2014/04/30/brakeman-2-dot-5-0-released/"/>
+    <updated>2014-04-30T09:52:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2014/04/30/brakeman-2-dot-5-0-released</id>
+    <content type="html">&lt;p&gt;This release includes a number of false positive fixes, more Rails 4 support, a new check for regular expression denial of service, and Markdown output formatting.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 2.4.3&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add GitHub-flavored Markdown output format (&lt;a href=&quot;https://github.com/gregose&quot;&gt;Greg Ose&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add check for regex denial of service (&lt;a href=&quot;https://github.com/mastahyeti&quot;&gt;Ben Toews&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Fix false positives when &lt;code&gt;sanitize&lt;/code&gt; is used in SQL (&lt;a href=&quot;https://github.com/jeffyip&quot;&gt;Jeff Yip&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add &lt;code&gt;String#intern&lt;/code&gt; and &lt;code&gt;Hash#symbolize_keys&lt;/code&gt; DoS check (&lt;a href=&quot;https://github.com/jrusnack&quot;&gt;Jan Rusnacko&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add support for Rails 4 &lt;code&gt;before_actions&lt;/code&gt; and friends&lt;/li&gt;
+&lt;li&gt;Add support for RailsLTS 2.3.18.7 and 2.3.18.8&lt;/li&gt;
+&lt;li&gt;Check for &lt;code&gt;protected_attributes&lt;/code&gt; gem (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/475&quot;&gt;#475&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Fix SQLi detection in chain calls in scopes (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/471&quot;&gt;#471&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Fix false positive when &lt;code&gt;:host&lt;/code&gt; is specified in redirect (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/464&quot;&gt;#464&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Check all arguments in &lt;code&gt;Model.select&lt;/code&gt; for SQLi&lt;/li&gt;
+&lt;li&gt;Move SQLi CVE checks to &lt;code&gt;CheckSQLCVEs&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Handle more non-literals in routes (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/461&quot;&gt;#461&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Markdown Output Format&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/gregose&quot;&gt;Greg Ose&lt;/a&gt; added the option to output to GitHub-flavored markdown (&lt;code&gt;-f markdown&lt;/code&gt; or &lt;code&gt;-o report.md&lt;/code&gt;). Additionally, the &lt;code&gt;--github-repo&lt;/code&gt; option can be used to link the files in the report to a specific GitHub repository. &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/463&quot;&gt;See here for details&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/463&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Regex Denial of Service&lt;/h3&gt;
+
+&lt;p&gt;A new check for dangerous interpolation in regular expressions was contributed by &lt;a href=&quot;https://github.com/mastahyeti&quot;&gt;Ben Toews&lt;/a&gt;. This will generate &quot;Denial of Service&quot; warnings if user input is interpolated into regular expressions.&lt;/p&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;ruby
+/#{params[:name]}/
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/454&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Avoid Warning on Sanitized SQL&lt;/h3&gt;
+
+&lt;p&gt;Brakeman should no longer warn about SQL values wrapped in &lt;code&gt;sanitize&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/commit/cd9093d890b7a16f117d11a0ae6af281ecbb648d&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;More Symbol Denial of Service Methods&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;String#intern&lt;/code&gt; and &lt;code&gt;Hash#symbolize_key&lt;/code&gt; were added to the symbol denial of service check by &lt;a href=&quot;https://github.com/jrusnack&quot;&gt;Jan Rusnacko&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/470&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Rails 4 Before Actions&lt;/h3&gt;
+
+&lt;p&gt;Rails 4 added a bunch of aliases for &lt;code&gt;before_filter&lt;/code&gt; and related methods, and Brakeman now recognizes these methods for adding and skipping filters.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/480&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Latest RailsLTS Version&lt;/h3&gt;
+
+&lt;p&gt;This release adds support for the latest RailsLTS 2.3.18.x versions and will not warn on &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/CdoMUVpsRmQ/iFRwR1xPym8J&quot;&gt;CVE-2012-1099&lt;/a&gt; and &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/tfp6gZCtzr4/j8LUHmu7fIEJ&quot;&gt;CVE-2014-0081&lt;/a&gt; for applications using the appropriate RailsLTS versions.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/481&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Protected Attributes Gem&lt;/h3&gt;
+
+&lt;p&gt;Brakeman now treats applications using the &lt;code&gt;protected_attributes&lt;/code&gt; gem as if mass assignment is enabled by default and &lt;code&gt;attr_accessible&lt;/code&gt; is necessary to protect models.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/477&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;SQL Injection in Scopes&lt;/h3&gt;
+
+&lt;p&gt;There was a bug which caused Brakeman not warn about SQL injection in chained calls inside scope blocks (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/471&quot;&gt;example here&lt;/a&gt;). Additionally, scope calls were not being handled for Rails 4.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/472&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Hosts in Redirects&lt;/h3&gt;
+
+&lt;p&gt;Brakeman should no longer warn about instances of &lt;code&gt;redirect_to&lt;/code&gt; when &lt;code&gt;:host&lt;/code&gt; is explicitly specified.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/465&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;SQL Injection in All Select Arguments&lt;/h3&gt;
+
+&lt;p&gt;Brakeman was only checking the first argument to &lt;code&gt;Model.select&lt;/code&gt; for SQL injection, but the method can take multiple arguments. This release corrects this to check all of the arguments.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/468&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;SQL Injection CVEs Moved to Separate Check&lt;/h3&gt;
+
+&lt;p&gt;All the checks for SQL injection CVEs have been moved from &lt;code&gt;CheckSQL&lt;/code&gt; to &lt;code&gt;CheckSQLCVEs&lt;/code&gt;. This should only have an effect for users explicitly specifying to run or skip &lt;code&gt;CheckSQL&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/478&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;More Routing Fixes&lt;/h3&gt;
+
+&lt;p&gt;More instances of non-literals in routes will be ignored instead of raising exceptions. In general, information from &lt;code&gt;routes.rb&lt;/code&gt; is not used except to warn about default routes (unless &lt;code&gt;--no-assume-routes&lt;/code&gt; is used).&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/462&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;SHAs&lt;/h3&gt;
+
+&lt;p&gt;The SHA1 sums for this release are&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;fc8a7991e9351f8d5e26a59acf54422a638f4866  brakeman-2.5.0.gem
+48f974aaf40957a325ee778d3d700fd29aa526bf  brakeman-min-2.5.0.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 2.4.3 Released</title>
@@ -1921,74 +2040,6 @@ end
 &lt;h3&gt;Brakeman Roadmap&lt;/h3&gt;
 
 &lt;p&gt;A rough guide to Brakeman 1.9 and 2.0 has been &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/Roadmap&quot;&gt;posted here&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 1.8.1 Released</title>
-    <link href="http://brakemanscanner.org/blog/2012/09/24/brakeman-1-dot-8-1-released/"/>
-    <updated>2012-09-24T12:09:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2012/09/24/brakeman-1-dot-8-1-released</id>
-    <content type="html">&lt;p&gt;Bug fixes!&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 1.8.0&lt;/em&gt;:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Recover from errors in output formatting (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/148&quot;&gt;#148&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Fix false positive in &lt;code&gt;redirect_to&lt;/code&gt; (Neil Matatall) (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/143&quot;&gt;#143&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Fix problems with removal of &lt;code&gt;Sexp#method_missing&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/150&quot;&gt;#150&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Fix array indexing in alias processing (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/145&quot;&gt;#145&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Fix old &lt;code&gt;mail_to&lt;/code&gt; vulnerability check (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/147&quot;&gt;#147&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Fix rescans when only controller action changes (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/141&quot;&gt;#141&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Allow comparison of versions with unequal lengths (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/144&quot;&gt;#144&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Handle super calls with blocks (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/146&quot;&gt;#146&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Remove malformed Sexps from HAML processing  (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/149&quot;&gt;#149&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Respect &lt;code&gt;-q&lt;/code&gt; flag for &quot;Rails 3 detected&quot; message&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;Fix Crashes when Generating Report&lt;/h3&gt;
-
-&lt;p&gt;Some scans were causing Brakeman to crash while generating reports with an error like:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;lib/brakeman/warning.rb:78:in `format_code': undefined method `gsub' for nil:NilClass (NoMethodError)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This was due to a combination of the removal of &lt;code&gt;method_missing&lt;/code&gt; behavior from &lt;code&gt;Sexp&lt;/code&gt; and the &lt;code&gt;OutputProcessor&lt;/code&gt; not handling errors well.&lt;/p&gt;
-
-&lt;p&gt;The problem should be fixed now, but please report an issue if &quot;[Format Error]&quot; shows up in reports.&lt;/p&gt;
-
-&lt;h3&gt;False Positive in Redirect Check&lt;/h3&gt;
-
-&lt;p&gt;Neil Matatall fixed &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/143&quot;&gt;an issue&lt;/a&gt; with a false positive when redirecting to an array.&lt;/p&gt;
-
-&lt;p&gt;When &lt;code&gt;redirect_to&lt;/code&gt; is given an array, Rails eventually falls through to &lt;code&gt;polymorphic_path&lt;/code&gt;, which will only return a path, not a full URL. Brakeman only checks for redirects that can redirect to a different host, so this is considered safe.&lt;/p&gt;
-
-&lt;h3&gt;Sexp and &lt;code&gt;method_missing&lt;/code&gt;&lt;/h3&gt;
-
-&lt;p&gt;The original &lt;code&gt;Sexp&lt;/code&gt; code from RubyParser uses &lt;code&gt;method_missing&lt;/code&gt; to find and optionally delete nodes. This functionality is not used very often (never in Brakeman) but has covered up bugs that would otherwise been found. Therefore, &lt;code&gt;Sexp#method_missing&lt;/code&gt; has been removed in Brakeman. However, it turns out that &lt;a href=&quot;https://github.com/seattlerb/ruby2ruby&quot;&gt;Ruby2Ruby&lt;/a&gt; uses it in a couple places. Brakeman uses Ruby2Ruby to covert s-expressions back to readable Ruby code, particularly when generating reports. This lead to some crashes.&lt;/p&gt;
-
-&lt;h3&gt;Fix Array Indexing&lt;/h3&gt;
-
-&lt;p&gt;Brakeman can handle pulling values out of simple arrays. Or it should be able to, but it keeps breaking. Should be fixed now!&lt;/p&gt;
-
-&lt;h3&gt;Fix &lt;code&gt;mail_to&lt;/code&gt; Check&lt;/h3&gt;
-
-&lt;p&gt;There is a Brakeman check for an &lt;a href=&quot;https://groups.google.com/d/topic/rubyonrails-security/8CpI7egxX4E/discussion&quot;&gt;old vulnerability&lt;/a&gt; in &lt;code&gt;mail_to&lt;/code&gt;. However, it turns out this check has been broken for a while. But now it is fixed! And there are regression tests.&lt;/p&gt;
-
-&lt;h3&gt;Fix Rescans on Controller Changes&lt;/h3&gt;
-
-&lt;p&gt;There were some crashes when rescanning was triggered by a controller change.&lt;/p&gt;
-
-&lt;h3&gt;HAML Processing&lt;/h3&gt;
-
-&lt;p&gt;Some very old code for HAML processing was generating malformed s-expressions, which then had to be handled specially in the output formatter. It turns out these nodes were not even used, so they were removed. Please report any problems arising from this! We do not have a lot of HAML test cases.&lt;/p&gt;
-
-&lt;h3&gt;Report Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release!&lt;/p&gt;
-
-&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
 </content>
   </entry>
   

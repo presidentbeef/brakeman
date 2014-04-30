@@ -108,6 +108,95 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/09/24/brakeman-1-dot-8-1-released/">Brakeman 1.8.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-09-24 12:09:00 -0700" pubdate  updated >Sep 24<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Bug fixes!</p>
+
+<p><em>Changes since 1.8.0</em>:</p>
+
+<ul>
+<li>Recover from errors in output formatting (<a href="https://github.com/presidentbeef/brakeman/pull/148">#148</a>)</li>
+<li>Fix false positive in <code>redirect_to</code> (Neil Matatall) (<a href="https://github.com/presidentbeef/brakeman/issues/143">#143</a>)</li>
+<li>Fix problems with removal of <code>Sexp#method_missing</code> (<a href="https://github.com/presidentbeef/brakeman/pull/150">#150</a>)</li>
+<li>Fix array indexing in alias processing (<a href="https://github.com/presidentbeef/brakeman/pull/145">#145</a>)</li>
+<li>Fix old <code>mail_to</code> vulnerability check (<a href="https://github.com/presidentbeef/brakeman/pull/147">#147</a>)</li>
+<li>Fix rescans when only controller action changes (<a href="https://github.com/presidentbeef/brakeman/pull/141">#141</a>)</li>
+<li>Allow comparison of versions with unequal lengths (<a href="https://github.com/presidentbeef/brakeman/pull/144">#144</a>)</li>
+<li>Handle super calls with blocks (<a href="https://github.com/presidentbeef/brakeman/pull/146">#146</a>)</li>
+<li>Remove malformed Sexps from HAML processing  (<a href="https://github.com/presidentbeef/brakeman/pull/149">#149</a>)</li>
+<li>Respect <code>-q</code> flag for &#8220;Rails 3 detected&#8221; message</li>
+</ul>
+
+
+<h3>Fix Crashes when Generating Report</h3>
+
+<p>Some scans were causing Brakeman to crash while generating reports with an error like:</p>
+
+<pre><code>lib/brakeman/warning.rb:78:in `format_code': undefined method `gsub' for nil:NilClass (NoMethodError)
+</code></pre>
+
+<p>This was due to a combination of the removal of <code>method_missing</code> behavior from <code>Sexp</code> and the <code>OutputProcessor</code> not handling errors well.</p>
+
+<p>The problem should be fixed now, but please report an issue if &#8220;[Format Error]&#8221; shows up in reports.</p>
+
+<h3>False Positive in Redirect Check</h3>
+
+<p>Neil Matatall fixed <a href="https://github.com/presidentbeef/brakeman/issues/143">an issue</a> with a false positive when redirecting to an array.</p>
+
+<p>When <code>redirect_to</code> is given an array, Rails eventually falls through to <code>polymorphic_path</code>, which will only return a path, not a full URL. Brakeman only checks for redirects that can redirect to a different host, so this is considered safe.</p>
+
+<h3>Sexp and <code>method_missing</code></h3>
+
+<p>The original <code>Sexp</code> code from RubyParser uses <code>method_missing</code> to find and optionally delete nodes. This functionality is not used very often (never in Brakeman) but has covered up bugs that would otherwise been found. Therefore, <code>Sexp#method_missing</code> has been removed in Brakeman. However, it turns out that <a href="https://github.com/seattlerb/ruby2ruby">Ruby2Ruby</a> uses it in a couple places. Brakeman uses Ruby2Ruby to covert s-expressions back to readable Ruby code, particularly when generating reports. This lead to some crashes.</p>
+
+<h3>Fix Array Indexing</h3>
+
+<p>Brakeman can handle pulling values out of simple arrays. Or it should be able to, but it keeps breaking. Should be fixed now!</p>
+
+<h3>Fix <code>mail_to</code> Check</h3>
+
+<p>There is a Brakeman check for an <a href="https://groups.google.com/d/topic/rubyonrails-security/8CpI7egxX4E/discussion">old vulnerability</a> in <code>mail_to</code>. However, it turns out this check has been broken for a while. But now it is fixed! And there are regression tests.</p>
+
+<h3>Fix Rescans on Controller Changes</h3>
+
+<p>There were some crashes when rescanning was triggered by a controller change.</p>
+
+<h3>HAML Processing</h3>
+
+<p>Some very old code for HAML processing was generating malformed s-expressions, which then had to be handled specially in the output formatter. It turns out these nodes were not even used, so they were removed. Please report any problems arising from this! We do not have a lot of HAML test cases.</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/09/04/brakeman-1-dot-8-0-released/">Brakeman 1.8.0 Released</a></h1>
     
     
@@ -936,107 +1025,6 @@ user.send(method)
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/03/05/brakeman-1-dot-5-1-released/">Brakeman 1.5.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-03-05 18:50:00 -0800" pubdate  updated >Mar 5<span>th</span>, 2012</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>After the excitment yesterday with a mass assignment vulnerability being exploited in a very public manner on <a href="https://gist.github.com/1978249">Github</a>, interest in Brakeman has skyrocketed.</p>
-
-<p>This lead to re-examination of Brakeman&#8217;s code for detecting that mass assignment has been globally disabled - and it turns out there was a bug or two. So here is a bug-fix release of Brakeman to correct that and some other minor issues.</p>
-
-<p>Upgrading to 1.5.1 may increase the number of warnings reported.</p>
-
-<p><em>Changes since 1.5.0</em>:</p>
-
-<ul>
-<li>Fix detection of global mass assignment setting</li>
-<li>Fix partial rendering in Rails 3</li>
-<li>Show backtrace when interrupt received (Ruby 1.9 only)</li>
-<li>More debug output</li>
-<li>Internal fixes:
-
-<ul>
-<li>Remove duplicate method in Brakeman::Rails2XSSErubis</li>
-<li>Add tracking of module and class to Brakeman::BaseProcessor</li>
-<li>Report module when using Brakeman::FindCall</li>
-</ul>
-</li>
-</ul>
-
-
-<h3>Mass Assignment</h3>
-
-<p>Mass assignment is not a particularly new issue, but the amount of attention suddenly focused on it this weekend was amazing.</p>
-
-<p>This release of Brakeman can detect three different methods for defaulting all models to a whitelist of allowed attributes that can be mass assigned.</p>
-
-<p>The first is probably the most widely-seen version. In an intializer, do</p>
-
-<pre><code>ActiveRecord::Base.send(:attr_accessible, nil)
-</code></pre>
-
-<p>The second is essentially equivalent, but 1.5.1 adds support for it as well:</p>
-
-<pre><code>module ActiveRecord
-  class Base
-    attr_accessible nil
-  end
-end
-</code></pre>
-
-<p>The third option is only available for Rails 3.1.0 and newer. The following configuration setting can be added to <code>application.rb</code>:</p>
-
-<pre><code>config.active_record.whitelist_attributes = true
-</code></pre>
-
-<p>Brakeman should correctly detect all of these.</p>
-
-<p><a href="http://pragtob.wordpress.com/2012/03/06/secure-your-rails-apps/">This is a very nice post</a> explaining the dangers of mass assignment (mentioning Brakeman is nice, too.)</p>
-
-<h3>Partials in Rails 3</h3>
-
-<p>In Rails 3, <code>render 'blah'</code> is now equivalent to <code>render :partial =&gt; 'blah'</code> when used inside a template.</p>
-
-<p>Brakeman now supports this correctly.</p>
-
-<h3>Debug Output</h3>
-
-<p>More debugging output has been added for use with the <code>-d</code> option.</p>
-
-<p>Additionally, when interrupting the application (for example, with <code>^C</code>), a stack trace will be output. Please note, however, that this only works with Ruby 1.9.</p>
-
-<h3>Internal Changes</h3>
-
-<p>There have been a few internal changes. There is a possibility that these will affect some warnings. However, it should only result in accurate reporting of class names.</p>
-
-<h3>Report Issues</h3>
-
-<p>Please report any problems on <a href="https://github.com/presidentbeef/brakeman/issues">Github</a>!</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1089,6 +1077,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/04/30/brakeman-2-dot-5-0-released/">Brakeman 2.5.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/03/22/brakeman-2-dot-4-3-released/">Brakeman 2.4.3 Released</a>
       </li>
     
@@ -1102,10 +1094,6 @@ end
     
       <li class="post">
         <a href="/blog/2014/02/05/brakeman-2-dot-4-0-released/">Brakeman 2.4.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/12/12/brakeman-2-dot-3-1-released/">Brakeman 2.3.1 Released</a>
       </li>
     
   </ul>
