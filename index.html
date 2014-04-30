@@ -154,11 +154,9 @@
 
 <p>A new check for dangerous interpolation in regular expressions was contributed by <a href="https://github.com/mastahyeti">Ben Toews</a>. This will generate &#8220;Denial of Service&#8221; warnings if user input is interpolated into regular expressions.</p>
 
-<p>For example:</p>
+<p>For example, this will generate a warning:</p>
 
-<p><code>ruby
-/#{params[:name]}/
-</code></p>
+<p>  /#{params[:name]}/</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/454">changes</a>)</p>
 

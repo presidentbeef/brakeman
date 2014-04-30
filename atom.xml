@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2014-04-30T13:04:34-07:00</updated>
+  <updated>2014-04-30T13:09:08-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -47,11 +47,9 @@
 
 &lt;p&gt;A new check for dangerous interpolation in regular expressions was contributed by &lt;a href=&quot;https://github.com/mastahyeti&quot;&gt;Ben Toews&lt;/a&gt;. This will generate &quot;Denial of Service&quot; warnings if user input is interpolated into regular expressions.&lt;/p&gt;
 
-&lt;p&gt;For example:&lt;/p&gt;
+&lt;p&gt;For example, this will generate a warning:&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;ruby
-/#{params[:name]}/
-&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;  /#{params[:name]}/&lt;/p&gt;
 
 &lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/454&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
