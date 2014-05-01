@@ -111,6 +111,11 @@ module Brakeman::Options
           options[:skip_libs] = true
         end
 
+        opts.on "--add-checks-path path1,path2,etc", Array, "A directory containing additional out-of-tree checks to run" do |paths|
+          options[:additional_checks_path] ||= Set.new
+          options[:additional_checks_path].merge paths.map {|p| File.expand_path p}
+        end
+
         opts.on "-t", "--test Check1,Check2,etc", Array, "Only run the specified checks" do |checks|
           checks.each_with_index do |s, index|
             if s[0,5] != "Check"

@@ -20,6 +20,13 @@ class Brakeman::Checks
     @checks
   end
 
+  def self.initialize_checks check_directory = ""
+    #Load all files in checks_directory
+    Dir.glob(File.join(check_directory, "*.rb")).sort.each do |f|
+      require f
+    end
+  end
+
   #No need to use this directly.
   def initialize options = { }
     if options[:min_confidence]
@@ -87,7 +94,7 @@ class Brakeman::Checks
   def self.run_checks_sequential(app_tree, tracker)
     check_runner = self.new :min_confidence => tracker.options[:min_confidence]
 
-    @checks.each do |c|
+    self.checks.each do |c|
       check_name = get_check_name c
 
       #Run or don't run check based on options
@@ -124,7 +131,7 @@ class Brakeman::Checks
 
     check_runner = self.new :min_confidence => tracker.options[:min_confidence]
 
-    @checks.each do |c|
+    self.checks.each do |c|
       check_name = get_check_name c
 
       #Run or don't run check based on options
@@ -174,7 +181,5 @@ class Brakeman::Checks
   end
 end
 
-#Load all files in checks/ directory
-Dir.glob("#{File.expand_path(File.dirname(__FILE__))}/checks/*.rb").sort.each do |f|
-  require f.match(/(brakeman\/checks\/.*)\.rb$/)[0]
-end
+# Load all of the default checks in the source tree
+Brakeman::Checks.initialize_checks File.expand_path(File.join(File.dirname(__FILE__), "checks"))
