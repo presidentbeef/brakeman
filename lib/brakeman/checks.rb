@@ -181,5 +181,5 @@ class Brakeman::Checks
   end
 end
 
-# Load all of the default checks in the source tree
+#Load all files in checks/ directory
 Brakeman::Checks.initialize_checks File.expand_path(File.join(File.dirname(__FILE__), "checks"))
