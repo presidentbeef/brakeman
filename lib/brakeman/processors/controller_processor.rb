@@ -25,11 +25,6 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     name = class_name(exp.class_name)
     parent = class_name(exp.parent_name)
 
-    if @current_class
-      outer_class = @current_class
-      name = (outer_class[:name].to_s + "::" + name.to_s).to_sym
-    end
-
     #If inside a real controller, treat any other classes as libraries.
     #But if not inside a controller already, then the class may include
     #a real controller, so we can't take this shortcut.
@@ -41,7 +36,6 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
     if not name.to_s.end_with? "Controller"
       Brakeman.debug "[Notice] Adding noncontroller as library: #{name}"
-      previous_controller = @controller
       #Set the class to be a module in order to get the right namespacing.
       #Add class to libraries, in case it is needed later (e.g. it's used
       #as a parent class for a controller.)
@@ -49,9 +43,12 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
       #@current_class to this not-really-a-controller thing.
       process_module exp, parent
 
-      @controller = previous_controller
-
       return exp
+    end
+
+    if @current_class
+      outer_class = @current_class
+      name = (outer_class[:name].to_s + "::" + name.to_s).to_sym
     end
 
     if @current_module
