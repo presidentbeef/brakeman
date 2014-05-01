@@ -220,7 +220,7 @@ module Brakeman
 
     options[:additional_checks_path].each do |path|
       Brakeman::Checks.initialize_checks path
-    end
+    end if options[:additional_checks_path]
 
     format_length = 30
 
@@ -308,7 +308,7 @@ module Brakeman
 
     options[:additional_checks_path].each do |path|
       Brakeman::Checks.initialize_checks path
-    end
+    end if options[:additional_checks_path]
 
     #Start scanning
     scanner = Scanner.new options
@@ -394,7 +394,7 @@ module Brakeman
 
     options[:additional_checks_path].each do |path|
       Brakeman::Checks.initialize_checks path
-    end
+    end if options[:additional_checks_path]
 
     begin
       previous_results = MultiJson.load(File.read(options[:previous_results_json]), :symbolize_keys => true)[:warnings]
