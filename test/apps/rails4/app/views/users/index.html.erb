@@ -11,3 +11,5 @@
 <%= number_to_human(params[:cost], format: h(params[:format])) %> Should not warn
 
 <%= number_to_percentage(params[:cost], negative_format: params[:format]) %>
+
+<%= render Thing.new(content: render(partial: "stuff")) %>
