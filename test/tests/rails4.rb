@@ -318,6 +318,38 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => nil
   end
 
+  def test_redirect_to_new_query_methods
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "410e22682c2ebd663204362aac560414233b5c225fbc4259d108d2c760bfcbe4",
+      :warning_type => "Redirect",
+      :line => 38,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:const, :User), :find_by, s(:hash, s(:lit, :name), s(:call, s(:params), :[], s(:lit, :name))))
+
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "c01e127b45d9010c495c6fd731baaf850f9a5bbad288cf9df66697d23ec6de4a",
+      :warning_type => "Redirect",
+      :line => 40,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:const, :User), :find_by!, s(:hash, s(:lit, :name), s(:call, s(:params), :[], s(:lit, :name))))
+
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "9dd39bc751eab84c5485fa35966357b6aacb8830bd6812c7a228a02c5ac598d0",
+      :warning_type => "Redirect",
+      :line => 42,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:call, s(:const, :User), :where, s(:hash, s(:lit, :stuff), s(:lit, 1))), :take)
+  end
+
   def test_i18n_xss_CVE_2013_4491_workaround
     assert_no_warning :type => :warning,
       :warning_code => 63,

@@ -31,4 +31,15 @@ class UsersController < ApplicationController
   def safe_set_page
     @page = :cool_page_bro
   end
+
+  def redirect_to_model
+    # None of these should warn in Rails 4
+    if stuff
+      redirect_to User.find_by(:name => params[:name])
+    elsif other_stuff
+      redirect_to User.find_by!(:name => params[:name])
+    else
+      redirect_to User.where(:stuff => 1).take
+    end
+  end
 end
