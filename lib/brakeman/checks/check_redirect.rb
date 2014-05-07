@@ -142,13 +142,20 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     if node_type? exp, :or
       model_instance? exp.lhs or model_instance? exp.rhs
     elsif call? exp
-      if model_name? exp.target or friendly_model? exp.target and
+      if model_target? exp and
         (@model_find_calls.include? exp.method or exp.method.to_s.match(/^find_by_/))
         true
       else
         association?(exp.target, exp.method)
       end
     end
+  end
+
+  def model_target? exp
+    return false unless call? exp
+    model_name? exp.target or
+    friendly_model? exp.target or
+    model_target? exp.target
   end
 
   #Returns true if exp is (probably) a friendly model instance
