@@ -66,6 +66,16 @@ class Rails2Tests < Test::Unit::TestCase
       :relative_path => "app/controllers/home_controller.rb"
   end
 
+  def test_command_injection_interpolate
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :line => 4,
+      :message => /^Possible command injection/,
+      :confidence => 0,
+      :file => /home_controller\/command_dependancy\.rb/,
+      :relative_path => "app/controllers/home_controller.rb"
+  end
+
   def test_command_injection_direct
     assert_warning :type => :warning,
       :warning_type => "Command Injection",
