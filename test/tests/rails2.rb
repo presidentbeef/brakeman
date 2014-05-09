@@ -66,7 +66,7 @@ class Rails2Tests < Test::Unit::TestCase
       :relative_path => "app/controllers/home_controller.rb"
   end
 
-  def test_command_injection_interpolate
+  def test_command_injection_interpolate_from_controller_dependency
     assert_warning :type => :warning,
       :warning_type => "Command Injection",
       :line => 4,
