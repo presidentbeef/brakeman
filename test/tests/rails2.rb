@@ -72,7 +72,7 @@ class Rails2Tests < Test::Unit::TestCase
       :line => 4,
       :message => /^Possible command injection/,
       :confidence => 0,
-      :file => /home_controller\/command_dependancy\.rb/,
+      :file => /home_controller\/command_dependency\.rb/,
       :relative_path => "app/controllers/home_controller.rb"
   end
 
