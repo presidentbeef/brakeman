@@ -12,10 +12,10 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   CONFIDENCE = { :high => 0, :med => 1, :low => 2 }
 
   Match = Struct.new(:type, :match)
-  
+
   class << self
     attr_accessor :name
-  
+
     def inherited(subclass)
       subclass.name = subclass.to_s.match(/^Brakeman::(.*)$/)[1]
     end
@@ -177,8 +177,9 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       tracker.config[:rails][:active_record][:whitelist_attributes] == Sexp.new(:true)
 
       @mass_assign_disabled = true
-    elsif version_between?("4.0.0", "4.9.9") and not tracker.config[:gems][:protected_attributes]
-      #May need to revisit dependng on what Rails 4 actually does/has
+    elsif version_between?("4.0.0", "4.9.9") && (!tracker.config[:gems][:protected_attributes] || (tracker.config[:rails][:active_record] &&
+            tracker.config[:rails][:active_record][:whitelist_attributes] == Sexp.new(:true)))
+
       @mass_assign_disabled = true
     else
       #Check for ActiveRecord::Base.send(:attr_accessible, nil)
