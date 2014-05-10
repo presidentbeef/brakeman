@@ -46,13 +46,15 @@ From source:
 
 It is simplest to run Brakeman from the root directory of the Rails application. A path may also be supplied.
 
-# Options
+# Basic Options
+
+For a full list of options, use `brakeman --help` or see the OPTIONS.md file.
 
 To specify an output file for the results:
 
     brakeman -o output_file
 
-The output format is determined by the file extension or by using the `-f` option. Current options are: `text`, `html`, `tabs`, `json` and `csv`.
+The output format is determined by the file extension or by using the `-f` option. Current options are: `text`, `html`, `tabs`, `json`, `markdown`, and `csv`.
 
 Multiple output files can be specified:
 
@@ -61,6 +63,8 @@ Multiple output files can be specified:
 To suppress informational warnings and just output the report:
 
     brakeman -q
+
+Note all Brakeman output except reports are sent to stderr, making it simple to redirect stdout to a file and just get the report.
 
 To see all kinds of debugging information:
 
@@ -78,28 +82,6 @@ To do the opposite and only run a certain set of tests:
 
     brakeman -t SQL,ValidationRegex
 
-To indicate certain methods are "safe":
-
-    brakeman -s benign_method,totally_safe
-
-By default, brakeman will assume that unknown methods involving untrusted data are dangerous. For example, this would cause a warning (Rails 2):
-
-    <%= some_method(:option => params[:input]) %>
-
-To only raise warnings only when untrusted data is being directly used:
-
-    brakeman -r
-
-By default, each check will be run in a separate thread. To disable this behavior:
-
-    brakeman -n
-
-Normally Brakeman will parse `routes.rb` and attempt to infer which controller methods are used as actions. However, this is not perfect (especially for Rails 3). To ignore the automatically inferred routes and assume all methods are actions:
-
-    brakeman -a
-
-Note that this will be enabled automatically if Brakeman runs into an error while parsing the routes.
-
 If Brakeman is running a bit slow, try
 
     brakeman --faster
@@ -113,10 +95,6 @@ By default, Brakeman will return 0 as an exit code unless something went very wr
 To skip certain files that Brakeman may have trouble parsing, use:
 
     brakeman --skip-files file1,file2,etc
-
-Brakeman will raise warnings on models that use `attr_protected`. To suppress these warnings:
-
-    brakeman --ignore-protected
 
 To compare results of a scan with a previous scan, use the JSON output option and then:
 
