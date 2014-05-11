@@ -36,6 +36,7 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
 
   def check_unsafe_symbol_creation result
     return if duplicate? result or result[:call].original_line
+    return if result[:location] && tracker.options[:safe_methods].include?(result[:location][:method].to_s)
 
     add_result result
 

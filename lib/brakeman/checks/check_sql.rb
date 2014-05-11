@@ -148,6 +148,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def process_result result
     return if duplicate?(result) or result[:call].original_line
     return if result[:target].nil? && !active_record_models.include?(result[:location][:class])
+    return if result[:location] && tracker.options[:safe_methods].include?(result[:location][:method].to_s)
 
 
     call = result[:call]
