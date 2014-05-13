@@ -198,9 +198,9 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     @current_method = nil
 
     if @current_class
-      @current_class[@visibility][name] = res
+      @current_class[@visibility][name] = { :src => res, :file => @file_name }
     elsif @current_module
-      @current_module[@visibility][name] = res
+      @current_module[@visibility][name] = { :src => res, :file => @file_name }
     end
 
     res
@@ -228,9 +228,9 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     @current_method = nil
 
     if @current_class
-      @current_class[@visibility][name] = res
+      @current_class[@visibility][name] = { :src => res, :file => @file_name }
     elsif @current_module
-      @current_module[@visibility][name] = res
+      @current_module[@visibility][name] = { :src => res, :file => @file_name }
     end
 
     res

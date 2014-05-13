@@ -17,7 +17,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
   def process_class exp
     name = class_name(exp.class_name)
-    
+
     if @current_class
       outer_class = @current_class
       name = (outer_class[:name].to_s + "::" + name.to_s).to_sym
@@ -40,7 +40,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
                     :protected => {},
                     :src => exp,
                     :file => @file_name }
-    
+
       @tracker.libs[name] = @current_class
     end
 
@@ -77,7 +77,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
                     :protected => {},
                     :src => exp,
                     :file => @file_name }
-    
+
       @tracker.libs[name] = @current_module
     end
 
@@ -97,9 +97,9 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
     exp.node_type = :methdef
 
     if @current_class
-      @current_class[:public][exp.method_name] = exp
+      @current_class[:public][exp.method_name] = { :src => exp, :file => @file_name }
     elsif @current_module
-      @current_module[:public][exp.method_name] = exp
+      @current_module[:public][exp.method_name] = { :src => exp, :file => @file_name }
     end
 
     exp
@@ -110,9 +110,9 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
     exp.node_type = :selfdef
 
     if @current_class
-      @current_class[:public][exp.method_name] = exp
+      @current_class[:public][exp.method_name] = { :src => exp, :file => @file_name }
     elsif @current_module
-      @current_module[:public][exp.method_name] = exp
+      @current_module[:public][exp.method_name] = { :src => exp, :file => @file_name }
     end
 
     exp
