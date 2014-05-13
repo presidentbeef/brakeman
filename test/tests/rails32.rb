@@ -320,11 +320,8 @@ class Rails32Tests < Test::Unit::TestCase
       :line => 4,
       :message => /^Possible command injection/,
       :confidence => 0,
-      # The current code does not have the ability to correctly resolve
-      # which file a method is declared in if a controller is defined across
-      # more than one file.
-      # :file => /command_dependency\.rb/,
-      # :relative_path => "app/controllers/exec_controller/command_dependency.rb"
+      :file => /command_dependency\.rb/,
+      :relative_path => "app/controllers/exec_controller/command_dependency.rb",
       :format_code => /params\[:file_name\]/
   end
 
@@ -334,11 +331,8 @@ class Rails32Tests < Test::Unit::TestCase
       :line => 6,
       :message => /^Possible command injection/,
       :confidence => 0,
-      # The current code does not have the ability to correctly resolve
-      # which file a method is declared in if a controller is defined across
-      # more than one file.
-      # :file => /command_dependency\.rb/,
-      # :relative_path => "app/controllers/exec_controller/command_dependency.rb"
+      :file => /command_dependency\.rb/,
+      :relative_path => "app/controllers/exec_controller/command_dependency.rb",
       :format_code => /params\[:user_input\]/
   end
 end
