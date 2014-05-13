@@ -2,8 +2,6 @@ class HomeController < ApplicationController
   before_filter :filter_it, :only => :test_filter
   before_filter :or_equals, :only => :test_mass_assign_with_or_equals
 
-  require_dependency 'home_controller/command_dependency'
-
   def index; end
 
   def test_params

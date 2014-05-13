@@ -1,8 +1,9 @@
-class HomeController
+class ExecController
 
-  def test_command2
+  def exec_this
     `ls #{params[:file_name]}`
 
     system params[:user_input]
   end
+
 end

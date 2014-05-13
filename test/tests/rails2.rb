@@ -17,13 +17,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 56 }
+        :generic => 54 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 57 }
+        :generic => 55 }
     end
   end
 
@@ -41,7 +41,7 @@ class Rails2Tests < Test::Unit::TestCase
 
   def test_eval
     assert_warning :warning_type => "Dangerous Eval",
-      :line => 42,
+      :line => 40,
       :message => /^User input in eval/,
       :format_code => /eval\(params\[:dangerous_input\]\)/,
       :file => /home_controller.rb/,
@@ -59,7 +59,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_command_injection_interpolate
     assert_warning :type => :warning,
       :warning_type => "Command Injection",
-      :line => 36,
+      :line => 34,
       :message => /^Possible command injection/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -69,7 +69,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_command_injection_direct
     assert_warning :type => :warning,
       :warning_type => "Command Injection",
-      :line => 38,
+      :line => 36,
       :message => /^Possible command injection/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -80,7 +80,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_file_access_concatenation
     assert_warning :type => :warning,
       :warning_type => "File Access",
-      :line => 26,
+      :line => 24,
       :message => /^Parameter value used in file name/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -90,7 +90,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_mass_assignment
     assert_warning :type => :warning,
       :warning_type => "Mass Assignment",
-      :line => 56,
+      :line => 54,
       :message => /^Unprotected mass assignment/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -110,7 +110,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_mass_assignment_with_or_equals_in_filter
     assert_warning :type => :warning,
       :warning_type => "Mass Assignment",
-      :line => 129,
+      :line => 127,
       :message => /^Unprotected\ mass\ assignment/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -120,7 +120,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_redirect
     assert_warning :type => :warning,
       :warning_type => "Redirect",
-      :line => 47,
+      :line => 45,
       :message => /^Possible unprotected redirect/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -128,7 +128,7 @@ class Rails2Tests < Test::Unit::TestCase
 
     assert_warning :type => :warning,
       :warning_type => "Redirect",
-      :line => 184,
+      :line => 182,
       :message => /^Possible unprotected redirect/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -138,8 +138,8 @@ class Rails2Tests < Test::Unit::TestCase
   def test_dynamic_render_path
     assert_warning :type => :warning,
       :warning_type => "Dynamic Render Path",
-      :line => 61,
-      :message => /^Render path contains parameter value near line 61: render/,
+      :line => 59,
+      :message => /^Render path contains parameter value near line 59: render/,
       :confidence => 1,
       :file => /home_controller\.rb/,
       :relative_path => "app/controllers/home_controller.rb"
@@ -148,8 +148,8 @@ class Rails2Tests < Test::Unit::TestCase
   def test_dynamic_render_path_high_confidence
     assert_warning :type => :warning,
       :warning_type => "Dynamic Render Path",
-      :line => 79,
-      :message => /^Render path contains parameter value near line 79: render/,
+      :line => 77,
+      :message => /^Render path contains parameter value near line 77: render/,
       :confidence => 0,
       :file => /home_controller\.rb/,
       :relative_path => "app/controllers/home_controller.rb"
@@ -168,7 +168,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_file_access_with_load
     assert_warning :type => :warning,
       :warning_type => "File Access",
-      :line => 65,
+      :line => 63,
       :message => /^Parameter value used in file name/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -224,7 +224,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_sql_injection_find_by_sql
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :line => 30,
+      :line => 28,
       :message => /^Possible SQL injection/,
       :confidence => 1,
       :file => /home_controller\.rb/,
@@ -234,7 +234,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_sql_injection_conditions_local
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :line => 31,
+      :line => 29,
       :message => /^Possible SQL injection/,
       :confidence => 1,
       :file => /home_controller\.rb/,
@@ -244,7 +244,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_sql_injection_params
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :line => 32,
+      :line => 30,
       :message => /^Possible SQL injection/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -306,8 +306,8 @@ class Rails2Tests < Test::Unit::TestCase
   def test_sql_user_input_multiline
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :line => 123,
-      :message => /^Possible SQL injection near line 123: User.find_by_sql/,
+      :line => 121,
+      :message => /^Possible SQL injection near line 121: User.find_by_sql/,
       :confidence => 0,
       :file => /home_controller\.rb/,
       :relative_path => "app/controllers/home_controller.rb"
@@ -624,8 +624,8 @@ class Rails2Tests < Test::Unit::TestCase
   def test_sql_injection_call_chain
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :line => 75,
-      :message => /^Possible SQL injection near line 75: User.humans.alive.find/,
+      :line => 73,
+      :message => /^Possible SQL injection near line 73: User.humans.alive.find/,
       :confidence => 0,
       :file => /home_controller\.rb/,
       :relative_path => "app/controllers/home_controller.rb"
@@ -890,7 +890,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_check_send
     assert_warning :type => :warning,
       :warning_type => "Dangerous Send",
-      :line => 85,
+      :line => 83,
       :message => /\AUser controlled method execution/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -1153,7 +1153,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_dangerous_send_try
     assert_warning :type => :warning,
       :warning_type => "Dangerous Send",
-      :line => 157,
+      :line => 155,
       :message => /^User\ controlled\ method\ execution/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -1163,7 +1163,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_dangerous_send_underscore
     assert_warning :type => :warning,
       :warning_type => "Dangerous Send",
-      :line => 158,
+      :line => 156,
       :message => /^User\ controlled\ method\ execution/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -1193,7 +1193,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_unsafe_reflection_constantize
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
-      :line => 91,
+      :line => 89,
       :message => /^Unsafe\ reflection\ method\ constantize\ cal/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -1212,7 +1212,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_unsafe_reflection_constantize_2
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
-      :line => 162,
+      :line => 160,
       :message => /^Unsafe\ reflection\ method\ constantize\ cal/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -1234,7 +1234,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_unsafe_symbol_creation_2
     assert_warning :type => :warning,
       :warning_type => "Denial of Service",
-      :line => 85,
+      :line => 83,
       :message => /^Symbol\ conversion\ from\ unsafe\ string/,
       :confidence => 0,
       :file => /home_controller\.rb/,
@@ -1373,13 +1373,13 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 56 }
+        :generic => 54 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 57 }
+        :generic => 55 }
     end
   end
 
