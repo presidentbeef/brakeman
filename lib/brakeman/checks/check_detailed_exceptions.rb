@@ -25,8 +25,9 @@ class Brakeman::CheckDetailedExceptions < Brakeman::BaseCheck
 
   def check_detailed_exceptions
     tracker.controllers.each do |name, controller|
-      controller[:public].each do |name, method|
-        body = method.body.last
+      controller[:public].each do |name, definition|
+        src = definition[:src]
+        body = src.body.last
         next unless body
 
         if name == :show_detailed_exceptions? and not safe? body
@@ -40,8 +41,8 @@ class Brakeman::CheckDetailedExceptions < Brakeman::BaseCheck
                :warning_code => :detailed_exceptions,
                :message => "Detailed exceptions may be enabled in 'show_detailed_exceptions?'",
                :confidence => confidence,
-               :code => method,
-               :file => controller[:file]
+               :code => src,
+               :file => definition[:file]
         end
       end
     end

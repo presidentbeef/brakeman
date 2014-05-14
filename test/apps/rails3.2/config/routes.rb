@@ -6,9 +6,11 @@ Rails32::Application.routes.draw do
       put 'update_password' => redirect('/settings/update_password')
     end
   end
-  
+
   match 'remove' => 'removal#remove_this_too'
   match 'implicit' => 'removal#implicit_render'
+
+  match 'exec' => 'exec#exec_this'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

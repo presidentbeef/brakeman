@@ -15,3 +15,5 @@
 <br />
 
 <%= link_to 'New user', new_user_path %>
+
+<%= select('post', 'author_id', "<option value='#{params[:id]}'>#{params[:name]}</option>") %>

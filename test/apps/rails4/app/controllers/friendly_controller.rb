@@ -63,4 +63,8 @@ class FriendlyController
       redirect_to params.merge(:host => params[:host]) # Should warn
     end
   end
+
+  def select_some_stuff
+    User.select(:name, params[:x])
+  end
 end

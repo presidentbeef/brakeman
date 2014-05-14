@@ -10,7 +10,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 3,
-      :template => 3,
+      :template => 4,
       :generic => 23 }
   end
 
@@ -320,6 +320,18 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
 
   def test_absolute_paths
     assert report[:generic_warnings].all? { |w| w.file.start_with? "/" }
+  end
+
+  def test_cross_site_scripting_CVE_2012_1099
+    assert_warning :type => :template,
+      :warning_code => 22,
+      :fingerprint => "d54bacec90be92ad8ca58164cdfd505114eae34db2fb5b03f7bc2a8fd93f1edb",
+      :warning_type => "Cross Site Scripting",
+      :line => 18,
+      :message => /^Upgrade\ to\ Rails\ 3\ or\ use\ options_for_se/,
+      :confidence => 1,
+      :relative_path => "app/views/users/index.html.erb",
+      :user_input => nil
   end
 
   def test_sql_injection_CVE_2013_0155
