@@ -1,3 +1,3 @@
 module Brakeman
-  Version = "2.4.3github7"
+  Version = "2.5.0github1"
 end

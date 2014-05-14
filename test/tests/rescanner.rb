@@ -70,7 +70,7 @@ class RescannerTests < Test::Unit::TestCase
       remove_method controller, :remove_this
     end
 
-    assert_reindex :controllers, :templates 
+    assert_reindex :controllers, :templates
     assert_changes
     assert_new 0
     assert_fixed 1
@@ -83,7 +83,7 @@ class RescannerTests < Test::Unit::TestCase
       remove_method controller, :change_lines
     end
 
-    assert_reindex :controllers, :templates 
+    assert_reindex :controllers, :templates
     assert_changes
     assert_new 0
     assert_fixed 0
@@ -148,7 +148,7 @@ class RescannerTests < Test::Unit::TestCase
       remove model
     end
 
-    assert_reindex :templates, :models, :controllers
+    assert_reindex :none
     assert_changes
     assert_new 7 #User is no longer a model, causing MORE warnings
     assert_fixed 7
@@ -164,7 +164,7 @@ class RescannerTests < Test::Unit::TestCase
       end
       RUBY
     end
-      
+
     assert_reindex :models
     assert_changes
     assert_new 1
@@ -180,7 +180,7 @@ class RescannerTests < Test::Unit::TestCase
     end
 
     assert_reindex :none
-    assert_changes 
+    assert_changes
     assert_new 1
     assert_fixed 0
   end
@@ -251,21 +251,6 @@ class RescannerTests < Test::Unit::TestCase
     assert_changes
     assert_new 1
     assert_fixed 0
-  end
-
-  def test_gemfile_lock_rails_lts
-    gemfile = "Gemfile.lock"
-
-    before_rescan_of gemfile, "rails_with_xss_plugin" do
-      append gemfile, "railslts-version (2.3.18.6)"
-    end
-
-    #@original is actually modified
-    assert @original.config[:gems][:"railslts-version"], "2.3.18.6"
-    assert_reindex :none
-    assert_changes
-    assert_new 0
-    assert_fixed 2
   end
 
   def test_gemfile_rails_version_fix_CVE_2014_0082

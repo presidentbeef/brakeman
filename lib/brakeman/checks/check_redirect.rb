@@ -19,6 +19,10 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
       @model_find_calls.merge [:from, :group, :having, :joins, :lock, :order, :reorder, :select, :where]
     end
 
+    if version_between? "4.0.0", "9.9.9"
+      @model_find_calls.merge [:find_by, :find_by!, :take]
+    end
+
     @tracker.find_call(:target => false, :method => :redirect_to).each do |res|
       process_result res
     end
@@ -142,13 +146,20 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     if node_type? exp, :or
       model_instance? exp.lhs or model_instance? exp.rhs
     elsif call? exp
-      if model_name? exp.target or friendly_model? exp.target and
+      if model_target? exp and
         (@model_find_calls.include? exp.method or exp.method.to_s.match(/^find_by_/))
         true
       else
         association?(exp.target, exp.method)
       end
     end
+  end
+
+  def model_target? exp
+    return false unless call? exp
+    model_name? exp.target or
+    friendly_model? exp.target or
+    model_target? exp.target
   end
 
   #Returns true if exp is (probably) a friendly model instance

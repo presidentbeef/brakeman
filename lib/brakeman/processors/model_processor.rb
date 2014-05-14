@@ -6,7 +6,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
   ASSOCIATIONS = Set[:belongs_to, :has_one, :has_many, :has_and_belongs_to_many]
 
   def initialize tracker
-    super 
+    super
     @model = nil
     @current_method = nil
     @visibility = :public
@@ -118,7 +118,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     @current_method = nil
     if @model
       list = @model[@visibility]
-      list[name] = res
+      list[name] = { :src => res, :file => @file_name }
     end
     res
   end
@@ -139,7 +139,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     res.line(exp.line)
     @current_method = nil
     if @model
-      @model[@visibility][name] = res unless @model.nil?
+      @model[@visibility][name] = { :src => res, :file => @file_name }
     end
     res
   end

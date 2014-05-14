@@ -10,6 +10,8 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
       version_between? "3.0.0", "3.2.16" or
       version_between? "4.0.0", "4.0.2"
 
+      return if lts_version? "2.3.18.8"
+
       check_number_helper_usage
       generic_warning unless @found_any
     end

@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 20
+      :generic => 25
     }
   end
 
@@ -234,6 +234,120 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 1,
       :relative_path => "app/models/account.rb",
       :user_input => s(:call, s(:self), :type)
+  end
+
+  def test_sql_injection_in_select_args
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "bd8c539a645aa417d538cbe7b658cc1c9743f61d1e90c948afacc7e023b30a62",
+      :warning_type => "SQL Injection",
+      :line => 64,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_sql_injection_sanitize
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "bf92408cc7306b3b2f74cac830b9328a1cc2cc8d7697eb904d04f5a2d46bc31c",
+      :warning_type => "SQL Injection",
+      :line => 3,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :age))
+
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "83d8270fd90fb665f2174fe170f51e94945de02879ed617f2f45d4434d5e5593",
+      :warning_type => "SQL Injection",
+      :line => 3,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :user_input => s(:call, nil, :sanitize, s(:lvar, :x))
+  end
+
+  def test_sql_injection_chained_call_in_scope
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "aa073ab210f9f4a800b5595241a6274656d37087a4f433d4b596516e1227d91b",
+      :warning_type => "SQL Injection",
+      :line => 6,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :user_input => s(:lvar, :col)
+  end
+
+  def test_dynamic_render_path_with_before_action
+    assert_warning :type => :warning,
+      :warning_code => 15,
+      :fingerprint => "5b2267a68b4bfada283b59bdb9f453489111a5f2c335737588f88135d99426fa",
+      :warning_type => "Dynamic Render Path",
+      :line => 14,
+      :message => /^Render\ path\ contains\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :page))
+  end
+
+  def test_dynamic_render_path_with_prepend_before_action
+    assert_warning :type => :warning,
+      :warning_code => 15,
+      :fingerprint => "fa1ad77b62059d1aeeb48217a94cc03a0109b1f17d8332c0e3a5718360de9a8c",
+      :warning_type => "Dynamic Render Path",
+      :line => 19,
+      :message => /^Render\ path\ contains\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :page))
+  end
+
+  def test_cross_site_request_forgery_with_skip_before_action
+    assert_warning :type => :warning,
+      :warning_code => 8,
+      :fingerprint => "320daba73937ffd333f10e5b578520dd90ba681962079bb92a775fb602e2d185",
+      :warning_type => "Cross-Site Request Forgery",
+      :line => 11,
+      :message => /^Use\ whitelist\ \(:only\ =>\ \[\.\.\]\)\ when\ skipp/,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => nil
+  end
+
+  def test_redirect_to_new_query_methods
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "410e22682c2ebd663204362aac560414233b5c225fbc4259d108d2c760bfcbe4",
+      :warning_type => "Redirect",
+      :line => 38,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:const, :User), :find_by, s(:hash, s(:lit, :name), s(:call, s(:params), :[], s(:lit, :name))))
+
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "c01e127b45d9010c495c6fd731baaf850f9a5bbad288cf9df66697d23ec6de4a",
+      :warning_type => "Redirect",
+      :line => 40,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:const, :User), :find_by!, s(:hash, s(:lit, :name), s(:call, s(:params), :[], s(:lit, :name))))
+
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "9dd39bc751eab84c5485fa35966357b6aacb8830bd6812c7a228a02c5ac598d0",
+      :warning_type => "Redirect",
+      :line => 42,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:call, s(:const, :User), :where, s(:hash, s(:lit, :stuff), s(:lit, 1))), :take)
   end
 
   def test_i18n_xss_CVE_2013_4491_workaround

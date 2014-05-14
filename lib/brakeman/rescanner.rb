@@ -109,6 +109,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def rescan_controller path
+    tracker.reset_controller path
     #Process source
     process_controller path
 
@@ -213,7 +214,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     when :template
       rescan_deleted_template path
     when :model
-      rescan_model path
+      rescan_deleted_model path
     when :lib
       rescan_deleted_lib path
     when :initializer
@@ -227,6 +228,10 @@ class Brakeman::Rescanner < Brakeman::Scanner
     end
 
     true
+  end
+
+  def rescan_deleted_model path
+    tracker.reset_model path
   end
 
   def rescan_deleted_controller path
@@ -325,13 +330,20 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
     method_matcher = /##{method_names.map {|n| Regexp.escape(n.to_s)}.join('|')}$/
 
+    to_rescan = []
+
     #Rescan controllers that mixed in library
     tracker.controllers.each do |name, controller|
       if controller[:includes].include? lib[:name]
         unless @paths.include? controller[:file]
-          rescan_file controller[:file]
+          to_rescan << controller[:file]
         end
       end
+    end
+
+    to_rescan.each do |controller|
+      tracker.reset_controller controller
+      rescan_file controller
     end
 
     to_rescan = []

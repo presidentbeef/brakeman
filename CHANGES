@@ -1,5 +1,16 @@
-# Unreleased
+# 2.5.0
 
+ * Add support for RailsLTS 2.3.18.7 and 2.3.18.8
+ * Add support for Rails 4 `before_actions` and friends
+ * Move SQLi CVE checks to `CheckSQLCVEs`
+ * Check for protected_attributes gem
+ * Fix SQLi detection in chain calls in scopes
+ * Add GitHub-flavored Markdown output format (Greg Ose)
+ * Fix false positives when sanitize() is used in SQL (Jeff Yip)
+ * Add String#intern and Hash#symbolize_keys DoS check (Jan Rusnacko)
+ * Check all arguments in Model.select for SQLi
+ * Fix false positive when :host is specified in redirect
+ * Handle more non-literals in routes
  * Add check for regex denial of service (Ben Toews) 
 
 # 2.4.3
