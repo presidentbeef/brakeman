@@ -16,7 +16,7 @@ class Rails32Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 5,
       :template => 11,
-      :generic => 11 }
+      :generic => 13 }
 
     if RUBY_PLATFORM == 'java'
       @expected[:generic] += 1
@@ -306,11 +306,33 @@ class Rails32Tests < Test::Unit::TestCase
     assert_warning :type => :model,
       :warning_type => "Mass Assignment",
       :message => "Potentially dangerous attribute available for mass assignment: :plan_id",
-      :confidence => 2, 
+      :confidence => 2,
       :file => /account\.rb/
   end
 
   def test_two_distinct_warnings_cant_have_same_fingerprint
     assert_equal report[:model_warnings].map(&:fingerprint), report[:model_warnings].map(&:fingerprint).uniq
+  end
+
+  def test_command_injection_interpolate_from_dependency
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :line => 4,
+      :message => /^Possible command injection/,
+      :confidence => 0,
+      :file => /command_dependency\.rb/,
+      :relative_path => "app/controllers/exec_controller/command_dependency.rb",
+      :format_code => /params\[:file_name\]/
+  end
+
+  def test_command_injection_direct_from_dependency
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :line => 6,
+      :message => /^Possible command injection/,
+      :confidence => 0,
+      :file => /command_dependency\.rb/,
+      :relative_path => "app/controllers/exec_controller/command_dependency.rb",
+      :format_code => /params\[:user_input\]/
   end
 end

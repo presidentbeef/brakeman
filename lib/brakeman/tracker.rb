@@ -82,11 +82,12 @@ class Brakeman::Tracker
       set.each do |set_name, info|
         [:private, :public, :protected].each do |visibility|
           info[visibility].each do |method_name, definition|
-            if definition.node_type == :selfdef
-              method_name = "#{definition[1]}.#{method_name}"
+            src = definition[:src]
+            if src.node_type == :selfdef
+              method_name = "#{src[1]}.#{method_name}"
             end
 
-            yield definition, set_name, method_name, info[:file]
+            yield src, set_name, method_name, definition[:file]
 
           end
         end
@@ -218,11 +219,12 @@ class Brakeman::Tracker
       set.each do |set_name, info|
         [:private, :public, :protected].each do |visibility|
           info[visibility].each do |method_name, definition|
-            if definition.node_type == :selfdef
-              method_name = "#{definition[1]}.#{method_name}"
+            src = definition[:src]
+            if src.node_type == :selfdef
+              method_name = "#{src[1]}.#{method_name}"
             end
 
-            finder.process_source definition, :class => set_name, :method => method_name, :file => info[:file]
+            finder.process_source src, :class => set_name, :method => method_name, :file => definition[:file]
 
           end
         end
