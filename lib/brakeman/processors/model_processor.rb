@@ -21,15 +21,20 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
 
   #s(:class, NAME, PARENT, BODY)
   def process_class exp
-    name = class_name exp.class_name
+    name = class_name(exp.class_name)
+    parent = class_name(exp.parent_name)
 
     if @model
       Brakeman.debug "[Notice] Skipping inner class: #{name}"
       ignore
+    elsif @tracker.models[name.to_sym]
+      @model = @tracker.models[name]
+      @model[:files] << @file_name
+      exp.body = process_all! exp.body
+      @model = nil
+      exp
     else
-      parent = class_name exp.parent_name
-
-      @model = { :name => name,
+      @model = { :name => name.to_sym,
         :parent => parent,
         :includes => [],
         :public => {},
@@ -37,7 +42,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
         :protected => {},
         :options => {},
         :associations => {},
-        :file => @file_name }
+        :files => [@file_name] }
       @tracker.models[@model[:name]] = @model
       exp.body = process_all! exp.body
       @model = nil
