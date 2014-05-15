@@ -57,6 +57,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
     if @tracker.controllers[name.to_sym]
       @current_class = @tracker.controllers[name]
+      @current_class[:files] << @file_name
     else
       @current_class = { :name => name,
                 :parent => parent,
@@ -66,7 +67,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
                 :protected => {},
                 :options => {:before_filters => []},
                 :src => exp,
-                :file => @file_name }
+                :files => [@file_name] }
       @tracker.controllers[@current_class[:name]] = @current_class
     end
 
@@ -96,6 +97,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
     if @tracker.libs[name]
       @current_module = @tracker.libs[name]
+      @current_module[:files] << @file_name
     else
       @current_module = { :name => name,
                     :parent => parent,
@@ -105,7 +107,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
                     :protected => {},
                     :options => {:before_filters => []},
                     :src => exp,
-                    :file => @file_name }
+                    :files => [@file_name] }
 
       @tracker.libs[name] = @current_module
     end

@@ -318,14 +318,14 @@ module Brakeman::Util
 
     case type
     when :controller
-      if tracker.controllers[name] and tracker.controllers[name][:file]
-        path = tracker.controllers[name][:file]
+      if tracker.controllers[name] and tracker.controllers[name][:files]
+        path = tracker.controllers[name][:files].first
       else
         path += "/app/controllers/#{underscore(string_name)}.rb"
       end
     when :model
-      if tracker.models[name] and tracker.models[name][:file]
-        path = tracker.models[name][:file]
+      if tracker.models[name] and tracker.models[name][:files]
+        path = tracker.models[name][:files].first
       else
         path += "/app/models/#{underscore(string_name)}.rb"
       end
