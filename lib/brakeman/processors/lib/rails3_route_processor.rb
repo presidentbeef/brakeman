@@ -96,10 +96,10 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
       matcher = first_arg.value
 
       if matcher == ':controller(/:action(/:id(.:format)))' or
-        matcher.include? ':controller' and matcher.include? ':action' #Default routes
+        matcher.include? ':controller' and (matcher.include? ':action' or matcher.include? '*action')  #Default routes
         @tracker.routes[:allow_all_actions] = first_arg
         return exp
-      elsif matcher.include? ':action'
+      elsif matcher.include? ':action' or matcher.include? '*action'
         action_variable = true
       elsif second_arg.nil? and in_controller_block? and not matcher.include? ":"
         add_route matcher
@@ -169,14 +169,14 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
           elsif in_controller_block? and symbol? v
             add_route v
           end
-        elsif first_arg.value.include? ":action" and hash? second_arg
+        elsif (first_arg.value.include? ":action" or first_arg.value.include? "*action") and hash? second_arg
           if second_arg[1].value == :controller
             @tracker.routes[second_arg[2].value] = [:allow_all_actions, {:allow_verb => exp.method.to_s}]
           end
         end
       end
     elsif string? first_arg
-      if first_arg.value.include? ':controller' and first_arg.value.include? ':action' #Default routes
+      if first_arg.value.include? ':controller' and (first_arg.value.include? ":action" or first_arg.value.include? "*action") #Default routes
         @tracker.routes[:allow_all_actions] = first_arg
       end
 
