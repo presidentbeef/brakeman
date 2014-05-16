@@ -156,6 +156,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_verb exp
+    #binding.pry
     first_arg = exp.first_arg
     second_arg = exp.second_arg
 
@@ -171,7 +172,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
           end
         elsif first_arg.value.include? ":action" and hash? second_arg
           if second_arg[1].value == :controller
-            @tracker.routes[second_arg[2].value] = [:allow_all_actions]
+            @tracker.routes[second_arg[2].value] = [:allow_all_actions, :allow_verb => exp.method.to_s]
           end
         end
       end
