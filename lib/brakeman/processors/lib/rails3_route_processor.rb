@@ -172,6 +172,15 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
         end
       end
     elsif string? first_arg
+      #Check if there is an unrestricted action parameter
+      action_variable = false
+
+      if first_arg.value.include? ':controller' and first_arg.value.include? ':action' #Default routes
+        @tracker.routes[:allow_all_actions] = first_arg
+      elsif first_arg.value.include? ':action'
+        action_variable = true
+      end
+
       route = first_arg.value.split "/"
       if route.length != 2
         add_route route[0]
@@ -193,6 +202,9 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     end
 
     @current_controller = nil unless in_controller_block?
+    if action_variable
+        @tracker.routes[@current_controller] = :allow_all_actions
+    end
     exp
   end
 
