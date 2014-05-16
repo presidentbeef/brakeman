@@ -170,7 +170,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
             add_route v
           end
         elsif (first_arg.value.include? ":action" or first_arg.value.include? "*action") and hash? second_arg
-          if second_arg[1].value == :controller
+          if hash_access(second_arg, :controller)
             @tracker.routes[second_arg[2].value] = [:allow_all_actions, {:allow_verb => exp.method.to_s}]
           end
         end
