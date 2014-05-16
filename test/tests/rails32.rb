@@ -13,7 +13,7 @@ class Rails32Tests < Test::Unit::TestCase
 
   def expected
     @expected ||= {
-      :controller => 0,
+      :controller => 8,
       :model => 5,
       :template => 11,
       :generic => 13 }
@@ -335,4 +335,55 @@ class Rails32Tests < Test::Unit::TestCase
       :relative_path => "app/controllers/exec_controller/command_dependency.rb",
       :format_code => /params\[:user_input\]/
   end
+
+   def test_controller_default_routes
+    # Test to ensure warnings are generated for loose routes
+     assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /GlobGetController.*get requests/,
+      :fingerprint => "6550aaf3da845a600a9c8fb767d08489679a9e3d89554db3c920ddb4eafcfb8e",
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /GlobMatchController.*matched requests/,
+      :fingerprint => "fb878909d1635de22ddc819e33e6a75e7f2cce0ff1efd2b7e76b361be88bb73e",
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /GlobPostController.*post requests/,
+      :fingerprint => "e5364369e3c89e5632aac3645e183037cc18de49f1b67547dca0c7febb6c849f",
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /GlobPutController.*put requests/,
+      :fingerprint => "b85eeac90866fc04b4bea19c971aed4f2458afe53c908aa7162eb1e46b84f9b6",
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /FooPostController.*post requests/,
+      :fingerprint => "880355a0a87704aa0d615dea6a175ba78711d1593843a596935f95cac3abc8a5",
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /FooGetController.*get requests/,
+      :fingerprint => "e4f29dc75741f74327ce95678173d3d5fe296335275f062c06d1348678f6a339",
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /FooPutController.*put requests/,
+      :fingerprint => "05a92f06689436b7b8189c358baab371de5f0fb7936ab206a11b251b0e5f7570",
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /BarMatchController.*matched requests/,
+      :fingerprint => "857efc249dfd1b5086dcf79c35e31ef19a7782d03b3beaa12f55f8634b543d2d",
+      :file => /routes\.rb/
+   end
 end
