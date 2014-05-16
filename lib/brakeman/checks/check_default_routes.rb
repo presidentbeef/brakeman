@@ -1,5 +1,4 @@
 require 'brakeman/checks/base_check'
-
 #Checks if default routes are allowed in routes.rb
 class Brakeman::CheckDefaultRoutes < Brakeman::BaseCheck
   Brakeman::Checks.add self

@@ -169,12 +169,13 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
           elsif in_controller_block? and symbol? v
             add_route v
           end
+        elsif first_arg.value.include? ":action" and hash? second_arg
+          if second_arg[1].value == :controller
+            @tracker.routes[second_arg[2].value] = [:allow_all_actions]
+          end
         end
       end
     elsif string? first_arg
-      #Check if there is an unrestricted action parameter
-      action_variable = false
-
       if first_arg.value.include? ':controller' and first_arg.value.include? ':action' #Default routes
         @tracker.routes[:allow_all_actions] = first_arg
       elsif first_arg.value.include? ':action'
@@ -202,9 +203,6 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     end
 
     @current_controller = nil unless in_controller_block?
-    if action_variable
-        @tracker.routes[@current_controller] = :allow_all_actions
-    end
     exp
   end
 
