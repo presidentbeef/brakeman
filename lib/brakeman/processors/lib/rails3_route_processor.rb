@@ -178,8 +178,6 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     elsif string? first_arg
       if first_arg.value.include? ':controller' and first_arg.value.include? ':action' #Default routes
         @tracker.routes[:allow_all_actions] = first_arg
-      elsif first_arg.value.include? ':action'
-        action_variable = true
       end
 
       route = first_arg.value.split "/"
