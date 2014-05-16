@@ -156,7 +156,6 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_verb exp
-    #binding.pry
     first_arg = exp.first_arg
     second_arg = exp.second_arg
 
