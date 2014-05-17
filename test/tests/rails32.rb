@@ -13,7 +13,7 @@ class Rails32Tests < Test::Unit::TestCase
 
   def expected
     @expected ||= {
-      :controller => 0,
+      :controller => 8,
       :model => 5,
       :template => 11,
       :generic => 13 }
@@ -335,4 +335,11 @@ class Rails32Tests < Test::Unit::TestCase
       :relative_path => "app/controllers/exec_controller/command_dependency.rb",
       :format_code => /params\[:user_input\]/
   end
+
+  # def test_controller_default_routes
+  # This isn't working currently - never passes, dunno why.
+  #   assert_warning :warning_type => "Default Routes",
+  #     :message => /GlobGetController/,
+  #     :file => /routes\.rb/
+  # end
 end

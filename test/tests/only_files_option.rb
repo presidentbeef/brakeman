@@ -8,7 +8,7 @@ class OnlyFilesOptionTests < Test::Unit::TestCase
 
   def expected
     @expected ||= {
-      :controller => 0,
+      :controller => 8,
       :model => 0,
       :template => 1,
       :generic => 8 }

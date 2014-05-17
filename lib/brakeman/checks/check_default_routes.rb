@@ -31,7 +31,7 @@ class Brakeman::CheckDefaultRoutes < Brakeman::BaseCheck
             :warning_type => "Default Routes", 
             :warning_code => :controller_default_routes,
             :message => "Any public method in #{name} can be used as an action for #{verb} requests.",
-            :line => actions[1],
+            :line => actions[2],
             :confidence => CONFIDENCE[:med],
             :file => "#{tracker.options[:app_path]}/config/routes.rb"
         end
