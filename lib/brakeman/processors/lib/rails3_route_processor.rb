@@ -298,11 +298,14 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     @controller_block = prev_block
   end
 
-  def action_route?(arg)
-    arg.value.include? ":action" or arg.value.include? "*action"
+  def action_route? arg
+    unless arg.is_a? String
+      arg = arg.value
+    end
+    arg.include? ":action" or arg.include? "*action"
   end
 
-  def loose_action(controller_name, verb = "any")
+  def loose_action controller_name, verb = "any"
     self.current_controller = controller_name.value
     @tracker.routes[@current_controller] = [:allow_all_actions, {:allow_verb => verb}]
   end
