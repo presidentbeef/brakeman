@@ -93,14 +93,16 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     action_variable = false
 
     if string? first_arg
+      
       matcher = first_arg.value
-
       if matcher == ':controller(/:action(/:id(.:format)))' or
-        matcher.include? ':controller' and (matcher.include? ':action' or matcher.include? '*action')  #Default routes
+        matcher.include? ':controller' and action_route?(matcher)  #Default routes
         @tracker.routes[:allow_all_actions] = first_arg
         return exp
-      elsif matcher.include? ':action' or matcher.include? '*action'
-        action_variable = true
+      elsif action_route?(first_arg)
+          if hash? second_arg and controller_name = hash_access(second_arg, :controller)
+            loose_action(controller_name)
+          end
       elsif second_arg.nil? and in_controller_block? and not matcher.include? ":"
         add_route matcher
       end
@@ -169,14 +171,14 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
           elsif in_controller_block? and symbol? v
             add_route v
           end
-        elsif (first_arg.value.include? ":action" or first_arg.value.include? "*action") and hash? second_arg
-          if hash_access(second_arg, :controller)
-            @tracker.routes[hash_access(second_arg[2])] = [:allow_all_actions, {:allow_verb => exp.method.to_s}]
+        elsif action_route?(first_arg)
+          if hash? second_arg and controller_name = hash_access(second_arg, :controller)
+            loose_action(controller_name, exp.method)
           end
         end
       end
     elsif string? first_arg
-      if first_arg.value.include? ':controller' and (first_arg.value.include? ":action" or first_arg.value.include? "*action") #Default routes
+      if first_arg.value.include? ':controller' and action_route?(first_arg) #Default routes
         @tracker.routes[:allow_all_actions] = first_arg
       end
 
@@ -294,5 +296,14 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     @controller_block = true
     yield
     @controller_block = prev_block
+  end
+
+  def action_route?(arg)
+    arg.value.include? ":action" or arg.value.include? "*action"
+  end
+
+  def loose_action(controller_name, verb = "any")
+    self.current_controller = controller_name.value
+    @tracker.routes[@current_controller] = [:allow_all_actions, {:allow_verb => verb}]
   end
 end
