@@ -101,7 +101,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
         return exp
       elsif action_route?(first_arg)
           if hash? second_arg and controller_name = hash_access(second_arg, :controller)
-            loose_action(controller_name, "match") #TODO: Parse verbs
+            loose_action(controller_name, "matched") #TODO: Parse verbs
           end
       elsif second_arg.nil? and in_controller_block? and not matcher.include? ":"
         add_route matcher

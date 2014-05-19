@@ -336,10 +336,51 @@ class Rails32Tests < Test::Unit::TestCase
       :format_code => /params\[:user_input\]/
   end
 
-  # def test_controller_default_routes
-  # This isn't working currently - never passes, dunno why.
-  #   assert_warning :warning_type => "Default Routes",
-  #     :message => /GlobGetController/,
-  #     :file => /routes\.rb/
-  # end
+   def test_controller_default_routes
+    # Test to ensure warnings are generated for loose routes
+     assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /GlobGetController.*get requests/,
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /GlobMatchController.*matched requests/,
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /GlobPostController.*post requests/,
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /GlobPutController.*put requests/,
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /FooPostController.*post requests/,
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /FooGetController.*get requests/,
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /FooPutController.*put requests/,
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /FooPostController.*post requests/,
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /BarMatchController.*matched requests/,
+      :file => /routes\.rb/
+   end
 end
