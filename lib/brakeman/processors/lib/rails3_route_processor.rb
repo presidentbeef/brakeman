@@ -299,10 +299,11 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def action_route? arg
-    unless arg.is_a? String
+    if string? arg
       arg = arg.value
     end
-    arg.include? ":action" or arg.include? "*action"
+
+    arg.is_a? String and (arg.include? ":action" or arg.include? "*action")
   end
 
   def loose_action controller_name, verb = "any"
