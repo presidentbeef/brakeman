@@ -383,6 +383,15 @@ module Brakeman::Util
     end
   end
 
+  #Convert path/filename to view name
+  #
+  # views/test/something.html.erb -> test/something
+  def template_path_to_name path
+    names = path.split("/")
+    names.last.gsub!(/(\.(html|js)\..*|\.rhtml)$/, '')
+    names[(names.index("views") + 1)..-1].join("/").to_sym
+  end
+
   def github_url file, line=nil
     if repo_url = @tracker.options[:github_url] and file and not file.empty? and file.start_with? '/'
       url = "#{repo_url}/#{relative_path(file)}"

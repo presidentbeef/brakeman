@@ -5,7 +5,8 @@ require 'brakeman/differ'
 
 #Class for rescanning changed files after an initial scan
 class Brakeman::Rescanner < Brakeman::Scanner
-
+ include Brakeman::Util
+  KNOWN_TEMPLATE_EXTENSIONS = Brakeman::TemplateParser::KNOWN_TEMPLATE_EXTENSIONS
   SCAN_ORDER = [:config, :gemfile, :initializer, :lib, :routes, :template,
     :model, :controller]
 
@@ -83,16 +84,9 @@ class Brakeman::Rescanner < Brakeman::Scanner
     when :config
       process_config
     when :initializer
-      process_initializer path
+      rescan_initializer path
     when :routes
-      # Routes affect which controller methods are treated as actions
-      # which affects which templates are rendered, so routes, controllers,
-      # and templates rendered from controllers must be rescanned
-      tracker.reset_routes
-      tracker.reset_templates :only_rendered => true
-      process_routes
-      process_controllers
-      @reindex << :controllers << :templates
+      rescan_routes
     when :gemfile
       if tracker.config[:gems][:rails_xss] and tracker.config[:escape_html]
         tracker.config[:escape_html] = false
@@ -108,8 +102,10 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
   def rescan_controller path
     controller = tracker.reset_controller path
-    paths =  controller.nil? ? [path] : controller[:files]
-    paths.each { |path| process_controller path if @app_tree.path_exists?(path)  }
+    paths = controller.nil? ? [path] : controller[:files]
+    parse_ruby_files(paths).each do |astfile|
+      process_controller astfile
+    end
 
     #Process data flow and template rendering
     #from the controller
@@ -122,7 +118,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
           end
         end
 
-        controller[:src].values.each do |src|
+        controller[:src].each_value do |src|
           @processor.process_controller_alias controller[:name], src
         end
       end
@@ -137,7 +133,10 @@ class Brakeman::Rescanner < Brakeman::Scanner
     template_name = template_path_to_name(path)
 
     tracker.reset_template template_name
-    process_template path
+    fp = Brakeman::FileParser.new(tracker, @app_tree)
+    template_parser = Brakeman::TemplateParser.new(tracker, fp)
+    template_parser.parse_template path, @app_tree.read_path(path)
+    process_template fp.file_list[:templates].first
 
     @processor.process_template_alias tracker.templates[template_name]
 
@@ -186,12 +185,14 @@ class Brakeman::Rescanner < Brakeman::Scanner
     num_models = tracker.models.length
     model = tracker.reset_model path
     paths = model.nil? ? [path] : model[:files]
-    paths.each { |path| process_model path if @app_tree.path_exists?(path)  }
+    parse_ruby_files(paths).each do |astfile|
+      process_model astfile.path, astfile.ast
+    end
 
     #Only need to rescan other things if a model is added or removed
     if num_models != tracker.models.length
-      process_templates
-      process_controllers
+      process_template_data_flows
+      process_controller_data_flows
       @reindex << :templates << :controllers
     end
 
@@ -201,7 +202,9 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def rescan_lib path
     lib = tracker.reset_lib path
     paths = lib.nil? ? [path] : lib[:files]
-    paths.each { |path| process_lib path if @app_tree.path_exists?(path)  }
+    parse_ruby_files(paths).each do |astfile|
+      process_lib astfile
+    end
 
     lib = nil
 
@@ -213,6 +216,23 @@ class Brakeman::Rescanner < Brakeman::Scanner
     end
 
     rescan_mixin lib if lib
+  end
+
+  def rescan_routes
+    # Routes affect which controller methods are treated as actions
+    # which affects which templates are rendered, so routes, controllers,
+    # and templates rendered from controllers must be rescanned
+    tracker.reset_routes
+    tracker.reset_templates :only_rendered => true
+    process_routes
+    process_controller_data_flows
+    @reindex << :controllers << :templates
+  end
+
+  def rescan_initializer path
+    parse_ruby_files([path]).each do |astfile|
+      process_initializer astfile
+    end
   end
 
   #Handle rescanning when a file is deleted
@@ -379,6 +399,13 @@ class Brakeman::Rescanner < Brakeman::Scanner
       tracker.reset_template template[0]
       rescan_file template[1]
     end
+  end
+
+  def parse_ruby_files list
+    paths = list.select { |path| @app_tree.path_exists? path }
+    file_parser = Brakeman::FileParser.new(tracker, @app_tree)
+    file_parser.parse_files paths, :rescan
+    file_parser.file_list[:rescan]
   end
 end
 
