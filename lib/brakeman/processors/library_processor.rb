@@ -29,7 +29,8 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
     if @tracker.libs[name]
       @current_class = @tracker.libs[name]
-      @current_class[:files] << @file_name
+      @current_class[:files] << @file_name unless @current_class[:files].include? @file_name
+      @current_class[:src][@file_name] = exp
     else
       parent = class_name exp.parent_name
 
@@ -39,8 +40,8 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
                     :public => {},
                     :private => {},
                     :protected => {},
-                    :src => exp,
-                    :files => [@file_name] }
+                    :src => { @file_name => exp },
+                    :files => [ @file_name ] }
 
       @tracker.libs[name] = @current_class
     end

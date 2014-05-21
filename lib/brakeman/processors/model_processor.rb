@@ -29,7 +29,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
       ignore
     elsif @tracker.models[name.to_sym]
       @model = @tracker.models[name]
-      @model[:files] << @file_name
+      @model[:files] << @file_name unless @model[:files].include? @file_name
       exp.body = process_all! exp.body
       @model = nil
       exp
