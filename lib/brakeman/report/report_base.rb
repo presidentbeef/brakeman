@@ -39,7 +39,7 @@ class Brakeman::Report::Base
       name = name.to_sym
       c = tracker.controllers[name]
 
-      if tracker.routes[:allow_all_actions] or tracker.routes[name] == :allow_all_actions
+      if tracker.routes[:allow_all_actions] or tracker.routes[name] == [:allow_all_actions]
         routes = c[:public].keys.map{|e| e.to_s}.sort.join(", ")
       elsif tracker.routes[name].nil?
         #No routes defined for this controller.

@@ -138,7 +138,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     end
 
     if action_variable
-      @tracker.routes[@current_controller] = :allow_all_actions
+      loose_action(@current_controller, "matched")
     end
 
     @current_controller = nil unless in_controller_block?

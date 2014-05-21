@@ -39,7 +39,7 @@ module Brakeman::RouteHelper
 
     routes = @tracker.routes[@current_controller]
     
-    if routes and routes != :allow_all_actions
+    if routes and routes != [:allow_all_actions]
       routes << route
     end
   end
