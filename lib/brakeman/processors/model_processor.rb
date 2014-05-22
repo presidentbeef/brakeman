@@ -14,7 +14,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     @file_name = nil
   end
 
-  #Process current_class source
+  #Process model source
   def process_model src, file_name = nil
     @file_name = file_name
     process src
@@ -64,7 +64,6 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     exp
   end
 
-  #s(:class, NAME, PARENT, BODY)
   def process_module exp
     name = class_name(exp.class_name)
 
