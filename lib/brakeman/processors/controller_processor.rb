@@ -60,15 +60,18 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
       @current_class[:files] << @file_name unless @current_class[:files].include? @file_name
       @current_class[:src][@file_name] = exp
     else
-      @current_class = { :name => name,
-                :parent => parent,
-                :includes => [],
-                :public => {},
-                :private => {},
-                :protected => {},
-                :options => {:before_filters => []},
-                :src => { @file_name => exp },
-                :files => [ @file_name ] }
+      @current_class = {
+        :name => name,
+        :parent => parent,
+        :includes => [],
+        :public => {},
+        :private => {},
+        :protected => {},
+        :options => {:before_filters => []},
+        :src => { @file_name => exp },
+        :files => [ @file_name ]
+      }
+
       @tracker.controllers[@current_class[:name]] = @current_class
     end
 
@@ -100,18 +103,21 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
       @current_module = @tracker.libs[name]
       @current_module[:files] << @file_name
     else
-      @current_module = { :name => name,
-                    :parent => parent,
-                    :includes => [],
-                    :public => {},
-                    :private => {},
-                    :protected => {},
-                    :options => {:before_filters => []},
-                    :src => exp,
-                    :files => [@file_name] }
+      @current_module = {
+        :name => name,
+        :parent => parent,
+        :includes => [],
+        :public => {},
+        :private => {},
+        :protected => {},
+        :options => {:before_filters => []},
+        :src => exp,
+        :files => [@file_name]
+      }
 
       @tracker.libs[name] = @current_module
     end
+
     exp.body = process_all! exp.body
 
     if outer_module

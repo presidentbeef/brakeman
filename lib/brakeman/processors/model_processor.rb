@@ -7,13 +7,14 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
 
   def initialize tracker
     super
-    @model = nil
+    @current_class = nil
     @current_method = nil
+    @current_module = nil
     @visibility = :public
     @file_name = nil
   end
 
-  #Process model source
+  #Process current_class source
   def process_model src, file_name = nil
     @file_name = file_name
     process src
@@ -24,17 +25,21 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     name = class_name(exp.class_name)
     parent = class_name(exp.parent_name)
 
-    if @model
-      Brakeman.debug "[Notice] Skipping inner class: #{name}"
-      ignore
-    elsif @tracker.models[name.to_sym]
-      @model = @tracker.models[name]
-      @model[:files] << @file_name unless @model[:files].include? @file_name
-      exp.body = process_all! exp.body
-      @model = nil
-      exp
+    if @current_class
+      outer_class = @current_class
+      name = (outer_class[:name].to_s + "::" + name.to_s).to_sym
+    end
+
+    if @current_module
+      name = (@current_module[:name].to_s + "::" + name.to_s).to_sym
+    end
+
+    if @tracker.models[name.to_sym]
+      @current_class = @tracker.models[name]
+      @current_class[:files] << @file_name unless @current_class[:files].include? @file_name
     else
-      @model = { :name => name.to_sym,
+      @current_class = {
+        :name => name.to_sym,
         :parent => parent,
         :includes => [],
         :public => {},
@@ -42,18 +47,69 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
         :protected => {},
         :options => {},
         :associations => {},
-        :files => [@file_name] }
-      @tracker.models[@model[:name]] = @model
-      exp.body = process_all! exp.body
-      @model = nil
-      exp
+        :files => [@file_name]
+      }
+
+      @tracker.models[@current_class[:name]] = @current_class
     end
+
+    exp.body = process_all! exp.body
+
+    if outer_class
+      @current_class = outer_class
+    else
+      @current_class = nil
+    end
+
+    exp
+  end
+
+  #s(:class, NAME, PARENT, BODY)
+  def process_module exp
+    name = class_name(exp.class_name)
+
+    if @current_module
+      outer_class = @current_module
+      name = (outer_class[:name].to_s + "::" + name.to_s).to_sym
+    end
+
+    if @current_class
+      name = (@current_class[:name].to_s + "::" + name.to_s).to_sym
+    end
+
+    if @tracker.models[name.to_sym]
+      @current_module = @tracker.models[name]
+      @current_module[:files] << @file_name unless @current_class[:files].include? @file_name
+    else
+      @current_module = {
+        :name => name.to_sym,
+        :includes => [],
+        :public => {},
+        :private => {},
+        :protected => {},
+        :options => {},
+        :associations => {},
+        :files => [@file_name]
+      }
+
+      @tracker.models[@current_class[:name]] = @current_module
+    end
+
+    exp.body = process_all! exp.body
+
+    if outer_module
+      @current_module = outer_module
+    else
+      @current_module = nil
+    end
+
+    exp
   end
 
   #Handle calls outside of methods,
   #such as include, attr_accessible, private, etc.
   def process_call exp
-    return exp unless @model
+    return exp unless @current_class
     target = exp.target
     if sexp? target
       target = process target
@@ -70,36 +126,36 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
         when :private, :protected, :public
           @visibility = method
         when :attr_accessible
-          @model[:attr_accessible] ||= []
+          @current_class[:attr_accessible] ||= []
         else
           #??
         end
       else
         case method
         when :include
-          @model[:includes] << class_name(first_arg) if @model
+          @current_class[:includes] << class_name(first_arg) if @current_class
         when :attr_accessible
-          @model[:attr_accessible] ||= []
+          @current_class[:attr_accessible] ||= []
           args = []
 
           exp.each_arg do |e|
             if node_type? e, :lit
               args << e.value
             elsif hash? e
-              @model[:options][:role_accessible] ||= []
-              @model[:options][:role_accessible].concat args
+              @current_class[:options][:role_accessible] ||= []
+              @current_class[:options][:role_accessible].concat args
             end
           end
 
-          @model[:attr_accessible].concat args
+          @current_class[:attr_accessible].concat args
         else
-          if @model
+          if @current_class
             if ASSOCIATIONS.include? method
-              @model[:associations][method] ||= []
-              @model[:associations][method].concat exp.args
+              @current_class[:associations][method] ||= []
+              @current_class[:associations][method].concat exp.args
             else
-              @model[:options][method] ||= []
-              @model[:options][method] << exp.arglist.line(exp.line)
+              @current_class[:options][method] ||= []
+              @current_class[:options][method] << exp.arglist.line(exp.line)
             end
           end
         end
@@ -114,15 +170,15 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
 
   #Add method definition to tracker
   def process_defn exp
-    return exp unless @model
+    return exp unless @current_class
     name = exp.method_name
 
     @current_method = name
     res = Sexp.new :methdef, name, exp.formal_args, *process_all!(exp.body)
     res.line(exp.line)
     @current_method = nil
-    if @model
-      list = @model[@visibility]
+    if @current_class
+      list = @current_class[@visibility]
       list[name] = { :src => res, :file => @file_name }
     end
     res
@@ -130,11 +186,11 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
 
   #Add method definition to tracker
   def process_defs exp
-    return exp unless @model
+    return exp unless @current_class
     name = exp.method_name
 
     if exp[1].node_type == :self
-      target = @model[:name]
+      target = @current_class[:name]
     else
       target = class_name exp[1]
     end
@@ -143,8 +199,8 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     res = Sexp.new :selfdef, target, name, exp.formal_args, *process_all!(exp.body)
     res.line(exp.line)
     @current_method = nil
-    if @model
-      @model[@visibility][name] = { :src => res, :file => @file_name }
+    if @current_class
+      @current_class[@visibility][name] = { :src => res, :file => @file_name }
     end
     res
   end
