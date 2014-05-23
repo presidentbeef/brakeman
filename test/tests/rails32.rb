@@ -16,7 +16,7 @@ class Rails32Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 5,
       :template => 11,
-      :generic => 14 }
+      :generic => 16 }
 
     if RUBY_PLATFORM == 'java'
       @expected[:generic] += 1
@@ -334,5 +334,29 @@ class Rails32Tests < Test::Unit::TestCase
       :file => /command_dependency\.rb/,
       :relative_path => "app/models/user/command_dependency.rb",
       :format_code => /params\[:user_input\]/
+  end
+
+  def test_command_injection_from_namespaced_model_1
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :class => :"MultiModel::Model1",
+      :line => 5,
+      :message => /^Possible command injection/,
+      :confidence => 0,
+      :file => /multi_model\.rb/,
+      :relative_path => "app/models/multi_model.rb",
+      :format_code => /params\[:user_input\]/
+  end
+
+  def test_command_injection_from_namespaced_model_2
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :class => :"MultiModel::Model2",
+      :line => 13,
+      :message => /^Possible command injection/,
+      :confidence => 0,
+      :file => /multi_model\.rb/,
+      :relative_path => "app/models/multi_model.rb",
+      :format_code => /params\[:user_input2\]/
   end
 end
