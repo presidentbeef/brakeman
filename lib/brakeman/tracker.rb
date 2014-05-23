@@ -37,7 +37,8 @@ class Brakeman::Tracker
         :public => {},
         :private => {},
         :protected => {},
-        :options => {} } }
+        :options => {},
+        :files => [] } }
     @routes = {}
     @initializers = {}
     @errors = []
@@ -270,7 +271,7 @@ class Brakeman::Tracker
     model_name = nil
 
     @models.each do |name, model|
-      if model[:file] == path
+      if model[:files].include?(path)
         model_name = name
         break
       end
@@ -279,10 +280,27 @@ class Brakeman::Tracker
     @models.delete model_name
   end
 
+  #Clear information related to model
+  def reset_lib path
+    lib_name = nil
+
+    @libs.each do |name, lib|
+      if lib[:files].include?(path)
+        lib_name = name
+        break
+      end
+    end
+
+    @libs.delete lib_name
+  end
+
   def reset_controller path
+    controller_name = nil
+
     #Remove from controller
-    @controllers.delete_if do |name, controller|
-      if controller[:file] == path
+    @controllers.each do |name, controller|
+      if controller[:files].include?(path)
+        controller_name = name
         template_matcher = /^#{name}#/
 
         #Remove templates rendered from this controller
@@ -295,10 +313,10 @@ class Brakeman::Tracker
 
         #Remove calls indexed from this controller
         @call_index.remove_indexes_by_class [name]
-
-        true
+        break
       end
     end
+    @controllers.delete controller_name
   end
 
   #Clear information about routes
