@@ -25,6 +25,13 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     name = class_name(exp.class_name)
     parent = class_name(exp.parent_name)
 
+    #If inside an inner clas we treat it as a library.
+    if @current_class
+      Brakeman.debug "[Notice] Treating inner class as library: #{name}"
+      Brakeman::LibraryProcessor.new(@tracker).process_library exp, @file_name
+      return exp
+    end
+
     if @current_class
       outer_class = @current_class
       name = (outer_class[:name].to_s + "::" + name.to_s).to_sym
@@ -34,23 +41,25 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
       name = (@current_module[:name].to_s + "::" + name.to_s).to_sym
     end
 
-    if @tracker.models[name.to_sym]
+    if @tracker.models[name]
       @current_class = @tracker.models[name]
       @current_class[:files] << @file_name unless @current_class[:files].include? @file_name
+      @current_class[:src][@file_name] = exp
     else
       @current_class = {
-        :name => name.to_sym,
+        :name => name,
         :parent => parent,
         :includes => [],
         :public => {},
         :private => {},
         :protected => {},
         :options => {},
+        :src => { @file_name => exp },
         :associations => {},
-        :files => [@file_name]
+        :files => [ @file_name ]
       }
 
-      @tracker.models[@current_class[:name]] = @current_class
+      @tracker.models[name] = @current_class
     end
 
     exp.body = process_all! exp.body
@@ -68,30 +77,32 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     name = class_name(exp.class_name)
 
     if @current_module
-      outer_class = @current_module
-      name = (outer_class[:name].to_s + "::" + name.to_s).to_sym
+      outer_module = @current_module
+      name = (outer_module[:name].to_s + "::" + name.to_s).to_sym
     end
 
     if @current_class
       name = (@current_class[:name].to_s + "::" + name.to_s).to_sym
     end
 
-    if @tracker.models[name.to_sym]
-      @current_module = @tracker.models[name]
-      @current_module[:files] << @file_name unless @current_class[:files].include? @file_name
+    if @tracker.libs[name]
+      @current_module = @tracker.libs[name]
+      @current_module[:files] << @file_name unless @current_module[:files].include? @file_name
+      @current_module[:src][@file_name] = exp
     else
       @current_module = {
-        :name => name.to_sym,
+        :name => name,
         :includes => [],
         :public => {},
         :private => {},
         :protected => {},
         :options => {},
+        :src => { @file_name => exp },
         :associations => {},
-        :files => [@file_name]
+        :files => [ @file_name ]
       }
 
-      @tracker.models[@current_class[:name]] = @current_module
+      @tracker.libs[name] = @current_module
     end
 
     exp.body = process_all! exp.body
@@ -176,10 +187,13 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     res = Sexp.new :methdef, name, exp.formal_args, *process_all!(exp.body)
     res.line(exp.line)
     @current_method = nil
+
     if @current_class
-      list = @current_class[@visibility]
-      list[name] = { :src => res, :file => @file_name }
+      @current_class[@visibility][name] = { :src => res, :file => @file_name }
+    elsif @current_module
+      @current_module[@visibility][name] = { :src => res, :file => @file_name }
     end
+
     res
   end
 
@@ -189,7 +203,13 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     name = exp.method_name
 
     if exp[1].node_type == :self
-      target = @current_class[:name]
+      if @current_class
+        target = @current_class[:name]
+      elsif @current_module
+        target = @current_module
+      else
+        target = nil
+      end
     else
       target = class_name exp[1]
     end
@@ -198,8 +218,11 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     res = Sexp.new :selfdef, target, name, exp.formal_args, *process_all!(exp.body)
     res.line(exp.line)
     @current_method = nil
+
     if @current_class
       @current_class[@visibility][name] = { :src => res, :file => @file_name }
+    elsif @current_module
+      @current_module[@visibility][name] = { :src => res, :file => @file_name }
     end
     res
   end

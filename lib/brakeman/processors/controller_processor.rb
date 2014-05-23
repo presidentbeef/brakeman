@@ -55,7 +55,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
       name = (@current_module[:name].to_s + "::" + name.to_s).to_sym
     end
 
-    if @tracker.controllers[name.to_sym]
+    if @tracker.controllers[name]
       @current_class = @tracker.controllers[name]
       @current_class[:files] << @file_name unless @current_class[:files].include? @file_name
       @current_class[:src][@file_name] = exp
@@ -72,7 +72,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
         :files => [ @file_name ]
       }
 
-      @tracker.controllers[@current_class[:name]] = @current_class
+      @tracker.controllers[name] = @current_class
     end
 
     exp.body = process_all! exp.body
@@ -101,7 +101,8 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
     if @tracker.libs[name]
       @current_module = @tracker.libs[name]
-      @current_module[:files] << @file_name
+      @current_module[:files] << @file_name unless @current_module[:files].include? @file_name
+      @current_module[:src][@file_name] = exp
     else
       @current_module = {
         :name => name,
@@ -111,8 +112,8 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
         :private => {},
         :protected => {},
         :options => {:before_filters => []},
-        :src => exp,
-        :files => [@file_name]
+        :src => { @file_name => exp },
+        :files => [ @file_name ]
       }
 
       @tracker.libs[name] = @current_module
