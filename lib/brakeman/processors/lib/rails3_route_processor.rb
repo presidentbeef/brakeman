@@ -89,9 +89,6 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     second_arg = exp.second_arg
     last_arg = exp.last_arg
 
-    #Check if there is an unrestricted action parameter
-    action_variable = false
-
     if string? first_arg
 
       matcher = first_arg.value
@@ -125,7 +122,6 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
             add_route v
           end
 
-          action_variable = false
          when :to
            if string? v
              add_route_from_string v[1]
@@ -135,10 +131,6 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
          end
         end
       end
-    end
-
-    if action_variable
-      loose_action(@current_controller, "matched")
     end
 
     @current_controller = nil unless in_controller_block?
