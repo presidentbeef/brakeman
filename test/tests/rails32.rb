@@ -16,7 +16,7 @@ class Rails32Tests < Test::Unit::TestCase
       :controller => 8,
       :model => 5,
       :template => 11,
-      :generic => 13 }
+      :generic => 16 }
 
     if RUBY_PLATFORM == 'java'
       @expected[:generic] += 1
@@ -314,21 +314,10 @@ class Rails32Tests < Test::Unit::TestCase
     assert_equal report[:model_warnings].map(&:fingerprint), report[:model_warnings].map(&:fingerprint).uniq
   end
 
-  def test_command_injection_interpolate_from_dependency
+  def test_controller_command_injection_direct_from_dependency
     assert_warning :type => :warning,
       :warning_type => "Command Injection",
-      :line => 4,
-      :message => /^Possible command injection/,
-      :confidence => 0,
-      :file => /command_dependency\.rb/,
-      :relative_path => "app/controllers/exec_controller/command_dependency.rb",
-      :format_code => /params\[:file_name\]/
-  end
-
-  def test_command_injection_direct_from_dependency
-    assert_warning :type => :warning,
-      :warning_type => "Command Injection",
-      :line => 6,
+      :line => 3,
       :message => /^Possible command injection/,
       :confidence => 0,
       :file => /command_dependency\.rb/,
@@ -336,9 +325,20 @@ class Rails32Tests < Test::Unit::TestCase
       :format_code => /params\[:user_input\]/
   end
 
-   def test_controller_default_routes
+  def test_model_command_injection_direct_from_dependency
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :line => 3,
+      :message => /^Possible command injection/,
+      :confidence => 0,
+      :file => /command_dependency\.rb/,
+      :relative_path => "app/models/user/command_dependency.rb",
+      :format_code => /params\[:user_input\]/
+  end
+
+  def test_controller_default_routes
     # Test to ensure warnings are generated for loose routes
-     assert_warning :type => :controller,
+    assert_warning :type => :controller,
       :warning_type => "Default Routes",
       :message => /GlobGetController.*get requests/,
       :fingerprint => "6550aaf3da845a600a9c8fb767d08489679a9e3d89554db3c920ddb4eafcfb8e",
@@ -385,5 +385,29 @@ class Rails32Tests < Test::Unit::TestCase
       :message => /BarMatchController.*matched requests/,
       :fingerprint => "857efc249dfd1b5086dcf79c35e31ef19a7782d03b3beaa12f55f8634b543d2d",
       :file => /routes\.rb/
-   end
+  end
+
+  def test_command_injection_from_namespaced_model_1
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :class => :"MultiModel::Model1",
+      :line => 5,
+      :message => /^Possible command injection/,
+      :confidence => 0,
+      :file => /multi_model\.rb/,
+      :relative_path => "app/models/multi_model.rb",
+      :format_code => /params\[:user_input\]/
+  end
+
+  def test_command_injection_from_namespaced_model_2
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :class => :"MultiModel::Model2",
+      :line => 13,
+      :message => /^Possible command injection/,
+      :confidence => 0,
+      :file => /multi_model\.rb/,
+      :relative_path => "app/models/multi_model.rb",
+      :format_code => /params\[:user_input2\]/
+  end
 end
