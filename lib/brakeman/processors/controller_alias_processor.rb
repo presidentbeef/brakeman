@@ -206,7 +206,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       true
     else
       routes = @tracker.routes[@current_class]
-      routes and (routes == :allow_all_actions or routes.include? method)
+      routes and (routes.include? :allow_all_actions or routes.include? method)
     end
   end
 

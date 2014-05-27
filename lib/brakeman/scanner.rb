@@ -207,7 +207,9 @@ class Brakeman::Scanner
       Brakeman.debug "Processing #{name}"
       report_progress(current, total, "controllers")
       current += 1
-      @processor.process_controller_alias name, controller[:src]
+      controller[:src].values.each do |src|
+        @processor.process_controller_alias name, src
+      end
     end
 
     #No longer need these processed filter methods
