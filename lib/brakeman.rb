@@ -16,6 +16,7 @@ module Brakeman
   #
   #Options:
   #
+  #  * :additional_libs - array of additional lib directories to process
   #  * :app_path - path to root of Rails app (required)
   #  * :assume_all_routes - assume all methods are routes (default: true)
   #  * :check_arguments - check arguments of methods (default: true)

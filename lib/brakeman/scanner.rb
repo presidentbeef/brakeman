@@ -265,13 +265,8 @@ class Brakeman::Scanner
       if type == :erb
         if tracker.config[:escape_html]
           type = :erubis
-          if options[:rails3]
-            require 'brakeman/parsers/rails3_erubis'
-            src = Brakeman::Rails3Erubis.new(text).src
-          else
-            require 'brakeman/parsers/rails2_xss_plugin_erubis'
-            src = Brakeman::Rails2XSSPluginErubis.new(text).src
-          end
+          require 'brakeman/parsers/rails3_erubis'
+          src = Brakeman::Rails3Erubis.new(text).src
         elsif tracker.config[:erubis]
           require 'brakeman/parsers/rails2_erubis'
           type = :erubis
