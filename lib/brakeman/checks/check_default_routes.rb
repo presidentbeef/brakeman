@@ -22,11 +22,16 @@ class Brakeman::CheckDefaultRoutes < Brakeman::BaseCheck
 
       tracker.routes.each do |name, actions|
         if actions.is_a? Array and actions[0] == :allow_all_actions
+          if actions[1].is_a? Hash and actions[1][:allow_verb]
+            verb = actions[1][:allow_verb]
+          else
+            verb = "any"
+          end
           warn :controller => name,
             :warning_type => "Default Routes", 
             :warning_code => :controller_default_routes,
-            :message => "Any public method in #{name} can be used as an action.",
-            :line => actions[1],
+            :message => "Any public method in #{name} can be used as an action for #{verb} requests.",
+            :line => actions[2],
             :confidence => CONFIDENCE[:med],
             :file => "#{tracker.options[:app_path]}/config/routes.rb"
         end
