@@ -255,7 +255,7 @@ class AliasProcessorTests < Test::Unit::TestCase
   end
 
   def test_simple_or_operation_compaction
-    assert_alias "[0, ((1 || 2) || 3), (4 || 8)]", <<-RUBY
+    assert_alias "[0, 4, (4 || 8)]", <<-RUBY
     x = 1
 
     if z
@@ -545,5 +545,46 @@ class AliasProcessorTests < Test::Unit::TestCase
        end
       end
     OUTPUT
+  end
+
+  def test_no_branch_for_plus_equals_with_string
+    assert_alias '"abc"', <<-INPUT
+      x = "a"
+      x += "b" if something
+      x += "c" if something_else
+      x
+    INPUT
+  end
+
+  def test_no_branch_for_plus_equals_with_string_in_ivar
+    assert_alias '"abc"', <<-INPUT
+      @x = "a"
+      @x += "b" if something
+      @x += "c" if something_else
+      @x
+    INPUT
+  end
+
+  #We could do better, but this prevents some Sexp explosions and retains
+  #information about the values
+  def test_no_branch_for_plus_equals_with_interpolated_string
+    assert_alias '"a" + "#{b}" + "c"', <<-'INPUT'
+      x = "a"
+      x += "#{b}" if something
+      x += "c" if something_else
+      x
+    INPUT
+  end
+
+  #Unfortunate to go to this behavior which loses information
+  #but I can't think of a scenario in which the several integers
+  #in ORs would be handled right anyway
+  def test_no_branch_for_plus_equals_with_number
+    assert_alias '6', <<-INPUT
+      x = 1
+      x += 2 if something
+      x += 3 if something_else
+      x
+    INPUT
   end
 end

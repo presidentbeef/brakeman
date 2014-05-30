@@ -257,12 +257,18 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #Local assignment
   # x = 1
   def process_lasgn exp
+    self_assign = self_assign?(exp.lhs, exp.rhs)
     exp.rhs = process exp.rhs if sexp? exp.rhs
     return exp if exp.rhs.nil?
 
     local = Sexp.new(:lvar, exp.lhs).line(exp.line || -2)
 
-    set_value local, exp.rhs
+    if self_assign
+      # Skip branching
+      env[local] = exp.rhs
+    else
+      set_value local, exp.rhs
+    end
 
     exp
   end
@@ -270,10 +276,19 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #Instance variable assignment
   # @x = 1
   def process_iasgn exp
+    self_assign = self_assign?(exp.lhs, exp.rhs)
     exp.rhs = process exp.rhs
     ivar = Sexp.new(:ivar, exp.lhs).line(exp.line)
 
-    set_value ivar, exp.rhs
+    if self_assign
+      if env[ivar].nil? and @meth_env
+        @meth_env[ivar] = exp.rhs
+      else
+        env[ivar] = exp.rhs
+      end
+    else
+      set_value ivar, exp.rhs
+    end
 
     exp
   end
@@ -725,6 +740,14 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     else
       false
     end
+  end
+
+  #Return true if for x += blah or @x += blah
+  def self_assign? var, value
+    call? value and
+    value.method == :+ and
+    node_type? value.target, :lvar, :ivar and
+    value.target.value == var
   end
 
   def value_from_if exp
