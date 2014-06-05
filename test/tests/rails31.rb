@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 23,
       :controller => 4,
-      :generic => 78 }
+      :generic => 79 }
   end
 
   def test_without_protection
@@ -841,6 +841,18 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Rails\ 3\.1\.0\ contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_remote_code_execution_CVE_2014_0130
+    assert_warning :type => :warning,
+      :warning_code => 77,
+      :fingerprint => "e833fd152ab95bf7481aada185323d97cd04c3e2322b90f3698632f4c4c04441",
+      :warning_type => "Remote Code Execution",
+      :line => nil,
+      :message => /^Rails\ 3\.1\.0\ with\ globbing\ routes\ is\ vuln/,
+      :confidence => 1,
+      :relative_path => "config/routes.rb",
       :user_input => nil
   end
 

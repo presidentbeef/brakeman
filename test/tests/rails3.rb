@@ -16,7 +16,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 8,
       :template => 38,
-      :generic => 71
+      :generic => 72
     }
 
     if RUBY_PLATFORM == 'java'
@@ -1182,6 +1182,18 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Rails\ 3\.0\.3\ has\ a\ denial\ of\ service\ vuln/,
       :confidence => 0,
       :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_remote_code_execution_CVE_2014_0130
+    assert_warning :type => :warning,
+      :warning_code => 77,
+      :fingerprint => "93393e44a0232d348e4db62276b18321b4cbc9051b702d43ba2fd3287175283c",
+      :warning_type => "Remote Code Execution",
+      :line => nil,
+      :message => /^Rails\ 3\.0\.3\ with\ globbing\ routes\ is\ vuln/,
+      :confidence => 0,
+      :relative_path => "config/routes.rb",
       :user_input => nil
   end
 
