@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 25
+      :generic => 27
     }
   end
 
@@ -280,6 +280,30 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 1,
       :relative_path => "app/models/user.rb",
       :user_input => s(:lvar, :col)
+  end
+
+  def test_sql_injection_in_find_by
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "ca9d658a7215099a35b3b3ec3867ffb8fb7ad497d31307ba8952d7dcb85e8ac9",
+      :warning_type => "SQL Injection",
+      :line => 47,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :age_limit))
+  end
+
+  def test_sql_injection_in_find_by!
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "6f743b0a084c132d3bd074a0d22e197d6c81018028f6166324de1970616c4cbd",
+      :warning_type => "SQL Injection",
+      :line => 48,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :user_search))
   end
 
   def test_dynamic_render_path_with_before_action
