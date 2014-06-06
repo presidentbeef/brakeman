@@ -42,4 +42,9 @@ class UsersController < ApplicationController
       redirect_to User.where(:stuff => 1).take
     end
   end
+
+  def find_by_stuff
+    User.find_by "age > #{params[:age_limit]}"
+    User.find_by! params[:user_search]
+  end
 end
