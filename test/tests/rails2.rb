@@ -17,13 +17,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 54 }
+        :generic => 55 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 55 }
+        :generic => 56 }
     end
   end
 
@@ -1020,6 +1020,18 @@ class Rails2Tests < Test::Unit::TestCase
       :user_input => nil
   end
 
+  def test_remote_code_execution_CVE_2014_0130
+    assert_warning :type => :warning,
+      :warning_code => 77,
+      :fingerprint => "93393e44a0232d348e4db62276b18321b4cbc9051b702d43ba2fd3287175283c",
+      :warning_type => "Remote Code Execution",
+      :line => nil,
+      :message => /^Rails\ 2\.3\.11\ with\ globbing\ routes\ is\ vul/,
+      :confidence => 0,
+      :relative_path => "config/routes.rb",
+      :user_input => nil
+  end
+
   def test_to_json
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
@@ -1373,13 +1385,13 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 54 }
+        :generic => 55 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 55 }
+        :generic => 56 }
     end
   end
 
