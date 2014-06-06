@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2014-06-06T12:05:47-07:00</updated>
+  <updated>2014-06-06T12:12:57-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -44,7 +44,7 @@
 
 &lt;h3&gt;Multiple Files for Controllers and Models&lt;/h3&gt;
 
-&lt;p&gt;(&lt;a href=&quot;https://github.com/ptoomey3&quot;&gt;Patrick Toomey&lt;/a&gt;) contributed improvements which allow Brakeman to process controllers and models which may be defined in multiple files. The changes also improve how Brakeman handles controllers and models inside modules. This may change some warnings and how some files are processed. Also, internally controllers and models may be associated with multiple files instead of just one.&lt;/p&gt;
+&lt;p&gt;(&lt;a href=&quot;https://github.com/ptoomey3&quot;&gt;Patrick Toomey&lt;/a&gt;) contributed improvements which allow Brakeman to process controllers and models which may be defined in multiple files. The changes also improve how Brakeman handles controllers and models inside modules. This may alter some warnings and how some files are processed. Also, controllers and models may be associated with multiple files instead of just one.&lt;/p&gt;
 
 &lt;p&gt;(changes &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/492&quot;&gt;here&lt;/a&gt; and &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/482&quot;&gt;here&lt;/a&gt;)&lt;/p&gt;
 
