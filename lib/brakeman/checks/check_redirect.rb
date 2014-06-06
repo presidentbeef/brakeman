@@ -37,7 +37,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
 
     if method == :redirect_to and
         not only_path?(call) and
-        not explicit_host?(call) and
+        not explicit_host?(call.first_arg) and
         res = include_user_input?(call)
 
       add_result result
@@ -117,11 +117,21 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     false
   end
 
-  def explicit_host? call
-    arg = call.first_arg
+  def explicit_host? arg
+    return unless sexp? arg
 
-    if hash? arg and value = hash_access(arg, :host)
-      return !has_immediate_user_input?(value)
+    if hash? arg
+      if value = hash_access(arg, :host)
+        return !has_immediate_user_input?(value)
+      end
+    elsif call? arg
+      target = arg.target
+
+      if hash? target and value = hash_access(target, :host)
+        return !has_immediate_user_input?(value)
+      elsif call? arg
+        return explicit_host? target
+      end
     end
 
     false

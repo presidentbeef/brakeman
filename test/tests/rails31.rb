@@ -99,6 +99,18 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /users_controller\.rb/
   end
 
+  def test_redirect_false_positive_chained_call
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "287308589926edfd6463a04b3eb5b39b67b3bf6de6da9c380f1507f377c5a333",
+      :warning_type => "Redirect",
+      :line => 185,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params, s(:lit, :host), s(:str, "http://app.webthing.com/stuff"), s(:lit, :port), s(:str, "80")), :except, s(:lit, :action), s(:lit, :controller), s(:lit, :auth_token))
+  end
+
   def test_whitelist_attributes
     assert_no_warning :type => :model,
       :warning_type => "Attribute Restriction",
