@@ -108,6 +108,99 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/10/17/brakeman-1-dot-8-2-released/">Brakeman 1.8.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-10-17 10:44:00 -0700" pubdate  updated >Oct 17<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a bugfix release, in particular fixing rescanning (used by <a href="https://github.com/guard/guard-brakeman">guard-brakeman</a>).</p>
+
+<p><em>Changes since 1.8.1</em>:</p>
+
+<ul>
+<li>Fixed rescanning problems caused by 1.8.0 changes</li>
+<li>Fix scope calls with single argument</li>
+<li>Report specific model name in rendered collections</li>
+<li>Handle overwritten JSON escape settings (Neil Matatall)</li>
+<li>Add CHANGES to gemspec</li>
+</ul>
+
+
+<h3>Rescan Fixes</h3>
+
+<p>Brakeman supports rescanning a subset of files in an application, with the caveat that the previous scan must still be in memory. This functionality was broken in the the 1.8.0 release, due to the lack of tests.</p>
+
+<p>This release updates rescanning to be more robust and work with the 1.8.0 changes to how &#8220;render paths&#8221; are stored. Also, a number of tests were added to help prevent breakage in the future.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/165">changes</a>)</p>
+
+<h3>Scope Calls with One Argument</h3>
+
+<p>Calls to <code>scope</code> with a single argument were causing errors in Brakeman&#8217;s SQL injection check.</p>
+
+<p>The fixed error looked like:</p>
+
+<pre><code>undefined method `node_type' for nil:NilClass  /something/brakeman/lib/brakeman/checks/check_sql.rb:75:in `block (2 levels) in find_scope_calls'
+</code></pre>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/157">changes</a>)</p>
+
+<h3>Model Names for Rendered Collections</h3>
+
+<p>In cases like below, where a collection of models is being rendered and the model name could be known, any resulting warnings will now reference the actual model name.</p>
+
+<pre><code>&lt;%= render 'user', :collection =&gt; User.all %&gt;
+</code></pre>
+
+<p>Previously, Brakeman would report warnings with <code>UnknownModel</code>, whether or not the model name was actually known.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/155">changes</a>)</p>
+
+<h3>Overwritten JSON Escape Config</h3>
+
+<p>It is possible that a config setting in one initializer overrides a setting in a different initializer. This is now handled for the JSON escape settings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/154">changes</a>)</p>
+
+<h3>CHANGES File in Gem</h3>
+
+<p>The <a href="https://github.com/presidentbeef/brakeman/blob/master/CHANGES">CHANGES</a> file is now included in the gem file as requested.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/issues/153">changes</a>)</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+
+<h3>Brakeman Roadmap</h3>
+
+<p>A rough guide to Brakeman 1.9 and 2.0 has been <a href="https://github.com/presidentbeef/brakeman/wiki/Roadmap">posted here</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/09/24/brakeman-1-dot-8-1-released/">Brakeman 1.8.1 Released</a></h1>
     
     
@@ -991,40 +1084,6 @@ user.send(method)
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/03/22/brakeman-jenkins-plugin-0-dot-7-released/">Brakeman Jenkins Plugin 0.7 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-03-22 13:27:00 -0700" pubdate  updated >Mar 22<span>nd</span>, 2012</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The <a href="http://jenkins-ci.org">Jenkins</a>/<a href="http://hudson-ci.org">Hudson</a> plugin which tracks, displays, and alerts on Brakeman warnings has been updated to work with the latest static analysis core plugin. In particular, this means warning thresholds for new warnings will no longer disappear.</p>
-
-<p>See <a href="https://wiki.jenkins-ci.org/display/JENKINS/Brakeman+Plugin">here</a> for more information about the plugin.</p>
-
-<p>Thanks to Nick Green for fixing this!</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1077,6 +1136,10 @@ user.send(method)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/06/06/brakeman-2-dot-6-0-released/">Brakeman 2.6.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/30/brakeman-2-dot-5-0-released/">Brakeman 2.5.0 Released</a>
       </li>
     
@@ -1090,10 +1153,6 @@ user.send(method)
     
       <li class="post">
         <a href="/blog/2014/02/19/brakeman-2-dot-4-1-released/">Brakeman 2.4.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/02/05/brakeman-2-dot-4-0-released/">Brakeman 2.4.0 Released</a>
       </li>
     
   </ul>

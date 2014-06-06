@@ -4,13 +4,121 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2014-04-30T13:11:00-07:00</updated>
+  <updated>2014-06-06T12:05:47-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 2.6.0 Released</title>
+    <link href="http://brakemanscanner.org/blog/2014/06/06/brakeman-2-dot-6-0-released/"/>
+    <updated>2014-06-06T09:04:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2014/06/06/brakeman-2-dot-6-0-released</id>
+    <content type="html">&lt;p&gt;This release introduces significant changes to how and when files are parsed, which may introduce changes in existing warnings and errors.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 2.5.0&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Improve default route detection in Rails 3/4 (&lt;a href=&quot;https://github.com/jjarmoc&quot;&gt;Jeff Jarmoc&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Handle controllers and models split across files (&lt;a href=&quot;https://github.com/ptoomey3&quot;&gt;Patrick Toomey&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Fix handling of &lt;code&gt;protected_attributes&lt;/code&gt; gem in Rails 4 (&lt;a href=&quot;https://github.com/phene&quot;&gt;Geoffrey Hichborn&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add check for CVE-2014-0130&lt;/li&gt;
+&lt;li&gt;Add &lt;code&gt;find_by&lt;/code&gt;/&lt;code&gt;find_by!&lt;/code&gt; to SQLi check for Rails 4&lt;/li&gt;
+&lt;li&gt;Do not branch values for &lt;code&gt;+=&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Parse most files upfront instead of on demand&lt;/li&gt;
+&lt;li&gt;Fix CheckRender with nested render calls (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/484&quot;&gt;#484&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Fix detection of &lt;code&gt;:host&lt;/code&gt; setting in redirects (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/506&quot;&gt;#506&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Ignore more model methods in redirects&lt;/li&gt;
+&lt;li&gt;Update to use RubyParser 3.5.0 (&lt;a href=&quot;https://github.com/ptoomey3&quot;&gt;Patrick Toomey&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Improved Default Route Detection&lt;/h3&gt;
+
+&lt;p&gt;In addition to Jeff Jarmoc's &lt;a href=&quot;http://matasano.com/research/AnatomyOfRailsVuln-CVE-2014-0130.pdf&quot;&gt;awesome research&lt;/a&gt; on CVE-2014-0130, he contributed much-needed improvements to detecting use of &lt;code&gt;:action&lt;/code&gt; and &lt;code&gt;*action&lt;/code&gt; in routes for Rails 3/4. This may result in more default routes warnings.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/493&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Multiple Files for Controllers and Models&lt;/h3&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/ptoomey3&quot;&gt;Patrick Toomey&lt;/a&gt;) contributed improvements which allow Brakeman to process controllers and models which may be defined in multiple files. The changes also improve how Brakeman handles controllers and models inside modules. This may change some warnings and how some files are processed. Also, internally controllers and models may be associated with multiple files instead of just one.&lt;/p&gt;
+
+&lt;p&gt;(changes &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/492&quot;&gt;here&lt;/a&gt; and &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/482&quot;&gt;here&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Protected Attributes Gem&lt;/h3&gt;
+
+&lt;p&gt;Thanks to (&lt;a href=&quot;https://github.com/phene&quot;&gt;Geoffrey Hichborn&lt;/a&gt;), Brakeman will now treat Rails 4 apps which use the &lt;a href=&quot;https://github.com/rails/protected_attributes&quot;&gt;protected_attributes gem&lt;/a&gt; like a Rails 3 app in regards to mass assignment.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/491&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Check for CVE-2014-0130&lt;/h3&gt;
+
+&lt;p&gt;Besides warning about more types of default routes in this release, Brakeman will also warn about &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/NkKc7vTW70o/NxW_PDBSG3AJ&quot;&gt;CVE-2014-0130&lt;/a&gt; explicitly. If the application uses default routes, the warning will be high confidence, otherwise medium. Note Brakeman will categorize this issue as &quot;Remote Code Execution&quot;, since &lt;a href=&quot;(http://matasano.com/research/AnatomyOfRailsVuln-CVE-2014-0130.pdf&quot;&gt;Jeff Jarmoc demonstrated&lt;/a&gt; rendering arbitrary files can lead to interpreting those files as ERB.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/502&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;SQL Injection in Find By&lt;/h3&gt;
+
+&lt;p&gt;Rails 4 added the &lt;code&gt;find_by&lt;/code&gt;/&lt;code&gt;find_by!&lt;/code&gt; methods which just call &lt;code&gt;where(*args).take&lt;/code&gt; and are therefore vulnerable to the same issues as &lt;code&gt;where&lt;/code&gt;. This release will check these methods for SQL injection now.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/504&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;No Branching for +=&lt;/h3&gt;
+
+&lt;p&gt;Code which used &lt;code&gt;+=&lt;/code&gt; heavily in combination with many branches lead to very poor performance. The resulting information from the branches was rarely useful. However, since &lt;code&gt;+=&lt;/code&gt; is buidling up a value (as opposed to replacing it), simply ignoring branches does not lose any of the values involved. Thus, the same vulnerabilities should be able to be detected even when losing flow sensitivity for &lt;code&gt;+=&lt;/code&gt; assignments. For details, &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/499&quot;&gt;see the changes&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;This change has improved processing on some files from over 30 minutes to under 1 second. If some files were processing slowly or had to be ignored previously, consider trying again with this release.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/499&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Parsing Files Upfront&lt;/h3&gt;
+
+&lt;p&gt;This release changes when files are parsed. Previously, files were read and parsed as they were processed. Now most files are read and parsed near the beginning of the scan instead. This has allowed for some internal cleanup and easier future changes. However, some bugs were fixed regarding sorting files which may cause warnings to change.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/501/&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Nested Renders&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;CheckRender&lt;/code&gt; had a bug when processing a &lt;code&gt;render&lt;/code&gt; call which contained another call to &lt;code&gt;render&lt;/code&gt;. This has been fixed.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/485&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Redirects with Chained Calls&lt;/h3&gt;
+
+&lt;p&gt;The last release added support for checking if a &lt;code&gt;redirect_to&lt;/code&gt; argument was setting the &lt;code&gt;:host&lt;/code&gt; option. However, it did not work with chained calls like the &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/506&quot;&gt;one reported here&lt;/a&gt;. Now it should.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/507&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Redirects to Models&lt;/h3&gt;
+
+&lt;p&gt;More Rails 4 methods have been added and support for chained methods has been improved to prevent false positives when redirecting to a model instance.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/489&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;RubyParser Upgrade&lt;/h3&gt;
+
+&lt;p&gt;The RubyParser dependency has been upgraded to 3.5.0 for Ruby 2.1 support. There are some issues with newlines and line number accuracy in newer versions (it is better for some code and worse for others) which has prevented further upgrades at the moment.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/497&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;SHAs&lt;/h3&gt;
+
+&lt;p&gt;The SHA1 sums for this release are&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;0aae141108d92040f3553557a31ad117ac1c2ea6  brakeman-2.6.0.gem
+70c2353f31d4d04ba8d95c871062db31d5c6e981  brakeman-min-2.6.0.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 2.5.0 Released</title>
@@ -1967,78 +2075,6 @@ end
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
 &lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 1.8.2 Released</title>
-    <link href="http://brakemanscanner.org/blog/2012/10/17/brakeman-1-dot-8-2-released/"/>
-    <updated>2012-10-17T10:44:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2012/10/17/brakeman-1-dot-8-2-released</id>
-    <content type="html">&lt;p&gt;This is a bugfix release, in particular fixing rescanning (used by &lt;a href=&quot;https://github.com/guard/guard-brakeman&quot;&gt;guard-brakeman&lt;/a&gt;).&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 1.8.1&lt;/em&gt;:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Fixed rescanning problems caused by 1.8.0 changes&lt;/li&gt;
-&lt;li&gt;Fix scope calls with single argument&lt;/li&gt;
-&lt;li&gt;Report specific model name in rendered collections&lt;/li&gt;
-&lt;li&gt;Handle overwritten JSON escape settings (Neil Matatall)&lt;/li&gt;
-&lt;li&gt;Add CHANGES to gemspec&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;Rescan Fixes&lt;/h3&gt;
-
-&lt;p&gt;Brakeman supports rescanning a subset of files in an application, with the caveat that the previous scan must still be in memory. This functionality was broken in the the 1.8.0 release, due to the lack of tests.&lt;/p&gt;
-
-&lt;p&gt;This release updates rescanning to be more robust and work with the 1.8.0 changes to how &quot;render paths&quot; are stored. Also, a number of tests were added to help prevent breakage in the future.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/165&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Scope Calls with One Argument&lt;/h3&gt;
-
-&lt;p&gt;Calls to &lt;code&gt;scope&lt;/code&gt; with a single argument were causing errors in Brakeman's SQL injection check.&lt;/p&gt;
-
-&lt;p&gt;The fixed error looked like:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;undefined method `node_type' for nil:NilClass  /something/brakeman/lib/brakeman/checks/check_sql.rb:75:in `block (2 levels) in find_scope_calls'
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/157&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Model Names for Rendered Collections&lt;/h3&gt;
-
-&lt;p&gt;In cases like below, where a collection of models is being rendered and the model name could be known, any resulting warnings will now reference the actual model name.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;%= render 'user', :collection =&amp;gt; User.all %&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Previously, Brakeman would report warnings with &lt;code&gt;UnknownModel&lt;/code&gt;, whether or not the model name was actually known.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/155&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Overwritten JSON Escape Config&lt;/h3&gt;
-
-&lt;p&gt;It is possible that a config setting in one initializer overrides a setting in a different initializer. This is now handled for the JSON escape settings.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/154&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;CHANGES File in Gem&lt;/h3&gt;
-
-&lt;p&gt;The &lt;a href=&quot;https://github.com/presidentbeef/brakeman/blob/master/CHANGES&quot;&gt;CHANGES&lt;/a&gt; file is now included in the gem file as requested.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/153&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Report Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
-
-&lt;h3&gt;Brakeman Roadmap&lt;/h3&gt;
-
-&lt;p&gt;A rough guide to Brakeman 1.9 and 2.0 has been &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/Roadmap&quot;&gt;posted here&lt;/a&gt;.&lt;/p&gt;
 </content>
   </entry>
   

@@ -108,6 +108,103 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2013/08/21/brakeman-2-dot-1-1-released/">Brakeman 2.1.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2013-08-21 12:00:00 -0700" pubdate  updated >Aug 21<span>st</span>, 2013</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a small bug fix release. The only expected changes in warnings are for dangerous attributes in <code>attr_accessible</code>
+and cross site scripting involving model attributes. Some warning fingerprints may change as a result of this update.</p>
+
+<p><em>Changes since 2.1.0</em>:</p>
+
+<ul>
+<li>More accurate results for model attribute warnings (<a href="https://github.com/presidentbeef/brakeman/issues/385">#385</a>)</li>
+<li>Do not warn on <code>attr_accessible</code> using roles (<a href="https://github.com/presidentbeef/brakeman/issues/372">#372</a>)</li>
+<li>New warning code for dangerous attributes in <code>attr_accessible</code></li>
+<li>Fix infinite loop when run as rake task (<a href="https://github.com/arkadyan">Matthew Shanley</a>)</li>
+<li>Use exit code zero with <code>-z</code> if all warnings ignored (<a href="https://github.com/presidentbeef/brakeman/issues/381">#381</a>)</li>
+<li>Respect ignored warnings in rescans (<a href="https://github.com/presidentbeef/brakeman/issues/382">#382</a>)</li>
+<li>Respect ignored warnings in tabs format reports</li>
+<li>Ignore dynamic controller names in routes</li>
+</ul>
+
+
+<h3>More Accurate Model Matching</h3>
+
+<p>Model attributes which are reported as user input should now be reported more accurately. For example, instead of reporting <code>Model.find(1)</code> as user input, the entire attribute will be reported. For example: <code>Model.find(1).name</code></p>
+
+<p>As a side effect, several methods which were already intended to be ignored (such as <code>count</code>) will actually be ignored for XSS warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/386">changes</a>)</p>
+
+<h3>attr_accessible Check Updates</h3>
+
+<p>The check for potentially dangerous attributes whitelisted in <code>attr_accessible</code> has been updated to ignore attributes protected by roles. Additionally, it now has its own warning code to separate it from regular mass assignment warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/388">warning code change</a>, <a href="https://github.com/presidentbeef/brakeman/pull/384">role change</a>)</p>
+
+<h3>Rake Task Fix</h3>
+
+<p>The last release included a method named <code>load_dependency</code> which handles calling <code>require</code> for optional dependencies. Unfortunately, Rails overrides <code>require</code> to call its own method called <code>load_dependency</code>. Rails is loaded when any <code>rake</code> command is used, so when Brakeman is run with Rake it causes an infinite loop between <code>load_dependency</code> and <code>require</code>.</p>
+
+<p>Thanks to <a href="https://github.com/arkadyan">Matthew Shanley</a> for reporting the issue and providing a fix.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/375">changes</a>)</p>
+
+<h3>Exit Code Fixed When Warnings Ignored</h3>
+
+<p>Brakeman will now return <code>0</code> when using <code>-z</code> and all reported warnings are ignored.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/375">changes</a>)</p>
+
+<h3>Ignore Warnings in Rescans</h3>
+
+<p>Ignored warnings should now be ignored during rescans (for use with <a href="https://github.com/guard/guard-brakeman">guard-brakeman</a>).</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/383">changes</a>)</p>
+
+<h3>Remove Ignored Warnings in Tabs Report</h3>
+
+<p>Ignoring warnings should now work for those using the Jenkins plugin.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/374">changes</a>)</p>
+
+<h3>Ignore Dynamic Controller Name in Routes</h3>
+
+<p>Instead of completely aborting route processing, dynamic controller names are just ignored.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/379">changes</a>)</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2013/07/17/brakeman-2-dot-1-0-released/">Brakeman 2.1.0 Released</a></h1>
     
     
@@ -1397,99 +1494,6 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/10/17/brakeman-1-dot-8-2-released/">Brakeman 1.8.2 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-10-17 10:44:00 -0700" pubdate  updated >Oct 17<span>th</span>, 2012</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a bugfix release, in particular fixing rescanning (used by <a href="https://github.com/guard/guard-brakeman">guard-brakeman</a>).</p>
-
-<p><em>Changes since 1.8.1</em>:</p>
-
-<ul>
-<li>Fixed rescanning problems caused by 1.8.0 changes</li>
-<li>Fix scope calls with single argument</li>
-<li>Report specific model name in rendered collections</li>
-<li>Handle overwritten JSON escape settings (Neil Matatall)</li>
-<li>Add CHANGES to gemspec</li>
-</ul>
-
-
-<h3>Rescan Fixes</h3>
-
-<p>Brakeman supports rescanning a subset of files in an application, with the caveat that the previous scan must still be in memory. This functionality was broken in the the 1.8.0 release, due to the lack of tests.</p>
-
-<p>This release updates rescanning to be more robust and work with the 1.8.0 changes to how &#8220;render paths&#8221; are stored. Also, a number of tests were added to help prevent breakage in the future.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/165">changes</a>)</p>
-
-<h3>Scope Calls with One Argument</h3>
-
-<p>Calls to <code>scope</code> with a single argument were causing errors in Brakeman&#8217;s SQL injection check.</p>
-
-<p>The fixed error looked like:</p>
-
-<pre><code>undefined method `node_type' for nil:NilClass  /something/brakeman/lib/brakeman/checks/check_sql.rb:75:in `block (2 levels) in find_scope_calls'
-</code></pre>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/157">changes</a>)</p>
-
-<h3>Model Names for Rendered Collections</h3>
-
-<p>In cases like below, where a collection of models is being rendered and the model name could be known, any resulting warnings will now reference the actual model name.</p>
-
-<pre><code>&lt;%= render 'user', :collection =&gt; User.all %&gt;
-</code></pre>
-
-<p>Previously, Brakeman would report warnings with <code>UnknownModel</code>, whether or not the model name was actually known.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/155">changes</a>)</p>
-
-<h3>Overwritten JSON Escape Config</h3>
-
-<p>It is possible that a config setting in one initializer overrides a setting in a different initializer. This is now handled for the JSON escape settings.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/154">changes</a>)</p>
-
-<h3>CHANGES File in Gem</h3>
-
-<p>The <a href="https://github.com/presidentbeef/brakeman/blob/master/CHANGES">CHANGES</a> file is now included in the gem file as requested.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/issues/153">changes</a>)</p>
-
-<h3>Report Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-
-<h3>Brakeman Roadmap</h3>
-
-<p>A rough guide to Brakeman 1.9 and 2.0 has been <a href="https://github.com/presidentbeef/brakeman/wiki/Roadmap">posted here</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1542,6 +1546,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/06/06/brakeman-2-dot-6-0-released/">Brakeman 2.6.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/30/brakeman-2-dot-5-0-released/">Brakeman 2.5.0 Released</a>
       </li>
     
@@ -1555,10 +1563,6 @@ end
     
       <li class="post">
         <a href="/blog/2014/02/19/brakeman-2-dot-4-1-released/">Brakeman 2.4.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/02/05/brakeman-2-dot-4-0-released/">Brakeman 2.4.0 Released</a>
       </li>
     
   </ul>
