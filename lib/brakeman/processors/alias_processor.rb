@@ -180,6 +180,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         #Force block arg(s) to be local
         if node_type? e, :lasgn
           env.current[Sexp.new(:lvar, e.lhs)] = e.rhs
+        elsif node_type? e, :kwarg
+          env.current[Sexp.new(:lvar, e[1])] = e[2]
         elsif node_type? e, :masgn
           e[1..-1].each do |var|
             local = Sexp.new(:lvar, var)

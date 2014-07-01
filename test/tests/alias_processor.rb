@@ -587,4 +587,16 @@ class AliasProcessorTests < Test::Unit::TestCase
       x
     INPUT
   end
+
+  def test_keywords_in_blocks
+    assert_output <<-'INPUT', <<-'OUTPUT'
+    x do |y: 1, z: "2"|
+      puts y, z
+    end
+    INPUT
+    x do |y: 1, z: "2"|
+      puts 1, "2"
+    end
+    OUTPUT
+  end
 end
