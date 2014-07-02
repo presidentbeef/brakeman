@@ -108,6 +108,88 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/03/22/brakeman-1-dot-5-2-released-important-fixes/">Brakeman 1.5.2 Released - Important Fixes</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-03-22 13:34:00 -0700" pubdate  updated >Mar 22<span>nd</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is update includes some important fixes. All users of the <code>rails_xss</code> plugin are particularly encouraged to upgrade.</p>
+
+<p><em>Changes since 1.5.1:</em></p>
+
+<ul>
+<li>Fix handling of views when using <code>rails_xss</code></li>
+<li>Fix rescanning of lib files (Neil Matatall)</li>
+<li>Fix <code>link_to</code> checks for Rails 2.0 and 2.3</li>
+<li>Revert to <code>ruby_parser</code> 2.3.1 for Ruby 1.8 parsing</li>
+<li>Only warn on user input in render paths</li>
+<li>Output stack trace on interrupt when debugging</li>
+<li>Ignore user input in if statement conditions</li>
+<li>Fix &#8211;skip-files option with Ruby 1.8</li>
+</ul>
+
+
+<h3>Views with rails_xss</h3>
+
+<p>Some previous changes to make sure Brakeman was processing ERB views the same way as the <code>rails_xss</code> plugin unfortunately broke the processing of those views.</p>
+
+<p>These changes caused Brakeman to not report <em>any</em> output from ERB views when the <code>rails_xss</code> plugin was in use, hiding any XSS vulnerabilities in those views.</p>
+
+<p>This now fixed, so if you are using the <code>rails_xss</code> plugin, it is highly recommended to upgrade.</p>
+
+<h3>Rescanning lib/ Files</h3>
+
+<p>Rescanning changed files in the <code>lib</code> directory was broken, but Neil fixed it!</p>
+
+<h3>link_to Checks</h3>
+
+<p>In Rails 2.3, the URL is escaped, but not the body of the link. In Rails 2.0, neither argument is escaped.</p>
+
+<p>In this release, the check for XSS in <code>link_to</code> has been updated to handle <code>link_to</code> with blocks and to warn in Rails 2.0.x if any user input is used as an argument.</p>
+
+<h3>Revert to ruby_parser for Ruby 1.8</h3>
+
+<p>Brakeman has been using a vendored version of <a href="https://github.com/seattlerb/ruby_parser">ruby_parser</a> with some updates to Ruby 1.9 syntax parsing. Unfortunately, that version also introduced some regressions for parsing Ruby 1.8 syntax.</p>
+
+<p>To handle this, Brakeman will now only use the vendored version for 1.9 parsing, but the regular gem version for 1.8 syntax parsing. This should fix some parse errors people are seeing for Ruby 1.8 apps.</p>
+
+<h3>Dynamic Render Path Updates</h3>
+
+<p>The check for dynamic render paths was not very good, but it is better now. &#8220;Dynamic Render Path&#8221; warnings should only be raised when user input is actually used to determine what view, partial, or file to render.</p>
+
+<h3>Stacktrace Output</h3>
+
+<p>Brakeman will now output a stacktrace if interrupted while running with the <code>-d</code> option. This is mostly helpful when Brakeman appears to &#8220;hang&#8221;.</p>
+
+<h3>Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a>!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/03/22/brakeman-jenkins-plugin-0-dot-7-released/">Brakeman Jenkins Plugin 0.7 Released</a></h1>
     
     
@@ -816,184 +898,6 @@ puts clean(x)
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2011/12/08/brakeman-1-dot-0-released/">Brakeman 1.0 Released!</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-12-08 01:35:00 -0800" pubdate  updated >Dec 8<span>th</span>, 2011</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>While the step up to 1.0 was essentially forced by major changes since 0.9.2, this is still an important release for Brakeman. Internally, Brakeman is no longer reliant on a global options variable, allowing it to be used as a library inside other applications. Also, all Brakeman modules, classes, and constants have been placed inside the Brakeman namespace.</p>
-
-
-
-
-<p>Support for Rails 3 is continuing to improve, although it is probably a good idea to run Brakeman with the <code>-m</code> option to see what routes it is seeing. If you receive a message that says &#8220;Error while processing routes - assuming all public controller methods are actions,&#8221; please consider opening an issue and (if possible) providing your <code>routes.rb</code> file as evidence.</p>
-
-
-
-
-<p>The performance of vulnerability checks that search for calls to specific methods (CheckExecute, CheckFileAccess, CheckSQL, etc.) has been drastically improved with the introduction of a call site index. If your scans were spending a lot of time running checks, you should see significant decrease in run time (although memory use may be slightly higher).</p>
-
-
-
-
-<p>If you are looking for an introduction to Brakeman, there are some <a href="http://brakemanscanner.org/docs/presentations/">presentations available</a> to watch or read.</p>
-
-
-
-
-<p>As usual, please <a href="https://github.com/presidentbeef/brakeman/issues">report</a> any issues! You can also send a tweet to <a href="http://twitter.com/brakeman">@Brakeman</a> if you have any questions.</p>
-
-
-
-
-<p><em>Changes since 1.0rc1:</em></p>
-
-
-
-
-<ul>
-<li>Better handling of assignments inside ifs</li>
-<li>Check more expressions for SQL injection</li>
-<li>Use latest ruby_parser for better 1.9 syntax support</li>
-<li>Better behavior for Brakeman as a library</li>
-</ul>
-
-
-
-
-<h3>Assignments Inside &#8216;if&#8217; Branches</h3>
-
-
-
-
-<p>Brakeman is now a little smarter about handling assignments inside <code>if</code>.</p>
-
-
-
-
-<p>For example:</p>
-
-
-
-
-<pre><code>if some_condition
-  x = params[:blah]
-else
-  x = "no blah"
-end
-</code></pre>
-
-
-
-
-<p>Previously, <code>x</code> would end up with the last value encountered, with no regard for execution branches. In this release, Brakeman will now combine the branches (unfortunately, Brakeman still operates along a &#8216;no branching&#8217; policy) and <code>x</code> will be given the value of <code>params[:blah] or "no blah"</code>.</p>
-
-
-
-
-<p>While not strictly semantically sound (and, trust me, Brakeman does many things that are not), it will still catch problems like</p>
-
-
-
-
-<pre><code>User.all(conditions =&gt; "blah = '#{x}'")
-</code></pre>
-
-
-
-
-<p>Thanks to <a href="http://osdir.com/ml/RubyonRails:Core/2011-11/msg00098.html">this message</a> on Rails Core for mentioning this problem.</p>
-
-
-
-
-<h3>Use Latest ruby_parser</h3>
-
-
-
-
-<p>A few releases ago, Brakeman included a slightly modified version of <a href="https://github.com/seattlerb/ruby_parser">ruby_parser</a> to help with Ruby 1.9 syntax issues.</p>
-
-
-
-
-<p>The very latest ruby_parser source has much better 1.9 support, but there has been no official release yet. So Brakeman comes with the latest code. This is necessary because Rails 3 will generate 1.9 syntax if you happen to run it with Ruby 1.9 when generating code.</p>
-
-
-
-
-<h3>Brakeman as a Library</h3>
-
-
-
-
-<p>While it is now possible to use Brakeman as a library (essentially just <code>Brakeman.run</code>), it is not very well polished. This release improves it slightly from the release candidate.</p>
-
-
-
-
-<h3>More SQL Injection</h3>
-
-
-
-
-<p><code>CheckSQL</code> will now search most expressions inside a SQL call for user input and string interpolation.</p>
-
-
-
-
-<h3>Changes Since 0.9.2</h3>
-
-
-
-
-<p>As a summary, here are the changes since 0.9.2:</p>
-
-
-
-
-<ul>
-<li>Brakeman can now be used as a library</li>
-<li>Faster call search</li>
-<li>Add option to return error code if warnings are found (tw-ngreen)</li>
-<li>Allow truncated messages to be expanded in HTML</li>
-<li>Keep expanded context in view in HTML output</li>
-<li>Fix summary when using warning thresholds</li>
-<li>Better support for Rails 3 routes</li>
-<li>Reduce SQL injection duplicate warnings</li>
-<li>Lower confidence on mass assignment with no user input</li>
-<li>Ignore mass assignment using all literal arguments</li>
-</ul>
-
-
-
-
-<p>See the <a href="http://brakemanscanner.org/blog/2011/12/05/brakeman-1-dot-0-release-candidate-available/">earlier post</a> for more details.</p>
-
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1046,6 +950,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/02/brakeman-2-dot-6-1-released/">Brakeman 2.6.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/06/brakeman-2-dot-6-0-released/">Brakeman 2.6.0 Released</a>
       </li>
     
@@ -1059,10 +967,6 @@ end
     
       <li class="post">
         <a href="/blog/2014/03/20/brakeman-2-dot-4-2-released/">Brakeman 2.4.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/02/19/brakeman-2-dot-4-1-released/">Brakeman 2.4.1 Released</a>
       </li>
     
   </ul>

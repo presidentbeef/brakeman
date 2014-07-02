@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Jenkins/Hudson Plugin</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman 2.6.1 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/jenkins/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2014/07/02/brakeman-2-dot-6-1-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -100,31 +100,123 @@
   <div id="main">
     <div id="content">
       <div>
-<article>
+<article class="hentry">
   
   <header>
-    <h1 class="entry-title">Jenkins/Hudson Plugin</h1>
-  </header>
-  
-  <p><a href="http://jenkins-ci.org/">Jenkins</a> (or <a href="http://hudson-ci.org">Hudson</a>) is a continuous integration tool.</p>
-
-<p>A <a href="http://wiki.jenkins-ci.org/display/JENKINS/Brakeman+Plugin">Brakeman plugin for Jenkins</a> is available which will allow you to run Brakeman automatically when code changes and report the results.</p>
-
-<p>It will also produce trend graphs like this:</p>
-
-<p><img src="/images/brakeman_trend_graph.png" title="Example Plugin Graph" alt="Example Plugin Graph" /></p>
-
-<p>Check <a href="/docs/jenkins/installation">here</a> for instructions on how to install the plugin.</p>
-
-  
-    <footer>
+    <div class="articlelogo">&nbsp;</div>
+    
+      <h1 class="entry-title">Brakeman 2.6.1 Released</h1>
+    
+    
       <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+
+
+
+<time datetime="2014-07-02 12:30:00 -0700" pubdate  updated >Jul 2<span>nd</span>, 2014</time>
+
+
+</p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This is a tiny release in response to today&#8217;s CVEs.</p>
+
+<p><em>Changes since 2.6.0</em>:</p>
+
+<ul>
+<li>Add check for CVE-2014-3482 and CVE-2014-3483</li>
+<li>Add support for keyword arguments in blocks (<a href="https://github.com/presidentbeef/brakeman/issues/511">#511</a>)</li>
+<li>Remove unused warning codes (<a href="https://github.com/bfish510">Bill Fischer</a>)</li>
+</ul>
+
+
+<h3>Check for PostgresSQL Injection CVEs</h3>
+
+<p><a href="https://groups.google.com/forum/#!msg/rubyonrails-security/wDxePLJGZdI/WP7EasCJTA4J">CVE-2014-3482 and CVE-2014-3483</a> are SQL injection issues when using the PostgresSQL backend with bitstring and range data types. Brakeman will warn about affected versions of Rails which include the &#8220;pg&#8221; gem in the Gemfile.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/515">changes</a>)</p>
+
+<h3>Support Keyword Arguments to Blocks</h3>
+
+<p>Brakeman now handles keyword arguments to blocks as local variables in the block scope instead of throwing an error.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/513">changes</a>)</p>
+
+<h3>Removal of Warning Codes</h3>
+
+<p>Warnings codes for <code>CVE_2013_6415</code> and <code>CVE_2013_6415_call</code> have been removed, as they are unused. This should not affect anyone.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/514">changes</a>)</p>
+
+<h3>SHAs</h3>
+
+<p>The SHA1 sums for this release are</p>
+
+<pre><code>5b7b5572efe769cfa38178e94952be05670e6fd4  brakeman-2.6.1.gem
+fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
+
+      
+
+
+
+
+<time datetime="2014-07-02 12:30:00 -0700" pubdate  updated >Jul 2<span>nd</span>, 2014</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2014/07/02/brakeman-2-dot-6-1-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2014/07/02/brakeman-2-dot-6-1-released/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread"><div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'brakeman';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2014/07/02/brakeman-2-dot-6-1-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2014/07/02/brakeman-2-dot-6-1-released/';
+  //var disqus_developer = 1;
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 

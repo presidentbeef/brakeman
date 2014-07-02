@@ -108,6 +108,77 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2014/07/02/brakeman-2-dot-6-1-released/">Brakeman 2.6.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2014-07-02 12:30:00 -0700" pubdate  updated >Jul 2<span>nd</span>, 2014</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a tiny release in response to today&#8217;s CVEs.</p>
+
+<p><em>Changes since 2.6.0</em>:</p>
+
+<ul>
+<li>Add check for CVE-2014-3482 and CVE-2014-3483</li>
+<li>Add support for keyword arguments in blocks (<a href="https://github.com/presidentbeef/brakeman/issues/511">#511</a>)</li>
+<li>Remove unused warning codes (<a href="https://github.com/bfish510">Bill Fischer</a>)</li>
+</ul>
+
+
+<h3>Check for PostgresSQL Injection CVEs</h3>
+
+<p><a href="https://groups.google.com/forum/#!msg/rubyonrails-security/wDxePLJGZdI/WP7EasCJTA4J">CVE-2014-3482 and CVE-2014-3483</a> are SQL injection issues when using the PostgresSQL backend with bitstring and range data types. Brakeman will warn about affected versions of Rails which include the &#8220;pg&#8221; gem in the Gemfile.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/515">changes</a>)</p>
+
+<h3>Support Keyword Arguments to Blocks</h3>
+
+<p>Brakeman now handles keyword arguments to blocks as local variables in the block scope instead of throwing an error.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/513">changes</a>)</p>
+
+<h3>Removal of Warning Codes</h3>
+
+<p>Warnings codes for <code>CVE_2013_6415</code> and <code>CVE_2013_6415_call</code> have been removed, as they are unused. This should not affect anyone.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/514">changes</a>)</p>
+
+<h3>SHAs</h3>
+
+<p>The SHA1 sums for this release are</p>
+
+<pre><code>5b7b5572efe769cfa38178e94952be05670e6fd4  brakeman-2.6.1.gem
+fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2014/06/06/brakeman-2-dot-6-0-released/">Brakeman 2.6.0 Released</a></h1>
     
     
@@ -1124,78 +1195,6 @@ gem install brakeman -P MediumSecurity
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/">Brakeman 2.1.2 Released - Important Security Update</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2013-09-18 01:38:00 -0700" pubdate  updated >Sep 18<span>th</span>, 2013</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Important</em>: Contrary to the &#8220;Brakeman Philosophy,&#8221; there is one situation in which Brakeman attempts to load files from an application. This is a security risk since the code in the files would be executed (typical <code>require</code> behavior). Note that this is only a real problem if running Brakeman against code outside one&#8217;s control. Since most users are scanning their own code, this should not be a concern for the majority of Brakeman users.</p>
-
-<p><em>Changes since 2.1.1:</em></p>
-
-<ul>
-<li>Do not attempt to load custom Haml filters</li>
-<li>Do not warn about <code>to_json</code> XSS in Rails 4</li>
-<li>Remove fuzzy matching on dangerous <code>attr_accessible</code> values</li>
-<li>Add &#8211;table-width option to set width of text reports (<a href="https://github.com/ssendev">ssendev</a>)</li>
-</ul>
-
-
-<h3>Custom Haml Filters</h3>
-
-<p>Brakeman no longer attempts to load custom Haml filters. This was a hack (from nearly three years ago) to help compile some Haml templates. It was recently noted that this introduces a security risk when scanning untrusted code.</p>
-
-<p>For now, custom Haml filters will cause a Brakeman error and the Haml templates using them will not be scanned.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/commit/8a6ae98df3039bf5f3d7cc0852efb1006362f143#L1L3">changes</a>)</p>
-
-<h3>JSON Output in Rails 4</h3>
-
-<p>As of Rails 4, the output of <code>to_json</code> is now safe by default. Brakeman should no longer warn about cross-site scripting with <code>to_json</code> in Rails 4 applications.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/392">changes</a>)</p>
-
-<h3>Less Fuzzy Mass Assignment</h3>
-
-<p>Brakeman no longer uses fuzzy matching for potentially dangerous model attributes allowed for mass assignment, such as any value containing <code>admin</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/390">changes</a>)</p>
-
-<h3>Text Report Width Option</h3>
-
-<p>The width of text reports can now be controlled with the <code>--table-width</code> option. For example, this can be useful when capturing text output to a file.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/387">changes</a>)</p>
-
-<h3>Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1246,6 +1245,10 @@ gem install brakeman -P MediumSecurity
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/02/brakeman-2-dot-6-1-released/">Brakeman 2.6.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/06/brakeman-2-dot-6-0-released/">Brakeman 2.6.0 Released</a>
       </li>
     
@@ -1259,10 +1262,6 @@ gem install brakeman -P MediumSecurity
     
       <li class="post">
         <a href="/blog/2014/03/20/brakeman-2-dot-4-2-released/">Brakeman 2.4.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/02/19/brakeman-2-dot-4-1-released/">Brakeman 2.4.1 Released</a>
       </li>
     
   </ul>
