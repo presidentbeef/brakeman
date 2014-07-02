@@ -65,8 +65,9 @@ module Brakeman::WarningCodes
     :detailed_exceptions => 62,
     :CVE_2013_4491 => 63,
     :CVE_2013_6414 => 64,
-    :CVE_2013_6415 => 65,
-    :CVE_2013_6415_call => 66,
+    # Replaced by CVE_2014_0081
+    #:CVE_2013_6415 => 65,
+    #:CVE_2013_6415_call => 66,
     :CVE_2013_6416 => 67,
     :CVE_2013_6416_call => 68,
     :CVE_2013_6417 => 69,
