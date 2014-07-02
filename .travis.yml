@@ -1,4 +1,4 @@
-script: "ruby test/test.rb"
+script: "bundle exec ruby test/test.rb"
 
 branches:
   only:
