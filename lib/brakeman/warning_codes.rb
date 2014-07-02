@@ -78,6 +78,8 @@ module Brakeman::WarningCodes
     :CVE_2014_0082 => 75,
     :regex_dos => 76,
     :CVE_2014_0130 => 77,
+    :CVE_2014_3482 => 78,
+    :CVE_2014_3483 => 79,
   }
 
   def self.code name
