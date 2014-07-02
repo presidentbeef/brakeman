@@ -5,7 +5,8 @@ require 'brakeman/differ'
 
 #Class for rescanning changed files after an initial scan
 class Brakeman::Rescanner < Brakeman::Scanner
-
+ include Brakeman::Util
+  KNOWN_TEMPLATE_EXTENSIONS = Brakeman::TemplateParser::KNOWN_TEMPLATE_EXTENSIONS
   SCAN_ORDER = [:config, :gemfile, :initializer, :lib, :routes, :template,
     :model, :controller]
 
@@ -74,10 +75,8 @@ class Brakeman::Rescanner < Brakeman::Scanner
     case type
     when :controller
       rescan_controller path
-      @reindex << :controllers << :templates
     when :template
       rescan_template path
-      @reindex << :templates
     when :model
       rescan_model path
     when :lib
@@ -85,16 +84,9 @@ class Brakeman::Rescanner < Brakeman::Scanner
     when :config
       process_config
     when :initializer
-      process_initializer path
+      rescan_initializer path
     when :routes
-      # Routes affect which controller methods are treated as actions
-      # which affects which templates are rendered, so routes, controllers,
-      # and templates rendered from controllers must be rescanned
-      tracker.reset_routes
-      tracker.reset_templates :only_rendered => true
-      process_routes
-      process_controllers
-      @reindex << :controllers << :templates
+      rescan_routes
     when :gemfile
       if tracker.config[:gems][:rails_xss] and tracker.config[:escape_html]
         tracker.config[:escape_html] = false
@@ -109,13 +101,16 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def rescan_controller path
-    #Process source
-    process_controller path
+    controller = tracker.reset_controller path
+    paths = controller.nil? ? [path] : controller[:files]
+    parse_ruby_files(paths).each do |astfile|
+      process_controller astfile
+    end
 
     #Process data flow and template rendering
     #from the controller
     tracker.controllers.each do |name, controller|
-      if controller[:file] == path
+      if controller[:files].include?(path)
         tracker.templates.each do |template_name, template|
           next unless template[:caller]
           unless template[:caller].grep(/^#{name}#/).empty?
@@ -123,9 +118,13 @@ class Brakeman::Rescanner < Brakeman::Scanner
           end
         end
 
-        @processor.process_controller_alias controller[:name], controller[:src]
+        controller[:src].each_value do |src|
+          @processor.process_controller_alias controller[:name], src
+        end
       end
     end
+
+    @reindex << :templates << :controllers
   end
 
   def rescan_template path
@@ -134,7 +133,10 @@ class Brakeman::Rescanner < Brakeman::Scanner
     template_name = template_path_to_name(path)
 
     tracker.reset_template template_name
-    process_template path
+    fp = Brakeman::FileParser.new(tracker, @app_tree)
+    template_parser = Brakeman::TemplateParser.new(tracker, fp)
+    template_parser.parse_template path, @app_tree.read_path(path)
+    process_template fp.file_list[:templates].first
 
     @processor.process_template_alias tracker.templates[template_name]
 
@@ -164,8 +166,10 @@ class Brakeman::Rescanner < Brakeman::Scanner
       if r[0] == :controller
         controller = tracker.controllers[r[1]]
 
-        unless @paths.include? controller[:file]
-          @processor.process_controller_alias controller[:name], controller[:src], r[2]
+        controller[:src].each do |file, src|
+          unless @paths.include? file
+            @processor.process_controller_alias controller[:name], src, r[2]
+          end
         end
       elsif r[0] == :template
         template = tracker.templates[r[1]]
@@ -173,17 +177,22 @@ class Brakeman::Rescanner < Brakeman::Scanner
         rescan_template template[:file]
       end
     end
+
+    @reindex << :templates
   end
 
   def rescan_model path
     num_models = tracker.models.length
-    tracker.reset_model path
-    process_model path if @app_tree.path_exists?(path)
+    model = tracker.reset_model path
+    paths = model.nil? ? [path] : model[:files]
+    parse_ruby_files(paths).each do |astfile|
+      process_model astfile.path, astfile.ast
+    end
 
     #Only need to rescan other things if a model is added or removed
     if num_models != tracker.models.length
-      process_templates
-      process_controllers
+      process_template_data_flows
+      process_controller_data_flows
       @reindex << :templates << :controllers
     end
 
@@ -191,12 +200,16 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def rescan_lib path
-    process_lib path if @app_tree.path_exists?(path)
+    lib = tracker.reset_lib path
+    paths = lib.nil? ? [path] : lib[:files]
+    parse_ruby_files(paths).each do |astfile|
+      process_lib astfile
+    end
 
     lib = nil
 
     tracker.libs.each do |name, library|
-      if library[:file] == path
+      if library[:files].include?(path)
         lib = library
         break
       end
@@ -205,11 +218,28 @@ class Brakeman::Rescanner < Brakeman::Scanner
     rescan_mixin lib if lib
   end
 
+  def rescan_routes
+    # Routes affect which controller methods are treated as actions
+    # which affects which templates are rendered, so routes, controllers,
+    # and templates rendered from controllers must be rescanned
+    tracker.reset_routes
+    tracker.reset_templates :only_rendered => true
+    process_routes
+    process_controller_data_flows
+    @reindex << :controllers << :templates
+  end
+
+  def rescan_initializer path
+    parse_ruby_files([path]).each do |astfile|
+      process_initializer astfile
+    end
+  end
+
   #Handle rescanning when a file is deleted
   def rescan_deleted_file path, type
     case type
     when :controller
-      rescan_deleted_controller path
+      rescan_controller path
     when :template
       rescan_deleted_template path
     when :model
@@ -227,10 +257,6 @@ class Brakeman::Rescanner < Brakeman::Scanner
     end
 
     true
-  end
-
-  def rescan_deleted_controller path
-    tracker.reset_controller path
   end
 
   def rescan_deleted_template path
@@ -260,7 +286,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     deleted_lib = nil
 
     tracker.libs.delete_if do |name, lib|
-      if lib[:file] == path
+      if lib[:files].include?(path)
         deleted_lib = lib
         true
       end
@@ -278,12 +304,19 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def remove_deleted_file path
     deleted = false
 
-    [:controllers, :templates, :models, :libs].each do |collection|
+    [:controllers, :models, :libs].each do |collection|
       tracker.send(collection).delete_if do |name, data|
-        if data[:file] == path
+        if data[:files].include?(path)
           deleted = true
           true
         end
+      end
+    end
+
+    tracker.templates.delete_if do |name, data|
+      if data[:file] == path
+        deleted = true
+        true
       end
     end
 
@@ -325,13 +358,22 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
     method_matcher = /##{method_names.map {|n| Regexp.escape(n.to_s)}.join('|')}$/
 
+    to_rescan = []
+
     #Rescan controllers that mixed in library
     tracker.controllers.each do |name, controller|
       if controller[:includes].include? lib[:name]
-        unless @paths.include? controller[:file]
-          rescan_file controller[:file]
+        controller[:files].each do |path|
+          unless @paths.include? path
+            to_rescan << path
+          end
         end
       end
+    end
+
+    to_rescan.each do |controller|
+      tracker.reset_controller controller
+      rescan_file controller
     end
 
     to_rescan = []
@@ -357,6 +399,13 @@ class Brakeman::Rescanner < Brakeman::Scanner
       tracker.reset_template template[0]
       rescan_file template[1]
     end
+  end
+
+  def parse_ruby_files list
+    paths = list.select { |path| @app_tree.path_exists? path }
+    file_parser = Brakeman::FileParser.new(tracker, @app_tree)
+    file_parser.parse_files paths, :rescan
+    file_parser.file_list[:rescan]
   end
 end
 

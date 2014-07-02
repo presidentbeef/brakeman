@@ -180,4 +180,8 @@ class UsersController < ApplicationController
   include UserMixin
 
   before_filter :assign_if, :only => :test_assign_if
+
+  def redirect_merge
+    redirect_to params.merge(host: 'http://app.webthing.com/stuff', port: '80').except(:action, :controller, :auth_token)
+  end
 end

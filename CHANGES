@@ -1,3 +1,17 @@
+# 2.6.0
+
+* Fix detection of `:host` setting in redirects with chained calls
+* Add check for CVE-2014-0130
+* Add `find_by`/`find_by!` to SQLi check for Rails 4
+* Parse most files upfront instead of on demand
+* Do not branch values for `+=`
+* Update to use RubyParser 3.5.0 (Patrick Toomey)
+* Improve default route detection in Rails 3/4 (Jeff Jarmoc)
+* Handle controllers and models split across files (Patrick Toomey)
+* Fix handling of `protected_attributes` gem in Rails 4 (Geoffrey Hichborn)
+* Ignore more model methods in redirects
+* Fix CheckRender with nested render calls
+
 # 2.5.0
 
  * Add support for RailsLTS 2.3.18.7 and 2.3.18.8

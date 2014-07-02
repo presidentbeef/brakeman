@@ -8,6 +8,8 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
     super
     @file_name = nil
     @alias_processor = Brakeman::AliasProcessor.new tracker
+    @current_module = nil
+    @current_class = nil
   end
 
   def process_library src, file_name = nil
@@ -17,7 +19,8 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
   def process_class exp
     name = class_name(exp.class_name)
-    
+    parent = class_name exp.parent_name
+
     if @current_class
       outer_class = @current_class
       name = (outer_class[:name].to_s + "::" + name.to_s).to_sym
@@ -29,18 +32,20 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
     if @tracker.libs[name]
       @current_class = @tracker.libs[name]
+      @current_class[:files] << @file_name unless @current_class[:files].include? @file_name
+      @current_class[:src][@file_name] = exp
     else
-      parent = class_name exp.parent_name
+      @current_class = {
+        :name => name,
+        :parent => parent,
+        :includes => [],
+        :public => {},
+        :private => {},
+        :protected => {},
+        :src => { @file_name => exp },
+        :files => [ @file_name ]
+      }
 
-      @current_class = { :name => name,
-                    :parent => parent,
-                    :includes => [],
-                    :public => {},
-                    :private => {},
-                    :protected => {},
-                    :src => exp,
-                    :file => @file_name }
-    
       @tracker.libs[name] = @current_class
     end
 
@@ -59,8 +64,8 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
     name = class_name(exp.module_name)
 
     if @current_module
-      outer_class = @current_module
-      name = (outer_class[:name].to_s + "::" + name.to_s).to_sym
+      outer_module = @current_module
+      name = (outer_module[:name].to_s + "::" + name.to_s).to_sym
     end
 
     if @current_class
@@ -69,22 +74,26 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
     if @tracker.libs[name]
       @current_module = @tracker.libs[name]
+      @current_module[:files] << @file_name unless @current_module[:files].include? @file_name
+      @current_module[:src][@file_name] = exp
     else
-      @current_module = { :name => name,
-                    :includes => [],
-                    :public => {},
-                    :private => {},
-                    :protected => {},
-                    :src => exp,
-                    :file => @file_name }
-    
+      @current_module = {
+        :name => name,
+        :includes => [],
+        :public => {},
+        :private => {},
+        :protected => {},
+        :src => { @file_name => exp },
+        :files => [ @file_name ]
+      }
+
       @tracker.libs[name] = @current_module
     end
 
     exp.body = process_all! exp.body
 
-    if outer_class
-      @current_module = outer_class
+    if outer_module
+      @current_module = outer_module
     else
       @current_module = nil
     end
@@ -97,9 +106,9 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
     exp.node_type = :methdef
 
     if @current_class
-      @current_class[:public][exp.method_name] = exp
+      @current_class[:public][exp.method_name] = { :src => exp, :file => @file_name }
     elsif @current_module
-      @current_module[:public][exp.method_name] = exp
+      @current_module[:public][exp.method_name] = { :src => exp, :file => @file_name }
     end
 
     exp
@@ -110,9 +119,9 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
     exp.node_type = :selfdef
 
     if @current_class
-      @current_class[:public][exp.method_name] = exp
+      @current_class[:public][exp.method_name] = { :src => exp, :file => @file_name }
     elsif @current_module
-      @current_module[:public][exp.method_name] = exp
+      @current_module[:public][exp.method_name] = { :src => exp, :file => @file_name }
     end
 
     exp

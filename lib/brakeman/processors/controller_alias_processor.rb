@@ -48,7 +48,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
         #Need to process the method like it was in a controller in order
         #to get the renders set
         processor = Brakeman::ControllerProcessor.new(@app_tree, @tracker)
-        method = mixin[:public][name].deep_clone
+        method = mixin[:public][name][:src].deep_clone
 
         if node_type? method, :methdef
           method = processor.process_defn method
@@ -206,7 +206,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       true
     else
       routes = @tracker.routes[@current_class]
-      routes and (routes == :allow_all_actions or routes.include? method)
+      routes and (routes.include? :allow_all_actions or routes.include? method)
     end
   end
 
@@ -323,7 +323,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
 
         @method_cache[method_name] = find_method method_name, controller[:parent]
       else
-        @method_cache[method_name] = { :controller => controller[:name], :method => method }
+        @method_cache[method_name] = { :controller => controller[:name], :method => method[:src] }
       end
     else
       nil

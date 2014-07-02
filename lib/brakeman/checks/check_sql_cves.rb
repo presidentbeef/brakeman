@@ -48,6 +48,18 @@ class Brakeman::CheckSQLCVEs < Brakeman::BaseCheck
       }
     end
 
+    if tracker.config[:gems] and tracker.config[:gems][:pg]
+      issues << {
+        :cve => "CVE-2014-3482",
+        :versions => [%w[2.0.0 2.9.9 3.2.19], %w[3.0.0 3.2.18 3.2.19], %w[4.0.0 4.0.6 4.0.7], %w[4.1.0 4.1.2 4.1.3]],
+        :url => "https://groups.google.com/d/msg/rubyonrails-security/wDxePLJGZdI/WP7EasCJTA4J"
+      } <<
+      {
+        :cve => "CVE-2014-3483",
+        :versions => [%w[2.0.0 2.9.9 3.2.19], %w[3.0.0 3.2.18 3.2.19], %w[4.0.0 4.0.6 4.0.7], %w[4.1.0 4.1.2 4.1.3]],
+        :url => "https://groups.google.com/d/msg/rubyonrails-security/wDxePLJGZdI/WP7EasCJTA4J" }
+    end
+
     issues.each do |cve_issue|
       cve_warning_for cve_issue[:versions], cve_issue[:cve], cve_issue[:url]
     end

@@ -318,14 +318,14 @@ module Brakeman::Util
 
     case type
     when :controller
-      if tracker.controllers[name] and tracker.controllers[name][:file]
-        path = tracker.controllers[name][:file]
+      if tracker.controllers[name] and tracker.controllers[name][:files]
+        path = tracker.controllers[name][:files].first
       else
         path += "/app/controllers/#{underscore(string_name)}.rb"
       end
     when :model
-      if tracker.models[name] and tracker.models[name][:file]
-        path = tracker.models[name][:file]
+      if tracker.models[name] and tracker.models[name][:files]
+        path = tracker.models[name][:files].first
       else
         path += "/app/models/#{underscore(string_name)}.rb"
       end
@@ -381,6 +381,15 @@ module Brakeman::Util
     else
       file
     end
+  end
+
+  #Convert path/filename to view name
+  #
+  # views/test/something.html.erb -> test/something
+  def template_path_to_name path
+    names = path.split("/")
+    names.last.gsub!(/(\.(html|js)\..*|\.rhtml)$/, '')
+    names[(names.index("views") + 1)..-1].join("/").to_sym
   end
 
   def github_url file, line=nil

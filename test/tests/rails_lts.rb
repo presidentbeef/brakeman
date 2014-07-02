@@ -47,4 +47,19 @@ class RailsLTSTests < Test::Unit::TestCase
     assert_new 0
     assert_fixed 4 # 2 + CVE-2012-1099 + CVE_2014_0081
   end
+
+  def test_rails_lts_CVE_2014_0130
+    gemfile = "Gemfile.lock"
+
+    before_rescan_of gemfile, "rails_with_xss_plugin" do
+      append gemfile, "railslts-version (2.3.18.9)"
+    end
+
+    #@original is actually modified
+    assert @original.config[:gems][:"railslts-version"], "2.3.18.9"
+    assert_reindex :none
+    assert_changes
+    assert_new 0
+    assert_fixed 5
+  end
 end

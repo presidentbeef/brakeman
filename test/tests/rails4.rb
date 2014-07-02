@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 25
+      :generic => 30
     }
   end
 
@@ -282,6 +282,30 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:lvar, :col)
   end
 
+  def test_sql_injection_in_find_by
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "ca9d658a7215099a35b3b3ec3867ffb8fb7ad497d31307ba8952d7dcb85e8ac9",
+      :warning_type => "SQL Injection",
+      :line => 47,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :age_limit))
+  end
+
+  def test_sql_injection_in_find_by!
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "6f743b0a084c132d3bd074a0d22e197d6c81018028f6166324de1970616c4cbd",
+      :warning_type => "SQL Injection",
+      :line => 48,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :user_search))
+  end
+
   def test_dynamic_render_path_with_before_action
     assert_warning :type => :warning,
       :warning_code => 15,
@@ -316,6 +340,38 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 1,
       :relative_path => "app/controllers/users_controller.rb",
       :user_input => nil
+  end
+
+  def test_redirect_to_new_query_methods
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "410e22682c2ebd663204362aac560414233b5c225fbc4259d108d2c760bfcbe4",
+      :warning_type => "Redirect",
+      :line => 38,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:const, :User), :find_by, s(:hash, s(:lit, :name), s(:call, s(:params), :[], s(:lit, :name))))
+
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "c01e127b45d9010c495c6fd731baaf850f9a5bbad288cf9df66697d23ec6de4a",
+      :warning_type => "Redirect",
+      :line => 40,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:const, :User), :find_by!, s(:hash, s(:lit, :name), s(:call, s(:params), :[], s(:lit, :name))))
+
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "9dd39bc751eab84c5485fa35966357b6aacb8830bd6812c7a228a02c5ac598d0",
+      :warning_type => "Redirect",
+      :line => 42,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:call, s(:const, :User), :where, s(:hash, s(:lit, :stuff), s(:lit, 1))), :take)
   end
 
   def test_i18n_xss_CVE_2013_4491_workaround
@@ -388,6 +444,42 @@ class Rails4Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_code => 72,
       :fingerprint => "0ba20216bdda1cc067f9e4795bdb0d9224fd23c58317ecc09db67b6b38a2d0f0",
+      :warning_type => "SQL Injection",
+      :line => nil,
+      :message => /^Rails\ 4\.0\.0\ contains\ a\ SQL\ injection\ vul/,
+      :confidence => 0,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_remote_code_execution_CVE_2014_0130
+    assert_warning :type => :warning,
+      :warning_code => 77,
+      :fingerprint => "e833fd152ab95bf7481aada185323d97cd04c3e2322b90f3698632f4c4c04441",
+      :warning_type => "Remote Code Execution",
+      :line => nil,
+      :message => /^Rails\ 4\.0\.0\ with\ globbing\ routes\ is\ vuln/,
+      :confidence => 1,
+      :relative_path => "config/routes.rb",
+      :user_input => nil
+  end
+
+  def test_sql_injection_CVE_2014_3482
+    assert_warning :type => :warning,
+      :warning_code => 78,
+      :fingerprint => "5c9706393849d7de5125a3688562aea31e112a7b09d0abbb461ee5dc7c1751b8",
+      :warning_type => "SQL Injection",
+      :line => nil,
+      :message => /^Rails\ 4\.0\.0\ contains\ a\ SQL\ injection\ vul/,
+      :confidence => 0,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_sql_injection_CVE_2014_3483
+    assert_warning :type => :warning,
+      :warning_code => 79,
+      :fingerprint => "4a60c60c39e12b1dd1d8b490f228594f0a555aa5447587625df362327e86ad2f",
       :warning_type => "SQL Injection",
       :line => nil,
       :message => /^Rails\ 4\.0\.0\ contains\ a\ SQL\ injection\ vul/,

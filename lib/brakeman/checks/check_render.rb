@@ -8,11 +8,11 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
 
   def run_check
     tracker.find_call(:target => nil, :method => :render).each do |result|
-      process_render result
+      process_render_result result
     end
   end
 
-  def process_render result
+  def process_render_result result
     return unless node_type? result[:call], :render
 
     case result[:call].render_type

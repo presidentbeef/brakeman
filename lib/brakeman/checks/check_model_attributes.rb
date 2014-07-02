@@ -3,7 +3,7 @@ require 'brakeman/checks/base_check'
 #Check if mass assignment is used with models
 #which inherit from ActiveRecord::Base.
 #
-#If tracker.options[:collapse_mass_assignment] is +true+ (default), all models 
+#If tracker.options[:collapse_mass_assignment] is +true+ (default), all models
 #which do not use attr_accessible will be reported in a single warning
 class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
   Brakeman::Checks.add self
@@ -55,7 +55,7 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
       check_models do |name, model|
         if model[:options][:attr_protected].nil?
           warn :model => name,
-            :file => model[:file],
+            :file => model[:files].first,
             :warning_type => "Attribute Restriction",
             :warning_code => :no_attr_accessible,
             :message => "Mass assignment is not restricted using attr_accessible",
@@ -70,7 +70,7 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
           end
 
           warn :model => name,
-            :file => model[:file],
+            :file => model[:files].first,
             :line => model[:options][:attr_protected].first.line,
             :warning_type => "Attribute Restriction",
             :warning_code => warning_code,

@@ -87,7 +87,7 @@ module Brakeman::Options
           options[:check_arguments] = !option
         end
 
-        opts.on "-s", "--safe-methods meth1,meth2,etc", Array, "Consider the specified methods safe" do |methods|
+        opts.on "-s", "--safe-methods meth1,meth2,etc", Array, "Set methods as safe for unescaped output in views" do |methods|
           options[:safe_methods] ||= Set.new
           options[:safe_methods].merge methods.map {|e| e.to_sym }
         end
