@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 28
+      :generic => 30
     }
   end
 
@@ -461,6 +461,30 @@ class Rails4Tests < Test::Unit::TestCase
       :message => /^Rails\ 4\.0\.0\ with\ globbing\ routes\ is\ vuln/,
       :confidence => 1,
       :relative_path => "config/routes.rb",
+      :user_input => nil
+  end
+
+  def test_sql_injection_CVE_2014_3482
+    assert_warning :type => :warning,
+      :warning_code => 78,
+      :fingerprint => "5c9706393849d7de5125a3688562aea31e112a7b09d0abbb461ee5dc7c1751b8",
+      :warning_type => "SQL Injection",
+      :line => nil,
+      :message => /^Rails\ 4\.0\.0\ contains\ a\ SQL\ injection\ vul/,
+      :confidence => 0,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_sql_injection_CVE_2014_3483
+    assert_warning :type => :warning,
+      :warning_code => 79,
+      :fingerprint => "4a60c60c39e12b1dd1d8b490f228594f0a555aa5447587625df362327e86ad2f",
+      :warning_type => "SQL Injection",
+      :line => nil,
+      :message => /^Rails\ 4\.0\.0\ contains\ a\ SQL\ injection\ vul/,
+      :confidence => 0,
+      :relative_path => "Gemfile",
       :user_input => nil
   end
 
