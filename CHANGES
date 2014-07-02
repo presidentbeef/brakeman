@@ -1,3 +1,9 @@
+# 2.6.1
+
+* Add check for CVE-2014-3482 and CVE-2014-3483
+* Add support for keyword arguments in blocks
+* Remove unused warning codes (Bill Fischer)
+
 # 2.6.0
 
 * Fix detection of `:host` setting in redirects with chained calls
