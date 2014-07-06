@@ -227,7 +227,7 @@ class Brakeman::Scanner
     begin
       @processor.process_controller(astfile.ast, astfile.path)
     rescue => e
-      tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
+      tracker.error e.exception(e.message + "\nWhile processing #{astfile.path}"), e.backtrace
     end
   end
 
