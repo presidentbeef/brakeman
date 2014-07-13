@@ -298,4 +298,17 @@ class RescannerTests < Test::Unit::TestCase
       assert_fixed 9
     end
   end
+
+  def test_gitignore_session_secret_subdir
+    gitignore = "config/initializers/.gitignore"
+
+    before_rescan_of gitignore do
+      append gitignore, "secret_token.rb"
+    end
+
+    assert_changes
+    assert_reindex :none
+    assert_fixed 1
+    assert_new 0
+  end
 end
