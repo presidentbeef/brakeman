@@ -134,12 +134,15 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   end
 
   def ignored? file
-    if @app_tree.exists? ".gitignore"
-      input = @app_tree.read(".gitignore")
+    [".", "config", "config/initializers"].each do |dir|
+      ignore_file = "#{dir}/.gitignore"
+      if @app_tree.exists? ignore_file
+        input = @app_tree.read(ignore_file)
 
-      input.include? file
-    else
-      false
+        return true if input.include? file
+      end
     end
+
+    false
   end
 end
