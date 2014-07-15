@@ -33,6 +33,7 @@ class Brakeman::Scanner
       Brakeman.notify "[Notice] Detected Rails 3 application"
     elsif not @app_tree.exists?("script")
       options[:rails3] = true # Probably need to do some refactoring
+      options[:rails4] = true
       Brakeman.notify "[Notice] Detected Rails 4 application"
     end
 
