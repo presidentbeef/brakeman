@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 30
+      :generic => 31
     }
   end
 
@@ -174,6 +174,18 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/controllers/friendly_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :query))
+  end
+
+  def test_nested_send
+    assert_warning :type => :warning,
+      :warning_code => 23,
+      :fingerprint => "8034183b1b7e4b3d7ad4d60c59e2de9252f277c8ab5dfb408f628b15f03645c3",
+      :warning_type => "Dangerous Send",
+      :line => 68,
+      :message => /^User\ controlled\ method\ execution/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
   end
 
   def test_sql_injection_connection_execute
