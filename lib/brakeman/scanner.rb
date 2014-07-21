@@ -28,14 +28,6 @@ class Brakeman::Scanner
       raise Brakeman::NoApplication, "Please supply the path to a Rails application."
     end
 
-    if @app_tree.exists?("script/rails")
-      options[:rails3] = true
-      Brakeman.notify "[Notice] Detected Rails 3 application"
-    elsif not @app_tree.exists?("script")
-      options[:rails3] = true # Probably need to do some refactoring
-      Brakeman.notify "[Notice] Detected Rails 4 application"
-    end
-
     @processor = processor || Brakeman::Processor.new(@app_tree, options)
   end
 
@@ -48,6 +40,7 @@ class Brakeman::Scanner
   def process
     Brakeman.notify "Processing gems..."
     process_gems
+    guess_rails_version
     Brakeman.notify "Processing configuration..."
     process_config
     Brakeman.notify "Parsing files..."
@@ -145,6 +138,20 @@ class Brakeman::Scanner
   rescue => e
     Brakeman.notify "[Notice] Error while processing Gemfile."
     tracker.error e.exception(e.message + "\nWhile processing Gemfile"), e.backtrace
+  end
+
+  #Set :rails3/:rails4 option if version was not determined from Gemfile
+  def guess_rails_version
+    unless tracker.options[:rails3] or tracker.options[:rails4]
+      if @app_tree.exists?("script/rails")
+        tracker.options[:rails3] = true
+        Brakeman.notify "[Notice] Detected Rails 3 application"
+      elsif not @app_tree.exists?("script")
+        tracker.options[:rails3] = true # Probably need to do some refactoring
+        tracker.options[:rails4] = true
+        Brakeman.notify "[Notice] Detected Rails 4 application"
+      end
+    end
   end
 
   #Process all the .rb files in config/initializers/

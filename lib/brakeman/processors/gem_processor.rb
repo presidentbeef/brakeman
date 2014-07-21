@@ -19,9 +19,15 @@ class Brakeman::GemProcessor < Brakeman::BaseProcessor
       @tracker.config[:rails_version] = $1
     end
 
-    if @tracker.config[:rails_version] =~ /^(3|4)\./ and not @tracker.options[:rails3]
-      @tracker.options[:rails3] = true
-      Brakeman.notify "[Notice] Detected Rails #$1 application"
+    if @tracker.options[:rails3].nil? and @tracker.options[:rails4].nil? and @tracker.config[:rails_version]
+      if @tracker.config[:rails_version].start_with? "3"
+        @tracker.options[:rails3] = true
+        Brakeman.notify "[Notice] Detected Rails 3 application"
+      elsif @tracker.config[:rails_version].start_with? "4"
+        @tracker.options[:rails3] = true
+        @tracker.options[:rails4] = true
+        Brakeman.notify "[Notice] Detected Rails 4 application"
+      end
     end
 
     if @tracker.config[:gems][:rails_xss]
