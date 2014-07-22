@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 31
+      :generic => 32
     }
   end
 
@@ -438,6 +438,18 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 1,
       :relative_path => "Gemfile",
       :user_input => nil
+  end
+
+  def test_sql_injection_in_chained_string_building
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "6109b24aecaa204463bcebeb594becfe06d5f3c40cfe092b54a4c5146273e134",
+      :warning_type => "SQL Injection",
+      :line => 34,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/models/account.rb",
+      :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :more_ids)), :join, s(:str, ","))
   end
 
   def test_sql_injection_CVE_2013_6417

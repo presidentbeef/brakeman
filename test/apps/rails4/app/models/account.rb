@@ -17,4 +17,20 @@ class Account < ActiveRecord::Base
     connection.select_one "SELECT * FROM somewhere WHERE x=#{connection.quote(params[:x])}"
     connection.execute "DELETE FROM stuff WHERE id=#{self.id}"
   end
+
+  def lots_of_string_building_sql
+    sql =
+      'SELECT count(*) as account_count, '+
+      'FROM account_links stuff_links '+
+      "WHERE account_links.stuff_id = #{@stuff.id} "
+
+    if params[:more_ids]
+      sql += " AND stuff IN "+
+        "(SELECT something_id "+
+        "FROM some_join_thing "+
+        "WHERE something_id IN (#{params[:more_ids].join(',')}))"
+    end
+    sql += "GROUP BY title, id "
+    Account.connection.select_all(sql)
+  end
 end
