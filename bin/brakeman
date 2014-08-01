@@ -17,7 +17,7 @@ end
 
 #Exit early for these options
 if options[:list_checks]
-  Brakeman.list_checks
+  Brakeman.list_checks options
   exit
 elsif options[:create_config]
   Brakeman.dump_config options
