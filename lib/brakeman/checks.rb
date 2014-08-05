@@ -181,4 +181,7 @@ class Brakeman::Checks
   end
 end
 
-Brakeman::Checks.initialize_checks File.expand_path(File.join(File.dirname(__FILE__), "checks"))
+#Load all files in checks/ directory
+Dir.glob("#{File.expand_path(File.dirname(__FILE__))}/checks/*.rb").sort.each do |f|
+  require f.match(/(brakeman\/checks\/.*)\.rb$/)[0]
+end
