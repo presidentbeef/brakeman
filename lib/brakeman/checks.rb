@@ -13,11 +13,18 @@ class Brakeman::Checks
 
   #Add a check. This will call +_klass_.new+ when running tests
   def self.add klass
-    @checks << klass
+    @checks << klass unless @checks.include? klass
   end
 
   def self.checks
     @checks
+  end
+
+  def self.initialize_checks check_directory = ""
+    #Load all files in check_directory
+    Dir.glob(File.join(check_directory, "*.rb")).sort.each do |f|
+      require f
+    end
   end
 
   #No need to use this directly.

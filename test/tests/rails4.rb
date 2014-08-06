@@ -1,11 +1,12 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-Rails4 = BrakemanTester.run_scan "rails4", "Rails 4"
+EXTERNAL_CHECKS_PATH = File.expand_path(File.join(File.dirname(__FILE__), "..", "/apps/rails4/external_checks"))
+Rails4 = BrakemanTester.run_scan "rails4", "Rails 4", {:additional_checks_path => [EXTERNAL_CHECKS_PATH]}
 
 class Rails4Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
   include BrakemanTester::CheckExpected
-  
+
   def report
     Rails4
   end
@@ -580,5 +581,12 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/controllers/application_controller.rb",
       :user_input => nil
+  end
+
+  #Verify checks external to Brakeman are loaded
+  def test_external_checks
+    assert defined? Brakeman::CheckExternalCheckTest
+    #Initial "Check" removed from check names
+    assert report[:checks_run].include? "ExternalCheckTest"
   end
 end

@@ -215,8 +215,11 @@ module Brakeman
   private_class_method :get_github_url
 
   #Output list of checks (for `-k` option)
-  def self.list_checks
+  def self.list_checks options
     require 'brakeman/scanner'
+
+    add_external_checks options
+
     format_length = 30
 
     $stderr.puts "Available Checks:"
@@ -301,6 +304,8 @@ module Brakeman
       raise NoBrakemanError, "Cannot find lib/ directory."
     end
 
+    add_external_checks options
+
     #Start scanning
     scanner = Scanner.new options
 
@@ -383,6 +388,8 @@ module Brakeman
     require 'brakeman/differ'
     raise ArgumentError.new("Comparison file doesn't exist") unless File.exists? options[:previous_results_json]
 
+    add_external_checks options
+
     begin
       previous_results = MultiJson.load(File.read(options[:previous_results_json]), :symbolize_keys => true)[:warnings]
     rescue MultiJson::DecodeError
@@ -435,6 +442,12 @@ module Brakeman
     end
 
     tracker.ignored_filter = config
+  end
+
+  def self.add_external_checks options
+    options[:additional_checks_path].each do |path|
+      Brakeman::Checks.initialize_checks path
+    end if options[:additional_checks_path]
   end
 
   class DependencyError < RuntimeError; end
