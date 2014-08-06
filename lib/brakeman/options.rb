@@ -32,7 +32,7 @@ module Brakeman::Options
         end
 
         opts.on "-p", "--path PATH", "Specify path to Rails application" do |path|
-          options[:app_path] = File.expand_path path
+          options[:app_path] = path
         end
 
         opts.on "-q", "--[no-]quiet", "Suppress informational messages" do |quiet|

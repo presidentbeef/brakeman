@@ -76,7 +76,6 @@ module Brakeman
       options[:quiet] = true
     end
 
-    options[:app_path] = File.expand_path(options[:app_path])
     options[:output_formats] = get_output_formats options
     options[:github_url] = get_github_url options
 

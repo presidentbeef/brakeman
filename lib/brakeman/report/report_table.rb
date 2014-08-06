@@ -98,7 +98,7 @@ class Brakeman::Report::Table < Brakeman::Report::Base
 
 +BRAKEMAN REPORT+
 
-Application path: #{File.expand_path tracker.options[:app_path]}
+Application path: #{tracker.app_path}
 Rails version: #{rails_version}
 Brakeman version: #{Brakeman::Version}
 Started at #{tracker.start_time}
