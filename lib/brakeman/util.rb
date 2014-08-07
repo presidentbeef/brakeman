@@ -274,7 +274,7 @@ module Brakeman::Util
     end
 
     if warning.file
-      File.expand_path warning.file, tracker.options[:app_path]
+      File.expand_path warning.file, tracker.app_path
     elsif warning.template.is_a? Hash and warning.template[:file]
       warning.template[:file]
     else
@@ -314,7 +314,7 @@ module Brakeman::Util
       end
     end
 
-    path = tracker.options[:app_path]
+    path = tracker.app_path
 
     case type
     when :controller
@@ -377,7 +377,7 @@ module Brakeman::Util
 
   def relative_path file
     if file and not file.empty? and file.start_with? '/'
-      Pathname.new(file).relative_path_from(Pathname.new(@tracker.options[:app_path])).to_s
+      Pathname.new(file).relative_path_from(Pathname.new(@tracker.app_path)).to_s
     else
       file
     end

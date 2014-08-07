@@ -36,9 +36,9 @@ end
 #Set application path according to the commandline arguments
 unless options[:app_path]
   if ARGV[-1].nil?
-    options[:app_path] = File.expand_path "."
+    options[:app_path] = "."
   else
-    options[:app_path] = File.expand_path ARGV[-1]
+    options[:app_path] = ARGV[-1]
   end
 end
 

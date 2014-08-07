@@ -76,7 +76,6 @@ module Brakeman
       options[:quiet] = true
     end
 
-    options[:app_path] = File.expand_path(options[:app_path])
     options[:output_formats] = get_output_formats options
     options[:github_url] = get_github_url options
 
@@ -308,9 +307,10 @@ module Brakeman
 
     #Start scanning
     scanner = Scanner.new options
+    tracker = scanner.tracker
 
-    notify "Processing application in #{options[:app_path]}"
-    tracker = scanner.process
+    notify "Processing application in #{tracker.app_path}"
+    scanner.process
 
     if options[:parallel_checks]
       notify "Running checks in parallel..."

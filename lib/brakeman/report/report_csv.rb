@@ -50,7 +50,7 @@ class Brakeman::Report::CSV < Brakeman::Report::Table
   #Generate header for CSV output
   def csv_header
     header = CSV.generate_line(["Application Path", "Report Generation Time", "Checks Performed", "Rails Version"])
-    header << CSV.generate_line([File.expand_path(tracker.options[:app_path]), Time.now.to_s, checks.checks_run.sort.join(", "), rails_version])
+    header << CSV.generate_line([File.expand_path(tracker.app_path), Time.now.to_s, checks.checks_run.sort.join(", "), rails_version])
     "BRAKEMAN REPORT\n\n" + header
   end
 end
