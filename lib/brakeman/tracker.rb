@@ -78,7 +78,7 @@ class Brakeman::Tracker
   end
 
   def app_path
-    File.expand_path @options[:app_path]
+    @app_path ||= File.expand_path @options[:app_path]
   end
 
   #Iterate over all methods in controllers and models.

@@ -27,7 +27,7 @@ module Brakeman
               when :slim
                 parse_slim text
               else
-                tracker.error "Unkown template type in #{path}"
+                tracker.error "Unknown template type in #{path}"
                 nil
               end
 
