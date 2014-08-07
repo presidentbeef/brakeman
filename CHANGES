@@ -1,3 +1,14 @@
+# Unreleased
+
+* Expand app path in one place instead of all over (Jeff Rafter)
+* Add `--add-checks-path` option for external checks (Clint Gibler)
+* Fix SQL injection detection in deep nested string building
+* Add `-4` option to force Rails 4 mode
+* Check entire call for `send`
+* Check for .gitignore of secrets in subdirectories
+* Fix block statment endings in Erubis
+* Fix undefined variable in controller processing error (Jason Barnabe) 
+
 # 2.6.1
 
 * Add check for CVE-2014-3482 and CVE-2014-3483
