@@ -48,7 +48,7 @@ class Brakeman::CheckSQLCVEs < Brakeman::BaseCheck
       }
     end
 
-    if tracker.config[:gems] and tracker.config[:gems][:pg]
+    if tracker.config[:gems][:pg]
       issues << {
         :cve => "CVE-2014-3482",
         :versions => [%w[2.0.0 2.9.9 3.2.19], %w[3.0.0 3.2.18 3.2.19], %w[4.0.0 4.0.6 4.0.7], %w[4.1.0 4.1.2 4.1.3]],

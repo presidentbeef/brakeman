@@ -184,7 +184,6 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     if node_type? exp, :or
       decorated_model? exp.lhs or decorated_model? exp.rhs
     else
-      tracker.config[:gems] and
       tracker.config[:gems][:draper] and
       call? exp and
       node_type?(exp.target, :const) and

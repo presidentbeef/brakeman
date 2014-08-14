@@ -25,7 +25,7 @@ class Brakeman::Tracker
     @processor = processor
     @options = options
 
-    @config = { :rails => {} }
+    @config = { :rails => {}, :gems => {} }
     @templates = {}
     @controllers = {}
     #Initialize models with the unknown model so
