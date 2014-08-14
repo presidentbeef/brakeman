@@ -481,7 +481,6 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   end
 
   def lts_version? version
-    tracker.config[:gems] and
     tracker.config[:gems][:'railslts-version'] and
     version_between? version, "2.3.18.99", tracker.config[:gems][:'railslts-version']
   end
