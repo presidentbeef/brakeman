@@ -47,4 +47,9 @@ class UsersController < ApplicationController
     User.find_by "age > #{params[:age_limit]}"
     User.find_by! params[:user_search]
   end
+
+  def symbolize_safe_parameters
+    params[:controller].to_sym
+    params[:action].intern
+  end
 end

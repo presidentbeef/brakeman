@@ -387,6 +387,28 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:call, s(:call, s(:const, :User), :where, s(:hash, s(:lit, :stuff), s(:lit, 1))), :take)
   end
 
+  def test_symbol_dos_with_safe_parameters
+    assert_no_warning :type => :warning,
+      :warning_code => 59,
+      :fingerprint => "53a74ac0c23e934a1d439e0b53ce818a22db6b23a696a61cd7dfb5b19175240a",
+      :warning_type => "Denial of Service",
+      :line => 52,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(pa/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :controller))
+
+    assert_no_warning :type => :warning,
+      :warning_code => 59,
+      :fingerprint => "d569b240f71e4fc4cc6e91559923baea941a1341d1d70fd6c1c36813947e369d",
+      :warning_type => "Denial of Service",
+      :line => 53,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(pa/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :action))
+  end
+
   def test_i18n_xss_CVE_2013_4491_workaround
     assert_no_warning :type => :warning,
       :warning_code => 63,
