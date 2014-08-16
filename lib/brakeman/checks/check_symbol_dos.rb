@@ -54,6 +54,8 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
     end
 
     if confidence
+      return if safe_parameter? input.match
+
       message = "Symbol conversion from unsafe string (#{friendly_type_of input})"
 
       warn :result => result,
@@ -63,7 +65,14 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
         :user_input => input.match,
         :confidence => confidence
     end
-
   end
 
+  def safe_parameter? input
+    return unless params? input
+
+    call? input and
+    input.method == :[] and
+    symbol? input.first_arg and
+    [:controller, :action].include? input.first_arg.value
+  end
 end
