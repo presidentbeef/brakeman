@@ -535,7 +535,7 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => nil
   end
 
-  def test_mass_assignment_CVE_2014_3415
+  def test_mass_assignment_CVE_2014_3514
     assert_warning :type => :warning,
       :warning_code => 81,
       :fingerprint => "c4a619b7316e45a5927b098294ff39d7206f84bac084402630318bf6f89f396d",
