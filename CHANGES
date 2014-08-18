@@ -1,5 +1,8 @@
-# Unreleased
+# 2.6.2 
 
+* Add check for CVE-2014-3415
+* Avoid warning about symbolizing safe parameters
+* Update ruby2ruby dependency to 2.1.1
 * Expand app path in one place instead of all over (Jeff Rafter)
 * Add `--add-checks-path` option for external checks (Clint Gibler)
 * Fix SQL injection detection in deep nested string building
