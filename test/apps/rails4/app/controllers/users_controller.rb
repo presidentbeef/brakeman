@@ -52,4 +52,13 @@ class UsersController < ApplicationController
     params[:controller].to_sym
     params[:action].intern
   end
+
+  def mass_assignment_bypass
+    User.create_with(params)  # high warning
+    User.create_with(params).create # high warning
+    User.create_with(params[:x].permit(:y)) # should not warn, workaround
+    something.create_with({}) # should not warn on hash literals
+    x.create_with(y(params))  # medium warning
+    y.create_with(x)          # weak warning
+  end
 end

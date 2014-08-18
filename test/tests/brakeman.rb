@@ -19,6 +19,16 @@ class BrakemanTests < Test::Unit::TestCase
     assert_equal absolute_path, at.root
     assert_equal File.join(absolute_path, "Gemfile"), at.expand_path("Gemfile")
   end
+
+  def test_relative_path_in_warnings
+    relative_path = Pathname.new(File.dirname(__FILE__)).relative_path_from(Pathname.getwd)
+    absolute_path = relative_path.realpath.to_s
+    input = ["-p", relative_path.to_s]
+    options, _ = Brakeman::Options.parse input
+    at = Brakeman::AppTree.from_options options
+
+
+  end
 end
 
 class UtilTests < Test::Unit::TestCase

@@ -11,7 +11,7 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
       :controller => 0,
       :model => 5,
       :template => 11,
-      :generic => 7 }
+      :generic => 8 }
   end
 
   def report
@@ -83,6 +83,18 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
       :message => /^Rails\ 4\.0\.0\ with\ globbing\ routes\ is\ vuln/,
       :confidence => 1,
       :relative_path => "config/routes.rb",
+      :user_input => nil
+  end
+
+  def test_mass_assignment_CVE_2014_3415
+    assert_warning :type => :warning,
+      :warning_code => 80,
+      :fingerprint => "c3535608927977a6b2f7587021ce6c366895ec0637cf1c15988324349b22f76d",
+      :warning_type => "Mass Assignment",
+      :line => nil,
+      :message => /^create_with\ is\ vulnerable\ to\ strong\ para/,
+      :confidence => 1,
+      :relative_path => "Gemfile",
       :user_input => nil
   end
 
