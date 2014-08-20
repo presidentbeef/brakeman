@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2014-08-18T15:47:38-07:00</updated>
+  <updated>2014-08-19T21:57:07-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -44,7 +44,7 @@
 
 &lt;h3&gt;External Check Option&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&quot;ihttps://github.com/clintgibler&quot;&gt;Clint Gibler&lt;/a&gt; has added the &lt;code&gt;--add-checks-path&lt;/code&gt; option to provide an path to search for additional checks. This is useful if you wish to write your own custom rules for Brakeman to run.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/clintgibler&quot;&gt;Clint Gibler&lt;/a&gt; has added the &lt;code&gt;--add-checks-path&lt;/code&gt; option to provide an path to search for additional checks. This is useful if you wish to write your own custom rules for Brakeman to run.&lt;/p&gt;
 
 &lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/532&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
