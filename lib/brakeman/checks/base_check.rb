@@ -139,13 +139,15 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   end
 
   #Checks if the model inherits from parent,
-  def ancestor? model, parent
+  def ancestor? model, parent, hierarchy = []
+    hierarchy << model[:name]
+
     if model == nil
       false
     elsif model[:parent] == parent
       true
-    elsif model[:parent]
-      ancestor? tracker.models[model[:parent]], parent
+    elsif model[:parent] && !hierarchy.include?(model[:parent])
+      ancestor? tracker.models[model[:parent]], parent, hierarchy
     else
       false
     end
@@ -156,11 +158,13 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   end
 
   # go up the chain of parent classes to see if any have attr_accessible
-  def parent_classes_protected? model
+  def parent_classes_protected? model, hierarchy = []
+    hierarchy << model[:name]
+
     if model[:attr_accessible] or model[:includes].include? :"ActiveModel::ForbiddenAttributesProtection"
       true
-    elsif parent = tracker.models[model[:parent]]
-      parent_classes_protected? parent
+    elsif parent = tracker.models[model[:parent]] && !hierarchy.include?(model[:parent])
+      parent_classes_protected? parent, hierarchy
     else
       false
     end
