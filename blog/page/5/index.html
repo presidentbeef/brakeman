@@ -108,6 +108,95 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/01/13/brakeman-1-dot-2-released/">Brakeman 1.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-01-13 22:00:00 -0800" pubdate  updated >Jan 13<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>First Brakeman release of 2012!</p>
+
+<p><em>Changes since 1.1:</em></p>
+
+<ul>
+<li>Speed improvements for CheckExecute and CheckRender</li>
+<li>Check <code>named_scope</code> and <code>scope</code> for SQL injection</li>
+<li>Add <code>--rake</code> option to create rake task to run Brakeman</li>
+<li>Add <code>--summary</code> option to only output summary</li>
+<li>Add experimental support for rescanning a subset of files</li>
+<li>Fix a problem with Rails 3 routes</li>
+</ul>
+
+
+<p>Besides those, there has also been quite a bit of code improvement internally.</p>
+
+<h3>Speed Improvements</h3>
+
+<p>The checks for command injection and dynamic render paths should be considerably faster now.</p>
+
+<h3>More SQL Injection Checks</h3>
+
+<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/30">a5sk4s</a> for pointing out that Brakeman was not checking <code>named_scope</code> for SQL injection. This has been rectified. For Rails 3.1 and up, <code>scope</code> will be checked.</p>
+
+<p>Also, it seems common to use <code>Model.table_name</code> inside SQL statements. This will no longer raise a warning.</p>
+
+<h3>Brakeman Rake Task</h3>
+
+<p>The <code>--rake</code> option can now be used to install a Rake task for running Brakeman. The task will be copied to <code>lib/tasks/brakeman.rake</code>.</p>
+
+<p>To use, run this from the root of the Rails app:</p>
+
+<pre><code>brakeman --rake
+</code></pre>
+
+<p>Then, to run Brakeman:</p>
+
+<pre><code>rake brakeman:run
+</code></pre>
+
+<p>Naturally, this requires Rake to be installed.</p>
+
+<p>To output to a specific file:</p>
+
+<pre><code>rake brakeman:run["report.html"]
+</code></pre>
+
+<p>More actions may be added in the future.</p>
+
+<h3>Summary Option</h3>
+
+<p>Sometimes the specifics of a scan are not needed. The <code>--summary</code> option will limit the report output to just the summary section.</p>
+
+<h3>Rescan for Subset of Files</h3>
+
+<p>This release adds experimental support for rescanning a subset of paths in a Rails application. Please see this <a href="https://gist.github.com/1563286">example</a>.</p>
+
+<h3>Issues</h3>
+
+<p>Please report <em>any</em> problems or questions on <a href="https://github.com/presidentbeef/brakeman/issues">GitHub</a> or send a tweet to <a href="https://twitter.com/#!/brakemanscanner">@Brakeman</a>!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2011/12/21/brakeman-1-dot-1-released/">Brakeman 1.1 Released</a></h1>
     
     
@@ -761,100 +850,6 @@ Brakeman.run :app_path =&gt; 'my_app'
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2011/09/15/brakeman-0-dot-8-0-released/">Brakeman 0.8.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-09-15 10:06:00 -0700" pubdate  updated >Sep 15<span>th</span>, 2011</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Change list for Brakeman 0.8.0:</p>
-
-<ul>
-<li>Add check for mass assignment using without_protection</li>
-<li>Add check for password in http_basic_authenticate_with</li>
-<li>Warn on user input in hash argument with mass assignment</li>
-<li>auto_link is now considered safe for Rails >= 3.0.6</li>
-<li>Output detected Rails version in report</li>
-<li>Keep track of methods called in class definition</li>
-<li>Add ruby_parser hack for Ruby 1.9 hash syntax</li>
-<li>Add a few Rails 3.1 tests</li>
-</ul>
-
-
-<p>As always, please <a href="https://github.com/presidentbeef/brakeman/issues">report any issues</a>.</p>
-
-<h2>New Checks</h2>
-
-<p>This release adds two checks specific to Rails 3.1.</p>
-
-<p>The first looks for mass assignment which deliberately bypasses attribute protection. For example:</p>
-
-<pre><code>User.new(params[:user], :without_protection) =&gt; true)
-</code></pre>
-
-<p>If user input is used for initializing the record, the warning will be set to high confidence. Otherwise, it will show up as medium confidence.</p>
-
-<p>The second new check looks for controllers using the new <code>http_basic_authenticate_with</code> method and including the password directly in the source.</p>
-
-<p>The example from the <a href="http://guides.rubyonrails.org/getting_started.html">Rails guide</a> looks like this:</p>
-
-<pre><code>class PostsController &lt; ApplicationController
-
-  http_basic_authenticate_with :name =&gt; "dhh", :password =&gt; "secret", :except =&gt; :index
-
-  #...
-
-end
-</code></pre>
-
-<p>This would raise a warning, mostly because it is a bad idea to have passwords in plain text right in your source code.</p>
-
-<h2>Changes to Existing Warnings</h2>
-
-<p>Mass assignment has been changed to raise a warning if there is any user input when calling <code>Model.new</code>.</p>
-
-<p><code>auto_link</code> was previously set to be a &#8220;known dangerous&#8221; method because it did not escape its output. That was fixed in Rails 3.0.6, so it will be considered safe for versions 3.0.6 and up. But then <code>auto_link</code> was removed in Rails 3.1, so for 3.1 and up it will be treated as a regular method.</p>
-
-<h2>Changes to Output</h2>
-
-<p>Warnings reports will now include the detected Rails version as part of the information reported.</p>
-
-<h2>Support for Ruby 1.9 Hash Syntax</h2>
-
-<p><a href="https://github.com/seattlerb/ruby_parser">RubyParser</a>, used by Brakeman for all its Ruby parsing needs, <a href="http://blog.zenspider.com/2010/12/bounty-ruby-parser-needs-19-lo.html">does not support the new Ruby 1.9 syntax</a>. After coming across an application which uses the <a href="http://blog.peepcode.com/tutorials/2011/rip-ruby-hash-rocket-syntax">1.9 hash syntax</a> <em>extremely</em> liberally, a temporary hack has been added that should allow Brakeman to parse it correctly.</p>
-
-<p>This does mean that Brakeman is overriding RubyParser&#8217;s code to add in this functionality. That is why it is a <em>temporary hack</em>.</p>
-
-<h2>New Tests</h2>
-
-<p>Work has begun on a test application using Rails 3.1. There do not seem to be any huge changes in 3.1 that would prevent Brakeman from working, though.</p>
-
-<h2>Next Version</h2>
-
-<p>The main area of focus for the next (major) release will be Rails 3.x routing. Brakeman is currently quite limited in what kinds of routes in understands.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -907,6 +902,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/08/27/brakeman-is-four-years-old/">Brakeman is Four Years Old!</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/08/18/brakeman-2-dot-6-2-released/">Brakeman 2.6.2 Released</a>
       </li>
     
@@ -920,10 +919,6 @@ end
     
       <li class="post">
         <a href="/blog/2014/04/30/brakeman-2-dot-5-0-released/">Brakeman 2.5.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/22/brakeman-2-dot-4-3-released/">Brakeman 2.4.3 Released</a>
       </li>
     
   </ul>

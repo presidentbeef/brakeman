@@ -215,12 +215,16 @@
         <lastmod>2014-08-19T21:56:29-07:00</lastmod>
     </url>
     <url>
+        <loc>http://brakemanscanner.org/blog/2014/08/27/brakeman-is-four-years-old/</loc>
+        <lastmod>2014-08-27T03:35:11-07:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/contact/</loc>
         <lastmod>2012-07-19T10:20:00-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/blog/archives/</loc>
-        <lastmod>2014-08-19T21:56:29-07:00</lastmod>
+        <lastmod>2014-08-27T03:35:11-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/content_license/</loc>
@@ -464,6 +468,6 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/</loc>
-        <lastmod>2014-08-19T21:56:29-07:00</lastmod>
+        <lastmod>2014-08-27T03:35:11-07:00</lastmod>
     </url>
 </urlset>
