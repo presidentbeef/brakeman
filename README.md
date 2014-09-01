@@ -4,6 +4,7 @@
 Status](https://secure.travis-ci.org/presidentbeef/brakeman.png)](https://travis-ci.org/presidentbeef/brakeman)
 [![Code
 Climate](https://codeclimate.com/github/presidentbeef/brakeman.png)](https://codeclimate.com/github/presidentbeef/brakeman)
+[![Inline docs](http://inch-ci.org/github/presidentbeef/brakeman.png?branch=master)](http://inch-ci.org/github/presidentbeef/brakeman)
 
 # Brakeman
 
