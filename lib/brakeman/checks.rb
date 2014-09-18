@@ -8,6 +8,7 @@ require 'brakeman/differ'
 #All .rb files in checks/ will be loaded.
 class Brakeman::Checks
   @checks = []
+  @optional_checks = []
 
   attr_reader :warnings, :controller_warnings, :model_warnings, :template_warnings, :checks_run
 
@@ -16,8 +17,13 @@ class Brakeman::Checks
     @checks << klass unless @checks.include? klass
   end
 
+  #Add an optional check
+  def self.add_optional klass
+    @optional_checks << klass unless @checks.include? klass
+  end
+
   def self.checks
-    @checks
+    @checks + @optional_checks
   end
 
   def self.initialize_checks check_directory = ""
@@ -94,7 +100,7 @@ class Brakeman::Checks
   def self.run_checks_sequential(app_tree, tracker)
     check_runner = self.new :min_confidence => tracker.options[:min_confidence]
 
-    @checks.each do |c|
+    self.checks_to_run(tracker).each do |c|
       check_name = get_check_name c
 
       #Run or don't run check based on options
@@ -131,7 +137,7 @@ class Brakeman::Checks
 
     check_runner = self.new :min_confidence => tracker.options[:min_confidence]
 
-    @checks.each do |c|
+    self.checks_to_run(tracker).each do |c|
       check_name = get_check_name c
 
       #Run or don't run check based on options
@@ -178,6 +184,14 @@ class Brakeman::Checks
 
   def self.get_check_name check_class
     check_class.to_s.split("::").last
+  end
+
+  def self.checks_to_run tracker
+    if tracker.options[:run_all_checks] or tracker.options[:run_checks]
+      @checks + @optional_checks
+    else
+      @checks
+    end
   end
 end
 
