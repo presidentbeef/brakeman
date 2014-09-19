@@ -14,8 +14,8 @@ class Brakeman::GemProcessor < Brakeman::BaseProcessor
 
     if gem_lock
       process_gem_lock gem_lock
-      @tracker.config[:rails_version] = @tracker.config[:gems][:rails]
-    elsif @tracker.config[:gems][:rails] =~ /(\d+.\d+.\d+)/
+      @tracker.config[:rails_version] = @tracker.config[:gems][:rails].nil? ? "version" : @tracker.config[:gems][:rails][:version]
+    elsif @tracker.config[:gems][:rails][:version] =~ /(\d+.\d+.\d+)/
       @tracker.config[:rails_version] = $1
     end
 
@@ -45,9 +45,10 @@ class Brakeman::GemProcessor < Brakeman::BaseProcessor
       gem_version = exp.second_arg
 
       if string? gem_version
-        @tracker.config[:gems][gem_name.value.to_sym] = gem_version.value
+        #We know it's the Gemfile since we're handling a Sexp
+        @tracker.config[:gems][gem_name.value.to_sym] = { :version => gem_version.value.to_s, :file => "Gemfile:" + exp.line.to_s }
       else
-        @tracker.config[:gems][gem_name.value.to_sym] = ">=0.0.0"
+        @tracker.config[:gems][gem_name.value.to_sym] = { :version => ">=0.0.0", :file => "" }
       end
     end
 
@@ -55,15 +56,17 @@ class Brakeman::GemProcessor < Brakeman::BaseProcessor
   end
 
   def process_gem_lock gem_lock
-    gem_lock.each_line do |line|
-      set_gem_version line
-    end
+    line_num = 1
+    gem_lock.each_line { |line|
+      set_gem_version_and_file line, "Gemfile.lock:" + line_num.to_s
+      line_num += 1
+    }
   end
 
   # Supports .rc2 but not ~>, >=, or <=
-  def set_gem_version line
+  def set_gem_version_and_file line, file
     if line =~ @gem_name_version
-      @tracker.config[:gems][$1.to_sym] = $2
+      @tracker.config[:gems][$1.to_sym] = { :version => $2.to_s, :file => file }
     end
   end
 end

@@ -781,7 +781,7 @@ class Rails31Tests < Test::Unit::TestCase
   def test_denial_of_service_CVE_2013_0269
     assert_warning :type => :warning,
       :warning_type => "Denial of Service",
-      :message => /^json\ gem\ version\ 1\.5\.4\ has\ a\ symbol\ crea/,
+      :message => /^json\ gem\ version\ 1\.5\.4\ \(.*?\) has\ a\ symbol\ crea/,
       :confidence => 1,
       :file => /Gemfile/
   end
@@ -850,7 +850,7 @@ class Rails31Tests < Test::Unit::TestCase
       :fingerprint => "e1b66f4311771d714a13be519693c540d7e917511a758827d9b2a0a7f958e40f",
       :warning_type => "SQL Injection",
       :line => nil,
-      :message => /^Rails\ 3\.1\.0\ contains\ a\ SQL\ injection\ vul/,
+      :message => /^Rails\ 3\.1\.0\ \(.*?\) contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",
       :user_input => nil

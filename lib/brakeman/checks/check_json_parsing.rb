@@ -55,8 +55,8 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
 
   def check_cve_2013_0269
     [:json, :json_pure].each do |name|
-      version = tracker.config[:gems] && tracker.config[:gems][name]
-      check_json_version name, version if version
+      gem_hash = tracker.config[:gems][name] if tracker.config[:gems]
+      check_json_version name, gem_hash[:version] if gem_hash and gem_hash[:version]
     end
   end
 
@@ -67,7 +67,12 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
 
     warning_type = "Denial of Service"
     confidence = CONFIDENCE[:med]
-    message = "#{name} gem version #{version} has a symbol creation vulnerablity: upgrade to "
+    file = tracker.config[:gems][name][:file] if tracker.config[:gems][name]
+    if file
+      message = "#{name} gem version #{version} (#{file}) has a symbol creation vulnerablity: upgrade to "
+    else
+      message = "#{name} gem version #{version} has a symbol creation vulnerablity: upgrade to "
+    end
 
     if version >= "1.7.0"
       confidence = CONFIDENCE[:high]

@@ -7,9 +7,14 @@ class Brakeman::CheckI18nXSS < Brakeman::BaseCheck
 
   def run_check
     if (version_between? "3.0.6", "3.2.15" or version_between? "4.0.0", "4.0.1") and not has_workaround?
-      message = "Rails #{tracker.config[:rails_version]} has an XSS vulnerability in i18n (CVE-2013-4491). Upgrade to Rails version "
 
-      i18n_gem = tracker.config[:gems][:i18n]
+      i18n_gem = tracker.config[:gems][:i18n][:version] if tracker.config[:gems][:i18n]
+      file = tracker.config[:gems][:rails][:file] if tracker.config[:gems][:rails]
+      if file
+        message = "Rails #{tracker.config[:rails_version]} (#{file}) has an XSS vulnerability in i18n (CVE-2013-4491). Upgrade to Rails version "
+      else
+        message = "Rails #{tracker.config[:rails_version]} has an XSS vulnerability in i18n (CVE-2013-4491). Upgrade to Rails version "
+      end
 
       if version_between? "3.0.6", "3.1.99" and version_before i18n_gem, "0.5.1"
         message << "3.2.16 or i18n 0.5.1"

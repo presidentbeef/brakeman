@@ -65,7 +65,7 @@ class BaseCheckTests < Test::Unit::TestCase
   end
 
   def lts_version? version, low
-    @tracker.config = { :gems => { :"railslts-version" => version } }
+    @tracker.config = { :gems => { :"railslts-version" => {:version => version, :file => nil } } }
     @check.send(:lts_version?, low)
   end
 
@@ -245,7 +245,7 @@ class GemProcessorTests < Test::Unit::TestCase
   FakeTracker = Struct.new(:config, :options)
 
   def assert_version version, name, msg = nil
-    assert_equal version, @tracker[:config][:gems][name], msg
+    assert_equal version, @tracker[:config][:gems][name][:version], msg
   end
 
   def setup
