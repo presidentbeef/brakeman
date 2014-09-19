@@ -70,11 +70,10 @@ class Brakeman::CheckSQLCVEs < Brakeman::BaseCheck
     return unless upgrade_version
 
     code = cve.tr('-', '_').to_sym
-    message = build_message cve, upgrade_version
 
     warn :warning_type => 'SQL Injection',
       :warning_code => code,
-      :message => message,
+      :message => build_message(cve, upgrade_version),
       :confidence => CONFIDENCE[:high],
       :file => gemfile_or_environment,
       :link_path => link
@@ -95,7 +94,7 @@ class Brakeman::CheckSQLCVEs < Brakeman::BaseCheck
     message = build_message 'CVE-2014-0080', '4.0.3'
     warn :warning_type => 'SQL Injection',
       :warning_code => :CVE_2014_0080,
-      :message => message,
+      :message => build_message('CVE-2014-0080', '4.0.3'),
       :confidence => CONFIDENCE[:high],
       :file => gemfile_or_environment,
       :link_path => "https://groups.google.com/d/msg/rubyonrails-security/Wu96YkTUR6s/pPLBMZrlwvYJ"

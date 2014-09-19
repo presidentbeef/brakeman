@@ -67,7 +67,12 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
 
     warning_type = "Denial of Service"
     confidence = CONFIDENCE[:med]
-    message = "#{name} gem version #{version} has a symbol creation vulnerablity: upgrade to "
+    file = tracker.config[:gems][name][:file] if tracker.config[:gems][name]
+    if file
+      message = "#{name} gem version #{version} (#{file}) has a symbol creation vulnerablity: upgrade to "
+    else
+      message = "#{name} gem version #{version} has a symbol creation vulnerablity: upgrade to "
+    end
 
     if version >= "1.7.0"
       confidence = CONFIDENCE[:high]

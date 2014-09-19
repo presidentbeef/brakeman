@@ -481,7 +481,7 @@ class Rails4Tests < Test::Unit::TestCase
       :fingerprint => "e1b66f4311771d714a13be519693c540d7e917511a758827d9b2a0a7f958e40f",
       :warning_type => "SQL Injection",
       :line => nil,
-      :message => /^Rails\ 4\.0\.0 \(.*\) contains\ a\ SQL\ injection\ vul/,
+      :message => /^Rails\ 4\.0\.0 \(.*?\) contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",
       :user_input => nil
@@ -493,7 +493,7 @@ class Rails4Tests < Test::Unit::TestCase
       :fingerprint => "0ba20216bdda1cc067f9e4795bdb0d9224fd23c58317ecc09db67b6b38a2d0f0",
       :warning_type => "SQL Injection",
       :line => nil,
-      :message => /^Rails\ 4\.0\.0 \(.*\) contains\ a\ SQL\ injection\ vul/,
+      :message => /^Rails\ 4\.0\.0 \(.*?\) contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",
       :user_input => nil
@@ -517,7 +517,7 @@ class Rails4Tests < Test::Unit::TestCase
       :fingerprint => "5c9706393849d7de5125a3688562aea31e112a7b09d0abbb461ee5dc7c1751b8",
       :warning_type => "SQL Injection",
       :line => nil,
-      :message => /^Rails\ 4\.0\.0 \(.*\) contains\ a\ SQL\ injection\ vul/,
+      :message => /^Rails\ 4\.0\.0 \(.*?\) contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",
       :user_input => nil
@@ -529,7 +529,7 @@ class Rails4Tests < Test::Unit::TestCase
       :fingerprint => "4a60c60c39e12b1dd1d8b490f228594f0a555aa5447587625df362327e86ad2f",
       :warning_type => "SQL Injection",
       :line => nil,
-      :message => /^Rails\ 4\.0\.0 \(.*\) contains\ a\ SQL\ injection\ vul/,
+      :message => /^Rails\ 4\.0\.0 \(.*?\) contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",
       :user_input => nil

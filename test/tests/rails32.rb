@@ -99,7 +99,7 @@ class Rails32Tests < Test::Unit::TestCase
       :warning_code => 63,
       :fingerprint => "de0e11056b9f9af7b8570d5354185cd7e17a18cc61d627555fe4adfff00fb447",
       :warning_type => "Cross Site Scripting",
-      :message => /^Rails\ 3\.2\.9\.rc2\ has\ an\ XSS\ vulnerability/,
+      :message => /^Rails\ 3\.2\.9\.rc2\ \(.*?\) has\ an\ XSS\ vulnerability/,
       :confidence => 1,
       :relative_path => "Gemfile"
   end
@@ -122,7 +122,7 @@ class Rails32Tests < Test::Unit::TestCase
       :fingerprint => "e1b66f4311771d714a13be519693c540d7e917511a758827d9b2a0a7f958e40f",
       :warning_type => "SQL Injection",
       :line => nil,
-      :message => /^Rails\ 3\.2\.9\.rc2 \(.*\) contains\ a\ SQL\ injection\ vul/,
+      :message => /^Rails\ 3\.2\.9\.rc2 \(.*?\) contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",
       :user_input => nil
