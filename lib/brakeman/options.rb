@@ -55,6 +55,10 @@ module Brakeman::Options
         opts.separator ""
         opts.separator "Scanning options:"
 
+        opts.on "-A", "--run-all-checks", "Run all default and optional checks" do
+          options[:run_all_checks] = true
+        end
+
         opts.on "-a", "--[no-]assume-routes", "Assume all controller methods are actions (default)" do |assume|
           options[:assume_all_routes] = assume
         end
