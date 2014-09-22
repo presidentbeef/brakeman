@@ -1,6 +1,11 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-RailsWithXssPlugin = BrakemanTester.run_scan "rails_with_xss_plugin", "RailsWithXssPlugin", :absolute_paths => true
+RailsWithXssPlugin = BrakemanTester.run_scan(
+  "rails_with_xss_plugin",
+  "RailsWithXssPlugin",
+  :absolute_paths => true,
+  :run_all_checks => true
+)
 
 class RailsWithXssPluginTests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
