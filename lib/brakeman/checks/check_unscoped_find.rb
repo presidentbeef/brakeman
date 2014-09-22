@@ -2,7 +2,7 @@ require 'brakeman/checks/base_check'
 
 #Checks if user supplied data is passed to send
 class Brakeman::CheckUnscopedFind < Brakeman::BaseCheck
-  Brakeman::Checks.add self
+  Brakeman::Checks.add_optional self
 
   @description = "Check for unscoped ActiveRecord queries"
 
