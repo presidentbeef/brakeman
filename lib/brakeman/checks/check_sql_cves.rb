@@ -70,12 +70,15 @@ class Brakeman::CheckSQLCVEs < Brakeman::BaseCheck
     return unless upgrade_version
 
     code = cve.tr('-', '_').to_sym
+    file = tracker.config[:gems][:rails][:file] if tracker.config[:gems][:rails]
+    line = tracker.config[:gems][:rails][:line] if tracker.config[:gems][:rails]
 
     warn :warning_type => 'SQL Injection',
       :warning_code => code,
+      :line => line,
       :message => "Rails #{tracker.config[:rails_version]} contains a SQL injection vulnerability (#{cve}). Upgrade to #{upgrade_version}",
       :confidence => CONFIDENCE[:high],
-      :file => gemfile_or_environment,
+      :file => file || gemfile_or_environment,
       :link_path => link
   end
 
@@ -95,7 +98,8 @@ class Brakeman::CheckSQLCVEs < Brakeman::BaseCheck
       :warning_code => :CVE_2014_0080,
       :message => "Rails #{tracker.config[:rails_version]} contains a SQL injection vulnerability (CVE-2014-0080) with PostgreSQL. Upgrade to 4.0.3",
       :confidence => CONFIDENCE[:high],
-      :file => gemfile_or_environment,
+      :file => @tracker.config[:gems][:pg][:file] || gemfile_or_environment,
+      :line => @tracker.config[:gems][:pg][:line],
       :link_path => "https://groups.google.com/d/msg/rubyonrails-security/Wu96YkTUR6s/pPLBMZrlwvYJ"
   end
 end
