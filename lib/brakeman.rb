@@ -24,6 +24,7 @@ module Brakeman
   #  * :config_file - configuration file
   #  * :escape_html - escape HTML by default (automatic)
   #  * :exit_on_warn - return false if warnings found, true otherwise. Not recommended for library use (default: false)
+  #  * :github_repo - github repo to use for file links (user/repo[/path][@ref])
   #  * :highlight_user_input - highlight user input in reported warnings (default: true)
   #  * :html_style - path to CSS file
   #  * :ignore_model_output - consider models safe (default: false)
@@ -75,8 +76,8 @@ module Brakeman
       options[:quiet] = true
     end
 
-    options[:app_path] = File.expand_path(options[:app_path])
     options[:output_formats] = get_output_formats options
+    options[:github_url] = get_github_url options
 
     options
   end
@@ -166,6 +167,8 @@ module Brakeman
       [:to_tabs]
     when :json, :to_json
       [:to_json]
+    when :markdown, :to_markdown
+      [:to_markdown]
     else
       [:to_s]
     end
@@ -185,6 +188,8 @@ module Brakeman
         :to_tabs
       when /\.json$/i
         :to_json
+      when /\.md$/i
+        :to_markdown
       else
         :to_s
       end
@@ -192,9 +197,28 @@ module Brakeman
   end
   private_class_method :get_formats_from_output_files
 
+  def self.get_github_url options
+    if github_repo = options[:github_repo]
+      full_repo, ref = github_repo.split '@', 2
+      name, repo, path = full_repo.split '/', 3
+      unless name && repo && !(name.empty? || repo.empty?)
+        raise ArgumentError, "Invalid GitHub repository format"
+      end
+      path.chomp '/' if path
+      ref ||= 'master'
+      ['https://github.com', name, repo, 'blob', ref, path].compact.join '/'
+    else
+      nil
+    end
+  end
+  private_class_method :get_github_url
+
   #Output list of checks (for `-k` option)
-  def self.list_checks
+  def self.list_checks options
     require 'brakeman/scanner'
+
+    add_external_checks options
+
     format_length = 30
 
     $stderr.puts "Available Checks:"
@@ -279,11 +303,14 @@ module Brakeman
       raise NoBrakemanError, "Cannot find lib/ directory."
     end
 
+    add_external_checks options
+
     #Start scanning
     scanner = Scanner.new options
+    tracker = scanner.tracker
 
-    notify "Processing application in #{options[:app_path]}"
-    tracker = scanner.process
+    notify "Processing application in #{tracker.app_path}"
+    scanner.process
 
     if options[:parallel_checks]
       notify "Running checks in parallel..."
@@ -361,6 +388,8 @@ module Brakeman
     require 'brakeman/differ'
     raise ArgumentError.new("Comparison file doesn't exist") unless File.exists? options[:previous_results_json]
 
+    add_external_checks options
+
     begin
       previous_results = MultiJson.load(File.read(options[:previous_results_json]), :symbolize_keys => true)[:warnings]
     rescue MultiJson::DecodeError
@@ -413,6 +442,12 @@ module Brakeman
     end
 
     tracker.ignored_filter = config
+  end
+
+  def self.add_external_checks options
+    options[:additional_checks_path].each do |path|
+      Brakeman::Checks.initialize_checks path
+    end if options[:additional_checks_path]
   end
 
   class DependencyError < RuntimeError; end

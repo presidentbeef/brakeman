@@ -5,7 +5,7 @@ module Brakeman
     attr_reader :root
 
     def self.from_options(options)
-      root = options[:app_path]
+      root = File.expand_path options[:app_path]
 
       # Convert files into Regexp for matching
       init_options = {}

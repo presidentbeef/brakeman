@@ -10,15 +10,15 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 3,
-      :template => 3,
-      :generic => 27 }
+      :template => 4,
+      :generic => 28 }
   end
 
   def report
     RailsWithXssPlugin
   end
- 
-  def test_default_routes_1 
+
+  def test_default_routes_1
     assert_warning :type => :warning,
       :warning_type => "Default Routes",
       :line => 52,
@@ -28,7 +28,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_command_injection_2 
+  def test_command_injection_2
     assert_warning :type => :warning,
       :warning_type => "Command Injection",
       :line => 48,
@@ -38,7 +38,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_command_injection_3 
+  def test_command_injection_3
     assert_warning :type => :warning,
       :warning_type => "Command Injection",
       :line => 68,
@@ -48,7 +48,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_command_injection_4 
+  def test_command_injection_4
     assert_warning :type => :warning,
       :warning_type => "Command Injection",
       :line => 102,
@@ -58,7 +58,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_mass_assignment_5 
+  def test_mass_assignment_5
     assert_warning :type => :warning,
       :warning_type => "Mass Assignment",
       :line => 47,
@@ -68,7 +68,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_mass_assignment_6 
+  def test_mass_assignment_6
     assert_warning :type => :warning,
       :warning_type => "Mass Assignment",
       :line => 47,
@@ -78,7 +78,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_mass_assignment_7 
+  def test_mass_assignment_7
     assert_warning :type => :warning,
       :warning_type => "Mass Assignment",
       :line => 67,
@@ -88,7 +88,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_mass_assignment_8 
+  def test_mass_assignment_8
     assert_warning :type => :warning,
       :warning_type => "Mass Assignment",
       :line => 71,
@@ -118,7 +118,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_redirect_11 
+  def test_redirect_11
     assert_warning :type => :warning,
       :warning_type => "Redirect",
       :line => 95,
@@ -144,7 +144,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :file => /Gemfile/
   end
 
-  def test_sql_injection_12 
+  def test_sql_injection_12
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
       :line => 126,
@@ -154,7 +154,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_cross_site_scripting_13 
+  def test_cross_site_scripting_13
     assert_warning :type => :warning,
       :warning_type => "Cross Site Scripting",
       #noline,
@@ -164,7 +164,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_cross_site_scripting_14 
+  def test_cross_site_scripting_14
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 13,
@@ -181,7 +181,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :file => /environment\.rb/
   end
 
-  def test_dynamic_render_path_15 
+  def test_dynamic_render_path_15
     assert_no_warning :type => :template,
       :warning_type => "Dynamic Render Path",
       :line => 8,
@@ -191,7 +191,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_sql_injection_16 
+  def test_sql_injection_16
     assert_no_warning :type => :template,
       :warning_type => "SQL Injection",
       :line => 4,
@@ -201,7 +201,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_sql_injection_17 
+  def test_sql_injection_17
     assert_no_warning :type => :template,
       :warning_type => "SQL Injection",
       :line => 7,
@@ -222,7 +222,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :user_input => s(:call, s(:params), :[], s(:lit, :name))
   end
 
-  def test_cross_site_request_forgery_18 
+  def test_cross_site_request_forgery_18
     assert_warning :type => :controller,
       :warning_type => "Cross-Site Request Forgery",
       #noline,
@@ -255,7 +255,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :user_input => nil
   end
 
-  def test_attribute_restriction_19 
+  def test_attribute_restriction_19
     assert_warning :type => :model,
       :warning_type => "Attribute Restriction",
       #noline,
@@ -265,7 +265,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_format_validation_20 
+  def test_format_validation_20
     assert_warning :type => :model,
       :warning_type => "Format Validation",
       :line => 5,
@@ -275,7 +275,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
 
-  def test_format_validation_21 
+  def test_format_validation_21
     assert_warning :type => :model,
       :warning_type => "Format Validation",
       :line => 7,
@@ -307,7 +307,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :message => /^Unescaped parameter value in JSON hash/,
       :confidence => 0,
       :file => /users\/to_json\.html\.erb/
-  end  
+  end
 
   def test_session_secret_token
     assert_warning :type => :warning,
@@ -320,6 +320,18 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
 
   def test_absolute_paths
     assert report[:generic_warnings].all? { |w| w.file.start_with? "/" }
+  end
+
+  def test_cross_site_scripting_CVE_2012_1099
+    assert_warning :type => :template,
+      :warning_code => 22,
+      :fingerprint => "d54bacec90be92ad8ca58164cdfd505114eae34db2fb5b03f7bc2a8fd93f1edb",
+      :warning_type => "Cross Site Scripting",
+      :line => 18,
+      :message => /^Upgrade\ to\ Rails\ 3\ or\ use\ options_for_se/,
+      :confidence => 1,
+      :relative_path => "app/views/users/index.html.erb",
+      :user_input => nil
   end
 
   def test_sql_injection_CVE_2013_0155
@@ -390,6 +402,18 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :message => /^Rails\ 2\.3\.14\ has\ a\ vulnerability\ in\ numb/,
       :confidence => 1,
       :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_remote_code_execution_CVE_2014_0130
+    assert_warning :type => :warning,
+      :warning_code => 77,
+      :fingerprint => "93393e44a0232d348e4db62276b18321b4cbc9051b702d43ba2fd3287175283c",
+      :warning_type => "Remote Code Execution",
+      :line => nil,
+      :message => /^Rails\ 2\.3\.14\ with\ globbing\ routes\ is\ vul/,
+      :confidence => 0,
+      :relative_path => "config/routes.rb",
       :user_input => nil
   end
 end

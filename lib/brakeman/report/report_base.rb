@@ -39,7 +39,7 @@ class Brakeman::Report::Base
       name = name.to_sym
       c = tracker.controllers[name]
 
-      if tracker.routes[:allow_all_actions] or tracker.routes[name] == :allow_all_actions
+      if tracker.routes.include? :allow_all_actions or (tracker.routes[name] and tracker.routes[name].include? :allow_all_actions)
         routes = c[:public].keys.map{|e| e.to_s}.sort.join(", ")
       elsif tracker.routes[name].nil?
         #No routes defined for this controller.
@@ -262,9 +262,16 @@ class Brakeman::Report::Base
   end
 
   def rails_version
-    return tracker.config[:rails_version] if tracker.config[:rails_version]
-    return "3.x" if tracker.options[:rails3]
-    "Unknown"
+    case
+    when tracker.config[:rails_version]
+      tracker.config[:rails_version]
+    when tracker.options[:rails4]
+      "4.x"
+    when tracker.options[:rails3]
+      "3.x"
+    else
+      "Unknown"
+    end
   end
 
   #Escape warning message and highlight user input in text output

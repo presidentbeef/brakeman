@@ -6,9 +6,21 @@ Rails32::Application.routes.draw do
       put 'update_password' => redirect('/settings/update_password')
     end
   end
-  
+
   match 'remove' => 'removal#remove_this_too'
   match 'implicit' => 'removal#implicit_render'
+
+  match 'exec' => 'exec#exec_this'
+
+  # Routes for 'Default Routes' tests
+  get "/glob/*action", controller: 'glob_get'
+  post '/glob_post/*action', controller: 'glob_post'
+  put 'glob_put/*action', controller: 'glob_put'
+  match "/glob/*action", controller: 'glob_match'
+  get "/foo_get/:action", controller: 'foo_get'
+  post "/foo_post/:action", controller: 'foo_post'
+  put 'foo_put/:action', controller: 'foo_put'
+  match '/bar/:action', controller: 'bar_match'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

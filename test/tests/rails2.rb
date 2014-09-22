@@ -1,3 +1,8 @@
+# NOTE: Please do not add any further tests to the Rails 2 application unless
+# the issue being tested specifically applies to Rails 2 and not the other
+# versions.
+# If possible, please use the rails3, rails3.1, or rails4 apps.
+
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
 Rails2 = BrakemanTester.run_scan "rails2", "Rails 2"
@@ -12,13 +17,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 52 }
+        :generic => 56 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 53 }
+        :generic => 57 }
     end
   end
 
@@ -1015,6 +1020,18 @@ class Rails2Tests < Test::Unit::TestCase
       :user_input => nil
   end
 
+  def test_remote_code_execution_CVE_2014_0130
+    assert_warning :type => :warning,
+      :warning_code => 77,
+      :fingerprint => "93393e44a0232d348e4db62276b18321b4cbc9051b702d43ba2fd3287175283c",
+      :warning_type => "Remote Code Execution",
+      :line => nil,
+      :message => /^Rails\ 2\.3\.11\ with\ globbing\ routes\ is\ vul/,
+      :confidence => 0,
+      :relative_path => "config/routes.rb",
+      :user_input => nil
+  end
+
   def test_to_json
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
@@ -1215,7 +1232,7 @@ class Rails2Tests < Test::Unit::TestCase
   end
 
   def test_unsafe_symbol_creation
-    [40,41].each do |line|
+    [41,42].each do |line|
       assert_warning :type => :warning,
         :warning_type => "Denial of Service",
         :line => line,
@@ -1241,6 +1258,36 @@ class Rails2Tests < Test::Unit::TestCase
       :warning_type => "Denial of Service",
       :line => 29,
       :message => /^Symbol\ conversion\ from\ unsafe\ string/,
+      :confidence => 1,
+      :file => /application_controller\.rb/,
+      :relative_path => "app/controllers/application_controller.rb"
+  end
+
+  def test_unsafe_symbol_creation_4
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :line => 86,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(pa/,
+      :confidence => 0,
+      :file => /other_controller\.rb/,
+      :relative_path => "app/controllers/other_controller.rb"
+  end
+
+  def test_unsafe_symbol_creation_5
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :line => 88,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(pa/,
+      :confidence => 1,
+      :file => /other_controller\.rb/,
+      :relative_path => "app/controllers/other_controller.rb"
+  end
+
+  def test_unsafe_symbol_creation_6
+    assert_warning :type => :warning,
+      :warning_type => "Denial of Service",
+      :line => 44,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(pa/,
       :confidence => 1,
       :file => /application_controller\.rb/,
       :relative_path => "app/controllers/application_controller.rb"
@@ -1327,7 +1374,7 @@ class Rails2Tests < Test::Unit::TestCase
 
   def test_unscoped_find
     assert_warning :type => :warning,
-      :warning_code => 77,
+      :warning_code => 82,
       :fingerprint => "37dab9cfbb8e19488040e31be4ceb4d21d0d11b6047998e80a30085a16de20f5",
       :warning_type => "Unscoped Find",
       :line => 3,
@@ -1350,13 +1397,13 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 52 }
+        :generic => 56 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 53 }
+        :generic => 57 }
     end
   end
 

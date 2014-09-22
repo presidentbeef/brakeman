@@ -32,7 +32,7 @@ module Brakeman::Options
         end
 
         opts.on "-p", "--path PATH", "Specify path to Rails application" do |path|
-          options[:app_path] = File.expand_path path
+          options[:app_path] = path
         end
 
         opts.on "-q", "--[no-]quiet", "Suppress informational messages" do |quiet|
@@ -47,8 +47,17 @@ module Brakeman::Options
           options[:rails3] = true
         end
 
+        opts.on "-4", "--rails4", "Force Rails 4 mode" do
+          options[:rails3] = true
+          options[:rails4] = true
+        end
+
         opts.separator ""
         opts.separator "Scanning options:"
+
+        opts.on "-A", "--run-all-checks", "Run all default and optional checks" do
+          options[:run_all_checks] = true
+        end
 
         opts.on "-a", "--[no-]assume-routes", "Assume all controller methods are actions (default)" do |assume|
           options[:assume_all_routes] = assume
@@ -87,7 +96,7 @@ module Brakeman::Options
           options[:check_arguments] = !option
         end
 
-        opts.on "-s", "--safe-methods meth1,meth2,etc", Array, "Consider the specified methods safe" do |methods|
+        opts.on "-s", "--safe-methods meth1,meth2,etc", Array, "Set methods as safe for unescaped output in views" do |methods|
           options[:safe_methods] ||= Set.new
           options[:safe_methods].merge methods.map {|e| e.to_sym }
         end
@@ -133,6 +142,11 @@ module Brakeman::Options
           end
         end
 
+        opts.on "--add-checks-path path1,path2,etc", Array, "A directory containing additional out-of-tree checks to run" do |paths|
+          options[:additional_checks_path] ||= Set.new
+          options[:additional_checks_path].merge paths.map {|p| File.expand_path p}
+        end
+
         opts.separator ""
         opts.separator "Output options:"
 
@@ -142,7 +156,7 @@ module Brakeman::Options
 
         opts.on "-f",
           "--format TYPE",
-          [:pdf, :text, :html, :csv, :tabs, :json],
+          [:pdf, :text, :html, :csv, :tabs, :json, :markdown],
           "Specify output formats. Default is text" do |type|
 
           type = "s" if type == :text
@@ -158,7 +172,7 @@ module Brakeman::Options
         end
 
         opts.on "-I", "--interactive-ignore", "Interactively ignore warnings" do
-          options[:interactive_ignore] = true 
+          options[:interactive_ignore] = true
         end
 
         opts.on "-l", "--[no-]combine-locations", "Combine warning locations (Default)" do |combine|
@@ -196,6 +210,10 @@ module Brakeman::Options
 
         opts.on "--absolute-paths", "Output absolute file paths in reports" do
           options[:absolute_paths] = true
+        end
+
+        opts.on "--github-repo USER/REPO[/PATH][@REF]", "Output links to GitHub in markdown and HTML reports using specified repo" do |repo|
+          options[:github_repo] = repo
         end
 
         opts.on "-w",

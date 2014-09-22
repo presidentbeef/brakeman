@@ -3,6 +3,8 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
+  UNSAFE_METHODS = [:to_sym, :literal_to_sym, :intern, :symbolize_keys, :symbolize_keys!]
+
   @description = "Checks for versions with ActiveRecord symbol denial of service, or code with a similar vulnerability"
 
   def run_check
@@ -26,7 +28,7 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
         :link => "https://groups.google.com/d/msg/rubyonrails-security/jgJ4cjjS8FE/BGbHRxnDRTIJ"
     end
 
-    tracker.find_call(:methods => [:to_sym, :literal_to_sym], :nested => true).each do |result|
+    tracker.find_call(:methods => UNSAFE_METHODS, :nested => true).each do |result|
       check_unsafe_symbol_creation(result)
     end
 
@@ -39,10 +41,10 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
 
     call = result[:call]
 
-    if result[:method] == :to_sym
-      args = [call.target]
-    else
+    if result[:method] == :literal_to_sym
       args = call.select { |e| sexp? e }
+    else
+      args = [call.target]
     end
 
     if input = args.map{ |arg| has_immediate_user_input?(arg) }.compact.first
@@ -52,6 +54,8 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
     end
 
     if confidence
+      return if safe_parameter? input.match
+
       message = "Symbol conversion from unsafe string (#{friendly_type_of input})"
 
       warn :result => result,
@@ -61,7 +65,14 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
         :user_input => input.match,
         :confidence => confidence
     end
-
   end
 
+  def safe_parameter? input
+    return unless params? input
+
+    call? input and
+    input.method == :[] and
+    symbol? input.first_arg and
+    [:controller, :action].include? input.first_arg.value
+  end
 end

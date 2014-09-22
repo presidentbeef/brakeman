@@ -17,7 +17,7 @@ end
 
 #Exit early for these options
 if options[:list_checks]
-  Brakeman.list_checks
+  Brakeman.list_checks options
   exit
 elsif options[:create_config]
   Brakeman.dump_config options
@@ -36,9 +36,9 @@ end
 #Set application path according to the commandline arguments
 unless options[:app_path]
   if ARGV[-1].nil?
-    options[:app_path] = File.expand_path "."
+    options[:app_path] = "."
   else
-    options[:app_path] = File.expand_path ARGV[-1]
+    options[:app_path] = ARGV[-1]
   end
 end
 

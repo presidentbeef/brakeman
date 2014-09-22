@@ -14,7 +14,7 @@ class Brakeman::CheckSkipBeforeFilter < Brakeman::BaseCheck
 
   def run_check
     tracker.controllers.each do |name, controller|
-      filter_skips = (controller[:options][:skip_before_filter] || []) + (controller[:options][:skip_filter] || [])
+      filter_skips = controller[:options].values_at(:skip_before_filter, :skip_filter, :skip_before_action, :skip_action_callback).compact.flatten(1)
 
       filter_skips.each do |filter|
         process_skip_filter filter, controller
@@ -31,7 +31,7 @@ class Brakeman::CheckSkipBeforeFilter < Brakeman::BaseCheck
         :message => "Use whitelist (:only => [..]) when skipping CSRF check",
         :code => filter,
         :confidence => CONFIDENCE[:med],
-        :file => controller[:file]
+        :file => controller[:files].first
 
     when :login_required, :authenticate_user!, :require_user
       warn :controller => controller[:name],
@@ -41,7 +41,7 @@ class Brakeman::CheckSkipBeforeFilter < Brakeman::BaseCheck
         :code => filter,
         :confidence => CONFIDENCE[:med],
         :link => "authentication_whitelist",
-        :file => controller[:file]
+        :file => controller[:files].first
     end
   end
 

@@ -58,7 +58,10 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   end
 
   def process_namespace exp
-    name = exp.block_call.first_arg.value
+    arg = exp.block_call.first_arg
+    return exp unless symbol? arg or string? arg 
+
+    name = arg.value
     block = exp.block
 
     @prefix << camelize(name)
@@ -86,18 +89,17 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     second_arg = exp.second_arg
     last_arg = exp.last_arg
 
-    #Check if there is an unrestricted action parameter
-    action_variable = false
-
     if string? first_arg
-      matcher = first_arg.value
 
+      matcher = first_arg.value
       if matcher == ':controller(/:action(/:id(.:format)))' or
-        matcher.include? ':controller' and matcher.include? ':action' #Default routes
+        matcher.include? ':controller' and action_route?(matcher)  #Default routes
         @tracker.routes[:allow_all_actions] = first_arg
         return exp
-      elsif matcher.include? ':action'
-        action_variable = true
+      elsif action_route?(first_arg)
+          if hash? second_arg and controller_name = hash_access(second_arg, :controller)
+            loose_action(controller_name, "matched") #TODO: Parse verbs
+          end
       elsif second_arg.nil? and in_controller_block? and not matcher.include? ":"
         add_route matcher
       end
@@ -120,7 +122,6 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
             add_route v
           end
 
-          action_variable = false
          when :to
            if string? v
              add_route_from_string v[1]
@@ -130,10 +131,6 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
          end
         end
       end
-    end
-
-    if action_variable
-      @tracker.routes[@current_controller] = :allow_all_actions
     end
 
     @current_controller = nil unless in_controller_block?
@@ -166,9 +163,17 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
           elsif in_controller_block? and symbol? v
             add_route v
           end
+        elsif action_route?(first_arg)
+          if hash? second_arg and controller_name = hash_access(second_arg, :controller)
+            loose_action(controller_name, exp.method)
+          end
         end
       end
     elsif string? first_arg
+      if first_arg.value.include? ':controller' and action_route?(first_arg) #Default routes
+        @tracker.routes[:allow_all_actions] = first_arg
+      end
+
       route = first_arg.value.split "/"
       if route.length != 2
         add_route route[0]
@@ -196,6 +201,8 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
   def process_resources exp
     first_arg = exp.first_arg
     second_arg = exp.second_arg
+
+    return exp unless symbol? first_arg or string? first_arg
 
     if second_arg and second_arg.node_type == :hash
       self.current_controller = first_arg.value
@@ -281,5 +288,18 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     @controller_block = true
     yield
     @controller_block = prev_block
+  end
+
+  def action_route? arg
+    if string? arg
+      arg = arg.value
+    end
+
+    arg.is_a? String and (arg.include? ":action" or arg.include? "*action")
+  end
+
+  def loose_action controller_name, verb = "any"
+    self.current_controller = controller_name.value
+    @tracker.routes[@current_controller] = [:allow_all_actions, {:allow_verb => verb}]
   end
 end

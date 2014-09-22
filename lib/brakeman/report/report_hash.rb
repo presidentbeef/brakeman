@@ -16,6 +16,7 @@ class Brakeman::Report::Hash < Brakeman::Report::Base
     end
 
     report[:config] = tracker.config
+    report[:checks_run] = tracker.checks.checks_run
 
     report
   end

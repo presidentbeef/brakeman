@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 23,
       :controller => 4,
-      :generic => 88 }
+      :generic => 89 }
   end
 
   def test_without_protection
@@ -97,6 +97,18 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Possible\ unprotected\ redirect/,
       :confidence => 2,
       :file => /users_controller\.rb/
+  end
+
+  def test_redirect_false_positive_chained_call
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "287308589926edfd6463a04b3eb5b39b67b3bf6de6da9c380f1507f377c5a333",
+      :warning_type => "Redirect",
+      :line => 185,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params, s(:lit, :host), s(:str, "http://app.webthing.com/stuff"), s(:lit, :port), s(:str, "80")), :except, s(:lit, :action), s(:lit, :controller), s(:lit, :auth_token))
   end
 
   def test_whitelist_attributes
@@ -841,6 +853,18 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Rails\ 3\.1\.0\ contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_remote_code_execution_CVE_2014_0130
+    assert_warning :type => :warning,
+      :warning_code => 77,
+      :fingerprint => "e833fd152ab95bf7481aada185323d97cd04c3e2322b90f3698632f4c4c04441",
+      :warning_type => "Remote Code Execution",
+      :line => nil,
+      :message => /^Rails\ 3\.1\.0\ with\ globbing\ routes\ is\ vuln/,
+      :confidence => 1,
+      :relative_path => "config/routes.rb",
       :user_input => nil
   end
 

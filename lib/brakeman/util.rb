@@ -274,7 +274,7 @@ module Brakeman::Util
     end
 
     if warning.file
-      File.expand_path warning.file, tracker.options[:app_path]
+      File.expand_path warning.file, tracker.app_path
     elsif warning.template.is_a? Hash and warning.template[:file]
       warning.template[:file]
     else
@@ -314,18 +314,18 @@ module Brakeman::Util
       end
     end
 
-    path = tracker.options[:app_path]
+    path = tracker.app_path
 
     case type
     when :controller
-      if tracker.controllers[name] and tracker.controllers[name][:file]
-        path = tracker.controllers[name][:file]
+      if tracker.controllers[name] and tracker.controllers[name][:files]
+        path = tracker.controllers[name][:files].first
       else
         path += "/app/controllers/#{underscore(string_name)}.rb"
       end
     when :model
-      if tracker.models[name] and tracker.models[name][:file]
-        path = tracker.models[name][:file]
+      if tracker.models[name] and tracker.models[name][:files]
+        path = tracker.models[name][:files].first
       else
         path += "/app/models/#{underscore(string_name)}.rb"
       end
@@ -377,9 +377,27 @@ module Brakeman::Util
 
   def relative_path file
     if file and not file.empty? and file.start_with? '/'
-      Pathname.new(file).relative_path_from(Pathname.new(@tracker.options[:app_path])).to_s
+      Pathname.new(file).relative_path_from(Pathname.new(@tracker.app_path)).to_s
     else
       file
+    end
+  end
+
+  #Convert path/filename to view name
+  #
+  # views/test/something.html.erb -> test/something
+  def template_path_to_name path
+    names = path.split("/")
+    names.last.gsub!(/(\.(html|js)\..*|\.rhtml)$/, '')
+    names[(names.index("views") + 1)..-1].join("/").to_sym
+  end
+
+  def github_url file, line=nil
+    if repo_url = @tracker.options[:github_url] and file and not file.empty? and file.start_with? '/'
+      url = "#{repo_url}/#{relative_path(file)}"
+      url << "#L#{line}" if line
+    else
+      nil
     end
   end
 

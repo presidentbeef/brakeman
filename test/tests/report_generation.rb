@@ -24,8 +24,12 @@ class TestReportGeneration < Test::Unit::TestCase
 
   def test_csv_sanity
     report = Report.to_csv
+    parsed = CSV.parse report
+    summary_header = ["Application Path", "Report Generation Time", "Checks Performed", "Rails Version"]
 
     assert report.is_a? String
+    assert_equal ["BRAKEMAN REPORT"], parsed[0]
+    assert_equal summary_header, parsed[2]
   end
 
   def test_tabs_sanity
@@ -40,6 +44,12 @@ class TestReportGeneration < Test::Unit::TestCase
     assert report.is_a? String
   end
 
+  def test_markdown_sanity
+    report = Report.to_markdown
+
+    assert report.is_a? String
+  end
+
   def test_bad_format_type
     assert_raises RuntimeError do
       Report.format(:to_something_else)
@@ -48,7 +58,7 @@ class TestReportGeneration < Test::Unit::TestCase
 
   def test_controller_output
     text_report = Report.to_s
-    
+
     assert text_report.include? "+CONTROLLERS+"
 
     html_report = Report.to_html

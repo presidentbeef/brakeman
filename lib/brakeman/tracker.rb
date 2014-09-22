@@ -25,7 +25,7 @@ class Brakeman::Tracker
     @processor = processor
     @options = options
 
-    @config = { :rails => {} }
+    @config = { :rails => {}, :gems => {} }
     @templates = {}
     @controllers = {}
     #Initialize models with the unknown model so
@@ -37,7 +37,8 @@ class Brakeman::Tracker
         :public => {},
         :private => {},
         :protected => {},
-        :options => {} } }
+        :options => {},
+        :files => [] } }
     @routes = {}
     @initializers = {}
     @errors = []
@@ -76,17 +77,22 @@ class Brakeman::Tracker
     @checks
   end
 
+  def app_path
+    @app_path ||= File.expand_path @options[:app_path]
+  end
+
   #Iterate over all methods in controllers and models.
   def each_method
     [self.controllers, self.models].each do |set|
       set.each do |set_name, info|
         [:private, :public, :protected].each do |visibility|
           info[visibility].each do |method_name, definition|
-            if definition.node_type == :selfdef
-              method_name = "#{definition[1]}.#{method_name}"
+            src = definition[:src]
+            if src.node_type == :selfdef
+              method_name = "#{src[1]}.#{method_name}"
             end
 
-            yield definition, set_name, method_name, info[:file]
+            yield src, set_name, method_name, definition[:file]
 
           end
         end
@@ -218,11 +224,12 @@ class Brakeman::Tracker
       set.each do |set_name, info|
         [:private, :public, :protected].each do |visibility|
           info[visibility].each do |method_name, definition|
-            if definition.node_type == :selfdef
-              method_name = "#{definition[1]}.#{method_name}"
+            src = definition[:src]
+            if src.node_type == :selfdef
+              method_name = "#{src[1]}.#{method_name}"
             end
 
-            finder.process_source definition, :class => set_name, :method => method_name, :file => info[:file]
+            finder.process_source src, :class => set_name, :method => method_name, :file => definition[:file]
 
           end
         end
@@ -268,7 +275,7 @@ class Brakeman::Tracker
     model_name = nil
 
     @models.each do |name, model|
-      if model[:file] == path
+      if model[:files].include?(path)
         model_name = name
         break
       end
@@ -277,10 +284,27 @@ class Brakeman::Tracker
     @models.delete model_name
   end
 
+  #Clear information related to model
+  def reset_lib path
+    lib_name = nil
+
+    @libs.each do |name, lib|
+      if lib[:files].include?(path)
+        lib_name = name
+        break
+      end
+    end
+
+    @libs.delete lib_name
+  end
+
   def reset_controller path
+    controller_name = nil
+
     #Remove from controller
-    @controllers.delete_if do |name, controller|
-      if controller[:file] == path
+    @controllers.each do |name, controller|
+      if controller[:files].include?(path)
+        controller_name = name
         template_matcher = /^#{name}#/
 
         #Remove templates rendered from this controller
@@ -293,10 +317,10 @@ class Brakeman::Tracker
 
         #Remove calls indexed from this controller
         @call_index.remove_indexes_by_class [name]
-
-        true
+        break
       end
     end
+    @controllers.delete controller_name
   end
 
   #Clear information about routes

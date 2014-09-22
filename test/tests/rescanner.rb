@@ -70,7 +70,7 @@ class RescannerTests < Test::Unit::TestCase
       remove_method controller, :remove_this
     end
 
-    assert_reindex :controllers, :templates 
+    assert_reindex :controllers, :templates
     assert_changes
     assert_new 0
     assert_fixed 1
@@ -83,7 +83,7 @@ class RescannerTests < Test::Unit::TestCase
       remove_method controller, :change_lines
     end
 
-    assert_reindex :controllers, :templates 
+    assert_reindex :controllers, :templates
     assert_changes
     assert_new 0
     assert_fixed 0
@@ -96,10 +96,22 @@ class RescannerTests < Test::Unit::TestCase
       remove controller
     end
 
-    assert_reindex :none
+    assert_reindex :controllers, :templates
     assert_changes
     assert_new 0
     assert_fixed 4
+  end
+
+  def test_delete_controller_dependency
+    controller = "app/controllers/exec_controller/command_dependency.rb"
+
+    before_rescan_of controller do
+      remove controller
+    end
+
+    assert_changes
+    assert_new 0
+    assert_fixed 1
   end
 
   def test_controller_escape_params
@@ -148,11 +160,26 @@ class RescannerTests < Test::Unit::TestCase
       remove model
     end
 
-    assert_reindex :templates, :models, :controllers
+    assert_reindex :models
     assert_changes
-    assert_new 7 #User is no longer a model, causing MORE warnings
-    assert_fixed 7
+    assert_new 0
+    assert_fixed 3
   end
+
+  def test_delete_model_and_dependency
+      model = "app/models/user.rb"
+      dependency = "app/models/user/command_dependency.rb"
+
+      before_rescan_of model do
+        remove model
+        remove dependency
+      end
+
+      assert_reindex :controllers, :models, :templates
+      assert_changes
+      assert_new 7 #User is no longer a model, causing MORE warnings
+      assert_fixed 8
+    end
 
   def test_add_method_to_model
     model = "app/models/user.rb"
@@ -164,7 +191,7 @@ class RescannerTests < Test::Unit::TestCase
       end
       RUBY
     end
-      
+
     assert_reindex :models
     assert_changes
     assert_new 1
@@ -180,7 +207,7 @@ class RescannerTests < Test::Unit::TestCase
     end
 
     assert_reindex :none
-    assert_changes 
+    assert_changes
     assert_new 1
     assert_fixed 0
   end
@@ -253,21 +280,6 @@ class RescannerTests < Test::Unit::TestCase
     assert_fixed 0
   end
 
-  def test_gemfile_lock_rails_lts
-    gemfile = "Gemfile.lock"
-
-    before_rescan_of gemfile, "rails_with_xss_plugin" do
-      append gemfile, "railslts-version (2.3.18.6)"
-    end
-
-    #@original is actually modified
-    assert @original.config[:gems][:"railslts-version"], "2.3.18.6"
-    assert_reindex :none
-    assert_changes
-    assert_new 0
-    assert_fixed 2
-  end
-
   def test_gemfile_rails_version_fix_CVE_2014_0082
     gemfile = "Gemfile.lock"
 
@@ -285,5 +297,18 @@ class RescannerTests < Test::Unit::TestCase
     else
       assert_fixed 9
     end
+  end
+
+  def test_gitignore_session_secret_subdir
+    gitignore = "config/initializers/.gitignore"
+
+    before_rescan_of gitignore do
+      append gitignore, "secret_token.rb"
+    end
+
+    assert_changes
+    assert_reindex :none
+    assert_fixed 1
+    assert_new 0
   end
 end

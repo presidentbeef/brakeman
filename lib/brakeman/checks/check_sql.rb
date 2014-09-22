@@ -19,6 +19,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     @sql_targets = [:all, :average, :calculate, :count, :count_by_sql, :exists?, :delete_all, :destroy_all,
       :find, :find_by_sql, :first, :last, :maximum, :minimum, :pluck, :sum, :update_all]
     @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :select, :where] if tracker.options[:rails3]
+    @sql_targets << :find_by << :find_by! if tracker.options[:rails4]
 
     @connection_calls = [:delete, :execute, :insert, :select_all, :select_one,
       :select_rows, :select_value, :select_values]
@@ -46,13 +47,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     Brakeman.debug "Finding calls to named_scope or scope"
     calls.concat find_scope_calls
 
-    Brakeman.debug "Checking version of Rails for CVE issues"
-    check_rails_versions_against_cve_issues
-
     Brakeman.debug "Processing possible SQL calls"
     calls.each { |call| process_result call }
-
-    check_CVE_2014_0080
   end
 
   #Find calls to named_scope() or scope() in models
@@ -65,7 +61,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         call = make_call(nil, :named_scope, args).line(args.line)
         scope_calls << scope_call_hash(call, name, :named_scope)
       end
-    elsif version_between?("3.1.0", "3.9.9")
+    elsif version_between?("3.1.0", "4.9.9")
       ar_scope_calls(:scope) do |name, args|
         second_arg = args[2]
         next unless sexp? second_arg
@@ -114,8 +110,12 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       find_calls.process_source(block, :class => model_name, :method => scope_name)
       find_calls.calls.each { |call| process_result(call) if @sql_targets.include?(call[:method]) }
     elsif block.node_type == :call
-      process_result :target => block.target, :method => block.method, :call => block,
-        :location => { :type => :class, :class => model_name, :method => scope_name }
+      while call? block
+        process_result :target => block.target, :method => block.method, :call => block,
+         :location => { :type => :class, :class => model_name, :method => scope_name }
+
+        block = block.target
+      end
     end
   end
 
@@ -173,19 +173,19 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                         else
                           check_find_arguments call.last_arg
                         end
-                      when :where, :having
+                      when :where, :having, :find_by, :find_by!
                         check_query_arguments call.arglist
                       when :order, :group, :reorder
                         check_order_arguments call.arglist
                       when :joins
                         check_joins_arguments call.first_arg
-                      when :from, :select
+                      when :from
                         unsafe_sql? call.first_arg
                       when :lock
                         check_lock_arguments call.first_arg
                       when :pluck
                         unsafe_sql? call.first_arg
-                      when :update_all
+                      when :update_all, :select
                         check_update_all_arguments call.args
                       when *@connection_calls
                         check_by_sql_arguments call.first_arg
@@ -496,20 +496,29 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     arg = exp.first_arg
 
     if STRING_METHODS.include? method
-      if string? target
-        check_string_arg arg
-      elsif string? arg
-        check_string_arg target
-      elsif call? target
-        check_for_string_building target
-      elsif node_type? target, :string_interp, :dstr or
-            node_type? arg, :string_interp, :dstr
-
-        check_string_arg target and
-        check_string_arg arg
-      end
+      check_str_target_or_arg(target, arg) or
+      check_interp_target_or_arg(target, arg) or
+      check_for_string_building(target) or
+      check_for_string_building(arg)
     else
       nil
+    end
+  end
+
+  def check_str_target_or_arg target, arg
+    if string? target
+      check_string_arg arg
+    elsif string? arg
+      check_string_arg target
+    end
+  end
+
+  def check_interp_target_or_arg target, arg
+    if node_type? target, :string_interp, :dstr or
+      node_type? arg, :string_interp, :dstr
+
+      check_string_arg target and
+      check_string_arg arg
     end
   end
 
@@ -540,7 +549,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     :sanitize_sql, :sanitize_sql_array, :sanitize_sql_for_assignment,
     :sanitize_sql_for_conditions, :sanitize_sql_hash,
     :sanitize_sql_hash_for_assignment, :sanitize_sql_hash_for_conditions,
-    :to_sql]
+    :to_sql, :sanitize]
 
   def safe_value? exp
     return true unless sexp? exp
@@ -638,83 +647,5 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       klass == :"ActiveRecord::Base" or
       active_record_models.include? klass
     end
-  end
-
-  # TODO: Move all SQL CVE checks to separate class
-  def check_CVE_2014_0080
-    return unless version_between? "4.0.0", "4.0.2" and
-                  @tracker.config[:gems].include? :pg
-
-    warn :warning_type => 'SQL Injection',
-      :warning_code => :CVE_2014_0080,
-      :message => "Rails #{tracker.config[:rails_version]} contains a SQL injection vulnerability (CVE-2014-0080) with PostgreSQL. Upgrade to 4.0.3",
-      :confidence => CONFIDENCE[:high],
-      :file => gemfile_or_environment,
-      :link_path => "https://groups.google.com/d/msg/rubyonrails-security/Wu96YkTUR6s/pPLBMZrlwvYJ"
-  end
-
-  def upgrade_version? versions
-    versions.each do |low, high, upgrade|
-      return upgrade if version_between? low, high
-    end
-
-    false
-  end
-
-  def check_rails_versions_against_cve_issues
-    issues = [
-      {
-        :cve => "CVE-2012-2660",
-        :versions => [%w[2.0.0 2.3.14 2.3.17], %w[3.0.0 3.0.12 3.0.13], %w[3.1.0 3.1.4 3.1.5], %w[3.2.0 3.2.3 3.2.4]],
-        :url => "https://groups.google.com/d/topic/rubyonrails-security/8SA-M3as7A8/discussion"
-      },
-      {
-        :cve => "CVE-2012-2661",
-        :versions => [%w[3.0.0 3.0.12 3.0.13], %w[3.1.0 3.1.4 3.1.5], %w[3.2.0 3.2.3 3.2.5]],
-        :url => "https://groups.google.com/d/topic/rubyonrails-security/dUaiOOGWL1k/discussion"
-      },
-      {
-        :cve => "CVE-2012-2695",
-        :versions => [%w[2.0.0 2.3.14 2.3.15], %w[3.0.0 3.0.13 3.0.14], %w[3.1.0 3.1.5 3.1.6], %w[3.2.0 3.2.5 3.2.6]],
-        :url => "https://groups.google.com/d/topic/rubyonrails-security/l4L0TEVAz1k/discussion"
-      },
-      {
-        :cve => "CVE-2012-5664",
-        :versions => [%w[2.0.0 2.3.14 2.3.15], %w[3.0.0 3.0.17 3.0.18], %w[3.1.0 3.1.8 3.1.9], %w[3.2.0 3.2.9 3.2.18]],
-        :url => "https://groups.google.com/d/topic/rubyonrails-security/DCNTNp_qjFM/discussion"
-      },
-      {
-        :cve => "CVE-2013-0155",
-        :versions => [%w[2.0.0 2.3.15 2.3.16], %w[3.0.0 3.0.18 3.0.19], %w[3.1.0 3.1.9 3.1.10], %w[3.2.0 3.2.10 3.2.11]],
-        :url => "https://groups.google.com/d/topic/rubyonrails-security/c7jT-EeN9eI/discussion"
-      },
-
-    ]
-
-    unless lts_version? '2.3.18.6'
-     issues << {
-        :cve => "CVE-2013-6417",
-        :versions => [%w[2.0.0 3.2.15 3.2.16], %w[4.0.0 4.0.1 4.0.2]],
-        :url => "https://groups.google.com/d/msg/ruby-security-ann/niK4drpSHT4/g8JW8ZsayRkJ"
-      }
-    end
-
-    issues.each do |cve_issue|
-      cve_warning_for cve_issue[:versions], cve_issue[:cve], cve_issue[:url]
-    end
-  end
-
-  def cve_warning_for versions, cve, link
-    upgrade_version = upgrade_version? versions
-    return unless upgrade_version
-
-    code = cve.tr('-', '_').to_sym
-
-    warn :warning_type => 'SQL Injection',
-      :warning_code => code,
-      :message => "Rails #{tracker.config[:rails_version]} contains a SQL injection vulnerability (#{cve}). Upgrade to #{upgrade_version}",
-      :confidence => CONFIDENCE[:high],
-      :file => gemfile_or_environment,
-      :link_path => link
   end
 end

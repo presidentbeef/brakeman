@@ -1,3 +1,8 @@
+# NOTE: Please do not add any further tests to the Rails 3.2 application unless
+# the issue being tested specifically applies to Rails 3.2 and not the other
+# versions.
+# If possible, please use the rails3, rails3.1, or rails4 apps.
+
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
 Rails32 = BrakemanTester.run_scan "rails3.2", "Rails 3.2"
@@ -8,10 +13,10 @@ class Rails32Tests < Test::Unit::TestCase
 
   def expected
     @expected ||= {
-      :controller => 0,
+      :controller => 8,
       :model => 5,
       :template => 11,
-      :generic => 11 }
+      :generic => 17 }
 
     if RUBY_PLATFORM == 'java'
       @expected[:generic] += 1
@@ -132,6 +137,18 @@ class Rails32Tests < Test::Unit::TestCase
       :message => /^Rails\ 3\.2\.9\.rc2\ has\ a\ denial\ of\ service\ /,
       :confidence => 0,
       :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_remote_code_execution_CVE_2014_0130
+    assert_warning :type => :warning,
+      :warning_code => 77,
+      :fingerprint => "93393e44a0232d348e4db62276b18321b4cbc9051b702d43ba2fd3287175283c",
+      :warning_type => "Remote Code Execution",
+      :line => nil,
+      :message => /^Rails\ 3\.2\.9\.rc2\ with\ globbing\ routes\ is\ /,
+      :confidence => 0,
+      :relative_path => "config/routes.rb",
       :user_input => nil
   end
 
@@ -301,11 +318,108 @@ class Rails32Tests < Test::Unit::TestCase
     assert_warning :type => :model,
       :warning_type => "Mass Assignment",
       :message => "Potentially dangerous attribute available for mass assignment: :plan_id",
-      :confidence => 2, 
+      :confidence => 2,
       :file => /account\.rb/
   end
 
   def test_two_distinct_warnings_cant_have_same_fingerprint
     assert_equal report[:model_warnings].map(&:fingerprint), report[:model_warnings].map(&:fingerprint).uniq
+  end
+
+  def test_controller_command_injection_direct_from_dependency
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :line => 3,
+      :message => /^Possible command injection/,
+      :confidence => 0,
+      :file => /command_dependency\.rb/,
+      :relative_path => "app/controllers/exec_controller/command_dependency.rb",
+      :format_code => /params\[:user_input\]/
+  end
+
+  def test_model_command_injection_direct_from_dependency
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :line => 3,
+      :message => /^Possible command injection/,
+      :confidence => 0,
+      :file => /command_dependency\.rb/,
+      :relative_path => "app/models/user/command_dependency.rb",
+      :format_code => /params\[:user_input\]/
+  end
+
+  def test_controller_default_routes
+    # Test to ensure warnings are generated for loose routes
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /GlobGetController.*get requests/,
+      :fingerprint => "6550aaf3da845a600a9c8fb767d08489679a9e3d89554db3c920ddb4eafcfb8e",
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /GlobMatchController.*matched requests/,
+      :fingerprint => "fb878909d1635de22ddc819e33e6a75e7f2cce0ff1efd2b7e76b361be88bb73e",
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /GlobPostController.*post requests/,
+      :fingerprint => "e5364369e3c89e5632aac3645e183037cc18de49f1b67547dca0c7febb6c849f",
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /GlobPutController.*put requests/,
+      :fingerprint => "b85eeac90866fc04b4bea19c971aed4f2458afe53c908aa7162eb1e46b84f9b6",
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /FooPostController.*post requests/,
+      :fingerprint => "880355a0a87704aa0d615dea6a175ba78711d1593843a596935f95cac3abc8a5",
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /FooGetController.*get requests/,
+      :fingerprint => "e4f29dc75741f74327ce95678173d3d5fe296335275f062c06d1348678f6a339",
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /FooPutController.*put requests/,
+      :fingerprint => "05a92f06689436b7b8189c358baab371de5f0fb7936ab206a11b251b0e5f7570",
+      :file => /routes\.rb/
+
+    assert_warning :type => :controller,
+      :warning_type => "Default Routes",
+      :message => /BarMatchController.*matched requests/,
+      :fingerprint => "857efc249dfd1b5086dcf79c35e31ef19a7782d03b3beaa12f55f8634b543d2d",
+      :file => /routes\.rb/
+  end
+
+  def test_command_injection_from_namespaced_model_1
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :class => :"MultiModel::Model1",
+      :line => 5,
+      :message => /^Possible command injection/,
+      :confidence => 0,
+      :file => /multi_model\.rb/,
+      :relative_path => "app/models/multi_model.rb",
+      :format_code => /params\[:user_input\]/
+  end
+
+  def test_command_injection_from_namespaced_model_2
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :class => :"MultiModel::Model2",
+      :line => 13,
+      :message => /^Possible command injection/,
+      :confidence => 0,
+      :file => /multi_model\.rb/,
+      :relative_path => "app/models/multi_model.rb",
+      :format_code => /params\[:user_input2\]/
   end
 end

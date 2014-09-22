@@ -53,4 +53,22 @@ class FriendlyController
                                      join thing_entries dohe on do.id = dohe.data_object_id
                                      where do.published=#{params[:published]} and dohe.visibility_id=#{something.id} group by toc.id")
   end
+
+  def redirect_to_some_places
+    if something
+      redirect_to params.merge(:host => "example.com") # Should not warn
+    elsif something_else
+      redirect_to params.merge(:host => User.canonical_url) # Should not warn
+    else
+      redirect_to params.merge(:host => params[:host]) # Should warn
+    end
+  end
+
+  def select_some_stuff
+    User.select(:name, params[:x])
+  end
+
+  def send_some_stuff
+    blah.send(params[:x]).to_json
+  end
 end
