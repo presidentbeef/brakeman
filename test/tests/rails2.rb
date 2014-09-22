@@ -1375,7 +1375,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_unscoped_find
     assert_warning :type => :warning,
       :warning_code => 82,
-      :fingerprint => "37dab9cfbb8e19488040e31be4ceb4d21d0d11b6047998e80a30085a16de20f5",
+      :fingerprint => "97cfe8a3ca261dfd2dcbd9f3aae6a007bc107c5ab6045e0f9cfaa7e66333c8c8",
       :warning_type => "Unscoped Find",
       :line => 3,
       :message => /^Unscoped\ call\ to\ Email\#find/,
