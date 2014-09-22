@@ -1,13 +1,6 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-Rails31 = BrakemanTester.run_scan(
-  "rails3.1",
-  "Rails 3.1",
-  :rails3          => true,
-  :parallel_checks => false,
-  :interprocedural => true,
-  :run_all_checks  => true
-)
+Rails31 = BrakemanTester.run_scan "rails3.1", "Rails 3.1", :rails3 => true, :parallel_checks => false, :interprocedural => true
 
 class Rails31Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
@@ -22,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 23,
       :controller => 4,
-      :generic => 89 }
+      :generic => 79 }
   end
 
   def test_without_protection

@@ -23,6 +23,15 @@ class Brakeman::CheckUnscopedFind < Brakeman::BaseCheck
 
   def process_result result
     return if duplicate? result or result[:call].original_line
+
+    # Not interested unless argument is user controlled.
+    call = result[:call]
+    return unless call.args.any? do |arg|
+      has_immediate_user_input?(arg) ||
+      has_immediate_model?(arg)      ||
+      include_user_input?(arg)
+    end
+
     add_result result
 
     warn :result => result,
