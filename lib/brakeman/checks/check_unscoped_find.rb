@@ -1,6 +1,6 @@
 require 'brakeman/checks/base_check'
 
-#Checks if user supplied data is passed to send
+# Checks for unscoped calls to models' #find and #find_by_id methods.
 class Brakeman::CheckUnscopedFind < Brakeman::BaseCheck
   Brakeman::Checks.add_optional self
 
@@ -26,19 +26,16 @@ class Brakeman::CheckUnscopedFind < Brakeman::BaseCheck
 
     # Not interested unless argument is user controlled.
     call = result[:call]
-    return unless call.args.any? do |arg|
-      has_immediate_user_input?(arg) ||
-      has_immediate_model?(arg)      ||
-      include_user_input?(arg)
-    end
+    return unless call.args.any? { |arg| include_user_input?(arg) }
 
     add_result result
 
     warn :result => result,
       :warning_type => "Unscoped Find",
       :warning_code => :unscoped_find,
-      :message => "Unscoped call to #{result[:target]}##{result[:method]}",
-      :code => result[:call],
-      :confidence => CONFIDENCE[:low]
+      :message      => "Unscoped call to #{result[:target]}##{result[:method]}",
+      :code         => result[:call],
+      :confidence   => CONFIDENCE[:low],
+      :user_input   => input.match
   end
 end
