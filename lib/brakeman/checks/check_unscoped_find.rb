@@ -26,7 +26,7 @@ class Brakeman::CheckUnscopedFind < Brakeman::BaseCheck
 
     # Not interested unless argument is user controlled.
     call = result[:call]
-    return unless call.args.any? { |arg| include_user_input?(arg) }
+    return unless input = call.args.find { |arg| include_user_input?(arg) }
 
     add_result result
 
