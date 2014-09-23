@@ -25,8 +25,8 @@ class Brakeman::CheckUnscopedFind < Brakeman::BaseCheck
     return if duplicate? result or result[:call].original_line
 
     # Not interested unless argument is user controlled.
-    call = result[:call]
-    return unless input = call.args.find { |arg| include_user_input?(arg) }
+    inputs = result[:call].args.map { |arg| include_user_input?(arg) }
+    return unless input = inputs.compact.first
 
     add_result result
 

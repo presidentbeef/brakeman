@@ -1381,7 +1381,7 @@ class Rails2Tests < Test::Unit::TestCase
       :message => /^Unscoped\ call\ to\ Email\#find/,
       :confidence => 2,
       :relative_path => "app/controllers/emails_controller.rb",
-      :user_input => nil
+      :user_input => s(:call, s(:params), :[], s(:lit, :email_id))
   end
 end
 
