@@ -65,6 +65,8 @@ module Brakeman::ProcessorHelper
         "#{class_name(exp.lhs)}::#{exp.rhs}".to_sym
       when :colon3
         "::#{exp.value}".to_sym
+      when :call
+        process exp.target
       when :self
         @current_class || @current_module || nil
       else
