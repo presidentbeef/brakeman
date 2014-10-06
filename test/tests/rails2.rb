@@ -5,7 +5,7 @@
 
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-Rails2 = BrakemanTester.run_scan "rails2", "Rails 2"
+Rails2 = BrakemanTester.run_scan "rails2", "Rails 2", :run_all_checks => true
 
 class Rails2Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
@@ -17,13 +17,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 55 }
+        :generic => 56 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 56 }
+        :generic => 57 }
     end
   end
 
@@ -1371,9 +1371,21 @@ class Rails2Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/views/other/ignore_me.html.erb"
   end
+
+  def test_unscoped_find
+    assert_warning :type => :warning,
+      :warning_code => 82,
+      :fingerprint => "97cfe8a3ca261dfd2dcbd9f3aae6a007bc107c5ab6045e0f9cfaa7e66333c8c8",
+      :warning_type => "Unscoped Find",
+      :line => 3,
+      :message => /^Unscoped\ call\ to\ Email\#find/,
+      :confidence => 2,
+      :relative_path => "app/controllers/emails_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :email_id))
+  end
 end
 
-Rails2WithOptions = BrakemanTester.run_scan "rails2", "Rails 2", :collapse_mass_assignment => false
+Rails2WithOptions = BrakemanTester.run_scan "rails2", "Rails 2", :collapse_mass_assignment => false, :run_all_checks => true
 
 class Rails2WithOptionsTests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
@@ -1385,13 +1397,13 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 55 }
+        :generic => 56 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 56 }
+        :generic => 57 }
     end
   end
 
