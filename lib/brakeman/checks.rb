@@ -26,6 +26,10 @@ class Brakeman::Checks
     @checks + @optional_checks
   end
 
+  def self.optional_checks
+    @optional_checks
+  end
+
   def self.initialize_checks check_directory = ""
     #Load all files in check_directory
     Dir.glob(File.join(check_directory, "*.rb")).sort.each do |f|

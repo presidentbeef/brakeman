@@ -249,6 +249,10 @@ module Brakeman::Options
           options[:list_checks] = true
         end
 
+        opts.on "--optional-checks", "List optional checks" do
+          options[:list_optional_checks] = true
+        end
+
         opts.on "--rake", "Create rake task to run Brakeman" do
           options[:install_rake_task] = true
         end

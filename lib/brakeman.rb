@@ -219,11 +219,18 @@ module Brakeman
 
     add_external_checks options
 
+    if options[:list_optional_checks]
+      $stderr.puts "Optional Checks:"
+      checks = Checks.optional_checks
+    else
+      $stderr.puts "Available Checks:"
+      checks = Checks.checks
+    end
+
     format_length = 30
 
-    $stderr.puts "Available Checks:"
     $stderr.puts "-" * format_length
-    Checks.checks.each do |check|
+    checks.each do |check|
       $stderr.printf("%-#{format_length}s%s\n", check.name, check.description)
     end
   end
