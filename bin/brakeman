@@ -16,7 +16,7 @@ rescue OptionParser::ParseError => e
 end
 
 #Exit early for these options
-if options[:list_checks]
+if options[:list_checks] or options[:list_optional_checks]
   Brakeman.list_checks options
   exit
 elsif options[:create_config]
