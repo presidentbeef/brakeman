@@ -68,11 +68,16 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
   end
 
   def safe_parameter? input
-    return unless params? input
-
-    call? input and
-    input.method == :[] and
-    symbol? input.first_arg and
-    [:controller, :action].include? input.first_arg.value
+    if call? input
+      if node_type? input.target, :params
+        input.method == :[] and
+        symbol? input.first_arg and
+        [:controller, :action].include? input.first_arg.value
+      else
+        safe_parameter? input.target
+      end
+    else
+      false
+    end
   end
 end

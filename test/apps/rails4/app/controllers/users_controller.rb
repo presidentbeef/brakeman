@@ -50,7 +50,7 @@ class UsersController < ApplicationController
 
   def symbolize_safe_parameters
     params[:controller].to_sym
-    params[:action].intern
+    params[:action].intern && params[:controller][/([^\/]+)$/].try(:to_sym)
   end
 
   def mass_assignment_bypass
