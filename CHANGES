@@ -1,3 +1,11 @@
+# Unreleased
+
+* Avoid warning about Symbol DoS on safe parameters as method targets
+* Fix stack overflow in ProcessHelper#class_name
+* Add optional check for unscoped find queries (Ben Toews)
+* Add framework for optional checks
+* Fix stack overflow for cycles in class ancestors (JR Richardson)
+
 # 2.6.2 
 
 * Add check for CVE-2014-3415
