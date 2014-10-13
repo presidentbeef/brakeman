@@ -13,7 +13,7 @@ class Brakeman::CheckUnscopedFind < Brakeman::BaseCheck
       active_record_models[name][:associations][:belongs_to]
     end
 
-    calls = tracker.find_call :method => [:find, :find_by_id],
+    calls = tracker.find_call :method => [:find, :find_by_id, :find_by_id!],
                               :targets => associated_model_names
 
     calls.each do |call|

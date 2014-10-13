@@ -61,4 +61,8 @@ class UsersController < ApplicationController
     x.create_with(y(params))  # medium warning
     y.create_with(x)          # weak warning
   end
+
+  def email_finds
+    Email.find_by_id! params[:email][:id]
+  end
 end

@@ -16,7 +16,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 36
+      :generic => 37
     }
   end
 
@@ -646,6 +646,18 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/controllers/application_controller.rb",
       :user_input => nil
+  end
+
+  def test_unscoped_find_by_id_bang
+    assert_warning :type => :warning,
+      :warning_code => 82,
+      :fingerprint => "4d88d42b82e11010ba1fb67f587bb756068caefe73bb74cc9c3e6f3b9842810f",
+      :warning_type => "Unscoped Find",
+      :line => 66,
+      :message => /^Unscoped\ call\ to\ Email\#find_by_id!/,
+      :confidence => 2,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :id))
   end
 
   #Verify checks external to Brakeman are loaded
