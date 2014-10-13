@@ -1,10 +1,11 @@
-# Unreleased
+# 2.6.3
 
+* Whitelist `exists` arel method from SQL injection check
 * Avoid warning about Symbol DoS on safe parameters as method targets
 * Fix stack overflow in ProcessHelper#class_name
 * Add optional check for unscoped find queries (Ben Toews)
 * Add framework for optional checks
-* Fix stack overflow for cycles in class ancestors (JR Richardson)
+* Fix stack overflow for cycles in class ancestors (Jeff Rafter)
 
 # 2.6.2 
 
