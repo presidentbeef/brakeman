@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2014-10-13T17:41:04-07:00</updated>
+  <updated>2014-10-13T21:42:18-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -76,6 +76,10 @@
 &lt;h3&gt;SHAs&lt;/h3&gt;
 
 &lt;p&gt;The SHA1 sums for this release are&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ceb689e3a6efd7e28483828de3441ec1fad501c1  brakeman-2.6.3.gem
+334a7820c05bfeb31e0e9d8123f45daef64eb102  brakeman-min-2.6.3.gem
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3&gt;Reporting Issues&lt;/h3&gt;
 
