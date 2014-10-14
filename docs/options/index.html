@@ -112,6 +112,11 @@
 
 <h2>Scanning Options</h2>
 
+<p>There are some checks which are not run by default. To run all checks, use:</p>
+
+<pre><code>brakeman -A
+</code></pre>
+
 <p>Each check will be run in a separate thread by default. To disable this behavior:</p>
 
 <pre><code>brakeman -n
@@ -390,6 +395,11 @@ brakeman --test SQL
 <pre><code>brakeman --checks
 </code></pre>
 
+<p>To show checks which are optional (not run by default):</p>
+
+<pre><code>brakeman --optional-checks
+</code></pre>
+
 <p>To generate a Rake task to run Brakeman:</p>
 
 <pre><code>brakeman --rake
@@ -452,6 +462,10 @@ brakeman --test SQL
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/13/brakeman-2-dot-6-3-released/">Brakeman 2.6.3 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/08/27/brakeman-is-four-years-old/">Brakeman is Four Years Old!</a>
       </li>
     
@@ -465,10 +479,6 @@ brakeman --test SQL
     
       <li class="post">
         <a href="/blog/2014/06/06/brakeman-2-dot-6-0-released/">Brakeman 2.6.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/30/brakeman-2-dot-5-0-released/">Brakeman 2.5.0 Released</a>
       </li>
     
   </ul>
