@@ -457,7 +457,7 @@ class Rails4Tests < Test::Unit::TestCase
       :warning_code => 67,
       :fingerprint => "e950ee1043d7f66b7f6ce99c2bf0876bd3ce8cb12818b52565b905cdb6004bad",
       :warning_type => "Cross Site Scripting",
-      :line => nil,
+      :line => 4,
       :message => /^Rails\ 4\.0\.0 has\ a\ vulnerability\ in/,
       :confidence => 1,
       :relative_path => "Gemfile",

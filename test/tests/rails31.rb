@@ -815,32 +815,34 @@ class Rails31Tests < Test::Unit::TestCase
   def test_denial_of_service_CVE_2013_1854
     assert_warning :type => :warning,
       :warning_code => 55,
-      :fingerprint => "2746b8872d4f46676a8c490a7ac906d23f6b11c9d83b6371ff5895139ec7b43b",
+      :fingerprint => "2aaf46791b1a8c520cd594aa0b6e382b81b9c8cd9728176a057208e412ec9962",
       :warning_type => "Denial of Service",
       :message => /^Rails\ 3\.1\.0\ has\ a\ denial\ of\ service\ vul/,
       :confidence => 1,
-      :file => /Gemfile/
+      :line => 69,
+      :relative_path => "Gemfile.lock"
   end
 
   def test_denial_of_service_CVE_2013_6414
     assert_warning :type => :warning,
       :warning_code => 64,
-      :fingerprint => "a7b00f08e4a18c09388ad017876e3f57d18040ead2816a2091f3301b6f0e5a00",
+      :fingerprint => "ee4938ce7bc4aa6f37b3d993d6fed813de6b15e5c1ada41146563207c395b0c5",
       :warning_type => "Denial of Service",
       :message => /^Rails\ 3\.1\.0\ has\ a\ denial\ of\ service\ vuln/,
       :confidence => 1,
-      :relative_path => "Gemfile"
+      :line => 69,
+      :relative_path => "Gemfile.lock"
   end
 
   def test_number_to_currency_CVE_2014_0081
     assert_warning :type => :warning,
       :warning_code => 73,
-      :fingerprint => "f6981b9c24727ef45040450a1f4b158ae3bc31b4b0343efe853fe12c64881695",
+      :fingerprint => "86f945934ed965a47c30705141157c44ee5c546d044f8de7d573bfab456e97ce",
       :warning_type => "Cross Site Scripting",
-      :line => nil,
+      :line => 69,
       :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ numbe/,
       :confidence => 1,
-      :relative_path => "Gemfile",
+      :relative_path => "Gemfile.lock",
       :user_input => nil
   end
 

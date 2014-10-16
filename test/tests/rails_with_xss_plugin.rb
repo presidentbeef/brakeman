@@ -404,11 +404,10 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :warning_code => 73,
       :fingerprint => "f6981b9c24727ef45040450a1f4b158ae3bc31b4b0343efe853fe12c64881695",
       :warning_type => "Cross Site Scripting",
-      :line => nil,
+      :line => 3,
       :message => /^Rails\ 2\.3\.14\ has\ a\ vulnerability\ in\ numb/,
       :confidence => 1,
-      :relative_path => "Gemfile",
-      :user_input => nil
+      :relative_path => "Gemfile"
   end
 
   def test_remote_code_execution_CVE_2014_0130
