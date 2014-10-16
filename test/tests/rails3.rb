@@ -1164,12 +1164,13 @@ class Rails3Tests < Test::Unit::TestCase
   def test_sql_injection_CVE_2013_6417
     assert_warning :type => :warning,
       :warning_code => 69,
-      :fingerprint => "e1b66f4311771d714a13be519693c540d7e917511a758827d9b2a0a7f958e40f",
+      :fingerprint => "2f63d663e9f35ba60ef81d56ffc4fbf0660fbc2067e728836176bc18f610f77f",
       :warning_type => "SQL Injection",
-      :line => nil,
+      :line => 49,
+      :file => /Gemfile.lock/,
       :message => /^Rails\ 3\.0\.3\ contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
-      :relative_path => "Gemfile",
+      :relative_path => "Gemfile.lock",
       :user_input => nil
   end
 

@@ -97,11 +97,12 @@ class Rails32Tests < Test::Unit::TestCase
   def test_i18n_xss_CVE_2013_4491
     assert_warning :type => :warning,
       :warning_code => 63,
-      :fingerprint => "de0e11056b9f9af7b8570d5354185cd7e17a18cc61d627555fe4adfff00fb447",
+      :fingerprint => "7ef985c538fd302e9450be3a61b2177c26bbfc6ccad7a598006802b0f5f8d6ae",
       :warning_type => "Cross Site Scripting",
       :message => /^Rails\ 3\.2\.9\.rc2\ has\ an\ XSS\ vulnerability/,
+      :file => /Gemfile\.lock/,
       :confidence => 1,
-      :relative_path => "Gemfile"
+      :relative_path => /Gemfile.lock/
   end
 
   def test_number_to_currency_CVE_2014_0081
@@ -119,12 +120,13 @@ class Rails32Tests < Test::Unit::TestCase
   def test_sql_injection_CVE_2013_6417
     assert_warning :type => :warning,
       :warning_code => 69,
-      :fingerprint => "e1b66f4311771d714a13be519693c540d7e917511a758827d9b2a0a7f958e40f",
+      :fingerprint => "2f63d663e9f35ba60ef81d56ffc4fbf0660fbc2067e728836176bc18f610f77f",
       :warning_type => "SQL Injection",
-      :line => nil,
+      :line => 64,
+      :file => /Gemfile.lock/,
       :message => /^Rails\ 3\.2\.9\.rc2 contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
-      :relative_path => "Gemfile",
+      :relative_path => /Gemfile.lock/,
       :user_input => nil
   end
 

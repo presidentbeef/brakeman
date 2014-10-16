@@ -21,12 +21,15 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
                     end
 
       message = "Rails #{tracker.config[:rails_version]} has a serious JSON parsing vulnerability: upgrade to #{new_version} or patch"
+      file = tracker.config[:gems][:yajl][:file] if uses_yajl?
+      line = tracker.config[:gems][:yajl][:line] if uses_yajl?
 
       warn :warning_type => "Remote Code Execution",
         :warning_code => :CVE_2013_0333,
         :message => message,
         :confidence => CONFIDENCE[:high],
-        :file => gemfile_or_environment,
+        :file => file || gemfile_or_environment, 
+        :line => line,
         :link_path => "https://groups.google.com/d/topic/rubyonrails-security/1h2DR63ViGo/discussion"
     end
   end
@@ -55,8 +58,8 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
 
   def check_cve_2013_0269
     [:json, :json_pure].each do |name|
-      version = tracker.config[:gems] && tracker.config[:gems][name]
-      check_json_version name, version if version
+      gem_hash = tracker.config[:gems][name] if tracker.config[:gems]
+      check_json_version name, gem_hash[:version] if gem_hash and gem_hash[:version]
     end
   end
 
@@ -90,7 +93,8 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
       :warning_code => :CVE_2013_0269,
       :message => message,
       :confidence => confidence,
-      :file => gemfile_or_environment,
+      :file => @tracker.config[:gems][name][:file] || gemfile_or_environment,
+      :line => @tracker.config[:gems][name][:line],
       :link => "https://groups.google.com/d/topic/rubyonrails-security/4_YvCpLzL58/discussion"
   end
 

@@ -412,11 +412,12 @@ class Rails4Tests < Test::Unit::TestCase
   def test_i18n_xss_CVE_2013_4491_workaround
     assert_no_warning :type => :warning,
       :warning_code => 63,
-      :fingerprint => "de0e11056b9f9af7b8570d5354185cd7e17a18cc61d627555fe4adfff00fb447",
+      :fingerprint => "7ef985c538fd302e9450be3a61b2177c26bbfc6ccad7a598006802b0f5f8d6ae",
       :warning_type => "Cross Site Scripting",
       :message => /^Rails\ 4\.0\.0\ has\ an\ XSS\ vulnerability\ in\ /,
+      :file => /Gemfile\.lock/,
       :confidence => 1,
-      :relative_path => "Gemfile"
+      :relative_path => /Gemfile/
   end
 
   def test_denial_of_service_CVE_2013_6414
@@ -480,7 +481,8 @@ class Rails4Tests < Test::Unit::TestCase
       :warning_code => 69,
       :fingerprint => "e1b66f4311771d714a13be519693c540d7e917511a758827d9b2a0a7f958e40f",
       :warning_type => "SQL Injection",
-      :line => nil,
+      :line => 4,
+      :file => /Gemfile/,
       :message => /^Rails\ 4\.0\.0 contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",
@@ -492,7 +494,8 @@ class Rails4Tests < Test::Unit::TestCase
       :warning_code => 72,
       :fingerprint => "0ba20216bdda1cc067f9e4795bdb0d9224fd23c58317ecc09db67b6b38a2d0f0",
       :warning_type => "SQL Injection",
-      :line => nil,
+      :line => 6,
+      :file => /Gemfile/,
       :message => /^Rails\ 4\.0\.0\ contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",
@@ -516,7 +519,8 @@ class Rails4Tests < Test::Unit::TestCase
       :warning_code => 78,
       :fingerprint => "5c9706393849d7de5125a3688562aea31e112a7b09d0abbb461ee5dc7c1751b8",
       :warning_type => "SQL Injection",
-      :line => nil,
+      :line => 4,
+      :file => /Gemfile/,
       :message => /^Rails\ 4\.0\.0\ contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",
@@ -528,7 +532,8 @@ class Rails4Tests < Test::Unit::TestCase
       :warning_code => 79,
       :fingerprint => "4a60c60c39e12b1dd1d8b490f228594f0a555aa5447587625df362327e86ad2f",
       :warning_type => "SQL Injection",
-      :line => nil,
+      :line => 4,
+      :file => /Gemfile/,
       :message => /^Rails\ 4\.0\.0\ contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",

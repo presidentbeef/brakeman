@@ -55,6 +55,7 @@ class #{name}Tests < Test::Unit::TestCase
       :fingerprint => #{w.fingerprint.inspect},
       :warning_type => #{w.warning_type.inspect},
       :line => #{w.line.inspect},
+      :file => #{w.file.inspect},
       :message => /^#{Regexp.escape w.message[0,40]}/,
       :confidence => #{w.confidence},
       :relative_path => #{w.relative_path.inspect},
