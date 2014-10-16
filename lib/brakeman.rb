@@ -19,7 +19,7 @@ module Brakeman
   #  * :app_path - path to root of Rails app (required)
   #  * :assume_all_routes - assume all methods are routes (default: true)
   #  * :check_arguments - check arguments of methods (default: true)
-  #  * :collapse_mass_assignment - report unprotected models in single warning (default: true)
+  #  * :collapse_mass_assignment - report unprotected models in single warning (default: false)
   #  * :combine_locations - combine warning locations (default: true)
   #  * :config_file - configuration file
   #  * :escape_html - escape HTML by default (automatic)
@@ -122,7 +122,7 @@ module Brakeman
       :safe_methods => Set.new,
       :min_confidence => 2,
       :combine_locations => true,
-      :collapse_mass_assignment => true,
+      :collapse_mass_assignment => false,
       :highlight_user_input => true,
       :ignore_redirect_to_model => true,
       :ignore_model_output => false,

@@ -4,7 +4,8 @@ RailsWithXssPlugin = BrakemanTester.run_scan(
   "rails_with_xss_plugin",
   "RailsWithXssPlugin",
   :absolute_paths => true,
-  :run_all_checks => true
+  :run_all_checks => true,
+  :collapse_mass_assignment => true
 )
 
 class RailsWithXssPluginTests < Test::Unit::TestCase

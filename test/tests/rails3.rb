@@ -14,7 +14,7 @@ class Rails3Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :controller => 1,
-      :model => 8,
+      :model => 9,
       :template => 38,
       :generic => 72
     }
@@ -395,10 +395,22 @@ class Rails3Tests < Test::Unit::TestCase
 
   def test_attribute_restriction
     assert_warning :type => :model,
+      :warning_code => 19,
+      :fingerprint => "91d73b1b9d6920156b920729c0146292eb9f10f4ba9515740442dbe82d4dee78",
       :warning_type => "Attribute Restriction",
-      :message => /^Mass assignment is not restricted using /,
+      :line => nil,
+      :message => /^Mass\ assignment\ is\ not\ restricted\ using\ /,
       :confidence => 0,
-      :file => /account, user\.rb/
+      :relative_path => "app/models/account.rb"
+
+    assert_warning :type => :model,
+      :warning_code => 19,
+      :fingerprint => "b325ae8a4570599cde146875ae86427506befae36a3b4a97ce2223930846fec5",
+      :warning_type => "Attribute Restriction",
+      :line => nil,
+      :message => /^Mass\ assignment\ is\ not\ restricted\ using\ /,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb"
   end
 
   def test_attr_protected
