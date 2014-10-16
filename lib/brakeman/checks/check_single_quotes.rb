@@ -33,7 +33,7 @@ class Brakeman::CheckSingleQuotes < Brakeman::BaseCheck
       :warning_code => :CVE_2012_3464,
       :message => message,
       :confidence => CONFIDENCE[:med],
-      :file => gemfile_or_environment,
+      :gem_info => gemfile_or_environment,
       :link_path => "https://groups.google.com/d/topic/rubyonrails-security/kKGNeMrnmiY/discussion"
   end
 

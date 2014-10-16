@@ -24,7 +24,7 @@ class Brakeman::CheckMailTo < Brakeman::BaseCheck
         :warning_code => :CVE_2011_0446,
         :message => message,
         :confidence => CONFIDENCE[:high],
-        :file => gemfile_or_environment,
+        :gem_info => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/topic/rubyonrails-security/8CpI7egxX4E/discussion"
     end
   end

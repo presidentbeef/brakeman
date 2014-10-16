@@ -29,7 +29,7 @@ class Brakeman::CheckDigestDoS < Brakeman::BaseCheck
       :message => message,
       :confidence => confidence,
       :link_path => "https://groups.google.com/d/topic/rubyonrails-security/vxJjrc15qYM/discussion",
-      :file => gemfile_or_environment
+      :gem_info => gemfile_or_environment
   end
 
   def with_http_digest?

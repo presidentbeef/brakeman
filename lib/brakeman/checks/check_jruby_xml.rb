@@ -32,7 +32,7 @@ class Brakeman::CheckJRubyXML < Brakeman::BaseCheck
       :warning_code => :CVE_2013_1856,
       :message => "Rails #{tracker.config[:rails_version]} with JRuby has a vulnerability in XML parser: upgrade to #{fix_version} or patch",
       :confidence => CONFIDENCE[:high],
-      :file => gemfile_or_environment,
+      :gem_info => gemfile_or_environment,
       :link => "https://groups.google.com/d/msg/rubyonrails-security/KZwsQbYsOiI/5kUV7dSCJGwJ"
   end
 end

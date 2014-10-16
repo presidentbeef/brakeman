@@ -487,8 +487,10 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     version_between? version, "2.3.18.99", tracker.config[:gems][:'railslts-version'][:version]
   end
 
-  def gemfile_or_environment
-    if @app_tree.exists?("Gemfile")
+  def gemfile_or_environment gem_name = :rails
+    if gem_name and info = tracker.config[:gems][gem_name]
+      info
+    elsif @app_tree.exists?("Gemfile")
       "Gemfile"
     else
       "config/environment.rb"
