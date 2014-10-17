@@ -200,8 +200,8 @@ module Brakeman::Options
           options[:output_files].push(file)
         end
 
-        opts.on "--separate-models", "Warn on each model without attr_accessible" do
-          options[:collapse_mass_assignment] = false
+        opts.on "--[no]-separate-models", "Warn on each model without attr_accessible (Default)" do |combine|
+          options[:collapse_mass_assignment] = combine
         end
 
         opts.on "--summary", "Only output summary of warnings" do

@@ -139,9 +139,9 @@ To limit width of the tables output in text reports, use
 
 By default, there is no limit.
 
-Brakeman will bundle all warnings about models without `attr_accessible` into one warning. This was problem a mistake. It's more useful to get one warning per model with
+Brakeman will warn about each model without `attr_accessible`. In the HTML report it may be nicer to get all models in one warning with
 
-    brakeman --separate-models
+    brakeman --no-separate-models
 
 Sometimes you don't need a big report, just the summary:
 
