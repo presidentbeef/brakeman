@@ -68,7 +68,7 @@ class Brakeman::CheckCreateWith < Brakeman::BaseCheck
       warn :warning_type => "Mass Assignment",
         :warning_code => :CVE_2014_3514,
         :message => @message,
-        :file => gemfile_or_environment,
+        :gem_info => gemfile_or_environment,
         :confidence => CONFIDENCE[:med],
         :link_path => "https://groups.google.com/d/msg/rubyonrails-security/M4chq5Sb540/CC1Fh0Y_NWwJ"
   end

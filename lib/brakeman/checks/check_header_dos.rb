@@ -19,7 +19,7 @@ class Brakeman::CheckHeaderDoS < Brakeman::BaseCheck
         :warning_code => :CVE_2013_6414,
         :message => message,
         :confidence => CONFIDENCE[:med],
-        :file => gemfile_or_environment,
+        :gem_info => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/msg/ruby-security-ann/A-ebV4WxzKg/KNPTbX8XAQUJ"
     end
   end
