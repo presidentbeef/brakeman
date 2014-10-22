@@ -9,7 +9,7 @@ class MassAssignDisableTest < Test::Unit::TestCase
     end
 
     assert_changes
-    assert_fixed 3
+    assert_fixed 4
     assert_new 0
   end
 

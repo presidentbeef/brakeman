@@ -30,7 +30,7 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
       :warning_code => :CVE_2014_0081,
       :message => message,
       :confidence => CONFIDENCE[:med],
-      :file => gemfile_or_environment,
+      :gem_info => gemfile_or_environment,
       :link_path => "https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ"
   end
 

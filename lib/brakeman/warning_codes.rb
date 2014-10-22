@@ -41,7 +41,7 @@ module Brakeman::WarningCodes
     :CVE_2012_2660 => 38,
     :CVE_2012_2661 => 39,
     :CVE_2012_2695 => 40,
-    :CVE_2012_2931 => 41,
+    #:CVE_2012_2931 => 41,
     :CVE_2012_3424 => 42,
     :CVE_2012_3463 => 43,
     :CVE_2012_3464 => 44,
@@ -65,8 +65,9 @@ module Brakeman::WarningCodes
     :detailed_exceptions => 62,
     :CVE_2013_4491 => 63,
     :CVE_2013_6414 => 64,
-    :CVE_2013_6415 => 65,
-    :CVE_2013_6415_call => 66,
+    # Replaced by CVE_2014_0081
+    #:CVE_2013_6415 => 65,
+    #:CVE_2013_6415_call => 66,
     :CVE_2013_6416 => 67,
     :CVE_2013_6416_call => 68,
     :CVE_2013_6417 => 69,
@@ -76,7 +77,13 @@ module Brakeman::WarningCodes
     :CVE_2014_0081 => 73,
     :CVE_2014_0081_call => 74,
     :CVE_2014_0082 => 75,
-    :regex_dos => 76
+    :regex_dos => 76,
+    :CVE_2014_0130 => 77,
+    :CVE_2014_3482 => 78,
+    :CVE_2014_3483 => 79,
+    :CVE_2014_3514 => 80,
+    :CVE_2014_3514_call => 81,
+    :unscoped_find => 82,
   }
 
   def self.code name

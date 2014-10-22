@@ -6,6 +6,29 @@ class BrakemanTests < Test::Unit::TestCase
       Brakeman.run "/tmp#{rand}" #better not exist
     end
   end
+
+  def test_app_tree_root_is_absolute
+    require 'brakeman/options'
+    relative_path = Pathname.new(File.dirname(__FILE__)).relative_path_from(Pathname.getwd)
+    absolute_path = relative_path.realpath.to_s
+    input = ["-p", relative_path.to_s]
+    options, _ = Brakeman::Options.parse input
+    at = Brakeman::AppTree.from_options options
+
+    assert !options[:app_path].start_with?("/")
+    assert_equal absolute_path, at.root
+    assert_equal File.join(absolute_path, "Gemfile"), at.expand_path("Gemfile")
+  end
+
+  def test_relative_path_in_warnings
+    relative_path = Pathname.new(File.dirname(__FILE__)).relative_path_from(Pathname.getwd)
+    absolute_path = relative_path.realpath.to_s
+    input = ["-p", relative_path.to_s]
+    options, _ = Brakeman::Options.parse input
+    at = Brakeman::AppTree.from_options options
+
+
+  end
 end
 
 class UtilTests < Test::Unit::TestCase
@@ -42,7 +65,7 @@ class BaseCheckTests < Test::Unit::TestCase
   end
 
   def lts_version? version, low
-    @tracker.config = { :gems => { :"railslts-version" => version } }
+    @tracker.config = { :gems => { :"railslts-version" => { :version => version, :file => nil, :line => nil} } }
     @check.send(:lts_version?, low)
   end
 
@@ -222,7 +245,7 @@ class GemProcessorTests < Test::Unit::TestCase
   FakeTracker = Struct.new(:config, :options)
 
   def assert_version version, name, msg = nil
-    assert_equal version, @tracker[:config][:gems][name], msg
+    assert_equal version, @tracker[:config][:gems][name][:version], msg
   end
 
   def setup

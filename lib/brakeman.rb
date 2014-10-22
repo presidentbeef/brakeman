@@ -20,7 +20,7 @@ module Brakeman
   #  * :app_path - path to root of Rails app (required)
   #  * :assume_all_routes - assume all methods are routes (default: true)
   #  * :check_arguments - check arguments of methods (default: true)
-  #  * :collapse_mass_assignment - report unprotected models in single warning (default: true)
+  #  * :collapse_mass_assignment - report unprotected models in single warning (default: false)
   #  * :combine_locations - combine warning locations (default: true)
   #  * :config_file - configuration file
   #  * :escape_html - escape HTML by default (automatic)
@@ -77,7 +77,6 @@ module Brakeman
       options[:quiet] = true
     end
 
-    options[:app_path] = File.expand_path(options[:app_path])
     options[:output_formats] = get_output_formats options
     options[:github_url] = get_github_url options
 
@@ -124,7 +123,7 @@ module Brakeman
       :safe_methods => Set.new,
       :min_confidence => 2,
       :combine_locations => true,
-      :collapse_mass_assignment => true,
+      :collapse_mass_assignment => false,
       :highlight_user_input => true,
       :ignore_redirect_to_model => true,
       :ignore_model_output => false,
@@ -216,13 +215,23 @@ module Brakeman
   private_class_method :get_github_url
 
   #Output list of checks (for `-k` option)
-  def self.list_checks
+  def self.list_checks options
     require 'brakeman/scanner'
+
+    add_external_checks options
+
+    if options[:list_optional_checks]
+      $stderr.puts "Optional Checks:"
+      checks = Checks.optional_checks
+    else
+      $stderr.puts "Available Checks:"
+      checks = Checks.checks
+    end
+
     format_length = 30
 
-    $stderr.puts "Available Checks:"
     $stderr.puts "-" * format_length
-    Checks.checks.each do |check|
+    checks.each do |check|
       $stderr.printf("%-#{format_length}s%s\n", check.name, check.description)
     end
   end
@@ -302,11 +311,14 @@ module Brakeman
       raise NoBrakemanError, "Cannot find lib/ directory."
     end
 
+    add_external_checks options
+
     #Start scanning
     scanner = Scanner.new options
+    tracker = scanner.tracker
 
-    notify "Processing application in #{options[:app_path]}"
-    tracker = scanner.process
+    notify "Processing application in #{tracker.app_path}"
+    scanner.process
 
     if options[:parallel_checks]
       notify "Running checks in parallel..."
@@ -384,6 +396,8 @@ module Brakeman
     require 'brakeman/differ'
     raise ArgumentError.new("Comparison file doesn't exist") unless File.exists? options[:previous_results_json]
 
+    add_external_checks options
+
     begin
       previous_results = MultiJson.load(File.read(options[:previous_results_json]), :symbolize_keys => true)[:warnings]
     rescue MultiJson::DecodeError
@@ -436,6 +450,12 @@ module Brakeman
     end
 
     tracker.ignored_filter = config
+  end
+
+  def self.add_external_checks options
+    options[:additional_checks_path].each do |path|
+      Brakeman::Checks.initialize_checks path
+    end if options[:additional_checks_path]
   end
 
   class DependencyError < RuntimeError; end

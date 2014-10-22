@@ -32,7 +32,7 @@ module Brakeman::Options
         end
 
         opts.on "-p", "--path PATH", "Specify path to Rails application" do |path|
-          options[:app_path] = File.expand_path path
+          options[:app_path] = path
         end
 
         opts.on "-q", "--[no-]quiet", "Suppress informational messages" do |quiet|
@@ -47,8 +47,17 @@ module Brakeman::Options
           options[:rails3] = true
         end
 
+        opts.on "-4", "--rails4", "Force Rails 4 mode" do
+          options[:rails3] = true
+          options[:rails4] = true
+        end
+
         opts.separator ""
         opts.separator "Scanning options:"
+
+        opts.on "-A", "--run-all-checks", "Run all default and optional checks" do
+          options[:run_all_checks] = true
+        end
 
         opts.on "-a", "--[no-]assume-routes", "Assume all controller methods are actions (default)" do |assume|
           options[:assume_all_routes] = assume
@@ -138,6 +147,11 @@ module Brakeman::Options
           end
         end
 
+        opts.on "--add-checks-path path1,path2,etc", Array, "A directory containing additional out-of-tree checks to run" do |paths|
+          options[:additional_checks_path] ||= Set.new
+          options[:additional_checks_path].merge paths.map {|p| File.expand_path p}
+        end
+
         opts.separator ""
         opts.separator "Output options:"
 
@@ -191,8 +205,8 @@ module Brakeman::Options
           options[:output_files].push(file)
         end
 
-        opts.on "--separate-models", "Warn on each model without attr_accessible" do
-          options[:collapse_mass_assignment] = false
+        opts.on "--[no]-separate-models", "Warn on each model without attr_accessible (Default)" do |combine|
+          options[:collapse_mass_assignment] = combine
         end
 
         opts.on "--summary", "Only output summary of warnings" do
@@ -238,6 +252,10 @@ module Brakeman::Options
 
         opts.on "-k", "--checks", "List all available vulnerability checks" do
           options[:list_checks] = true
+        end
+
+        opts.on "--optional-checks", "List optional checks" do
+          options[:list_optional_checks] = true
         end
 
         opts.on "--rake", "Create rake task to run Brakeman" do

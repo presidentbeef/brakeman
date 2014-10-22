@@ -32,6 +32,6 @@ class Brakeman::CheckRenderDoS < Brakeman::BaseCheck
       :message => message,
       :confidence => CONFIDENCE[:high],
       :link_path => "https://groups.google.com/d/msg/rubyonrails-security/LMxO_3_eCuc/ozGBEhKaJbIJ",
-      :file => gemfile_or_environment
+      :gem_info => gemfile_or_environment
   end
 end

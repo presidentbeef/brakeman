@@ -169,4 +169,10 @@ class OutputProcessorTests < Test::Unit::TestCase
           s(:call, nil, :x)),
           1)
   end
+
+  def test_rescue_block
+    assert_output "a rescue b",
+      s(:rescue, s(:call, nil, :a),
+        s(:resbody, s(:array), s(:call, nil, :b)))
+  end
 end

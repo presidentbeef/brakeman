@@ -14,9 +14,9 @@ class Rails3Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :controller => 1,
-      :model => 8,
+      :model => 9,
       :template => 38,
-      :generic => 71
+      :generic => 72
     }
 
     if RUBY_PLATFORM == 'java'
@@ -395,10 +395,22 @@ class Rails3Tests < Test::Unit::TestCase
 
   def test_attribute_restriction
     assert_warning :type => :model,
+      :warning_code => 19,
+      :fingerprint => "91d73b1b9d6920156b920729c0146292eb9f10f4ba9515740442dbe82d4dee78",
       :warning_type => "Attribute Restriction",
-      :message => /^Mass assignment is not restricted using /,
+      :line => nil,
+      :message => /^Mass\ assignment\ is\ not\ restricted\ using\ /,
       :confidence => 0,
-      :file => /account, user\.rb/
+      :relative_path => "app/models/account.rb"
+
+    assert_warning :type => :model,
+      :warning_code => 19,
+      :fingerprint => "b325ae8a4570599cde146875ae86427506befae36a3b4a97ce2223930846fec5",
+      :warning_type => "Attribute Restriction",
+      :line => nil,
+      :message => /^Mass\ assignment\ is\ not\ restricted\ using\ /,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb"
   end
 
   def test_attr_protected
@@ -1045,12 +1057,12 @@ class Rails3Tests < Test::Unit::TestCase
   def test_mail_link_CVE_2011_0446
     assert_warning :type => :template,
       :warning_code => 32,
-      :fingerprint => "ca5cb14e201255ecf4904957bba2e12eab64ea2d31c26d7150a431dcdae2f206",
+      :fingerprint => "036a26cc74453c8ca220442bb647911effbb1e6d0b1c47f1131a967a2e0922d5",
       :warning_type => "Mail Link",
       :line => 1,
       :message => /^Vulnerability\ in\ mail_to\ using\ javascrip/,
       :confidence => 0,
-      :file => /Gemfile/
+      :relative_path => "Gemfile.lock"
   end
 
   def test_sql_injection_CVE_2013_0155
@@ -1142,46 +1154,60 @@ class Rails3Tests < Test::Unit::TestCase
   def test_denial_of_service_CVE_2013_6414
     assert_warning :type => :warning,
       :warning_code => 64,
-      :fingerprint => "a7b00f08e4a18c09388ad017876e3f57d18040ead2816a2091f3301b6f0e5a00",
+      :fingerprint => "ee4938ce7bc4aa6f37b3d993d6fed813de6b15e5c1ada41146563207c395b0c5",
       :warning_type => "Denial of Service",
       :message => /^Rails\ 3\.0\.3\ has\ a\ denial\ of\ service\ vuln/,
       :confidence => 1,
-      :relative_path => "Gemfile"
+      :line => 49,
+      :relative_path => "Gemfile.lock"
   end
 
   def test_number_to_currency_CVE_2014_0081
     assert_warning :type => :warning,
       :warning_code => 73,
-      :fingerprint => "f6981b9c24727ef45040450a1f4b158ae3bc31b4b0343efe853fe12c64881695",
+      :fingerprint => "86f945934ed965a47c30705141157c44ee5c546d044f8de7d573bfab456e97ce",
       :warning_type => "Cross Site Scripting",
-      :line => nil,
+      :line => 49,
       :message => /^Rails\ 3\.0\.3\ has\ a\ vulnerability\ in\ numbe/,
       :confidence => 1,
-      :relative_path => "Gemfile",
+      :relative_path => "Gemfile.lock",
       :user_input => nil
   end
 
   def test_sql_injection_CVE_2013_6417
     assert_warning :type => :warning,
       :warning_code => 69,
-      :fingerprint => "e1b66f4311771d714a13be519693c540d7e917511a758827d9b2a0a7f958e40f",
+      :fingerprint => "2f63d663e9f35ba60ef81d56ffc4fbf0660fbc2067e728836176bc18f610f77f",
       :warning_type => "SQL Injection",
-      :line => nil,
+      :line => 49,
+      :file => /Gemfile.lock/,
       :message => /^Rails\ 3\.0\.3\ contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
-      :relative_path => "Gemfile",
+      :relative_path => "Gemfile.lock",
       :user_input => nil
   end
 
   def test_denial_of_service_CVE_2014_0082
     assert_warning :type => :warning,
       :warning_code => 75,
-      :fingerprint => "403a72d08a90043384fe56d3a6bc3e255b8799b380693914143d403607433db7",
+      :fingerprint => "99b6df435353f17dff4b0d7dfeb5f21e5c0e8045dc73533e456baf78f1fc2215",
       :warning_type => "Denial of Service",
-      :line => nil,
+      :line => 49,
       :message => /^Rails\ 3\.0\.3\ has\ a\ denial\ of\ service\ vuln/,
       :confidence => 0,
-      :relative_path => "Gemfile",
+      :relative_path => "Gemfile.lock",
+      :user_input => nil
+  end
+
+  def test_remote_code_execution_CVE_2014_0130
+    assert_warning :type => :warning,
+      :warning_code => 77,
+      :fingerprint => "93393e44a0232d348e4db62276b18321b4cbc9051b702d43ba2fd3287175283c",
+      :warning_type => "Remote Code Execution",
+      :line => nil,
+      :message => /^Rails\ 3\.0\.3\ with\ globbing\ routes\ is\ vuln/,
+      :confidence => 0,
+      :relative_path => "config/routes.rb",
       :user_input => nil
   end
 

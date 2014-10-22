@@ -20,12 +20,12 @@ class Brakeman::Report::Tests < Brakeman::Report::Base
   def generate_report
     counter = 0
 
-    name = camelize File.basename(tracker.options[:app_path])
+    name = camelize File.basename(tracker.app_path)
 
     output = <<-RUBY
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-#{name} = BrakemanTester.run_scan "#{File.basename tracker.options[:app_path]}", "#{name}"
+#{name} = BrakemanTester.run_scan "#{File.basename tracker.app_path}", "#{name}"
 
 class #{name}Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
@@ -55,6 +55,7 @@ class #{name}Tests < Test::Unit::TestCase
       :fingerprint => #{w.fingerprint.inspect},
       :warning_type => #{w.warning_type.inspect},
       :line => #{w.line.inspect},
+      :file => #{w.file.inspect},
       :message => /^#{Regexp.escape w.message[0,40]}/,
       :confidence => #{w.confidence},
       :relative_path => #{w.relative_path.inspect},
@@ -71,9 +72,9 @@ options, _ = Brakeman::Options.parse!(ARGV)
 
 unless options[:app_path]
   if ARGV[-1].nil?
-    options[:app_path] = File.expand_path "."
+    options[:app_path] = "."
   else
-    options[:app_path] = File.expand_path ARGV[-1]
+    options[:app_path] = ARGV[-1]
   end
 end
 

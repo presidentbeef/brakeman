@@ -12,7 +12,14 @@ class Sexp
     #
     #The original functionality calls find_node and optionally
     #deletes the node if found.
-    raise NoMethodError.new("No method '#{name}' for Sexp", name, args)
+    #
+    #Defining a method named "return" seems like a bad idea, so we have to
+    #check for it here instead
+    if name == :return
+      find_node name, *args
+    else
+      raise NoMethodError.new("No method '#{name}' for Sexp", name, args)
+    end
   end
 
   #Create clone of Sexp and nested Sexps but not their non-Sexp contents.

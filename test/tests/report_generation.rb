@@ -24,8 +24,12 @@ class TestReportGeneration < Test::Unit::TestCase
 
   def test_csv_sanity
     report = Report.to_csv
+    parsed = CSV.parse report
+    summary_header = ["Application Path", "Report Generation Time", "Checks Performed", "Rails Version"]
 
     assert report.is_a? String
+    assert_equal ["BRAKEMAN REPORT"], parsed[0]
+    assert_equal summary_header, parsed[2]
   end
 
   def test_tabs_sanity

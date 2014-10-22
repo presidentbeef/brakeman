@@ -24,7 +24,7 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
         :warning_code => :CVE_2013_1854,
         :message => "Rails #{tracker.config[:rails_version]} has a denial of service vulnerability in ActiveRecord: upgrade to #{fix_version} or patch",
         :confidence => CONFIDENCE[:med],
-        :file => gemfile_or_environment,
+        :gem_info => gemfile_or_environment,
         :link => "https://groups.google.com/d/msg/rubyonrails-security/jgJ4cjjS8FE/BGbHRxnDRTIJ"
     end
 
@@ -54,6 +54,8 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
     end
 
     if confidence
+      return if safe_parameter? input.match
+
       message = "Symbol conversion from unsafe string (#{friendly_type_of input})"
 
       warn :result => result,
@@ -63,7 +65,19 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
         :user_input => input.match,
         :confidence => confidence
     end
-
   end
 
+  def safe_parameter? input
+    if call? input
+      if node_type? input.target, :params
+        input.method == :[] and
+        symbol? input.first_arg and
+        [:controller, :action].include? input.first_arg.value
+      else
+        safe_parameter? input.target
+      end
+    else
+      false
+    end
+  end
 end

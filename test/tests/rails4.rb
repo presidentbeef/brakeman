@@ -1,11 +1,12 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-Rails4 = BrakemanTester.run_scan "rails4", "Rails 4"
+EXTERNAL_CHECKS_PATH = File.expand_path(File.join(File.dirname(__FILE__), "..", "/apps/rails4/external_checks"))
+Rails4 = BrakemanTester.run_scan "rails4", "Rails 4", {:additional_checks_path => [EXTERNAL_CHECKS_PATH], :run_all_checks => true}
 
 class Rails4Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
   include BrakemanTester::CheckExpected
-  
+
   def report
     Rails4
   end
@@ -15,7 +16,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 25
+      :generic => 37
     }
   end
 
@@ -176,6 +177,18 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:call, s(:params), :[], s(:lit, :query))
   end
 
+  def test_nested_send
+    assert_warning :type => :warning,
+      :warning_code => 23,
+      :fingerprint => "8034183b1b7e4b3d7ad4d60c59e2de9252f277c8ab5dfb408f628b15f03645c3",
+      :warning_type => "Dangerous Send",
+      :line => 68,
+      :message => /^User\ controlled\ method\ execution/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
   def test_sql_injection_connection_execute
     assert_warning :type => :warning,
       :warning_code => 0,
@@ -282,6 +295,30 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:lvar, :col)
   end
 
+  def test_sql_injection_in_find_by
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "ca9d658a7215099a35b3b3ec3867ffb8fb7ad497d31307ba8952d7dcb85e8ac9",
+      :warning_type => "SQL Injection",
+      :line => 47,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :age_limit))
+  end
+
+  def test_sql_injection_in_find_by!
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "6f743b0a084c132d3bd074a0d22e197d6c81018028f6166324de1970616c4cbd",
+      :warning_type => "SQL Injection",
+      :line => 48,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :user_search))
+  end
+
   def test_dynamic_render_path_with_before_action
     assert_warning :type => :warning,
       :warning_code => 15,
@@ -350,14 +387,37 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:call, s(:call, s(:const, :User), :where, s(:hash, s(:lit, :stuff), s(:lit, 1))), :take)
   end
 
+  def test_symbol_dos_with_safe_parameters
+    assert_no_warning :type => :warning,
+      :warning_code => 59,
+      :fingerprint => "53a74ac0c23e934a1d439e0b53ce818a22db6b23a696a61cd7dfb5b19175240a",
+      :warning_type => "Denial of Service",
+      :line => 52,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(pa/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :controller))
+
+    assert_no_warning :type => :warning,
+      :warning_code => 59,
+      :fingerprint => "d569b240f71e4fc4cc6e91559923baea941a1341d1d70fd6c1c36813947e369d",
+      :warning_type => "Denial of Service",
+      :line => 53,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(pa/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :action))
+  end
+
   def test_i18n_xss_CVE_2013_4491_workaround
     assert_no_warning :type => :warning,
       :warning_code => 63,
-      :fingerprint => "de0e11056b9f9af7b8570d5354185cd7e17a18cc61d627555fe4adfff00fb447",
+      :fingerprint => "7ef985c538fd302e9450be3a61b2177c26bbfc6ccad7a598006802b0f5f8d6ae",
       :warning_type => "Cross Site Scripting",
       :message => /^Rails\ 4\.0\.0\ has\ an\ XSS\ vulnerability\ in\ /,
+      :file => /Gemfile\.lock/,
       :confidence => 1,
-      :relative_path => "Gemfile"
+      :relative_path => /Gemfile/
   end
 
   def test_denial_of_service_CVE_2013_6414
@@ -397,11 +457,23 @@ class Rails4Tests < Test::Unit::TestCase
       :warning_code => 67,
       :fingerprint => "e950ee1043d7f66b7f6ce99c2bf0876bd3ce8cb12818b52565b905cdb6004bad",
       :warning_type => "Cross Site Scripting",
-      :line => nil,
+      :line => 4,
       :message => /^Rails\ 4\.0\.0 has\ a\ vulnerability\ in/,
       :confidence => 1,
       :relative_path => "Gemfile",
       :user_input => nil
+  end
+
+  def test_sql_injection_in_chained_string_building
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "6109b24aecaa204463bcebeb594becfe06d5f3c40cfe092b54a4c5146273e134",
+      :warning_type => "SQL Injection",
+      :line => 34,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/models/account.rb",
+      :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :more_ids)), :join, s(:str, ","))
   end
 
   def test_sql_injection_CVE_2013_6417
@@ -409,7 +481,8 @@ class Rails4Tests < Test::Unit::TestCase
       :warning_code => 69,
       :fingerprint => "e1b66f4311771d714a13be519693c540d7e917511a758827d9b2a0a7f958e40f",
       :warning_type => "SQL Injection",
-      :line => nil,
+      :line => 4,
+      :file => /Gemfile/,
       :message => /^Rails\ 4\.0\.0 contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",
@@ -421,11 +494,93 @@ class Rails4Tests < Test::Unit::TestCase
       :warning_code => 72,
       :fingerprint => "0ba20216bdda1cc067f9e4795bdb0d9224fd23c58317ecc09db67b6b38a2d0f0",
       :warning_type => "SQL Injection",
-      :line => nil,
+      :line => 6,
+      :file => /Gemfile/,
       :message => /^Rails\ 4\.0\.0\ contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile",
       :user_input => nil
+  end
+
+  def test_remote_code_execution_CVE_2014_0130
+    assert_warning :type => :warning,
+      :warning_code => 77,
+      :fingerprint => "e833fd152ab95bf7481aada185323d97cd04c3e2322b90f3698632f4c4c04441",
+      :warning_type => "Remote Code Execution",
+      :line => nil,
+      :message => /^Rails\ 4\.0\.0\ with\ globbing\ routes\ is\ vuln/,
+      :confidence => 1,
+      :relative_path => "config/routes.rb",
+      :user_input => nil
+  end
+
+  def test_sql_injection_CVE_2014_3482
+    assert_warning :type => :warning,
+      :warning_code => 78,
+      :fingerprint => "5c9706393849d7de5125a3688562aea31e112a7b09d0abbb461ee5dc7c1751b8",
+      :warning_type => "SQL Injection",
+      :line => 4,
+      :file => /Gemfile/,
+      :message => /^Rails\ 4\.0\.0\ contains\ a\ SQL\ injection\ vul/,
+      :confidence => 0,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_sql_injection_CVE_2014_3483
+    assert_warning :type => :warning,
+      :warning_code => 79,
+      :fingerprint => "4a60c60c39e12b1dd1d8b490f228594f0a555aa5447587625df362327e86ad2f",
+      :warning_type => "SQL Injection",
+      :line => 4,
+      :file => /Gemfile/,
+      :message => /^Rails\ 4\.0\.0\ contains\ a\ SQL\ injection\ vul/,
+      :confidence => 0,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_mass_assignment_CVE_2014_3514
+    assert_warning :type => :warning,
+      :warning_code => 81,
+      :fingerprint => "c4a619b7316e45a5927b098294ff39d7206f84bac084402630318bf6f89f396d",
+      :warning_type => "Mass Assignment",
+      :line => 57,
+      :message => /^create_with\ is\ vulnerable\ to\ strong\ para/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => nil
+
+    assert_warning :type => :warning,
+      :warning_code => 81,
+      :fingerprint => "c4a619b7316e45a5927b098294ff39d7206f84bac084402630318bf6f89f396d",
+      :warning_type => "Mass Assignment",
+      :line => 58,
+      :message => /^create_with\ is\ vulnerable\ to\ strong\ para/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => nil
+
+    assert_warning :type => :warning,
+      :warning_code => 81,
+      :fingerprint => "8c55b05e3467934ac900567d47b4ac496e9761424b66b246585d14ba5b2b0240",
+      :warning_type => "Mass Assignment",
+      :line => 61,
+      :message => /^create_with\ is\ vulnerable\ to\ strong\ para/,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => nil
+
+    assert_warning :type => :warning,
+      :warning_code => 81,
+      :fingerprint => "aafdaf40064466b1eea16ca053072fb2ef20c999411108d606c8555ade2ce629",
+      :warning_type => "Mass Assignment",
+      :line => 62,
+      :message => /^create_with\ is\ vulnerable\ to\ strong\ para/,
+      :confidence => 2,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => nil
+
   end
 
   def test_mass_assignment_with_permit!
@@ -496,5 +651,24 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/controllers/application_controller.rb",
       :user_input => nil
+  end
+
+  def test_unscoped_find_by_id_bang
+    assert_warning :type => :warning,
+      :warning_code => 82,
+      :fingerprint => "4d88d42b82e11010ba1fb67f587bb756068caefe73bb74cc9c3e6f3b9842810f",
+      :warning_type => "Unscoped Find",
+      :line => 66,
+      :message => /^Unscoped\ call\ to\ Email\#find_by_id!/,
+      :confidence => 2,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :id))
+  end
+
+  #Verify checks external to Brakeman are loaded
+  def test_external_checks
+    assert defined? Brakeman::CheckExternalCheckTest
+    #Initial "Check" removed from check names
+    assert report[:checks_run].include? "ExternalCheckTest"
   end
 end

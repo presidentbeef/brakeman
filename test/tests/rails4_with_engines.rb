@@ -11,7 +11,7 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
       :controller => 0,
       :model => 5,
       :template => 11,
-      :generic => 6 }
+      :generic => 8 }
   end
 
   def report
@@ -24,8 +24,9 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
       :fingerprint => "de0e11056b9f9af7b8570d5354185cd7e17a18cc61d627555fe4adfff00fb447",
       :warning_type => "Cross Site Scripting",
       :message => /^Rails\ 4\.0\.0\ has\ an\ XSS\ vulnerability\ in\ /,
+      :file => /Gemfile/,
       :confidence => 1,
-      :relative_path => "Gemfile"
+      :relative_path => /Gemfile/
   end
 
   def test_number_to_currency_CVE_2014_0081
@@ -33,7 +34,7 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
       :warning_code => 73,
       :fingerprint => "f6981b9c24727ef45040450a1f4b158ae3bc31b4b0343efe853fe12c64881695",
       :warning_type => "Cross Site Scripting",
-      :line => nil,
+      :line => 4,
       :message => /^Rails\ 4\.0\.0\ has\ a\ vulnerability\ in\ numbe/,
       :confidence => 1,
       :relative_path => "Gemfile",
@@ -67,9 +68,34 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
       :warning_code => 69,
       :fingerprint => "e1b66f4311771d714a13be519693c540d7e917511a758827d9b2a0a7f958e40f",
       :warning_type => "SQL Injection",
-      :line => nil,
       :message => /^Rails\ 4\.0\.0\ contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
+      :relative_path => 'Gemfile',
+      :line => 4,
+      :file => /Gemfile/,
+      :user_input => nil
+  end
+
+  def test_remote_code_execution_CVE_2014_0130
+    assert_warning :type => :warning,
+      :warning_code => 77,
+      :fingerprint => "e833fd152ab95bf7481aada185323d97cd04c3e2322b90f3698632f4c4c04441",
+      :warning_type => "Remote Code Execution",
+      :line => nil,
+      :message => /^Rails\ 4\.0\.0\ with\ globbing\ routes\ is\ vuln/,
+      :confidence => 1,
+      :relative_path => "config/routes.rb",
+      :user_input => nil
+  end
+
+  def test_mass_assignment_CVE_2014_3514
+    assert_warning :type => :warning,
+      :warning_code => 80,
+      :fingerprint => "c3535608927977a6b2f7587021ce6c366895ec0637cf1c15988324349b22f76d",
+      :warning_type => "Mass Assignment",
+      :line => 4,
+      :message => /^create_with\ is\ vulnerable\ to\ strong\ para/,
+      :confidence => 1,
       :relative_path => "Gemfile",
       :user_input => nil
   end

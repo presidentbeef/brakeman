@@ -37,7 +37,7 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
         :warning_code => :CVE_2011_0447,
         :message => "CSRF protection is flawed in unpatched versions of Rails #{tracker.config[:rails_version]} (CVE-2011-0447). Upgrade to 2.3.11 or apply patches as needed",
         :confidence => CONFIDENCE[:high],
-        :file => gemfile_or_environment,
+        :gem_info => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/topic/rubyonrails-security/LZWjzCPgNmU/discussion"
 
     elsif version_between? "3.0.0", "3.0.3"
@@ -47,7 +47,7 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
         :warning_code => :CVE_2011_0447,
         :message => "CSRF protection is flawed in unpatched versions of Rails #{tracker.config[:rails_version]} (CVE-2011-0447). Upgrade to 3.0.4 or apply patches as needed",
         :confidence => CONFIDENCE[:high],
-        :file => gemfile_or_environment,
+        :gem_info => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/topic/rubyonrails-security/LZWjzCPgNmU/discussion"
     end
   end

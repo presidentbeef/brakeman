@@ -33,7 +33,7 @@ class Brakeman::CheckTranslateBug < Brakeman::BaseCheck
         :warning_code => :translate_vuln,
         :message => message,
         :confidence => confidence,
-        :file => gemfile_or_environment,
+        :gem_info => gemfile_or_environment,
         :link_path => "http://groups.google.com/group/rubyonrails-security/browse_thread/thread/2b61d70fb73c7cc5"
     end
   end

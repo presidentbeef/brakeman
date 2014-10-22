@@ -21,19 +21,24 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
                     end
 
       message = "Rails #{tracker.config[:rails_version]} has a serious JSON parsing vulnerability: upgrade to #{new_version} or patch"
+      if uses_yajl?
+        gem_info = gemfile_or_environment(:yajl)
+      else
+        gem_info = gemfile_or_environment
+      end
 
       warn :warning_type => "Remote Code Execution",
         :warning_code => :CVE_2013_0333,
         :message => message,
         :confidence => CONFIDENCE[:high],
-        :file => gemfile_or_environment,
+        :gem_info => gem_info,
         :link_path => "https://groups.google.com/d/topic/rubyonrails-security/1h2DR63ViGo/discussion"
     end
   end
 
   #Check if `yajl` is included in Gemfile
   def uses_yajl?
-    tracker.config[:gems] and tracker.config[:gems][:yajl]
+    tracker.config[:gems][:yajl]
   end
 
   #Check for `ActiveSupport::JSON.backend = "JSONGem"`
@@ -55,8 +60,8 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
 
   def check_cve_2013_0269
     [:json, :json_pure].each do |name|
-      version = tracker.config[:gems] && tracker.config[:gems][name]
-      check_json_version name, version if version
+      gem_hash = tracker.config[:gems][name] if tracker.config[:gems]
+      check_json_version name, gem_hash[:version] if gem_hash and gem_hash[:version]
     end
   end
 
@@ -90,7 +95,7 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
       :warning_code => :CVE_2013_0269,
       :message => message,
       :confidence => confidence,
-      :file => gemfile_or_environment,
+      :gem_info => gemfile_or_environment(name),
       :link => "https://groups.google.com/d/topic/rubyonrails-security/4_YvCpLzL58/discussion"
   end
 

@@ -66,7 +66,7 @@ class Brakeman::Report::Markdown < Brakeman::Report::Base
         ['Application path', 'Rails version', 'Brakeman version', 'Started at', 'Duration']
     ) do |t|
       t.add_row([
-        File.expand_path(tracker.options[:app_path]),
+        tracker.app_path,
         rails_version,
         Brakeman::Version,
         tracker.start_time,

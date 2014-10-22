@@ -1,5 +1,39 @@
-# Unreleased
+# 2.6.3
 
+* Whitelist `exists` arel method from SQL injection check
+* Avoid warning about Symbol DoS on safe parameters as method targets
+* Fix stack overflow in ProcessHelper#class_name
+* Add optional check for unscoped find queries (Ben Toews)
+* Add framework for optional checks
+* Fix stack overflow for cycles in class ancestors (Jeff Rafter)
+
+# 2.6.2 
+
+* Add check for CVE-2014-3415
+* Avoid warning about symbolizing safe parameters
+* Update ruby2ruby dependency to 2.1.1
+* Expand app path in one place instead of all over (Jeff Rafter)
+* Add `--add-checks-path` option for external checks (Clint Gibler)
+* Fix SQL injection detection in deep nested string building
+* Add `-4` option to force Rails 4 mode
+* Check entire call for `send`
+* Check for .gitignore of secrets in subdirectories
+* Fix block statment endings in Erubis
+* Fix undefined variable in controller processing error (Jason Barnabe) 
+
+# 2.6.1
+
+* Add check for CVE-2014-3482 and CVE-2014-3483
+* Add support for keyword arguments in blocks
+* Remove unused warning codes (Bill Fischer)
+
+# 2.6.0
+
+* Fix detection of `:host` setting in redirects with chained calls
+* Add check for CVE-2014-0130
+* Add `find_by`/`find_by!` to SQLi check for Rails 4
+* Parse most files upfront instead of on demand
+* Do not branch values for `+=`
 * Update to use RubyParser 3.5.0 (Patrick Toomey)
 * Improve default route detection in Rails 3/4 (Jeff Jarmoc)
 * Handle controllers and models split across files (Patrick Toomey)

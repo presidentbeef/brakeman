@@ -42,4 +42,27 @@ class UsersController < ApplicationController
       redirect_to User.where(:stuff => 1).take
     end
   end
+
+  def find_by_stuff
+    User.find_by "age > #{params[:age_limit]}"
+    User.find_by! params[:user_search]
+  end
+
+  def symbolize_safe_parameters
+    params[:controller].to_sym
+    params[:action].intern && params[:controller][/([^\/]+)$/].try(:to_sym)
+  end
+
+  def mass_assignment_bypass
+    User.create_with(params)  # high warning
+    User.create_with(params).create # high warning
+    User.create_with(params[:x].permit(:y)) # should not warn, workaround
+    something.create_with({}) # should not warn on hash literals
+    x.create_with(y(params))  # medium warning
+    y.create_with(x)          # weak warning
+  end
+
+  def email_finds
+    Email.find_by_id! params[:email][:id]
+  end
 end

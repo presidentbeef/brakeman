@@ -67,4 +67,8 @@ class FriendlyController
   def select_some_stuff
     User.select(:name, params[:x])
   end
+
+  def send_some_stuff
+    blah.send(params[:x]).to_json
+  end
 end

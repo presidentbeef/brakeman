@@ -2,6 +2,10 @@ This file may or may not be up-to-date. For best results but less information, r
 
 ## Scanning Options
 
+There are some checks which are not run by default. To run all checks, use:
+
+    brakeman -A
+
 Each check will be run in a separate thread by default. To disable this behavior:
 
     brakeman -n
@@ -28,7 +32,11 @@ To force Brakeman into Rails 3 mode:
 
     brakeman -3
 
-This is basically the same as Rails 4 mode, too. But beware some things rely on knowing the exact version name. This shouldn't be a problem with any modern Rails app using a `Gemfile.lock` though.
+Or to force Brakeman into Rails 4 mode:
+
+    brakeman -4
+
+Beware some behavior and checks rely on knowing the exact version name. This shouldn't be a problem with any modern Rails app using a `Gemfile.lock` though.
 
 Brakeman used to parse `routes.rb` and attempt to infer which controller methods are used as actions. However, this is not perfect (especially for Rails 3/4), so now it assumes all controller methods are actions. To disable this behavior:
 
@@ -131,9 +139,9 @@ To limit width of the tables output in text reports, use
 
 By default, there is no limit.
 
-Brakeman will bundle all warnings about models without `attr_accessible` into one warning. This was problem a mistake. It's more useful to get one warning per model with
+Brakeman will warn about each model without `attr_accessible`. In the HTML report it may be nicer to get all models in one warning with
 
-    brakeman --separate-models
+    brakeman --no-separate-models
 
 Sometimes you don't need a big report, just the summary:
 
@@ -228,6 +236,10 @@ The `-c` option can be used to specify a configuration file to use.
 To list available checks with short descriptions:
 
     brakeman --checks
+
+To show checks which are optional (not run by default):
+
+    brakeman --optional-checks
 
 To generate a Rake task to run Brakeman:
 

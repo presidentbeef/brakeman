@@ -1,10 +1,3 @@
-#Temporary fix for https://github.com/seattlerb/ruby_parser/issues/154
-class Regexp
-  [:ENC_NONE, :ENC_EUC, :ENC_SJIS, :ENC_UTF8].each do |enc|
-    remove_const enc if const_defined? enc
-  end
-end
-
 require 'ruby2ruby'
 require 'brakeman/util'
 

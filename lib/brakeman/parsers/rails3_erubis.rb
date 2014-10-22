@@ -39,14 +39,6 @@ class Brakeman::Rails3Erubis < ::Erubis::Eruby
     end
   end
 
-  def add_stmt(src, code)
-    if code =~ BLOCK_EXPR
-      src << '@output_buffer.append_if_string= ' << code
-    else
-      super
-    end
-  end
-
   def add_expr_escaped(src, code)
     if code =~ BLOCK_EXPR
       src << "@output_buffer.safe_append= " << code

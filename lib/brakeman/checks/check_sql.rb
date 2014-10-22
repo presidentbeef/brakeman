@@ -19,6 +19,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     @sql_targets = [:all, :average, :calculate, :count, :count_by_sql, :exists?, :delete_all, :destroy_all,
       :find, :find_by_sql, :first, :last, :maximum, :minimum, :pluck, :sum, :update_all]
     @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :select, :where] if tracker.options[:rails3]
+    @sql_targets << :find_by << :find_by! if tracker.options[:rails4]
 
     @connection_calls = [:delete, :execute, :insert, :select_all, :select_one,
       :select_rows, :select_value, :select_values]
@@ -172,7 +173,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                         else
                           check_find_arguments call.last_arg
                         end
-                      when :where, :having
+                      when :where, :having, :find_by, :find_by!
                         check_query_arguments call.arglist
                       when :order, :group, :reorder
                         check_order_arguments call.arglist
@@ -495,20 +496,29 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     arg = exp.first_arg
 
     if STRING_METHODS.include? method
-      if string? target
-        check_string_arg arg
-      elsif string? arg
-        check_string_arg target
-      elsif call? target
-        check_for_string_building target
-      elsif node_type? target, :string_interp, :dstr or
-            node_type? arg, :string_interp, :dstr
-
-        check_string_arg target and
-        check_string_arg arg
-      end
+      check_str_target_or_arg(target, arg) or
+      check_interp_target_or_arg(target, arg) or
+      check_for_string_building(target) or
+      check_for_string_building(arg)
     else
       nil
+    end
+  end
+
+  def check_str_target_or_arg target, arg
+    if string? target
+      check_string_arg arg
+    elsif string? arg
+      check_string_arg target
+    end
+  end
+
+  def check_interp_target_or_arg target, arg
+    if node_type? target, :string_interp, :dstr or
+      node_type? arg, :string_interp, :dstr
+
+      check_string_arg target and
+      check_string_arg arg
     end
   end
 
@@ -539,7 +549,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     :sanitize_sql, :sanitize_sql_array, :sanitize_sql_for_assignment,
     :sanitize_sql_for_conditions, :sanitize_sql_hash,
     :sanitize_sql_hash_for_assignment, :sanitize_sql_hash_for_conditions,
-    :to_sql, :sanitize]
+    :to_sql, :sanitize, :exists]
 
   def safe_value? exp
     return true unless sexp? exp

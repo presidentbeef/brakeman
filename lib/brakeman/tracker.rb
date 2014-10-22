@@ -25,7 +25,7 @@ class Brakeman::Tracker
     @processor = processor
     @options = options
 
-    @config = { :rails => {} }
+    @config = { :rails => {}, :gems => {} }
     @templates = {}
     @controllers = {}
     #Initialize models with the unknown model so
@@ -75,6 +75,10 @@ class Brakeman::Tracker
     @end_time = Time.now
     @duration = @end_time - @start_time
     @checks
+  end
+
+  def app_path
+    @app_path ||= File.expand_path @options[:app_path]
   end
 
   #Iterate over all methods in controllers and models.

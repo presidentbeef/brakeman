@@ -262,9 +262,16 @@ class Brakeman::Report::Base
   end
 
   def rails_version
-    return tracker.config[:rails_version] if tracker.config[:rails_version]
-    return "3.x" if tracker.options[:rails3]
-    "Unknown"
+    case
+    when tracker.config[:rails_version]
+      tracker.config[:rails_version]
+    when tracker.options[:rails4]
+      "4.x"
+    when tracker.options[:rails3]
+      "3.x"
+    else
+      "Unknown"
+    end
   end
 
   #Escape warning message and highlight user input in text output

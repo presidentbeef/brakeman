@@ -16,7 +16,7 @@ class Brakeman::Warning
   def initialize options = {}
     @view_name = nil
 
-    [:called_from, :check, :class, :code, :confidence, :controller, :file, :line, :link_path,
+    [:called_from, :check, :class, :code, :confidence, :controller, :file, :gem_info, :line, :link_path,
       :message, :method, :model, :relative_path, :template, :user_input, :warning_set, :warning_type].each do |option|
 
       self.instance_variable_set("@#{option}", options[option])
@@ -40,6 +40,16 @@ class Brakeman::Warning
         @line = @user_input.line
       elsif @code and @code.respond_to? :line
         @line = @code.line
+      end
+    end
+
+    if @gem_info
+      if @gem_info.is_a? Hash
+        @line ||= @gem_info[:line]
+        @file ||= @gem_info[:file]
+      else
+        # Fallback behavior returns just a string for the file name
+        @file ||= @gem_info
       end
     end
 
