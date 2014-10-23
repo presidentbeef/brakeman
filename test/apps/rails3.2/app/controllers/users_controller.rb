@@ -96,4 +96,8 @@ class UsersController < ApplicationController
   def render_text
     render :text => "oh noes my service"
   end
+
+  def test_symbol_dos
+    params[:x].to_sym # no warning because this is an optional check
+  end
 end
