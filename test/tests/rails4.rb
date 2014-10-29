@@ -16,7 +16,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 37
+      :generic => 38
     }
   end
 
@@ -474,6 +474,18 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/models/account.rb",
       :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :more_ids)), :join, s(:str, ","))
+  end
+
+  def test_command_injection_in_library
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "9a11e7271784d69c667ad82481596096781a4873297d3f7523d290f51465f9d6",
+      :warning_type => "Command Injection",
+      :line => 3,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/sweet_lib.rb",
+      :user_input => s(:lvar, :bad)
   end
 
   def test_sql_injection_CVE_2013_6417
