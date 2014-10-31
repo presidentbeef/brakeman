@@ -599,4 +599,13 @@ class AliasProcessorTests < Test::Unit::TestCase
     end
     OUTPUT
   end
+
+  def test_branch_with_self_assign_target
+    assert_alias 'a.w.y', <<-INPUT
+    x = a
+    x = x.w if thing
+    x = x.y if other_thing
+    x
+    INPUT
+  end
 end
