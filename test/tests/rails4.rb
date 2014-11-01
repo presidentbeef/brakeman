@@ -16,7 +16,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 38
+      :generic => 39
     }
   end
 
@@ -675,6 +675,19 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 2,
       :relative_path => "app/controllers/users_controller.rb",
       :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :id))
+  end
+
+  def test_before_filter_block
+    assert_warning :type => :warning,
+      :warning_code => 13,
+      :fingerprint => "f8081023e9a6026264eaee41a4a1f520fc98ee5dbcba2129245e6a3873cb6409",
+      :warning_type => "Dangerous Eval",
+      :line => 7,
+      :message => /^User\ input\ in\ eval/,
+      :confidence => 0,
+      :relative_path => "app/controllers/another_controller.rb",
+      :method => :before_filter,
+      :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :x))
   end
 
   #Verify checks external to Brakeman are loaded
