@@ -124,9 +124,8 @@
     files = args[:output_files].split(' ') if args[:output_files]
     Brakeman.run :app_path =&gt; ".", :output_files =&gt; files, :print_report =&gt; true
   end
+end
 </code></pre>
-
-<p>   end</p>
 
 <p>This task will run Brakeman with no options. If given an output file, it will save the report in that file. Otherwise, it will print the report out to the console.</p>
 
