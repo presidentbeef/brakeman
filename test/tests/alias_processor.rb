@@ -600,6 +600,18 @@ class AliasProcessorTests < Test::Unit::TestCase
     OUTPUT
   end
 
+  def test_multiple_assignment
+    assert_output <<-INPUT, <<-OUTPUT
+    x, $y = 1, 2
+    x
+    $y
+    INPUT
+    x, $y = 1, 2
+    1
+    2
+    OUTPUT
+  end
+
   def test_branch_with_self_assign_target
     assert_alias 'a.w.y', <<-INPUT
     x = a
