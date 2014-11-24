@@ -771,12 +771,38 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
   end
 
-  #Return true if for x += blah or @x += blah
   def self_assign? var, value
+    self_assign_var?(var, value) or self_assign_target?(var, value)
+  end
+
+  #Return true if for x += blah or @x += blah
+  def self_assign_var? var, value
     call? value and
     value.method == :+ and
     node_type? value.target, :lvar, :ivar and
     value.target.value == var
+  end
+
+  #Return true for x = x.blah
+  def self_assign_target? var, value
+    target = top_target(value)
+
+    if node_type? target, :lvar, :ivar
+      target = target.value
+    end
+
+    var == target
+  end
+
+  #Returns last non-nil target in a call chain
+  def top_target exp, last = nil
+    if call? exp
+      top_target exp.target, exp
+    elsif node_type? exp, :iter, :call_with_block
+      top_target exp.block_call, last
+    else
+      exp || last
+    end
   end
 
   def value_from_if exp
