@@ -118,13 +118,15 @@
 <pre><code>namespace :brakeman do
 
   desc "Run Brakeman"
-  task :run, :output_file do |t, args|
+  task :run, :output_files do |t, args|
     require 'brakeman'
 
-    Brakeman.run :app_path =&gt; ".", :output_file =&gt; args[:output_file], :print_report =&gt; true
+    files = args[:output_files].split(' ') if args[:output_files]
+    Brakeman.run :app_path =&gt; ".", :output_files =&gt; files, :print_report =&gt; true
   end
-end
 </code></pre>
+
+<p>   end</p>
 
 <p>This task will run Brakeman with no options. If given an output file, it will save the report in that file. Otherwise, it will print the report out to the console.</p>
 
