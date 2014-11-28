@@ -300,7 +300,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/reducing_false_positives/</loc>
-        <lastmod>2012-07-19T10:20:00-07:00</lastmod>
+        <lastmod>2014-11-28T10:02:35-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/faq/</loc>
@@ -465,6 +465,10 @@
     <url>
         <loc>http://brakemanscanner.org/docs/options/</loc>
         <lastmod>2014-10-13T17:30:29-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/ignoring_false_positives/</loc>
+        <lastmod>2014-11-28T10:00:50-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/install/</loc>

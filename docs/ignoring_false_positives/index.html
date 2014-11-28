@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Reducing False Positives</title>
+  <title>Brakeman - Rails Security Scanner: Ignoring False Positives</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/reducing_false_positives/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/ignoring_false_positives/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -103,58 +103,82 @@
 <article>
   
   <header>
-    <h1 class="entry-title">Reducing False Positives</h1>
+    <h1 class="entry-title">Ignoring False Positives</h1>
   </header>
   
-  <p>By default, Brakeman reports as much as possible. Because there is no way for Brakeman to know if certain items are actually safe or not, it errs on the side of reporting <em>too much</em> rather than possibly not reporting a real problem. Sometimes, though, these false positives can become overwhelming. Brakeman does provides many options for customizing reports. It is also possible <a href="/docs/ignoring_false_positives">to ignore specific warnings</a>.</p>
+  <p>False positives (warnings about potential vulnerabilities which are not actual vulnerabilities) are present in any security tool. Before ignoring a false positive, <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue#false-positivesfalse-negatives">be certain it is actually a false positive</a> and also consider <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">reporting it</a> in case changes can be made to Brakeman to prevent the false positive in the future.</p>
 
-<p>It is recommended to always run Brakeman with the default settings first (and then periodically after that), but it is possible to narrow down the results to make them less annoying.</p>
+<p>The ignore configuration is a JSON file containing a list of warnings. This is essentially the same as the JSON report, except the warnings can also have a <code>note</code> field.</p>
 
-<h3>Specify Checks to Run</h3>
+<p>This functionality was introduced in <a href="/blog/2013/07/17/brakeman-2-dot-1-0-released/">Brakeman 2.1.0</a>.</p>
 
-<p>When running Brakeman, one can specify a set of checks to run or a set to exclude using the <code>--test</code> or <code>--except</code>, respectively. These options take a comma-separated list of check names, which are case-sensitive. Use <code>brakeman --checks</code> to get a list of the exact check names.</p>
+<h2>Creating and Managing an Ignore File</h2>
 
-<p>For example, to only check for SQL injection and cross-site scripting:</p>
+<p>The <code>-I</code> option (or <code>--interactive-ignore</code> if you are not into the whole brevity thing) is the simplest way to create and manage an ignore configuration.</p>
 
-<pre><code>brakeman --test CheckSQL,CheckCrossSiteScripting
+<p>Use the <code>-I</code> option with a regular run of Brakeman.</p>
+
+<p>After the scan, Brakeman will ask for an existing configuration file to load:</p>
+
+<pre><code>Input file: |config/brakeman.ignore| 
 </code></pre>
 
-<p><em>(&#8216;Check&#8217; can actually be omitted from the names.)</em></p>
+<p>Unless there is an existing file somewhere else, just press enter to continue. If the file does not exist, Brakeman will prompt</p>
 
-<p>To exclude checks for dynamic render paths:</p>
-
-<pre><code>brakeman --except CheckRender
+<pre><code>No such file. Continue with empty config? 
 </code></pre>
 
-<h3>Set Confidence Threshold</h3>
+<p>Enter <code>y</code> unless there is an existing file.</p>
 
-<p>Getting a ton of weak confidence warnings? Use <code>-w3</code> to only report high confidence warnings or <code>-w2</code> to only report high and medium confidence warnings.</p>
+<p>Next, Brakeman will ask what to do:</p>
 
-<p>(Use of <code>-w3</code> is not recommended, however.)</p>
-
-<h3>Mark Methods as Safe</h3>
-
-<p>If an applications has custome sanitizing methods or just methods which are known to be safe, then the <code>--safe-methods</code> option can be used to ignore those methods. Specify the methods as a comma-separated list.</p>
-
-<p>For example:</p>
-
-<pre><code>brakeman --safe-methods this_one,that_one,totally_safe,my_sanitizer
+<pre><code>1. Inspect all warnings
+2. Hide previously ignored warnings
+3. Skip - use current ignore configuration
+? 
 </code></pre>
 
-<h3>Only Reporting Direct Vulnerabilities</h3>
+<p>Enter <code>1</code> to step through all warnings. Enter <code>2</code> to step through all warnings except those which were already ignored. Enter <code>3</code> to skip the whole process and leave things as-is.</p>
 
-<p>With the default settings, Brakeman will report cross-site scripting vulnerabilities if the return value of a method where user input is a <em>parameter</em> is output.</p>
+<p>For option <code>1</code> or <code>2</code>, Brakeman will now present each warning in turn and ask what to do with them:</p>
 
-<p>For example, this will raise a warning unless <code>some_method</code> is marked as safe like above:</p>
+<p><img src="/images/bm-I.png" alt="brakeman -I" /></p>
 
-<pre><code>&lt;%= some_method(params[:blah]) %&gt;
+<p>These are the options:</p>
+
+<pre><code>i - Add warning to ignore list
+n - Add warning to ignore list and add note
+s - Skip this warning (will remain ignored or shown)
+u - Remove this warning from ignore list
+a - Ignore this warning and all remaining warnings
+k - Skip this warning and all remaining warnings
+q - Quit, do not update ignored warnings
+? - Display this help
 </code></pre>
 
-<p>To ignore this kind of output, use the <code>--report-direct</code> option. This also applies to some other situations, such as checking calls to <code>redirect_to</code>.</p>
+<p>After stepping through the warnings, Brakeman will ask if the changes should be saved:</p>
 
-<h3>Ignoring Model Attributes</h3>
+<pre><code>1. Save changes
+2. Start over
+3. Quit, do not save changes
+? 
+</code></pre>
 
-<p>Brakeman assumes database values are suspect (and so should you). But for some applications this does not make sense. Use the <code>--ignore-model-output</code> option to suppress reporting model attributes as cross-site scripting vulnerabilities.</p>
+<p>Enter <code>1</code> to save the changes to a file. Enter <code>2</code> to step through the warnings again. Enter <code>3</code> to not save any changes.</p>
+
+<p>For option <code>1</code>, Brakeman will ask where to save the file. The default <code>config/brakeman.ignore</code> is recommended.</p>
+
+<p>After that, the scan report will be generated, with the specified warnings ignored.</p>
+
+<h2>Specifying an Ignore File</h2>
+
+<p>By default, Brakeman will look in the <code>config</code> directory of the application being scanned for a file named <code>brakeman.ignore</code>. If this file exists, it will automatically be loaded and used.</p>
+
+<p>Otherwise, the location of the configuration file can be set using <code>-i</code> or <code>--ignore-config</code> with the file name, relative to the root of the Rails application.</p>
+
+<h2>When Warnings are Ignored</h2>
+
+<p>JSON reports include an array of <code>ignored_warnings</code>, HTML reports have a table of ignored warnings which is hidden by default, and the basic text output will include the number of warnings ignored, if any.</p>
 
 <hr />
 
