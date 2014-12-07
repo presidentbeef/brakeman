@@ -12,7 +12,7 @@
 #  tracker.config[:rails][:action_controller][:session_store]
 #
 #Values for tracker.config[:rails] will still be Sexps.
-class Brakeman::Rails2ConfigProcessor < Brakeman::BaseProcessor
+class Brakeman::Rails2ConfigProcessor < Brakeman::BasicProcessor
   #Replace block variable in
   #
   #  Rails::Initializer.run |config|

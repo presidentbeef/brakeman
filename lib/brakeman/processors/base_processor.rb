@@ -20,14 +20,6 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     IGNORE
   end
 
-  def process_class exp
-    current_class = @current_class
-    @current_class = class_name exp[1]
-    process_all exp.body
-    @current_class = current_class
-    exp
-  end
-
   #Process a new scope. Removes expressions that are set to nil.
   def process_scope exp
     #NOPE?
