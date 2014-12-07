@@ -67,6 +67,10 @@ class Brakeman::FindCall < Brakeman::BaseProcessor
     process exp
   end
 
+  def process_default exp
+    process_all exp
+  end
+
   #Process body of method
   def process_methdef exp
     process_all exp.body
