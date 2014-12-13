@@ -70,7 +70,7 @@ begin
       puts MultiJson.dump(vulns, :pretty => true)
     end
 
-    if options[:exit_on_warn] and (vulns[:new].count + vulns[:fixed].count > 0)
+    if options[:exit_on_warn] && vulns[:new].count > 0
       exit Brakeman::Warnings_Found_Exit_Code
     end
   else
