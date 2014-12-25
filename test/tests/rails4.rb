@@ -16,7 +16,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 39
+      :generic => 40
     }
   end
 
@@ -476,6 +476,18 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :more_ids)), :join, s(:str, ","))
   end
 
+  def test_no_sql_injection_due_to_skipped_filter
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "47709afc6e3ba4db08a7e6a6b9bda9644c0e8827437eb3489626b2471e0414b5",
+      :warning_type => "SQL Injection",
+      :line => 14,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/another_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
   def test_command_injection_in_library
     assert_warning :type => :warning,
       :warning_code => 14,
@@ -486,6 +498,18 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 1,
       :relative_path => "lib/sweet_lib.rb",
       :user_input => s(:lvar, :bad)
+  end
+
+  def test_command_injection_from_not_skipping_before_filter
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "9f209feb4b84e753fe331875dda3c1fb30c2938bfda056f4583b15f64ef940b9",
+      :warning_type => "Command Injection",
+      :line => 18,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/another_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
   end
 
   def test_sql_injection_CVE_2013_6417

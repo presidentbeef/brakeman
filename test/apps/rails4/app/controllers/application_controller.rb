@@ -23,4 +23,10 @@ class ApplicationController < ActionController::Base
     # Should warn on self.verify_mode = OpenSSL::SSL::VERIFY_NONE
     self.verify_mode = OpenSSL::SSL::VERIFY_NONE
   end
+
+  before_action :set_bad_thing
+
+  def set_bad_thing
+    @bad_thing = params[:x]
+  end
 end
