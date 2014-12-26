@@ -99,7 +99,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
       add_result result
 
       warn :result => result,
-        :warning_type => "Cross Site Scripting",
+        :warning_type => "Cross-Site Scripting",
         :warning_code => :xss_content_tag,
         :message => message,
         :user_input => input.match,
@@ -117,7 +117,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
         end
 
         warn :result => result,
-          :warning_type => "Cross Site Scripting",
+          :warning_type => "Cross-Site Scripting",
           :warning_code => :xss_content_tag,
           :message => "Unescaped model attribute in content_tag",
           :user_input => match,
@@ -133,7 +133,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
       add_result result
 
       warn :result => result,
-        :warning_type => "Cross Site Scripting",
+        :warning_type => "Cross-Site Scripting",
         :warning_code => :xss_content_tag,
         :message => message,
         :user_input => @matched.match,

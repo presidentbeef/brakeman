@@ -18,9 +18,9 @@ Request parameters or string interpolation has been detected in a `system` call.
 
 See http://guides.rubyonrails.org/security.html#command-line-injection for details.
 
-# Cross Site Scripting
+# Cross-Site Scripting
 
-Cross site scripting warnings are raised when a parameter or model attribute is output through a view without being escaped.
+Cross-site scripting warnings are raised when a parameter or model attribute is output through a view without being escaped.
 
 See http://guides.rubyonrails.org/security.html#cross-site-scripting-xss for details.
 

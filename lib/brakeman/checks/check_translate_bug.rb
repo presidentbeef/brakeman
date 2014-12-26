@@ -29,7 +29,7 @@ class Brakeman::CheckTranslateBug < Brakeman::BaseCheck
         "Rails 2.3.x using the rails_xss plugin #{description}."
       end
 
-      warn :warning_type => "Cross Site Scripting",
+      warn :warning_type => "Cross-Site Scripting",
         :warning_code => :translate_vuln,
         :message => message,
         :confidence => confidence,

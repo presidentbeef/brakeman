@@ -1,5 +1,5 @@
 Can detect:
--Possibly unescaped model attributes or parameters in views (Cross Site Scripting)
+-Possibly unescaped model attributes or parameters in views (Cross-Site Scripting)
 -Bad string interpolation in calls to Model.find, Model.last, Model.first, etc., as well as chained calls (SQL Injection)
 -String interpolation in find_by_sql (SQL Injection)
 -String interpolation or params in calls to system, exec, and syscall and `` (Command Injection)

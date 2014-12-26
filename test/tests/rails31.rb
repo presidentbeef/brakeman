@@ -142,7 +142,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_translate_bug
     assert_warning :type => :warning,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :message => /^Versions before 3.1.2 have a vulnerability/,
       :confidence => 0,
       :file => /Gemfile/
@@ -498,7 +498,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_select_vulnerability
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 2,
       :message => /^Upgrade to Rails 3.1.4, 3.1.0 select\(\) helper is vulnerable/,
       :confidence => 1,
@@ -507,7 +507,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_string_buffer_manipulation_bug
     assert_warning :type => :warning,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :message => /^Rails 3.1.0 has a vulnerabilty in SafeBuffer. Upgrade to 3.1.4/,
       :confidence => 1,
       :file => /Gemfile/
@@ -551,7 +551,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_controller_mixin
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped parameter value near line 1: params\[:bad\]/,
       :confidence => 0,
@@ -560,7 +560,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_controller_mixin_default_render
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped parameter value near line 1: params\[:bad\]/,
       :confidence => 0,
@@ -569,7 +569,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_get_in_resources_block
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
@@ -578,7 +578,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_get_in_controller_block
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
@@ -587,7 +587,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_post_with_just_hash_in_controller_block
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
@@ -596,7 +596,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_put_to_in_controller_block
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
@@ -605,7 +605,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_match_to_route
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
@@ -614,7 +614,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_delete_in_resources_block
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
@@ -623,7 +623,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_route_hash_shorthand
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
@@ -632,7 +632,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_model_name_in_collection_xss
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped model attribute near line 1: User\.new\.bio/,
       :confidence => 0,
@@ -641,7 +641,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_xss_helper_params_return
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
@@ -650,7 +650,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_xss_helper_with_args
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 3,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
@@ -659,7 +659,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_xss_helper_assign_ivar
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 5,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
@@ -668,7 +668,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_xss_helper_assign_ivar_twice
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
@@ -677,7 +677,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_xss_helper_model_return
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped\ model\ attribute/,
       :confidence => 0,
@@ -686,7 +686,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_xss_multiple_exp_in_string_interpolation
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped\ model\ attribute/,
       :confidence => 0,
@@ -695,7 +695,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_cross_site_scripting_select_tag_CVE_2012_3463
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 3,
       :message => /^Upgrade\ to\ Rails\ 3\.1\.8,\ 3\.1\.0\ select_tag/,
       :confidence => 0,
@@ -704,7 +704,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_cross_site_scripting_single_quotes_CVE_2012_3464
     assert_warning :type => :warning,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :message => /^Rails\ 3\.1\.0\ does\ not\ escape\ single\ quote/,
       :confidence => 1,
       :file => /Gemfile/
@@ -756,7 +756,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_strip_tags_CVE_2012_3465
     assert_warning :type => :warning,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ strip/,
       :confidence => 0,
       :file => /Gemfile/
@@ -788,7 +788,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_xss_sanitize_CVE_2013_1857
     assert_warning :type => :warning,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 64,
       :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ sanit/,
       :confidence => 0,
@@ -797,7 +797,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_xss_sanitize_css_CVE_2013_1855
     assert_warning :type => :warning,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 65,
       :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ sanitize_css/,
       :confidence => 0,
@@ -838,7 +838,7 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_code => 73,
       :fingerprint => "86f945934ed965a47c30705141157c44ee5c546d044f8de7d573bfab456e97ce",
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 69,
       :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ numbe/,
       :confidence => 1,
@@ -873,7 +873,7 @@ class Rails31Tests < Test::Unit::TestCase
 
   def test_to_json_with_overwritten_config
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :message => /^Unescaped parameter value in JSON hash/,
       :confidence => 0,
       :line => 1,
@@ -884,7 +884,7 @@ class Rails31Tests < Test::Unit::TestCase
     assert_no_warning :type => :template,
       :warning_code => 5,
       :fingerprint => "56acfae7db5bda36a971702c819899043e7f62c8623223f353a1ade876454712",
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 2,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 2,
@@ -1146,7 +1146,7 @@ class Rails31Tests < Test::Unit::TestCase
     assert_no_warning :type => :template,
       :warning_code => 2,
       :fingerprint => "8851713f0af477e60090607b814ba68055e4ac1cf19df0628fddd961ff87e763",
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 3,
       :message => /^Unescaped\ model\ attribute/,
       :confidence => 0,
@@ -1157,7 +1157,7 @@ class Rails31Tests < Test::Unit::TestCase
     assert_warning :type => :template,
       :warning_code => 2,
       :fingerprint => "3310ef4a4bde8b120fd5d421565ee416af815404e7c116a8069052e8732589d0",
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 7,
       :message => /^Unescaped\ model\ attribute/,
       :confidence => 0,
