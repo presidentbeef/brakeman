@@ -29,7 +29,7 @@ class Brakeman::CheckSingleQuotes < Brakeman::BaseCheck
       return
     end
 
-    warn :warning_type => "Cross Site Scripting",
+    warn :warning_type => "Cross-Site Scripting",
       :warning_code => :CVE_2012_3464,
       :message => message,
       :confidence => CONFIDENCE[:med],

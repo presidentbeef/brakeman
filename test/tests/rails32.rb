@@ -67,7 +67,7 @@ class Rails32Tests < Test::Unit::TestCase
 
   def test_xss_sanitize_css_CVE_2013_1855
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 2,
       :message => /^Rails\ 3\.2\.9\.rc2\ has\ a\ vulnerability\ in\ s/,
       :confidence => 0,
@@ -99,7 +99,7 @@ class Rails32Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_code => 63,
       :fingerprint => "7ef985c538fd302e9450be3a61b2177c26bbfc6ccad7a598006802b0f5f8d6ae",
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :message => /^Rails\ 3\.2\.9\.rc2\ has\ an\ XSS\ vulnerability/,
       :file => /Gemfile\.lock/,
       :confidence => 1,
@@ -110,7 +110,7 @@ class Rails32Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_code => 73,
       :fingerprint => "86f945934ed965a47c30705141157c44ee5c546d044f8de7d573bfab456e97ce",
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 64,
       :message => /^Rails\ 3\.2\.9\.rc2\ has\ a\ vulnerability\ in\ n/,
       :confidence => 1,
@@ -166,7 +166,7 @@ class Rails32Tests < Test::Unit::TestCase
 
   def test_cross_site_scripting_2
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped\ model\ attribute/,
       :confidence => 0,
@@ -175,7 +175,7 @@ class Rails32Tests < Test::Unit::TestCase
 
   def test_cross_site_scripting_3
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
@@ -184,7 +184,7 @@ class Rails32Tests < Test::Unit::TestCase
 
   def test_cross_site_scripting_4
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 2,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
@@ -193,7 +193,7 @@ class Rails32Tests < Test::Unit::TestCase
 
   def test_cross_site_scripting_5
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped\ model\ attribute/,
       :confidence => 0,
@@ -202,7 +202,7 @@ class Rails32Tests < Test::Unit::TestCase
 
   def test_cross_site_scripting_6
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped\ model\ attribute/,
       :confidence => 0,
@@ -211,7 +211,7 @@ class Rails32Tests < Test::Unit::TestCase
 
   def test_cross_site_scripting_7
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 15,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
@@ -220,7 +220,7 @@ class Rails32Tests < Test::Unit::TestCase
 
   def test_escaped_params_to_json
     assert_no_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 21,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
@@ -229,7 +229,7 @@ class Rails32Tests < Test::Unit::TestCase
 
   def test_cross_site_scripting_in_slim_param
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 3,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
@@ -238,7 +238,7 @@ class Rails32Tests < Test::Unit::TestCase
 
   def test_cross_site_scripting_in_slim_model
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 4,
       :message => /^Unescaped\ model\ attribute/,
       :confidence => 0,
@@ -247,7 +247,7 @@ class Rails32Tests < Test::Unit::TestCase
 
   def test_cross_site_scripting_slim_partial_param
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 6,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
@@ -256,7 +256,7 @@ class Rails32Tests < Test::Unit::TestCase
 
   def test_cross_site_scripting_slim_partial_model
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 8,
       :message => /^Unescaped\ model\ attribute/,
       :confidence => 0,

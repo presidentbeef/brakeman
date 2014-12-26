@@ -47,7 +47,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
       unless duplicate? result
         add_result result
         warn :result => result,
-          :warning_type => "Cross Site Scripting", 
+          :warning_type => "Cross-Site Scripting", 
           :warning_code => :xss_link_to_href,
           :message => message,
           :user_input => input.match,
@@ -80,7 +80,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
       if message and not duplicate? result
         add_result result
         warn :result => result, 
-          :warning_type => "Cross Site Scripting", 
+          :warning_type => "Cross-Site Scripting", 
           :warning_code => :xss_link_to_href,
           :message => message,
           :user_input => @matched.match,

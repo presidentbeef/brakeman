@@ -47,7 +47,7 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
       end
 
       warn :result => result,
-        :warning_type => "Cross Site Scripting",
+        :warning_type => "Cross-Site Scripting",
         :warning_code => code,
         :message => message,
         :confidence => CONFIDENCE[:high],

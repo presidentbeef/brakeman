@@ -1,6 +1,6 @@
 require 'brakeman/checks/base_check'
 
-#Check for cross site scripting vulnerability in mail_to :encode => :javascript
+#Check for cross-site scripting vulnerability in mail_to :encode => :javascript
 #with certain versions of Rails (< 2.3.11 or < 3.0.4).
 #
 #http://groups.google.com/group/rubyonrails-security/browse_thread/thread/f02a48ede8315f81

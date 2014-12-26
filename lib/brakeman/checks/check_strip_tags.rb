@@ -25,7 +25,7 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
         message = "Versions before 2.3.13 have a vulnerability in strip_tags (CVE-2011-2931)"
       end
 
-      warn :warning_type => "Cross Site Scripting",
+      warn :warning_type => "Cross-Site Scripting",
         :warning_code => :CVE_2011_2931,
         :message => message,
         :gem_info => gemfile_or_environment,
@@ -48,7 +48,7 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
       return
     end
 
-    warn :warning_type => "Cross Site Scripting",
+    warn :warning_type => "Cross-Site Scripting",
       :warning_code => :CVE_2012_3465,
       :message => message,
       :confidence => CONFIDENCE[:high],
