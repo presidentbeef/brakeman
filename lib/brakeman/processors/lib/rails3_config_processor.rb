@@ -12,7 +12,7 @@
 #  tracker.config[:rails][:active_record][:whitelist_attributes]
 #
 #Values for tracker.config[:rails] will still be Sexps.
-class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
+class Brakeman::Rails3ConfigProcessor < Brakeman::BasicProcessor
   RAILS_CONFIG = Sexp.new(:call, nil, :config)
 
   def initialize *args
