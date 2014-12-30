@@ -222,6 +222,44 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
                    @tracker.libs[controller[:parent]]
     end
 
+    remove_skipped_filters filters, method, klass
+  end
+
+  def remove_skipped_filters filters, method, klass
+    controller = @tracker.controllers[klass]
+
+    while controller
+      filters = filters - get_skipped_filters(method, controller)
+
+      controller = @tracker.controllers[controller[:parent]] ||
+                   @tracker.libs[controller[:parent]]
+    end
+
+    filters
+  end
+
+  def get_skipped_filters method, controller
+    return [] unless controller[:options] and controller[:options][:skip_filters]
+
+    filters = []
+
+    if controller[:skip_filter_cache].nil?
+      controller[:skip_filter_cache] = controller[:options][:skip_filters].map do |filter|
+        before_filter_to_hash(filter.args)
+      end
+    end
+
+    controller[:skip_filter_cache].each do |f|
+      if f[:all] or
+        (f[:only] == method) or
+        (f[:only].is_a? Array and f[:only].include? method) or
+        (f[:except].is_a? Symbol and f[:except] != method) or
+        (f[:except].is_a? Array and not f[:except].include? method)
+
+        filters.concat f[:methods]
+      end
+    end
+
     filters
   end
 
@@ -235,7 +273,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       filter_cache = []
 
       controller[:options][:before_filters].each do |filter|
-        filter_cache << before_filter_to_hash(filter)
+        filter_cache << before_filter_to_hash(filter.args)
       end
 
       controller[:before_filter_cache] = filter_cache
@@ -319,7 +357,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
             @method_cache[method_name] = method
             return method
           end
-        end
+       end
 
         @method_cache[method_name] = find_method method_name, controller[:parent]
       else
