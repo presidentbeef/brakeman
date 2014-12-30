@@ -1,3 +1,5 @@
+require 'brakeman/processors/lib/basic_processor'
+
 #Processes the Sexp from routes.rb. Stores results in tracker.routes.
 #
 #Note that it is only interested in determining what methods on which
