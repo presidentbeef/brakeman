@@ -1,3 +1,6 @@
+
+require 'brakeman/processors/lib/basic_processor'
+
 #Processes configuration. Results are put in tracker.config.
 #
 #Configuration of Rails via Rails::Initializer are stored in tracker.config[:rails].
