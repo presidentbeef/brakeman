@@ -72,7 +72,7 @@ class Brakeman::OutputProcessor < Ruby2Ruby
       elsif string? e
         e[1]
       else
-        process e
+        "\#{#{process e}}"
       end
     end.join
     exp.clear
