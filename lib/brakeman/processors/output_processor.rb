@@ -23,12 +23,6 @@ class Brakeman::OutputProcessor < Ruby2Ruby
     end
   end
 
-  def process_lvar exp
-    out = "(local #{exp[0]})"
-    exp.clear
-    out
-  end
-
   def process_ignore exp
     exp.clear
     "[ignored]"
