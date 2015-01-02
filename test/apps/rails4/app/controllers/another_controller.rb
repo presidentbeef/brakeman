@@ -17,4 +17,20 @@ class AnotherController < ApplicationController
   def also_use_bad_thing
     `#{@bad_thing}`
   end
+
+  def render_stuff
+    user_name = User.current_user.name
+
+    render :text => "Welcome back, #{params[:name]}!}"
+    render :text => "Welcome back, #{user_name}!}"
+    render :text => params[:q]
+    render :text => user_name
+
+    render :inline => "<%= #{params[:name]} %>"
+    render :inline => "<%= #{user_name} %>"
+
+    # should not warn
+    render :text => CGI.escapeHTML(params[:q])
+    render :text => "Welcome back, #{CGI::escapeHTML(params[:name])}!}"
+  end
 end
