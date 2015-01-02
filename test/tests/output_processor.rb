@@ -175,4 +175,9 @@ class OutputProcessorTests < Test::Unit::TestCase
       s(:rescue, s(:call, nil, :a),
         s(:resbody, s(:array), s(:call, nil, :b)))
   end
+
+  def test_command_interpolation
+    assert_output '`#{x}`',
+      s(:dxstr, "", s(:evstr, s(:call, nil, :x)))
+  end
 end
