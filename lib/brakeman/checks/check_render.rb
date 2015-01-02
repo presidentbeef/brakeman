@@ -36,13 +36,13 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
 
 
       if input = has_immediate_user_input?(view)
-        confidence = CONFIDENCE[:high]
-      elsif input = include_user_input?(view)
         if node_type? view, :string_interp, :dstr
           confidence = CONFIDENCE[:med]
         else
-          confidence = CONFIDENCE[:low]
+          confidence = CONFIDENCE[:high]
         end
+      elsif input = include_user_input?(view)
+        confidence = CONFIDENCE[:low]
       else
         return
       end
