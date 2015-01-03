@@ -86,6 +86,7 @@ module Brakeman::WarningCodes
     :unscoped_find => 82,
     :CVE_2011_2932 => 83,
     :cross_site_scripting_inline => 84,
+    :CVE_2014_7829 => 85,
   }
 
   def self.code name
