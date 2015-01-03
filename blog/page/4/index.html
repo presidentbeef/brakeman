@@ -108,6 +108,95 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/06/12/brakeman-1-dot-6-2-released/">Brakeman 1.6.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-06-12 17:07:00 -0700" pubdate  updated >Jun 12<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Besides checks for the latest CVEs, this release includes a slightly improved redirect check, noiser output with <code>--compare</code>, and better handling of <code>before_filter</code>.</p>
+
+<p><em>Changes since 1.6.1</em>:</p>
+
+<ul>
+<li>Add checks for CVE-2012-2660, CVE-2012-2661, CVE-2012-2694, CVE-2012-2695 (Dave Worth)</li>
+<li>Avoid warning when redirecting to a model instance</li>
+<li>Raise confidence level for model attributes in redirects</li>
+<li>Add <code>request.parameters</code> as a parameters hash</li>
+<li>Return non-zero exit code when missing dependencies</li>
+<li>Fix <code>before_filter :except</code> logic</li>
+<li>Only accept symbol literals as before_filter names</li>
+<li>Cache before_filter lookups</li>
+<li>Turn off quiet mode by default for <code>--compare</code></li>
+</ul>
+
+
+<h3>Latest CVEs</h3>
+
+<p>A number of Rails vulnerabilities were announced recently, although there are really only two issues.</p>
+
+<p>One issue is that query parameters like <code>?name[]</code> and <code>?name[]=1&amp;name[]</code> get converted to <code>{"name" =&gt; [nil]}</code> and <code>{"name" =&gt; ["1", nil]}</code>. This, in turn, causes ActiveRecord to produce SQL queries with either <code>IS NULL</code> or <code>IN ('1', NULL)</code>. This is probably unexpected behavior.</p>
+
+<p>The other issue is that query parameters like <code>?name[users.id]=1</code> or <code>?name[users][id]=1</code> get converted to <code>{"name" =&gt; { "users.id" =&gt; 1 }}</code> or <code>{"name" =&gt; { "users" =&gt; { "id" =&gt; 1 }}}</code>. ActiveRecord interprets <code>"users.id"</code> and <code>"users" =&gt; { "id" ...}</code> as <code>"users"."id"</code> in the WHERE clause, allowing an attacker to control the table/columns being queried.</p>
+
+<p>Updated versions for Rails 3.x have been released.</p>
+
+<p>For Rails 2.3, I believe <a href="https://github.com/presidentbeef/rails/pull/1/files">these changes</a> will fix the first issue, and there is another <a href="https://rubyonrails-security.googlegroups.com/attach/aee3413fb038bf56/2-3-sql-injection.patch?view=1&amp;part=3">patch available</a> for the second issue.</p>
+
+<p>Older versions of Rails 2.x may be vulnerable to the &#8220;NULL&#8221; issue, but not to the nested hashes problem.</p>
+
+<h3>Unprotected Redirect Check</h3>
+
+<p>There have been some minor changes to <code>CheckRedirect</code>. In most cases, it should no longer warn when redirecting to a model instance. If there are still false positives with this scenario, please report them.</p>
+
+<p>The other change is that redirects to model attributes will now be marked as high confidence, instead of weak.</p>
+
+<h3>Exit Code on Missing Dependencies</h3>
+
+<p>Brakeman catches errors from missing dependencies in order to show a nicer error message. Unfortunately, it was also returning <code>0</code> on exit. This is undesirable behavior when chaining commands together.</p>
+
+<p>This has been changed to return a non-zero exit code.</p>
+
+<h3>Before Filter Changes</h3>
+
+<p>There were some isues with how <code>before_filter</code> was being handled. The logic when using <code>:except</code> was broken, causing Brakeman to treat it like <code>:only</code>.</p>
+
+<p>The other issue caused Brakeman to interpret arguments such as method calls as method names. For example, <code>before_filter blah</code> would be treated like <code>before_filter :blah</code>.</p>
+
+<p>While dealing with this, caching of filter lookups was also added for a minor performance improvement.</p>
+
+<h3>Noisier <code>--compare</code></h3>
+
+<p>Using the <code>--compare</code> option now shows the same output as a regular scan. If you are piping the output of <code>--compare</code> to a file or elsewhere, you may wish to use the <code>--quiet</code> option.</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/05/23/brakeman-1-dot-6-1-released/">Brakeman 1.6.1 Released</a></h1>
     
     
@@ -925,57 +1014,6 @@ puts clean(x)
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/01/26/brakeman-1-dot-2-2-released/">Brakeman 1.2.2 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-01-26 13:58:00 -0800" pubdate  updated >Jan 26<span>th</span>, 2012</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Changes since 1.2.1:</em></p>
-
-<ul>
-<li>&#8211;no-progress works again</li>
-<li>Make CheckLinkTo a separate check</li>
-<li>Don&#8217;t fail on unknown options to resource(s)</li>
-<li>Handle empty resource(s) blocks</li>
-<li>Add RescanReport#existing_warnings</li>
-</ul>
-
-
-<h3>No Progress Option</h3>
-
-<p>The last release broke the <code>--no-progress</code> option for hiding the <code>1/100 files processed</code> type messages. Now it works again!</p>
-
-<h3>Separate Check for link_to</h3>
-
-<p>For no great reason, <code>CheckLinkTo</code> was bundled with <code>CheckCrossSiteScripting</code>. It has now been moved out to a separate file, allowing it to be treated as a regular check. This means it can be explicitly skipped using <code>-x CheckLinkTo</code> (if desired).</p>
-
-<h3>Better Rails 2 Route Handling</h3>
-
-<p>Brakeman was raising an exception if a hash option to <code>resource</code> or <code>resources</code> did not match a set of known options. Now it will only warn instead of aborting route processing.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1028,6 +1066,10 @@ puts clean(x)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/01/02/brakeman-3-dot-0-0-released/">Brakeman 3.0.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/13/brakeman-2-dot-6-3-released/">Brakeman 2.6.3 Released</a>
       </li>
     
@@ -1041,10 +1083,6 @@ puts clean(x)
     
       <li class="post">
         <a href="/blog/2014/07/02/brakeman-2-dot-6-1-released/">Brakeman 2.6.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/06/06/brakeman-2-dot-6-0-released/">Brakeman 2.6.0 Released</a>
       </li>
     
   </ul>
