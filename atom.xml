@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2015-01-02T20:11:53-08:00</updated>
+  <updated>2015-01-02T20:49:29-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -36,6 +36,7 @@
 &lt;li&gt;Add check for cross site scripting via inline renders&lt;/li&gt;
 &lt;li&gt;Add check for CVE-2014-7829&lt;/li&gt;
 &lt;li&gt;Fix parsing of &lt;code&gt;&amp;lt;%==&lt;/code&gt; in ERB&lt;/li&gt;
+&lt;li&gt;Fix output format of command interpolation&lt;/li&gt;
 &lt;li&gt;Fix CVE for CVE-2011-2932&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -123,6 +124,22 @@
 &lt;p&gt;Parsing &lt;code&gt;&amp;lt;%==&lt;/code&gt; in ERB templates no longer causes errors.&lt;/p&gt;
 
 &lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/589&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Command Interpolation Format Fix&lt;/h3&gt;
+
+&lt;p&gt;Brakeman was formatting&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;`#{x}`
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;as&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;`x`
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This has been fixed.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/596&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
 &lt;h3&gt;CVE-2011-2932&lt;/h3&gt;
 

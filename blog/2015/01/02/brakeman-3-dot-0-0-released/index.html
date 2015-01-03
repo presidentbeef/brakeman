@@ -140,6 +140,7 @@
 <li>Add check for cross site scripting via inline renders</li>
 <li>Add check for CVE-2014-7829</li>
 <li>Fix parsing of <code>&lt;%==</code> in ERB</li>
+<li>Fix output format of command interpolation</li>
 <li>Fix CVE for CVE-2011-2932</li>
 </ul>
 
@@ -227,6 +228,22 @@
 <p>Parsing <code>&lt;%==</code> in ERB templates no longer causes errors.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/589">changes</a>)</p>
+
+<h3>Command Interpolation Format Fix</h3>
+
+<p>Brakeman was formatting</p>
+
+<pre><code>`#{x}`
+</code></pre>
+
+<p>as</p>
+
+<pre><code>`x`
+</code></pre>
+
+<p>This has been fixed.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/596">changes</a>)</p>
 
 <h3>CVE-2011-2932</h3>
 
