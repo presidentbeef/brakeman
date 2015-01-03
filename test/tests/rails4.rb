@@ -16,7 +16,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 40
+      :generic => 46
     }
   end
 
@@ -461,6 +461,70 @@ class Rails4Tests < Test::Unit::TestCase
       :message => /^Rails\ 4\.0\.0 has\ a\ vulnerability\ in/,
       :confidence => 1,
       :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_render_text
+    assert_warning :type => :warning,
+      :warning_code => 84,
+      :fingerprint => "9e40043f992762c78415ef06c2b50916d6f16112759fb2762b9a781e09d651e0",
+      :warning_type => "Cross Site Scripting",
+      :line => 24,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/another_controller.rb",
+      :user_input => nil
+
+    assert_warning :type => :warning,
+      :warning_code => 84,
+      :fingerprint => "e8ab2a0727aec11bd56cdac0fa0e9f340e2d739fd964f0d9fe044f0707544bf0",
+      :warning_type => "Cross Site Scripting",
+      :line => 25,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 1,
+      :relative_path => "app/controllers/another_controller.rb",
+      :user_input => nil
+
+    assert_warning :type => :warning,
+      :warning_code => 84,
+      :fingerprint => "44697e7dc6c955c6bd7747c31f3c7617c0da3dcdb9bdae0963b62cbc4462e39f",
+      :warning_type => "Cross Site Scripting",
+      :line => 26,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/another_controller.rb",
+      :user_input => nil
+
+    assert_warning :type => :warning,
+      :warning_code => 84,
+      :fingerprint => "e8ab2a0727aec11bd56cdac0fa0e9f340e2d739fd964f0d9fe044f0707544bf0",
+      :warning_type => "Cross Site Scripting",
+      :line => 27,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 1,
+      :relative_path => "app/controllers/another_controller.rb",
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_render_inline
+    assert_warning :type => :warning,
+      :warning_code => 84,
+      :fingerprint => "9e40043f992762c78415ef06c2b50916d6f16112759fb2762b9a781e09d651e0",
+      :warning_type => "Cross Site Scripting",
+      :line => 29,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/another_controller.rb",
+      :user_input => nil
+
+    assert_warning :type => :warning,
+      :warning_code => 84,
+      :fingerprint => "e8ab2a0727aec11bd56cdac0fa0e9f340e2d739fd964f0d9fe044f0707544bf0",
+      :warning_type => "Cross Site Scripting",
+      :line => 30,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 1,
+      :relative_path => "app/controllers/another_controller.rb",
       :user_input => nil
   end
 
