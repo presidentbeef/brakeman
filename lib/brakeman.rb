@@ -420,7 +420,7 @@ module Brakeman
       require name
     rescue LoadError => e
       $stderr.puts e.message
-      $stderr.puts "Please install the appropriate dependency."
+      $stderr.puts "Please install the appropriate dependency: #{name}."
       exit! -1
     end
   end

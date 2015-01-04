@@ -40,6 +40,15 @@ From source:
     gem build brakeman.gemspec
     gem install brakeman*.gem
 
+## For Slim Users
+
+[Slim v3.0.0](https://github.com/slim-template/slim/blob/master/CHANGES#L12) dropped support for Ruby 1.8.7. Install a version of [`slim`](http://slim-lang.com/) compatible with your Ruby.
+
+| Ruby Version |       `Gemfile`       |              Command Line              |
+|--------------|-----------------------|----------------------------------------|
+| Ruby 1.8.7   | `gem 'slim', '< 3.0'` | `$ gem install slim --version '< 3.0'` |
+| Ruby 1.9+    | `gem 'slim'`          | `$ gem install slim`                   |
+
 # Usage
 
     brakeman [app_path]
