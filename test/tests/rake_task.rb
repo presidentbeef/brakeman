@@ -9,7 +9,7 @@ class RakeTaskTests < Test::Unit::TestCase
   end
 
   def cleanup
-    $stderr = old_stderr
+    $stderr = @old_stderr
   end
 
   def in_temp_app
