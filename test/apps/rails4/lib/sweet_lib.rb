@@ -5,6 +5,6 @@ class SweetLib
 
   def test_find_group
     #Should warn, no escaping done for :group
-    User.find(:all, :conditions => "title = 'blah'", :group => "something, #{params[:group]}")
+    system("rm #{@bad}")
   end
 end
