@@ -555,7 +555,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_command_injection_in_library
     assert_warning :type => :warning,
       :warning_code => 14,
-      :fingerprint => "21857e8872d187312a0b2470876bf6c8a8885df84c510d766f4639d95ae7cef7",
+      :fingerprint => "9a11e7271784d69c667ad82481596096781a4873297d3f7523d290f51465f9d6",
       :warning_type => "Command Injection",
       :line => 3,
       :message => /^Possible\ command\ injection/,
@@ -567,7 +567,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_sql_injection_interpolated_group_param_in_library
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "dd032fd10d9f75171111dada136906dcb605c61ad492431ca2fa243707264a4c",
+      :fingerprint => "3acaa2bbe232e6fb04e9bfe309bdf1b16bab7495f469fcafdb83181b044d4922",
       :warning_type => "SQL Injection",
       :line => 8,
       :message => /^Possible\ SQL\ injection/,
