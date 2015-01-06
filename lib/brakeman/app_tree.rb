@@ -54,15 +54,15 @@ module Brakeman
     end
 
     def controller_paths
-      @controller_paths ||= find_paths("app/controllers")
+      @controller_paths ||= find_paths("app/**/controllers")
     end
 
     def model_paths
-      @model_paths ||= find_paths("app/models")
+      @model_paths ||= find_paths("app/**/models")
     end
 
     def template_paths
-      @template_paths ||= find_paths("app/views", "*.{#{VIEW_EXTENSIONS}}")
+      @template_paths ||= find_paths("app/**/views", "*.{#{VIEW_EXTENSIONS}}")
     end
 
     def layout_exists?(name)
