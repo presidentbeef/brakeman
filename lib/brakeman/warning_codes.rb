@@ -84,6 +84,9 @@ module Brakeman::WarningCodes
     :CVE_2014_3514 => 80,
     :CVE_2014_3514_call => 81,
     :unscoped_find => 82,
+    :CVE_2011_2932 => 83,
+    :cross_site_scripting_inline => 84,
+    :CVE_2014_7829 => 85,
   }
 
   def self.code name

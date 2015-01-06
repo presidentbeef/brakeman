@@ -1,3 +1,22 @@
+# 3.0.0
+
+* Add check for CVE-2014-7829
+* Add check for cross site scripting via inline renders
+* Fix formatting of command interpolation
+* Local variables are no longer formatted as `(local var)`
+* Actually skip skipped before filters
+* `--exit-on-warn --compare` only returns error code on new warnings (Jeff Yip)
+* Fix parsing of `<%==` in ERB
+* Sort warnings by fingerprint in JSON report (Jeff Yip)
+* Handle symmetric multiple assignment
+* Do not branch for self attribute assignment `x = x.y`
+* Fix CVE for CVE-2011-2932
+* Remove "fake filters" from warning fingerpints
+* Index calls in `lib/` files
+* Move Symbol DoS to optional checks
+* CVEs report correct line and file name (Gemfile/Gemfile.lock) (Rob Fletcher)
+* Change `--separate-models` to be the default
+
 # 2.6.3
 
 * Whitelist `exists` arel method from SQL injection check

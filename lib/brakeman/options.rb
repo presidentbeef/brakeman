@@ -80,6 +80,10 @@ module Brakeman::Options
           options[:ignore_attr_protected] = true
         end
 
+        opts.on "--[no-]index-libs", "Add libraries to call index (default)" do |index|
+          options[:index_libs] = index
+        end
+
         opts.on "--interprocedural", "Process method calls to known methods" do
           options[:interprocedural] = true
         end
@@ -205,8 +209,8 @@ module Brakeman::Options
           options[:output_files].push(file)
         end
 
-        opts.on "--[no]-separate-models", "Warn on each model without attr_accessible (Default)" do |combine|
-          options[:collapse_mass_assignment] = combine
+        opts.on "--[no-]separate-models", "Warn on each model without attr_accessible (Default)" do |separate|
+          options[:collapse_mass_assignment] = !separate
         end
 
         opts.on "--summary", "Only output summary of warnings" do

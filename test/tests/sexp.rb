@@ -162,11 +162,21 @@ class SexpTests < Test::Unit::TestCase
     assert_equal s(:lit, 1), exp.rhs
   end
 
-  def test_class_variable_assignment
+  def test_class_variable_declaration
     exp = parse '@@x = 1'
 
+    assert_equal :cvdecl, exp.node_type
     assert_equal :@@x, exp.lhs
     assert_equal s(:lit, 1), exp.rhs
+  end
+
+  def test_class_variable_assignment
+    exp = parse 'def x; @@a = 1; end'
+    asgn = exp.last
+
+    assert_equal :cvasgn, asgn.node_type
+    assert_equal :@@a, asgn.lhs
+    assert_equal s(:lit, 1), asgn.rhs
   end
 
   def test_method_def_name

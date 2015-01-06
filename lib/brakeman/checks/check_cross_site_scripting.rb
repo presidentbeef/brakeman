@@ -35,48 +35,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   #Run check
   def run_check
-    @ignore_methods = Set[:button_to, :check_box, :content_tag, :escapeHTML, :escape_once,
-                           :field_field, :fields_for, :h, :hidden_field,
-                           :hidden_field, :hidden_field_tag, :image_tag, :label,
-                           :link_to, :mail_to, :radio_button, :select,
-                           :submit_tag, :text_area, :text_field,
-                           :text_field_tag, :url_encode, :url_for,
-                           :will_paginate].merge tracker.options[:safe_methods]
-
-    @models = tracker.models.keys
-    @inspect_arguments = tracker.options[:check_arguments]
-
-    @known_dangerous = Set[:truncate, :concat]
-
-    if version_between? "2.0.0", "3.0.5"
-      @known_dangerous << :auto_link
-    elsif version_between? "3.0.6", "3.0.99"
-      @ignore_methods << :auto_link
-    end
-
-    if version_between? "2.0.0", "2.3.14"
-      @known_dangerous << :strip_tags
-    end
-
-    json_escape_on = false
-    initializers = tracker.check_initializers :ActiveSupport, :escape_html_entities_in_json=
-    initializers.each {|result| json_escape_on = true?(result.call.first_arg) }
-
-    if tracker.config[:rails][:active_support] and
-      true? tracker.config[:rails][:active_support][:escape_html_entities_in_json]
-
-        json_escape_on = true
-    elsif version_between? "4.0.0", "5.0.0"
-      json_escape_on = true
-    end
-
-    if !json_escape_on or version_between? "0.0.0", "2.0.99"
-      @known_dangerous << :to_json
-      Brakeman.debug("Automatic to_json escaping not enabled, consider to_json dangerous")
-    else
-      @safe_input_attributes << :to_json
-      Brakeman.debug("Automatic to_json escaping is enabled.")
-    end
+    setup
 
     tracker.each_template do |name, template|
       Brakeman.debug "Checking #{name} for XSS"
@@ -299,6 +258,51 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     process exp.then_clause if sexp? exp.then_clause
     process exp.else_clause if sexp? exp.else_clause
     exp
+  end
+
+  def setup
+    @ignore_methods = Set[:button_to, :check_box, :content_tag, :escapeHTML, :escape_once,
+                           :field_field, :fields_for, :h, :hidden_field,
+                           :hidden_field, :hidden_field_tag, :image_tag, :label,
+                           :link_to, :mail_to, :radio_button, :select,
+                           :submit_tag, :text_area, :text_field,
+                           :text_field_tag, :url_encode, :url_for,
+                           :will_paginate].merge tracker.options[:safe_methods]
+
+    @models = tracker.models.keys
+    @inspect_arguments = tracker.options[:check_arguments]
+
+    @known_dangerous = Set[:truncate, :concat]
+
+    if version_between? "2.0.0", "3.0.5"
+      @known_dangerous << :auto_link
+    elsif version_between? "3.0.6", "3.0.99"
+      @ignore_methods << :auto_link
+    end
+
+    if version_between? "2.0.0", "2.3.14"
+      @known_dangerous << :strip_tags
+    end
+
+    json_escape_on = false
+    initializers = tracker.check_initializers :ActiveSupport, :escape_html_entities_in_json=
+    initializers.each {|result| json_escape_on = true?(result.call.first_arg) }
+
+    if tracker.config[:rails][:active_support] and
+      true? tracker.config[:rails][:active_support][:escape_html_entities_in_json]
+
+        json_escape_on = true
+    elsif version_between? "4.0.0", "5.0.0"
+      json_escape_on = true
+    end
+
+    if !json_escape_on or version_between? "0.0.0", "2.0.99"
+      @known_dangerous << :to_json
+      Brakeman.debug("Automatic to_json escaping not enabled, consider to_json dangerous")
+    else
+      @safe_input_attributes << :to_json
+      Brakeman.debug("Automatic to_json escaping is enabled.")
+    end
   end
 
   def raw_call? exp

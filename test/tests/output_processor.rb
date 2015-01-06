@@ -22,7 +22,7 @@ class OutputProcessorTests < Test::Unit::TestCase
   end
 
   def test_output_local_variable
-    assert_output "(local x)", Sexp.new(:lvar, :x)
+    assert_output "x", Sexp.new(:lvar, :x)
   end
 
   def test_output_ignore
@@ -46,8 +46,8 @@ class OutputProcessorTests < Test::Unit::TestCase
   end
 
   def test_output_output
-    assert_output "[Output] (local x)", Sexp.new(:output,
-                                                 Sexp.new(:lvar, :x))
+    assert_output "[Output] x", Sexp.new(:output,
+                                         Sexp.new(:lvar, :x))
   end
 
   def test_output_output_format
@@ -155,7 +155,7 @@ class OutputProcessorTests < Test::Unit::TestCase
                Sexp.new(:args),
                Sexp.new(:ivar, :@x))
 
-    assert_output "def x(y)\n  @x = (local y)\nend",
+    assert_output "def x(y)\n  @x = y\nend",
       Sexp.new(:methdef,
                :x,
                Sexp.new(:args, :y),
@@ -174,5 +174,10 @@ class OutputProcessorTests < Test::Unit::TestCase
     assert_output "a rescue b",
       s(:rescue, s(:call, nil, :a),
         s(:resbody, s(:array), s(:call, nil, :b)))
+  end
+
+  def test_command_interpolation
+    assert_output '`#{x}`',
+      s(:dxstr, "", s(:evstr, s(:call, nil, :x)))
   end
 end

@@ -83,7 +83,13 @@ class Brakeman::Tracker
 
   #Iterate over all methods in controllers and models.
   def each_method
-    [self.controllers, self.models, self.libs].each do |set|
+    classes = [self.controllers, self.models]
+
+    if @options[:index_libs]
+      classes << self.libs
+    end
+
+    classes.each do |set|
       set.each do |set_name, info|
         [:private, :public, :protected].each do |visibility|
           info[visibility].each do |method_name, definition|

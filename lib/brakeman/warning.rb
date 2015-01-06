@@ -35,6 +35,10 @@ class Brakeman::Warning
       end
     end
 
+    if @method.to_s =~ /^fake_filter\d+/
+      @method = :before_filter
+    end
+
     if not @line
       if @user_input and @user_input.respond_to? :line
         @line = @user_input.line
