@@ -1,8 +1,10 @@
+require 'brakeman/processors/lib/basic_processor'
+
 #Processes the Sexp from routes.rb. Stores results in tracker.routes.
 #
 #Note that it is only interested in determining what methods on which
 #controllers are used as routes, not the generated URLs for routes.
-class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
+class Brakeman::Rails3RoutesProcessor < Brakeman::BasicProcessor
   include Brakeman::RouteHelper
 
   attr_reader :map, :nested, :current_controller
@@ -53,7 +55,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BaseProcessor
     when :controller
       process_controller_block exp
     else
-      super
+      process_default exp
     end
   end
 

@@ -67,7 +67,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
         :public => {},
         :private => {},
         :protected => {},
-        :options => {:before_filters => []},
+        :options => {:before_filters => [], :skip_filters => []},
         :src => { @file_name => exp },
         :files => [ @file_name ]
       }
@@ -158,9 +158,11 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
         when :include
           @current_class[:includes] << class_name(first_arg) if @current_class
         when :before_filter, :append_before_filter, :before_action, :append_before_action
-          @current_class[:options][:before_filters] << exp.args
+          @current_class[:options][:before_filters] << exp
         when :prepend_before_filter, :prepend_before_action
-          @current_class[:options][:before_filters].unshift exp.args
+          @current_class[:options][:before_filters].unshift exp
+        when :skip_before_filter, :skip_filter, :skip_before_action, :skip_action_callback
+          @current_class[:options][:skip_filters] << exp
         when :layout
           if string? last_arg
             #layout "some_layout"

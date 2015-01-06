@@ -1,7 +1,7 @@
-require 'brakeman/processors/base_processor'
+require 'brakeman/processors/lib/basic_processor'
 
 #Processes Gemfile and Gemfile.lock
-class Brakeman::GemProcessor < Brakeman::BaseProcessor
+class Brakeman::GemProcessor < Brakeman::BasicProcessor
 
   def initialize *args
     super

@@ -29,6 +29,15 @@ module Brakeman::ProcessorHelper
 
     exp
   end
+
+  def process_class exp
+    current_class = @current_class
+    @current_class = class_name exp[1]
+    process_all exp.body
+    @current_class = current_class
+    exp
+  end
+
   #Sets the current module.
   def process_module exp
     module_name = class_name(exp.class_name).to_s

@@ -29,7 +29,7 @@ class Brakeman::Rails3Erubis < ::Erubis::Eruby
     end
   end
 
-  BLOCK_EXPR = /\s+(do|\{)(\s*\|[^|]*\|)?\s*\Z/
+  BLOCK_EXPR = /\s*((\s+|\))do|\{)(\s*\|[^|]*\|)?\s*\Z/
 
   def add_expr_literal(src, code)
     if code =~ BLOCK_EXPR
@@ -43,7 +43,7 @@ class Brakeman::Rails3Erubis < ::Erubis::Eruby
     if code =~ BLOCK_EXPR
       src << "@output_buffer.safe_append= " << code
     else
-      src << "@output_buffer.safe_concat(" << code << ");"
+      src << "@output_buffer.safe_append= (" << code << ");"
     end
   end
 

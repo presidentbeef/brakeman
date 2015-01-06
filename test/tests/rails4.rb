@@ -16,7 +16,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 37
+      :generic => 47
     }
   end
 
@@ -464,6 +464,70 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => nil
   end
 
+  def test_cross_site_scripting_render_text
+    assert_warning :type => :warning,
+      :warning_code => 84,
+      :fingerprint => "9e40043f992762c78415ef06c2b50916d6f16112759fb2762b9a781e09d651e0",
+      :warning_type => "Cross Site Scripting",
+      :line => 24,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/another_controller.rb",
+      :user_input => nil
+
+    assert_warning :type => :warning,
+      :warning_code => 84,
+      :fingerprint => "e8ab2a0727aec11bd56cdac0fa0e9f340e2d739fd964f0d9fe044f0707544bf0",
+      :warning_type => "Cross Site Scripting",
+      :line => 25,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 1,
+      :relative_path => "app/controllers/another_controller.rb",
+      :user_input => nil
+
+    assert_warning :type => :warning,
+      :warning_code => 84,
+      :fingerprint => "44697e7dc6c955c6bd7747c31f3c7617c0da3dcdb9bdae0963b62cbc4462e39f",
+      :warning_type => "Cross Site Scripting",
+      :line => 26,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/another_controller.rb",
+      :user_input => nil
+
+    assert_warning :type => :warning,
+      :warning_code => 84,
+      :fingerprint => "e8ab2a0727aec11bd56cdac0fa0e9f340e2d739fd964f0d9fe044f0707544bf0",
+      :warning_type => "Cross Site Scripting",
+      :line => 27,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 1,
+      :relative_path => "app/controllers/another_controller.rb",
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_render_inline
+    assert_warning :type => :warning,
+      :warning_code => 84,
+      :fingerprint => "9e40043f992762c78415ef06c2b50916d6f16112759fb2762b9a781e09d651e0",
+      :warning_type => "Cross Site Scripting",
+      :line => 29,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/another_controller.rb",
+      :user_input => nil
+
+    assert_warning :type => :warning,
+      :warning_code => 84,
+      :fingerprint => "e8ab2a0727aec11bd56cdac0fa0e9f340e2d739fd964f0d9fe044f0707544bf0",
+      :warning_type => "Cross Site Scripting",
+      :line => 30,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 1,
+      :relative_path => "app/controllers/another_controller.rb",
+      :user_input => nil
+  end
+
   def test_sql_injection_in_chained_string_building
     assert_warning :type => :warning,
       :warning_code => 0,
@@ -474,6 +538,42 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/models/account.rb",
       :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :more_ids)), :join, s(:str, ","))
+  end
+
+  def test_no_sql_injection_due_to_skipped_filter
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "47709afc6e3ba4db08a7e6a6b9bda9644c0e8827437eb3489626b2471e0414b5",
+      :warning_type => "SQL Injection",
+      :line => 14,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/another_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_command_injection_in_library
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "9a11e7271784d69c667ad82481596096781a4873297d3f7523d290f51465f9d6",
+      :warning_type => "Command Injection",
+      :line => 3,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/sweet_lib.rb",
+      :user_input => s(:lvar, :bad)
+  end
+
+  def test_command_injection_from_not_skipping_before_filter
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "9f209feb4b84e753fe331875dda3c1fb30c2938bfda056f4583b15f64ef940b9",
+      :warning_type => "Command Injection",
+      :line => 18,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/another_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
   end
 
   def test_sql_injection_CVE_2013_6417
@@ -663,6 +763,19 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 2,
       :relative_path => "app/controllers/users_controller.rb",
       :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :id))
+  end
+
+  def test_before_filter_block
+    assert_warning :type => :warning,
+      :warning_code => 13,
+      :fingerprint => "f8081023e9a6026264eaee41a4a1f520fc98ee5dbcba2129245e6a3873cb6409",
+      :warning_type => "Dangerous Eval",
+      :line => 7,
+      :message => /^User\ input\ in\ eval/,
+      :confidence => 0,
+      :relative_path => "app/controllers/another_controller.rb",
+      :method => :before_filter,
+      :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :x))
   end
 
   #Verify checks external to Brakeman are loaded

@@ -1,3 +1,6 @@
+
+require 'brakeman/processors/lib/basic_processor'
+
 #Processes configuration. Results are put in tracker.config.
 #
 #Configuration of Rails via Rails::Initializer are stored in tracker.config[:rails].
@@ -12,7 +15,7 @@
 #  tracker.config[:rails][:active_record][:whitelist_attributes]
 #
 #Values for tracker.config[:rails] will still be Sexps.
-class Brakeman::Rails3ConfigProcessor < Brakeman::BaseProcessor
+class Brakeman::Rails3ConfigProcessor < Brakeman::BasicProcessor
   RAILS_CONFIG = Sexp.new(:call, nil, :config)
 
   def initialize *args

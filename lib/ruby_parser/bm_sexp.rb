@@ -4,7 +4,7 @@
 class Sexp
   attr_reader :paren
   attr_accessor :original_line, :or_depth
-  ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cdecl, :or, :and, :colon2]
+  ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cvasgn, :cdecl, :or, :and, :colon2]
 
   def method_missing name, *args
     #Brakeman does not use this functionality,
@@ -419,6 +419,7 @@ class Sexp
   #Sets the left hand side of assignment or boolean.
   def lhs= exp
     expect *ASSIGNMENT_BOOL
+    @my_hash_value = nil
     self[1] = exp
   end
 
@@ -427,14 +428,25 @@ class Sexp
   #    s(:lasgn, :x, s(:lit, 1))
   #                  ^--rhs---^
   def rhs
-    expect *ASSIGNMENT_BOOL
-    self[2]
+    expect :attrasgn, *ASSIGNMENT_BOOL
+
+    if self.node_type == :attrasgn
+      self[3]
+    else
+      self[2]
+    end
   end
 
   #Sets the right hand side of assignment or boolean.
   def rhs= exp
-    expect *ASSIGNMENT_BOOL
-    self[2] = exp
+    expect :attrasgn, *ASSIGNMENT_BOOL
+    @my_hash_value = nil
+
+    if self.node_type == :attrasgn
+      self[3] = exp
+    else
+      self[2] = exp
+    end
   end
 
   #Returns name of method being defined in a method definition.

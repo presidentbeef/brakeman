@@ -40,6 +40,6 @@ class Brakeman::Report::JSON < Brakeman::Report::Base
       hash = w.to_hash
       hash[:file] = warning_file w
       hash
-    end.sort_by { |w| w[:file] }
+    end.sort_by { |w| "#{w[:fingerprint]}#{w[:line]}" }
   end
 end
