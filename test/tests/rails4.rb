@@ -16,7 +16,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 47
+      :generic => 48
     }
   end
 
@@ -555,13 +555,25 @@ class Rails4Tests < Test::Unit::TestCase
   def test_command_injection_in_library
     assert_warning :type => :warning,
       :warning_code => 14,
-      :fingerprint => "9a11e7271784d69c667ad82481596096781a4873297d3f7523d290f51465f9d6",
+      :fingerprint => "21857e8872d187312a0b2470876bf6c8a8885df84c510d766f4639d95ae7cef7",
       :warning_type => "Command Injection",
       :line => 3,
       :message => /^Possible\ command\ injection/,
       :confidence => 1,
       :relative_path => "lib/sweet_lib.rb",
       :user_input => s(:lvar, :bad)
+  end
+
+  def test_command_injection_interpolated_string_in_library
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "69855e4f6509c389b337195c00517b13b89a69773dcd1281ee3ae5577c8f2cf0",
+      :warning_type => "Command Injection",
+      :line => 8,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/sweet_lib.rb",
+      :user_input => s(:ivar, :@bad)
   end
 
   def test_command_injection_from_not_skipping_before_filter
