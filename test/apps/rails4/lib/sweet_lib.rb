@@ -3,8 +3,8 @@ class SweetLib
     `ls #{bad}`
   end
 
-  def test_find_group
-    #Should warn, no escaping done for :group
+  def test_command_injection_in_lib
+    #Should warn about command injection
     system("rm #{@bad}")
   end
 end

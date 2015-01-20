@@ -567,7 +567,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_command_injection_interpolated_string_in_library
     assert_warning :type => :warning,
       :warning_code => 14,
-      :fingerprint => "69855e4f6509c389b337195c00517b13b89a69773dcd1281ee3ae5577c8f2cf0",
+      :fingerprint => "899bf57685de767746ef220e51883b62eca23b505a6e17e57dcd8c2ca57959b8",
       :warning_type => "Command Injection",
       :line => 8,
       :message => /^Possible\ command\ injection/,
