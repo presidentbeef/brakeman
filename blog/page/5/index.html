@@ -108,57 +108,6 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-    <h1 class="entry-title"><a href="/blog/2012/01/26/brakeman-1-dot-2-2-released/">Brakeman 1.2.2 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-01-26 13:58:00 -0800" pubdate  updated >Jan 26<span>th</span>, 2012</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Changes since 1.2.1:</em></p>
-
-<ul>
-<li>&#8211;no-progress works again</li>
-<li>Make CheckLinkTo a separate check</li>
-<li>Don&#8217;t fail on unknown options to resource(s)</li>
-<li>Handle empty resource(s) blocks</li>
-<li>Add RescanReport#existing_warnings</li>
-</ul>
-
-
-<h3>No Progress Option</h3>
-
-<p>The last release broke the <code>--no-progress</code> option for hiding the <code>1/100 files processed</code> type messages. Now it works again!</p>
-
-<h3>Separate Check for link_to</h3>
-
-<p>For no great reason, <code>CheckLinkTo</code> was bundled with <code>CheckCrossSiteScripting</code>. It has now been moved out to a separate file, allowing it to be treated as a regular check. This means it can be explicitly skipped using <code>-x CheckLinkTo</code> (if desired).</p>
-
-<h3>Better Rails 2 Route Handling</h3>
-
-<p>Brakeman was raising an exception if a hash option to <code>resource</code> or <code>resources</code> did not match a set of known options. Now it will only warn instead of aborting route processing.</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
     <h1 class="entry-title"><a href="/blog/2012/01/20/brakeman-1-dot-2-1-released/">Brakeman 1.2.1 Released</a></h1>
     
     
@@ -167,7 +116,7 @@
 
 
 
-<time datetime="2012-01-20 12:16:00 -0800" pubdate  updated >Jan 20<span>th</span>, 2012</time>
+<time datetime="2012-01-20 12:16:00 -0500" pubdate  updated >Jan 20<span>th</span>, 2012</time>
 
 
 </p>
@@ -252,7 +201,7 @@
 
 
 
-<time datetime="2012-01-13 22:00:00 -0800" pubdate  updated >Jan 13<span>th</span>, 2012</time>
+<time datetime="2012-01-13 22:00:00 -0500" pubdate  updated >Jan 13<span>th</span>, 2012</time>
 
 
 </p>
@@ -341,7 +290,7 @@
 
 
 
-<time datetime="2011-12-21 19:12:00 -0800" pubdate  updated >Dec 21<span>st</span>, 2011</time>
+<time datetime="2011-12-21 19:12:00 -0500" pubdate  updated >Dec 21<span>st</span>, 2011</time>
 
 
 </p>
@@ -410,7 +359,7 @@
 
 
 
-<time datetime="2011-12-08 01:35:00 -0800" pubdate  updated >Dec 8<span>th</span>, 2011</time>
+<time datetime="2011-12-08 01:35:00 -0500" pubdate  updated >Dec 8<span>th</span>, 2011</time>
 
 
 </p>
@@ -588,7 +537,7 @@ end
 
 
 
-<time datetime="2011-12-05 14:04:00 -0800" pubdate  updated >Dec 5<span>th</span>, 2011</time>
+<time datetime="2011-12-05 14:04:00 -0500" pubdate  updated >Dec 5<span>th</span>, 2011</time>
 
 
 </p>
@@ -674,7 +623,7 @@ Brakeman.run :app_path =&gt; 'my_app'
 
 
 
-<time datetime="2011-11-21 17:12:00 -0800" pubdate  updated >Nov 21<span>st</span>, 2011</time>
+<time datetime="2011-11-21 17:12:00 -0500" pubdate  updated >Nov 21<span>st</span>, 2011</time>
 
 
 </p>
@@ -720,7 +669,7 @@ Brakeman.run :app_path =&gt; 'my_app'
 
 
 
-<time datetime="2011-11-18 10:41:00 -0800" pubdate  updated >Nov 18<span>th</span>, 2011</time>
+<time datetime="2011-11-18 10:41:00 -0500" pubdate  updated >Nov 18<span>th</span>, 2011</time>
 
 
 </p>
@@ -754,7 +703,7 @@ Brakeman.run :app_path =&gt; 'my_app'
 
 
 
-<time datetime="2011-11-16 16:23:00 -0800" pubdate  updated >Nov 16<span>th</span>, 2011</time>
+<time datetime="2011-11-16 16:23:00 -0500" pubdate  updated >Nov 16<span>th</span>, 2011</time>
 
 
 </p>
@@ -819,7 +768,7 @@ Brakeman.run :app_path =&gt; 'my_app'
 
 
 
-<time datetime="2011-11-04 14:58:00 -0700" pubdate  updated >Nov 4<span>th</span>, 2011</time>
+<time datetime="2011-11-04 14:58:00 -0400" pubdate  updated >Nov 4<span>th</span>, 2011</time>
 
 
 </p>
@@ -868,6 +817,79 @@ Brakeman.run :app_path =&gt; 'my_app'
 <h3>&#8220;Like&#8221; Brakeman on Ruby Toolbox</h3>
 
 <p>Please consider &#8216;liking&#8217; Brakeman on the <a href="https://www.ruby-toolbox.com/projects/brakeman">Ruby Toolbox</a>!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2011/10/25/brakeman-0-dot-8-3-released/">Brakeman 0.8.3 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2011-10-25 10:00:00 -0400" pubdate  updated >Oct 25<span>th</span>, 2011</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Changes for 0.8.3:</p>
+
+<ul>
+<li>Respect -w flag in .tabs format (<a href="https://github.com/tw-ngreen">tw-ngreen</a>)</li>
+<li>Escape HTML output of error messages</li>
+<li>Add &#8211;skip-libs option</li>
+</ul>
+
+
+<p>Changes since 0.8.0:</p>
+
+<ul>
+<li>Run checks in parallel threads by default</li>
+<li>Fix compatibility with ruby_parser 2.3.1</li>
+<li>Add option to assume all controller methods are actions</li>
+<li>Recover from errors when parsing routes</li>
+</ul>
+
+
+<h3>Fix for .tabs Format</h3>
+
+<p>Brakeman will now pay attention to the <code>-w</code> flag (setting minimum confidence levels) when using the <code>.tabs</code> format.</p>
+
+<h3>Escape Error Messages in HTML</h3>
+
+<p>Error message will now be escaped in the HTML output so they do not mess up the formatting.</p>
+
+<h3>&#8211;skip-libs Option</h3>
+
+<p>The <code>--skip-libs</code> option will cause Brakeman to not process the files in the <code>lib</code> directory. At the moment, the results from this directory are only used in a couple places, so it is unlikely that skipping them will cause any problems.</p>
+
+<h3>Parallel Checks</h3>
+
+<p>Checks are now run in separate threads by default. Thus far, there does not seem to be a big difference between using threads and the sequential approach. To turn off threads, use the <code>-n</code> option.</p>
+
+<h3>ruby_parser Compatibility</h3>
+
+<p>This is a stop-gap measure until <a href="https://github.com/seattlerb/ruby_parser">ruby_parser</a> supports Ruby 1.9, which is getting closer to reality.</p>
+
+<h3>Route Processing</h3>
+
+<p>Brakeman will no longer crash if there are problems parsing <code>routes.rb</code>. Instead, it will assume all public methods on controllers are actions. The <code>-a</code> option will also turn this behavior on.</p>
+
+<p>Rails 3.1 route parsing is still a work in progress, so this should at least allow analysis of 3.1 apps, even if it means slightly reduced accuracy.</p>
 </div>
   
   
@@ -927,10 +949,6 @@ Brakeman.run :app_path =&gt; 'my_app'
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2015/01/02/brakeman-3-dot-0-0-released/">Brakeman 3.0.0 Released</a>
-      </li>
-    
-      <li class="post">
         <a href="/blog/2014/10/13/brakeman-2-dot-6-3-released/">Brakeman 2.6.3 Released</a>
       </li>
     
@@ -944,6 +962,10 @@ Brakeman.run :app_path =&gt; 'my_app'
     
       <li class="post">
         <a href="/blog/2014/07/02/brakeman-2-dot-6-1-released/">Brakeman 2.6.1 Released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/06/brakeman-2-dot-6-0-released/">Brakeman 2.6.0 Released</a>
       </li>
     
   </ul>
