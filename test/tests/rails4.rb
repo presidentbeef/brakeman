@@ -790,6 +790,18 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :x))
   end
 
+  def test_cross_site_request_forgery_setting_in_api_controller
+    assert_no_warning :type => :controller,
+      :warning_code => 7,
+      :fingerprint => "6f5239fb87c64764d0c209014deb5cf504c2c10ee424bd33590f0a4f22e01d8f",
+      :warning_type => "Cross-Site Request Forgery",
+      :line => nil,
+      :message => /^'protect_from_forgery'\ should\ be\ called\ /,
+      :confidence => 0,
+      :relative_path => "app/controllers/application_controller.rb",
+      :user_input => nil
+  end
+
   #Verify checks external to Brakeman are loaded
   def test_external_checks
     assert defined? Brakeman::CheckExternalCheckTest
