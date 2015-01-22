@@ -16,8 +16,9 @@ module Brakeman
   #
   #Options:
   #
-  #  * :additional_libs - array of additional lib directories to process
   #  * :app_path - path to root of Rails app (required)
+  #  * :additional_checks_path - array of additional directories containing additional out-of-tree checks to run
+  #  * :additional_libs_path - array of additional application relative lib directories (ex. app/mailers) to process
   #  * :assume_all_routes - assume all methods are routes (default: true)
   #  * :check_arguments - check arguments of methods (default: true)
   #  * :collapse_mass_assignment - report unprotected models in single warning (default: false)
@@ -421,7 +422,7 @@ module Brakeman
       require name
     rescue LoadError => e
       $stderr.puts e.message
-      $stderr.puts "Please install the appropriate dependency."
+      $stderr.puts "Please install the appropriate dependency: #{name}."
       exit! -1
     end
   end

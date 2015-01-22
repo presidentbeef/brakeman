@@ -15,7 +15,7 @@ module Brakeman
       if options[:only_files]
         init_options[:only_files] = Regexp.new("(?:" << options[:only_files].map { |f| Regexp.escape f }.join("|") << ")")
       end
-      init_options[:additional_libs] = options[:additional_libs]
+      init_options[:additional_libs_path] = options[:additional_libs_path]
       new(root, init_options)
     end
 
@@ -23,7 +23,7 @@ module Brakeman
       @root = root
       @skip_files = init_options[:skip_files]
       @only_files = init_options[:only_files]
-      @additional_libs = init_options[:additional_libs] || []
+      @additional_libs_path = init_options[:additional_libs_path] || []
     end
 
     def expand_path(path)
@@ -56,15 +56,15 @@ module Brakeman
     end
 
     def controller_paths
-      @controller_paths ||= find_paths("app/controllers")
+      @controller_paths ||= find_paths("app/**/controllers")
     end
 
     def model_paths
-      @model_paths ||= find_paths("app/models")
+      @model_paths ||= find_paths("app/**/models")
     end
 
     def template_paths
-      @template_paths ||= find_paths("app/views", "*.{#{VIEW_EXTENSIONS}}")
+      @template_paths ||= find_paths("app/**/views", "*.{#{VIEW_EXTENSIONS}}")
     end
 
     def layout_exists?(name)
@@ -80,7 +80,7 @@ module Brakeman
   private
 
     def find_additional_lib_paths
-      @additional_libs.collect{ |path| find_paths path }.flatten
+      @additional_libs_path.collect{ |path| find_paths path }.flatten
     end
 
     def find_paths(directory, extensions = "*.rb")

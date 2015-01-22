@@ -43,41 +43,8 @@ class Brakeman::OutputProcessor < Ruby2Ruby
     "cookies"
   end
 
-  def process_string_interp exp
-    out = '"'
-    exp.each do |e|
-      if e.is_a? String
-        out << e
-      else
-        res = process e
-        out << res unless res == "" 
-      end
-    end
-    out << '"'
-    exp.clear
-    out
-  end
-
-  def process_string_eval exp
-    out = "\#{#{process(exp[0])}}"
-    exp.clear
-    out
-  end
-
-  def process_dxstr exp
-    out = "`"
-    out << exp.map! do |e|
-      if e.is_a? String
-        e
-      elsif string? e
-        e[1]
-      else
-        "\#{#{process e}}"
-      end
-    end.join
-    exp.clear
-    out << "`"
-  end
+  alias process_string_interp process_dstr
+  alias process_string_eval process_evstr
 
   def process_rlist exp
     out = exp.map do |e|
@@ -226,6 +193,8 @@ class Brakeman::OutputProcessor < Ruby2Ruby
         else
           raise "unknown type: #{pt.inspect}"
         end
+      when String then
+        s << pt
       else
         # HACK: raise "huh?: #{pt.inspect}" -- hitting # constants in regexps
         # do nothing for now

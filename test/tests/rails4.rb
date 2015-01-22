@@ -1,7 +1,7 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
 EXTERNAL_CHECKS_PATH = File.expand_path(File.join(File.dirname(__FILE__), "..", "/apps/rails4/external_checks"))
-Rails4 = BrakemanTester.run_scan "rails4", "Rails 4", {:additional_checks_path => [EXTERNAL_CHECKS_PATH], :run_all_checks => true}
+Rails4 = BrakemanTester.run_scan "rails4", "Rails 4", {:additional_checks_path => [EXTERNAL_CHECKS_PATH], :run_all_checks => true, :additional_libs_path => ["app/api"]}
 
 class Rails4Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
@@ -16,7 +16,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 47
+      :generic => 49
     }
   end
 
@@ -552,16 +552,40 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
   end
 
+  def test_additional_libs_option
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "528555766bb642ac7137a2a3b14d022ad12cc2006925b2a028d7f07c1c804204",
+      :warning_type => "Command Injection",
+      :line => 4,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/api/api.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :dir))
+  end
+
   def test_command_injection_in_library
     assert_warning :type => :warning,
       :warning_code => 14,
-      :fingerprint => "9a11e7271784d69c667ad82481596096781a4873297d3f7523d290f51465f9d6",
+      :fingerprint => "21857e8872d187312a0b2470876bf6c8a8885df84c510d766f4639d95ae7cef7",
       :warning_type => "Command Injection",
       :line => 3,
       :message => /^Possible\ command\ injection/,
       :confidence => 1,
       :relative_path => "lib/sweet_lib.rb",
       :user_input => s(:lvar, :bad)
+  end
+
+  def test_command_injection_interpolated_string_in_library
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "899bf57685de767746ef220e51883b62eca23b505a6e17e57dcd8c2ca57959b8",
+      :warning_type => "Command Injection",
+      :line => 8,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/sweet_lib.rb",
+      :user_input => s(:ivar, :@bad)
   end
 
   def test_command_injection_from_not_skipping_before_filter

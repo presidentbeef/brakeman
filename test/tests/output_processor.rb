@@ -83,6 +83,12 @@ class OutputProcessorTests < Test::Unit::TestCase
                                       "",
                                       Sexp.new(:string_eval,
                                                Sexp.new(:ivar, :@x)))
+
+    input = '"#{params[:plugin]}/app/views/#{params[:view]}"'
+    s_input = RubyParser.new.parse(input)
+
+    assert_output input,
+      Brakeman::BaseProcessor.new(nil).process(s_input)
   end
 
   def test_output_format
@@ -179,5 +185,9 @@ class OutputProcessorTests < Test::Unit::TestCase
   def test_command_interpolation
     assert_output '`#{x}`',
       s(:dxstr, "", s(:evstr, s(:call, nil, :x)))
+
+
+    input = Brakeman::BaseProcessor.new(nil).process(RubyParser.new.parse('`1#{x}2#{y}3`'))
+    assert_output '`1#{x}2#{y}3`', input
   end
 end
