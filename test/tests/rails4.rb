@@ -1,7 +1,7 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
 EXTERNAL_CHECKS_PATH = File.expand_path(File.join(File.dirname(__FILE__), "..", "/apps/rails4/external_checks"))
-Rails4 = BrakemanTester.run_scan "rails4", "Rails 4", {:additional_checks_path => [EXTERNAL_CHECKS_PATH], :run_all_checks => true}
+Rails4 = BrakemanTester.run_scan "rails4", "Rails 4", {:additional_checks_path => [EXTERNAL_CHECKS_PATH], :run_all_checks => true, :additional_libs_path => ["app/api"]}
 
 class Rails4Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
@@ -16,7 +16,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 2,
-      :generic => 48
+      :generic => 49
     }
   end
 
@@ -550,6 +550,18 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/controllers/another_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_additional_libs_option
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "528555766bb642ac7137a2a3b14d022ad12cc2006925b2a028d7f07c1c804204",
+      :warning_type => "Command Injection",
+      :line => 4,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/api/api.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :dir))
   end
 
   def test_command_injection_in_library
