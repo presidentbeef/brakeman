@@ -29,6 +29,42 @@ class BrakemanTests < Test::Unit::TestCase
 
 
   end
+
+  def test_app_tree_flexible_file_paths
+    require 'brakeman/options'
+    relative_path = File.expand_path(File.join(TEST_PATH, "/apps/rails4_non_standard_structure/"))
+    input = ["-p", relative_path.to_s]
+    options, _ = Brakeman::Options.parse input
+    at = Brakeman::AppTree.from_options options
+
+    contains_foo_controller = false
+    at.controller_paths.each do |path|
+      if File.basename(path) == 'foo_controller.rb'
+        contains_foo_controller = true
+        break
+      end
+    end
+
+    contains_foo_model = false
+    at.model_paths.each do |path|
+      if File.basename(path) == 'foo.rb'
+        contains_foo_model = true
+        break
+      end
+    end
+
+    contains_foo_view = false
+    at.template_paths.each do |path|
+      if File.basename(path) == 'foo.html.erb'
+        contains_foo_view = true
+        break
+      end
+    end
+
+    assert contains_foo_controller
+    assert contains_foo_model
+    assert contains_foo_view
+  end
 end
 
 class UtilTests < Test::Unit::TestCase
