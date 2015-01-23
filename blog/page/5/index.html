@@ -108,6 +108,121 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/02/08/brakeman-1-dot-3-0-released/">Brakeman 1.3.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-02-08 15:11:00 -0500" pubdate  updated >Feb 8<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Thanks to everyone who reported problems and suggestions this time around!</p>
+
+<p>This release includes some new features, better performance on large projects, and more detection criteria. Warnings reported may change after upgrading.</p>
+
+<p><em>Changes since 1.2.2:</em></p>
+
+<ul>
+<li>Add file paths to HTML report</li>
+<li>Add caching of filters</li>
+<li>Add <code>--skip-files</code> option</li>
+<li>Add support for <code>attr_protected</code></li>
+<li>Add detection of request.env as user input</li>
+<li>Descriptions of checks in <code>-k</code> output</li>
+<li>Improved processing of named scopes</li>
+<li>Check for mass assignment in <code>ActiveRecord::Associations::AssociationCollection#build</code></li>
+<li>Better variable substitution</li>
+<li>Table output option for rescan reports</li>
+</ul>
+
+
+<h3>File Paths in HTML Report</h3>
+
+<p>In the HTML output, any warning which has context associated with it (visible when clicking on the warning message) will now include the file name at the top of the code snippet.</p>
+
+<h3>Filter Caching</h3>
+
+<p>Filters (using <code>before_filter</code>) are now only parsed once, instead of for everytime they are used. This has greatly improved performance when scanning some large projects.</p>
+
+<h3>Option to Skip Files</h3>
+
+<p>A list of files to skip can be provided with the <code>--skip-files</code> option. This will skip any initializers, libraries, controllers, models, or views that match the file names provided. The file names to skip are matched against the end of the absolute path. That is, <code>blah.rb</code> will skip <em>any</em> file with a name ending in <code>blah.rb</code>. This means it is not necessary to provide the full path to a file.</p>
+
+<h3>Support for Blacklisting Attributes</h3>
+
+<p>Previously, Brakeman ignored uses of <code>attr_protected</code>. Ideally, <code>attr_accessible</code> should always be used to whitelist attributes that can be set using mass assignment. This way, attributes can never be &#8220;accidentally&#8221; exposed. However, it can also be tedious for large models.</p>
+
+<p>With this release, Brakeman will downgrade mass assignment warnings to &#8220;weak&#8221; confidence if <code>attr_protected</code> is used, as well as suggesting that <code>attr_accessible</code> be used instead.</p>
+
+<p>The <code>--ignore-protected</code> option can be used to suppress any warnings for models that use <code>attr_protected</code>.</p>
+
+<h3>Request Environment is User Input</h3>
+
+<p><code>request.env</code> will now be treated as user input.</p>
+
+<h3>Check Descriptions</h3>
+
+<p>The <code>-k</code> option now includes descriptions of each check.</p>
+
+<h3>Named Scope Improvements</h3>
+
+<p>The 1.2.0 release added checking for SQL injection in named scopes, but it was not very accurate. This has been improved.</p>
+
+<h3>Better Variable Substitution</h3>
+
+<p>Variable substitution would sometimes &#8220;explode&#8221; if a set of code was processed for aliasing several times.</p>
+
+<p>For example,</p>
+
+<pre><code>x = clean(x)
+
+puts x
+</code></pre>
+
+<p>Might become</p>
+
+<pre><code>x = clean(x)
+
+puts clean(clean(clean(clean(x))))
+</code></pre>
+
+<p>This should now be prevented, so it would just become</p>
+
+<pre><code>x = clean(x)
+
+puts clean(x)
+</code></pre>
+
+<p>There may be subtle issues with this code (although I have not seen any yet), but it&#8217;s better than creating a bunch of useless substitutions.</p>
+
+<h3>Table Output for Rescan Reports</h3>
+
+<p><code>RescanReport#to_s(true)</code> will now output formatted tables, thanks to <a href="https://github.com/presidentbeef/brakeman/pull/33">Dave Worth</a>.</p>
+
+<h3>Issues?</h3>
+
+<p>As usual, please report any issues on <a href="https://github.com/presidentbeef/brakeman/issues">GitHub</a>, send a tweet to <a href="https://twitter.com/brakeman">@Brakeman</a>, or send an email to the <a href="http://librelist.com/browser/brakeman/">mailing list</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/01/26/brakeman-1-dot-2-2-released/">Brakeman 1.2.2 Released</a></h1>
     
     
@@ -116,7 +231,7 @@
 
 
 
-<time datetime="2012-01-26 13:58:00 -0800" pubdate  updated >Jan 26<span>th</span>, 2012</time>
+<time datetime="2012-01-26 13:58:00 -0500" pubdate  updated >Jan 26<span>th</span>, 2012</time>
 
 
 </p>
@@ -167,7 +282,7 @@
 
 
 
-<time datetime="2012-01-20 12:16:00 -0800" pubdate  updated >Jan 20<span>th</span>, 2012</time>
+<time datetime="2012-01-20 12:16:00 -0500" pubdate  updated >Jan 20<span>th</span>, 2012</time>
 
 
 </p>
@@ -252,7 +367,7 @@
 
 
 
-<time datetime="2012-01-13 22:00:00 -0800" pubdate  updated >Jan 13<span>th</span>, 2012</time>
+<time datetime="2012-01-13 22:00:00 -0500" pubdate  updated >Jan 13<span>th</span>, 2012</time>
 
 
 </p>
@@ -341,7 +456,7 @@
 
 
 
-<time datetime="2011-12-21 19:12:00 -0800" pubdate  updated >Dec 21<span>st</span>, 2011</time>
+<time datetime="2011-12-21 19:12:00 -0500" pubdate  updated >Dec 21<span>st</span>, 2011</time>
 
 
 </p>
@@ -410,7 +525,7 @@
 
 
 
-<time datetime="2011-12-08 01:35:00 -0800" pubdate  updated >Dec 8<span>th</span>, 2011</time>
+<time datetime="2011-12-08 01:35:00 -0500" pubdate  updated >Dec 8<span>th</span>, 2011</time>
 
 
 </p>
@@ -588,7 +703,7 @@ end
 
 
 
-<time datetime="2011-12-05 14:04:00 -0800" pubdate  updated >Dec 5<span>th</span>, 2011</time>
+<time datetime="2011-12-05 14:04:00 -0500" pubdate  updated >Dec 5<span>th</span>, 2011</time>
 
 
 </p>
@@ -674,7 +789,7 @@ Brakeman.run :app_path =&gt; 'my_app'
 
 
 
-<time datetime="2011-11-21 17:12:00 -0800" pubdate  updated >Nov 21<span>st</span>, 2011</time>
+<time datetime="2011-11-21 17:12:00 -0500" pubdate  updated >Nov 21<span>st</span>, 2011</time>
 
 
 </p>
@@ -720,7 +835,7 @@ Brakeman.run :app_path =&gt; 'my_app'
 
 
 
-<time datetime="2011-11-18 10:41:00 -0800" pubdate  updated >Nov 18<span>th</span>, 2011</time>
+<time datetime="2011-11-18 10:41:00 -0500" pubdate  updated >Nov 18<span>th</span>, 2011</time>
 
 
 </p>
@@ -754,7 +869,7 @@ Brakeman.run :app_path =&gt; 'my_app'
 
 
 
-<time datetime="2011-11-16 16:23:00 -0800" pubdate  updated >Nov 16<span>th</span>, 2011</time>
+<time datetime="2011-11-16 16:23:00 -0500" pubdate  updated >Nov 16<span>th</span>, 2011</time>
 
 
 </p>
@@ -798,76 +913,6 @@ Brakeman.run :app_path =&gt; 'my_app'
 <p>Brakeman reports using the CSV format should work once again.</p>
 
 <p>There is a bug in Ruport when using Ruby 1.9.2 and CSV output. A temporary patch has been added until this is resolved.</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2011/11/04/brakeman-0-dot-8-4-released/">Brakeman 0.8.4 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-11-04 14:58:00 -0700" pubdate  updated >Nov 4<span>th</span>, 2011</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Changes:</p>
-
-<ul>
-<li>Option for separate attr_accessible warnings</li>
-<li>Option to set CSS file for HTML output</li>
-<li>Add file names for version-specific warnings</li>
-<li>Add line number for default routes in a controller</li>
-<li>Fix hash_insert()</li>
-<li>Remove use of Queue from threaded checks</li>
-</ul>
-
-
-<h3>Separate attr_accessible Warnings</h3>
-
-<p>The current default is to roll all controllers lacking <code>attr_accessible</code> into a single warning. This is convenient when manually looking at HTML or text output, but for Jenkins/Hudson it is better to have each be a separate warning. That way it is easier to track new and fixed warnings.</p>
-
-<p>To turn on this behavior, use <code>--separate-models</code>.</p>
-
-<h3>Custom CSS for HTML Output</h3>
-
-<p>Use the <code>--css-file</code> option to set a custom CSS file for styling HTML output. This file is copied directly into the report.</p>
-
-<h3>File Names for Version-Specific Warnings</h3>
-
-<p>Previously, there would be no file name associated with warnings about certain versions of Rails. This caused the warnings to not show up in the Jenkins/Hudson plugin. Now either <code>Gemfile</code> or <code>config/environment.rb</code> will be used as the file name for warnings based on the detected Rails version.</p>
-
-<h3>Line Number for Default Routes</h3>
-
-<p>When default routes were detected for specific controllers, there will now be a line number (from <code>routes.rb</code>) associated with the warning.</p>
-
-<h3>hash_insert() Fixed</h3>
-
-<p><code>hash_insert</code> was broken and would cause some spurious warnings. For example, sometimes <code>only_path =&gt; true</code> would be set in <code>params</code>, but Brakeman would mess up the <code>params</code> hash and a redirect warning would still be created.</p>
-
-<h3>Threaded Checks No Longer Use Queue</h3>
-
-<p>When using threaded checks, the resulting warnings were stored in a thread-safe Queue. This has been removed, and the resulting value from each thread will be used instead. This should avoid some (small) locking overhead and is just simpler.</p>
-
-<h3>&#8220;Like&#8221; Brakeman on Ruby Toolbox</h3>
-
-<p>Please consider &#8216;liking&#8217; Brakeman on the <a href="https://www.ruby-toolbox.com/projects/brakeman">Ruby Toolbox</a>!</p>
 </div>
   
   
@@ -927,6 +972,10 @@ Brakeman.run :app_path =&gt; 'my_app'
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/01/22/brakeman-3-dot-0-1-released/">Brakeman 3.0.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/01/02/brakeman-3-dot-0-0-released/">Brakeman 3.0.0 Released</a>
       </li>
     
@@ -940,10 +989,6 @@ Brakeman.run :app_path =&gt; 'my_app'
     
       <li class="post">
         <a href="/blog/2014/08/18/brakeman-2-dot-6-2-released/">Brakeman 2.6.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/07/02/brakeman-2-dot-6-1-released/">Brakeman 2.6.1 Released</a>
       </li>
     
   </ul>
