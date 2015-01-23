@@ -1,3 +1,12 @@
+# 3.0.1
+
+* Avoid protect_from_forgery warning unless ApplicationController inherits from ActionController::Base
+* Properly format command interpolation (again)
+* Remove Slim dependency (Casey West)
+* Allow for controllers/models/templates in directories under `app/` (Neal Harris)
+* Add `--add-libs-path` for additional libraries (Patrick Toomey)
+* Properly process libraries (Patrick Toomey)
+
 # 3.0.0
 
 * Add check for CVE-2014-7829
