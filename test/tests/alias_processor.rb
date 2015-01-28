@@ -437,6 +437,26 @@ class AliasProcessorTests < Test::Unit::TestCase
     OUTPUT
   end
 
+  def test_shadowed_block_arg
+    assert_output <<-INPUT, <<-OUTPUT
+      def a
+        y = 1
+        x do |w; y, z|
+          y = 2
+        end
+        puts y
+      end
+    INPUT
+      def a
+        y = 1
+        x do |w; y, z|
+          y = 2
+        end
+        puts 1
+      end
+    OUTPUT
+  end
+
   def test_block_in_class_scope
     # Make sure blocks in class do not mess up instance variable scope
     # for subsequent methods
