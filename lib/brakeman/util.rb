@@ -423,6 +423,8 @@ module Brakeman::Util
 
   # rely on Terminal::Table to build the structure, extract the data out in CSV format
   def table_to_csv table
+    return "" unless table
+
     Brakeman.load_brakeman_dependency 'terminal-table'
     output = CSV.generate_line(table.headings.cells.map{|cell| cell.to_s.strip})
     table.rows.each do |row|
