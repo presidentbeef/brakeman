@@ -32,6 +32,12 @@ class TestReportGeneration < Test::Unit::TestCase
     assert_equal summary_header, parsed[2]
   end
 
+  def test_csv_report_no_warnings
+    assert_nothing_raised do
+      Brakeman.run(:app_path => "#{TEST_PATH}/apps/rails4_non_standard_structure", :quiet => true, :report_routes => true).report.to_csv
+    end
+  end
+
   def test_tabs_sanity
     report = Report.to_tabs
 
