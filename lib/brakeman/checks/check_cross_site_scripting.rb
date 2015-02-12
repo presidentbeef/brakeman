@@ -260,6 +260,19 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     exp
   end
 
+  def process_case exp
+    #Ignore user input in case value
+    #TODO: also ignore when values
+
+    current = 2
+    while current < exp.length
+      process exp[current] if exp[current]
+      current += 1
+    end
+
+    exp
+  end
+
   def setup
     @ignore_methods = Set[:button_to, :check_box, :content_tag, :escapeHTML, :escape_once,
                            :field_field, :fields_for, :h, :hidden_field,
