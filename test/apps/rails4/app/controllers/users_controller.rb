@@ -65,4 +65,15 @@ class UsersController < ApplicationController
   def email_finds
     Email.find_by_id! params[:email][:id]
   end
+
+  def case_statement
+    @x = case params[:x]
+         when :yes
+           "yep"
+         when :no
+           "nope"
+         else
+           "dunno"
+         end
+  end
 end

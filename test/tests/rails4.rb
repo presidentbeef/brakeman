@@ -343,6 +343,18 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:call, s(:params), :[], s(:lit, :page))
   end
 
+  def test_no_cross_site_scripting_in_case_value
+    assert_no_warning :type => :template,
+      :warning_code => 5,
+      :fingerprint => "e9a2843313999c2e856065efaf0a84ffc56ed912112c34927f406339bb395715",
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 2,
+      :relative_path => "app/views/users/case_statement.html.erb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
   def test_cross_site_request_forgery_with_skip_before_action
     assert_warning :type => :warning,
       :warning_code => 8,
