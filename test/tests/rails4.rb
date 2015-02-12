@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 0,
       :model => 1,
-      :template => 2,
+      :template => 3,
       :generic => 49
     }
   end
@@ -525,6 +525,18 @@ class Rails4Tests < Test::Unit::TestCase
       :message => /^Unescaped\ model\ attribute/,
       :confidence => 1,
       :relative_path => "app/controllers/another_controller.rb",
+      :user_input => nil
+  end
+
+  def test_xss_haml_line_number
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "f46cf9e2ae9df8f14d195c41589aa3f64a2347b93b899d8871bf4daffeb33c5f",
+      :warning_type => "Cross Site Scripting",
+      :line => 5,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/users/haml_test.html.haml",
       :user_input => nil
   end
 

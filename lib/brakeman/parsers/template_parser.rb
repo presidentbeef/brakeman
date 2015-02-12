@@ -75,7 +75,7 @@ module Brakeman
       Brakeman.load_brakeman_dependency 'sass'
 
       Haml::Engine.new(text,
-                       :escape_html => !!tracker.config[:escape_html]).precompiled
+                       :escape_html => !!tracker.config[:escape_html]).precompiled.gsub(/([^\\])\\n/, '\1')
     end
 
     def parse_slim text
