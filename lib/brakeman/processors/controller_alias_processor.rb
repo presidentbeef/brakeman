@@ -1,5 +1,6 @@
 require 'brakeman/processors/alias_processor'
 require 'brakeman/processors/lib/render_helper'
+require 'brakeman/processors/lib/render_path'
 require 'brakeman/processors/lib/find_return_value'
 
 #Processes aliasing in controllers, but includes following
@@ -170,7 +171,8 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
 
   #Process template and add the current class and method name as called_from info
   def process_template name, args
-    super name, args, ["#@current_class##@current_method"]
+    render_path = Brakeman::RenderPath.new.add_controller_render(@current_class, @current_method)
+    super name, args, render_path
   end
 
   #Turns a method name into a template name

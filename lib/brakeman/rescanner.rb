@@ -113,7 +113,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
       if controller[:files].include?(path)
         tracker.templates.each do |template_name, template|
           next unless template[:caller]
-          unless template[:caller].grep(/^#{name}#/).empty?
+          if template[:caller].include_controller? name
             tracker.reset_template template_name
           end
         end
@@ -142,21 +142,18 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
     rescan = Set.new
 
-    template_matcher = /^Template:(.+)/
-    controller_matcher = /^(.+Controller)#(.+)/
-    template_name_matcher = /^#{template_name}\./
-
     #Search for processed template and process it.
     #Search for rendered versions of template and re-render (if necessary)
     tracker.templates.each do |name, template|
       if template[:file] == path or template[:file].nil?
-        next unless template[:caller] and name.to_s.match(template_name_matcher)
+        next unless template[:caller] and template[:name].to_sym == template_name.to_sym
 
         template[:caller].each do |from|
-          if from.match(template_matcher)
-            rescan << [:template, $1.to_sym]
-          elsif from.match(controller_matcher)
-            rescan << [:controller, $1.to_sym, $2.to_sym]
+          case from[:type]
+          when :template
+            rescan << [:template, from[:name]]
+          when :controller
+            rescan << [:controller, from[:class], from[:method]]
           end
         end
       end
@@ -272,13 +269,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
     #Remove any rendered versions, or partials rendered from it
     tracker.templates.delete_if do |name, template|
-      if template[:file] == path
-        true
-      elsif template[:file].nil?
-        name = name.to_s
-
-        name.match(rendered_from_controller) or name.match(rendered_from_view)
-      end
+      template[:file] == path or template[:name].to_sym == template_name.to_sym
     end
   end
 
@@ -356,8 +347,6 @@ class Brakeman::Rescanner < Brakeman::Scanner
       end
     end
 
-    method_matcher = /##{method_names.map {|n| Regexp.escape(n.to_s)}.join('|')}$/
-
     to_rescan = []
 
     #Rescan controllers that mixed in library
@@ -384,7 +373,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     tracker.templates.each do |name, template|
       next unless template[:caller]
 
-      unless template[:caller].grep(method_matcher).empty?
+      if template[:caller].include_any_method? method_names
         name.to_s.match /^([^.]+)/
 
         original = tracker.templates[$1.to_sym]
