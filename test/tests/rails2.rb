@@ -660,7 +660,7 @@ class Rails2Tests < Test::Unit::TestCase
       :warning_code => 0,
       :fingerprint => "37885d589fc5c41553dcc38b36b506c2e508d1f37ce040eb6dca92a958f858fb",
       :warning_type => "SQL Injection",
-      :line => 26,
+      :line => 31,
       :message => /^Possible\ SQL\ injection/,
       :confidence => 1,
       :relative_path => "app/models/user.rb",
