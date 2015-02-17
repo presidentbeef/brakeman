@@ -53,7 +53,6 @@ class Brakeman::CheckSimpleFormat < Brakeman::CheckCrossSiteScripting
       :warning_code => :CVE_2013_6416_call,
       :message => "Values passed to simple_format are not safe in Rails #{@tracker.config[:rails_version]}",
       :confidence => CONFIDENCE[:high],
-      :gem_info => gemfile_or_environment,
       :link_path => "https://groups.google.com/d/msg/ruby-security-ann/5ZI1-H5OoIM/ZNq4FoR2GnIJ",
       :user_input => match.match
   end
