@@ -89,7 +89,7 @@ module Brakeman
     end
 
     def to_json *args
-      self.to_a.to_json *args
+      MultiJson.dump(self.to_a)
     end
 
     def initialize_copy original
