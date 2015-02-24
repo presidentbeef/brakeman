@@ -44,22 +44,22 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
   def test_xss_simple_format_CVE_2013_6416
     assert_warning :type => :template,
       :warning_code => 68,
-      :fingerprint => "0e340cc916e7487f118dae7cf3e3c1e6763c13455ec84ad56b4d3f520de8b3cb",
+      :fingerprint => "e5b270bcb5bf77069b7e4adf0c46221d1277f0b126c795e43b700a6b0f4747ae",
       :warning_type => "Cross Site Scripting",
       :line => 20,
       :message => /^Values\ passed\ to\ simple_format\ are\ not\ s/,
       :confidence => 0,
-      :relative_path => "Gemfile",
+      :relative_path => "engines/user_removal/app/views/users/show.html.erb",
       :user_input => s(:call, s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))), :likes)
 
     assert_warning :type => :template,
       :warning_code => 68,
-      :fingerprint => "33d10865a3c6c1594ecbee5511cde466b474b0e819ef979193159559becfbd4c",
+      :fingerprint => "e31d9365f0e99e55bb3d62deda2bf1ee0bc4e5970dd5791fcde8056f6558f51f",
       :warning_type => "Cross Site Scripting",
       :line => 21,
       :message => /^Values\ passed\ to\ simple_format\ are\ not\ s/,
       :confidence => 0,
-      :relative_path => "Gemfile",
+      :relative_path => "engines/user_removal/app/views/users/show.html.erb",
       :user_input => s(:call, s(:params), :[], s(:lit, :color))
   end
 
