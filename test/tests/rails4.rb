@@ -16,7 +16,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 3,
-      :generic => 49
+      :generic => 50
     }
   end
 
@@ -419,6 +419,28 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/controllers/users_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :action))
+  end
+
+  def test_regex_denial_of_service
+    assert_warning :type => :warning,
+      :warning_code => 76,
+      :fingerprint => "6cca076d42e35f953627c7013ee8d6245f0ce564fd8a595cdb47f1d58a47f90f",
+      :warning_type => "Denial of Service",
+      :line => 38,
+      :message => /^Parameter\ value\ used\ in\ regex/,
+      :confidence => 0,
+      :relative_path => "app/controllers/another_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+
+    assert_no_warning :type => :template,
+      :warning_code => 76,
+      :fingerprint => "7d3359e28705b6a4392a1dd6ab9c424e7f7c754cdf2df1d932168ab8a77840c2",
+      :warning_type => "Denial of Service",
+      :line => 1,
+      :message => /^Parameter\ value\ used\ in\ regex/,
+      :confidence => 0,
+      :relative_path => "app/views/another/use_params_in_regex.html.erb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
   end
 
   def test_i18n_xss_CVE_2013_4491_workaround

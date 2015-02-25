@@ -33,4 +33,8 @@ class AnotherController < ApplicationController
     render :text => CGI.escapeHTML(params[:q])
     render :text => "Welcome back, #{CGI::escapeHTML(params[:name])}!}"
   end
+
+  def use_params_in_regex
+    @x = something.match /#{params[:x]}/
+  end
 end
