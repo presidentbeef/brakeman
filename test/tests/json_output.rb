@@ -6,10 +6,10 @@ class JSONOutputTests < Test::Unit::TestCase
   end
 
   def test_for_render_path
-    assert @json["warnings"].all? { |warning|
-      warning.keys.include?("render_path") and
-      (warning["render_path"].nil? or warning["render_path"].is_a? Array)
-    }
+    @json["warnings"].each do |warning|
+      is_right_thing = warning.keys.include?("render_path") && (warning["render_path"].nil? or warning["render_path"].is_a? Array)
+      assert is_right_thing, "#{warning["render_path"].class} is not right"
+    end
   end
 
   def test_for_expected_keys

@@ -257,7 +257,7 @@ class Brakeman::Tracker
   def reset_templates options = { :only_rendered => false }
     if options[:only_rendered]
       @templates.delete_if do |name, template|
-        name.to_s.include? "Controller#"
+        template[:caller] and template[:caller].rendered_from_controller?
       end
     else
       @templates = {}
@@ -311,11 +311,10 @@ class Brakeman::Tracker
     @controllers.each do |name, controller|
       if controller[:files].include?(path)
         controller_name = name
-        template_matcher = /^#{name}#/
 
         #Remove templates rendered from this controller
         @templates.each do |template_name, template|
-          if template[:caller] and not template[:caller].grep(template_matcher).empty?
+          if template[:caller] and template[:caller].include_controller? name
             reset_template template_name
             @call_index.remove_template_indexes template_name
           end

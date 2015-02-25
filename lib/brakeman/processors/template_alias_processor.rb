@@ -1,6 +1,7 @@
 require 'set'
 require 'brakeman/processors/alias_processor'
 require 'brakeman/processors/lib/render_helper'
+require 'brakeman/processors/lib/render_path'
 require 'brakeman/tracker'
 
 #Processes aliasing in templates.
@@ -19,14 +20,14 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
   #Process template
   def process_template name, args
     if @called_from
-      unless @called_from.grep(/Template:#{name}$/).empty?
+      if @called_from.include_template? name
         Brakeman.debug "Skipping circular render from #{@template[:name]} to #{name}"
         return
       end
 
-      super name, args, @called_from + ["Template:#{@template[:name]}"]
+      super name, args, @called_from.dup.add_template_render(@template[:name])
     else
-      super name, args, ["Template:#{@template[:name]}"]
+      super name, args, Brakeman::RenderPath.new.add_template_render(@template[:name])
     end
   end
 
