@@ -6,19 +6,23 @@ module Brakeman
       @path = []
     end
 
-    def add_controller_render controller_name, method_name
+    def add_controller_render controller_name, method_name, line
       method_name ||= ""
 
       @path << { :type => :controller,
                  :class => controller_name.to_sym,
-                 :method => method_name.to_sym }
+                 :method => method_name.to_sym,
+                 :line => line
+                }
 
       self
     end
 
-    def add_template_render template_name
+    def add_template_render template_name, line
       @path << { :type => :template,
-                 :name => template_name.to_sym }
+                 :name => template_name.to_sym,
+                 :line => line
+               }
 
       self
     end

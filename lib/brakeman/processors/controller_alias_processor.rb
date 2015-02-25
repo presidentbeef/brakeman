@@ -166,13 +166,22 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #Processes the default template for the current action
   def process_default_render exp
     process_layout
-    process_template template_name, nil
+    process_template template_name, nil, nil, nil
   end
 
   #Process template and add the current class and method name as called_from info
-  def process_template name, args
-    render_path = Brakeman::RenderPath.new.add_controller_render(@current_class, @current_method)
-    super name, args, render_path
+  def process_template name, args, _, line
+    # If line is null, assume implicit render and set the end of the action
+    # method as the line number
+    if line.nil? and controller = @tracker.controllers[@current_class]
+      if meth = controller[:public][@current_method]
+        line = meth[:src] && meth[:src].last && meth[:src].last.line
+        line += 1
+      end
+    end
+
+    render_path = Brakeman::RenderPath.new.add_controller_render(@current_class, @current_method, line)
+    super name, args, render_path, line
   end
 
   #Turns a method name into a template name

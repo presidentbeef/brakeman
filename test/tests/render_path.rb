@@ -4,34 +4,34 @@ class RenderPathTests < Test::Unit::TestCase
   end
 
   def test_include_controller
-    @r.add_controller_render :TestController, :test
+    @r.add_controller_render :TestController, :test, 1
 
     assert @r.include_controller? :TestController
   end
 
   def test_rendered_from_controller
-    @r.add_controller_render :TestController, :test
+    @r.add_controller_render :TestController, :test, 1
 
     assert @r.rendered_from_controller?
   end
 
   def test_include_template
-    @r.add_template_render 'some/template'
+    @r.add_template_render 'some/template', 1
 
     assert @r.include_template? :'some/template'
   end
 
   def test_include_any_method
-    @r.add_controller_render :TestController, :test
-    @r.add_controller_render :TestController, :test2
-    @r.add_controller_render :TestController, :test3
+    @r.add_controller_render :TestController, :test, 10
+    @r.add_controller_render :TestController, :test2, 20
+    @r.add_controller_render :TestController, :test3, 30
 
     assert @r.include_any_method? ['test']
   end
 
   def test_each
-    @r.add_controller_render :TestController, :test
-    @r.add_template_render 'some/template'
+    @r.add_controller_render :TestController, :test, 1
+    @r.add_template_render 'some/template', 2
 
     @r.each do |loc|
       case loc[:type]
@@ -45,10 +45,10 @@ class RenderPathTests < Test::Unit::TestCase
   end
 
   def test_dup
-    @r.add_controller_render :TestController, :test
+    @r.add_controller_render :TestController, :test, 1
 
     s = @r.dup
-    s.add_template_render 'some/template'
+    s.add_template_render 'some/template', 2
 
     assert_equal 1, @r.length
     assert_equal 2, s.length
