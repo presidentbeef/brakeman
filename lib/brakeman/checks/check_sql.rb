@@ -558,7 +558,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     when :str, :lit, :const, :colon2, :nil, :true, :false
       true
     when :call
-      if exp.method == :to_s
+      if exp.method == :to_s or exp.method == :to_sym
         safe_value? exp.target
       else
         IGNORE_METHODS_IN_SQL.include? exp.method or
