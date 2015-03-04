@@ -8,4 +8,8 @@ class User < ActiveRecord::Base
   def arel_exists
     where(User.where(User.arel_table[:object_id].eq(arel_table[:id])).exists)
   end
+
+  def symbol_stuff
+    self.where(User.table_name.to_sym)
+  end
 end

@@ -16,7 +16,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 1,
       :template => 3,
-      :generic => 50
+      :generic => 51
     }
   end
 
@@ -596,6 +596,29 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/controllers/another_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_sql_injection_ignore_to_sym
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "f2e6d5d952c841a148c086beb09ad2961ab9854215f3665babd574aaa4aaaf83",
+      :warning_type => "SQL Injection",
+      :line => 13,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb",
+      :user_input => s(:call, s(:call, s(:const, :User), :table_name), :to_sym)
+
+    # This is a side effect of the test above
+    assert_warning :type => :warning,
+      :warning_code => 59,
+      :fingerprint => "80fce17f43faed45ada3a85acd3902ab32478e585190b25dbb4d5ce483a463f7",
+      :warning_type => "Denial of Service",
+      :line => 13,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(mo/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :user_input => s(:call, s(:const, :User), :table_name)
   end
 
   def test_additional_libs_option
