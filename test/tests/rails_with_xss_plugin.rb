@@ -103,6 +103,17 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :file => /users_controller\.rb/
   end
 
+  def test_mass_assignment_with_string
+    assert_no_warning :type => :warning,
+      :warning_code => 17,
+      :fingerprint => "2893b1a48ec56548a5a48d38324c5d78f7845066713ad79bb0ec17032672c862",
+      :warning_type => "Mass Assignment",
+      :line => 97,
+      :message => /^Unprotected\ mass\ assignment/,
+      :confidence => 2,
+      :relative_path => "app/controllers/other_controller.rb",
+      :user_input => nil
+  end
 
   def test_redirect_to_model_instance
     assert_no_warning :type => :warning,

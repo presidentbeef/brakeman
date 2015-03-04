@@ -139,4 +139,8 @@ class UsersController < ApplicationController
   def test_sanitize
     @x = params[:x]
   end
+
+  def string_mass
+    User.new("stuff")
+  end
 end
