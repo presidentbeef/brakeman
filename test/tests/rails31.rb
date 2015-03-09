@@ -1006,6 +1006,30 @@ class Rails31Tests < Test::Unit::TestCase
       :user_input => s(:call, nil, :child_id)
   end
 
+  def test_sql_injection_primary_key
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "b9a4789e68bee09651fc948e3c78b60fb6b611a96b284eea2cb37b2ca9e83d97",
+      :warning_type => "SQL Injection",
+      :line => 47,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb",
+      :user_input => s(:call, s(:const, :User), :primary_key)
+  end
+
+  def test_sql_injection_table_name_prefix
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "841b2af00d0992f49b753a3a6c1118a95ec9a7519ec434d7b0613d40d9fd67fe",
+      :warning_type => "SQL Injection",
+      :line => 47,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :user_input => s(:call, nil, :table_name_prefix)
+  end
+
   def test_validates_format
     assert_warning :type => :model,
       :warning_type => "Format Validation",

@@ -42,4 +42,8 @@ class User < ActiveRecord::Base
                " OR #{table_name}.user_id = ?",
                  stuff, stuff, user.id, user.id)
   end
+
+  def self.more_safe_stuff
+    where("#{User.primary_key} = #{table_name_prefix}a.thing")
+  end
 end
