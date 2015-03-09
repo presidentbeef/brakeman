@@ -1,5 +1,8 @@
-# Unreleased
+# 3.0.2
 
+* Alias process methods called in class scope on models
+* Treat primary_key, table_name_prefix, table_name_suffix as safe in SQL
+* Fix using --compare and --add-checks-path together
 * Avoid warning about mass assignment with string literals
 * Only report original regex DoS locations
 * Improve render path information implementation
