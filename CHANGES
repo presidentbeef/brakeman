@@ -1,3 +1,16 @@
+# Unreleased
+
+* Avoid warning about mass assignment with string literals
+* Only report original regex DoS locations
+* Improve render path information implementation
+* Report correct file for simple_format usage CVE warning
+* Remove URI.escape from HTML reports with GitHub repos
+* Update ruby_parser to ~> 3.6.2
+* Remove formatting newlines in HAML template output
+* Ignore case value in XSS checks
+* Fix CSV output when there are no warnings
+* Handle processing of explictly shadowed block arguments
+
 # 3.0.1
 
 * Avoid protect_from_forgery warning unless ApplicationController inherits from ActionController::Base
