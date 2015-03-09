@@ -14,7 +14,7 @@ class Rails4Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :controller => 0,
-      :model => 1,
+      :model => 2,
       :template => 3,
       :generic => 51
     }
@@ -619,6 +619,31 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 1,
       :relative_path => "app/models/user.rb",
       :user_input => s(:call, s(:const, :User), :table_name)
+  end
+
+  def test_sql_injection_scope_alias_processing
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "a28e3653220903b78e2f00f1e571aa7afaa4f7db6f0789be8cf59c1b9eb583a1",
+      :warning_type => "SQL Injection",
+      :line => 13,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/email.rb",
+      :user_input => s(:lvar, :task_table)
+
+  end
+
+  def test_format_validation_model_alias_processing
+    assert_warning :type => :model,
+      :warning_code => 30,
+      :fingerprint => "d2bfa987fd0e59d1d515a0bc0baaf378d1dd75483184c945b662b96d370add28",
+      :warning_type => "Format Validation",
+      :line => 8,
+      :message => /^Insufficient\ validation\ for\ 'email'\ usin/,
+      :confidence => 0,
+      :relative_path => "app/models/email.rb",
+      :user_input => nil
   end
 
   def test_additional_libs_option

@@ -170,7 +170,8 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
           end
         end
       end
-      ignore
+
+      exp
     else
       call = make_call target, method, process_all!(exp.args)
       call.line(exp.line)
