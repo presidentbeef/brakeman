@@ -20,12 +20,13 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     @method_cache = {} #Cache method lookups
   end
 
-  def process_controller name, src
+  def process_controller name, src, file
     if not node_type? src, :class
       Brakeman.debug "#{name} is not a class, it's a #{src.node_type}"
       return
     else
       @current_class = name
+      @file = file
 
       process_default src
 
@@ -58,6 +59,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
           method = processor.process method
         end
 
+        @file = mixin[:files].first
         #Then process it like any other method in the controller
         process method
       end
@@ -180,7 +182,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       end
     end
 
-    render_path = Brakeman::RenderPath.new.add_controller_render(@current_class, @current_method, line)
+    render_path = Brakeman::RenderPath.new.add_controller_render(@current_class, @current_method, line, @file)
     super name, args, render_path, line
   end
 

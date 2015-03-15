@@ -221,8 +221,8 @@ class Brakeman::Scanner
 
     track_progress controllers, "controllers" do |name, controller|
       Brakeman.debug "Processing #{name}"
-      controller.src.each_value do |src|
-        @processor.process_controller_alias name, src
+      controller.src.each do |file, src|
+        @processor.process_controller_alias name, src, nil, file
       end
     end
 
