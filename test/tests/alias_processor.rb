@@ -640,4 +640,30 @@ class AliasProcessorTests < Test::Unit::TestCase
     x
     INPUT
   end
+
+  def test_branch_array_include
+    assert_alias 'x', <<-INPUT
+    if [1,2,3].include? x
+      stuff
+    end
+
+    x
+    INPUT
+
+    assert_output <<-INPUT, <<-OUTPUT
+    if [1,2,3].include? x
+      y = x + 2
+      p y
+    end
+
+    x
+    INPUT
+    if [1,2,3].include? x
+      y = 3
+      p 3
+    end
+
+    x
+    OUTPUT
+  end
 end
