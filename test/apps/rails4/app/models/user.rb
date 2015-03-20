@@ -12,9 +12,4 @@ class User < ActiveRecord::Base
   def symbol_stuff
     self.where(User.table_name.to_sym)
   end
-
-  def self.get_all_countries(locale)
-    q = "country_#{locale} ASC".to_s
-    c = User.order(q)
-  end
 end

@@ -33,4 +33,9 @@ class Account < ActiveRecord::Base
     sql += "GROUP BY title, id "
     Account.connection.select_all(sql)
   end
+
+  def self.get_all_countries(locale)
+    q = "country_#{locale} ASC".to_s
+    c = User.order(q)
+  end
 end
