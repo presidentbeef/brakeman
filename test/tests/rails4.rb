@@ -16,7 +16,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 2,
       :template => 3,
-      :generic => 51
+      :generic => 52
     }
   end
 
@@ -631,7 +631,18 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 1,
       :relative_path => "app/models/email.rb",
       :user_input => s(:lvar, :task_table)
+  end
 
+  def test_sql_injection_with_to_s_on_string_interp
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "4617dc460e895a734ac500b963bae96ee133e272611464519e7dcf52810075aa",
+      :warning_type => "SQL Injection",
+      :line => 39,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/account.rb",
+      :user_input => s(:lvar, :locale)
   end
 
   def test_format_validation_model_alias_processing

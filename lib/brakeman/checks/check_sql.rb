@@ -431,6 +431,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       unless IGNORE_METHODS_IN_SQL.include? exp.method
         if has_immediate_user_input? exp or has_immediate_model? exp
           exp
+        elsif exp.method == :to_s
+          find_dangerous_value exp.target, ignore_hash
         else
           check_call exp
         end
