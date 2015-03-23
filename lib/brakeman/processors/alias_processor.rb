@@ -465,6 +465,19 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     exp
   end
 
+  # Check if exp is a call to Array#include? on an array literal
+  # that contains all literal values. For example:
+  #
+  #    [1, 2, "a"].include? x
+  #
+  def array_include_all_literals? exp
+    call? exp and
+    exp.method == :include? and
+    node_type? exp.target, :array and
+    exp.target.length > 1 and
+    exp.target.all? { |e| e.is_a? Symbol or node_type? e, :lit, :str }
+  end
+
   #Sets @inside_if = true
   def process_if exp
     if @ignore_ifs.nil?
@@ -498,7 +511,17 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         scope do
           @branch_env = env.current
           branch_index = 2 + i # s(:if, condition, then_branch, else_branch)
-          exp[branch_index] = process_if_branch branch
+          if i == 0 and array_include_all_literals? condition
+            # If the condition is ["a", "b"].include? x
+            # set x to "a" inside the true branch
+            var = condition.first_arg
+            previous_value = env.current[var]
+            env.current[var] = condition.target[1]
+            exp[branch_index] = process_if_branch branch
+            env.current[var] = previous_value
+          else
+            exp[branch_index] = process_if_branch branch
+          end
           branch_scopes << env.current
           @branch_env = nil
         end

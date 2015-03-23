@@ -12,4 +12,15 @@ class User < ActiveRecord::Base
   def symbol_stuff
     self.where(User.table_name.to_sym)
   end
+
+  scope :sorted_by, ->(field, asc) {
+    asc = ['desc', 'asc'].include?(asc) ? asc : 'asc'
+
+    ordering = if field == 'extension'
+                 "substring_index(#{table_name}.data_file_name, '.', -1) #{asc}"
+               elsif SORTABLE_COLUMNS.include?(field)
+                 { field.to_sym => asc.to_sym }
+               end
+    order(ordering) # should not warn about `asc` interpolation
+  }
 end
