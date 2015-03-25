@@ -117,12 +117,19 @@
 
 <p>Brakeman gems are now signed, which means the contents of the gem can be verified using the <a href="https://github.com/presidentbeef/brakeman/blob/master/brakeman-public_cert.pem">public Brakeman certificate</a>.</p>
 
-<p>To verify the gem, first add the certificate as &#8220;trusted&#8221;:</p>
+<p>To verify the gem, first add the following certificate as &#8220;trusted&#8221;:</p>
 
-<pre><code>gem cert --add &lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
+<pre><code># Brakeman
+gem cert --add &lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
+
+# ruby_parser, etc.
+gem cert --add &lt;(curl -Ls http://www.zenspider.com/~ryan/gem-public_cert.pem)
+
+# multijson
+gem cert --add &lt;(curl -Ls https://raw.githubusercontent.com/intridea/multi_json/master/certs/rwz.pem)
 </code></pre>
 
-<p>If that looks scary, the certificate can always be downloaded manually and then added. The certificate only needs to be added once.</p>
+<p>If that looks scary, the certificates can always be downloaded manually and then added. The certificates only need to be added once (until they expire).</p>
 
 <p>Then the gem can be verified at install:</p>
 
