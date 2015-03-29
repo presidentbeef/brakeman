@@ -76,4 +76,11 @@ class UsersController < ApplicationController
            "dunno"
          end
   end
+
+  def open_stuff
+    open(params[:url]) # remote code execution warning
+    Kernel.open(URI(params[:url])) # file access and RCE warning
+    open("#{params[:x]}/something/something") # remote code execution warning
+    open("some_path/#{params[:x]}/something/something") # file access warning
+  end
 end
