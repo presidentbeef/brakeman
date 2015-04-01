@@ -43,6 +43,10 @@ class User < ActiveRecord::Base
                  stuff, stuff, user.id, user.id)
   end
 
+  def self.safe_sql_using_quoted_table_name
+    where("#{User.quoted_table_name}.id = ?", 1)
+  end
+
   def self.more_safe_stuff
     where("#{User.primary_key} = #{table_name_prefix}a.thing")
   end
