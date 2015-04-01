@@ -1018,6 +1018,18 @@ class Rails31Tests < Test::Unit::TestCase
       :user_input => s(:call, s(:const, :User), :primary_key)
   end
 
+  def test_sql_injection_quoted_table_name
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "d62a8796ff7e8f7547cea5352112294354b0400b01ab55388fa802a655751ed3",
+      :warning_type => "SQL Injection",
+      :line => 47,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb",
+      :user_input => s(:call, s(:const, :User), :quoted_table_name)
+  end
+
   def test_sql_injection_table_name_prefix
     assert_no_warning :type => :warning,
       :warning_code => 0,
