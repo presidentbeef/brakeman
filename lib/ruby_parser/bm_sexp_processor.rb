@@ -29,6 +29,12 @@ class Brakeman::SexpProcessor
 
   attr_reader :env
 
+  # Cache process methods per class
+
+  def self.processors
+    @processors ||= {}
+  end
+
   ##
   # Creates a new SexpProcessor.  Use super to invoke this
   # initializer from SexpProcessor subclasses, then use the
@@ -37,15 +43,14 @@ class Brakeman::SexpProcessor
 
   def initialize
     @expected            = Sexp
-
-    # we do this on an instance basis so we can subclass it for
-    # different processors.
-    @processors = {}
+    @processors = self.class.processors
     @context    = []
 
-    public_methods.each do |name|
-      if name.to_s.start_with? "process_" then
-        @processors[name[8..-1].to_sym] = name.to_sym
+    if @processors.empty?
+      public_methods.each do |name|
+        if name.to_s.start_with? "process_" then
+          @processors[name[8..-1].to_sym] = name.to_sym
+        end
       end
     end
   end
