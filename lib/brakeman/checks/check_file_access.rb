@@ -12,6 +12,7 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
     methods = tracker.find_call :targets => [:Dir, :File, :IO, :Kernel, :"Net::FTP", :"Net::HTTP", :PStore, :Pathname, :Shell], :methods => [:[], :chdir, :chroot, :delete, :entries, :foreach, :glob, :install, :lchmod, :lchown, :link, :load, :load_file, :makedirs, :move, :new, :open, :read, :readlines, :rename, :rmdir, :safe_unlink, :symlink, :syscopy, :sysopen, :truncate, :unlink]
 
     methods.concat tracker.find_call :target => :YAML, :methods => [:load_file, :parse_file]
+    methods.concat tracker.find_call :target => nil, :method => [:open]
 
     Brakeman.debug "Finding calls to load()"
     methods.concat tracker.find_call :target => false, :method => :load

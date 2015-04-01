@@ -22,10 +22,12 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     Brakeman.debug "Finding system calls using ``"
     check_for_backticks tracker
 
+    check_open_calls
+
     Brakeman.debug "Finding other system calls"
     calls = tracker.find_call :targets => [:IO, :Open3, :Kernel, :'POSIX::Spawn', :Process, nil],
       :methods => [:capture2, :capture2e, :capture3, :exec, :pipeline, :pipeline_r,
-        :pipeline_rw, :pipeline_start, :pipeline_w, :popen, :popen2, :popen2e, 
+        :pipeline_rw, :pipeline_start, :pipeline_w, :popen, :popen2, :popen2e,
         :popen3, :spawn, :syscall, :system]
 
     Brakeman.debug "Processing system calls"
@@ -57,12 +59,36 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       end
 
       warn :result => result,
-        :warning_type => "Command Injection", 
+        :warning_type => "Command Injection",
         :warning_code => :command_injection,
         :message => "Possible command injection",
         :code => call,
         :user_input => failure.match,
         :confidence => confidence
+    end
+  end
+
+  def check_open_calls
+    tracker.find_call(:targets => [nil, :Kernel], :method => :open).each do |result|
+      if match = dangerous_open_arg?(result[:call].first_arg)
+        warn :result => result,
+          :warning_type => "Command Injection",
+          :warning_code => :command_injection,
+          :message => "Possible command injection in open()",
+          :user_input => match.match,
+          :confidence => CONFIDENCE[:high]
+      end
+    end
+  end
+
+  def dangerous_open_arg? exp
+    if node_type? exp, :string_interp, :dstr
+      # Check for input at start of string
+      exp[1] == "" and
+        node_type? exp[2], :evstr, :string_eval and
+        has_immediate_user_input? exp[2]
+    else
+      has_immediate_user_input? exp
     end
   end
 

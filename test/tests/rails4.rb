@@ -16,7 +16,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 2,
       :template => 3,
-      :generic => 52
+      :generic => 58
     }
   end
 
@@ -702,6 +702,70 @@ class Rails4Tests < Test::Unit::TestCase
       :message => /^Possible\ command\ injection/,
       :confidence => 0,
       :relative_path => "app/controllers/another_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_command_injection_in_open
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "e5316ae15f7db1b2232599d86859229ce01fb6eff1e6d273dbc154345c374d67",
+      :warning_type => "Command Injection",
+      :line => 81,
+      :message => /^Possible\ command\ injection\ in\ open\(\)/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :url))
+
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "90bc5e7b29027e8d2f8d7bc110dbd173db1f05a8583010613c26f996cd86b02b",
+      :warning_type => "Command Injection",
+      :line => 83,
+      :message => /^Possible\ command\ injection\ in\ open\(\)/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_file_access_in_open
+    assert_warning :type => :warning,
+      :warning_code => 16,
+      :fingerprint => "e860688d22411c19cb37652e2b41de6475ce094cf92dd6d66ce6b840e8e74c4b",
+      :warning_type => "File Access",
+      :line => 81,
+      :message => /^Parameter\ value\ used\ in\ file\ name/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :url))
+
+    assert_warning :type => :warning,
+      :warning_code => 16,
+      :fingerprint => "259391ba0e21aa57fc0cadae71741c88b1cd86366e2f46f8347bf8ded1f3b526",
+      :warning_type => "File Access",
+      :line => 82,
+      :message => /^Parameter\ value\ used\ in\ file\ name/,
+      :confidence => 2,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :url))
+
+    assert_warning :type => :warning,
+      :warning_code => 16,
+      :fingerprint => "fa018b141157364fad0135416637cf6007b5c77feebda276159e07de76a3f639",
+      :warning_type => "File Access",
+      :line => 83,
+      :message => /^Parameter\ value\ used\ in\ file\ name/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+
+    assert_warning :type => :warning,
+      :warning_code => 16,
+      :fingerprint => "9068352d27a2b01f54e7e23a926d2d8501edfe9ae2fb22d9670b46afff61ed4f",
+      :warning_type => "File Access",
+      :line => 84,
+      :message => /^Parameter\ value\ used\ in\ file\ name/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
   end
 
