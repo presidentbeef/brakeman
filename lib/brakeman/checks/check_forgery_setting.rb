@@ -52,6 +52,17 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
         :confidence => CONFIDENCE[:high],
         :gem_info => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/topic/rubyonrails-security/LZWjzCPgNmU/discussion"
+    elsif version_between? "4.0.0", "100.0.0" and forgery_opts = app_controller[:options][:protect_from_forgery]
+
+      unless forgery_opts.is_a?(Array) and sexp?(forgery_opts.first) and hash_access(forgery_opts.first.first_arg, :with).value == :exception
+        warn :controller => :ApplicationController,
+          :warning_type => "Cross-Site Request Forgery",
+          :warning_code => :csrf_not_protected_by_raising_exception,
+          :message => "protect_from_forgery should be configured with 'with: :exception'",
+          :confidence => CONFIDENCE[:med],
+          :file => app_controller[:files].first,
+          :link_path => "blog post link?"
+      end
     end
   end
 end
