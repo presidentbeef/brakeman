@@ -3,7 +3,7 @@ class AdminController < ApplicationController
   skip_before_filter :login_required, :except => :do_admin_stuff
   skip_filter :authenticate_user!, :except => :do_admin_stuff
   skip_before_filter :require_user, :except => [:do_admin_stuff, :do_other_stuff]
-
+  before_filter -> { @thing = params[:t] }, only: [:use_lambda_filter]
 
   def constantize_some_stuff
     klass = params[:class].constantize
@@ -46,6 +46,10 @@ class AdminController < ApplicationController
 
     system "echo #{1}"
     exec "nmap 192.168.#{1}.1"
+    system @thing # no warning
+  end
 
+  def use_lambda_filter
+    eval @thing
   end
 end

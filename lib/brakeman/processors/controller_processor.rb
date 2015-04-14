@@ -158,9 +158,17 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
         when :include
           @current_class[:includes] << class_name(first_arg) if @current_class
         when :before_filter, :append_before_filter, :before_action, :append_before_action
-          @current_class[:options][:before_filters] << exp
+          if node_type? exp.first_arg, :iter
+            add_lambda_filter exp
+          else
+            @current_class[:options][:before_filters] << exp
+          end
         when :prepend_before_filter, :prepend_before_action
-          @current_class[:options][:before_filters].unshift exp
+          if node_type? exp.first_arg, :iter
+            add_lambda_filter exp
+          else
+            @current_class[:options][:before_filters].unshift exp
+          end
         when :skip_before_filter, :skip_filter, :skip_before_action, :skip_action_callback
           @current_class[:options][:skip_filters] << exp
         when :layout
@@ -310,5 +318,26 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     @visibility = vis
     process before_filter_call
     exp
+  end
+
+  def add_lambda_filter exp
+    # Convert into regular block call
+    e = exp.dup
+    lambda_node = e.delete_at(3)
+    result = Sexp.new(:iter, e).line(e.line)
+
+    # Add block arguments
+    if node_type? lambda_node[2], :args
+      result << lambda_node[2].last
+    else
+      result << s(:args)
+    end
+
+    # Add block contents
+    if sexp? lambda_node[3]
+      result << lambda_node[3]
+    end
+
+    add_fake_filter result
   end
 end
