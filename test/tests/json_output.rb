@@ -39,4 +39,8 @@ class JSONOutputTests < Test::Unit::TestCase
   def test_paths
     assert @@json["warnings"].all? { |w| not w["file"].start_with? "/" }
   end
+
+  def test_template_names_dont_have_renderer
+    assert @@json["warnings"].none? { |warning| warning["render_path"] and warning["location"]["template"].include? "(" }
+  end
 end

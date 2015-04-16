@@ -89,9 +89,8 @@ class Brakeman::Warning
   end
 
   #Returns name of a view, including where it was rendered from
-  def view_name
-    return @view_name if @view_name
-    if called_from
+  def view_name(include_renderer = true)
+    if called_from and include_renderer
       @view_name = "#{template.name} (#{called_from.last})"
     else
       @view_name = template.name
@@ -183,10 +182,10 @@ class Brakeman::Warning
     Digest::SHA2.new(256).update("#{warning_code_string}#{code_string}#{location_string}#{@relative_path}#{self.confidence}").to_s
   end
 
-  def location
+  def location include_renderer = true
     case @warning_set
     when :template
-      location = { :type => :template, :template => self.view_name }
+      location = { :type => :template, :template => self.view_name(include_renderer) }
     when :model
       location = { :type => :model, :model => self.model }
     when :controller
@@ -210,7 +209,7 @@ class Brakeman::Warning
       :link => self.link,
       :code => (@code && self.format_code(false)),
       :render_path => self.called_from,
-      :location => self.location,
+      :location => self.location(false),
       :user_input => (@user_input && self.format_user_input(false)),
       :confidence => TEXT_CONFIDENCE[self.confidence]
     }
