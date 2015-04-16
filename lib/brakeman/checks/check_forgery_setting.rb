@@ -63,8 +63,7 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
           :warning_code => :csrf_not_protected_by_raising_exception,
           :message => "protect_from_forgery should be configured with 'with: :exception'",
           :confidence => CONFIDENCE[:med],
-          :file => app_controller[:files].first,
-          :link_path => "blog post link?"
+          :file => app_controller[:files].first
         }
 
         args.merge!(:code => forgery_opts.first) if forgery_opts.is_a?(Array)
