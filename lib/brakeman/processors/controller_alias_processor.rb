@@ -182,7 +182,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       end
     end
 
-    render_path = Brakeman::RenderPath.new.add_controller_render(@current_class, @current_method, line, @file)
+    render_path = Brakeman::RenderPath.new.add_controller_render(@current_class, @current_method, line, relative_path(@file))
     super name, args, render_path, line
   end
 

@@ -19,7 +19,7 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
 
   #Process template
   def process_template name, args, _, line = nil
-    file = @template[:file] || tracker.templates[@template[:name]]
+    file = relative_path(@template.file || @tracker.templates[@template.name])
 
     if @called_from
       if @called_from.include_template? name
