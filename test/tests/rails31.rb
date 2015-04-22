@@ -1,13 +1,11 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-Rails31 = BrakemanTester.run_scan "rails3.1", "Rails 3.1", :rails3 => true, :parallel_checks => false, :interprocedural => true
-
 class Rails31Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
   include BrakemanTester::CheckExpected
 
   def report
-    Rails31
+    @@report ||= BrakemanTester.run_scan "rails3.1", "Rails 3.1", :rails3 => true, :parallel_checks => false, :interprocedural => true
   end
 
   def expected

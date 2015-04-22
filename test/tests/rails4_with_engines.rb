@@ -1,7 +1,5 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-Rails4WithEngines = BrakemanTester.run_scan "rails4_with_engines", "Rails4WithEngines"
-
 class Rails4WithEnginesTests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
   include BrakemanTester::CheckExpected
@@ -15,7 +13,7 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
   end
 
   def report
-    Rails4WithEngines
+   @@report ||= BrakemanTester.run_scan "rails4_with_engines", "Rails4WithEngines"
   end
 
   def test_i18n_xss_CVE_2013_4491
