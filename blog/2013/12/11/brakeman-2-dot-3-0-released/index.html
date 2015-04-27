@@ -1,0 +1,377 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Brakeman - Rails Security Scanner: Brakeman 2.3.0 Released</title>
+  <meta name="author" content="Justin Collins">
+  <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
+
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2013/12/11/brakeman-2-dot-3-0-released/"/>
+  <link href="/favicon.png" rel="shortcut icon" />
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="http://s3.amazonaws.com/ender-js/jeesh.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Brakeman - Rails Security Scanner" type="application/atom+xml"/>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-12578396-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<script language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
+<script src="/javascripts/jquery.github_badge.js"></script>
+<meta property="twitter:account_id" content="23978537" />
+
+</head>
+
+<body  >
+  <header><hgroup>
+  <h1><a href="/">Brakeman - Rails Security Scanner</a></h1>
+  
+    <h2>Static analysis security scanner for Ruby on Rails</h2>
+  
+</hgroup>
+
+</header>
+  <nav role=navigation><ul role=subscription data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+<form action="http://google.com/search" method="get">
+  <fieldset role="site-search">
+    <input type="hidden" name="q" value="site:brakemanscanner.org" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+<ul role=main-navigation>
+  <li><a href="/">Home</a></li>
+  <li><a href="/docs">Documentation</a></li>
+  <li><a href="https://github.com/presidentbeef/brakeman">Source</a></li>
+  <li><a href="/docs/contributing">Contributing</a></li>
+  <li><a href="/brakeman_users">Users</a></li>
+  <li><a href="/contact">Contact</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry">
+  
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+      <h1 class="entry-title">Brakeman 2.3.0 Released</h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2013-12-11 12:20:00 -0800" pubdate  updated >Dec 11<span>th</span>, 2013</time>
+
+
+</p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This is a small release, but adds several new warning codes for the latest Rails CVEs and a new check for uses of <code>permit!</code>. Also, this is the first signed gem release of Brakeman; see below for details.</p>
+
+<p><em>Changes since 2.2.0:</em></p>
+
+<ul>
+<li>Add check for CVE-2013-4491 (i18n XSS)</li>
+<li>Add check for CVE-2013-6414 (header DoS)</li>
+<li>Add check for CVE-2013-6415 (<code>number_to_currency</code>)</li>
+<li>Add check for CVE-2013-6416 (<code>simple_format</code> XSS)</li>
+<li>Add check for CVE-2013-6417 (query generation)</li>
+<li>Add check for <code>Parameters#permit!</code> (<a href="https://github.com/presidentbeef/brakeman/issues/281">#281</a>)</li>
+<li>Fix Slim XSS false positives (<a href="https://github.com/noahd1">Noah Davis</a>)</li>
+<li>Whitelist <code>Model#create</code> for redirects (<a href="https://github.com/presidentbeef/brakeman/issues/406">#406</a>)</li>
+<li>Collapse send/try calls</li>
+<li>Fix scoping issues with instance variables and blocks (<a href="https://github.com/presidentbeef/brakeman/issues/406">#406</a>)</li>
+<li>Fix typos in reflection and translate bug messages</li>
+</ul>
+
+
+<h3>I18n XSS</h3>
+
+<p><a href="https://groups.google.com/d/msg/ruby-security-ann/pLrh6DUw998/2i61N5c3heUJ">CVE-2013-4491</a> is a possible XSS in the i18n gem. Brakeman will warn unless the i18n gem is updated to the proper version or the workaround is used.</p>
+
+<h3>Header DoS</h3>
+
+<p><a href="https://groups.google.com/d/msg/ruby-security-ann/A-ebV4WxzKg/KNPTbX8XAQUJ">CVE-2013-6414</a> is a possible denial of service from special headers. Brakeman will warn unless the workaround is used.</p>
+
+<h3>Currency XSS</h3>
+
+<p><a href="https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ">CVE-2013-6415</a> is an XSS in the second argument of <code>number_to_currency</code>. Brakeman will warn on uses of <code>number_to_currency</code> with dangerous unescaped arguments. If no dangerous uses are found, Brakeman will provide a general warning about the CVE.</p>
+
+<h3>Simple Format XSS</h3>
+
+<p><a href="https://groups.google.com/d/msg/ruby-security-ann/5ZI1-H5OoIM/ZNq4FoR2GnIJ">CVE-2013-6416</a> is an XSS in <code>simple_format</code>, which does not escape its output. Brakeman will warn on dangerous uses of <code>simple_format</code>. If no uses are found, it will report a general warning.</p>
+
+<h3>Query Generation Vulnerability</h3>
+
+<p><a href="https://groups.google.com/d/msg/ruby-security-ann/niK4drpSHT4/g8JW8ZsayRkJ">CVE-2013-6417</a> is the continuation of an old problem with SQL queries. The newest issue is caused by Rack middleware freezing the parameters before they can be cleaned up. Brakeman reports a general warning about this.</p>
+
+<h3>Check for Permit!</h3>
+
+<p>Brakeman now warns on uses of <code>Parameters#permit!</code>, which bypasses mass assignment protections. If a <code>permit!</code> is used without a subsequent mass assignment in the same method, the confidence will be medium.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/414">changes</a>)</p>
+
+<h3>Slim XSS False Positives</h3>
+
+<p>(<a href="https://github.com/noahd1">Noah Davis</a>) provided a fix for XSS false positives in Slim templates when ActiveSupport is loaded. While Brakeman itself does not depend on ActiveSupport, it might be loaded if Brakeman is run with Bundler or as part of a Rake task.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/410">changes</a>)</p>
+
+<h3>Whitelist Record Creation in Redirects</h3>
+
+<p>Redirects to <code>Model#create</code> and <code>Model#create!</code> should no longer warn.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/408">changes</a>)</p>
+
+<h3>Collapse <code>try</code>/<code>send</code></h3>
+
+<p>The effect of using <code>try(:something)</code> or <code>send(:something)</code> are essentially the same as calling <code>something</code>, so Brakeman now converts calls to <code>try</code>/<code>send</code> directly to the method being called.</p>
+
+<p>For example:</p>
+
+<pre><code>User.find(1).try(:name)
+</code></pre>
+
+<p>is changed to</p>
+
+<pre><code>User.find(1).name
+</code></pre>
+
+<p>This can help find more vulnerabilities as well as prevent some false positives if the method name is actually something safe like <code>id</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/412">changes</a>)</p>
+
+<h3>Block Scoping</h3>
+
+<p>Several issues with blocks were fixed in this release. First, no calls with blocks were being processed correctly inside controllers. Secondly, instance variable assignments inside blocks were treated like local assignments. They are now treated as &#8220;method level&#8221; assignments (i.e. every method has its own &#8220;global&#8221; scope). Finally, local assignments inside blocks to existing variables were also being treated as block-local assignments.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/407">changes</a>)</p>
+
+<h3>Warning Typos</h3>
+
+<p>Two tiny changes have been made to warning messages. The &#8220;translate bug&#8221; from ages ago had an extra <code>}</code> in the message, and the message for unsafe reflection no longer capitalizes &#8220;Reflection&#8221;. But since everyone is using <a href="http://brakemanscanner.org/blog/2013/05/20/brakeman-2-dot-0-0-released/">warning fingerprints and not relying on matching messages</a>, you should be okay, right?</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/411">changes</a>)</p>
+
+<h3>Signed Gems</h3>
+
+<p>The Brakeman gems are now signed and can be verified with <a href="https://github.com/presidentbeef/brakeman/blob/master/brakeman-public_cert.pem">this certificate</a>.</p>
+
+<p>To verify on installation:</p>
+
+<pre><code>gem cert --add &lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
+gem install brakeman -P MediumSecurity
+</code></pre>
+
+<p>&#8220;HighSecurity&#8221; requires all dependencies to be signed as well, which is unlikely.</p>
+
+<p>Additionally, here are the SHA sums for this release:</p>
+
+<pre><code>2ae503781c51a69a1123d37d46b4813ea91f01e8  brakeman-2.3.0.gem
+77d39eaf0e2663af526dcbf6e3b5bac16173fed1  brakeman-min-2.3.0.gem
+</code></pre>
+
+<h3>Brakeman Users</h3>
+
+<p>We have a new page on this website <a href="http://brakemanscanner.org/brakeman_users/">listing companies which use Brakeman</a>.</p>
+
+<p>Please contact us (<a href="http://brakemanscanner.org/brakeman_users/">see bottom of page</a>) to have your company listed!</p>
+
+<h3>Stickers</h3>
+
+<p>Brakeman stickers are still available!</p>
+
+<blockquote class="twitter-tweet" lang="en"><p>Wish you were getting one of these? Just send your name and address to stickers@brakeman.org and you will be next! <a href="http://t.co/qXdnGVo6hG">pic.twitter.com/qXdnGVo6hG</a></p>&mdash; Brakeman Scanner (@brakeman) <a href="https://twitter.com/brakeman/statuses/403546302119563264">November 21, 2013</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<h3>Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
+
+      
+
+
+
+
+<time datetime="2013-12-11 12:20:00 -0800" pubdate  updated >Dec 11<span>th</span>, 2013</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2013/12/11/brakeman-2-dot-3-0-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2013/12/11/brakeman-2-dot-3-0-released/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread"><div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'brakeman';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2013/12/11/brakeman-2-dot-3-0-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2013/12/11/brakeman-2-dot-3-0-released/';
+  //var disqus_developer = 1;
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside role=sidebar>
+  
+    <section>
+  <p></p>
+  <p>Brakeman is an open source vulnerability scanner specifically designed for Ruby on Rails applications. It statically analyzes Rails application code to find security issues at any stage of development.</p>
+</section>
+<section>
+<script type='text/javascript'>
+    $(document).ready(function(){
+        $("#github").GitHubBadge({
+          login: "presidentbeef",
+          kind: "project",
+          repo_name: "brakeman",
+          include_github_logo: false,
+          image_path: "",
+          commit_count: "1",
+          issue_count: "0",
+          repo_count: "0"
+      });
+    });
+</script>
+<div id="github"></div>
+<a href="http://travis-ci.org/#!/presidentbeef/brakeman"><img src="https://secure.travis-ci.org/presidentbeef/brakeman.png" /></a>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/03/09/brakeman-3-dot-0-2-released/">Brakeman 3.0.2 Released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/22/brakeman-3-dot-0-1-released/">Brakeman 3.0.1 Released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/02/brakeman-3-dot-0-0-released/">Brakeman 3.0.0 Released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/13/brakeman-2-dot-6-3-released/">Brakeman 2.6.3 Released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/08/27/brakeman-is-four-years-old/">Brakeman is Four Years Old!</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <a class="twitter-timeline" data-dnt=true href="https://twitter.com/brakeman" data-widget-id="258654953097273345">Tweets by @brakeman</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer><p>
+<span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | <a href="/content_license">Content license</a></span>
+</p>
+
+</footer>
+</body>
+</html>
