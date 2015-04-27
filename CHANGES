@@ -1,3 +1,11 @@
+# Unreleased
+
+* Ignore quoted_table_name in SQL (Gabriel Sobrinho)
+* Warn about RCE and file access with `open`
+* Handle array include? guard conditionals
+* Do not ignore targets of `to_s` in SQL
+* Add Rake task to exit with error code when fail (masarakki)
+
 # 3.0.2
 
 * Alias process methods called in class scope on models
