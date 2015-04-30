@@ -1,10 +1,13 @@
-# Unreleased
+# 3.0.3
 
+* Ignore more Arel methods in SQL
+* Warn about protect_from_forgery without exceptions (Neil Matatall)
+* Handle lambdas as filters
 * Ignore quoted_table_name in SQL (Gabriel Sobrinho)
 * Warn about RCE and file access with `open`
 * Handle array include? guard conditionals
 * Do not ignore targets of `to_s` in SQL
-* Add Rake task to exit with error code when fail (masarakki)
+* Add Rake task to exit with error code on warnings (masarakki)
 
 # 3.0.2
 
