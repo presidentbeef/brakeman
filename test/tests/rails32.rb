@@ -5,8 +5,6 @@
 
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-Rails32 = BrakemanTester.run_scan "rails3.2", "Rails 3.2"
-
 class Rails32Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
   include BrakemanTester::CheckExpected
@@ -26,11 +24,11 @@ class Rails32Tests < Test::Unit::TestCase
   end
 
   def report
-    Rails32
+    @@report ||= BrakemanTester.run_scan "rails3.2", "Rails 3.2"
   end
 
   def test_rc_version_number
-    assert_equal "3.2.9.rc2", Rails32[:config][:rails_version]
+    assert_equal "3.2.9.rc2", report[:config][:rails_version]
   end
 
   def test_sql_injection_CVE_2012_5664

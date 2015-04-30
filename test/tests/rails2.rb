@@ -5,8 +5,6 @@
 
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-Rails2 = BrakemanTester.run_scan "rails2", "Rails 2", :run_all_checks => true, :collapse_mass_assignment => true
-
 class Rails2Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
   include BrakemanTester::CheckExpected
@@ -28,7 +26,7 @@ class Rails2Tests < Test::Unit::TestCase
   end
 
   def report
-    Rails2
+    @@report ||= BrakemanTester.run_scan "rails2", "Rails 2", :run_all_checks => true, :collapse_mass_assignment => true
   end
 
   def test_no_errors
@@ -1399,8 +1397,6 @@ class Rails2Tests < Test::Unit::TestCase
   end
 end
 
-Rails2WithOptions = BrakemanTester.run_scan "rails2", "Rails 2", :run_all_checks => true
-
 class Rails2WithOptionsTests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
   include BrakemanTester::CheckExpected
@@ -1422,7 +1418,7 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
   end
 
   def report
-    Rails2WithOptions
+    @@report ||= BrakemanTester.run_scan "rails2", "Rails 2", :run_all_checks => true
   end
 
   def test_no_errors

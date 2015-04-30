@@ -1,14 +1,12 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-EXTERNAL_CHECKS_PATH = File.expand_path(File.join(File.dirname(__FILE__), "..", "/apps/rails4/external_checks"))
-Rails4 = BrakemanTester.run_scan "rails4", "Rails 4", {:additional_checks_path => [EXTERNAL_CHECKS_PATH], :run_all_checks => true, :additional_libs_path => ["app/api"]}
-
 class Rails4Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
   include BrakemanTester::CheckExpected
 
   def report
-    Rails4
+    external_checks_path = File.expand_path(File.join(File.dirname(__FILE__), "..", "/apps/rails4/external_checks"))
+    @@report ||= BrakemanTester.run_scan "rails4", "Rails 4", {:additional_checks_path => [external_checks_path], :run_all_checks => true, :additional_libs_path => ["app/api"]}
   end
 
   def expected

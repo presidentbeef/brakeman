@@ -1,7 +1,5 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-Rails32OnlyFiles = BrakemanTester.run_scan "rails3.2", "Rails 3.2", { :only_files => ["app/views/users/"], :skip_files => ["app/views/users/sanitized.html.erb"] }
-
 class OnlyFilesOptionTests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
   include BrakemanTester::CheckExpected
@@ -21,7 +19,7 @@ class OnlyFilesOptionTests < Test::Unit::TestCase
   end
 
   def report
-    Rails32OnlyFiles
+    @@report ||= BrakemanTester.run_scan "rails3.2", "Rails 3.2", { :only_files => ["app/views/users/"], :skip_files => ["app/views/users/sanitized.html.erb"] }
   end
 
   def test_escaped_params_to_json
