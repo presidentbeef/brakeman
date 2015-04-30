@@ -8,7 +8,7 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
 
   def expected
     @expected ||= {
-      :controller => 0,
+      :controller => 1,
       :model => 5,
       :template => 11,
       :generic => 8 }
@@ -276,4 +276,13 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
       :relative_path => "engines/user_removal/app/models/user.rb"
   end
 
+  def test_csrf_without_exception
+    assert_warning :type => :controller,
+      :warning_code => 86,
+      :fingerprint => "4d109bd02e4ccb3ea4c51485c947be435ee006a61af7d2cd37d1b358c7469189",
+      :warning_type => "Cross-Site Request Forgery",
+      :message => "protect_from_forgery should be configured with 'with: :exception'",
+      :confidence => 1,
+      :relative_path => "app/controllers/application_controller.rb"
+  end
 end
