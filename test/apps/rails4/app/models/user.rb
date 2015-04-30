@@ -23,4 +23,13 @@ class User < ActiveRecord::Base
                end
     order(ordering) # should not warn about `asc` interpolation
   }
+
+  def much_arel # None of these should warn
+    group_recipient = User.joins(:group).where(User.arel_table[:message_id].eq Email.arel_table[:id])
+    group_with_special_property = group_recipient.where(:groups => { :private => false, :special_property => true })
+    Email.where(group_recipient.exists.not.or(group_with_special_property.exists))
+
+    User.select('users.id').joins(User.joins(:deal_purchases).join_sources).where(Email.arel_table[:created_at].gt(last_activity)).group('users.id')
+    User.where(User.joins(:group).where(User.arel_table[:message_id].eq arel_table[:id]))
+  end
 end

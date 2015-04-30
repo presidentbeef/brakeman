@@ -643,6 +643,35 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:lvar, :locale)
   end
 
+ def test_no_sql_injection_from_arel_methods
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "61d957cdeca70a82f53d7ec72287fc21f67c67c6e8dbc9c3c4cb2d115f3a5602",
+      :warning_type => "SQL Injection",
+      :line => 30,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb"
+
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "46a08db9c5b2739027a34c37cbb79c0813247e5bba856705a56174173e230f4b",
+      :warning_type => "SQL Injection",
+      :line => 32,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb"
+
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "64233e939bcef59cf6100c75cfefaf2968734305d4431622556e2f612b10a912",
+      :warning_type => "SQL Injection",
+      :line => 33,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb"
+  end
+ 
   def test_format_validation_model_alias_processing
     assert_warning :type => :model,
       :warning_code => 30,
