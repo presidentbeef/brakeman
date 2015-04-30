@@ -108,6 +108,117 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2015/04/30/brakeman-3-dot-0-3-released/">Brakeman 3.0.3 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2015-04-30 09:50:00 -0700" pubdate  updated >Apr 30<span>th</span>, 2015</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is mostly a bug fix release, but does introduce a new warning code for when <code>protect_from_forgery</code> is not set to raise exceptions in Rails 4.</p>
+
+<ul>
+<li>Warn about <code>protect_from_forgery</code> without exceptions <a href="https://github.com/oreoshake">Neil Matatall</a></li>
+<li>Add Rake task to exit with error code on warnings <a href="https://github.com/masarakki">masarakki</a></li>
+<li>Ignore <code>quoted_table_name</code> in SQL <a href="https://github.com/sobrinho">Gabriel Sobhrinho</a></li>
+<li>Ignore more Arel methods in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/604">#604</a>)</li>
+<li>Warn about RCE and file access with <code>open</code></li>
+<li>Handle <code>Array#include?</code> guard conditionals (<a href="https://github.com/presidentbeef/brakeman/issues/604">#604</a>)</li>
+<li>Handle lambdas as filters</li>
+<li>Do not ignore targets of <code>to_s</code> in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/638">#638</a>)</li>
+</ul>
+
+
+<h3>New CSRF Warning</h3>
+
+<p><a href="https://github.com/oreoshake">Neil Matatall</a> has added a warning for Rails 4 applications that do not pass the <code>with: :exception</code> option to <code>protect_from_forgery</code>. The default behavior of clearing out the session (but still processing the request) has lead to vulnerabilities in some applications. GitHub <a href="https://bounty.github.com/researchers/LukasReschke.html">recently awarded a bug bounty</a> for a vulnerability caused by this behavior.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/648">changes</a>)</p>
+
+<h3>Additional Rake Task</h3>
+
+<p><a href="https://github.com/masarakki">Masarakki</a> added a Rake task that will exit with an error code if any warnings are found (like <code>brakeman -z</code>). The task can be run with <code>rake brakeman:check</code>.</p>
+
+<p>However, please note the use of Rake tasks to run Brakeman is discouraged, since it loads the entire Rails application which is unnecessary and may cause conflicts with Brakeman dependencies.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/637">changes</a>)</p>
+
+<h3>Reduce SQL Injection False Positives</h3>
+
+<p>A patch from <a href="https://github.com/sobrinho">Gabriel Sobhrinho</a> removes warnings about <code>quoted_table_name</code> in SQL queries.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/647">changes</a>)</p>
+
+<p>An additional change was made to ignore more Arel methods nested inside of other queries. This should reduce many of the false positives seen with combining Arel and ActiveRecord queries.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/653">changes</a>)</p>
+
+<h3>Remote Code Execution in open()</h3>
+
+<p>As noted in <a href="http://sakurity.com/blog/2015/02/28/openuri.html">Egor Homakov&#8217;s blog post</a>, <code>open</code> can actually be used to spawn new processes by starting the argument with a pipe <code>|</code>. Brakeman will now warn about remote code execution via <code>open</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/643">changes</a>)</p>
+
+<h3>Simple Guard Conditions</h3>
+
+<p>Brakeman should now recognize guard conditions that look exactly like this:</p>
+
+<pre><code>if [1, 2, "a", "b"].include? x
+  do_something_dangerous_with x
+end
+</code></pre>
+
+<p>This may resolve some false positives. If you have code similar to this, please consider <a href="https://github.com/presidentbeef/brakeman/issues">opening an issue</a> and perhaps it can be handled similarly.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/640">changes</a>)</p>
+
+<h3>Lambda Filters</h3>
+
+<p>Filters that use lambdas instead of blocks should now be handled correctly.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/649">changes</a>)</p>
+
+<h3>Handle to_s in SQL</h3>
+
+<p>Values with <code>to_s</code> called on them were being ignored when checking for SQL injection. This has been fixed.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/639">changes</a>)</p>
+
+<h3>SHAs</h3>
+
+<p>The SHA1 sums for this release are</p>
+
+<pre><code>170c3dd6925373b7da2e27fd1decf2957b35dc43  brakeman-3.0.3.gem
+f126e305404a61e99f9ddb848996d87325d1485a  brakeman-min-3.0.3.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2015/03/09/brakeman-3-dot-0-2-released/">Brakeman 3.0.2 Released</a></h1>
     
     
@@ -1167,69 +1278,6 @@ fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2014/03/22/brakeman-2-dot-4-3-released/">Brakeman 2.4.3 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2014-03-22 17:49:00 -0700" pubdate  updated >Mar 22<span>nd</span>, 2014</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>A new gem version has been released because the 2.4.2 gem was not signed. No other changes were introduced.</p>
-
-<h3>Signed Gems</h3>
-
-<p>As a reminder, the Brakeman gems are (supposed to be) signed and can be verified with <a href="https://github.com/presidentbeef/brakeman/blob/master/brakeman-public_cert.pem">this certificate</a>.</p>
-
-<p>To verify on installation:</p>
-
-<pre><code>gem cert --add &lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
-gem install brakeman -P MediumSecurity
-</code></pre>
-
-<p>&#8220;HighSecurity&#8221; requires all dependencies to be signed as well, which is unlikely.</p>
-
-<p>There is some weirdness around <code>-P MediumSecurity</code> currently. The simplest solution seems to be:</p>
-
-<pre><code>gem install brakeman   # Install Brakeman and all dependencies
-gem uninstall brakeman # Remove the Brakeman gem
-gem install brakeman -P MediumSecurity  # Install Brakeman gem and check signature
-</code></pre>
-
-<h3>SHAs</h3>
-
-<p>The SHA1 sums for this release are</p>
-
-<pre><code>16b4890fa8ee6bad1d429a12bf3f0cb8e76cb2d8  brakeman-2.4.3.gem
-be5743d77140e64b75eefc53f8697f767ab370d9  brakeman-min-2.4.3.gem 
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1280,6 +1328,10 @@ be5743d77140e64b75eefc53f8697f767ab370d9  brakeman-min-2.4.3.gem
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/30/brakeman-3-dot-0-3-released/">Brakeman 3.0.3 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/09/brakeman-3-dot-0-2-released/">Brakeman 3.0.2 Released</a>
       </li>
     
@@ -1293,10 +1345,6 @@ be5743d77140e64b75eefc53f8697f767ab370d9  brakeman-min-2.4.3.gem
     
       <li class="post">
         <a href="/blog/2014/10/13/brakeman-2-dot-6-3-released/">Brakeman 2.6.3 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/08/27/brakeman-is-four-years-old/">Brakeman is Four Years Old!</a>
       </li>
     
   </ul>
