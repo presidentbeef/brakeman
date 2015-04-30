@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2015-04-30T11:05:25-07:00</updated>
+  <updated>2015-04-30T11:21:03-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -20,9 +20,9 @@
     <content type="html">&lt;p&gt;This is mostly a bug fix release, but does introduce a new warning code for when &lt;code&gt;protect_from_forgery&lt;/code&gt; is not set to raise exceptions in Rails 4.&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Warn about &lt;code&gt;protect_from_forgery&lt;/code&gt; without exceptions &lt;a href=&quot;https://github.com/oreoshake&quot;&gt;Neil Matatall&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Add Rake task to exit with error code on warnings &lt;a href=&quot;https://github.com/masarakki&quot;&gt;masarakki&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Ignore &lt;code&gt;quoted_table_name&lt;/code&gt; in SQL &lt;a href=&quot;https://github.com/sobrinho&quot;&gt;Gabriel Sobhrinho&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Warn about &lt;code&gt;protect_from_forgery&lt;/code&gt; without exceptions (&lt;a href=&quot;https://github.com/oreoshake&quot;&gt;Neil Matatall&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add Rake task to exit with error code on warnings (&lt;a href=&quot;https://github.com/masarakki&quot;&gt;masarakki&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Ignore &lt;code&gt;quoted_table_name&lt;/code&gt; in SQL (&lt;a href=&quot;https://github.com/sobrinho&quot;&gt;Gabriel Sobhrinho&lt;/a&gt;)&lt;/li&gt;
 &lt;li&gt;Ignore more Arel methods in SQL (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/604&quot;&gt;#604&lt;/a&gt;)&lt;/li&gt;
 &lt;li&gt;Warn about RCE and file access with &lt;code&gt;open&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Handle &lt;code&gt;Array#include?&lt;/code&gt; guard conditionals (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/604&quot;&gt;#604&lt;/a&gt;)&lt;/li&gt;
