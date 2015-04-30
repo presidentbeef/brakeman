@@ -15,7 +15,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 23,
       :controller => 4,
-      :generic => 79 }
+      :generic => 80 }
   end
 
   def test_without_protection
@@ -1265,5 +1265,17 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Possible\ command\ injection/,
       :confidence => 1,
       :relative_path => "app/controllers/admin_controller.rb"
+  end
+
+  def test_eval_from_lambda_filter
+    assert_warning :type => :warning,
+      :warning_code => 13,
+      :fingerprint => "58e5c4088dc57057a112ab5c472633752f787b8f6b0437bbd19d82fa06afbddb",
+      :warning_type => "Dangerous Eval",
+      :line => 53,
+      :message => /^User\ input\ in\ eval/,
+      :confidence => 0,
+      :relative_path => "app/controllers/admin_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :t))
   end
 end
