@@ -551,7 +551,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     :sanitize_sql, :sanitize_sql_array, :sanitize_sql_for_assignment,
     :sanitize_sql_for_conditions, :sanitize_sql_hash,
     :sanitize_sql_hash_for_assignment, :sanitize_sql_hash_for_conditions,
-    :to_sql, :sanitize, :exists, :primary_key, :table_name_prefix, :table_name_suffix]
+    :to_sql, :sanitize, :primary_key, :table_name_prefix, :table_name_suffix]
 
   def safe_value? exp
     return true unless sexp? exp
@@ -565,6 +565,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       else
         IGNORE_METHODS_IN_SQL.include? exp.method or
         quote_call? exp or
+        arel? exp or
         exp.method.to_s.end_with? "_id"
       end
     when :if
@@ -586,6 +587,12 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     elsif exp.target.nil?
       exp.method == :quote_value
     end
+  end
+
+  AREL_METHODS = [:not, :and, :or, :exists, :join_sources, :arel_table, :gt, :lt, :on, :eq, :eq_any, :where]
+
+  def arel? exp
+    call? exp and (AREL_METHODS.include? exp.method or arel? exp.target)
   end
 
   #Check call for string building
