@@ -41,7 +41,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     Brakeman.debug "Finding possible SQL calls using constantized()"
     calls.concat tracker.find_call(:methods => @sql_targets).select { |result| constantize_call? result }
 
-    connect_targets = active_record_models.keys + [nil, :"ActiveRecord::Base"]
+    connect_targets = active_record_models.keys + [:connection, :"ActiveRecord::Base"]
     calls.concat tracker.find_call(:targets => connect_targets, :methods => @connection_calls, :chained => true).select { |result| connect_call? result }
 
     Brakeman.debug "Finding calls to named_scope or scope"
