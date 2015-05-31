@@ -152,14 +152,6 @@ For even more continuous testing, try the [Guard plugin](https://github.com/guar
     gem build brakeman.gemspec
     gem install brakeman*.gem
 
-# Homepage/News
-
-Website: http://brakemanscanner.org/
-
-Twitter: http://twitter.com/brakeman
-
-Mailing list: brakeman@librelist.com
-
 # Who is Using Brakeman?
 
 * [Code Climate](https://codeclimate.com/)
@@ -169,6 +161,14 @@ Mailing list: brakeman@librelist.com
 * [Twitter](https://twitter.com/)
 
 [..and more!](http://brakemanscanner.org/brakeman_users)
+
+# Homepage/News
+
+Website: http://brakemanscanner.org/
+
+Twitter: http://twitter.com/brakeman
+
+Mailing list: brakeman@librelist.com
 
 # License
 
