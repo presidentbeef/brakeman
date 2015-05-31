@@ -9,51 +9,31 @@ Climate](https://codeclimate.com/github/presidentbeef/brakeman.png)](https://cod
 
 Brakeman is a static analysis tool which checks Ruby on Rails applications for security vulnerabilities.
 
-It works with Rails 2.x, 3.x, and 4.x.
-
-There is also a [plugin available](http://brakemanscanner.org/docs/jenkins/) for Jenkins/Hudson.
-
-For even more continuous testing, try the [Guard plugin](https://github.com/guard/guard-brakeman).
-
-# Homepage/News
-
-Website: http://brakemanscanner.org/
-
-Twitter: http://twitter.com/brakeman
-
-Mailing list: brakeman@librelist.com
-
 # Installation
 
 Using RubyGems:
 
     gem install brakeman
 
-Using Bundler, add to development group in Gemfile and set to not be required automatically:
+Using Bundler:
 
     group :development do
       gem 'brakeman', :require => false
     end
 
-From source:
-
-    gem build brakeman.gemspec
-    gem install brakeman*.gem
-
-## For Slim Users
-
-[Slim v3.0.0](https://github.com/slim-template/slim/blob/master/CHANGES#L12) dropped support for Ruby 1.8.7. Install a version of [`slim`](http://slim-lang.com/) compatible with your Ruby.
-
-| Ruby Version |       `Gemfile`       |              Command Line              |
-|--------------|-----------------------|----------------------------------------|
-| Ruby 1.8.7   | `gem 'slim', '< 3.0'` | `$ gem install slim --version '< 3.0'` |
-| Ruby 1.9+    | `gem 'slim'`          | `$ gem install slim`                   |
-
 # Usage
 
-    brakeman [app_path]
+From a Rails application's root directory:
 
-It is simplest to run Brakeman from the root directory of the Rails application. A path may also be supplied.
+    brakeman
+
+Outside of Rails root:
+
+    brakeman /path/to/rails/application
+
+# Compatibility
+
+Brakeman works with Rails 2.x, 3.x, and 4.x.
 
 # Basic Options
 
@@ -149,6 +129,35 @@ Options passed in on the commandline have priority over configuration files.
 The default config locations are `./config/brakeman.yml`, `~/.brakeman/config.yml`, and `/etc/brakeman/config.yml`
 
 The `-c` option can be used to specify a configuration file to use.
+
+# For Slim Users
+
+[Slim v3.0.0](https://github.com/slim-template/slim/blob/master/CHANGES#L12) dropped support for Ruby 1.8.7. Install a version of [`slim`](http://slim-lang.com/) compatible with your Ruby.
+
+| Ruby Version |       `Gemfile`       |              Command Line              |
+|--------------|-----------------------|----------------------------------------|
+| Ruby 1.8.7   | `gem 'slim', '< 3.0'` | `$ gem install slim --version '< 3.0'` |
+| Ruby 1.9+    | `gem 'slim'`          | `$ gem install slim`                   |
+
+# Continuous Integration
+
+There is also a [plugin available](http://brakemanscanner.org/docs/jenkins/) for Jenkins/Hudson.
+
+For even more continuous testing, try the [Guard plugin](https://github.com/guard/guard-brakeman).
+
+# Building
+
+    git clone https://github.com/presidentbeef/brakeman.git
+    gem build brakeman.gemspec
+    gem install brakeman*.gem
+
+# Homepage/News
+
+Website: http://brakemanscanner.org/
+
+Twitter: http://twitter.com/brakeman
+
+Mailing list: brakeman@librelist.com
 
 # Who is Using Brakeman?
 
