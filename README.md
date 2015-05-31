@@ -172,4 +172,4 @@ Mailing list: brakeman@librelist.com
 
 # License
 
-see MIT-LICENSE
+see [MIT-LICENSE](MIT-LICENSE)
