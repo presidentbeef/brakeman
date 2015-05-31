@@ -37,7 +37,7 @@ Brakeman works with Rails 2.x, 3.x, and 4.x.
 
 # Basic Options
 
-For a full list of options, use `brakeman --help` or see the OPTIONS.md file.
+For a full list of options, use `brakeman --help` or see the [OPTIONS.md](OPTIONS.md) file.
 
 To specify an output file for the results:
 
