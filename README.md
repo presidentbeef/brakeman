@@ -141,7 +141,7 @@ The `-c` option can be used to specify a configuration file to use.
 
 # Continuous Integration
 
-There is also a [plugin available](http://brakemanscanner.org/docs/jenkins/) for Jenkins/Hudson.
+There is a [plugin available](http://brakemanscanner.org/docs/jenkins/) for Jenkins/Hudson.
 
 For even more continuous testing, try the [Guard plugin](https://github.com/guard/guard-brakeman).
 
