@@ -147,7 +147,8 @@ For even more continuous testing, try the [Guard plugin](https://github.com/guar
 
 # Building
 
-    git clone https://github.com/presidentbeef/brakeman.git
+    git clone git://github.com/presidentbeef/brakeman.git
+    cd brakeman
     gem build brakeman.gemspec
     gem install brakeman*.gem
 
