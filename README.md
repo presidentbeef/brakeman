@@ -1,4 +1,4 @@
-![Brakeman Logo](http://brakemanscanner.org/images/logo_medium.png)
+[![Brakeman Logo](http://brakemanscanner.org/images/logo_medium.png)](http://brakemanscanner.org/)
 
 [![Travis CI
 Status](https://secure.travis-ci.org/presidentbeef/brakeman.png)](https://travis-ci.org/presidentbeef/brakeman)
