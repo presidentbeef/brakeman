@@ -152,6 +152,8 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
   def get_chain call
     if node_type? call, :call, :attrasgn
       get_chain(call.target) + [call.method]
+    elsif call.nil?
+      []
     else
       [get_target(call)]
     end
