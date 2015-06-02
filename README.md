@@ -1,4 +1,4 @@
-![Brakeman Logo](http://brakemanscanner.org/images/logo_medium.png)
+[![Brakeman Logo](http://brakemanscanner.org/images/logo_medium.png)](http://brakemanscanner.org/)
 
 [![Travis CI
 Status](https://secure.travis-ci.org/presidentbeef/brakeman.png)](https://travis-ci.org/presidentbeef/brakeman)
@@ -9,55 +9,35 @@ Climate](https://codeclimate.com/github/presidentbeef/brakeman.png)](https://cod
 
 Brakeman is a static analysis tool which checks Ruby on Rails applications for security vulnerabilities.
 
-It works with Rails 2.x, 3.x, and 4.x.
-
-There is also a [plugin available](http://brakemanscanner.org/docs/jenkins/) for Jenkins/Hudson.
-
-For even more continuous testing, try the [Guard plugin](https://github.com/guard/guard-brakeman).
-
-# Homepage/News
-
-Website: http://brakemanscanner.org/
-
-Twitter: http://twitter.com/brakeman
-
-Mailing list: brakeman@librelist.com
-
 # Installation
 
 Using RubyGems:
 
     gem install brakeman
 
-Using Bundler, add to development group in Gemfile and set to not be required automatically:
+Using Bundler:
 
     group :development do
       gem 'brakeman', :require => false
     end
 
-From source:
-
-    gem build brakeman.gemspec
-    gem install brakeman*.gem
-
-## For Slim Users
-
-[Slim v3.0.0](https://github.com/slim-template/slim/blob/master/CHANGES#L12) dropped support for Ruby 1.8.7. Install a version of [`slim`](http://slim-lang.com/) compatible with your Ruby.
-
-| Ruby Version |       `Gemfile`       |              Command Line              |
-|--------------|-----------------------|----------------------------------------|
-| Ruby 1.8.7   | `gem 'slim', '< 3.0'` | `$ gem install slim --version '< 3.0'` |
-| Ruby 1.9+    | `gem 'slim'`          | `$ gem install slim`                   |
-
 # Usage
 
-    brakeman [app_path]
+From a Rails application's root directory:
 
-It is simplest to run Brakeman from the root directory of the Rails application. A path may also be supplied.
+    brakeman
+
+Outside of Rails root:
+
+    brakeman /path/to/rails/application
+
+# Compatibility
+
+Brakeman works with Rails 2.x, 3.x, and 4.x.
 
 # Basic Options
 
-For a full list of options, use `brakeman --help` or see the OPTIONS.md file.
+For a full list of options, use `brakeman --help` or see the [OPTIONS.md](OPTIONS.md) file.
 
 To specify an output file for the results:
 
@@ -118,7 +98,7 @@ To create and manage this file, use:
 
 # Warning information
 
-See WARNING\_TYPES for more information on the warnings reported by this tool.
+See [WARNING\_TYPES](WARNING_TYPES) for more information on the warnings reported by this tool.
 
 # Warning context
 
@@ -150,6 +130,28 @@ The default config locations are `./config/brakeman.yml`, `~/.brakeman/config.ym
 
 The `-c` option can be used to specify a configuration file to use.
 
+# For Slim Users
+
+[Slim v3.0.0](https://github.com/slim-template/slim/blob/master/CHANGES#L12) dropped support for Ruby 1.8.7. Install a version of [`slim`](http://slim-lang.com/) compatible with your Ruby.
+
+| Ruby Version |       `Gemfile`       |              Command Line              |
+|--------------|-----------------------|----------------------------------------|
+| Ruby 1.8.7   | `gem 'slim', '< 3.0'` | `$ gem install slim --version '< 3.0'` |
+| Ruby 1.9+    | `gem 'slim'`          | `$ gem install slim`                   |
+
+# Continuous Integration
+
+There is a [plugin available](http://brakemanscanner.org/docs/jenkins/) for Jenkins/Hudson.
+
+For even more continuous testing, try the [Guard plugin](https://github.com/guard/guard-brakeman).
+
+# Building
+
+    git clone git://github.com/presidentbeef/brakeman.git
+    cd brakeman
+    gem build brakeman.gemspec
+    gem install brakeman*.gem
+
 # Who is Using Brakeman?
 
 * [Code Climate](https://codeclimate.com/)
@@ -160,6 +162,14 @@ The `-c` option can be used to specify a configuration file to use.
 
 [..and more!](http://brakemanscanner.org/brakeman_users)
 
+# Homepage/News
+
+Website: http://brakemanscanner.org/
+
+Twitter: http://twitter.com/brakeman
+
+Mailing list: brakeman@librelist.com
+
 # License
 
-see MIT-LICENSE
+see [MIT-LICENSE](MIT-LICENSE)
