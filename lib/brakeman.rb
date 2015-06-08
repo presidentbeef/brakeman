@@ -134,6 +134,7 @@ module Brakeman
       :parallel_checks => true,
       :relative_path => false,
       :report_progress => true,
+      :progress_dots => false,
       :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css"
     }
   end

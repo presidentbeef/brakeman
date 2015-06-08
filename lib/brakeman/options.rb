@@ -31,6 +31,10 @@ module Brakeman::Options
           options[:report_progress] = progress
         end
 
+        opts.on "--[no-]progress-dots", "Show progress as dots" do |progress_dots|
+          options[:progress_dots] = progress_dots
+        end
+
         opts.on "-p", "--path PATH", "Specify path to Rails application" do |path|
           options[:app_path] = path
         end
