@@ -197,7 +197,10 @@ module BrakemanTester::RescanTestHelper
   end
 
   def write_file file, content
-    File.open full_path(file), "w+" do |f|
+    require 'fileutils'
+    path = full_path(file)
+    FileUtils.mkdir_p(File.dirname(path))
+    File.open path, "w" do |f|
       f.puts content
     end
   end
