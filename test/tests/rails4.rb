@@ -13,7 +13,7 @@ class Rails4Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 0,
       :model => 2,
-      :template => 3,
+      :template => 4,
       :generic => 58
     }
   end
@@ -557,6 +557,18 @@ class Rails4Tests < Test::Unit::TestCase
       :message => /^Unescaped\ model\ attribute/,
       :confidence => 1,
       :relative_path => "app/controllers/another_controller.rb",
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_with_double_equals
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "046c3a770f455c30aa5e3a49bc1309e6511c142783e2f1d0c0eddcbcef366cef",
+      :warning_type => "Cross Site Scripting",
+      :line => 16,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/users/index.html.erb",
       :user_input => nil
   end
 

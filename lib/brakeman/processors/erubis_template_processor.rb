@@ -80,6 +80,11 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
 
         if arg.node_type == :str
           ignore
+        elsif exp.method == :safe_append=
+          s = Sexp.new :output, arg
+          s.line(exp.line)
+          @current_template[:outputs] << s
+          s
         else
           s = Sexp.new :escaped_output, arg
           s.line(exp.line)
