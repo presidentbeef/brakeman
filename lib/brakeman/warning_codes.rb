@@ -88,6 +88,7 @@ module Brakeman::WarningCodes
     :cross_site_scripting_inline => 84,
     :CVE_2014_7829 => 85,
     :csrf_not_protected_by_raising_exception => 86,
+    :CVE_2015_3226 => 87,
   }
 
   def self.code name
