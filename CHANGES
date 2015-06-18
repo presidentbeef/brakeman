@@ -1,3 +1,10 @@
+# 3.0.4
+
+* Add check for CVE-2015-3226 (XSS via JSON keys)
+* Add check for CVE-2015-3227 (XML DoS)
+* Treat `<%==` as unescaped output
+* Update `ruby_parser` dependency to 3.7.0
+
 # 3.0.3
 
 * Ignore more Arel methods in SQL
