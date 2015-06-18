@@ -9,7 +9,7 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 11,
-      :generic => 8 }
+      :generic => 9 }
   end
 
   def report
@@ -282,5 +282,17 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
       :message => "protect_from_forgery should be configured with 'with: :exception'",
       :confidence => 1,
       :relative_path => "app/controllers/application_controller.rb"
+  end
+
+  def test_xml_dos_CVE_2015_3227
+    assert_warning :type => :warning,
+      :warning_code => 88,
+      :fingerprint => "6ad4464dbb2a999591c7be8346dc137c3372b280f4a8b0c024fef91dfebeeb83",
+      :warning_type => "Denial of Service",
+      :line => 4,
+      :message => /^Rails\ 4\.0\.0\ is\ vulnerable\ to\ denial\ of\ s/,
+      :confidence => 1,
+      :relative_path => "Gemfile",
+      :user_input => nil
   end
 end

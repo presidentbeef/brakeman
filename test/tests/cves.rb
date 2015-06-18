@@ -83,4 +83,52 @@ class CVETests < Test::Unit::TestCase
       :user_input => nil 
   end
 
+  def test_CVE_2015_3227_4_2_1
+    before_rescan_of "Gemfile", "rails4" do
+      replace "Gemfile", "4.0.0", "4.2.1"
+    end
+
+    assert_version "4.2.1"
+    assert_warning :type => :warning,
+      :warning_code => 88,
+      :fingerprint => "6ad4464dbb2a999591c7be8346dc137c3372b280f4a8b0c024fef91dfebeeb83",
+      :warning_type => "Denial of Service",
+      :line => 4,
+      :message => /^Rails\ 4\.2\.1\ is\ vulnerable\ to\ denial\ of\ s/,
+      :confidence => 1,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_CVE_2015_3227_4_1_11
+    before_rescan_of "Gemfile", "rails4" do
+      replace "Gemfile", "4.0.0", "4.1.11"
+    end
+
+    assert_version "4.1.11"
+    assert_no_warning :type => :warning,
+      :warning_code => 88,
+      :warning_type => "Denial of Service",
+      :line => 4,
+      :confidence => 1,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_CVE_2015_3227_workaround
+    initializer = "config/initializers/xml.rb"
+    before_rescan_of ["Gemfile", initializer], "rails4" do
+      replace "Gemfile", "4.0.0", "4.1.11"
+      write_file initializer, "ActiveSupport::XmlMini.backend = 'Nokogiri'"
+    end
+
+    assert_version "4.1.11"
+    assert_no_warning :type => :warning,
+      :warning_code => 88,
+      :warning_type => "Denial of Service",
+      :line => 4,
+      :confidence => 1,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
 end

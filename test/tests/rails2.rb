@@ -15,13 +15,13 @@ class Rails2Tests < Test::Unit::TestCase
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 56 }
+        :generic => 57 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
         :template => 47,
-        :generic => 57 }
+        :generic => 58 }
     end
   end
 
@@ -1044,6 +1044,18 @@ class Rails2Tests < Test::Unit::TestCase
       :user_input => nil
   end
 
+  def test_xml_dos_CVE_2015_3227
+    assert_warning :type => :warning,
+      :warning_code => 88,
+      :fingerprint => "73e352cd7b43b0a4045a100d43b7707bebf3caeaec223a191375cde74f7e2b52",
+      :warning_type => "Denial of Service",
+      :line => nil,
+      :message => /^Rails\ 2\.3\.11\ is\ vulnerable\ to\ denial\ of\ /,
+      :confidence => 1,
+      :relative_path => "config/environment.rb",
+      :user_input => nil
+  end
+
   def test_to_json
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
@@ -1407,13 +1419,13 @@ class Rails2WithOptionsTests < Test::Unit::TestCase
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 56 }
+        :generic => 57 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
         :template => 47,
-        :generic => 57 }
+        :generic => 58 }
     end
   end
 

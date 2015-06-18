@@ -7,9 +7,9 @@ class TestMarkdownOutput < Test::Unit::TestCase
 
   def test_reported_warnings
     if Brakeman::Scanner::RUBY_1_9
-      assert_equal 171, Report.lines.to_a.count
-    else
       assert_equal 172, Report.lines.to_a.count
+    else
+      assert_equal 173, Report.lines.to_a.count
     end
   end
 end
