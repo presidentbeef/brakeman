@@ -13,7 +13,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 23,
       :controller => 4,
-      :generic => 80 }
+      :generic => 81 }
   end
 
   def test_without_protection
@@ -866,6 +866,18 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Rails\ 3\.1\.0\ with\ globbing\ routes\ is\ vuln/,
       :confidence => 1,
       :relative_path => "config/routes.rb",
+      :user_input => nil
+  end
+
+  def test_xml_dos_CVE_2015_3227
+    assert_warning :type => :warning,
+      :warning_code => 88,
+      :fingerprint => "ab42647fbdea61e25c4b794e82a8b315054e2fac4328bb3fd4be6a744889a987",
+      :warning_type => "Denial of Service",
+      :line => 69,
+      :message => /^Rails\ 3\.1\.0\ is\ vulnerable\ to\ denial\ of\ s/,
+      :confidence => 1,
+      :relative_path => "Gemfile.lock",
       :user_input => nil
   end
 

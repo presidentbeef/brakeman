@@ -9,7 +9,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :controller => 1,
       :model => 3,
       :template => 4,
-      :generic => 28 }
+      :generic => 29 }
   end
 
   def report
@@ -429,6 +429,18 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
       :message => /^Rails\ 2\.3\.14\ with\ globbing\ routes\ is\ vul/,
       :confidence => 0,
       :relative_path => "config/routes.rb",
+      :user_input => nil
+  end
+
+  def test_xml_dos_CVE_2015_3227
+    assert_warning :type => :warning,
+      :warning_code => 88,
+      :fingerprint => "6ad4464dbb2a999591c7be8346dc137c3372b280f4a8b0c024fef91dfebeeb83",
+      :warning_type => "Denial of Service",
+      :line => 3,
+      :message => /^Rails\ 2\.3\.14\ is\ vulnerable\ to\ denial\ of\ /,
+      :confidence => 1,
+      :relative_path => "Gemfile",
       :user_input => nil
   end
 end

@@ -9,7 +9,7 @@ class OnlyFilesOptionTests < Test::Unit::TestCase
       :controller => 8,
       :model => 0,
       :template => 1,
-      :generic => 9 }
+      :generic => 10 }
 
     if RUBY_PLATFORM == 'java'
       @expected[:generic] += 1
@@ -107,6 +107,18 @@ class OnlyFilesOptionTests < Test::Unit::TestCase
       :message => /^Rails\ 3\.2\.9\.rc2\ with\ globbing\ routes\ is\ /,
       :confidence => 0,
       :relative_path => "config/routes.rb",
+      :user_input => nil
+  end
+
+  def test_xml_dos_2015_3227
+    assert_warning :type => :warning,
+      :warning_code => 88,
+      :fingerprint => "ab42647fbdea61e25c4b794e82a8b315054e2fac4328bb3fd4be6a744889a987",
+      :warning_type => "Denial of Service",
+      :line => 64,
+      :message => /^Rails\ 3\.2\.9\.rc2\ is\ vulnerable\ to\ denial\ /,
+      :confidence => 1,
+      :relative_path => "Gemfile.lock",
       :user_input => nil
   end
 end

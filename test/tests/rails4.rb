@@ -14,7 +14,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 2,
       :template => 4,
-      :generic => 58
+      :generic => 59
     }
   end
 
@@ -913,6 +913,18 @@ class Rails4Tests < Test::Unit::TestCase
       :relative_path => "app/controllers/users_controller.rb",
       :user_input => nil
 
+  end
+
+  def test_CVE_2015_3227
+    assert_warning :type => :warning,
+      :warning_code => 88,
+      :fingerprint => "6ad4464dbb2a999591c7be8346dc137c3372b280f4a8b0c024fef91dfebeeb83",
+      :warning_type => "Denial of Service",
+      :line => 4,
+      :message => /^Rails\ 4\.0\.0\ is\ vulnerable\ to\ denial\ of\ s/,
+      :confidence => 1,
+      :relative_path => "Gemfile",
+      :user_input => nil
   end
 
   def test_mass_assignment_with_permit!
