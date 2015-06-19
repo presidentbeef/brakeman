@@ -159,7 +159,7 @@ class Rails32Tests < Test::Unit::TestCase
       :fingerprint => "ab42647fbdea61e25c4b794e82a8b315054e2fac4328bb3fd4be6a744889a987",
       :warning_type => "Denial of Service",
       :line => 64,
-      :message => /^Rails\ 3\.2\.9\.rc2\ is\ vulnerable\ to\ denial\ /,
+      :message => /^Rails\ 3\.2\.9\.rc2 is vulnerable to denial of service via XML parsing \(CVE-2015-3227\). Upgrade to Rails version 3.2.22/,
       :confidence => 1,
       :relative_path => "Gemfile.lock",
       :user_input => nil

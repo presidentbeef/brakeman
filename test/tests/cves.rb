@@ -131,4 +131,15 @@ class CVETests < Test::Unit::TestCase
       :relative_path => "Gemfile",
       :user_input => nil
   end
+
+  def test_CVE_2015_3227_3_2_22
+    before_rescan_of "Gemfile.lock", "rails3.2" do
+      replace "Gemfile.lock", "rails (3.2.9.rc2)", "rails (3.2.22)"
+    end
+
+    assert_version "3.2.22"
+    assert_no_warning :type => :warning,
+      :warning_code => 88,
+      :warning_type => "Denial of Service"
+  end
 end
