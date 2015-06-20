@@ -4,13 +4,49 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2015-06-18T11:20:41-07:00</updated>
+  <updated>2015-06-19T18:16:12-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 3.0.5 Released</title>
+    <link href="http://brakemanscanner.org/blog/2015/06/19/brakeman-3-dot-0-5-released/"/>
+    <updated>2015-06-19T18:09:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2015/06/19/brakeman-3-dot-0-5-released</id>
+    <content type="html">&lt;p&gt;And this is why you don't rush out releases.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 3.0.4&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fix check for CVE-2015-3227 (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/667&quot;&gt;#667&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Fix CVE-2015-3227 Check&lt;/h3&gt;
+
+&lt;p&gt;Includes information that Rails 3.2.22 is the fix version for anything before Rails 4.0. Fixes warning message when exact Rails version cannot be determined. Fixes link URL to point to the CVE announcement.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/668&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;SHAs&lt;/h3&gt;
+
+&lt;p&gt;The SHA1 sums for this release are&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;b78e11b745128ed7f9acd5d0c4f5e0e3a81f4d07  brakeman-min-3.0.5.gem
+c62cc782595d4995aa385b6bd96c2485ac932077  brakeman-3.0.5.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 3.0.4 Released</title>
@@ -1684,82 +1720,6 @@ gem install brakeman -P MediumSecurity
 &lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/387&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
 &lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 2.1.1 Released</title>
-    <link href="http://brakemanscanner.org/blog/2013/08/21/brakeman-2-dot-1-1-released/"/>
-    <updated>2013-08-21T12:00:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2013/08/21/brakeman-2-dot-1-1-released</id>
-    <content type="html">&lt;p&gt;This is a small bug fix release. The only expected changes in warnings are for dangerous attributes in &lt;code&gt;attr_accessible&lt;/code&gt;
-and cross site scripting involving model attributes. Some warning fingerprints may change as a result of this update.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 2.1.0&lt;/em&gt;:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;More accurate results for model attribute warnings (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/385&quot;&gt;#385&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Do not warn on &lt;code&gt;attr_accessible&lt;/code&gt; using roles (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/372&quot;&gt;#372&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;New warning code for dangerous attributes in &lt;code&gt;attr_accessible&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Fix infinite loop when run as rake task (&lt;a href=&quot;https://github.com/arkadyan&quot;&gt;Matthew Shanley&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Use exit code zero with &lt;code&gt;-z&lt;/code&gt; if all warnings ignored (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/381&quot;&gt;#381&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Respect ignored warnings in rescans (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/382&quot;&gt;#382&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Respect ignored warnings in tabs format reports&lt;/li&gt;
-&lt;li&gt;Ignore dynamic controller names in routes&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;More Accurate Model Matching&lt;/h3&gt;
-
-&lt;p&gt;Model attributes which are reported as user input should now be reported more accurately. For example, instead of reporting &lt;code&gt;Model.find(1)&lt;/code&gt; as user input, the entire attribute will be reported. For example: &lt;code&gt;Model.find(1).name&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;As a side effect, several methods which were already intended to be ignored (such as &lt;code&gt;count&lt;/code&gt;) will actually be ignored for XSS warnings.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/386&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;attr_accessible Check Updates&lt;/h3&gt;
-
-&lt;p&gt;The check for potentially dangerous attributes whitelisted in &lt;code&gt;attr_accessible&lt;/code&gt; has been updated to ignore attributes protected by roles. Additionally, it now has its own warning code to separate it from regular mass assignment warnings.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/388&quot;&gt;warning code change&lt;/a&gt;, &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/384&quot;&gt;role change&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Rake Task Fix&lt;/h3&gt;
-
-&lt;p&gt;The last release included a method named &lt;code&gt;load_dependency&lt;/code&gt; which handles calling &lt;code&gt;require&lt;/code&gt; for optional dependencies. Unfortunately, Rails overrides &lt;code&gt;require&lt;/code&gt; to call its own method called &lt;code&gt;load_dependency&lt;/code&gt;. Rails is loaded when any &lt;code&gt;rake&lt;/code&gt; command is used, so when Brakeman is run with Rake it causes an infinite loop between &lt;code&gt;load_dependency&lt;/code&gt; and &lt;code&gt;require&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/arkadyan&quot;&gt;Matthew Shanley&lt;/a&gt; for reporting the issue and providing a fix.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/375&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Exit Code Fixed When Warnings Ignored&lt;/h3&gt;
-
-&lt;p&gt;Brakeman will now return &lt;code&gt;0&lt;/code&gt; when using &lt;code&gt;-z&lt;/code&gt; and all reported warnings are ignored.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/375&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Ignore Warnings in Rescans&lt;/h3&gt;
-
-&lt;p&gt;Ignored warnings should now be ignored during rescans (for use with &lt;a href=&quot;https://github.com/guard/guard-brakeman&quot;&gt;guard-brakeman&lt;/a&gt;).&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/383&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Remove Ignored Warnings in Tabs Report&lt;/h3&gt;
-
-&lt;p&gt;Ignoring warnings should now work for those using the Jenkins plugin.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/374&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Ignore Dynamic Controller Name in Routes&lt;/h3&gt;
-
-&lt;p&gt;Instead of completely aborting route processing, dynamic controller names are just ignored.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/379&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Report Issues&lt;/h3&gt;
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
