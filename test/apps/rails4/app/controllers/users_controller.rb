@@ -83,4 +83,8 @@ class UsersController < ApplicationController
     open("#{params[:x]}/something/something") # remote code execution warning
     open("some_path/#{params[:x]}/something/something") # file access warning
   end
+
+  def eval_it
+    @x = eval(params[:x])
+  end
 end

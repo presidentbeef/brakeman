@@ -14,7 +14,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 2,
       :template => 4,
-      :generic => 59
+      :generic => 60
     }
   end
 
@@ -1020,6 +1020,28 @@ class Rails4Tests < Test::Unit::TestCase
       :relative_path => "app/controllers/another_controller.rb",
       :method => :before_filter,
       :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :x))
+  end
+
+  def test_eval_duplicates
+    assert_warning :type => :warning,
+      :warning_code => 13,
+      :fingerprint => "33067304aaa21c6a874fed3b9bb0084cb66b607cc620065cb8ab06a640d3ab14",
+      :warning_type => "Dangerous Eval",
+      :line => 88,
+      :message => /^User\ input\ in\ eval/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+
+    assert_no_warning :type => :template,
+      :warning_code => 13,
+      :fingerprint => "dc94bedbdf82991d7a356de94650325c256c5876227480b3b98e24aadaab1fd5",
+      :warning_type => "Dangerous Eval",
+      :line => 1,
+      :message => /^User\ input\ in\ eval/,
+      :confidence => 0,
+      :relative_path => "app/views/users/eval_it.html.erb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
   end
 
   def test_cross_site_request_forgery_setting_in_api_controller
