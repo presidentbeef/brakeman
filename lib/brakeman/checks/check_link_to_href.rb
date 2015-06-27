@@ -40,6 +40,8 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     #with something before the user input
     return if node_type?(url_arg, :string_interp) && !url_arg[1].chomp.empty?
 
+    #Avoid warning on any *_path methods which are generally safe
+    return if call? url_arg and url_arg.method.to_s =~ /_path$/
 
     if input = has_immediate_user_input?(url_arg)
       message = "Unsafe #{friendly_type_of input} in link_to href"
