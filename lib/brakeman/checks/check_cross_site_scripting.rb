@@ -61,6 +61,8 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       out = exp.value.first_arg
     end
 
+    return if call? out and ignore_call? out.target, out.method
+
     if input = has_immediate_user_input?(out)
       add_result exp
 
