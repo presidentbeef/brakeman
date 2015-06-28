@@ -325,7 +325,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   end
 
   def ignore_call? target, method
-    ignored_method?(method) or
+    ignored_method?(target, method) or
     safe_input_attribute?(target, method) or
     ignored_model_method?(method) or
     form_builder_method?(target, method) or
@@ -341,7 +341,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     IGNORE_MODEL_METHODS.include? method
   end
 
-  def ignored_method? method
+  def ignored_method? target, method
     @ignore_methods.include? method or method.to_s =~ IGNORE_LIKE
   end
 

@@ -11,13 +11,11 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
                         
   @description = "Checks to see if values used for hrefs are sanitized using a :url_safe_method to protect against javascript:/data: XSS"
 
-  IGNORE_LIKE = /_path$/
-
   def run_check
     @ignore_methods = Set[:button_to, :check_box,
                            :field_field, :fields_for, :hidden_field,
                            :hidden_field, :hidden_field_tag, :image_tag, :label,
-                           :mail_to, :radio_button, :select,
+                           :mail_to, :polymorphic_url, :radio_button, :select,
                            :submit_tag, :text_area, :text_field,
                            :text_field_tag, :url_encode, :url_for,
                            :will_paginate].merge(tracker.options[:url_safe_methods] || [])
@@ -93,7 +91,9 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     end
   end
 
-  def ignored_method? method
-    @ignore_methods.include? method or method.to_s =~ IGNORE_LIKE
+  def ignored_method? target, method
+    @ignore_methods.include? method or
+      method.to_s =~ /_path$/ or
+      (target.nil? and method.to_s =~ /_url$/)
   end
 end
