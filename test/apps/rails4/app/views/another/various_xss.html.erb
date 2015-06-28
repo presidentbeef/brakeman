@@ -1,0 +1,8 @@
+<%= link_to 'stuff', cool_thing_url(params[:x]) %> Don't warn
+<%= link_to 'stuff', Thing.find(params[:id]).home_url %> Warn
+<%= link_to 'stuff', Thing.find(params[:id]).home_path %> Don't warn
+<%= link_to 'other stuff', home_path(Thing.find(params[:id])) %> Don't warn
+<%= raw(x(params[:x])) %> Warn with warning code 2 not 5
+<% form_for Thing.first do |t| %>
+  <%== t.select(things, Thing.new(params[:t]).stuff) %>
+<% end %>
