@@ -61,6 +61,8 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       out = exp.value.first_arg
     end
 
+    return if call? out and ignore_call? out.target, out.method
+
     if input = has_immediate_user_input?(out)
       add_result exp
 
@@ -171,11 +173,14 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
           add_result exp
 
           link_path = "cross_site_scripting"
+          warning_code = :cross_site_scripting
+
           if @known_dangerous.include? exp.method
             confidence = CONFIDENCE[:high]
             if exp.method == :to_json
               message += " in JSON hash"
               link_path += "_to_json"
+              warning_code = :xss_to_json
             end
           else
             confidence = CONFIDENCE[:low]
@@ -183,7 +188,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
           warn :template => @current_template,
             :warning_type => "Cross Site Scripting",
-            :warning_code => :xss_to_json,
+            :warning_code => warning_code,
             :message => message,
             :code => exp,
             :user_input => @matched.match,
@@ -340,8 +345,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   end
 
   def ignored_method? target, method
-    target.nil? and
-    (@ignore_methods.include? method or method.to_s =~ IGNORE_LIKE)
+    @ignore_methods.include? method or method.to_s =~ IGNORE_LIKE
   end
 
   def cgi_escaped? target, method
