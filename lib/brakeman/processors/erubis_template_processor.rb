@@ -9,12 +9,14 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
     if sexp? target
       target = process target
     end
+
+    exp.target = target
+    exp.arglist = process exp.arglist
     method = exp.method
 
     #_buf is the default output variable for Erubis
     if node_type?(target, :lvar, :ivar) and (target.value == :_buf or target.value == :@output_buffer)
       if method == :<< or method == :safe_concat
-        exp.arglist = process exp.arglist
 
         arg = exp.first_arg
 
@@ -42,14 +44,9 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
         abort "Unrecognized action on buffer: #{method}"
       end
     elsif target == nil and method == :render
-      exp.arglist = process exp.arglist
       make_render_in_view exp
     else
-      #TODO: Is it really necessary to create a new Sexp here?
-      call = make_call target, method, process_all!(exp.args)
-      call.original_line = exp.original_line
-      call.line(exp.line)
-      call
+      exp
     end
   end
 
