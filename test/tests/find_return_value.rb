@@ -2,8 +2,8 @@ require 'brakeman/processors/lib/find_return_value'
 
 class FindReturnValueTests < Test::Unit::TestCase
   def assert_returns expected, original, env = nil
-    expected = RubyParser.new.parse(expected) if expected.is_a? String
-    original = RubyParser.new.parse(original) if original.is_a? String
+    expected = RubyParser.for_current_ruby.parse(expected) if expected.is_a? String
+    original = RubyParser.for_current_ruby.parse(original) if original.is_a? String
     return_value = Brakeman::FindReturnValue.return_value original, env
 
     assert_equal expected, return_value
