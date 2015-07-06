@@ -32,7 +32,7 @@ module Brakeman
 
     def parse_ruby input, path
       begin
-        RubyParser.new.parse input, path
+        RubyParser.for_current_ruby.parse input, path
       rescue Racc::ParseError => e
         @tracker.error e, "Could not parse #{path}"
         nil

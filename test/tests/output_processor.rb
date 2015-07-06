@@ -85,7 +85,7 @@ class OutputProcessorTests < Test::Unit::TestCase
                                                Sexp.new(:ivar, :@x)))
 
     input = '"#{params[:plugin]}/app/views/#{params[:view]}"'
-    s_input = RubyParser.new.parse(input)
+    s_input = RubyParser.for_current_ruby.parse(input)
 
     assert_output input,
       Brakeman::BaseProcessor.new(nil).process(s_input)
@@ -187,7 +187,7 @@ class OutputProcessorTests < Test::Unit::TestCase
       s(:dxstr, "", s(:evstr, s(:call, nil, :x)))
 
 
-    input = Brakeman::BaseProcessor.new(nil).process(RubyParser.new.parse('`1#{x}2#{y}3`'))
+    input = Brakeman::BaseProcessor.new(nil).process(RubyParser.for_current_ruby.parse('`1#{x}2#{y}3`'))
     assert_output '`1#{x}2#{y}3`', input
   end
 end

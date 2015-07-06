@@ -1,7 +1,7 @@
 class AliasProcessorTests < Test::Unit::TestCase
   def assert_alias expected, original, full = false
-    original_sexp = RubyParser.new.parse original
-    expected_sexp = RubyParser.new.parse expected
+    original_sexp = RubyParser.for_current_ruby.parse original
+    expected_sexp = RubyParser.for_current_ruby.parse expected
     processed_sexp = Brakeman::AliasProcessor.new.process_safely original_sexp
 
     if full
@@ -332,9 +332,9 @@ class AliasProcessorTests < Test::Unit::TestCase
   end
 
   def test_default_branch_limit_before_reset_with_option
-    expected_y = RubyParser.new.parse "((((0 or 1) or 2) or 3) or 4)"
-    expected_x = RubyParser.new.parse "5 or 6"
-    original_sexp = RubyParser.new.parse <<-RUBY
+    expected_y = RubyParser.for_current_ruby.parse "((((0 or 1) or 2) or 3) or 4)"
+    expected_x = RubyParser.for_current_ruby.parse "5 or 6"
+    original_sexp = RubyParser.for_current_ruby.parse <<-RUBY
     x = 0
 
     if something

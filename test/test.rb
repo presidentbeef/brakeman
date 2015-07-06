@@ -232,7 +232,7 @@ module BrakemanTester::RescanTestHelper
   end
 
   def parse code
-    RubyParser.new.parse code
+    RubyParser.for_current_ruby.parse code
   end
 end
 

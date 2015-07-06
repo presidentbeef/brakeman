@@ -297,7 +297,7 @@ class Brakeman::Scanner
   end
 
   def parse_ruby input
-    RubyParser.new.parse input
+    RubyParser.for_current_ruby.parse input
   end
 end
 
