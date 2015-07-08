@@ -24,4 +24,5 @@ Gem::Specification.new do |s|
   s.add_dependency "haml", ">=3.0", "<5.0"
   s.add_dependency "sass", "~>3.0"
   s.add_dependency "multi_json", "~>1.2"
+  s.add_dependency "builder", "~>2.0"
 end

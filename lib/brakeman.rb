@@ -173,6 +173,8 @@ module Brakeman
       [:to_json]
     when :markdown, :to_markdown
       [:to_markdown]
+    when :xml, :to_xml
+      [:to_xml]
     else
       [:to_s]
     end
@@ -194,6 +196,8 @@ module Brakeman
         :to_json
       when /\.md$/i
         :to_markdown
+      when /\.xml$/i
+        :to_xml
       else
         :to_s
       end
