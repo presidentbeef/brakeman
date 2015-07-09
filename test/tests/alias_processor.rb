@@ -50,6 +50,14 @@ class AliasProcessorTests < Test::Unit::TestCase
     RUBY
   end
 
+  def test_string_append_call
+    assert_alias "'hello ' << params[:x]", <<-RUBY
+    x = ""
+    x << 'hello ' << params[:x]
+    x
+    RUBY
+  end
+
   def test_array_index
     assert_alias "'cookie'", <<-RUBY
       dessert = ["fruit", "pie", "ice cream"]

@@ -14,7 +14,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 2,
       :template => 6,
-      :generic => 60
+      :generic => 61
     }
   end
 
@@ -702,7 +702,19 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:lvar, :locale)
   end
 
- def test_no_sql_injection_from_arel_methods
+  def test_sql_injection_string_concat
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "b92b1e8d755fb15bed56f8e6f872f81784813b0eae3682b68dd0601e4fb9c0a6",
+      :warning_type => "SQL Injection",
+      :line => 51,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/another_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :search))
+  end
+
+  def test_no_sql_injection_from_arel_methods
     assert_no_warning :type => :warning,
       :warning_code => 0,
       :fingerprint => "61d957cdeca70a82f53d7ec72287fc21f67c67c6e8dbc9c3c4cb2d115f3a5602",

@@ -77,6 +77,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #Process a method call.
   def process_call exp
     target_var = exp.target
+    target_var &&= target_var.deep_clone
     exp = process_default exp
 
     #In case it is replaced with something else
@@ -164,8 +165,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         env[target_var] = target
         return target
       else
-        target = find_push_target exp
-        env[target] = exp unless target.nil? #Happens in TemplateAliasProcessor
+        target = find_push_target(target_var)
+        env[target] = exp unless target.nil? # Happens in TemplateAliasProcessor
       end
     end
 
