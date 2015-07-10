@@ -74,6 +74,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     result
   end
 
+  ARRAY_CONST = s(:const, :Array)
+
   #Process a method call.
   def process_call exp
     target_var = exp.target
@@ -96,6 +98,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     if node_type? target, :or and [:+, :-, :*, :/].include? method
       res = process_or_simple_operation(exp)
       return res if res
+    end
+
+    if target == ARRAY_CONST and method == :new
+      return Sexp.new(:array, *exp.args)
     end
 
     #See if it is possible to simplify some basic cases

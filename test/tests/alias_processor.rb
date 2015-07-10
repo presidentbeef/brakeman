@@ -108,6 +108,22 @@ class AliasProcessorTests < Test::Unit::TestCase
     RUBY
   end
 
+  def test_array_new_append
+    assert_alias '[1, 2, 3]', <<-RUBY
+      x = Array.new
+      x << 1 << 2 << 3
+      x
+    RUBY
+  end
+
+  def test_array_new_init_append
+    assert_alias '[1, 2, 3]', <<-RUBY
+      x = Array.new(1)
+      x << 2 << 3
+      x
+    RUBY
+  end
+
   def test_hash_index
     assert_alias "'You say goodbye, I say :hello'", <<-RUBY
       x = {:goodbye => "goodbye cruel world" }
