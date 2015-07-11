@@ -58,6 +58,23 @@ class AliasProcessorTests < Test::Unit::TestCase
     RUBY
   end
 
+  def test_string_interp_concat
+    assert_alias '"#{y}\nthing"', <<-'RUBY'
+    x = "#{y}\n"
+    x << "thing"
+    x
+    RUBY
+  end
+
+  def test_string_concat_interp
+    assert_alias '"hello\n#{world}"', <<-'RUBY'
+    x = ""
+    x << "hello"
+    x << "\n#{world}"
+    x
+    RUBY
+  end
+
   def test_array_index
     assert_alias "'cookie'", <<-RUBY
       dessert = ["fruit", "pie", "ice cream"]
