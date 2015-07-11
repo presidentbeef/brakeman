@@ -37,4 +37,22 @@ class AnotherController < ApplicationController
   def use_params_in_regex
     @x = something.match /#{params[:x]}/
   end
+
+  def building_strings_for_sql
+    query = "SELECT * FROM users WHERE"
+
+    if params[:search].to_i == 1
+      query << " role = 'admin'"
+    else
+      query << " role = 'admin' " + params[:search]
+    end
+
+    begin
+      result = {:result => User.find_by_sql(query) }
+    rescue
+      result = {}
+    end
+
+    render json: result.as_json
+  end
 end

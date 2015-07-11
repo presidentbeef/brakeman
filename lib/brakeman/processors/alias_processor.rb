@@ -77,6 +77,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #Process a method call.
   def process_call exp
     target_var = exp.target
+    target_var &&= target_var.deep_clone
     exp = process_default exp
 
     #In case it is replaced with something else
@@ -159,13 +160,26 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         target.value << first_arg.value
         env[target_var] = target
         return target
+      elsif string? target and node_type? first_arg, :dstr, :string_interp
+        exp = Sexp.new(:dstr, target.value + first_arg[1]).concat(first_arg[2..-1])
+        env[target_var] = exp
+      elsif string? first_arg and node_type? target, :dstr, :string_interp
+        if string? target.last
+          target.last.value << first_arg.value
+        elsif target.last.is_a? String
+          target.last << first_arg.value
+        else
+          target << first_arg
+        end
+        env[target_var] = target
+        return first_arg
       elsif array? target
         target << first_arg
         env[target_var] = target
         return target
       else
-        target = find_push_target exp
-        env[target] = exp unless target.nil? #Happens in TemplateAliasProcessor
+        target = find_push_target(target_var)
+        env[target] = exp unless target.nil? # Happens in TemplateAliasProcessor
       end
     end
 
