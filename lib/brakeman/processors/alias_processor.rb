@@ -75,6 +75,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   end
 
   ARRAY_CONST = s(:const, :Array)
+  HASH_CONST = s(:const, :Hash)
 
   #Process a method call.
   def process_call exp
@@ -98,10 +99,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     if node_type? target, :or and [:+, :-, :*, :/].include? method
       res = process_or_simple_operation(exp)
       return res if res
-    end
-
-    if target == ARRAY_CONST and method == :new
+    elsif target == ARRAY_CONST and method == :new
       return Sexp.new(:array, *exp.args)
+    elsif target == HASH_CONST and method == :new and first_arg.nil? and !node_type?(@exp_context.last, :iter, :call_with_block)
+      return Sexp.new(:hash)
     end
 
     #See if it is possible to simplify some basic cases
@@ -193,7 +194,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   end
 
   def process_call_with_block exp
+    @exp_context.push exp
     exp[1] = process exp.block_call
+    @exp_context.pop
 
     env.scope do
       exp.block_args.each do |e|
