@@ -57,8 +57,12 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
     if exp.node_type == :output
       out = exp.value
-    elsif exp.node_type == :escaped_output and raw_call? exp
-      out = exp.value.first_arg
+    elsif exp.node_type == :escaped_output
+      if raw_call? exp
+        out = exp.value.first_arg
+      elsif html_safe_call? exp
+        out = exp.value.target
+      end
     end
 
     return if call? out and ignore_call? out.target, out.method
@@ -143,8 +147,12 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   #Otherwise, ignore
   def process_escaped_output exp
     unless check_for_immediate_xss exp
-      if raw_call? exp and not duplicate? exp
-        process exp.value.first_arg
+      if not duplicate? exp
+        if raw_call? exp
+          process exp.value.first_arg
+        elsif html_safe_call? exp
+          process exp.value.target
+        end
       end
     end
     exp
@@ -325,6 +333,10 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   def raw_call? exp
     exp.value.node_type == :call and exp.value.method == :raw
+  end
+
+  def html_safe_call? exp
+    exp.value.node_type == :call and exp.value.method == :html_safe
   end
 
   def ignore_call? target, method

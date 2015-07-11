@@ -13,7 +13,7 @@ class Rails4Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 0,
       :model => 2,
-      :template => 6,
+      :template => 7,
       :generic => 61
     }
   end
@@ -569,6 +569,18 @@ class Rails4Tests < Test::Unit::TestCase
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
       :relative_path => "app/views/users/index.html.erb",
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_with_html_safe
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "b04cfd8d120b773a3e9f70af8762f7efa7c5ca5c7f83136131d6cc75259cd429",
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/another/html_safe_is_not.html.erb",
       :user_input => nil
   end
 
