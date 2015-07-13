@@ -7,7 +7,7 @@ class Brakeman::Report::XML < Brakeman::Report::Base
 
     warnings = convert_to_hashes all_warnings, :warning
 
-    errors = tracker.errors.map{|e| { :error => e[:error], :location => e[:backtrace][0] }}
+    errors = tracker.errors.map{|e| { :error => {:error_message => e[:error], :location => e[:backtrace][0]} }}
 
     ignored = convert_to_hashes ignored_warnings, :ignored_warning
 
