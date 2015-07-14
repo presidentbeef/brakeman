@@ -71,4 +71,14 @@ class TestReportGeneration < Test::Unit::TestCase
 
     assert html_report.include? "<h2>Controllers</h2>"
   end
+
+
+  def test_xml_sanity
+    report = Report.to_xml
+
+    assert report.is_a? String
+    assert report.match(/\A.*<\/report_info>\s\z/m)
+
+  end
+
 end

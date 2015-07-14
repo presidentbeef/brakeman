@@ -30,7 +30,7 @@ class Brakeman::Report::XML < Brakeman::Report::Base
       :errors => errors
     }
 
-    output_xml x, "report_info", reportInfo
+    output_xml x, :report_info, reportInfo
 
   end
 
@@ -45,18 +45,18 @@ class Brakeman::Report::XML < Brakeman::Report::Base
   end
 
   def output_xml xml, label, data
-    xml.send(label) do
+    xml.tag!(label) do
       data.each do |hash, value|
         if value.is_a? Hash
           output_xml xml, hash, value
         elsif value.is_a? Array
-          xml.send(hash) do
+          xml.tag!(hash) do
             value.each do |v|
               print_hash xml, v
             end
           end
         else
-          xml.send(hash, value)
+          xml.tag!(hash, value)
         end
       end
     end
