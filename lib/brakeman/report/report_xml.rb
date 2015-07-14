@@ -2,7 +2,7 @@ require 'builder'
 
 class Brakeman::Report::XML < Brakeman::Report::Base
   def generate_report
-    x = Builder::XmlMarkup.new(indent: 2)
+    x = Builder::XmlMarkup.new(:indent => 2)
     x.instruct!
 
     warnings = convert_to_hashes all_warnings, :warning
