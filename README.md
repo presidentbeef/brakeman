@@ -130,15 +130,6 @@ The default config locations are `./config/brakeman.yml`, `~/.brakeman/config.ym
 
 The `-c` option can be used to specify a configuration file to use.
 
-# For Slim Users
-
-[Slim v3.0.0](https://github.com/slim-template/slim/blob/master/CHANGES#L12) dropped support for Ruby 1.8.7. Install a version of [`slim`](http://slim-lang.com/) compatible with your Ruby.
-
-| Ruby Version |       `Gemfile`       |              Command Line              |
-|--------------|-----------------------|----------------------------------------|
-| Ruby 1.8.7   | `gem 'slim', '< 3.0'` | `$ gem install slim --version '< 3.0'` |
-| Ruby 1.9+    | `gem 'slim'`          | `$ gem install slim`                   |
-
 # Continuous Integration
 
 There is a [plugin available](http://brakemanscanner.org/docs/jenkins/) for Jenkins/Hudson.
