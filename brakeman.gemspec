@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.signing_key = gem_priv_key if File.exist? gem_priv_key and $0 =~ /gem\z/
   s.add_development_dependency "test-unit"
   s.add_dependency "ruby_parser", "~>3.7.0"
-  s.add_dependency "ruby2ruby", "~>2.1.1"
+  s.add_dependency "ruby2ruby", ">=2.1.1", "<2.3.0"
   s.add_dependency "terminal-table", "~>1.4.5"
   s.add_dependency "fastercsv", "~>1.5"
   s.add_dependency "highline", "~>1.6"
