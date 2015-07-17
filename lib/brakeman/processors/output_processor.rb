@@ -79,7 +79,7 @@ class Brakeman::OutputProcessor < Ruby2Ruby
 
   alias process_methdef process_defn
 
-  def process_call_with_block exp
+  def process_iter exp
     call = process exp[0]
     block = process_rlist exp[2..-1]
     out = "#{call} do\n #{block}\n end"

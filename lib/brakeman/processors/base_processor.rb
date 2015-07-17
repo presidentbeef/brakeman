@@ -49,7 +49,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     exp
   end
 
-  #Processes calls with blocks. Changes Sexp node type to :call_with_block
+  #Processes calls with blocks.
   #
   #s(:iter, CALL, {:lasgn|:masgn}, BLOCK)
   def process_iter exp
@@ -63,7 +63,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
       block = nil
     end
 
-    call = Sexp.new(:call_with_block, call, exp.block_args, block).compact
+    call = Sexp.new(:iter, call, exp.block_args, block).compact
     call.line(exp.line)
     call
   end

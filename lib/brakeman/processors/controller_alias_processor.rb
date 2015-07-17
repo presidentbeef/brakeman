@@ -122,7 +122,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   end
 
   #Check for +respond_to+
-  def process_call_with_block exp
+  def process_iter exp
     super
 
     if call? exp.block_call and exp.block_call.method == :respond_to

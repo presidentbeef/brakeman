@@ -145,7 +145,7 @@ class OutputProcessorTests < Test::Unit::TestCase
 
   def test_output_call_with_block
     assert_output "x do\n y\n end",
-      Sexp.new(:call_with_block,
+      Sexp.new(:iter,
                Sexp.new(:call, nil, :x),
                Sexp.new(:args),
                Sexp.new(:call, nil, :y))

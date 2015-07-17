@@ -101,7 +101,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       return res if res
     elsif target == ARRAY_CONST and method == :new
       return Sexp.new(:array, *exp.args)
-    elsif target == HASH_CONST and method == :new and first_arg.nil? and !node_type?(@exp_context.last, :iter, :call_with_block)
+    elsif target == HASH_CONST and method == :new and first_arg.nil? and !node_type?(@exp_context.last, :iter)
       return Sexp.new(:hash)
     end
 
@@ -193,7 +193,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     exp
   end
 
-  def process_call_with_block exp
+  def process_iter exp
     @exp_context.push exp
     exp[1] = process exp.block_call
     @exp_context.pop
@@ -229,8 +229,6 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
     exp
   end
-
-  alias process_iter process_call_with_block
 
   #Process a new scope.
   def process_scope exp
@@ -844,7 +842,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def top_target exp, last = nil
     if call? exp
       top_target exp.target, exp
-    elsif node_type? exp, :iter, :call_with_block
+    elsif node_type? exp, :iter
       top_target exp.block_call, last
     else
       exp || last

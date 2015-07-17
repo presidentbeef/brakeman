@@ -357,7 +357,7 @@ class Sexp
   #      s(:lasgn, :y),
   #       s(:block, s(:lvar, :y), s(:call, nil, :z, s(:arglist))))
   def block_call
-    expect :iter, :call_with_block
+    expect :iter
     self[1]
   end
 
@@ -374,10 +374,10 @@ class Sexp
       return find_node :block, delete
     end
 
-    expect :iter, :call_with_block, :scope, :resbody
+    expect :iter, :scope, :resbody
 
     case self.node_type
-    when :iter, :call_with_block
+    when :iter
       self[3]
     when :scope
       self[1]
@@ -394,7 +394,7 @@ class Sexp
   #      s(:lasgn, :y), <- block_args
   #       s(:call, nil, :p, s(:arglist, s(:lvar, :y))))
   def block_args
-    expect :iter, :call_with_block
+    expect :iter
     if self[2] == 0 # ?! See https://github.com/presidentbeef/brakeman/issues/331
       return Sexp.new(:args)
     else
