@@ -79,9 +79,9 @@ class OutputProcessorTests < Test::Unit::TestCase
 
 
   def test_output_string_interp
-    assert_output '"#{@x}"', Sexp.new(:string_interp,
+    assert_output '"#{@x}"', Sexp.new(:dstr,
                                       "",
-                                      Sexp.new(:string_eval,
+                                      Sexp.new(:evstr,
                                                Sexp.new(:ivar, :@x)))
 
     input = '"#{params[:plugin]}/app/views/#{params[:view]}"'

@@ -118,10 +118,10 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
   #HAML likes to put interpolated values into _hamlout.push_text
   #but we want to handle those individually
   def build_output_from_push_text exp
-    if node_type? exp, :string_interp, :dstr
+    if string_interp? exp
       exp.map! do |e|
         if sexp? e
-          if node_type? e, :string_eval, :evstr
+          if node_type? e, :evstr
             e = e.value
           end
 
@@ -148,7 +148,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       exp
     when :str, :ignore, :output, :escaped_output
       exp
-    when :block, :rlist, :string_interp, :dstr
+    when :block, :rlist, :dstr
       exp.map! { |e| get_pushed_value e }
     else
       if call? exp and exp.target == HAML_HELPERS and exp.method == :html_escape

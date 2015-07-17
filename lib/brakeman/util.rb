@@ -129,6 +129,10 @@ module Brakeman::Util
     exp.is_a? Sexp and exp.node_type == :str
   end
 
+  def string_interp? exp
+    exp.is_a? Sexp and exp.node_type == :dstr
+  end
+
   #Check if _exp_ represents a Symbol: s(:lit, :...)
   def symbol? exp
     exp.is_a? Sexp and exp.node_type == :lit and exp[1].is_a? Symbol

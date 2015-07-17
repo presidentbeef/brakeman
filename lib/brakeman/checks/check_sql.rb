@@ -257,7 +257,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     first_arg = arg[1]
 
     if node_type? arg, :arglist
-      if arg.length > 2 and node_type? first_arg, :string_interp, :dstr
+      if arg.length > 2 and string_interp? first_arg
         # Model.where("blah = ?", blah)
         return check_string_interp first_arg
       else
@@ -368,7 +368,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
   #Returns value if interpolated value is not something safe
   def unsafe_string_interp? exp
-    if node_type? exp, :string_eval, :evstr
+    if node_type? exp, :evstr
       value = exp.value
     else
       value = exp
@@ -382,7 +382,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       case value.node_type
       when :or
         unsafe_string_interp?(value.lhs) || unsafe_string_interp?(value.rhs)
-      when :string_interp, :dstr
+      when :dstr
         if dangerous = check_string_interp(value)
           return dangerous
         end
@@ -421,7 +421,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       #
       #and check first value
       unsafe_sql? exp[1]
-    when :string_interp, :dstr
+    when :dstr
       check_string_interp exp
     when :hash
       check_hash_values exp unless ignore_hash
@@ -516,9 +516,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   end
 
   def check_interp_target_or_arg target, arg
-    if node_type? target, :string_interp, :dstr or
-      node_type? arg, :string_interp, :dstr
-
+    if string_interp? target or string_interp? arg
       check_string_arg target and
       check_string_arg arg
     end
@@ -529,7 +527,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       nil
     elsif string_building? exp
       check_for_string_building exp
-    elsif node_type? exp, :string_interp, :dstr
+    elsif string_interp? exp
       check_string_interp exp
     elsif call? exp and exp.method == :to_s
       check_string_arg exp.target
@@ -541,8 +539,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def string_building? exp
     return false unless call? exp and STRING_METHODS.include? exp.method
 
-    node_type? exp.target, :str, :dstr, :string_interp or
-    node_type? exp.first_arg, :str, :dstr, :string_interp or
+    node_type? exp.target, :str, :dstr or
+    node_type? exp.first_arg, :str, :dstr or
     string_building? exp.target or
     string_building? exp.first_arg
   end

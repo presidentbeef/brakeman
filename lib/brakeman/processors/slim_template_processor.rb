@@ -25,7 +25,7 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
         ignore
       elsif render? arg
         make_output make_render_in_view arg
-      elsif node_type? arg, :interp, :dstr
+      elsif string_interp? arg
         process_inside_interp arg
       elsif node_type? arg, :ignore
         ignore
@@ -61,7 +61,7 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
   #Better to pull those values out directly.
   def process_inside_interp exp
     exp.map! do |e|
-      if node_type? e, :evstr, :string_eval
+      if node_type? e, :evstr
         e.value = process_interp_output e.value
         e
       else

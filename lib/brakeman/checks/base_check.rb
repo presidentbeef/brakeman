@@ -115,7 +115,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   end
 
   #Does not actually process string interpolation, but notes that it occurred.
-  def process_string_interp exp
+  def process_dstr exp
     @string_interp = Match.new(:interp, exp)
     process_default exp
   end
@@ -328,7 +328,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       end
     elsif sexp? exp
       case exp.node_type
-      when :string_interp, :dstr
+      when :dstr
         exp.each do |e|
           if sexp? e
             match = has_immediate_user_input?(e)
@@ -336,7 +336,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
           end
         end
         false
-      when :string_eval, :evstr
+      when :evstr
         if sexp? exp.value
           if exp.value.node_type == :rlist
             exp.value.each_sexp do |e|
@@ -390,14 +390,14 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       end
     elsif sexp? exp
       case exp.node_type
-      when :string_interp, :dstr
+      when :dstr
         exp.each do |e|
           if sexp? e and match = has_immediate_model?(e, out)
             return match
           end
         end
         false
-      when :string_eval, :evstr
+      when :evstr
         if sexp? exp.value
           if exp.value.node_type == :rlist
             exp.value.each_sexp do |e|
