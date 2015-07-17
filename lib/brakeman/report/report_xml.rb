@@ -11,6 +11,8 @@ class Brakeman::Report::XML < Brakeman::Report::Base
 
     ignored = convert_to_hashes ignored_warnings, :ignored_warning
 
+    checks_performed = checks.checks_run.map{|c| {:check => c.to_s}}
+
     scanInfo = {
       :app_path => File.expand_path(tracker.app_path),
       :ruby_version => RUBY_VERSION,
@@ -20,7 +22,7 @@ class Brakeman::Report::XML < Brakeman::Report::Base
       :start_time => tracker.start_time.to_s,
       :end_time => tracker.end_time.to_s,
       :duration => tracker.duration,
-      :checks => checks.checks_run.sort.join(',')
+      :checks => checks_performed
     }
 
     reportInfo = {
@@ -38,7 +40,8 @@ class Brakeman::Report::XML < Brakeman::Report::Base
     warnings.map do |w|
       hash = w.to_hash
       hash[:file] = warning_file w
-      hash[:location] = hash[:location].flatten.join(',') unless hash[:location].nil?
+      # hash[:location] = hash[:location].flatten.join(',') unless hash[:location].nil?
+      hash[:location] = hash[:location].map{|hash, value| {hash => value.to_s}} unless hash[:location].nil?
       item = {typ => hash}
       item
     end.sort_by { |w| "#{w[:fingerprint]}#{w[:line]}" }
@@ -64,7 +67,11 @@ class Brakeman::Report::XML < Brakeman::Report::Base
 
   def print_hash xml, data
     data.each do |hash, value|
-      output_xml xml, hash, value
+      if value.is_a? Hash
+        output_xml xml, hash, value
+      else
+        xml.tag!(hash, value)
+      end
     end
   end
 
