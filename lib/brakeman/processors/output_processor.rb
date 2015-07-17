@@ -77,8 +77,6 @@ class Brakeman::OutputProcessor < Ruby2Ruby
     return "def #{name}#{args}\n#{body}\nend".gsub(/\n\s*\n+/, "\n")
   end
 
-  alias process_methdef process_defn
-
   def process_iter exp
     call = process exp[0]
     block = process_rlist exp[2..-1]

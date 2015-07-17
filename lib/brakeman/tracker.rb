@@ -94,7 +94,7 @@ class Brakeman::Tracker
         [:private, :public, :protected].each do |visibility|
           info[visibility].each do |method_name, definition|
             src = definition[:src]
-            if src.node_type == :selfdef
+            if src.node_type == :defs
               method_name = "#{src[1]}.#{method_name}"
             end
 
@@ -231,7 +231,7 @@ class Brakeman::Tracker
         [:private, :public, :protected].each do |visibility|
           info[visibility].each do |method_name, definition|
             src = definition[:src]
-            if src.node_type == :selfdef
+            if src.node_type == :defs
               method_name = "#{src[1]}.#{method_name}"
             end
 

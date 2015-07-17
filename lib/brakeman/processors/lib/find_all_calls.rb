@@ -23,12 +23,12 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
   end
 
   #Process body of method
-  def process_methdef exp
+  def process_defn exp
     process_all exp.body
   end
 
   #Process body of method
-  def process_selfdef exp
+  def process_defs exp
     process_all exp.body
   end
 

@@ -103,7 +103,6 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
   def process_defn exp
     exp = @alias_processor.process exp
-    exp.node_type = :methdef
 
     if @current_class
       exp.body = process_all! exp.body
@@ -118,7 +117,6 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
   def process_defs exp
     exp = @alias_processor.process exp
-    exp.node_type = :selfdef
 
     if @current_class
       exp.body = process_all! exp.body

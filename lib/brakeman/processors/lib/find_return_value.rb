@@ -38,7 +38,7 @@ class Brakeman::FindReturnValue
 
     find_explicit_return_values exp
 
-    if node_type? exp, :methdef, :selfdef, :defn, :defs
+    if node_type? exp, :defn, :defs
       body = exp.body
 
       unless body.empty?
