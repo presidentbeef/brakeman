@@ -16,6 +16,7 @@ module Brakeman
       type = path.match(KNOWN_TEMPLATE_EXTENSIONS)[1].to_sym
       type = :erb if type == :rhtml
       name = template_path_to_name path
+      Brakeman.debug "Parsing #{path}"
 
       begin
         src = case type
