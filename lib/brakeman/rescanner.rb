@@ -88,8 +88,8 @@ class Brakeman::Rescanner < Brakeman::Scanner
     when :routes
       rescan_routes
     when :gemfile
-      if tracker.config[:gems][:rails_xss] and tracker.config[:escape_html]
-        tracker.config[:escape_html] = false
+      if tracker.config.has_gem? :rails_xss and tracker.config.escape_html?
+        tracker.config.escape_html = false
       end
 
       process_gems
@@ -102,7 +102,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
   def rescan_controller path
     controller = tracker.reset_controller path
-    paths = controller.nil? ? [path] : controller[:files]
+    paths = controller.nil? ? [path] : controller.files
     parse_ruby_files(paths).each do |astfile|
       process_controller astfile
     end
@@ -110,16 +110,16 @@ class Brakeman::Rescanner < Brakeman::Scanner
     #Process data flow and template rendering
     #from the controller
     tracker.controllers.each do |name, controller|
-      if controller[:files].include?(path)
+      if controller.files.include?(path)
         tracker.templates.each do |template_name, template|
-          next unless template[:caller]
-          if template[:caller].include_controller? name
+          next unless template.render_path
+          if template.render_path.include_controller? name
             tracker.reset_template template_name
           end
         end
 
-        controller[:src].each_value do |src|
-          @processor.process_controller_alias controller[:name], src
+        controller.src.each_value do |src|
+          @processor.process_controller_alias controller.name, src
         end
       end
     end
@@ -145,10 +145,10 @@ class Brakeman::Rescanner < Brakeman::Scanner
     #Search for processed template and process it.
     #Search for rendered versions of template and re-render (if necessary)
     tracker.templates.each do |name, template|
-      if template[:file] == path or template[:file].nil?
-        next unless template[:caller] and template[:name].to_sym == template_name.to_sym
+      if template.file == path or template.file.nil?
+        next unless template.render_path and template.name.to_sym == template_name.to_sym
 
-        template[:caller].each do |from|
+        template.render_path.each do |from|
           case from[:type]
           when :template
             rescan << [:template, from[:name]]
@@ -163,15 +163,15 @@ class Brakeman::Rescanner < Brakeman::Scanner
       if r[0] == :controller
         controller = tracker.controllers[r[1]]
 
-        controller[:src].each do |file, src|
+        controller.src.each do |file, src|
           unless @paths.include? file
-            @processor.process_controller_alias controller[:name], src, r[2]
+            @processor.process_controller_alias controller.name, src, r[2]
           end
         end
       elsif r[0] == :template
         template = tracker.templates[r[1]]
 
-        rescan_template template[:file]
+        rescan_template template.file
       end
     end
 
@@ -181,7 +181,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def rescan_model path
     num_models = tracker.models.length
     model = tracker.reset_model path
-    paths = model.nil? ? [path] : model[:files]
+    paths = model.nil? ? [path] : model.files
     parse_ruby_files(paths).each do |astfile|
       process_model astfile.path, astfile.ast
     end
@@ -198,7 +198,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
   def rescan_lib path
     lib = tracker.reset_lib path
-    paths = lib.nil? ? [path] : lib[:files]
+    paths = lib.nil? ? [path] : lib.files
     parse_ruby_files(paths).each do |astfile|
       process_lib astfile
     end
@@ -206,7 +206,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     lib = nil
 
     tracker.libs.each do |name, library|
-      if library[:files].include?(path)
+      if library.files.include?(path)
         lib = library
         break
       end
@@ -269,7 +269,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
     #Remove any rendered versions, or partials rendered from it
     tracker.templates.delete_if do |name, template|
-      template[:file] == path or template[:name].to_sym == template_name.to_sym
+      template.file == path or template.name.to_sym == template_name.to_sym
     end
   end
 
@@ -277,7 +277,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     deleted_lib = nil
 
     tracker.libs.delete_if do |name, lib|
-      if lib[:files].include?(path)
+      if lib.files.include?(path)
         deleted_lib = lib
         true
       end
@@ -297,7 +297,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
     [:controllers, :models, :libs].each do |collection|
       tracker.send(collection).delete_if do |name, data|
-        if data[:files].include?(path)
+        if data.files.include?(path)
           deleted = true
           true
         end
@@ -305,7 +305,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     end
 
     tracker.templates.delete_if do |name, data|
-      if data[:file] == path
+      if data.file == path
         deleted = true
         true
       end
@@ -341,18 +341,16 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def rescan_mixin lib
     method_names = []
 
-    [:public, :private, :protected].each do |access|
-      lib[access].each do |name, meth|
-        method_names << name
-      end
+    lib.each_method do |name, meth|
+      method_names << name
     end
 
     to_rescan = []
 
     #Rescan controllers that mixed in library
     tracker.controllers.each do |name, controller|
-      if controller[:includes].include? lib[:name]
-        controller[:files].each do |path|
+      if controller.includes.include? lib.name
+        controller.files.each do |path|
           unless @paths.include? path
             to_rescan << path
           end
@@ -371,15 +369,15 @@ class Brakeman::Rescanner < Brakeman::Scanner
     #This is not precise, because a different controller might have the
     #same method...
     tracker.templates.each do |name, template|
-      next unless template[:caller]
+      next unless template.render_path
 
-      if template[:caller].include_any_method? method_names
+      if template.render_path.include_any_method? method_names
         name.to_s.match /^([^.]+)/
 
         original = tracker.templates[$1.to_sym]
 
         if original
-          to_rescan << [name, original[:file]]
+          to_rescan << [name, original.file]
         end
       end
     end

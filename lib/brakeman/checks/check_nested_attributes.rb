@@ -8,7 +8,7 @@ class Brakeman::CheckNestedAttributes < Brakeman::BaseCheck
   @description = "Checks for nested attributes vulnerability in Rails 2.3.9 and 3.0.0"
 
   def run_check
-    version = tracker.config[:rails_version]
+    version = rails_version
 
     if (version == "2.3.9" or version == "3.0.0") and uses_nested_attributes?
       message = "Vulnerability in nested attributes (CVE-2010-3933). Upgrade to Rails version "
@@ -30,7 +30,7 @@ class Brakeman::CheckNestedAttributes < Brakeman::BaseCheck
 
   def uses_nested_attributes?
     active_record_models.each do |name, model|
-      return true if model[:options][:accepts_nested_attributes_for]
+      return true if model.options[:accepts_nested_attributes_for]
     end
 
     false

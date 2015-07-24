@@ -3,7 +3,7 @@ require 'brakeman/processors/lib/basic_processor'
 
 #Processes configuration. Results are put in tracker.config.
 #
-#Configuration of Rails via Rails::Initializer are stored in tracker.config[:rails].
+#Configuration of Rails via Rails::Initializer are stored in tracker.config.rails.
 #For example:
 #
 #  MyApp::Application.configure do
@@ -12,15 +12,14 @@ require 'brakeman/processors/lib/basic_processor'
 #
 #will be stored in
 #
-#  tracker.config[:rails][:active_record][:whitelist_attributes]
+#  tracker.config.rails[:active_record][:whitelist_attributes]
 #
-#Values for tracker.config[:rails] will still be Sexps.
+#Values for tracker.config.rails will still be Sexps.
 class Brakeman::Rails3ConfigProcessor < Brakeman::BasicProcessor
   RAILS_CONFIG = Sexp.new(:call, nil, :config)
 
   def initialize *args
     super
-    @tracker.config[:rails] ||= {}
     @inside_config = false
   end
 
@@ -66,13 +65,13 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BasicProcessor
       attribute = exp.method.to_s[0..-2].to_sym
       if exp.args.length > 1
         #Multiple arguments?...not sure if this will ever happen
-        @tracker.config[:rails][attribute] = exp.args
+        @tracker.config.rails[attribute] = exp.args
       else
-        @tracker.config[:rails][attribute] = exp.first_arg
+        @tracker.config.rails[attribute] = exp.first_arg
       end
     elsif include_rails_config? exp
       options = get_rails_config exp
-      level = @tracker.config[:rails]
+      level = @tracker.config.rails
       options[0..-2].each do |o|
         level[o] ||= {}
 

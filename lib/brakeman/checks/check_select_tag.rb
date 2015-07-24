@@ -21,7 +21,7 @@ class Brakeman::CheckSelectTag < Brakeman::BaseCheck
 
     @ignore_methods = Set[:escapeHTML, :escape_once, :h].merge tracker.options[:safe_methods]
 
-    @message = "Upgrade to Rails #{suggested_version}, #{tracker.config[:rails_version]} select_tag is vulnerable (CVE-2012-3463)"
+    @message = "Upgrade to Rails #{suggested_version}, #{rails_version} select_tag is vulnerable (CVE-2012-3463)"
 
     calls = tracker.find_call(:target => nil, :method => :select_tag).select do |result|
       result[:location][:type] == :template

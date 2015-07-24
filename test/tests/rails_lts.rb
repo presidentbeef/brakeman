@@ -11,7 +11,7 @@ class RailsLTSTests < Test::Unit::TestCase
     end
 
     #@original is actually modified
-    assert @original.config[:gems][:"railslts-version"], "2.3.18.6"
+    assert @original.config.gem_version(:'railslts-version'), "2.3.18.6"
     assert_reindex :none
     assert_changes
     assert_new 0
@@ -26,7 +26,7 @@ class RailsLTSTests < Test::Unit::TestCase
     end
 
     #@original is actually modified
-    assert @original.config[:gems][:"railslts-version"], "2.3.18.7"
+    assert @original.config.gem_version(:'railslts-version'), "2.3.18.7"
     assert_reindex :none
     assert_changes
     assert_new 0
@@ -41,7 +41,7 @@ class RailsLTSTests < Test::Unit::TestCase
     end
 
     #@original is actually modified
-    assert @original.config[:gems][:"railslts-version"], "2.3.18.8"
+    assert @original.config.gem_version(:'railslts-version'), "2.3.18.8"
     assert_reindex :none
     assert_changes
     assert_new 0
@@ -56,7 +56,7 @@ class RailsLTSTests < Test::Unit::TestCase
     end
 
     #@original is actually modified
-    assert @original.config[:gems][:"railslts-version"], "2.3.18.9"
+    assert @original.config.gem_version(:'railslts-version'), "2.3.18.9"
     assert_reindex :none
     assert_changes
     assert_new 0

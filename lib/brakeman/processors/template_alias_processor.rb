@@ -21,20 +21,20 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
   def process_template name, args
     if @called_from
       if @called_from.include_template? name
-        Brakeman.debug "Skipping circular render from #{@template[:name]} to #{name}"
+        Brakeman.debug "Skipping circular render from #{@template.name} to #{name}"
         return
       end
 
-      super name, args, @called_from.dup.add_template_render(@template[:name])
+      super name, args, @called_from.dup.add_template_render(@template.name)
     else
-      super name, args, Brakeman::RenderPath.new.add_template_render(@template[:name])
+      super name, args, Brakeman::RenderPath.new.add_template_render(@template.name)
     end
   end
 
   #Determine template name
   def template_name name
-    if !name.to_s.include?('/') && @template[:name].to_s.include?('/')
-      name = "#{@template[:name].to_s.match(/^(.*\/).*$/)[1]}#{name}"
+    if !name.to_s.include?('/') && @template.name.to_s.include?('/')
+      name = "#{@template.name.to_s.match(/^(.*\/).*$/)[1]}#{name}"
     end
     name
   end

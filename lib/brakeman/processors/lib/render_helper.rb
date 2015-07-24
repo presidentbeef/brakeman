@@ -84,7 +84,7 @@ module Brakeman::RenderHelper
         process_template "layouts/#{options[:layout][1]}", nil
       elsif node_type? options[:layout], :false
         #nothing
-      elsif not template[:name].to_s.match(/[^\/_][^\/]+$/)
+      elsif not template.name.to_s.match(/[^\/_][^\/]+$/)
         #Don't do this for partials
         
         process_layout
@@ -100,7 +100,7 @@ module Brakeman::RenderHelper
 
         #The collection name is the name of the partial without the leading
         #underscore.
-        variable = template[:name].to_s.match(/[^\/_][^\/]+$/)[0].to_sym
+        variable = template.name.to_s.match(/[^\/_][^\/]+$/)[0].to_sym
 
         #Unless the :as => :variable_name option is used
         if options[:as]
@@ -127,7 +127,7 @@ module Brakeman::RenderHelper
       #Run source through AliasProcessor with instance variables from the
       #current environment.
       #TODO: Add in :locals => { ... } to environment
-      src = Brakeman::TemplateAliasProcessor.new(@tracker, template, called_from).process_safely(template[:src], template_env)
+      src = Brakeman::TemplateAliasProcessor.new(@tracker, template, called_from).process_safely(template.src, template_env)
 
       digest = Digest::SHA1.new.update(name + src.to_s).to_s.to_sym
 
@@ -142,7 +142,7 @@ module Brakeman::RenderHelper
       #This information will be stored in tracker.templates, but with a name
       #specifying this particular route. The original source should remain
       #pristine (so it can be processed within other environments).
-      @tracker.processor.process_template name, src, template[:type], called_from
+      @tracker.processor.process_template name, src, template.type, called_from
     end
   end
 

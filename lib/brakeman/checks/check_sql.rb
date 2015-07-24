@@ -14,8 +14,6 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   @description = "Check for SQL injection"
 
   def run_check
-    @rails_version = tracker.config[:rails_version]
-
     @sql_targets = [:all, :average, :calculate, :count, :count_by_sql, :exists?, :delete_all, :destroy_all,
       :find, :find_by_sql, :first, :last, :maximum, :minimum, :pluck, :sum, :update_all]
     @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :select, :where] if tracker.options[:rails3]
@@ -84,7 +82,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def ar_scope_calls(symbol_name = :named_scope, &block)
     return_array = []
     active_record_models.each do |name, model|
-      model_args = model[:options][symbol_name]
+      model_args = model.options[symbol_name]
       if model_args
         model_args.each do |args|
           yield name, args
@@ -614,7 +612,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #
   #http://www.rorsecurity.info/2008/09/08/sql-injection-issue-in-limit-and-offset-parameter/
   def check_for_limit_or_offset_vulnerability options
-    return false if @rails_version.nil? or @rails_version >= "2.1.1" or not hash?(options)
+    return false if rails_version.nil? or rails_version >= "2.1.1" or not hash?(options)
 
     return true if hash_access(options, :limit) or hash_access(options, :offset)
 

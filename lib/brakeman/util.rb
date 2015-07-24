@@ -267,6 +267,10 @@ module Brakeman::Util
     call
   end
 
+  def rails_version
+    @tracker.config.rails_version
+  end
+
   #Return file name related to given warning. Uses +warning.file+ if it exists
   def file_for warning, tracker = nil
     if tracker.nil?
@@ -275,14 +279,14 @@ module Brakeman::Util
 
     if warning.file
       File.expand_path warning.file, tracker.app_path
-    elsif warning.template.is_a? Hash and warning.template[:file]
-      warning.template[:file]
+    elsif warning.template and warning.template.file
+      warning.template.file
     else
       case warning.warning_set
       when :controller
         file_by_name warning.controller, :controller, tracker
       when :template
-        file_by_name warning.template[:name], :template, tracker
+        file_by_name warning.template.name, :template, tracker
       when :model
         file_by_name warning.model, :model, tracker
       when :warning
@@ -318,20 +322,20 @@ module Brakeman::Util
 
     case type
     when :controller
-      if tracker.controllers[name] and tracker.controllers[name][:files]
-        path = tracker.controllers[name][:files].first
+      if tracker.controllers[name]
+        path = tracker.controllers[name].file
       else
         path += "/app/controllers/#{underscore(string_name)}.rb"
       end
     when :model
-      if tracker.models[name] and tracker.models[name][:files]
-        path = tracker.models[name][:files].first
+      if tracker.models[name]
+        path = tracker.models[name].file
       else
         path += "/app/models/#{underscore(string_name)}.rb"
       end
     when :template
-      if tracker.templates[name] and tracker.templates[name][:file]
-        path = tracker.templates[name][:file]
+      if tracker.templates[name] and tracker.templates[name].file
+        path = tracker.templates[name].file
       elsif string_name.include? " "
         name = string_name.split[0].to_sym
         path = file_for tracker, name, :template

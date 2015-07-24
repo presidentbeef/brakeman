@@ -25,7 +25,7 @@ class Brakeman::CheckModelSerialize < Brakeman::BaseCheck
   #High confidence warning on serialized, unprotected attributes.
   #Medium confidence warning for serialized, protected attributes.
   def check_for_serialize model
-    if serialized_attrs = model[:options] && model[:options][:serialize]
+    if serialized_attrs = model.options[:serialize]
       attrs = Set.new
 
       serialized_attrs.each do |arglist|
@@ -34,9 +34,9 @@ class Brakeman::CheckModelSerialize < Brakeman::BaseCheck
         end
       end
 
-      if unsafe_attrs = model[:attr_accessible]
+      if unsafe_attrs = model.attr_accessible
         attrs.delete_if { |attr| not unsafe_attrs.include? attr.value }
-      elsif protected_attrs = model[:options][:attr_protected]
+      elsif protected_attrs = model.attr_protected
         safe_attrs = Set.new
 
         protected_attrs.each do |arglist|
@@ -54,13 +54,13 @@ class Brakeman::CheckModelSerialize < Brakeman::BaseCheck
         confidence = CONFIDENCE[:high]
       end
 
-      warn :model => model[:name],
+      warn :model => model.name,
         :warning_type => "Remote Code Execution",
         :warning_code => :CVE_2013_0277,
-        :message => "Serialized attributes are vulnerable in Rails #{tracker.config[:rails_version]}, upgrade to #{@upgrade_version} or patch.",
+        :message => "Serialized attributes are vulnerable in Rails #{rails_version}, upgrade to #{@upgrade_version} or patch.",
         :confidence => confidence,
         :link => "https://groups.google.com/d/topic/rubyonrails-security/KtmwSbEpzrU/discussion",
-        :file => model[:files].first
+        :file => model.file
     end
   end
 end

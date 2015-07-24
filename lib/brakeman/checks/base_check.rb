@@ -39,8 +39,9 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
   #Add result to result list, which is used to check for duplicates
   def add_result result, location = nil
-    location ||= (@current_template && @current_template[:name]) || @current_class || @current_module || @current_set || result[:location][:class] || result[:location][:template]
+    location ||= (@current_template && @current_template.name) || @current_class || @current_module || @current_set || result[:location][:class] || result[:location][:template]
     location = location[:name] if location.is_a? Hash
+    location = location.name if location.is_a? Brakeman::Collection
     location = location.to_sym
 
     if result.is_a? Hash
@@ -138,36 +139,6 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     Brakeman::OutputProcessor.new.format(exp).gsub(/\r|\n/, "")
   end
 
-  #Checks if the model inherits from parent,
-  def ancestor? model, parent, seen={}
-    return false unless model
-
-    seen[model[:name]] = true
-    if model[:parent] == parent || seen[model[:parent]]
-      true
-    elsif model[:parent]
-      ancestor? tracker.models[model[:parent]], parent, seen
-    else
-      false
-    end
-  end
-
-  def unprotected_model? model
-    model[:attr_accessible].nil? and !parent_classes_protected?(model) and ancestor?(model, :"ActiveRecord::Base")
-  end
-
-  # go up the chain of parent classes to see if any have attr_accessible
-  def parent_classes_protected? model, seen={}
-    seen[model] = true
-    if model[:attr_accessible] or model[:includes].include? :"ActiveModel::ForbiddenAttributesProtection"
-      true
-    elsif parent = tracker.models[model[:parent]] and !seen[parent]
-      parent_classes_protected? parent, seen
-    else
-      false
-    end
-  end
-
   #Checks if mass assignment is disabled globally in an initializer.
   def mass_assign_disabled?
     return @mass_assign_disabled unless @mass_assign_disabled.nil?
@@ -175,12 +146,10 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     @mass_assign_disabled = false
 
     if version_between?("3.1.0", "3.9.9") and
-      tracker.config[:rails][:active_record] and
-      tracker.config[:rails][:active_record][:whitelist_attributes] == Sexp.new(:true)
+      tracker.config.whitelist_attributes?
 
       @mass_assign_disabled = true
-    elsif tracker.options[:rails4] && (!tracker.config[:gems][:protected_attributes] || (tracker.config[:rails][:active_record] &&
-            tracker.config[:rails][:active_record][:whitelist_attributes] == Sexp.new(:true)))
+    elsif tracker.options[:rails4] && (!tracker.config.has_gem?(:protected_attributes) || tracker.config.whitelist_attributes?)
 
       @mass_assign_disabled = true
     else
@@ -231,7 +200,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     #gem and still using hack above, so this is a separate check for
     #including ActiveModel::ForbiddenAttributesProtection in
     #ActiveRecord::Base in an initializer.
-    if not @mass_assign_disabled and version_between?("3.1.0", "3.9.9") and tracker.config[:gems][:strong_parameters]
+    if not @mass_assign_disabled and version_between?("3.1.0", "3.9.9") and tracker.config.has_gem? :strong_parameters
       matches = tracker.check_initializers([], :include)
       forbidden_protection = Sexp.new(:colon2, Sexp.new(:const, :ActiveModel), :ForbiddenAttributesProtection)
 
@@ -267,9 +236,10 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       raise ArgumentError
     end
 
-    location ||= (@current_template && @current_template[:name]) || @current_class || @current_module || @current_set || result[:location][:class] || result[:location][:template]
+    location ||= (@current_template && @current_template.name) || @current_class || @current_module || @current_set || result[:location][:class] || result[:location][:template]
 
     location = location[:name] if location.is_a? Hash
+    location = location.name if location.is_a? Brakeman::Collection
     location = location.to_sym
 
     @results.each do |r|
@@ -456,7 +426,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   #
   #If the Rails version is unknown, returns false.
   def version_between? low_version, high_version, current_version = nil
-    current_version ||= tracker.config[:rails_version]
+    current_version ||= rails_version
     return false unless current_version
 
     version = current_version.split(".").map! { |n| n.to_i }
@@ -483,12 +453,12 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   end
 
   def lts_version? version
-    tracker.config[:gems][:'railslts-version'] and
-    version_between? version, "2.3.18.99", tracker.config[:gems][:'railslts-version'][:version]
+    tracker.config.has_gem? :'railslts-version' and
+    version_between? version, "2.3.18.99", tracker.config.gem_version(:'railslts-version')
   end
 
   def gemfile_or_environment gem_name = :rails
-    if gem_name and info = tracker.config[:gems][gem_name]
+    if gem_name and info = tracker.config.get_gem(gem_name)
       info
     elsif @app_tree.exists?("Gemfile")
       "Gemfile"
@@ -507,7 +477,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     @active_record_models = {}
 
     tracker.models.each do |name, model|
-      if ancestor? model, :"ActiveRecord::Base"
+      if model.ancestor? :"ActiveRecord::Base"
         @active_record_models[name] = model
       end
     end
