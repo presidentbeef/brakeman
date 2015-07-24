@@ -108,6 +108,585 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/10/17/brakeman-1-dot-8-2-released/">Brakeman 1.8.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-10-17 10:44:00 -0700" pubdate  updated >Oct 17<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a bugfix release, in particular fixing rescanning (used by <a href="https://github.com/guard/guard-brakeman">guard-brakeman</a>).</p>
+
+<p><em>Changes since 1.8.1</em>:</p>
+
+<ul>
+<li>Fixed rescanning problems caused by 1.8.0 changes</li>
+<li>Fix scope calls with single argument</li>
+<li>Report specific model name in rendered collections</li>
+<li>Handle overwritten JSON escape settings (Neil Matatall)</li>
+<li>Add CHANGES to gemspec</li>
+</ul>
+
+
+<h3>Rescan Fixes</h3>
+
+<p>Brakeman supports rescanning a subset of files in an application, with the caveat that the previous scan must still be in memory. This functionality was broken in the the 1.8.0 release, due to the lack of tests.</p>
+
+<p>This release updates rescanning to be more robust and work with the 1.8.0 changes to how &#8220;render paths&#8221; are stored. Also, a number of tests were added to help prevent breakage in the future.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/165">changes</a>)</p>
+
+<h3>Scope Calls with One Argument</h3>
+
+<p>Calls to <code>scope</code> with a single argument were causing errors in Brakeman&#8217;s SQL injection check.</p>
+
+<p>The fixed error looked like:</p>
+
+<pre><code>undefined method `node_type' for nil:NilClass  /something/brakeman/lib/brakeman/checks/check_sql.rb:75:in `block (2 levels) in find_scope_calls'
+</code></pre>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/157">changes</a>)</p>
+
+<h3>Model Names for Rendered Collections</h3>
+
+<p>In cases like below, where a collection of models is being rendered and the model name could be known, any resulting warnings will now reference the actual model name.</p>
+
+<pre><code>&lt;%= render 'user', :collection =&gt; User.all %&gt;
+</code></pre>
+
+<p>Previously, Brakeman would report warnings with <code>UnknownModel</code>, whether or not the model name was actually known.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/155">changes</a>)</p>
+
+<h3>Overwritten JSON Escape Config</h3>
+
+<p>It is possible that a config setting in one initializer overrides a setting in a different initializer. This is now handled for the JSON escape settings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/154">changes</a>)</p>
+
+<h3>CHANGES File in Gem</h3>
+
+<p>The <a href="https://github.com/presidentbeef/brakeman/blob/master/CHANGES">CHANGES</a> file is now included in the gem file as requested.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/issues/153">changes</a>)</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+
+<h3>Brakeman Roadmap</h3>
+
+<p>A rough guide to Brakeman 1.9 and 2.0 has been <a href="https://github.com/presidentbeef/brakeman/wiki/Roadmap">posted here</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2012/09/24/brakeman-1-dot-8-1-released/">Brakeman 1.8.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-09-24 12:09:00 -0700" pubdate  updated >Sep 24<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Bug fixes!</p>
+
+<p><em>Changes since 1.8.0</em>:</p>
+
+<ul>
+<li>Recover from errors in output formatting (<a href="https://github.com/presidentbeef/brakeman/pull/148">#148</a>)</li>
+<li>Fix false positive in <code>redirect_to</code> (Neil Matatall) (<a href="https://github.com/presidentbeef/brakeman/issues/143">#143</a>)</li>
+<li>Fix problems with removal of <code>Sexp#method_missing</code> (<a href="https://github.com/presidentbeef/brakeman/pull/150">#150</a>)</li>
+<li>Fix array indexing in alias processing (<a href="https://github.com/presidentbeef/brakeman/pull/145">#145</a>)</li>
+<li>Fix old <code>mail_to</code> vulnerability check (<a href="https://github.com/presidentbeef/brakeman/pull/147">#147</a>)</li>
+<li>Fix rescans when only controller action changes (<a href="https://github.com/presidentbeef/brakeman/pull/141">#141</a>)</li>
+<li>Allow comparison of versions with unequal lengths (<a href="https://github.com/presidentbeef/brakeman/pull/144">#144</a>)</li>
+<li>Handle super calls with blocks (<a href="https://github.com/presidentbeef/brakeman/pull/146">#146</a>)</li>
+<li>Remove malformed Sexps from HAML processing  (<a href="https://github.com/presidentbeef/brakeman/pull/149">#149</a>)</li>
+<li>Respect <code>-q</code> flag for &#8220;Rails 3 detected&#8221; message</li>
+</ul>
+
+
+<h3>Fix Crashes when Generating Report</h3>
+
+<p>Some scans were causing Brakeman to crash while generating reports with an error like:</p>
+
+<pre><code>lib/brakeman/warning.rb:78:in `format_code': undefined method `gsub' for nil:NilClass (NoMethodError)
+</code></pre>
+
+<p>This was due to a combination of the removal of <code>method_missing</code> behavior from <code>Sexp</code> and the <code>OutputProcessor</code> not handling errors well.</p>
+
+<p>The problem should be fixed now, but please report an issue if &#8220;[Format Error]&#8221; shows up in reports.</p>
+
+<h3>False Positive in Redirect Check</h3>
+
+<p>Neil Matatall fixed <a href="https://github.com/presidentbeef/brakeman/issues/143">an issue</a> with a false positive when redirecting to an array.</p>
+
+<p>When <code>redirect_to</code> is given an array, Rails eventually falls through to <code>polymorphic_path</code>, which will only return a path, not a full URL. Brakeman only checks for redirects that can redirect to a different host, so this is considered safe.</p>
+
+<h3>Sexp and <code>method_missing</code></h3>
+
+<p>The original <code>Sexp</code> code from RubyParser uses <code>method_missing</code> to find and optionally delete nodes. This functionality is not used very often (never in Brakeman) but has covered up bugs that would otherwise been found. Therefore, <code>Sexp#method_missing</code> has been removed in Brakeman. However, it turns out that <a href="https://github.com/seattlerb/ruby2ruby">Ruby2Ruby</a> uses it in a couple places. Brakeman uses Ruby2Ruby to covert s-expressions back to readable Ruby code, particularly when generating reports. This lead to some crashes.</p>
+
+<h3>Fix Array Indexing</h3>
+
+<p>Brakeman can handle pulling values out of simple arrays. Or it should be able to, but it keeps breaking. Should be fixed now!</p>
+
+<h3>Fix <code>mail_to</code> Check</h3>
+
+<p>There is a Brakeman check for an <a href="https://groups.google.com/d/topic/rubyonrails-security/8CpI7egxX4E/discussion">old vulnerability</a> in <code>mail_to</code>. However, it turns out this check has been broken for a while. But now it is fixed! And there are regression tests.</p>
+
+<h3>Fix Rescans on Controller Changes</h3>
+
+<p>There were some crashes when rescanning was triggered by a controller change.</p>
+
+<h3>HAML Processing</h3>
+
+<p>Some very old code for HAML processing was generating malformed s-expressions, which then had to be handled specially in the output formatter. It turns out these nodes were not even used, so they were removed. Please report any problems arising from this! We do not have a lot of HAML test cases.</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2012/09/04/brakeman-1-dot-8-0-released/">Brakeman 1.8.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-09-04 11:26:00 -0700" pubdate  updated >Sep 4<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>Changes since 1.7.1</em>:</p>
+
+<ul>
+<li>Support relative paths in reports (fsword)</li>
+<li>Allow Brakeman to be run without tty (fsword)</li>
+<li>Fix exit code with <code>--compare</code> (fsword)</li>
+<li>Fix <code>--rake</code> option (Deepak Kumar)</li>
+<li>Add high confidence warnings for <code>to_json</code> XSS (Neil Matatall)</li>
+<li>Fix <code>redirect_to</code> false negative</li>
+<li>Fix duplicate warnings with <code>raw</code> calls</li>
+<li>Fix shadowing of rendered partials</li>
+<li>Add &#8220;render chain&#8221; to HTML reports</li>
+<li>Add check for XSS in <code>content_tag</code></li>
+<li>Add full backtrace for errors in debug mode</li>
+<li>Treat model attributes in <code>or</code> expressions as immediate values</li>
+<li>Switch to method access for Sexp nodes</li>
+</ul>
+
+
+<h3>Relative Paths in Reports</h3>
+
+<p>The <code>--relative-paths</code> option will now cause Brakeman to output relative paths for warnings in reports in either JSON or tabs format. This is useful when comparing reports run on different machines or just in different directories.</p>
+
+<h3>Brakeman without TTY</h3>
+
+<p>Thanks to <a href="http://fsword.github.com/">fsword</a>, Brakeman can now run without a TTY available.</p>
+
+<h3>Exit Code for Compare</h3>
+
+<p>Also thanks to fsword, Brakeman will return a proper exit code when run with <code>-z --compare</code>. If any changes are found, the exit code will be nonzero.</p>
+
+<h3>Rake Task Generation Fixed</h3>
+
+<p>The <code>--rake</code> option was broken, but <a href="https://github.com/deepakinseattle">Deepak Kumar</a> noticed and fixed it!</p>
+
+<h3>High Confidence Warnings for JSON</h3>
+
+<p>Older versions of Rails default to not escaping <code>to_json</code> calls, leading to <a href="http://brakemanscanner.org/docs/warning_types/cross_site_scripting_to_json/">cross site scripting problems</a>. Since Rails 2.1.0, Rails has provided an option to escape JSON output by default. Brakeman will check this option, and warn on unescaped <code>to_json</code> calls.</p>
+
+<h3>Fix Redirect False Negative</h3>
+
+<p>Brakeman was incorrectly checking for <code>:only_path =&gt; true</code> in <em>any</em> argument to <code>redirect_to</code>. However, it is only valid as part of the first argument.</p>
+
+<h3>Fix Duplicate Warnings on Raw Calls</h3>
+
+<p>A logic mistake sometimes caused a high and weak confidence warning to be reported for the same code using <code>raw</code>. This has been fixed.</p>
+
+<h3>Fix Shadowing of Rendered Partials</h3>
+
+<p>Due to the way Brakeman was storing rendered partials, a view that was rendered multiple times via different code paths would only store a single instance of the rendered view. This could result in some vulnerabilities not being reported.</p>
+
+<p>To fix this, Brakeman now stores the entire &#8220;render chain&#8221; (that is, each location of a <code>render</code>). This ensures a unique key for each rendered template.</p>
+
+<h3>Report Render Chain in HTML</h3>
+
+<p>HTML reports now have a new feature that reports the &#8220;render chain&#8221; for view warnings (if the chain is more than a single call deep).</p>
+
+<p>A warning like this:</p>
+
+<p><img src="/images/unexpanded_call_chain.png" alt="Unexpanded" /></p>
+
+<p>Might expand to show this chain:</p>
+
+<p><img src="/images/expanded_call_chain.png" alt="Expanded" /></p>
+
+<h3>Check for XSS in <code>content_tag</code></h3>
+
+<p><code>content_tag</code> is a view helper for generating HTML tags containing some content. In Rails 2.x, <code>content_tag</code> did not escape this content. In Rails 3.x, this changed so that now it is escaped. While <code>content_tag</code> does have an <code>escape</code> parameter (true by default), this only applies to the tag attribute <em>values</em>.</p>
+
+<p>Brakeman now warns on possible cross site scripting via <code>content_tag</code> calls. <a href="/docs/warning_types/content_tag">See here</a> for more details.</p>
+
+<h3>Backtraces in Debug Mode</h3>
+
+<p>By default, Brakeman tries its best to recover from errors and produce a report. However, this can sometimes make it difficult to track down the sources of errors. Now, with the <code>-d</code> option, Brakeman will report backtraces for errors encountered while running, as well as including backtraces in HTML reports.</p>
+
+<h3>Convenience Methods for Sexp Access</h3>
+
+<p>Previously, all code dealing with <a href="https://en.wikipedia.org/wiki/S-exp">s-expressions</a> in the <code>Sexp</code> class accessed nodes via array access, e.g. <code>exp[1]</code> or <code>exp[2]</code>. This led to hard-to-read code like <code>exp[2][3][1][1..-1]</code>. This release includes convenience methods to replace those types of calls. Available methods are <a href="http://rdoc.info/gems/brakeman/Sexp">documented here</a>.</p>
+
+<p>Hopefully this leads to code that is both easier to read and easier to write.</p>
+
+<h3>Reporting Problems</h3>
+
+<p>This release touches a lot of code (76 changed files with 1,515 additions and 598 deletions), so there is ample opportunity for bugs to sneak in. Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a>!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> and following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2012/08/13/brakeman-1-dot-7-1-released/">Brakeman 1.7.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-08-13 11:04:00 -0700" pubdate  updated >Aug 13<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a small release to add checks for the <a href="http://weblog.rubyonrails.org/2012/8/9/ann-rails-3-2-8-has-been-released/">Rails vulnerabilities reported last week</a>.</p>
+
+<p><em>Changes since 1.7.0</em>:</p>
+
+<ul>
+<li>Add check for <a href="https://groups.google.com/d/topic/rubyonrails-security/fV3QUToSMSw/discussion">CVE-2012-3463</a></li>
+<li>Add check for <a href="https://groups.google.com/d/topic/rubyonrails-security/kKGNeMrnmiY/discussion">CVE-2012-3464</a></li>
+<li>Add check for <a href="https://groups.google.com/d/topic/rubyonrails-security/FgVEtBajcTY/discussion">CVE-2012-3465</a></li>
+<li>Add charset to HTML report (<a href="https://github.com/hooopo">hooopo</a>)</li>
+<li>Report XSS in select() for Rails 2</li>
+</ul>
+
+
+<h3>CVE-2012-3463 - XSS in select_tag Prompt</h3>
+
+<p>In Rails 3.x, values supplied to the <code>:prompt</code> option in the <code>select_tag</code> helper are not escaped, leading to a cross-site scripting vulnerability.</p>
+
+<p>Brakeman will warn on all uses of <code>select_tag</code> with unescaped user input in the <code>:prompt</code> option.</p>
+
+<h3>CVE-2012-3464 - Single Quotes are Unescaped</h3>
+
+<p>This is pretty much a known issue (<a href="http://www.ruby-forum.com/topic/166894">example from 2008</a>), but Rails 3.2.8 fixes it.</p>
+
+<p>Single quotes are most dangerous when interpolating values into HTML attributes that use single quotes, which is why it is often recommended to always use double quotes in HTML.</p>
+
+<p>There is a <a href="https://groups.google.com/d/topic/rubyonrails-security/kKGNeMrnmiY/discussion">provided workaround</a> for earlier versions of Rails which replaces <code>ERB::Util.html_escape</code> with <code>Rack::Utils.escape_html</code>. This method adds escaping for both single quotes (<code>'</code>) and forward slashes (<code>/</code>).</p>
+
+<p>If the provided workaround is used in an initializer, as suggested, then Brakeman will not generate a warning for this vulnerability. Otherwise, Brakeman will generate a warning for affected versions.</p>
+
+<h3>CVE-2012-3465 - XSS in strip_tags</h3>
+
+<p>Another vulnerability has been reported for <code>strip_tags</code> (earlier report was <a href="https://groups.google.com/d/topic/rubyonrails-security/K5EwdJt06hI/discussion">CVE-2011-2931</a>).</p>
+
+<p>Brakeman will warn on affected versions if uses of <code>strip_tags</code> are detected.</p>
+
+<h3>XSS in select Helper</h3>
+
+<p>This vulnerability was <a href="https://groups.google.com/d/topic/rubyonrails-security/CdoMUVpsRmQ/discussion">reported a while ago</a>, but it was unclear if it applied to Rails 2.x or just Rails 3. Thanks to Neil Matatall, it has been confirmed to be an issue in Rails 2.x as well.</p>
+
+<p>Therefore, Brakeman will be reporting the vulnerability (<code>select</code> does not escape options list if supplied as a straight string) for Rails 2.x as well.</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2012/07/31/brakeman-1-dot-7-0-released/">Brakeman 1.7.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-07-31 17:44:00 -0700" pubdate  updated >Jul 31<span>st</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release includes improvements to Rails 3 route processing, better performance, several bug fixes, and more!</p>
+
+<p><em>Changes since 1.6.2</em>:</p>
+
+<ul>
+<li>Add check for CVE-2012-3424</li>
+<li>Link report types to descriptions on website</li>
+<li>Report errors raised while running check</li>
+<li>Improve processing of Rails 3 routes</li>
+<li>Improve file access check</li>
+<li>Avoid warning on non-ActiveModel models</li>
+<li>Fix how <code>params[:x] ||=</code> is handled</li>
+<li>Treat user input in <code>or</code> expressions as immediate values</li>
+<li>Fix processing of negative array indexes</li>
+<li>Fix &#8220;empty char-class&#8221; error</li>
+<li>Speed improvements by stripping down SexpProcessor</li>
+<li>Add line breaks to truncated table rows</li>
+</ul>
+
+
+<h3>Check for HTTP Auth Digest DoS</h3>
+
+<p><a href="https://groups.google.com/d/topic/rubyonrails-security/vxJjrc15qYM/discussion">CVE-2012-3424</a>, a potential denial of service vulnerability in how Rails handles HTTP authentication digest parameters, was recently announced. It affects Rails 3.x, and is fixed in 3.0.16, 3.1.7, and 3.2.7.</p>
+
+<p>Brakeman will generate a warning for the Rails versions affected, but will only report a high confidence warning if <code>authenticate_or_request_with_http_digest</code> or <code>authenticate_with_http_digest</code> methods are called.</p>
+
+<h3>Links to Warning Information</h3>
+
+<p>HTML reports now link warning types to descriptions on the Brakeman website. JSON reports will also include the link information. Due to this change, it is not possible to compare JSON reports from previous versions using the <code>--compare</code> option.</p>
+
+<p>Suggestions and <a href="https://github.com/presidentbeef/brakeman-site">pull requests</a> for improving the documention are welcome!</p>
+
+<h3>Report Check Errors</h3>
+
+<p>Previously, errors encounted while running checks were not included in reports. This has been fixed.</p>
+
+<h3>Better Rails 3 Route Processing</h3>
+
+<p>Even the simple information Brakeman uses (which methods are routes) is difficult to extract from Rails 3 routes due to all the different options it offers. This release should decrease the number of &#8220;Error while processing routes&#8221; messages that come up.</p>
+
+<p>See <a href="https://github.com/presidentbeef/brakeman/pull/116">this pull request</a> for more information about specific fixes.</p>
+
+<h3>Improved File Access Check</h3>
+
+<p>The check for user input in file access calls has been improved so the confidence of the warnings will vary according to how the user input is used, like most other checks.</p>
+
+<p>Additionally, the check will now respect the <code>--report-direct</code> option.</p>
+
+<h3>No SQLi Warnings for Non-ActiveModel</h3>
+
+<p>Models which do not inherit from <code>ActiveRecord::Base</code> will no longer be reported in SQL injection warnings.</p>
+
+<h3>Default Assignment to <code>params</code></h3>
+
+<p>Normally, when Brakeman processes an assignment like <code>x ||= y</code>, it will assign <code>y</code> to <code>x</code> if no previous value is found for <code>x</code>.</p>
+
+<p>However, in this case:</p>
+
+<pre><code>params[:x] ||= y
+</code></pre>
+
+<p>The information that the left hand side is a <code>params</code> hash is lost.</p>
+
+<p>This has been changed so default assignment to a <code>params</code> hash will not replace the entire value, but will handle it as <code>params[:x] || y</code>.</p>
+
+<h3>User Input in <code>or</code> Expressions</h3>
+
+<p>Previously, unescaped output like</p>
+
+<pre><code>&lt;%= params[:x] || z %&gt;
+</code></pre>
+
+<p>would have been reported as a weak confidence warning. This has been changed so that any user input in an <code>or</code> expression will be considered immediate (versus &#8220;indirect&#8221;) output and will likely result in high confidence warnings.</p>
+
+<h3>Speed Improvements</h3>
+
+<p>Scan times should decrease by 15-25% with this release. This is mostly due to stripping unused bits out of SexpProcessor.</p>
+
+<h3>Bug Fixes</h3>
+
+<p>Besides errors raised when processing Rails 3 routes, the <code>Result must be a Sexp, was Symbol::array</code> and <code>empty char-class</code> errors should be resolved now.</p>
+
+<p>Please report any errors raised when performing scans, as they are usually bugs.</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2012/06/12/brakeman-1-dot-6-2-released/">Brakeman 1.6.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-06-12 17:07:00 -0700" pubdate  updated >Jun 12<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Besides checks for the latest CVEs, this release includes a slightly improved redirect check, noiser output with <code>--compare</code>, and better handling of <code>before_filter</code>.</p>
+
+<p><em>Changes since 1.6.1</em>:</p>
+
+<ul>
+<li>Add checks for CVE-2012-2660, CVE-2012-2661, CVE-2012-2694, CVE-2012-2695 (Dave Worth)</li>
+<li>Avoid warning when redirecting to a model instance</li>
+<li>Raise confidence level for model attributes in redirects</li>
+<li>Add <code>request.parameters</code> as a parameters hash</li>
+<li>Return non-zero exit code when missing dependencies</li>
+<li>Fix <code>before_filter :except</code> logic</li>
+<li>Only accept symbol literals as before_filter names</li>
+<li>Cache before_filter lookups</li>
+<li>Turn off quiet mode by default for <code>--compare</code></li>
+</ul>
+
+
+<h3>Latest CVEs</h3>
+
+<p>A number of Rails vulnerabilities were announced recently, although there are really only two issues.</p>
+
+<p>One issue is that query parameters like <code>?name[]</code> and <code>?name[]=1&amp;name[]</code> get converted to <code>{"name" =&gt; [nil]}</code> and <code>{"name" =&gt; ["1", nil]}</code>. This, in turn, causes ActiveRecord to produce SQL queries with either <code>IS NULL</code> or <code>IN ('1', NULL)</code>. This is probably unexpected behavior.</p>
+
+<p>The other issue is that query parameters like <code>?name[users.id]=1</code> or <code>?name[users][id]=1</code> get converted to <code>{"name" =&gt; { "users.id" =&gt; 1 }}</code> or <code>{"name" =&gt; { "users" =&gt; { "id" =&gt; 1 }}}</code>. ActiveRecord interprets <code>"users.id"</code> and <code>"users" =&gt; { "id" ...}</code> as <code>"users"."id"</code> in the WHERE clause, allowing an attacker to control the table/columns being queried.</p>
+
+<p>Updated versions for Rails 3.x have been released.</p>
+
+<p>For Rails 2.3, I believe <a href="https://github.com/presidentbeef/rails/pull/1/files">these changes</a> will fix the first issue, and there is another <a href="https://rubyonrails-security.googlegroups.com/attach/aee3413fb038bf56/2-3-sql-injection.patch?view=1&amp;part=3">patch available</a> for the second issue.</p>
+
+<p>Older versions of Rails 2.x may be vulnerable to the &#8220;NULL&#8221; issue, but not to the nested hashes problem.</p>
+
+<h3>Unprotected Redirect Check</h3>
+
+<p>There have been some minor changes to <code>CheckRedirect</code>. In most cases, it should no longer warn when redirecting to a model instance. If there are still false positives with this scenario, please report them.</p>
+
+<p>The other change is that redirects to model attributes will now be marked as high confidence, instead of weak.</p>
+
+<h3>Exit Code on Missing Dependencies</h3>
+
+<p>Brakeman catches errors from missing dependencies in order to show a nicer error message. Unfortunately, it was also returning <code>0</code> on exit. This is undesirable behavior when chaining commands together.</p>
+
+<p>This has been changed to return a non-zero exit code.</p>
+
+<h3>Before Filter Changes</h3>
+
+<p>There were some isues with how <code>before_filter</code> was being handled. The logic when using <code>:except</code> was broken, causing Brakeman to treat it like <code>:only</code>.</p>
+
+<p>The other issue caused Brakeman to interpret arguments such as method calls as method names. For example, <code>before_filter blah</code> would be treated like <code>before_filter :blah</code>.</p>
+
+<p>While dealing with this, caching of filter lookups was also added for a minor performance improvement.</p>
+
+<h3>Noisier <code>--compare</code></h3>
+
+<p>Using the <code>--compare</code> option now shows the same output as a regular scan. If you are piping the output of <code>--compare</code> to a file or elsewhere, you may wish to use the <code>--quiet</code> option.</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/05/23/brakeman-1-dot-6-1-released/">Brakeman 1.6.1 Released</a></h1>
     
     
@@ -505,477 +1084,6 @@ user.send(method)
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/03/22/brakeman-jenkins-plugin-0-dot-7-released/">Brakeman Jenkins Plugin 0.7 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-03-22 13:27:00 -0700" pubdate  updated >Mar 22<span>nd</span>, 2012</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The <a href="http://jenkins-ci.org">Jenkins</a>/<a href="http://hudson-ci.org">Hudson</a> plugin which tracks, displays, and alerts on Brakeman warnings has been updated to work with the latest static analysis core plugin. In particular, this means warning thresholds for new warnings will no longer disappear.</p>
-
-<p>See <a href="https://wiki.jenkins-ci.org/display/JENKINS/Brakeman+Plugin">here</a> for more information about the plugin.</p>
-
-<p>Thanks to Nick Green for fixing this!</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/03/05/brakeman-1-dot-5-1-released/">Brakeman 1.5.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-03-05 18:50:00 -0800" pubdate  updated >Mar 5<span>th</span>, 2012</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>After the excitment yesterday with a mass assignment vulnerability being exploited in a very public manner on <a href="https://gist.github.com/1978249">Github</a>, interest in Brakeman has skyrocketed.</p>
-
-<p>This lead to re-examination of Brakeman&#8217;s code for detecting that mass assignment has been globally disabled - and it turns out there was a bug or two. So here is a bug-fix release of Brakeman to correct that and some other minor issues.</p>
-
-<p>Upgrading to 1.5.1 may increase the number of warnings reported.</p>
-
-<p><em>Changes since 1.5.0</em>:</p>
-
-<ul>
-<li>Fix detection of global mass assignment setting</li>
-<li>Fix partial rendering in Rails 3</li>
-<li>Show backtrace when interrupt received (Ruby 1.9 only)</li>
-<li>More debug output</li>
-<li>Internal fixes:
-
-<ul>
-<li>Remove duplicate method in Brakeman::Rails2XSSErubis</li>
-<li>Add tracking of module and class to Brakeman::BaseProcessor</li>
-<li>Report module when using Brakeman::FindCall</li>
-</ul>
-</li>
-</ul>
-
-
-<h3>Mass Assignment</h3>
-
-<p>Mass assignment is not a particularly new issue, but the amount of attention suddenly focused on it this weekend was amazing.</p>
-
-<p>This release of Brakeman can detect three different methods for defaulting all models to a whitelist of allowed attributes that can be mass assigned.</p>
-
-<p>The first is probably the most widely-seen version. In an intializer, do</p>
-
-<pre><code>ActiveRecord::Base.send(:attr_accessible, nil)
-</code></pre>
-
-<p>The second is essentially equivalent, but 1.5.1 adds support for it as well:</p>
-
-<pre><code>module ActiveRecord
-  class Base
-    attr_accessible nil
-  end
-end
-</code></pre>
-
-<p>The third option is only available for Rails 3.1.0 and newer. The following configuration setting can be added to <code>application.rb</code>:</p>
-
-<pre><code>config.active_record.whitelist_attributes = true
-</code></pre>
-
-<p>Brakeman should correctly detect all of these.</p>
-
-<p><a href="http://pragtob.wordpress.com/2012/03/06/secure-your-rails-apps/">This is a very nice post</a> explaining the dangers of mass assignment (mentioning Brakeman is nice, too.)</p>
-
-<h3>Partials in Rails 3</h3>
-
-<p>In Rails 3, <code>render 'blah'</code> is now equivalent to <code>render :partial =&gt; 'blah'</code> when used inside a template.</p>
-
-<p>Brakeman now supports this correctly.</p>
-
-<h3>Debug Output</h3>
-
-<p>More debugging output has been added for use with the <code>-d</code> option.</p>
-
-<p>Additionally, when interrupting the application (for example, with <code>^C</code>), a stack trace will be output. Please note, however, that this only works with Ruby 1.9.</p>
-
-<h3>Internal Changes</h3>
-
-<p>There have been a few internal changes. There is a possibility that these will affect some warnings. However, it should only result in accurate reporting of class names.</p>
-
-<h3>Report Issues</h3>
-
-<p>Please report any problems on <a href="https://github.com/presidentbeef/brakeman/issues">Github</a>!</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/03/01/brakeman-1-dot-5-0-released/">Brakeman 1.5.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-03-01 20:23:00 -0800" pubdate  updated >Mar 1<span>st</span>, 2012</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>A release was forced today because two new Rails vulnerabilities were reported (the first since November):</p>
-
-<ul>
-<li><a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/9da0c515a6c4664">Manual options are not escaped in select()</a></li>
-<li><a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/edd28f1e3d04e913">Some operations on SafeBuffer mistakenly return strings marked as html_safe</a></li>
-</ul>
-
-
-<p>This release includes checks for these two vulnerabilities.</p>
-
-<p>There is also a new check for skipping CSRF token verification, and some other changes which may result in fewer or more vulnerabilities being reported.</p>
-
-<p><em>Changes since 1.4.0:</em></p>
-
-<ul>
-<li>Add version check for SafeBuffer vulnerability</li>
-<li>Add check for select vulnerability in Rails 3</li>
-<li>select() is no longer considered safe in Rails 2</li>
-<li>Add check for skipping CSRF protection with a blacklist</li>
-<li>Add JSON report format</li>
-<li>Model#id should not be considered XSS</li>
-<li>Standardize methods to check for SQL injection</li>
-<li>Fix Rails 2 route parsing issue with nested routes</li>
-</ul>
-
-
-<h3>Check for SafeBuffer Vulnerability</h3>
-
-<p>A new vulnerability was reported that affects strings which are marked as <code>html_safe</code> and then modified in some way. For some operations, the new, modified string will still be marked as <code>html_safe</code>. Full details <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/edd28f1e3d04e913">here</a>.</p>
-
-<p>For this vulnerability, Brakeman only does a version check and reports if an application is used a vulnerable version of Rails. It only reports on Rails 3 applications, since Rails 3 introduced the concept of SafeBuffers.</p>
-
-<h3>Check for select Helper Vulnerability</h3>
-
-<p>Another vulnerability was reported today in the <code>select</code> form helper. Option tags built by hand (interpolating values into <code>&lt;option&gt;&lt;/option&gt;</code>) will not be escaped by <code>select</code>. Full details <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/9da0c515a6c4664">here</a>.</p>
-
-<p>For Rails 3 applications, Brakeman checks for uses of <code>select</code> which have user input in the <code>options</code> argument. This check may be refined in the future.</p>
-
-<p>For Rails 2, Brakeman no longer considers <code>select</code> a safe method when checking for cross site scripting.</p>
-
-<h3>Check for CSRF Filter Skipping</h3>
-
-<p>When cross site request forgery protection is enabled, a <code>before_filter</code> is added called <code>verify_authenticity_token</code>. This filter checks that actions called responding to a <code>POST</code> have a correct authenticity token from the client. Since this is a regular <code>before_filter</code>, it can be skipped using <code>skip_before_filter</code>.</p>
-
-<p>If <code>skip_before_filter</code> is called using an <code>:except</code> option, then the default for the controller becomes NOT checking for an authenticity token:</p>
-
-<pre><code>skip_before_filter :verify_authenticity_token, :except =&gt; [:create, :delete]
-</code></pre>
-
-<p>It is recommended to use <code>:only</code> if skipping this filter is actually necessary. This way, any new actions added later will automatically fall under the CSRF protection.</p>
-
-<p>This check may be extended in the future to other important filters.</p>
-
-<h3>JSON Report Format</h3>
-
-<p>While the code for outputting JSON was in the 1.4.0 release, it was not actually added as a proper output format! This has been rectified.</p>
-
-<p><code>-f json</code> or <code>-o report.json</code> will now produce JSON reports.</p>
-
-<p>The information contained in these reports may change in the future, although that should only be adding more information.</p>
-
-<h3>SQL Methods</h3>
-
-<p>The code for finding SQL methods to check for SQL injection was a little messed up. Depending on how the method was called, different sets of methods were considered dangerous.</p>
-
-<p>This has been changed for better consistency and coverage. This means reports may include new SQL injections, so keep an eye out.</p>
-
-<h3>Rails 2 Route Parsing Fix</h3>
-
-<p>There was a bug in the code which determined if a method was being called on <code>map</code>, which caused Brakeman to think strange methods were route definitions (for example, <code>require</code>). This has been fixed.</p>
-
-<h3>Report Problems!</h3>
-
-<p>Always <a href="https://github.com/presidentbeef/brakeman/issues">report problems</a> encountered when running Brakeman.</p>
-
-<p>Don&#8217;t forget to join the <a href="http://librelist.com/browser/brakeman/">mailing list</a> and/or follow <a href="https://twitter.com/brakeman">@Brakeman</a> on Twitter.</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/02/25/brakeman-1-dot-4-0-released/">Brakeman 1.4.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-02-25 09:57:00 -0800" pubdate  updated >Feb 25<span>th</span>, 2012</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is not a big release, but it does add a new check. Also, processing for ERB templates with the <code>rails_xss</code> plugin has changed, so there is the possibility that line numbers for reported warnings will shift.</p>
-
-<p><em>Changes since 1.3.0:</em></p>
-
-<ul>
-<li>Add check for user input in link_to href parameter</li>
-<li>Match ERB processing to rails_xss plugin when plugin used</li>
-<li>Add Brakeman::Report#to_json, Brakeman::Warning#to_json</li>
-<li>Warnings below minimum confidence are dropped completely</li>
-<li>Brakeman.run will now always return a Tracker</li>
-</ul>
-
-
-<h3>New Check for link_to</h3>
-
-<p><a href="https://github.com/oreoshake">Neil Matatall</a> has contributed a new check for the href parameter in <code>link_to</code>. Even if HTML escaped, some values can be dangerous, so this check will warn for user input in that parameter. See <a href="https://github.com/presidentbeef/brakeman/pull/45">here</a> for more details.</p>
-
-<p>The <code>--url-safe-methods</code> option can be used to specify escaping methods which are safe for urls.</p>
-
-<h3>ERB and rails_xss</h3>
-
-<p>The <code>rails_xss</code> plugin has some fixes for how Erbuis handles certain input. Brakeman now matches those changes, which fixes some parsing errors.</p>
-
-<h3>Internal Changes</h3>
-
-<p>There have been some changes which only impact those working with Brakeman as a library.</p>
-
-<p>First, there is now json output for reports. This actually should be an output format option, but I did not realize it until writing this post. The next release will include this, though!</p>
-
-<p>The way Brakeman handles the <code>--confidence-level</code> option has also changed. In the past, warnings would be filtered when output in a report. This meant, for example, that <code>tracker.checks.all_warnings</code> would still return warnings below the specified confidence level. It also caused problems because there were many places in the code where the warnings needed to be filtered. With this release, warnings below the confidence level will be dropped as soon as they are found and will not need to be filtered at any later point.</p>
-
-<p>Lastly, <code>Brakeman.run</code> would return <code>false</code> if <code>--exit-on-warn</code> was set, and a <code>Tracker</code> object otherwise. This has changed. <code>Brakeman.run</code> will now always return a <code>Tracker</code> object and the logic for <code>--exit-on-warn</code> was pushed out to the Brakeman executable.</p>
-
-<h3>Report Issues</h3>
-
-<p>As usual, please <a href="https://github.com/presidentbeef/brakeman/issues">report any issues</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/02/08/brakeman-1-dot-3-0-released/">Brakeman 1.3.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-02-08 15:11:00 -0800" pubdate  updated >Feb 8<span>th</span>, 2012</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Thanks to everyone who reported problems and suggestions this time around!</p>
-
-<p>This release includes some new features, better performance on large projects, and more detection criteria. Warnings reported may change after upgrading.</p>
-
-<p><em>Changes since 1.2.2:</em></p>
-
-<ul>
-<li>Add file paths to HTML report</li>
-<li>Add caching of filters</li>
-<li>Add <code>--skip-files</code> option</li>
-<li>Add support for <code>attr_protected</code></li>
-<li>Add detection of request.env as user input</li>
-<li>Descriptions of checks in <code>-k</code> output</li>
-<li>Improved processing of named scopes</li>
-<li>Check for mass assignment in <code>ActiveRecord::Associations::AssociationCollection#build</code></li>
-<li>Better variable substitution</li>
-<li>Table output option for rescan reports</li>
-</ul>
-
-
-<h3>File Paths in HTML Report</h3>
-
-<p>In the HTML output, any warning which has context associated with it (visible when clicking on the warning message) will now include the file name at the top of the code snippet.</p>
-
-<h3>Filter Caching</h3>
-
-<p>Filters (using <code>before_filter</code>) are now only parsed once, instead of for everytime they are used. This has greatly improved performance when scanning some large projects.</p>
-
-<h3>Option to Skip Files</h3>
-
-<p>A list of files to skip can be provided with the <code>--skip-files</code> option. This will skip any initializers, libraries, controllers, models, or views that match the file names provided. The file names to skip are matched against the end of the absolute path. That is, <code>blah.rb</code> will skip <em>any</em> file with a name ending in <code>blah.rb</code>. This means it is not necessary to provide the full path to a file.</p>
-
-<h3>Support for Blacklisting Attributes</h3>
-
-<p>Previously, Brakeman ignored uses of <code>attr_protected</code>. Ideally, <code>attr_accessible</code> should always be used to whitelist attributes that can be set using mass assignment. This way, attributes can never be &#8220;accidentally&#8221; exposed. However, it can also be tedious for large models.</p>
-
-<p>With this release, Brakeman will downgrade mass assignment warnings to &#8220;weak&#8221; confidence if <code>attr_protected</code> is used, as well as suggesting that <code>attr_accessible</code> be used instead.</p>
-
-<p>The <code>--ignore-protected</code> option can be used to suppress any warnings for models that use <code>attr_protected</code>.</p>
-
-<h3>Request Environment is User Input</h3>
-
-<p><code>request.env</code> will now be treated as user input.</p>
-
-<h3>Check Descriptions</h3>
-
-<p>The <code>-k</code> option now includes descriptions of each check.</p>
-
-<h3>Named Scope Improvements</h3>
-
-<p>The 1.2.0 release added checking for SQL injection in named scopes, but it was not very accurate. This has been improved.</p>
-
-<h3>Better Variable Substitution</h3>
-
-<p>Variable substitution would sometimes &#8220;explode&#8221; if a set of code was processed for aliasing several times.</p>
-
-<p>For example,</p>
-
-<pre><code>x = clean(x)
-
-puts x
-</code></pre>
-
-<p>Might become</p>
-
-<pre><code>x = clean(x)
-
-puts clean(clean(clean(clean(x))))
-</code></pre>
-
-<p>This should now be prevented, so it would just become</p>
-
-<pre><code>x = clean(x)
-
-puts clean(x)
-</code></pre>
-
-<p>There may be subtle issues with this code (although I have not seen any yet), but it&#8217;s better than creating a bunch of useless substitutions.</p>
-
-<h3>Table Output for Rescan Reports</h3>
-
-<p><code>RescanReport#to_s(true)</code> will now output formatted tables, thanks to <a href="https://github.com/presidentbeef/brakeman/pull/33">Dave Worth</a>.</p>
-
-<h3>Issues?</h3>
-
-<p>As usual, please report any issues on <a href="https://github.com/presidentbeef/brakeman/issues">GitHub</a>, send a tweet to <a href="https://twitter.com/brakeman">@Brakeman</a>, or send an email to the <a href="http://librelist.com/browser/brakeman/">mailing list</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/01/26/brakeman-1-dot-2-2-released/">Brakeman 1.2.2 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-01-26 13:58:00 -0800" pubdate  updated >Jan 26<span>th</span>, 2012</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Changes since 1.2.1:</em></p>
-
-<ul>
-<li>&#8211;no-progress works again</li>
-<li>Make CheckLinkTo a separate check</li>
-<li>Don&#8217;t fail on unknown options to resource(s)</li>
-<li>Handle empty resource(s) blocks</li>
-<li>Add RescanReport#existing_warnings</li>
-</ul>
-
-
-<h3>No Progress Option</h3>
-
-<p>The last release broke the <code>--no-progress</code> option for hiding the <code>1/100 files processed</code> type messages. Now it works again!</p>
-
-<h3>Separate Check for link_to</h3>
-
-<p>For no great reason, <code>CheckLinkTo</code> was bundled with <code>CheckCrossSiteScripting</code>. It has now been moved out to a separate file, allowing it to be treated as a regular check. This means it can be explicitly skipped using <code>-x CheckLinkTo</code> (if desired).</p>
-
-<h3>Better Rails 2 Route Handling</h3>
-
-<p>Brakeman was raising an exception if a hash option to <code>resource</code> or <code>resources</code> did not match a set of known options. Now it will only warn instead of aborting route processing.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1028,23 +1136,23 @@ puts clean(x)
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2014/10/13/brakeman-2-dot-6-3-released/">Brakeman 2.6.3 Released</a>
+        <a href="/blog/2015/06/19/brakeman-3-dot-0-5-released/">Brakeman 3.0.5 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/08/27/brakeman-is-four-years-old/">Brakeman is Four Years Old!</a>
+        <a href="/blog/2015/06/18/brakeman-3-dot-0-4-released/">Brakeman 3.0.4 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/08/18/brakeman-2-dot-6-2-released/">Brakeman 2.6.2 Released</a>
+        <a href="/blog/2015/04/30/brakeman-3-dot-0-3-released/">Brakeman 3.0.3 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/07/02/brakeman-2-dot-6-1-released/">Brakeman 2.6.1 Released</a>
+        <a href="/blog/2015/03/09/brakeman-3-dot-0-2-released/">Brakeman 3.0.2 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/06/06/brakeman-2-dot-6-0-released/">Brakeman 2.6.0 Released</a>
+        <a href="/blog/2015/01/22/brakeman-3-dot-0-1-released/">Brakeman 3.0.1 Released</a>
       </li>
     
   </ul>

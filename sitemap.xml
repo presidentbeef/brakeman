@@ -223,12 +223,36 @@
         <lastmod>2014-10-13T21:42:13-07:00</lastmod>
     </url>
     <url>
+        <loc>http://brakemanscanner.org/blog/2015/01/02/brakeman-3-dot-0-0-released/</loc>
+        <lastmod>2015-07-24T13:39:52-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/blog/2015/01/22/brakeman-3-dot-0-1-released/</loc>
+        <lastmod>2015-07-24T13:39:52-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/blog/2015/03/09/brakeman-3-dot-0-2-released/</loc>
+        <lastmod>2015-07-24T13:39:52-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/blog/2015/04/30/brakeman-3-dot-0-3-released/</loc>
+        <lastmod>2015-07-24T13:39:52-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/blog/2015/06/18/brakeman-3-dot-0-4-released/</loc>
+        <lastmod>2015-07-24T13:39:52-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/blog/2015/06/19/brakeman-3-dot-0-5-released/</loc>
+        <lastmod>2015-07-24T13:39:52-07:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/contact/</loc>
         <lastmod>2012-07-19T10:20:00-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/blog/archives/</loc>
-        <lastmod>2014-10-13T21:42:13-07:00</lastmod>
+        <lastmod>2015-07-24T13:39:52-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/content_license/</loc>
@@ -236,7 +260,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/brakeman_users/</loc>
-        <lastmod>2014-10-29T09:37:15-07:00</lastmod>
+        <lastmod>2015-07-24T13:41:11-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/brakeman_as_a_library/</loc>
@@ -368,7 +392,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/cross-site_request_forgery/</loc>
-        <lastmod>2013-05-16T19:22:12-07:00</lastmod>
+        <lastmod>2015-07-24T13:39:52-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/cross_site_scripting_to_json/</loc>
@@ -472,7 +496,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/install/</loc>
-        <lastmod>2013-12-16T08:36:58-08:00</lastmod>
+        <lastmod>2015-07-24T13:39:52-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/running/</loc>
@@ -480,6 +504,6 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/</loc>
-        <lastmod>2014-10-13T21:42:13-07:00</lastmod>
+        <lastmod>2015-07-24T13:39:52-07:00</lastmod>
     </url>
 </urlset>

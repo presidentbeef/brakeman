@@ -117,12 +117,19 @@
 
 <p>Brakeman gems are now signed, which means the contents of the gem can be verified using the <a href="https://github.com/presidentbeef/brakeman/blob/master/brakeman-public_cert.pem">public Brakeman certificate</a>.</p>
 
-<p>To verify the gem, first add the certificate as &#8220;trusted&#8221;:</p>
+<p>To verify the gem, first add the following certificates as &#8220;trusted&#8221;:</p>
 
-<pre><code>gem cert --add &lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
+<pre><code># Brakeman
+gem cert --add &lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
+
+# ruby_parser, etc.
+gem cert --add &lt;(curl -Ls http://www.zenspider.com/~ryan/gem-public_cert.pem)
+
+# multijson
+gem cert --add &lt;(curl -Ls https://raw.githubusercontent.com/intridea/multi_json/master/certs/rwz.pem)
 </code></pre>
 
-<p>If that looks scary, the certificate can always be downloaded manually and then added. The certificate only needs to be added once.</p>
+<p>If that looks scary, the certificates can always be downloaded manually and then added. The certificates only need to be added once (until they expire).</p>
 
 <p>Then the gem can be verified at install:</p>
 
@@ -197,23 +204,23 @@ gem install brakeman-*.gem
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2014/10/13/brakeman-2-dot-6-3-released/">Brakeman 2.6.3 Released</a>
+        <a href="/blog/2015/06/19/brakeman-3-dot-0-5-released/">Brakeman 3.0.5 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/08/27/brakeman-is-four-years-old/">Brakeman is Four Years Old!</a>
+        <a href="/blog/2015/06/18/brakeman-3-dot-0-4-released/">Brakeman 3.0.4 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/08/18/brakeman-2-dot-6-2-released/">Brakeman 2.6.2 Released</a>
+        <a href="/blog/2015/04/30/brakeman-3-dot-0-3-released/">Brakeman 3.0.3 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/07/02/brakeman-2-dot-6-1-released/">Brakeman 2.6.1 Released</a>
+        <a href="/blog/2015/03/09/brakeman-3-dot-0-2-released/">Brakeman 3.0.2 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/06/06/brakeman-2-dot-6-0-released/">Brakeman 2.6.0 Released</a>
+        <a href="/blog/2015/01/22/brakeman-3-dot-0-1-released/">Brakeman 3.0.1 Released</a>
       </li>
     
   </ul>
