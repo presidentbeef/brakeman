@@ -1,9 +1,8 @@
 [![Brakeman Logo](http://brakemanscanner.org/images/logo_medium.png)](http://brakemanscanner.org/)
 
-[![Travis CI
-Status](https://secure.travis-ci.org/presidentbeef/brakeman.png)](https://travis-ci.org/presidentbeef/brakeman)
-[![Code
-Climate](https://codeclimate.com/github/presidentbeef/brakeman.png)](https://codeclimate.com/github/presidentbeef/brakeman)
+[![Build Status](https://travis-ci.org/presidentbeef/brakeman.svg?branch=master)](https://travis-ci.org/presidentbeef/brakeman)
+[![Code Climate](https://codeclimate.com/github/presidentbeef/brakeman/badges/gpa.svg)](https://codeclimate.com/github/presidentbeef/brakeman)
+[![Test Coverage](https://codeclimate.com/github/presidentbeef/brakeman/badges/coverage.svg)](https://codeclimate.com/github/presidentbeef/brakeman/coverage)
 
 # Brakeman
 
