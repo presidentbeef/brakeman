@@ -162,7 +162,7 @@ class OutputProcessorTests < Test::Unit::TestCase
                Sexp.new(:ivar, :@x))
 
     assert_output "def x(y)\n  @x = y\nend",
-      Sexp.new(:methdef,
+      Sexp.new(:defn,
                :x,
                Sexp.new(:args, :y),
                Sexp.new(:iasgn, :@x, Sexp.new(:lvar, :y)))
