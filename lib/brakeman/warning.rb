@@ -62,7 +62,7 @@ class Brakeman::Warning
         @warning_set = :model
       elsif self.template
         @warning_set = :template
-        @called_from = self.template[:caller]
+        @called_from = self.template.render_path
       elsif self.controller
         @warning_set = :controller
       else
@@ -92,9 +92,9 @@ class Brakeman::Warning
   def view_name
     return @view_name if @view_name
     if called_from
-      @view_name = "#{template[:name]} (#{called_from.last})"
+      @view_name = "#{template.name} (#{called_from.last})"
     else
-      @view_name = template[:name]
+      @view_name = template.name
     end
   end
 

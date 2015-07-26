@@ -6,7 +6,7 @@ class Brakeman::CheckXMLDoS < Brakeman::BaseCheck
   @description = "Checks for XML denial of service (CVE-2015-3227)"
 
   def run_check
-    version = tracker.config[:rails_version]
+    version = rails_version
 
     fix_version = case
                   when version_between?("2.0.0", "3.2.21")

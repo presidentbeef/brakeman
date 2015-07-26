@@ -78,13 +78,13 @@ module Brakeman
         name = ("#{name}.#{called_from}").to_sym
       end
 
-      @tracker.templates[name][:src] = result
-      @tracker.templates[name][:type] = type
+      @tracker.templates[name].src = result
+      @tracker.templates[name].type = type
     end
 
     #Process any calls to render() within a template
     def process_template_alias template
-      TemplateAliasProcessor.new(@tracker, template).process_safely template[:src]
+      TemplateAliasProcessor.new(@tracker, template).process_safely template.src
     end
 
     #Process source for initializing files

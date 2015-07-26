@@ -30,12 +30,12 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
         elsif node_type? target, :ivar and target.value == :@output_buffer
           s = Sexp.new :escaped_output, arg
           s.line(exp.line)
-          @current_template[:outputs] << s
+          @current_template.add_output s
           s
         else
           s = Sexp.new :output, arg
           s.line(exp.line)
-          @current_template[:outputs] << s
+          @current_template.add_output s
           s
         end
       elsif method == :to_s
@@ -80,12 +80,12 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
         elsif exp.method == :safe_append=
           s = Sexp.new :output, arg
           s.line(exp.line)
-          @current_template[:outputs] << s
+          @current_template.add_output s
           s
         else
           s = Sexp.new :escaped_output, arg
           s.line(exp.line)
-          @current_template[:outputs] << s
+          @current_template.add_output s
           s
         end
       else

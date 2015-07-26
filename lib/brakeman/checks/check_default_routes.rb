@@ -74,7 +74,7 @@ class Brakeman::CheckDefaultRoutes < Brakeman::BaseCheck
 
     warn :warning_type => "Remote Code Execution",
       :warning_code => :CVE_2014_0130,
-      :message => "Rails #{tracker.config[:rails_version]} with globbing routes is vulnerable to directory traversal and remote code execution. Patch or upgrade to #{upgrade}",
+      :message => "Rails #{rails_version} with globbing routes is vulnerable to directory traversal and remote code execution. Patch or upgrade to #{upgrade}",
       :confidence => confidence,
       :file => "#{tracker.app_path}/config/routes.rb",
       :link => "http://matasano.com/research/AnatomyOfRailsVuln-CVE-2014-0130.pdf"

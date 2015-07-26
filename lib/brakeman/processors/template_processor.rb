@@ -1,4 +1,5 @@
 require 'brakeman/processors/base_processor'
+require 'brakeman/tracker/template'
 
 #Base Processor for templates/views
 class Brakeman::TemplateProcessor < Brakeman::BaseProcessor
@@ -6,13 +7,8 @@ class Brakeman::TemplateProcessor < Brakeman::BaseProcessor
   #Initializes template information.
   def initialize tracker, template_name, called_from = nil, file_name = nil
     super(tracker) 
-    @current_template = { :name => template_name,
-                          :caller => called_from,
-                          :partial => template_name.to_s[0,1] == "_",
-                          :outputs => [],
-                          :src => nil, #set in Processor
-                          :type => nil, #set in Processor
-                          :file => file_name } 
+    @current_template = Brakeman::Template.new template_name, called_from, file_name, tracker
+
     if called_from
       template_name = (template_name.to_s + "." + called_from.to_s).to_sym
     end
@@ -27,7 +23,7 @@ class Brakeman::TemplateProcessor < Brakeman::BaseProcessor
     begin
       super
     rescue => e
-      except = e.exception("Error when processing #{@current_template[:name]}: #{e.message}")
+      except = e.exception("Error when processing #{@current_template.name}: #{e.message}")
       except.set_backtrace(e.backtrace)
       raise except
     end
@@ -48,7 +44,7 @@ class Brakeman::TemplateProcessor < Brakeman::BaseProcessor
   #Adds output to the list of outputs.
   def process_output exp
     exp.value = process exp.value
-    @current_template[:outputs] << exp unless exp.original_line
+    @current_template.add_output exp unless exp.original_line
     exp
   end
 

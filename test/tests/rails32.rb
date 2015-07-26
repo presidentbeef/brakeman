@@ -28,7 +28,7 @@ class Rails32Tests < Test::Unit::TestCase
   end
 
   def test_rc_version_number
-    assert_equal "3.2.9.rc2", report[:config][:rails_version]
+    assert_equal "3.2.9.rc2", report[:config].rails_version
   end
 
   def test_sql_injection_CVE_2012_5664

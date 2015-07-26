@@ -107,7 +107,7 @@ class Brakeman::Scanner
     if @app_tree.exists?("vendor/plugins/rails_xss") or
       options[:rails3] or options[:escape_html]
 
-      tracker.config[:escape_html] = true
+      tracker.config.escape_html = true
       Brakeman.notify "[Notice] Escaping HTML by default"
     end
   end
@@ -221,7 +221,7 @@ class Brakeman::Scanner
 
     track_progress controllers, "controllers" do |name, controller|
       Brakeman.debug "Processing #{name}"
-      controller[:src].each_value do |src|
+      controller.src.each_value do |src|
         @processor.process_controller_alias name, src
       end
     end

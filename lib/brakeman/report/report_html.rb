@@ -47,12 +47,10 @@ class Brakeman::Report::HTML < Brakeman::Report::Base
     out_processor = Brakeman::OutputProcessor.new
     template_rows = {}
     tracker.templates.each do |name, template|
-      unless template[:outputs].empty?
-        template[:outputs].each do |out|
-          out = CGI.escapeHTML(out_processor.format(out))
-          template_rows[name] ||= []
-          template_rows[name] << out.gsub("\n", ";").gsub(/\s+/, " ")
-        end
+      template.each_output do |out|
+        out = CGI.escapeHTML(out_processor.format(out))
+        template_rows[name] ||= []
+        template_rows[name] << out.gsub("\n", ";").gsub(/\s+/, " ")
       end
     end
 
@@ -83,7 +81,7 @@ class Brakeman::Report::HTML < Brakeman::Report::Base
     warning["Message"] = with_context original, warning["Message"]
     warning["Warning Type"] = with_link original, warning["Warning Type"]
     warning["Called From"] = original.called_from
-    warning["Template Name"] = original.template[:name]
+    warning["Template Name"] = original.template.name
     warning
   end
 

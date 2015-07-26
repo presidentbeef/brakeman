@@ -67,7 +67,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
         ignore
       else
         s = Sexp.new(:output, out)
-        @current_template[:outputs] << s
+        @current_template.add_output s
         s.line(exp.line)
         s
       end
@@ -140,11 +140,11 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
     case exp.node_type
     when :format
       exp.node_type = :output
-      @current_template[:outputs] << exp
+      @current_template.add_output exp
       exp
     when :format_escaped
       exp.node_type = :escaped_output
-      @current_template[:outputs] << exp
+      @current_template.add_output exp
       exp
     when :str, :ignore, :output, :escaped_output
       exp
@@ -158,7 +158,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       end
 
       s.line(exp.line)
-      @current_template[:outputs] << s
+      @current_template.add_output s
       s
     end
   end

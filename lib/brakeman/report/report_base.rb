@@ -40,7 +40,7 @@ class Brakeman::Report::Base
       c = tracker.controllers[name]
 
       if tracker.routes.include? :allow_all_actions or (tracker.routes[name] and tracker.routes[name].include? :allow_all_actions)
-        routes = c[:public].keys.map{|e| e.to_s}.sort.join(", ")
+        routes = c.methods_public.keys.map{|e| e.to_s}.sort.join(", ")
       elsif tracker.routes[name].nil?
         #No routes defined for this controller.
         #This can happen when it is only a parent class
@@ -48,7 +48,7 @@ class Brakeman::Report::Base
         routes = "[None]"
 
       else
-        routes = (Set.new(c[:public].keys) & tracker.routes[name.to_sym]).
+        routes = (Set.new(c.methods_public.keys) & tracker.routes[name.to_sym]).
           to_a.
           map {|e| e.to_s}.
           sort.
@@ -60,8 +60,8 @@ class Brakeman::Report::Base
       end
 
       controller_rows << { "Name" => name.to_s,
-        "Parent" => c[:parent].to_s,
-        "Includes" => c[:includes].join(", "),
+        "Parent" => c.parent.to_s,
+        "Includes" => c.includes.join(", "),
         "Routes" => routes
       }
     end
@@ -248,7 +248,7 @@ class Brakeman::Report::Base
   end
 
   def number_of_templates tracker
-    Set.new(tracker.templates.map {|k,v| v[:name].to_s[/[^.]+/]}).length
+    Set.new(tracker.templates.map {|k,v| v.name.to_s[/[^.]+/]}).length
   end
 
   def warning_file warning, absolute = @tracker.options[:absolute_paths]
@@ -263,8 +263,8 @@ class Brakeman::Report::Base
 
   def rails_version
     case
-    when tracker.config[:rails_version]
-      tracker.config[:rails_version]
+    when tracker.config.rails_version
+      tracker.config.rails_version
     when tracker.options[:rails4]
       "4.x"
     when tracker.options[:rails3]

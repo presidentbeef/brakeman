@@ -17,7 +17,7 @@ class Brakeman::CheckQuoteTableName < Brakeman::BaseCheck
         confidence = CONFIDENCE[:med]
       end
 
-      if tracker.config[:rails_version] =~ /^3/
+      if rails_version =~ /^3/
         message = "Versions before 3.0.10 have a vulnerability in quote_table_name: CVE-2011-2930"
       else
         message = "Versions before 2.3.14 have a vulnerability in quote_table_name: CVE-2011-2930"

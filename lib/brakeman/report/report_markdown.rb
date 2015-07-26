@@ -99,12 +99,10 @@ class Brakeman::Report::Markdown < Brakeman::Report::Base
     out_processor = Brakeman::OutputProcessor.new
     template_rows = {}
     tracker.templates.each do |name, template|
-      unless template[:outputs].empty?
-        template[:outputs].each do |out|
-          out = out_processor.format out
-          template_rows[name] ||= []
-          template_rows[name] << out.gsub("\n", ";").gsub(/\s+/, " ")
-        end
+      template.each_output do |out|
+        out = out_processor.format out
+        template_rows[name] ||= []
+        template_rows[name] << out.gsub("\n", ";").gsub(/\s+/, " ")
       end
     end
 

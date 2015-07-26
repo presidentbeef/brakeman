@@ -19,7 +19,7 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
 
   def cve_2011_2931
     if version_between?('2.0.0', '2.3.12') or version_between?('3.0.0', '3.0.9')
-      if tracker.config[:rails_version] =~ /^3/
+      if rails_version =~ /^3/
         message = "Versions before 3.0.10 have a vulnerability in strip_tags (CVE-2011-2931)"
       else
         message = "Versions before 2.3.13 have a vulnerability in strip_tags (CVE-2011-2931)"
@@ -36,14 +36,14 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
 
   def cve_2012_3465
     case
-    when (version_between?('2.0.0', '2.3.14') and tracker.config[:escape_html])
+    when (version_between?('2.0.0', '2.3.14') and tracker.config.escape_html?)
       message = "All Rails 2.x versions have a vulnerability in strip_tags (CVE-2012-3465)"
     when version_between?('3.0.10', '3.0.16')
-      message = "Rails #{tracker.config[:rails_version]} has a vulnerability in strip_tags (CVE-2012-3465). Upgrade to 3.0.17"
+      message = "Rails #{rails_version} has a vulnerability in strip_tags (CVE-2012-3465). Upgrade to 3.0.17"
     when version_between?('3.1.0', '3.1.7')
-      message = "Rails #{tracker.config[:rails_version]} has a vulnerability in strip_tags (CVE-2012-3465). Upgrade to 3.1.8"
+      message = "Rails #{rails_version} has a vulnerability in strip_tags (CVE-2012-3465). Upgrade to 3.1.8"
     when version_between?('3.2.0', '3.2.7')
-      message = "Rails #{tracker.config[:rails_version]} has a vulnerability in strip_tags (CVE-2012-3465). Upgrade to 3.2.8"
+      message = "Rails #{rails_version} has a vulnerability in strip_tags (CVE-2012-3465). Upgrade to 3.2.8"
     else
       return
     end

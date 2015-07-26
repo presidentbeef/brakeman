@@ -37,19 +37,19 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   def process_mixins
     controller = @tracker.controllers[@current_class]
 
-    controller[:includes].each do |i|
+    controller.includes.each do |i|
       mixin = @tracker.libs[i]
 
       next unless mixin
 
       #Process methods in alphabetical order for consistency
-      methods = mixin[:public].keys.map { |n| n.to_s }.sort.map { |n| n.to_sym }
+      methods = mixin.methods_public.keys.map { |n| n.to_s }.sort.map { |n| n.to_sym }
 
       methods.each do |name|
         #Need to process the method like it was in a controller in order
         #to get the renders set
         processor = Brakeman::ControllerProcessor.new(@app_tree, @tracker)
-        method = mixin[:public][name][:src].deep_clone
+        method = mixin.get_method(name)[:src].deep_clone
 
         if node_type? method, :methdef
           method = processor.process_defn method
@@ -192,12 +192,12 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   def layout_name
     controller = @tracker.controllers[@current_class]
 
-    return controller[:layout] if controller[:layout]
-    return false if controller[:layout] == false
+    return controller.layout if controller.layout
+    return false if controller.layout == false
 
     app_controller = @tracker.controllers[:ApplicationController]
 
-    return app_controller[:layout] if app_controller and app_controller[:layout]
+    return app_controller.layout if app_controller and app_controller.layout
 
     nil
   end
@@ -215,120 +215,12 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #Get list of filters, including those that are inherited
   def before_filter_list method, klass
     controller = @tracker.controllers[klass]
-    filters = []
 
-    while controller
-      filters = get_before_filters(method, controller) + filters
-
-      controller = @tracker.controllers[controller[:parent]] ||
-                   @tracker.libs[controller[:parent]]
-    end
-
-    remove_skipped_filters filters, method, klass
-  end
-
-  def remove_skipped_filters filters, method, klass
-    controller = @tracker.controllers[klass]
-
-    while controller
-      filters = filters - get_skipped_filters(method, controller)
-
-      controller = @tracker.controllers[controller[:parent]] ||
-                   @tracker.libs[controller[:parent]]
-    end
-
-    filters
-  end
-
-  def get_skipped_filters method, controller
-    return [] unless controller[:options] and controller[:options][:skip_filters]
-
-    filters = []
-
-    if controller[:skip_filter_cache].nil?
-      controller[:skip_filter_cache] = controller[:options][:skip_filters].map do |filter|
-        before_filter_to_hash(filter.args)
-      end
-    end
-
-    controller[:skip_filter_cache].each do |f|
-      if f[:all] or
-        (f[:only] == method) or
-        (f[:only].is_a? Array and f[:only].include? method) or
-        (f[:except].is_a? Symbol and f[:except] != method) or
-        (f[:except].is_a? Array and not f[:except].include? method)
-
-        filters.concat f[:methods]
-      end
-    end
-
-    filters
-  end
-
-  #Returns an array of filter names
-  def get_before_filters method, controller
-    return [] unless controller[:options] and controller[:options][:before_filters]
-
-    filters = []
-
-    if controller[:before_filter_cache].nil?
-      filter_cache = []
-
-      controller[:options][:before_filters].each do |filter|
-        filter_cache << before_filter_to_hash(filter.args)
-      end
-
-      controller[:before_filter_cache] = filter_cache
-    end
-
-    controller[:before_filter_cache].each do |f|
-      if f[:all] or
-        (f[:only] == method) or
-        (f[:only].is_a? Array and f[:only].include? method) or
-        (f[:except].is_a? Symbol and f[:except] != method) or
-        (f[:except].is_a? Array and not f[:except].include? method)
-
-        filters.concat f[:methods]
-      end
-    end
-
-    filters
-  end
-
-  #Returns a before filter as a hash table
-  def before_filter_to_hash args
-    filter = {}
-
-    #Process args for the uncommon but possible situation
-    #in which some variables are used in the filter.
-    args.each do |a|
-      if sexp? a
-        a = process_default a
-      end
-    end
-
-    filter[:methods] = [args[0][1]]
-
-    args[1..-1].each do |a|
-      filter[:methods] << a[1] if a.node_type == :lit
-    end
-
-    if args[-1].node_type == :hash
-      option = args[-1][1][1]
-      value = args[-1][2]
-      case value.node_type
-      when :array
-        filter[option] = value[1..-1].map {|v| v[1] }
-      when :lit, :str
-        filter[option] = value[1]
-      else
-        Brakeman.debug "[Notice] Unknown before_filter value: #{option} => #{value}"
-      end
+    if controller
+      controller.before_filter_list self, method
     else
-      filter[:all] = true
+      []
     end
-
-    filter
   end
 
   #Finds a method in the given class or a parent class
@@ -348,12 +240,10 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     controller ||= @tracker.libs[klass]
 
     if klass and controller
-      method = controller[:public][method_name]
-      method ||= controller[:private][method_name]
-      method ||= controller[:protected][method_name]
+      method = controller.get_method method_name
 
       if method.nil?
-        controller[:includes].each do |included|
+        controller.includes.each do |included|
           method = find_method method_name, included
           if method
             @method_cache[method_name] = method
@@ -361,9 +251,9 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
           end
        end
 
-        @method_cache[method_name] = find_method method_name, controller[:parent]
+        @method_cache[method_name] = find_method method_name, controller.parent
       else
-        @method_cache[method_name] = { :controller => controller[:name], :method => method[:src] }
+        @method_cache[method_name] = { :controller => controller.name, :method => method[:src] }
       end
     else
       nil

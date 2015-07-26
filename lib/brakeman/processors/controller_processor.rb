@@ -1,4 +1,5 @@
 require 'brakeman/processors/base_processor'
+require 'brakeman/tracker/controller'
 
 #Processes controller. Results are put in tracker.controllers
 class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
@@ -28,7 +29,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     #If inside a real controller, treat any other classes as libraries.
     #But if not inside a controller already, then the class may include
     #a real controller, so we can't take this shortcut.
-    if @current_class and @current_class[:name].to_s.end_with? "Controller"
+    if @current_class and @current_class.name.to_s.end_with? "Controller"
       Brakeman.debug "[Notice] Treating inner class as library: #{name}"
       Brakeman::LibraryProcessor.new(@tracker).process_library exp, @file_name
       return exp
@@ -48,30 +49,18 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
     if @current_class
       outer_class = @current_class
-      name = (outer_class[:name].to_s + "::" + name.to_s).to_sym
+      name = (outer_class.name.to_s + "::" + name.to_s).to_sym
     end
 
     if @current_module
-      name = (@current_module[:name].to_s + "::" + name.to_s).to_sym
+      name = (@current_module.name.to_s + "::" + name.to_s).to_sym
     end
 
     if @tracker.controllers[name]
       @current_class = @tracker.controllers[name]
-      @current_class[:files] << @file_name unless @current_class[:files].include? @file_name
-      @current_class[:src][@file_name] = exp
+      @current_class.add_file @file_name, exp
     else
-      @current_class = {
-        :name => name,
-        :parent => parent,
-        :includes => [],
-        :public => {},
-        :private => {},
-        :protected => {},
-        :options => {:before_filters => [], :skip_filters => []},
-        :src => { @file_name => exp },
-        :files => [ @file_name ]
-      }
-
+      @current_class = Brakeman::Controller.new name, parent, @file_name, exp, @tracker
       @tracker.controllers[name] = @current_class
     end
 
@@ -92,30 +81,18 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
     if @current_module
       outer_module = @current_module
-      name = (outer_module[:name].to_s + "::" + name.to_s).to_sym
+      name = (outer_module.name.to_s + "::" + name.to_s).to_sym
     end
 
     if @current_class
-      name = (@current_class[:name].to_s + "::" + name.to_s).to_sym
+      name = (@current_class.name.to_s + "::" + name.to_s).to_sym
     end
 
     if @tracker.libs[name]
       @current_module = @tracker.libs[name]
-      @current_module[:files] << @file_name unless @current_module[:files].include? @file_name
-      @current_module[:src][@file_name] = exp
+      @current_module.add_file @file_name, exp
     else
-      @current_module = {
-        :name => name,
-        :parent => parent,
-        :includes => [],
-        :public => {},
-        :private => {},
-        :protected => {},
-        :options => {:before_filters => []},
-        :src => { @file_name => exp },
-        :files => [ @file_name ]
-      }
-
+      @current_module = Brakeman::Controller.new name, parent, @file_name, exp, @tracker
       @tracker.libs[name] = @current_module
     end
 
@@ -149,45 +126,44 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
         when :private, :protected, :public
           @visibility = method
         when :protect_from_forgery
-          @current_class[:options][:protect_from_forgery] = true
+          @current_class.options[:protect_from_forgery] = true
         else
           #??
         end
       else
         case method
         when :include
-          @current_class[:includes] << class_name(first_arg) if @current_class
+          @current_class.add_include class_name(first_arg) if @current_class
         when :before_filter, :append_before_filter, :before_action, :append_before_action
           if node_type? exp.first_arg, :iter
             add_lambda_filter exp
           else
-            @current_class[:options][:before_filters] << exp
+            @current_class.add_before_filter exp
           end
         when :prepend_before_filter, :prepend_before_action
           if node_type? exp.first_arg, :iter
             add_lambda_filter exp
           else
-            @current_class[:options][:before_filters].unshift exp
+            @current_class.prepend_before_filter exp
           end
         when :skip_before_filter, :skip_filter, :skip_before_action, :skip_action_callback
-          @current_class[:options][:skip_filters] << exp
+          @current_class.skip_filter exp
         when :layout
           if string? last_arg
             #layout "some_layout"
 
             name = last_arg.value.to_s
             if @app_tree.layout_exists?(name)
-              @current_class[:layout] = "layouts/#{name}"
+              @current_class.layout = "layouts/#{name}"
             else
               Brakeman.debug "[Notice] Layout not found: #{name}"
             end
           elsif node_type? last_arg, :nil, :false
             #layout :false or layout nil
-            @current_class[:layout] = false
+            @current_class.layout = false
           end
         else
-          @current_class[:options][method] ||= []
-          @current_class[:options][method] << exp
+          @current_class.add_option method, exp
         end
       end
 
@@ -218,9 +194,9 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     @current_method = nil
 
     if @current_class
-      @current_class[@visibility][name] = { :src => res, :file => @file_name }
+      @current_class.add_method @visibility, name, res, @file_name
     elsif @current_module
-      @current_module[@visibility][name] = { :src => res, :file => @file_name }
+      @current_module.add_method @visibility, name, res, @file_name
     end
 
     res
@@ -232,7 +208,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
     if exp[1].node_type == :self
       if @current_class
-        target = @current_class[:name]
+        target = @current_class.name
       elsif @current_module
         target = @current_module
       else
@@ -248,9 +224,9 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     @current_method = nil
 
     if @current_class
-      @current_class[@visibility][name] = { :src => res, :file => @file_name }
+      @current_class.add_method @visibility, name, res, @file_name
     elsif @current_module
-      @current_module[@visibility][name] = { :src => res, :file => @file_name }
+      @current_module.add_method @visibility, name, res, @file_name
     end
 
     res
@@ -268,13 +244,13 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
   #Sets default layout for renders inside Controller
   def set_layout_name
-    return if @current_class[:layout]
+    return if @current_class.layout
 
-    name = underscore(@current_class[:name].to_s.split("::")[-1].gsub("Controller", ''))
+    name = underscore(@current_class.name.to_s.split("::")[-1].gsub("Controller", ''))
 
     #There is a layout for this Controller
     if @app_tree.layout_exists?(name)
-      @current_class[:layout] = "layouts/#{name}"
+      @current_class.layout = "layouts/#{name}"
     end
   end
 
@@ -308,7 +284,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     #Build Sexp for filter method
     body = Sexp.new(:lasgn,
                     block_variable,
-                    Sexp.new(:call, Sexp.new(:const, @current_class[:name]), :new))
+                    Sexp.new(:call, Sexp.new(:const, @current_class.name), :new))
 
     filter_method = Sexp.new(:defn, filter_name, Sexp.new(:args), body).concat(block_inner).line(exp.line)
 

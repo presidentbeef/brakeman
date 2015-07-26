@@ -273,7 +273,7 @@ class RescannerTests < Test::Unit::TestCase
     end
 
     #@original is actually modified
-    assert @original.config[:rails_version], "3.2.6"
+    assert @original.config.rails_version, "3.2.6"
     assert_reindex :none
     assert_changes
     assert_new 1
@@ -288,7 +288,7 @@ class RescannerTests < Test::Unit::TestCase
     end
 
     #@original is actually modified
-    assert @original.config[:rails_version], "3.2.17"
+    assert @original.config.rails_version, "3.2.17"
     assert_reindex :none
     assert_changes
     assert_new 0

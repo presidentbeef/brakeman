@@ -25,7 +25,7 @@ class Brakeman::CheckRenderDoS < Brakeman::BaseCheck
   end
 
   def warn_about_text_render
-    message = "Rails #{tracker.config[:rails_version]} has a denial of service vulnerability (CVE-2014-0082). Upgrade to Rails version 3.2.17"
+    message = "Rails #{rails_version} has a denial of service vulnerability (CVE-2014-0082). Upgrade to Rails version 3.2.17"
 
     warn :warning_type => "Denial of Service",
       :warning_code => :CVE_2014_0082,
