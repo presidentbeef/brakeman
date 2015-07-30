@@ -7,4 +7,8 @@ class SweetLib
     #Should warn about command injection
     system("rm #{@bad}")
   end
+
+  def test_net_http_start_ssl
+    Net::HTTP.start(uri.host, uri.port, :use_ssl => true, :verify_mode => OpenSSL::SSL::VERIFY_NONE)
+  end
 end
