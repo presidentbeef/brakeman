@@ -30,7 +30,7 @@ class CVETests < Test::Unit::TestCase
       :message => /^Rails\ 4\.1\.1\ does\ not\ encode\ JSON\ keys\ \(C/,
       :confidence => 0,
       :relative_path => "Gemfile",
-      :user_input => nil 
+      :user_input => nil
   end
 
   def test_CVE_2015_3226_4_2_1
@@ -47,7 +47,7 @@ class CVETests < Test::Unit::TestCase
       :message => /^Rails\ 4\.2\.1\ does\ not\ encode\ JSON\ keys\ \(C/,
       :confidence => 0,
       :relative_path => "Gemfile",
-      :user_input => nil 
+      :user_input => nil
   end
 
   def test_CVE_2015_3226_workaround
@@ -67,7 +67,7 @@ class CVETests < Test::Unit::TestCase
             end
           end
         end
-      end 
+      end
       RUBY
     end
 
@@ -80,7 +80,7 @@ class CVETests < Test::Unit::TestCase
       :message => /^Rails\ 4\.2\.1\ does\ not\ encode\ JSON\ keys\ \(C/,
       :confidence => 0,
       :relative_path => "Gemfile",
-      :user_input => nil 
+      :user_input => nil
   end
 
   def test_CVE_2015_3227_4_2_1
@@ -141,5 +141,13 @@ class CVETests < Test::Unit::TestCase
     assert_no_warning :type => :warning,
       :warning_code => 88,
       :warning_type => "Denial of Service"
+  end
+
+  def test_railties_version
+    before_rescan_of "Gemfile", "rails4" do
+      replace "Gemfile", "rails", "railties"
+    end
+
+    assert_version "4.0.0"
   end
 end
