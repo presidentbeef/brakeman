@@ -99,6 +99,9 @@ module Brakeman
 
       if options
         options.each { |k, v| options[k] = Set.new v if v.is_a? Array }
+        
+        # After parsing the yaml config file for options, convert any string keys into symbols.
+        options.keys.select {|k| k.is_a? String}.map {|k| k.to_sym }.each {|k| options[k] = options[k.to_s]; options.delete(k.to_s) }
 
         # notify if options[:quiet] and quiet is nil||false
         notify "[Notice] Using configuration in #{config}" unless (options[:quiet] || quiet)
