@@ -1,12 +1,11 @@
 require 'brakeman/differ'
 
-DiffRun = Brakeman.run :app_path => "#{TEST_PATH}/apps/rails2"
-
 class DifferTests < Test::Unit::TestCase
   include BrakemanTester::DiffHelper
 
   def setup
-    @warnings = DiffRun.warnings
+    @@diffrun ||= Brakeman.run :app_path => "#{TEST_PATH}/apps/rails2"
+    @warnings ||= @@diffrun.warnings
   end
 
   def diff new, old
