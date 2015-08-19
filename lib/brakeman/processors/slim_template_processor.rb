@@ -46,14 +46,14 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
   def make_output exp
     s = Sexp.new :output, exp
     s.line(exp.line)
-    @current_template[:outputs] << s
+    @current_template.add_output s
     s
   end
 
   def make_escaped_output exp
     s = Sexp.new :escaped_output, exp.first_arg
     s.line(exp.line)
-    @current_template[:outputs] << s
+    @current_template.add_output s
     s
   end
 

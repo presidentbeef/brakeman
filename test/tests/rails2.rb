@@ -34,7 +34,7 @@ class Rails2Tests < Test::Unit::TestCase
   end
 
   def test_config_sanity
-    assert_equal 'UTC', report[:config][:rails][:time_zone].value
+    assert_equal 'UTC', report[:config].rails[:time_zone].value
   end
 
   def test_eval

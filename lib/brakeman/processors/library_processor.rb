@@ -1,5 +1,6 @@
 require 'brakeman/processors/base_processor'
 require 'brakeman/processors/alias_processor'
+require 'brakeman/tracker/library'
 
 #Process generic library and stores it in Tracker.libs
 class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
@@ -23,29 +24,18 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
     if @current_class
       outer_class = @current_class
-      name = (outer_class[:name].to_s + "::" + name.to_s).to_sym
+      name = (outer_class.name.to_s + "::" + name.to_s).to_sym
     end
 
     if @current_module
-      name = (@current_module[:name].to_s + "::" + name.to_s).to_sym
+      name = (@current_module.name.to_s + "::" + name.to_s).to_sym
     end
 
     if @tracker.libs[name]
       @current_class = @tracker.libs[name]
-      @current_class[:files] << @file_name unless @current_class[:files].include? @file_name
-      @current_class[:src][@file_name] = exp
+      @current_class.add_file @file_name, exp
     else
-      @current_class = {
-        :name => name,
-        :parent => parent,
-        :includes => [],
-        :public => {},
-        :private => {},
-        :protected => {},
-        :src => { @file_name => exp },
-        :files => [ @file_name ]
-      }
-
+      @current_class = Brakeman::Library.new name, parent, @file_name, exp, @tracker 
       @tracker.libs[name] = @current_class
     end
 
@@ -65,28 +55,18 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
     if @current_module
       outer_module = @current_module
-      name = (outer_module[:name].to_s + "::" + name.to_s).to_sym
+      name = (outer_module.name.to_s + "::" + name.to_s).to_sym
     end
 
     if @current_class
-      name = (@current_class[:name].to_s + "::" + name.to_s).to_sym
+      name = (@current_class.name.to_s + "::" + name.to_s).to_sym
     end
 
     if @tracker.libs[name]
       @current_module = @tracker.libs[name]
-      @current_module[:files] << @file_name unless @current_module[:files].include? @file_name
-      @current_module[:src][@file_name] = exp
+      @current_module.add_file @file_name, exp
     else
-      @current_module = {
-        :name => name,
-        :includes => [],
-        :public => {},
-        :private => {},
-        :protected => {},
-        :src => { @file_name => exp },
-        :files => [ @file_name ]
-      }
-
+      @current_module = Brakeman::Library.new name, nil, @file_name, exp, @tracker
       @tracker.libs[name] = @current_module
     end
 
@@ -106,10 +86,10 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
     if @current_class
       exp.body = process_all! exp.body
-      @current_class[:public][exp.method_name] = { :src => exp, :file => @file_name }
+      @current_class.add_method :public, exp.method_name, exp, @file_name
     elsif @current_module
       exp.body = process_all! exp.body
-      @current_module[:public][exp.method_name] = { :src => exp, :file => @file_name }
+      @current_module.add_method :public, exp.method_name, exp, @file_name
     end
 
     exp
@@ -120,10 +100,10 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
     if @current_class
       exp.body = process_all! exp.body
-      @current_class[:public][exp.method_name] = { :src => exp, :file => @file_name }
+      @current_class.add_method :public, exp.method_name, exp, @file_name
     elsif @current_module
       exp.body = process_all! exp.body
-      @current_module[:public][exp.method_name] = { :src => exp, :file => @file_name }
+      @current_module.add_method :public, exp.method_name, exp, @file_name
     end
 
     exp

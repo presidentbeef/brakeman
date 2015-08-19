@@ -5,14 +5,16 @@ $LOAD_PATH.unshift "#{TEST_PATH}/../lib"
 begin
   require 'simplecov'
 
-  SimpleCov.start do
-    add_filter 'lib/ruby_parser/ruby18_parser.rb'
-    add_filter 'lib/ruby_parser/ruby19_parser.rb'
-    add_filter 'lib/ruby_parser/ruby_lexer.rb'
-    add_filter 'lib/ruby_parser/ruby_parser_extras.rb'
-  end
+  SimpleCov.start
 rescue LoadError => e
   $stderr.puts "Install simplecov for test coverage report"
+end
+
+begin
+  require "codeclimate-test-reporter"
+  CodeClimate::TestReporter.start
+rescue LoadError => e
+  $stderr.puts "Skipping Code Climate test reporting"
 end
 
 require 'brakeman'
@@ -42,7 +44,7 @@ module BrakemanTester::FindWarning
 
   def assert_no_warning opts
     warnings = find opts
-    assert_equal 0, warnings.length, "Unexpected warning found"
+    assert_equal 0, warnings.length
   end
 
   def find opts = {}, &block
@@ -85,7 +87,7 @@ module BrakemanTester::CheckExpected
   end
 
   def test_zero_errors
-    assert_equal 0, report[:errors].length
+    assert_equal 0, report[:errors].length, "Unexpected warning found: #{report[:errors].inspect}"
   end
 end
 

@@ -16,6 +16,7 @@ module Brakeman
       type = path.match(KNOWN_TEMPLATE_EXTENSIONS)[1].to_sym
       type = :erb if type == :rhtml
       name = template_path_to_name path
+      Brakeman.debug "Parsing #{path}"
 
       begin
         src = case type
@@ -46,7 +47,7 @@ module Brakeman
     end
 
     def parse_erb text
-      if tracker.config[:escape_html]
+      if tracker.config.escape_html?
         if tracker.options[:rails3]
           require 'brakeman/parsers/rails3_erubis'
           Brakeman::Rails3Erubis.new(text).src
@@ -54,7 +55,7 @@ module Brakeman
           require 'brakeman/parsers/rails2_xss_plugin_erubis'
           Brakeman::Rails2XSSPluginErubis.new(text).src
         end
-      elsif tracker.config[:erubis]
+      elsif tracker.config.erubis?
         require 'brakeman/parsers/rails2_erubis'
         Brakeman::ScannerErubis.new(text).src
       else
@@ -66,8 +67,8 @@ module Brakeman
     end
 
     def erubis?
-      tracker.config[:escape_html] or
-      tracker.config[:erubis]
+      tracker.config.escape_html? or
+        tracker.config.erubis?
     end
 
     def parse_haml text
@@ -75,7 +76,7 @@ module Brakeman
       Brakeman.load_brakeman_dependency 'sass'
 
       Haml::Engine.new(text,
-                       :escape_html => !!tracker.config[:escape_html]).precompiled.gsub(/([^\\])\\n/, '\1')
+                       :escape_html => tracker.config.escape_html?).precompiled.gsub(/([^\\])\\n/, '\1')
     end
 
     def parse_slim text

@@ -38,7 +38,7 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
       next if duplicate? result
       add_result result
 
-      message = "Rails #{tracker.config[:rails_version]} has a vulnerability in #{method}: upgrade to #{@fix_version} or patch"
+      message = "Rails #{rails_version} has a vulnerability in #{method}: upgrade to #{@fix_version} or patch"
 
       if include_user_input? result[:call]
         confidence = CONFIDENCE[:high]

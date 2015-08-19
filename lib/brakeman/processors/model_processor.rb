@@ -1,9 +1,8 @@
 require 'brakeman/processors/base_processor'
+require 'brakeman/tracker/model'
 
 #Processes models. Puts results in tracker.models
 class Brakeman::ModelProcessor < Brakeman::BaseProcessor
-
-  ASSOCIATIONS = Set[:belongs_to, :has_one, :has_many, :has_and_belongs_to_many]
 
   def initialize tracker
     super
@@ -34,31 +33,18 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
 
     if @current_class
       outer_class = @current_class
-      name = (outer_class[:name].to_s + "::" + name.to_s).to_sym
+      name = (outer_class.name.to_s + "::" + name.to_s).to_sym
     end
 
     if @current_module
-      name = (@current_module[:name].to_s + "::" + name.to_s).to_sym
+      name = (@current_module.name.to_s + "::" + name.to_s).to_sym
     end
 
     if @tracker.models[name]
       @current_class = @tracker.models[name]
-      @current_class[:files] << @file_name unless @current_class[:files].include? @file_name
-      @current_class[:src][@file_name] = exp
+      @current_class.add_file @file_name, exp
     else
-      @current_class = {
-        :name => name,
-        :parent => parent,
-        :includes => [],
-        :public => {},
-        :private => {},
-        :protected => {},
-        :options => {},
-        :src => { @file_name => exp },
-        :associations => {},
-        :files => [ @file_name ]
-      }
-
+      @current_class = Brakeman::Model.new name, parent, @file_name, exp, @tracker 
       @tracker.models[name] = @current_class
     end
 
@@ -78,30 +64,18 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
 
     if @current_module
       outer_module = @current_module
-      name = (outer_module[:name].to_s + "::" + name.to_s).to_sym
+      name = (outer_module.name.to_s + "::" + name.to_s).to_sym
     end
 
     if @current_class
-      name = (@current_class[:name].to_s + "::" + name.to_s).to_sym
+      name = (@current_class.name.to_s + "::" + name.to_s).to_sym
     end
 
     if @tracker.libs[name]
       @current_module = @tracker.libs[name]
-      @current_module[:files] << @file_name unless @current_module[:files].include? @file_name
-      @current_module[:src][@file_name] = exp
+      @current_module.add_file @file_name, exp
     else
-      @current_module = {
-        :name => name,
-        :includes => [],
-        :public => {},
-        :private => {},
-        :protected => {},
-        :options => {},
-        :src => { @file_name => exp },
-        :associations => {},
-        :files => [ @file_name ]
-      }
-
+      @current_module = Brakeman::Model.new name, nil, @file_name, exp, @tracker
       @tracker.libs[name] = @current_module
     end
 
@@ -136,37 +110,21 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
         when :private, :protected, :public
           @visibility = method
         when :attr_accessible
-          @current_class[:attr_accessible] ||= []
+          @current_class.set_attr_accessible
         else
           #??
         end
       else
         case method
         when :include
-          @current_class[:includes] << class_name(first_arg) if @current_class
+          @current_class.add_include class_name(first_arg) if @current_class
         when :attr_accessible
-          @current_class[:attr_accessible] ||= []
-          args = []
-
-          exp.each_arg do |e|
-            if node_type? e, :lit
-              args << e.value
-            elsif hash? e
-              @current_class[:options][:role_accessible] ||= []
-              @current_class[:options][:role_accessible].concat args
-            end
-          end
-
-          @current_class[:attr_accessible].concat args
+          @current_class.set_attr_accessible exp
+        when :attr_protected
+          @current_class.set_attr_protected exp
         else
           if @current_class
-            if ASSOCIATIONS.include? method
-              @current_class[:associations][method] ||= []
-              @current_class[:associations][method].concat exp.args
-            else
-              @current_class[:options][method] ||= []
-              @current_class[:options][method] << exp.arglist.line(exp.line)
-            end
+            @current_class.add_option method, exp
           end
         end
       end
@@ -190,9 +148,9 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     @current_method = nil
 
     if @current_class
-      @current_class[@visibility][name] = { :src => res, :file => @file_name }
+      @current_class.add_method @visibility, name, res, @file_name
     elsif @current_module
-      @current_module[@visibility][name] = { :src => res, :file => @file_name }
+      @current_module.add_method @visibility, name, res, @file_name
     end
 
     res
@@ -205,7 +163,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
 
     if exp[1].node_type == :self
       if @current_class
-        target = @current_class[:name]
+        target = @current_class.name
       elsif @current_module
         target = @current_module
       else
@@ -221,9 +179,9 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     @current_method = nil
 
     if @current_class
-      @current_class[@visibility][name] = { :src => res, :file => @file_name }
+      @current_class.add_method @visibility, name, res, @file_name
     elsif @current_module
-      @current_module[@visibility][name] = { :src => res, :file => @file_name }
+      @current_module.add_method @visibility, name, res, @file_name
     end
     res
   end

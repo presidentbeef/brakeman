@@ -42,7 +42,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
       @current_template = template
 
-      template[:outputs].each do |out|
+      template.each_output do |out|
         unless check_for_immediate_xss out
           @matched = false
           @mark = false
@@ -314,9 +314,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     initializers = tracker.check_initializers :ActiveSupport, :escape_html_entities_in_json=
     initializers.each {|result| json_escape_on = true?(result.call.first_arg) }
 
-    if tracker.config[:rails][:active_support] and
-      true? tracker.config[:rails][:active_support][:escape_html_entities_in_json]
-
+    if tracker.config.escape_html_entities_in_json? 
         json_escape_on = true
     elsif version_between? "4.0.0", "5.0.0"
       json_escape_on = true

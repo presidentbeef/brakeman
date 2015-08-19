@@ -8,7 +8,7 @@ class Brakeman::CheckTranslateBug < Brakeman::BaseCheck
 
   def run_check
     return if lts_version? '2.3.18.6'
-    if (version_between?('2.3.0', '2.3.99') and tracker.config[:escape_html]) or
+    if (version_between?('2.3.0', '2.3.99') and tracker.config.escape_html?) or
         version_between?('3.0.0', '3.0.10') or
         version_between?('3.1.0', '3.1.1')
 
@@ -18,12 +18,11 @@ class Brakeman::CheckTranslateBug < Brakeman::BaseCheck
         CONFIDENCE[:med]
       end
 
-      version = tracker.config[:rails_version]
       description = "have a vulnerability in the translate helper with keys ending in _html"
 
-      message = if version =~ /^3\.1/
+      message = if rails_version =~ /^3\.1/
         "Versions before 3.1.2 #{description}."
-      elsif version =~ /^3\.0/
+      elsif rails_version =~ /^3\.0/
         "Versions before 3.0.11 #{description}."
       else
         "Rails 2.3.x using the rails_xss plugin #{description}."

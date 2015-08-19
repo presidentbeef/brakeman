@@ -18,11 +18,11 @@ class Brakeman::CheckBasicAuth < Brakeman::BaseCheck
 
   def check_basic_auth_filter
     controllers = tracker.controllers.select do |name, c|
-      c[:options][:http_basic_authenticate_with]
+      c.options[:http_basic_authenticate_with]
     end
 
     Hash[controllers].each do |name, controller|
-      controller[:options][:http_basic_authenticate_with].each do |call|
+      controller.options[:http_basic_authenticate_with].each do |call|
 
         if pass = get_password(call) and string? pass
           warn :controller => name,
@@ -31,7 +31,7 @@ class Brakeman::CheckBasicAuth < Brakeman::BaseCheck
               :message => "Basic authentication password stored in source code",
               :code => call,
               :confidence => 0,
-              :file => controller[:files].first
+              :file => controller.file
           break
         end
       end

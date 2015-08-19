@@ -184,7 +184,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     if node_type? exp, :or
       decorated_model? exp.lhs or decorated_model? exp.rhs
     else
-      tracker.config[:gems][:draper] and
+      tracker.config.has_gem? :draper and
       call? exp and
       node_type?(exp.target, :const) and
       exp.target.value.to_s.match(/Decorator$/) and
@@ -204,14 +204,6 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
 
     return false unless model
 
-    model[:associations].each do |name, args|
-      args.each do |arg|
-        if symbol? arg and arg.value == meth
-          return true
-        end
-      end
-    end
-
-    false
+    model.association? meth
   end
 end

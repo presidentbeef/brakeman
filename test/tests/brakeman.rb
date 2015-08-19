@@ -91,17 +91,20 @@ class BaseCheckTests < Test::Unit::TestCase
 
   def setup
     @tracker = FakeTracker.new
+    @tracker.config = Brakeman::Config.new(@tracker)
     app_tree = FakeAppTree.new
     @check = Brakeman::BaseCheck.new app_tree, @tracker
   end
 
   def version_between? version, low, high
-    @tracker.config = { :rails_version => version }
+    @tracker.config.rails_version = version
     @check.send(:version_between?, low, high)
   end
 
   def lts_version? version, low
-    @tracker.config = { :gems => { :"railslts-version" => { :version => version, :file => nil, :line => nil} } }
+    if version
+      @tracker.config.add_gem :"railslts-version", version, nil, nil
+    end
     @check.send(:lts_version?, low)
   end
 
@@ -126,7 +129,7 @@ class BaseCheckTests < Test::Unit::TestCase
   end
 
   def test_lts_version
-    @tracker.config = { :rails_version => "2.3.18" }
+    @tracker.config.rails_version = "2.3.18"
     assert lts_version? '2.3.18.6', '2.3.18.6'
     assert !lts_version?('2.3.18.1', '2.3.18.6')
     assert !lts_version?(nil, '2.3.18.6')
@@ -281,11 +284,13 @@ class GemProcessorTests < Test::Unit::TestCase
   FakeTracker = Struct.new(:config, :options)
 
   def assert_version version, name, msg = nil
-    assert_equal version, @tracker[:config][:gems][name][:version], msg
+    assert_equal version, @tracker.config.gem_version(name), msg
   end
 
   def setup
-    @tracker = FakeTracker.new({}, {})
+    @tracker = FakeTracker.new
+    @tracker.options = {}
+    @tracker.config = Brakeman::Config.new(@tracker)
     @gem_processor = Brakeman::GemProcessor.new @tracker
     @eol_representations = ["\r\n", "\n"]
     @gem_locks = @eol_representations.inject({}) {|h, eol|

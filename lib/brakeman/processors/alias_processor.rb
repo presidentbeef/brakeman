@@ -9,7 +9,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   include Brakeman::ProcessorHelper
   include Brakeman::Util
 
-  attr_reader :result
+  attr_reader :result, :tracker
 
   #Returns a new AliasProcessor with an empty environment.
   #

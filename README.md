@@ -1,9 +1,8 @@
 [![Brakeman Logo](http://brakemanscanner.org/images/logo_medium.png)](http://brakemanscanner.org/)
 
-[![Travis CI
-Status](https://secure.travis-ci.org/presidentbeef/brakeman.png)](https://travis-ci.org/presidentbeef/brakeman)
-[![Code
-Climate](https://codeclimate.com/github/presidentbeef/brakeman.png)](https://codeclimate.com/github/presidentbeef/brakeman)
+[![Build Status](https://travis-ci.org/presidentbeef/brakeman.svg?branch=master)](https://travis-ci.org/presidentbeef/brakeman)
+[![Code Climate](https://codeclimate.com/github/presidentbeef/brakeman/badges/gpa.svg)](https://codeclimate.com/github/presidentbeef/brakeman)
+[![Test Coverage](https://codeclimate.com/github/presidentbeef/brakeman/badges/coverage.svg)](https://codeclimate.com/github/presidentbeef/brakeman/coverage)
 
 # Brakeman
 
@@ -129,15 +128,6 @@ Options passed in on the commandline have priority over configuration files.
 The default config locations are `./config/brakeman.yml`, `~/.brakeman/config.yml`, and `/etc/brakeman/config.yml`
 
 The `-c` option can be used to specify a configuration file to use.
-
-# For Slim Users
-
-[Slim v3.0.0](https://github.com/slim-template/slim/blob/master/CHANGES#L12) dropped support for Ruby 1.8.7. Install a version of [`slim`](http://slim-lang.com/) compatible with your Ruby.
-
-| Ruby Version |       `Gemfile`       |              Command Line              |
-|--------------|-----------------------|----------------------------------------|
-| Ruby 1.8.7   | `gem 'slim', '< 3.0'` | `$ gem install slim --version '< 3.0'` |
-| Ruby 1.9+    | `gem 'slim'`          | `$ gem install slim`                   |
 
 # Continuous Integration
 

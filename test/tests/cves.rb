@@ -10,9 +10,9 @@ class CVETests < Test::Unit::TestCase
 
   def assert_version version, gem = :rails
     if gem == :rails
-      assert_equal version, @rescanner.tracker.config[:rails_version]
+      assert_equal version, @rescanner.tracker.config.rails_version
     else
-      assert_equal version, @rescanner.tracker.config[:gems][gem][:version]
+      assert_equal version, @rescanner.tracker.config.gem_version(gem)
     end
   end
 

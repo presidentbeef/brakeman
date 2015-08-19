@@ -20,7 +20,7 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
                       "3.0.20"
                     end
 
-      message = "Rails #{tracker.config[:rails_version]} has a serious JSON parsing vulnerability: upgrade to #{new_version} or patch"
+      message = "Rails #{rails_version} has a serious JSON parsing vulnerability: upgrade to #{new_version} or patch"
       if uses_yajl?
         gem_info = gemfile_or_environment(:yajl)
       else
@@ -38,7 +38,7 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
 
   #Check if `yajl` is included in Gemfile
   def uses_yajl?
-    tracker.config[:gems][:yajl]
+    tracker.config.has_gem? :yajl
   end
 
   #Check for `ActiveSupport::JSON.backend = "JSONGem"`
@@ -60,7 +60,7 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
 
   def check_cve_2013_0269
     [:json, :json_pure].each do |name|
-      gem_hash = tracker.config[:gems][name] if tracker.config[:gems]
+      gem_hash = tracker.config.get_gem name
       check_json_version name, gem_hash[:version] if gem_hash and gem_hash[:version]
     end
   end

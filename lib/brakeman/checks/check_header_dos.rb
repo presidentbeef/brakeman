@@ -7,7 +7,7 @@ class Brakeman::CheckHeaderDoS < Brakeman::BaseCheck
 
   def run_check
     if (version_between? "3.0.0", "3.2.15" or version_between? "4.0.0", "4.0.1") and not has_workaround?
-      message = "Rails #{tracker.config[:rails_version]} has a denial of service vulnerability (CVE-2013-6414). Upgrade to Rails version "
+      message = "Rails #{rails_version} has a denial of service vulnerability (CVE-2013-6414). Upgrade to Rails version "
 
       if version_between? "3.0.0", "3.2.15"
         message << "3.2.16"

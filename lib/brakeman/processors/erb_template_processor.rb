@@ -34,7 +34,7 @@ class Brakeman::ErbTemplateProcessor < Brakeman::TemplateProcessor
         else
           s = Sexp.new :output, arg
           s.line(exp.line)
-          @current_template[:outputs] << s
+          @current_template.add_output s
           s
         end
       elsif method == :force_encoding

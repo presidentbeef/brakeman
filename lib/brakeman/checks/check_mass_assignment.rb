@@ -19,7 +19,10 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
 
     models = []
     tracker.models.each do |name, m|
-      if unprotected_model? m
+      if m.is_a? Hash
+        p m
+      end
+      if m.unprotected_model?
         models << name
       end
     end
@@ -62,7 +65,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
 
       model = tracker.models[res[:chain].first]
 
-      attr_protected = (model and model[:options][:attr_protected])
+      attr_protected = (model and model.attr_protected)
 
       if attr_protected and tracker.options[:ignore_attr_protected]
         return

@@ -11,21 +11,39 @@ class Brakeman::CheckSSLVerify < Brakeman::BaseCheck
 
   def run_check
     check_open_ssl_verify_none
+    check_http_start
   end
 
   def check_open_ssl_verify_none
-    tracker.find_call(:method => :verify_mode=).each {|call| process_result(call)}
+    tracker.find_call(:method => :verify_mode=).each {|call| process_verify_mode_result(call) }
   end
 
-  def process_result(result)
-    return if duplicate?(result)
+  def process_verify_mode_result result
     if result[:call].last_arg == SSL_VERIFY_NONE
-      add_result result
-      warn :result => result,
-        :warning_type => "SSL Verification Bypass",
-        :warning_code => :ssl_verification_bypass,
-        :message => "SSL certificate verification was bypassed",
-        :confidence => CONFIDENCE[:high]
+      warn_about_ssl_verification_bypass result
     end
+  end
+
+  def check_http_start
+    tracker.find_call(:target => :'Net::HTTP', :method => :start).each { |call| process_http_start_result call }
+  end
+
+  def process_http_start_result result
+    arg = result[:call].last_arg
+
+    if hash? arg and hash_access(arg, :verify_mode) == SSL_VERIFY_NONE
+      warn_about_ssl_verification_bypass result
+    end
+  end
+
+  def warn_about_ssl_verification_bypass result
+    return if duplicate?(result)
+    add_result result
+
+    warn :result => result,
+      :warning_type => "SSL Verification Bypass",
+      :warning_code => :ssl_verification_bypass,
+      :message => "SSL certificate verification was bypassed",
+      :confidence => CONFIDENCE[:high]
   end
 end

@@ -29,7 +29,7 @@ class Rails3Tests < Test::Unit::TestCase
   end
 
   def test_config_sanity
-    assert_equal 'utf-8', report[:config][:rails][:encoding].value
+    assert_equal 'utf-8', report[:config].rails[:encoding].value
   end
 
   def test_eval_params

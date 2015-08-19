@@ -14,7 +14,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 2,
       :template => 7,
-      :generic => 61
+      :generic => 62
     }
   end
 
@@ -1065,6 +1065,18 @@ class Rails4Tests < Test::Unit::TestCase
       :message => /^SSL\ certificate\ verification\ was\ bypassed/,
       :confidence => 0,
       :relative_path => "app/controllers/application_controller.rb",
+      :user_input => nil
+  end
+
+  def test_ssl_verification_bypass_net_start
+    assert_warning :type => :warning,
+      :warning_code => 71,
+      :fingerprint => "fed73f1d7511e72e158a7080eefe377c0c34ad18190471829216e9a2c4f7126d",
+      :warning_type => "SSL Verification Bypass",
+      :line => 12,
+      :message => /^SSL\ certificate\ verification\ was\ bypasse/,
+      :confidence => 0,
+      :relative_path => "lib/sweet_lib.rb",
       :user_input => nil
   end
 
