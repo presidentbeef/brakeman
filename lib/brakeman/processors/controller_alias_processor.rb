@@ -59,7 +59,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
           method = processor.process method
         end
 
-        @file = mixin[:files].first
+        @file = mixin.file
         #Then process it like any other method in the controller
         process method
       end
@@ -176,7 +176,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     # If line is null, assume implicit render and set the end of the action
     # method as the line number
     if line.nil? and controller = @tracker.controllers[@current_class]
-      if meth = controller[:public][@current_method]
+      if meth = controller.get_method(@current_method)
         line = meth[:src] && meth[:src].last && meth[:src].last.line
         line += 1
       end
