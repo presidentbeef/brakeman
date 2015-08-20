@@ -656,7 +656,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_sql_injection_active_record_base_connection
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "37885d589fc5c41553dcc38b36b506c2e508d1f37ce040eb6dca92a958f858fb",
+      :fingerprint => "9aab1347248beb5a3bec91e84b133dcd8fc1bd2b113b744e2df59acf9085cd81",
       :warning_type => "SQL Injection",
       :line => 31,
       :message => /^Possible\ SQL\ injection/,
@@ -1320,7 +1320,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_regex_dos
     assert_warning :type => :warning,
       :warning_code => 76,
-      :fingerprint => "4ac4f6438b6ad6deb9dfec0d96a47f071853396b4325dad85ebb6aa87b309c98",
+      :fingerprint => "de95ff1870e84933cb5a67bdd5c10cfa666b0bcd95cc78d7dd962215be9ed20c",
       :warning_type => "Denial of Service",
       :line => 74,
       :message => /^Parameter\ value\ used\ in\ regex/,
@@ -1332,7 +1332,7 @@ class Rails2Tests < Test::Unit::TestCase
   def test_indirect_regex_dos
     assert_warning :type => :warning,
       :warning_code => 76,
-      :fingerprint => "b7a197708a04abd2d8f0ca402f3bb0e8690f57685814e09440d1946ba279b14f",
+      :fingerprint => "afdb18fa56308063ad491b76821fb76724dd6f0bd9d3e6aac83c933af0b4baac",
       :warning_type => "Denial of Service",
       :line => 82,
       :message => /^Parameter\ value\ used\ in\ regex/,

@@ -143,7 +143,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     name = exp.method_name
 
     @current_method = name
-    res = Sexp.new :methdef, name, exp.formal_args, *process_all!(exp.body)
+    res = Sexp.new :defn, name, exp.formal_args, *process_all!(exp.body)
     res.line(exp.line)
     @current_method = nil
 
@@ -174,7 +174,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     end
 
     @current_method = name
-    res = Sexp.new :selfdef, target, name, exp.formal_args, *process_all!(exp.body)
+    res = Sexp.new :defs, target, name, exp.formal_args, *process_all!(exp.body)
     res.line(exp.line)
     @current_method = nil
 

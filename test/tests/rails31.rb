@@ -995,7 +995,7 @@ class Rails31Tests < Test::Unit::TestCase
   def test_sql_injection_with_interpolated_value
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "fd5cc1e0538e8a08b47e85cb7a9a699358908d8049daaaa5609539aa8aa03278",
+      :fingerprint => "d877102aa3a7f1c5a6074d9486e6c850dd9dab23cab4f149a9bd674b440bda49",
       :warning_type => "SQL Injection",
       :line => 33,
       :message => /^Possible\ SQL\ injection/,
@@ -1213,7 +1213,7 @@ class Rails31Tests < Test::Unit::TestCase
   def test_information_disclosure_detailed_exceptions_override
     assert_warning :type => :warning,
       :warning_code => 62,
-      :fingerprint => "16f60330426df3603595f5692c7b0916e38c8674a214fef45d7acf248a8db6b3",
+      :fingerprint => "e427e61359aa0f4f1e1a689066ff1c5034a54c9518da46755e308252b35b054d",
       :warning_type => "Information Disclosure",
       :line => 29,
       :message => /^Detailed\ exceptions\ may\ be\ enabled\ in\ 's/,
@@ -1224,7 +1224,7 @@ class Rails31Tests < Test::Unit::TestCase
   def test_command_injection_interpolation_inside_interpolation
     assert_warning :type => :warning,
       :warning_code => 14,
-      :fingerprint => "5ef09b79bf1d08ccd42e376238f9a618227da4990ea7702a1d4da2e83f4820fe",
+      :fingerprint => "e12b7628a5656be025d37569da24a10157702f541cae63eca5d4211ff1ce632a",
       :warning_type => "Command Injection",
       :line => 34,
       :message => /^Possible\ command\ injection/,

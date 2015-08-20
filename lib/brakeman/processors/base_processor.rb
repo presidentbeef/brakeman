@@ -49,7 +49,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     exp
   end
 
-  #Processes calls with blocks. Changes Sexp node type to :call_with_block
+  #Processes calls with blocks.
   #
   #s(:iter, CALL, {:lasgn|:masgn}, BLOCK)
   def process_iter exp
@@ -63,20 +63,18 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
       block = nil
     end
 
-    call = Sexp.new(:call_with_block, call, exp.block_args, block).compact
+    call = Sexp.new(:iter, call, exp.block_args, block).compact
     call.line(exp.line)
     call
   end
 
-  #String with interpolation. Changes Sexp node type to :string_interp
+  #String with interpolation.
   def process_dstr exp
     exp = exp.dup
     exp.shift
     exp.map! do |e|
       if e.is_a? String
         e
-      elsif e.value.is_a? String
-        e.value
       else
         res = process e
         if res.empty?
@@ -87,7 +85,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
       end
     end.compact!
 
-    exp.unshift :string_interp
+    exp.unshift :dstr
   end
 
   #Processes a block. Changes Sexp node type to :rlist
@@ -103,10 +101,8 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   end
 
   #Processes the inside of an interpolated String.
-  #Changes Sexp node type to :string_eval
   def process_evstr exp
     exp = exp.dup
-    exp[0] = :string_eval
     exp[1] = process exp[1]
     exp
   end

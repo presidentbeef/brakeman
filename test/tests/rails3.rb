@@ -55,7 +55,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_command_injection_params_interpolation
     assert_warning :type => :warning,
       :warning_code => 14,
-      :fingerprint => "eb5287a6638bce4be342627db12d03f1e5b51175ed13549920921e3659c21df4",
+      :fingerprint => "d68453d17bca16814e8eaffdce5b1dcf3e87aeeca2d94f3dcf78e309cb1b29c6",
       :warning_type => "Command Injection",
       :line => 34,
       :message => /^Possible command injection near line 34:/,
@@ -93,7 +93,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_command_injection_capture2
     assert_warning :type => :warning,
       :warning_code => 14,
-      :fingerprint => "744cb371d69e757edd75bf6d58c610e3e813ff2b75b353c4c89c67274e4a35bb",
+      :fingerprint => "a9e14a8381114ec58551a94c281c36782ec9d6d91d93c346e6e4f7a6f32e9c25",
       :warning_type => "Command Injection",
       :line => 146,
       :message => /^Possible\ command\ injection/,
@@ -104,7 +104,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_command_injection_capture2e
     assert_warning :type => :warning,
       :warning_code => 14,
-      :fingerprint => "521c0a714d14ae878305ce737a2bdd5897dcea154c0622b14806ed6e6c60f526",
+      :fingerprint => "99283cfdb2799fc278d5e474d11dc952ead57861e29470cf5ac16629a5b07fb2",
       :warning_type => "Command Injection",
       :line => 147,
       :message => /^Possible\ command\ injection/,
@@ -115,7 +115,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_command_injection_capture3
     assert_warning :type => :warning,
       :warning_code => 14,
-      :fingerprint => "b75a4b21f55912860d675ac300de862f6b2050688b32f745ea8944832e5e699f",
+      :fingerprint => "1c7506f2977852c07f8e41dcdad205794048b258b557e7d322acf86fab0a6877",
       :warning_type => "Command Injection",
       :line => 148,
       :message => /^Possible\ command\ injection/,
@@ -137,7 +137,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_command_injection_pipeline_r
     assert_warning :type => :warning,
       :warning_code => 14,
-      :fingerprint => "987aad17f377a6101d5bd3e1611ae3716b276f319c3f91b69efd93717d993ea7",
+      :fingerprint => "f28aa6e2e73662dd58169db727fc30099da36a9e0d1817375bb257faed376e52",
       :warning_type => "Command Injection",
       :line => 150,
       :message => /^Possible\ command\ injection/,
@@ -170,7 +170,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_command_injection_spawn
     assert_warning :type => :warning,
       :warning_code => 14,
-      :fingerprint => "6b25cb3fa42bb234319ddf690a164eda038b6f000e501fbfa872fb5fa627609b",
+      :fingerprint => "73d4d3114ea536247c38a4e0d5bbcde047ea3f304d2e6a22b1693003d5135409",
       :warning_type => "Command Injection",
       :line => 153,
       :message => /^Possible\ command\ injection/,
@@ -684,7 +684,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_sql_injection_delete_all
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "6ae0b599e368b7658cfe3772ab0823d68247796b3718eaa6c1228897d633e0a2",
+      :fingerprint => "4045f9ab95a70f3674f6e1ff7c1f0ac7bdd9ab39bf111f1d0c0b7a386643fbff",
       :warning_type => "SQL Injection",
       :line => 57,
       :message => /^Possible\ SQL\ injection/,
@@ -696,7 +696,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_sql_injection_destroy_all
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "0631b0564dfe4bb760c250e1de7f0678dd28e5be5c54841fa8581ac3bf2ffaaf",
+      :fingerprint => "7bbc1feebc89050e053bd3a24b9b00fe5d1879650368e82ee22b3cbc371a9ec3",
       :warning_type => "SQL Injection",
       :line => 58,
       :message => /^Possible\ SQL\ injection/,
@@ -708,7 +708,7 @@ class Rails3Tests < Test::Unit::TestCase
   def test_sql_injection_to_s_value
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "92eae7165aea8653ce37be36b5a843114fd7d6ce61f272db03239dfdaa151ee8",
+      :fingerprint => "0cf32bcc2320f59c97d4f5e051a764ee4fe7af987149ff118bce9900ff7a2faa",
       :warning_type => "SQL Injection",
       :line => 64,
       :message => /^Possible\ SQL\ injection/,

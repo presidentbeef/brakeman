@@ -43,7 +43,7 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
   FORM_BUILDER_CALL = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new)
 
   #Looks for form methods and iterating over collections of Models
-  def process_call_with_block exp
+  def process_iter exp
     process_default exp
 
     call = exp.block_call
@@ -76,8 +76,6 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
 
     exp
   end
-
-  alias process_iter process_call_with_block
 
   #Checks if +exp+ is a call to Model.all or Model.find*
   def get_model_target exp

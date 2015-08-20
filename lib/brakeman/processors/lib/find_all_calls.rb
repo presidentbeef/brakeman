@@ -23,12 +23,12 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
   end
 
   #Process body of method
-  def process_methdef exp
+  def process_defn exp
     process_all exp.body
   end
 
   #Process body of method
-  def process_selfdef exp
+  def process_defs exp
     process_all exp.body
   end
 
@@ -42,7 +42,7 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
     exp
   end
 
-  def process_call_with_block exp
+  def process_iter exp
     call = exp.block_call
 
     if call.node_type == :call
@@ -62,8 +62,6 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
 
     exp
   end
-
-  alias process_iter process_call_with_block
 
   #Calls to render() are converted to s(:render, ...) but we would
   #like them in the call cache still for speed

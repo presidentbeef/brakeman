@@ -43,9 +43,6 @@ class Brakeman::OutputProcessor < Ruby2Ruby
     "cookies"
   end
 
-  alias process_string_interp process_dstr
-  alias process_string_eval process_evstr
-
   def process_rlist exp
     out = exp.map do |e|
       res = process e
@@ -80,9 +77,7 @@ class Brakeman::OutputProcessor < Ruby2Ruby
     return "def #{name}#{args}\n#{body}\nend".gsub(/\n\s*\n+/, "\n")
   end
 
-  alias process_methdef process_defn
-
-  def process_call_with_block exp
+  def process_iter exp
     call = process exp[0]
     block = process_rlist exp[2..-1]
     out = "#{call} do\n #{block}\n end"
@@ -173,35 +168,4 @@ class Brakeman::OutputProcessor < Ruby2Ruby
     exp.clear
     out
   end
-
-  #This is copied from Ruby2Ruby, except the :string_eval type has been added
-  def util_dthing(type, exp)
-    s = []
-
-    # first item in sexp is a string literal
-    s << dthing_escape(type, exp.shift)
-
-    until exp.empty?
-      pt = exp.shift
-      case pt
-      when Sexp then
-        case pt.first
-        when :str then
-          s << dthing_escape(type, pt.last)
-        when :evstr, :string_eval then
-          s << '#{' << process(pt) << '}' # do not use interpolation here
-        else
-          raise "unknown type: #{pt.inspect}"
-        end
-      when String then
-        s << pt
-      else
-        # HACK: raise "huh?: #{pt.inspect}" -- hitting # constants in regexps
-        # do nothing for now
-      end
-    end
-
-    s.join
-  end
-
 end

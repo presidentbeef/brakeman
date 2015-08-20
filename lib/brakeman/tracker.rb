@@ -88,7 +88,7 @@ class Brakeman::Tracker
       set.each do |set_name, collection|
         collection.each_method do |method_name, definition|
           src = definition[:src]
-          if src.node_type == :selfdef
+          if src.node_type == :defs
             method_name = "#{src[1]}.#{method_name}"
           end
 
@@ -223,7 +223,7 @@ class Brakeman::Tracker
       set.each do |set_name, info|
         info.each_method do |method_name, definition|
           src = definition[:src]
-          if src.node_type == :selfdef
+          if src.node_type == :defs
             method_name = "#{src[1]}.#{method_name}"
           end
 

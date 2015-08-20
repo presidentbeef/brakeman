@@ -101,7 +101,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       return res if res
     elsif target == ARRAY_CONST and method == :new
       return Sexp.new(:array, *exp.args)
-    elsif target == HASH_CONST and method == :new and first_arg.nil? and !node_type?(@exp_context.last, :iter, :call_with_block)
+    elsif target == HASH_CONST and method == :new and first_arg.nil? and !node_type?(@exp_context.last, :iter)
       return Sexp.new(:hash)
     end
 
@@ -167,10 +167,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         target.value << first_arg.value
         env[target_var] = target
         return target
-      elsif string? target and node_type? first_arg, :dstr, :string_interp
+      elsif string? target and string_interp? first_arg
         exp = Sexp.new(:dstr, target.value + first_arg[1]).concat(first_arg[2..-1])
         env[target_var] = exp
-      elsif string? first_arg and node_type? target, :dstr, :string_interp
+      elsif string? first_arg and string_interp? target
         if string? target.last
           target.last.value << first_arg.value
         elsif target.last.is_a? String
@@ -193,7 +193,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     exp
   end
 
-  def process_call_with_block exp
+  def process_iter exp
     @exp_context.push exp
     exp[1] = process exp.block_call
     @exp_context.pop
@@ -230,8 +230,6 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     exp
   end
 
-  alias process_iter process_call_with_block
-
   #Process a new scope.
   def process_scope exp
     env.scope do
@@ -248,7 +246,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   end
 
   #Process a method definition.
-  def process_methdef exp
+  def process_defn exp
     meth_env do
       exp.body = process_all! exp.body
     end
@@ -268,16 +266,13 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   end
 
   #Process a method definition on self.
-  def process_selfdef exp
+  def process_defs exp
     env.scope do
       set_env_defaults
       exp.body = process_all! exp.body
     end
     exp
   end
-
-  alias process_defn process_methdef
-  alias process_defs process_selfdef
 
   #Local assignment
   # x = 1
@@ -844,7 +839,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def top_target exp, last = nil
     if call? exp
       top_target exp.target, exp
-    elsif node_type? exp, :iter, :call_with_block
+    elsif node_type? exp, :iter
       top_target exp.block_call, last
     else
       exp || last

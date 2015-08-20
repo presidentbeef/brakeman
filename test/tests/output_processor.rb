@@ -79,9 +79,9 @@ class OutputProcessorTests < Test::Unit::TestCase
 
 
   def test_output_string_interp
-    assert_output '"#{@x}"', Sexp.new(:string_interp,
+    assert_output '"#{@x}"', Sexp.new(:dstr,
                                       "",
-                                      Sexp.new(:string_eval,
+                                      Sexp.new(:evstr,
                                                Sexp.new(:ivar, :@x)))
 
     input = '"#{params[:plugin]}/app/views/#{params[:view]}"'
@@ -145,7 +145,7 @@ class OutputProcessorTests < Test::Unit::TestCase
 
   def test_output_call_with_block
     assert_output "x do\n y\n end",
-      Sexp.new(:call_with_block,
+      Sexp.new(:iter,
                Sexp.new(:call, nil, :x),
                Sexp.new(:args),
                Sexp.new(:call, nil, :y))
@@ -162,7 +162,7 @@ class OutputProcessorTests < Test::Unit::TestCase
                Sexp.new(:ivar, :@x))
 
     assert_output "def x(y)\n  @x = y\nend",
-      Sexp.new(:methdef,
+      Sexp.new(:defn,
                :x,
                Sexp.new(:args, :y),
                Sexp.new(:iasgn, :@x, Sexp.new(:lvar, :y)))

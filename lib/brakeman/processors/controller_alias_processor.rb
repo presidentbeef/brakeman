@@ -51,10 +51,10 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
         processor = Brakeman::ControllerProcessor.new(@app_tree, @tracker)
         method = mixin.get_method(name)[:src].deep_clone
 
-        if node_type? method, :methdef
+        if node_type? method, :defn
           method = processor.process_defn method
         else
-          #Should be a methdef, but this will catch other cases
+          #Should be a defn, but this will catch other cases
           method = processor.process method
         end
 
@@ -71,7 +71,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
 
   #Processes a method definition, which may include
   #processing any rendered templates.
-  def process_methdef exp
+  def process_defn exp
     meth_name = exp.method_name
 
     Brakeman.debug "Processing #{@current_class}##{meth_name}"
@@ -122,7 +122,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   end
 
   #Check for +respond_to+
-  def process_call_with_block exp
+  def process_iter exp
     super
 
     if call? exp.block_call and exp.block_call.method == :respond_to

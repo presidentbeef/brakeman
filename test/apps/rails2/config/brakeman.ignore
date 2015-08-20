@@ -3,7 +3,7 @@
     {
       "warning_type": "Cross Site Scripting",
       "warning_code": 2,
-      "fingerprint": "6300805e44167e6c3446efbd06b97206928855a2bfc6e1f3e61c097795956b13",
+      "fingerprint": "e53a25ddc8ca61f7c4b81602bae04cd6746cf6a7432e89407fbeb362a66f4e8f",
       "message": "Unescaped model attribute",
       "file": "app/views/other/ignore_me.html.erb",
       "line": 2,
@@ -21,7 +21,7 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "f2fa1da45eea252150f6920454822bda3ed5c83a2c376c1296a98037969dd45f",
+      "fingerprint": "5313b025804b1cbf885f2862078391086c6d5cba892f47ed31506cb5b23df24a",
       "message": "Possible SQL injection",
       "file": "app/views/other/ignore_me.html.erb",
       "line": 2,
@@ -34,9 +34,9 @@
       },
       "user_input": "params[:x]",
       "confidence": "High",
-      "note": "Ignoring for testing"
+      "note": ""
     }
   ],
-  "updated": "2013-07-12 16:58:59 -0700",
-  "brakeman_version": "2.0.0"
+  "updated": "2015-07-16 22:46:47 -0700",
+  "brakeman_version": "3.0.5"
 }

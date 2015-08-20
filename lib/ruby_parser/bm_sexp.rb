@@ -357,7 +357,7 @@ class Sexp
   #      s(:lasgn, :y),
   #       s(:block, s(:lvar, :y), s(:call, nil, :z, s(:arglist))))
   def block_call
-    expect :iter, :call_with_block
+    expect :iter
     self[1]
   end
 
@@ -374,10 +374,10 @@ class Sexp
       return find_node :block, delete
     end
 
-    expect :iter, :call_with_block, :scope, :resbody
+    expect :iter, :scope, :resbody
 
     case self.node_type
-    when :iter, :call_with_block
+    when :iter
       self[3]
     when :scope
       self[1]
@@ -394,7 +394,7 @@ class Sexp
   #      s(:lasgn, :y), <- block_args
   #       s(:call, nil, :p, s(:arglist, s(:lvar, :y))))
   def block_args
-    expect :iter, :call_with_block
+    expect :iter
     if self[2] == 0 # ?! See https://github.com/presidentbeef/brakeman/issues/331
       return Sexp.new(:args)
     else
@@ -451,23 +451,23 @@ class Sexp
 
   #Returns name of method being defined in a method definition.
   def method_name
-    expect :defn, :defs, :methdef, :selfdef
+    expect :defn, :defs
 
     case self.node_type
-    when :defn, :methdef
+    when :defn
       self[1]
-    when :defs, :selfdef
+    when :defs
       self[2]
     end
   end
 
   def formal_args
-    expect :defn, :defs, :methdef, :selfdef
+    expect :defn, :defs
 
     case self.node_type
-    when :defn, :methdef
+    when :defn
       self[2]
-    when :defs, :selfdef
+    when :defs
       self[3]
     end
   end
@@ -475,13 +475,13 @@ class Sexp
   #Sets body, which is now a complicated process because the body is no longer
   #a separate Sexp, but just a list of Sexps.
   def body= exp
-    expect :defn, :defs, :methdef, :selfdef, :class, :module
+    expect :defn, :defs, :class, :module
     @my_hash_value = nil
 
     case self.node_type
-    when :defn, :methdef, :class
+    when :defn, :class
       index = 3
-    when :defs, :selfdef
+    when :defs
       index = 4
     when :module
       index = 2
@@ -499,12 +499,12 @@ class Sexp
   #Returns body of a method definition, class, or module.
   #This will be an untyped Sexp containing a list of Sexps from the body.
   def body
-    expect :defn, :defs, :methdef, :selfdef, :class, :module
+    expect :defn, :defs, :class, :module
 
     case self.node_type
-    when :defn, :methdef, :class
+    when :defn, :class
       self[3..-1]
-    when :defs, :selfdef
+    when :defs
       self[4..-1]
     when :module
       self[2..-1]

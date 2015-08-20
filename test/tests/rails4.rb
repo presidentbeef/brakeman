@@ -134,7 +134,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_information_disclosure_detailed_exceptions_override
     assert_warning :type => :warning,
       :warning_code => 62,
-      :fingerprint => "c1c1c512feca03b77e560939098efabbc2ec9279ef66f75bc63a84f815b54ec2",
+      :fingerprint => "e023f55d7d83631e750435a7d8f432e7e6d0d87b0a82706f91f247ce004830c2",
       :warning_type => "Information Disclosure",
       :line => 6,
       :message => /^Detailed\ exceptions\ may\ be\ enabled\ in\ 's/,
@@ -190,7 +190,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_sql_injection_connection_execute
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "4efbd2d2fc76d30296c8aa66368ddaf337b4c677778f36cddfa2290da2ec514b",
+      :fingerprint => "7e96859dfdd7755eaa51af9ee04731c739af364215a97673b7576f348e88fcf1",
       :warning_type => "SQL Injection",
       :line => 8,
       :message => /^Possible\ SQL\ injection/,
@@ -202,7 +202,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_sql_injection_select_rows
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "2e3c08dfb1e17f7d2e6ee5d142223477b85d27e6aa88d2d06cf0a00d04ed2d5c",
+      :fingerprint => "f1a6d026c789b6a029812171695e88fc0de85116d6bba6df61235ccca8194827",
       :warning_type => "SQL Injection",
       :line => 54,
       :message => /^Possible\ SQL\ injection/,
@@ -214,19 +214,19 @@ class Rails4Tests < Test::Unit::TestCase
   def test_sql_injection_select_values
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "3538776239f624a1101afe68b2e894424e8ae3f68222a6eec9fb4421d01cc557",
+      :fingerprint => "700c504a68786c6a8d7a7125b5a722ede615e0f998f3c385d65bd12189220a99",
       :warning_type => "SQL Injection",
       :line => 46,
       :message => /^Possible\ SQL\ injection/,
       :confidence => 1,
       :relative_path => "app/controllers/friendly_controller.rb",
-      :user_input => s(:call, s(:call_with_block, s(:call, s(:call, nil, :destinations), :map), s(:args, :d), s(:call, s(:lvar, :d), :id)), :join, s(:str, ","))
+      :user_input => s(:call, s(:iter, s(:call, s(:call, nil, :destinations), :map), s(:args, :d), s(:call, s(:lvar, :d), :id)), :join, s(:str, ","))
   end
 
   def test_sql_injection_exec_query
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "59be915e75d6eb88def8fccebae1f9930bb6e50b2e598c7f04bf98c7a3235219",
+      :fingerprint => "f99145dd8cfb1abca2ff36722b4bd136382d86ffd2bb28eb5ac6d064677c845f",
       :warning_type => "SQL Injection",
       :line => 12,
       :message => /^Possible\ SQL\ injection/,
@@ -238,7 +238,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_sql_injection_exec_update
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "29fac7fc616f19edf59cc230f7a86292d6c69234b5879868eaf1d954f033974f",
+      :fingerprint => "cf9a74253c027dafb7f6bc090b0c4a7c36e9982d15c46e40bda37eeee78966ef",
       :warning_type => "SQL Injection",
       :line => 5,
       :message => /^Possible\ SQL\ injection/,
@@ -296,7 +296,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_sql_injection_in_find_by
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "ca9d658a7215099a35b3b3ec3867ffb8fb7ad497d31307ba8952d7dcb85e8ac9",
+      :fingerprint => "660d7f796162d23ff209f2d35bb647b3d0cc6ad280e9320ce9d3b2853c508730",
       :warning_type => "SQL Injection",
       :line => 47,
       :message => /^Possible\ SQL\ injection/,
@@ -422,7 +422,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_regex_denial_of_service
     assert_warning :type => :warning,
       :warning_code => 76,
-      :fingerprint => "6cca076d42e35f953627c7013ee8d6245f0ce564fd8a595cdb47f1d58a47f90f",
+      :fingerprint => "f162a94e8ba3c94a8e997b470687e9d5e44a7692b99248b8bc3e689c1a1b86ff",
       :warning_type => "Denial of Service",
       :line => 38,
       :message => /^Parameter\ value\ used\ in\ regex/,
@@ -646,7 +646,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_sql_injection_in_chained_string_building
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "6109b24aecaa204463bcebeb594becfe06d5f3c40cfe092b54a4c5146273e134",
+      :fingerprint => "e60bf02af3884ea73227f05e0b5e00a8ed4466958c22223dbbc4fc4f828c6a1c",
       :warning_type => "SQL Injection",
       :line => 34,
       :message => /^Possible\ SQL\ injection/,
@@ -705,7 +705,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_sql_injection_with_to_s_on_string_interp
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "4617dc460e895a734ac500b963bae96ee133e272611464519e7dcf52810075aa",
+      :fingerprint => "76279bb48be9716ee4618dbd0a3cda08a63fc1053484c4f29c0214940a57a202",
       :warning_type => "SQL Injection",
       :line => 39,
       :message => /^Possible\ SQL\ injection/,
@@ -770,7 +770,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_additional_libs_option
     assert_warning :type => :warning,
       :warning_code => 14,
-      :fingerprint => "528555766bb642ac7137a2a3b14d022ad12cc2006925b2a028d7f07c1c804204",
+      :fingerprint => "e1bff55541ac57c8bae7b027e34c23bfe76f675d5a741d767d4a533bbce9ab4a",
       :warning_type => "Command Injection",
       :line => 4,
       :message => /^Possible\ command\ injection/,
@@ -782,7 +782,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_command_injection_in_library
     assert_warning :type => :warning,
       :warning_code => 14,
-      :fingerprint => "21857e8872d187312a0b2470876bf6c8a8885df84c510d766f4639d95ae7cef7",
+      :fingerprint => "9a11e7271784d69c667ad82481596096781a4873297d3f7523d290f51465f9d6",
       :warning_type => "Command Injection",
       :line => 3,
       :message => /^Possible\ command\ injection/,
@@ -794,7 +794,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_command_injection_interpolated_string_in_library
     assert_warning :type => :warning,
       :warning_code => 14,
-      :fingerprint => "899bf57685de767746ef220e51883b62eca23b505a6e17e57dcd8c2ca57959b8",
+      :fingerprint => "83151193b403812e79a00a3bf8f1e8a01d0232b6b8ae5b1bccb2fd146299e8c6",
       :warning_type => "Command Injection",
       :line => 8,
       :message => /^Possible\ command\ injection/,
@@ -806,7 +806,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_command_injection_from_not_skipping_before_filter
     assert_warning :type => :warning,
       :warning_code => 14,
-      :fingerprint => "9f209feb4b84e753fe331875dda3c1fb30c2938bfda056f4583b15f64ef940b9",
+      :fingerprint => "b4a4bfc1dd6f5f193c9cd3f0819abb936375eee379e5373c08d23957d3af1cd0",
       :warning_type => "Command Injection",
       :line => 18,
       :message => /^Possible\ command\ injection/,
@@ -828,7 +828,7 @@ class Rails4Tests < Test::Unit::TestCase
 
     assert_warning :type => :warning,
       :warning_code => 14,
-      :fingerprint => "90bc5e7b29027e8d2f8d7bc110dbd173db1f05a8583010613c26f996cd86b02b",
+      :fingerprint => "b35ce0b104d755d40bec760daf5ca33578036f737094e453b9c79e0c441ef2b7",
       :warning_type => "Command Injection",
       :line => 83,
       :message => /^Possible\ command\ injection\ in\ open\(\)/,
@@ -860,7 +860,7 @@ class Rails4Tests < Test::Unit::TestCase
 
     assert_warning :type => :warning,
       :warning_code => 16,
-      :fingerprint => "fa018b141157364fad0135416637cf6007b5c77feebda276159e07de76a3f639",
+      :fingerprint => "2e235612f5ee3a6c20a094cec38c65ec4ae5f9550cd2cd31da69d5ef751967e6",
       :warning_type => "File Access",
       :line => 83,
       :message => /^Parameter\ value\ used\ in\ file\ name/,
@@ -870,7 +870,7 @@ class Rails4Tests < Test::Unit::TestCase
 
     assert_warning :type => :warning,
       :warning_code => 16,
-      :fingerprint => "9068352d27a2b01f54e7e23a926d2d8501edfe9ae2fb22d9670b46afff61ed4f",
+      :fingerprint => "a554792e632ec66fa9bee7a880a0ebf5b1938603ee2b673d240d03c4b9574ad9",
       :warning_type => "File Access",
       :line => 84,
       :message => /^Parameter\ value\ used\ in\ file\ name/,

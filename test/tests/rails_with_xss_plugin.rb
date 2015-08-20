@@ -228,7 +228,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   def test_sql_injection_select_value
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "e725c387439202f28c1983bf225323d93b5891695c91b9389740e2da3d74855e",
+      :fingerprint => "fbf3545b52e589a9f9c25449b3505fadbdec63010664504e7366fbcc5fe6b43a",
       :warning_type => "SQL Injection",
       :line => 134,
       :message => /^Possible\ SQL\ injection/,
@@ -340,7 +340,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   def test_cross_site_scripting_CVE_2012_1099
     assert_warning :type => :template,
       :warning_code => 22,
-      :fingerprint => "d54bacec90be92ad8ca58164cdfd505114eae34db2fb5b03f7bc2a8fd93f1edb",
+      :fingerprint => "4ad12198bfbc84a389e439d3c4cc9c2551e3c2aa7b36182336463ca87e45ec5b",
       :warning_type => "Cross Site Scripting",
       :line => 18,
       :message => /^Upgrade\ to\ Rails\ 3\ or\ use\ options_for_se/,

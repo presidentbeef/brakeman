@@ -252,7 +252,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   end
 
   #Process as default
-  def process_string_interp exp
+  def process_dstr exp
     process_default exp
   end
 

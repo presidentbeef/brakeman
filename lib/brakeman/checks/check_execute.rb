@@ -82,10 +82,10 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
   end
 
   def dangerous_open_arg? exp
-    if node_type? exp, :string_interp, :dstr
+    if string_interp? exp
       # Check for input at start of string
       exp[1] == "" and
-        node_type? exp[2], :evstr, :string_eval and
+        node_type? exp[2], :evstr and
         has_immediate_user_input? exp[2]
     else
       has_immediate_user_input? exp
@@ -137,7 +137,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
         e = e.target
       end
 
-      if node_type? e, :or, :evstr, :string_eval, :string_interp
+      if node_type? e, :or, :evstr, :dstr
         if res = dangerous?(e)
           return res
         end
