@@ -118,8 +118,8 @@ class Brakeman::Rescanner < Brakeman::Scanner
           end
         end
 
-        controller.src.each_value do |src|
-          @processor.process_controller_alias controller.name, src
+        controller.src.each do |file, src|
+          @processor.process_controller_alias controller.name, src, nil, file
         end
       end
     end
@@ -165,7 +165,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
         controller.src.each do |file, src|
           unless @paths.include? file
-            @processor.process_controller_alias controller.name, src, r[2]
+            @processor.process_controller_alias controller.name, src, r[2], file
           end
         end
       elsif r[0] == :template

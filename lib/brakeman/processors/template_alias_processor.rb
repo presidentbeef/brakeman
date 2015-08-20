@@ -18,16 +18,18 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
   end
 
   #Process template
-  def process_template name, args
+  def process_template name, args, _, line = nil
+    file = relative_path(@template.file || @tracker.templates[@template.name])
+
     if @called_from
       if @called_from.include_template? name
         Brakeman.debug "Skipping circular render from #{@template.name} to #{name}"
         return
       end
 
-      super name, args, @called_from.dup.add_template_render(@template.name)
+      super name, args, @called_from.dup.add_template_render(@template.name, line, file)
     else
-      super name, args, Brakeman::RenderPath.new.add_template_render(@template.name)
+      super name, args, Brakeman::RenderPath.new.add_template_render(@template.name, line, file)
     end
   end
 

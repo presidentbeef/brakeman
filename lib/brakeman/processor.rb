@@ -47,8 +47,8 @@ module Brakeman
 
     #Process variable aliasing in controller source and save it in the
     #tracker.
-    def process_controller_alias name, src, only_method = nil
-      ControllerAliasProcessor.new(@app_tree, @tracker, only_method).process_controller name, src
+    def process_controller_alias name, src, only_method = nil, file = nil
+      ControllerAliasProcessor.new(@app_tree, @tracker, only_method).process_controller name, src, file
     end
 
     #Process a model source

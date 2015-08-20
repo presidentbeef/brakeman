@@ -9,15 +9,15 @@ module Brakeman::RenderHelper
     @rendered = true
     case exp.render_type
     when :action, :template
-      process_action exp[2][1], exp[3]
+      process_action exp[2][1], exp[3], exp.line
     when :default
       begin
-        process_template template_name, exp[3]
+        process_template template_name, exp[3], nil, exp.line
       rescue ArgumentError
         Brakeman.debug "Problem processing render: #{exp}"
       end
     when :partial, :layout
-      process_partial exp[2], exp[3]
+      process_partial exp[2], exp[3], exp.line
     when :nothing
     end
     exp
@@ -31,30 +31,31 @@ module Brakeman::RenderHelper
 
     return unless name
 
-    process_template name, nil
+    process_template name, nil, nil, nil
   end
 
   #Determines file name for partial and then processes it
-  def process_partial name, args
+  def process_partial name, args, line
     if name == "" or !(string? name or symbol? name)
       return
     end
 
     names = name.value.to_s.split("/")
     names[-1] = "_" + names[-1]
-    process_template template_name(names.join("/")), args
+    process_template template_name(names.join("/")), args, nil, line
   end
 
   #Processes a given action
-  def process_action name, args
+  def process_action name, args, line
     if name.is_a? String or name.is_a? Symbol
-      process_template template_name(name), args
+      process_template template_name(name), args, nil, line
     end
   end
 
   #Processes a template, adding any instance variables
   #to its environment.
-  def process_template name, args, called_from = nil
+  def process_template name, args, called_from = nil, *_
+
     Brakeman.debug "Rendering #{name} (#{called_from})"
     #Get scanned source for this template
     name = name.to_s.gsub(/^\//, "")
@@ -81,7 +82,7 @@ module Brakeman::RenderHelper
 
       #Process layout
       if string? options[:layout]
-        process_template "layouts/#{options[:layout][1]}", nil
+        process_template "layouts/#{options[:layout][1]}", nil, nil, nil
       elsif node_type? options[:layout], :false
         #nothing
       elsif not template.name.to_s.match(/[^\/_][^\/]+$/)

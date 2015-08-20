@@ -6,19 +6,25 @@ module Brakeman
       @path = []
     end
 
-    def add_controller_render controller_name, method_name
+    def add_controller_render controller_name, method_name, line, file
       method_name ||= ""
 
       @path << { :type => :controller,
                  :class => controller_name.to_sym,
-                 :method => method_name.to_sym }
+                 :method => method_name.to_sym,
+                 :line => line,
+                 :file => file
+                }
 
       self
     end
 
-    def add_template_render template_name
+    def add_template_render template_name, line, file
       @path << { :type => :template,
-                 :name => template_name.to_sym }
+                 :name => template_name.to_sym,
+                 :line => line,
+                 :file => file
+               }
 
       self
     end
@@ -89,7 +95,7 @@ module Brakeman
     end
 
     def to_json *args
-      MultiJson.dump(self.to_a)
+      MultiJson.dump(@path)
     end
 
     def initialize_copy original
