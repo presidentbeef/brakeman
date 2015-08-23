@@ -168,13 +168,6 @@ Metrics/ModuleLength:
 Metrics/PerceivedComplexity:
   Max: 58
 
-# Offense count: 4
-# Cop supports --auto-correct.
-Performance/Size:
-  Exclude:
-    - 'test/tests/markdown_output.rb'
-    - 'test/tests/tabs_output.rb'
-
 # Offense count: 5
 # Cop supports --auto-correct.
 Performance/StringReplacement:
