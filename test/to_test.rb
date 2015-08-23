@@ -49,7 +49,7 @@ class #{name}Tests < Test::Unit::TestCase
       counter += 1
 
       <<-RUBY
-  def test_#{w.warning_type.to_s.downcase.tr(" -", "__")}_#{counter}
+  def test_#{w.warning_type.to_s.downcase.tr(' -', '__')}_#{counter}
     assert_warning :type => #{w.warning_set.inspect},
       :warning_code => #{w.warning_code},
       :fingerprint => #{w.fingerprint.inspect},

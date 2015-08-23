@@ -78,7 +78,7 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BasicProcessor
         option = level[o]
 
         if not option.is_a? Hash
-          Brakeman.debug "[Notice] Skipping config setting: #{options.map(&:to_s).join(".")}"
+          Brakeman.debug "[Notice] Skipping config setting: #{options.map(&:to_s).join('.')}"
           return exp
         end
 

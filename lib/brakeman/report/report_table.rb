@@ -101,7 +101,7 @@ Rails version: #{rails_version}
 Brakeman version: #{Brakeman::Version}
 Started at #{tracker.start_time}
 Duration: #{tracker.duration} seconds
-Checks run: #{checks.checks_run.sort.join(", ")}
+Checks run: #{checks.checks_run.sort.join(', ')}
 HEADER
   end
 end
