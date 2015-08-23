@@ -30,12 +30,6 @@ Lint/AmbiguousRegexpLiteral:
 Lint/AssignmentInCondition:
   Enabled: false
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AlignWith, SupportedStyles, AutoCorrect.
-Lint/DefEndAlignment:
-  Enabled: false
-
 # Offense count: 12
 # Cop supports --auto-correct.
 Lint/DeprecatedClassMethods:
