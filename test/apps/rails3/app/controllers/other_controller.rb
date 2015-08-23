@@ -59,11 +59,11 @@ class OtherController < ApplicationController
   end
 
   def test_sql_to_s status
-    column = "#{product_action_type_key.to_s}_count"
+    column = "#{product_action_type_key}_count"
     # Should warn about "product_action_type_key", not "product_action_type_key.to_s"
     Product.where(id: product_id).update_all ["#{column} = #{column} + ?", delta]
     # Should not warn
-    Product.where("id = #{id.to_s}")
+    Product.where("id = #{id}")
     # Should warn about "status" not "status.to_s"
     Product.find(:all, :conditions => "product_status_id = " + status.to_s)
     # Show not warn

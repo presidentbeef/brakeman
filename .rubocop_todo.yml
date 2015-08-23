@@ -98,12 +98,6 @@ Lint/ShadowingOuterLocalVariable:
     - 'lib/brakeman/report/ignore/config.rb'
     - 'lib/brakeman/rescanner.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Lint/StringConversionInInterpolation:
-  Exclude:
-    - 'test/apps/rails3/app/controllers/other_controller.rb'
-
 # Offense count: 47
 # Cop supports --auto-correct.
 Lint/UnusedBlockArgument:
