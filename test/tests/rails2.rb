@@ -1264,7 +1264,7 @@ class Rails2Tests < Test::Unit::TestCase
         :confidence => 0,
         :file => /application_controller\.rb/,
         :relative_path => "app/controllers/application_controller.rb"
-     end
+    end
   end
 
   def test_unsafe_symbol_creation_2

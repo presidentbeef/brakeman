@@ -58,7 +58,7 @@ class Brakeman::Differ
     else
      OLD_WARNING_KEYS.each do |attr|
         return false if new_warning[attr] != fixed_warning[attr]
-      end
+     end
 
       true
     end

@@ -260,7 +260,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
             @method_cache[method_name] = method
             return method
           end
-       end
+        end
 
         @method_cache[method_name] = find_method method_name, controller.parent
       else

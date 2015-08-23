@@ -30,14 +30,6 @@ Lint/AmbiguousRegexpLiteral:
 Lint/AssignmentInCondition:
   Enabled: false
 
-# Offense count: 3
-# Cop supports --auto-correct.
-Lint/BlockAlignment:
-  Exclude:
-    - 'lib/brakeman/differ.rb'
-    - 'lib/brakeman/processors/controller_alias_processor.rb'
-    - 'test/tests/rails2.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: AlignWith, SupportedStyles, AutoCorrect.
