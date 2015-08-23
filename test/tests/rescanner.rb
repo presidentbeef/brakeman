@@ -167,19 +167,19 @@ class RescannerTests < Test::Unit::TestCase
   end
 
   def test_delete_model_and_dependency
-      model = "app/models/user.rb"
-      dependency = "app/models/user/command_dependency.rb"
+    model = "app/models/user.rb"
+    dependency = "app/models/user/command_dependency.rb"
 
-      before_rescan_of model do
-        remove model
-        remove dependency
-      end
-
-      assert_reindex :controllers, :models, :templates
-      assert_changes
-      assert_new 7 #User is no longer a model, causing MORE warnings
-      assert_fixed 8
+    before_rescan_of model do
+      remove model
+      remove dependency
     end
+
+    assert_reindex :controllers, :models, :templates
+    assert_changes
+    assert_new 7 #User is no longer a model, causing MORE warnings
+    assert_fixed 8
+  end
 
   def test_add_method_to_model
     model = "app/models/user.rb"
