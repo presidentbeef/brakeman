@@ -992,10 +992,3 @@ Style/VariableInterpolation:
 Style/WhileUntilDo:
   Exclude:
     - 'lib/brakeman/processors/output_processor.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: MaxLineLength.
-Style/WhileUntilModifier:
-  Exclude:
-    - 'lib/brakeman/processors/output_processor.rb'

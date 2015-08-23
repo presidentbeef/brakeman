@@ -66,9 +66,7 @@ class Brakeman::OutputProcessor < Ruby2Ruby
     exp.shift if exp == s(s(:nil)) # empty it out of a default nil expression
 
     body = []
-    until exp.empty? do
-      body << indent(process(exp.shift))
-    end
+    body << indent(process(exp.shift)) until exp.empty?
 
     body << indent("# do nothing") if body.empty?
 
