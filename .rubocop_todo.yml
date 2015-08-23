@@ -905,13 +905,6 @@ Style/SymbolProc:
     - 'lib/brakeman/tracker.rb'
     - 'test/apps/rails4/app/controllers/friendly_controller.rb'
 
-# Offense count: 8
-# Cop supports --auto-correct.
-Style/Tab:
-  Exclude:
-    - 'lib/brakeman/processors/base_processor.rb'
-    - 'test/apps/rails3.2/app/models/multi_model.rb'
-
 # Offense count: 23
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.

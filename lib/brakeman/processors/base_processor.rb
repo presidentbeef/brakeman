@@ -205,8 +205,8 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     elsif first_arg.is_a? Symbol or first_arg.is_a? String
       type = :action
       value = Sexp.new(:lit, first_arg.to_sym)
-		elsif first_arg.nil?
-			type = :default
+    elsif first_arg.nil?
+      type = :default
     elsif not hash? first_arg
       type = :action
       value = first_arg
