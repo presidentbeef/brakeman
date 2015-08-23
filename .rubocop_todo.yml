@@ -999,9 +999,3 @@ Style/WhileUntilDo:
 Style/WhileUntilModifier:
   Exclude:
     - 'lib/brakeman/processors/output_processor.rb'
-
-# Offense count: 11
-# Cop supports --auto-correct.
-# Configuration parameters: WordRegex.
-Style/WordArray:
-  MinSize: 12
