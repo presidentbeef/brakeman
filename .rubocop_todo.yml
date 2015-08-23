@@ -78,13 +78,6 @@ Lint/LiteralInCondition:
   Exclude:
     - 'test/apps/rails3/app/models/user.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: AutoCorrect.
-Lint/LiteralInInterpolation:
-  Exclude:
-    - 'test/apps/rails3.1/app/controllers/admin_controller.rb'
-
 # Offense count: 3
 Lint/NonLocalExitFromIterator:
   Exclude:
