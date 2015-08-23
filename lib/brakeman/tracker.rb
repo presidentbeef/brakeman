@@ -59,7 +59,7 @@ class Brakeman::Tracker
     Brakeman.debug exception
     Brakeman.debug backtrace
 
-    @errors << { :error => exception.to_s.gsub("\n", " "), :backtrace => backtrace }
+    @errors << { :error => exception.to_s.tr("\n", ' '), :backtrace => backtrace }
   end
 
   #Run a set of checks on the current information. Results will be stored

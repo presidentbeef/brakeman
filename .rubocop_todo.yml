@@ -168,16 +168,6 @@ Metrics/ModuleLength:
 Metrics/PerceivedComplexity:
   Max: 58
 
-# Offense count: 5
-# Cop supports --auto-correct.
-Performance/StringReplacement:
-  Exclude:
-    - 'lib/brakeman/report/report_html.rb'
-    - 'lib/brakeman/report/report_markdown.rb'
-    - 'lib/brakeman/report/report_table.rb'
-    - 'lib/brakeman/tracker.rb'
-    - 'test/apps/rails4/config/initializers/i18n.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.

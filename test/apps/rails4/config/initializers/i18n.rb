@@ -11,7 +11,7 @@ class HtmlSafeI18nExceptionHandler
   def call(exception, locale, key, options)
     if exception.is_a?(Missing) && options[:rescue_format] == :html
       keys = exception.keys.map { |k| Rack::Utils.escape_html k }
-      key = keys.last.to_s.gsub('_', ' ').gsub(/\b('?[a-z])/) { $1.capitalize }
+      key = keys.last.to_s.tr('_', ' ').gsub(/\b('?[a-z])/) { $1.capitalize }
       %(<span class="translation_missing" title="translation missing: #{keys.join('.')}">#{key}</span>)
     else
       @original_exception_handler.call(exception, locale, key, options)
