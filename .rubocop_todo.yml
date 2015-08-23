@@ -870,14 +870,6 @@ Style/SpaceInsideStringInterpolation:
   Exclude:
     - 'test/apps/rails3.1/app/controllers/other_controller.rb'
 
-# Offense count: 3
-# Cop supports --auto-correct.
-Style/SpecialGlobalVars:
-  Exclude:
-    - 'bin/brakeman'
-    - 'brakeman-min.gemspec'
-    - 'brakeman.gemspec'
-
 # Offense count: 2929
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
