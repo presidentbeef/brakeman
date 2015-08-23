@@ -16,15 +16,15 @@ class JSONOutputTests < Test::Unit::TestCase
   end
 
   def test_for_scan_info_keys
-    info_keys = %w(app_path rails_version security_warnings start_time end_time duration 
-checks_performed number_of_controllers number_of_models number_of_templates 
+    info_keys = %w(app_path rails_version security_warnings start_time end_time duration
+checks_performed number_of_controllers number_of_models number_of_templates
 ruby_version brakeman_version)
 
     assert (@@json["scan_info"].keys - info_keys).empty?
   end
 
   def test_for_expected_warning_keys
-    expected = %w(warning_type message file link code location 
+    expected = %w(warning_type message file link code location
 render_path user_input confidence line warning_code fingerprint)
 
     @@json["warnings"].each do |warning|

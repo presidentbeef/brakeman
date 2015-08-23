@@ -34,7 +34,7 @@ class AdminController < ApplicationController
     `#{"blah #{why?}"}`
 
     # Some command injection of literals
-    # which should not raise warnings 
+    # which should not raise warnings
     or_input = if admin
                  "rm -rf"
                else

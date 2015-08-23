@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   named_scope :dah, lambda {|*args| { :conditions => "dah = '#{args[1]}'"}}
-  
+
   named_scope :phooey, :conditions => "phoeey = '#{User.phooey}'"
 
   named_scope :with_state, lambda {|state| state.present? ? {:conditions => "state_name = '#{state}'"} : {}}

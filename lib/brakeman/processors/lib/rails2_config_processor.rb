@@ -124,7 +124,7 @@ class Brakeman::ConfigAliasProcessor < Brakeman::AliasProcessor
 
   RAILS_INIT = Sexp.new(:colon2, Sexp.new(:const, :Rails), :Initializer)
 
-  #Look for a call to 
+  #Look for a call to
   #
   #  Rails::Initializer.run do |config|
   #    ...

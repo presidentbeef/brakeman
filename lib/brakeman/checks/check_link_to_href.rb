@@ -1,14 +1,14 @@
 require 'brakeman/checks/check_cross_site_scripting'
 
 #Checks for calls to link_to which pass in potentially hazardous data
-#to the second argument.  While this argument must be html_safe to not break 
-#the html, it must also be url safe as determined by calling a 
-#:url_safe_method.  This prevents attacks such as javascript:evil() or 
+#to the second argument.  While this argument must be html_safe to not break
+#the html, it must also be url safe as determined by calling a
+#:url_safe_method.  This prevents attacks such as javascript:evil() or
 #data:<encoded XSS> which is html_safe, but not safe as an href
 #Props to Nick Green for the idea.
 class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
   Brakeman::Checks.add self
-                        
+
   @description = "Checks to see if values used for hrefs are sanitized using a :url_safe_method to protect against javascript:/data: XSS"
 
   def run_check
@@ -23,7 +23,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     @models = tracker.models.keys
     @inspect_arguments = tracker.options[:check_arguments]
 
-    methods = tracker.find_call :target => false, :method => :link_to 
+    methods = tracker.find_call :target => false, :method => :link_to
     methods.each do |call|
       process_result call
     end
@@ -48,7 +48,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
       unless duplicate? result
         add_result result
         warn :result => result,
-          :warning_type => "Cross Site Scripting", 
+          :warning_type => "Cross Site Scripting",
           :warning_code => :xss_link_to_href,
           :message => message,
           :user_input => input.match,
@@ -57,19 +57,19 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
       end
     elsif has_immediate_model? url_arg
 
-      # Decided NOT warn on models.  polymorphic_path is called it a model is 
+      # Decided NOT warn on models.  polymorphic_path is called it a model is
       # passed to link_to (which passes it to url_for)
 
     elsif array? url_arg
-      # Just like models, polymorphic path/url is called if the argument is 
-      # an array      
+      # Just like models, polymorphic path/url is called if the argument is
+      # an array
 
     elsif hash? url_arg
 
       # url_for uses the key/values pretty carefully and I don't see a risk.
       # IF you have default routes AND you accept user input for :controller
-      # and :only_path, then MAYBE you could trigger a javascript:/data: 
-      # attack. 
+      # and :only_path, then MAYBE you could trigger a javascript:/data:
+      # attack.
 
     elsif @matched
       if @matched.type == :model and not tracker.options[:ignore_model_output]
@@ -80,8 +80,8 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
 
       if message and not duplicate? result
         add_result result
-        warn :result => result, 
-          :warning_type => "Cross Site Scripting", 
+        warn :result => result,
+          :warning_type => "Cross Site Scripting",
           :warning_code => :xss_link_to_href,
           :message => message,
           :user_input => @matched.match,

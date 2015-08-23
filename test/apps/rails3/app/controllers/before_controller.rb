@@ -33,7 +33,7 @@ class BeforeController < ApplicationController
     @query = params[:search]
     @bill = something_else
   end
-  
+
   def filter5
     @purchase = @account.purchases.last
   end

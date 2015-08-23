@@ -8,7 +8,7 @@ class Brakeman::CheckEscapeFunction < Brakeman::BaseCheck
   @description = "Checks for versions before 2.3.14 which have a vulnerable escape method"
 
   def run_check
-    if version_between?('2.0.0', '2.3.13') and RUBY_VERSION < '1.9.0' 
+    if version_between?('2.0.0', '2.3.13') and RUBY_VERSION < '1.9.0'
 
       warn :warning_type => 'Cross Site Scripting',
         :warning_code => :CVE_2011_2932,

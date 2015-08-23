@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   scope :blah, where("thinger = '#{BLAH}'") #No longer warns on constants
 
   scope :dah, lambda {|*args| { :conditions => "dah = '#{args[1]}'"}}
-  
+
   scope :phooey, :conditions => "phoeey = '#{User.phooey}'"
 
   scope :this_is_safe, lambda { |name|

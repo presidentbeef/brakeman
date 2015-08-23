@@ -129,7 +129,7 @@ class OutputProcessorTests < Test::Unit::TestCase
       Sexp.new(:render,
                :partial,
                Sexp.new(:str, "x/y"),
-               Sexp.new(:hash, 
+               Sexp.new(:hash,
                         Sexp.new(:lit, :locals),
                         Sexp.new(:hash,
                                  Sexp.new(:lit, :user),

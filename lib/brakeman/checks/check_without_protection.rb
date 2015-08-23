@@ -18,8 +18,8 @@ class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
 
     Brakeman.debug "Finding all mass assignments"
     calls = tracker.find_call :targets => active_record_models.keys, :methods => [:new,
-      :attributes=, 
-      :update_attributes, 
+      :attributes=,
+      :update_attributes,
       :update_attributes!,
       :create,
       :create!]
@@ -49,11 +49,11 @@ class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
             user_input = nil
           end
 
-          warn :result => res, 
-            :warning_type => "Mass Assignment", 
+          warn :result => res,
+            :warning_type => "Mass Assignment",
             :warning_code => :mass_assign_without_protection,
             :message => "Unprotected mass assignment",
-            :code => call, 
+            :code => call,
             :user_input => user_input,
             :confidence => confidence
 

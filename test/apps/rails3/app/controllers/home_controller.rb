@@ -146,7 +146,7 @@ class HomeController < ApplicationController
     Open3.capture2 "ls #{params[:dir]}"
     Open3.capture2e "ls #{params[:dir]}"
     Open3.capture3 "ls #{params[:dir]}"
-    Open3.pipeline "sort", "uniq", :in => params[:file] 
+    Open3.pipeline "sort", "uniq", :in => params[:file]
     Open3.pipeline_r "sort #{params[:file]}", "uniq"
     Open3.pipeline_rw params[:cmd], "sort -g"
     Open3.pipeline_start *params[:cmds]

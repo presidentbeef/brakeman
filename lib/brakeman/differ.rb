@@ -1,5 +1,5 @@
 # extracting the diff logic to it's own class for consistency. Currently handles
-# an array of Brakeman::Warnings or plain hash representations.  
+# an array of Brakeman::Warnings or plain hash representations.
 class Brakeman::Differ
   DEFAULT_HASH = {:new => [], :fixed => []}
   OLD_WARNING_KEYS = [:warning_type, :location, :code, :message, :file, :link, :confidence, :user_input]
@@ -48,7 +48,7 @@ class Brakeman::Differ
 
   def eql_except_line_number new_warning, fixed_warning
     # can't do this ahead of time, as callers may be expecting a Brakeman::Warning
-    if new_warning.is_a? Brakeman::Warning 
+    if new_warning.is_a? Brakeman::Warning
       new_warning = new_warning.to_hash
       fixed_warning = fixed_warning.to_hash
     end

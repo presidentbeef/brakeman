@@ -23,7 +23,7 @@ class Brakeman::CheckSafeBufferManipulation < Brakeman::BaseCheck
     message = "Rails #{rails_version} has a vulnerabilty in SafeBuffer. Upgrade to #{suggested_version} or apply patches."
 
     warn :warning_type => "Cross Site Scripting",
-      :warning_code => :safe_buffer_vuln, 
+      :warning_code => :safe_buffer_vuln,
       :message => message,
       :confidence => CONFIDENCE[:med],
       :gem_info => gemfile_or_environment

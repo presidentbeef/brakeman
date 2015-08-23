@@ -754,7 +754,7 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/models/user.rb"
   end
- 
+
   def test_format_validation_model_alias_processing
     assert_warning :type => :model,
       :warning_code => 30,

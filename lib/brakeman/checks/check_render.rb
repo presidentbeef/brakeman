@@ -59,4 +59,4 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
         :confidence => confidence
     end
   end
-end 
+end

@@ -62,7 +62,7 @@ module Brakeman::RenderHelper
     template = @tracker.templates[name.to_sym]
     unless template
       Brakeman.debug "[Notice] No such template: #{name}"
-      return 
+      return
     end
 
     template_env = only_ivars(:include_request_vars)
@@ -87,7 +87,7 @@ module Brakeman::RenderHelper
         #nothing
       elsif not template.name.to_s.match(/[^\/_][^\/]+$/)
         #Don't do this for partials
-        
+
         process_layout
       end
 

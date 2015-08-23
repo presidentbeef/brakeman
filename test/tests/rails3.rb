@@ -3,7 +3,7 @@ abort "Please run using test/test.rb" unless defined? BrakemanTester
 class Rails3Tests < Test::Unit::TestCase
   include BrakemanTester::FindWarning
   include BrakemanTester::CheckExpected
-  
+
   def report
     @@report ||= BrakemanTester.run_scan "rails3", "Rails 3", :rails3 => true,
       :config_file => File.join(TEST_PATH, "apps", "rails3", "config", "brakeman.yml")
@@ -538,8 +538,8 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 0,
       :file => /test_params\.html\.erb/
-  end  
- 
+  end
+
   def test_href_parameter_in_link_to
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
@@ -547,21 +547,21 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 0,
       :file => /test_params\.html\.erb/
- 
+
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 16,
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 1,
-      :file => /test_params\.html\.erb/      
- 
+      :file => /test_params\.html\.erb/
+
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 18,
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 1,
-      :file => /test_params\.html\.erb/            
-  end  
+      :file => /test_params\.html\.erb/
+  end
 
   def test_polymorphic_url_in_href
     assert_no_warning :type => :template,
@@ -569,14 +569,14 @@ class Rails3Tests < Test::Unit::TestCase
       :line => 10,
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 1,
-      :file => /test_model\.html\.erb/  
+      :file => /test_model\.html\.erb/
 
     assert_no_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 12,
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 1,
-      :file => /test_model\.html\.erb/  
+      :file => /test_model\.html\.erb/
   end
 
 
@@ -933,7 +933,7 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
       :confidence => 0,
       :file => /test_content_tag\.html\.erb/
-  end 
+  end
 
   def test_xss_content_tag_in_tag_name
     assert_warning :type => :template,
@@ -1110,7 +1110,7 @@ class Rails3Tests < Test::Unit::TestCase
       :message => /^Rails\ 3\.0\.3\ has\ a\ serious\ JSON\ parsing\ v/,
       :confidence => 0,
       :file => /Gemfile/
-  end 
+  end
 
   def test_denial_of_service_CVE_2013_0269
     assert_warning :type => :warning,
