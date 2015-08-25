@@ -8,11 +8,13 @@ class Brakeman::GemProcessor < Brakeman::BasicProcessor
     @gem_name_version = /^\s*([-_+.A-Za-z0-9]+) \((\w(\.\w+)*)\)/
   end
 
-  def process_gems src, gem_lock = nil
-    process src
+  def process_gems gem_files
+    @gem_files = gem_files
+    @gemfile = gem_files[:gemfile][:file]
+    process gem_files[:gemfile][:src]
 
-    if gem_lock
-      process_gem_lock gem_lock
+    if gem_files[:gemlock]
+      process_gem_lock
     end
 
     @tracker.config.set_rails_version
@@ -31,16 +33,17 @@ class Brakeman::GemProcessor < Brakeman::BasicProcessor
                   nil
                 end
 
-      @tracker.config.add_gem gem_name.value, version, 'Gemfile', exp.line
+      @tracker.config.add_gem gem_name.value, version, @gemfile, exp.line
     end
 
     exp
   end
 
-  def process_gem_lock gem_lock
+  def process_gem_lock
     line_num = 1
-    gem_lock.each_line do |line|
-      set_gem_version_and_file line, 'Gemfile.lock', line_num
+    file = @gem_files[:gemlock][:file]
+    @gem_files[:gemlock][:src].each_line do |line|
+      set_gem_version_and_file line, file, line_num
       line_num += 1
     end
   end

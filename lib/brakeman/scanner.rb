@@ -128,12 +128,21 @@ class Brakeman::Scanner
 
   #Process Gemfile
   def process_gems
+    gem_files = {}
     if @app_tree.exists? "Gemfile"
-      if @app_tree.exists? "Gemfile.lock"
-        @processor.process_gems(parse_ruby(@app_tree.read("Gemfile")), @app_tree.read("Gemfile.lock"))
-      else
-        @processor.process_gems(parse_ruby(@app_tree.read("Gemfile")))
-      end
+      gem_files[:gemfile] = { :src => parse_ruby(@app_tree.read("Gemfile")), :file => "Gemfile" }
+    elsif @app_tree.exists? "gems.rb"
+      gem_files[:gemfile] = { :src => parse_ruby(@app_tree.read("gems.rb")), :file => "gems.rb" }
+    end
+
+    if @app_tree.exists? "Gemfile.lock"
+      gem_files[:gemlock] = { :src => @app_tree.read("Gemfile.lock"), :file => "Gemfile.lock" }
+    elsif @app_tree.exists? "gems.locked"
+      gem_files[:gemlock] = { :src => @app_tree.read("gems.locked"), :file => "gems.locked" }
+    end
+
+    if gem_files[:gemfile] or gem_files[:gemlock]
+      @processor.process_gems gem_files
     end
   rescue => e
     Brakeman.notify "[Notice] Error while processing Gemfile."

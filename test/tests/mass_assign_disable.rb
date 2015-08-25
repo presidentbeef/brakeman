@@ -64,8 +64,8 @@ class MassAssignDisableTest < Test::Unit::TestCase
   end
 
   def test_protected_attributes_gem_without_whitelist_attributes
-    before_rescan_of "Gemfile", "rails4_with_engines" do
-      append "Gemfile", "gem 'protected_attributes'"
+    before_rescan_of "gems.rb", "rails4_with_engines" do
+      append "gems.rb", "gem 'protected_attributes'"
     end
 
     assert_reindex :none
@@ -77,8 +77,8 @@ class MassAssignDisableTest < Test::Unit::TestCase
   def test_protected_attributes_gem_with_whitelist_attributes
     config = "config/environments/production.rb"
 
-    before_rescan_of ["Gemfile", config], "rails4_with_engines" do
-      append "Gemfile", "gem 'protected_attributes'"
+    before_rescan_of ["gems.rb", config], "rails4_with_engines" do
+      append "gems.rb", "gem 'protected_attributes'"
 
       replace config, "config.active_record.whitelist_attributes = false",
         "config.active_record.whitelist_attributes = true"

@@ -19,23 +19,23 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
   def test_i18n_xss_CVE_2013_4491
     assert_warning :type => :warning,
       :warning_code => 63,
-      :fingerprint => "de0e11056b9f9af7b8570d5354185cd7e17a18cc61d627555fe4adfff00fb447",
+      :fingerprint => "f127f5b2c0fc6f49570a6a3ec2b79baa2d8c24df59f86926f7a83855af06f534",
       :warning_type => "Cross Site Scripting",
       :message => /^Rails\ 4\.0\.0\ has\ an\ XSS\ vulnerability\ in\ /,
-      :file => /Gemfile/,
+      :file => /gems.rb/,
       :confidence => 1,
-      :relative_path => /Gemfile/
+      :relative_path => "gems.rb"
   end
 
   def test_number_to_currency_CVE_2014_0081
     assert_warning :type => :warning,
       :warning_code => 73,
-      :fingerprint => "f6981b9c24727ef45040450a1f4b158ae3bc31b4b0343efe853fe12c64881695",
+      :fingerprint => "d884628b046c0ac6267bffe01bf0017a29dd94065e10e564d337cd85e40550a1",
       :warning_type => "Cross Site Scripting",
       :line => 4,
       :message => /^Rails\ 4\.0\.0\ has\ a\ vulnerability\ in\ numbe/,
       :confidence => 1,
-      :relative_path => "Gemfile",
+      :relative_path => "gems.rb",
       :user_input => nil
   end
 
@@ -64,13 +64,13 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
   def test_sql_injection_CVE_2013_6417
     assert_warning :type => :warning,
       :warning_code => 69,
-      :fingerprint => "e1b66f4311771d714a13be519693c540d7e917511a758827d9b2a0a7f958e40f",
+      :fingerprint => "6526cbe210b51803986cddbfd567059c8036390eb697d64baa604b62940a3c55",
       :warning_type => "SQL Injection",
       :message => /^Rails\ 4\.0\.0\ contains\ a\ SQL\ injection\ vul/,
       :confidence => 0,
-      :relative_path => 'Gemfile',
+      :relative_path => 'gems.rb',
       :line => 4,
-      :file => /Gemfile/,
+      :file => /gems.rb/,
       :user_input => nil
   end
 
@@ -89,12 +89,12 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
   def test_mass_assignment_CVE_2014_3514
     assert_warning :type => :warning,
       :warning_code => 80,
-      :fingerprint => "c3535608927977a6b2f7587021ce6c366895ec0637cf1c15988324349b22f76d",
+      :fingerprint => "98c76e0940c4e2ebb0dafd2b022c6818e7f620f196ce7e5c612af7d6ac06cd39",
       :warning_type => "Mass Assignment",
       :line => 4,
       :message => /^create_with\ is\ vulnerable\ to\ strong\ para/,
       :confidence => 1,
-      :relative_path => "Gemfile",
+      :relative_path => "gems.rb",
       :user_input => nil
   end
 
@@ -287,12 +287,12 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
   def test_xml_dos_CVE_2015_3227
     assert_warning :type => :warning,
       :warning_code => 88,
-      :fingerprint => "6ad4464dbb2a999591c7be8346dc137c3372b280f4a8b0c024fef91dfebeeb83",
+      :fingerprint => "ea8edcadc48c04a69e0bee3bdb214ce61f7837b46e9c254b61993660653d1ec6",
       :warning_type => "Denial of Service",
       :line => 4,
       :message => /^Rails\ 4\.0\.0\ is\ vulnerable\ to\ denial\ of\ s/,
       :confidence => 1,
-      :relative_path => "Gemfile",
+      :relative_path => "gems.rb",
       :user_input => nil
   end
 end
