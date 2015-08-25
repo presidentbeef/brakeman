@@ -6,6 +6,9 @@
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title>Users: <%= controller.action_name %></title>
   <%= stylesheet_link_tag 'scaffold' %>
+<script>
+  var browser="<%= j request.env['HTTP_USER_AGENT'] %>";
+</script>
 </head>
 <body>
 
