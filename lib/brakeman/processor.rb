@@ -27,8 +27,8 @@ module Brakeman
     end
 
     #Process Gemfile
-    def process_gems src, gem_lock = nil
-      GemProcessor.new(@tracker).process_gems src, gem_lock
+    def process_gems gem_files
+      GemProcessor.new(@tracker).process_gems gem_files
     end
 
     #Process route file source

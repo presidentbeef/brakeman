@@ -150,4 +150,16 @@ class CVETests < Test::Unit::TestCase
 
     assert_version "4.0.0"
   end
+
+  def test_new_bundler_file_names
+    before_rescan_of ["Gemfile", "Gemfile.lock"] do
+      rename "Gemfile", "gems.rb"
+      rename "Gemfile.lock", "gems.locked"
+    end
+
+    assert_changes
+    assert_new 0
+    assert_fixed 0
+    assert_version "3.2.9.rc2"
+  end
 end

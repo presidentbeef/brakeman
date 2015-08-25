@@ -171,6 +171,16 @@ module BrakemanTester::RescanTestHelper
     assert_equal false, File.exist?(path)
   end
 
+  def rename from_file, to_file
+    require 'fileutils'
+    old_path = full_path from_file
+    new_path = full_path to_file
+
+    assert File.exist?(old_path), "Could not find #{old_path} to delete"
+
+    FileUtils.mv old_path, new_path
+  end
+
   def append file, code
     File.open full_path(file), "a" do |f|
       f.puts code

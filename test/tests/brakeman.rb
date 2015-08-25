@@ -299,8 +299,9 @@ class GemProcessorTests < Test::Unit::TestCase
   end
 
   def test_gem_lock_parsing
+    empty_block = Sexp.new(:block)
     @gem_locks.each do |eol, gem_lock|
-      @gem_processor.process_gems Sexp.new(:block), gem_lock
+      @gem_processor.process_gems :gemfile => { :file => "Gemfile", :src => empty_block}, :gemlock => { :file => "gems.locked", :src => gem_lock }
       assert_version "4.3.1", :erubis, "Couldn't match gemlock with eol: #{eol}"
       assert_version "3.2.1", :paperclip, "Couldn't match gemlock with eol: #{eol}"
       assert_version "3.2.1.rc2", :rails, "Couldn't match gemlock with eol: #{eol}"

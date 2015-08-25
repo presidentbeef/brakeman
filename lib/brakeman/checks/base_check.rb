@@ -462,6 +462,8 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       info
     elsif @app_tree.exists?("Gemfile")
       "Gemfile"
+    elsif @app_tree.exists?("gems.rb")
+      "gems.rb"
     else
       "config/environment.rb"
     end
