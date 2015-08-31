@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2015-08-30T23:32:01-07:00</updated>
+  <updated>2015-08-30T23:35:35-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -29,10 +29,10 @@
 &lt;li&gt;Remove renaming of several &lt;code&gt;Sexp&lt;/code&gt; nodes&lt;/li&gt;
 &lt;li&gt;Treat &lt;code&gt;html_safe&lt;/code&gt; like &lt;code&gt;raw&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Use railties version if rails gem is missing (&lt;a href=&quot;https://github.com/lucasmazza&quot;&gt;Lucas Mazza&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Warn about unverified SSL mode in Net::HTTP.start&lt;/li&gt;
+&lt;li&gt;Warn about unverified SSL mode in &lt;code&gt;Net::HTTP.start&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Expand XSS safe methods&lt;/li&gt;
 &lt;li&gt;Avoid warning on path creation methods in &lt;code&gt;link_to&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Add support for gems.rb/gems.locked (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/705&quot;&gt;#705&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add support for &lt;code&gt;gems.rb&lt;/code&gt;/&lt;code&gt;gems.locked&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/705&quot;&gt;#705&lt;/a&gt;)&lt;/li&gt;
 &lt;li&gt;Fix low confidence XSS warning code&lt;/li&gt;
 &lt;li&gt;Avoid duplicate &lt;code&gt;eval&lt;/code&gt; warnings&lt;/li&gt;
 &lt;li&gt;Convert YAML config keys to symbols (&lt;a href=&quot;https://github.com/KarlGl&quot;&gt;Karl Glaser&lt;/a&gt;)&lt;/li&gt;
@@ -51,11 +51,7 @@
 
 &lt;p&gt;Previously, render paths were arrays of strings. The strings represented the locations of calls to &lt;code&gt;render&lt;/code&gt; (implicit or explicit), either in the form &lt;code&gt;&amp;lt;Controller&amp;gt;#&amp;lt;method&amp;gt;&lt;/code&gt; or &lt;code&gt;Template:&amp;lt;template/path&amp;gt;&lt;/code&gt;. While the information was somewhat useful to humans, it was not easily manipulated by computers and it was difficult to link the strings back to application code.&lt;/p&gt;
 
-&lt;p&gt;Now, render paths are arrays of hashes. The hash has a &lt;code&gt;type&lt;/code&gt; key with a value of either &lt;code&gt;controller&lt;/code&gt; or &lt;code&gt;template&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;For controllers, the hash includes &lt;code&gt;class&lt;/code&gt;, &lt;code&gt;method&lt;/code&gt;, &lt;code&gt;line&lt;/code&gt;, and &lt;code&gt;file&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;For templates, the hash includes &lt;code&gt;name&lt;/code&gt;, &lt;code&gt;line&lt;/code&gt;, and &lt;code&gt;file&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Now, render paths are arrays of hashes. The hash has a &lt;code&gt;type&lt;/code&gt; key with a value of either &lt;code&gt;controller&lt;/code&gt; or &lt;code&gt;template&lt;/code&gt;. For controllers, the hash includes &lt;code&gt;class&lt;/code&gt;, &lt;code&gt;method&lt;/code&gt;, &lt;code&gt;line&lt;/code&gt;, and &lt;code&gt;file&lt;/code&gt;. For templates, the hash includes &lt;code&gt;name&lt;/code&gt;, &lt;code&gt;line&lt;/code&gt;, and &lt;code&gt;file&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;Example:&lt;/p&gt;
 
@@ -78,9 +74,7 @@
 
 &lt;p&gt;Implicit renders from controller actions point to the line at the end of the method.&lt;/p&gt;
 
-&lt;p&gt;Rendered templates in JSON reports used to include the render location as well.&lt;/p&gt;
-
-&lt;p&gt;For example:&lt;/p&gt;
+&lt;p&gt;Rendered templates in JSON reports used to include the render location as well. For example:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;&quot;location&quot;: {
   &quot;type&quot;: &quot;template&quot;,
@@ -128,13 +122,13 @@
 
 &lt;h3&gt;More Safe Methods&lt;/h3&gt;
 
-&lt;p&gt;Brakeman warns about user input in the href parameter of &lt;code&gt;link_to&lt;/code&gt; because it is possible to pass in a string starting with &lt;code&gt;javascript:&lt;/code&gt;, which will execute the XSS payload when the victim clicks on it. However, it will no longer warn about methods that look like path helpers or URL generation methods. It will still warn about URL methods on models, however, because those may be direct user input.&lt;/p&gt;
+&lt;p&gt;Brakeman warns about user input in the href parameter of &lt;code&gt;link_to&lt;/code&gt; because it is possible to pass in a string starting with &lt;code&gt;javascript:&lt;/code&gt;, which will execute the XSS payload when the victim clicks on it. However, it will no longer warn about methods that look like path helpers or URL generation methods. It will still warn about URL methods on models, since those may be direct user input.&lt;/p&gt;
 
 &lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/674&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
 &lt;h3&gt;gems.rb/gems.locked&lt;/h3&gt;
 
-&lt;p&gt;&lt;code&gt;gems.rb&lt;/code&gt;/&lt;code&gt;gems.locked&lt;/code&gt; are alternative names to &lt;code&gt;Gemfile&lt;/code&gt;/&lt;code&gt;Gemfile.lock&lt;/code&gt; which Brakeman now supports.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;gems.rb&lt;/code&gt;/&lt;code&gt;gems.locked&lt;/code&gt; are alternative names for &lt;code&gt;Gemfile&lt;/code&gt;/&lt;code&gt;Gemfile.lock&lt;/code&gt;. Brakeman now supports either pair.&lt;/p&gt;
 
 &lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/705&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 

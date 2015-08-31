@@ -133,10 +133,10 @@
 <li>Remove renaming of several <code>Sexp</code> nodes</li>
 <li>Treat <code>html_safe</code> like <code>raw</code></li>
 <li>Use railties version if rails gem is missing (<a href="https://github.com/lucasmazza">Lucas Mazza</a>)</li>
-<li>Warn about unverified SSL mode in Net::HTTP.start</li>
+<li>Warn about unverified SSL mode in <code>Net::HTTP.start</code></li>
 <li>Expand XSS safe methods</li>
 <li>Avoid warning on path creation methods in <code>link_to</code></li>
-<li>Add support for gems.rb/gems.locked (<a href="https://github.com/presidentbeef/brakeman/pull/705">#705</a>)</li>
+<li>Add support for <code>gems.rb</code>/<code>gems.locked</code> (<a href="https://github.com/presidentbeef/brakeman/pull/705">#705</a>)</li>
 <li>Fix low confidence XSS warning code</li>
 <li>Avoid duplicate <code>eval</code> warnings</li>
 <li>Convert YAML config keys to symbols (<a href="https://github.com/KarlGl">Karl Glaser</a>)</li>
@@ -155,11 +155,7 @@
 
 <p>Previously, render paths were arrays of strings. The strings represented the locations of calls to <code>render</code> (implicit or explicit), either in the form <code>&lt;Controller&gt;#&lt;method&gt;</code> or <code>Template:&lt;template/path&gt;</code>. While the information was somewhat useful to humans, it was not easily manipulated by computers and it was difficult to link the strings back to application code.</p>
 
-<p>Now, render paths are arrays of hashes. The hash has a <code>type</code> key with a value of either <code>controller</code> or <code>template</code>.</p>
-
-<p>For controllers, the hash includes <code>class</code>, <code>method</code>, <code>line</code>, and <code>file</code>.</p>
-
-<p>For templates, the hash includes <code>name</code>, <code>line</code>, and <code>file</code>.</p>
+<p>Now, render paths are arrays of hashes. The hash has a <code>type</code> key with a value of either <code>controller</code> or <code>template</code>. For controllers, the hash includes <code>class</code>, <code>method</code>, <code>line</code>, and <code>file</code>. For templates, the hash includes <code>name</code>, <code>line</code>, and <code>file</code>.</p>
 
 <p>Example:</p>
 
@@ -182,9 +178,7 @@
 
 <p>Implicit renders from controller actions point to the line at the end of the method.</p>
 
-<p>Rendered templates in JSON reports used to include the render location as well.</p>
-
-<p>For example:</p>
+<p>Rendered templates in JSON reports used to include the render location as well. For example:</p>
 
 <pre><code>"location": {
   "type": "template",
@@ -232,13 +226,13 @@
 
 <h3>More Safe Methods</h3>
 
-<p>Brakeman warns about user input in the href parameter of <code>link_to</code> because it is possible to pass in a string starting with <code>javascript:</code>, which will execute the XSS payload when the victim clicks on it. However, it will no longer warn about methods that look like path helpers or URL generation methods. It will still warn about URL methods on models, however, because those may be direct user input.</p>
+<p>Brakeman warns about user input in the href parameter of <code>link_to</code> because it is possible to pass in a string starting with <code>javascript:</code>, which will execute the XSS payload when the victim clicks on it. However, it will no longer warn about methods that look like path helpers or URL generation methods. It will still warn about URL methods on models, since those may be direct user input.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/674">changes</a>)</p>
 
 <h3>gems.rb/gems.locked</h3>
 
-<p><code>gems.rb</code>/<code>gems.locked</code> are alternative names to <code>Gemfile</code>/<code>Gemfile.lock</code> which Brakeman now supports.</p>
+<p><code>gems.rb</code>/<code>gems.locked</code> are alternative names for <code>Gemfile</code>/<code>Gemfile.lock</code>. Brakeman now supports either pair.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/705">changes</a>)</p>
 
