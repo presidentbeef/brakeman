@@ -1,3 +1,22 @@
+# 3.1.0
+
+* Add support for gems.rb/gems.locked
+* Update render path information in JSON reports
+* Remove renaming of several Sexp nodes
+* Convert YAML config keys to symbols (Karl Glaser)
+* Use railties version if rails gem is missing (Lucas Mazza)
+* Warn about unverified SSL mode in Net::HTTP.start
+* Add Model, Controller, Template, Config classes internally
+* Report file being parsed in debug output
+* Update dependencies to Ruby 1.8 incompatible versions
+* Treat Array.new and Hash.new as arrays/hashes
+* Fix handling of string concatenation with existing string
+* Treat html_safe like raw()
+* Fix low confidence XSS warning code
+* Avoid warning on path creation methods in link_to
+* Expand safe methods to match methods with targets
+* Avoid duplicate eval() warnings
+
 # 3.0.5
 
 * Fix check for CVE-2015-3227
