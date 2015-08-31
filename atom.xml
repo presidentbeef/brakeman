@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2015-08-30T22:44:52-07:00</updated>
+  <updated>2015-08-30T23:32:01-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -17,7 +17,7 @@
     <link href="http://brakemanscanner.org/blog/2015/08/30/brakeman-3-dot-1-0-released/"/>
     <updated>2015-08-30T21:46:00-07:00</updated>
     <id>http://brakemanscanner.org/blog/2015/08/30/brakeman-3-dot-1-0-released</id>
-    <content type="html">&lt;p&gt;There are several changes in this release that may affect consumers of the JSON report as well as anyone relying on the ignore configuration file. Please try out &lt;a href=&quot;https://gist.github.com/presidentbeef/52d5cce0fd26b901179e&quot;&gt;this script&lt;/a&gt; to migrate ignore configurations.&lt;/p&gt;
+    <content type="html">&lt;p&gt;There are several changes in this release which may affect consumers of the JSON report as well as anyone relying on the ignore configuration file. Please try out &lt;a href=&quot;https://gist.github.com/presidentbeef/52d5cce0fd26b901179e&quot;&gt;this script&lt;/a&gt; to migrate ignore configurations.&lt;/p&gt;
 
 &lt;p&gt;Additionally, some dependencies have been updated to versions no longer supporting Ruby 1.8. As a consequence, Brakeman no longer runs &quot;out of the box&quot; on Ruby 1.8, although you may be able to use the &lt;code&gt;brakeman-min&lt;/code&gt; gem. No more attempts will be made to support running on Ruby 1.8 in future releases. Please note that does not mean Ruby 1.8 code cannot be analyzed; that still works fine.&lt;/p&gt;
 
@@ -59,29 +59,22 @@
 
 &lt;p&gt;Example:&lt;/p&gt;
 
-&lt;p&gt;```json
-[
-  {&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&quot;type&quot;: &quot;controller&quot;,
-&quot;class&quot;: &quot;ProductsController&quot;,
-&quot;method&quot;: &quot;create&quot;,
-&quot;line&quot;: 50,
-&quot;file&quot;: &quot;app/controllers/products_controller.rb&quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;  },
-  {&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&quot;type&quot;: &quot;template&quot;,
-&quot;name&quot;: &quot;products/new&quot;,
-&quot;line&quot;: 2,
-&quot;file&quot;: &quot;app/views/products/new.html.erb&quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;  }
+&lt;pre&gt;&lt;code&gt;[
+  {
+    &quot;type&quot;: &quot;controller&quot;,
+    &quot;class&quot;: &quot;ProductsController&quot;,
+    &quot;method&quot;: &quot;create&quot;,
+    &quot;line&quot;: 50,
+    &quot;file&quot;: &quot;app/controllers/products_controller.rb&quot;
+  },
+  {
+    &quot;type&quot;: &quot;template&quot;,
+    &quot;name&quot;: &quot;products/new&quot;,
+    &quot;line&quot;: 2,
+    &quot;file&quot;: &quot;app/views/products/new.html.erb&quot;
+  }
 ]
-```&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Implicit renders from controller actions point to the line at the end of the method.&lt;/p&gt;
 
@@ -89,12 +82,11 @@
 
 &lt;p&gt;For example:&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;json
-&quot;location&quot;: {
+&lt;pre&gt;&lt;code&gt;&quot;location&quot;: {
   &quot;type&quot;: &quot;template&quot;,
   &quot;template&quot;: &quot;home/index (HomeController#index)&quot;
 }
-&lt;/code&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Since this information is redundant with the render path, it has been removed.&lt;/p&gt;
 
@@ -179,6 +171,10 @@
 &lt;h3&gt;SHAs&lt;/h3&gt;
 
 &lt;p&gt;The SHA1 sums for this release are&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;236af597e5cbcc0e647c02c4087ceb5965510435  brakeman-3.1.0.gem
+fe06faf67e781c4c4dc5ee362918ef2dfd8e1ce2  brakeman-min-3.1.0.gem
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3&gt;Reporting Issues&lt;/h3&gt;
 

@@ -121,7 +121,7 @@
   </header>
 
 
-<div class="entry-content"><p>There are several changes in this release that may affect consumers of the JSON report as well as anyone relying on the ignore configuration file. Please try out <a href="https://gist.github.com/presidentbeef/52d5cce0fd26b901179e">this script</a> to migrate ignore configurations.</p>
+<div class="entry-content"><p>There are several changes in this release which may affect consumers of the JSON report as well as anyone relying on the ignore configuration file. Please try out <a href="https://gist.github.com/presidentbeef/52d5cce0fd26b901179e">this script</a> to migrate ignore configurations.</p>
 
 <p>Additionally, some dependencies have been updated to versions no longer supporting Ruby 1.8. As a consequence, Brakeman no longer runs &#8220;out of the box&#8221; on Ruby 1.8, although you may be able to use the <code>brakeman-min</code> gem. No more attempts will be made to support running on Ruby 1.8 in future releases. Please note that does not mean Ruby 1.8 code cannot be analyzed; that still works fine.</p>
 
@@ -163,29 +163,22 @@
 
 <p>Example:</p>
 
-<p>&#8220;`json
-[
-  {</p>
-
-<pre><code>"type": "controller",
-"class": "ProductsController",
-"method": "create",
-"line": 50,
-"file": "app/controllers/products_controller.rb"
-</code></pre>
-
-<p>  },
-  {</p>
-
-<pre><code>"type": "template",
-"name": "products/new",
-"line": 2,
-"file": "app/views/products/new.html.erb"
-</code></pre>
-
-<p>  }
+<pre><code>[
+  {
+    "type": "controller",
+    "class": "ProductsController",
+    "method": "create",
+    "line": 50,
+    "file": "app/controllers/products_controller.rb"
+  },
+  {
+    "type": "template",
+    "name": "products/new",
+    "line": 2,
+    "file": "app/views/products/new.html.erb"
+  }
 ]
-&#8220;`</p>
+</code></pre>
 
 <p>Implicit renders from controller actions point to the line at the end of the method.</p>
 
@@ -193,12 +186,11 @@
 
 <p>For example:</p>
 
-<p><code>json
-"location": {
+<pre><code>"location": {
   "type": "template",
   "template": "home/index (HomeController#index)"
 }
-</code></p>
+</code></pre>
 
 <p>Since this information is redundant with the render path, it has been removed.</p>
 
@@ -283,6 +275,10 @@
 <h3>SHAs</h3>
 
 <p>The SHA1 sums for this release are</p>
+
+<pre><code>236af597e5cbcc0e647c02c4087ceb5965510435  brakeman-3.1.0.gem
+fe06faf67e781c4c4dc5ee362918ef2dfd8e1ce2  brakeman-min-3.1.0.gem
+</code></pre>
 
 <h3>Reporting Issues</h3>
 
