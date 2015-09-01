@@ -16,6 +16,10 @@ class CallIndexTests < Test::Unit::TestCase
     assert @call_index.find_calls(opts).length
   end
 
+  def test_find_by_method_regex
+    assert_found 2, :method => %r{do_it(?:_now)?}
+  end
+
   def test_find_by_method
     assert_found 1, :method => :hello
   end

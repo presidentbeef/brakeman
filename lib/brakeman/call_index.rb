@@ -139,6 +139,8 @@ class Brakeman::CallIndex
   def calls_by_method method
     if method.is_a? Array
       calls_by_methods method
+    elsif method.is_a? Regexp
+      calls_by_methods_regex method
     else
       @calls_by_method[method.to_sym] || []
     end
@@ -152,6 +154,14 @@ class Brakeman::CallIndex
       calls.concat @calls_by_method[method] if @calls_by_method.key? method
     end
 
+    calls
+  end
+
+  def calls_by_methods_regex methods_regex
+    calls = []
+    @calls_by_method.each do |key, value|
+      calls.concat value if key.to_s.match methods_regex
+    end
     calls
   end
 
