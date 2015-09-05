@@ -1,13 +1,12 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :posts
   map.resources :users
- 
-  map.connect 'login', :controller => 'users', :action => 'login' 
-  map.connect 'logout', :controller => 'users', :action => 'logout' 
- 
+
+  map.connect 'login', :controller => 'users', :action => 'login'
+  map.connect 'logout', :controller => 'users', :action => 'logout'
+
   map.connect 'results', :controller => 'users', :action => 'results'
   map.connect 'search', :controller => 'users', :action => 'search'
- 
 
   # The priority is based upon order of creation: first created -> highest priority.
 
@@ -27,7 +26,7 @@ ActionController::Routing::Routes.draw do |map|
 
   # Sample resource route with sub-resources:
   #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
-  
+
   # Sample resource route with more complex sub-resources
   #   map.resources :products do |products|
   #     products.resources :comments

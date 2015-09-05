@@ -177,7 +177,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   def friendly_model? exp
     call? exp and model_name? exp.target and exp.method == :friendly
   end
-  
+
   #Returns true if exp is (probably) a decorated model instance
   #using the Draper gem
   def decorated_model? exp

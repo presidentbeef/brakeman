@@ -227,7 +227,7 @@ module Brakeman::Options
 
         opts.on "-w",
           "--confidence-level LEVEL",
-          ["1", "2", "3"],
+          %w(1 2 3),
           "Set minimal confidence level (1 - 3)" do |level|
 
           options[:min_confidence] =  3 - level.to_i

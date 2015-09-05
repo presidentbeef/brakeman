@@ -1,6 +1,6 @@
 class Notifier < ActionMailer::Base
   def nsfree_deactivation_heroku(account, allowed, used)
-    # ...   
+    # ...
     subject "#{Zerigo.service_provider[:company_name]} add-on at Heroku: #{Zerigo.sites[:ns][:app_name]} service deactivated"
     from Zerigo.service_provider[:company_support_email]
     recipients rcpts

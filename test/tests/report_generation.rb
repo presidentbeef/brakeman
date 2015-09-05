@@ -15,7 +15,7 @@ class TestReportGeneration < Test::Unit::TestCase
 
   def test_json_sanity
     report = @@report.to_json
-    expected_keys = ["scan_info", "warnings", "errors"]
+    expected_keys = %w(scan_info warnings errors)
 
     assert report.is_a? String
 

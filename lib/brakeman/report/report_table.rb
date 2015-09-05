@@ -60,7 +60,7 @@ class Brakeman::Report::Table < Brakeman::Report::Base
       template.each_output do |out|
         out = out_processor.format out
         template_rows[name] ||= []
-        template_rows[name] << out.gsub("\n", ";").gsub(/\s+/, " ")
+        template_rows[name] << out.tr("\n", ';').gsub(/\s+/, " ")
       end
     end
 
@@ -101,7 +101,7 @@ Rails version: #{rails_version}
 Brakeman version: #{Brakeman::Version}
 Started at #{tracker.start_time}
 Duration: #{tracker.duration} seconds
-Checks run: #{checks.checks_run.sort.join(", ")}
+Checks run: #{checks.checks_run.sort.join(', ')}
 HEADER
   end
 end

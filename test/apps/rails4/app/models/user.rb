@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
   end
 
   scope :sorted_by, ->(field, asc) {
-    asc = ['desc', 'asc'].include?(asc) ? asc : 'asc'
+    asc = %w(desc asc).include?(asc) ? asc : 'asc'
 
     ordering = if field == 'extension'
                  "substring_index(#{table_name}.data_file_name, '.', -1) #{asc}"

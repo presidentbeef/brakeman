@@ -10,7 +10,7 @@ class Brakeman::Report::Base
 
   attr_reader :tracker, :checks
 
-  TEXT_CONFIDENCE = [ "High", "Medium", "Weak" ]
+  TEXT_CONFIDENCE = %w(High Medium Weak)
 
   def initialize app_tree, tracker
     @app_tree = app_tree
@@ -66,7 +66,7 @@ class Brakeman::Report::Base
       }
     end
 
-    cols = ['Name', 'Parent', 'Includes', 'Routes']
+    cols = %w(Name Parent Includes Routes)
 
     locals = {:controller_rows => controller_rows}
     values = controller_rows.collect{|row| row.values_at(*cols) }
@@ -76,7 +76,7 @@ class Brakeman::Report::Base
   #Generate table of errors or return nil if no errors
   def generate_errors
     values = tracker.errors.collect{|error| [error[:error], error[:backtrace][0]]}
-    render_array('error_overview', ['Error', 'Location'], values, {:tracker => tracker})
+    render_array('error_overview', %w(Error Location), values, {:tracker => tracker})
   end
 
   def generate_warnings

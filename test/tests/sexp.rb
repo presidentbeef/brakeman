@@ -80,7 +80,7 @@ class SexpTests < Test::Unit::TestCase
     exp = parse "x.y"
 
     assert_equal :y, exp.method
-    
+
     exp.method = :z
 
     assert_equal :z, exp.method

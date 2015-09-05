@@ -13,7 +13,7 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
     app_controller = tracker.controllers[:ApplicationController]
     return unless app_controller and app_controller.ancestor? :"ActionController::Base"
 
-    if tracker.config.allow_forgery_protection? 
+    if tracker.config.allow_forgery_protection?
       warn :controller => :ApplicationController,
         :warning_type => "Cross-Site Request Forgery",
         :warning_code => :csrf_protection_disabled,

@@ -34,7 +34,7 @@ class AdminController < ApplicationController
     `#{"blah #{why?}"}`
 
     # Some command injection of literals
-    # which should not raise warnings 
+    # which should not raise warnings
     or_input = if admin
                  "rm -rf"
                else
@@ -44,8 +44,8 @@ class AdminController < ApplicationController
     system "cd / && #{or_input}"
     `cd / && #{or_input}`
 
-    system "echo #{1}"
-    exec "nmap 192.168.#{1}.1"
+    system "echo 1"
+    exec "nmap 192.168.1.1"
     system @thing # no warning
   end
 

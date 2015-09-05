@@ -44,7 +44,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
       @current_class = @tracker.models[name]
       @current_class.add_file @file_name, exp
     else
-      @current_class = Brakeman::Model.new name, parent, @file_name, exp, @tracker 
+      @current_class = Brakeman::Model.new name, parent, @file_name, exp, @tracker
       @tracker.models[name] = @current_class
     end
 

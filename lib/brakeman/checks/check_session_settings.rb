@@ -17,7 +17,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   end
 
   def run_check
-    settings = tracker.config.session_settings 
+    settings = tracker.config.session_settings
 
     check_for_issues settings, "#{tracker.app_path}/config/environment.rb"
 

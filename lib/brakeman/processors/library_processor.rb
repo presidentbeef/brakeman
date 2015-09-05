@@ -35,7 +35,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
       @current_class = @tracker.libs[name]
       @current_class.add_file @file_name, exp
     else
-      @current_class = Brakeman::Library.new name, parent, @file_name, exp, @tracker 
+      @current_class = Brakeman::Library.new name, parent, @file_name, exp, @tracker
       @tracker.libs[name] = @current_class
     end
 

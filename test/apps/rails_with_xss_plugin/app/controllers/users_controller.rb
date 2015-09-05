@@ -103,14 +103,14 @@ class UsersController < ApplicationController
 
     $stderr.puts "password: #{password}"
 
-    user = User.find(:first, :conditions => { :user_name => params[:user][:user_name].downcase, :password => password }) 
+    user = User.find(:first, :conditions => { :user_name => params[:user][:user_name].downcase, :password => password })
 
     if user.nil?
       redirect_to '/login'
     else
       session[:user_id] = user.id
 
-      redirect_to :controller => :posts, :action => :index 
+      redirect_to :controller => :posts, :action => :index
     end
   end
 

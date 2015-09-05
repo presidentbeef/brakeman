@@ -112,7 +112,7 @@ class Brakeman::CallIndex
     method = options[:method] || options[:methods]
 
     calls = calls_by_method method
-    
+
     return [] if calls.nil?
 
     calls = filter_by_chain calls, target

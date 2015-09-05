@@ -9,9 +9,9 @@ class TestTabsOutput < Test::Unit::TestCase
 
   def test_reported_warnings
     if Brakeman::Scanner::RUBY_1_9
-      assert_equal 110, @@report.lines.to_a.count
+      assert_equal 110, @@report.lines.to_a.size
     else
-      assert_equal 111, @@report.lines.to_a.count
+      assert_equal 111, @@report.lines.to_a.size
     end
   end
 end

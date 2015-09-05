@@ -1,0 +1,18 @@
+inherit_from: .rubocop_todo.yml
+
+
+
+#---------------------------
+# Style configuration
+#---------------------------
+
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+#Style/HashSyntax:
+#  Enabled: true
+#  EnforcedStyle: ruby19
+
+#---------------------------
+# Don't intend to fix these:
+#---------------------------
+

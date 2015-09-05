@@ -4,7 +4,7 @@ require 'brakeman/processors/template_processor'
 class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
   HAML_FORMAT_METHOD = /format_script_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)/
   HAML_HELPERS = s(:colon2, s(:const, :Haml), :Helpers)
-  
+
   #Processes call, looking for template output
   def process_call exp
     target = exp.target
@@ -136,7 +136,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
   #Gets outputs from values interpolated into _hamlout.push_text
   def get_pushed_value exp
     return exp unless sexp? exp
-    
+
     case exp.node_type
     when :format
       exp.node_type = :output

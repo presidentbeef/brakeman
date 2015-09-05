@@ -95,7 +95,7 @@ class Brakeman::FindCall < Brakeman::BasicProcessor
       end
 
     end
-    
+
     #Normally FindCall won't match a method invocation that is the target of
     #another call, such as:
     #

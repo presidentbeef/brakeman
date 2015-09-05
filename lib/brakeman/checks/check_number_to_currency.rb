@@ -35,7 +35,7 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
   end
 
   def check_number_helper_usage
-    number_methods = [:number_to_currency, :number_to_percentage, :number_to_human] 
+    number_methods = [:number_to_currency, :number_to_percentage, :number_to_human]
     tracker.find_call(:target => false, :methods => number_methods).each do |result|
       arg = result[:call].second_arg
       next unless arg

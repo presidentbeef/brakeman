@@ -30,7 +30,7 @@ ActionController::Routing::Routes.draw do |map|
 
   # Sample resource route with sub-resources:
   #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
-  
+
   # Sample resource route with more complex sub-resources
   #   map.resources :products do |products|
   #     products.resources :comments
@@ -55,5 +55,5 @@ ActionController::Routing::Routes.draw do |map|
   map.connect ':controller/:action/:id.:format'
   map.some_routes
 
-  map.things "/things", :controller => "home", :action => "index_#{random_dynamic_thing}" 
+  map.things "/things", :controller => "home", :action => "index_#{random_dynamic_thing}"
 end

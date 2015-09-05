@@ -302,7 +302,7 @@ q - Quit, do not update ignored warnings
 
     def yes_or_no message
       answer = HighLine.new.ask message do |q|
-        q.in = ["y", "n", "yes", "no"]
+        q.in = %w(y n yes no)
       end
 
       answer.match /^y/i

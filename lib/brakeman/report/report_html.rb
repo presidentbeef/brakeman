@@ -50,7 +50,7 @@ class Brakeman::Report::HTML < Brakeman::Report::Base
       template.each_output do |out|
         out = CGI.escapeHTML(out_processor.format(out))
         template_rows[name] ||= []
-        template_rows[name] << out.gsub("\n", ";").gsub(/\s+/, " ")
+        template_rows[name] << out.tr("\n", ';').gsub(/\s+/, " ")
       end
     end
 

@@ -10,7 +10,7 @@ class Brakeman::Warning
 
   attr_accessor :code, :context, :file, :message, :relative_path
 
-  TEXT_CONFIDENCE = [ "High", "Medium", "Weak" ]
+  TEXT_CONFIDENCE = %w(High Medium Weak)
 
   #+options[:result]+ can be a result from Tracker#find_call. Otherwise, it can be +nil+.
   def initialize options = {}
