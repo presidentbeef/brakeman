@@ -434,7 +434,12 @@ module Brakeman::Util
     return "" unless table
 
     Brakeman.load_brakeman_dependency 'terminal-table'
-    output = CSV.generate_line(table.headings.cells.map{|cell| cell.to_s.strip})
+    headings = table.headings
+    if headings.is_a? Array
+      headings = headings.first
+    end
+
+    output = CSV.generate_line(headings.cells.map{|cell| cell.to_s.strip})
     table.rows.each do |row|
       output << CSV.generate_line(row.cells.map{|cell| cell.to_s.strip})
     end
