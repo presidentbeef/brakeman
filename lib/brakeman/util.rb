@@ -45,6 +45,33 @@ module Brakeman::Util
     word + "s"
   end
 
+  #Returns a class name as a Symbol.
+  #If class name cannot be determined, returns _exp_.
+  def class_name exp
+    case exp
+    when Sexp
+      case exp.node_type
+      when :const
+        exp.value
+      when :lvar
+        exp.value.to_sym
+      when :colon2
+        "#{class_name(exp.lhs)}::#{exp.rhs}".to_sym
+      when :colon3
+        "::#{exp.value}".to_sym
+      when :self
+        @current_class || @current_module || nil
+      else
+        exp
+      end
+    when Symbol
+      exp
+    when nil
+      nil
+    else
+      exp
+    end
+  end
 
   #Takes an Sexp like
   # (:hash, (:lit, :key), (:str, "value"))
