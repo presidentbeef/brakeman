@@ -334,7 +334,7 @@ class RailsWithXssPluginTests < Test::Unit::TestCase
   end
 
   def test_absolute_paths
-    assert report[:generic_warnings].all? { |w| w.file.start_with? "/" }
+    assert report[:generic_warnings].all? { |w| (Pathname.new w.file).absolute? }
   end
 
   def test_cross_site_scripting_CVE_2012_1099
