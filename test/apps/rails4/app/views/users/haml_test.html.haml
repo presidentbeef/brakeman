@@ -4,3 +4,5 @@
   #innerstuff
     %h1= raw params[:y]
     =" #{User.first.name.html_safe}"
+    :javascript
+      var import_file_upload_id = "#{j(params[:id])}";
