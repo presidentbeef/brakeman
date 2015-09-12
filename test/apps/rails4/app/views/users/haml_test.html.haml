@@ -3,3 +3,4 @@
     %p= params[:x]
   #innerstuff
     %h1= raw params[:y]
+    =" #{User.first.name.html_safe}"

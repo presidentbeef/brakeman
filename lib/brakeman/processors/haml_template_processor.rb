@@ -41,9 +41,17 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
                   build_output_from_push_text(out)
                 when HAML_FORMAT_METHOD
                   if $4 == "true"
-                    Sexp.new :format_escaped, out
+                    if string_interp? out
+                      build_output_from_push_text(out, :escaped_output)
+                    else
+                      Sexp.new :format_escaped, out
+                    end
                   else
-                    Sexp.new :format, out
+                    if string_interp? out
+                      build_output_from_push_text(out)
+                    else
+                      Sexp.new :format, out
+                    end
                   end
                 else
                   raise "Unrecognized action on _hamlout: #{method}"
@@ -117,7 +125,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
 
   #HAML likes to put interpolated values into _hamlout.push_text
   #but we want to handle those individually
-  def build_output_from_push_text exp
+  def build_output_from_push_text exp, default = :output
     if string_interp? exp
       exp.map! do |e|
         if sexp? e
@@ -125,7 +133,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
             e = e.value
           end
 
-          get_pushed_value e
+          get_pushed_value e, default
         else
           e
         end
@@ -134,7 +142,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
   end
 
   #Gets outputs from values interpolated into _hamlout.push_text
-  def get_pushed_value exp
+  def get_pushed_value exp, default = :output
     return exp unless sexp? exp
     
     case exp.node_type
@@ -154,7 +162,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       if call? exp and exp.target == HAML_HELPERS and exp.method == :html_escape
         s = Sexp.new(:escaped_output, exp.first_arg)
       else
-        s = Sexp.new(:output, exp)
+        s = Sexp.new(default, exp)
       end
 
       s.line(exp.line)
