@@ -585,7 +585,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     end
   end
 
-  AREL_METHODS = [:not, :and, :or, :exists, :join_sources, :arel_table, :gt, :lt, :on, :eq, :eq_any, :where]
+  AREL_METHODS = [:all, :not, :and, :or, :exists, :join_sources, :arel_table, :gt, :lt, :on, :eq, :eq_any, :where]
 
   def arel? exp
     call? exp and (AREL_METHODS.include? exp.method or arel? exp.target)
