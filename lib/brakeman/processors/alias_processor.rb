@@ -274,6 +274,15 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     exp
   end
 
+  # Handles x = y = z = 1
+  def get_rhs exp
+    if node_type? exp, :lasgn, :iasgn, :gasgn, :attrasgn, :cvdecl, :cdecl
+      get_rhs(exp.rhs)
+    else
+      exp
+    end
+  end
+
   #Local assignment
   # x = 1
   def process_lasgn exp
@@ -285,9 +294,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
     if self_assign
       # Skip branching
-      env[local] = exp.rhs
+      env[local] = get_rhs(exp)
     else
-      set_value local, exp.rhs
+      set_value local, get_rhs(exp)
     end
 
     exp
@@ -302,12 +311,12 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
     if self_assign
       if env[ivar].nil? and @meth_env
-        @meth_env[ivar] = exp.rhs
+        @meth_env[ivar] = get_rhs(exp)
       else
-        env[ivar] = exp.rhs
+        env[ivar] = get_rhs(exp)
       end
     else
-      set_value ivar, exp.rhs
+      set_value ivar, get_rhs(exp)
     end
 
     exp
@@ -317,7 +326,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   # $x = 1
   def process_gasgn exp
     match = Sexp.new(:gvar, exp.lhs)
-    value = exp.rhs = process(exp.rhs)
+    exp.rhs = process(exp.rhs)
+    value = get_rhs(exp)
     value.line = exp.line
 
     set_value match, value
@@ -329,7 +339,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   # @@x = 1
   def process_cvdecl exp
     match = Sexp.new(:cvar, exp.lhs)
-    value = exp.rhs = process(exp.rhs)
+    exp.rhs = process(exp.rhs)
+    value = get_rhs(exp)
 
     set_value match, value
 
@@ -358,7 +369,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         env[tar_variable] = hash_insert target.deep_clone, index, value
       end
     elsif method.to_s[-1,1] == "="
-      value = exp.first_arg = process(index_arg)
+      exp.first_arg = process(index_arg)
+      value = get_rhs(exp)
       #This is what we'll replace with the value
       match = Sexp.new(:call, target, method.to_s[0..-2].to_sym)
 
@@ -478,7 +490,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       match = exp.lhs
     end
 
-    env[match] = exp.rhs
+    env[match] = get_rhs(exp)
 
     exp
   end
