@@ -689,6 +689,44 @@ class AliasProcessorTests < Test::Unit::TestCase
     OUTPUT
   end
 
+  def test_chained_assignment
+    assert_alias '1', <<-INPUT
+    x = y = 1
+    x
+    INPUT
+
+    assert_alias '1', <<-INPUT
+    @x = @y = 1
+    @x
+    INPUT
+
+    assert_alias '1', <<-INPUT
+    $x = $y = 1
+    $x
+    INPUT
+
+    assert_alias '1', <<-INPUT
+    X = Y = 1
+    X
+    INPUT
+
+    assert_alias '1', <<-INPUT
+    @@x = @@y = 1
+    @@x
+    INPUT
+
+    assert_alias '1', <<-INPUT
+    w.x = x.y = 1
+    w.x
+    INPUT
+
+    assert_alias '5', <<-INPUT
+    A = @b = @@c = $D = e.f = 1
+    z = A + @b + @@c + $D + e.f
+    z
+    INPUT
+  end
+
   def test_branch_with_self_assign_target
     assert_alias 'a.w.y', <<-INPUT
     x = a
