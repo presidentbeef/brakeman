@@ -232,6 +232,13 @@ class AliasProcessorTests < Test::Unit::TestCase
     RUBY
   end
 
+  def test_try_symbol_to_proc_collapse
+    assert_alias 'x.y', <<-RUBY
+      z = x.try(&:y)
+      z
+    RUBY
+  end
+
   def test_multiple_assignments_in_if
     assert_alias "1 or 4", <<-RUBY
     x = 1
