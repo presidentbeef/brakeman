@@ -13,7 +13,7 @@ class Rails4Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 0,
       :model => 2,
-      :template => 7,
+      :template => 8,
       :generic => 62
     }
   end
@@ -642,6 +642,29 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:call, nil, :params)
   end
 
+  def test_cross_site_scripting_haml_interpolation
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "9d4de763367e98fe87e2923d1426e474b3e41a4754e1bc06d3a672bc68b89b79",
+      :warning_type => "Cross Site Scripting",
+      :line => 6,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :relative_path => "app/views/users/haml_test.html.haml",
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_find_and_preserve_escape_javascript
+    assert_no_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "d75b08fa4d1ef70aa2be54f4568b7486aaf91beae65c7adc1422d3582fdbf5b0",
+      :warning_type => "Cross Site Scripting",
+      :line => 8,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 2,
+      :relative_path => "app/views/users/haml_test.html.haml",
+      :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :id))
+  end
 
   def test_sql_injection_in_chained_string_building
     assert_warning :type => :warning,

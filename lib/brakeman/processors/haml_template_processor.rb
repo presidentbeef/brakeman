@@ -4,7 +4,8 @@ require 'brakeman/processors/template_processor'
 class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
   HAML_FORMAT_METHOD = /format_script_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)/
   HAML_HELPERS = s(:colon2, s(:const, :Haml), :Helpers)
-  
+  JAVASCRIPT_FILTER = s(:colon2, s(:colon2, s(:const, :Haml), :Filters), :Javascript)
+
   #Processes call, looking for template output
   def process_call exp
     target = exp.target
@@ -36,20 +37,31 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
               if string? out
                 ignore
               else
-                case method.to_s
-                when "push_text"
-                  build_output_from_push_text(out)
-                when HAML_FORMAT_METHOD
-                  if $4 == "true"
-                    Sexp.new :format_escaped, out
-                  else
-                    Sexp.new :format, out
-                  end
-                else
-                  raise "Unrecognized action on _hamlout: #{method}"
-                end
-              end
+                r = case method.to_s
+                    when "push_text"
+                      build_output_from_push_text(out)
+                    when HAML_FORMAT_METHOD
+                      if $4 == "true"
+                        if string_interp? out
+                          build_output_from_push_text(out, :escaped_output)
+                        else
+                          Sexp.new :format_escaped, out
+                        end
+                      else
+                        if string_interp? out
+                          build_output_from_push_text(out)
+                        else
+                          Sexp.new :format, out
+                        end
+                      end
 
+                    else
+                      raise "Unrecognized action on _hamlout: #{method}"
+                    end
+
+                @javascript = false
+                r
+              end
             end
 
       res.line(exp.line)
@@ -75,6 +87,14 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       #Process call to render()
       exp.arglist = process exp.arglist
       make_render_in_view exp
+    elsif target == nil and method == :find_and_preserve
+      process exp.first_arg
+    elsif method == :render_with_options
+      if target == JAVASCRIPT_FILTER
+        @javascript = true
+      end
+
+      process exp.first_arg
     else
       exp.target = target
       exp.arglist = process exp.arglist
@@ -117,7 +137,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
 
   #HAML likes to put interpolated values into _hamlout.push_text
   #but we want to handle those individually
-  def build_output_from_push_text exp
+  def build_output_from_push_text exp, default = :output
     if string_interp? exp
       exp.map! do |e|
         if sexp? e
@@ -125,7 +145,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
             e = e.value
           end
 
-          get_pushed_value e
+          get_pushed_value e, default
         else
           e
         end
@@ -134,9 +154,9 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
   end
 
   #Gets outputs from values interpolated into _hamlout.push_text
-  def get_pushed_value exp
+  def get_pushed_value exp, default = :output
     return exp unless sexp? exp
-    
+
     case exp.node_type
     when :format
       exp.node_type = :output
@@ -153,8 +173,10 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
     else
       if call? exp and exp.target == HAML_HELPERS and exp.method == :html_escape
         s = Sexp.new(:escaped_output, exp.first_arg)
+      elsif @javascript and call? exp and (exp.method == :j or exp.method == :escape_javascript)
+        s = Sexp.new(:escaped_output, exp.first_arg)
       else
-        s = Sexp.new(:output, exp)
+        s = Sexp.new(default, exp)
       end
 
       s.line(exp.line)
