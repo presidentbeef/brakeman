@@ -634,6 +634,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   # Change x.send(:y, 1) to x.y(1)
   def collapse_send_call exp, first_arg
+    # Handle try(&:id)
+    if node_type? first_arg, :block_pass
+      first_arg = first_arg[1]
+    end
+
     return unless symbol? first_arg or string? first_arg
     exp.method = first_arg.value.to_sym
     args = exp.args
