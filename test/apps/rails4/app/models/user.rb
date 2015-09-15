@@ -32,5 +32,9 @@ class User < ActiveRecord::Base
     User.select('users.id').joins(User.joins(:deal_purchases).join_sources).where(Email.arel_table[:created_at].gt(last_activity)).group('users.id')
     User.where(User.joins(:group).where(User.arel_table[:message_id].eq arel_table[:id]))
     User.from(User.all)
+    User.from(User.active.order(created_at: :desc).limit(30))
+    User.from(User.active.order(created_at: :desc))
+    User.from(User.project(users[:age].average.as("mean_age")))
+    User.from(User.group(user[:user_id]).having(thing[:id].count.gt(5)))
   end
 end
