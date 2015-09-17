@@ -98,9 +98,12 @@ class Brakeman::CallIndex
       @calls_by_method[call[:method]] ||= []
       @calls_by_method[call[:method]] << call
 
-      unless call[:target].is_a? Sexp
+      if not call[:target].is_a? Sexp
         @calls_by_target[call[:target]] ||= []
         @calls_by_target[call[:target]] << call
+      elsif call[:target].node_type == :params or call[:target].node_type == :session
+        @calls_by_target[call[:target].node_type] ||= []
+        @calls_by_target[call[:target].node_type] << call
       end
     end
   end
