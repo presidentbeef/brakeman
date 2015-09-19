@@ -14,7 +14,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 2,
       :template => 8,
-      :generic => 62
+      :generic => 64
     }
   end
 
@@ -81,6 +81,30 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /secret_token\.rb/,
       :relative_path => "config/initializers/secret_token.rb"
+  end
+
+  def test_session_manipulation
+    assert_warning :type => :warning,
+      :warning_code => 89,
+      :fingerprint => "7cb52cac7d8562181aab8f09a34f6393708261c60d2a485a0b89ebd3e8f4b2f4",
+      :warning_type => "Session Manipulation",
+      :line => 92,
+      :message => /^Parameter\ value\ used\ as\ key\ in\ session\ h/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_session_manipulation_indirect
+    assert_warning :type => :warning,
+      :warning_code => 89,
+      :fingerprint => "08cbdbed8bcd19a7746434865a0e4a4dc363dd980953cc5b535a318970c95d20",
+      :warning_type => "Session Manipulation",
+      :line => 93,
+      :message => /^Parameter\ value\ used\ as\ key\ in\ session\ h/,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:params), :[], s(:lit, :token))
   end
 
   def test_json_escaped_by_default_in_rails_4

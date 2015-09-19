@@ -87,4 +87,9 @@ class UsersController < ApplicationController
   def eval_it
     @x = eval(params[:x])
   end
+
+  def session_key
+    session[params[:x]] = params[:y]
+    session["blah-#{params[:token]}"] = user.thing
+  end
 end
