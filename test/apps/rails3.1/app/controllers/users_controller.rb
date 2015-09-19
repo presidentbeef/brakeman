@@ -184,4 +184,8 @@ class UsersController < ApplicationController
   def redirect_merge
     redirect_to params.merge(host: 'http://app.webthing.com/stuff', port: '80').except(:action, :controller, :auth_token)
   end
+
+  def drape
+    @user = (params[:id] ? User.find(params[:id]) : current_user).decorate
+  end
 end

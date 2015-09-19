@@ -61,6 +61,18 @@ class Rails31Tests < Test::Unit::TestCase
       :file => /other_controller\.rb/
   end
 
+  def test_link_to_decorated_model
+    assert_no_warning :type => :template,
+      :warning_code => 4,
+      :fingerprint => "2eacd2da6edd4b26585956c8b36840d7631f4a5132388829d8e4e4d0b5aaae7d",
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unsafe\ model\ attribute\ in\ link_to\ href/,
+      :confidence => 1,
+      :relative_path => "app/views/users/drape.html.erb",
+      :user_input => s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id)))
+  end
+
   def test_redirect_multiple_values
     assert_no_warning :type => :warning,
       :warning_type => "Redirect",
