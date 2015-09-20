@@ -91,6 +91,15 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     end
   end
 
+  def ignore_call? target, method
+    decorated_model? method or super
+  end
+
+  def decorated_model? method
+    tracker.config.has_gem? :draper and
+      method == :decorate
+  end
+
   def ignored_method? target, method
     @ignore_methods.include? method or
       method.to_s =~ /_path$/ or
