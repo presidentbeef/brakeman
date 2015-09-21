@@ -90,6 +90,7 @@ module Brakeman::WarningCodes
     :csrf_not_protected_by_raising_exception => 86,
     :CVE_2015_3226 => 87,
     :CVE_2015_3227 => 88,
+    :session_key_manipulation => 89,
   }
 
   def self.code name
