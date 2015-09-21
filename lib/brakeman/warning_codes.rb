@@ -91,6 +91,8 @@ module Brakeman::WarningCodes
     :CVE_2015_3226 => 87,
     :CVE_2015_3227 => 88,
     :session_key_manipulation => 89,
+    :weak_hash_digest => 90,
+    :weak_hash_hmac => 91,
   }
 
   def self.code name

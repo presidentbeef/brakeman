@@ -14,7 +14,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 2,
       :template => 8,
-      :generic => 64
+      :generic => 69
     }
   end
 
@@ -463,6 +463,66 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/views/another/use_params_in_regex.html.erb",
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_weak_hash_base64
+    assert_warning :type => :warning,
+      :warning_code => 90,
+      :fingerprint => "c82b29233b0e3326b628ac74cadc99264c796153d7971e7be09f71bd847a303f",
+      :warning_type => "Weak Hash",
+      :line => 97,
+      :message => /^Weak\ hashing\ algorithm\ \(MD5\)\ used/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:params)
+  end
+
+  def test_weak_hash_password_variable_nested
+    assert_warning :type => :warning,
+      :warning_code => 90,
+      :fingerprint => "2b147d27348729419872dcaa48c6cbb3881bc8f283e5c03a47fc6bed11d72ced",
+      :warning_type => "Weak Hash",
+      :line => 42,
+      :message => /^Weak\ hashing\ algorithm\ \(MD5\)\ used/,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb",
+      :user_input => s(:lvar, :password)
+  end
+
+  def test_weak_hash_creation
+    assert_warning :type => :warning,
+      :warning_code => 90,
+      :fingerprint => "0b4a35f9ac4fbfa2b270aea8b325905f8654bbfa5d79d52bcde766655e385cdf",
+      :warning_type => "Weak Hash",
+      :line => 99,
+      :message => /^Weak\ hashing\ algorithm\ \(SHA1\)\ used/,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => nil
+  end
+
+  def test_weak_hash_with_password_attribute
+    assert_warning :type => :warning,
+      :warning_code => 90,
+      :fingerprint => "79abd372d12d87347e5c6bb00d01a0e54994be7bb19765a0d5927702f40f829f",
+      :warning_type => "Weak Hash",
+      :line => 100,
+      :message => /^Weak\ hashing\ algorithm\ \(SHA1\)\ used/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => s(:call, s(:call, nil, :current_user), :password)
+  end
+
+  def test_weak_hash_in_HMAC
+    assert_warning :type => :warning,
+      :warning_code => 91,
+      :fingerprint => "f72bce61c2064a2c25b61db0699931b37770e0f3c174236ee77cabdedde01d94",
+      :warning_type => "Weak Hash",
+      :line => 98,
+      :message => /^Weak\ hashing\ algorithm\ \(SHA1\)\ used\ in\ HM/,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :user_input => nil
   end
 
   def test_i18n_xss_CVE_2013_4491_workaround
