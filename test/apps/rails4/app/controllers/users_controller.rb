@@ -92,4 +92,11 @@ class UsersController < ApplicationController
     session[params[:x]] = params[:y]
     session["blah-#{params[:token]}"] = user.thing
   end
+
+  def hash_some_things
+    Digest::MD5.base64digest(params[:password])
+    Digest::HMAC.new('that', 'thing', Digest::SHA1)
+    Digest::SHA1.new.update(thing)
+    Digest::SHA1.digest(current_user.password + current_user.salt)[0,15]
+  end
 end

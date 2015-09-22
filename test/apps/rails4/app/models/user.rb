@@ -37,4 +37,8 @@ class User < ActiveRecord::Base
     User.from(User.project(users[:age].average.as("mean_age")))
     User.from(User.group(user[:user_id]).having(thing[:id].count.gt(5)))
   end
+
+  def self.encrypt_pass password
+    Base64.encode64(Digest::MD5.hexdigest(password))
+  end
 end
