@@ -1,3 +1,17 @@
+# Unreleased
+
+* Add optional check for use of MD5 and SHA1
+* Avoid warning when linking to decorated models
+* Add check for user input in session keys
+* Fix chained assignment
+* Treat a.try(&:b) like a.b()
+* Consider j/escape_javascript safe inside HAML JavaScript blocks
+* Better HAML processing of find_and_preserve calls
+* Add more Arel methods to be ignored in SQL
+* Fix absolute paths for Windows (Cody Frederick)
+* Support newer terminal-table releases
+* Allow searching call index methods by regex (Alex Ianus)
+
 # 3.1.0
 
 * Add support for gems.rb/gems.locked
