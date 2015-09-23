@@ -58,6 +58,7 @@ class #{name}Tests < Test::Unit::TestCase
       :message => /^#{Regexp.escape w.message[0,40]}/,
       :confidence => #{w.confidence},
       :relative_path => #{w.relative_path.inspect},
+      :code => #{w.code},
       :user_input => #{w.user_input.inspect}
   end
       RUBY
