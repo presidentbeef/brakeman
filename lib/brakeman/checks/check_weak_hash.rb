@@ -5,17 +5,19 @@ class Brakeman::CheckWeakHash < Brakeman::BaseCheck
 
   @description = "Checks for use of weak hashes like MD5"
 
-  DIGEST_CALLS = [:base64digest, :digest, :hexdigest]
-  MD5 = s(:colon2, s(:const, :Digest), :MD5)
-  SHA1 = s(:colon2, s(:const, :Digest), :SHA1)
+  DIGEST_CALLS = [:base64digest, :digest, :hexdigest, :new]
 
   def run_check
-    tracker.find_call(:targets => [:'Digest::MD5', :'Digest::SHA1'], :nested => true).each do |result|
+    tracker.find_call(:targets => [:'Digest::MD5', :'Digest::SHA1', :'OpenSSL::Digest::MD5', :'OpenSSL::Digest::SHA1'], :nested => true).each do |result|
       process_hash_result result
     end
 
     tracker.find_call(:target => :'Digest::HMAC', :methods => [:new, :hexdigest], :nested => true).each do |result|
       process_hmac_result result
+    end
+
+    tracker.find_call(:targets => [:'OpenSSL::Digest::Digest', :'OpenSSL::Digest'], :method => :new).each do |result|
+      process_openssl_result result
     end
   end
 
@@ -39,9 +41,11 @@ class Brakeman::CheckWeakHash < Brakeman::BaseCheck
       confidence = CONFIDENCE[:med]
     end
 
-    alg = if call.target == MD5
+
+    alg = case call.target.last
+          when :MD5
            " (MD5)"
-          elsif call.target == SHA1
+           when :SHA1
             " (SHA1)"
           else
             ""
@@ -61,10 +65,10 @@ class Brakeman::CheckWeakHash < Brakeman::BaseCheck
 
     call = result[:call]
 
-    alg = case call.third_arg
-           when MD5
+    alg = case call.third_arg.last
+           when :MD5
              'MD5'
-           when SHA1
+           when :SHA1
              'SHA1'
            else
              return
@@ -75,6 +79,25 @@ class Brakeman::CheckWeakHash < Brakeman::BaseCheck
       :warning_code => :weak_hash_hmac,
       :message => "Weak hashing algorithm (#{alg}) used in HMAC",
       :confidence => CONFIDENCE[:med]
+  end
+
+  def process_openssl_result result
+    return if duplicate? result
+    add_result result
+
+    arg = result[:call].first_arg
+
+    if string? arg
+      alg = arg.value.upcase
+
+      if alg == 'MD5' or alg == 'SHA1'
+        warn :result => result,
+          :warning_type => "Weak Hash",
+          :warning_code => :weak_hash_digest,
+          :message => "Weak hashing algorithm (#{alg}) used",
+          :confidence => CONFIDENCE[:med]
+      end
+    end
   end
 
   def user_input_as_arg? call
