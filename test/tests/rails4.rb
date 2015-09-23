@@ -14,7 +14,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 2,
       :template => 8,
-      :generic => 69
+      :generic => 72
     }
   end
 
@@ -522,6 +522,45 @@ class Rails4Tests < Test::Unit::TestCase
       :message => /^Weak\ hashing\ algorithm\ \(SHA1\)\ used\ in\ HM/,
       :confidence => 1,
       :relative_path => "app/controllers/users_controller.rb",
+      :user_input => nil
+  end
+
+  def test_weak_hash_openssl_digest
+    assert_warning :type => :warning,
+      :warning_code => 90,
+      :fingerprint => "7c2030a3a6d98010dcc0b93b2e63cc940ec4a8fd505a3f8a3eece61cb924354d",
+      :warning_type => "Weak Hash",
+      :line => 104,
+      :message => /^Weak\ hashing\ algorithm\ \(MD5\)\ used/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :Digest), :MD5), :digest, s(:call, nil, :password)),
+      :user_input => s(:call, nil, :password)
+  end
+
+  def test_weak_hash_openssl_new_md5
+    assert_warning :type => :warning,
+      :warning_code => 90,
+      :fingerprint => "62a0ab29b01aa673f3d9f0ea8a6535da6f44b3c47bb37b2e87b7418a1f49d6e2",
+      :warning_type => "Weak Hash",
+      :line => 102,
+      :message => /^Weak\ hashing\ algorithm\ \(MD5\)\ used/,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :Digest), :Digest), :new, s(:str, "md5")),
+      :user_input => nil
+  end
+
+  def test_weak_hash_openssl_new_sha1
+    assert_warning :type => :warning,
+      :warning_code => 90,
+      :fingerprint => "295adb8ca6d79e65e0b14b7a6f9a7326094b738c450f3aaa78122ac172619e31",
+      :warning_type => "Weak Hash",
+      :line => 103,
+      :message => /^Weak\ hashing\ algorithm\ \(SHA1\)\ used/,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:colon2, s(:const, :OpenSSL), :Digest), :new, s(:str, "SHA1")),
       :user_input => nil
   end
 

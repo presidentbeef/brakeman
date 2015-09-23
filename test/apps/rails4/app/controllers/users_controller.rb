@@ -98,5 +98,9 @@ class UsersController < ApplicationController
     Digest::HMAC.new('that', 'thing', Digest::SHA1)
     Digest::SHA1.new.update(thing)
     Digest::SHA1.digest(current_user.password + current_user.salt)[0,15]
+
+    OpenSSL::Digest::Digest.new('md5')
+    OpenSSL::Digest.new("SHA1")
+    OpenSSL::Digest::MD5.digest(password)
   end
 end
