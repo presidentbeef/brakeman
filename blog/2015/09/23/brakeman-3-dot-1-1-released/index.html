@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Brakeman 2.1.1 Released</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman 3.1.1 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/blog/2013/08/21/brakeman-2-dot-1-1-released/"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2015/09/23/brakeman-3-dot-1-1-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -105,7 +105,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 2.1.1 Released</h1>
+      <h1 class="entry-title">Brakeman 3.1.1 Released</h1>
     
     
       <p class="meta">
@@ -113,7 +113,7 @@
 
 
 
-<time datetime="2013-08-21 12:00:00 -0700" pubdate  updated >Aug 21<span>st</span>, 2013</time>
+<time datetime="2015-09-23 08:11:00 -0700" pubdate  updated >Sep 23<span>rd</span>, 2015</time>
 
 
 </p>
@@ -121,74 +121,103 @@
   </header>
 
 
-<div class="entry-content"><p>This is a small bug fix release. The only expected changes in warnings are for dangerous attributes in <code>attr_accessible</code>
-and cross site scripting involving model attributes. Some warning fingerprints may change as a result of this update.</p>
+<div class="entry-content"><p>This release includes two new checks and a number of bug fixes.</p>
 
-<p><em>Changes since 2.1.0</em>:</p>
+<p><em>Changes since 3.1.0</em>:</p>
 
 <ul>
-<li>More accurate results for model attribute warnings (<a href="https://github.com/presidentbeef/brakeman/issues/385">#385</a>)</li>
-<li>Do not warn on <code>attr_accessible</code> using roles (<a href="https://github.com/presidentbeef/brakeman/issues/372">#372</a>)</li>
-<li>New warning code for dangerous attributes in <code>attr_accessible</code></li>
-<li>Fix infinite loop when run as rake task (<a href="https://github.com/arkadyan">Matthew Shanley</a>)</li>
-<li>Use exit code zero with <code>-z</code> if all warnings ignored (<a href="https://github.com/presidentbeef/brakeman/issues/381">#381</a>)</li>
-<li>Respect ignored warnings in rescans (<a href="https://github.com/presidentbeef/brakeman/issues/382">#382</a>)</li>
-<li>Respect ignored warnings in tabs format reports</li>
-<li>Ignore dynamic controller names in routes</li>
+<li>Add check for user input in session keys</li>
+<li>Add optional check for use of MD5 and SHA1</li>
+<li>Fix absolute paths for Windows (<a href="https://github.com/spcoder">Cody Frederick</a>)</li>
+<li>Allow searching call index methods by regex (<a href="https://github.com/aianus">Alex Ianus</a>)</li>
+<li>Consider <code>j</code>/<code>escape_javascript</code> safe inside Haml JavaScript blocks (<a href="https://github.com/presidentbeef/brakeman/issues/708">#708</a>)</li>
+<li>Better Haml processing of <code>find_and_preserve</code> calls</li>
+<li>Fix chained assignment</li>
+<li>Treat <code>a.try(&amp;:b)</code> like <code>a.b()</code></li>
+<li>Add more Arel methods to be ignored in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/711">#711</a>)</li>
+<li>Avoid warning when linking to decorated models (<a href="https://github.com/presidentbeef/brakeman/issues/683">#683</a>)</li>
+<li>Support newer terminal-table releases (<a href="https://github.com/presidentbeef/brakeman/issues/709">#709</a>)</li>
 </ul>
 
 
-<h3>More Accurate Model Matching</h3>
+<h3>Session Manipulation Check</h3>
 
-<p>Model attributes which are reported as user input should now be reported more accurately. For example, instead of reporting <code>Model.find(1)</code> as user input, the entire attribute will be reported. For example: <code>Model.find(1).name</code></p>
+<p>As suggested by <a href="https://twitter.com/joernchen">Joernchen</a>, Brakeman will now look for user input in session keys which can lead to session manipulation.</p>
 
-<p>As a side effect, several methods which were already intended to be ignored (such as <code>count</code>) will actually be ignored for XSS warnings.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/720">changes</a>)</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/386">changes</a>)</p>
+<h3>Optional Check for Weak Hashes</h3>
 
-<h3>attr_accessible Check Updates</h3>
+<p>An optional check to look for use of MD5 and SHA1 has been added to this release. Run with <code>-t WeakHash</code> to use just this optional check or <code>-A</code> to run all checks.</p>
 
-<p>The check for potentially dangerous attributes whitelisted in <code>attr_accessible</code> has been updated to ignore attributes protected by roles. Additionally, it now has its own warning code to separate it from regular mass assignment warnings.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/722">changes</a>)</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/388">warning code change</a>, <a href="https://github.com/presidentbeef/brakeman/pull/384">role change</a>)</p>
+<h3>Windows Paths</h3>
 
-<h3>Rake Task Fix</h3>
+<p><a href="https://github.com/spcoder">Cody Frederick</a> fixed an issue with determining absolute paths on Windows.</p>
 
-<p>The last release included a method named <code>load_dependency</code> which handles calling <code>require</code> for optional dependencies. Unfortunately, Rails overrides <code>require</code> to call its own method called <code>load_dependency</code>. Rails is loaded when any <code>rake</code> command is used, so when Brakeman is run with Rake it causes an infinite loop between <code>load_dependency</code> and <code>require</code>.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/714">changes</a>)</p>
 
-<p>Thanks to <a href="https://github.com/arkadyan">Matthew Shanley</a> for reporting the issue and providing a fix.</p>
+<h3>Search for Methods by Regex</h3>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/375">changes</a>)</p>
+<p><a href="https://github.com/aianus">Alex Ianus</a> re-introduced the ability to search the CallIndex with regular expressions for methods:</p>
 
-<h3>Exit Code Fixed When Warnings Ignored</h3>
+<pre><code>tracker.find_call(method: /_something$/)
+</code></pre>
 
-<p>Brakeman will now return <code>0</code> when using <code>-z</code> and all reported warnings are ignored.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/710">changes</a>)</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/375">changes</a>)</p>
+<h3>Haml Processing</h3>
 
-<h3>Ignore Warnings in Rescans</h3>
+<p>Haml users may have noticed warnings with <code>find_and_preserve(Haml::Filters::Javascript.render_with_options(...))</code> in them. This has been fixed so <code>find_and_preserve</code> is treated as though it just passes through its arguments. Calls to <code>render_with_options</code> will be treated as unescaped output.</p>
 
-<p>Ignored warnings should now be ignored during rescans (for use with <a href="https://github.com/guard/guard-brakeman">guard-brakeman</a>).</p>
+<p>Along with this change, <code>j</code> and <code>escape_javascript</code> will be considered safe inside <code>:javascript</code> filters in Haml.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/383">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/716">changes</a>)</p>
 
-<h3>Remove Ignored Warnings in Tabs Report</h3>
+<h3>Chained Assignment</h3>
 
-<p>Ignoring warnings should now work for those using the Jenkins plugin.</p>
+<p>Chained assignments like <code>a = b = c = 1</code> will now be handled correctly. This fixes <a href="https://stackoverflow.com/questions/11314450/how-to-secure-link-to-variable-cross-site-scripting-vulnerabilities">a very old issue from 2012</a>.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/374">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/718">changes</a>)</p>
 
-<h3>Ignore Dynamic Controller Name in Routes</h3>
+<h3>Trying More</h3>
 
-<p>Instead of completely aborting route processing, dynamic controller names are just ignored.</p>
+<p>While Brakeman already treated <code>a.try(:b)</code> like <code>a.b()</code>, there is a surprising amount of code which does <code>a.try(&amp;:b)</code>. This is totally unncessary, but Brakeman now handles it as well.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/379">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/717">changes</a>)</p>
 
-<h3>Report Issues</h3>
+<h3>More Arel Whitelisting</h3>
+
+<p>A number of Arel methods have been whitelisted to avoid warning about them inside SQL query building.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/719">changes</a>)</p>
+
+<h3>Decorated Models in Links</h3>
+
+<p>If the Draper gem is used, Brakeman will ignore calls to <code>decorate</code> in <code>link_to</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/721">changes</a>)</p>
+
+<h3>terminal-table</h3>
+
+<p>Newer <a href="https://github.com/tj/terminal-table">terminal-table</a> releases are supported now and the dependency has been relaxed.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/712">changes</a>)</p>
+
+<h3>SHAs</h3>
+
+<p>The SHA1 sums for this release are</p>
+
+<pre><code>cfd1840116c20b0b8932720fdaac09dd4e47091a  brakeman-3.1.1.gem
+603389da732d307a014af445a1f312415b65a682  brakeman-min-3.1.1.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
 
 <p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
 
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter, joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>, or hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a>.</p>
 </div>
 
 
@@ -204,7 +233,7 @@ and cross site scripting involving model attributes. Some warning fingerprints m
 
 
 
-<time datetime="2013-08-21 12:00:00 -0700" pubdate  updated >Aug 21<span>st</span>, 2013</time>
+<time datetime="2015-09-23 08:11:00 -0700" pubdate  updated >Sep 23<span>rd</span>, 2015</time>
 
 
 
@@ -215,7 +244,7 @@ and cross site scripting involving model attributes. Some warning fingerprints m
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2013/08/21/brakeman-2-dot-1-1-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2013/08/21/brakeman-2-dot-1-1-released/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2015/09/23/brakeman-3-dot-1-1-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2015/09/23/brakeman-3-dot-1-1-released/" >Tweet</a>
   
   
   <g:plusone size="medium"></g:plusone>
@@ -231,8 +260,8 @@ and cross site scripting involving model attributes. Some warning fingerprints m
     <div id="disqus_thread"><div id="disqus_thread"></div>
 <script type="text/javascript">
   var disqus_shortname = 'brakeman';
-  var disqus_identifier = 'http://brakemanscanner.org/blog/2013/08/21/brakeman-2-dot-1-1-released/';
-  var disqus_url = 'http://brakemanscanner.org/blog/2013/08/21/brakeman-2-dot-1-1-released/';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2015/09/23/brakeman-3-dot-1-1-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2015/09/23/brakeman-3-dot-1-1-released/';
   //var disqus_developer = 1;
   (function() {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

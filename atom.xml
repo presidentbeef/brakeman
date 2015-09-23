@@ -4,13 +4,118 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2015-09-11T17:31:38-07:00</updated>
+  <updated>2015-09-23T09:14:47-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 3.1.1 Released</title>
+    <link href="http://brakemanscanner.org/blog/2015/09/23/brakeman-3-dot-1-1-released/"/>
+    <updated>2015-09-23T08:11:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2015/09/23/brakeman-3-dot-1-1-released</id>
+    <content type="html">&lt;p&gt;This release includes two new checks and a number of bug fixes.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 3.1.0&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add check for user input in session keys&lt;/li&gt;
+&lt;li&gt;Add optional check for use of MD5 and SHA1&lt;/li&gt;
+&lt;li&gt;Fix absolute paths for Windows (&lt;a href=&quot;https://github.com/spcoder&quot;&gt;Cody Frederick&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Allow searching call index methods by regex (&lt;a href=&quot;https://github.com/aianus&quot;&gt;Alex Ianus&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Consider &lt;code&gt;j&lt;/code&gt;/&lt;code&gt;escape_javascript&lt;/code&gt; safe inside Haml JavaScript blocks (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/708&quot;&gt;#708&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Better Haml processing of &lt;code&gt;find_and_preserve&lt;/code&gt; calls&lt;/li&gt;
+&lt;li&gt;Fix chained assignment&lt;/li&gt;
+&lt;li&gt;Treat &lt;code&gt;a.try(&amp;amp;:b)&lt;/code&gt; like &lt;code&gt;a.b()&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Add more Arel methods to be ignored in SQL (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/711&quot;&gt;#711&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Avoid warning when linking to decorated models (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/683&quot;&gt;#683&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Support newer terminal-table releases (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/709&quot;&gt;#709&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Session Manipulation Check&lt;/h3&gt;
+
+&lt;p&gt;As suggested by &lt;a href=&quot;https://twitter.com/joernchen&quot;&gt;Joernchen&lt;/a&gt;, Brakeman will now look for user input in session keys which can lead to session manipulation.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/720&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Optional Check for Weak Hashes&lt;/h3&gt;
+
+&lt;p&gt;An optional check to look for use of MD5 and SHA1 has been added to this release. Run with &lt;code&gt;-t WeakHash&lt;/code&gt; to use just this optional check or &lt;code&gt;-A&lt;/code&gt; to run all checks.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/722&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Windows Paths&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/spcoder&quot;&gt;Cody Frederick&lt;/a&gt; fixed an issue with determining absolute paths on Windows.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/714&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Search for Methods by Regex&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/aianus&quot;&gt;Alex Ianus&lt;/a&gt; re-introduced the ability to search the CallIndex with regular expressions for methods:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;tracker.find_call(method: /_something$/)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/710&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Haml Processing&lt;/h3&gt;
+
+&lt;p&gt;Haml users may have noticed warnings with &lt;code&gt;find_and_preserve(Haml::Filters::Javascript.render_with_options(...))&lt;/code&gt; in them. This has been fixed so &lt;code&gt;find_and_preserve&lt;/code&gt; is treated as though it just passes through its arguments. Calls to &lt;code&gt;render_with_options&lt;/code&gt; will be treated as unescaped output.&lt;/p&gt;
+
+&lt;p&gt;Along with this change, &lt;code&gt;j&lt;/code&gt; and &lt;code&gt;escape_javascript&lt;/code&gt; will be considered safe inside &lt;code&gt;:javascript&lt;/code&gt; filters in Haml.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/716&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Chained Assignment&lt;/h3&gt;
+
+&lt;p&gt;Chained assignments like &lt;code&gt;a = b = c = 1&lt;/code&gt; will now be handled correctly. This fixes &lt;a href=&quot;https://stackoverflow.com/questions/11314450/how-to-secure-link-to-variable-cross-site-scripting-vulnerabilities&quot;&gt;a very old issue from 2012&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/718&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Trying More&lt;/h3&gt;
+
+&lt;p&gt;While Brakeman already treated &lt;code&gt;a.try(:b)&lt;/code&gt; like &lt;code&gt;a.b()&lt;/code&gt;, there is a surprising amount of code which does &lt;code&gt;a.try(&amp;amp;:b)&lt;/code&gt;. This is totally unncessary, but Brakeman now handles it as well.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/717&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;More Arel Whitelisting&lt;/h3&gt;
+
+&lt;p&gt;A number of Arel methods have been whitelisted to avoid warning about them inside SQL query building.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/719&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Decorated Models in Links&lt;/h3&gt;
+
+&lt;p&gt;If the Draper gem is used, Brakeman will ignore calls to &lt;code&gt;decorate&lt;/code&gt; in &lt;code&gt;link_to&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/721&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;terminal-table&lt;/h3&gt;
+
+&lt;p&gt;Newer &lt;a href=&quot;https://github.com/tj/terminal-table&quot;&gt;terminal-table&lt;/a&gt; releases are supported now and the dependency has been relaxed.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/712&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;SHAs&lt;/h3&gt;
+
+&lt;p&gt;The SHA1 sums for this release are&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cfd1840116c20b0b8932720fdaac09dd4e47091a  brakeman-3.1.1.gem
+603389da732d307a014af445a1f312415b65a682  brakeman-min-3.1.1.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter, joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt;, or hanging out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 3.1.0 Released</title>
@@ -1760,85 +1865,6 @@ gem install brakeman -P MediumSecurity
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
 &lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 2.2.0 Released</title>
-    <link href="http://brakemanscanner.org/blog/2013/10/28/brakeman-2-dot-2-0-released/"/>
-    <updated>2013-10-28T10:30:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2013/10/28/brakeman-2-dot-2-0-released</id>
-    <content type="html">&lt;p&gt;This is a small release, with some bug and false positive fixes alongside initial support for Rails engines and a new check for detailed exceptions.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 2.2.0:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Support scanning Rails engines (&lt;a href=&quot;https://github.com/phene&quot;&gt;Geoffrey Hichborn&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Ignore redirects to models using &lt;code&gt;friendly_id&lt;/code&gt; (&lt;a href=&quot;https://github.com/aj0strow&quot;&gt;AJ Ostrow&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Add check for detailed exceptions in production (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/391&quot;&gt;#391&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Use Rails version from Gemfile if it is available (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/398&quot;&gt;#398&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Only add routes with actual names (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/395&quot;&gt;#395&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Reduce command injection false positives&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;Rails Engines&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/phene&quot;&gt;Geoffrey Hichborn&lt;/a&gt; added support for checking Rails engines paths when searching for controllers, models, and views. Please let us know if there are any issues or files missed with this change.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/397&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Redirects with Friendly ID&lt;/h3&gt;
-
-&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/aj0strow&quot;&gt;AJ Ostrow&lt;/a&gt;, Brakeman should no longer warn on redirects to models using &lt;code&gt;friendly_id&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/400&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Detailed Exceptions&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/ntalbott&quot;&gt;Nathaniel Talbott&lt;/a&gt; suggested checking that detailed exceptions (treating requests as local) are not enabled in production.&lt;/p&gt;
-
-&lt;p&gt;Brakeman now generates a warning in a new category called &quot;&lt;a href=&quot;http://brakemanscanner.org/docs/warning_types/information_disclosure/&quot;&gt;Information Disclosure&lt;/a&gt;&quot; if &lt;code&gt;config.consider_all_requests_local&lt;/code&gt; is set to &lt;code&gt;true&lt;/code&gt; in production or a controller overrides &lt;code&gt;show_detailed_exceptions?&lt;/code&gt; to return something other than &lt;code&gt;false&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Please see the &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/396&quot;&gt;changes&lt;/a&gt; regarding the new category and two new warning codes associated with these warnings.&lt;/p&gt;
-
-&lt;h3&gt;Better Version Detection&lt;/h3&gt;
-
-&lt;p&gt;Brakeman now uses the Rails version found in &lt;code&gt;Gemfile&lt;/code&gt; or &lt;code&gt;Gemfile.lock&lt;/code&gt; to determine when to enable Rails 3/4 mode, which seems obvious in retrospect. This required swapping when the &lt;code&gt;Gemfile&lt;/code&gt; and the configuration files are processed.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/402&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Rails 3 Routes&lt;/h3&gt;
-
-&lt;p&gt;A small fix prevents Brakeman from raising an error when a route is a redirect or any value other than a string or symbol.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/403&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Command Injection False Positives&lt;/h3&gt;
-
-&lt;p&gt;There should be fewer false positives for command injection when interpolated values are literals. The check also now ignores commonly used values &lt;code&gt;RAILS_ROOT&lt;/code&gt;, &lt;code&gt;Rails.env&lt;/code&gt;, and &lt;code&gt;Rails.root&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Additionally, reported &quot;dangerous&quot; values (&lt;code&gt;user_input&lt;/code&gt; in JSON reports) for command injection are more specific. For example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;system &quot;rm -rf #{some_var}&quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;used to report the entire string &lt;code&gt;&quot;rm -rf #{some_var}&quot;&lt;/code&gt; as dangerous, even though it's really warning about the interpolation of &lt;code&gt;some_var&lt;/code&gt;. Now Brakeman will report the first potentially dangerous interpolated value. Note that this does not change fingerprints for existing warnings.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/404&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Also consider joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt; or following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter.&lt;/p&gt;
-
-&lt;h3&gt;Verification&lt;/h3&gt;
-
-&lt;p&gt;The SHA-1 for the Brakeman 2.2.0 gem is:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;f3a2b369bda79c677a913cdb2350cbda8bce8a90  brakeman-2.2.0.gem
-&lt;/code&gt;&lt;/pre&gt;
 </content>
   </entry>
   

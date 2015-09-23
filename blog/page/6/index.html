@@ -108,6 +108,75 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2011/12/21/brakeman-1-dot-1-released/">Brakeman 1.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2011-12-21 19:12:00 -0800" pubdate  updated >Dec 21<span>st</span>, 2011</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This was supposed to be a 1.0.1 release, but quite a bit of code changed.</p>
+
+<p>Changes since 1.0:</p>
+
+<ul>
+<li>Relax required versions for dependencies (this is for Bundler users)</li>
+<li>Performance improvements for source processing</li>
+<li>Better progress reporting</li>
+<li>Handle basic operators like &lt;&lt; + - * /</li>
+<li>Rescue more errors to prevent Brakeman from completely bailing out</li>
+<li>Compatibility with newer Haml versions</li>
+<li>Fix some 1.9 warnings</li>
+</ul>
+
+
+<h3>Relax Dependencies</h3>
+
+<p>The version dependencies for Brakeman have been relaxed somewhat, so it should work fine if included in a Rails 3 Gemfile. Unfortunately, this makes it a little harder to be sure it will work with all setups. Please report any problems!</p>
+
+<h3>Performance Improvements</h3>
+
+<p>The 1.0 release reduced the time taken for running the vulnerability checks, but (unrelatedly) the time for processing the source code increased.</p>
+
+<p>This release makes some improvements that should improve scan times. If it takes an intolerable amount of time for scans (more than 5-10 minutes), try using the <code>--faster</code> option. This will possibly report fewer vulnerabilities, but should be much faster.</p>
+
+<h3>Progress Reporting</h3>
+
+<p>Brakeman will now provide better feedback about its progress while processing applications. For even more output, use the <code>--debug</code> option.</p>
+
+<h3>Handle More Operators</h3>
+
+<p>See <a href="https://github.com/presidentbeef/brakeman/wiki/Using-Brakeman::AliasProcessor">here</a> for the kinds of simple processing Brakeman can do.</p>
+
+<h3>Rescue More Errors</h3>
+
+<p>Brakeman does its best to never completely abort execution and tries to always provide an analysis of whatever it can manage. This release rescues exceptions that may occur while processing configurations and Gemfiles.</p>
+
+<h3>Problems</h3>
+
+<p>If you run into any problems, don&#8217;t hesitate to send a tweet to <a href="http://twitter.com/brakemanscanner">@Brakemanscanner</a> or <a href="https://github.com/presidentbeef/brakeman/issues">file an issue</a> on GitHub!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2011/12/08/brakeman-1-dot-0-released/">Brakeman 1.0 Released!</a></h1>
     
     
@@ -786,46 +855,10 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2011/08/27/one-year-anniversary-and-a-website/">One Year Anniversary</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-08-27 01:00:00 -0700" pubdate  updated >Aug 27<span>th</span>, 2011</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>One year ago, Brakeman 0.0.1 was released as a gem. Then it was promptly yanked and replaced with <a href="http://rubygems.org/gems/brakeman/versions/0.0.2">Brakeman 0.0.2</a>.</p>
-
-<p>In celebration of this grand anniversary, there have been several new releases today.</p>
-
-<p>The first is <a href="http://rubygems.org/gems/brakeman/versions/0.7.2">Brakeman 0.7.2</a>, a minor release adding CVE numbers for the <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/f878a33159ac9967">latest vulnerabilities</a> and fixing how nested params/cookie accesses are handled (e.g., <code>params[:user][:name]</code> is now considered a direct use of a parameter).</p>
-
-<p>Next up, Brakeman has its own Twitter feed <a href="https://twitter.com/brakemanscanner">@BrakemanScanner</a>.</p>
-
-<p>Lastly, there is this new website. Look forward to tutorials and more in-depth information about how to use Brakeman effectively.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
+    
+      <a class="prev" href="/blog/page/7/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -874,6 +907,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/09/23/brakeman-3-dot-1-1-released/">Brakeman 3.1.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/30/brakeman-3-dot-1-0-released/">Brakeman 3.1.0 Released</a>
       </li>
     
@@ -887,10 +924,6 @@ end
     
       <li class="post">
         <a href="/blog/2015/04/30/brakeman-3-dot-0-3-released/">Brakeman 3.0.3 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/09/brakeman-3-dot-0-2-released/">Brakeman 3.0.2 Released</a>
       </li>
     
   </ul>
