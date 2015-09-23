@@ -1,4 +1,4 @@
-# Unreleased
+# 3.1.1
 
 * Add optional check for use of MD5 and SHA1
 * Avoid warning when linking to decorated models
