@@ -6,7 +6,8 @@ class Rails4Tests < Test::Unit::TestCase
 
   def report
     external_checks_path = File.expand_path(File.join(File.dirname(__FILE__), "..", "/apps/rails4/external_checks"))
-    @@report ||= BrakemanTester.run_scan "rails4", "Rails 4", {:additional_checks_path => [external_checks_path], :run_all_checks => true, :additional_libs_path => ["app/api"]}
+    # There are additional options in config/brakeman.yml
+    @@report ||= BrakemanTester.run_scan "rails4", "Rails 4", {:additional_checks_path => [external_checks_path]}
   end
 
   def expected
