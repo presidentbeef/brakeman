@@ -139,6 +139,16 @@ class Brakeman::Report::HTML < Brakeman::Report::Base
     "<table id='#{code_id}' class='context' style='display:none'>" <<
     "<caption>#{CGI.escapeHTML warning_file(warning) || ''}</caption>"
 
+    output << <<-HTML
+      <thead style='display:none'>
+        <tr>
+          <th>line number</th>
+          <th>line content</th>
+        </tr>
+      </thead>
+      <tbody>
+    HTML
+
     unless context.empty?
       if warning.line - 1 == 1 or warning.line + 1 == 1
         error = " near_error"
@@ -184,7 +194,7 @@ class Brakeman::Report::HTML < Brakeman::Report::Base
       end
     end
 
-    output << "</table></div>"
+    output << "</tbody></table></div>"
   end
 
   #Escape warning message and highlight user input in HTML output
