@@ -73,7 +73,7 @@ module Brakeman
       options.delete :quiet
     end
 
-    options = default_options.merge(load_options(options[:config_file], options[:quiet])).merge(options)
+    options = default_options.merge(load_options(options)).merge(options)
 
     if options[:quiet].nil? and not command_line
       options[:quiet] = true
@@ -85,16 +85,14 @@ module Brakeman
     options
   end
 
-  CONFIG_FILES = [
-    File.expand_path("./config/brakeman.yml"),
-    File.expand_path("~/.brakeman/config.yml"),
-    File.expand_path("/etc/brakeman/config.yml")
-  ]
-
   #Load options from YAML file
-  def self.load_options custom_location, quiet
+  def self.load_options line_options
+    custom_location = line_options[:config_file]
+    quiet = line_options[:quiet]
+    app_path = line_options[:app_path]
+
     #Load configuration file
-    if config = config_file(custom_location)
+    if config = config_file(custom_location, app_path)
       options = YAML.load_file config
 
       if options
@@ -115,8 +113,14 @@ module Brakeman
     end
   end
 
-  def self.config_file custom_location = nil
-    supported_locations = [File.expand_path(custom_location || "")] + CONFIG_FILES
+  CONFIG_FILES = [
+    File.expand_path("~/.brakeman/config.yml"),
+    File.expand_path("/etc/brakeman/config.yml")
+  ]
+
+  def self.config_file custom_location, app_path
+    app_config = File.expand_path(File.join(app_path, "config", "brakeman.yml"))
+    supported_locations = [File.expand_path(custom_location || ""), app_config] + CONFIG_FILES
     supported_locations.detect {|f| File.file?(f) }
   end
 
