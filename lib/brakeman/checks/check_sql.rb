@@ -197,7 +197,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       input = include_user_input? dangerous_value
       if input
         confidence = CONFIDENCE[:high]
-        user_input = input.match
+        user_input = input
       else
         confidence = CONFIDENCE[:med]
         user_input = dangerous_value

@@ -51,7 +51,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
           :warning_type => "Cross Site Scripting", 
           :warning_code => :xss_link_to_href,
           :message => message,
-          :user_input => input.match,
+          :user_input => input,
           :confidence => CONFIDENCE[:high],
           :link_path => "link_to_href"
       end
@@ -84,7 +84,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
           :warning_type => "Cross Site Scripting", 
           :warning_code => :xss_link_to_href,
           :message => message,
-          :user_input => @matched.match,
+          :user_input => @matched,
           :confidence => CONFIDENCE[:med],
           :link_path => "link_to_href"
       end

@@ -52,7 +52,7 @@ class Brakeman::CheckSelectTag < Brakeman::BaseCheck
           :result => result,
           :message => @message,
           :confidence => CONFIDENCE[:high],
-          :user_input => input.match,
+          :user_input => input,
           :link_path => "https://groups.google.com/d/topic/rubyonrails-security/fV3QUToSMSw/discussion"
       end
     end

@@ -49,7 +49,7 @@ class Brakeman::CheckDeserialize < Brakeman::BaseCheck
         :warning_type => "Remote Code Execution",
         :warning_code => :unsafe_deserialize,
         :message => message,
-        :user_input => input.match,
+        :user_input => input,
         :confidence => confidence,
         :link_path => "unsafe_deserialization"
     end

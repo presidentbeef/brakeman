@@ -50,7 +50,6 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
 
   def check_helper_option result, exp
     if match = (has_immediate_user_input? exp or has_immediate_model? exp)
-      match = match.match if match.is_a? Match
       warn_on_number_helper result, match
       @found_any = true
     else

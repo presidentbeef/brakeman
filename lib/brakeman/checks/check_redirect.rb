@@ -53,7 +53,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
         :warning_code => :open_redirect,
         :message => "Possible unprotected redirect",
         :code => call,
-        :user_input => res.match,
+        :user_input => res,
         :confidence => confidence
     end
   end

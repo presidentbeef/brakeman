@@ -5,8 +5,8 @@ require 'brakeman/warning_codes'
 #The Warning class stores information about warnings
 class Brakeman::Warning
   attr_reader :called_from, :check, :class, :confidence, :controller,
-    :line, :method, :model, :template, :user_input, :warning_code, :warning_set,
-    :warning_type
+    :line, :method, :model, :template, :user_input, :user_input_type,
+    :warning_code, :warning_set, :warning_type
 
   attr_accessor :code, :context, :file, :message, :relative_path
 
@@ -37,6 +37,11 @@ class Brakeman::Warning
 
     if @method.to_s =~ /^fake_filter\d+/
       @method = :before_filter
+    end
+
+    if @user_input.is_a? Brakeman::BaseCheck::Match
+      @user_input_type = @user_input.type
+      @user_input = @user_input.match
     end
 
     if not @line

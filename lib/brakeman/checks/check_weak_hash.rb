@@ -30,7 +30,6 @@ class Brakeman::CheckWeakHash < Brakeman::BaseCheck
 
     if DIGEST_CALLS.include? call.method
       if input = user_input_as_arg?(call)
-        input = input.match
         confidence = CONFIDENCE[:high]
       elsif input = hashing_password?(call)
         confidence = CONFIDENCE[:high]

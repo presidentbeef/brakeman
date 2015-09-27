@@ -55,7 +55,7 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
         :warning_type => "Dynamic Render Path",
         :warning_code => :dynamic_render_path,
         :message => message,
-        :user_input => input.match,
+        :user_input => input,
         :confidence => confidence
     end
   end
