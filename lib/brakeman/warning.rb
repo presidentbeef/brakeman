@@ -12,14 +12,32 @@ class Brakeman::Warning
 
   TEXT_CONFIDENCE = [ "High", "Medium", "Weak" ]
 
+  OPTIONS = {:called_from => :@called_from,
+              :check => :@check,
+              :class => :@class,
+              :code => :@code,
+              :confidence => :@confidence,
+              :controller => :@controller,
+              :file => :@file,
+              :gem_info => :@gem_info,
+              :line => :@line,
+              :link_path => :@link_path,
+              :message => :@message,
+              :method => :@method,
+              :model => :@model,
+              :relative_path => :@relative_path,
+              :template => :@template,
+              :user_input => :@user_input,
+              :warning_set => :@warning_set,
+              :warning_type => :@warning_type
+            }
+
   #+options[:result]+ can be a result from Tracker#find_call. Otherwise, it can be +nil+.
   def initialize options = {}
     @view_name = nil
 
-    [:called_from, :check, :class, :code, :confidence, :controller, :file, :gem_info, :line, :link_path,
-      :message, :method, :model, :relative_path, :template, :user_input, :warning_set, :warning_type].each do |option|
-
-      self.instance_variable_set("@#{option}", options[option])
+    OPTIONS.each do |key, var|
+      self.instance_variable_set(var, options[key])
     end
 
     result = options[:result]
