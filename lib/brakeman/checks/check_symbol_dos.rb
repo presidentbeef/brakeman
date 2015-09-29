@@ -41,7 +41,7 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
         :warning_type => "Denial of Service",
         :warning_code => :unsafe_symbol_creation,
         :message => message,
-        :user_input => input.match,
+        :user_input => input,
         :confidence => confidence
     end
   end

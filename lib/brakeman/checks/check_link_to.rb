@@ -70,7 +70,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
 
     message = "Unescaped #{friendly_type_of input} in link_to"
 
-    warn_xss(result, message, input.match, CONFIDENCE[:high])
+    warn_xss(result, message, input, CONFIDENCE[:high])
   end
 
   # Check if we should warn about the specified method
@@ -93,7 +93,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
 
     message = "Unescaped #{friendly_type_of matched} in link_to"
 
-    warn_xss(result, message, @matched.match, CONFIDENCE[:med])
+    warn_xss(result, message, @matched, CONFIDENCE[:med])
   end
 
   # Create a warn for this xss

@@ -52,7 +52,7 @@ class Brakeman::CheckRegexDoS < Brakeman::BaseCheck
           :warning_code => :regex_dos,
           :message => message,
           :confidence => confidence,
-          :user_input => match.match
+          :user_input => match
       end
     end
   end

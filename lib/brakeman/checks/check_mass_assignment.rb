@@ -80,16 +80,14 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
           else
             confidence = CONFIDENCE[:high]
           end
-          user_input = input.match
         else
           confidence = CONFIDENCE[:low]
-          user_input = input.match
         end
       elsif node_type? call.first_arg, :lit, :str
         return
       else
         confidence = CONFIDENCE[:low]
-        user_input = nil
+        input = nil
       end
 
       warn :result => res,
@@ -97,7 +95,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
         :warning_code => :mass_assign_call,
         :message => "Unprotected mass assignment",
         :code => call,
-        :user_input => user_input,
+        :user_input => input,
         :confidence => confidence
     end
 

@@ -199,7 +199,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
             :warning_code => warning_code,
             :message => message,
             :code => exp,
-            :user_input => @matched.match,
+            :user_input => @matched,
             :confidence => confidence,
             :link_path => link_path
         end

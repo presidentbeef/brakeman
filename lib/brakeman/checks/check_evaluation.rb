@@ -29,7 +29,7 @@ class Brakeman::CheckEvaluation < Brakeman::BaseCheck
         :warning_code => :code_eval,
         :message => "User input in eval",
         :code => result[:call],
-        :user_input => input.match,
+        :user_input => input,
         :confidence => CONFIDENCE[:high]
     end
   end

@@ -102,7 +102,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
         :warning_type => "Cross Site Scripting",
         :warning_code => :xss_content_tag,
         :message => message,
-        :user_input => input.match,
+        :user_input => input,
         :confidence => CONFIDENCE[:high],
         :link_path => "content_tag"
 
@@ -136,7 +136,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
         :warning_type => "Cross Site Scripting",
         :warning_code => :xss_content_tag,
         :message => message,
-        :user_input => @matched.match,
+        :user_input => @matched,
         :confidence => CONFIDENCE[:med],
         :link_path => "content_tag"
     end

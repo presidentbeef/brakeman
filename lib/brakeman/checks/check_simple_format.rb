@@ -54,6 +54,6 @@ class Brakeman::CheckSimpleFormat < Brakeman::CheckCrossSiteScripting
       :message => "Values passed to simple_format are not safe in Rails #{rails_version}",
       :confidence => CONFIDENCE[:high],
       :link_path => "https://groups.google.com/d/msg/ruby-security-ann/5ZI1-H5OoIM/ZNq4FoR2GnIJ",
-      :user_input => match.match
+      :user_input => match
   end
 end

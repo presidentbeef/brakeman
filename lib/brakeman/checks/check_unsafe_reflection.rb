@@ -44,7 +44,7 @@ class Brakeman::CheckUnsafeReflection < Brakeman::BaseCheck
         :warning_type => "Remote Code Execution",
         :warning_code => :unsafe_constantize,
         :message => message,
-        :user_input => input.match,
+        :user_input => input,
         :confidence => confidence
     end
   end

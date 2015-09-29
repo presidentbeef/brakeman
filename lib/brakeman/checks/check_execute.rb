@@ -63,7 +63,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
         :warning_code => :command_injection,
         :message => "Possible command injection",
         :code => call,
-        :user_input => failure.match,
+        :user_input => failure,
         :confidence => confidence
     end
   end
@@ -75,7 +75,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
           :warning_type => "Command Injection",
           :warning_code => :command_injection,
           :message => "Possible command injection in open()",
-          :user_input => match.match,
+          :user_input => match,
           :confidence => CONFIDENCE[:high]
       end
     end
@@ -111,10 +111,8 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
 
     if input = include_user_input?(exp)
       confidence = CONFIDENCE[:high]
-      user_input = input.match
     elsif input = dangerous?(exp)
       confidence = CONFIDENCE[:med]
-      user_input = input
     else
       return
     end
@@ -124,7 +122,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       :warning_code => :command_injection,
       :message => "Possible command injection",
       :code => exp,
-      :user_input => user_input,
+      :user_input => input,
       :confidence => confidence
   end
 

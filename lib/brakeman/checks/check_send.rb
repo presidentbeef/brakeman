@@ -30,7 +30,7 @@ class Brakeman::CheckSend < Brakeman::BaseCheck
         :warning_code => :dangerous_send,
         :message => "User controlled method execution",
         :code => result[:call],
-        :user_input => input.match,
+        :user_input => input,
         :confidence => CONFIDENCE[:high]
     end
   end
