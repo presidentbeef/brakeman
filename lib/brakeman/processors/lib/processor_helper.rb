@@ -59,4 +59,17 @@ module Brakeman::ProcessorHelper
 
     exp
   end
+
+  # e.g. private defn
+  def process_call_defn? exp
+    if call? exp and exp.target.nil? and node_type? exp.first_arg, :defn, :defs and [:private, :public, :protected].include? exp.method
+      prev_visibility = @visibility
+      @visibility = exp.method
+      process exp.first_arg
+      @visibility = prev_visibility
+      exp
+    else
+      false
+    end
+  end
 end

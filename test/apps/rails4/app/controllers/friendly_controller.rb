@@ -71,4 +71,8 @@ class FriendlyController
   def send_some_stuff
     blah.send(params[:x]).to_json
   end
+
+  private def private_some_stuff
+    eval params[:what_is_this_java?]
+  end
 end

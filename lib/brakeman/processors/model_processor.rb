@@ -94,6 +94,8 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
   #such as include, attr_accessible, private, etc.
   def process_call exp
     return exp unless @current_class
+    return exp if process_call_defn? exp
+
     target = exp.target
     if sexp? target
       target = process target

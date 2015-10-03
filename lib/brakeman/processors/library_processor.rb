@@ -108,4 +108,12 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
     exp
   end
+
+  def process_call exp
+    if process_call_defn? exp
+      exp
+    else
+      process_default exp
+    end
+  end
 end
