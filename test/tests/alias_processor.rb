@@ -33,6 +33,20 @@ class AliasProcessorTests < Test::Unit::TestCase
     RUBY
   end
 
+  def test_divide_by_zero
+    assert_alias '1 / 0', <<-RUBY
+    x = 1 / 0
+    x
+    RUBY
+  end
+
+  def test_infinity
+    e = RubyParser.new.parse "x = 1.0 / 0; x"
+    a = Brakeman::AliasProcessor.new.process_safely e
+
+    assert_equal Sexp.new(:lit, 1.0 / 0), a.last
+  end
+
   def test_concatentation
     assert_alias "'Hello world!'", <<-RUBY
       x = "Hello"
