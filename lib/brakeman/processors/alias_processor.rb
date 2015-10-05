@@ -79,6 +79,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   #Process a method call.
   def process_call exp
+    return exp if process_call_defn? exp
     target_var = exp.target
     target_var &&= target_var.deep_clone
     exp = process_default exp

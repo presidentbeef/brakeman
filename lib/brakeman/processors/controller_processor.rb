@@ -109,6 +109,8 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
   #Look for specific calls inside the controller
   def process_call exp
+    return exp if process_call_defn? exp
+
     target = exp.target
     if sexp? target
       target = process target

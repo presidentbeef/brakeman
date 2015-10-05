@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 2,
       :template => 8,
-      :generic => 72
+      :generic => 73
     }
   end
 
@@ -1272,6 +1272,19 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/views/users/eval_it.html.erb",
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_private_call
+    assert_warning :type => :warning,
+      :warning_code => 13,
+      :fingerprint => "f0463ae920dc6ebbed7f66d0bdf1cc41b7c7257f7f724107377d7c59c5ee8707",
+      :warning_type => "Dangerous Eval",
+      :line => 76,
+      :message => /^User\ input\ in\ eval/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :code => s(:call, nil, :eval, s(:call, s(:call, nil, :params), :[], s(:lit, :what_is_this_java?))),
+      :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :what_is_this_java?))
   end
 
   def test_cross_site_request_forgery_setting_in_api_controller
