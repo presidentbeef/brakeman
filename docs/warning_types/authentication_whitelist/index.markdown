@@ -1,0 +1,1 @@
+When skipping `before_filter`s with security implications, a "whitelist" approach using `only` should be used instead of `except`. This ensures actions are protected by default, and unprotected only by exception.

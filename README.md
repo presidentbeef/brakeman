@@ -42,7 +42,7 @@ To specify an output file for the results:
 
     brakeman -o output_file
 
-The output format is determined by the file extension or by using the `-f` option. Current options are: `text`, `html`, `tabs`, `json`, `markdown`, and `csv`.
+The output format is determined by the file extension or by using the `-f` option. Current options are: `text`, `html`, `tabs`, `json`, `markdown`, `csv`, and `codeclimate`.
 
 Multiple output files can be specified:
 

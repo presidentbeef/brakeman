@@ -24,6 +24,12 @@ class TestReportGeneration < Test::Unit::TestCase
     assert (expected_keys - report_hash.keys).empty?, "Expected #{expected_keys - report_hash.keys} to be empty"
   end
 
+  def test_codeclimate_sanity
+    report = @@report.to_codeclimate
+
+    assert report.is_a? String
+  end
+
   def test_csv_sanity
     report = @@report.to_csv
     parsed = CSV.parse report
