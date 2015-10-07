@@ -396,7 +396,7 @@ class Rails3Tests < Test::Unit::TestCase
       :warning_code => 19,
       :fingerprint => "91d73b1b9d6920156b920729c0146292eb9f10f4ba9515740442dbe82d4dee78",
       :warning_type => "Attribute Restriction",
-      :line => nil,
+      :line => 1,
       :message => /^Mass\ assignment\ is\ not\ restricted\ using\ /,
       :confidence => 0,
       :relative_path => "app/models/account.rb"
@@ -405,7 +405,7 @@ class Rails3Tests < Test::Unit::TestCase
       :warning_code => 19,
       :fingerprint => "b325ae8a4570599cde146875ae86427506befae36a3b4a97ce2223930846fec5",
       :warning_type => "Attribute Restriction",
-      :line => nil,
+      :line => 1,
       :message => /^Mass\ assignment\ is\ not\ restricted\ using\ /,
       :confidence => 0,
       :relative_path => "app/models/user.rb"
