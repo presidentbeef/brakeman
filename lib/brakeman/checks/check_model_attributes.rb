@@ -56,6 +56,7 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
         if model.attr_protected.nil?
           warn :model => name,
             :file => model.file,
+            :line => model.top_line,
             :warning_type => "Attribute Restriction",
             :warning_code => :no_attr_accessible,
             :message => "Mass assignment is not restricted using attr_accessible",

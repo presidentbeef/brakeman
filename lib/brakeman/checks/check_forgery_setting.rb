@@ -28,7 +28,8 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
         :warning_code => :csrf_protection_missing,
         :message => "'protect_from_forgery' should be called in ApplicationController",
         :confidence => CONFIDENCE[:high],
-        :file => app_controller.file
+        :file => app_controller.file,
+        :line => app_controller.top_line
 
     elsif version_between? "2.1.0", "2.3.10"
 

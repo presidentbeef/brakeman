@@ -60,7 +60,8 @@ class Brakeman::CheckModelSerialize < Brakeman::BaseCheck
         :message => "Serialized attributes are vulnerable in Rails #{rails_version}, upgrade to #{@upgrade_version} or patch.",
         :confidence => confidence,
         :link => "https://groups.google.com/d/topic/rubyonrails-security/KtmwSbEpzrU/discussion",
-        :file => model.file
+        :file => model.file,
+        :line => model.top_line
     end
   end
 end
