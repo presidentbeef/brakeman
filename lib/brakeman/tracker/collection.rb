@@ -70,6 +70,18 @@ module Brakeman
       @files.first
     end
 
+    def top_line
+      if sexp? @src[file]
+        @src[file].line
+      else
+        @src.each_value do |source|
+          if sexp? source
+            return source.line
+          end
+        end
+      end
+    end
+
     def methods_public
       @methods[:public]
     end
