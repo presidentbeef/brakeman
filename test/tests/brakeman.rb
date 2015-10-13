@@ -278,6 +278,11 @@ class ConfigTests < Test::Unit::TestCase
     output_format_tester({:output_files => ['xx.xx', 'xx.xx']}, [:to_s, :to_s])
     output_format_tester({:output_files => ['xx.html', 'xx.pdf', 'xx.csv', 'xx.tabs', 'xx.json', 'xx.md']}, [:to_html, :to_pdf, :to_csv, :to_tabs, :to_json, :to_markdown])
   end
+
+  def test_output_format_errors_raised
+    options = {:output_format => :to_json, :output_files => ['xx.csv', 'xx.xxx']}
+    assert_raises("ArgumentError: Cannot specify output format if multiple output files specified") {Brakeman.get_output_formats(options)}
+  end
 end
 
 class GemProcessorTests < Test::Unit::TestCase
