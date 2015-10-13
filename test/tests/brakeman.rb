@@ -283,6 +283,37 @@ class ConfigTests < Test::Unit::TestCase
     options = {:output_format => :to_json, :output_files => ['xx.csv', 'xx.xxx']}
     assert_raises("ArgumentError: Cannot specify output format if multiple output files specified") {Brakeman.get_output_formats(options)}
   end
+
+  def test_github_options_raises_error
+    config = Tempfile.new("config")
+
+    config.write <<-YAML.strip
+    ---
+    :quiet: true
+    YAML
+
+    config.close
+    options = {:github_repo => 'www.test.com', :app_path => "/tmp"}
+    assert_raise ArgumentError do
+      Brakeman.set_options(options)
+    end
+  end
+
+  def test_github_options_returns_url
+    config = Tempfile.new("config")
+
+    config.write <<-YAML.strip
+    ---
+    :quiet: true
+    YAML
+
+    config.close
+    options = {:github_repo => 'presidentbeef/brakeman', :app_path => "/tmp"}
+
+    final_options = Brakeman.set_options(options)
+    assert final_options[:github_url], "https://www.github.com/presidentbeef/brakeman"
+  end
+
 end
 
 class GemProcessorTests < Test::Unit::TestCase
