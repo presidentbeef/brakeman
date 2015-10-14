@@ -300,14 +300,6 @@ class ConfigTests < Test::Unit::TestCase
   end
 
   def test_github_options_returns_url
-    # config = Tempfile.new("config")
-
-    # config.write <<-YAML.strip
-    # ---
-    # :quiet: true
-    # YAML
-
-    # config.close
     options = {:github_repo => 'presidentbeef/brakeman', :app_path => "/tmp"}
 
     final_options = Brakeman.set_options(options)
