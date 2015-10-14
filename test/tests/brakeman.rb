@@ -300,18 +300,33 @@ class ConfigTests < Test::Unit::TestCase
   end
 
   def test_github_options_returns_url
-    config = Tempfile.new("config")
+    # config = Tempfile.new("config")
 
-    config.write <<-YAML.strip
-    ---
-    :quiet: true
-    YAML
+    # config.write <<-YAML.strip
+    # ---
+    # :quiet: true
+    # YAML
 
-    config.close
+    # config.close
     options = {:github_repo => 'presidentbeef/brakeman', :app_path => "/tmp"}
 
     final_options = Brakeman.set_options(options)
     assert final_options[:github_url], "https://www.github.com/presidentbeef/brakeman"
+  end
+
+  def test_optional_check_options
+    options = {:list_optional_checks => true}
+    assert_equal "Optional Checks:\n------------------------------\nCheckSymbolDoS                Checks for symbol denial of service\nCheckUnscopedFind             Check for unscoped ActiveRecord queries\nCheckWeakHash                 Checks for use of weak hashes like MD5\n", capture_output {
+      final_options = Brakeman.list_checks(options)
+    }[1]
+  end
+
+  def test_default_check_options
+    options = {}
+    checks_results = "Available Checks:\n------------------------------\nCheckBasicAuth                Checks for the use of http_basic_authenticate_with\nCheckCrossSiteScripting       Checks for unescaped output in views\nCheckContentTag               Checks for XSS in calls to content_tag\nCheckCreateWith               Checks for strong params bypass in CVE-2014-3514\nCheckDefaultRoutes            Checks for default routes\nCheckDeserialize              Checks for unsafe deserialization of objects\nCheckDetailedExceptions       Checks for information disclosure displayed via detailed exceptions\nCheckDigestDoS                Checks for digest authentication DoS vulnerability\nCheckEscapeFunction           Checks for versions before 2.3.14 which have a vulnerable escape method\nCheckEvaluation               Searches for evaluation of user input\nCheckExecute                  Finds instances of possible command injection\nCheckFileAccess               Finds possible file access using user input\nCheckFileDisclosure           Checks for versions with file existence disclosure vulnerability\nCheckFilterSkipping           Checks for versions 3.0-3.0.9 which had a vulnerability in filters\nCheckForgerySetting           Verifies that protect_from_forgery is enabled in ApplicationController\nCheckHeaderDoS                Checks for header DoS (CVE-2013-6414)\nCheckI18nXSS                  Checks for i18n XSS (CVE-2013-4491)\nCheckJRubyXML                 Checks for versions with JRuby XML parsing backend\nCheckJSONEncoding             Checks for missing JSON encoding (CVE-2015-3226)\nCheckJSONParsing              Checks for JSON parsing vulnerabilities CVE-2013-0333 and CVE-2013-0269\nCheckLinkTo                   Checks for XSS in link_to in versions before 3.0\nCheckLinkToHref               Checks to see if values used for hrefs are sanitized using a :url_safe_method to protect against javascript:/data: XSS\nCheckMailTo                   Checks for mail_to XSS vulnerability in certain versions\nCheckMassAssignment           Finds instances of mass assignment\nCheckModelAttrAccessible      Reports models which have dangerous attributes defined under the attr_accessible whitelist.\nCheckModelAttributes          Reports models which do not use attr_restricted and warns on models that use attr_protected\nCheckModelSerialize           Report uses of serialize in versions vulnerable to CVE-2013-0277\nCheckNestedAttributes         Checks for nested attributes vulnerability in Rails 2.3.9 and 3.0.0\nCheckNumberToCurrency         Checks for number helpers XSS vulnerabilities in certain versions\nCheckQuoteTableName           Checks for quote_table_name vulnerability in versions before 2.3.14 and 3.0.10\nCheckRedirect                 Looks for calls to redirect_to with user input as arguments\nCheckRegexDoS                 Searches regexes including user input\nCheckRender                   Finds calls to render that might allow file access\nCheckRenderDoS                Warn about denial of service with render :text (CVE-2014-0082)\nCheckRenderInline             Checks for cross site scripting in render calls\nCheckResponseSplitting        Report response splitting in Rails 2.3.0 - 2.3.13\nCheckSafeBufferManipulation   Check for Rails versions with SafeBuffer bug\nCheckSanitizeMethods          Checks for versions with vulnerable sanitize and sanitize_css\nCheckSelectTag                Looks for unsafe uses of select_tag() in some versions of Rails 3.x\nCheckSelectVulnerability      Looks for unsafe uses of select() helper\nCheckSend                     Check for unsafe use of Object#send\nCheckSendFile                 Check for user input in uses of send_file\nCheckSessionManipulation      Check for user input in session keys\nCheckSessionSettings          Checks for session key length and http_only settings\nCheckSimpleFormat             Checks for simple_format XSS vulnerability (CVE-2013-6416) in certain versions\nCheckSingleQuotes             Check for versions which do not escape single quotes (CVE-2012-3464)\nCheckSkipBeforeFilter         Warn when skipping CSRF or authentication checks by default\nCheckSQL                      Check for SQL injection\nCheckSQLCVEs                  Checks for several SQL CVEs\nCheckSSLVerify                Checks for OpenSSL::SSL::VERIFY_NONE\nCheckStripTags                Report strip_tags vulnerabilities CVE-2011-2931 and CVE-2012-3465\nCheckSymbolDoSCVE             Checks for versions with ActiveRecord symbol denial of service vulnerability\nCheckTranslateBug             Report XSS vulnerability in translate helper\nCheckUnsafeReflection         Checks for unsafe reflection\nCheckValidationRegex          Report uses of validates_format_of with improper anchors\nCheckWithoutProtection        Check for mass assignment using without_protection\nCheckXMLDoS                   Checks for XML denial of service (CVE-2015-3227)\nCheckYAMLParsing              Checks for YAML parsing vulnerabilities (CVE-2013-0156)\nCheckSymbolDoS                Checks for symbol denial of service\nCheckUnscopedFind             Check for unscoped ActiveRecord queries\nCheckWeakHash                 Checks for use of weak hashes like MD5\n"
+    assert_equal checks_results, capture_output {
+      final_options = Brakeman.list_checks(options)
+    }[1]
   end
 
 end
