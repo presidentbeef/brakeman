@@ -4,14 +4,18 @@
 
 <p><%= template[0] %></p>
 <table>
-  <tr>
-    <th>Output</th>
-  </tr>
+  <thead>
+    <tr>
+      <th>Output</th>
+    </tr>
+  </thead>
+  <tbody>
   <% template[1].each do |call| %>
-  <tr>
-    <td><%= call %></td>
-  </tr>
+    <tr>
+      <td><%= call %></td>
+    </tr>
   <% end %>
+  </tbody>
 </table>
 
 <% end %>
