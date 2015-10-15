@@ -97,7 +97,7 @@ module Brakeman
 
       if options
         options.each { |k, v| options[k] = Set.new v if v.is_a? Array }
-        
+
         # After parsing the yaml config file for options, convert any string keys into symbols.
         options.keys.select {|k| k.is_a? String}.map {|k| k.to_sym }.each {|k| options[k] = options[k.to_s]; options.delete(k.to_s) }
 
@@ -307,7 +307,6 @@ module Brakeman
     else
       puts YAML.dump(options)
     end
-    exit
   end
 
   #Run a scan. Generally called from Brakeman.run instead of directly.
