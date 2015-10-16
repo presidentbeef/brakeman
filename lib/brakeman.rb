@@ -303,9 +303,9 @@ module Brakeman
       File.open file, "w" do |f|
         YAML.dump options, f
       end
-      puts "Output configuration to #{file}"
+      notify "Output configuration to #{file}"
     else
-      puts YAML.dump(options)
+      notify YAML.dump(options)
     end
   end
 
