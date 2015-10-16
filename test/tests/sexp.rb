@@ -383,4 +383,10 @@ class SexpTests < Test::Unit::TestCase
     assert_equal s(:or, s(:or, s(:or, s(:lit, 0), s(:lit, 0)), s(:lit, 1)), s(:lit, 2)), e
     assert_equal 3, e.or_depth
   end
+
+  def test_inspect_recursive
+    s = Sexp.new(:s)
+    s << s
+    assert_equal "s(:s, s(...))", s.inspect
+  end
 end

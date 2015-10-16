@@ -554,6 +554,24 @@ class Sexp
 
     self[2]
   end
+
+  require 'set'
+  def inspect seen = Set.new
+    if seen.include? self.object_id
+      's(...)'
+    else
+      seen << self.object_id
+      sexp_str = self.map do |x|
+        if x.is_a? Sexp
+          x.inspect seen
+        else
+          x.inspect
+        end
+      end.join(', ')
+
+      "s(#{sexp_str})"
+    end
+  end
 end
 
 #Invalidate hash cache if the Sexp changes
