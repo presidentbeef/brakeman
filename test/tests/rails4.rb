@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 2,
       :template => 8,
-      :generic => 73
+      :generic => 74
     }
   end
 
@@ -900,6 +900,39 @@ class Rails4Tests < Test::Unit::TestCase
       :message => /^Possible\ SQL\ injection/,
       :confidence => 0,
       :relative_path => "app/models/user.rb"
+  end
+
+  def test_hash_keys_not_values
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :warning_type => "SQL Injection",
+      :line => 80,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :code => s(:call, s(:const, :User), :where, s(:hash, s(:str, "stuff"), s(:call, s(:params), :[], s(:lit, :stuff)))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :stuff))
+
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :warning_type => "SQL Injection",
+      :line => 81,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :code => s(:call, s(:const, :User), :where, s(:hash, s(:call, s(:params), :[], s(:lit, :key)), s(:call, s(:params), :[], s(:lit, :stuff)))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :stuff))
+
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "ec196cf3f65f4d45b41345d19cdec2ced1420781bd379a5223b9fa9318bec3d4",
+      :warning_type => "SQL Injection",
+      :line => 81,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :code => s(:call, s(:const, :User), :where, s(:hash, s(:call, s(:params), :[], s(:lit, :key)), s(:call, s(:params), :[], s(:lit, :stuff)))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :key))
   end
  
   def test_format_validation_model_alias_processing

@@ -75,4 +75,9 @@ class FriendlyController
   private def private_some_stuff
     eval params[:what_is_this_java?]
   end
+
+  def where_hashes
+    User.where('stuff' => params[:stuff]) # no warning
+    User.where(params[:key] => params[:stuff]) # warn
+  end
 end
