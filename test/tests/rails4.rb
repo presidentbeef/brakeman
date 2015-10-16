@@ -766,6 +766,19 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:call, nil, :params)
   end
 
+  def test_xss_no_warning_on_model_finds_in_href
+    assert_no_warning :type => :template,
+      :warning_code => 4,
+      :fingerprint => "ada8501c6761c382f47b0ecd03d653059f16aabd7ef1588900a916ae6fd877ef",
+      :warning_type => "Cross Site Scripting",
+      :line => 18,
+      :message => /^Unsafe\ parameter\ value\ in\ link_to\ href/,
+      :confidence => 1,
+      :relative_path => "app/views/users/index.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, "Bars"), s(:call, s(:call, s(:call, nil, :current_user), :bars), :find, s(:call, s(:call, nil, :params), :[], s(:lit, :id)))),
+      :user_input => s(:call, nil, :params)
+  end
+
   def test_cross_site_scripting_haml_interpolation
     assert_warning :type => :template,
       :warning_code => 2,
