@@ -320,6 +320,33 @@ class ConfigTests < Test::Unit::TestCase
     end
   end
 
+  def test_dump_config_no_file
+    options = {:create_config => true, :test_option => "test"}
+    config_output = capture_output {
+      Brakeman.dump_config(options)
+    }[1]
+    assert_equal config_output, "---\n:test_option: test\n"
+  end
+
+  def test_dump_config_with_set
+    require 'set'
+    test_set = Set.new ["test", "test2"]
+    options = {:create_config => true, :test_option => test_set}
+    config_output = capture_output {
+      Brakeman.dump_config(options)
+    }[1]
+    assert_equal config_output, "---\n:test_option:\n- test\n- test2\n"
+  end
+
+  def test_dump_config_with_file
+    test_file = "test.cfg"
+    options = {:create_config => test_file, :test_option => "test"}
+    config_output = capture_output {
+      Brakeman.dump_config(options)
+    }[1]
+    assert_equal config_output, "Output configuration to test.cfg\n"
+    assert File.delete test_file
+  end
 end
 
 class GemProcessorTests < Test::Unit::TestCase
