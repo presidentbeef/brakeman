@@ -7,11 +7,20 @@ class AnotherController < ApplicationController
     eval params[:x]
   end
 
+  before_filter :set_something,
+    :except => %w(
+      render_stuff
+    )
+
   skip_before_action :set_bad_thing, :except => [:also_use_bad_thing]
 
   def use_bad_thing
     # This should not warn, because the filter is skipped!
     User.where(@bad_thing)
+  end
+
+  def set_something
+    @something = 1
   end
 
   def also_use_bad_thing
