@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/dangerous_evaluation/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/dangerous_eval/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -106,12 +106,11 @@
     <h1 class="entry-title">Dangerous Evaluation</h1>
   </header>
   
-  <script>
-window.location.replace("http://brakemanscanner.org/docs/warning_types/dangerous_eval/");
-</script>
+  <p>User input in an <code>eval</code> statement is VERY dangerous, so this will always raise a warning. Brakeman looks for calls to <code>eval</code>, <code>instance_eval</code>, <code>class_eval</code>, and <code>module_eval</code>.</p>
 
+<hr />
 
-<p>Content moved to <a href="dangerous_eval/">Dangerous Eval</a>.</p>
+<p>Back to <a href="/docs/warning_types">Warning Types</a></p>
 
   
     <footer>

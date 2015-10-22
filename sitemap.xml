@@ -368,7 +368,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/dangerous_evaluation/</loc>
-        <lastmod>2013-05-16T19:22:12-07:00</lastmod>
+        <lastmod>2015-10-22T12:07:34-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/mass_assignment/</loc>
@@ -452,7 +452,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/evaluation/</loc>
-        <lastmod>2013-05-16T19:22:12-07:00</lastmod>
+        <lastmod>2015-10-22T12:07:34-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/redirect/</loc>
@@ -477,6 +477,10 @@
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/cross_site_request_forgery/</loc>
         <lastmod>2013-05-16T19:22:12-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/dangerous_eval/</loc>
+        <lastmod>2015-10-22T12:07:34-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/unsafe_deserialization/</loc>
