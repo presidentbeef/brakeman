@@ -340,7 +340,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   def ignore_call? target, method
     ignored_method?(target, method) or
     safe_input_attribute?(target, method) or
-    ignored_model_method?(method) or
+    ignored_model_method?(target, method) or
     form_builder_method?(target, method) or
     haml_escaped?(target, method) or
     boolean_method?(method) or
@@ -348,10 +348,10 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     xml_escaped?(target, method)
   end
 
-  def ignored_model_method? method
-    @matched and
-    @matched.type == :model and
-    IGNORE_MODEL_METHODS.include? method
+  def ignored_model_method? target, method
+    ((@matched and @matched.type == :model) or
+       model_name? target) and
+       IGNORE_MODEL_METHODS.include? method
   end
 
   def ignored_method? target, method
