@@ -29,9 +29,9 @@ class AnotherController < ApplicationController
     render :inline => "<%= #{params[:name]} %>"
     render :inline => "<%= #{user_name} %>"
 
-    # should not warn
-    render :text => CGI.escapeHTML(params[:q])
-    render :text => "Welcome back, #{CGI::escapeHTML(params[:name])}!}"
+    render :text => CGI.escapeHTML(params[:q]) # should not warn
+    render :text => "Welcome back, #{CGI::escapeHTML(params[:name])}!}" # should not warn
+    render :text => params[:q], :content_type => "text/plain" # should not warn
   end
 
   def use_params_in_regex
