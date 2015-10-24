@@ -6,3 +6,5 @@
 <% form_for Thing.first do |t| %>
   <%== t.select(things, Thing.new(params[:t]).stuff) %>
 <% end %>
+
+<%= link_to 'Bars', current_user.bars.find(params[:id]) %> Don't warn

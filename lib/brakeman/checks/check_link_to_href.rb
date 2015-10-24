@@ -55,7 +55,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
           :confidence => CONFIDENCE[:high],
           :link_path => "link_to_href"
       end
-    elsif has_immediate_model? url_arg
+    elsif has_immediate_model? url_arg or model_find_call? url_arg
 
       # Decided NOT warn on models.  polymorphic_path is called it a model is 
       # passed to link_to (which passes it to url_for)
@@ -104,5 +104,12 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     @ignore_methods.include? method or
       method.to_s =~ /_path$/ or
       (target.nil? and method.to_s =~ /_url$/)
+  end
+
+  def model_find_call? exp
+    return unless call? exp
+
+    MODEL_METHODS.include? exp.method or
+      exp.method.to_s =~ /^find_by_/
   end
 end
