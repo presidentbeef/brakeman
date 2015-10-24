@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'yaml'
+require 'safe_yaml/load'
 require 'set'
 
 module Brakeman
@@ -93,7 +93,7 @@ module Brakeman
 
     #Load configuration file
     if config = config_file(custom_location, app_path)
-      options = YAML.load_file config
+      options = SafeYAML.load_file config, :deserialize_symbols => true
 
       if options
         options.each { |k, v| options[k] = Set.new v if v.is_a? Array }
