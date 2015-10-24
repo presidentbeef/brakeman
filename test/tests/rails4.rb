@@ -422,6 +422,19 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:call, s(:call, s(:const, :User), :where, s(:hash, s(:lit, :stuff), s(:lit, 1))), :take)
   end
 
+  def redirect_to_current_user_query_methods
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "b4056de92c9abd844825526b971fe683a66dd79c1fefbdd58ad343d8aeb60f6b",
+      :warning_type => "Redirect",
+      :line => 108,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 2,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, nil, :redirect_to, s(:call, s(:call, s(:call, nil, :current_user), :place), :find, s(:call, s(:params), :[], s(:lit, :p)))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :p))
+  end
+
   def test_symbol_dos_with_safe_parameters
     assert_no_warning :type => :warning,
       :warning_code => 59,

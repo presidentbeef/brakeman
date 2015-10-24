@@ -103,4 +103,8 @@ class UsersController < ApplicationController
     OpenSSL::Digest.new("SHA1")
     OpenSSL::Digest::MD5.digest(password)
   end
+
+  def redirector
+    redirect_to current_user.place.find(params[:p])
+  end
 end
