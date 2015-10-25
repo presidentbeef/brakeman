@@ -103,4 +103,7 @@ class UsersController < ApplicationController
     OpenSSL::Digest.new("SHA1")
     OpenSSL::Digest::MD5.digest(password)
   end
+
+  def more_haml
+  end
 end

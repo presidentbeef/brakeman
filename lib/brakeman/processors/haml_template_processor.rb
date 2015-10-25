@@ -141,7 +141,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
     if string_interp? exp
       exp.map! do |e|
         if sexp? e
-          if node_type? e, :evstr
+          if node_type? e, :evstr and e[1]
             e = e.value
           end
 
