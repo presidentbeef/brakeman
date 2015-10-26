@@ -1,3 +1,17 @@
+# Unreleased
+
+* Handle empty interpolation in HAML filters
+* Ignore filters that are not method names
+* Use SafeYAML to load configuration files
+* Warn on SQL query keys, not values in hashes
+* Allow inspection of recursive Sexps
+* Add line numbers to class-level warnings
+* Handle `private def ...`
+* Catch divide-by-zero in alias processing
+* Reduce string allocations in Warning#initialize
+* Sortable tables in HTML report (David Lanner)
+* Search for config file relative to application root
+
 # 3.1.1
 
 * Add optional check for use of MD5 and SHA1
