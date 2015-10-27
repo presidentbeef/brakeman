@@ -342,7 +342,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def check_hash_keys exp
     hash_iterate(exp) do |key, value|
       unless symbol?(key)
-        unsafe_key = unsafe_sql? value
+        unsafe_key = unsafe_sql? key
         return unsafe_key if unsafe_key
       end
     end

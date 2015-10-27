@@ -124,9 +124,9 @@ module Brakeman
         end
       end
 
-      filter[:methods] = [args[0][1]]
+      filter[:methods] = []
 
-      args[1..-1].each do |a|
+      args.each do |a|
         filter[:methods] << a[1] if a.node_type == :lit
       end
 

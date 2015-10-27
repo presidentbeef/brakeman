@@ -103,7 +103,10 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   #Processes the inside of an interpolated String.
   def process_evstr exp
     exp = exp.dup
-    exp[1] = process exp[1]
+    if exp[1]
+      exp[1] = process exp[1]
+    end
+
     exp
   end
 

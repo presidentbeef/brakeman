@@ -107,4 +107,7 @@ class UsersController < ApplicationController
   def redirector
     redirect_to current_user.place.find(params[:p])
   end
+
+  def more_haml
+  end
 end
