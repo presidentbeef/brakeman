@@ -1,5 +1,8 @@
 # Unreleased
 
+* Treat `current_user` like a model
+* Set user input value for inline renders
+* Avoid warning on inline renders with safe content types
 * Handle empty interpolation in HAML filters
 * Ignore filters that are not method names
 * Use SafeYAML to load configuration files
