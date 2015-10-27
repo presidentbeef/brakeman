@@ -636,65 +636,71 @@ class Rails4Tests < Test::Unit::TestCase
   def test_cross_site_scripting_render_text
     assert_warning :type => :warning,
       :warning_code => 84,
-      :fingerprint => "9e40043f992762c78415ef06c2b50916d6f16112759fb2762b9a781e09d651e0",
+      :fingerprint => "a0b38ce5204afaaddfb5ba121d286bade5fe56cacbae1eb6c6e08482729638dd",
       :warning_type => "Cross Site Scripting",
       :line => 24,
-      :message => /^Unescaped\ parameter\ value/,
+      :message => /^Unescaped\ parameter\ value\ rendered\ inlin/,
       :confidence => 0,
       :relative_path => "app/controllers/another_controller.rb",
-      :user_input => nil
+      :code => s(:render, :text, s(:dstr, "Welcome back, ", s(:evstr, s(:call, s(:params), :[], s(:lit, :name))), s(:str, "!}")), s(:hash)),
+      :user_input => s(:call, s(:params), :[], s(:lit, :name))
 
     assert_warning :type => :warning,
       :warning_code => 84,
-      :fingerprint => "e8ab2a0727aec11bd56cdac0fa0e9f340e2d739fd964f0d9fe044f0707544bf0",
+      :fingerprint => "a8bac3d3d75f55126b8331b0c843c8e02154ebe61b1e7e88443c85c4c67c501e",
       :warning_type => "Cross Site Scripting",
       :line => 25,
-      :message => /^Unescaped\ model\ attribute/,
+      :message => /^Unescaped\ model\ attribute\ rendered\ inlin/,
       :confidence => 1,
       :relative_path => "app/controllers/another_controller.rb",
-      :user_input => nil
+      :code => s(:render, :text, s(:dstr, "Welcome back, ", s(:evstr, s(:call, s(:call, s(:const, :User), :current_user), :name)), s(:str, "!}")), s(:hash)),
+      :user_input => s(:call, s(:call, s(:const, :User), :current_user), :name)
 
     assert_warning :type => :warning,
       :warning_code => 84,
-      :fingerprint => "44697e7dc6c955c6bd7747c31f3c7617c0da3dcdb9bdae0963b62cbc4462e39f",
+      :fingerprint => "74de1c04495b3d230bc81868e420d2c6ca121a5cd6a721d2189ba81f4862010a",
       :warning_type => "Cross Site Scripting",
       :line => 26,
-      :message => /^Unescaped\ parameter\ value/,
+      :message => /^Unescaped\ parameter\ value\ rendered\ inlin/,
       :confidence => 0,
       :relative_path => "app/controllers/another_controller.rb",
-      :user_input => nil
+      :code => s(:render, :text, s(:call, s(:params), :[], s(:lit, :q)), s(:hash)),
+      :user_input => s(:call, s(:params), :[], s(:lit, :q))
 
     assert_warning :type => :warning,
       :warning_code => 84,
-      :fingerprint => "e8ab2a0727aec11bd56cdac0fa0e9f340e2d739fd964f0d9fe044f0707544bf0",
+      :fingerprint => "9f96bf32a7fa73d2ba20e1b838bfa133a94c3b7029d9aadf5b813c25e49a031f",
       :warning_type => "Cross Site Scripting",
       :line => 27,
-      :message => /^Unescaped\ model\ attribute/,
+      :message => /^Unescaped\ model\ attribute\ rendered\ inlin/,
       :confidence => 1,
       :relative_path => "app/controllers/another_controller.rb",
-      :user_input => nil
+      :code => s(:render, :text, s(:call, s(:call, s(:const, :User), :current_user), :name), s(:hash)),
+      :user_input => s(:call, s(:call, s(:const, :User), :current_user), :name)
   end
 
   def test_cross_site_scripting_render_inline
     assert_warning :type => :warning,
       :warning_code => 84,
-      :fingerprint => "9e40043f992762c78415ef06c2b50916d6f16112759fb2762b9a781e09d651e0",
+      :fingerprint => "1cfc027040376a06bd45ee3ce473dcd36adfa54e052d08651098d1c1e09bacec",
       :warning_type => "Cross Site Scripting",
       :line => 29,
-      :message => /^Unescaped\ parameter\ value/,
+      :message => /^Unescaped\ parameter\ value\ rendered\ inlin/,
       :confidence => 0,
       :relative_path => "app/controllers/another_controller.rb",
-      :user_input => nil
+      :code => s(:render, :inline, s(:dstr, "<%= ", s(:evstr, s(:call, s(:params), :[], s(:lit, :name))), s(:str, " %>")), s(:hash)),
+      :user_input => s(:call, s(:params), :[], s(:lit, :name))
 
     assert_warning :type => :warning,
       :warning_code => 84,
-      :fingerprint => "e8ab2a0727aec11bd56cdac0fa0e9f340e2d739fd964f0d9fe044f0707544bf0",
+      :fingerprint => "89c00a5b4a816c6cf0c4cd2618f1a76411c3fc55460bf9069bb7ca12abb75f75",
       :warning_type => "Cross Site Scripting",
       :line => 30,
-      :message => /^Unescaped\ model\ attribute/,
+      :message => /^Unescaped\ model\ attribute\ rendered\ inlin/,
       :confidence => 1,
       :relative_path => "app/controllers/another_controller.rb",
-      :user_input => nil
+      :code => s(:render, :inline, s(:dstr, "<%= ", s(:evstr, s(:call, s(:call, s(:const, :User), :current_user), :name)), s(:str, " %>")), s(:hash)),
+      :user_input => s(:call, s(:call, s(:const, :User), :current_user), :name)
   end
 
   def test_cross_site_scripting_with_double_equals
