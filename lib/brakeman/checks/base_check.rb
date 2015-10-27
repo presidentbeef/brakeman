@@ -404,6 +404,8 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
     if exp.is_a? Symbol
       @models.include? exp
+    elsif call? exp and exp.target.nil? and exp.method == :current_user
+      true
     elsif sexp? exp
       @models.include? class_name(exp)
     else
