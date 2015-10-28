@@ -1,10 +1,11 @@
-# Unreleased
+# 3.1.2
 
 * Treat `current_user` like a model
 * Set user input value for inline renders
 * Avoid warning on inline renders with safe content types
 * Handle empty interpolation in HAML filters
 * Ignore filters that are not method names
+* Avoid warning about model find/find_by* in hrefs
 * Use SafeYAML to load configuration files
 * Warn on SQL query keys, not values in hashes
 * Allow inspection of recursive Sexps
