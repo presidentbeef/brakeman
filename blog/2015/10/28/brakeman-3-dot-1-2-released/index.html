@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Authentication Whitelist</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman 3.1.2 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/authentication_whitelist/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2015/10/28/brakeman-3-dot-1-2-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -100,26 +100,161 @@
   <div id="main">
     <div id="content">
       <div>
-<article>
+<article class="hentry">
   
   <header>
-    <h1 class="entry-title">Authentication Whitelist</h1>
-  </header>
-  
-  <p>When skipping <code>before_filter</code>s with security implications, a &#8220;whitelist&#8221; approach using <code>only</code> should be used instead of <code>except</code>. This ensures actions are protected by default, and unprotected only by exception.</p>
-
-<hr />
-
-<p>Back to <a href="/docs/warning_types">Warning Types</a></p>
-
-  
-    <footer>
+    <div class="articlelogo">&nbsp;</div>
+    
+      <h1 class="entry-title">Brakeman 3.1.2 Released</h1>
+    
+    
       <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+
+
+
+<time datetime="2015-10-28 15:59:00 -0700" pubdate  updated >Oct 28<span>th</span>, 2015</time>
+
+
+</p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This release is mostly bug fixes and false positive reduction. However, please note fingerprints for inline render warnings will change.</p>
+
+<p><em>Changes since 3.1.1</em>:</p>
+
+<ul>
+<li>Sortable tables in HTML report (David Lanner)</li>
+<li>Add line numbers to class-level warnings</li>
+<li>Warn on SQL query keys, not values in hashes (<a href="https://github.com/presidentbeef/brakeman/issues/738">#738</a>)</li>
+<li>Set user input value for inline renders</li>
+<li>Avoid warning on inline renders with safe content types</li>
+<li>Treat <code>current_user</code> like a model (<a href="https://github.com/presidentbeef/brakeman/issues/744">#744</a>)</li>
+<li>Avoid warning about model <code>find/find_by*</code> in hrefs</li>
+<li>Handle <code>private def ...</code></li>
+<li>Handle empty interpolation in HAML filters (<a href="https://github.com/presidentbeef/brakeman/issues/732">#732</a>)</li>
+<li>Catch divide-by-zero in alias processing (<a href="https://github.com/presidentbeef/brakeman/issues/729">#729</a>)</li>
+<li>Ignore filters that are not method names</li>
+<li>Search for config file relative to application root</li>
+<li>Use SafeYAML to load configuration files</li>
+<li>Allow inspection of recursive Sexps</li>
+<li>Reduce string allocations in <code>Warning#initialize</code></li>
+</ul>
+
+
+<h3>Sortable Tables</h3>
+
+<p><a href="https://github.com/dlanner">David Lanner</a> added the ability to sort tables in the HTML report by clicking on the column headers.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/726">changes</a>)</p>
+
+<h3>Line Numbers for Class Warnings</h3>
+
+<p>When warning about an entire class (like a model missing <code>attr_accessible</code>), the warning line number will point to the beginning of the class.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/733">changes</a>)</p>
+
+<h3>SQL Query Hashes</h3>
+
+<p>A long-standing bug in Brakeman caused it to warn about values in query hashes (e.g., <code>User.where(:x =&gt; params[:x])</code>) when it was intended to warn about user input in the <em>keys</em>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/740">changes</a>)</p>
+
+<h3>Inline Renders</h3>
+
+<p>Brakeman will now report the <code>render</code> call as the <code>code</code> value and the user input as <code>user_input</code>. Please note the code will look a little different from what Brakeman reports, as render calls are turned into a slightly different AST node internally. This will definitely change fingerprints for these warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/751">changes</a>)</p>
+
+<h3>current_user</h3>
+
+<p>In a couple places, Brakeman will treat <code>current_user</code> like a model instance, which it almost always is. This will probably be expanded in future releases.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/749">changes</a>)</p>
+
+<h3>Inline Privates</h3>
+
+<p>Calls to <code>private</code> using the return value of <code>def</code> will now work properly:</p>
+
+<pre><code>private def secret_stuff
+# ...
+end
+</code></pre>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/731">changes</a>)</p>
+
+<h3>Empty HAML Interpolation</h3>
+
+<p>Empty HAML interpolation inside of filters will no longer cause crashes and will be handled properly.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/750">changes</a>)</p>
+
+<h3>Divide-by-Zero</h3>
+
+<p>Brakeman sometimes divides by zero when it performs simple arithmetic during constant folding. While this is now reported as an error (and used to be, too), someday it should be a warning instead.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/730">changes</a>)</p>
+
+<h3>Config File Changes</h3>
+
+<p>When looking for the <code>config/brakeman.yml</code> configuration file, Brakeman will now look relative to the application path instead of the working directory.</p>
+
+<p>Additionally, the <code>SafeYAML</code> gem is used to prevent code execution for those running Brakeman against untrusted code.</p>
+
+<p>(changes <a href="https://github.com/presidentbeef/brakeman/pull/725">here</a> and <a href="https://github.com/presidentbeef/brakeman/pull/741">here</a>)</p>
+
+<h3>SHAs</h3>
+
+<p>The SHA256 sums for this release are</p>
+
+<pre><code>c01f07ccc2490d0421e5974499c57f519aa371bfab5d25ba3b224e7ae9e2c415  brakeman-3.1.2.gem
+d820c872cbe7bc8452c9bd8bd46d990ff1c0d53ee621c09f1997270fc978f783  brakeman-min-3.1.2.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs fixed in this release.</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter, joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>, or hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
+
+      
+
+
+
+
+<time datetime="2015-10-28 15:59:00 -0700" pubdate  updated >Oct 28<span>th</span>, 2015</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2015/10/28/brakeman-3-dot-1-2-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2015/10/28/brakeman-3-dot-1-2-released/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
 </article>
 
   <section>
@@ -127,8 +262,8 @@
     <div id="disqus_thread"><div id="disqus_thread"></div>
 <script type="text/javascript">
   var disqus_shortname = 'brakeman';
-  var disqus_identifier = 'http://brakemanscanner.org/docs/warning_types/authentication_whitelist/index.html';
-  var disqus_url = 'http://brakemanscanner.org/docs/warning_types/authentication_whitelist/index.html';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2015/10/28/brakeman-3-dot-1-2-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2015/10/28/brakeman-3-dot-1-2-released/';
   //var disqus_developer = 1;
   (function() {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
