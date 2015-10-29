@@ -25,5 +25,5 @@ Gem::Specification.new do |s|
   s.add_dependency "sass", "~>3.0"
   s.add_dependency "slim", ">=1.3.6", "<4.0"
   s.add_dependency "multi_json", "~>1.2"
-  s.add_dependency "safe_yaml"
+  s.add_dependency "safe_yaml", ">= 1.0"
 end
