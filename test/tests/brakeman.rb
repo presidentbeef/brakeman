@@ -345,6 +345,8 @@ class ConfigTests < Test::Unit::TestCase
       Brakeman.dump_config(options)
     }[1]
     assert_equal config_output, "Output configuration to test.cfg\n"
+    file_text = File.read(test_file)
+    assert_equal file_text, "---\n:test_option: test\n"
     assert File.delete test_file
   end
 end
