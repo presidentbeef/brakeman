@@ -180,6 +180,8 @@ module Brakeman
       [:to_json]
     when :markdown, :to_markdown
       [:to_markdown]
+    when :cc, :to_cc, :codeclimate, :to_codeclimate
+      [:to_codeclimate]
     else
       [:to_s]
     end
@@ -201,6 +203,8 @@ module Brakeman
         :to_json
       when /\.md$/i
         :to_markdown
+      when /(\.cc|\.codeclimate)$/i
+        :to_codeclimate
       else
         :to_s
       end

@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+$:.unshift "#{File.expand_path(File.dirname(__FILE__))}/../lib"
+
+require "json"
+
+if File.exist?("/config.json")
+  engine_config = JSON.parse(File.read("/config.json"))
+else
+  engine_config = {}
+end
+
+command = "/usr/src/app/bin/brakeman --quiet --format codeclimate"
+
+if engine_config["include_paths"]
+  engine_config["include_paths"].each do |path|
+    path.chop! while path[-1] == "/"
+  end
+
+  command += " --only-files " + engine_config["include_paths"].join(",")
+end
+
+exec command
