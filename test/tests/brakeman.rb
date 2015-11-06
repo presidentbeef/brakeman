@@ -278,6 +278,77 @@ class ConfigTests < Test::Unit::TestCase
     output_format_tester({:output_files => ['xx.xx', 'xx.xx']}, [:to_s, :to_s])
     output_format_tester({:output_files => ['xx.html', 'xx.pdf', 'xx.csv', 'xx.tabs', 'xx.json', 'xx.md']}, [:to_html, :to_pdf, :to_csv, :to_tabs, :to_json, :to_markdown])
   end
+
+  def test_output_format_errors_raised
+    options = {:output_format => :to_json, :output_files => ['xx.csv', 'xx.xxx']}
+    assert_raises("ArgumentError: Cannot specify output format if multiple output files specified") {Brakeman.get_output_formats(options)}
+  end
+
+  def test_github_options_raises_error
+    options = {:github_repo => 'www.test.com', :app_path => "/tmp"}
+    assert_raise ArgumentError do
+      Brakeman.set_options(options)
+    end
+  end
+
+  def test_github_options_returns_url
+    options = {:github_repo => 'presidentbeef/brakeman', :app_path => "/tmp"}
+
+    final_options = Brakeman.set_options(options)
+    assert final_options[:github_url], "https://www.github.com/presidentbeef/brakeman"
+  end
+
+  def test_optional_check_options
+    options = {:list_optional_checks => true}
+    check_list = capture_output {
+      Brakeman.list_checks(options)
+    }[1]
+    Brakeman::Checks.optional_checks.each do |check|
+      assert check_list.include? check.to_s.split("::").last
+      assert check_list.include? check.description
+    end
+  end
+
+  def test_default_check_options
+    options = {}
+    check_list = capture_output {
+      Brakeman.list_checks(options)
+    }[1]
+    Brakeman::Checks.checks.each do |check|
+      assert check_list.include? check.to_s.split("::").last
+      assert check_list.include? check.description
+    end
+  end
+
+  def test_dump_config_no_file
+    options = {:create_config => true, :test_option => "test"}
+    config_output = capture_output {
+      Brakeman.dump_config(options)
+    }[1]
+    assert_equal config_output, "---\n:test_option: test\n"
+  end
+
+  def test_dump_config_with_set
+    require 'set'
+    test_set = Set.new ["test", "test2"]
+    options = {:create_config => true, :test_option => test_set}
+    config_output = capture_output {
+      Brakeman.dump_config(options)
+    }[1]
+    assert_equal config_output, "---\n:test_option:\n- test\n- test2\n"
+  end
+
+  def test_dump_config_with_file
+    test_file = "test.cfg"
+    options = {:create_config => test_file, :test_option => "test"}
+    config_output = capture_output {
+      Brakeman.dump_config(options)
+    }[1]
+    assert_equal config_output, "Output configuration to test.cfg\n"
+    file_text = File.read(test_file)
+    assert_equal file_text, "---\n:test_option: test\n"
+    assert File.delete test_file
+  end
 end
 
 class GemProcessorTests < Test::Unit::TestCase
