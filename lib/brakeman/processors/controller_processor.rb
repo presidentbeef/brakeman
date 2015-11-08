@@ -236,9 +236,14 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
   #Look for before_filters and add fake ones if necessary
   def process_iter exp
-    block_call_name = exp.block_call.method
-    if block_call_name == :before_filter  or block_call_name == :before_action
-      add_fake_filter exp
+    if @current_method.nil? and call? exp.block_call
+      block_call_name = exp.block_call.method
+
+      if block_call_name == :before_filter  or block_call_name == :before_action
+        add_fake_filter exp
+      else
+        super
+      end
     else
       super
     end
