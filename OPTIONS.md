@@ -62,15 +62,21 @@ To instead limit the number of branches tracked for a given value:
 
 `LIMIT` should be an integer value. `0` is almost the same as `--no-branching` but `--no-branching` is preferred. The default value is `5`. Lower values generally make Brakeman go faster. `-1` is the same as unlimited.
 
-To skip certain files use:
+To skip certain files or directories use:
 
-    brakeman --skip-files file1,file2,etc
+    brakeman --skip-files file1,/path1/,path2/
+
+Directories are matched to relative to root path of your application and must end in a path separator for your platform (ex. `/`). The above invocation would match and skip the following:
+
+* Any file named `file1`. Any file that has `file1` as a path component would still be scanned.
+* Any file within `/path1`. Because of the leading `/`, only directories from the application's root directory will match. For example, `/lib/path1/some_path1_file.rb` would still be scanned.
+* Any directory named `path2`. Because there is no leading `/`, any directory with `path2` as a path component will be skipped. For example, `/lib/path2/some_lib_for_testing.rb` would not be scanned.
 
 Note Brakeman does "whole program" analysis, therefore skipping a file may affect warning results from more than just that one file.
 
-The inverse but even more dangerous option is to specific which files to scan:
+The inverse but even more dangerous option is to choose specific files or directories to scan:
 
-    brakeman --only-files some_file,some_dir
+    brakeman --only-files file1,/path2/,path2/
 
 Again, since Brakeman looks at the whole program, it is very likely not going to behave as expected when scanning a subset of files. Also, if certain files are excluded Brakeman may not function at all.
 

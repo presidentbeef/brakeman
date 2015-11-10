@@ -110,12 +110,12 @@ module Brakeman::Options
           options[:url_safe_methods].merge methods.map {|e| e.to_sym }
         end
 
-        opts.on "--skip-files file1,file2,etc", Array, "Skip processing of these files" do |files|
+        opts.on "--skip-files file1,path2,etc", Array, "Skip processing of these files/directories. Directories are application relative and must end in \"#{File::SEPARATOR}\"" do |files|
           options[:skip_files] ||= Set.new
           options[:skip_files].merge files
         end
 
-        opts.on "--only-files file1,file2,etc", Array, "Process only these files" do |files|
+        opts.on "--only-files file1,path2,etc", Array, "Process only these files/directories. Directories are application relative and must end in \"#{File::SEPARATOR}\"" do |files|
           options[:only_files] ||= Set.new
           options[:only_files].merge files
         end
