@@ -4,3 +4,4 @@ Gemfile.lock
 coverage/
 test/coverage/
 .bundle
+.byebug_history
