@@ -12,51 +12,44 @@ module Brakeman
       # Convert files into Regexp for matching
       init_options = {}
       if options[:skip_files]
-        skip_files_escaped = options[:skip_files].map do |f|
-          # If path ends in a file separator then we assume it is a path rather
-          # than a filename.
-          if f.end_with?(File::SEPARATOR)
-            # If path starts with a file separator then we assume that they
-            # want the project relative path to start with this path.
-            if f.start_with?(File::SEPARATOR)
-              "\\A#{Regexp.escape f}"
-            # If it ends in a file separator, but does not begin with a file
-            # separator then we assume the path can match any part of the project
-            # relative path.
-            else
-              Regexp.escape f
-            end
-          else
-            "#{Regexp.escape f}\\z"
-          end
-        end
-        init_options[:skip_files] = Regexp.new("(?:" << skip_files_escaped.join("|") << ")")
+        init_options[:skip_files] = regex_for_paths(options[:skip_files])
       end
 
       if options[:only_files]
-        only_files_escaped = options[:only_files].map do |f|
-          # If it ends in a file separator then we assume it is a path rather
-          # than a filename.
-          if f.end_with?(File::SEPARATOR)
-            # If it starts with a file separator then we assume that they
-            # want the project relative path to start with this path
-            if f.start_with?(File::SEPARATOR)
-              "\\A#{Regexp.escape f}"
-            # If it ends in a file separator, but does not begin with a file
-            # separator then we assume the path can match any part of the project
-            # relative path.
-            else
-              Regexp.escape f
-            end
-          else
-            "#{Regexp.escape f}\\z"
-          end
-        end
-        init_options[:only_files] = Regexp.new("(?:" << only_files_escaped.join("|") << ")")
+        init_options[:only_files] = regex_for_paths(options[:only_files])
       end
       init_options[:additional_libs_path] = options[:additional_libs_path]
       new(root, init_options)
     end
+
+    # Accepts an array of filenames and paths with the following format and
+    # returns a Regexp to match them:
+    #   * "path1/file1.rb" - Matches a specific filename in the project directory.
+    #   * "path1/" - Matches any path that conatains "path1" in the project directory.
+    #   * "/path1/ - Matches any path that is rooted at "path1" in the project directory.
+    #
+    def self.regex_for_paths(paths)
+      path_regexes = paths.map do |f|
+        # If path ends in a file separator then we assume it is a path rather
+        # than a filename.
+        if f.end_with?(File::SEPARATOR)
+          # If path starts with a file separator then we assume that they
+          # want the project relative path to start with this path prefix.
+          if f.start_with?(File::SEPARATOR)
+            "\\A#{Regexp.escape f}"
+          # If it ends in a file separator, but does not begin with a file
+          # separator then we assume the path can match any path component in
+          # the project.
+          else
+            Regexp.escape f
+          end
+        else
+          "#{Regexp.escape f}\\z"
+        end
+      end
+      Regexp.new("(?:" << path_regexes.join("|") << ")")
+    end
+    private_class_method(:regex_for_paths)
 
     def initialize(root, init_options = {})
       @root = root
@@ -158,6 +151,5 @@ module Brakeman
         @skip_files.match(project_relative_path)
       end
     end
-
   end
 end

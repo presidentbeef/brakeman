@@ -9,7 +9,7 @@ class OnlyFilesOptionTests < Test::Unit::TestCase
       :controller => 8,
       :model => 0,
       :template => 1,
-      :generic => 10 }
+      :generic => 12 }
 
     if RUBY_PLATFORM == 'java'
       @expected[:generic] += 1
@@ -19,7 +19,7 @@ class OnlyFilesOptionTests < Test::Unit::TestCase
   end
 
   def report
-    @@report ||= BrakemanTester.run_scan "rails3.2", "Rails 3.2", { :only_files => ["app/views/users/"], :skip_files => ["app/views/users/sanitized.html.erb"] }
+    @@report ||= BrakemanTester.run_scan "rails3.2", "Rails 3.2", { :only_files => ["app/views/users/", "exec_controller.rb", "/app/models/user/"], :skip_files => ["app/views/users/sanitized.html.erb"] }
   end
 
   def test_escaped_params_to_json
@@ -38,6 +38,26 @@ class OnlyFilesOptionTests < Test::Unit::TestCase
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
       :file => /_slimmer\.html\.slim/
+  end
+
+  def test_command_injection_in_exec_controller
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :class => :"ExecController",
+      :line => 5,
+      :message => /^Possible command injection/,
+      :confidence => 0,
+      :file => /exec_controller\.rb/
+  end
+
+  def test_command_injection_in_user_model_dependency
+    assert_warning :type => :warning,
+      :warning_type => "Command Injection",
+      :class => :"User",
+      :line => 3,
+      :message => /^Possible command injection/,
+      :confidence => 0,
+      :file => /command_dependency\.rb/
   end
 
   # This is the template that is skipped, should be no warning
