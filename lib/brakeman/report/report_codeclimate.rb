@@ -29,7 +29,7 @@ class Brakeman::Report::CodeClimate < Brakeman::Report::Base
         }
       },
       content: {
-        body: content_for(warning.warning_type, warning.link)
+        body: content_for(warning.warning_code, warning.link)
       }
     }.to_json
   end
@@ -52,10 +52,10 @@ class Brakeman::Report::CodeClimate < Brakeman::Report::Base
     @warning_codes[warning_code].to_s
   end
 
-  def content_for(warning_type, link)
+  def content_for(warning_code, link)
     @contents ||= {}
     unless link.nil?
-      @contents[warning_type] ||= local_content_for(link) || "Read more: #{link}"
+      @contents[warning_code] ||= local_content_for(link) || "Read more: #{link}"
     end
   end
 
