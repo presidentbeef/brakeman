@@ -60,6 +60,8 @@ class Brakeman::Warning
     if @user_input.is_a? Brakeman::BaseCheck::Match
       @user_input_type = @user_input.type
       @user_input = @user_input.match
+    elsif @user_input == false
+      @user_input = nil
     end
 
     if not @line
