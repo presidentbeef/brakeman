@@ -774,5 +774,21 @@ class AliasProcessorTests < Test::Unit::TestCase
 
     x
     OUTPUT
+
+    assert_output <<-INPUT, <<-OUTPUT
+    x = params[:x].presence
+    if ['a','b'].include? x
+      User.send x
+    end
+
+    x
+    INPUT
+    x = params[:x].presence
+    if ['a','b'].include? params[:x].presence
+      User.a
+    end
+
+    params[:x].presence
+    OUTPUT
   end
 end

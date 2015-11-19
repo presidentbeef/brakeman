@@ -62,16 +62,21 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       @tracker.error err if @tracker
     end
 
-    #Generic replace
-    if replacement = env[exp] and not duplicate? replacement
-      result = replacement.deep_clone(exp.line)
-    else
-      result = exp
-    end
-
+    result = replace(exp)
+  
     @exp_context.pop
 
     result
+  end
+
+  def replace exp, int = 0
+    return exp if int > 3
+
+    if replacement = env[exp] and not duplicate? replacement
+      replace(replacement.deep_clone(exp.line), int + 1)
+    else
+      exp
+    end
   end
 
   ARRAY_CONST = s(:const, :Array)
