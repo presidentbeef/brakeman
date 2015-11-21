@@ -13,7 +13,7 @@ class CallIndexTests < Test::Unit::TestCase
   end
 
   def assert_found num, opts
-    assert @call_index.find_calls(opts).length
+    assert_equal num, @call_index.find_calls(opts).length
   end
 
   def test_find_by_method_regex
