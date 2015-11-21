@@ -1,13 +1,13 @@
 class CallIndexTests < Test::Unit::TestCase
   def setup
     @calls = [
-      {:method => :hello, :target => :world, :call => {} },
-      {:method => :goodbye, :target => :world, :call => {} },
-      {:method => :foo, :target => :world, :call => {} },
-      {:method => :foo, :target => :the_bar, :call => {} },
-      {:method => :foo, :target => :the_baz, :call => {} },
-      {:method => :do_it, :target => nil, :call => {} },
-      {:method => :do_it_now, :target => nil, :call => {} },
+      {:method => :hello, :target => :world, :call => {}, :nested => false },
+      {:method => :goodbye, :target => :world, :call => {}, :nested => false  },
+      {:method => :foo, :target => :world, :call => {}, :nested => false  },
+      {:method => :foo, :target => :the_bar, :call => {}, :nested => false  },
+      {:method => :foo, :target => :the_baz, :call => {}, :nested => false  },
+      {:method => :do_it, :target => nil, :call => {}, :nested => false  },
+      {:method => :do_it_now, :target => nil, :call => {}, :nested => false  },
     ]
     @call_index = Brakeman::CallIndex.new(@calls)
   end
