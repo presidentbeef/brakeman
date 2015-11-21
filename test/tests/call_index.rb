@@ -1,3 +1,5 @@
+require 'brakeman/processors/lib/find_all_calls'
+
 class CallIndexTests < Test::Unit::TestCase
   def setup
     @calls = [
@@ -9,6 +11,17 @@ class CallIndexTests < Test::Unit::TestCase
       {:method => :do_it, :target => nil, :call => {}, :nested => false  },
       {:method => :do_it_now, :target => nil, :call => {}, :nested => false  },
     ]
+
+    src = Brakeman::AliasProcessor.new.process RubyParser.new.parse <<-RUBY
+      def x
+        x.y.z(1)
+        params[:x].y.z(2)
+      end
+    RUBY
+    all_calls = Brakeman::FindAllCalls.new(Object.new)
+    all_calls.process(src)
+    @calls += all_calls.calls
+
     @call_index = Brakeman::CallIndex.new(@calls)
   end
 
@@ -54,5 +67,15 @@ class CallIndexTests < Test::Unit::TestCase
 
   def test_find_by_no_target_and_methods
     assert_found 2, :target => nil, :method => [:do_it, :do_it_now]
+  end
+
+  def test_find_by_target_and_method_in_chain
+    assert_found 0, :target => :x, :method => :z
+    assert_found 1, :target => :x, :method => :z, :chained => true
+  end
+
+  def test_find_params_and_method_in_chain
+    assert_found 0, :target => :params, :method => :z
+    assert_found 1, :target => :params, :method => :z, :chained => true
   end
 end

@@ -137,6 +137,8 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
         class_name exp
       when :self
         @current_class || @current_module || nil
+      when :params, :session, :cookies
+        exp.node_type
       else
         exp
       end
