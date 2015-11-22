@@ -126,7 +126,7 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
 
   #Gets the target of a call as a Symbol
   #if possible
-  def get_target exp
+  def get_target exp, include_calls = false
     if sexp? exp
       case exp.node_type
       when :ivar, :lvar, :const, :lit
@@ -137,6 +137,23 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
         class_name exp
       when :self
         @current_class || @current_module || nil
+      when :params, :session, :cookies
+        exp.node_type
+      when :call
+        if include_calls
+          if exp.target.nil?
+            exp.method
+          else
+            t = get_target(exp.target, :include_calls)
+            if t.is_a? Symbol
+              :"#{t}.#{exp.method}"
+            else
+              exp
+            end
+          end
+        else
+          exp
+        end
       else
         exp
       end
@@ -187,6 +204,8 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
       @in_target = true
       process target
       @in_target = already_in_target
+
+      target = get_target(target, :include_calls)
     end
 
     method = exp.method
