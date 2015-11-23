@@ -188,4 +188,8 @@ class UsersController < ApplicationController
   def drape
     @user = (params[:id] ? User.find(params[:id]) : current_user).decorate
   end
+
+  def mass_again
+    User.new(stuff, :without_protection => true)
+  end
 end

@@ -13,7 +13,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 23,
       :controller => 4,
-      :generic => 81 }
+      :generic => 82 }
   end
 
   def test_without_protection
@@ -23,6 +23,19 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Unprotected mass assignment/,
       :confidence => 0,
       :file => /users_controller\.rb/
+  end
+
+  def test_mass_assignment_user_input_is_nil
+    assert_warning :type => :warning,
+      :warning_code => 54,
+      :fingerprint => "1ee65e0ad3785d2d56e7c854e4f6ababc3853f1dbe78ee03059d023629f3d4bd",
+      :warning_type => "Mass Assignment",
+      :line => 193,
+      :message => /^Unprotected\ mass\ assignment/,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :User), :new, s(:call, nil, :stuff), s(:hash, s(:lit, :without_protection), s(:true))),
+      :user_input => nil
   end
 
   def test_redirect_to_model_attribute

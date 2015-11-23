@@ -29,7 +29,7 @@ class Brakeman::Report::CodeClimate < Brakeman::Report::Base
         }
       },
       content: {
-        body: content_for(warning.warning_type, warning.link)
+        body: content_for(warning.warning_code, warning.link)
       }
     }.to_json
   end
@@ -52,17 +52,17 @@ class Brakeman::Report::CodeClimate < Brakeman::Report::Base
     @warning_codes[warning_code].to_s
   end
 
-  def content_for(warning_type, link)
+  def content_for(warning_code, link)
     @contents ||= {}
-    @contents.fetch(warning_type) do
-      directory = warning_type.downcase.gsub(/\s+/, "_")
-      filename = File.join(DOCUMENTATION_PATH, directory, "index.markdown")
-
-      if File.exist?(filename)
-        @contents[warning_type] = File.read(filename)
-      elsif link
-        "Read more: #{link}"
-      end
+    unless link.nil?
+      @contents[warning_code] ||= local_content_for(link) || "Read more: #{link}"
     end
+  end
+
+  def local_content_for(link)
+    directory = link.split("/").last
+    filename = File.join(DOCUMENTATION_PATH, directory, "index.markdown")
+
+    File.read(filename) if File.exist?(filename)
   end
 end
