@@ -1,3 +1,14 @@
+# 3.1.3
+
+* Make sure before_filter call with block is still a call
+* CallIndex improvements
+* Restore minimum Highline version (Kevin Glowacz)
+* Add Code Climate output format (Ashley Baldwin-Hunter/Devon Blandin/John Pignata/Michael Bernstein)
+* Iteratively replace values
+* Output nil instead of false for user_input in JSON
+* Depend on safe_yaml 1.0 or later
+* Test coverage improvements for Brakema module (Bethany Rentz)
+
 # 3.1.2
 
 * Treat `current_user` like a model
