@@ -1252,6 +1252,19 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => nil
   end
 
+  def test_mass_assign_without_protection_with_hash_literal
+    assert_no_warning :type => :warning,
+      :warning_code => 54,
+      :fingerprint => "b1fa7b124d251da5ade7f4fe22f158cd63894b91604d03f6faeef113036dad5a",
+      :warning_type => "Mass Assignment",
+      :line => 115,
+      :message => /^Unprotected\ mass\ assignment/,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :User), :new, s(:hash, s(:lit, :username), s(:str, "jjconti"), s(:lit, :admin), s(:false)), s(:hash, s(:lit, :without_protection), s(:true))),
+      :user_input => nil
+  end
+
   def test_only_desired_attribute_is_ignored
     assert_warning :type => :model,
       :warning_code => 60,
