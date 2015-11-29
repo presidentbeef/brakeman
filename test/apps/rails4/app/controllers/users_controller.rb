@@ -110,4 +110,8 @@ class UsersController < ApplicationController
 
   def more_haml
   end
+
+  def without
+    User.new({username: "jjconti", admin: false}, without_protection: true)
+  end
 end
