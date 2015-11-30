@@ -26,6 +26,10 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
         process tracker.initializers[file]
       end
     end
+
+    if tracker.options[:rails4]
+      check_secrets_yaml
+    end
   end
 
   #Looks for ActionController::Base.session = { ... }
@@ -44,7 +48,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
     if tracker.options[:rails3] and settings_target?(exp.target) and
       (exp.method == :secret_token= or exp.method == :secret_key_base=) and string? exp.first_arg
 
-      warn_about_secret_token exp, @app_tree.expand_path("config/initializers/secret_token.rb")
+      warn_about_secret_token exp.line, @app_tree.expand_path("config/initializers/secret_token.rb")
     end
 
     exp
@@ -99,6 +103,24 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
       if value = hash_access(settings, :secure)
         if false? value
           warn_about_secure_only value.line, file
+        end
+      end
+    end
+  end
+
+  def check_secrets_yaml
+    secrets_file = "config/secrets.yml"
+
+    if @app_tree.exists? secrets_file
+      yaml = @app_tree.read secrets_file
+      require 'safe_yaml/load'
+      secrets = SafeYAML.load yaml
+
+      if secrets["production"] and secret = secrets["production"]["secret_key_base"]
+        unless secret.include? "<%="
+          line = yaml.lines.find_index { |l| l.include? secret } + 1
+
+          warn_about_secret_token line, @app_tree.expand_path(secrets_file)
         end
       end
     end
