@@ -19,7 +19,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   def run_check
     settings = tracker.config.session_settings 
 
-    check_for_issues settings, "#{tracker.app_path}/config/environment.rb"
+    check_for_issues settings, @app_tree.expand_path("config/environment.rb")
 
     ["session_store.rb", "secret_token.rb"].each do |file|
       if tracker.initializers[file] and not ignored? file
@@ -38,13 +38,13 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   #in Rails 4.x apps
   def process_attrasgn exp
     if not tracker.options[:rails3] and exp.target == @session_settings and exp.method == :session=
-      check_for_issues exp.first_arg, "#{tracker.app_path}/config/initializers/session_store.rb"
+      check_for_issues exp.first_arg, @app_tree.expand_path("config/initializers/session_store.rb")
     end
 
     if tracker.options[:rails3] and settings_target?(exp.target) and
       (exp.method == :secret_token= or exp.method == :secret_key_base=) and string? exp.first_arg
 
-      warn_about_secret_token exp, "#{tracker.app_path}/config/initializers/secret_token.rb"
+      warn_about_secret_token exp, @app_tree.expand_path("config/initializers/secret_token.rb")
     end
 
     exp
@@ -54,7 +54,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   #in Rails 3.x apps
   def process_call exp
     if tracker.options[:rails3] and settings_target?(exp.target) and exp.method == :session_store
-      check_for_rails3_issues exp.second_arg, "#{tracker.app_path}/config/initializers/session_store.rb"
+      check_for_rails3_issues exp.second_arg, @app_tree.expand_path("config/initializers/session_store.rb")
     end
 
     exp
@@ -76,13 +76,13 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
                   hash_access(settings, :httponly))
 
         if false? value
-          warn_about_http_only value, file
+          warn_about_http_only value.line, file
         end
       end
 
       if value = hash_access(settings, :secret)
         if string? value
-          warn_about_secret_token value, file
+          warn_about_secret_token value.line, file
         end
       end
     end
@@ -92,43 +92,43 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
     if settings and hash? settings
       if value = hash_access(settings, :httponly)
         if false? value
-          warn_about_http_only value, file
+          warn_about_http_only value.line, file
         end
       end
 
       if value = hash_access(settings, :secure)
         if false? value
-          warn_about_secure_only value, file
+          warn_about_secure_only value.line, file
         end
       end
     end
   end
 
-  def warn_about_http_only value, file
+  def warn_about_http_only line, file
     warn :warning_type => "Session Setting",
       :warning_code => :http_cookies,
       :message => "Session cookies should be set to HTTP only",
       :confidence => CONFIDENCE[:high],
-      :line => value.line,
+      :line => line,
       :file => file
 
   end
 
-  def warn_about_secret_token value, file
+  def warn_about_secret_token line, file
     warn :warning_type => "Session Setting",
       :warning_code => :session_secret,
       :message => "Session secret should not be included in version control",
       :confidence => CONFIDENCE[:high],
-      :line => value.line,
+      :line => line,
       :file => file
   end
 
-  def warn_about_secure_only value, file
+  def warn_about_secure_only line, file
     warn :warning_type => "Session Setting",
       :warning_code => :secure_cookies,
       :message => "Session cookie should be set to secure only",
       :confidence => CONFIDENCE[:high],
-      :line => value.line,
+      :line => line,
       :file => file
   end
 
