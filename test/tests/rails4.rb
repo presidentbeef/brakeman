@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 2,
       :template => 8,
-      :generic => 74
+      :generic => 75
     }
   end
 
@@ -82,6 +82,18 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /secret_token\.rb/,
       :relative_path => "config/initializers/secret_token.rb"
+  end
+
+  def test_session_secrets_yaml
+    assert_warning :type => :warning,
+      :warning_code => 29,
+      :fingerprint => "f0ee1cc1980474c82a013645508f002dcc801e00db5592f7dd8cd6bdb93c73fe",
+      :warning_type => "Session Setting",
+      :line => 22,
+      :message => /^Session\ secret\ should\ not\ be\ included\ in/,
+      :confidence => 0,
+      :relative_path => "config/secrets.yml",
+      :user_input => nil
   end
 
   def test_session_manipulation
