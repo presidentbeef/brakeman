@@ -6,7 +6,9 @@
 
 # Brakeman
 
-Brakeman is a static analysis tool which checks Ruby on Rails applications for security vulnerabilities.
+Brakeman is an open source static analysis tool which checks Ruby on Rails applications for security vulnerabilities.
+
+Check out [Brakeman Pro](https://brakemanpro.com/) if you are looking for a commercially-supported version with a GUI and advanced features.
 
 # Installation
 
