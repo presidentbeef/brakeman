@@ -1,5 +1,8 @@
 # 3.1.3
 
+* Check for session secret in secrets.yml
+* Respect `exit_on_warn` in config file
+* Avoid warning on `without_protection: true` with hash literals
 * Make sure before_filter call with block is still a call
 * CallIndex improvements
 * Restore minimum Highline version (Kevin Glowacz)
