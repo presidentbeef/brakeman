@@ -94,7 +94,7 @@
   <li><a href="/docs/contributing">Contributing</a></li>
   <li><a href="/brakeman_users">Users</a></li>
   <li><a href="/contact">Contact</a></li>
-  <li><a href="/brakeman_pro">Pro</a></li>
+  <li><a href="/brakeman_pro">Support</a></li>
 </ul>
 
 </nav>
@@ -102,6 +102,93 @@
     <div id="content">
       <div class="blog-index">
 
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2012/05/23/brakeman-1-dot-6-1-released/">Brakeman 1.6.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-05-23 12:45:00 -0700" pubdate  updated >May 23<span>rd</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Wow, it&#8217;s been over a month since the last release!</p>
+
+<p>The major change in this version is a rewrite of the SQL injection check. Many more methods are covered, and there should be a reduction of false positives as well.</p>
+
+<p><em>Changes since 1.6.0</em>:</p>
+
+<ul>
+<li>Major rewrite of CheckSQL</li>
+<li>Process actions mixed into controllers</li>
+<li>Check for inherited <code>attr_accessible</code> (Neil Matatall)</li>
+<li>Handle <code>render :template =&gt; ...</code></li>
+<li>Report line number of highlighted value, if available</li>
+<li>Fix highlighting of HTML escaped values in HTML report</li>
+<li>Fix rescanning of deleted templates</li>
+</ul>
+
+
+<h3>Updated SQL Injection Check</h3>
+
+<p><code>CheckSQL</code> has been completely revamped. Brakeman now has a much better understanding of the various ActiveRecord::FinderMethods and ActiveRecord::QueryMethods, as well as their options.</p>
+
+<p>The check is also more conservative about what it warns on. Previously, since string interpolation is the main entry point for SQL injection in Rails, any interpolated value in a query would generate a warning. Now, &#8220;safe&#8221; sanitization methods, obviously safe methods like <code>to_i</code> and <code>id</code>, constants, strings, and other literal values should not cause warnings.</p>
+
+<p>The &#8220;highlighted&#8221; value (or &#8220;user input&#8221;) reported for SQL warnings should be much more accurate now, making it easier to determine why a warning was reported.</p>
+
+<h3>Controller Mixins</h3>
+
+<p>Methods on controller mixins that are used as actions should now be processed as if they were defined in the controller itself.</p>
+
+<h3>Check for Inherited Mass Assignment Protection</h3>
+
+<p>Since mass assignment protection via <code>attr_accessible</code> is inheritable, Brakeman will no longer warn about models whose parent uses <code>attr_accessible</code>.</p>
+
+<h3>Template Option in Render</h3>
+
+<p>Somehow, the <code>:template</code> option for <code>render</code> has been ignored this whole time. Sorry!</p>
+
+<h3>Better Line Numbers</h3>
+
+<p>Warnings which have a <code>:user_input</code> field use that value to &#8220;highlight&#8221; part of the code in the reported warning. This value usually corresponds to the code which actually caused the warning to be generated.</p>
+
+<p>If a warning has this field, the line number of that code is used, instead of the starting line number of the entire piece of code. This often leads to more accurate and helpful line numbers.</p>
+
+<h3>Highlighted Values in HTML Reports</h3>
+
+<p>Since the warnings output in HTML reports are HTML-escaped, there was a sometimes mismatch between the value that needed to be highlighted and the HTML warning output, causing nothing to be highlighted. This is fixed now.</p>
+
+<h3>Rescanning of Deleted Templates</h3>
+
+<p>In the rescanning logic, templates which are related to a changed file (a view or partial that is rendered, usually) will be rescanned. However, there is the possibility that the template which needs to be rescanned as a related file has been deleted as part of the set of changes. This caused the rescanning to blow up, but that has been fixed now.</p>
+
+<h3>Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+
+<p>Don&#8217;t forget to check out the <a href="https://speakerdeck.com/u/presidentbeef/p/keeping-rails-applications-on-track-with-brakeman">RailsConf Brakeman presentation slides</a>.</p>
+</div>
+  
+  
+
+
+  </article>
 
 
   <article>
@@ -890,91 +977,6 @@ puts clean(x)
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/01/20/brakeman-1-dot-2-1-released/">Brakeman 1.2.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-01-20 12:16:00 -0800" pubdate  updated >Jan 20<span>th</span>, 2012</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is essentially just a bugfix release, but due to the fixes for <code>link_to</code> warnings, there is a good possibility the number of reported warnings will decrease when upgrading to this version.</p>
-
-<p>Changes since 1.2.0:</p>
-
-<ul>
-<li>Remove link_to warning for Rails 3.x or when using rails_xss</li>
-<li>Don&#8217;t warn if first argument to link_to is escaped</li>
-<li>Detect usage of attr_accessible with no arguments</li>
-<li>Fix error when rendering a partial from a view but not through a controller</li>
-<li>Fix some issues with rails_xss, CheckCrossSiteScripting, and CheckTranslateBug</li>
-<li>Simplify Brakeman Rake task</li>
-<li>Avoid modifying $VERBOSE</li>
-<li>Add Brakeman::RescanReport#to_s</li>
-<li>Add Brakeman::Warning#to_s</li>
-</ul>
-
-
-<h3>link_to Changes</h3>
-
-<p>Prior to Rails 3.0, there <a href="https://rails.lighthouseapp.com/projects/8994/tickets/3518-link_to-doesnt-escape-its-input">was a bug</a> in <code>link_to</code> that caused the body of the link tag to be output without escaping. While this was fixed in Rails 3.0, Brakeman has still been warning on it. This was also fixed in the <a href="https://github.com/rails/rails_xss/commit/afc1610fe4b94150faee98c16f15a24290d20900">rails_xss</a>, so Brakeman should no longer warn on <code>link_to</code> for Rails 2.x when using the rails_xss plugin.</p>
-
-<p>Brakeman was also warning on <code>link_to</code> even if the body argument was manually escaped. This should be resolved now.</p>
-
-<p>One other related issue was a silly bug causing Brakeman to sometimes ignore <code>--escape-html</code> or the rails_xss plugin, leading to some confusing output. This is fixed.</p>
-
-<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/32">Neil Matatall</a> for reporting the <code>link_to</code> issue and <a href="https://github.com/a5sk4s">Andreas</a> for reporting the rails_xss problems.</p>
-
-<h3>attr_accessible with No Arguments</h3>
-
-<p>Brakeman was not detecting the case where <code>attr_accessible</code> is called with zero arguments, causing spurious mass assignment warnings.</p>
-
-<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/31">Justin Wiley</a> for reporting this.</p>
-
-<h3>Brakeman Rake Task</h3>
-
-<p>The Brakeman Rake task (installed via <code>--rake</code>) is even <a href="/docs/rake">simpler now</a>.</p>
-
-<h3>$VERBOSE</h3>
-
-<p>Brakeman was using <code>$VERBOSE</code> and <code>Kernel.warn</code> for controlling debug output. This has changed and <code>$VERBOSE</code> will no longer be modified when using Brakeman.</p>
-
-<h3>Rails 3.2 Support</h3>
-
-<p>So far, there have not been any issues with Brakeman and Rails 3.2. Please <a href="https://github.com/presidentbeef/brakeman/issues">report</a> any that come up!</p>
-
-<h3>JRuby Performance</h3>
-
-<p>Prior to Brakeman 1.2, <a href="http://jruby.org/">JRuby</a> was very slow when running Brakeman. This has changed, and now JRuby is probably the fastest option for scanning large applications. Give it a try, especially if you are using Ruby 1.8.7!</p>
-
-<h3>Mailing List</h3>
-
-<p>There is now a Brakeman mailing list on <a href="http://librelist.com/browser/brakeman/">librelist</a>.</p>
-
-<p>To subscribe, send any email to <a href='&#109;ailto&#58;b&#114;%&#54;1k&#37;65m&#37;&#54;1n&#64;&#37;6Ci&#98;%&#55;2&#101;l%&#54;&#57;st&#46;com'>brakeman&#64;libr&#101;&#108;ist&#46;com</a>. You will be asked to confirm your subscription.</p>
-
-<p>Archives are available for browsing on <a href="http://www.mail-archive.com/brakeman@librelist.com/maillist.html">The Mail Archive</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1027,6 +1029,10 @@ puts clean(x)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/02/brakeman-3-dot-1-3-released/">Brakeman 3.1.3 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/10/28/brakeman-3-dot-1-2-released/">Brakeman 3.1.2 Released</a>
       </li>
     
@@ -1040,10 +1046,6 @@ puts clean(x)
     
       <li class="post">
         <a href="/blog/2015/06/19/brakeman-3-dot-0-5-released/">Brakeman 3.0.5 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/06/18/brakeman-3-dot-0-4-released/">Brakeman 3.0.4 Released</a>
       </li>
     
   </ul>

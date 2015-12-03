@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Brakeman 2.6.0 Released</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman 3.1.3 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/blog/2014/06/06/brakeman-2-dot-6-0-released/"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2015/12/02/brakeman-3-dot-1-3-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -106,7 +106,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 2.6.0 Released</h1>
+      <h1 class="entry-title">Brakeman 3.1.3 Released</h1>
     
     
       <p class="meta">
@@ -114,7 +114,7 @@
 
 
 
-<time datetime="2014-06-06 09:04:00 -0700" pubdate  updated >Jun 6<span>th</span>, 2014</time>
+<time datetime="2015-12-02 09:23:00 -0800" pubdate  updated >Dec 2<span>nd</span>, 2015</time>
 
 
 </p>
@@ -122,106 +122,102 @@
   </header>
 
 
-<div class="entry-content"><p>This release introduces significant changes to how and when files are parsed, which may introduce changes in existing warnings and errors.</p>
+<div class="entry-content"><p>This is a small bug fix release, except for one major new feature: <a href="https://codeclimate.com/changelog/5653c9b67f7feb0048003051">Brakeman is now available as an engine on the new Code Climate platform</a>!</p>
 
-<p><em>Changes since 2.5.0</em>:</p>
+<p><em>Changes since 3.1.2</em>:</p>
 
 <ul>
-<li>Improve default route detection in Rails 3/4 (<a href="https://github.com/jjarmoc">Jeff Jarmoc</a>)</li>
-<li>Handle controllers and models split across files (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
-<li>Fix handling of <code>protected_attributes</code> gem in Rails 4 (<a href="https://github.com/phene">Geoffrey Hichborn</a>)</li>
-<li>Add check for CVE-2014-0130</li>
-<li>Add <code>find_by</code>/<code>find_by!</code> to SQLi check for Rails 4</li>
-<li>Do not branch values for <code>+=</code></li>
-<li>Parse most files upfront instead of on demand</li>
-<li>Fix CheckRender with nested render calls (<a href="https://github.com/presidentbeef/brakeman/issues/484">#484</a>)</li>
-<li>Fix detection of <code>:host</code> setting in redirects (<a href="https://github.com/presidentbeef/brakeman/issues/506">#506</a>)</li>
-<li>Ignore more model methods in redirects</li>
-<li>Update to use RubyParser 3.5.0 (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
+<li>Add Code Climate output format (<a href="https://github.com/ABaldwinHunter">Ashley Baldwin-Hunter</a> / <a href="https://github.com/dblandin">Devon Blandin</a> / <a href="https://github.com/presidentbeef/brakeman/pull/759">John Pignata</a> / <a href="https://github.com/mrb">Michael Bernstein</a>)</li>
+<li>Restore minimum Highline version (<a href="https://github.com/kjg">Kevin Glowacz</a>)</li>
+<li>Depend on safe_yaml 1.0 or later (<a href="https://github.com/presidentbeef/brakeman/issues/752">#753</a>)</li>
+<li>Check for session secret in secrets.yml (<a href="https://github.com/presidentbeef/brakeman/issues/760">#760</a>)</li>
+<li>Avoid warning on <code>without_protection: true</code> with hash literal (<a href="https://github.com/presidentbeef/brakeman/issues/769">#769</a>)</li>
+<li>Respect <code>exit_on_warn</code> in config file (<a href="https://github.com/presidentbeef/brakeman/pull/771">#771</a>)</li>
+<li>Avoid outputting false for <code>user_input</code> in JSON</li>
+<li>Iteratively replace variables</li>
+<li>CallIndex improvements</li>
+<li>Improved tests for the Brakeman module (<a href="https://github.com/bethanyr">Bethany Rentz</a>)</li>
+<li>Make sure a <code>before_filter</code> with block is a call (<a href="https://github.com/presidentbeef/brakeman/issues/763">#763</a>)</li>
 </ul>
 
 
-<h3>Improved Default Route Detection</h3>
+<h3>Code Climate Platform</h3>
 
-<p>In addition to Jeff Jarmoc&#8217;s <a href="http://matasano.com/research/AnatomyOfRailsVuln-CVE-2014-0130.pdf">awesome research</a> on CVE-2014-0130, he contributed much-needed improvements to detecting use of <code>:action</code> and <code>*action</code> in routes for Rails 3/4. This may result in more default routes warnings.</p>
+<p>Thanks to the folks at <a href="https://codeclimate.com/">Code Climate</a>, this release adds the ability to run Brakeman as an analysis engine on <a href="https://codeclimate.com/changelog/5653c9b67f7feb0048003051">Code Climate’s platform</a>. You can now run Brakeman as part of Code Climate’s hosted analysis, or on your command line with their open source CLI. Brakeman can be integrated with results from your other favorite static analysis tools, giving you a unified view of issues in your code.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/493">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/758">main changes</a>)</p>
 
-<h3>Multiple Files for Controllers and Models</h3>
+<h3>Dependencies</h3>
 
-<p>(<a href="https://github.com/ptoomey3">Patrick Toomey</a>) contributed improvements which allow Brakeman to process controllers and models which may be defined in multiple files. The changes also improve how Brakeman handles controllers and models inside modules. This may alter some warnings and how some files are processed. Also, controllers and models may be associated with multiple files instead of just one.</p>
+<p>Brakeman 3.1.0 relaxed the <a href="https://github.com/JEG2/highline">Highline</a> dependency (to support Highline 1.7.x and up) and Brakeman 3.1.2 added a dependency on <a href="https://github.com/dtao/safe_yaml">safe_yaml</a> without specifying a minimum version. Both of these changes resulted in some issues if combined with an application that depends on older versions of these libraries.</p>
 
-<p>(changes <a href="https://github.com/presidentbeef/brakeman/pull/492">here</a> and <a href="https://github.com/presidentbeef/brakeman/pull/482">here</a>)</p>
+<p>Highline and safe_yaml now have minimum versions specified.</p>
 
-<h3>Protected Attributes Gem</h3>
+<p>(changes <a href="https://github.com/presidentbeef/brakeman/pull/762">here</a> and <a href="https://github.com/presidentbeef/brakeman/pull/753">here</a>)</p>
 
-<p>Thanks to (<a href="https://github.com/phene">Geoffrey Hichborn</a>), Brakeman will now treat Rails 4 apps which use the <a href="https://github.com/rails/protected_attributes">protected_attributes gem</a> like a Rails 3 app in regards to mass assignment.</p>
+<h3>More Secrets</h3>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/491">changes</a>)</p>
+<p>Production session secrets stored in <code>config/secrets.yml</code> will now raise a warning.</p>
 
-<h3>Check for CVE-2014-0130</h3>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/776">changes</a></p>
 
-<p>Besides warning about more types of default routes in this release, Brakeman will also warn about <a href="https://groups.google.com/d/msg/rubyonrails-security/NkKc7vTW70o/NxW_PDBSG3AJ">CVE-2014-0130</a> explicitly. If the application uses default routes, the warning will be high confidence, otherwise medium. Note Brakeman will categorize this issue as &#8220;Remote Code Execution&#8221;, since <a href="(http://matasano.com/research/AnatomyOfRailsVuln-CVE-2014-0130.pdf">Jeff Jarmoc demonstrated</a> rendering arbitrary files can lead to interpreting those files as ERB.</p>
+<h3>Mass Assignment False Positive</h3>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/502">changes</a>)</p>
+<p>Previously, Brakeman would warn on any mass assignment using <code>without_protection: true</code>. <a href="https://carouselapps.com/2015/11/24/using-brakeman/">This blog post</a> noted Brakeman would even warn if the values for mass assignment were a hash literal. This has been fixed.</p>
 
-<h3>SQL Injection in Find By</h3>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/773">changes</a>)</p>
 
-<p>Rails 4 added the <code>find_by</code>/<code>find_by!</code> methods which just call <code>where(*args).take</code> and are therefore vulnerable to the same issues as <code>where</code>. This release will check these methods for SQL injection now.</p>
+<h3>Harcode Mode in Config</h3>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/504">changes</a>)</p>
+<p>Brakeman now supports turning on &#8220;hardcore mode&#8221; (setting <code>:exit_on_warn: true</code>) in a config file. This causes Brakeman return a non-zero exit code if any warnings are found.</p>
 
-<h3>No Branching for +=</h3>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/774">changes</a>)</p>
 
-<p>Code which used <code>+=</code> heavily in combination with many branches lead to very poor performance. The resulting information from the branches was rarely useful. However, since <code>+=</code> is buidling up a value (as opposed to replacing it), simply ignoring branches does not lose any of the values involved. Thus, the same vulnerabilities should be able to be detected even when losing flow sensitivity for <code>+=</code> assignments. For details, <a href="https://github.com/presidentbeef/brakeman/pull/499">see the changes</a>.</p>
+<h3>JSON Output</h3>
 
-<p>This change has improved processing on some files from over 30 minutes to under 1 second. If some files were processing slowly or had to be ignored previously, consider trying again with this release.</p>
+<p>A refactoring caused some values of <code>user_input</code> in JSON reports to be <code>false</code> instead of <code>nil</code>. This has been corrected.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/499">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/756">changes</a>)</p>
 
-<h3>Parsing Files Upfront</h3>
+<h3>More Variable Replacement</h3>
 
-<p>This release changes when files are parsed. Previously, files were read and parsed as they were processed. Now most files are read and parsed near the beginning of the scan instead. This has allowed for some internal cleanup and easier future changes. However, some bugs were fixed regarding sorting files which may cause warnings to change.</p>
+<p>A long time ago, Brakeman used to do two passes for data flow analysis, just in case one substitution could be replaced with yet another value. The second pass was removed when it turned out not to be that helpful in reality. However, there are some cases where it is helpful. Now Brakeman will attempt substitutions if there are more matches, but with a hard limit of 5 replacements to avoid infinite loops. This will reduce false positives in some situations.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/501/">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/757">changes</a>)</p>
 
-<h3>Nested Renders</h3>
+<h3>CallIndex Improvements</h3>
 
-<p><code>CheckRender</code> had a bug when processing a <code>render</code> call which contained another call to <code>render</code>. This has been fixed.</p>
+<p>Fixed a small bug where <code>params</code> was not a valid target when searching chained methods, as well as making it possible to search for chains beginning with a method call. Additionally, all the tests for CallIndex were broken and not testing anything.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/485">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/766">changes</a>)</p>
 
-<h3>Redirects with Chained Calls</h3>
+<h3>Improved Test Coverage</h3>
 
-<p>The last release added support for checking if a <code>redirect_to</code> argument was setting the <code>:host</code> option. However, it did not work with chained calls like the <a href="https://github.com/presidentbeef/brakeman/issues/506">one reported here</a>. Now it should.</p>
+<p>Thanks to <a href="https://github.com/bethanyr">Bethany Rentz</a>, <a href="https://codeclimate.com/github/presidentbeef/brakeman/coverage">test coverage</a> was nudged up over 90%. Plenty of low-hanging fruit remains, <a href="https://github.com/presidentbeef/brakeman/issues/723">see this issue</a> for suggestions of how to contribute!</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/507">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/735">changes</a>)</p>
 
-<h3>Redirects to Models</h3>
+<h3>Brakeman Pro</h3>
 
-<p>More Rails 4 methods have been added and support for chained methods has been improved to prevent false positives when redirecting to a model instance.</p>
+<p>Another small announcement: the first public release of <a href="http://brakemanscanner.org/brakeman_pro/">Brakeman Pro</a> (the commercial version of Brakeman) is now available for purchase. If you are looking to financially support development of Brakeman, would like paid support, need a commercial license, or just want a slick GUI, consider checking out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/489">changes</a>)</p>
-
-<h3>RubyParser Upgrade</h3>
-
-<p>The RubyParser dependency has been upgraded to 3.5.0 for Ruby 2.1 support. There are some issues with newlines and line number accuracy in newer versions (it is better for some code and worse for others) which has prevented further upgrades at the moment.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/497">changes</a>)</p>
+<p>For some clarification regarding the future of Brakeman and Brakeman Pro, please see <a href="http://librelist.com/browser//brakeman/2015/2/24/future-of-brakeman/">this email from earlier in the year</a>.</p>
 
 <h3>SHAs</h3>
 
-<p>The SHA1 sums for this release are</p>
+<p>The SHA256 sums for this release are</p>
 
-<pre><code>0aae141108d92040f3553557a31ad117ac1c2ea6  brakeman-2.6.0.gem
-70c2353f31d4d04ba8d95c871062db31d5c6e981  brakeman-min-2.6.0.gem
+<pre><code>57b0edcc289eb74359d2042a38ea519f96f606c89dc879e5fb53971d3d656707  brakeman-3.1.3.gem
+85473af3a55c440959ea91f94fe14177ac58aa35b44fbb007c93cd742803eae6  brakeman-min-3.1.3.gem
 </code></pre>
 
 <h3>Reporting Issues</h3>
 
+<p>Thank you to everyone who reported bugs and contributed improvements in this release.</p>
+
 <p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
 
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter, joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>, or hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a>.</p>
 </div>
 
 
@@ -237,7 +233,7 @@
 
 
 
-<time datetime="2014-06-06 09:04:00 -0700" pubdate  updated >Jun 6<span>th</span>, 2014</time>
+<time datetime="2015-12-02 09:23:00 -0800" pubdate  updated >Dec 2<span>nd</span>, 2015</time>
 
 
 
@@ -248,7 +244,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2014/06/06/brakeman-2-dot-6-0-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2014/06/06/brakeman-2-dot-6-0-released/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2015/12/02/brakeman-3-dot-1-3-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2015/12/02/brakeman-3-dot-1-3-released/" >Tweet</a>
   
   
   <g:plusone size="medium"></g:plusone>
@@ -264,8 +260,8 @@
     <div id="disqus_thread"><div id="disqus_thread"></div>
 <script type="text/javascript">
   var disqus_shortname = 'brakeman';
-  var disqus_identifier = 'http://brakemanscanner.org/blog/2014/06/06/brakeman-2-dot-6-0-released/';
-  var disqus_url = 'http://brakemanscanner.org/blog/2014/06/06/brakeman-2-dot-6-0-released/';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2015/12/02/brakeman-3-dot-1-3-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2015/12/02/brakeman-3-dot-1-3-released/';
   //var disqus_developer = 1;
   (function() {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

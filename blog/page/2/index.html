@@ -94,7 +94,7 @@
   <li><a href="/docs/contributing">Contributing</a></li>
   <li><a href="/brakeman_users">Users</a></li>
   <li><a href="/contact">Contact</a></li>
-  <li><a href="/brakeman_pro">Pro</a></li>
+  <li><a href="/brakeman_pro">Support</a></li>
 </ul>
 
 </nav>
@@ -102,6 +102,104 @@
     <div id="content">
       <div class="blog-index">
 
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2014/10/13/brakeman-2-dot-6-3-released/">Brakeman 2.6.3 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2014-10-13 16:03:00 -0700" pubdate  updated >Oct 13<span>th</span>, 2014</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is mostly a bug fix release, but does include new support for optional checks along with an optional check for unscoped calls to <code>find</code>.</p>
+
+<p><em>Changes since 2.6.2</em>:</p>
+
+<ul>
+<li>Add framework for optional checks</li>
+<li>Add optional check for unscoped find queries (<a href="https://github.com/mastahyeti">Ben Toews</a>)</li>
+<li>Fix stack overflow for cycles in class ancestors (<a href="https://github.com/jeffrafter">Jeff Rafter</a>)</li>
+<li>Fix stack overflow in <code>ProcessHelper#class_name</code> (<a href="https://github.com/presidentbeef/brakeman/issues/553">#553</a>)</li>
+<li>Whitelist <code>exists</code> arel method from SQL injection check</li>
+<li>Avoid warning about Symbol DoS on safe parameters as method targets</li>
+</ul>
+
+
+<h3>Optional Checks</h3>
+
+<p>Brakeman now supports loading checks that are not run by default. These &#8220;nondefault&#8221; checks may have high false positive rates or introduce significant slowdowns. Optional checks should be treated as experimental and may experience more breaking changes than default checks.</p>
+
+<p>To run <em>all</em> checks, use <code>-A</code>. To list only the optional checks, try <code>--optional-checks</code>. Optional checks are also listed in <code>--checks</code>. As usual, checks may be specified using <code>-t</code> or <code>--test</code>. At this time there is no way to easily run the default checks plus some optional checks.</p>
+
+<p>On the code side, optional checks are the same except <code>Brakeman::Checks.add self</code> becomes <code>Brakeman::Checks.add_optional self</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/555">changes</a>)</p>
+
+<h3>Unscoped Queries</h3>
+
+<p>The first optional check to be added to Brakeman comes from <a href="https://github.com/mastahyeti">Ben Toews</a>. This check looks for calls to <code>find</code> (or similar methods) directly on models that have a <code>belongs_to</code> relationship.</p>
+
+<p>As this is an optional check, use <code>-A</code> to include it in a scan or <code>-t UnscopedFind</code> to run it by itself.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/469">changes</a>)</p>
+
+<h3>Fix Loops in Class Ancestors</h3>
+
+<p><a href="https://github.com/jeffrafter">Jeff Rafter</a> added a fix for stack overflows (infinite loops) when a class has (or appears to have) a cycle in its superclasses.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/543">changes</a>)</p>
+
+<h3>Fix Stack Overflow</h3>
+
+<p>This release fixes an issue with another infinite loop when looking up the class name in a self-referential variable name, which comes up in some situations. Fixing this bug also fixed some XSS false positives for safe model attribute methods (like <code>id</code>) but unfortunately also revealed some dynamic render false positives.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/560">changes</a>)</p>
+
+<h3>Whitelist Arel Method</h3>
+
+<p>Brakeman does not warn on most uses of Arel, but was warning about SQL injection from the <code>exists</code> method.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/566">changes</a>)</p>
+
+<h3>Less Symbol DoS</h3>
+
+<p>Brakeman should no longer warn about Symbol DoS when symbolizing <code>params[:controller]</code> and <code>params[:action]</code> even when there are intermediate method calls, like <code>params[:action].to_s.to_sym</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/564">changes</a>)</p>
+
+<h3>SHAs</h3>
+
+<p>The SHA1 sums for this release are</p>
+
+<pre><code>ceb689e3a6efd7e28483828de3441ec1fad501c1  brakeman-2.6.3.gem
+334a7820c05bfeb31e0e9d8123f45daef64eb102  brakeman-min-2.6.3.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
+</div>
+  
+  
+
+
+  </article>
 
 
   <article>
@@ -1104,68 +1202,6 @@ Test.find_by_sql(query)
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2013/12/12/brakeman-2-dot-3-1-released/">Brakeman 2.3.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2013-12-12 23:24:00 -0800" pubdate  updated >Dec 12<span>th</span>, 2013</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Two minor bugs were fixed in this release. Please see the <a href="http://brakemanscanner.org/blog/2013/12/11/brakeman-2-dot-3-0-released/">2.3.0 release post</a> if you are upgrading from an earlier version.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/415">changes</a>)</p>
-
-<p><em>Changes since 2.3.0</em>:</p>
-
-<ul>
-<li>Fix check for CVE-2013-4491 (i18n XSS) to detect workaround</li>
-<li>Fix link for CVE-2013-6415 (number_to_currency)</li>
-</ul>
-
-
-<h3>i18n XSS Workaround</h3>
-
-<p>Brakeman 2.3.0 included a check for the <a href="https://groups.google.com/d/msg/ruby-security-ann/pLrh6DUw998/bLFEyIO4k_EJ">official i18n XSS workaround</a>, but it was commented out during testing and unfortunately left that way.</p>
-
-<h3>CVE-2013-6415 Link</h3>
-
-<p>The link provided for <a href="https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ">CVE-2013-6415</a> in Brakeman 2.3.0 was copy-pasted from an older check. This has been fixed.</p>
-
-<h3>SHAs</h3>
-
-<p>The SHA sums for this release are</p>
-
-<pre><code>469b209a4c72f5a1133d696575caeee1675837e7  brakeman-2.3.1.gem
-827e1cdefba543f59ed5070aaa3f587d8c7d9513  brakeman-min-2.3.1.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1218,6 +1254,10 @@ Test.find_by_sql(query)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/02/brakeman-3-dot-1-3-released/">Brakeman 3.1.3 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/10/28/brakeman-3-dot-1-2-released/">Brakeman 3.1.2 Released</a>
       </li>
     
@@ -1231,10 +1271,6 @@ Test.find_by_sql(query)
     
       <li class="post">
         <a href="/blog/2015/06/19/brakeman-3-dot-0-5-released/">Brakeman 3.0.5 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/06/18/brakeman-3-dot-0-4-released/">Brakeman 3.0.4 Released</a>
       </li>
     
   </ul>

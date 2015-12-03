@@ -94,7 +94,7 @@
   <li><a href="/docs/contributing">Contributing</a></li>
   <li><a href="/brakeman_users">Users</a></li>
   <li><a href="/contact">Contact</a></li>
-  <li><a href="/brakeman_pro">Pro</a></li>
+  <li><a href="/brakeman_pro">Support</a></li>
 </ul>
 
 </nav>
@@ -102,6 +102,68 @@
     <div id="content">
       <div class="blog-index">
 
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2013/12/12/brakeman-2-dot-3-1-released/">Brakeman 2.3.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2013-12-12 23:24:00 -0800" pubdate  updated >Dec 12<span>th</span>, 2013</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Two minor bugs were fixed in this release. Please see the <a href="http://brakemanscanner.org/blog/2013/12/11/brakeman-2-dot-3-0-released/">2.3.0 release post</a> if you are upgrading from an earlier version.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/415">changes</a>)</p>
+
+<p><em>Changes since 2.3.0</em>:</p>
+
+<ul>
+<li>Fix check for CVE-2013-4491 (i18n XSS) to detect workaround</li>
+<li>Fix link for CVE-2013-6415 (number_to_currency)</li>
+</ul>
+
+
+<h3>i18n XSS Workaround</h3>
+
+<p>Brakeman 2.3.0 included a check for the <a href="https://groups.google.com/d/msg/ruby-security-ann/pLrh6DUw998/bLFEyIO4k_EJ">official i18n XSS workaround</a>, but it was commented out during testing and unfortunately left that way.</p>
+
+<h3>CVE-2013-6415 Link</h3>
+
+<p>The link provided for <a href="https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ">CVE-2013-6415</a> in Brakeman 2.3.0 was copy-pasted from an older check. This has been fixed.</p>
+
+<h3>SHAs</h3>
+
+<p>The SHA sums for this release are</p>
+
+<pre><code>469b209a4c72f5a1133d696575caeee1675837e7  brakeman-2.3.1.gem
+827e1cdefba543f59ed5070aaa3f587d8c7d9513  brakeman-min-2.3.1.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
 
 
   <article>
@@ -1300,118 +1362,6 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2013/02/13/brakeman-1-dot-9-2-released/">Brakeman 1.9.2 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2013-02-13 15:48:00 -0800" pubdate  updated >Feb 13<span>th</span>, 2013</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This release is almost entirely enhancements to old checks or new checks for recent vulnerabilities. New features in the next release, I promise.</p>
-
-<p><em>Changes since 1.9.1</em>:</p>
-
-<ul>
-<li>Add check for CVE-2013-0269</li>
-<li>Add check for CVE-2013-0276</li>
-<li>Add check for CVE-2013-0277</li>
-<li>Add check for CVE-2013-0333</li>
-<li>Check for more send-like methods (<a href="https://github.com/joernchen">joernchen</a>)</li>
-<li>Check for more SQL injection locations</li>
-<li>Check for more dangerous YAML methods (<a href="https://github.com/presidentbeef/brakeman/issues/246">#246</a>)</li>
-<li>Support MultiJSON 1.2 for Rails 3.0 and 3.1 (<a href="https://github.com/presidentbeef/brakeman/issues/247">#247</a>)</li>
-</ul>
-
-
-<h3>CVE-2013-0269 - Vulnerabilities in JSON gems</h3>
-
-<p><a href="https://groups.google.com/d/topic/rubyonrails-security/4_YvCpLzL58/discussion">CVE-2013-0269</a> is not strictly a Rails issue, but since it was announced on the Rails security list and was relatively easy to check, Brakeman will warn on it.</p>
-
-<p>Versions of the json/json_pure gem on the 1.7.x branch will raise remote code execution warnings, while any other affected version will be reported as a denial of service vulnerability.</p>
-
-<p>Applications which do not parse user input are not affected by these issues, but it is a good idea to upgrade anyway, as it should be relatively painless.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/262">changes</a>)</p>
-
-<h3>CVE-2013-0276 - attr_protected Bypass</h3>
-
-<p>Brakeman has been warning on uses of <code>attr_protected</code> since version 1.4.0, but it was reported with weak confidence, since it is really a best-practice issue.</p>
-
-<p>Now, however, uses of <code>attr_protected</code> will be reported as medium confidence unless used in a Rails version affected by <a href="https://groups.google.com/d/topic/rubyonrails-security/AFBKNY7VSH8/discussion">CVE-2013-0276</a>, in which case it will be high confidence.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/262">changes</a>)</p>
-
-<h3>CVE-2013-0277 - Serialized Attributes</h3>
-
-<p><a href="https://groups.google.com/d/topic/rubyonrails-security/KtmwSbEpzrU/discussion">CVE-2013-0277</a> allows attackers to insert malicious YAML into serialized model attributes. Using <code>attr_accessible</code> or <code>attr_protected</code> somewhat mitigates this, but it is still possible for an application to manually assign user input to a serialized attribute.</p>
-
-<p>Brakeman will warn on affected models, with confidence level depending on whether or not the attribute can be mass assigned.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/262">changes</a>)</p>
-
-<h3>CVE-2013-0333 - JSON Parsing Vulnerability</h3>
-
-<p><a href="https://groups.google.com/d/topic/rubyonrails-security/1h2DR63ViGo/discussion">CVE-2013-0333</a> is another side effect of the recent YAML vulnerabilities. Rails&#8217; default JSON request parser converted requests to YAML then parsed them as YAML.</p>
-
-<p>Brakeman will warn on affected versions unless the provided workaround (setting the JSON backend to <code>JSONGem</code>) is present.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/254">changes</a>)</p>
-
-<h3>Check for More Send-like Methods</h3>
-
-<p>Thanks to joernchen, Brakeman will now warn if user input is passed to <code>try</code>, <code>public_send</code>, or <code>__send__</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/256">changes</a>)</p>
-
-<h3>Check for More SQL Injection Sites</h3>
-
-<p>While researching for <a href="http://rails-sqli.org/">rails-sqli.org</a>, a few more methods came up for Brakeman to check.</p>
-
-<p>Brakeman will now warn on SQL injection in <code>update_all</code> and <code>pluck</code> methods.</p>
-
-<h3>Check for More Dangerous YAML Methods</h3>
-
-<p>Brakeman will now warn on dangerous uses of <code>load_documents</code>, <code>load_stream</code>, <code>parse_documents</code>, and <code>parse_stream</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/249">changes</a>)</p>
-
-<h3>Support MultiJSON 1.2</h3>
-
-<p>The MultiJSON gem changed some APIs around version 1.3. For convenience, Brakeman supported 1.3 or higher. However, for the same reason, Rails 3.0 and 3.1 are locked at versions before 1.3.</p>
-
-<p>For those using Rails 3.0 or 3.1 and including Brakeman in the Gemfile, Brakeman now supports both the old and new interfaces for MultiJSON and the depedency has been pushed back to MultiJSON 1.2.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/248">changes</a>)</p>
-
-<h3>Report Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-
-<p>Finally, please check out <a href="http://rails-sqli.org/">rails-sqli.org</a> and send in any feedback. Thanks!</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1464,6 +1414,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/02/brakeman-3-dot-1-3-released/">Brakeman 3.1.3 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/10/28/brakeman-3-dot-1-2-released/">Brakeman 3.1.2 Released</a>
       </li>
     
@@ -1477,10 +1431,6 @@ end
     
       <li class="post">
         <a href="/blog/2015/06/19/brakeman-3-dot-0-5-released/">Brakeman 3.0.5 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/06/18/brakeman-3-dot-0-4-released/">Brakeman 3.0.4 Released</a>
       </li>
     
   </ul>
