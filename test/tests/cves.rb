@@ -162,4 +162,13 @@ class CVETests < Test::Unit::TestCase
     assert_fixed 0
     assert_version "3.2.9.rc2"
   end
+
+  def test_ignored_secrets_yml
+    before_rescan_of [".gitignore", "config/secrets.yml"], "rails4" do
+      append ".gitignore", "\nconfig/secrets.yml"
+    end
+
+    assert_new 0
+    assert_fixed 1
+  end
 end
