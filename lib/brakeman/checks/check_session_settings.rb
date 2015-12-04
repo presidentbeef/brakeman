@@ -113,6 +113,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
 
     if @app_tree.exists? secrets_file
       yaml = @app_tree.read secrets_file
+      require 'date' # https://github.com/dtao/safe_yaml/issues/80
       require 'safe_yaml/load'
       secrets = SafeYAML.load yaml
 
