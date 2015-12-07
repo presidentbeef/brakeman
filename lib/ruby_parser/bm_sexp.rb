@@ -412,13 +412,13 @@ class Sexp
   #    s(:lasgn, :x, s(:lit, 1))
   #               ^--lhs
   def lhs
-    expect *ASSIGNMENT_BOOL
+    expect(*ASSIGNMENT_BOOL)
     self[1]
   end
 
   #Sets the left hand side of assignment or boolean.
   def lhs= exp
-    expect *ASSIGNMENT_BOOL
+    expect(*ASSIGNMENT_BOOL)
     @my_hash_value = nil
     self[1] = exp
   end
