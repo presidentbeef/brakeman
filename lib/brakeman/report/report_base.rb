@@ -142,17 +142,17 @@ class Brakeman::Report::Base
       w = warning.to_row type
 
       case type
-        when :warning
-          convert_warning w, warning
-        when :template
-          convert_template_warning w, warning
-        when :model
-          convert_model_warning w, warning
-        when :controller
-          convert_controller_warning w, warning
-        when :ignored
-          convert_ignored_warning w, warning
-        end
+      when :warning
+        convert_warning w, warning
+      when :template
+        convert_template_warning w, warning
+      when :model
+        convert_model_warning w, warning
+      when :controller
+        convert_controller_warning w, warning
+      when :ignored
+        convert_ignored_warning w, warning
+      end
     end
   end
 
