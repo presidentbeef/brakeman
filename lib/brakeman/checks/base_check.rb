@@ -348,7 +348,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       if @safe_input_attributes.include? method
         false
       elsif call? target and not method.to_s[-1,1] == "?"
-        if res = has_immediate_model?(target, out)
+        if has_immediate_model?(target, out)
           exp
         else
           false

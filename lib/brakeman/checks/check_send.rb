@@ -22,7 +22,7 @@ class Brakeman::CheckSend < Brakeman::BaseCheck
 
     send_call = get_send result[:call]
     process_call_args send_call
-    target = process send_call.target
+    process send_call.target
 
     if input = has_immediate_user_input?(send_call.first_arg)
       warn :result => result,
