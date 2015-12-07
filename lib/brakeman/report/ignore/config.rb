@@ -119,7 +119,7 @@ module Brakeman
       @already_ignored.each do |w|
         fingerprint = w[:fingerprint]
 
-        unless @ignored_warnings.find { |w| w.fingerprint == fingerprint }
+        unless @ignored_warnings.find { |ignored_warning| ignored_warning.fingerprint == fingerprint }
           warnings << w
         end
       end
