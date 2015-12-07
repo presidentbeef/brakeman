@@ -60,11 +60,11 @@ module Brakeman
     end
 
     def each &block
-      @path.each &block
+      @path.each(&block)
     end
 
     def join *args
-      self.to_a.join *args
+      self.to_a.join(*args)
     end
 
     def length
