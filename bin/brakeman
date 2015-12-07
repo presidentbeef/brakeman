@@ -12,7 +12,7 @@ begin
 rescue OptionParser::ParseError => e
   $stderr.puts e.message.capitalize
   $stderr.puts "Please see `brakeman --help` for valid options"
-  exit -1
+  exit(-1)
 end
 
 #Exit early for these options
