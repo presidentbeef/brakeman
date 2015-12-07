@@ -43,12 +43,12 @@ module Brakeman
     end
 
     def exists?(path)
-      File.exists?(File.join(@root, path))
+      File.exist?(File.join(@root, path))
     end
 
     # This is a pair for #read_path. Again, would like to kill these
     def path_exists?(path)
-      File.exists?(path)
+      File.exist?(path)
     end
 
     def initializer_paths
