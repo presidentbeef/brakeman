@@ -27,6 +27,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     @helper_method_cache = {}
     @helper_method_info = Hash.new({})
     @or_depth_limit = (tracker && tracker.options[:branch_limit]) || 5 #arbitrary default
+    @meth_env = nil
     set_env_defaults
   end
 
@@ -63,7 +64,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
 
     result = replace(exp)
-  
+
     @exp_context.pop
 
     result

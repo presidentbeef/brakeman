@@ -13,6 +13,8 @@ module Brakeman
       @rails = {}
       @gems = {}
       @settings = {}
+      @escape_html = nil
+      @erubis = nil
     end
 
     def allow_forgery_protection?
