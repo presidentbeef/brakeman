@@ -2,7 +2,6 @@
 #and some changes for caching hash value and tracking 'original' line number
 #of a Sexp.
 class Sexp
-  attr_reader :paren
   attr_accessor :original_line, :or_depth
   ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cvasgn, :cdecl, :or, :and, :colon2]
 
