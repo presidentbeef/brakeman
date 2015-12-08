@@ -5,6 +5,11 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
 
   @description = "Checks for number helpers XSS vulnerabilities in certain versions"
 
+  def initialize(*)
+    super
+    @found_any = false
+  end
+
   def run_check
     if version_between? "2.0.0", "2.3.18" or
       version_between? "3.0.0", "3.2.16" or
@@ -35,7 +40,7 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
   end
 
   def check_number_helper_usage
-    number_methods = [:number_to_currency, :number_to_percentage, :number_to_human] 
+    number_methods = [:number_to_currency, :number_to_percentage, :number_to_human]
     tracker.find_call(:target => false, :methods => number_methods).each do |result|
       arg = result[:call].second_arg
       next unless arg

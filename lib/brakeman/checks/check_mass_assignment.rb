@@ -9,6 +9,11 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
 
   @description = "Finds instances of mass assignment"
 
+  def initialize(*)
+    super
+    @mass_assign_calls = nil
+  end
+
   def run_check
     check_mass_assignment
     check_permit!

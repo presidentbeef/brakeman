@@ -2,7 +2,6 @@
 #and some changes for caching hash value and tracking 'original' line number
 #of a Sexp.
 class Sexp
-  attr_reader :paren
   attr_accessor :original_line, :or_depth
   ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cvasgn, :cdecl, :or, :and, :colon2]
 
@@ -412,13 +411,13 @@ class Sexp
   #    s(:lasgn, :x, s(:lit, 1))
   #               ^--lhs
   def lhs
-    expect *ASSIGNMENT_BOOL
+    expect(*ASSIGNMENT_BOOL)
     self[1]
   end
 
   #Sets the left hand side of assignment or boolean.
   def lhs= exp
-    expect *ASSIGNMENT_BOOL
+    expect(*ASSIGNMENT_BOOL)
     @my_hash_value = nil
     self[1] = exp
   end

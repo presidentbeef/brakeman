@@ -262,15 +262,15 @@ module Brakeman
       task_path = File.join("lib", "tasks", "brakeman.rake")
     end
 
-    if not File.exists? rake_path
+    if not File.exist? rake_path
       raise RakeInstallError, "No Rakefile detected"
-    elsif File.exists? task_path
+    elsif File.exist? task_path
       raise RakeInstallError, "Task already exists"
     end
 
     require 'fileutils'
 
-    if not File.exists? "lib/tasks"
+    if not File.exist? "lib/tasks"
       notify "Creating lib/tasks"
       FileUtils.mkdir_p "lib/tasks"
     end
@@ -279,7 +279,7 @@ module Brakeman
 
     FileUtils.cp "#{path}/brakeman/brakeman.rake", task_path
 
-    if File.exists? task_path
+    if File.exist? task_path
       notify "Task created in #{task_path}"
       notify "Usage: rake brakeman:run[output_file]"
     else
@@ -407,7 +407,7 @@ module Brakeman
   def self.compare options
     require 'multi_json'
     require 'brakeman/differ'
-    raise ArgumentError.new("Comparison file doesn't exist") unless File.exists? options[:previous_results_json]
+    raise ArgumentError.new("Comparison file doesn't exist") unless File.exist? options[:previous_results_json]
 
     begin
       previous_results = MultiJson.load(File.read(options[:previous_results_json]), :symbolize_keys => true)[:warnings]
@@ -431,7 +431,7 @@ module Brakeman
     rescue LoadError => e
       $stderr.puts e.message
       $stderr.puts "Please install the appropriate dependency: #{name}."
-      exit! -1
+      exit!(-1)
     end
   end
 

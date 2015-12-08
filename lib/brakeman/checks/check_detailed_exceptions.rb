@@ -25,12 +25,12 @@ class Brakeman::CheckDetailedExceptions < Brakeman::BaseCheck
 
   def check_detailed_exceptions
     tracker.controllers.each do |name, controller|
-      controller.methods_public.each do |name, definition|
+      controller.methods_public.each do |method_name, definition|
         src = definition[:src]
         body = src.body.last
         next unless body
 
-        if name == :show_detailed_exceptions? and not safe? body
+        if method_name == :show_detailed_exceptions? and not safe? body
           if true? body
             confidence = CONFIDENCE[:high]
           else
