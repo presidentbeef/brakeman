@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'safe_yaml/load'
 require 'set'
 
 module Brakeman
@@ -93,6 +92,8 @@ module Brakeman
 
     #Load configuration file
     if config = config_file(custom_location, app_path)
+      require 'date' # https://github.com/dtao/safe_yaml/issues/80
+      require 'safe_yaml/load'
       options = SafeYAML.load_file config, :deserialize_symbols => true
 
       if options
@@ -289,6 +290,7 @@ module Brakeman
 
   #Output configuration to YAML
   def self.dump_config options
+    require 'yaml'
     if options[:create_config].is_a? String
       file = options[:create_config]
     else
