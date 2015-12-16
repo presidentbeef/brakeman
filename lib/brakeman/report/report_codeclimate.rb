@@ -19,6 +19,7 @@ class Brakeman::Report::CodeClimate < Brakeman::Report::Base
       type: "Issue",
       check_name: warning_code_name,
       description: warning.message,
+      fingerprint: warning.fingerprint,
       categories: ["Security"],
       severity: severity_level_for(warning.confidence),
       remediation_points: remediation_points_for(warning_code_name),
