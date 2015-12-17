@@ -5,8 +5,8 @@ class TestCodeClimateOutput < Test::Unit::TestCase
   end
 
   def test_for_expected_keys
-    expected = ["type", "check_name", "description", "categories", "severity",
-                "remediation_points", "location", "content"]
+    expected = ["type", "check_name", "description", "fingerprint", "categories",
+                "severity", "remediation_points", "location", "content"]
 
     @@issues.each do |issue|
       assert (issue.keys - expected).empty?
