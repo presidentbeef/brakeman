@@ -263,6 +263,10 @@
         <lastmod>2015-12-03T09:34:41-08:00</lastmod>
     </url>
     <url>
+        <loc>http://brakemanscanner.org/blog/2015/12/22/brakeman-3-dot-1-4-released/</loc>
+        <lastmod>2015-12-22T09:45:15-08:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/contact/</loc>
         <lastmod>2012-07-19T10:20:00-07:00</lastmod>
     </url>
@@ -272,7 +276,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/blog/archives/</loc>
-        <lastmod>2015-12-03T09:34:41-08:00</lastmod>
+        <lastmod>2015-12-22T09:45:15-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/content_license/</loc>
@@ -528,6 +532,6 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/</loc>
-        <lastmod>2015-12-03T09:34:41-08:00</lastmod>
+        <lastmod>2015-12-22T09:45:15-08:00</lastmod>
     </url>
 </urlset>
