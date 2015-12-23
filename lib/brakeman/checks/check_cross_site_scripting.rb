@@ -310,7 +310,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
     if tracker.config.escape_html_entities_in_json?
         json_escape_on = true
-    elsif version_between? "4.0.0", "5.0.0"
+    elsif version_between? "4.0.0", "9.9.9"
       json_escape_on = true
     end
 

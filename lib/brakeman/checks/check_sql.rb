@@ -59,7 +59,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         call = make_call(nil, :named_scope, args).line(args.line)
         scope_calls << scope_call_hash(call, name, :named_scope)
       end
-    elsif version_between?("3.1.0", "4.9.9")
+    elsif version_between?("3.1.0", "9.9.9")
       ar_scope_calls(:scope) do |name, args|
         second_arg = args[2]
         next unless sexp? second_arg
