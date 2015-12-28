@@ -834,6 +834,19 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :id))
   end
 
+  def test_cross_site_scripting_in_comparison_false_positive
+    assert_no_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "70f4d1c73e97cdcc0581309169cf59bde767f9f02666421ae9f3b22604f8c37f",
+      :warning_type => "Cross Site Scripting",
+      :line => 18,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/users/index.html.erb",
+      :code => s(:call, s(:call, s(:call, nil, :params), :[], s(:lit, :x)), :==, s(:lit, 1)),
+      :user_input => nil
+  end
+
   def test_sql_injection_in_chained_string_building
     assert_warning :type => :warning,
       :warning_code => 0,
@@ -1101,6 +1114,20 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/controllers/users_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+
+  def test_unsafe_reflection_comparison_false_positive
+    assert_no_warning :type => :warning,
+      :warning_code => 24,
+      :fingerprint => "df957ee4f94d5c14f0ad24eb4b185b274721ac5edd72addd6ed54cf10a4c11bb",
+      :warning_type => "Remote Code Execution",
+      :line => 90,
+      :message => /^Unsafe\ reflection\ method\ constantize\ cal/,
+      :confidence => 1,
+      :relative_path => "app/controllers/friendly_controller.rb",
+      :code => s(:call, s(:iter, s(:call, s(:array, s(:str, "Post"), s(:str, "Comments")), :detect), s(:args, :k), s(:call, s(:lvar, :k), :==, s(:call, s(:params), :[], s(:lit, :a)))), :constantize),
+      :user_input => s(:call, s(:params), :[], s(:lit, :a))
   end
 
   def test_sql_injection_CVE_2013_6417

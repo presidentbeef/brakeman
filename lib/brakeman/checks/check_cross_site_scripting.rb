@@ -281,7 +281,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   end
 
   def setup
-    @ignore_methods = Set[:button_to, :check_box, :content_tag, :escapeHTML, :escape_once,
+    @ignore_methods = Set[:==, :!=, :button_to, :check_box, :content_tag, :escapeHTML, :escape_once,
                            :field_field, :fields_for, :h, :hidden_field,
                            :hidden_field, :hidden_field_tag, :image_tag, :label,
                            :link_to, :mail_to, :radio_button, :select,
@@ -370,7 +370,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   end
 
   def safe_input_attribute? target, method
-    target and @safe_input_attributes.include? method
+    target and always_safe_method? method
   end
 
   def boolean_method? method

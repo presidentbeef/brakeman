@@ -80,4 +80,14 @@ class FriendlyController
     User.where('stuff' => params[:stuff]) # no warning
     User.where(params[:key] => params[:stuff]) # warn
   end
+
+  def whitelistit
+    whitelist = ["Post", "Comments"]
+    whitelisted_class_name = whitelist.detect {|k| k == params[:a]}
+    if whitelisted_class_name.nil?
+      raise "Nope!"
+    else
+      whitelisted_class_name.constantize
+    end
+  end
 end
