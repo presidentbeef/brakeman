@@ -456,7 +456,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/</loc>
-        <lastmod>2014-10-14T08:58:41-07:00</lastmod>
+        <lastmod>2015-12-28T08:36:17-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/sql_injection/</loc>
@@ -513,6 +513,10 @@
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/authentication_whitelist/</loc>
         <lastmod>2013-05-16T19:22:12-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/session_manipulation/</loc>
+        <lastmod>2015-12-28T08:33:34-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/options/</loc>
