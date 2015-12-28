@@ -208,11 +208,11 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
   def process_defs exp
     name = exp.method_name
 
-    if exp[1].node_type == :self
+    if node_type? exp[1], :self
       if @current_class
         target = @current_class.name
       elsif @current_module
-        target = @current_module
+        target = @current_module.name
       else
         target = nil
       end
