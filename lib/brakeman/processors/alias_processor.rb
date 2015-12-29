@@ -212,6 +212,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def process_iter exp
     @exp_context.push exp
     exp[1] = process exp.block_call
+    if array_detect_all_literals? exp[1]
+      return exp.block_call.target[1]
+    end
+
     @exp_context.pop
 
     env.scope do
@@ -521,6 +525,15 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     exp.method == :include? and
     node_type? exp.target, :array and
     exp.target.length > 1 and
+    exp.target.all? { |e| e.is_a? Symbol or node_type? e, :lit, :str }
+  end
+
+  def array_detect_all_literals? exp
+    call? exp and
+    [:detect, :find].include? exp.method and
+    node_type? exp.target, :array and
+    exp.target.length > 1 and
+    exp.first_arg.nil? and
     exp.target.all? { |e| e.is_a? Symbol or node_type? e, :lit, :str }
   end
 
