@@ -35,6 +35,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     @mass_assign_disabled = nil
     @has_user_input = nil
     @safe_input_attributes = Set[:to_i, :to_f, :arel_table, :id]
+    @comparison_ops  = Set[:==, :!=, :>, :<, :>=, :<=]
   end
 
   #Add result to result list, which is used to check for duplicates
@@ -71,12 +72,14 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
   #Process calls and check if they include user input
   def process_call exp
-    process exp.target if sexp? exp.target
-    process_call_args exp
+    unless @comparison_ops.include? exp.method
+      process exp.target if sexp? exp.target
+      process_call_args exp
+    end
 
     target = exp.target
 
-    unless @safe_input_attributes.include? exp.method
+    unless always_safe_method? exp.method
       if params? target
         @has_user_input = Match.new(:params, exp)
       elsif cookies? target
@@ -122,6 +125,11 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   end
 
   private
+
+  def always_safe_method? meth
+    @safe_input_attributes.include? meth or
+      @comparison_ops.include? meth
+  end
 
   #Report a warning
   def warn options
@@ -286,7 +294,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   def has_immediate_user_input? exp
     if exp.nil?
       false
-    elsif call? exp and not @safe_input_attributes.include? exp.method
+    elsif call? exp and not always_safe_method? exp.method
       if params? exp
         return Match.new(:params, exp)
       elsif cookies? exp
@@ -345,7 +353,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       target = exp.target
       method = exp.method
 
-      if @safe_input_attributes.include? method
+      if always_safe_method? method
         false
       elsif call? target and not method.to_s[-1,1] == "?"
         if has_immediate_model?(target, out)
