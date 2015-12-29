@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 2,
       :template => 8,
-      :generic => 75
+      :generic => 77
     }
   end
 
@@ -977,6 +977,41 @@ class Rails4Tests < Test::Unit::TestCase
       :relative_path => "app/controllers/friendly_controller.rb",
       :code => s(:call, s(:const, :User), :where, s(:hash, s(:call, s(:params), :[], s(:lit, :key)), s(:call, s(:params), :[], s(:lit, :stuff)))),
       :user_input => s(:call, s(:params), :[], s(:lit, :key))
+  end
+
+  def test_sql_injection_with_permit
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "195c3ab08dd4b4f11a29afabb704cefe1d8987a9a7690e7c8299900c9e888a94",
+      :warning_type => "SQL Injection",
+      :line => 119,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :User), :find_by, s(:call, s(:params), :permit, s(:lit, :OMG))),
+      :user_input => s(:call, s(:params), :permit, s(:lit, :OMG))
+
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "1f92b0ca5290f5c4de78cfa33a72c2f845604062fa0d5c31f1800111cf191f36",
+      :warning_type => "SQL Injection",
+      :line => 120,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :User), :find_by, s(:call, s(:call, s(:params), :permit, s(:lit, :OMG)), :[], s(:lit, :OMG))),
+      :user_input => s(:call, s(:call, s(:params), :permit, s(:lit, :OMG)), :[], s(:lit, :OMG))
+
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "420d307a7e184dab8298c445acbf12df7cd106d38bc60886d9e2583972f3a6f5",
+      :warning_type => "SQL Injection",
+      :line => 121,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :User), :where, s(:dstr, "", s(:evstr, s(:call, s(:params), :permit, s(:lit, :OMG))))),
+      :user_input => s(:call, s(:params), :permit, s(:lit, :OMG))
   end
  
   def test_format_validation_model_alias_processing

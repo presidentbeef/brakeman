@@ -114,4 +114,10 @@ class UsersController < ApplicationController
   def without
     User.new({username: "jjconti", admin: false}, without_protection: true)
   end
+
+  def permit_in_sql
+    User.find_by(params.permit(:OMG)) # Don't warn
+    User.find_by(params.permit(:OMG)[:OMG]) # Warn
+    User.where("#{params.permit(:OMG)}") # Warn
+  end
 end
