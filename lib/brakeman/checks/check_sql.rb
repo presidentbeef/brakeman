@@ -264,8 +264,10 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     end
 
     if request_value? arg
-      # Model.where(params[:where])
-      arg
+      unless call? arg and params? arg.target and arg.method == :permit
+        # Model.where(params[:where])
+        arg
+      end
     elsif hash? arg
       #This is generally going to be a hash of column names and values, which
       #would escape the values. But the keys _could_ be user input.
