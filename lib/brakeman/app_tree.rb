@@ -134,7 +134,10 @@ module Brakeman
         # relative root never has a leading separator. But, we use a leading
         # separator in a @skip_files entry to imply that a directory is
         # "absolute" with respect to the project directory.
-        project_relative_path = File::SEPARATOR + absolute_path.relative_path_from(project_root).to_s
+        project_relative_path = File.join(
+          File::SEPARATOR,
+          absolute_path.relative_path_from(project_root).to_s
+        )
         @only_files.match(project_relative_path)
       end
     end
@@ -147,7 +150,10 @@ module Brakeman
         # relative root never has a leading separator. But, we use a leading
         # separator in a @skip_files entry to imply that a directory is
         # "absolute" with respect to the project directory.
-        project_relative_path = File::SEPARATOR + absolute_path.relative_path_from(project_root).to_s
+        project_relative_path = File.join(
+          File::SEPARATOR,
+          absolute_path.relative_path_from(project_root).to_s
+        )
         @skip_files.match(project_relative_path)
       end
     end
