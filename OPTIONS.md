@@ -66,7 +66,7 @@ To skip certain files or directories use:
 
     brakeman --skip-files file1,/path1/,path2/
 
-Directories are matched to relative to the root path of your application and must end in a path separator for your platform (ex. `/`). The above invocation would match and skip the following:
+Directories are matched relative to the root path of your application and must end in a path separator for your platform (ex. `/`). The above invocation would match and skip the following:
 
 * Any file named `file1`. Any file that has `file1` as a path component would still be scanned.
 * Any file within `/path1`. Because of the leading `/`, only directories from the application's root directory will match. For example, `/lib/path1/some_path1_file.rb` would still be scanned.
