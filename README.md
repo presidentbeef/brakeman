@@ -82,9 +82,9 @@ By default, Brakeman will return 0 as an exit code unless something went very wr
 
     brakeman -z
 
-To skip certain files that Brakeman may have trouble parsing, use:
+To skip certain files or directories that Brakeman may have trouble parsing, use:
 
-    brakeman --skip-files file1,file2,etc
+    brakeman --skip-files file1,/path1/,path2/
 
 To compare results of a scan with a previous scan, use the JSON output option and then:
 
