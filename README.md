@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/presidentbeef/brakeman.svg?branch=master)](https://travis-ci.org/presidentbeef/brakeman)
 [![Code Climate](https://codeclimate.com/github/presidentbeef/brakeman/badges/gpa.svg)](https://codeclimate.com/github/presidentbeef/brakeman)
 [![Test Coverage](https://codeclimate.com/github/presidentbeef/brakeman/badges/coverage.svg)](https://codeclimate.com/github/presidentbeef/brakeman/coverage)
+[![Gitter](https://badges.gitter.im/presidentbeef/brakeman.svg)](https://gitter.im/presidentbeef/brakeman)
 
 # Brakeman
 
