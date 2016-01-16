@@ -93,91 +93,49 @@ class Brakeman::Checks
   #Run all the checks on the given Tracker.
   #Returns a new instance of Checks with the results.
   def self.run_checks(app_tree, tracker)
-    if tracker.options[:parallel_checks]
-      self.run_checks_parallel(app_tree, tracker)
-    else
-      self.run_checks_sequential(app_tree, tracker)
-    end
-  end
-
-  #Run checks sequentially
-  def self.run_checks_sequential(app_tree, tracker)
+    checks = self.checks_to_run(tracker)
     check_runner = self.new :min_confidence => tracker.options[:min_confidence]
-
-    self.checks_to_run(tracker).each do |c|
-      check_name = get_check_name c
-
-      #Run or don't run check based on options
-      unless tracker.options[:skip_checks].include? check_name or
-        (tracker.options[:run_checks] and not tracker.options[:run_checks].include? check_name)
-
-        Brakeman.notify " - #{check_name}"
-
-        check = c.new(app_tree, tracker)
-
-        begin
-          check.run_check
-        rescue => e
-          tracker.error e
-        end
-
-        check.warnings.each do |w|
-          check_runner.add_warning w
-        end
-
-        #Maintain list of which checks were run
-        #mainly for reporting purposes
-        check_runner.checks_run << check_name[5..-1]
-      end
-    end
-
-    check_runner
+    self.actually_run_checks(checks, check_runner, app_tree, tracker)
   end
 
-  #Run checks in parallel threads
-  def self.run_checks_parallel(app_tree, tracker)
-    threads = []
+  def self.actually_run_checks(checks, check_runner, app_tree, tracker)
+    threads = [] # Results for parallel
+    results = [] # Results for sequential
+    parallel = tracker.options[:parallel_checks]
     error_mutex = Mutex.new
 
-    check_runner = self.new :min_confidence => tracker.options[:min_confidence]
-
-    self.checks_to_run(tracker).each do |c|
+    checks.each do |c|
       check_name = get_check_name c
+      Brakeman.notify " - #{check_name}"
 
-      #Run or don't run check based on options
-      unless tracker.options[:skip_checks].include? check_name or
-        (tracker.options[:run_checks] and not tracker.options[:run_checks].include? check_name)
-
-        Brakeman.notify " - #{check_name}"
-
+      if parallel
         threads << Thread.new do
-          check = c.new(app_tree, tracker)
-
-          begin
-            check.run_check
-          rescue => e
-            error_mutex.synchronize do
-              tracker.error e
-            end
-          end
-
-          check.warnings
+          self.run_a_check(c, error_mutex, app_tree, tracker)
         end
-
-        #Maintain list of which checks were run
-        #mainly for reporting purposes
-        check_runner.checks_run << check_name[5..-1]
+      else
+        results << self.run_a_check(c, error_mutex, app_tree, tracker)
       end
+
+      #Maintain list of which checks were run
+      #mainly for reporting purposes
+      check_runner.checks_run << check_name[5..-1]
     end
 
     threads.each { |t| t.join }
 
     Brakeman.notify "Checks finished, collecting results..."
 
-    #Collect results
-    threads.each do |thread|
-      thread.value.each do |warning|
-        check_runner.add_warning warning
+    if parallel
+      threads.each do |thread|
+        thread.value.each do |warning|
+          check_runner.add_warning warning
+        end
+      end
+    else
+      results.each do |warnings|
+        warnings.each do |warning|
+          check_runner.add_warning warning
+        end
       end
     end
 
@@ -191,11 +149,39 @@ class Brakeman::Checks
   end
 
   def self.checks_to_run tracker
-    if tracker.options[:run_all_checks] or tracker.options[:run_checks]
-      @checks + @optional_checks
-    else
-      @checks
+    to_run = if tracker.options[:run_all_checks] or tracker.options[:run_checks]
+               @checks + @optional_checks
+             else
+               @checks
+             end
+
+    self.filter_checks to_run, tracker
+  end
+
+  def self.filter_checks checks, tracker
+    skipped = tracker.options[:skip_checks]
+    explicit = tracker.options[:run_checks]
+
+    checks.reject do |c|
+      check_name = self.get_check_name(c)
+
+      skipped.include? check_name or
+        (explicit and not explicit.include? check_name)
     end
+  end
+
+  def self.run_a_check klass, mutex, app_tree, tracker
+    check = klass.new(app_tree, tracker)
+
+    begin
+      check.run_check
+    rescue => e
+      error_mutex.synchronize do
+        tracker.error e
+      end
+    end
+
+    check.warnings
   end
 end
 
