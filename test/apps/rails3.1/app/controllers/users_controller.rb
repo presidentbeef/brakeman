@@ -192,4 +192,10 @@ class UsersController < ApplicationController
   def mass_again
     User.new(stuff, :without_protection => true)
   end
+
+  def dynamic_finders
+    User.find_by_name_and_password(params[:name], params[:pass])
+    User.find_by_reset_code(params[:code])
+    Product.find_by_guid(params[:guid].to_s) # No warn
+  end
 end

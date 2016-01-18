@@ -13,7 +13,7 @@ class Rails31Tests < Test::Unit::TestCase
       :model => 3,
       :template => 23,
       :controller => 4,
-      :generic => 82 }
+      :generic => 84 }
   end
 
   def test_without_protection
@@ -1075,6 +1075,30 @@ class Rails31Tests < Test::Unit::TestCase
       :confidence => 1,
       :relative_path => "app/models/user.rb",
       :user_input => s(:call, nil, :table_name_prefix)
+  end
+
+  def test_sql_injection_dynamic_finders
+    assert_warning :type => :warning,
+      :warning_code => 92,
+      :fingerprint => "911d08b750e5c583e0c1fcfffc229f284d10d69a2bb2f78ac068ef44585f8ae1",
+      :warning_type => "SQL Injection",
+      :line => 197,
+      :message => /^MySQL\ integer\ conversion\ may\ cause\ 0\ to\ /,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :User), :find_by_name_and_password, s(:call, s(:params), :[], s(:lit, :name)), s(:call, s(:params), :[], s(:lit, :pass))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :name))
+
+    assert_warning :type => :warning,
+      :warning_code => 92,
+      :fingerprint => "62dce25499ad7885cb6b838c44095707d045c40c474d09e862e82ba206f4837a",
+      :warning_type => "SQL Injection",
+      :line => 198,
+      :message => /^MySQL\ integer\ conversion\ may\ cause\ 0\ to\ /,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :User), :find_by_reset_code, s(:call, s(:params), :[], s(:lit, :code))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :code))
   end
 
   def test_validates_format

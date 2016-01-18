@@ -93,6 +93,7 @@ module Brakeman::WarningCodes
     :session_key_manipulation => 89,
     :weak_hash_digest => 90,
     :weak_hash_hmac => 91,
+    :sql_injection_dynamic_finder => 92,
   }
 
   def self.code name
