@@ -96,7 +96,7 @@ class Brakeman::Scanner
   #
   #Stores parsed information in tracker.config
   def process_config
-    if options[:rails3]
+    if options[:rails3] or options[:rails4] or options[:rails5]
       process_config_file "application.rb"
       process_config_file "environments/production.rb"
     else
@@ -155,8 +155,13 @@ class Brakeman::Scanner
       if @app_tree.exists?("script/rails")
         tracker.options[:rails3] = true
         Brakeman.notify "[Notice] Detected Rails 3 application"
+      elsif @app_tree.exists?("app/channels")
+        tracker.options[:rails3] = true
+        tracker.options[:rails4] = true
+        tracker.options[:rails5] = true
+        Brakeman.notify "[Notice] Detected Rails 5 application"
       elsif not @app_tree.exists?("script")
-        tracker.options[:rails3] = true # Probably need to do some refactoring
+        tracker.options[:rails3] = true
         tracker.options[:rails4] = true
         Brakeman.notify "[Notice] Detected Rails 4 application"
       end

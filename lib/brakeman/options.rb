@@ -52,6 +52,12 @@ module Brakeman::Options
           options[:rails4] = true
         end
 
+        opts.on "-5", "--rails5", "Force Rails 5 mode" do
+          options[:rails3] = true
+          options[:rails4] = true
+          options[:rails5] = true
+        end
+
         opts.separator ""
         opts.separator "Scanning options:"
 
