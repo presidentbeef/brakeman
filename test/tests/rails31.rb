@@ -919,6 +919,18 @@ class Rails31Tests < Test::Unit::TestCase
       :user_input => nil
   end
 
+  def test_denial_of_service_CVE_2016_0751_work_around
+    assert_no_warning :type => :warning,
+      :warning_code => 94,
+      :fingerprint => "5945a9b096557ee5771c2dd12ea6cbec933b662d169e559f524ba01c44bf2452",
+      :warning_type => "Denial of Service",
+      :line => 69,
+      :message => /^Rails\ 3\.1\.0\ is\ vulnerable\ to\ denial\ of\ s/,
+      :confidence => 1,
+      :relative_path => "Gemfile.lock",
+      :user_input => nil
+  end
+
   def test_to_json_with_overwritten_config
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",

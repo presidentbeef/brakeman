@@ -14,7 +14,7 @@ class Rails3Tests < Test::Unit::TestCase
       :controller => 1,
       :model => 9,
       :template => 38,
-      :generic => 73
+      :generic => 74
     }
 
     if RUBY_PLATFORM == 'java'
@@ -1315,6 +1315,18 @@ class Rails3Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_code => 88,
       :fingerprint => "ab42647fbdea61e25c4b794e82a8b315054e2fac4328bb3fd4be6a744889a987",
+      :warning_type => "Denial of Service",
+      :line => 49,
+      :message => /^Rails\ 3\.0\.3\ is\ vulnerable\ to\ denial\ of\ s/,
+      :confidence => 1,
+      :relative_path => "Gemfile.lock",
+      :user_input => nil
+  end
+
+  def test_denial_of_service_CVE_2015_7576
+    assert_warning :type => :warning,
+      :warning_code => 94,
+      :fingerprint => "5945a9b096557ee5771c2dd12ea6cbec933b662d169e559f524ba01c44bf2452",
       :warning_type => "Denial of Service",
       :line => 49,
       :message => /^Rails\ 3\.0\.3\ is\ vulnerable\ to\ denial\ of\ s/,
