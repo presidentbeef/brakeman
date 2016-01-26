@@ -94,6 +94,7 @@ module Brakeman::WarningCodes
     :weak_hash_digest => 90,
     :weak_hash_hmac => 91,
     :sql_injection_dynamic_finder => 92,
+    :CVE_2015_7576 => 93,
   }
 
   def self.code name
