@@ -41,4 +41,6 @@ class User < ActiveRecord::Base
   def self.encrypt_pass password
     Base64.encode64(Digest::MD5.hexdigest(password))
   end
+
+  accepts_nested_attributes_for :something, allow_destroy: false, reject_if: proc { |attributes| stuff }
 end

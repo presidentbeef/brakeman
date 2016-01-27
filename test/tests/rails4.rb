@@ -13,7 +13,7 @@ class Rails4Tests < Test::Unit::TestCase
   def expected
     @expected ||= {
       :controller => 0,
-      :model => 2,
+      :model => 3,
       :template => 8,
       :generic => 78
     }
@@ -1293,6 +1293,18 @@ class Rails4Tests < Test::Unit::TestCase
       :message => /^Rails\ 4\.0\.0\ is\ vulnerable\ to\ denial\ of\ s/,
       :confidence => 1,
       :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_nested_attributes_bypass_CVE_2015_7577
+    assert_warning :type => :model,
+      :warning_code => 95,
+      :fingerprint => "04494b2a7fe6aff45ef9c1d72f4bcce132979a8725e8a3d313d17d5c3411c4d0",
+      :warning_type => "Nested Attributes",
+      :line => 45,
+      :message => /^Rails\ 4\.0\.0\ does\ not\ call\ :reject_if\ opt/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
       :user_input => nil
   end
 

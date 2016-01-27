@@ -307,4 +307,16 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
       :relative_path => "gems.rb",
       :user_input => nil
   end
+
+  def test_nested_attributes_bypass_workaround_CVE_2015_7577
+    assert_no_warning :type => :model,
+      :warning_code => 95,
+      :fingerprint => "2b1b6ac6e2348889ac0e1a7fdf0861dba7af91d794c454f8b4b07e7655a19610",
+      :warning_type => "Nested Attributes",
+      :line => 4,
+      :message => /^Rails\ 4\.0\.0\ does\ not\ call\ :reject_if\ opt/,
+      :confidence => 1,
+      :relative_path => "engines/user_removal/app/models/user.rb",
+      :user_input => nil
+  end
 end

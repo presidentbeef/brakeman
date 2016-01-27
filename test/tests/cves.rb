@@ -189,6 +189,16 @@ class CVETests < Test::Unit::TestCase
 
     assert_new 0
     assert_version "3.2.22.1"
-    assert_no_warning type: :controller, :warning_code => 93
+    assert_no_warning type: :controller, :warning_code => 94
+  end
+
+  def test_CVE_2015_7577
+    before_rescan_of "Gemfile", "rails4" do
+      replace "Gemfile", "rails', '4.0.0'", "rails', '4.2.5.1'"
+    end
+
+    assert_new 0
+    assert_version "4.2.5.1"
+    assert_no_warning type: :model, :warning_code => 95
   end
 end

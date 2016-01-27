@@ -96,6 +96,7 @@ module Brakeman::WarningCodes
     :sql_injection_dynamic_finder => 92,
     :CVE_2015_7576 => 93,
     :CVE_2016_0751 => 94,
+    :CVE_2015_7577 => 95,
   }
 
   def self.code name
