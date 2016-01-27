@@ -2,6 +2,7 @@
 $:.unshift "#{File.expand_path(File.dirname(__FILE__))}/../lib"
 
 require "json"
+require "shellwords"
 
 if File.exist?("/config.json")
   engine_config = JSON.parse(File.read("/config.json"))
@@ -16,7 +17,7 @@ if engine_config["include_paths"]
     path.chop! while path[-1] == "/"
   end
 
-  command += " --only-files " + engine_config["include_paths"].join(",")
+  command += " --only-files " + engine_config["include_paths"].join(",").shellescape
 end
 
 exec command
