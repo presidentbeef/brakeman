@@ -9,7 +9,7 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
       :controller => 1,
       :model => 5,
       :template => 11,
-      :generic => 9 }
+      :generic => 10 }
   end
 
   def report
@@ -288,6 +288,18 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_code => 88,
       :fingerprint => "ea8edcadc48c04a69e0bee3bdb214ce61f7837b46e9c254b61993660653d1ec6",
+      :warning_type => "Denial of Service",
+      :line => 4,
+      :message => /^Rails\ 4\.0\.0\ is\ vulnerable\ to\ denial\ of\ s/,
+      :confidence => 1,
+      :relative_path => "gems.rb",
+      :user_input => nil
+  end
+
+  def test_denial_of_service_CVE_2016_0751
+    assert_warning :type => :warning,
+      :warning_code => 94,
+      :fingerprint => "13138593b5d3af97b9b674220c811229870f418c36717cb3c3df69928264bc95",
       :warning_type => "Denial of Service",
       :line => 4,
       :message => /^Rails\ 4\.0\.0\ is\ vulnerable\ to\ denial\ of\ s/,

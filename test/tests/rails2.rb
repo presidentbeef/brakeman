@@ -1056,6 +1056,19 @@ class Rails2Tests < Test::Unit::TestCase
       :user_input => nil
   end
 
+  def test_mime_type_dos_CVE_2016_0751
+    # Used workaround
+    assert_no_warning :type => :warning,
+      :warning_code => 94,
+      :fingerprint => "dfe71c713bd20a8e1324a38bd89b1667862ba47133fc62c5cc36372dac691a75",
+      :warning_type => "Denial of Service",
+      :line => nil,
+      :message => /^Rails\ 2\.3\.11\ is\ vulnerable\ to\ denial\ of\ /,
+      :confidence => 1,
+      :relative_path => "config/environment.rb",
+      :user_input => nil
+  end
+
   def test_to_json
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",

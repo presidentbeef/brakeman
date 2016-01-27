@@ -181,4 +181,14 @@ class CVETests < Test::Unit::TestCase
     assert_version "3.2.22.1"
     assert_no_warning type: :controller, :warning_code => 93
   end
+
+  def test_CVE_2016_0751
+    before_rescan_of "Gemfile.lock", "rails3.1" do
+      replace "Gemfile.lock", " rails (3.1.0)", " rails (3.2.22.1)"
+    end
+
+    assert_new 0
+    assert_version "3.2.22.1"
+    assert_no_warning type: :controller, :warning_code => 93
+  end
 end

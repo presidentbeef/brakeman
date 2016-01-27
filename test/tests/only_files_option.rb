@@ -9,7 +9,7 @@ class OnlyFilesOptionTests < Test::Unit::TestCase
       :controller => 8,
       :model => 0,
       :template => 1,
-      :generic => 12 }
+      :generic => 13 }
 
     if RUBY_PLATFORM == 'java'
       @expected[:generic] += 1
@@ -140,5 +140,16 @@ class OnlyFilesOptionTests < Test::Unit::TestCase
       :confidence => 1,
       :relative_path => "Gemfile.lock",
       :user_input => nil
+  end
+
+  def test_denial_of_service_CVE_2015_0751
+    assert_warning :type => :warning,
+      :warning_code => 94,
+      :fingerprint => "5945a9b096557ee5771c2dd12ea6cbec933b662d169e559f524ba01c44bf2452",
+      :warning_type => "Denial of Service",
+      :line => 64,
+      :message => /^Rails\ 3\.2\.9\.rc2\ is\ vulnerable\ to\ denial\ /,
+      :confidence => 1,
+      :relative_path => "Gemfile.lock"
   end
 end

@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 2,
       :template => 8,
-      :generic => 77
+      :generic => 78
     }
   end
 
@@ -1276,6 +1276,18 @@ class Rails4Tests < Test::Unit::TestCase
     assert_warning :type => :warning,
       :warning_code => 88,
       :fingerprint => "6ad4464dbb2a999591c7be8346dc137c3372b280f4a8b0c024fef91dfebeeb83",
+      :warning_type => "Denial of Service",
+      :line => 4,
+      :message => /^Rails\ 4\.0\.0\ is\ vulnerable\ to\ denial\ of\ s/,
+      :confidence => 1,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_denial_of_service_CVE_2016_0751
+    assert_warning :type => :warning,
+      :warning_code => 94,
+      :fingerprint => "71fd8de94b502e46add9c8c9fad23096bb26e01e16fc5f23de56e6080e858c4a",
       :warning_type => "Denial of Service",
       :line => 4,
       :message => /^Rails\ 4\.0\.0\ is\ vulnerable\ to\ denial\ of\ s/,
