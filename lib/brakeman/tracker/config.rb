@@ -7,6 +7,7 @@ module Brakeman
     attr_reader :rails, :tracker
     attr_accessor :rails_version
     attr_writer :erubis, :escape_html
+    attr_reader :gems
 
     def initialize tracker
       @tracker = tracker
