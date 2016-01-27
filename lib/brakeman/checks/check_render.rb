@@ -4,7 +4,7 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckRender < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
-  @description = "Finds calls to render that might allow file access"
+  @description = "Finds calls to render that might allow file access or code execution"
 
   def run_check
     tracker.find_call(:target => nil, :method => :render).each do |result|
@@ -17,7 +17,8 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
 
     case result[:call].render_type
     when :partial, :template, :action, :file
-      check_for_dynamic_path result
+      check_for_rce(result) or
+        check_for_dynamic_path(result)
     when :inline
     when :js
     when :json
@@ -57,6 +58,27 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
         :message => message,
         :user_input => input,
         :confidence => confidence
+    end
+  end
+
+  def check_for_rce result
+    return unless version_between? "0.0.0", "3.2.22" or
+                  version_between? "4.0.0", "4.1.14" or
+                  version_between? "4.2.0", "4.2.5"
+
+
+    view = result[:call][2]
+    if sexp? view and not duplicate? result
+      if params? view
+        add_result result
+
+        warn :result => result,
+          :warning_type => "Remote Code Execution",
+          :warning_code => :dynamic_render_path_rce,
+          :message => "Passing query parameters to render() is vulnerable in Rails #{rails_version} (CVE-2016-0752)",
+          :user_input => view,
+          :confidence => CONFIDENCE[:high]
+      end
     end
   end
 end 

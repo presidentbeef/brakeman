@@ -356,25 +356,27 @@ class Rails4Tests < Test::Unit::TestCase
 
   def test_dynamic_render_path_with_before_action
     assert_warning :type => :warning,
-      :warning_code => 15,
-      :fingerprint => "5b2267a68b4bfada283b59bdb9f453489111a5f2c335737588f88135d99426fa",
-      :warning_type => "Dynamic Render Path",
+      :warning_code => 99,
+      :fingerprint => "4b5d8c35b22fbdfbfabfd07343c8466ec941d5b78afbd574cf6ce76c68080c85",
+      :warning_type => "Remote Code Execution",
       :line => 14,
-      :message => /^Render\ path\ contains\ parameter\ value/,
+      :message => /^Passing\ query\ parameters\ to\ render/,
       :confidence => 0,
       :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:render, :action, s(:call, s(:params), :[], s(:lit, :page)), s(:hash)),
       :user_input => s(:call, s(:params), :[], s(:lit, :page))
   end
 
   def test_dynamic_render_path_with_prepend_before_action
     assert_warning :type => :warning,
-      :warning_code => 15,
-      :fingerprint => "fa1ad77b62059d1aeeb48217a94cc03a0109b1f17d8332c0e3a5718360de9a8c",
-      :warning_type => "Dynamic Render Path",
+      :warning_code => 99,
+      :fingerprint => "dd7110db0e7948d5e7047029e73ad570435e62e3ef8f3091eef57e15a11b6654",
+      :warning_type => "Remote Code Execution",
       :line => 19,
-      :message => /^Render\ path\ contains\ parameter\ value/,
+      :message => /^Passing\ query\ parameters\ to\ render/,
       :confidence => 0,
       :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:render, :action, s(:call, s(:params), :[], s(:lit, :page)), s(:hash)),
       :user_input => s(:call, s(:params), :[], s(:lit, :page))
   end
 

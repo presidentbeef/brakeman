@@ -197,7 +197,7 @@ class CVETests < Test::Unit::TestCase
       replace "Gemfile", "rails', '4.0.0'", "rails', '4.2.5.1'"
     end
 
-    assert_new 0
+    assert_new 2 # RCE to Dynamic renders, unrelated
     assert_version "4.2.5.1"
     assert_no_warning type: :model, :warning_code => 95
   end
