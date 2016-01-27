@@ -12,7 +12,7 @@ class Rails31Tests < Test::Unit::TestCase
     @expected ||= {
       :model => 3,
       :template => 23,
-      :controller => 4,
+      :controller => 5,
       :generic => 84 }
   end
 
@@ -903,6 +903,19 @@ class Rails31Tests < Test::Unit::TestCase
       :message => /^Rails\ 3\.1\.0\ is\ vulnerable\ to\ denial\ of\ s/,
       :confidence => 1,
       :relative_path => "Gemfile.lock",
+      :user_input => nil
+  end
+
+  def test_basic_auth_CVE_2015_7576
+    assert_warning :type => :controller,
+      :warning_code => 93,
+      :fingerprint => "331d393d362efd9c1e65526886afdbcc0ffca838e3ad00d5a9920e8920f2a7d7",
+      :warning_type => "Timing Attack",
+      :line => 4,
+      :message => /^Basic\ authentication\ in\ Rails\ 3\.1\.0\ is\ v/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, nil, :http_basic_authenticate_with, s(:hash, s(:lit, :name), s(:str, "superduperadmin"), s(:lit, :password), s(:str, "superdupersecret"), s(:lit, :only), s(:lit, :create))),
       :user_input => nil
   end
 
