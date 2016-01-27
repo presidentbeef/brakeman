@@ -17,12 +17,17 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
         '3.1.12'
       when version_between?('3.2.0', '3.2.12')
         '3.2.13'
-      else
-        return
       end
 
-    check_cve_2013_1855
-    check_cve_2013_1857
+    if @fix_version
+      check_cve_2013_1855
+      check_cve_2013_1857
+    elsif tracker.config.has_gem? :'rails-html-sanitizer' and
+          version_between? "1.0.0", "1.0.2", tracker.config.gem_version(:'rails-html-sanitizer')
+
+      warn_sanitizer_cve "CVE-2015-7578", "https://groups.google.com/d/msg/rubyonrails-security/uh--W4TDwmI/JbvSRpdbFQAJ"
+      warn_sanitizer_cve "CVE-2015-7580", "https://groups.google.com/d/msg/rubyonrails-security/uh--W4TDwmI/m_CVZtdbFQAJ"
+    end
   end
 
   def check_cve_2013_1855
@@ -53,5 +58,22 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
         :confidence => CONFIDENCE[:high],
         :link_path => link
     end
+  end
+
+  def warn_sanitizer_cve cve, link
+    message = "rails-html-sanitizer #{tracker.config.gem_version(:'rails-html-sanitizer')} is vulnerable (#{cve}). Upgrade to 1.0.3"
+
+    if tracker.find_call(:target => false, :method => :sanitize).any?
+      confidence = CONFIDENCE[:high]
+    else
+      confidence = CONFIDENCE[:med]
+    end
+
+    warn :warning_type => "Cross Site Scripting",
+      :warning_code => cve.tr('-', '_').to_sym,
+      :message => message,
+      :gem_info => gemfile_or_environment,
+      :confidence => confidence,
+      :link_path => link
   end
 end

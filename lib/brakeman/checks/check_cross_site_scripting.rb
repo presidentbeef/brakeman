@@ -304,6 +304,12 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       @known_dangerous << :strip_tags
     end
 
+    if tracker.config.has_gem? :'rails-html-sanitizer' and
+       version_between? "1.0.0", "1.0.2", tracker.config.gem_version(:'rails-html-sanitizer')
+
+      @known_dangerous << :sanitize
+    end
+
     json_escape_on = false
     initializers = tracker.check_initializers :ActiveSupport, :escape_html_entities_in_json=
     initializers.each {|result| json_escape_on = true?(result.call.first_arg) }

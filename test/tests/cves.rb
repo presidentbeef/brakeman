@@ -201,4 +201,16 @@ class CVETests < Test::Unit::TestCase
     assert_version "4.2.5.1"
     assert_no_warning type: :model, :warning_code => 95
   end
+
+  def test_sanitize_cves
+    before_rescan_of "Gemfile.lock", "rails5" do
+      replace "Gemfile.lock", "rails-html-sanitizer (1.0.2)", "rails-html-sanitizer (1.0.3)"
+    end
+
+    assert_fixed 3
+    assert_new 1 # XSS goes from high to weak
+    assert_version "1.0.3", :'rails-html-sanitizer'
+    assert_no_warning :warning_code => 96
+    assert_no_warning :warning_code => 97
+  end
 end
