@@ -214,4 +214,14 @@ class CVETests < Test::Unit::TestCase
     assert_no_warning :warning_code => 97
     assert_no_warning :warning_code => 98
   end
+
+  def test_CVE_2015_7581
+    before_rescan_of "Gemfile", "rails4" do
+      replace "Gemfile", "rails', '4.0.0'", "rails', '4.2.5.1'"
+    end
+
+    assert_new 2 # RCE to Dynamic renders, unrelated
+    assert_version "4.2.5.1"
+    assert_no_warning :warning_code => 100
+  end
 end

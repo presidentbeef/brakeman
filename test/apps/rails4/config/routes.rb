@@ -4,6 +4,8 @@ Rails4::Application.routes.draw do
   namespace also_not_a_symbol do
     resource :thing
   end
+
+  get ':controller/stuff/:id/:user_id'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
