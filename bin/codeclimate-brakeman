@@ -2,6 +2,7 @@
 $:.unshift "#{File.expand_path(File.dirname(__FILE__))}/../lib"
 
 require "json"
+require "shellwords"
 
 if File.exist?("/config.json")
   engine_config = JSON.parse(File.read("/config.json"))
@@ -12,7 +13,7 @@ end
 command = "/usr/src/app/bin/brakeman --quiet --format codeclimate"
 
 if engine_config["include_paths"]
-  command += " --only-files " + engine_config["include_paths"].join(",")
+  command += " --only-files " + engine_config["include_paths"].join(",").shellescape
 end
 
 exec command
