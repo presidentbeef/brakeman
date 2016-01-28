@@ -1,3 +1,22 @@
+# 3.1.5
+
+* Fix CodeClimate construction of --only-files (Will Fleming)
+* Add check for denial of service via routes (CVE-2015-7581)
+* Warn about RCE with `render params` (CVE-2016-0752)
+* Add check for `strip_tags` XSS (CVE-2015-7579)
+* Add check for `sanitize` XSS (CVE-2015-7578/80)
+* Add check for `reject_if` proc bypass (CVE-2015-7577)
+* Add check for mime-type denial of service (CVE-2016-0751)
+* Add check for basic auth timing attack (CVE-2015-7576)
+* Add initial Rails 5 support
+* Check for implict integer comparison in dynamic finders
+* Support directories better in --only-files and --skip-files (Patrick Toomey)
+* Avoid warning about `permit` in SQL
+* Handle guards using `detect`
+* Avoid warning on user input in comparisons
+* Handle module names with self methods
+* Add session manipulation documentation
+
 # 3.1.4
 
 * Emit brakeman's native fingerprints for Code Climate engine (Noah Davis)
