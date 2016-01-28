@@ -5,16 +5,21 @@ require 'brakeman/checks/base_check'
 #
 #Check for uses of strip_tags in Rails versions before 2.3.13 and 3.0.10:
 #http://groups.google.com/group/rubyonrails-security/browse_thread/thread/2b9130749b74ea12
+#
+#Check for user of strip_tags with rails-html-sanitizer 1.0.2:
+#https://groups.google.com/d/msg/rubyonrails-security/OU9ugTZcbjc/PjEP46pbFQAJ
 class Brakeman::CheckStripTags < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
-  @description = "Report strip_tags vulnerabilities CVE-2011-2931 and CVE-2012-3465"
+  @description = "Report strip_tags vulnerabilities"
 
   def run_check
     if uses_strip_tags?
       cve_2011_2931
       cve_2012_3465
     end
+
+    cve_2015_7579
   end
 
   def cve_2011_2931
@@ -56,9 +61,29 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
       :link_path => "https://groups.google.com/d/topic/rubyonrails-security/FgVEtBajcTY/discussion"
   end
 
+  def cve_2015_7579
+    if tracker.config.gem_version(:'rails-html-sanitizer') == '1.0.2'
+      if uses_strip_tags?
+        confidence = CONFIDENCE[:high]
+      else
+        confidence = CONFIDENCE[:med]
+      end
+
+      message = "rails-html-sanitizer 1.0.2 is vulnerable (CVE-2015-7579). Upgrade to 1.0.3"
+
+      warn :warning_type => "Cross Site Scripting",
+        :warning_code => :CVE_2015_7579,
+        :message => message,
+        :confidence => confidence,
+        :gem_info => gemfile_or_environment,
+        :link_path => "https://groups.google.com/d/msg/rubyonrails-security/OU9ugTZcbjc/PjEP46pbFQAJ"
+
+    end
+  end
+
   def uses_strip_tags?
     Brakeman.debug "Finding calls to strip_tags()"
 
-    not tracker.find_call(:target => false, :method => :strip_tags).empty?
+    not tracker.find_call(:target => false, :method => :strip_tags, :nested => true).empty?
   end
 end

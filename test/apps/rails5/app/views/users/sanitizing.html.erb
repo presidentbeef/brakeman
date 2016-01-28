@@ -1,1 +1,3 @@
 <%= raw sanitize(params[:x]) %>
+
+<%= strip_tags(params[:x]).html_safe %>

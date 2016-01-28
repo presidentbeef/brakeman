@@ -300,7 +300,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       @ignore_methods << :auto_link
     end
 
-    if version_between? "2.0.0", "2.3.14"
+    if version_between? "2.0.0", "2.3.14" or tracker.config.gem_version(:'rails-html-sanitizer') == '1.0.2'
       @known_dangerous << :strip_tags
     end
 

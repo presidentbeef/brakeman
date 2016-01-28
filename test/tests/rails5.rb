@@ -12,8 +12,8 @@ class Rails5Tests < Test::Unit::TestCase
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 1,
-      :generic => 2
+      :template => 2,
+      :generic => 3
     }
   end
 
@@ -41,6 +41,19 @@ class Rails5Tests < Test::Unit::TestCase
       :user_input => nil
   end
 
+  def test_cross_site_scripting_CVE_2015_7579
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "0d980d69bd0158cfa6a92c12bc49294fe32e9862a758e11fe3cf9e03b6c50489",
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/users/sanitizing.html.erb",
+      :code => s(:call, nil, :strip_tags, s(:call, s(:call, nil, :params), :[], s(:lit, :x))),
+      :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :x))
+  end
+
   def test_cross_site_scripting_sanitize_cve
     assert_warning :type => :template,
       :warning_code => 2,
@@ -52,5 +65,17 @@ class Rails5Tests < Test::Unit::TestCase
       :relative_path => "app/views/users/sanitizing.html.erb",
       :code => s(:call, nil, :sanitize, s(:call, s(:call, nil, :params), :[], s(:lit, :x))),
       :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :x))
+  end
+
+  def test_cross_site_scripting_strip_tags_cve
+    assert_warning :type => :warning,
+      :warning_code => 98,
+      :fingerprint => "9f292c507e0f07fd0ffc7a3d000af464c522ae6a929015256f505f35fb75ac82",
+      :warning_type => "Cross Site Scripting",
+      :line => 115,
+      :message => /^rails\-html\-sanitizer\ 1\.0\.2\ is\ vulnerable/,
+      :confidence => 0,
+      :relative_path => "Gemfile.lock",
+      :user_input => nil
   end
 end
