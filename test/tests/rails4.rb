@@ -15,7 +15,7 @@ class Rails4Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 3,
       :template => 8,
-      :generic => 78
+      :generic => 79
     }
   end
 
@@ -1307,6 +1307,18 @@ class Rails4Tests < Test::Unit::TestCase
       :message => /^Rails\ 4\.0\.0\ does\ not\ call\ :reject_if\ opt/,
       :confidence => 1,
       :relative_path => "app/models/user.rb",
+      :user_input => nil
+  end
+
+  def test_denial_of_service_CVE_2015_7581
+    assert_warning :type => :warning,
+      :warning_code => 100,
+      :fingerprint => "5443fee81b56e41e116305465ddf3e2afc64e69a1a0119693dfd5368c6228d89",
+      :warning_type => "Denial of Service",
+      :line => 4,
+      :message => /^Rails\ 4\.0\.0\ has\ a\ denial\ of\ service\ vuln/,
+      :confidence => 1,
+      :relative_path => "Gemfile",
       :user_input => nil
   end
 

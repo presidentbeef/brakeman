@@ -31,6 +31,10 @@ module Brakeman::RouteHelper
 
     return unless route.is_a? String or route.is_a? Symbol
 
+    if route.is_a? String and controller.nil? and route.include? ":controller"
+      controller = ":controller"
+    end
+
     route = route.to_sym
 
     if controller
