@@ -42,7 +42,7 @@ class Brakeman::CheckBasicAuthTimingAttack < Brakeman::BaseCheck
 
   def check_basic_auth_call
     # This is relatively unusual, but found in the wild
-    tracker.find_call(target: nil, method: :http_basic_authenticate_with).each do |result|
+    tracker.find_call(:target => nil, :method => :http_basic_authenticate_with).each do |result|
       warn :result => result,
         :warning_type => "Timing Attack",
         :warning_code => :CVE_2015_7576,
