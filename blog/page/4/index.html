@@ -109,6 +109,127 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2013/04/05/brakeman-1-dot-9-5-released/">Brakeman 1.9.5 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2013-04-05 08:42:00 -0700" pubdate  updated >Apr 5<span>th</span>, 2013</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>As planned, Brakeman 1.9.5 is mostly internal bug fixes and improvements, with the one exception being a new check for symbol creation from user input. Barring any emergencies, the next release will be 2.0.</p>
+
+<p><em>Changes since 1.9.4</em>:</p>
+
+<ul>
+<li>Add check for unsafe symbol creation (<a href="https://github.com/HonoreDB">Aaron Weiner</a>)</li>
+<li>Do not warn on mass assignment with <code>slice</code>/<code>only</code> (<a href="https://github.com/presidentbeef/brakeman/issues/203">#203</a>)</li>
+<li>Do not warn on session secret if in <code>.gitignore</code> (<a href="https://github.com/presidentbeef/brakeman/issues/241">#241</a>)</li>
+<li>Fix session secret check for Rails 4</li>
+<li>Fix scoping for blocks and block arguments</li>
+<li>Fix error when modifying blocks in templates</li>
+<li>Fix crash on <code>before_filter</code> outside controller</li>
+<li>Fix <code>Sexp</code> hash cache invalidation</li>
+<li>Respect <code>quiet</code> option in configuration file (<a href="https://github.com/presidentbeef/brakeman/issues/300">#300</a>)</li>
+<li>Convert assignment to simple <code>if</code> expressions to <code>or</code></li>
+<li>More fixes for assignments inside branches</li>
+<li>Refactoring of <code>CheckLinkTo</code> and <code>Report</code> (<a href="https://github.com/barttenbrinke">Bart ten Brinke</a>)</li>
+<li>Pin ruby2ruby dependency to version 2.0.3 (<a href="https://github.com/seattlerb/ruby2ruby/issues/15">see here</a>)</li>
+</ul>
+
+
+<h3>Symbol Creation Check</h3>
+
+<p><a href="https://github.com/HonoreDB">Aaron Weiner</a> added a check for symbol creation from user input, such as <code>params[:x].to_i</code> which can lead to Denial of Service.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/296">changes</a>)</p>
+
+<h3>Mass Assignment with Select Keys</h3>
+
+<p>A common pattern to avoid mass assignment issues is to use <code>slice</code> or <code>only</code> when passing in values to mass assignment methods. Brakeman should no longer warn in these situations.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/303">changes</a>)</p>
+
+<h3>Ignoring Session Secrets</h3>
+
+<p>Brakeman no longer warns if the config file containing the session secret key is included in <code>.gitignore</code>. This only applies if the default file names are used.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/302">changes</a>)</p>
+
+<h3>Warn on Rails 4 Session Secrets</h3>
+
+<p>Support for Rails 4 session secrets has been added, since the configuration for that changed again.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/302">changes</a>)</p>
+
+<h3>Block Scoping</h3>
+
+<p>Correct scope for blocks is tricky, and there are also some differences between Ruby 1.8 and 1.9 for block arguments. For the most part, Brakeman has ignored blocks, but this lead to some compounding issues with assignments in branches.</p>
+
+<p>This release now treats all block arguments as local assignments <em>inside</em> the block and shadows any variables outside the block (this is Ruby 1.9 behavior). This should lead to some performance improvements where block arguments do shadow outer variables.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/305">changes and examples</a>)</p>
+
+<h3>Sexp Hash Cache Invalidation</h3>
+
+<p>Since Brakeman does a ton of hash table lookups with s-expressions as keys, it caches <code>Sexp#hash</code> values. In some situations, these cached values were being invalidated when they did not need to be, and not being invalidated when they should have been.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/294">changes</a>)</p>
+
+<h3>Quiet Option</h3>
+
+<p>Brakeman will now be quiet if the option is set in a configuration file.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/306">changes</a>)</p>
+
+<h3>Assignments of If Expressions</h3>
+
+<p>Simple if expression assigments such as <code>x = thing ? this : that</code> will now be converted to <code>x = this || that</code>. This should simplify some code reported with warnings as well as avoid warning on values in <code>if</code> conditions.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/295">changes and examples</a>)</p>
+
+<h3>Assignments in If Expressions</h3>
+
+<p>Assignments inside <code>if</code> branches cause Brakeman to &#8220;branch&#8221; the values for a variable, since it could be two or more different values. However, this branching should only occur <em>after</em> both branches have been processed. Brakeman 1.9.3 made it so values were not branched inside of a single branch, but there was still an issue where values branched in the <code>then</code> clause would be used in the <code>else</code> clause. This release fixes that issue and simplifies branching overall.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/297">changes and examples</a>)</p>
+
+<h3>Refactoring Internals</h3>
+
+<p><a href="https://github.com/barttenbrinke">Bart ten Brinke</a> has begun some work refactoring some of the many ugly parts of Brakeman. Thanks!</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+
+<h3>Roadmap</h3>
+
+<p>Next up should be <a href="https://github.com/presidentbeef/brakeman/wiki/Roadmap">Brakeman 2.0</a> unless there needs to be another emergency release. Most of the changes for 2.0 are relatively minor, but break backwards compatibility in areas that may affect external tools. This includes cleaning up warning messages, removing duplicate information from JSON output, combining some checks, changing some defaults, and so on.</p>
+
+<p>If you have suggestions for other breaking changes, please file an issue ASAP to get it into the next release!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2013/03/18/brakeman-1-dot-9-4-released/">Brakeman 1.9.4 Released</a></h1>
     
     
@@ -1202,81 +1323,6 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/08/13/brakeman-1-dot-7-1-released/">Brakeman 1.7.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-08-13 11:04:00 -0700" pubdate  updated >Aug 13<span>th</span>, 2012</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a small release to add checks for the <a href="http://weblog.rubyonrails.org/2012/8/9/ann-rails-3-2-8-has-been-released/">Rails vulnerabilities reported last week</a>.</p>
-
-<p><em>Changes since 1.7.0</em>:</p>
-
-<ul>
-<li>Add check for <a href="https://groups.google.com/d/topic/rubyonrails-security/fV3QUToSMSw/discussion">CVE-2012-3463</a></li>
-<li>Add check for <a href="https://groups.google.com/d/topic/rubyonrails-security/kKGNeMrnmiY/discussion">CVE-2012-3464</a></li>
-<li>Add check for <a href="https://groups.google.com/d/topic/rubyonrails-security/FgVEtBajcTY/discussion">CVE-2012-3465</a></li>
-<li>Add charset to HTML report (<a href="https://github.com/hooopo">hooopo</a>)</li>
-<li>Report XSS in select() for Rails 2</li>
-</ul>
-
-
-<h3>CVE-2012-3463 - XSS in select_tag Prompt</h3>
-
-<p>In Rails 3.x, values supplied to the <code>:prompt</code> option in the <code>select_tag</code> helper are not escaped, leading to a cross-site scripting vulnerability.</p>
-
-<p>Brakeman will warn on all uses of <code>select_tag</code> with unescaped user input in the <code>:prompt</code> option.</p>
-
-<h3>CVE-2012-3464 - Single Quotes are Unescaped</h3>
-
-<p>This is pretty much a known issue (<a href="http://www.ruby-forum.com/topic/166894">example from 2008</a>), but Rails 3.2.8 fixes it.</p>
-
-<p>Single quotes are most dangerous when interpolating values into HTML attributes that use single quotes, which is why it is often recommended to always use double quotes in HTML.</p>
-
-<p>There is a <a href="https://groups.google.com/d/topic/rubyonrails-security/kKGNeMrnmiY/discussion">provided workaround</a> for earlier versions of Rails which replaces <code>ERB::Util.html_escape</code> with <code>Rack::Utils.escape_html</code>. This method adds escaping for both single quotes (<code>'</code>) and forward slashes (<code>/</code>).</p>
-
-<p>If the provided workaround is used in an initializer, as suggested, then Brakeman will not generate a warning for this vulnerability. Otherwise, Brakeman will generate a warning for affected versions.</p>
-
-<h3>CVE-2012-3465 - XSS in strip_tags</h3>
-
-<p>Another vulnerability has been reported for <code>strip_tags</code> (earlier report was <a href="https://groups.google.com/d/topic/rubyonrails-security/K5EwdJt06hI/discussion">CVE-2011-2931</a>).</p>
-
-<p>Brakeman will warn on affected versions if uses of <code>strip_tags</code> are detected.</p>
-
-<h3>XSS in select Helper</h3>
-
-<p>This vulnerability was <a href="https://groups.google.com/d/topic/rubyonrails-security/CdoMUVpsRmQ/discussion">reported a while ago</a>, but it was unclear if it applied to Rails 2.x or just Rails 3. Thanks to Neil Matatall, it has been confirmed to be an issue in Rails 2.x as well.</p>
-
-<p>Therefore, Brakeman will be reporting the vulnerability (<code>select</code> does not escape options list if supplied as a straight string) for Rails 2.x as well.</p>
-
-<h3>Report Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1329,6 +1375,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/01/28/brakeman-3-dot-1-5-released.markdown/">Brakeman 3.1.5 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/28/brakeman-3-dot-1-5-released/">Brakeman 3.1.5 Released</a>
       </li>
     
@@ -1342,10 +1392,6 @@ end
     
       <li class="post">
         <a href="/blog/2015/10/28/brakeman-3-dot-1-2-released/">Brakeman 3.1.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/09/23/brakeman-3-dot-1-1-released/">Brakeman 3.1.1 Released</a>
       </li>
     
   </ul>

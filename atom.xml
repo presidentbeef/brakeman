@@ -4,13 +4,158 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2016-01-28T21:28:00-08:00</updated>
+  <updated>2016-01-29T08:27:22-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 3.1.5 Released</title>
+    <link href="http://brakemanscanner.org/blog/2016/01/28/brakeman-3-dot-1-5-released.markdown/"/>
+    <updated>2016-01-28T08:26:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2016/01/28/brakeman-3-dot-1-5-released.markdown</id>
+    <content type="html">This release adds warnings for the latest Rails CVEs.
+
+*Changes since 3.1.4*:
+
+* Warn about RCE with `render params` (CVE-2016-0752)
+* Add check for `strip_tags` XSS (CVE-2015-7579)
+* Add check for `sanitize` XSS (CVE-2015-7578/80)
+* Add check for basic auth timing attack (CVE-2015-7576)
+* Add check for `reject_if` proc bypass (CVE-2015-7577)
+* Add check for denial of service via routes (CVE-2015-7581)
+* Add check for mime-type denial of service (CVE-2016-0751)
+* Check for implicit integer comparison in dynamic finders
+* Support directories better with `--only-files` and `--skip-files` ([Patrick Toomey](https://github.com/ptoomey3))
+* Fix CodeClimate construction of `--only-files` ([Will Fleming](https://github.com/wfleming))
+* Avoid warning about `permit` in SQL ([669](https://github.com/presidentbeef/brakeman/issues/669))
+* Avoid warning on user input in comparisons
+* Handle guards using `detect` ([376](https://github.com/presidentbeef/brakeman/issues/376))
+* Handle module names with self methods ([#785](https://github.com/presidentbeef/brakeman/issues/785))
+* Add session manipulation documentation ([#791](https://github.com/presidentbeef/brakeman/pull/791))
+* Add initial Rails 5 support
+
+### Render Remote Code Execution
+
+First up, [CVE-2016-0752](https://groups.google.com/d/msg/rubyonrails-security/335P1DcLG00/OfB9_LhbFQAJ) allows an attacker to render files outside of the application path as well as [execute arbitary code](https://nvisium.com/blog/2016/01/26/rails-dynamic-render-to-rce-cve-2016-0752/). Passing in `params` values directly is [especially dangerous](https://twitter.com/joernchen/status/456822118500823040). Brakeman has warned about passing user input to `render` since it was first released as &quot;dynamic render path&quot; warnings. For calls to `render` that directly pass in `params`, it has been changed to a remote code execution warning in affected versions.
+
+([changes](https://github.com/presidentbeef/brakeman/pull/807))
+
+### Sanitization XSS
+
+[CVE-2015-7579](https://groups.google.com/d/msg/rubyonrails-security/OU9ugTZcbjc/PjEP46pbFQAJ), [CVE-2015-7578](https://github.com/presidentbeef/brakeman/pull/807), and [CVE-2015-7580](https://groups.google.com/d/msg/rubyonrails-security/uh--W4TDwmI/m_CVZtdbFQAJ) are vulnerabilities in `rails-html-sanitizer` affecting the `strip_tags` and `sanitize` methods. Brakeman will mark uses of `strip_tags` and `sanitize` with `raw` or `html_safe` as high confidence warnings. Since these methods might be used in support gems, Brakeman will also generate a generic warning for the CVEs in apps using vulnerable versions of `rails-html-sanitizer`..
+
+([changes](https://github.com/presidentbeef/brakeman/pull/805) plus [these](https://github.com/presidentbeef/brakeman/pull/806))
+
+### Basic Auth Timing Attack
+
+The implemenation of `http_basic_authenticate_with` did not use constant-time comparison when checking passwords, allowing timing attacks as described in [CVE-2015-7576](https://groups.google.com/d/msg/rubyonrails-security/ANv0HDHEC3k/mt7wNGxbFQAJ). Brakeman will warn about affected applications using `http_basic_authenticate_with`.
+
+([changes](https://github.com/presidentbeef/brakeman/pull/800))
+
+### Bypass Record Deletion Filtering
+
+[CVE-2015-7577](https://groups.google.com/d/msg/rubyonrails-security/cawsWcQ6c8g/tegZtYdbFQAJ) is a bug where the `reject_if` option to `accepts_nested_attributes_for` will not be called if `allow_destroy` is set to `false`. Brakeman will warn on applications which meet all of these criteria and do not include the workaround in an initializer.
+
+([changes](https://github.com/presidentbeef/brakeman/pull/804))
+
+### Wildcard Route Denial of Service
+
+Brakeman will warn about [CVE-2015-7581](https://groups.google.com/d/msg/rubyonrails-security/dthJ5wL69JE/YzPnFelbFQAJ) when it detects routes containing `':controller'` wildcards on affected versions of Rails. These routes can be abused to cause a denial of service.
+
+([changes](https://github.com/presidentbeef/brakeman/pull/808))
+
+### Mimetype Denial of Service
+
+Sending many different mimetypes via `Accept` headers can cause a denial of service. Brakeman will warn about [CVE-2016-0751](https://groups.google.com/d/msg/rubyonrails-security/9oLY_FCzvoc/w9oI9XxbFQAJ) in affected versions of Rails unless the workaround is present.
+
+([changes](https://github.com/presidentbeef/brakeman/pull/801))
+
+### MySQL Implicit Integer Conversion
+
+As [described here](http://www.phenoelit.org/blog/archives/2013/02/05/mysql_madness_and_rails/), MySQL will convert string values to match integer input - often leading to `0=0` comparisons in queries which will always return true. Brakeman will warn when an application uses MySQL and `find_by_*` dynamic finders on potentially sensitive fields like `password`.
+
+([changes](https://github.com/presidentbeef/brakeman/pull/798))
+
+### Better Directory Support When Skipping Files
+
+[Patrick Toomey](https://github.com/ptoomey3) provided a patch to better explicitly match directories with `--only-files` and `--skip-files`. See the [updated options](https://github.com/presidentbeef/brakeman/blob/82de21d7c85acd8980ae7c4b86d77207f73b3444/OPTIONS.md#scanning-options) for details.
+
+*Please note use of `--only-files` is strongly discouraged. Brakeman is designed to scan entire applications.*
+
+([changes](https://github.com/presidentbeef/brakeman/pull/764))
+
+### CodeClimate File Restriction 
+
+The `include_paths` configuration for the CodeClimate engine has been updated by [Will Fleming](https://github.com/wfleming) to handle spaces and other special characters.
+
+([changes](https://github.com/presidentbeef/brakeman/pull/803/))
+
+### Permit `permit` in SQL
+
+Surprisingly, it is safe and effective to use `params.permit` in SQL queries, as it will always return a hash of values which will be interpreted as parameterized values. Brakeman will no longer warn about uses of `permit` in SQL queries.
+
+([changes](https://github.com/presidentbeef/brakeman/pull/795))
+
+### User Input in Comparisons
+
+Brakeman will no longer warn about user input in comparisons, such as `'x' == params[:x]`.
+
+([changes](https://github.com/presidentbeef/brakeman/pull/793))
+
+### Detect `detect` Guard Statements
+
+Fixing a [bug](https://github.com/presidentbeef/brakeman/issues/376) filed almost 2.5 years ago, Brakeman will now recognize `Array#detect`/`Array#find` being used to whitelist values.
+
+For example:
+
+    if safe_name = [:A, :B, :C].detect { |v| v == params[:v] }
+      safe_name.constantize
+    end
+
+([changes](https://github.com/presidentbeef/brakeman/pull/794/))
+
+### Self Methods with Modules
+
+Definitions of self methods inside nested modules was broken and is now fixed.
+
+([changes](https://github.com/presidentbeef/brakeman/pull/792))
+
+### Session Manipulation Documentation
+
+Documentation for session manipulation warnings has now been added to [the Brakeman site](http://brakemanscanner.org/docs/warning_types/session_manipulation/) and for the CodeClimate engine.
+
+([changes](https://github.com/presidentbeef/brakeman/pull/791))
+
+### Rails 5 Support
+
+Initial support for Rails 5 has been added to Brakeman, including a `-5` option to force Rails 5 mode. However, no special analysis or warnings specific to Rails 5 have been implemented yet.
+
+([changes](https://github.com/presidentbeef/brakeman/pull/799))
+
+### CVE-2016-0753?
+
+This release does not include a warning for [CVE-2016-0753](https://groups.google.com/d/msg/rubyonrails-security/6jQVC1geukQ/8oYETcxbFQAJ). The vulnerability appears to require using `permit!` which Brakeman already warns about, or else passing in hashes that are not query parameters which Brakeman would not be able to detect as dangerous or benign.
+
+### SHAs
+
+The SHA256 sums for this release are
+
+    fa9528859d4baa8cd4fbe67f634cd3741ee85d553bf59c4b2315a5ccb2976835  brakeman-3.1.5.gem
+    3248084efe71fcbb0c65b36e71ff0c06e65ac6bce1817a6f9d38ae0657a95bde  brakeman-min-3.1.5.gem
+
+### Reporting Issues
+
+Thank you to everyone who reported bugs and contributed improvements in this release.
+
+Please report any [issues](https://github.com/presidentbeef/brakeman/issues) with this release! Take a look at [this guide](https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue) to reporting Brakeman problems.
+
+Also consider following [@brakeman](https://twitter.com/brakeman) on Twitter or hanging out [on Gitter](https://gitter.im/presidentbeef/brakeman). Please note the mailing list is no longer in use and has apparently not been delivering mail for some time.
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 3.1.5 Released</title>
@@ -43,7 +188,7 @@
 
 &lt;h3&gt;Render Remote Code Execution&lt;/h3&gt;
 
-&lt;p&gt;First up, &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/335P1DcLG00/OfB9_LhbFQAJ&quot;&gt;CVE-2016-0752&lt;/a&gt; allows an attacker to render files outside of the application path as well as &lt;a href=&quot;https://nvisium.com/blog/2016/01/26/rails-dynamic-render-to-rce-cve-2016-0752/&quot;&gt;execute arbitary code&lt;/a&gt;. Passing in &lt;code&gt;params&lt;/code&gt; values directly is &lt;a href=&quot;https://twitter.com/joernchen/status/456822118500823040&quot;&gt;especially dangerous&lt;/a&gt;. Brakeman has warned about passing user input to &lt;code&gt;render&lt;/code&gt; since it was first released as &quot;dynamic render path&quot; warnings. For calls to &lt;code&gt;render&lt;/code&gt; that directly pass in &lt;code&gt;params&lt;/code&gt;, it has been changed to a remote code execution warning in affected versions.&lt;/p&gt;
+&lt;p&gt;First up, &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/335P1DcLG00/OfB9_LhbFQAJ&quot;&gt;CVE-2016-0752&lt;/a&gt; allows an attacker to render files outside of the application path as well as &lt;a href=&quot;https://nvisium.com/blog/2016/01/26/rails-dynamic-render-to-rce-cve-2016-0752/&quot;&gt;execute arbitrary code&lt;/a&gt;. Passing in &lt;code&gt;params&lt;/code&gt; values directly is &lt;a href=&quot;https://twitter.com/joernchen/status/456822118500823040&quot;&gt;especially dangerous&lt;/a&gt;. Brakeman has warned about passing user input to &lt;code&gt;render&lt;/code&gt; since it was first released as &quot;dynamic render path&quot; warnings. For calls to &lt;code&gt;render&lt;/code&gt; that directly pass in &lt;code&gt;params&lt;/code&gt;, it has been changed to a remote code execution warning in affected versions.&lt;/p&gt;
 
 &lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/807&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
@@ -55,13 +200,13 @@
 
 &lt;h3&gt;Basic Auth Timing Attack&lt;/h3&gt;
 
-&lt;p&gt;The implemenation of &lt;code&gt;http_basic_authenticate_with&lt;/code&gt; did not use constant-time comparison when checking passwords, allowing timing attacks as described in &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/ANv0HDHEC3k/mt7wNGxbFQAJ&quot;&gt;CVE-2015-7576&lt;/a&gt;. Brakeman will warn about affected applications using &lt;code&gt;http_basic_authenticate_with&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The implementation of &lt;code&gt;http_basic_authenticate_with&lt;/code&gt; did not use constant-time comparison when checking passwords, allowing timing attacks as described in &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/ANv0HDHEC3k/mt7wNGxbFQAJ&quot;&gt;CVE-2015-7576&lt;/a&gt;. Brakeman will warn about affected applications using &lt;code&gt;http_basic_authenticate_with&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/800&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
 &lt;h3&gt;Bypass Record Deletion Filtering&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/cawsWcQ6c8g/tegZtYdbFQAJ&quot;&gt;CVE-2015-7577&lt;/a&gt; is a bug where the &lt;code&gt;reject_if&lt;/code&gt; option to &lt;code&gt;accepts_nested_attributes_for&lt;/code&gt; will not be called if &lt;code&gt;allow_destroy&lt;/code&gt; is set to &lt;code&gt;false&lt;/code&gt;. Brakeman will warn on applications which meet all of these criteria.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/cawsWcQ6c8g/tegZtYdbFQAJ&quot;&gt;CVE-2015-7577&lt;/a&gt; is a bug where the &lt;code&gt;reject_if&lt;/code&gt; option to &lt;code&gt;accepts_nested_attributes_for&lt;/code&gt; will not be called if &lt;code&gt;allow_destroy&lt;/code&gt; is set to &lt;code&gt;false&lt;/code&gt;. Brakeman will warn on applications which meet all of these criteria and do not include the workaround in an initializer.&lt;/p&gt;
 
 &lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/804&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
@@ -71,9 +216,9 @@
 
 &lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/808&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
-&lt;h3&gt;Mimetype Denial of Service&lt;/h3&gt;
+&lt;h3&gt;Mime-type Denial of Service&lt;/h3&gt;
 
-&lt;p&gt;Sending many different mimetypes via &lt;code&gt;Accept&lt;/code&gt; headers can cause a denial of service. Brakeman will warn about &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/9oLY_FCzvoc/w9oI9XxbFQAJ&quot;&gt;CVE-2016-0751&lt;/a&gt; in affected versions of Rails unless the workaround is present.&lt;/p&gt;
+&lt;p&gt;Sending many different mime-types via &lt;code&gt;Accept&lt;/code&gt; headers can cause a denial of service. Brakeman will warn about &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/9oLY_FCzvoc/w9oI9XxbFQAJ&quot;&gt;CVE-2016-0751&lt;/a&gt; in affected versions of Rails unless the workaround is present.&lt;/p&gt;
 
 &lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/801&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
@@ -1791,108 +1936,6 @@ gem install brakeman -P MediumSecurity  # Install Brakeman gem and check signatu
 
 &lt;pre&gt;&lt;code&gt;16b4890fa8ee6bad1d429a12bf3f0cb8e76cb2d8  brakeman-2.4.3.gem
 be5743d77140e64b75eefc53f8697f767ab370d9  brakeman-min-2.4.3.gem 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 2.4.2 Released</title>
-    <link href="http://brakemanscanner.org/blog/2014/03/20/brakeman-2-dot-4-2-released/"/>
-    <updated>2014-03-20T22:37:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2014/03/20/brakeman-2-dot-4-2-released</id>
-    <content type="html">&lt;p&gt;This release is only internal changes and bug fixes, but some scans may see significant time and memory improvements.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 2.4.1&lt;/em&gt;:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Skip identically rendered templates&lt;/li&gt;
-&lt;li&gt;Improve HAML template processing&lt;/li&gt;
-&lt;li&gt;Only track original template output locations&lt;/li&gt;
-&lt;li&gt;Reuse duplicate call location information&lt;/li&gt;
-&lt;li&gt;Fix duplicate warnings about sanitize CVE&lt;/li&gt;
-&lt;li&gt;Remove &lt;code&gt;rescue Exception&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;Drop Identical Templates&lt;/h3&gt;
-
-&lt;p&gt;For a long time now Brakeman has skipped processing templates if the template had already been processed with an identical environment. However, there are many times when a template is rendered with different environments but the actual output is the same. Brakeman now drops these templates (they are rendered, then discarded if they are duplicates). This reduces peak memory overhead, sometimes drastically. It can also speed up call indexing and vulnerability checks since fewer templates are searched.&lt;/p&gt;
-
-&lt;p&gt;The location and render path of template warnings may change slightly due to this change. Also, the rendered template debug output will no longer include all rendered templates since duplicates will not be tracked.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/442&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Better HAML Processing&lt;/h3&gt;
-
-&lt;p&gt;HAML templates will be processed more accurately with this release.&lt;/p&gt;
-
-&lt;p&gt;For example, a template like this&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#content
-  .nav
-    = @navigation_menu
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;used to produce output like&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;+-------------------------------------------------------------------------------------------------+
-| Output                                                                                          |
-+-------------------------------------------------------------------------------------------------+
-| [Output] &quot;&amp;lt;div id='content'&amp;gt;; &amp;lt;div class='nav'&amp;gt;; #{[Escaped] @navigation_menu}; &amp;lt;/div&amp;gt;;&amp;lt;/div&amp;gt;;&quot; |
-+-------------------------------------------------------------------------------------------------+
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;but now it will look like this instead&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;+-----------------------------------+
-| Output                            |
-+-----------------------------------+
-| [Escaped Output] @navigation_menu |
-+-----------------------------------+
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Besides looking much nicer, this improves warnings and reduces how much code Brakeman has to search. Additionally, these &lt;code&gt;push_text&lt;/code&gt; methods can often interpolate multiple values into the output string, which were not being properly detected as output. This is fixed now.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/441&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Duplicate Template Outputs&lt;/h3&gt;
-
-&lt;p&gt;Aliased values in templates were being counted multiple times as output. This did not affect warnings generated, but it did create duplicate output values to check and extraneous debug output.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/443&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Call Location Reuse&lt;/h3&gt;
-
-&lt;p&gt;For large applications, many calls in the call index actually have the same location (class+method or template). Instead of creating a new location hash for each call, the locations are cached and reused.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/444&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Sanitize CVE Duplicates&lt;/h3&gt;
-
-&lt;p&gt;Don't worry - &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/zAAU7vGTPvI/1vZDWXqBuXgJ&quot;&gt;CVE-2013-1857&lt;/a&gt; is one year old this week. But Brakeman was not properly preventing duplicate warnings for it. Hopefully this was affecting exactly no one.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/445&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Narrower Exception Handling&lt;/h3&gt;
-
-&lt;p&gt;All instances of &lt;code&gt;rescue Exception&lt;/code&gt; were removed from Brakeman and replaced with bare &lt;code&gt;rescue&lt;/code&gt;s to catch &lt;code&gt;StandardError&lt;/code&gt; and subclasses. &lt;code&gt;Exception&lt;/code&gt; has some unfortunate subclasses, such as &lt;code&gt;NoMemoryError&lt;/code&gt; and &lt;code&gt;Interrupt&lt;/code&gt; which Brakeman should not be rescuing.&lt;/p&gt;
-
-&lt;p&gt;This does mean there may be some newly unhandled exceptions. Please report these so they can be rescued properly.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/446&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;SHAs&lt;/h3&gt;
-
-&lt;p&gt;The SHA1 sums for this release are&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;02842dc497bf22b5b427cfd02635c005c4fc4fd4  brakeman-2.4.2.gem
-4893cedbcb015e96c82f4777b00a49ca8d0ae22f  brakeman-min-2.4.2.gem
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3&gt;Reporting Issues&lt;/h3&gt;

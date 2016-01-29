@@ -148,7 +148,7 @@
 
 <h3>Render Remote Code Execution</h3>
 
-<p>First up, <a href="https://groups.google.com/d/msg/rubyonrails-security/335P1DcLG00/OfB9_LhbFQAJ">CVE-2016-0752</a> allows an attacker to render files outside of the application path as well as <a href="https://nvisium.com/blog/2016/01/26/rails-dynamic-render-to-rce-cve-2016-0752/">execute arbitary code</a>. Passing in <code>params</code> values directly is <a href="https://twitter.com/joernchen/status/456822118500823040">especially dangerous</a>. Brakeman has warned about passing user input to <code>render</code> since it was first released as &#8220;dynamic render path&#8221; warnings. For calls to <code>render</code> that directly pass in <code>params</code>, it has been changed to a remote code execution warning in affected versions.</p>
+<p>First up, <a href="https://groups.google.com/d/msg/rubyonrails-security/335P1DcLG00/OfB9_LhbFQAJ">CVE-2016-0752</a> allows an attacker to render files outside of the application path as well as <a href="https://nvisium.com/blog/2016/01/26/rails-dynamic-render-to-rce-cve-2016-0752/">execute arbitrary code</a>. Passing in <code>params</code> values directly is <a href="https://twitter.com/joernchen/status/456822118500823040">especially dangerous</a>. Brakeman has warned about passing user input to <code>render</code> since it was first released as &#8220;dynamic render path&#8221; warnings. For calls to <code>render</code> that directly pass in <code>params</code>, it has been changed to a remote code execution warning in affected versions.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/807">changes</a>)</p>
 
@@ -160,13 +160,13 @@
 
 <h3>Basic Auth Timing Attack</h3>
 
-<p>The implemenation of <code>http_basic_authenticate_with</code> did not use constant-time comparison when checking passwords, allowing timing attacks as described in <a href="https://groups.google.com/d/msg/rubyonrails-security/ANv0HDHEC3k/mt7wNGxbFQAJ">CVE-2015-7576</a>. Brakeman will warn about affected applications using <code>http_basic_authenticate_with</code>.</p>
+<p>The implementation of <code>http_basic_authenticate_with</code> did not use constant-time comparison when checking passwords, allowing timing attacks as described in <a href="https://groups.google.com/d/msg/rubyonrails-security/ANv0HDHEC3k/mt7wNGxbFQAJ">CVE-2015-7576</a>. Brakeman will warn about affected applications using <code>http_basic_authenticate_with</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/800">changes</a>)</p>
 
 <h3>Bypass Record Deletion Filtering</h3>
 
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/cawsWcQ6c8g/tegZtYdbFQAJ">CVE-2015-7577</a> is a bug where the <code>reject_if</code> option to <code>accepts_nested_attributes_for</code> will not be called if <code>allow_destroy</code> is set to <code>false</code>. Brakeman will warn on applications which meet all of these criteria.</p>
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/cawsWcQ6c8g/tegZtYdbFQAJ">CVE-2015-7577</a> is a bug where the <code>reject_if</code> option to <code>accepts_nested_attributes_for</code> will not be called if <code>allow_destroy</code> is set to <code>false</code>. Brakeman will warn on applications which meet all of these criteria and do not include the workaround in an initializer.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/804">changes</a>)</p>
 
@@ -176,9 +176,9 @@
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/808">changes</a>)</p>
 
-<h3>Mimetype Denial of Service</h3>
+<h3>Mime-type Denial of Service</h3>
 
-<p>Sending many different mimetypes via <code>Accept</code> headers can cause a denial of service. Brakeman will warn about <a href="https://groups.google.com/d/msg/rubyonrails-security/9oLY_FCzvoc/w9oI9XxbFQAJ">CVE-2016-0751</a> in affected versions of Rails unless the workaround is present.</p>
+<p>Sending many different mime-types via <code>Accept</code> headers can cause a denial of service. Brakeman will warn about <a href="https://groups.google.com/d/msg/rubyonrails-security/9oLY_FCzvoc/w9oI9XxbFQAJ">CVE-2016-0751</a> in affected versions of Rails unless the workaround is present.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/801">changes</a>)</p>
 
@@ -350,6 +350,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/01/28/brakeman-3-dot-1-5-released.markdown/">Brakeman 3.1.5 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/28/brakeman-3-dot-1-5-released/">Brakeman 3.1.5 Released</a>
       </li>
     
@@ -363,10 +367,6 @@ end
     
       <li class="post">
         <a href="/blog/2015/10/28/brakeman-3-dot-1-2-released/">Brakeman 3.1.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/09/23/brakeman-3-dot-1-1-released/">Brakeman 3.1.1 Released</a>
       </li>
     
   </ul>
