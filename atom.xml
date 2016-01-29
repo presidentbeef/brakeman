@@ -4,13 +4,163 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2016-01-15T13:13:18-08:00</updated>
+  <updated>2016-01-28T21:28:00-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 3.1.5 Released</title>
+    <link href="http://brakemanscanner.org/blog/2016/01/28/brakeman-3-dot-1-5-released/"/>
+    <updated>2016-01-28T08:26:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2016/01/28/brakeman-3-dot-1-5-released</id>
+    <content type="html">&lt;p&gt;This release adds warnings for the latest Rails CVEs.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 3.1.4&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Warn about RCE with &lt;code&gt;render params&lt;/code&gt; (CVE-2016-0752)&lt;/li&gt;
+&lt;li&gt;Add check for &lt;code&gt;strip_tags&lt;/code&gt; XSS (CVE-2015-7579)&lt;/li&gt;
+&lt;li&gt;Add check for &lt;code&gt;sanitize&lt;/code&gt; XSS (CVE-2015-7578/80)&lt;/li&gt;
+&lt;li&gt;Add check for basic auth timing attack (CVE-2015-7576)&lt;/li&gt;
+&lt;li&gt;Add check for &lt;code&gt;reject_if&lt;/code&gt; proc bypass (CVE-2015-7577)&lt;/li&gt;
+&lt;li&gt;Add check for denial of service via routes (CVE-2015-7581)&lt;/li&gt;
+&lt;li&gt;Add check for mime-type denial of service (CVE-2016-0751)&lt;/li&gt;
+&lt;li&gt;Check for implicit integer comparison in dynamic finders&lt;/li&gt;
+&lt;li&gt;Support directories better with &lt;code&gt;--only-files&lt;/code&gt; and &lt;code&gt;--skip-files&lt;/code&gt; (&lt;a href=&quot;https://github.com/ptoomey3&quot;&gt;Patrick Toomey&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Fix CodeClimate construction of &lt;code&gt;--only-files&lt;/code&gt; (&lt;a href=&quot;https://github.com/wfleming&quot;&gt;Will Fleming&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Avoid warning about &lt;code&gt;permit&lt;/code&gt; in SQL (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/669&quot;&gt;669&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Avoid warning on user input in comparisons&lt;/li&gt;
+&lt;li&gt;Handle guards using &lt;code&gt;detect&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/376&quot;&gt;376&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Handle module names with self methods (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/785&quot;&gt;#785&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add session manipulation documentation (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/791&quot;&gt;#791&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add initial Rails 5 support&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Render Remote Code Execution&lt;/h3&gt;
+
+&lt;p&gt;First up, &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/335P1DcLG00/OfB9_LhbFQAJ&quot;&gt;CVE-2016-0752&lt;/a&gt; allows an attacker to render files outside of the application path as well as &lt;a href=&quot;https://nvisium.com/blog/2016/01/26/rails-dynamic-render-to-rce-cve-2016-0752/&quot;&gt;execute arbitary code&lt;/a&gt;. Passing in &lt;code&gt;params&lt;/code&gt; values directly is &lt;a href=&quot;https://twitter.com/joernchen/status/456822118500823040&quot;&gt;especially dangerous&lt;/a&gt;. Brakeman has warned about passing user input to &lt;code&gt;render&lt;/code&gt; since it was first released as &quot;dynamic render path&quot; warnings. For calls to &lt;code&gt;render&lt;/code&gt; that directly pass in &lt;code&gt;params&lt;/code&gt;, it has been changed to a remote code execution warning in affected versions.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/807&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Sanitization XSS&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/OU9ugTZcbjc/PjEP46pbFQAJ&quot;&gt;CVE-2015-7579&lt;/a&gt;, &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/807&quot;&gt;CVE-2015-7578&lt;/a&gt;, and &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/uh--W4TDwmI/m_CVZtdbFQAJ&quot;&gt;CVE-2015-7580&lt;/a&gt; are vulnerabilities in &lt;code&gt;rails-html-sanitizer&lt;/code&gt; affecting the &lt;code&gt;strip_tags&lt;/code&gt; and &lt;code&gt;sanitize&lt;/code&gt; methods. Brakeman will mark uses of &lt;code&gt;strip_tags&lt;/code&gt; and &lt;code&gt;sanitize&lt;/code&gt; with &lt;code&gt;raw&lt;/code&gt; or &lt;code&gt;html_safe&lt;/code&gt; as high confidence warnings. Since these methods might be used in support gems, Brakeman will also generate a generic warning for the CVEs in apps using vulnerable versions of &lt;code&gt;rails-html-sanitizer&lt;/code&gt;..&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/805&quot;&gt;changes&lt;/a&gt; plus &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/806&quot;&gt;these&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Basic Auth Timing Attack&lt;/h3&gt;
+
+&lt;p&gt;The implemenation of &lt;code&gt;http_basic_authenticate_with&lt;/code&gt; did not use constant-time comparison when checking passwords, allowing timing attacks as described in &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/ANv0HDHEC3k/mt7wNGxbFQAJ&quot;&gt;CVE-2015-7576&lt;/a&gt;. Brakeman will warn about affected applications using &lt;code&gt;http_basic_authenticate_with&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/800&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Bypass Record Deletion Filtering&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/cawsWcQ6c8g/tegZtYdbFQAJ&quot;&gt;CVE-2015-7577&lt;/a&gt; is a bug where the &lt;code&gt;reject_if&lt;/code&gt; option to &lt;code&gt;accepts_nested_attributes_for&lt;/code&gt; will not be called if &lt;code&gt;allow_destroy&lt;/code&gt; is set to &lt;code&gt;false&lt;/code&gt;. Brakeman will warn on applications which meet all of these criteria.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/804&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Wildcard Route Denial of Service&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will warn about &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/dthJ5wL69JE/YzPnFelbFQAJ&quot;&gt;CVE-2015-7581&lt;/a&gt; when it detects routes containing &lt;code&gt;':controller'&lt;/code&gt; wildcards on affected versions of Rails. These routes can be abused to cause a denial of service.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/808&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Mimetype Denial of Service&lt;/h3&gt;
+
+&lt;p&gt;Sending many different mimetypes via &lt;code&gt;Accept&lt;/code&gt; headers can cause a denial of service. Brakeman will warn about &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/9oLY_FCzvoc/w9oI9XxbFQAJ&quot;&gt;CVE-2016-0751&lt;/a&gt; in affected versions of Rails unless the workaround is present.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/801&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;MySQL Implicit Integer Conversion&lt;/h3&gt;
+
+&lt;p&gt;As &lt;a href=&quot;http://www.phenoelit.org/blog/archives/2013/02/05/mysql_madness_and_rails/&quot;&gt;described here&lt;/a&gt;, MySQL will convert string values to match integer input - often leading to &lt;code&gt;0=0&lt;/code&gt; comparisons in queries which will always return true. Brakeman will warn when an application uses MySQL and &lt;code&gt;find_by_*&lt;/code&gt; dynamic finders on potentially sensitive fields like &lt;code&gt;password&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/798&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Better Directory Support When Skipping Files&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/ptoomey3&quot;&gt;Patrick Toomey&lt;/a&gt; provided a patch to better explicitly match directories with &lt;code&gt;--only-files&lt;/code&gt; and &lt;code&gt;--skip-files&lt;/code&gt;. See the &lt;a href=&quot;https://github.com/presidentbeef/brakeman/blob/82de21d7c85acd8980ae7c4b86d77207f73b3444/OPTIONS.md#scanning-options&quot;&gt;updated options&lt;/a&gt; for details.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Please note use of &lt;code&gt;--only-files&lt;/code&gt; is strongly discouraged. Brakeman is designed to scan entire applications.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/764&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;CodeClimate File Restriction&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code&gt;include_paths&lt;/code&gt; configuration for the CodeClimate engine has been updated by &lt;a href=&quot;https://github.com/wfleming&quot;&gt;Will Fleming&lt;/a&gt; to handle spaces and other special characters.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/803/&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Permit &lt;code&gt;permit&lt;/code&gt; in SQL&lt;/h3&gt;
+
+&lt;p&gt;Surprisingly, it is safe and effective to use &lt;code&gt;params.permit&lt;/code&gt; in SQL queries, as it will always return a hash of values which will be interpreted as parameterized values. Brakeman will no longer warn about uses of &lt;code&gt;permit&lt;/code&gt; in SQL queries.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/795&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;User Input in Comparisons&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will no longer warn about user input in comparisons, such as &lt;code&gt;'x' == params[:x]&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/793&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Detect &lt;code&gt;detect&lt;/code&gt; Guard Statements&lt;/h3&gt;
+
+&lt;p&gt;Fixing a &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/376&quot;&gt;bug&lt;/a&gt; filed almost 2.5 years ago, Brakeman will now recognize &lt;code&gt;Array#detect&lt;/code&gt;/&lt;code&gt;Array#find&lt;/code&gt; being used to whitelist values.&lt;/p&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if safe_name = [:A, :B, :C].detect { |v| v == params[:v] }
+  safe_name.constantize
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/794/&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Self Methods with Modules&lt;/h3&gt;
+
+&lt;p&gt;Definitions of self methods inside nested modules was broken and is now fixed.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/792&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Session Manipulation Documentation&lt;/h3&gt;
+
+&lt;p&gt;Documentation for session manipulation warnings has now been added to &lt;a href=&quot;http://brakemanscanner.org/docs/warning_types/session_manipulation/&quot;&gt;the Brakeman site&lt;/a&gt; and for the CodeClimate engine.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/791&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Rails 5 Support&lt;/h3&gt;
+
+&lt;p&gt;Initial support for Rails 5 has been added to Brakeman, including a &lt;code&gt;-5&lt;/code&gt; option to force Rails 5 mode. However, no special analysis or warnings specific to Rails 5 have been implemented yet.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/799&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;CVE-2016-0753?&lt;/h3&gt;
+
+&lt;p&gt;This release does not include a warning for &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/6jQVC1geukQ/8oYETcxbFQAJ&quot;&gt;CVE-2016-0753&lt;/a&gt;. The vulnerability appears to require using &lt;code&gt;permit!&lt;/code&gt; which Brakeman already warns about, or else passing in hashes that are not query parameters which Brakeman would not be able to detect as dangerous or benign.&lt;/p&gt;
+
+&lt;h3&gt;SHAs&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;fa9528859d4baa8cd4fbe67f634cd3741ee85d553bf59c4b2315a5ccb2976835  brakeman-3.1.5.gem
+3248084efe71fcbb0c65b36e71ff0c06e65ac6bce1817a6f9d38ae0657a95bde  brakeman-min-3.1.5.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed improvements in this release.&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter or hanging out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt;. Please note the mailing list is no longer in use and has apparently not been delivering mail for some time.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 3.1.4 Released</title>
@@ -1750,62 +1900,6 @@ be5743d77140e64b75eefc53f8697f767ab370d9  brakeman-min-2.4.3.gem
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
 &lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 2.4.1 Released</title>
-    <link href="http://brakemanscanner.org/blog/2014/02/19/brakeman-2-dot-4-1-released/"/>
-    <updated>2014-02-19T10:53:00-08:00</updated>
-    <id>http://brakemanscanner.org/blog/2014/02/19/brakeman-2-dot-4-1-released</id>
-    <content type="html">&lt;p&gt;This release only adds checks for the latest CVEs, no other changes.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 2.4.0&lt;/em&gt;:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Add check for CVE-2014-0080&lt;/li&gt;
-&lt;li&gt;Add check for CVE-2014-0081, replaces CVE-2013-6415&lt;/li&gt;
-&lt;li&gt;Add check for CVE-2014-0082&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;CVE-2014-0080&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/Wu96YkTUR6s/pPLBMZrlwvYJ&quot;&gt;CVE-2014-0080&lt;/a&gt; is a SQL injection issue only affects applications using PostgreSQL with Rails 4.x. If Brakeman detects the &lt;code&gt;pg&lt;/code&gt; gem and an affected version, it will warn about this CVE.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/447&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;CVE-2014-0081&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/tfp6gZCtzr4/j8LUHmu7fIEJ&quot;&gt;CVE-2014-0081&lt;/a&gt; is a vulnerability in &lt;code&gt;number_to_currency&lt;/code&gt;, &lt;code&gt;number_to_percentage&lt;/code&gt;, and &lt;code&gt;number_to_human&lt;/code&gt;. Values passed in as options may not be properly escaped. It affects all previous versions of Rails.&lt;/p&gt;
-
-&lt;p&gt;Brakeman will warn on unsafe uses of these methods. If no unsafe calls are found, it will generate a generic medium confidence warning.&lt;/p&gt;
-
-&lt;p&gt;Warnings for CVE-2014-0081 replace warnings for CVE-2013-6415, which was about just &lt;code&gt;number_to_currency&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/448&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;CVE-2014-0082&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/LMxO_3_eCuc/ozGBEhKaJbIJ&quot;&gt;CVE-2014-0082&lt;/a&gt; is a potential symbol denial of service problem when handling &lt;code&gt;render :text&lt;/code&gt; in Rails 3.x.&lt;/p&gt;
-
-&lt;p&gt;Brakeman will only warn about this CVE if it detects use of &lt;code&gt;render :text&lt;/code&gt; in affected versions.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/449&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;SHAs&lt;/h3&gt;
-
-&lt;p&gt;The SHA1 sums for this release are&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;e9fb5439d5a322b4a9c9611d75d994e7df83d4d2  brakeman-2.4.1.gem
-b84ad90a7ec9b6e6bbce8fc69c50d1d8b3214d0f  brakeman-min-2.4.1.gem
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter or joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
 </content>
   </entry>
   
