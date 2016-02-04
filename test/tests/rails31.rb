@@ -12,8 +12,8 @@ class Rails31Tests < Test::Unit::TestCase
     @expected ||= {
       :model => 3,
       :template => 23,
-      :controller => 5,
-      :generic => 84 }
+      :controller => 4,
+      :generic => 85 }
   end
 
   def test_without_protection
@@ -907,9 +907,9 @@ class Rails31Tests < Test::Unit::TestCase
   end
 
   def test_basic_auth_CVE_2015_7576
-    assert_warning :type => :controller,
+    assert_warning :type => :warning,
       :warning_code => 93,
-      :fingerprint => "331d393d362efd9c1e65526886afdbcc0ffca838e3ad00d5a9920e8920f2a7d7",
+      :fingerprint => "b7dd886bf4767c0245001519f8d6c402a9a4cad9211ce6663fb6118c23962057",
       :warning_type => "Timing Attack",
       :line => 4,
       :message => /^Basic\ authentication\ in\ Rails\ 3\.1\.0\ is\ v/,

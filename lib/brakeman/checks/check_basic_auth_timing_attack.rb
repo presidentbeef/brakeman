@@ -17,31 +17,10 @@ class Brakeman::CheckBasicAuthTimingAttack < Brakeman::BaseCheck
                  return
                end
 
-    check_basic_auth_filter
     check_basic_auth_call
   end
 
-  def check_basic_auth_filter
-    controllers = tracker.controllers.select do |name, c|
-      c.options[:http_basic_authenticate_with]
-    end
-
-    Hash[controllers].each do |name, controller|
-      controller.options[:http_basic_authenticate_with].each do |call|
-        warn :controller => name,
-          :warning_type => "Timing Attack",
-          :warning_code => :CVE_2015_7576,
-          :message => "Basic authentication in Rails #{rails_version} is vulnerable to timing attacks. Upgrade to #@upgrade",
-          :code => call,
-          :confidence => CONFIDENCE[:high],
-          :file => controller.file,
-          :link => "https://groups.google.com/d/msg/rubyonrails-security/ANv0HDHEC3k/mt7wNGxbFQAJ"
-      end
-    end
-  end
-
   def check_basic_auth_call
-    # This is relatively unusual, but found in the wild
     tracker.find_call(target: nil, method: :http_basic_authenticate_with).each do |result|
       warn :result => result,
         :warning_type => "Timing Attack",

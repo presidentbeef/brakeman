@@ -115,6 +115,23 @@ class Brakeman::Tracker
     end
   end
 
+
+  def each_class
+    classes = [self.controllers, self.models]
+
+    if @options[:index_libs]
+      classes << self.libs
+    end
+
+    classes.each do |set|
+      set.each do |set_name, collection|
+        collection.src.each do |file, src|
+          yield src, set_name, file
+        end
+      end
+    end
+  end
+
   #Find a method call.
   #
   #Options:
@@ -176,6 +193,10 @@ class Brakeman::Tracker
 
     self.each_method do |definition, set_name, method_name, file|
       finder.process_source definition, :class => set_name, :method => method_name, :file => file
+    end
+
+    self.each_class do |definition, set_name, file|
+      finder.process_source definition, :class => set_name, :file => file
     end
 
     self.each_template do |name, template|
