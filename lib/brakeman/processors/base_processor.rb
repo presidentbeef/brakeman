@@ -68,6 +68,14 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     call
   end
 
+  def process_safe_call exp
+    if self.has_method? :process_call
+      process_call exp
+    else
+      process_default exp
+    end
+  end
+
   #String with interpolation.
   def process_dstr exp
     exp = exp.dup
