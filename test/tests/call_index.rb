@@ -12,14 +12,26 @@ class CallIndexTests < Test::Unit::TestCase
       {:method => :do_it_now, :target => nil, :call => {}, :nested => false  },
     ]
 
-    src = Brakeman::AliasProcessor.new.process RubyParser.new.parse <<-RUBY
+    meth_src = Brakeman::AliasProcessor.new.process RubyParser.new.parse <<-RUBY
       def x
         x.y.z(1)
         params[:x].y.z(2)
       end
     RUBY
+
+    class_src = Brakeman::AliasProcessor.new.process RubyParser.new.parse <<-RUBY
+    class A
+      do_a_thing
+
+      def x
+        x.y.z(1)
+        params[:x].y.z(2)
+      end
+    end
+    RUBY
     all_calls = Brakeman::FindAllCalls.new(Object.new)
-    all_calls.process(src)
+    all_calls.process_source(meth_src, method: :x)
+    all_calls.process_source(class_src, class: :A)
     @calls += all_calls.calls
 
     @call_index = Brakeman::CallIndex.new(@calls)
@@ -77,5 +89,9 @@ class CallIndexTests < Test::Unit::TestCase
   def test_find_params_and_method_in_chain
     assert_found 0, :target => :params, :method => :z
     assert_found 1, :target => :params, :method => :z, :chained => true
+  end
+
+  def test_find_class_scope_call_by_method
+    assert_found 1, :method => :do_a_thing
   end
 end

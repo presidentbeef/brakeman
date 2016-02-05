@@ -24,11 +24,13 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
 
   #Process body of method
   def process_defn exp
+    return exp unless @current_method
     process_all exp.body
   end
 
   #Process body of method
   def process_defs exp
+    return exp unless @current_method
     process_all exp.body
   end
 
