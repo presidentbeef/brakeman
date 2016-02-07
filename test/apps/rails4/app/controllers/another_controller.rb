@@ -55,4 +55,9 @@ class AnotherController < ApplicationController
 
     render json: result.as_json
   end
+
+  def safe_renders
+      render params[:action]
+      render params[:controller]
+  end
 end

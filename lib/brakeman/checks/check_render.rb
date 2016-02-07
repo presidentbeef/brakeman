@@ -35,7 +35,6 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
     if sexp? view and not duplicate? result
       add_result result
 
-
       if input = has_immediate_user_input?(view)
         if string_interp? view
           confidence = CONFIDENCE[:med]
@@ -49,6 +48,7 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
       end
 
       return if input.type == :model #skip models
+      return if safe_param? input.match
 
       message = "Render path contains #{friendly_type_of input}"
 
@@ -71,6 +71,7 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
     if sexp? view and not duplicate? result
       if params? view
         add_result result
+        return if safe_param? view
 
         warn :result => result,
           :warning_type => "Remote Code Execution",
@@ -79,6 +80,13 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
           :user_input => view,
           :confidence => CONFIDENCE[:high]
       end
+    end
+  end
+
+  def safe_param? exp
+    if params? exp and call? exp and exp.method == :[]
+      arg = exp.first_arg
+      symbol? arg and [:controller, :action].include? arg.value
     end
   end
 end 
