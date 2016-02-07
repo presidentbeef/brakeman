@@ -74,7 +74,7 @@ class HomeController < ApplicationController
   end
 
   def test_another_dynamic_render
-    render :action => params[:action]
+    render :action => params[:my_action]
   end
 
   # not safe
