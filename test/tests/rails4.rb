@@ -380,6 +380,30 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:call, s(:params), :[], s(:lit, :page))
   end
 
+  def test_dynamic_render_safeish_values
+    assert_no_warning :type => :warning,
+      :warning_code => 99,
+      :fingerprint => "fe066eddb631b6ab1ab2baaad37e1f0a6aa6ae2c5611cb3b6bfcea1f279fe96b",
+      :warning_type => "Remote Code Execution",
+      :line => 60,
+      :message => /^Passing\ query\ parameters\ to\ render\(\)\ is\ /,
+      :confidence => 0,
+      :relative_path => "app/controllers/another_controller.rb",
+      :code => s(:render, :action, s(:call, s(:params), :[], s(:lit, :action)), s(:hash)),
+      :user_input => s(:call, s(:params), :[], s(:lit, :action))
+
+    assert_no_warning :type => :warning,
+      :warning_code => 99,
+      :fingerprint => "7205e53a21cb8e2b33ae76f3c25a1b9e60b61169d19fe423e4b936d92966450b",
+      :warning_type => "Remote Code Execution",
+      :line => 61,
+      :message => /^Passing\ query\ parameters\ to\ render\(\)\ is\ /,
+      :confidence => 0,
+      :relative_path => "app/controllers/another_controller.rb",
+      :code => s(:render, :action, s(:call, s(:params), :[], s(:lit, :controller)), s(:hash)),
+      :user_input => s(:call, s(:params), :[], s(:lit, :controller))
+  end
+
   def test_no_cross_site_scripting_in_case_value
     assert_no_warning :type => :template,
       :warning_code => 5,

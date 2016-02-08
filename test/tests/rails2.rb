@@ -146,14 +146,14 @@ class Rails2Tests < Test::Unit::TestCase
   def test_dynamic_render_path_high_confidence
     assert_warning :type => :warning,
       :warning_code => 99,
-      :fingerprint => "556d3b084d138ff8df7be13e71609b3d86a15f587fd0fc4c82dadffae7709c6e",
+      :fingerprint => "d77e92530f810b945b9bd04db2e25afab968b4379d08062f7c5a822671a159a6",
       :warning_type => "Remote Code Execution",
       :line => 77,
-      :message => /^Passing\ query\ parameters\ to\ render/,
+      :message => /^Passing\ query\ parameters\ to\ render\(\)\ is\ /,
       :confidence => 0,
       :relative_path => "app/controllers/home_controller.rb",
-      :code => s(:render, :action, s(:call, s(:params), :[], s(:lit, :action)), s(:hash)),
-      :user_input => s(:call, s(:params), :[], s(:lit, :action))
+      :code => s(:render, :action, s(:call, s(:params), :[], s(:lit, :my_action)), s(:hash)),
+      :user_input => s(:call, s(:params), :[], s(:lit, :my_action))
   end
 
   def test_file_access
