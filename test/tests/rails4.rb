@@ -860,6 +860,17 @@ class Rails4Tests < Test::Unit::TestCase
       :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :id))
   end
 
+  def test_cross_site_scripting_coffee_script
+    assert_no_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "7027ca0313a2ca480f871890936e5d72f035cb7c27d25a5bf01afa784a9db10f",
+      :warning_type => "Cross Site Scripting",
+      :line => 10,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 2,
+      :relative_path => "app/views/users/haml_test.html.haml"
+  end
+
   def test_cross_site_scripting_in_comparison_false_positive
     assert_no_warning :type => :template,
       :warning_code => 2,

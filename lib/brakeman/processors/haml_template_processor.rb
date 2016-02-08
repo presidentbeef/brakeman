@@ -5,6 +5,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
   HAML_FORMAT_METHOD = /format_script_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)/
   HAML_HELPERS = s(:colon2, s(:const, :Haml), :Helpers)
   JAVASCRIPT_FILTER = s(:colon2, s(:colon2, s(:const, :Haml), :Filters), :Javascript)
+  COFFEE_FILTER = s(:colon2, s(:colon2, s(:const, :Haml), :Filters), :Coffee)
 
   #Processes call, looking for template output
   def process_call exp
@@ -90,7 +91,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
     elsif target == nil and method == :find_and_preserve
       process exp.first_arg
     elsif method == :render_with_options
-      if target == JAVASCRIPT_FILTER
+      if target == JAVASCRIPT_FILTER or target == COFFEE_FILTER
         @javascript = true
       end
 
