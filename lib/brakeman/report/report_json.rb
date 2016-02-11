@@ -1,6 +1,3 @@
-Brakeman.load_brakeman_dependency 'multi_json'
-require 'brakeman/report/initializers/multi_json'
-
 class Brakeman::Report::JSON < Brakeman::Report::Base
   def generate_report
     errors = tracker.errors.map{|e| { :error => e[:error], :location => e[:backtrace][0] }}
@@ -32,7 +29,7 @@ class Brakeman::Report::JSON < Brakeman::Report::Base
       :errors => errors
     }
 
-    MultiJson.dump(report_info, :pretty => true)
+    JSON.pretty_generate report_info
   end
 
   def convert_to_hashes warnings

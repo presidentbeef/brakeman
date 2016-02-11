@@ -1,7 +1,8 @@
+require 'json'
 
 class JSONOutputTests < Test::Unit::TestCase
   def setup
-    @@json ||= MultiJson.load(Brakeman.run("#{TEST_PATH}/apps/rails3.2").report.to_json)
+    @@json ||= JSON.parse(Brakeman.run("#{TEST_PATH}/apps/rails3.2").report.to_json)
   end
 
   def test_for_render_path

@@ -95,7 +95,8 @@ module Brakeman
     end
 
     def to_json *args
-      MultiJson.dump(@path)
+      require 'json'
+      JSON.generate(@path)
     end
 
     def initialize_copy original

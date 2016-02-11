@@ -1,5 +1,5 @@
 require 'set'
-require 'multi_json'
+require 'json'
 
 module Brakeman
   class IgnoreConfig
@@ -75,7 +75,7 @@ module Brakeman
     # Read configuration to file
     def read_from_file file = @file
       if File.exist? file
-        @already_ignored = MultiJson.load(File.read(file), :symbolize_keys => true)[:ignored_warnings]
+        @already_ignored = JSON.parse(File.read(file), :symbolize_names => true)[:ignored_warnings]
       else
         Brakeman.notify "[Notice] Could not find ignore configuration in #{file}"
         @already_ignored = []
@@ -107,7 +107,7 @@ module Brakeman
       }
 
       File.open file, "w" do |f|
-        f.puts MultiJson.dump(output, :pretty => true)
+        f.puts JSON.pretty_generate(output)
       end
     end
 

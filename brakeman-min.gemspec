@@ -17,6 +17,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "test-unit"
   s.add_dependency "ruby_parser", "~>3.7.0"
   s.add_dependency "ruby2ruby", ">=2.1.1", "<2.3.0"
-  s.add_dependency "multi_json", "~>1.2"
   s.add_dependency "safe_yaml", ">= 1.0"
 end
