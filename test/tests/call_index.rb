@@ -10,6 +10,7 @@ class CallIndexTests < Test::Unit::TestCase
       {:method => :foo, :target => :the_baz, :call => {}, :nested => false  },
       {:method => :do_it, :target => nil, :call => {}, :nested => false  },
       {:method => :do_it_now, :target => nil, :call => {}, :nested => false  },
+      {:method => :with_target, :target => :blah, :call => {}, :nested => false  },
     ]
 
     meth_src = Brakeman::AliasProcessor.new.process RubyParser.new.parse <<-RUBY
@@ -75,6 +76,7 @@ class CallIndexTests < Test::Unit::TestCase
 
   def test_find_by_no_target_and_method
     assert_found 1, :target => nil, :method => :do_it
+    assert_found 0, :targets => nil, :method => :with_target
   end
 
   def test_find_by_no_target_and_methods
