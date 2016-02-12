@@ -1,4 +1,4 @@
-require 'multi_json'
+require 'json'
 require 'digest/sha2'
 require 'brakeman/warning_codes'
 
@@ -241,7 +241,7 @@ class Brakeman::Warning
   end
 
   def to_json
-    MultiJson.dump self.to_hash
+    JSON.generate self.to_hash
   end
 
   private
