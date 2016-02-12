@@ -45,7 +45,7 @@ class Brakeman::CallIndex
 
     #Find calls with no explicit target
     #with either :target => nil or :target => false
-    elsif options.key? :target and not target and method
+    elsif (options.key? :target or options.key? :targets) and not target and method
       calls = calls_by_method method
       calls = filter_by_target calls, nil
 
