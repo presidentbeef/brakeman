@@ -1,5 +1,4 @@
-Brakeman.load_brakeman_dependency 'csv'
-require "brakeman/report/initializers/faster_csv"
+require 'csv'
 require "brakeman/report/report_table"
 
 class Brakeman::Report::CSV < Brakeman::Report::Table

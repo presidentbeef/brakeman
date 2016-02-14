@@ -18,7 +18,6 @@ Gem::Specification.new do |s|
   s.add_dependency "ruby_parser", "~>3.7.0"
   s.add_dependency "ruby2ruby", ">=2.1.1", "<2.3.0"
   s.add_dependency "terminal-table", "~>1.4"
-  s.add_dependency "fastercsv", "~>1.5"
   s.add_dependency "highline", ">=1.6.20", "<2.0"
   s.add_dependency "erubis", "~>2.6"
   s.add_dependency "haml", ">=3.0", "<5.0"
