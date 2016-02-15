@@ -176,7 +176,7 @@ class Brakeman::Checks
     begin
       check.run_check
     rescue => e
-      error_mutex.synchronize do
+      mutex.synchronize do
         tracker.error e
       end
     end
