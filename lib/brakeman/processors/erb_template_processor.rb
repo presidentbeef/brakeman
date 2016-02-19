@@ -25,7 +25,7 @@ class Brakeman::ErbTemplateProcessor < Brakeman::TemplateProcessor
 
         arg = exp.first_arg
 
-        if arg.node_type == :call and arg.method == :to_s #erb always calls to_s on output
+        if call? arg and arg.method == :to_s #erb always calls to_s on output
           arg = arg.target
         end
 

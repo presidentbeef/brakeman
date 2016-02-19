@@ -99,7 +99,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
         link_path = "cross_site_scripting"
         warning_code = :cross_site_scripting
 
-        if node_type?(out, :call, :attrasgn) && out.method == :to_json
+        if node_type?(out, :call, :safe_call, :attrasgn, :safe_attrasgn) && out.method == :to_json
           message += " in JSON hash"
           link_path += "_to_json"
           warning_code = :xss_to_json
@@ -334,7 +334,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   end
 
   def html_safe_call? exp
-    exp.value.node_type == :call and exp.value.method == :html_safe
+    call? exp.value and exp.value.method == :html_safe
   end
 
   def ignore_call? target, method

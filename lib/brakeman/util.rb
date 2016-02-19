@@ -167,7 +167,8 @@ module Brakeman::Util
 
   #Check if _exp_ represents a method call: s(:call, ...)
   def call? exp
-    exp.is_a? Sexp and exp.node_type == :call
+    exp.is_a? Sexp and
+      (exp.node_type == :call or exp.node_type == :safe_call)
   end
 
   #Check if _exp_ represents a Regexp: s(:lit, /.../)
@@ -214,7 +215,7 @@ module Brakeman::Util
     if exp.is_a? Sexp
       return true if exp.node_type == :params or ALL_PARAMETERS.include? exp
 
-      if exp.node_type == :call
+      if call? exp
         if params? exp[1]
           return true
         elsif exp[2] == :[]
@@ -230,7 +231,7 @@ module Brakeman::Util
     if exp.is_a? Sexp
       return true if exp.node_type == :cookies or exp == COOKIES
 
-      if exp.node_type == :call
+      if call? exp
         if cookies? exp[1]
           return true
         elsif exp[2] == :[]

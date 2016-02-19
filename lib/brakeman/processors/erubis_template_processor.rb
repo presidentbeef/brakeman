@@ -21,7 +21,7 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
         arg = exp.first_arg
 
         #We want the actual content
-        if arg.node_type == :call and (arg.method == :to_s or arg.method == :html_safe!)
+        if call? arg and (arg.method == :to_s or arg.method == :html_safe!)
           arg = arg.target
         end
 

@@ -64,9 +64,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         second_arg = args[2]
         next unless sexp? second_arg
 
-        if second_arg.node_type == :iter and node_type? second_arg.block, :block, :call
+        if second_arg.node_type == :iter and node_type? second_arg.block, :block, :call, :safe_call
           process_scope_with_block(name, args)
-        elsif second_arg.node_type == :call
+        elsif call? second_arg
           call = second_arg
           scope_calls << scope_call_hash(call, name, call.method)
         else
@@ -107,7 +107,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       find_calls = Brakeman::FindAllCalls.new(tracker)
       find_calls.process_source(block, :class => model_name, :method => scope_name)
       find_calls.calls.each { |call| process_result(call) if @sql_targets.include?(call[:method]) }
-    elsif block.node_type == :call
+    elsif call? block
       while call? block
         process_result :target => block.target, :method => block.method, :call => block,
          :location => { :type => :class, :class => model_name, :method => scope_name }

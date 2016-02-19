@@ -14,4 +14,20 @@ class Brakeman::BasicProcessor < Brakeman::SexpProcessor
   def process_default exp
     process_all exp
   end
+
+  def process_safe_call exp
+    if self.respond_to? :process_call
+      process_call exp
+    else
+      process_default exp
+    end
+  end
+
+  def process_safe_attrasgn exp
+    if self.respond_to? :process_attrasgn
+      process_attrasgn exp
+    else
+      process_default exp
+    end
+  end
 end

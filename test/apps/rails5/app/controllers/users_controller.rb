@@ -71,4 +71,11 @@ class UsersController < ApplicationController
     def user_params
       params[:user]
     end
+
+    def ruby_230
+      x&.send(params[:x])
+
+      params.permit!
+      User.new&.attributes = params
+    end
 end

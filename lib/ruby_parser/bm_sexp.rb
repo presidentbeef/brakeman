@@ -141,13 +141,13 @@ class Sexp
   #s(:call, s(:call, nil, :x, s(:arglist)), :y, s(:arglist, s(:lit, 1)))
   #         ^-----------target-----------^
   def target
-    expect :call, :attrasgn
+    expect :call, :attrasgn, :safe_call, :safe_attrasgn
     self[1]
   end
 
   #Sets the target of a method call:
   def target= exp
-    expect :call, :attrasgn
+    expect :call, :attrasgn, :safe_call, :safe_attrasgn
     @my_hash_value = nil
     self[1] = exp
   end
@@ -157,10 +157,10 @@ class Sexp
   #s(:call, s(:call, nil, :x, s(:arglist)), :y, s(:arglist, s(:lit, 1)))
   #                        ^- method
   def method
-    expect :call, :attrasgn, :super, :zsuper, :result
+    expect :call, :attrasgn, :safe_call, :safe_attrasgn, :super, :zsuper, :result
 
     case self.node_type
-    when :call, :attrasgn
+    when :call, :attrasgn, :safe_call, :safe_attrasgn
       self[2]
     when :super, :zsuper
       :super
@@ -170,14 +170,14 @@ class Sexp
   end
 
   def method= name
-    expect :call
+    expect :call, :safe_call
 
     self[2] = name
   end
 
   #Sets the arglist in a method call.
   def arglist= exp
-    expect :call, :attrasgn
+    expect :call, :attrasgn, :safe_call, :safe_attrasgn
     @my_hash_value = nil
     start_index = 3
 
@@ -201,10 +201,10 @@ class Sexp
   #    s(:call, s(:call, nil, :x, s(:arglist)), :y, s(:arglist, s(:lit, 1), s(:lit, 2)))
   #                                                 ^------------ arglist ------------^
   def arglist
-    expect :call, :attrasgn, :super, :zsuper
+    expect :call, :attrasgn, :safe_call, :safe_attrasgn, :super, :zsuper
 
     case self.node_type
-    when :call, :attrasgn
+    when :call, :attrasgn, :safe_call, :safe_attrasgn
       self[3..-1].unshift :arglist
     when :super, :zsuper
       if self[1]
@@ -220,10 +220,10 @@ class Sexp
   #    s(:call, s(:call, nil, :x, s(:arglist)), :y, s(:arglist, s(:lit, 1), s(:lit, 2)))
   #                                                             ^--------args--------^
   def args
-    expect :call, :attrasgn, :super, :zsuper
+    expect :call, :attrasgn, :safe_call, :safe_attrasgn, :super, :zsuper
 
     case self.node_type
-    when :call, :attrasgn
+    when :call, :attrasgn, :safe_call, :safe_attrasgn
       if self[3]
         self[3..-1]
       else
@@ -239,11 +239,11 @@ class Sexp
   end
 
   def each_arg replace = false
-    expect :call, :attrasgn, :super, :zsuper
+    expect :call, :attrasgn, :safe_call, :safe_attrasgn, :super, :zsuper
     range = nil
 
     case self.node_type
-    when :call, :attrasgn
+    when :call, :attrasgn, :safe_call, :safe_attrasgn
       if self[3]
         range = (3...self.length)
       end
@@ -270,43 +270,43 @@ class Sexp
 
   #Returns first argument of a method call.
   def first_arg
-    expect :call, :attrasgn
+    expect :call, :attrasgn, :safe_call, :safe_attrasgn
     self[3]
   end
 
   #Sets first argument of a method call.
   def first_arg= exp
-    expect :call, :attrasgn
+    expect :call, :attrasgn, :safe_call, :safe_attrasgn
     @my_hash_value = nil
     self[3] = exp
   end
 
   #Returns second argument of a method call.
   def second_arg
-    expect :call, :attrasgn
+    expect :call, :attrasgn, :safe_call, :safe_attrasgn
     self[4]
   end
 
   #Sets second argument of a method call.
   def second_arg= exp
-    expect :call, :attrasgn
+    expect :call, :attrasgn, :safe_call, :safe_attrasgn
     @my_hash_value = nil
     self[4] = exp
   end
 
   def third_arg
-    expect :call, :attrasgn
+    expect :call, :attrasgn, :safe_call, :safe_attrasgn
     self[5]
   end
 
   def third_arg= exp
-    expect :call, :attrasgn
+    expect :call, :attrasgn, :safe_call, :safe_attrasgn
     @my_hash_value = nil
     self[5] = exp
   end
 
   def last_arg
-    expect :call, :attrasgn
+    expect :call, :attrasgn, :safe_call, :safe_attrasgn
 
     if self[3]
       self[-1]
@@ -427,9 +427,9 @@ class Sexp
   #    s(:lasgn, :x, s(:lit, 1))
   #                  ^--rhs---^
   def rhs
-    expect :attrasgn, *ASSIGNMENT_BOOL
+    expect :attrasgn, :safe_attrasgn, *ASSIGNMENT_BOOL
 
-    if self.node_type == :attrasgn
+    if self.node_type == :attrasgn or self.node_type == :safe_attrasgn
       self[3]
     else
       self[2]
@@ -438,10 +438,10 @@ class Sexp
 
   #Sets the right hand side of assignment or boolean.
   def rhs= exp
-    expect :attrasgn, *ASSIGNMENT_BOOL
+    expect :attrasgn, :safe_attrasgn, *ASSIGNMENT_BOOL
     @my_hash_value = nil
 
-    if self.node_type == :attrasgn
+    if self.node_type == :attrasgn or self.node_type == :safe_attrasgn
       self[3] = exp
     else
       self[2] = exp
