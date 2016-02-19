@@ -13,8 +13,34 @@ class Rails5Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 2,
-      :generic => 3
+      :generic => 5
     }
+  end
+
+  def test_mass_assignment_with_safe_attrasgn
+    assert_warning :type => :warning,
+      :warning_code => 70,
+      :fingerprint => "046f3c6cc9a55464d21837b583c672c26532cd46c1f719853a1a15b790baf8ea",
+      :warning_type => "Mass Assignment",
+      :line => 78,
+      :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:params), :permit!),
+      :user_input => nil
+  end
+
+  def test_dangerous_send_with_safe_call
+    assert_warning :type => :warning,
+      :warning_code => 23,
+      :fingerprint => "21c9eef1c001e48a0bfedfa11ff0f9d96b0c106f1016218712dabc088b2e69b6",
+      :warning_type => "Dangerous Send",
+      :line => 76,
+      :message => /^User\ controlled\ method\ execution/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:call, nil, :x), :send, s(:call, s(:params), :[], s(:lit, :x))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
   end
 
   def test_cross_site_scripting_CVE_2015_7578
