@@ -215,7 +215,7 @@ module Brakeman::Util
     if exp.is_a? Sexp
       return true if exp.node_type == :params or ALL_PARAMETERS.include? exp
 
-      if exp.node_type == :call
+      if call? exp
         if params? exp[1]
           return true
         elsif exp[2] == :[]
@@ -231,7 +231,7 @@ module Brakeman::Util
     if exp.is_a? Sexp
       return true if exp.node_type == :cookies or exp == COOKIES
 
-      if exp.node_type == :call
+      if call? exp
         if cookies? exp[1]
           return true
         elsif exp[2] == :[]

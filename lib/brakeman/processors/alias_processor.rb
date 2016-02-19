@@ -296,7 +296,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   # Handles x = y = z = 1
   def get_rhs exp
-    if node_type? exp, :lasgn, :iasgn, :gasgn, :attrasgn, :cvdecl, :cdecl
+    if node_type? exp, :lasgn, :iasgn, :gasgn, :attrasgn, :safe_attrasgn, :cvdecl, :cdecl
       get_rhs(exp.rhs)
     else
       exp

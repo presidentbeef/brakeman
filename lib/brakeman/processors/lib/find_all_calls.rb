@@ -141,7 +141,7 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
         @current_class || @current_module || nil
       when :params, :session, :cookies
         exp.node_type
-      when :call
+      when :call, :safe_call
         if include_calls
           if exp.target.nil?
             exp.method
@@ -167,7 +167,7 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
   #Returns method chain as an array
   #For example, User.human.alive.all would return [:User, :human, :alive, :all]
   def get_chain call
-    if node_type? call, :call, :attrasgn
+    if node_type? call, :call, :attrasgn, :safe_call, :safe_attrasgn
       get_chain(call.target) + [call.method]
     elsif call.nil?
       []

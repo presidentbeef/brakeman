@@ -69,7 +69,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   end
 
   def process_safe_call exp
-    if self.has_method? :process_call
+    if self.respond_to? :process_call
       process_call exp
     else
       process_default exp
