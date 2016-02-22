@@ -1,3 +1,14 @@
+# 3.2.0.pre1
+
+* Support calls using `&.` operator
+* Update ruby_parser dependency to 3.8.1
+* Remove `fastercsv` dependency
+* Fix finding calls with `targets: nil`
+* Remove `multi-json` dependecy
+* Handle CoffeeScript in HAML
+* Avoid render warnings about params[:action]/params[:controller]
+* Index calls in class bodies but outside methods
+
 # 3.1.5
 
 * Fix CodeClimate construction of --only-files (Will Fleming)
