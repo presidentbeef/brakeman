@@ -78,4 +78,8 @@ class UsersController < ApplicationController
       params.permit!
       User.new&.attributes = params
     end
+
+    def symbol
+      params[:x].to_sym
+    end
 end

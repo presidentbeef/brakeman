@@ -5,7 +5,7 @@ class Rails5Tests < Test::Unit::TestCase
   include BrakemanTester::CheckExpected
 
   def report
-    @@report ||= BrakemanTester.run_scan "rails5", "Rails 5"
+    @@report ||= BrakemanTester.run_scan "rails5", "Rails 5", run_all_checks: true
   end
 
   def expected
@@ -40,6 +40,19 @@ class Rails5Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, s(:call, nil, :x), :send, s(:call, s(:params), :[], s(:lit, :x))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_no_symbol_denial_of_service
+    assert_no_warning :type => :warning,
+      :warning_code => 59,
+      :fingerprint => "78ba8fe2efc151bc8eca64f36940d1423a8fb92f17a8b7858bffba6cb372490b",
+      :warning_type => "Denial of Service",
+      :line => 83,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(pa/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:call, s(:params), :[], s(:lit, :x)), :to_sym),
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
   end
 
