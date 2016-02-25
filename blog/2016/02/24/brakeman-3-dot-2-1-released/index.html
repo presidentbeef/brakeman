@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Brakeman 1.6.2 Released</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman 3.2.1 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/blog/2012/06/12/brakeman-1-dot-6-2-released/"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2016/02/24/brakeman-3-dot-2-1-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -106,7 +106,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 1.6.2 Released</h1>
+      <h1 class="entry-title">Brakeman 3.2.1 Released</h1>
     
     
       <p class="meta">
@@ -114,7 +114,7 @@
 
 
 
-<time datetime="2012-06-12 17:07:00 -0700" pubdate  updated >Jun 12<span>th</span>, 2012</time>
+<time datetime="2016-02-24 21:36:00 -0800" pubdate  updated >Feb 24<span>th</span>, 2016</time>
 
 
 </p>
@@ -122,66 +122,30 @@
   </header>
 
 
-<div class="entry-content"><p>Besides checks for the latest CVEs, this release includes a slightly improved redirect check, noiser output with <code>--compare</code>, and better handling of <code>before_filter</code>.</p>
-
-<p><em>Changes since 1.6.1</em>:</p>
+<div class="entry-content"><p><em>Changes since 3.2.0</em>:</p>
 
 <ul>
-<li>Add checks for CVE-2012-2660, CVE-2012-2661, CVE-2012-2694, CVE-2012-2695 (Dave Worth)</li>
-<li>Avoid warning when redirecting to a model instance</li>
-<li>Raise confidence level for model attributes in redirects</li>
-<li>Add <code>request.parameters</code> as a parameters hash</li>
-<li>Return non-zero exit code when missing dependencies</li>
-<li>Fix <code>before_filter :except</code> logic</li>
-<li>Only accept symbol literals as before_filter names</li>
-<li>Cache before_filter lookups</li>
-<li>Turn off quiet mode by default for <code>--compare</code></li>
+<li>Remove <code>multi_json</code> dependency from <code>bin/brakeman</code></li>
 </ul>
 
 
-<h3>Latest CVEs</h3>
+<p>As pointed out by <a href="https://github.com/bf4">Benjamin Fleischer</a>, there was a lingering use of <code>multi_json</code> in <code>bin/brakeman</code>. This only caused a problem when using the <code>--compare</code> option.</p>
 
-<p>A number of Rails vulnerabilities were announced recently, although there are really only two issues.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/831">changes</a>)</p>
 
-<p>One issue is that query parameters like <code>?name[]</code> and <code>?name[]=1&amp;name[]</code> get converted to <code>{"name" =&gt; [nil]}</code> and <code>{"name" =&gt; ["1", nil]}</code>. This, in turn, causes ActiveRecord to produce SQL queries with either <code>IS NULL</code> or <code>IN ('1', NULL)</code>. This is probably unexpected behavior.</p>
+<h3>SHAs</h3>
 
-<p>The other issue is that query parameters like <code>?name[users.id]=1</code> or <code>?name[users][id]=1</code> get converted to <code>{"name" =&gt; { "users.id" =&gt; 1 }}</code> or <code>{"name" =&gt; { "users" =&gt; { "id" =&gt; 1 }}}</code>. ActiveRecord interprets <code>"users.id"</code> and <code>"users" =&gt; { "id" ...}</code> as <code>"users"."id"</code> in the WHERE clause, allowing an attacker to control the table/columns being queried.</p>
+<p>The SHA256 sums for this release are</p>
 
-<p>Updated versions for Rails 3.x have been released.</p>
+<pre><code>4a7e7a6e9ad9fed22f727fb8d471de145f55d97465b4dfb4935e3e8379667425  brakeman-min-3.2.1.gem
+901202b04b1cae0a781b5a6bae2db3eecd35e9f0a044fbfaa31cac63ab636449  brakeman-3.2.1.gem
+</code></pre>
 
-<p>For Rails 2.3, I believe <a href="https://github.com/presidentbeef/rails/pull/1/files">these changes</a> will fix the first issue, and there is another <a href="https://rubyonrails-security.googlegroups.com/attach/aee3413fb038bf56/2-3-sql-injection.patch?view=1&amp;part=3">patch available</a> for the second issue.</p>
+<h3>Reporting Issues</h3>
 
-<p>Older versions of Rails 2.x may be vulnerable to the &#8220;NULL&#8221; issue, but not to the nested hashes problem.</p>
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
 
-<h3>Unprotected Redirect Check</h3>
-
-<p>There have been some minor changes to <code>CheckRedirect</code>. In most cases, it should no longer warn when redirecting to a model instance. If there are still false positives with this scenario, please report them.</p>
-
-<p>The other change is that redirects to model attributes will now be marked as high confidence, instead of weak.</p>
-
-<h3>Exit Code on Missing Dependencies</h3>
-
-<p>Brakeman catches errors from missing dependencies in order to show a nicer error message. Unfortunately, it was also returning <code>0</code> on exit. This is undesirable behavior when chaining commands together.</p>
-
-<p>This has been changed to return a non-zero exit code.</p>
-
-<h3>Before Filter Changes</h3>
-
-<p>There were some isues with how <code>before_filter</code> was being handled. The logic when using <code>:except</code> was broken, causing Brakeman to treat it like <code>:only</code>.</p>
-
-<p>The other issue caused Brakeman to interpret arguments such as method calls as method names. For example, <code>before_filter blah</code> would be treated like <code>before_filter :blah</code>.</p>
-
-<p>While dealing with this, caching of filter lookups was also added for a minor performance improvement.</p>
-
-<h3>Noisier <code>--compare</code></h3>
-
-<p>Using the <code>--compare</code> option now shows the same output as a regular scan. If you are piping the output of <code>--compare</code> to a file or elsewhere, you may wish to use the <code>--quiet</code> option.</p>
-
-<h3>Report Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion. Please note the mailing list is no longer in use and has apparently not been delivering mail for some time.</p>
 </div>
 
 
@@ -197,7 +161,7 @@
 
 
 
-<time datetime="2012-06-12 17:07:00 -0700" pubdate  updated >Jun 12<span>th</span>, 2012</time>
+<time datetime="2016-02-24 21:36:00 -0800" pubdate  updated >Feb 24<span>th</span>, 2016</time>
 
 
 
@@ -208,7 +172,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2012/06/12/brakeman-1-dot-6-2-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2012/06/12/brakeman-1-dot-6-2-released/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2016/02/24/brakeman-3-dot-2-1-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2016/02/24/brakeman-3-dot-2-1-released/" >Tweet</a>
   
   
   <g:plusone size="medium"></g:plusone>
@@ -224,8 +188,8 @@
     <div id="disqus_thread"><div id="disqus_thread"></div>
 <script type="text/javascript">
   var disqus_shortname = 'brakeman';
-  var disqus_identifier = 'http://brakemanscanner.org/blog/2012/06/12/brakeman-1-dot-6-2-released/';
-  var disqus_url = 'http://brakemanscanner.org/blog/2012/06/12/brakeman-1-dot-6-2-released/';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2016/02/24/brakeman-3-dot-2-1-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2016/02/24/brakeman-3-dot-2-1-released/';
   //var disqus_developer = 1;
   (function() {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

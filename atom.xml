@@ -4,13 +4,45 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2016-02-24T16:32:42-08:00</updated>
+  <updated>2016-02-24T21:42:35-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 3.2.1 Released</title>
+    <link href="http://brakemanscanner.org/blog/2016/02/24/brakeman-3-dot-2-1-released/"/>
+    <updated>2016-02-24T21:36:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2016/02/24/brakeman-3-dot-2-1-released</id>
+    <content type="html">&lt;p&gt;&lt;em&gt;Changes since 3.2.0&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Remove &lt;code&gt;multi_json&lt;/code&gt; dependency from &lt;code&gt;bin/brakeman&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;As pointed out by &lt;a href=&quot;https://github.com/bf4&quot;&gt;Benjamin Fleischer&lt;/a&gt;, there was a lingering use of &lt;code&gt;multi_json&lt;/code&gt; in &lt;code&gt;bin/brakeman&lt;/code&gt;. This only caused a problem when using the &lt;code&gt;--compare&lt;/code&gt; option.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/831&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;SHAs&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;4a7e7a6e9ad9fed22f727fb8d471de145f55d97465b4dfb4935e3e8379667425  brakeman-min-3.2.1.gem
+901202b04b1cae0a781b5a6bae2db3eecd35e9f0a044fbfaa31cac63ab636449  brakeman-3.2.1.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hanging out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion. Please note the mailing list is no longer in use and has apparently not been delivering mail for some time.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 3.2.0 Released</title>
@@ -1832,48 +1864,6 @@ fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
 
 &lt;pre&gt;&lt;code&gt;fc8a7991e9351f8d5e26a59acf54422a638f4866  brakeman-2.5.0.gem
 48f974aaf40957a325ee778d3d700fd29aa526bf  brakeman-min-2.5.0.gem
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 2.4.3 Released</title>
-    <link href="http://brakemanscanner.org/blog/2014/03/22/brakeman-2-dot-4-3-released/"/>
-    <updated>2014-03-22T17:49:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2014/03/22/brakeman-2-dot-4-3-released</id>
-    <content type="html">&lt;p&gt;A new gem version has been released because the 2.4.2 gem was not signed. No other changes were introduced.&lt;/p&gt;
-
-&lt;h3&gt;Signed Gems&lt;/h3&gt;
-
-&lt;p&gt;As a reminder, the Brakeman gems are (supposed to be) signed and can be verified with &lt;a href=&quot;https://github.com/presidentbeef/brakeman/blob/master/brakeman-public_cert.pem&quot;&gt;this certificate&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;To verify on installation:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;gem cert --add &amp;lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
-gem install brakeman -P MediumSecurity
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&quot;HighSecurity&quot; requires all dependencies to be signed as well, which is unlikely.&lt;/p&gt;
-
-&lt;p&gt;There is some weirdness around &lt;code&gt;-P MediumSecurity&lt;/code&gt; currently. The simplest solution seems to be:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;gem install brakeman   # Install Brakeman and all dependencies
-gem uninstall brakeman # Remove the Brakeman gem
-gem install brakeman -P MediumSecurity  # Install Brakeman gem and check signature
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3&gt;SHAs&lt;/h3&gt;
-
-&lt;p&gt;The SHA1 sums for this release are&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;16b4890fa8ee6bad1d429a12bf3f0cb8e76cb2d8  brakeman-2.4.3.gem
-be5743d77140e64b75eefc53f8697f767ab370d9  brakeman-min-2.4.3.gem 
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3&gt;Reporting Issues&lt;/h3&gt;
