@@ -109,6 +109,129 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2014/03/20/brakeman-2-dot-4-2-released/">Brakeman 2.4.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2014-03-20 22:37:00 -0700" pubdate  updated >Mar 20<span>th</span>, 2014</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release is only internal changes and bug fixes, but some scans may see significant time and memory improvements.</p>
+
+<p><em>Changes since 2.4.1</em>:</p>
+
+<ul>
+<li>Skip identically rendered templates</li>
+<li>Improve HAML template processing</li>
+<li>Only track original template output locations</li>
+<li>Reuse duplicate call location information</li>
+<li>Fix duplicate warnings about sanitize CVE</li>
+<li>Remove <code>rescue Exception</code></li>
+</ul>
+
+
+<h3>Drop Identical Templates</h3>
+
+<p>For a long time now Brakeman has skipped processing templates if the template had already been processed with an identical environment. However, there are many times when a template is rendered with different environments but the actual output is the same. Brakeman now drops these templates (they are rendered, then discarded if they are duplicates). This reduces peak memory overhead, sometimes drastically. It can also speed up call indexing and vulnerability checks since fewer templates are searched.</p>
+
+<p>The location and render path of template warnings may change slightly due to this change. Also, the rendered template debug output will no longer include all rendered templates since duplicates will not be tracked.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/442">changes</a>)</p>
+
+<h3>Better HAML Processing</h3>
+
+<p>HAML templates will be processed more accurately with this release.</p>
+
+<p>For example, a template like this</p>
+
+<pre><code>#content
+  .nav
+    = @navigation_menu
+</code></pre>
+
+<p>used to produce output like</p>
+
+<pre><code>+-------------------------------------------------------------------------------------------------+
+| Output                                                                                          |
++-------------------------------------------------------------------------------------------------+
+| [Output] "&lt;div id='content'&gt;; &lt;div class='nav'&gt;; #{[Escaped] @navigation_menu}; &lt;/div&gt;;&lt;/div&gt;;" |
++-------------------------------------------------------------------------------------------------+
+</code></pre>
+
+<p>but now it will look like this instead</p>
+
+<pre><code>+-----------------------------------+
+| Output                            |
++-----------------------------------+
+| [Escaped Output] @navigation_menu |
++-----------------------------------+
+</code></pre>
+
+<p>Besides looking much nicer, this improves warnings and reduces how much code Brakeman has to search. Additionally, these <code>push_text</code> methods can often interpolate multiple values into the output string, which were not being properly detected as output. This is fixed now.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/441">changes</a>)</p>
+
+<h3>Duplicate Template Outputs</h3>
+
+<p>Aliased values in templates were being counted multiple times as output. This did not affect warnings generated, but it did create duplicate output values to check and extraneous debug output.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/443">changes</a>)</p>
+
+<h3>Call Location Reuse</h3>
+
+<p>For large applications, many calls in the call index actually have the same location (class+method or template). Instead of creating a new location hash for each call, the locations are cached and reused.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/444">changes</a>)</p>
+
+<h3>Sanitize CVE Duplicates</h3>
+
+<p>Don&#8217;t worry - <a href="https://groups.google.com/d/msg/rubyonrails-security/zAAU7vGTPvI/1vZDWXqBuXgJ">CVE-2013-1857</a> is one year old this week. But Brakeman was not properly preventing duplicate warnings for it. Hopefully this was affecting exactly no one.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/445">changes</a>)</p>
+
+<h3>Narrower Exception Handling</h3>
+
+<p>All instances of <code>rescue Exception</code> were removed from Brakeman and replaced with bare <code>rescue</code>s to catch <code>StandardError</code> and subclasses. <code>Exception</code> has some unfortunate subclasses, such as <code>NoMemoryError</code> and <code>Interrupt</code> which Brakeman should not be rescuing.</p>
+
+<p>This does mean there may be some newly unhandled exceptions. Please report these so they can be rescued properly.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/446">changes</a>)</p>
+
+<h3>SHAs</h3>
+
+<p>The SHA1 sums for this release are</p>
+
+<pre><code>02842dc497bf22b5b427cfd02635c005c4fc4fd4  brakeman-2.4.2.gem
+4893cedbcb015e96c82f4777b00a49ca8d0ae22f  brakeman-min-2.4.2.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2014/02/19/brakeman-2-dot-4-1-released/">Brakeman 2.4.1 Released</a></h1>
     
     
@@ -1212,127 +1335,6 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2013/04/05/brakeman-1-dot-9-5-released/">Brakeman 1.9.5 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2013-04-05 08:42:00 -0700" pubdate  updated >Apr 5<span>th</span>, 2013</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>As planned, Brakeman 1.9.5 is mostly internal bug fixes and improvements, with the one exception being a new check for symbol creation from user input. Barring any emergencies, the next release will be 2.0.</p>
-
-<p><em>Changes since 1.9.4</em>:</p>
-
-<ul>
-<li>Add check for unsafe symbol creation (<a href="https://github.com/HonoreDB">Aaron Weiner</a>)</li>
-<li>Do not warn on mass assignment with <code>slice</code>/<code>only</code> (<a href="https://github.com/presidentbeef/brakeman/issues/203">#203</a>)</li>
-<li>Do not warn on session secret if in <code>.gitignore</code> (<a href="https://github.com/presidentbeef/brakeman/issues/241">#241</a>)</li>
-<li>Fix session secret check for Rails 4</li>
-<li>Fix scoping for blocks and block arguments</li>
-<li>Fix error when modifying blocks in templates</li>
-<li>Fix crash on <code>before_filter</code> outside controller</li>
-<li>Fix <code>Sexp</code> hash cache invalidation</li>
-<li>Respect <code>quiet</code> option in configuration file (<a href="https://github.com/presidentbeef/brakeman/issues/300">#300</a>)</li>
-<li>Convert assignment to simple <code>if</code> expressions to <code>or</code></li>
-<li>More fixes for assignments inside branches</li>
-<li>Refactoring of <code>CheckLinkTo</code> and <code>Report</code> (<a href="https://github.com/barttenbrinke">Bart ten Brinke</a>)</li>
-<li>Pin ruby2ruby dependency to version 2.0.3 (<a href="https://github.com/seattlerb/ruby2ruby/issues/15">see here</a>)</li>
-</ul>
-
-
-<h3>Symbol Creation Check</h3>
-
-<p><a href="https://github.com/HonoreDB">Aaron Weiner</a> added a check for symbol creation from user input, such as <code>params[:x].to_i</code> which can lead to Denial of Service.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/296">changes</a>)</p>
-
-<h3>Mass Assignment with Select Keys</h3>
-
-<p>A common pattern to avoid mass assignment issues is to use <code>slice</code> or <code>only</code> when passing in values to mass assignment methods. Brakeman should no longer warn in these situations.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/303">changes</a>)</p>
-
-<h3>Ignoring Session Secrets</h3>
-
-<p>Brakeman no longer warns if the config file containing the session secret key is included in <code>.gitignore</code>. This only applies if the default file names are used.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/302">changes</a>)</p>
-
-<h3>Warn on Rails 4 Session Secrets</h3>
-
-<p>Support for Rails 4 session secrets has been added, since the configuration for that changed again.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/302">changes</a>)</p>
-
-<h3>Block Scoping</h3>
-
-<p>Correct scope for blocks is tricky, and there are also some differences between Ruby 1.8 and 1.9 for block arguments. For the most part, Brakeman has ignored blocks, but this lead to some compounding issues with assignments in branches.</p>
-
-<p>This release now treats all block arguments as local assignments <em>inside</em> the block and shadows any variables outside the block (this is Ruby 1.9 behavior). This should lead to some performance improvements where block arguments do shadow outer variables.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/305">changes and examples</a>)</p>
-
-<h3>Sexp Hash Cache Invalidation</h3>
-
-<p>Since Brakeman does a ton of hash table lookups with s-expressions as keys, it caches <code>Sexp#hash</code> values. In some situations, these cached values were being invalidated when they did not need to be, and not being invalidated when they should have been.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/294">changes</a>)</p>
-
-<h3>Quiet Option</h3>
-
-<p>Brakeman will now be quiet if the option is set in a configuration file.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/306">changes</a>)</p>
-
-<h3>Assignments of If Expressions</h3>
-
-<p>Simple if expression assigments such as <code>x = thing ? this : that</code> will now be converted to <code>x = this || that</code>. This should simplify some code reported with warnings as well as avoid warning on values in <code>if</code> conditions.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/295">changes and examples</a>)</p>
-
-<h3>Assignments in If Expressions</h3>
-
-<p>Assignments inside <code>if</code> branches cause Brakeman to &#8220;branch&#8221; the values for a variable, since it could be two or more different values. However, this branching should only occur <em>after</em> both branches have been processed. Brakeman 1.9.3 made it so values were not branched inside of a single branch, but there was still an issue where values branched in the <code>then</code> clause would be used in the <code>else</code> clause. This release fixes that issue and simplifies branching overall.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/297">changes and examples</a>)</p>
-
-<h3>Refactoring Internals</h3>
-
-<p><a href="https://github.com/barttenbrinke">Bart ten Brinke</a> has begun some work refactoring some of the many ugly parts of Brakeman. Thanks!</p>
-
-<h3>Report Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-
-<h3>Roadmap</h3>
-
-<p>Next up should be <a href="https://github.com/presidentbeef/brakeman/wiki/Roadmap">Brakeman 2.0</a> unless there needs to be another emergency release. Most of the changes for 2.0 are relatively minor, but break backwards compatibility in areas that may affect external tools. This includes cleaning up warning messages, removing duplicate information from JSON output, combining some checks, changing some defaults, and so on.</p>
-
-<p>If you have suggestions for other breaking changes, please file an issue ASAP to get it into the next release!</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1385,6 +1387,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/02/24/brakeman-3-dot-2-0-released/">Brakeman 3.2.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/28/brakeman-3-dot-1-5-released/">Brakeman 3.1.5 Released</a>
       </li>
     
@@ -1398,10 +1404,6 @@ end
     
       <li class="post">
         <a href="/blog/2015/10/28/brakeman-3-dot-1-2-released/">Brakeman 3.1.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/09/23/brakeman-3-dot-1-1-released/">Brakeman 3.1.1 Released</a>
       </li>
     
   </ul>
