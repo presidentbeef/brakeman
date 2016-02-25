@@ -1,5 +1,8 @@
-# 3.2.0.pre1
+# 3.2.0
 
+* Skip Symbol DoS check on Rails 5
+* Only update ignore config file on changes
+* Sort ignore config file
 * Support calls using `&.` operator
 * Update ruby_parser dependency to 3.8.1
 * Remove `fastercsv` dependency
