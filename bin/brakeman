@@ -2,7 +2,6 @@
 #Adjust path in case called directly and not through gem
 $:.unshift "#{File.expand_path(File.dirname(__FILE__))}/../lib"
 
-require 'json'
 require 'brakeman'
 require 'brakeman/options'
 require 'brakeman/version'
@@ -59,16 +58,17 @@ end
 
 begin
   if options[:previous_results_json]
+    require 'json'
     vulns = Brakeman.compare options.merge(:quiet => options[:quiet])
 
     if options[:comparison_output_file]
       File.open options[:comparison_output_file], "w" do |f|
-        f.puts Json.dump(vulns, :pretty => true)
+        f.puts JSON.pretty_generate(vulns)
       end
 
       Brakeman.notify "Comparison saved in '#{options[:comparison_output_file]}'"
     else
-      puts Json.dump(vulns, :pretty => true)
+      puts JSON.pretty_generate(vulns)
     end
 
     if options[:exit_on_warn] && vulns[:new].count > 0
