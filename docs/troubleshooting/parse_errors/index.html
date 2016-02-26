@@ -107,7 +107,7 @@
     <h1 class="entry-title">Parsing Errors</h1>
   </header>
   
-  <p>Brakeman relies on <a href="https://github.com/seattlerb/ruby_parser">ruby_parser</a> for parsing Ruby code. Support for Ruby 1.9 syntax is still in development, so Brakeman cannot handle all the new 1.9 syntax changes. Unfortunately, the next version of ruby_parser (3.0) makes some large, incompatible changes which will also require major changes in Brakeman. This means some syntax may go unsupported for a while.</p>
+  <p>Brakeman relies on <a href="https://github.com/seattlerb/ruby_parser">ruby_parser</a> for parsing Ruby code.</p>
 
 <p>The steps below should help narrow down the source of the problem.</p>
 
@@ -123,9 +123,7 @@
 
 <p>If the file is an ERB template, then the output of <code>erb</code> or <code>erubis</code> must be checked.</p>
 
-<p>Run <code>erb -x file_name.html.erb | ruby -c</code> to check using ERB.</p>
-
-<p>Run <code>erubis -x file_name.html.erb | ruby -c</code> to check using Erubis. Use this for Rails 3 or when using the <code>rails_xss</code> gem.</p>
+<p>Run <code>erubis -x file_name.html.erb | ruby -c</code> to check using Erubis.</p>
 
 <p><em>Important:</em> Rails uses a slightly modified version of ERB, so the output from these tools is not exactly the same as what Rails sees. Brakeman attempts to emulate the Rails version.</p>
 
@@ -135,13 +133,9 @@
 
 <p>Run <code>haml -e --debug file_name.html.haml</code> to check the output. Note that this will attempt to execute the code, which will likely fail. However, it will also indicate syntax problems.</p>
 
-<h3>Remove Ruby 1.9 Syntax</h3>
-
-<p>If the file contains Ruby 1.9 syntax, try changing it to 1.8 syntax. If this resolves the problem, then it is definitely a ruby_parse issue. Note, however, that it may already be fixed in the master branch.</p>
-
 <h3>File an Issue</h3>
 
-<p>Please file <a href="https://github.com/presidentbeef/brakeman/issues">an issue</a> with an example of the syntax which fails to parse. While these are usually ruby_parser problems, it never hurts to look into it.</p>
+<p>Please file <a href="https://github.com/presidentbeef/brakeman/issues">an issue</a> with an example of the syntax which fails to parse.</p>
 
 <hr />
 
