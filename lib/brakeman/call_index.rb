@@ -53,7 +53,7 @@ class Brakeman::CallIndex
     elsif method
       calls = calls_by_method method
     else
-      notify "Invalid arguments to CallCache#find_calls: #{options.inspect}"
+      raise "Invalid arguments to CallCache#find_calls: #{options.inspect}"
     end
 
     return [] if calls.nil?
