@@ -96,4 +96,10 @@ class CallIndexTests < Test::Unit::TestCase
   def test_find_class_scope_call_by_method
     assert_found 1, :method => :do_a_thing
   end
+
+  def test_find_error
+    assert_raise do
+      @call_index.find_calls :target => nil, :methods => nil
+    end
+  end
 end

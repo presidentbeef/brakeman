@@ -281,7 +281,7 @@ class ConfigTests < Test::Unit::TestCase
 
   def test_output_format_errors_raised
     options = {:output_format => :to_json, :output_files => ['xx.csv', 'xx.xxx']}
-    assert_raises("ArgumentError: Cannot specify output format if multiple output files specified") {Brakeman.get_output_formats(options)}
+    assert_raise(ArgumentError) { Brakeman.get_output_formats(options) }
   end
 
   def test_github_options_raises_error
