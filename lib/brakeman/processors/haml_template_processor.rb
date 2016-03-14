@@ -88,7 +88,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       #Process call to render()
       exp.arglist = process exp.arglist
       make_render_in_view exp
-    elsif target == nil and method == :find_and_preserve
+    elsif target == nil and method == :find_and_preserve and exp.first_arg
       process exp.first_arg
     elsif method == :render_with_options
       if target == JAVASCRIPT_FILTER or target == COFFEE_FILTER
