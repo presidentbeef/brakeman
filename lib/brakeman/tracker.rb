@@ -5,10 +5,11 @@ require 'brakeman/report'
 require 'brakeman/processors/lib/find_call'
 require 'brakeman/processors/lib/find_all_calls'
 require 'brakeman/tracker/config'
+require 'brakeman/tracker/constants'
 
 #The Tracker keeps track of all the processed information.
 class Brakeman::Tracker
-  attr_accessor :controllers, :templates, :models, :errors,
+  attr_accessor :controllers, :constants, :templates, :models, :errors,
     :checks, :initializers, :config, :routes, :processor, :libs,
     :template_cache, :options, :filter_cache, :start_time, :end_time,
     :duration, :ignored_filter
@@ -38,6 +39,7 @@ class Brakeman::Tracker
     @initializers = {}
     @errors = []
     @libs = {}
+    @constants = Brakeman::Constants.new
     @checks = nil
     @processed = nil
     @template_cache = Set.new
@@ -186,6 +188,14 @@ class Brakeman::Tracker
     else
       self.warnings
     end
+  end
+
+  def add_constant name, value, context = nil
+    @constants.add name, value, context
+  end
+
+  def constant_lookup name
+    @constants[name]
   end
 
   def index_call_sites
