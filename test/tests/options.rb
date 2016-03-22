@@ -252,6 +252,14 @@ class BrakemanOptionsTest < Test::Unit::TestCase
     assert_equal ["output1.rb,output2.rb"], options[:output_files]
   end
 
+  def test_no_output_files_option
+    options = setup_options_from_input("--no-output-files")
+    assert_equal nil, options[:output_files]
+
+    options = setup_options_from_input("--no-output-files", "--output", "output1.rb,output2.rb")
+    assert_equal nil, options[:output_files]
+  end
+
   def test_sperate_models_option
     options = setup_options_from_input("--separate-models")
     assert !options[:collapse_mass_assignment]
