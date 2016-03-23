@@ -13,7 +13,11 @@ end
 command = "/usr/src/app/bin/brakeman --quiet --format codeclimate"
 
 if engine_config["include_paths"]
-  command += " --only-files " + engine_config["include_paths"].compact.join(",").shellescape
+  command << " --only-files #{engine_config["include_paths"].compact.join(",").shellescape}"
+end
+
+if system("test -w /dev/stdout")
+  command << " --output /dev/stdout"
 end
 
 exec command
