@@ -1,5 +1,10 @@
-require 'rubygems'
 require 'set'
+
+path_load = "#{File.expand_path(File.dirname(__FILE__))}/../bundle/load.rb"
+
+if File.exist? path_load
+  require path_load
+end
 
 module Brakeman
 
