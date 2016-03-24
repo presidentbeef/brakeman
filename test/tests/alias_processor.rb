@@ -435,7 +435,7 @@ class AliasProcessorTests < Test::Unit::TestCase
     [x, y]
     RUBY
 
-    tracker = Struct.new("FakeTracker", :options).new(:branch_limit => 4)
+    tracker = Brakeman::Tracker.new(nil, nil, :branch_limit => 4)
 
     assert_equal 4, tracker.options[:branch_limit]
 
