@@ -507,7 +507,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       exp.rhs = process exp.rhs
     end
 
-    @tracker.add_constant exp.lhs, exp.rhs
+    @tracker.add_constant exp.lhs, exp.rhs if @tracker
 
     if exp.lhs.is_a? Symbol
       match = Sexp.new(:const, exp.lhs)

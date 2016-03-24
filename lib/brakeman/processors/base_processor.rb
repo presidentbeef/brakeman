@@ -174,7 +174,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   end
 
   def process_cdecl exp
-    @tracker.add_constant exp.lhs, exp.rhs
+    @tracker.add_constant exp.lhs, exp.rhs if @tracker
     exp
   end
 
