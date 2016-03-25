@@ -47,6 +47,14 @@ module Brakeman
       @constants << Constant.new(name, value, context)
     end
 
+    def get_literal name
+      if x = self[name] and [:lit, :false, :str, :true, :array, :hash].include? x.node_type
+        x
+      else
+        nil
+      end
+    end
+
     def self.constant_as_array exp
       get_constant_name(exp).split('::')
     end

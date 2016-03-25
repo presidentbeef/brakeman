@@ -195,7 +195,7 @@ class Brakeman::Tracker
   end
 
   def constant_lookup name
-    @constants[name]
+    @constants.get_literal name
   end
 
   def index_call_sites
