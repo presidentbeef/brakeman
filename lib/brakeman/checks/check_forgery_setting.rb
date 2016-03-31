@@ -53,7 +53,7 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
     elsif version_between? "4.0.0", "100.0.0" and forgery_opts = app_controller.options[:protect_from_forgery]
 
       unless forgery_opts.is_a?(Array) and sexp?(forgery_opts.first) and
-          access_arg = hash_access(forgery_opts.first.first_arg, :with) and access_arg.size == 1 and
+          access_arg = hash_access(forgery_opts.first.first_arg, :with) and symbol? access_arg and
           access_arg.value == :exception
 
         args = {
