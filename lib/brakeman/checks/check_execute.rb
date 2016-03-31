@@ -43,6 +43,10 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     first_arg = call.first_arg
 
     case call.method
+    when :popen
+      unless array? first_arg
+        failure = include_user_input?(args) || dangerous_interp?(args)
+      end
     when :system, :exec
       failure = include_user_input?(first_arg) || dangerous_interp?(first_arg)
     else
