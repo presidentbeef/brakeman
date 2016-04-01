@@ -4,8 +4,8 @@ class SweetLib
   end
 
   def test_command_injection_in_lib
-    #Should warn about command injection
-    system("rm #{@bad}")
+    IO.popen(['ls', params[:id]]) #Should not warn
+    system("rm #{@bad}") #Should warn about command injection
   end
 
   def test_net_http_start_ssl
