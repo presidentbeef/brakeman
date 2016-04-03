@@ -43,7 +43,7 @@ module Brakeman
       end
     end
 
-    def add name, value, context
+    def add name, value, context = nil
       @constants << Constant.new(name, value, context)
     end
 
@@ -60,10 +60,10 @@ module Brakeman
     end
 
     def self.get_constant_name exp
-      if exp.is_a? Symbol
-        exp.to_s
-      else
+      if exp.is_a? Sexp
         Brakeman::OutputProcessor.new.format(exp)
+      else
+        exp.to_s
       end
     end
   end
