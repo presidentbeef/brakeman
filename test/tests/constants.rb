@@ -43,8 +43,8 @@ class ConstantTests < Test::Unit::TestCase
       BAR = 'Qux'
 
       def variations
-        ['Baz'].first.constantize
-        ['Baz'].first.constantize
+        'Baz'.constantize
+        'Baz'.constantize
         'Qux'.constantize
         'Qux'.constantize
       end
