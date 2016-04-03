@@ -254,6 +254,10 @@ module Brakeman::Util
     request_env? exp
   end
 
+  def constant? exp
+    node_type? exp, :const, :colon2, :colon3
+  end
+
   #Check if _exp_ is a Sexp.
   def sexp? exp
     exp.is_a? Sexp

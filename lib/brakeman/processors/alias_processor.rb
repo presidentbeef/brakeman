@@ -73,7 +73,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def replace exp, int = 0
     return exp if int > 3
 
+
     if replacement = env[exp] and not duplicate? replacement
+      replace(replacement.deep_clone(exp.line), int + 1)
+    elsif tracker and replacement = tracker.constant_lookup(exp) and not duplicate? replacement
       replace(replacement.deep_clone(exp.line), int + 1)
     else
       exp
@@ -503,6 +506,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     if sexp? exp.rhs
       exp.rhs = process exp.rhs
     end
+
+    @tracker.add_constant exp.lhs, exp.rhs if @tracker
 
     if exp.lhs.is_a? Symbol
       match = Sexp.new(:const, exp.lhs)

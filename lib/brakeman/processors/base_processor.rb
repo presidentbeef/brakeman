@@ -173,6 +173,11 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     exp
   end
 
+  def process_cdecl exp
+    @tracker.add_constant exp.lhs, exp.rhs if @tracker
+    exp
+  end
+
   #Convenience method for `make_render exp, true`
   def make_render_in_view exp
     make_render exp, true
