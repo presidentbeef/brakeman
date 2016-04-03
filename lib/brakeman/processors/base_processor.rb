@@ -179,7 +179,18 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   end
 
   def process_cdecl exp
-    @tracker.add_constant exp.lhs, exp.rhs if @tracker
+    file = case
+           when @file_name
+             @file_name
+           when @current_class.is_a?(Brakeman::Collection)
+             @current_class.file
+           when @current_module.is_a?(Brakeman::Collection)
+             @current_module.file
+           else
+             nil
+           end
+
+    @tracker.add_constant exp.lhs, exp.rhs, :file => file if @tracker
     exp
   end
 
