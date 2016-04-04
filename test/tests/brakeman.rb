@@ -65,6 +65,19 @@ class BrakemanTests < Test::Unit::TestCase
     assert contains_foo_model
     assert contains_foo_view
   end
+
+  def test_engines_path
+    require 'brakeman/options'
+    relative_path = File.expand_path(File.join(TEST_PATH, "/apps/rails4_with_engines"))
+    input = ["-p", relative_path.to_s]
+    options, _ = Brakeman::Options.parse input
+    options[:engines_path] = ['engines/user_removal']
+    at = Brakeman::AppTree.from_options options
+
+    expected_controllers = %w{application_controller.rb removal_controller.rb users_controller.rb}
+    basename = Proc.new { |path| File.basename path }
+    assert (at.controller_paths.map(&basename) - expected_controllers).empty?
+  end
 end
 
 class UtilTests < Test::Unit::TestCase
