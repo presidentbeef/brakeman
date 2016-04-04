@@ -104,7 +104,7 @@ module Brakeman
     end
 
     def layout_exists?(name)
-      !find_file("app/views/layouts", name, "{.erb, .haml, .slim}").empty?
+      !glob_files("app/views/layouts", name, "{.erb, .haml, .slim}").empty?
     end
 
     def lib_paths
@@ -119,10 +119,10 @@ module Brakeman
     end
 
     def find_paths(directory, extensions = ".rb")
-      select_files(find_file(directory, "*", extensions).sort)
+      select_files(glob_files(directory, "*", extensions).sort)
     end
 
-    def find_file(directory, name, extensions = ".rb")
+    def glob_files(directory, name, extensions = ".rb")
       abs_engines = @absolute_engines_path.to_a.join(",")
       rel_engines = @relative_engines_path.empty? ? "" : "{#{@relative_engines_path.to_a.join("/,")},}/"
       pattern = "{#{@root},#{abs_engines}}" + "/#{rel_engines}#{directory}/**/#{name}#{extensions}"
