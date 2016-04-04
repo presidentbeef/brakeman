@@ -6,7 +6,7 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
 
   def expected
     @expected ||= {
-      :controller => 1,
+      :controller => 2,
       :model => 5,
       :template => 11,
       :generic => 10 }
