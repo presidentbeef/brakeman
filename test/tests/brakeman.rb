@@ -69,9 +69,9 @@ class BrakemanTests < Test::Unit::TestCase
   def test_engines_path
     require 'brakeman/options'
     relative_path = File.expand_path(File.join(TEST_PATH, "/apps/rails4_with_engines"))
-    input = ["-p", relative_path.to_s]
+    input = ["-p", relative_path.to_s,
+             "--engines", "engine/user_removal"]
     options, _ = Brakeman::Options.parse input
-    options[:engines_path] = ['engines/user_removal']
     at = Brakeman::AppTree.from_options options
 
     expected_controllers = %w{application_controller.rb removal_controller.rb users_controller.rb}

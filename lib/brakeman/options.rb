@@ -279,6 +279,11 @@ module Brakeman::Options
         opts.on_tail "-h", "--help", "Display this message" do
           options[:show_help] = true
         end
+
+        opts.on "--engines path1,path2,etc", Array, "Include these engines in the scan." do |paths|
+          options[:engines_path] ||= Set.new
+          options[:engines_path].merge paths
+        end
       end
 
       if destructive
