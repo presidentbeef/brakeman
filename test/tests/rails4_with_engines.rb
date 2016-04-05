@@ -284,6 +284,18 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
       :relative_path => "app/controllers/application_controller.rb"
   end
 
+  def test_csrf_in_engine
+    assert_warning :type => :controller,
+      :warning_code => 7,
+      :fingerprint => "bdd5f4f1cdd2e9fb24adc4e9333f2b2eb1d0325badcab7c0b89c25952a2454e8",
+      :warning_type => "Cross-Site Request Forgery",
+      :line => 1,
+      :message => /^'protect_from_forgery'\ should\ be\ called\ /,
+      :confidence => 0,
+      :relative_path => "engines/user_removal/app/controllers/base_controller.rb",
+      :user_input => nil
+  end
+
   def test_xml_dos_CVE_2015_3227
     assert_warning :type => :warning,
       :warning_code => 88,
