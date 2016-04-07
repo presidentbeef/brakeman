@@ -111,6 +111,22 @@
 
 <p>The ignore configuration is a JSON file containing a list of warnings. This is essentially the same as the JSON report, except the warnings can also have a <code>note</code> field.</p>
 
+<p>A minimal configuration might look like this, although the auto-generated one will have more information:</p>
+
+<pre><code>{
+    "ignored_warnings": [
+        {
+          "fingerprint": "a21418b38aa77ef73946105fb1c9e3623b7be67a2419b960793871587200cbcc",
+          "note": "ignore foo"
+        },
+        {
+          "fingerprint": "5945a9b096557ee5771c2dd12ea6cbec933b662d169e559f524ba01c44bf2452",
+          "note": "ignore bar"
+        }
+    ]
+}
+</code></pre>
+
 <p>This functionality was introduced in <a href="/blog/2013/07/17/brakeman-2-dot-1-0-released/">Brakeman 2.1.0</a>.</p>
 
 <h2>Creating and Managing an Ignore File</h2>
@@ -204,6 +220,7 @@ q - Quit, do not update ignored warnings
     <section>
   <p></p>
   <p>Brakeman is an open source vulnerability scanner specifically designed for Ruby on Rails applications. It statically analyzes Rails application code to find security issues at any stage of development.</p>
+  <p><a href="https://brakemanpro.com">Brakeman Pro</a> is the commercial version of the scanner which offers a GUI and advanced features.</p>
 </section>
 <section>
 <script type='text/javascript'>
