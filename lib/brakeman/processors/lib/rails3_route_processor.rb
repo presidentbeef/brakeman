@@ -17,6 +17,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BasicProcessor
     @current_controller = nil
     @with_options = nil #For use inside map.with_options
     @controller_block = false
+    @file_name = "config/routes.rb"
   end
 
   def process_routes exp

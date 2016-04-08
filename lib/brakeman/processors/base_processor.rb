@@ -13,7 +13,12 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     super()
     @last = nil
     @tracker = tracker
-    @current_template = @current_module = @current_class = @current_method = nil
+    @current_template = @current_module = @current_class = @current_method = @file_name = nil
+  end
+
+  def process_file exp, file_name
+    @file_name = file_name
+    process exp
   end
 
   def ignore

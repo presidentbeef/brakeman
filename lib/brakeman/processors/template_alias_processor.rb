@@ -18,8 +18,8 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
   end
 
   #Process template
-  def process_template name, args, _, line = nil
-    file = relative_path(@template.file || @tracker.templates[@template.name])
+  def process_template name, args, _, line = nil, file_name = nil
+    @file_name = file_name || relative_path(@template.file || @tracker.templates[@template.name])
 
     if @called_from
       if @called_from.include_template? name
@@ -27,9 +27,9 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
         return
       end
 
-      super name, args, @called_from.dup.add_template_render(@template.name, line, file)
+      super name, args, @called_from.dup.add_template_render(@template.name, line, @file_name)
     else
-      super name, args, Brakeman::RenderPath.new.add_template_render(@template.name, line, file)
+      super name, args, Brakeman::RenderPath.new.add_template_render(@template.name, line, @file_name)
     end
   end
 
