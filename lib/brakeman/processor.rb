@@ -22,8 +22,8 @@ module Brakeman
     end
 
     #Process configuration file source
-    def process_config src
-      ConfigProcessor.new(@tracker).process_config src
+    def process_config src, file_name
+      ConfigProcessor.new(@tracker).process_config src, file_name
     end
 
     #Process Gemfile
@@ -88,10 +88,10 @@ module Brakeman
     end
 
     #Process source for initializing files
-    def process_initializer name, src
-      res = BaseProcessor.new(@tracker).process src
-      res = AliasProcessor.new(@tracker).process res
-      @tracker.initializers[Pathname.new(name).basename.to_s] = res
+    def process_initializer file_name, src
+      res = BaseProcessor.new(@tracker).process_file src, file_name
+      res = AliasProcessor.new(@tracker).process_safely res, nil, file_name
+      @tracker.initializers[Pathname.new(file_name).basename.to_s] = res
     end
 
     #Process source for a library file

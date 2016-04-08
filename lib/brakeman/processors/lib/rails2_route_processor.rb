@@ -16,6 +16,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BasicProcessor
     @prefix = [] #Controller name prefix (a module name, usually)
     @current_controller = nil
     @with_options = nil #For use inside map.with_options
+    @file_name = "config/routes.rb"
   end
 
   #Call this with parsed route file information.
@@ -23,7 +24,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BasicProcessor
   #This method first calls RouteAliasProcessor#process_safely on the +exp+,
   #so it does not modify the +exp+.
   def process_routes exp
-    process Brakeman::RouteAliasProcessor.new.process_safely(exp)
+    process Brakeman::RouteAliasProcessor.new.process_safely(exp, nil, @file_name)
   end
 
   #Looking for mapping of routes

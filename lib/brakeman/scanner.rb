@@ -116,7 +116,7 @@ class Brakeman::Scanner
     path = "config/#{file}"
 
     if @app_tree.exists?(path)
-      @processor.process_config(parse_ruby(@app_tree.read(path)))
+      @processor.process_config(parse_ruby(@app_tree.read(path)), path)
     end
 
   rescue => e
