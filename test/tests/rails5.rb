@@ -13,7 +13,7 @@ class Rails5Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 2,
-      :generic => 5
+      :generic => 6
     }
   end
 
@@ -54,6 +54,18 @@ class Rails5Tests < Test::Unit::TestCase
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, s(:call, s(:params), :[], s(:lit, :x)), :to_sym),
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_secrets_in_source
+    assert_warning :type => :warning,
+      :warning_code => 101,
+      :fingerprint => "eefde7320af81299c41d50840750b5cb509a1fe454ba9179076955bf53b6d966",
+      :warning_type => "Authentication",
+      :line => 1,
+      :message => /^Hardcoded\ value\ for\ DB_PASSWORD\ in\ sourc/,
+      :confidence => 1,
+      :user_input => nil,
+      :relative_path => "config/initializers/secrets.rb"
   end
 
   def test_cross_site_scripting_CVE_2015_7578

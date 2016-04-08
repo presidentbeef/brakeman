@@ -16,7 +16,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #The recommended usage is:
   #
   # AliasProcessor.new.process_safely src
-  def initialize tracker = nil
+  def initialize tracker = nil, file_name = nil
     super()
     @env = SexpProcessor::Environment.new
     @inside_if = false
@@ -28,6 +28,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     @helper_method_info = Hash.new({})
     @or_depth_limit = (tracker && tracker.options[:branch_limit]) || 5 #arbitrary default
     @meth_env = nil
+    @file_name = file_name
     set_env_defaults
   end
 
@@ -512,7 +513,18 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       exp.rhs = process exp.rhs
     end
 
-    @tracker.add_constant exp.lhs, exp.rhs if @tracker
+    file = case
+           when @file_name
+             @file_name
+           when @current_class.is_a?(Brakeman::Collection)
+             @current_class.file
+           when @current_module.is_a?(Brakeman::Collection)
+             @current_module.file
+           else
+             nil
+           end
+
+    @tracker.add_constant exp.lhs, exp.rhs, :file => file if @tracker
 
     if exp.lhs.is_a? Symbol
       match = Sexp.new(:const, exp.lhs)

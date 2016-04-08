@@ -2,9 +2,22 @@ require 'brakeman/processors/output_processor'
 
 module Brakeman
   class Constant
+    attr_reader :name, :file
+
     def initialize name, value = nil, context = nil 
       set_name name, context
       @values = [ value ]
+      @context = context
+
+      if @context
+        @file = @context[:file]
+      end
+    end
+
+    def line
+      if @values.first.is_a? Sexp
+        @values.first.line
+      end
     end
 
     def set_name name, context
@@ -20,6 +33,12 @@ module Brakeman
         Sexp.new(:or, v, m)
       end
     end
+
+    def add_value exp
+      unless @values.include? exp
+        @values << exp
+      end
+    end
   end
 
   class Constants
@@ -31,10 +50,7 @@ module Brakeman
 
     def [] exp
       return unless constant? exp
-      name = Constants.constant_as_array(exp)
-      match = @constants.find do |c|
-        c.match? name
-      end
+      match = find_constant exp
 
       if match
         match.value
@@ -43,8 +59,19 @@ module Brakeman
       end
     end
 
+    def find_constant exp
+      name = Constants.constant_as_array(exp)
+      @constants.find do |c|
+        c.match? name
+      end
+    end
+
     def add name, value, context = nil
-      @constants << Constant.new(name, value, context)
+      if existing = self.find_constant(name)
+        existing.add_value value
+      else
+        @constants << Constant.new(name, value, context)
+      end
     end
 
     def get_literal name
@@ -53,6 +80,10 @@ module Brakeman
       else
         nil
       end
+    end
+
+    def each &block
+      @constants.each &block
     end
 
     def self.constant_as_array exp
