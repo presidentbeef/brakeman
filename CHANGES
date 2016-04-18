@@ -1,3 +1,14 @@
+# Unreleased
+
+* Add optional check for secrets in source code
+* Process `Array#first`
+* Avoid warning on `popen` with array
+* Bundle all dependencies in gem
+* Track constants globally
+* Handle HAML `find_and_preserve` with a block
+* [Code Climate engine] When possible, output to /dev/stdout (Gordon Diggs)
+* [Code Climate engine] Remove nil entries from include_paths (Gordon Diggs)
+
 # 3.2.1
 
 * Remove `multi_json` dependency from `bin/brakeman`
