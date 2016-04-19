@@ -652,6 +652,19 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /test_params\.html\.erb/
   end
 
+  def test_cross_site_scripting_alias_u
+    assert_no_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "a1f78b7e1ff25f81054b5ed38d04457e76278ba38444cb65f93cd559f9545bd9",
+      :warning_type => "Cross Site Scripting",
+      :line => 22,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/home/test_params.html.erb",
+      :code => s(:call, s(:params), :[], s(:lit, :w00t)),
+      :user_input => nil
+  end
+
   def test_sql_injection_in_template
     #SQL injection in controllers should not warn again in views
     assert_no_warning :type => :template,
