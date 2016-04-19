@@ -505,6 +505,19 @@ class Rails2Tests < Test::Unit::TestCase
       :relative_path => "app/views/home/test_params.html.erb"
   end
 
+  def test_cross_site_scripting_alias_u_for_link_to
+    assert_no_warning :type => :template,
+      :warning_code => 3,
+      :fingerprint => "1803557ac730919bef3de68329461c47d5bee2a6bcdc8f467e6ee896504e6355",
+      :warning_type => "Cross Site Scripting",
+      :line => 22,
+      :message => /^Unescaped\ parameter\ value\ in\ link_to/,
+      :confidence => 0,
+      :relative_path => "app/views/home/test_params.html.erb",
+      :code => s(:call, nil, :link_to, s(:call, s(:params), :[], s(:lit, :w00t)), s(:str, "some_url")),
+      :user_input => s(:call, s(:params), :[], s(:lit, :w00t))
+  end
+
   def test_encoded_href_parameter_in_link_to
     assert_no_warning :type => :template,
       :warning_type => "Cross Site Scripting",
