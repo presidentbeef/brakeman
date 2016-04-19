@@ -26,7 +26,8 @@ class Brakeman::Report::CodeClimate < Brakeman::Report::Base
       location: {
         path: warning.relative_path,
         lines: {
-          begin: warning.line || 1
+          begin: warning.line || 1,
+          end: warning.line || 1,
         }
       },
       content: {

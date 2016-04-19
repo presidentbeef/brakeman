@@ -17,6 +17,7 @@ class TestCodeClimateOutput < Test::Unit::TestCase
     @@issues.each do |issue|
       assert issue["location"]["path"].length > 0
       assert issue["location"]["lines"]["begin"] >= 1
+      assert issue["location"]["lines"]["end"] >= 1
     end
   end
 
