@@ -441,6 +441,19 @@ class Rails2Tests < Test::Unit::TestCase
       :relative_path => "app/views/home/test_params.html.erb"
   end
 
+  def test_cross_site_scripting_alias_u
+    assert_no_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "a1f78b7e1ff25f81054b5ed38d04457e76278ba38444cb65f93cd559f9545bd9",
+      :warning_type => "Cross Site Scripting",
+      :line => 20,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/home/test_params.html.erb",
+      :code => s(:call, s(:params), :[], s(:lit, :w00t)),
+      :user_input => nil
+  end
+
   def test_model_attribute_from_controller
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
@@ -490,6 +503,19 @@ class Rails2Tests < Test::Unit::TestCase
       :confidence => 1,
       :file => /test_params\.html\.erb/,
       :relative_path => "app/views/home/test_params.html.erb"
+  end
+
+  def test_cross_site_scripting_alias_u_for_link_to
+    assert_no_warning :type => :template,
+      :warning_code => 3,
+      :fingerprint => "1803557ac730919bef3de68329461c47d5bee2a6bcdc8f467e6ee896504e6355",
+      :warning_type => "Cross Site Scripting",
+      :line => 22,
+      :message => /^Unescaped\ parameter\ value\ in\ link_to/,
+      :confidence => 0,
+      :relative_path => "app/views/home/test_params.html.erb",
+      :code => s(:call, nil, :link_to, s(:call, s(:params), :[], s(:lit, :w00t)), s(:str, "some_url")),
+      :user_input => s(:call, s(:params), :[], s(:lit, :w00t))
   end
 
   def test_encoded_href_parameter_in_link_to
@@ -544,6 +570,19 @@ class Rails2Tests < Test::Unit::TestCase
       :confidence => 1,
       :file => /test_model\.html\.erb/,
       :relative_path => "app/views/home/test_model.html.erb"
+  end
+
+  def test_cross_site_scripting_alias_u_for_link_to_href
+    assert_no_warning :type => :template,
+      :warning_code => 4,
+      :fingerprint => "395a4782d1e015e32c62aff7b3811533d91015935bc1b4258ad17b264dcdf6fe",
+      :warning_type => "Cross Site Scripting",
+      :line => 15,
+      :message => /^Unsafe\ parameter\ value\ in\ link_to\ href/,
+      :confidence => 0,
+      :relative_path => "app/views/home/test_model.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, "test"), s(:call, s(:params), :[], s(:lit, :user_id))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :user_id))
   end
 
   def test_unescaped_body_in_link_to
@@ -860,6 +899,19 @@ class Rails2Tests < Test::Unit::TestCase
       :confidence => 0,
       :file => /test_content_tag\.html\.erb/,
       :relative_path => "app/views/home/test_content_tag.html.erb"
+  end
+
+  def test_cross_site_scripting_u_alias_for_content_tag
+    assert_no_warning :type => :template,
+      :warning_code => 53,
+      :fingerprint => "e0279d86dea74b0da8c9cf5fce0b38c1023c1c407e84671d03ce0ca3440f03da",
+      :warning_type => "Cross Site Scripting",
+      :line => 29,
+      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :confidence => 0,
+      :relative_path => "app/views/home/test_content_tag.html.erb",
+      :code => s(:call, nil, :content_tag, s(:lit, :span), s(:call, s(:params), :[], s(:lit, :url))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :url))
   end
 
   #Uh...maybe this shouldn't be a warning

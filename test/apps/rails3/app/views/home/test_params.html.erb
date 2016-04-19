@@ -18,3 +18,5 @@ Still dangerous hrefs: <%= link_to "donkey", not_safe(params[:bad_robot]) %>
 Not completely safe: <%= link_to "Helvetica hoodie bushwick", h(params[:js_xss]) %>
 
 Request parameters: <%= raw request.parameters %>
+
+Should not warn <%= raw u(params[:w00t]) %>

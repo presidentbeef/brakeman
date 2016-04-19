@@ -286,7 +286,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
                            :hidden_field, :hidden_field_tag, :image_tag, :label,
                            :link_to, :mail_to, :radio_button, :select,
                            :submit_tag, :text_area, :text_field,
-                           :text_field_tag, :url_encode, :url_for,
+                           :text_field_tag, :url_encode, :u, :url_for,
                            :will_paginate].merge tracker.options[:safe_methods]
 
     @models = tracker.models.keys
