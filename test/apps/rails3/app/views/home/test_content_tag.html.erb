@@ -33,3 +33,6 @@ Should warn
 
 Should warn
 <%= content_tag @user.preferred_markup, "Seriously" %>
+
+Should not warn
+<%= content_tag :span, "test", { u(params[:class]) => "display:none" } %>

@@ -888,6 +888,19 @@ class Rails2Tests < Test::Unit::TestCase
       :relative_path => "app/views/home/test_content_tag.html.erb"
   end
 
+  def test_cross_site_scripting_u_alias_for_content_tag
+    assert_no_warning :type => :template,
+      :warning_code => 53,
+      :fingerprint => "e0279d86dea74b0da8c9cf5fce0b38c1023c1c407e84671d03ce0ca3440f03da",
+      :warning_type => "Cross Site Scripting",
+      :line => 29,
+      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :confidence => 0,
+      :relative_path => "app/views/home/test_content_tag.html.erb",
+      :code => s(:call, nil, :content_tag, s(:lit, :span), s(:call, s(:params), :[], s(:lit, :url))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :url))
+  end
+
   #Uh...maybe this shouldn't be a warning
   def test_cross_site_scripting_in_sanitize_method
     assert_warning :type => :template,

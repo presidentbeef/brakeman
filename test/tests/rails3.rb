@@ -969,6 +969,19 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /test_content_tag\.html\.erb/
   end
 
+  def test_cross_site_scripting_u_alias_for_content_tag
+    assert_no_warning :type => :template,
+      :warning_code => 53,
+      :fingerprint => "2bfdd98472f9f235b3ea683a4d911749b0c1b7ae169be697657304724d780595",
+      :warning_type => "Cross Site Scripting",
+      :line => 38,
+      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :confidence => 0,
+      :relative_path => "app/views/home/test_content_tag.html.erb",
+      :code => s(:call, nil, :content_tag, s(:lit, :span), s(:str, "test"), s(:hash, s(:call, s(:params), :[], s(:lit, :class)), s(:str, "display:none"))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :class))
+  end
+
   def test_cross_site_scripting_prepend_filter
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
