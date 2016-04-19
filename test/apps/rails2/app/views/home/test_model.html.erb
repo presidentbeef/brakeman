@@ -11,3 +11,5 @@ It's just a model <%= link_to "Hipster ipsum", User.first %>
 It's just a couple of models <%= link_to "Hipster ipsum", [Account.first, User.last] %>
 
 <%= render :partial => 'models', :collection => all_the_things, :as => :model %>
+
+Safe link_to herf fun: <%= link_to "test", u(params[:user_id]) %>
