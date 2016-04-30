@@ -82,4 +82,8 @@ class UsersController < ApplicationController
     def symbol
       params[:x].to_sym
     end
+
+    def slice_then_permit
+      User.new(params.slice(:id).permit!)
+    end
 end

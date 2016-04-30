@@ -30,6 +30,19 @@ class Rails5Tests < Test::Unit::TestCase
       :user_input => nil
   end
 
+  def test_mass_assignment_with_slice
+    assert_no_warning :type => :warning,
+      :warning_code => 70,
+      :fingerprint => "79c472e032f2ff16f4688ea9d87ccc1c6def392c9b3e189ee1c4d1c079dd4fbf",
+      :warning_type => "Mass Assignment",
+      :line => 87,
+      :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:call, s(:params), :slice, s(:lit, :id)), :permit!),
+      :user_input => nil
+  end
+
   def test_dangerous_send_with_safe_call
     assert_warning :type => :warning,
       :warning_code => 23,
