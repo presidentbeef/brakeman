@@ -48,9 +48,19 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   #Process an if statement.
   def process_if exp
     exp = exp.dup
-    exp[1] = process exp.condition
-    exp[2] = process exp.then_clause if exp.then_clause
-    exp[3] = process exp.else_clause if exp.else_clause
+    condition = exp[1] = process exp.condition
+
+    if true? condition
+      exp[2] = process exp.then_clause if exp.then_clause
+      exp[3] = nil
+    elsif false? condition
+      exp[2] = nil
+      exp[3] = process exp.else_clause if exp.else_clause
+    else
+      exp[2] = process exp.then_clause if exp.then_clause
+      exp[3] = process exp.else_clause if exp.else_clause
+    end
+
     exp
   end
 

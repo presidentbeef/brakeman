@@ -21,7 +21,7 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BasicProcessor
   end
 
   def process_routes exp
-    process exp.dup
+    process Brakeman::AliasProcessor.new.process_safely(exp, nil, @file_name)
   end
 
   def process_call exp

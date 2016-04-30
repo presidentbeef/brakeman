@@ -120,6 +120,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       return Sexp.new(:false)
     end
 
+
     #See if it is possible to simplify some basic cases
     #of addition/concatenation.
     case method
@@ -568,7 +569,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       @ignore_ifs = @tracker && @tracker.options[:ignore_ifs]
     end
 
-    condition = process exp.condition
+    condition = exp.condition = process exp.condition
 
     #Check if a branch is obviously going to be taken
     if true? condition
