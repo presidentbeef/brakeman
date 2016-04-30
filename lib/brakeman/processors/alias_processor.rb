@@ -87,6 +87,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   ARRAY_CONST = s(:const, :Array)
   HASH_CONST = s(:const, :Hash)
+  RAILS_TEST = s(:call, s(:call, s(:const, :Rails), :env), :test?)
 
   #Process a method call.
   def process_call exp
@@ -115,6 +116,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       return Sexp.new(:array, *exp.args)
     elsif target == HASH_CONST and method == :new and first_arg.nil? and !node_type?(@exp_context.last, :iter)
       return Sexp.new(:hash)
+    elsif exp == RAILS_TEST
+      return Sexp.new(:false)
     end
 
     #See if it is possible to simplify some basic cases
