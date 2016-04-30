@@ -85,5 +85,6 @@ class UsersController < ApplicationController
 
     def slice_then_permit
       User.new(params.slice(:id).permit!)
+      User.find_by(params.slice(:id))
     end
 end

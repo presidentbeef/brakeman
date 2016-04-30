@@ -43,6 +43,19 @@ class Rails5Tests < Test::Unit::TestCase
       :user_input => nil
   end
 
+  def test_sql_injection_with_slice
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "d9f4fec5f738785ea1aed229d192a2d5d2eb0d8805f6ca58fd02416105e0f9db",
+      :warning_type => "SQL Injection",
+      :line => 88,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :User), :find_by, s(:call, s(:params), :slice, s(:lit, :id))),
+      :user_input => s(:call, s(:params), :slice, s(:lit, :id))
+  end
+
   def test_dangerous_send_with_safe_call
     assert_warning :type => :warning,
       :warning_code => 23,
