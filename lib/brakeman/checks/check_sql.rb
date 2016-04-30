@@ -264,7 +264,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     end
 
     if request_value? arg
-      unless call? arg and params? arg.target and arg.method == :permit
+      unless call? arg and params? arg.target and [:permit, :slice].include? arg.method
         # Model.where(params[:where])
         arg
       end
