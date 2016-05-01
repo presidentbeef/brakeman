@@ -12,6 +12,9 @@ module Brakeman
   #option is set
   Warnings_Found_Exit_Code = 3
 
+  #Exit code returned when no Rails application is detected
+  No_App_Found_Exit_Code = 4
+
   @debug = false
   @quiet = false
   @loaded_dependencies = []
