@@ -85,5 +85,5 @@ begin
   end
 rescue Brakeman::NoApplication => e
   $stderr.puts e.message
-  exit 1
+  exit Brakeman::No_App_Found_Exit_Code
 end
