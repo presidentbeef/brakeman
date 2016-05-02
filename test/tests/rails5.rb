@@ -94,6 +94,31 @@ class Rails5Tests < Test::Unit::TestCase
       :relative_path => "config/initializers/secrets.rb"
   end
 
+  def test_skipping_rails_env_test
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "46cda22e00dca87a8715682bd7d8d52cc4a8e705257b27c5e36595ebd1f654f8",
+      :warning_type => "SQL Injection",
+      :line => 4,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb",
+      :code => s(:call, s(:const, :User), :where, s(:params)),
+      :user_input => s(:params)
+  end
+
+  def test_default_routes_in_test
+    assert_no_warning :type => :warning,
+      :warning_code => 11,
+      :fingerprint => "ff2b76e22c9fd2bc3930f9a935124b9ed9f6ea710bbb5bc7c51505d70ca0f2d5",
+      :warning_type => "Default Routes",
+      :line => 8,
+      :message => /^All\ public\ methods\ in\ controllers\ are\ av/,
+      :confidence => 0,
+      :relative_path => "config/routes.rb",
+      :user_input => nil
+  end
+
   def test_cross_site_scripting_CVE_2015_7578
     assert_warning :type => :warning,
       :warning_code => 96,

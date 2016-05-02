@@ -185,6 +185,37 @@ class AliasProcessorTests < Test::Unit::TestCase
     RUBY
   end
 
+  def test_skip_obvious_if
+    assert_output <<-INPUT, <<-OUTPUT
+      condition = false
+
+      if condition
+        x = true
+      else
+        x = false
+      end
+      INPUT
+      condition = false
+
+      if false
+      else
+        x = false
+      end
+      OUTPUT
+  end
+
+  def test_skip_rails_env_test
+    assert_alias "'No!'", <<-RUBY
+      if Rails.env.test?
+        x = "Yes!"
+      else
+        x = "No!"
+      end
+
+      x
+    RUBY
+  end
+
   def test_if
     assert_alias "'Awesome!' or 'Else awesome!'", <<-RUBY
       if something

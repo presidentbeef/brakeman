@@ -326,6 +326,12 @@ class Sexp
     self[1]
   end
 
+  def condition= exp
+    expect :if
+    self[1] = exp
+  end
+
+
   #Returns 'then' clause of an if expression:
   #
   #    s(:if,

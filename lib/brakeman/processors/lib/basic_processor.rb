@@ -30,4 +30,22 @@ class Brakeman::BasicProcessor < Brakeman::SexpProcessor
       process_default exp
     end
   end
+
+  def process_if exp
+    condition = exp.condition
+
+    process condition
+
+    if true? condition
+      process exp.then_clause
+    elsif false? condition
+      process exp.else_clause
+    else
+      [exp.then_clause, exp.else_clause].compact.map do |e|
+        process e
+      end
+    end
+
+    exp
+  end
 end
