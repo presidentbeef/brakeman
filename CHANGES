@@ -1,13 +1,20 @@
-# Unreleased
+# 3.3.0
 
+* Skip processing obviously false if branches (more broadly)
+* Skip if branches with `Rails.env.test?`
+* Return exit code `4` if no Rails application is detected
+* Avoid warning about mass assignment with `params.slice`
+* Avoid warning about `u` helper (Chad Dollins)
 * Add optional check for secrets in source code
 * Process `Array#first`
+* Allow non-Hash arguments in `protect_from_forgery` (Jason Yeo)
 * Avoid warning on `popen` with array
 * Bundle all dependencies in gem
 * Track constants globally
 * Handle HAML `find_and_preserve` with a block
 * [Code Climate engine] When possible, output to /dev/stdout (Gordon Diggs)
 * [Code Climate engine] Remove nil entries from include_paths (Gordon Diggs)
+* [Code Climate engine] Report end lines for issues (Gordon Diggs)
 
 # 3.2.1
 
