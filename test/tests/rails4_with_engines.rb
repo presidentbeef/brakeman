@@ -6,7 +6,7 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
 
   def expected
     @expected ||= {
-      :controller => 1,
+      :controller => 2,
       :model => 5,
       :template => 11,
       :generic => 10 }
@@ -282,6 +282,18 @@ class Rails4WithEnginesTests < Test::Unit::TestCase
       :message => "protect_from_forgery should be configured with 'with: :exception'",
       :confidence => 1,
       :relative_path => "app/controllers/application_controller.rb"
+  end
+
+  def test_csrf_in_engine
+    assert_warning :type => :controller,
+      :warning_code => 7,
+      :fingerprint => "bdd5f4f1cdd2e9fb24adc4e9333f2b2eb1d0325badcab7c0b89c25952a2454e8",
+      :warning_type => "Cross-Site Request Forgery",
+      :line => 1,
+      :message => /^'protect_from_forgery'\ should\ be\ called\ /,
+      :confidence => 0,
+      :relative_path => "engines/user_removal/app/controllers/base_controller.rb",
+      :user_input => nil
   end
 
   def test_xml_dos_CVE_2015_3227
