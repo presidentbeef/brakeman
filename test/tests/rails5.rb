@@ -132,6 +132,19 @@ class Rails5Tests < Test::Unit::TestCase
       :user_input => s(:call, s(:params), :slice, s(:lit, :back_to))
   end
 
+  def test_cross_site_scripting_with_slice
+    assert_no_warning :type => :template,
+      :warning_code => 4,
+      :fingerprint => "0e7c3fed684f3152150e01986fbdde92741b2d69628156f3f28f30987456c018",
+      :warning_type => "Cross Site Scripting",
+      :line => 25,
+      :message => /^Unsafe\ parameter\ value\ in\ link_to\ href/,
+      :confidence => 0,
+      :relative_path => "app/views/users/index.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, "slice"), s(:call, s(:params), :slice, s(:lit, :url))),
+      :user_input => s(:call, s(:params), :slice, s(:lit, :url))
+  end
+
   def test_cross_site_scripting_CVE_2015_7578
     assert_warning :type => :warning,
       :warning_code => 96,
