@@ -1,5 +1,6 @@
 # 3.3.0
 
+* Avoid warning about `slice` in `redirect_to` and `link_to`
 * Skip processing obviously false if branches (more broadly)
 * Skip if branches with `Rails.env.test?`
 * Return exit code `4` if no Rails application is detected
