@@ -38,6 +38,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     if method == :redirect_to and
         not only_path?(call) and
         not explicit_host?(call.first_arg) and
+        not slice_call?(call.first_arg) and
         res = include_user_input?(call)
 
       add_result result
@@ -205,5 +206,10 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     return false unless model
 
     model.association? meth
+  end
+
+  def slice_call? exp
+    return unless call? exp
+    exp.method == :slice
   end
 end

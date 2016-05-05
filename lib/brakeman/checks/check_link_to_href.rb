@@ -15,7 +15,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     @ignore_methods = Set[:button_to, :check_box,
                            :field_field, :fields_for, :hidden_field,
                            :hidden_field, :hidden_field_tag, :image_tag, :label,
-                           :mail_to, :polymorphic_url, :radio_button, :select,
+                           :mail_to, :polymorphic_url, :radio_button, :select, :slice,
                            :submit_tag, :text_area, :text_field,
                            :text_field_tag, :url_encode, :u, :url_for,
                            :will_paginate].merge(tracker.options[:url_safe_methods] || [])

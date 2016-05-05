@@ -119,6 +119,32 @@ class Rails5Tests < Test::Unit::TestCase
       :user_input => nil
   end
 
+  def test_redirect_with_slice
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "b70fe6fa14df927bdfe80e0731c4c4170db0c3c80edad5a4462c7037acde93a4",
+      :warning_type => "Redirect",
+      :line => 89,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, nil, :redirect_to, s(:call, s(:params), :slice, s(:lit, :back_to))),
+      :user_input => s(:call, s(:params), :slice, s(:lit, :back_to))
+  end
+
+  def test_cross_site_scripting_with_slice
+    assert_no_warning :type => :template,
+      :warning_code => 4,
+      :fingerprint => "0e7c3fed684f3152150e01986fbdde92741b2d69628156f3f28f30987456c018",
+      :warning_type => "Cross Site Scripting",
+      :line => 25,
+      :message => /^Unsafe\ parameter\ value\ in\ link_to\ href/,
+      :confidence => 0,
+      :relative_path => "app/views/users/index.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, "slice"), s(:call, s(:params), :slice, s(:lit, :url))),
+      :user_input => s(:call, s(:params), :slice, s(:lit, :url))
+  end
+
   def test_cross_site_scripting_CVE_2015_7578
     assert_warning :type => :warning,
       :warning_code => 96,
