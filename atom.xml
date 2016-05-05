@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2016-05-05T08:55:24-07:00</updated>
+  <updated>2016-05-05T08:58:16-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -24,7 +24,7 @@
 &lt;ul&gt;
 &lt;li&gt;Bundle all dependencies in gem&lt;/li&gt;
 &lt;li&gt;Return exit code &lt;code&gt;4&lt;/code&gt; if no Rails application is detected (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/869&quot;&gt;#869&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Add optional check for secrets in source code&lt;/li&gt;
+&lt;li&gt;Add optional check for secrets in source code (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/201&quot;&gt;#201&lt;/a&gt;)&lt;/li&gt;
 &lt;li&gt;Track constants globally&lt;/li&gt;
 &lt;li&gt;Skip if branches with &lt;code&gt;Rails.env.test?&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/862&quot;&gt;#862&lt;/a&gt;)&lt;/li&gt;
 &lt;li&gt;Skip processing obviously false if branches (more broadly)&lt;/li&gt;
