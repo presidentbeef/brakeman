@@ -13,7 +13,7 @@ class Rails3Tests < Test::Unit::TestCase
     @expected ||= {
       :controller => 1,
       :model => 9,
-      :template => 38,
+      :template => 39,
       :generic => 74
     }
 
@@ -562,6 +562,19 @@ class Rails3Tests < Test::Unit::TestCase
       :confidence => 1,
       :file => /test_params\.html\.erb/            
   end  
+
+  # Brakeman previously mishandled multiple newlines between nested ruby
+  # expressions incorrectly. This test verifies that multiple newlines
+  # between ruby expressions does not lead to incorrect line numbers in
+  # warnings.
+  def test_multiple_newlines_in_nested_logic
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 5,
+      :message => /^Unsafe parameter value in link_to href/,
+      :confidence => 0,
+      :file => /test_multiple_newlines\.html\.erb/
+  end
 
   def test_polymorphic_url_in_href
     assert_no_warning :type => :template,

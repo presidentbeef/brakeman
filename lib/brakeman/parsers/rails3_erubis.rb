@@ -9,8 +9,8 @@ class Brakeman::Rails3Erubis < ::Erubis::Eruby
 
   #This is different from Rails 3 - fixes some line number issues
   def add_text(src, text)
-    if text == "\n"
-      src << "\n"
+    if text =~ /\A\n+\z/
+      src << text
     elsif text.include? "\n"
       lines = text.split("\n")
       if text.match(/\n\z/)
