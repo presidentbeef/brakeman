@@ -563,7 +563,7 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /test_params\.html\.erb/            
   end  
 
-  # Brakeman previously mishandled multiple newlines between nested ruby
+  # Brakeman previously handled multiple newlines between nested ruby
   # expressions incorrectly. This test verifies that multiple newlines
   # between ruby expressions does not lead to incorrect line numbers in
   # warnings.
