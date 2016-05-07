@@ -1,6 +1,6 @@
 require 'brakeman/differ'
 
-class DifferTests < Test::Unit::TestCase
+class DifferTests < Minitest::Test
   include BrakemanTester::DiffHelper
 
   def setup

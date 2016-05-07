@@ -1,6 +1,6 @@
 require 'brakeman/processors/base_processor'
 
-class SexpTests < Test::Unit::TestCase
+class SexpTests < Minitest::Test
   def setup
     @ruby_parser = ::RubyParser
   end
@@ -265,7 +265,7 @@ class SexpTests < Test::Unit::TestCase
   def test_wrong_sexp_error
     exp = parse 'true ? false : true'
 
-    assert_raise WrongSexpError do
+    assert_raises WrongSexpError do
       exp.method
     end
   end
@@ -340,7 +340,7 @@ class SexpTests < Test::Unit::TestCase
     s_hash = s.hash
     s << :blah
 
-    assert_not_equal s_hash, s.hash
+    refute_equal s_hash, s.hash
   end
 
   # Since Sexp is subclassed from Array, only changing the contents
@@ -350,7 +350,7 @@ class SexpTests < Test::Unit::TestCase
     s_hash = s.hash
     s.line(10)
 
-    assert_not_nil s.instance_variable_get(:@my_hash_value)
+    refute_nil s.instance_variable_get(:@my_hash_value)
   end
 
   def test_sexp_line_set

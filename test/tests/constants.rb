@@ -1,4 +1,4 @@
-class ConstantTests < Test::Unit::TestCase
+class ConstantTests < Minitest::Test
   def setup
     @constants = Brakeman::Constants.new
   end

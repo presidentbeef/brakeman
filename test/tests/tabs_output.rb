@@ -1,4 +1,4 @@
-class TestTabsOutput < Test::Unit::TestCase
+class TestTabsOutput < Minitest::Test
   def setup
     @@report ||= Brakeman.run(
       :app_path       => "#{TEST_PATH}/apps/rails2",

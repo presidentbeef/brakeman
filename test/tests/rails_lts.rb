@@ -1,6 +1,6 @@
 require 'brakeman/rescanner'
 
-class RailsLTSTests < Test::Unit::TestCase
+class RailsLTSTests < Minitest::Test
   include BrakemanTester::RescanTestHelper
 
   def test_gemfile_lock_rails_lts

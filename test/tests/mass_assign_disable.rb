@@ -1,4 +1,4 @@
-class MassAssignDisableTest < Test::Unit::TestCase
+class MassAssignDisableTest < Minitest::Test
   include BrakemanTester::RescanTestHelper
 
   def mass_assign_disable content

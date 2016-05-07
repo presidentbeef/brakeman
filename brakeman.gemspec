@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   if File.exist? 'bundle/load.rb'
     s.files += Dir['bundle/ruby/*/gems/**/*'] + ['bundle/load.rb']
   else
-    s.add_development_dependency "test-unit" unless ENV['BM_PACKAGE']
+    s.add_development_dependency "minitest" unless ENV['BM_PACKAGE']
     s.add_dependency "ruby_parser", "~>3.8.1"
     s.add_dependency "ruby2ruby", "~>2.3.0"
     s.add_dependency "terminal-table", "~>1.4"

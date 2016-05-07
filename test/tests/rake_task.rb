@@ -1,7 +1,7 @@
 require 'fileutils'
 require 'tmpdir'
 
-class RakeTaskTests < Test::Unit::TestCase
+class RakeTaskTests < Minitest::Test
   def setup
     # Brakeman is noisy on errors
     @old_stderr = $stderr.dup
@@ -47,7 +47,7 @@ class RakeTaskTests < Test::Unit::TestCase
         Brakeman.install_rake_task
       end
 
-      assert_raise Brakeman::RakeInstallError do
+      assert_raises Brakeman::RakeInstallError do
         Brakeman.install_rake_task
       end
     end
@@ -57,7 +57,7 @@ class RakeTaskTests < Test::Unit::TestCase
     in_temp_app do
       File.delete @rakefile
 
-      assert_raise Brakeman::RakeInstallError do
+      assert_raises Brakeman::RakeInstallError do
         Brakeman.install_rake_task
       end
     end
