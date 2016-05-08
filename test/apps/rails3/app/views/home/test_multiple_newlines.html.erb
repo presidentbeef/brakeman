@@ -1,0 +1,7 @@
+<% if @name %>
+
+
+  <% if @indirect %>
+    Dangerous hrefs in nested logic with multiple newlines: <%= link_to "so many newlines", params[:dangerous] %>
+  <% end %>
+<% end %>
