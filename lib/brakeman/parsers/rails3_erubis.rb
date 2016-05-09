@@ -12,7 +12,7 @@ class Brakeman::Rails3Erubis < ::Erubis::Eruby
     lines = text.lines
     lines.each do |line|
       if line == "\n"
-        src << "\n"
+        src << line
       else
         newline = line.end_with?("\n") ? "\n" : nil
         src << "@output_buffer << ('" << escape_text(line.chomp) << "'.html_safe!);#{newline}"
