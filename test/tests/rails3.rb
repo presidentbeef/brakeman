@@ -563,7 +563,6 @@ class Rails3Tests < Test::Unit::TestCase
       :file => /test_params\.html\.erb/            
   end  
 
-
   def test_newlines_in_template
     # Brakeman previously handled multiple newlines between nested ruby
     # expressions incorrectly. This test verifies that multiple newlines between
@@ -705,7 +704,7 @@ class Rails3Tests < Test::Unit::TestCase
     #SQL injection in controllers should not warn again in views
     assert_no_warning :type => :template,
       :warning_type => "SQL Injection",
-      :line => 3,
+      :line => 4,
       :message => /^Possible SQL injection/,
       :confidence => 0,
       :file => /test_sql\.html\.erb/
