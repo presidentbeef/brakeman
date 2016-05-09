@@ -522,7 +522,7 @@ class Rails31Tests < Test::Unit::TestCase
   def test_select_vulnerability
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
-      :line => 2,
+      :line => 3,
       :message => /^Upgrade to Rails 3.1.4, 3.1.0 select\(\) helper is vulnerable/,
       :confidence => 1,
       :file => /edit\.html\.erb/
