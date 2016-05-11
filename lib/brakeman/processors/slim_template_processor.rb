@@ -13,11 +13,7 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
     method = exp.method
 
     if method == :safe_concat and (target == SAFE_BUFFER or target == OUTPUT_BUFFER)
-      arg = exp.first_arg
-
-      if call? arg and arg.method == :to_s
-        arg = arg.target
-      end
+      arg = normalize_output(exp.first_arg)
 
       if is_escaped? arg
         make_escaped_output arg

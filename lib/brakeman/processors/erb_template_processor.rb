@@ -23,11 +23,7 @@ class Brakeman::ErbTemplateProcessor < Brakeman::TemplateProcessor
           raise "Did not expect more than a single argument to _erbout.concat"
         end
 
-        arg = exp.first_arg
-
-        if call? arg and arg.method == :to_s #erb always calls to_s on output
-          arg = arg.target
-        end
+        arg = normalize_output(exp.first_arg)
 
         if arg.node_type == :str #ignore plain strings
           ignore

@@ -29,7 +29,8 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
 
               if arg
                 @inside_concat = true
-                out = exp.first_arg = process(arg)
+                exp.first_arg = process(arg)
+                out = normalize_output(exp.first_arg)
                 @inside_concat = false
               else
                 raise "Empty _hamlout.#{method}()?"
@@ -73,7 +74,8 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       #Has something to do with values of blocks?
     elsif sexp? target and method == :<< and is_buffer_target? target
       @inside_concat = true
-      out = exp.first_arg = process(exp.first_arg)
+      exp.first_arg = process(exp.first_arg)
+      out = normalize_output(exp.first_arg)
       @inside_concat = false
 
       if out.node_type == :str #ignore plain strings
