@@ -276,6 +276,10 @@ module Brakeman::Options
           options[:show_version] = true
         end
 
+        opts.on "--force-scan", "Scan application even if rails is not detected" do
+          options[:force_scan] = true
+        end
+
         opts.on_tail "-h", "--help", "Display this message" do
           options[:show_help] = true
         end
