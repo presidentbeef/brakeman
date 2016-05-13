@@ -2,7 +2,7 @@ require 'brakeman/processors/template_processor'
 
 #Processes ERB templates using Erubis instead of erb.
 class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
-  
+
   #s(:call, TARGET, :method, ARGS)
   def process_call exp
     target = exp.target
@@ -70,14 +70,15 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
   #Look for assignments to output buffer that look like this:
   #  @output_buffer.append = some_output
   #  @output_buffer.safe_append = some_output
+  #  @output_buffer.safe_expr_append = some_output
   def process_attrasgn exp
     if exp.target.node_type == :ivar and exp.target.value == :@output_buffer
-      if exp.method == :append= or exp.method == :safe_append=
+      if append_method?(exp.method)
         arg = exp.first_arg = process(exp.first_arg)
 
         if arg.node_type == :str
           ignore
-        elsif exp.method == :safe_append=
+        elsif safe_append_method?(exp.method)
           s = Sexp.new :output, arg
           s.line(exp.line)
           @current_template.add_output s
@@ -94,5 +95,14 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
     else
       super
     end
+  end
+
+  private
+  def append_method?(method)
+    method == :append= || safe_append_method?(method)
+  end
+
+  def safe_append_method?(method)
+    method == :safe_append= || method == :safe_expr_append=
   end
 end
