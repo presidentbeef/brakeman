@@ -21,7 +21,8 @@ class BrakemanOptionsTest < Test::Unit::TestCase
     :list_optional_checks   => "--optional-checks",
     :install_rake_task      => "--rake",
     :show_version           => "-v",
-    :show_help              => "-h"
+    :show_help              => "-h",
+    :force_scan             => "--force-scan"
   }
 
   ALT_OPTION_INPUTS = {
