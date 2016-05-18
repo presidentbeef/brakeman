@@ -12,7 +12,7 @@ class Rails5Tests < Test::Unit::TestCase
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 2,
+      :template => 3,
       :generic => 7
     }
   end
@@ -143,6 +143,18 @@ class Rails5Tests < Test::Unit::TestCase
       :relative_path => "app/views/users/index.html.erb",
       :code => s(:call, nil, :link_to, s(:str, "slice"), s(:call, s(:params), :slice, s(:lit, :url))),
       :user_input => s(:call, s(:params), :slice, s(:lit, :url))
+  end
+
+  def test_if_expression_in_templates
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "26b8b0ad586712d41ac6877e2292c6da7aa4760078add7fd23edf5b7a1bcb699",
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/widget/show.html.erb",
+      :code => s(:call, s(:params), :[], s(:lit, :x))
   end
 
   def test_cross_site_scripting_CVE_2015_7578
