@@ -18,12 +18,7 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
     if node_type?(target, :lvar, :ivar) and (target.value == :_buf or target.value == :@output_buffer)
       if method == :<< or method == :safe_concat
 
-        arg = exp.first_arg
-
-        #We want the actual content
-        if call? arg and (arg.method == :to_s or arg.method == :html_safe!)
-          arg = arg.target
-        end
+        arg = normalize_output(exp.first_arg)
 
         if arg.node_type == :str #ignore plain strings
           ignore
@@ -74,7 +69,8 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
   def process_attrasgn exp
     if exp.target.node_type == :ivar and exp.target.value == :@output_buffer
       if append_method?(exp.method)
-        arg = exp.first_arg = process(exp.first_arg)
+        exp.first_arg = process(exp.first_arg)
+        arg = normalize_output(exp.first_arg)
 
         if arg.node_type == :str
           ignore

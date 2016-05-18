@@ -52,4 +52,13 @@ class Brakeman::TemplateProcessor < Brakeman::BaseProcessor
   def process_escaped_output exp
     process_output exp
   end
+
+  # Pull out actual output value from template
+  def normalize_output arg
+    if call? arg and [:to_s, :html_safe!, :freeze].include? arg.method
+      arg.target
+    else
+      arg
+    end
+  end
 end
