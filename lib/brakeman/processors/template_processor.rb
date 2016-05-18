@@ -57,6 +57,16 @@ class Brakeman::TemplateProcessor < Brakeman::BaseProcessor
   def normalize_output arg
     if call? arg and [:to_s, :html_safe!, :freeze].include? arg.method
       arg.target
+    elsif node_type? arg, :if
+      branches = [arg.then_clause, arg.else_clause].compact
+
+      if branches.empty?
+        s(:nil)
+      elsif branches.length == 2
+        Sexp.new(:or, *branches)
+      else
+        branches.first
+      end
     else
       arg
     end
