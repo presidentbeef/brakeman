@@ -45,6 +45,10 @@ module Brakeman
     end
 
     def add_method visibility, name, src, file_name
+      if src.node_type == :defs
+        name = :"#{src[1]}.#{name}"
+      end
+
       @methods[visibility][name] = { :src => src, :file => file_name }
     end
 

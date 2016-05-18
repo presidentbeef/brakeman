@@ -263,7 +263,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_sql_injection_exec_query
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "f99145dd8cfb1abca2ff36722b4bd136382d86ffd2bb28eb5ac6d064677c845f",
+      :fingerprint => "52da65996b98cd05c8a515f9cee489bb086448be56b7aa87a20d513afe47d7b8",
       :warning_type => "SQL Injection",
       :line => 12,
       :message => /^Possible\ SQL\ injection/,
@@ -532,7 +532,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_weak_hash_password_variable_nested
     assert_warning :type => :warning,
       :warning_code => 90,
-      :fingerprint => "2b147d27348729419872dcaa48c6cbb3881bc8f283e5c03a47fc6bed11d72ced",
+      :fingerprint => "db7bbef4391043f40b09a052829d71540e6edbd9c89ea7b9e17e10e8c63cdc98",
       :warning_type => "Weak Hash",
       :line => 42,
       :message => /^Weak\ hashing\ algorithm\ \(MD5\)\ used/,
@@ -946,7 +946,7 @@ class Rails4Tests < Test::Unit::TestCase
   def test_sql_injection_with_to_s_on_string_interp
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "76279bb48be9716ee4618dbd0a3cda08a63fc1053484c4f29c0214940a57a202",
+      :fingerprint => "06f9f76470ed1d4559c28258f29cab4ec28817a5414121a23b90ea6e9a564374",
       :warning_type => "SQL Injection",
       :line => 39,
       :message => /^Possible\ SQL\ injection/,

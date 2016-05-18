@@ -13,7 +13,7 @@ class Rails5Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 2,
-      :generic => 6
+      :generic => 7
     }
   end
 
@@ -205,5 +205,18 @@ class Rails5Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "Gemfile.lock",
       :user_input => nil
+  end
+
+  def test_dangerous_eval_in_prior_class_method_with_same_name
+    assert_warning :type => :warning,
+      :warning_code => 13,
+      :fingerprint => "7fe3142d1d11b7118463e45a82b4b7a2b5b5bac95cf8904050c101fae16b8168",
+      :warning_type => "Dangerous Eval",
+      :line => 3,
+      :message => /User input in eval near line 3/,
+      :method => :"User.evaluate_user_input",
+      :confidence => 0,
+      :relative_path => "app/models/user.rb",
+      :user_input => s(:params)
   end
 end
