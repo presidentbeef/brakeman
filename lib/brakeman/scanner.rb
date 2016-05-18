@@ -1,5 +1,3 @@
-require 'rubygems'
-
 begin
   require 'ruby_parser'
   require 'ruby_parser/bm_sexp.rb'
