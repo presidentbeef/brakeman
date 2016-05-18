@@ -1,5 +1,5 @@
 begin
-  require 'ruby_parser'
+  Brakeman.load_brakeman_dependency 'ruby_parser'
   require 'ruby_parser/bm_sexp.rb'
   require 'ruby_parser/bm_sexp_processor.rb'
   require 'brakeman/processor'

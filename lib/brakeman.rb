@@ -1,11 +1,5 @@
 require 'set'
 
-path_load = "#{File.expand_path(File.dirname(__FILE__))}/../bundle/load.rb"
-
-if File.exist? path_load
-  require path_load
-end
-
 module Brakeman
 
   #This exit code is used when warnings are found and the --exit-on-warn
@@ -18,6 +12,7 @@ module Brakeman
   @debug = false
   @quiet = false
   @loaded_dependencies = []
+  @vendored_paths = false
 
   #Run Brakeman scan. Returns Tracker object.
   #
@@ -101,7 +96,7 @@ module Brakeman
     #Load configuration file
     if config = config_file(custom_location, app_path)
       require 'date' # https://github.com/dtao/safe_yaml/issues/80
-      require 'safe_yaml/load'
+      self.load_brakeman_dependency 'safe_yaml/load'
       options = SafeYAML.load_file config, :deserialize_symbols => true
 
       if options
@@ -167,7 +162,7 @@ module Brakeman
       get_formats_from_output_files options[:output_files]
     else
       begin
-        require 'terminal-table'
+        self.load_brakeman_dependency 'terminal-table', :allow_fail
         return [:to_s]
       rescue LoadError
         return [:to_json]
@@ -433,15 +428,29 @@ module Brakeman
     Brakeman::Differ.new(new_results, previous_results).diff
   end
 
-  def self.load_brakeman_dependency name
+  def self.load_brakeman_dependency name, allow_fail = false
     return if @loaded_dependencies.include? name
+
+    unless @vendored_paths
+      path_load = "#{File.expand_path(File.dirname(__FILE__))}/../bundle/load.rb"
+
+      if File.exist? path_load
+        require path_load
+      end
+
+      @vendored_paths = true
+    end
 
     begin
       require name
     rescue LoadError => e
-      $stderr.puts e.message
-      $stderr.puts "Please install the appropriate dependency: #{name}."
-      exit!(-1)
+      if allow_fail
+        raise e
+      else
+        $stderr.puts e.message
+        $stderr.puts "Please install the appropriate dependency: #{name}."
+        exit!(-1)
+      end
     end
   end
 
