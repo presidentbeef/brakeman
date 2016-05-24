@@ -1063,7 +1063,7 @@ class Rails4Tests < Test::Unit::TestCase
       :code => s(:call, s(:const, :User), :where, s(:dstr, "", s(:evstr, s(:call, s(:params), :permit, s(:lit, :OMG))))),
       :user_input => s(:call, s(:params), :permit, s(:lit, :OMG))
   end
- 
+
   def test_format_validation_model_alias_processing
     assert_warning :type => :model,
       :warning_code => 30,
@@ -1074,6 +1074,15 @@ class Rails4Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/models/email.rb",
       :user_input => nil
+  end
+
+  def test_format_validation_with_multiline
+    assert_no_warning :type => :model,
+      :warning_type => "Format Validation",
+      :line => 11,
+      :message => /^Insufficient\ validation\ for\ 'number/,
+      :confidence => 0,
+      :file => /phone\.rb/
   end
 
   def test_additional_libs_option
