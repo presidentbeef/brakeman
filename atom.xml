@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2016-05-07T09:53:57-07:00</updated>
+  <updated>2016-05-23T18:59:52-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -97,13 +97,13 @@
 
 &lt;h3&gt;Forgery Option&lt;/h3&gt;
 
-&lt;p&gt;(Jason Yeo](https://github.com/jsyeo] provided a fix for when Brakeman encounters a non-Hash argument to &lt;code&gt;protect_from_forgery&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/jsyeo&quot;&gt;Jason Yeo&lt;/a&gt; provided a fix for when Brakeman encounters a non-Hash argument to &lt;code&gt;protect_from_forgery&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/849&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
 &lt;h3&gt;&lt;code&gt;u&lt;/code&gt; Helper&lt;/h3&gt;
 
-&lt;p&gt;(Chad Dollins](] fixed XSS false positives when the &lt;code&gt;u&lt;/code&gt; alias for &lt;code&gt;url_encode&lt;/code&gt; is used.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/cdollins&quot;&gt;Chad Dollins&lt;/a&gt; fixed XSS false positives when the &lt;code&gt;u&lt;/code&gt; alias for &lt;code&gt;url_encode&lt;/code&gt; is used.&lt;/p&gt;
 
 &lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/863&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
@@ -121,7 +121,7 @@
 
 &lt;h3&gt;Code Climate Engine&lt;/h3&gt;
 
-&lt;p&gt;(&lt;a href=&quot;https://github.com/GordonDiggs&quot;&gt;Gordon Diggs&lt;/a&gt;) provided several improvements to the Code Climate Engine in this release:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/GordonDiggs&quot;&gt;Gordon Diggs&lt;/a&gt; provided several improvements to the Code Climate Engine in this release:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Remove &lt;code&gt;nil&lt;/code&gt; entries from the &lt;code&gt;include_paths&lt;/code&gt; option&lt;/li&gt;
