@@ -59,17 +59,37 @@ class Brakeman::CheckValidationRegex < Brakeman::BaseCheck
     end
   end
 
+  # Match secure regexp without extended option
+  SECURE_REGEXP_PATTERN = %r{
+    \A
+    \\A
+    .*
+    \\[zZ]
+    \z
+  }x
+
+  # Match secure of regexp with extended option
+  EXTENDED_SECURE_REGEXP_PATTERN = %r{
+    \A
+    \s*
+    \\A
+    .*
+    \\[zZ]
+    \s*
+    \z
+  }mx
+
   #Issue warning if the regular expression does not use
   #+\A+ and +\z+
   def check_regex value, validator
     return unless regexp? value
 
-    regex = value.value.inspect
-    unless regex =~ /\A\/\\A.*\\(z|Z)\/(m|i|x|n|e|u|s|o)*\z/
+    regex = value.value
+    unless secure_regex?(regex)
       warn :model => @current_model,
       :warning_type => "Format Validation",
       :warning_code => :validation_regex,
-      :message => "Insufficient validation for '#{get_name validator}' using #{regex}. Use \\A and \\z as anchors",
+      :message => "Insufficient validation for '#{get_name validator}' using #{regex.inspect}. Use \\A and \\z as anchors",
       :line => value.line,
       :confidence => CONFIDENCE[:high]
     end
@@ -84,5 +104,13 @@ class Brakeman::CheckValidationRegex < Brakeman::BaseCheck
     else
       name
     end
+  end
+
+  private
+
+  def secure_regex?(regex)
+    extended_regex = Regexp::EXTENDED == regex.options & Regexp::EXTENDED
+    regex_pattern = extended_regex ? EXTENDED_SECURE_REGEXP_PATTERN : SECURE_REGEXP_PATTERN
+    regex_pattern =~ regex.source
   end
 end

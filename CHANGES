@@ -1,3 +1,5 @@
+* Allow multile line regex in validates_format_of
+
 # 3.3.0
 
 * Skip processing obviously false if branches (more broadly)
