@@ -1,9 +1,11 @@
 require 'brakeman/processors/lib/processor_helper'
+require 'brakeman/processors/lib/safe_call_helper'
 require 'brakeman/util'
 
 #Base processor for most processors.
 class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   include Brakeman::ProcessorHelper
+  include Brakeman::SafeCallHelper
   include Brakeman::Util
 
   IGNORE = Sexp.new :ignore
@@ -81,14 +83,6 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     call = Sexp.new(:iter, call, exp.block_args, block).compact
     call.line(exp.line)
     call
-  end
-
-  def process_safe_call exp
-    if self.respond_to? :process_call
-      process_call exp
-    else
-      process_default exp
-    end
   end
 
   #String with interpolation.
