@@ -1,12 +1,14 @@
 require 'brakeman/util'
 require 'ruby_parser/bm_sexp_processor'
 require 'brakeman/processors/lib/processor_helper'
+require 'brakeman/processors/lib/safe_call_helper'
 
 #Returns an s-expression with aliases replaced with their value.
 #This does not preserve semantics (due to side effects, etc.), but it makes
 #processing easier when searching for various things.
 class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   include Brakeman::ProcessorHelper
+  include Brakeman::SafeCallHelper
   include Brakeman::Util
 
   attr_reader :result, :tracker
@@ -94,6 +96,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     return exp if process_call_defn? exp
     target_var = exp.target
     target_var &&= target_var.deep_clone
+    if exp.node_type == :safe_call
+      exp.node_type = :call
+    end
     exp = process_default exp
 
     #In case it is replaced with something else

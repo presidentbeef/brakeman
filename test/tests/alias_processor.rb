@@ -236,6 +236,14 @@ class AliasProcessorTests < Test::Unit::TestCase
     RUBY
   end
 
+  def test_safe_or_equal
+    assert_alias '10', <<-RUBY
+      x&.y ||= 10
+      x&.y ||= "not this!"
+      x&.y
+    RUBY
+  end
+
   def test_unknown_hash
     assert_alias '1', <<-RUBY
       some_hash[:x] = 1
@@ -282,6 +290,13 @@ class AliasProcessorTests < Test::Unit::TestCase
     assert_alias 'y(1)', <<-RUBY
       x = send(:y, 1)
       x
+    RUBY
+  end
+
+  def test_safe_send_collapse
+    assert_alias 'x.y(1)', <<-RUBY
+      z = x&.send(:y, 1)
+      z
     RUBY
   end
 
