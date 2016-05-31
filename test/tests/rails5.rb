@@ -56,6 +56,18 @@ class Rails5Tests < Test::Unit::TestCase
       :user_input => s(:call, s(:params), :slice, s(:lit, :id))
   end
 
+  def test_sql_injection_with_quoted_primary_key
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "f9396dd572315e802eca1e03024a5b309ff006ede47b1aef6255236fcc37d2a9",
+      :warning_type => "SQL Injection",
+      :line => 3,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/thing.rb",
+      :user_input => s(:call, nil, :quoted_primary_key)
+  end
+
   def test_dangerous_send_with_safe_call
     assert_warning :type => :warning,
       :warning_code => 23,
