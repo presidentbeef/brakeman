@@ -160,9 +160,9 @@ For even more continuous testing, try the [Guard plugin](https://github.com/guar
 
 Website: http://brakemanscanner.org/
 
-Twitter: http://twitter.com/brakeman
+Twitter: https://twitter.com/brakeman
 
-Mailing list: brakeman@librelist.com
+Chat: https://gitter.im/presidentbeef/brakeman
 
 # License
 
