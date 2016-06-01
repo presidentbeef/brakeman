@@ -1,5 +1,6 @@
 # 3.3.1 
 
+* Delay loading vendored gems and modifying load path
 * Avoid warning about SQL injection with `quoted_primary_key`
 * Support more safe `&.` operations
 * Allow multile line regex in `validates_format_of` (Dmitrij Fedorenko)
