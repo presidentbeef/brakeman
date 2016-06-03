@@ -1,4 +1,5 @@
 require './lib/brakeman/version'
+require './gem_common'
 gem_priv_key = File.expand_path("~/.ssh/gem-private_key.pem")
 
 Gem::Specification.new do |s|
@@ -14,8 +15,7 @@ Gem::Specification.new do |s|
   s.license = "MIT"
   s.cert_chain  = ['brakeman-public_cert.pem']
   s.signing_key = gem_priv_key if File.exist? gem_priv_key and $0 =~ /gem\z/
-  s.add_development_dependency "test-unit"
-  s.add_dependency "ruby_parser", "~>3.8.1"
-  s.add_dependency "ruby2ruby", "~>2.3.0"
-  s.add_dependency "safe_yaml", ">= 1.0"
+
+  Brakeman::GemDependencies.dev_dependencies(s)
+  Brakeman::GemDependencies.base_dependencies(s)
 end
