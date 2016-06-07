@@ -13,7 +13,7 @@ class Rails5Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 3,
-      :generic => 7
+      :generic => 8
     }
   end
 
@@ -167,6 +167,19 @@ class Rails5Tests < Test::Unit::TestCase
       :confidence => 0,
       :relative_path => "app/views/widget/show.html.erb",
       :code => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_remote_code_execution_in_dynamic_constant
+    assert_warning :type => :warning,
+      :warning_code => 24,
+      :fingerprint => "ed9f1dea97ba2929a0107fce64c3b4aa66010961ebbef36e1d11428067095cb6",
+      :warning_type => "Remote Code Execution",
+      :line => 7,
+      :message => /^Unsafe\ reflection\ method\ constantize\ cal/,
+      :confidence => 0,
+      :relative_path => "app/controllers/widget_controller.rb",
+      :code => s(:call, s(:call, s(:params), :[], s(:lit, :IdentifierClass)), :constantize),
+      :user_input => s(:call, s(:params), :[], s(:lit, :IdentifierClass))
   end
 
   def test_cross_site_scripting_CVE_2015_7578

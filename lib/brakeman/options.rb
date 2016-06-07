@@ -76,6 +76,7 @@ module Brakeman::Options
         opts.on "--faster", "Faster, but less accurate scan" do
           options[:ignore_ifs] = true
           options[:skip_libs] = true
+          options[:disable_constant_tracking] = true
         end
 
         opts.on "--ignore-model-output", "Consider model attributes XSS-safe" do

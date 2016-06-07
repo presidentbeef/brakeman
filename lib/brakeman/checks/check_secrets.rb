@@ -13,7 +13,7 @@ class Brakeman::CheckSecrets < Brakeman::BaseCheck
     @warned = Set.new
 
     @tracker.constants.each do |constant|
-      name = constant.name.last
+      name = constant.name_array.last
       value = constant.value
 
       if string? value and not value.value.empty? and looks_like_secret? name

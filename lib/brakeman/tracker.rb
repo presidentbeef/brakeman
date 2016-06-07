@@ -186,11 +186,11 @@ class Brakeman::Tracker
   end
 
   def add_constant name, value, context = nil
-    @constants.add name, value, context
+    @constants.add name, value, context unless @options[:disable_constant_tracking]
   end
 
   def constant_lookup name
-    @constants.get_literal name
+    @constants.get_literal name unless @options[:disable_constant_tracking]
   end
 
   def index_call_sites
