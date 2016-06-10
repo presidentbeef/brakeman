@@ -4,13 +4,54 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2016-06-03T08:13:48-07:00</updated>
+  <updated>2016-06-10T12:42:23-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 3.3.2 Released</title>
+    <link href="http://brakemanscanner.org/blog/2016/06/10/brakeman-3-dot-3-2-released/"/>
+    <updated>2016-06-10T08:49:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2016/06/10/brakeman-3-dot-3-2-released</id>
+    <content type="html">&lt;p&gt;This is a bug fix release.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 3.3.2&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fix performance regression in global constant tracking&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;Brakeman 3.3.0 introduced a new feature to track constant values across the application. This helped reduce false positives, for example when checking a value against a constant array of values. However, the lookup of constant values was very slow for moderate to large numbers of constants. In some test cases it added up to a minute of scan time. This has been resolved along with some changes to how dynamic constant names are handled.&lt;/p&gt;
+
+&lt;p&gt;Additionally, the &lt;code&gt;--faster&lt;/code&gt; option will turn off global constant tracking entirely.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/891&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;SHAs&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;58bb2179de2bd479d32dc2d2018e40caf478916e283ea88089fe0bcb30a55e6c  brakeman-3.3.2.gem
+4f72ff02a163d78244554c4a26ea35e88d76dd6b60c3d21573db8518abcba6fc  brakeman-min-3.3.2.gem
+c0beeabe95aa693a5273bd48922028f48a190940b18c795813bd0f96068452b4  brakeman-lib-3.3.2.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to the reporters of the performance issue in the 3.3.0 release.&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hanging out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;
+
+&lt;p&gt;For commercial support, please consider &lt;a href=&quot;https://brakemanpro.com/&quot;&gt;Brakeman Pro&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 3.3.1 Released</title>
@@ -1836,56 +1877,6 @@ b5cefd6f14edb57f12d1fe9fcc0fb24e05a05aaf  brakeman-min-3.0.0.gem
 
 &lt;pre&gt;&lt;code&gt;f225541559d2fbe5374d481b6105b66053f9710a  brakeman-2.6.2.gem
 67882d467b6a8fc6e504b6dcb9605f79a0c6a22c  brakeman-min-2.6.2.gem
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 2.6.1 Released</title>
-    <link href="http://brakemanscanner.org/blog/2014/07/02/brakeman-2-dot-6-1-released/"/>
-    <updated>2014-07-02T12:30:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2014/07/02/brakeman-2-dot-6-1-released</id>
-    <content type="html">&lt;p&gt;This is a tiny release in response to today's CVEs.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 2.6.0&lt;/em&gt;:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Add check for CVE-2014-3482 and CVE-2014-3483&lt;/li&gt;
-&lt;li&gt;Add support for keyword arguments in blocks (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/511&quot;&gt;#511&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Remove unused warning codes (&lt;a href=&quot;https://github.com/bfish510&quot;&gt;Bill Fischer&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;Check for PostgresSQL Injection CVEs&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://groups.google.com/forum/#!msg/rubyonrails-security/wDxePLJGZdI/WP7EasCJTA4J&quot;&gt;CVE-2014-3482 and CVE-2014-3483&lt;/a&gt; are SQL injection issues when using the PostgresSQL backend with bitstring and range data types. Brakeman will warn about affected versions of Rails which include the &quot;pg&quot; gem in the Gemfile.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/515&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Support Keyword Arguments to Blocks&lt;/h3&gt;
-
-&lt;p&gt;Brakeman now handles keyword arguments to blocks as local variables in the block scope instead of throwing an error.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/513&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Removal of Warning Codes&lt;/h3&gt;
-
-&lt;p&gt;Warnings codes for &lt;code&gt;CVE_2013_6415&lt;/code&gt; and &lt;code&gt;CVE_2013_6415_call&lt;/code&gt; have been removed, as they are unused. This should not affect anyone.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/514&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;SHAs&lt;/h3&gt;
-
-&lt;p&gt;The SHA1 sums for this release are&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;5b7b5572efe769cfa38178e94952be05670e6fd4  brakeman-2.6.1.gem
-fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3&gt;Reporting Issues&lt;/h3&gt;
