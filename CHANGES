@@ -1,3 +1,7 @@
+# 3.3.2
+
+* Fix serious performance regression with global constant tracking
+
 # 3.3.1 
 
 * Delay loading vendored gems and modifying load path
