@@ -233,6 +233,12 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     @mass_assign_disabled
   end
 
+  def original? result
+    return false if result[:call].original_line or duplicate? result
+    add_result result
+    true
+  end
+
   #This is to avoid reporting duplicates. Checks if the result has been
   #reported already from the same line number.
   def duplicate? result, location = nil

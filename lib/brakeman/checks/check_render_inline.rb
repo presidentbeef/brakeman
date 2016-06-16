@@ -12,8 +12,7 @@ class Brakeman::CheckRenderInline < Brakeman::CheckCrossSiteScripting
   end
 
   def check_render result
-    return if duplicate? result
-    add_result result
+    return unless original? result
 
     call = result[:call]
 

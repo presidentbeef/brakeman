@@ -30,8 +30,7 @@ class Brakeman::CheckDeserialize < Brakeman::BaseCheck
   end
 
   def check_deserialize result, target, arg = nil
-    return if duplicate? result
-    add_result result
+    return unless original? result
 
     arg ||= result[:call].first_arg
     method = result[:call].method
