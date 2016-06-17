@@ -25,6 +25,7 @@ class Brakeman::Report::Table < Brakeman::Report::Base
       truncate_table(generate_templates.to_s) << "\n"
     end
 
+    output_table("+Obsolete Ignore Entries+", generate_obsolete, out)
     output_table("+Errors+", generate_errors, out)
     output_table("+SECURITY WARNINGS+", generate_warnings, out)
     output_table("Controller Warnings:", generate_controller_warnings, out)

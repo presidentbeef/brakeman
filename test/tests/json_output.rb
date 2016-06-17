@@ -2,7 +2,7 @@ require 'json'
 
 class JSONOutputTests < Minitest::Test
   def setup
-    @@json ||= JSON.parse(Brakeman.run("#{TEST_PATH}/apps/rails3.2").report.to_json)
+    @@json ||= JSON.parse(Brakeman.run("#{TEST_PATH}/apps/rails4").report.to_json)
   end
 
   def test_for_render_path
@@ -13,7 +13,7 @@ class JSONOutputTests < Minitest::Test
   end
 
   def test_for_expected_keys
-    assert (@@json.keys - ["warnings", "ignored_warnings", "scan_info", "errors"]).empty?
+    assert (@@json.keys - ["warnings", "ignored_warnings", "scan_info", "errors", "obsolete"]).empty?
   end
 
   def test_for_scan_info_keys
@@ -35,6 +35,10 @@ class JSONOutputTests < Minitest::Test
 
   def test_for_errors
     assert @@json["errors"].is_a? Array
+  end
+
+  def test_for_obsolete
+    assert_equal ["abcdef01234567890ba28050e7faf1d54f218dfa9435c3f65f47cb378c18cf98"], @@json["obsolete"]
   end
 
   def test_paths

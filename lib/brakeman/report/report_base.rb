@@ -79,6 +79,11 @@ class Brakeman::Report::Base
     render_array('error_overview', ['Error', 'Location'], values, {:tracker => tracker})
   end
 
+  def generate_obsolete
+    values = tracker.unused_fingerprints.collect{|fingerprint| [fingerprint] }
+    render_array('obsolete_ignore_entries', ['fingerprint'], values, {:tracker => tracker})
+  end
+
   def generate_warnings
     render_warnings generic_warnings,
                     :warning,

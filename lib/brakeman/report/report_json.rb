@@ -2,6 +2,8 @@ class Brakeman::Report::JSON < Brakeman::Report::Base
   def generate_report
     errors = tracker.errors.map{|e| { :error => e[:error], :location => e[:backtrace][0] }}
 
+    obsolete = tracker.unused_fingerprints
+
     warnings = convert_to_hashes all_warnings
 
     ignored = convert_to_hashes ignored_warnings
@@ -26,7 +28,8 @@ class Brakeman::Report::JSON < Brakeman::Report::Base
       :scan_info => scan_info,
       :warnings => warnings,
       :ignored_warnings => ignored,
-      :errors => errors
+      :errors => errors,
+      :obsolete => obsolete
     }
 
     JSON.pretty_generate report_info

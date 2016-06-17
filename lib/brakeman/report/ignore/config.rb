@@ -11,6 +11,7 @@ module Brakeman
       @new_warnings = new_warnings
       @already_ignored = []
       @ignored_fingerprints = Set.new
+      @used_fingerprints = Set.new
       @notes = {}
       @shown_warnings = @ignored_warnings = nil
       @changed = false
@@ -43,6 +44,7 @@ module Brakeman
 
     # Determine if warning should be ignored
     def ignored? warning
+      @used_fingerprints << warning.fingerprint
       @ignored_fingerprints.include? warning.fingerprint
     end
 
@@ -73,6 +75,11 @@ module Brakeman
       end
 
       nil
+    end
+
+    # The set of unused ignore entries
+    def obsolete_fingerprints
+      (@ignored_fingerprints - @used_fingerprints).to_a
     end
 
     # Read configuration to file
