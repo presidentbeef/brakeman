@@ -65,7 +65,7 @@ class Brakeman::FindReturnValue
       @uses_ivars = true if node_type? current, :ivar
 
       if node_type? current, :return
-        @return_values << current.value unless current.value.nil?
+        @return_values << last_value(current.value) unless current.length < 2
       elsif sexp? current
         todo = current[1..-1].concat todo
       end
@@ -100,7 +100,11 @@ class Brakeman::FindReturnValue
     when :lasgn, :iasgn, :op_asgn_or
       last_value exp.rhs
     when :return
-      exp.value
+      if exp.length > 1
+        last_value exp.value
+      else
+        nil
+      end
     else
       exp.original_line = exp.line unless exp.original_line
       exp
