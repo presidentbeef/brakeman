@@ -84,9 +84,15 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
   end
 
   def safe_param? exp
-    if params? exp and call? exp and exp.method == :[]
-      arg = exp.first_arg
-      symbol? arg and [:controller, :action].include? arg.value
+    if params? exp and call? exp
+      method_name = exp.method
+
+      if method_name == :[]
+        arg = exp.first_arg
+        symbol? arg and [:controller, :action].include? arg.value
+      else
+        boolean_method? method_name
+      end
     end
   end
 end 
