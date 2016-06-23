@@ -97,8 +97,8 @@ class Brakeman::FindReturnValue
           true_branch or false_branch
         end
       end
-    when :lasgn, :iasgn
-      exp.rhs
+    when :lasgn, :iasgn, :op_asgn_or
+      last_value exp.rhs
     when :return
       exp.value
     else
