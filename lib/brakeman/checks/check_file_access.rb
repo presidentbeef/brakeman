@@ -27,8 +27,7 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
   end
 
   def process_result result
-    return if duplicate? result
-    add_result result
+    return unless original? result
     call = result[:call]
     file_name = call.first_arg
 

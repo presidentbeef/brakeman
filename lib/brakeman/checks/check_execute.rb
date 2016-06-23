@@ -53,8 +53,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       failure = include_user_input?(args) || dangerous_interp?(args)
     end
 
-    if failure and not duplicate? result
-      add_result result
+    if failure and original? result
 
       if failure.type == :interp #Not from user input
         confidence = CONFIDENCE[:med]
@@ -107,9 +106,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
 
   #Processes backticks.
   def process_backticks result
-    return if duplicate? result
-
-    add_result result
+    return unless original? result
 
     exp = result[:call]
 

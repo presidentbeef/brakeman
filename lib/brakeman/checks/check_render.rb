@@ -32,8 +32,7 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
   def check_for_dynamic_path result
     view = result[:call][2]
 
-    if sexp? view and not duplicate? result
-      add_result result
+    if sexp? view and original? result
 
       if input = has_immediate_user_input?(view)
         if string_interp? view

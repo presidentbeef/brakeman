@@ -34,8 +34,7 @@ class Brakeman::CheckSelectTag < Brakeman::BaseCheck
 
   #Check if select_tag is called with user input in :prompt option
   def process_result result
-    return if duplicate? result
-    add_result result
+    return unless original? result
 
     #Only concerned if user input is supplied for :prompt option
     last_arg = result[:call].last_arg

@@ -65,8 +65,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
 
     check = check_call call
 
-    if check and not call.original_line and not duplicate? res
-      add_result res
+    if check and original? res
 
       model = tracker.models[res[:chain].first]
 
@@ -180,8 +179,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
   end
 
   def warn_on_permit! result
-    return if duplicate? result or result[:call].original_line
-    add_result result
+    return unless original? result
 
     confidence = if subsequent_mass_assignment? result
                    CONFIDENCE[:high]

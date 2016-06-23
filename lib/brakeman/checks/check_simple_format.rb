@@ -43,8 +43,7 @@ class Brakeman::CheckSimpleFormat < Brakeman::CheckCrossSiteScripting
   end
 
   def warn_on_simple_format result, match
-    return if duplicate? result
-    add_result result
+    return unless original? result
 
     @found_any = true
 

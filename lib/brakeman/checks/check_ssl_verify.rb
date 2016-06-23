@@ -37,8 +37,7 @@ class Brakeman::CheckSSLVerify < Brakeman::BaseCheck
   end
 
   def warn_about_ssl_verification_bypass result
-    return if duplicate?(result)
-    add_result result
+    return unless original? result
 
     warn :result => result,
       :warning_type => "SSL Verification Bypass",
