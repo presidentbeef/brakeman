@@ -389,4 +389,12 @@ class SexpTests < Test::Unit::TestCase
     s << s
     assert_equal "s(:s, s(...))", s.inspect
   end
+
+  def test_value
+    assert_equal 1, s(:lit, 1).value
+    assert_nil s(:blah).value
+    assert_raises do
+      s(:blah, 1, 2).value
+    end
+  end
 end

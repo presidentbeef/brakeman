@@ -51,7 +51,7 @@ class Sexp
 
   def value
     raise WrongSexpError, "Sexp#value called on multi-item Sexp", caller[1..-1] if size > 2
-    last
+    self[1]
   end
 
   def value= exp
