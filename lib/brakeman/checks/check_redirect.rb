@@ -29,10 +29,9 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   end
 
   def process_result result
-    return if duplicate? result
+    return unless original? result
 
     call = result[:call]
-
     method = call.method
 
     if method == :redirect_to and
@@ -40,8 +39,6 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
         not explicit_host?(call.first_arg) and
         not slice_call?(call.first_arg) and
         res = include_user_input?(call)
-
-      add_result result
 
       if res.type == :immediate
         confidence = CONFIDENCE[:high]
