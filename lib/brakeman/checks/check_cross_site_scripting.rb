@@ -378,8 +378,4 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   def safe_input_attribute? target, method
     target and always_safe_method? method
   end
-
-  def boolean_method? method
-    method.to_s.end_with? "?"
-  end
 end

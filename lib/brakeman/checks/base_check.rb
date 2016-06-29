@@ -131,6 +131,10 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       @comparison_ops.include? meth
   end
 
+  def boolean_method? method
+    method[-1] == "?"
+  end
+
   #Report a warning
   def warn options
     extra_opts = { :check => self.class.to_s }

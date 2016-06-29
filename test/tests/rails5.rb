@@ -182,6 +182,19 @@ class Rails5Tests < Test::Unit::TestCase
       :user_input => s(:call, s(:params), :[], s(:lit, :IdentifierClass))
   end
 
+  def test_dynamic_render_path_with_boolean
+    assert_no_warning :type => :warning,
+      :warning_code => 15,
+      :fingerprint => "77503a2c10167a42ac4b40b81aa2cf3b737ad206f5a9c593ae9898c9915a5136",
+      :warning_type => "Dynamic Render Path",
+      :line => 11,
+      :message => /^Render\ path\ contains\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/widget_controller.rb",
+      :code => s(:render, :action, s(:call, s(:call, s(:params), :[], s(:lit, :x)), :thing?), s(:hash)),
+      :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :x)), :thing?)
+  end
+
   def test_cross_site_scripting_CVE_2015_7578
     assert_warning :type => :warning,
       :warning_code => 96,
