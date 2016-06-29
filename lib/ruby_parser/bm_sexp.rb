@@ -436,7 +436,11 @@ class Sexp
     expect :attrasgn, :safe_attrasgn, *ASSIGNMENT_BOOL
 
     if self.node_type == :attrasgn or self.node_type == :safe_attrasgn
-      self[3]
+      if self[2] == :[]=
+        self[4]
+      else
+        self[3]
+      end
     else
       self[2]
     end

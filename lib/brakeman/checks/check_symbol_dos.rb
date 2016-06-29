@@ -8,7 +8,7 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
   @description = "Checks for symbol denial of service"
 
   def run_check
-    return if rails_version > "5.0.0"
+    return if rails_version and rails_version > "5.0.0"
 
     tracker.find_call(:methods => UNSAFE_METHODS, :nested => true).each do |result|
       check_unsafe_symbol_creation(result)
@@ -16,9 +16,7 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
   end
 
   def check_unsafe_symbol_creation result
-    return if duplicate? result or result[:call].original_line
-
-    add_result result
+    return unless original? result
 
     call = result[:call]
 

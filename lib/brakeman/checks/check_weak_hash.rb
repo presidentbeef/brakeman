@@ -22,8 +22,7 @@ class Brakeman::CheckWeakHash < Brakeman::BaseCheck
   end
 
   def process_hash_result result
-    return if duplicate? result
-    add_result result
+    return unless original? result
 
     input = nil
     call = result[:call]
@@ -59,8 +58,7 @@ class Brakeman::CheckWeakHash < Brakeman::BaseCheck
   end
 
   def process_hmac_result result
-    return if duplicate? result
-    add_result result
+    return unless original? result
 
     call = result[:call]
 
@@ -81,8 +79,7 @@ class Brakeman::CheckWeakHash < Brakeman::BaseCheck
   end
 
   def process_openssl_result result
-    return if duplicate? result
-    add_result result
+    return unless original? result
 
     arg = result[:call].first_arg
 

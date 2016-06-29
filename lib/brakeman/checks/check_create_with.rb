@@ -26,8 +26,7 @@ class Brakeman::CheckCreateWith < Brakeman::BaseCheck
   end
 
   def process_result result
-    return if duplicate? result
-    add_result result
+    return unless original? result
     arg = result[:call].first_arg
 
     confidence = danger_level arg

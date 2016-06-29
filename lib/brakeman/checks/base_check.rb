@@ -131,6 +131,10 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       @comparison_ops.include? meth
   end
 
+  def boolean_method? method
+    method[-1] == "?"
+  end
+
   #Report a warning
   def warn options
     extra_opts = { :check => self.class.to_s }
@@ -231,6 +235,12 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     end
 
     @mass_assign_disabled
+  end
+
+  def original? result
+    return false if result[:call].original_line or duplicate? result
+    add_result result
+    true
   end
 
   #This is to avoid reporting duplicates. Checks if the result has been

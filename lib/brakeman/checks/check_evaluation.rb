@@ -20,8 +20,7 @@ class Brakeman::CheckEvaluation < Brakeman::BaseCheck
 
   #Warns if eval includes user input
   def process_result result
-    return if duplicate? result or result[:call].original_line
-    add_result result
+    return unless original? result
 
     if input = include_user_input?(result[:call].arglist)
       warn :result => result,
