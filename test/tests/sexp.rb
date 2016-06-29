@@ -148,6 +148,12 @@ class SexpTests < Test::Unit::TestCase
     assert_equal s(:lit, 1), exp.rhs
   end
 
+  def test_attribute_index_assignment
+    exp = parse 'y[:x] = 1'
+
+    assert_equal s(:lit, 1), exp.rhs
+  end
+
   def test_global_assignment
     exp = parse '$x = 1'
 
