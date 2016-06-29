@@ -149,6 +149,14 @@ class FindReturnValueTests < Test::Unit::TestCase
     RUBY
   end
 
+  def test_return_value_attrasgn
+    assert_returns "1", <<-RUBY
+      def x
+        return (y[:x] = 1)
+      end
+    RUBY
+  end
+
   def test_return_begin_value
     assert_returns '(blah1 or blah2) or blah4', <<-RUBY
       def x
