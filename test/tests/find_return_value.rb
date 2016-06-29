@@ -148,4 +148,23 @@ class FindReturnValueTests < Test::Unit::TestCase
       end
     RUBY
   end
+
+  def test_return_begin_value
+    assert_returns '(blah1 or blah2) or blah4', <<-RUBY
+      def x
+        begin
+          doing_some_stuff
+          blah1
+        rescue Thing
+          blah2
+        rescue That
+          blah3
+          blah4
+        rescue Stuff
+          nil
+        rescue
+        end
+      end
+    RUBY
+  end
 end

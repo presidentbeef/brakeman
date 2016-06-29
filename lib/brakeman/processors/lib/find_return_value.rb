@@ -99,6 +99,30 @@ class Brakeman::FindReturnValue
       end
     when :lasgn, :iasgn, :op_asgn_or
       last_value exp.rhs
+    when :rescue
+      values = []
+
+      exp.each_sexp do |e|
+        if node_type? e, :resbody
+          if e.last
+            values << last_value(e.last)
+          end
+        elsif sexp? e
+          values << last_value(e)
+        end
+      end
+
+      values.reject! do |v|
+        v.nil? or node_type? v, :nil
+      end
+
+      if values.length > 1
+        values.inject do |m, v|
+          make_or(m, v)
+        end
+      else
+        values.first
+      end
     when :return
       if exp.value
         last_value exp.value
