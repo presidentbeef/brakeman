@@ -129,6 +129,8 @@ class Brakeman::FindReturnValue
       else
         nil
       end
+    when :nil
+      nil
     else
       exp.original_line = exp.line unless exp.original_line
       exp

@@ -160,6 +160,7 @@ class FindReturnValueTests < Test::Unit::TestCase
   def test_return_begin_value
     assert_returns '(blah1 or blah2) or blah4', <<-RUBY
       def x
+        return nil if stuff
         begin
           doing_some_stuff
           blah1
