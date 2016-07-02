@@ -157,6 +157,19 @@ class Rails5Tests < Test::Unit::TestCase
       :user_input => s(:call, s(:params), :slice, s(:lit, :url))
   end
 
+  def test_cross_site_scripting_with_merge_in_link_to
+    assert_no_warning :type => :template,
+      :warning_code => 4,
+      :fingerprint => "54043efc2da20930f636dedfef5b1e77dfed0957ebb0c285f0c0a71b68e046c5",
+      :warning_type => "Cross Site Scripting",
+      :line => 6,
+      :message => /^Unsafe\ parameter\ value\ in\ link_to\ href/,
+      :confidence => 0,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, "good"), s(:call, s(:call, nil, :params), :merge, s(:hash, s(:lit, :page), s(:lit, 2)))),
+      :user_input => s(:call, s(:call, nil, :params), :merge, s(:hash, s(:lit, :page), s(:lit, 2)))
+  end
+
   def test_if_expression_in_templates
     assert_warning :type => :template,
       :warning_code => 2,

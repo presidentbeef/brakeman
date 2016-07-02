@@ -45,7 +45,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     if input = has_immediate_user_input?(url_arg)
       message = "Unsafe #{friendly_type_of input} in link_to href"
 
-      unless duplicate? result
+      unless duplicate? result or call_on_params? url_arg
         add_result result
         warn :result => result,
           :warning_type => "Cross Site Scripting", 
@@ -74,7 +74,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     elsif @matched
       if @matched.type == :model and not tracker.options[:ignore_model_output]
         message = "Unsafe model attribute in link_to href"
-      elsif @matched.type == :params
+      elsif @matched.type == :params and not call_on_params? @matched.match
         message = "Unsafe parameter value in link_to href"
       end
 
@@ -111,5 +111,11 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
 
     MODEL_METHODS.include? exp.method or
       exp.method.to_s =~ /^find_by_/
+  end
+
+  def call_on_params? exp
+    call? exp and
+    params? exp.target and
+    exp.method != :[]
   end
 end
