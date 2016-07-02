@@ -17,7 +17,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
                            :hidden_field, :hidden_field_tag, :image_tag, :label,
                            :mail_to, :polymorphic_url, :radio_button, :select, :slice,
                            :submit_tag, :text_area, :text_field,
-                           :text_field_tag, :url_encode, :u, :url_for,
+                           :text_field_tag, :url_encode, :u,
                            :will_paginate].merge(tracker.options[:url_safe_methods] || [])
 
     @models = tracker.models.keys
@@ -35,6 +35,10 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     call = result[:call] = result[:call].dup
     @matched = false
     url_arg = process call.second_arg
+
+    if call? url_arg and url_arg.method == :url_for
+      url_arg = url_arg.first_arg
+    end
 
     #Ignore situations where the href is an interpolated string
     #with something before the user input

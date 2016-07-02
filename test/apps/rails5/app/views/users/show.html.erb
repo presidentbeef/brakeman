@@ -4,3 +4,4 @@
 <%= link_to 'Back', users_path %>
 
 <%= link_to("good", params.merge(:page => 2)) %>
+<%= link_to("xss", url_for(params[:bad])) %>

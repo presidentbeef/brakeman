@@ -12,7 +12,7 @@ class Rails5Tests < Test::Unit::TestCase
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 3,
+      :template => 4,
       :generic => 8
     }
   end
@@ -168,6 +168,19 @@ class Rails5Tests < Test::Unit::TestCase
       :relative_path => "app/views/users/show.html.erb",
       :code => s(:call, nil, :link_to, s(:str, "good"), s(:call, s(:call, nil, :params), :merge, s(:hash, s(:lit, :page), s(:lit, 2)))),
       :user_input => s(:call, s(:call, nil, :params), :merge, s(:hash, s(:lit, :page), s(:lit, 2)))
+  end
+
+  def test_cross_site_scripting_link_to_url_for
+    assert_warning :type => :template,
+      :warning_code => 4,
+      :fingerprint => "03fcddff701f15c976a229c2a814c817f81463b733c6d4925253488879d907e3",
+      :warning_type => "Cross Site Scripting",
+      :line => 7,
+      :message => /^Unsafe\ parameter\ value\ in\ link_to\ href/,
+      :confidence => 0,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, "xss"), s(:call, nil, :url_for, s(:call, s(:params), :[], s(:lit, :bad)))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :bad))
   end
 
   def test_if_expression_in_templates
