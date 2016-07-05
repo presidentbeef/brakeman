@@ -8,7 +8,7 @@ module Brakeman::RenderHelper
     process_default exp
     @rendered = true
     case exp.render_type
-    when :action, :template
+    when :action, :template, :inline
       process_action exp[2][1], exp[3], exp.line
     when :default
       begin
