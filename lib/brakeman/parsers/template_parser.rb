@@ -85,5 +85,14 @@ module Brakeman
       Slim::Template.new(:disable_capture => true,
                          :generator => Temple::Generators::RailsOutputBuffer) { text }.precompiled_template
     end
+
+    def self.parse_inline_erb tracker, text
+      fp = Brakeman::FileParser.new(nil, nil)
+      tp = self.new(tracker, fp)
+      src = tp.parse_erb text
+      type = tp.erubis? ? :erubis : :erb
+
+      return type, fp.parse_ruby(src, "_inline_")
+    end
   end
 end

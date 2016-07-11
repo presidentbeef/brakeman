@@ -272,6 +272,31 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
 
     type ||= :default
     value ||= :default
+
+    if type == :inline and string? value and not hash_access(rest, :type)
+      value, rest = make_inline_render(value, rest)
+    end
+
     return type, value, rest
+  end
+
+  def make_inline_render value, options
+    require 'brakeman/parsers/template_parser'
+
+    class_or_module = (@current_class || @current_module)
+
+    class_or_module = if class_or_module.nil?
+                        "Unknown"
+                      else
+                        class_or_module.name
+                      end
+
+    template_name = "#@current_method/inline@#{value.line}:#{class_or_module}".to_sym
+    type, ast = Brakeman::TemplateParser.parse_inline_erb(@tracker, value.value)
+    ast = ast.deep_clone(value.line)
+    @tracker.processor.process_template(template_name, ast, type, nil, @file_name)
+    @tracker.processor.process_template_alias(@tracker.templates[template_name])
+
+    return s(:lit, template_name), options
   end
 end
