@@ -71,4 +71,15 @@ class Brakeman::TemplateProcessor < Brakeman::BaseProcessor
       arg
     end
   end
+
+  def add_escaped_output output
+    add_output output, :escaped_output
+  end
+
+  def add_output output, type = :output
+    s = Sexp.new(type, output)
+    s.line(output.line)
+    @current_template.add_output s
+    s
+  end
 end

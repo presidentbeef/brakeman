@@ -28,10 +28,7 @@ class Brakeman::ErbTemplateProcessor < Brakeman::TemplateProcessor
         if arg.node_type == :str #ignore plain strings
           ignore
         else
-          s = Sexp.new :output, arg
-          s.line(exp.line)
-          @current_template.add_output s
-          s
+          add_output arg
         end
       elsif method == :force_encoding
         ignore
