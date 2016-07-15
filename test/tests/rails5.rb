@@ -13,7 +13,7 @@ class Rails5Tests < Test::Unit::TestCase
       :controller => 0,
       :model => 0,
       :template => 5,
-      :generic => 8
+      :generic => 9
     }
   end
 
@@ -232,6 +232,19 @@ class Rails5Tests < Test::Unit::TestCase
       :relative_path => "app/controllers/widget_controller.rb",
       :code => s(:render, :action, s(:call, s(:call, s(:params), :[], s(:lit, :x)), :thing?), s(:hash)),
       :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :x)), :thing?)
+  end
+
+  def test_warning_in_helper_method
+    assert_warning :type => :warning,
+      :warning_code => 13,
+      :fingerprint => "e90f8e364e35ed2f6a56b4597e7de8945c836c75ef673006d960a380ecdf47e8",
+      :warning_type => "Dangerous Eval",
+      :line => 3,
+      :message => /^User\ input\ in\ eval/,
+      :confidence => 0,
+      :relative_path => "app/helpers/users_helper.rb",
+      :code => s(:call, nil, :eval, s(:call, s(:params), :[], s(:lit, :x))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
   end
 
   def test_cross_site_scripting_CVE_2015_7578
