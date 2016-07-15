@@ -23,7 +23,7 @@ class Brakeman::Scanner
     @app_tree = Brakeman::AppTree.from_options(options)
 
     if (!@app_tree.root || !@app_tree.exists?("app")) && !options[:force_scan]
-      raise Brakeman::NoApplication, "Please supply the path to a Rails application."
+      raise Brakeman::NoApplication, "Please supply the path to a Rails application (looking in #{@app_tree.root})."
     end
 
     @processor = processor || Brakeman::Processor.new(@app_tree, options)
