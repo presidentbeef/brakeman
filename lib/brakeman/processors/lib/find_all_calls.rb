@@ -28,11 +28,7 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
     process_all exp.body
   end
 
-  #Process body of method
-  def process_defs exp
-    return exp unless @current_method
-    process_all exp.body
-  end
+  alias process_defs process_defn
 
   #Process body of block
   def process_rlist exp
@@ -70,11 +66,7 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
   def process_render exp
     process exp.last if sexp? exp.last
 
-    @calls << { :target => nil,
-                :method => :render,
-                :call => exp,
-                :nested => false,
-                :location => make_location }
+    add_simple_call :render, exp
 
     exp
   end
@@ -84,11 +76,7 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
   def process_dxstr exp
     process exp.last if sexp? exp.last
 
-    @calls << { :target => nil,
-                :method => :`,
-                :call => exp,
-                :nested => false,
-                :location => make_location }
+    add_simple_call :`, exp
 
     exp
   end
@@ -97,11 +85,7 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
   def process_dsym exp
     exp.each { |arg| process arg if sexp? arg }
 
-    @calls << { :target => nil,
-                :method => :literal_to_sym,
-                :call => exp,
-                :nested => false,
-                :location => make_location }
+    add_simple_call :literal_to_sym, exp
 
     exp
   end
@@ -110,11 +94,7 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
   def process_dregx exp
     exp.each { |arg| process arg if sexp? arg }
 
-    @calls << { :target => nil,
-                :method => :brakeman_regex_interp,
-                :call => exp,
-                :nested => false,
-                :location => make_location }
+    add_simple_call :brakeman_regex_interp, exp
 
     exp
   end
@@ -125,6 +105,14 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
   end
 
   private
+
+  def add_simple_call method_name, exp
+    @calls << { :target => nil,
+                :method => method_name,
+                :call => exp,
+                :nested => false,
+                :location => make_location }
+  end
 
   #Gets the target of a call as a Symbol
   #if possible

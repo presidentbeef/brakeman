@@ -23,15 +23,9 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
         if arg.node_type == :str #ignore plain strings
           ignore
         elsif node_type? target, :ivar and target.value == :@output_buffer
-          s = Sexp.new :escaped_output, arg
-          s.line(exp.line)
-          @current_template.add_output s
-          s
+          add_escaped_output arg
         else
-          s = Sexp.new :output, arg
-          s.line(exp.line)
-          @current_template.add_output s
-          s
+          add_output arg
         end
       elsif method == :to_s
         ignore
@@ -75,15 +69,9 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
         if arg.node_type == :str
           ignore
         elsif safe_append_method?(exp.method)
-          s = Sexp.new :output, arg
-          s.line(exp.line)
-          @current_template.add_output s
-          s
+          add_output arg
         else
-          s = Sexp.new :escaped_output, arg
-          s.line(exp.line)
-          @current_template.add_output s
-          s
+          add_escaped_output arg
         end
       else
         super

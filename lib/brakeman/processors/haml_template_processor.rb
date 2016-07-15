@@ -81,10 +81,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       if out.node_type == :str #ignore plain strings
         ignore
       else
-        s = Sexp.new(:output, out)
-        @current_template.add_output s
-        s.line(exp.line)
-        s
+        add_output out
       end
     elsif target == nil and method == :render
       #Process call to render()
@@ -175,16 +172,12 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       exp.map! { |e| get_pushed_value e }
     else
       if call? exp and exp.target == HAML_HELPERS and exp.method == :html_escape
-        s = Sexp.new(:escaped_output, exp.first_arg)
+        add_escaped_output exp.first_arg
       elsif @javascript and call? exp and (exp.method == :j or exp.method == :escape_javascript)
-        s = Sexp.new(:escaped_output, exp.first_arg)
+        add_escaped_output exp.first_arg
       else
-        s = Sexp.new(default, exp)
+        add_output exp, default
       end
-
-      s.line(exp.line)
-      @current_template.add_output s
-      s
     end
   end
 end
