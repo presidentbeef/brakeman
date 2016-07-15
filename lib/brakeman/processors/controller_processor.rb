@@ -1,8 +1,11 @@
 require 'brakeman/processors/base_processor'
+require 'brakeman/processors/lib/module_helper'
 require 'brakeman/tracker/controller'
 
 #Processes controller. Results are put in tracker.controllers
 class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
+  include Brakeman::ModuleHelper
+
   FORMAT_HTML = Sexp.new(:call, Sexp.new(:lvar, :format), :html)
 
   def initialize app_tree, tracker
@@ -47,64 +50,15 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
       return exp
     end
 
-    if @current_class
-      outer_class = @current_class
-      name = (outer_class.name.to_s + "::" + name.to_s).to_sym
-    end
-
-    if @current_module
-      name = (@current_module.name.to_s + "::" + name.to_s).to_sym
-    end
-
-    if @tracker.controllers[name]
-      @current_class = @tracker.controllers[name]
-      @current_class.add_file @file_name, exp
-    else
-      @current_class = Brakeman::Controller.new name, parent, @file_name, exp, @tracker
-      @tracker.controllers[name] = @current_class
-    end
-
-    exp.body = process_all! exp.body
-    set_layout_name
-
-    if outer_class
-      @current_class = outer_class
-    else
-      @current_class = nil
+    handle_class(exp, @tracker.controllers, Brakeman::Controller) do
+      set_layout_name
     end
 
     exp
   end
 
   def process_module exp, parent = nil
-    name = class_name(exp.module_name)
-
-    if @current_module
-      outer_module = @current_module
-      name = (outer_module.name.to_s + "::" + name.to_s).to_sym
-    end
-
-    if @current_class
-      name = (@current_class.name.to_s + "::" + name.to_s).to_sym
-    end
-
-    if @tracker.libs[name]
-      @current_module = @tracker.libs[name]
-      @current_module.add_file @file_name, exp
-    else
-      @current_module = Brakeman::Controller.new name, parent, @file_name, exp, @tracker
-      @tracker.libs[name] = @current_module
-    end
-
-    exp.body = process_all! exp.body
-
-    if outer_module
-      @current_module = outer_module
-    else
-      @current_module = nil
-    end
-
-    exp
+    handle_module exp, Brakeman::Controller, parent
   end
 
   #Look for specific calls inside the controller
@@ -185,53 +139,6 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
       call.line(exp.line)
       call
     end
-  end
-
-  #Process method definition and store in Tracker
-  def process_defn exp
-    name = exp.method_name
-    @current_method = name
-    res = Sexp.new :defn, name, exp.formal_args, *process_all!(exp.body)
-    res.line(exp.line)
-    @current_method = nil
-
-    if @current_class
-      @current_class.add_method @visibility, name, res, @file_name
-    elsif @current_module
-      @current_module.add_method @visibility, name, res, @file_name
-    end
-
-    res
-  end
-
-  #Process self.method definition and store in Tracker
-  def process_defs exp
-    name = exp.method_name
-
-    if node_type? exp[1], :self
-      if @current_class
-        target = @current_class.name
-      elsif @current_module
-        target = @current_module.name
-      else
-        target = nil
-      end
-    else
-      target = class_name exp[1]
-    end
-
-    @current_method = name
-    res = Sexp.new :defs, target, name, exp.formal_args, *process_all!(exp.body)
-    res.line(exp.line)
-    @current_method = nil
-
-    if @current_class
-      @current_class.add_method @visibility, name, res, @file_name
-    elsif @current_module
-      @current_module.add_method @visibility, name, res, @file_name
-    end
-
-    res
   end
 
   #Look for before_filters and add fake ones if necessary
