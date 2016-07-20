@@ -1,3 +1,16 @@
+# 3.3.3
+
+* Show path when no Rails app found (Neil Matatall)
+* Index calls in view helpers
+* Process inline template renders
+* Avoid warning about hashes in link_to hrefs
+* Add documentation for authentication category
+* Ignore boolean methods in render paths
+* Reduce open redirect duplicates
+* Fix SymbolDoS error with unknown Rails version
+* Sexp#value returns nil when there is no value
+* Improve return value estimation
+
 # 3.3.2
 
 * Fix serious performance regression with global constant tracking
