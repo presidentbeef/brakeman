@@ -4,13 +4,101 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2016-06-29T16:19:44-07:00</updated>
+  <updated>2016-07-20T18:48:14-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 3.3.3 Released</title>
+    <link href="http://brakemanscanner.org/blog/2016/07/20/brakeman-3-dot-3-3-released/"/>
+    <updated>2016-07-20T18:11:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2016/07/20/brakeman-3-dot-3-3-released</id>
+    <content type="html">&lt;p&gt;This release is mostly bug fixes and internal improvements, although it may find more warnings due to indexing of view helpers.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Index calls in view helpers&lt;/li&gt;
+&lt;li&gt;Process inline template renders (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/672&quot;&gt;#672&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Show path when no Rails app found (&lt;a href=&quot;https://github.com/oreoshake&quot;&gt;Neil Matatall&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Avoid warning about hashes in &lt;code&gt;link_to&lt;/code&gt; hrefs (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/897&quot;&gt;#897&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Improve return value guesses&lt;/li&gt;
+&lt;li&gt;Ignore boolean methods in render paths&lt;/li&gt;
+&lt;li&gt;Reduce open redirect duplicates&lt;/li&gt;
+&lt;li&gt;Fix SymbolDoS error with unknown Rails version&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;View Helpers&lt;/h3&gt;
+
+&lt;p&gt;Calls in view helpers are now indexed, which means Brakeman will search them for potential vulnerabilities.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/907&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Inline Templates&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will now process inline templates in controllers, if they are using ERB (the default):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;render :inline =&amp;gt; &quot;&amp;lt;%= params[:x].html_safe %&amp;gt;&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/905&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Rails App Path&lt;/h3&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/oreoshake&quot;&gt;Neil Matatall&lt;/a&gt;, Brakeman will now display the path it tried to search for a Rails application if it cannot find it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Please supply the path to a Rails application (looking in /some/path/).
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/909&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Hashes as URLs&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will no longer warn about obvious hash arguments in the HREF for &lt;code&gt;link_to&lt;/code&gt; calls, as well as handling &lt;code&gt;url_for&lt;/code&gt; better.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/904&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Return Values&lt;/h3&gt;
+
+&lt;p&gt;In some cases, Brakeman attempts to determine the possible return value(s) of a method call.
+This release includes a number of improvements to those guesses which may make some warnings easier to understand
+and fix some false positives.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/896&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Render Path Booleans&lt;/h3&gt;
+
+&lt;p&gt;The check for dynamic render paths will no longer warn about methods ending in &lt;code&gt;?&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/899&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Redirect Duplicates&lt;/h3&gt;
+
+&lt;p&gt;This release refactored much of the warning duplicate tracking, and as such there should be fewer duplicate warnings about open redirects.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/901&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;SHAs&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;490bf7b47d4edbb29fd3f87c5dafa50aec2888d495b64275a635df324a8476e9  brakeman-3.3.3.gem
+793f1c69cca2681bdd0c98f11307ace4f1a43ed594dd45cbe5b67f0383e76e2f  brakeman-lib-3.3.3.gem
+dcc3a75b12f84cac582d383a375d3b85d033e25ba42af051bedcdc8b5377c2c5  brakeman-min-3.3.3.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed improvements in this release.&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hanging out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 3.3.2 Released</title>
@@ -1776,114 +1864,6 @@ b5cefd6f14edb57f12d1fe9fcc0fb24e05a05aaf  brakeman-min-3.0.0.gem
 &lt;p&gt;Here’s to four more years?&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;By the way - stickers have returned! Send your name and address (yes, international is fine) to &lt;a href='mail&amp;#116;o&amp;#58;st%69&amp;#99;&amp;#107;%65&amp;#37;72s&amp;#64;bra&amp;#107;&amp;#101;&amp;#109;&amp;#97;&amp;#37;&amp;#54;&amp;#69;&amp;#46;or&amp;#103;'&gt;stic&amp;#107;ers&amp;#64;brakeman&amp;#46;org&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 2.6.2 Released</title>
-    <link href="http://brakemanscanner.org/blog/2014/08/18/brakeman-2-dot-6-2-released/"/>
-    <updated>2014-08-18T09:15:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2014/08/18/brakeman-2-dot-6-2-released</id>
-    <content type="html">&lt;p&gt;This release is mostly bug fixes and updates, but does include two new options.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 2.6.1:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Add check for CVE-2014-3514&lt;/li&gt;
-&lt;li&gt;Add &lt;code&gt;--add-checks-path&lt;/code&gt; option for external checks (Clint Gibler)&lt;/li&gt;
-&lt;li&gt;Add &lt;code&gt;-4&lt;/code&gt; option to force Rails 4 mode&lt;/li&gt;
-&lt;li&gt;Fix SQL injection detection in deep nested string building&lt;/li&gt;
-&lt;li&gt;Check entire call for &lt;code&gt;send&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/523&quot;&gt;#523&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Check for .gitignore of secrets in subdirectories (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/519&quot;&gt;#519&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Avoid warning about symbolizing safe parameters (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/536&quot;&gt;#536&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Fix block statment endings in Erubis (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/518&quot;&gt;#518&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Update ruby2ruby dependency to 2.1.1&lt;/li&gt;
-&lt;li&gt;Expand app path in one place instead of all over (Jeff Rafter)&lt;/li&gt;
-&lt;li&gt;Fix undefined variable in controller processing error (Jason Barnabe)&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;Mass Assignment Bypass (CVE-2014-3514)&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/M4chq5Sb540/CC1Fh0Y_NWwJ&quot;&gt;CVE-2014-3514&lt;/a&gt; describes an issue where  &lt;code&gt;create_with&lt;/code&gt; does not implement strong parameters, allowing mass assignment in Rails 4.x. For vulnerable versions, Brakeman warns about instances of &lt;code&gt;create_with&lt;/code&gt; or a generic warning if no uses are found.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/540&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;External Check Option&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/clintgibler&quot;&gt;Clint Gibler&lt;/a&gt; has added the &lt;code&gt;--add-checks-path&lt;/code&gt; option to provide an path to search for additional checks. This is useful if you wish to write your own custom rules for Brakeman to run.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/532&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Option to Force Rails 4&lt;/h3&gt;
-
-&lt;p&gt;If the Rails version for an application cannot be determined automatically for some reason, the &lt;code&gt;-4&lt;/code&gt; option will force Brakeman to treat it like a Rails 4 application.&lt;/p&gt;
-
-&lt;p&gt;Included with this change are some fixes when a Rails 4 app is detected but the exact version number cannot be determined. This may change the output for some scans.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/527&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;SQL Injection in Nested Strings&lt;/h3&gt;
-
-&lt;p&gt;This release fixes some SQL injection detection when there is lots of string building mixing concatenation and interpolation. These changes may also affect which value Brakeman warns about within the string.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/528&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Better Send Call Detection&lt;/h3&gt;
-
-&lt;p&gt;Previously, Brakeman was ignored calls to &lt;code&gt;send&lt;/code&gt; when they were nested inside a chain of calls. This has been fixed.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/524&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Ignored Secrets&lt;/h3&gt;
-
-&lt;p&gt;Brakeman now checks subdirectories for &lt;code&gt;.gitignore&lt;/code&gt; files which determing if the secrets configuration is being ignored.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/521&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Symbolizing Safe Paramaters&lt;/h3&gt;
-
-&lt;p&gt;Since &lt;code&gt;params[:controller]&lt;/code&gt; and &lt;code&gt;params[:action]&lt;/code&gt; are quite difficult (possibly impossible) to DoS, Brakeman will not warn about symbolizing them.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/538&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Erubis Fixes&lt;/h3&gt;
-
-&lt;p&gt;Some ERB templates were not parsing correctly due to how Brakeman was handling the end of blocks. This should be resolved now.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/520&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Ruby2Ruby Dependency Updated&lt;/h3&gt;
-
-&lt;p&gt;Brakeman now depends on the latest version of Ruby2Ruby due to the &lt;a href=&quot;https://github.com/seattlerb/ruby2ruby/commit/a1576d12cb1e5e379875548abfd441c6e3095f4a&quot;&gt;fix here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/537&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Expand App Path Once&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;&quot;&gt;Jeff Rafter&lt;/a&gt; refactored a bunch of code which was converting the application path to an absolute path and instead moved it to one (okay, maybe two) spots. This should not affect any reports.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/534&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Error in Controller Processing&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/JasonBarnabe&quot;&gt;Jason Barnabe&lt;/a&gt; fixed an error...in the error handling when processing controllers.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/517&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;SHAs&lt;/h3&gt;
-
-&lt;p&gt;The SHA1 sums for this release are&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;f225541559d2fbe5374d481b6105b66053f9710a  brakeman-2.6.2.gem
-67882d467b6a8fc6e504b6dcb9605f79a0c6a22c  brakeman-min-2.6.2.gem
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
 </content>
   </entry>
   
