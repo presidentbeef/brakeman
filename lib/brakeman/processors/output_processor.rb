@@ -86,55 +86,23 @@ class Brakeman::OutputProcessor < Ruby2Ruby
   end
 
   def process_output exp
-    out = if exp[0].node_type == :str
-            ""
-          else
-            res = process exp[0]
-
-            if res == ""
-              ""
-            else
-              "[Output] #{res}"
-            end
-          end
-    exp.clear
-    out
+    output_format exp, "Output"
   end
 
   def process_escaped_output exp
-    out = if exp[0].node_type == :str
-            ""
-          else
-            res = process exp[0]
-
-            if res == ""
-              ""
-            else
-              "[Escaped Output] #{res}"
-            end
-          end
-    exp.clear
-    out
+    output_format exp, "Escaped Output"
   end
 
 
   def process_format exp
-    out = if exp[0].node_type == :str or exp[0].node_type == :ignore
-            ""
-          else
-            res = process exp[0]
-
-            if res == ""
-              ""
-            else
-              "[Format] #{res}"
-            end
-          end
-    exp.clear
-    out
+    output_format exp, "Format"
   end
 
   def process_format_escaped exp
+    output_format exp, "Escaped"
+  end
+
+  def output_format exp, tag
     out = if exp[0].node_type == :str or exp[0].node_type == :ignore
             ""
           else
@@ -143,7 +111,7 @@ class Brakeman::OutputProcessor < Ruby2Ruby
             if res == ""
               ""
             else
-              "[Escaped] #{res}"
+              "[#{tag}] #{res}"
             end
           end
     exp.clear
