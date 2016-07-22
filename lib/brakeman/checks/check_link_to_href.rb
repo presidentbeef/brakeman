@@ -17,7 +17,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
                            :hidden_field, :hidden_field_tag, :image_tag, :label,
                            :mail_to, :polymorphic_url, :radio_button, :select, :slice,
                            :submit_tag, :text_area, :text_field,
-                           :text_field_tag, :url_encode, :u, :url_for,
+                           :text_field_tag, :url_encode, :u,
                            :will_paginate].merge(tracker.options[:url_safe_methods] || [])
 
     @models = tracker.models.keys
@@ -36,6 +36,10 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     @matched = false
     url_arg = process call.second_arg
 
+    if call? url_arg and url_arg.method == :url_for
+      url_arg = url_arg.first_arg
+    end
+
     #Ignore situations where the href is an interpolated string
     #with something before the user input
     return if string_interp?(url_arg) && !url_arg[1].chomp.empty?
@@ -45,7 +49,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     if input = has_immediate_user_input?(url_arg)
       message = "Unsafe #{friendly_type_of input} in link_to href"
 
-      unless duplicate? result
+      unless duplicate? result or call_on_params? url_arg
         add_result result
         warn :result => result,
           :warning_type => "Cross Site Scripting", 
@@ -74,7 +78,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     elsif @matched
       if @matched.type == :model and not tracker.options[:ignore_model_output]
         message = "Unsafe model attribute in link_to href"
-      elsif @matched.type == :params
+      elsif @matched.type == :params and not call_on_params? @matched.match
         message = "Unsafe parameter value in link_to href"
       end
 
@@ -111,5 +115,11 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
 
     MODEL_METHODS.include? exp.method or
       exp.method.to_s =~ /^find_by_/
+  end
+
+  def call_on_params? exp
+    call? exp and
+    params? exp.target and
+    exp.method != :[]
   end
 end

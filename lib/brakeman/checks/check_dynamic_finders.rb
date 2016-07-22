@@ -15,8 +15,7 @@ class Brakeman::CheckDynamicFinders < Brakeman::BaseCheck
   end
 
   def process_result result
-    return if duplicate? result or result[:call].original_line
-    add_result result
+    return unless original? result
 
     call = result[:call]
 

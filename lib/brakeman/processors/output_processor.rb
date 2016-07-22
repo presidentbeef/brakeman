@@ -1,4 +1,4 @@
-require 'ruby2ruby'
+Brakeman.load_brakeman_dependency 'ruby2ruby'
 require 'brakeman/util'
 
 #Produces formatted output strings from Sexps.

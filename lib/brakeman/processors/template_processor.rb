@@ -52,4 +52,34 @@ class Brakeman::TemplateProcessor < Brakeman::BaseProcessor
   def process_escaped_output exp
     process_output exp
   end
+
+  # Pull out actual output value from template
+  def normalize_output arg
+    if call? arg and [:to_s, :html_safe!, :freeze].include? arg.method
+      arg.target
+    elsif node_type? arg, :if
+      branches = [arg.then_clause, arg.else_clause].compact
+
+      if branches.empty?
+        s(:nil)
+      elsif branches.length == 2
+        Sexp.new(:or, *branches)
+      else
+        branches.first
+      end
+    else
+      arg
+    end
+  end
+
+  def add_escaped_output output
+    add_output output, :escaped_output
+  end
+
+  def add_output output, type = :output
+    s = Sexp.new(type, output)
+    s.line(output.line)
+    @current_template.add_output s
+    s
+  end
 end

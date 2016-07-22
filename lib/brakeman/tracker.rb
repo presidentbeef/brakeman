@@ -90,12 +90,7 @@ class Brakeman::Tracker
       set.each do |set_name, collection|
         collection.each_method do |method_name, definition|
           src = definition[:src]
-          if src.node_type == :defs
-            method_name = "#{src[1]}.#{method_name}"
-          end
-
           yield src, set_name, method_name, definition[:file]
-
         end
       end
     end
@@ -191,11 +186,11 @@ class Brakeman::Tracker
   end
 
   def add_constant name, value, context = nil
-    @constants.add name, value, context
+    @constants.add name, value, context unless @options[:disable_constant_tracking]
   end
 
   def constant_lookup name
-    @constants.get_literal name
+    @constants.get_literal name unless @options[:disable_constant_tracking]
   end
 
   def index_call_sites
@@ -254,10 +249,6 @@ class Brakeman::Tracker
       set.each do |set_name, info|
         info.each_method do |method_name, definition|
           src = definition[:src]
-          if src.node_type == :defs
-            method_name = "#{src[1]}.#{method_name}"
-          end
-
           finder.process_source src, :class => set_name, :method => method_name, :file => definition[:file]
         end
       end

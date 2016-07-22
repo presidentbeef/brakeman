@@ -522,7 +522,7 @@ class Rails31Tests < Minitest::Test
   def test_select_vulnerability
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
-      :line => 2,
+      :line => 3,
       :message => /^Upgrade to Rails 3.1.4, 3.1.0 select\(\) helper is vulnerable/,
       :confidence => 1,
       :file => /edit\.html\.erb/
@@ -1045,7 +1045,7 @@ class Rails31Tests < Minitest::Test
   def test_sql_injection_with_interpolated_value
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "d877102aa3a7f1c5a6074d9486e6c850dd9dab23cab4f149a9bd674b440bda49",
+      :fingerprint => "b4dff795ce1504c9273a13add535c895ceb920e9091ddfff614fd2ea4c3696ed",
       :warning_type => "SQL Injection",
       :line => 33,
       :message => /^Possible\ SQL\ injection/,

@@ -18,8 +18,7 @@ class Brakeman::CheckUnsafeReflection < Brakeman::BaseCheck
   end
 
   def check_unsafe_reflection result
-    return if duplicate? result or result[:call].original_line
-    add_result result
+    return unless original? result
 
     call = result[:call] 
     method = call.method

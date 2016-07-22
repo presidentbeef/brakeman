@@ -76,6 +76,7 @@ module Brakeman::Options
         opts.on "--faster", "Faster, but less accurate scan" do
           options[:ignore_ifs] = true
           options[:skip_libs] = true
+          options[:disable_constant_tracking] = true
         end
 
         opts.on "--ignore-model-output", "Consider model attributes XSS-safe" do
@@ -274,6 +275,10 @@ module Brakeman::Options
 
         opts.on "-v", "--version", "Show Brakeman version" do
           options[:show_version] = true
+        end
+
+        opts.on "--force-scan", "Scan application even if rails is not detected" do
+          options[:force_scan] = true
         end
 
         opts.on_tail "-h", "--help", "Display this message" do

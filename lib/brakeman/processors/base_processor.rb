@@ -1,9 +1,11 @@
 require 'brakeman/processors/lib/processor_helper'
+require 'brakeman/processors/lib/safe_call_helper'
 require 'brakeman/util'
 
 #Base processor for most processors.
 class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   include Brakeman::ProcessorHelper
+  include Brakeman::SafeCallHelper
   include Brakeman::Util
 
   IGNORE = Sexp.new :ignore
@@ -81,14 +83,6 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     call = Sexp.new(:iter, call, exp.block_args, block).compact
     call.line(exp.line)
     call
-  end
-
-  def process_safe_call exp
-    if self.respond_to? :process_call
-      process_call exp
-    else
-      process_default exp
-    end
   end
 
   #String with interpolation.
@@ -278,6 +272,31 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
 
     type ||= :default
     value ||= :default
+
+    if type == :inline and string? value and not hash_access(rest, :type)
+      value, rest = make_inline_render(value, rest)
+    end
+
     return type, value, rest
+  end
+
+  def make_inline_render value, options
+    require 'brakeman/parsers/template_parser'
+
+    class_or_module = (@current_class || @current_module)
+
+    class_or_module = if class_or_module.nil?
+                        "Unknown"
+                      else
+                        class_or_module.name
+                      end
+
+    template_name = "#@current_method/inline@#{value.line}:#{class_or_module}".to_sym
+    type, ast = Brakeman::TemplateParser.parse_inline_erb(@tracker, value.value)
+    ast = ast.deep_clone(value.line)
+    @tracker.processor.process_template(template_name, ast, type, nil, @file_name)
+    @tracker.processor.process_template_alias(@tracker.templates[template_name])
+
+    return s(:lit, template_name), options
   end
 end

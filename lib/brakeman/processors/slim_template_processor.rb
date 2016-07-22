@@ -13,27 +13,23 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
     method = exp.method
 
     if method == :safe_concat and (target == SAFE_BUFFER or target == OUTPUT_BUFFER)
-      arg = exp.first_arg
-
-      if call? arg and arg.method == :to_s
-        arg = arg.target
-      end
+      arg = normalize_output(exp.first_arg)
 
       if is_escaped? arg
-        make_escaped_output arg
+        add_escaped_output arg
       elsif string? arg
         ignore
       elsif render? arg
-        make_output make_render_in_view arg
+        add_output make_render_in_view arg
       elsif string_interp? arg
         process_inside_interp arg
       elsif node_type? arg, :ignore
         ignore
       else
-        make_output arg
+        add_output arg
       end
     elsif is_escaped? exp
-      make_escaped_output exp.first_arg
+      add_escaped_output exp.first_arg
     elsif target == nil and method == :render
       exp.arglist = process exp.arglist
       make_render_in_view exp
@@ -41,20 +37,6 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
       exp.arglist = process exp.arglist
       exp
     end
-  end
-
-  def make_output exp
-    s = Sexp.new :output, exp
-    s.line(exp.line)
-    @current_template.add_output s
-    s
-  end
-
-  def make_escaped_output exp
-    s = Sexp.new :escaped_output, exp.first_arg
-    s.line(exp.line)
-    @current_template.add_output s
-    s
   end
 
   #Slim likes to interpolate output into strings then pass them to safe_concat.
@@ -80,13 +62,13 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
       elsif exp == SAFE_BUFFER
         ignore
       elsif render? exp
-        make_output make_render_in_view exp
+        add_output make_render_in_view exp
       elsif node_type? :output, :escaped_output
         exp
       elsif is_escaped? exp
-        make_escaped_output exp
+        add_escaped_output exp
       else
-        make_output exp
+        add_output exp
       end
     end
   end

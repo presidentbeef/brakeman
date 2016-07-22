@@ -17,8 +17,7 @@ class Brakeman::CheckSend < Brakeman::BaseCheck
   end
 
   def process_result result
-    return if duplicate? result or result[:call].original_line
-    add_result result
+    return unless original? result
 
     send_call = get_send result[:call]
     process_call_args send_call

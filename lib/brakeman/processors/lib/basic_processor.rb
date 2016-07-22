@@ -1,8 +1,10 @@
 require 'brakeman/processors/lib/processor_helper'
+require 'brakeman/processors/lib/safe_call_helper'
 require 'brakeman/util'
 
 class Brakeman::BasicProcessor < Brakeman::SexpProcessor
   include Brakeman::ProcessorHelper
+  include Brakeman::SafeCallHelper
   include Brakeman::Util
 
   def initialize tracker
@@ -13,22 +15,6 @@ class Brakeman::BasicProcessor < Brakeman::SexpProcessor
 
   def process_default exp
     process_all exp
-  end
-
-  def process_safe_call exp
-    if self.respond_to? :process_call
-      process_call exp
-    else
-      process_default exp
-    end
-  end
-
-  def process_safe_attrasgn exp
-    if self.respond_to? :process_attrasgn
-      process_attrasgn exp
-    else
-      process_default exp
-    end
   end
 
   def process_if exp

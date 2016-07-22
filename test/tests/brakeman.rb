@@ -7,6 +7,12 @@ class BrakemanTests < Minitest::Test
     end
   end
 
+  def test_exception_no_on_no_application_if_forced
+    assert_nothing_raised Brakeman::NoApplication do
+      Brakeman.run :app_path => "/tmp#{rand}", :force_scan => true #better not exist
+    end
+  end
+
   def test_app_tree_root_is_absolute
     require 'brakeman/options'
     relative_path = Pathname.new(File.dirname(__FILE__)).relative_path_from(Pathname.getwd)

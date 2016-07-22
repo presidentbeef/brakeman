@@ -26,8 +26,7 @@ class Brakeman::CheckRegexDoS < Brakeman::BaseCheck
 
   #Warns if regex includes user input
   def process_result result
-    return if duplicate? result or result[:call].original_line
-    add_result result
+    return unless original? result
 
     call = result[:call]
     components = call[1..-1]

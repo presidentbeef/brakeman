@@ -148,6 +148,12 @@ class SexpTests < Minitest::Test
     assert_equal s(:lit, 1), exp.rhs
   end
 
+  def test_attribute_index_assignment
+    exp = parse 'y[:x] = 1'
+
+    assert_equal s(:lit, 1), exp.rhs
+  end
+
   def test_global_assignment
     exp = parse '$x = 1'
 
@@ -388,5 +394,13 @@ class SexpTests < Minitest::Test
     s = Sexp.new(:s)
     s << s
     assert_equal "s(:s, s(...))", s.inspect
+  end
+
+  def test_value
+    assert_equal 1, s(:lit, 1).value
+    assert_nil s(:blah).value
+    assert_raises do
+      s(:blah, 1, 2).value
+    end
   end
 end

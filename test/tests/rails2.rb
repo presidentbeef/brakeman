@@ -698,7 +698,7 @@ class Rails2Tests < Minitest::Test
   def test_sql_injection_active_record_base_connection
     assert_warning :type => :warning,
       :warning_code => 0,
-      :fingerprint => "9aab1347248beb5a3bec91e84b133dcd8fc1bd2b113b744e2df59acf9085cd81",
+      :fingerprint => "4918bccd67257c7f691718b4bb10bbbf176bc4bd3ad80cce9df11032cc73515d",
       :warning_type => "SQL Injection",
       :line => 31,
       :message => /^Possible\ SQL\ injection/,

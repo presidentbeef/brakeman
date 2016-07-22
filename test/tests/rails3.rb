@@ -13,7 +13,7 @@ class Rails3Tests < Minitest::Test
     @expected ||= {
       :controller => 1,
       :model => 9,
-      :template => 38,
+      :template => 40,
       :generic => 74
     }
 
@@ -563,6 +563,29 @@ class Rails3Tests < Minitest::Test
       :file => /test_params\.html\.erb/            
   end  
 
+  def test_newlines_in_template
+    # Brakeman previously handled multiple newlines between nested ruby
+    # expressions incorrectly. This test verifies that multiple newlines between
+    # ruby expressions does not lead to incorrect line numbers in warnings.
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 5,
+      :message => /^Unsafe parameter value in link_to href/,
+      :confidence => 0,
+      :file => /test_newlines\.html\.erb/
+
+    # Brakeman previously handled multiple newlines between HTML markup and ruby
+    # expressions incorrectly. This test verifies that multiple newlines between
+    # HTML and ruby expressions does not lead to incorrect line numbers in
+    # warnings.
+    assert_warning :type => :template,
+      :warning_type => "Cross Site Scripting",
+      :line => 12,
+      :message => /^Unsafe parameter value in link_to href/,
+      :confidence => 0,
+      :file => /test_newlines\.html\.erb/
+  end
+
   def test_polymorphic_url_in_href
     assert_no_warning :type => :template,
       :warning_type => "Cross Site Scripting",
@@ -640,7 +663,7 @@ class Rails3Tests < Minitest::Test
   def test_unescaped_model
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
-      :line => 3, #This should be line 4 :(
+      :line => 4,
       :message => /^Unescaped model attribute/,
       :confidence => 0,
       :file => /test_sql\.html\.erb/
@@ -681,7 +704,7 @@ class Rails3Tests < Minitest::Test
     #SQL injection in controllers should not warn again in views
     assert_no_warning :type => :template,
       :warning_type => "SQL Injection",
-      :line => 3, #This should be line 4 :(
+      :line => 4,
       :message => /^Possible SQL injection/,
       :confidence => 0,
       :file => /test_sql\.html\.erb/
@@ -770,7 +793,7 @@ class Rails3Tests < Minitest::Test
   def test_indirect_cookie
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
-      :line => 4,
+      :line => 5,
       :message => /^Unescaped cookie value/,
       :confidence => 2,
       :file => /test_cookie\.html\.erb/
@@ -790,7 +813,7 @@ class Rails3Tests < Minitest::Test
   def test_cookies_multidimensional
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
-      :line => 6,
+      :line => 7,
       :message => /^Unescaped cookie value/,
       :confidence => 0,
       :file => /test_cookie\.html\.erb/

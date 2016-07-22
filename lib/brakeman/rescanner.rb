@@ -1,5 +1,4 @@
 require 'brakeman/scanner'
-require 'terminal-table'
 require 'brakeman/util'
 require 'brakeman/differ'
 
@@ -449,6 +448,8 @@ class Brakeman::RescanReport
 
   #Output total, fixed, and new warnings
   def to_s(verbose = false)
+    Brakeman.load_brakeman_dependency 'terminal-table'
+
     if !verbose
       <<-OUTPUT
 Total warnings: #{all_warnings.length}

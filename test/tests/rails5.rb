@@ -12,8 +12,8 @@ class Rails5Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 2,
-      :generic => 6
+      :template => 5,
+      :generic => 9
     }
   end
 
@@ -54,6 +54,18 @@ class Rails5Tests < Minitest::Test
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, s(:const, :User), :find_by, s(:call, s(:params), :slice, s(:lit, :id))),
       :user_input => s(:call, s(:params), :slice, s(:lit, :id))
+  end
+
+  def test_sql_injection_with_quoted_primary_key
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "f9396dd572315e802eca1e03024a5b309ff006ede47b1aef6255236fcc37d2a9",
+      :warning_type => "SQL Injection",
+      :line => 3,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/thing.rb",
+      :user_input => s(:call, nil, :quoted_primary_key)
   end
 
   def test_dangerous_send_with_safe_call
@@ -145,6 +157,96 @@ class Rails5Tests < Minitest::Test
       :user_input => s(:call, s(:params), :slice, s(:lit, :url))
   end
 
+  def test_cross_site_scripting_with_merge_in_link_to
+    assert_no_warning :type => :template,
+      :warning_code => 4,
+      :fingerprint => "54043efc2da20930f636dedfef5b1e77dfed0957ebb0c285f0c0a71b68e046c5",
+      :warning_type => "Cross Site Scripting",
+      :line => 6,
+      :message => /^Unsafe\ parameter\ value\ in\ link_to\ href/,
+      :confidence => 0,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, "good"), s(:call, s(:call, nil, :params), :merge, s(:hash, s(:lit, :page), s(:lit, 2)))),
+      :user_input => s(:call, s(:call, nil, :params), :merge, s(:hash, s(:lit, :page), s(:lit, 2)))
+  end
+
+  def test_cross_site_scripting_link_to_url_for
+    assert_warning :type => :template,
+      :warning_code => 4,
+      :fingerprint => "03fcddff701f15c976a229c2a814c817f81463b733c6d4925253488879d907e3",
+      :warning_type => "Cross Site Scripting",
+      :line => 7,
+      :message => /^Unsafe\ parameter\ value\ in\ link_to\ href/,
+      :confidence => 0,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, "xss"), s(:call, nil, :url_for, s(:call, s(:params), :[], s(:lit, :bad)))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :bad))
+  end
+
+  def test_cross_site_scripting_inline_erb
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "26b8b0ad586712d41ac6877e2292c6da7aa4760078add7fd23edf5b7a1bcb699",
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/widget/show.html.erb",
+      :code => s(:call, s(:params), :[], s(:lit, :x)),
+      :user_input => nil
+  end
+
+  def test_if_expression_in_templates
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "26b8b0ad586712d41ac6877e2292c6da7aa4760078add7fd23edf5b7a1bcb699",
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/widget/show.html.erb",
+      :code => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_remote_code_execution_in_dynamic_constant
+    assert_warning :type => :warning,
+      :warning_code => 24,
+      :fingerprint => "ed9f1dea97ba2929a0107fce64c3b4aa66010961ebbef36e1d11428067095cb6",
+      :warning_type => "Remote Code Execution",
+      :line => 7,
+      :message => /^Unsafe\ reflection\ method\ constantize\ cal/,
+      :confidence => 0,
+      :relative_path => "app/controllers/widget_controller.rb",
+      :code => s(:call, s(:call, s(:params), :[], s(:lit, :IdentifierClass)), :constantize),
+      :user_input => s(:call, s(:params), :[], s(:lit, :IdentifierClass))
+  end
+
+  def test_dynamic_render_path_with_boolean
+    assert_no_warning :type => :warning,
+      :warning_code => 15,
+      :fingerprint => "77503a2c10167a42ac4b40b81aa2cf3b737ad206f5a9c593ae9898c9915a5136",
+      :warning_type => "Dynamic Render Path",
+      :line => 11,
+      :message => /^Render\ path\ contains\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/widget_controller.rb",
+      :code => s(:render, :action, s(:call, s(:call, s(:params), :[], s(:lit, :x)), :thing?), s(:hash)),
+      :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :x)), :thing?)
+  end
+
+  def test_warning_in_helper_method
+    assert_warning :type => :warning,
+      :warning_code => 13,
+      :fingerprint => "e90f8e364e35ed2f6a56b4597e7de8945c836c75ef673006d960a380ecdf47e8",
+      :warning_type => "Dangerous Eval",
+      :line => 3,
+      :message => /^User\ input\ in\ eval/,
+      :confidence => 0,
+      :relative_path => "app/helpers/users_helper.rb",
+      :code => s(:call, nil, :eval, s(:call, s(:params), :[], s(:lit, :x))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
   def test_cross_site_scripting_CVE_2015_7578
     assert_warning :type => :warning,
       :warning_code => 96,
@@ -205,5 +307,18 @@ class Rails5Tests < Minitest::Test
       :confidence => 0,
       :relative_path => "Gemfile.lock",
       :user_input => nil
+  end
+
+  def test_dangerous_eval_in_prior_class_method_with_same_name
+    assert_warning :type => :warning,
+      :warning_code => 13,
+      :fingerprint => "7fe3142d1d11b7118463e45a82b4b7a2b5b5bac95cf8904050c101fae16b8168",
+      :warning_type => "Dangerous Eval",
+      :line => 3,
+      :message => /User input in eval near line 3/,
+      :method => :"User.evaluate_user_input",
+      :confidence => 0,
+      :relative_path => "app/models/user.rb",
+      :user_input => s(:params)
   end
 end

@@ -65,7 +65,7 @@ class Brakeman::FindReturnValue
       @uses_ivars = true if node_type? current, :ivar
 
       if node_type? current, :return
-        @return_values << current.value unless current.value.nil?
+        @return_values << last_value(current.value) if current.value
       elsif sexp? current
         todo = current[1..-1].concat todo
       end
@@ -97,10 +97,40 @@ class Brakeman::FindReturnValue
           true_branch or false_branch
         end
       end
-    when :lasgn, :iasgn
-      exp.rhs
+    when :lasgn, :iasgn, :op_asgn_or, :attrasgn
+      last_value exp.rhs
+    when :rescue
+      values = []
+
+      exp.each_sexp do |e|
+        if node_type? e, :resbody
+          if e.last
+            values << last_value(e.last)
+          end
+        elsif sexp? e
+          values << last_value(e)
+        end
+      end
+
+      values.reject! do |v|
+        v.nil? or node_type? v, :nil
+      end
+
+      if values.length > 1
+        values.inject do |m, v|
+          make_or(m, v)
+        end
+      else
+        values.first
+      end
     when :return
-      exp.value
+      if exp.value
+        last_value exp.value
+      else
+        nil
+      end
+    when :nil
+      nil
     else
       exp.original_line = exp.line unless exp.original_line
       exp

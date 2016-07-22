@@ -3,7 +3,7 @@
 #of a Sexp.
 class Sexp
   attr_accessor :original_line, :or_depth
-  ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cvasgn, :cdecl, :or, :and, :colon2]
+  ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cvasgn, :cdecl, :or, :and, :colon2, :op_asgn_or]
 
   def method_missing name, *args
     #Brakeman does not use this functionality,
@@ -51,7 +51,7 @@ class Sexp
 
   def value
     raise WrongSexpError, "Sexp#value called on multi-item Sexp", caller[1..-1] if size > 2
-    last
+    self[1]
   end
 
   def value= exp
@@ -436,7 +436,11 @@ class Sexp
     expect :attrasgn, :safe_attrasgn, *ASSIGNMENT_BOOL
 
     if self.node_type == :attrasgn or self.node_type == :safe_attrasgn
-      self[3]
+      if self[2] == :[]=
+        self[4]
+      else
+        self[3]
+      end
     else
       self[2]
     end

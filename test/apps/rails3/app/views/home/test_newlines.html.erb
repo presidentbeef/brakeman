@@ -1,0 +1,13 @@
+<% if @name %>
+
+
+  <% if @indirect %>
+    Dangerous hrefs in nested logic after multiple newlines: <%= link_to "newlines between ruby code", params[:dangerous] %>
+  <% end %>
+<% end %>
+
+<h1>Home#test_newlines</h1>
+
+<% if @indirect99 %>
+  Dangerous hrefs in nested logic after multiple newlines: <%= link_to "newlines between HTML and ruby code", params[:dangerous] %>
+<% end %>

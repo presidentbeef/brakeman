@@ -2,7 +2,7 @@ require 'brakeman/processors/template_processor'
 
 #Processes ERB templates using Erubis instead of erb.
 class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
-  
+
   #s(:call, TARGET, :method, ARGS)
   def process_call exp
     target = exp.target
@@ -18,25 +18,14 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
     if node_type?(target, :lvar, :ivar) and (target.value == :_buf or target.value == :@output_buffer)
       if method == :<< or method == :safe_concat
 
-        arg = exp.first_arg
-
-        #We want the actual content
-        if call? arg and (arg.method == :to_s or arg.method == :html_safe!)
-          arg = arg.target
-        end
+        arg = normalize_output(exp.first_arg)
 
         if arg.node_type == :str #ignore plain strings
           ignore
         elsif node_type? target, :ivar and target.value == :@output_buffer
-          s = Sexp.new :escaped_output, arg
-          s.line(exp.line)
-          @current_template.add_output s
-          s
+          add_escaped_output arg
         else
-          s = Sexp.new :output, arg
-          s.line(exp.line)
-          @current_template.add_output s
-          s
+          add_output arg
         end
       elsif method == :to_s
         ignore
@@ -70,23 +59,19 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
   #Look for assignments to output buffer that look like this:
   #  @output_buffer.append = some_output
   #  @output_buffer.safe_append = some_output
+  #  @output_buffer.safe_expr_append = some_output
   def process_attrasgn exp
     if exp.target.node_type == :ivar and exp.target.value == :@output_buffer
-      if exp.method == :append= or exp.method == :safe_append=
-        arg = exp.first_arg = process(exp.first_arg)
+      if append_method?(exp.method)
+        exp.first_arg = process(exp.first_arg)
+        arg = normalize_output(exp.first_arg)
 
         if arg.node_type == :str
           ignore
-        elsif exp.method == :safe_append=
-          s = Sexp.new :output, arg
-          s.line(exp.line)
-          @current_template.add_output s
-          s
+        elsif safe_append_method?(exp.method)
+          add_output arg
         else
-          s = Sexp.new :escaped_output, arg
-          s.line(exp.line)
-          @current_template.add_output s
-          s
+          add_escaped_output arg
         end
       else
         super
@@ -94,5 +79,14 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
     else
       super
     end
+  end
+
+  private
+  def append_method?(method)
+    method == :append= || safe_append_method?(method)
+  end
+
+  def safe_append_method?(method)
+    method == :safe_append= || method == :safe_expr_append=
   end
 end
