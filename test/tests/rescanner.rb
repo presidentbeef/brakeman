@@ -6,7 +6,7 @@ class Brakeman::Rescanner
   attr_reader :changes, :reindex
 end
 
-class RescannerTests < Test::Unit::TestCase
+class RescannerTests < Minitest::Test
   include BrakemanTester::RescanTestHelper
 
   def test_no_change_no_warnings

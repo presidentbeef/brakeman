@@ -1,6 +1,6 @@
 require 'json'
 
-class JSONCompareTests < Test::Unit::TestCase
+class JSONCompareTests < Minitest::Test
   include BrakemanTester::DiffHelper
 
   def setup

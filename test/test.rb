@@ -19,7 +19,13 @@ end
 
 require 'brakeman'
 require 'brakeman/scanner'
-require 'test/unit'
+require 'minitest/autorun'
+
+class Minitest::Test
+  def assert_nothing_raised *args
+    yield
+  end
+end
 
 #Helper methods for running scans
 module BrakemanTester
@@ -38,7 +44,7 @@ end
 module BrakemanTester::FindWarning
   def assert_warning opts
     warnings = find opts
-    assert_not_equal 0, warnings.length, "No warning found"
+    refute_equal 0, warnings.length, "No warning found"
     assert_equal 1, warnings.length, "Matched more than one warning"
   end
 

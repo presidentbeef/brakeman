@@ -1,6 +1,6 @@
 require 'brakeman/processors/lib/find_all_calls'
 
-class CallIndexTests < Test::Unit::TestCase
+class CallIndexTests < Minitest::Test
   def setup
     @calls = [
       {:method => :hello, :target => :world, :call => {}, :nested => false },
@@ -98,7 +98,7 @@ class CallIndexTests < Test::Unit::TestCase
   end
 
   def test_find_error
-    assert_raise do
+    assert_raises do
       @call_index.find_calls :target => nil, :methods => nil
     end
   end

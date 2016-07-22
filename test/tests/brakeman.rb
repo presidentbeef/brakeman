@@ -1,8 +1,8 @@
 require 'tempfile'
 
-class BrakemanTests < Test::Unit::TestCase
+class BrakemanTests < Minitest::Test
   def test_exception_on_no_application
-    assert_raise Brakeman::NoApplication do
+    assert_raises Brakeman::NoApplication do
       Brakeman.run "/tmp#{rand}" #better not exist
     end
   end
@@ -73,7 +73,7 @@ class BrakemanTests < Test::Unit::TestCase
   end
 end
 
-class UtilTests < Test::Unit::TestCase
+class UtilTests < Minitest::Test
   def setup
     @ruby_parser = RubyParser
   end
@@ -91,7 +91,7 @@ class UtilTests < Test::Unit::TestCase
   end
 end
 
-class BaseCheckTests < Test::Unit::TestCase
+class BaseCheckTests < Minitest::Test
   FakeTracker = Struct.new(:config)
   FakeAppTree = Struct.new(:root)
 
@@ -142,7 +142,7 @@ class BaseCheckTests < Test::Unit::TestCase
   end
 end
 
-class ConfigTests < Test::Unit::TestCase
+class ConfigTests < Minitest::Test
 
   def setup
     Brakeman.instance_variable_set(:@quiet, false)
@@ -287,12 +287,12 @@ class ConfigTests < Test::Unit::TestCase
 
   def test_output_format_errors_raised
     options = {:output_format => :to_json, :output_files => ['xx.csv', 'xx.xxx']}
-    assert_raise(ArgumentError) { Brakeman.get_output_formats(options) }
+    assert_raises(ArgumentError) { Brakeman.get_output_formats(options) }
   end
 
   def test_github_options_raises_error
     options = {:github_repo => 'www.test.com', :app_path => "/tmp"}
-    assert_raise ArgumentError do
+    assert_raises ArgumentError do
       Brakeman.set_options(options)
     end
   end
@@ -357,7 +357,7 @@ class ConfigTests < Test::Unit::TestCase
   end
 end
 
-class GemProcessorTests < Test::Unit::TestCase
+class GemProcessorTests < Minitest::Test
   FakeTracker = Struct.new(:config, :options)
 
   def assert_version version, name, msg = nil

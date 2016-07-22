@@ -1,6 +1,6 @@
 require 'json'
 
-class JSONOutputTests < Test::Unit::TestCase
+class JSONOutputTests < Minitest::Test
   def setup
     @@json ||= JSON.parse(Brakeman.run("#{TEST_PATH}/apps/rails3.2").report.to_json)
   end

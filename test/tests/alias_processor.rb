@@ -1,4 +1,4 @@
-class AliasProcessorTests < Test::Unit::TestCase
+class AliasProcessorTests < Minitest::Test
   def assert_alias expected, original, full = false
     original_sexp = RubyParser.new.parse original
     expected_sexp = RubyParser.new.parse expected

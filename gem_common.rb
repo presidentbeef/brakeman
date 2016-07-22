@@ -1,7 +1,7 @@
 module Brakeman
   module GemDependencies
     def self.dev_dependencies spec
-      spec.add_development_dependency "test-unit"
+      spec.add_development_dependency "minitest"
     end
 
     def self.base_dependencies spec

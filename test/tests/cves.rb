@@ -1,6 +1,6 @@
 require 'brakeman/rescanner'
 
-class CVETests < Test::Unit::TestCase
+class CVETests < Minitest::Test
   include BrakemanTester::RescanTestHelper
   include BrakemanTester::FindWarning
 

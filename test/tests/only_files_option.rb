@@ -1,8 +1,9 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-class OnlyFilesOptionTests < Test::Unit::TestCase
+class OnlyFilesOptionTests < Minitest::Test
   include BrakemanTester::FindWarning
   include BrakemanTester::CheckExpected
+  parallelize_me!
 
   def expected
     @expected ||= {

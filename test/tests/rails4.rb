@@ -1,6 +1,6 @@
 abort "Please run using test/test.rb" unless defined? BrakemanTester
 
-class Rails4Tests < Test::Unit::TestCase
+class Rails4Tests < Minitest::Test
   include BrakemanTester::FindWarning
   include BrakemanTester::CheckExpected
 

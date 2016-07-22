@@ -1,4 +1,4 @@
-class RenderPathTests < Test::Unit::TestCase
+class RenderPathTests < Minitest::Test
   def setup
     @r = Brakeman::RenderPath.new
   end

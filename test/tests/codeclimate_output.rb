@@ -1,4 +1,4 @@
-class TestCodeClimateOutput < Test::Unit::TestCase
+class TestCodeClimateOutput < Minitest::Test
   def setup
     @@report ||= Brakeman.run("#{TEST_PATH}/apps/rails2").report.to_codeclimate
     @@issues ||= @@report.split("\0").map { |json| JSON.parse(json) }

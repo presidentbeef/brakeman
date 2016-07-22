@@ -1,6 +1,6 @@
 require 'json'
 
-class TestReportGeneration < Test::Unit::TestCase
+class TestReportGeneration < Minitest::Test
   def setup
     @@report ||= Brakeman.run(:app_path => "#{TEST_PATH}/apps/rails3.2", :quiet => true, :report_routes => true).report
   end
