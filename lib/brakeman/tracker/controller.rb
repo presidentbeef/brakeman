@@ -60,12 +60,7 @@ module Brakeman
       end
 
       @skip_filter_cache.each do |f|
-        if f[:all] or
-          (f[:only] == method) or
-          (f[:only].is_a? Array and f[:only].include? method) or
-          (f[:except].is_a? Symbol and f[:except] != method) or
-          (f[:except].is_a? Array and not f[:except].include? method)
-
+        if filter_includes_method? f, method
           filters.concat f[:methods]
         else
         end
@@ -73,6 +68,7 @@ module Brakeman
 
       filters
     end
+
 
     def remove_skipped_filters processor, filters, method
       controller = self
@@ -99,16 +95,10 @@ module Brakeman
       end
 
       @before_filter_cache.each do |f|
-        if f[:all] or
-          (f[:only] == method) or
-          (f[:only].is_a? Array and f[:only].include? method) or
-          (f[:except].is_a? Symbol and f[:except] != method) or
-          (f[:except].is_a? Array and not f[:except].include? method)
-
+        if filter_includes_method? f, method
           filters.concat f[:methods]
         end
       end
-
 
       filters
     end
@@ -146,6 +136,16 @@ module Brakeman
       end
 
       filter
+    end
+
+    private
+
+    def filter_includes_method? filter_rule, method_name
+       filter_rule[:all] or
+       (filter_rule[:only] == method_name) or
+       (filter_rule[:only].is_a? Array and filter_rule[:only].include? method_name) or
+       (filter_rule[:except].is_a? Symbol and filter_rule[:except] != method_name) or
+       (filter_rule[:except].is_a? Array and not filter_rule[:except].include? method_name)
     end
   end
 

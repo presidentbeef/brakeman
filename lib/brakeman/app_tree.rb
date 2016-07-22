@@ -53,6 +53,7 @@ module Brakeman
 
     def initialize(root, init_options = {})
       @root = root
+      @project_root_path = Pathname.new(@root)
       @skip_files = init_options[:skip_files]
       @only_files = init_options[:only_files]
       @additional_libs_path = init_options[:additional_libs_path] || []
@@ -133,34 +134,31 @@ module Brakeman
 
     def select_only_files(paths)
       return paths unless @only_files
-      project_root  = Pathname.new(@root)
+
       paths.select do |path|
-        absolute_path = Pathname.new(path)
-        # relative root never has a leading separator. But, we use a leading
-        # separator in a @skip_files entry to imply that a directory is
-        # "absolute" with respect to the project directory.
-        project_relative_path = File.join(
-          File::SEPARATOR,
-          absolute_path.relative_path_from(project_root).to_s
-        )
-        @only_files.match(project_relative_path)
+        match_path @only_files, path
       end
     end
 
     def reject_skipped_files(paths)
       return paths unless @skip_files
-      project_root  = Pathname.new(@root)
+
       paths.reject do |path|
-        absolute_path = Pathname.new(path)
-        # relative root never has a leading separator. But, we use a leading
-        # separator in a @skip_files entry to imply that a directory is
-        # "absolute" with respect to the project directory.
-        project_relative_path = File.join(
-          File::SEPARATOR,
-          absolute_path.relative_path_from(project_root).to_s
-        )
-        @skip_files.match(project_relative_path)
+        match_path @skip_files, path
       end
+    end
+
+    def match_path files, path
+      absolute_path = Pathname.new(path)
+      # relative root never has a leading separator. But, we use a leading
+      # separator in a @skip_files entry to imply that a directory is
+      # "absolute" with respect to the project directory.
+      project_relative_path = File.join(
+        File::SEPARATOR,
+        absolute_path.relative_path_from(@project_root_path).to_s
+      )
+
+      files.match(project_relative_path)
     end
   end
 end

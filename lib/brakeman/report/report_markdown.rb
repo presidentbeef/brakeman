@@ -1,6 +1,6 @@
-Brakeman.load_brakeman_dependency 'terminal-table'
+require 'brakeman/report/report_table'
 
-class Brakeman::Report::Markdown < Brakeman::Report::Base
+class Brakeman::Report::Markdown < Brakeman::Report::Table
 
   class MarkdownTable < Terminal::Table
 
@@ -19,6 +19,11 @@ class Brakeman::Report::Markdown < Brakeman::Report::Base
     end
     alias :to_s :render
 
+  end
+
+  def initialize *args
+    super
+    @table = MarkdownTable
   end
 
   def generate_report
@@ -42,22 +47,19 @@ class Brakeman::Report::Markdown < Brakeman::Report::Base
       generate_templates.to_s << "\n\n"
     end
 
-    res = generate_errors
-    out << "### Errors\n\n" << res.to_s << "\n\n" if res
-
-    res = generate_warnings
-    out << "### SECURITY WARNINGS\n\n" << res.to_s << "\n\n" if res
-
-    res = generate_controller_warnings
-    out << "### Controller Warnings:\n\n" << res.to_s << "\n\n" if res
-
-    res = generate_model_warnings
-    out << "### Model Warnings:\n\n" << res.to_s << "\n\n" if res
-
-    res = generate_template_warnings
-    out << "### View Warnings:\n\n" << res.to_s << "\n\n" if res
+    output_table("Errors", generate_errors, out)
+    output_table("SECURITY WARNINGS", generate_warnings, out)
+    output_table("Controller Warnings:", generate_controller_warnings, out)
+    output_table("Model Warnings:", generate_model_warnings, out)
+    output_table("View Warnings:", generate_template_warnings, out)
 
     out
+  end
+
+  def output_table title, result, output
+    return unless result
+
+    output << "### #{title}\n\n#{result.to_s}\n\n"
   end
 
   def generate_metadata
@@ -78,57 +80,6 @@ class Brakeman::Report::Markdown < Brakeman::Report::Base
   def generate_checks
     MarkdownTable.new(:headings => ['Checks performed']) do |t|
       t.add_row([checks.checks_run.sort.join(", ")])
-    end
-  end
-
-  def generate_overview
-    num_warnings = all_warnings.length
-
-    MarkdownTable.new(:headings => ['Scanned/Reported', 'Total']) do |t|
-      t.add_row ['Controllers', tracker.controllers.length]
-      t.add_row ['Models', tracker.models.length - 1]
-      t.add_row ['Templates', number_of_templates(@tracker)]
-      t.add_row ['Errors', tracker.errors.length]
-      t.add_row ['Security Warnings', "#{num_warnings} (#{warnings_summary[:high_confidence]})"]
-      t.add_row ['Ignored Warnings', ignored_warnings.length] unless ignored_warnings.empty?
-    end
-  end
-
-  #Generate listings of templates and their output
-  def generate_templates
-    out_processor = Brakeman::OutputProcessor.new
-    template_rows = {}
-    tracker.templates.each do |name, template|
-      template.each_output do |out|
-        out = out_processor.format out
-        template_rows[name] ||= []
-        template_rows[name] << out.gsub("\n", ";").gsub(/\s+/, " ")
-      end
-    end
-
-    template_rows = template_rows.sort_by{|name, value| name.to_s}
-
-    output = ''
-    template_rows.each do |template|
-      output << template.first.to_s << "\n\n"
-      table = MarkdownTable.new(:headings => ['Output']) do |t|
-        # template[1] is an array of calls
-        template[1].each do |v|
-          t.add_row [v]
-        end
-      end
-
-      output << table.to_s << "\n\n"
-    end
-
-    output
-  end
-
-  def render_array template, headings, value_array, locals
-    return if value_array.empty?
-
-    MarkdownTable.new(:headings => headings) do |t|
-      value_array.each { |value_row| t.add_row value_row }
     end
   end
 

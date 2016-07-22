@@ -42,19 +42,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
     exp
   end
 
-  def process_defs exp
-    exp = @alias_processor.process exp
-
-    if @current_class
-      exp.body = process_all! exp.body
-      @current_class.add_method :public, exp.method_name, exp, @file_name
-    elsif @current_module
-      exp.body = process_all! exp.body
-      @current_module.add_method :public, exp.method_name, exp, @file_name
-    end
-
-    exp
-  end
+  alias process_defs process_defn
 
   def process_call exp
     if process_call_defn? exp
