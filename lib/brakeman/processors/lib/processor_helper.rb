@@ -72,4 +72,17 @@ module Brakeman::ProcessorHelper
       false
     end
   end
+
+  def current_file_name
+    case
+    when @file_name
+      @file_name
+    when @current_class.is_a?(Brakeman::Collection)
+      @current_class.file
+    when @current_module.is_a?(Brakeman::Collection)
+      @current_module.file
+    else
+      nil
+    end
+  end
 end
