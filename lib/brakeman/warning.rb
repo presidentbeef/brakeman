@@ -172,7 +172,8 @@ class Brakeman::Warning
   def to_row type = :warning
     @row = { "Confidence" => self.confidence,
       "Warning Type" => self.warning_type.to_s,
-      "Message" => self.format_message }
+      "Message" => self.format_message,
+      "Fingerprint" => self.fingerprint }
 
     case type
     when :template

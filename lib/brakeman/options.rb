@@ -277,6 +277,10 @@ module Brakeman::Options
           options[:show_version] = true
         end
 
+        opts.on "--ignore-file-only", "Do not generate report, only update ignore file." do
+          options[:ignore_file_only] = true
+        end
+
         opts.on "--force-scan", "Scan application even if rails is not detected" do
           options[:force_scan] = true
         end

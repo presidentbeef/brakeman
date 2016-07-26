@@ -22,6 +22,8 @@ module Brakeman::Util
 
   ALL_PARAMETERS = Set[PARAMETERS, QUERY_PARAMETERS, PATH_PARAMETERS, REQUEST_PARAMETERS, REQUEST_PARAMS]
 
+  BRAKEMAN_SAFE_FLAG = "Brakeman safe:"
+
   #Convert a string from "something_like_this" to "SomethingLikeThis"
   #
   #Taken from ActiveSupport.
@@ -390,25 +392,34 @@ module Brakeman::Util
     context = []
     return context unless warning.line and file and @app_tree.path_exists? file
 
-    current_line = 0
-    start_line = warning.line - 5
-    end_line = warning.line + 5
+    start_line = warning.line - 6
 
-    start_line = 1 if start_line < 0
+    start_line = 0 if start_line < 0
+    current_line = start_line + 1
 
     File.open file do |f|
-      f.each_line do |line|
+
+      f.lines.drop(start_line).take(10).each do |line|
+
+        if line.include? BRAKEMAN_SAFE_FLAG
+
+          # NOTE: The format is: "Brakeman safe", the fingerprint, reason for whitelisting (optional) seperated by ":"
+          safe_fingerprint, safe_note = line.split(':')[1..2]
+
+          if not safe_fingerprint.nil? and safe_fingerprint.gsub(/\s+/, "") == warning.fingerprint
+            # Add the note (if any) to ignore file.
+            unless safe_note.nil?
+              @tracker.ignored_filter.add_note(warning, safe_note.strip())
+            end
+
+            @tracker.ignored_filter.save_with_old([ warning ], true)
+            return []
+          end
+
+        end
+
+        context << [current_line, line]
         current_line += 1
-
-        next if line.strip == ""
-
-        if current_line > end_line
-          break
-        end
-
-        if current_line >= start_line
-          context << [current_line, line]
-        end
       end
     end
 
