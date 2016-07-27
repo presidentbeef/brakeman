@@ -4,6 +4,7 @@ MAINTAINER Justin Collins
 WORKDIR /usr/src/app
 COPY Gemfile* /usr/src/app/
 COPY brakeman.gemspec /usr/src/app/
+COPY gem_common.rb /usr/src/app/
 COPY lib/brakeman/version.rb /usr/src/app/lib/brakeman/
 
 RUN apt-get update && \
