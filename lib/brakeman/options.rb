@@ -212,8 +212,15 @@ module Brakeman::Options
         end
 
         opts.on "-o", "--output FILE", "Specify files for output. Defaults to stdout. Multiple '-o's allowed" do |file|
-          options[:output_files] ||= []
-          options[:output_files].push(file)
+          unless options[:no_output_files]
+            options[:output_files] ||= []
+            options[:output_files].push(file)
+          end
+        end
+
+        opts.on "--no-output-files", "Ignore any output files specified in config. Overrides any '-o' arguments" do
+          options[:no_output_files] = true
+          options[:output_files] = nil
         end
 
         opts.on "--[no-]separate-models", "Warn on each model without attr_accessible (Default)" do |separate|
