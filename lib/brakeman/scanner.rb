@@ -36,32 +36,44 @@ class Brakeman::Scanner
 
   #Process everything in the Rails application
   def process
-    Brakeman.notify "Processing gems..."
+    Brakeman.notify "Processing gems"
     process_gems
     guess_rails_version
-    Brakeman.notify "Processing configuration..."
+    Brakeman.notify ""
+    Brakeman.notify "Processing configuration"
     process_config
-    Brakeman.notify "Parsing files..."
+    Brakeman.notify ""
+    Brakeman.notify "Parsing files"
     parse_files
-    Brakeman.notify "Processing initializers..."
+    Brakeman.notify ""
+    Brakeman.notify "Processing initializers"
     process_initializers
-    Brakeman.notify "Processing libs..."
+    Brakeman.notify ""
+    Brakeman.notify "Processing libs"
     process_libs
-    Brakeman.notify "Processing routes...          "
+    Brakeman.notify ""
+    Brakeman.notify "Processing routes"
     process_routes
-    Brakeman.notify "Processing templates...       "
+    Brakeman.notify ""
+    Brakeman.notify "Processing templates"
     process_templates
-    Brakeman.notify "Processing data flow in templates..."
+    Brakeman.notify ""
+    Brakeman.notify "Processing data flow in templates"
     process_template_data_flows
-    Brakeman.notify "Processing models...          "
+    Brakeman.notify ""
+    Brakeman.notify "Processing models"
     process_models
-    Brakeman.notify "Processing controllers...     "
+    Brakeman.notify ""
+    Brakeman.notify "Processing controllers"
     process_controllers
-    Brakeman.notify "Processing data flow in controllers..."
+    Brakeman.notify ""
+    Brakeman.notify "Processing data flow in controllers"
     process_controller_data_flows
-    Brakeman.notify "Indexing call sites...        "
+    Brakeman.notify ""
+    Brakeman.notify "Indexing call sites"
     index_call_sites
     tracker
+    Brakeman.notify ""
   end
 
   def parse_files
@@ -301,7 +313,11 @@ class Brakeman::Scanner
 
   def report_progress(current, total, type = "files")
     return unless @options[:report_progress]
-    $stderr.print " #{current}/#{total} #{type} processed\r"
+    if @options[:progress_dots]
+      $stderr.print "."
+    else
+      $stderr.print " #{current}/#{total} #{type} processed\r"
+    end
   end
 
   def index_call_sites
