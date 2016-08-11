@@ -10,7 +10,7 @@ else
   engine_config = {}
 end
 
-command = "/usr/src/app/bin/brakeman --quiet --format codeclimate"
+command = "/usr/src/app/bin/brakeman --quiet --format codeclimate --output /dev/stdout"
 
 if engine_config["include_paths"]
   command << " --only-files #{engine_config["include_paths"].compact.join(",").shellescape}"
