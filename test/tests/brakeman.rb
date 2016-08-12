@@ -148,22 +148,6 @@ class ConfigTests < Minitest::Test
     Brakeman.instance_variable_set(:@quiet, false)
   end
 
-  # method from test-unit: http://test-unit.rubyforge.org/test-unit/en/Test/Unit/Util/Output.html#capture_output-instance_method
-  def capture_output
-    require 'stringio'
-
-    output = StringIO.new
-    error = StringIO.new
-    stdout_save, stderr_save = $stdout, $stderr
-    $stdout, $stderr = output, error
-    begin
-      yield
-      [output.string, error.string]
-    ensure
-      $stdout, $stderr = stdout_save, stderr_save
-    end
-  end
-
   def test_quiet_option_from_file
     config = Tempfile.new("config")
 
@@ -179,13 +163,13 @@ class ConfigTests < Minitest::Test
       :app_path => "/tmp" #doesn't need to be real
     }
 
-    assert_equal "", capture_output {
+    assert_output "" do
       final_options = Brakeman.set_options(options)
 
       config.unlink
 
       assert final_options[:quiet], "Expected quiet option to be true, but was #{final_options[:quiet]}"
-    }[1]
+    end
   end
 
   def test_quiet_option_from_commandline
@@ -204,9 +188,9 @@ class ConfigTests < Minitest::Test
       :app_path => "/tmp" #doesn't need to be real
     }
 
-    assert_equal "", capture_output {
+    assert_output "" do
       final_options = Brakeman.set_options(options)
-    }[1]
+    end
   end
 
   def test_quiet_option_default
@@ -247,10 +231,10 @@ class ConfigTests < Minitest::Test
       :run_checks => []
     }
 
-    assert_equal "", capture_output {
+    assert_output "" do
       Brakeman.run options
       config.unlink
-    }[1]
+    end
   end
 
   def output_format_tester options, expected_options
@@ -306,7 +290,7 @@ class ConfigTests < Minitest::Test
 
   def test_optional_check_options
     options = {:list_optional_checks => true}
-    check_list = capture_output {
+    check_list = capture_io {
       Brakeman.list_checks(options)
     }[1]
     Brakeman::Checks.optional_checks.each do |check|
@@ -317,7 +301,7 @@ class ConfigTests < Minitest::Test
 
   def test_default_check_options
     options = {}
-    check_list = capture_output {
+    check_list = capture_io {
       Brakeman.list_checks(options)
     }[1]
     Brakeman::Checks.checks.each do |check|
@@ -328,31 +312,33 @@ class ConfigTests < Minitest::Test
 
   def test_dump_config_no_file
     options = {:create_config => true, :test_option => "test"}
-    config_output = capture_output {
+
+    assert_output nil, "---\n:test_option: test\n" do
       Brakeman.dump_config(options)
-    }[1]
-    assert_equal config_output, "---\n:test_option: test\n"
+    end
   end
 
   def test_dump_config_with_set
     require 'set'
     test_set = Set.new ["test", "test2"]
     options = {:create_config => true, :test_option => test_set}
-    config_output = capture_output {
+
+    assert_output nil, "---\n:test_option:\n- test\n- test2\n" do
       Brakeman.dump_config(options)
-    }[1]
-    assert_equal config_output, "---\n:test_option:\n- test\n- test2\n"
+    end
   end
 
   def test_dump_config_with_file
     test_file = "test.cfg"
     options = {:create_config => test_file, :test_option => "test"}
-    config_output = capture_output {
+
+    assert_output nil, "Output configuration to test.cfg\n" do
       Brakeman.dump_config(options)
-    }[1]
-    assert_equal config_output, "Output configuration to test.cfg\n"
+    end
+
     file_text = File.read(test_file)
     assert_equal file_text, "---\n:test_option: test\n"
+  ensure
     assert File.delete test_file
   end
 end
