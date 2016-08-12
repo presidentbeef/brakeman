@@ -37,6 +37,11 @@ class Brakeman::CheckSQLCVEs < Brakeman::BaseCheck
         :versions => [%w[2.0.0 2.3.15 2.3.16], %w[3.0.0 3.0.18 3.0.19], %w[3.1.0 3.1.9 3.1.10], %w[3.2.0 3.2.10 3.2.11]],
         :url => "https://groups.google.com/d/topic/rubyonrails-security/c7jT-EeN9eI/discussion"
       },
+      {
+        :cve => "CVE-2016-6317",
+        :versions => [%w[4.2.0 4.2.7.0 4.2.7.1]],
+        :url => "https://groups.google.com/d/msg/ruby-security-ann/WccgKSKiPZA/9DrsDVSoCgAJ"
+      },
 
     ]
 
