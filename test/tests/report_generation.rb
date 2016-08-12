@@ -2,7 +2,8 @@ require 'json'
 
 class TestReportGeneration < Minitest::Test
   def setup
-    @@report ||= Brakeman.run(:app_path => "#{TEST_PATH}/apps/rails3.2", :quiet => true, :report_routes => true).report
+    @@tracker||= Brakeman.run(:app_path => "#{TEST_PATH}/apps/rails3.2", :quiet => true, :report_routes => true)
+    @@report ||= @@tracker.report
   end
 
   def test_html_sanity
@@ -60,10 +61,28 @@ class TestReportGeneration < Minitest::Test
     assert report.is_a? String
   end
 
+  def test_text_debug_sanity
+    @@tracker.options[:debug] = true
+    report = @@report.to_s
+
+    assert report.is_a? String
+  ensure
+    @@tracker.options[:debug] = false
+  end
+
   def test_markdown_sanity
     report = @@report.to_markdown
 
     assert report.is_a? String
+  end
+
+  def test_markdown_debug_sanity
+    @@tracker.options[:debug] = true
+    report = @@report.to_markdown
+
+    assert report.is_a?(String), "Report wasn't a String, it was a #{report.class}"
+  ensure
+    @@tracker.options[:debug] = false
   end
 
   def test_bad_format_type
