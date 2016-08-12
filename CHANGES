@@ -1,3 +1,10 @@
+# 3.3.4
+
+* Add generic warning for CVE-2016-6316
+* Warn about dangerous use of `content_tag` with CVE-2016-6316
+* Add warning for CVE-2016-6317
+* Use Minitest
+
 # 3.3.3
 
 * Show path when no Rails app found (Neil Matatall)
