@@ -225,12 +225,21 @@ class CVETests < Minitest::Test
     assert_no_warning :warning_code => 100
   end
 
-  def test_CVE_2016_6316
+  def test_CVE_2016_6316_rails3
     before_rescan_of ["Gemfile.lock", "app/views/home/test_content_tag.html.erb"], "rails3" do
       replace "Gemfile.lock", "rails (3.0.3)", "rails (3.2.22.4)"
     end
 
     assert_version "3.2.22.4"
     assert_fixed 29 # 2 for CVE-2016-6316
+  end
+
+  def test_CVE_2016_6316_rails5
+    before_rescan_of ["Gemfile.lock", "app/views/widget/content_tag.html.erb"], "rails5" do
+      replace "Gemfile.lock", "rails (5.0.0)", "rails (5.0.0.1)"
+    end
+
+    assert_version "5.0.0.1"
+    assert_fixed 2 # 2 for CVE-2016-6316
   end
 end
