@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: SQL Injection</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman 3.3.4/3.3.5 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/sql_injection/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2016/08/12/brakeman-3-dot-3-4-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -101,60 +101,138 @@
   <div id="main">
     <div id="content">
       <div>
-<article>
+<article class="hentry">
   
   <header>
-    <h1 class="entry-title">SQL Injection</h1>
-  </header>
-  
-  <p>Injection is #1 on the 2010 <a href="https://www.owasp.org/index.php/Top_10_2010-A1">OWASP Top Ten</a> web security risks. SQL injection is when a user is able to manipulate a value which is used unsafely inside a SQL query. This can lead to data leaks, data loss, elevation of privilege, and other unpleasant outcomes.</p>
-
-<p>Brakeman focuses on ActiveRecord methods dealing with building SQL statements.</p>
-
-<p>A basic (Rails 2.x) example looks like this:</p>
-
-<pre><code>User.first(:conditions =&gt; "username = '#{params[:username]}'")
-</code></pre>
-
-<p>Brakeman would produce a warning like this:</p>
-
-<pre><code>Possible SQL injection near line 30: User.first(:conditions =&gt; ("username = '#{params[:username]}'")) 
-</code></pre>
-
-<p>The safe way to do this query is to use a parameterized query:</p>
-
-<pre><code>User.first(:conditions =&gt; ["username = ?", params[:username]])
-</code></pre>
-
-<p>Brakeman also understands the new Rails 3.x way of doing things (and local variables and concatentation):</p>
-
-<pre><code>username = params[:user][:name].downcase
-password = params[:user][:password]
-
-User.first.where("username = '" + username + "' AND password = '" + password + "'")
-</code></pre>
-
-<p>This results in this kind of warning:</p>
-
-<pre><code>Possible SQL injection near line 37:
-User.first.where((((("username = '" + params[:user][:name].downcase) + "' AND password = '") + params[:user][:password]) + "'"))
-</code></pre>
-
-<p>See <a href="http://guides.rubyonrails.org/security.html#sql-injection">the Ruby Security Guide</a> for more information and <a href="http://rails-sqli.org">Rails-SQLi.org</a> for many examples of SQL injection in Rails.</p>
-
-<hr />
-
-<p>Back to <a href="/docs/warning_types">Warning Types</a></p>
-
-  
-    <footer>
+    <div class="articlelogo">&nbsp;</div>
+    
+      <h1 class="entry-title">Brakeman 3.3.4/3.3.5 Released</h1>
+    
+    
       <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+
+
+
+<time datetime="2016-08-12 08:26:00 -0700" pubdate  updated >Aug 12<span>th</span>, 2016</time>
+
+
+</p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This release is solely to add warnings for <a href="https://groups.google.com/d/msg/ruby-security-ann/8B2iV2tPRSE/JkjCJkSoCgAJ">CVE-2016-6316</a> and <a href="https://groups.google.com/d/msg/ruby-security-ann/WccgKSKiPZA/9DrsDVSoCgAJ">CVE-2016-6317</a>. There was a bug in 3.3.4 that affected debug output which has been fixed in 3.3.5.</p>
+
+<p><em>Changes since 3.3.3</em>:</p>
+
+<ul>
+<li>Add generic warning for CVE-2016-6316</li>
+<li>Warn about dangerous use of <code>content_tag</code> with CVE-2016-6316</li>
+<li>Add warning for CVE-2016-6317</li>
+<li>Use Minitest</li>
+</ul>
+
+
+<p><em>Changes since 3.3.4</em>:</p>
+
+<ul>
+<li>Fix bug in reports when using <code>--debug</code></li>
+</ul>
+
+
+<h3>CVE-2016-6316</h3>
+
+<p>Typically Rails will escape attribute values passed to tag helpers like <code>content_tag</code>. If the attribute has already been marked as &#8220;safe&#8221; with <code>.html_safe</code> or (more likely) a different escaping helper like <code>sanitize</code>, the tag helper will not escape the value again (that is the purpose of <code>.html_safe</code>). However, not all sanitizers/escape methods escape double quotes, which are dangerous inside of tag attributes. In particular, double quotes allow an attacker to close the current attribute and insert new attributes (like <code>onmouseover</code>) that can execute JavaScript.</p>
+
+<p>Brakeman will issue a generic warning about CVE-2016-6316 for affected versions and may generate warnings for potentially dangerous calls to <code>content_tag</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/917">changes</a>)</p>
+
+<h3>CVE-2016-6317</h3>
+
+<p>The <a href="https://groups.google.com/d/msg/rubyonrails-security/8SA-M3as7A8/Mr9fi9X4kNgJ">JSON bug</a> is back. Specially-crafted queries can cause parameters to be interpreted as empty hashes, which may cause unexpected behavior in SQL queries.</p>
+
+<p>Brakeman will generate a generic warning for affected versions (4.2 series).</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/918">changes</a>)</p>
+
+<h3>Minitest</h3>
+
+<p>Unrelated, Brakeman now uses Minitest instead of test-unit.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/912/">changes</a>)</p>
+
+<h3>SHAs</h3>
+
+<p>The SHA256 sums for this release are</p>
+
+<pre><code>7231e00bdb4353ee7e91e5f1e60e34cf29b5563e6f7e1e5478223e72568c493a  brakeman-3.3.5.gem
+c07e282c2e1733f8d7db4a4ffefe22e7e38a62ddfd750f0866c0b49070cb61c9  brakeman-lib-3.3.5.gem
+a7f8e6fa8eb4254b7ad17080180289794a02641b1f2ec362de57cfdb2f1535be  brakeman-min-3.3.5.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs.</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
+
+      
+
+
+
+
+<time datetime="2016-08-12 08:26:00 -0700" pubdate  updated >Aug 12<span>th</span>, 2016</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2016/08/12/brakeman-3-dot-3-4-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2016/08/12/brakeman-3-dot-3-4-released/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread"><div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'brakeman';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2016/08/12/brakeman-3-dot-3-4-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2016/08/12/brakeman-3-dot-3-4-released/';
+  //var disqus_developer = 1;
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 

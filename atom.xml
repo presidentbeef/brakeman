@@ -4,13 +4,78 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2016-07-20T18:48:14-07:00</updated>
+  <updated>2016-08-12T15:35:46-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 3.3.4/3.3.5 Released</title>
+    <link href="http://brakemanscanner.org/blog/2016/08/12/brakeman-3-dot-3-4-released/"/>
+    <updated>2016-08-12T08:26:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2016/08/12/brakeman-3-dot-3-4-released</id>
+    <content type="html">&lt;p&gt;This release is solely to add warnings for &lt;a href=&quot;https://groups.google.com/d/msg/ruby-security-ann/8B2iV2tPRSE/JkjCJkSoCgAJ&quot;&gt;CVE-2016-6316&lt;/a&gt; and &lt;a href=&quot;https://groups.google.com/d/msg/ruby-security-ann/WccgKSKiPZA/9DrsDVSoCgAJ&quot;&gt;CVE-2016-6317&lt;/a&gt;. There was a bug in 3.3.4 that affected debug output which has been fixed in 3.3.5.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 3.3.3&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add generic warning for CVE-2016-6316&lt;/li&gt;
+&lt;li&gt;Warn about dangerous use of &lt;code&gt;content_tag&lt;/code&gt; with CVE-2016-6316&lt;/li&gt;
+&lt;li&gt;Add warning for CVE-2016-6317&lt;/li&gt;
+&lt;li&gt;Use Minitest&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;em&gt;Changes since 3.3.4&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fix bug in reports when using &lt;code&gt;--debug&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;CVE-2016-6316&lt;/h3&gt;
+
+&lt;p&gt;Typically Rails will escape attribute values passed to tag helpers like &lt;code&gt;content_tag&lt;/code&gt;. If the attribute has already been marked as &quot;safe&quot; with &lt;code&gt;.html_safe&lt;/code&gt; or (more likely) a different escaping helper like &lt;code&gt;sanitize&lt;/code&gt;, the tag helper will not escape the value again (that is the purpose of &lt;code&gt;.html_safe&lt;/code&gt;). However, not all sanitizers/escape methods escape double quotes, which are dangerous inside of tag attributes. In particular, double quotes allow an attacker to close the current attribute and insert new attributes (like &lt;code&gt;onmouseover&lt;/code&gt;) that can execute JavaScript.&lt;/p&gt;
+
+&lt;p&gt;Brakeman will issue a generic warning about CVE-2016-6316 for affected versions and may generate warnings for potentially dangerous calls to &lt;code&gt;content_tag&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/917&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;CVE-2016-6317&lt;/h3&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/8SA-M3as7A8/Mr9fi9X4kNgJ&quot;&gt;JSON bug&lt;/a&gt; is back. Specially-crafted queries can cause parameters to be interpreted as empty hashes, which may cause unexpected behavior in SQL queries.&lt;/p&gt;
+
+&lt;p&gt;Brakeman will generate a generic warning for affected versions (4.2 series).&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/918&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Minitest&lt;/h3&gt;
+
+&lt;p&gt;Unrelated, Brakeman now uses Minitest instead of test-unit.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/912/&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;SHAs&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;7231e00bdb4353ee7e91e5f1e60e34cf29b5563e6f7e1e5478223e72568c493a  brakeman-3.3.5.gem
+c07e282c2e1733f8d7db4a4ffefe22e7e38a62ddfd750f0866c0b49070cb61c9  brakeman-lib-3.3.5.gem
+a7f8e6fa8eb4254b7ad17080180289794a02641b1f2ec362de57cfdb2f1535be  brakeman-min-3.3.5.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs.&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hanging out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 3.3.3 Released</title>
@@ -1789,81 +1854,6 @@ b5cefd6f14edb57f12d1fe9fcc0fb24e05a05aaf  brakeman-min-3.0.0.gem
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
 &lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman is Four Years Old!</title>
-    <link href="http://brakemanscanner.org/blog/2014/08/27/brakeman-is-four-years-old/"/>
-    <updated>2014-08-27T02:41:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2014/08/27/brakeman-is-four-years-old</id>
-    <content type="html">&lt;p&gt;Brakeman was first &lt;a href=&quot;https://github.com/presidentbeef/brakeman/commit/cd1663fb22bbe2e1097bac8f9ee96fcdadc07fd2&quot;&gt;publicly released&lt;/a&gt; four years ago today!&lt;/p&gt;
-
-&lt;p&gt;In those four years, Brakeman has gradually become a widely-used static analysis security tool for Ruby on Rails, leaving other web frameworks jealous.&lt;/p&gt;
-
-&lt;blockquote class=&quot;twitter-tweet&quot; lang=&quot;en&quot;&gt;&lt;p&gt;Is there something like Rails’ brakeman gem (automated security checks) for Django?&lt;/p&gt;&amp;mdash; Fabio Akita (@AkitaOnRails) &lt;a href=&quot;https://twitter.com/AkitaOnRails/statuses/409037162987155457&quot;&gt;December 6, 2013&lt;/a&gt;&lt;/blockquote&gt;
-
-
-&lt;script async src=&quot;http://brakemanscanner.org//platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
-
-
-
-
-&lt;blockquote class=&quot;twitter-tweet&quot; lang=&quot;en&quot;&gt;&lt;p&gt;&lt;a href=&quot;https://twitter.com/nodesecurity&quot;&gt;@nodesecurity&lt;/a&gt; do you know of an equivalent module in &lt;a href=&quot;https://twitter.com/hashtag/nodejs?src=hash&quot;&gt;#nodejs&lt;/a&gt; to the &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; gem?&lt;/p&gt;&amp;mdash; Erik Isaksen (@eisaksen) &lt;a href=&quot;https://twitter.com/eisaksen/statuses/423965742883950592&quot;&gt;January 16, 2014&lt;/a&gt;&lt;/blockquote&gt;
-
-
-&lt;script async src=&quot;http://brakemanscanner.org//platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
-
-
-
-
-&lt;blockquote class=&quot;twitter-tweet&quot; lang=&quot;en&quot;&gt;&lt;p&gt;Is there something like &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; that would check security of an Ubuntu server? /cc &lt;a href=&quot;https://twitter.com/roidrage&quot;&gt;@roidrage&lt;/a&gt; &lt;a href=&quot;https://twitter.com/zuzur&quot;&gt;@zuzur&lt;/a&gt; &lt;a href=&quot;https://twitter.com/envygeeks&quot;&gt;@envygeeks&lt;/a&gt; &lt;a href=&quot;https://twitter.com/postmodern_mod3&quot;&gt;@postmodern_mod3&lt;/a&gt; &lt;a href=&quot;https://twitter.com/gcouprie&quot;&gt;@gcouprie&lt;/a&gt;&lt;/p&gt;&amp;mdash; Thibaut Barrère (@thibaut_barrere) &lt;a href=&quot;https://twitter.com/thibaut_barrere/statuses/302394306277285889&quot;&gt;February 15, 2013&lt;/a&gt;&lt;/blockquote&gt;
-
-
-&lt;script async src=&quot;http://brakemanscanner.org//platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
-
-
-&lt;p&gt;Brakeman is used in all kinds of organizations, from hobby projects to open source applications to start-ups to large corporations. If your organization uses Brakeman, &lt;a href=&quot;http://brakemanscanner.org/brakeman_users/&quot;&gt;please consider being listed&lt;/a&gt;!&lt;/p&gt;
-
-&lt;blockquote class=&quot;twitter-tweet&quot; lang=&quot;en&quot;&gt;&lt;p&gt;congrats to the @brakemanscanner project on their 1.0 release today, we appreciate your work within &lt;a href=&quot;https://twitter.com/twitter&quot;&gt;@twitter&lt;/a&gt; &lt;a href=&quot;http://t.co/SHjQM5k2&quot;&gt;http://t.co/SHjQM5k2&lt;/a&gt;&lt;/p&gt;&amp;mdash; Twitter Open Source (@TwitterOSS) &lt;a href=&quot;https://twitter.com/TwitterOSS/statuses/144865822941265920&quot;&gt;December 8, 2011&lt;/a&gt;&lt;/blockquote&gt;
-
-
-&lt;script async src=&quot;http://brakemanscanner.org//platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
-
-
-&lt;p&gt;Brakeman also helps power &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/Brakeman-as-a-Service&quot;&gt;several SaaS offerings&lt;/a&gt;!&lt;/p&gt;
-
-&lt;blockquote class=&quot;twitter-tweet&quot; lang=&quot;en&quot;&gt;&lt;p&gt;Rails Security Monitor is powered by &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; which we &amp;lt;3 and contribute to. We hope fans Brakeman fans will like it: &lt;a href=&quot;http://t.co/2yI8S20l&quot;&gt;http://t.co/2yI8S20l&lt;/a&gt;&lt;/p&gt;&amp;mdash; Bryan Helmkamp (@brynary) &lt;a href=&quot;https://twitter.com/brynary/statuses/301070119176642560&quot;&gt;February 11, 2013&lt;/a&gt;&lt;/blockquote&gt;
-
-
-&lt;script async src=&quot;http://brakemanscanner.org//platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
-
-
-&lt;p&gt;Did you know Brakeman even won a Ruby award?&lt;/p&gt;
-
-&lt;blockquote class=&quot;twitter-tweet&quot; lang=&quot;en&quot;&gt;&lt;p&gt;Thanks &lt;a href=&quot;https://twitter.com/yukihiro_matz&quot;&gt;@yukihiro_matz&lt;/a&gt; and other judges! This is an awesome trophy and I&amp;#39;m honored to receive it. &lt;a href=&quot;http://t.co/Dz1W8b1qof&quot;&gt;pic.twitter.com/Dz1W8b1qof&lt;/a&gt;&lt;/p&gt;&amp;mdash; Justin Collins (@presidentbeef) &lt;a href=&quot;https://twitter.com/presidentbeef/statuses/321756142449598464&quot;&gt;April 9, 2013&lt;/a&gt;&lt;/blockquote&gt;
-
-
-&lt;script async src=&quot;http://brakemanscanner.org//platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
-
-
-&lt;p&gt;Because Brakeman is so old, it still supports Rails 2.3 (2009!) and Ruby 1.8.7 (2008!) while usually adding support for new releases fairly quickly, making it useful for nearly any Rails application. If it doesn't work for you - &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;please file an issue&lt;/a&gt;!&lt;/p&gt;
-
-&lt;p&gt;Many thanks to the many people who have contributed to Brakeman. All contributions - patches, bug reports, documentation updates, promoting Brakeman, or even just asking questions - are sincerely appreciated. Lots of gratitude to the open source projects underlying Brakeman and their maintainers, especially &lt;a href=&quot;https://twitter.com/the_zenspider&quot;&gt;Ryan Davis&lt;/a&gt;. And a big thank you to the companies who have funded Brakeman's development!&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;4 years&lt;/li&gt;
-&lt;li&gt;39 contributors&lt;/li&gt;
-&lt;li&gt;69 releases&lt;/li&gt;
-&lt;li&gt;181 closed issues&lt;/li&gt;
-&lt;li&gt;2,043 commits&lt;/li&gt;
-&lt;li&gt;700,000+ gem downloads&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;p&gt;Here’s to four more years?&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;By the way - stickers have returned! Send your name and address (yes, international is fine) to &lt;a href='mail&amp;#116;o&amp;#58;st%69&amp;#99;&amp;#107;%65&amp;#37;72s&amp;#64;bra&amp;#107;&amp;#101;&amp;#109;&amp;#97;&amp;#37;&amp;#54;&amp;#69;&amp;#46;or&amp;#103;'&gt;stic&amp;#107;ers&amp;#64;brakeman&amp;#46;org&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 </content>
   </entry>
   
