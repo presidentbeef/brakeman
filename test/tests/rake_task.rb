@@ -2,16 +2,6 @@ require 'fileutils'
 require 'tmpdir'
 
 class RakeTaskTests < Minitest::Test
-  def setup
-    # Brakeman is noisy on errors
-    @old_stderr = $stderr.dup
-    $stderr.reopen("/dev/null", "w")
-  end
-
-  def cleanup
-    $stderr = @old_stderr
-  end
-
   def in_temp_app
     Dir.mktmpdir do |dir|
       begin
