@@ -54,6 +54,36 @@ class Brakeman::Report::Table < Brakeman::Report::Base
     end
   end
 
+  #Generate listings of templates and their output
+  def generate_templates
+    out_processor = Brakeman::OutputProcessor.new
+    template_rows = {}
+    tracker.templates.each do |name, template|
+      template.each_output do |out|
+        out = out_processor.format out
+        template_rows[name] ||= []
+        template_rows[name] << out.gsub("\n", ";").gsub(/\s+/, " ")
+      end
+    end
+
+    template_rows = template_rows.sort_by{|name, value| name.to_s}
+
+    output = ''
+    template_rows.each do |template|
+      output << template.first.to_s << "\n\n"
+      table = @table.new(:headings => ['Output']) do |t|
+        # template[1] is an array of calls
+        template[1].each do |v|
+          t.add_row [v]
+        end
+      end
+
+      output << table.to_s << "\n\n"
+    end
+
+    output
+  end
+
   def render_array template, headings, value_array, locals
     return if value_array.empty?
 
