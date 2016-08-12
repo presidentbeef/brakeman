@@ -197,9 +197,10 @@ class CVETests < Minitest::Test
       replace "Gemfile", "rails', '4.0.0'", "rails', '4.2.5.1'"
     end
 
-    assert_new 2 # RCE to Dynamic renders, unrelated
+    assert_new 3 # RCE to Dynamic renders and CVE-2016-6317, unrelated
     assert_version "4.2.5.1"
     assert_no_warning type: :model, :warning_code => 95
+    assert_warning :warning_code => 102 # CVE-2016-6317
   end
 
   def test_sanitize_cves
@@ -220,9 +221,10 @@ class CVETests < Minitest::Test
       replace "Gemfile", "rails', '4.0.0'", "rails', '4.2.5.1'"
     end
 
-    assert_new 2 # RCE to Dynamic renders, unrelated
+    assert_new 3 # RCE to Dynamic renders and CVE-2016-6317, unrelated
     assert_version "4.2.5.1"
     assert_no_warning :warning_code => 100
+    assert_warning :warning_code => 102 # CVE-2016-6317
   end
 
   def test_CVE_2016_6316_rails3
