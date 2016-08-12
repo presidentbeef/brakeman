@@ -14,7 +14,7 @@ class Rails3Tests < Minitest::Test
       :controller => 1,
       :model => 9,
       :template => 42,
-      :generic => 74
+      :generic => 75
     }
 
     if RUBY_PLATFORM == 'java'
@@ -1418,6 +1418,18 @@ class Rails3Tests < Minitest::Test
       :line => 49,
       :message => /^Rails\ 3\.0\.3\ is\ vulnerable\ to\ denial\ of\ s/,
       :confidence => 1,
+      :relative_path => "Gemfile.lock",
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_CVE_2016_6316
+    assert_warning :type => :warning,
+      :warning_code => 102,
+      :fingerprint => "331e69e4654f158601d9a0e124304f825da4e0156d2c94759eb02611e280feaa",
+      :warning_type => "Cross Site Scripting",
+      :line => 49,
+      :message => /^Rails\ 3\.0\.3\ content_tag\ does\ not\ escape\ /,
+      :confidence => 0,
       :relative_path => "Gemfile.lock",
       :user_input => nil
   end

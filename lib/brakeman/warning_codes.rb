@@ -103,6 +103,7 @@ module Brakeman::WarningCodes
     :dynamic_render_path_rce => 99,
     :CVE_2015_7581 => 100,
     :secret_in_source => 101,
+    :CVE_2016_6316 => 102,
   }
 
   def self.code name

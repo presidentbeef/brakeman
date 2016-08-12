@@ -231,7 +231,7 @@ class CVETests < Minitest::Test
     end
 
     assert_version "3.2.22.4"
-    assert_fixed 29 # 2 for CVE-2016-6316
+    assert_fixed 30 # 3 for CVE-2016-6316
   end
 
   def test_CVE_2016_6316_rails5
@@ -240,6 +240,6 @@ class CVETests < Minitest::Test
     end
 
     assert_version "5.0.0.1"
-    assert_fixed 2 # 2 for CVE-2016-6316
+    assert_fixed 3 # 3 for CVE-2016-6316
   end
 end

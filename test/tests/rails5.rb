@@ -13,7 +13,7 @@ class Rails5Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 7,
-      :generic => 9
+      :generic => 10
     }
   end
 
@@ -333,6 +333,18 @@ class Rails5Tests < Minitest::Test
       :relative_path => "app/views/widget/content_tag.html.erb",
       :code => s(:call, nil, :content_tag, s(:lit, :div), s(:str, "hi"), s(:hash, s(:lit, :title), s(:call, nil, :sanitize, s(:call, s(:call, nil, :params), :[], s(:lit, :stuff))))),
       :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :stuff))
+  end
+
+  def test_cross_site_scripting_CVE_2016_6316_general
+    assert_warning :type => :warning,
+      :warning_code => 102,
+      :fingerprint => "331e69e4654f158601d9a0e124304f825da4e0156d2c94759eb02611e280feaa",
+      :warning_type => "Cross Site Scripting",
+      :line => 115,
+      :message => /^Rails\ 5\.0\.0\ content_tag\ does\ not\ escape\ /,
+      :confidence => 0,
+      :relative_path => "Gemfile.lock",
+      :user_input => nil
   end
 
   def test_dangerous_eval_in_prior_class_method_with_same_name

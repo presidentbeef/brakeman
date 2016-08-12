@@ -15,7 +15,7 @@ class Rails4Tests < Minitest::Test
       :controller => 0,
       :model => 3,
       :template => 8,
-      :generic => 79
+      :generic => 80
     }
   end
 
@@ -1361,6 +1361,18 @@ class Rails4Tests < Minitest::Test
       :warning_type => "Denial of Service",
       :line => 4,
       :message => /^Rails\ 4\.0\.0\ has\ a\ denial\ of\ service\ vuln/,
+      :confidence => 1,
+      :relative_path => "Gemfile",
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_CVE_2016_6316
+    assert_warning :type => :warning,
+      :warning_code => 102,
+      :fingerprint => "263bacc3390a9dd1ddec7a7f5bbb609a837de55725571234708d2a3b83a017fe",
+      :warning_type => "Cross Site Scripting",
+      :line => 4,
+      :message => /^Rails\ 4\.0\.0\ content_tag\ does\ not\ escape\ /,
       :confidence => 1,
       :relative_path => "Gemfile",
       :user_input => nil

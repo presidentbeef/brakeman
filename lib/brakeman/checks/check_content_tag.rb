@@ -28,16 +28,18 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
                            :will_paginate].merge tracker.options[:safe_methods]
 
     @known_dangerous = []
-    methods = tracker.find_call :target => false, :method => :content_tag
+    @content_tags = tracker.find_call :target => false, :method => :content_tag
 
     @models = tracker.models.keys
     @inspect_arguments = tracker.options[:check_arguments]
     @mark = nil
 
     Brakeman.debug "Checking for XSS in content_tag"
-    methods.each do |call|
+    @content_tags.each do |call|
       process_result call
     end
+
+    check_cve_2016_6316
   end
 
   def process_result result
@@ -87,7 +89,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
 
   def check_argument result, exp
     #Check contents of raw() calls directly
-    if call? exp and exp.method == :raw
+    if raw? exp
       arg = process exp.first_arg
     else
       arg = process exp
@@ -152,6 +154,38 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
     end
 
     exp
+  end
+
+  def check_cve_2016_6316
+    if cve_2016_6316?
+      confidence = if @content_tags.any?
+                     CONFIDENCE[:high]
+                   else
+                     CONFIDENCE[:med]
+                   end
+
+      fix_version = case
+                    when version_between?("3.0.0", "3.2.22.3")
+                      "3.2.22.4"
+                    when version_between?("4.0.0", "4.2.7.0")
+                      "4.2.7.1"
+                    when version_between?("5.0.0", "5.0.0")
+                      "5.0.0"
+                    when (version.nil? and tracker.options[:rails3])
+                      "3.2.22.4"
+                    when (version.nil? and tracker.options[:rails4])
+                      "4.2.7.2"
+                    else
+                      return
+                    end
+
+      warn :warning_type => "Cross Site Scripting",
+        :warning_code => :CVE_2016_6316,
+        :message => "Rails #{rails_version} content_tag does not escape double quotes in attribute values (CVE-2016-6316). Upgrade to #{fix_version}",
+        :confidence => confidence,
+        :gem_info => gemfile_or_environment,
+        :link_path => "https://groups.google.com/d/msg/ruby-security-ann/8B2iV2tPRSE/JkjCJkSoCgAJ"
+    end
   end
 
   def raw? exp
