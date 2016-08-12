@@ -73,7 +73,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
     #By default, content_tag escapes attribute values passed in as a hash.
     #But this behavior can be disabled. So only check attributes hash
     #if they are explicitly not escaped.
-    if not @matched and attributes and false? escape_attr
+    if not @matched and attributes and (false? escape_attr or cve_2016_6316?)
       if request_value? attributes or not hash? attributes
         check_argument result, attributes
       else #check hash values
@@ -156,5 +156,11 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
 
   def raw? exp
     call? exp and exp.method == :raw
+  end
+
+  def cve_2016_6316?
+    version_between? "3.0.0", "3.2.22.3" or
+    version_between? "4.0.0", "4.2.7.0" or
+    version_between? "5.0.0", "5.0.0.0"
   end
 end
