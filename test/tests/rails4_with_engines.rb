@@ -9,7 +9,7 @@ class Rails4WithEnginesTests < Minitest::Test
       :controller => 1,
       :model => 5,
       :template => 11,
-      :generic => 10 }
+      :generic => 11 }
   end
 
   def report
@@ -317,6 +317,18 @@ class Rails4WithEnginesTests < Minitest::Test
       :message => /^Rails\ 4\.0\.0\ does\ not\ call\ :reject_if\ opt/,
       :confidence => 1,
       :relative_path => "engines/user_removal/app/models/user.rb",
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_CVE_2016_6316
+    assert_warning :type => :warning,
+      :warning_code => 102,
+      :fingerprint => "88b10c71ffa09afd9ec3dec09e08647caceb9977e23c80abc0de6bf024bb85b9",
+      :warning_type => "Cross Site Scripting",
+      :line => 4,
+      :message => /^Rails\ 4\.0\.0\ content_tag\ does\ not\ escape\ /,
+      :confidence => 1,
+      :relative_path => "gems.rb",
       :user_input => nil
   end
 end

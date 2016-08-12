@@ -10,7 +10,7 @@ class OnlyFilesOptionTests < Minitest::Test
       :controller => 8,
       :model => 0,
       :template => 1,
-      :generic => 13 }
+      :generic => 14 }
 
     if RUBY_PLATFORM == 'java'
       @expected[:generic] += 1
@@ -152,5 +152,17 @@ class OnlyFilesOptionTests < Minitest::Test
       :message => /^Rails\ 3\.2\.9\.rc2\ is\ vulnerable\ to\ denial\ /,
       :confidence => 1,
       :relative_path => "Gemfile.lock"
+  end
+
+  def test_cross_site_scripting_CVE_2016_6316
+    assert_warning :type => :warning,
+      :warning_code => 102,
+      :fingerprint => "1a1b3368951a20d02976c9207e5981df37d1bfa7dbbdb925eecd9013ecfeaa0f",
+      :warning_type => "Cross Site Scripting",
+      :line => 64,
+      :message => /^Rails\ 3\.2\.9\.rc2\ content_tag\ does\ not\ esc/,
+      :confidence => 1,
+      :relative_path => "Gemfile.lock",
+      :user_input => nil
   end
 end

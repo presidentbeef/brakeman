@@ -13,8 +13,8 @@ class Rails3Tests < Minitest::Test
     @expected ||= {
       :controller => 1,
       :model => 9,
-      :template => 40,
-      :generic => 74
+      :template => 42,
+      :generic => 75
     }
 
     if RUBY_PLATFORM == 'java'
@@ -1041,6 +1041,19 @@ class Rails3Tests < Minitest::Test
       :file => /use_filter12345\.html\.erb/
   end
 
+  def test_cross_site_scripting_CVE_2016_6316
+    assert_warning :type => :template,
+      :warning_code => 53,
+      :fingerprint => "0787a388cdb27d68d2e1591d02a3c84f0bc6938ede52139471082386798f7327",
+      :warning_type => "Cross Site Scripting",
+      :line => 11,
+      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :confidence => 0,
+      :relative_path => "app/views/home/test_content_tag.html.erb",
+      :code => s(:call, nil, :content_tag, s(:lit, :div), s(:str, "Blah!"), s(:hash, s(:lit, :class), s(:call, s(:params), :[], s(:lit, :class))), s(:true)),
+      :user_input => s(:call, s(:params), :[], s(:lit, :class))
+  end 
+
   def test_cross_site_scripting_model_in_tag_name
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
@@ -1048,6 +1061,19 @@ class Rails3Tests < Minitest::Test
       :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
       :confidence => 0,
       :file => /test_content_tag\.html\.erb/
+  end
+
+  def test_content_tag_attributes_CVE_2016_6316
+    assert_warning :type => :template,
+      :warning_code => 53,
+      :fingerprint => "e1d77d0c162fb0a1c4cc55655045755217c9e46f575d5c89848cfa2207fd1406",
+      :warning_type => "Cross Site Scripting",
+      :line => 23,
+      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :confidence => 0,
+      :relative_path => "app/views/home/test_content_tag.html.erb",
+      :code => s(:call, nil, :content_tag, s(:lit, :div), s(:str, "Blah!"), s(:hash, s(:lit, :class), s(:call, s(:params), :[], s(:lit, :class)))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :class))
   end
 
   def test_cross_site_scripting_request_parameters
@@ -1392,6 +1418,18 @@ class Rails3Tests < Minitest::Test
       :line => 49,
       :message => /^Rails\ 3\.0\.3\ is\ vulnerable\ to\ denial\ of\ s/,
       :confidence => 1,
+      :relative_path => "Gemfile.lock",
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_CVE_2016_6316
+    assert_warning :type => :warning,
+      :warning_code => 102,
+      :fingerprint => "331e69e4654f158601d9a0e124304f825da4e0156d2c94759eb02611e280feaa",
+      :warning_type => "Cross Site Scripting",
+      :line => 49,
+      :message => /^Rails\ 3\.0\.3\ content_tag\ does\ not\ escape\ /,
+      :confidence => 0,
       :relative_path => "Gemfile.lock",
       :user_input => nil
   end

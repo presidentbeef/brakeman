@@ -13,7 +13,7 @@ class Rails31Tests < Minitest::Test
       :model => 3,
       :template => 23,
       :controller => 4,
-      :generic => 85 }
+      :generic => 86 }
   end
 
   def test_without_protection
@@ -1361,5 +1361,17 @@ class Rails31Tests < Minitest::Test
       :confidence => 0,
       :relative_path => "app/controllers/admin_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :t))
+  end
+
+  def test_cross_site_scripting_CVE_2016_6316
+    assert_warning :type => :warning,
+      :warning_code => 102,
+      :fingerprint => "1a1b3368951a20d02976c9207e5981df37d1bfa7dbbdb925eecd9013ecfeaa0f",
+      :warning_type => "Cross Site Scripting",
+      :line => 69,
+      :message => /^Rails\ 3\.1\.0\ content_tag\ does\ not\ escape\ /,
+      :confidence => 1,
+      :relative_path => "Gemfile.lock",
+      :user_input => nil
   end
 end

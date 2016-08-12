@@ -12,8 +12,8 @@ class Rails5Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 5,
-      :generic => 9
+      :template => 7,
+      :generic => 10
     }
   end
 
@@ -304,6 +304,44 @@ class Rails5Tests < Minitest::Test
       :warning_type => "Cross Site Scripting",
       :line => 115,
       :message => /^rails\-html\-sanitizer\ 1\.0\.2\ is\ vulnerable/,
+      :confidence => 0,
+      :relative_path => "Gemfile.lock",
+      :user_input => nil
+  end
+
+  def test_xss_content_tag_CVE_2016_6316_html_safe
+    assert_warning :type => :template,
+      :warning_code => 53,
+      :fingerprint => "956e3e4f494316c5f30cde009086fd7be0bddf80d85901cdb8e3d7b7d76d219b",
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :confidence => 0,
+      :relative_path => "app/views/widget/content_tag.html.erb",
+      :code => s(:call, nil, :content_tag, s(:lit, :div), s(:str, "hi"), s(:hash, s(:lit, :title), s(:call, s(:call, s(:call, nil, :params), :[], s(:lit, :stuff)), :html_safe))),
+      :user_input => s(:call, s(:call, s(:call, nil, :params), :[], s(:lit, :stuff)), :html_safe)
+  end
+
+  def test_xss_content_tag_CVE_2016_6316_sanitize
+    assert_warning :type => :template,
+      :warning_code => 53,
+      :fingerprint => "a1ca8c0e91d159ddc920d3c9efc6942f6aa697c519b299b756810ac1ca977763",
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :confidence => 1,
+      :relative_path => "app/views/widget/content_tag.html.erb",
+      :code => s(:call, nil, :content_tag, s(:lit, :div), s(:str, "hi"), s(:hash, s(:lit, :title), s(:call, nil, :sanitize, s(:call, s(:call, nil, :params), :[], s(:lit, :stuff))))),
+      :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :stuff))
+  end
+
+  def test_cross_site_scripting_CVE_2016_6316_general
+    assert_warning :type => :warning,
+      :warning_code => 102,
+      :fingerprint => "331e69e4654f158601d9a0e124304f825da4e0156d2c94759eb02611e280feaa",
+      :warning_type => "Cross Site Scripting",
+      :line => 115,
+      :message => /^Rails\ 5\.0\.0\ content_tag\ does\ not\ escape\ /,
       :confidence => 0,
       :relative_path => "Gemfile.lock",
       :user_input => nil
