@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2016-08-12T15:35:46-07:00</updated>
+  <updated>2016-08-12T19:08:41-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -17,7 +17,7 @@
     <link href="http://brakemanscanner.org/blog/2016/08/12/brakeman-3-dot-3-4-released/"/>
     <updated>2016-08-12T08:26:00-07:00</updated>
     <id>http://brakemanscanner.org/blog/2016/08/12/brakeman-3-dot-3-4-released</id>
-    <content type="html">&lt;p&gt;This release is solely to add warnings for &lt;a href=&quot;https://groups.google.com/d/msg/ruby-security-ann/8B2iV2tPRSE/JkjCJkSoCgAJ&quot;&gt;CVE-2016-6316&lt;/a&gt; and &lt;a href=&quot;https://groups.google.com/d/msg/ruby-security-ann/WccgKSKiPZA/9DrsDVSoCgAJ&quot;&gt;CVE-2016-6317&lt;/a&gt;. There was a bug in 3.3.4 that affected debug output which has been fixed in 3.3.5.&lt;/p&gt;
+    <content type="html">&lt;p&gt;This is a quick release to add warnings for &lt;a href=&quot;https://groups.google.com/d/msg/ruby-security-ann/8B2iV2tPRSE/JkjCJkSoCgAJ&quot;&gt;CVE-2016-6316&lt;/a&gt; and &lt;a href=&quot;https://groups.google.com/d/msg/ruby-security-ann/WccgKSKiPZA/9DrsDVSoCgAJ&quot;&gt;CVE-2016-6317&lt;/a&gt;. There was a bug in 3.3.4 that affected debug output which has been fixed in 3.3.5.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 3.3.3&lt;/em&gt;:&lt;/p&gt;
 
