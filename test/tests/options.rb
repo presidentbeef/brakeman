@@ -62,6 +62,14 @@ class BrakemanOptionsTest < Minitest::Test
     assert !options[:assume_all_routes]
   end
 
+  def test_no_exit_on_warn
+    options = setup_options_from_input("--exit-on-warn")
+    assert options[:exit_on_warn]
+
+    options = setup_options_from_input("--no-exit-on-warn")
+    assert !options[:exit_on_warn]
+  end
+
   def test_faster_options
     options = setup_options_from_input("--faster")
     assert options[:ignore_ifs] && options[:skip_libs]
