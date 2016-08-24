@@ -362,7 +362,14 @@ module Brakeman
   end
 
   def self.write_report_to_files tracker, output_files
+    require 'fileutils'
+
     output_files.each_with_index do |output_file, idx|
+      dir = File.dirname(output_file)
+      unless Dir.exist? dir
+        FileUtils.mkdir_p(dir)
+      end
+
       File.open output_file, "w" do |f|
         f.write tracker.report.format(tracker.options[:output_formats][idx])
       end
