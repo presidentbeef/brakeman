@@ -39,8 +39,8 @@ module Brakeman::Options
           options[:quiet] = quiet
         end
 
-        opts.on( "-z", "--exit-on-warn", "Exit code is non-zero if warnings found") do
-          options[:exit_on_warn] = true
+        opts.on( "-z", "--[no-]exit-on-warn", "Exit code is non-zero if warnings found") do |exit_on_warn|
+          options[:exit_on_warn] = exit_on_warn
         end
 
         opts.on "-3", "--rails3", "Force Rails 3 mode" do
