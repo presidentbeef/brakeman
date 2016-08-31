@@ -16,7 +16,7 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
       arg = normalize_output(exp.first_arg)
 
       if is_escaped? arg
-        add_escaped_output arg
+        add_escaped_output arg.first_arg
       elsif string? arg
         ignore
       elsif render? arg
