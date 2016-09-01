@@ -16,7 +16,7 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
       arg = normalize_output(exp.first_arg)
 
       if is_escaped? arg
-        add_escaped_output arg
+        add_escaped_output arg.first_arg
       elsif string? arg
         ignore
       elsif render? arg
@@ -24,6 +24,8 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
       elsif string_interp? arg
         process_inside_interp arg
       elsif node_type? arg, :ignore
+        ignore
+      elsif internal_variable? arg
         ignore
       else
         add_output arg
@@ -77,6 +79,11 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
     call? exp and
     exp.target == TEMPLE_UTILS and
     (exp.method == :escape_html or exp.method == :escape_html_safe)
+  end
+
+  def internal_variable? exp
+    node_type? exp, :lvar and
+    exp.value =~ /^_temple_/
   end
 
   def render? exp
