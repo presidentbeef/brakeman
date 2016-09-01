@@ -34,7 +34,7 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
         add_output arg
       end
     elsif is_escaped? exp
-      add_escaped_output exp.first_arg
+      add_escaped_output arg
     elsif target == nil and method == :render
       exp.arglist = process exp.arglist
       make_render_in_view exp
@@ -76,6 +76,14 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
         add_output exp
       end
     end
+  end
+
+  def add_escaped_output exp
+    exp = normalize_output(exp)
+
+    return exp if string? exp or internal_variable? exp
+
+    super exp
   end
 
   def is_escaped? exp
