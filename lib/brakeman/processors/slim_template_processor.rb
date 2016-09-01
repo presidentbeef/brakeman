@@ -7,6 +7,7 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
   SAFE_BUFFER = s(:call, s(:colon2, s(:const, :ActiveSupport), :SafeBuffer), :new)
   OUTPUT_BUFFER = s(:ivar, :@output_buffer)
   TEMPLE_UTILS = s(:colon2, s(:colon3, :Temple), :Utils)
+  ATTR_MERGE = s(:call, s(:call, s(:array), :reject, s(:block_pass, s(:lit, :empty?))), :join, s(:str, " "))
 
   def process_call exp
     target = exp.target
@@ -26,6 +27,8 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
       elsif node_type? arg, :ignore
         ignore
       elsif internal_variable? arg
+        ignore
+      elsif arg == ATTR_MERGE
         ignore
       else
         add_output arg
@@ -83,7 +86,7 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
 
   def internal_variable? exp
     node_type? exp, :lvar and
-    exp.value =~ /^_temple_/
+    exp.value =~ /^_(temple_|slim_)/
   end
 
   def render? exp
