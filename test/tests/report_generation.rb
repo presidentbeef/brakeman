@@ -2,7 +2,7 @@ require 'json'
 
 class TestReportGeneration < Minitest::Test
   def setup
-    @@tracker||= Brakeman.run(:app_path => "#{TEST_PATH}/apps/rails3.2", :quiet => true, :report_routes => true)
+    @@tracker||= Brakeman.run(:app_path => "#{TEST_PATH}/apps/rails4", :quiet => true, :report_routes => true)
     @@report ||= @@tracker.report
   end
 
@@ -47,6 +47,13 @@ class TestReportGeneration < Minitest::Test
     assert_nothing_raised do
       Brakeman.run(:app_path => "#{TEST_PATH}/apps/rails4_non_standard_structure", :quiet => true, :report_routes => true).report.to_csv
     end
+  end
+
+  def test_obsolete_reporting
+    report = @@report.to_s
+
+    assert report.include? "+Obsolete Ignore Entries+"
+    assert report.include? "abcdef01234567890ba28050e7faf1d54f218dfa9435c3f65f47cb378c18cf98"
   end
 
   def test_tabs_sanity

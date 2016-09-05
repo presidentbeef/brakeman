@@ -185,6 +185,11 @@ class Brakeman::Tracker
     end
   end
 
+  def unused_fingerprints
+    return [] unless self.ignored_filter
+    self.ignored_filter.obsolete_fingerprints
+  end
+
   def add_constant name, value, context = nil
     @constants.add name, value, context unless @options[:disable_constant_tracking]
   end
