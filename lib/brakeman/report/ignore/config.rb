@@ -82,6 +82,17 @@ module Brakeman
       (@ignored_fingerprints - @used_fingerprints).to_a
     end
 
+    def prune_obsolete
+      obsolete = obsolete_fingerprints.to_set
+      @ignored_fingerprints -= obsolete
+
+      @already_ignored.reject! do |w|
+        if obsolete.include? w[:fingerprint]
+          @changed = true
+        end
+      end
+    end
+
     # Read configuration to file
     def read_from_file file = @file
       if File.exist? file
