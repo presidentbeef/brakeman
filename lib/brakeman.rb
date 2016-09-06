@@ -212,6 +212,8 @@ module Brakeman
         :to_markdown
       when /(\.cc|\.codeclimate)$/i
         :to_codeclimate
+      when /\.plain$/i
+        :to_plain
       else
         :to_s
       end
