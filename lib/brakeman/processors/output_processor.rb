@@ -9,7 +9,9 @@ class Brakeman::OutputProcessor < Ruby2Ruby
   include Brakeman::Util
 
   #Copies +exp+ and then formats it.
-  def format exp
+  def format exp, user_input = nil, &block
+    @user_input = user_input
+    @user_input_block = block
     process(exp.deep_clone) || "[Format Error]"
   end
 
@@ -17,7 +19,11 @@ class Brakeman::OutputProcessor < Ruby2Ruby
 
   def process exp
     begin
-      super exp if sexp? exp and not exp.empty?
+      if @user_input and @user_input == exp
+        @user_input_block.call(exp, super(exp))
+      else
+        super exp if sexp? exp and not exp.empty?
+      end
     rescue => e
       Brakeman.debug "While formatting #{exp}: #{e}\n#{e.backtrace.join("\n")}"
     end

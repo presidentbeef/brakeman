@@ -191,7 +191,8 @@ class BrakemanOptionsTest < Minitest::Test
       json: :to_json,
       markdown: :to_markdown,
       codeclimate: :to_codeclimate,
-      cc: :to_cc
+      cc: :to_cc,
+      plain: :to_plain
     }
 
     format_options.each_pair do |key, value|
@@ -260,6 +261,15 @@ class BrakemanOptionsTest < Minitest::Test
     options = setup_options_from_input("--output", "output1.rb,output2.rb")
     assert_equal ["output1.rb,output2.rb"], options[:output_files]
   end
+
+  def test_output_color_option
+    options = setup_options_from_input("--color")
+    assert options[:output_color]
+
+    options = setup_options_from_input("--no-color")
+    assert !options[:output_color]
+  end
+
 
   def test_sperate_models_option
     options = setup_options_from_input("--separate-models")

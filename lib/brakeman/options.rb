@@ -172,12 +172,12 @@ module Brakeman::Options
 
         opts.on "-f",
           "--format TYPE",
-          [:pdf, :text, :html, :csv, :tabs, :json, :markdown, :codeclimate, :cc],
+          [:pdf, :text, :html, :csv, :tabs, :json, :markdown, :codeclimate, :cc, :plain],
           "Specify output formats. Default is text" do |type|
 
           type = "s" if type == :text
           options[:output_format] = ("to_" << type.to_s).to_sym
-          end
+        end
 
         opts.on "--css-file CSSFile", "Specify CSS to use for HTML output" do |file|
           options[:html_style] = File.expand_path file
@@ -197,6 +197,10 @@ module Brakeman::Options
 
         opts.on "--[no-]highlights", "Highlight user input in report" do |highlight|
           options[:highlight_user_input] = highlight
+        end
+
+        opts.on "--[no-]color", "Use ANSI colors in report (Default)" do |color|
+          options[:output_color] = color
         end
 
         opts.on "-m", "--routes", "Report controller information" do
