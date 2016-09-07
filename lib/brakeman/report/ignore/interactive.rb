@@ -19,6 +19,7 @@ module Brakeman
       @ignore_config.filter_ignored
 
       unless @quit
+        penultimate_menu
         final_menu
       end
 
@@ -65,6 +66,10 @@ module Brakeman
           process_warnings
         end
 
+        m.choice "Prune obsolete ignored warnings" do
+          prune_obsolete
+        end
+
         m.choice "Skip - use current ignore configuration" do
           @quit = true
           @ignore_config.filter_ignored
@@ -101,6 +106,36 @@ q - Quit, do not update ignored warnings
           "?"
         end
       end
+    end
+
+    def penultimate_menu
+      obsolete = @ignore_config.obsolete_fingerprints
+      return unless obsolete.any?
+
+      if obsolete.length > 1
+        plural = 's'
+        verb = 'are'
+      else
+        plural = ''
+        verb = 'is'
+      end
+
+      say "\n#{obsolete.length} fingerprint#{plural} #{verb} unused:", :green
+      obsolete.each do |obs|
+        say obs
+      end
+
+      if yes_or_no "\nRemove fingerprint#{plural}?"
+        @ignore_config.prune_obsolete
+      end
+    end
+
+    def prune_obsolete
+      @ignore_config.filter_ignored
+      obsolete = @ignore_config.obsolete_fingerprints
+      @ignore_config.prune_obsolete
+
+      say "Removed #{obsolete.length} obsolete fingerprint#{'s' if obsolete.length > 1} from ignore config.", :yellow
     end
 
     def final_menu
