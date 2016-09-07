@@ -145,7 +145,8 @@ module Brakeman
       :parallel_checks => true,
       :relative_path => false,
       :report_progress => true,
-      :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css"
+      :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css",
+      :output_color => true
     }
   end
 
@@ -186,6 +187,8 @@ module Brakeman
       [:to_markdown]
     when :cc, :to_cc, :codeclimate, :to_codeclimate
       [:to_codeclimate]
+    when :plain ,:to_plain
+      [:to_plain]
     else
       [:to_s]
     end
@@ -209,6 +212,8 @@ module Brakeman
         :to_markdown
       when /(\.cc|\.codeclimate)$/i
         :to_codeclimate
+      when /\.plain$/i
+        :to_plain
       else
         :to_s
       end
@@ -363,6 +368,7 @@ module Brakeman
 
   def self.write_report_to_files tracker, output_files
     require 'fileutils'
+    tracker.options[:output_color] = false
 
     output_files.each_with_index do |output_file, idx|
       dir = File.dirname(output_file)
@@ -379,6 +385,10 @@ module Brakeman
   private_class_method :write_report_to_files
 
   def self.write_report_to_formats tracker, output_formats
+    unless $stdout.tty?
+      tracker.options[:output_color] = false
+    end
+
     output_formats.each do |output_format|
       puts tracker.report.format(output_format)
     end

@@ -107,4 +107,14 @@ class TestReportGeneration < Minitest::Test
 
     assert html_report.include? "<h2>Controllers</h2>"
   end
+
+  def test_plain_debug_sanity
+    @@tracker.options[:debug] = true
+    report = @@report.to_plain
+
+    assert report.is_a? String
+    assert report.match /Overview.*Warning Types.*Controller Overview.*Template Output.*Warnings/m
+  ensure
+    @@tracker.options[:debug] = false
+  end
 end
