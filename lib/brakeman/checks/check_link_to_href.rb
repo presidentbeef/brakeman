@@ -52,7 +52,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
       unless duplicate? result or call_on_params? url_arg
         add_result result
         warn :result => result,
-          :warning_type => "Cross Site Scripting", 
+          :warning_type => "Cross-Site Scripting", 
           :warning_code => :xss_link_to_href,
           :message => message,
           :user_input => input,
@@ -85,7 +85,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
       if message and not duplicate? result
         add_result result
         warn :result => result, 
-          :warning_type => "Cross Site Scripting", 
+          :warning_type => "Cross-Site Scripting", 
           :warning_code => :xss_link_to_href,
           :message => message,
           :user_input => @matched,

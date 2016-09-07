@@ -1,6 +1,6 @@
 ### HTTP Only
 
-It is recommended that session cookies be set to "http-only". This helps prevent stealing of cookies via cross site scripting.
+It is recommended that session cookies be set to "http-only". This helps prevent stealing of cookies via cross-site scripting.
 
 ### Secret Length
 

@@ -171,7 +171,7 @@ class RailsWithXssPluginTests < Minitest::Test
 
   def test_cross_site_scripting_13
     assert_warning :type => :warning,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       #noline,
       :message => /^Rails\ 2\.3\.x\ using\ the\ rails_xss\ plugin\ h/,
       :confidence => 1,
@@ -181,7 +181,7 @@ class RailsWithXssPluginTests < Minitest::Test
 
   def test_cross_site_scripting_14
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 13,
       :message => /^Unescaped\ model\ attribute/,
       :confidence => 0,
@@ -190,7 +190,7 @@ class RailsWithXssPluginTests < Minitest::Test
 
   def test_cross_site_scripting_single_quotes_CVE_2012_3464
     assert_no_warning :type => :warning,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :message => /^All\ Rails\ 2\.x\ versions\ do\ not\ escape\ sin/,
       :confidence => 1,
       :file => /environment\.rb/
@@ -250,7 +250,7 @@ class RailsWithXssPluginTests < Minitest::Test
     assert_warning :type => :template,
       :warning_code => 58,
       :fingerprint => "3ec8749301aa7cdb1d3ec5610120492138060f05d65af0aa53dbb1a3b7c493ac",
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Rails\ 2\.3\.14\ has\ a\ vulnerability\ in\ sani/,
       :confidence => 0,
@@ -262,7 +262,7 @@ class RailsWithXssPluginTests < Minitest::Test
     assert_no_warning :type => :template,
       :warning_code => 58,
       :fingerprint => "9d90d446941026c42502e1213ef6d9122a2ad587266cdb002d9f30bb3c77523d",
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Rails\ 2\.3\.14\ has\ a\ vulnerability\ in\ sani/,
       :confidence => 0,
@@ -301,7 +301,7 @@ class RailsWithXssPluginTests < Minitest::Test
 
   def test_strip_tags_CVE_2012_3465
     assert_warning :type => :warning,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :message => /^All\ Rails\ 2\.x\ versions\ have\ a\ vulnerabil/,
       :confidence => 0,
       :file => /Gemfile/
@@ -317,7 +317,7 @@ class RailsWithXssPluginTests < Minitest::Test
 
   def test_to_json
     assert_warning :type => :template,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 1,
       :message => /^Unescaped parameter value in JSON hash/,
       :confidence => 0,
@@ -341,7 +341,7 @@ class RailsWithXssPluginTests < Minitest::Test
     assert_warning :type => :template,
       :warning_code => 22,
       :fingerprint => "4ad12198bfbc84a389e439d3c4cc9c2551e3c2aa7b36182336463ca87e45ec5b",
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 18,
       :message => /^Upgrade\ to\ Rails\ 3\ or\ use\ options_for_se/,
       :confidence => 1,
@@ -413,7 +413,7 @@ class RailsWithXssPluginTests < Minitest::Test
     assert_warning :type => :warning,
       :warning_code => 73,
       :fingerprint => "f6981b9c24727ef45040450a1f4b158ae3bc31b4b0343efe853fe12c64881695",
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :line => 3,
       :message => /^Rails\ 2\.3\.14\ has\ a\ vulnerability\ in\ numb/,
       :confidence => 1,

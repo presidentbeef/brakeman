@@ -18,7 +18,7 @@ class Brakeman::CheckI18nXSS < Brakeman::BaseCheck
         return
       end
 
-      warn :warning_type => "Cross Site Scripting",
+      warn :warning_type => "Cross-Site Scripting",
         :warning_code => :CVE_2013_4491,
         :message => message,
         :confidence => CONFIDENCE[:med],

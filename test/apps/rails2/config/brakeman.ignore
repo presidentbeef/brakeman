@@ -1,7 +1,7 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "Cross Site Scripting",
+      "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "e53a25ddc8ca61f7c4b81602bae04cd6746cf6a7432e89407fbeb362a66f4e8f",
       "message": "Unescaped model attribute",

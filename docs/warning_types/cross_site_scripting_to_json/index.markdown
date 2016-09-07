@@ -1,4 +1,4 @@
-Cross site scripting (or XSS) is #2 on the 2010 [OWASP Top Ten](https://www.owasp.org/index.php/Top_10_2010-A2) web security risks and it pops up nearly everywhere.
+Cross-site scripting (or XSS) is #2 on the 2010 [OWASP Top Ten](https://www.owasp.org/index.php/Top_10_2010-A2) web security risks and it pops up nearly everywhere.
 
 XSS occurs when a user-manipulatable value is displayed on a web page without escaping it, allowing someone to inject Javascript or HTML into the page.  Calls to `Hash#to_json` can be used to trigger XSS.  Brakeman will check to see if there are any calls to `Hash#to_json` with `ActiveSupport#escape_html_entities_in_json` set to false (or if you are running Rails < 2.1.0 which did not have this functionality).
 

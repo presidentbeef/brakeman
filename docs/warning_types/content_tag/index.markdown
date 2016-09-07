@@ -1,4 +1,4 @@
-Cross site scripting (or XSS) is #2 on the 2010 [OWASP Top Ten](https://www.owasp.org/index.php/Top_10_2010-A2) web security risks and it pops up nearly everywhere. XSS occurs when a user-manipulatable value is displayed on a web page without escaping it, allowing someone to inject Javascript or HTML into the page.
+Cross-site scripting (or XSS) is #2 on the 2010 [OWASP Top Ten](https://www.owasp.org/index.php/Top_10_2010-A2) web security risks and it pops up nearly everywhere. XSS occurs when a user-manipulatable value is displayed on a web page without escaping it, allowing someone to inject Javascript or HTML into the page.
 
 [content\_tag](http://apidock.com/rails/ActionView/Helpers/TagHelper/content_tag) is a view helper which generates an HTML tag with some content:
 

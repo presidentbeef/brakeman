@@ -52,7 +52,7 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
       end
 
       warn :result => result,
-        :warning_type => "Cross Site Scripting",
+        :warning_type => "Cross-Site Scripting",
         :warning_code => code,
         :message => message,
         :confidence => CONFIDENCE[:high],
@@ -69,7 +69,7 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
       confidence = CONFIDENCE[:med]
     end
 
-    warn :warning_type => "Cross Site Scripting",
+    warn :warning_type => "Cross-Site Scripting",
       :warning_code => cve.tr('-', '_').to_sym,
       :message => message,
       :gem_info => gemfile_or_environment,

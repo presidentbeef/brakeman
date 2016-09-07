@@ -1,7 +1,7 @@
 class Brakeman::CheckRenderInline < Brakeman::CheckCrossSiteScripting
   Brakeman::Checks.add self
 
-  @description = "Checks for cross site scripting in render calls"
+  @description = "Checks for cross-site scripting in render calls"
 
   def run_check
     setup
@@ -24,14 +24,14 @@ class Brakeman::CheckRenderInline < Brakeman::CheckCrossSiteScripting
 
         if input = has_immediate_user_input?(render_value)
           warn :result => result,
-            :warning_type => "Cross Site Scripting",
+            :warning_type => "Cross-Site Scripting",
             :warning_code => :cross_site_scripting_inline,
             :message => "Unescaped #{friendly_type_of input} rendered inline",
             :user_input => input,
             :confidence => CONFIDENCE[:high]
         elsif input = has_immediate_model?(render_value)
           warn :result => result,
-            :warning_type => "Cross Site Scripting",
+            :warning_type => "Cross-Site Scripting",
             :warning_code => :cross_site_scripting_inline,
             :message => "Unescaped model attribute rendered inline",
             :user_input => input,
