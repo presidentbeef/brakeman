@@ -1,3 +1,12 @@
+# 3.4.0
+
+* Add new `plain` report format
+* Add option to prune ignore file with `-I`
+* Improved Slim template support
+* Show obsolete ignore entries in reports (Jonathan Cheatham)
+* Support creating reports in non-existent paths
+* Add `--no-exit-warn`
+
 # 3.3.5
 
 * Fix bug in reports when using --debug option
