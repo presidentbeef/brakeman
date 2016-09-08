@@ -12,6 +12,13 @@ end
 
 command = "/usr/src/app/bin/brakeman --quiet --format codeclimate"
 
+debug = engine_config["config"] && engine_config["config"]["debug"]
+
+# ATM this gets parsed as a string instead of bool: "config":{ "debug":"true" }
+if debug && debug.to_s.downcase == "true"
+  command << " --debug"
+end
+
 if engine_config["include_paths"]
   command << " --only-files #{engine_config["include_paths"].compact.join(",").shellescape}"
 end
