@@ -87,6 +87,42 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
   end
 
+  def process_bracket_call exp
+    if r = env[exp]
+      return r.deep_clone(exp.line)
+    end
+
+    exp.arglist = process_default(exp.arglist)
+
+    if r = env[exp]
+      return r.deep_clone(exp.line)
+    end
+
+    t = env[exp.target]
+
+    if node_type? t, :hash
+      if v = hash_access(t, exp.first_arg)
+        v.deep_clone(exp.line)
+      else
+        exp
+      end
+    elsif array? t
+      if v = process_array_access(t, exp.args)
+        v.deep_clone(exp.line)
+      else
+        exp
+      end
+    elsif t
+      exp.target = t.deep_clone(exp.line)
+      exp
+    else
+      if exp.target # `self` target is reported as `nil` https://github.com/seattlerb/ruby_parser/issues/250
+        exp.target = process_default exp.target
+      end
+      exp
+    end
+  end
+
   ARRAY_CONST = s(:const, :Array)
   HASH_CONST = s(:const, :Hash)
   RAILS_TEST = s(:call, s(:call, s(:const, :Rails), :env), :test?)
@@ -99,7 +135,12 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     if exp.node_type == :safe_call
       exp.node_type = :call
     end
-    exp = process_default exp
+
+    if exp.method == :[]
+      return process_bracket_call exp
+    else
+      exp = process_default exp
+    end
 
     #In case it is replaced with something else
     unless call? exp
@@ -391,7 +432,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   # x[:y] = 1
   def process_attrasgn exp
     tar_variable = exp.target
-    target = exp.target = process(exp.target)
+    target = process(exp.target)
     method = exp.method
     index_arg = exp.first_arg
     value_arg = exp.second_arg
@@ -405,6 +446,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
       if hash? target
         env[tar_variable] = hash_insert target.deep_clone, index, value
+      else
+        exp.target = target
       end
     elsif method.to_s[-1,1] == "="
       exp.first_arg = process(index_arg)
@@ -413,6 +456,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       match = Sexp.new(:call, target, method.to_s[0..-2].to_sym)
 
       set_value match, value
+      exp.target = target
     else
       raise "Unrecognized assignment: #{exp}"
     end
