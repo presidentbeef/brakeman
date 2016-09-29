@@ -359,4 +359,28 @@ class Rails5Tests < Minitest::Test
       :relative_path => "app/models/user.rb",
       :user_input => s(:params)
   end
+
+  def test_link_to_href_safe_interpolation
+    assert_no_warning :type => :template,
+      :warning_code => 4,
+      :fingerprint => "840e79fc7cc526a9e744b8a3d49f6689aa572941f46b030d14cdec01f3675a4a",
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unsafe\ parameter\ value\ in\ link_to\ href/,
+      :confidence => 0,
+      :relative_path => "app/views/widget/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, "Thing"), s(:dstr, "", s(:evstr, s(:call, s(:const, :ENV), :[], s(:str, "SOME_URL"))), s(:evstr, s(:call, s(:params), :[], s(:lit, :x))))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+
+    assert_no_warning :type => :template,
+      :warning_code => 4,
+      :fingerprint => "ea91f7cfb339ae9522f00fb1f3bc176f789110b6e0cbc4f8704e95d0999b0e71",
+      :warning_type => "Cross Site Scripting",
+      :line => 4,
+      :message => /^Unsafe\ parameter\ value\ in\ link_to\ href/,
+      :confidence => 0,
+      :relative_path => "app/views/widget/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, "Email!"), s(:dstr, "mailto:", s(:evstr, s(:call, s(:params), :[], s(:lit, :x))))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
 end
