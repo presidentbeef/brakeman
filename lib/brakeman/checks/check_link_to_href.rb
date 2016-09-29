@@ -40,16 +40,12 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
       url_arg = url_arg.first_arg
     end
 
-    #Ignore situations where the href is an interpolated string
-    #with something before the user input
-    return if string_interp?(url_arg) && !url_arg[1].chomp.empty?
-
     return if call? url_arg and ignore_call? url_arg.target, url_arg.method
 
     if input = has_immediate_user_input?(url_arg)
       message = "Unsafe #{friendly_type_of input} in link_to href"
 
-      unless duplicate? result or call_on_params? url_arg
+      unless duplicate? result or call_on_params? url_arg or ignore_interpolation? url_arg, input.match
         add_result result
         warn :result => result,
           :warning_type => "Cross Site Scripting", 
@@ -82,7 +78,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
         message = "Unsafe parameter value in link_to href"
       end
 
-      if message and not duplicate? result
+      if message and not duplicate? result and not ignore_interpolation? url_arg, @matched.match
         add_result result
         warn :result => result, 
           :warning_type => "Cross Site Scripting", 
@@ -93,6 +89,24 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
           :link_path => "link_to_href"
       end
     end
+  end
+
+  #Ignore situations where the href is an interpolated string
+  #with something before the user input
+  def ignore_interpolation? arg, suspect
+    return unless string_interp? arg
+    return true unless arg[1].chomp.empty? # plain string before interpolation
+
+    first_interp = arg.find_nodes(:evstr).first
+    return unless first_interp
+
+    first_interp[1].deep_each do |e|
+      if suspect == e
+        return false
+      end
+    end
+
+    true
   end
 
   def ignore_call? target, method
