@@ -247,6 +247,20 @@ class Rails5Tests < Minitest::Test
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
   end
 
+  def test_sql_injection_where_values_hash_fp
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "2a77f56c4c09590a4cac1fe68dd00c0fa0a7820ea6f0d4bad20451ecc07dc68e",
+      :warning_type => "SQL Injection",
+      :line => 17,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb",
+      :code => s(:call, nil, :where, s(:call, s(:call, s(:const, :Thing), :canadian), :where_values_hash)),
+      :user_input => s(:call, s(:call, s(:const, :Thing), :canadian), :where_values_hash)
+  end
+
+
   def test_cross_site_scripting_CVE_2015_7578
     assert_warning :type => :warning,
       :warning_code => 96,

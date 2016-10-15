@@ -12,4 +12,7 @@ class User < ApplicationRecord
       User.where(params)
     end
   end
+
+  has_many :things,
+    -> { where(Thing.canadian.where_values_hash) }
 end

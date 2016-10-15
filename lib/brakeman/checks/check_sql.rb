@@ -549,7 +549,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     :quoted_primary_key, :to_i, :to_f, :sanitize_sql, :sanitize_sql_array,
     :sanitize_sql_for_assignment, :sanitize_sql_for_conditions, :sanitize_sql_hash,
     :sanitize_sql_hash_for_assignment, :sanitize_sql_hash_for_conditions,
-    :to_sql, :sanitize, :primary_key, :table_name_prefix, :table_name_suffix]
+    :to_sql, :sanitize, :primary_key, :table_name_prefix, :table_name_suffix,
+    :where_values_hash
+  ]
 
   def safe_value? exp
     return true unless sexp? exp
