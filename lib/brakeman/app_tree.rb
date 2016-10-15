@@ -19,6 +19,7 @@ module Brakeman
         init_options[:only_files] = regex_for_paths(options[:only_files])
       end
       init_options[:additional_libs_path] = options[:additional_libs_path]
+      init_options[:engines_path] = options[:engines_path]
       new(root, init_options)
     end
 
@@ -57,6 +58,9 @@ module Brakeman
       @skip_files = init_options[:skip_files]
       @only_files = init_options[:only_files]
       @additional_libs_path = init_options[:additional_libs_path] || []
+      @engines_path = init_options[:engines_path] || []
+      @absolute_engines_path = @engines_path.select { |path| path.start_with?(File::SEPARATOR) }
+      @relative_engines_path = @engines_path - @absolute_engines_path
     end
 
     def expand_path(path)
@@ -101,8 +105,7 @@ module Brakeman
     end
 
     def layout_exists?(name)
-      pattern = "#{@root}/{engines/*/,}app/views/layouts/#{name}.html.{erb,haml,slim}"
-      !Dir.glob(pattern).empty?
+      !glob_files("app/views/layouts", name, "{.erb, .haml, .slim}").empty?
     end
 
     def lib_paths
@@ -121,10 +124,16 @@ module Brakeman
       @additional_libs_path.collect{ |path| find_paths path }.flatten
     end
 
-    def find_paths(directory, extensions = "*.rb")
-      pattern = @root + "/{engines/*/,}#{directory}/**/#{extensions}"
+    def find_paths(directory, extensions = ".rb")
+      select_files(glob_files(directory, "*", extensions).sort)
+    end
 
-      select_files(Dir.glob(pattern).sort)
+    def glob_files(directory, name, extensions = ".rb")
+      abs_engines = @absolute_engines_path.to_a.join(",")
+      rel_engines = @relative_engines_path.empty? ? "" : "{#{@relative_engines_path.to_a.join("/,")},}/"
+      pattern = "{#{@root},#{abs_engines}}" + "/#{rel_engines}#{directory}/**/#{name}#{extensions}"
+
+      Dir.glob(pattern)
     end
 
     def select_files(paths)
