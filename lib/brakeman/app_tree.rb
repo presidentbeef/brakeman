@@ -129,9 +129,7 @@ module Brakeman
     end
 
     def glob_files(directory, name, extensions = ".rb")
-      abs_engines = @absolute_engines_path.to_a.join(",")
-      rel_engines = @relative_engines_path.empty? ? "" : "{#{@relative_engines_path.to_a.join("/,")},}/"
-      pattern = "{#{@root},#{abs_engines}}" + "/#{rel_engines}#{directory}/**/#{name}#{extensions}"
+      pattern = "#{root_search_pattern}#{directory}/**/#{name}#{extensions}"
 
       Dir.glob(pattern)
     end
@@ -168,6 +166,16 @@ module Brakeman
       )
 
       files.match(project_relative_path)
+    end
+
+    def root_search_pattern
+      return @root_search_pattern if @root_search_pattern
+      abs = @absolute_engines_path.to_a.map { |path| path.gsub /#{File::SEPARATOR}+$/, '' }
+      rel = @relative_engines_path.to_a.map { |path| path.gsub /#{File::SEPARATOR}+$/, '' }
+
+      roots = ([@root] + abs).join(",")
+      rel_engines = (rel + [""]).join("/,")
+      @root_search_patrern = "{#{roots}}/{#{rel_engines}}"
     end
   end
 end
