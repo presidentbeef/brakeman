@@ -76,7 +76,7 @@ class BrakemanTests < Minitest::Test
     require 'brakeman/options'
     relative_path = File.expand_path(File.join(TEST_PATH, "/apps/rails4_with_engines"))
     input = ["-p", relative_path.to_s,
-             "--engines", "engine/user_removal"]
+             "--add-engines-path", "engine/user_removal"]
     options, _ = Brakeman::Options.parse input
     at = Brakeman::AppTree.from_options options
 

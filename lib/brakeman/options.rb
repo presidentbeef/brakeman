@@ -136,6 +136,11 @@ module Brakeman::Options
           options[:additional_libs_path].merge paths
         end
 
+        opts.on "--add-engines-path path1,path2,etc", Array, "Include these engines in the scan" do |paths|
+          options[:engine_paths] ||= Set.new
+          options[:engine_paths].merge paths
+        end
+
         opts.on "-t", "--test Check1,Check2,etc", Array, "Only run the specified checks" do |checks|
           checks.each_with_index do |s, index|
             if s[0,5] != "Check"
@@ -287,11 +292,6 @@ module Brakeman::Options
 
         opts.on_tail "-h", "--help", "Display this message" do
           options[:show_help] = true
-        end
-
-        opts.on "--engines path1,path2,etc", Array, "Include these engines in the scan." do |paths|
-          options[:engines_path] ||= Set.new
-          options[:engines_path].merge paths
         end
       end
 

@@ -147,7 +147,7 @@ module Brakeman
       :report_progress => true,
       :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css",
       :output_color => true,
-      :engines_path => ["engines/*"]
+      :engine_paths => ["engines/*"]
     }
   end
 

@@ -19,7 +19,7 @@ module Brakeman
         init_options[:only_files] = regex_for_paths(options[:only_files])
       end
       init_options[:additional_libs_path] = options[:additional_libs_path]
-      init_options[:engines_path] = options[:engines_path]
+      init_options[:engine_paths] = options[:engine_paths]
       new(root, init_options)
     end
 
@@ -58,9 +58,9 @@ module Brakeman
       @skip_files = init_options[:skip_files]
       @only_files = init_options[:only_files]
       @additional_libs_path = init_options[:additional_libs_path] || []
-      @engines_path = init_options[:engines_path] || []
-      @absolute_engines_path = @engines_path.select { |path| path.start_with?(File::SEPARATOR) }
-      @relative_engines_path = @engines_path - @absolute_engines_path
+      @engine_paths = init_options[:engine_paths] || []
+      @absolute_engine_paths = @engine_paths.select { |path| path.start_with?(File::SEPARATOR) }
+      @relative_engine_paths = @engine_paths - @absolute_engine_paths
     end
 
     def expand_path(path)
@@ -170,8 +170,8 @@ module Brakeman
 
     def root_search_pattern
       return @root_search_pattern if @root_search_pattern
-      abs = @absolute_engines_path.to_a.map { |path| path.gsub /#{File::SEPARATOR}+$/, '' }
-      rel = @relative_engines_path.to_a.map { |path| path.gsub /#{File::SEPARATOR}+$/, '' }
+      abs = @absolute_engine_paths.to_a.map { |path| path.gsub /#{File::SEPARATOR}+$/, '' }
+      rel = @relative_engine_paths.to_a.map { |path| path.gsub /#{File::SEPARATOR}+$/, '' }
 
       roots = ([@root] + abs).join(",")
       rel_engines = (rel + [""]).join("/,")
