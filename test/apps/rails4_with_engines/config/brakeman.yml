@@ -1,3 +1,4 @@
 ---
 :engines_path:
   - engines/user_removal
+  - alt_engines/*
