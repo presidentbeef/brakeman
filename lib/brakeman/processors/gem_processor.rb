@@ -21,19 +21,26 @@ class Brakeman::GemProcessor < Brakeman::BasicProcessor
   end
 
   def process_call exp
-    if exp.target == nil and exp.method == :gem
-      gem_name = exp.first_arg
-      return exp unless string? gem_name
+    if exp.target == nil
+      if exp.method == :gem
+        gem_name = exp.first_arg
+        return exp unless string? gem_name
 
-      gem_version = exp.second_arg
+        gem_version = exp.second_arg
 
-      version = if string? gem_version
-                  gem_version.value
-                else
-                  nil
-                end
+        version = if string? gem_version
+                    gem_version.value
+                  else
+                    nil
+                  end
 
-      @tracker.config.add_gem gem_name.value, version, @gemfile, exp.line
+        @tracker.config.add_gem gem_name.value, version, @gemfile, exp.line
+      elsif exp.method == :ruby
+        version = exp.first_arg
+        if string? version
+          @tracker.config.set_ruby_version version.value
+        end
+      end
     end
 
     exp
