@@ -8,12 +8,51 @@ class Rails4WithEnginesTests < Minitest::Test
     @expected ||= {
       :controller => 1,
       :model => 5,
-      :template => 11,
-      :generic => 11 }
+      :template => 12,
+      :generic => 13 }
   end
 
   def report
    @@report ||= BrakemanTester.run_scan "rails4_with_engines", "Rails4WithEngines"
+  end
+
+  def test_dangerous_send_in_engine
+    assert_warning :type => :warning,
+      :warning_code => 23,
+      :fingerprint => "d32b6adf5f606b101ff7e1d47d76458f84fc8e3b5fbed7a7347fe7ae34cde9bb",
+      :warning_type => "Dangerous Send",
+      :line => 3,
+      :message => /^User\ controlled\ method\ execution/,
+      :confidence => 0,
+      :relative_path => "alt_engines/admin_stuff/app/controllers/admin_controller.rb",
+      :code => s(:call, s(:call, s(:call, s(:call, s(:params), :[], s(:lit, :class)), :classify), :constantize), :send, s(:call, s(:params), :[], s(:lit, :meth))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :meth))
+  end
+
+  def test_cross_site_scripting_in_engine
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "2cdecf9256c975d1c7a3cdb0f912eb8f660b8b5a9e343dd8f6e7e73c827b7549",
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "alt_engines/admin_stuff/app/views/admin/debug.html.erb",
+      :code => s(:call, s(:params), :[], s(:lit, :debug)),
+      :user_input => nil
+  end
+
+  def test_remote_code_execution_in_engine
+    assert_warning :type => :warning,
+      :warning_code => 24,
+      :fingerprint => "5a59773cc5a29469202c4e8908e37cdb9ef7926af05f68de1c6e765854e869c0",
+      :warning_type => "Remote Code Execution",
+      :line => 3,
+      :message => /^Unsafe\ reflection\ method\ constantize\ cal/,
+      :confidence => 0,
+      :relative_path => "alt_engines/admin_stuff/app/controllers/admin_controller.rb",
+      :code => s(:call, s(:call, s(:call, s(:params), :[], s(:lit, :class)), :classify), :constantize),
+      :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :class)), :classify)
   end
 
   def test_i18n_xss_CVE_2013_4491
