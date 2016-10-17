@@ -58,11 +58,13 @@ module Brakeman
       HighLine.new.choose do |m|
         m.choice "Inspect all warnings" do
           @skip_ignored = false
+          pre_show_help
           process_warnings
         end
 
         m.choice "Hide previously ignored warnings" do
           @skip_ignored = true
+          pre_show_help
           process_warnings
         end
 
@@ -92,7 +94,20 @@ module Brakeman
         m.choice "s"
         m.choice "q"
         m.choice "?" do
-          say <<-HELP
+          show_help
+          "?"
+        end
+      end
+    end
+
+    def pre_show_help
+      say "-" * 20
+      say "Actions:", :cyan
+      show_help
+    end
+
+    def show_help
+      say <<-HELP
 i - Add warning to ignore list
 n - Add warning to ignore list and add note
 s - Skip this warning (will remain ignored or shown)
@@ -101,11 +116,7 @@ a - Ignore this warning and all remaining warnings
 k - Skip this warning and all remaining warnings
 q - Quit, do not update ignored warnings
 ? - Display this help
-          HELP
-
-          "?"
-        end
-      end
+      HELP
     end
 
     def penultimate_menu
