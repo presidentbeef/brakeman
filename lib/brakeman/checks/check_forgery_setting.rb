@@ -49,8 +49,7 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
     opts = {
       :controller => :ApplicationController,
       :warning_type => "Cross-Site Request Forgery",
-      :confidence => CONFIDENCE[:high],
-      :file => tracker.controllers[:ApplicationController].file
+      :confidence => CONFIDENCE[:high]
     }.merge opts
 
     warn opts
