@@ -175,7 +175,7 @@ module Brakeman
 
       roots = ([@root] + abs).join(",")
       rel_engines = (rel + [""]).join("/,")
-      @root_search_patrern = "{#{roots}}/{#{rel_engines}}"
+      @root_search_pattern = "{#{roots}}/{#{rel_engines}}"
     end
   end
 end
