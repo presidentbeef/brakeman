@@ -10,44 +10,36 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
   @description = "Verifies that protect_from_forgery is enabled in direct subclasses of ActionController::Base"
 
   def run_check
-    if tracker.config.allow_forgery_protection?
-      csrf_warning :warning_code => :csrf_protection_disabled,
-        :message => "Forgery protection is disabled"
+    tracker.controllers
+    .select { |_, controller| controller.parent == :"ActionController::Base" }
+    .each do |name, controller|
+      if controller and not controller.protect_from_forgery?
+        csrf_warning :controller => name,
+          :warning_code => :csrf_protection_missing,
+          :message => "'protect_from_forgery' should be called in #{name}",
+          :file => controller.file,
+          :line => controller.top_line
+      elsif version_between? "4.0.0", "100.0.0" and forgery_opts = controller.options[:protect_from_forgery]
+        unless forgery_opts.is_a?(Array) and sexp?(forgery_opts.first) and
+          access_arg = hash_access(forgery_opts.first.first_arg, :with) and symbol? access_arg and
+          access_arg.value == :exception
 
-    elsif version_between? "2.1.0", "2.3.10"
-      cve_2011_0447 "2.3.11"
-    elsif version_between? "3.0.0", "3.0.3"
-      cve_2011_0447 "3.0.4"
-    else
-      tracker.controllers
-      .select { |_, controller| controller.parent == :"ActionController::Base" }
-      .each do |name, controller|
-        if controller and not controller.protect_from_forgery?
-          warn :controller => name,
+          args = {
+            :controller => name,
             :warning_type => "Cross-Site Request Forgery",
-            :warning_code => :csrf_protection_missing,
-            :message => "'protect_from_forgery' should be called in #{name}",
-            :confidence => CONFIDENCE[:high],
-            :file => controller.file,
-            :line => controller.top_line
-        elsif version_between? "4.0.0", "100.0.0" and forgery_opts = controller.options[:protect_from_forgery]
-          unless forgery_opts.is_a?(Array) and sexp?(forgery_opts.first) and
-            access_arg = hash_access(forgery_opts.first.first_arg, :with) and symbol? access_arg and
-            access_arg.value == :exception
+            :warning_code => :csrf_not_protected_by_raising_exception,
+            :message => "protect_from_forgery should be configured with 'with: :exception'",
+            :confidence => CONFIDENCE[:med],
+            :file => controller.file
+          }
 
-            args = {
-              :controller => name,
-              :warning_type => "Cross-Site Request Forgery",
-              :warning_code => :csrf_not_protected_by_raising_exception,
-              :message => "protect_from_forgery should be configured with 'with: :exception'",
-              :confidence => CONFIDENCE[:med],
-              :file => controller.file
-            }
+          args.merge!(:code => forgery_opts.first) if forgery_opts.is_a?(Array)
 
-            args.merge!(:code => forgery_opts.first) if forgery_opts.is_a?(Array)
+          csrf_warning args
+        end
 
-            csrf_warning args
-          end
+        if controller.options[:protect_from_forgery]
+          check_cve_2011_0447
         end
       end
     end
@@ -64,7 +56,20 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
     warn opts
   end
 
-  def cve_2011_0447 new_version
+  def check_cve_2011_0447
+    @warned_cve_2011_0447 ||= false
+    return if @warned_cve_2011_0447
+
+    if version_between? "2.1.0", "2.3.10"
+      new_version = "2.3.11"
+    elsif version_between? "3.0.0", "3.0.3"
+      new_version = "3.0.4"
+    else
+      return
+    end
+
+    @warned_cve_2011_0447 = true # only warn once
+
     csrf_warning :warning_code => :CVE_2011_0447,
       :message => "CSRF protection is flawed in unpatched versions of Rails #{rails_version} (CVE-2011-0447). Upgrade to #{new_version} or apply patches as needed",
       :gem_info => gemfile_or_environment,

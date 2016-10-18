@@ -11,7 +11,7 @@ class Rails3Tests < Minitest::Test
 
   def expected
     @expected ||= {
-      :controller => 0,
+      :controller => 1,
       :model => 9,
       :template => 42,
       :generic => 75
@@ -384,14 +384,14 @@ class Rails3Tests < Minitest::Test
   end
 
   def test_csrf_protection
-    assert_warning :type => :warning,
-      :warning_code => 33,
-      :fingerprint => "cc7397ad174bf0da4629bf721183207781fa674909e811965fcde139eb177447",
+    assert_warning :type => :controller,
+      :warning_code => 7,
+      :fingerprint => "6f5239fb87c64764d0c209014deb5cf504c2c10ee424bd33590f0a4f22e01d8f",
       :warning_type => "Cross-Site Request Forgery",
-      :line => 49,
-      :message => /^CSRF\ protection\ is\ flawed\ in\ unpatched\ v/,
+      :line => 1,
+      :message => /^'protect_from_forgery'\ should\ be\ called\ /,
       :confidence => 0,
-      :relative_path => "Gemfile.lock",
+      :relative_path => "app/controllers/application_controller.rb",
       :user_input => nil
   end
 
