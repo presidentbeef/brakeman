@@ -7,41 +7,48 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
-  @description = "Verifies that protect_from_forgery is enabled in ApplicationController"
+  @description = "Verifies that protect_from_forgery is enabled in direct subclasses of ActionController::Base"
 
   def run_check
-    app_controller = tracker.controllers[:ApplicationController]
-    return unless app_controller and app_controller.ancestor? :"ActionController::Base"
-
     if tracker.config.allow_forgery_protection?
       csrf_warning :warning_code => :csrf_protection_disabled,
         :message => "Forgery protection is disabled"
 
-    elsif app_controller and not app_controller.protect_from_forgery?
-      csrf_warning :warning_code => :csrf_protection_missing,
-        :message => "'protect_from_forgery' should be called in ApplicationController",
-        :line => app_controller.top_line
-
     elsif version_between? "2.1.0", "2.3.10"
       cve_2011_0447 "2.3.11"
-
     elsif version_between? "3.0.0", "3.0.3"
       cve_2011_0447 "3.0.4"
+    else
+      tracker.controllers
+      .select { |_, controller| controller.parent == :"ActionController::Base" }
+      .each do |name, controller|
+        if controller and not controller.protect_from_forgery?
+          warn :controller => name,
+            :warning_type => "Cross-Site Request Forgery",
+            :warning_code => :csrf_protection_missing,
+            :message => "'protect_from_forgery' should be called in #{name}",
+            :confidence => CONFIDENCE[:high],
+            :file => controller.file,
+            :line => controller.top_line
+        elsif version_between? "4.0.0", "100.0.0" and forgery_opts = controller.options[:protect_from_forgery]
+          unless forgery_opts.is_a?(Array) and sexp?(forgery_opts.first) and
+            access_arg = hash_access(forgery_opts.first.first_arg, :with) and symbol? access_arg and
+            access_arg.value == :exception
 
-    elsif version_between? "4.0.0", "100.0.0" and forgery_opts = app_controller.options[:protect_from_forgery]
-      unless forgery_opts.is_a?(Array) and sexp?(forgery_opts.first) and
-          access_arg = hash_access(forgery_opts.first.first_arg, :with) and symbol? access_arg and
-          access_arg.value == :exception
+            args = {
+              :controller => name,
+              :warning_type => "Cross-Site Request Forgery",
+              :warning_code => :csrf_not_protected_by_raising_exception,
+              :message => "protect_from_forgery should be configured with 'with: :exception'",
+              :confidence => CONFIDENCE[:med],
+              :file => controller.file
+            }
 
-        args = {
-          :warning_code => :csrf_not_protected_by_raising_exception,
-          :message => "protect_from_forgery should be configured with 'with: :exception'",
-          :confidence => CONFIDENCE[:med]
-        }
+            args.merge!(:code => forgery_opts.first) if forgery_opts.is_a?(Array)
 
-        args.merge!(:code => forgery_opts.first) if forgery_opts.is_a?(Array)
-
-        csrf_warning args
+            csrf_warning args
+          end
+        end
       end
     end
   end
