@@ -3,7 +3,7 @@ abort "Please run using test/test.rb" unless defined? BrakemanTester
 class Rails3Tests < Minitest::Test
   include BrakemanTester::FindWarning
   include BrakemanTester::CheckExpected
-  
+
   def report
     @@report ||= BrakemanTester.run_scan "rails3", "Rails 3", :rails3 => true,
       :config_file => File.join(TEST_PATH, "apps", "rails3", "config", "brakeman.yml")
@@ -385,10 +385,14 @@ class Rails3Tests < Minitest::Test
 
   def test_csrf_protection
     assert_warning :type => :controller,
+      :warning_code => 7,
+      :fingerprint => "6f5239fb87c64764d0c209014deb5cf504c2c10ee424bd33590f0a4f22e01d8f",
       :warning_type => "Cross-Site Request Forgery",
-      :message => /^'protect_from_forgery' should be called /,
+      :line => 1,
+      :message => /^'protect_from_forgery'\ should\ be\ called\ /,
       :confidence => 0,
-      :file => /application_controller\.rb/
+      :relative_path => "app/controllers/application_controller.rb",
+      :user_input => nil
   end
 
   def test_attribute_restriction
@@ -538,8 +542,8 @@ class Rails3Tests < Minitest::Test
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 0,
       :file => /test_params\.html\.erb/
-  end  
- 
+  end
+
   def test_href_parameter_in_link_to
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
@@ -547,21 +551,21 @@ class Rails3Tests < Minitest::Test
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 0,
       :file => /test_params\.html\.erb/
- 
+
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 16,
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 1,
-      :file => /test_params\.html\.erb/      
- 
+      :file => /test_params\.html\.erb/
+
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 18,
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 1,
-      :file => /test_params\.html\.erb/            
-  end  
+      :file => /test_params\.html\.erb/
+  end
 
   def test_newlines_in_template
     # Brakeman previously handled multiple newlines between nested ruby
@@ -592,14 +596,14 @@ class Rails3Tests < Minitest::Test
       :line => 10,
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 1,
-      :file => /test_model\.html\.erb/  
+      :file => /test_model\.html\.erb/
 
     assert_no_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 12,
       :message => /^Unsafe parameter value in link_to href/,
       :confidence => 1,
-      :file => /test_model\.html\.erb/  
+      :file => /test_model\.html\.erb/
   end
 
   def test_cross_site_scripting_alias_u_for_link_to_href
@@ -981,7 +985,7 @@ class Rails3Tests < Minitest::Test
       :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
       :confidence => 0,
       :file => /test_content_tag\.html\.erb/
-  end 
+  end
 
   def test_xss_content_tag_in_tag_name
     assert_warning :type => :template,
@@ -1197,7 +1201,7 @@ class Rails3Tests < Minitest::Test
       :message => /^Rails\ 3\.0\.3\ has\ a\ serious\ JSON\ parsing\ v/,
       :confidence => 0,
       :file => /Gemfile/
-  end 
+  end
 
   def test_denial_of_service_CVE_2013_0269
     assert_warning :type => :warning,
