@@ -38,9 +38,10 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
           csrf_warning args
         end
 
-        if controller.options[:protect_from_forgery]
-          check_cve_2011_0447
-        end
+      end
+
+      if controller.options[:protect_from_forgery]
+        check_cve_2011_0447
       end
     end
   end
