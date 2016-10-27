@@ -1,3 +1,13 @@
+# Unreleased
+
+* Show action help at start of interactive ignore
+* Check CSRF setting in direct subclasses of `ActionController::Base` (Jason Yeo)
+* Configurable engines path (Jason Yeo)
+* Use Ruby version to turn off SymbolDoS check
+* Pull Ruby version from `.ruby-version` or Gemfile
+* Avoid warning about `where_values_hash` in SQLi
+* Fix ignoring link interpolation not at beginning of string
+
 # 3.4.0
 
 * Add new `plain` report format
