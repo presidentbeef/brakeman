@@ -105,7 +105,7 @@ module Brakeman
     end
 
     def layout_exists?(name)
-      !glob_files("app/views/layouts", name, "{.erb, .haml, .slim}").empty?
+      !Dir.glob("#{root_search_pattern}app/views/layouts/#{name}.html.{erb,haml,slim}").empty?
     end
 
     def lib_paths
