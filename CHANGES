@@ -1,4 +1,4 @@
-# Unreleased
+# 3.4.1
 
 * Show action help at start of interactive ignore
 * Check CSRF setting in direct subclasses of `ActionController::Base` (Jason Yeo)
