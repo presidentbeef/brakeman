@@ -303,6 +303,10 @@
         <lastmod>2016-09-07T21:35:13-07:00</lastmod>
     </url>
     <url>
+        <loc>http://brakemanscanner.org/blog/2016/11/01/brakeman-3-dot-4-1-released/</loc>
+        <lastmod>2016-10-31T15:12:11-07:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/contact/</loc>
         <lastmod>2016-01-13T23:04:46-08:00</lastmod>
     </url>
@@ -312,7 +316,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/blog/archives/</loc>
-        <lastmod>2016-09-07T21:35:13-07:00</lastmod>
+        <lastmod>2016-10-31T15:12:11-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/content_license/</loc>
@@ -472,7 +476,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/basic_auth/</loc>
-        <lastmod>2016-06-29T16:16:11-07:00</lastmod>
+        <lastmod>2016-10-31T15:47:28-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/file_access/</loc>
@@ -512,7 +516,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/remote_code_execution/</loc>
-        <lastmod>2016-06-29T16:16:11-07:00</lastmod>
+        <lastmod>2016-10-31T15:47:28-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/model_validation/</loc>
@@ -544,7 +548,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/dynamic_render_path/</loc>
-        <lastmod>2016-06-29T16:16:11-07:00</lastmod>
+        <lastmod>2016-10-31T15:47:28-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/authentication_whitelist/</loc>
@@ -552,7 +556,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/session_manipulation/</loc>
-        <lastmod>2016-06-29T16:16:11-07:00</lastmod>
+        <lastmod>2016-10-31T15:47:28-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/authentication/</loc>
@@ -576,6 +580,6 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/</loc>
-        <lastmod>2016-09-07T21:35:13-07:00</lastmod>
+        <lastmod>2016-10-31T15:12:11-07:00</lastmod>
     </url>
 </urlset>
