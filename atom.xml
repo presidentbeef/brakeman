@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2016-11-02T13:39:57-07:00</updated>
+  <updated>2016-11-02T13:44:17-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -14,9 +14,9 @@
   
   <entry>
     <title>Brakeman 3.4.1 Released</title>
-    <link href="http://brakemanscanner.org/blog/2016/11/01/brakeman-3-dot-4-1-released/"/>
-    <updated>2016-11-01T14:07:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2016/11/01/brakeman-3-dot-4-1-released</id>
+    <link href="http://brakemanscanner.org/blog/2016/11/02/brakeman-3-dot-4-1-released/"/>
+    <updated>2016-11-02T13:07:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2016/11/02/brakeman-3-dot-4-1-released</id>
     <content type="html">&lt;ul&gt;
 &lt;li&gt;Configurable engines path (&lt;a href=&quot;https://github.com/jsyeo&quot;&gt;Jason Yeo&lt;/a&gt;)&lt;/li&gt;
 &lt;li&gt;Check CSRF setting in direct subclasses of &lt;code&gt;ActionController::Base&lt;/code&gt; (&lt;a href=&quot;https://github.com/jsyeo&quot;&gt;Jason Yeo&lt;/a&gt;)&lt;/li&gt;
