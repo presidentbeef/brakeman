@@ -19,8 +19,17 @@ if debug && debug.to_s.downcase == "true"
   command << " --debug --no-progress"
 end
 
+IncompatibleFilenameError = Class.new(StandardError)
+
 if engine_config["include_paths"]
-  command << " --only-files #{engine_config["include_paths"].compact.join(",").shellescape}"
+  paths = engine_config["include_paths"].compact.select do |path|
+    if path.include?(",")
+      raise IncompatibleFilenameError, "Can't analyze #{path.inspect} because it has a comma in its filename. Please remove this file or exclude it in your .codeclimate.yml"
+    else
+      path
+    end
+  end
+  command << " --only-files #{paths.join(",").shellescape}"
 end
 
 if system("test -w /dev/stdout")
