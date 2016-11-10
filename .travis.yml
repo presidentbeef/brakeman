@@ -1,4 +1,6 @@
-script: "bundle exec ruby test/test.rb"
+script:
+  - "bundle exec ruby test/test.rb"
+  - "bundle exec codeclimate-test-reporter"
 
 branches:
   only:
