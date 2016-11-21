@@ -103,7 +103,7 @@ To create and manage this file, use:
 
 # Warning information
 
-See [WARNING\_TYPES](WARNING_TYPES) for more information on the warnings reported by this tool.
+See [warning\_types](docs/warning_types) for more information on the warnings reported by this tool.
 
 # Warning context
 
