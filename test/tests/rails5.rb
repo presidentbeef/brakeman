@@ -410,4 +410,12 @@ class Rails5Tests < Minitest::Test
       :code => s(:call, nil, :link_to, s(:str, "Email!"), s(:dstr, "mailto:", s(:evstr, s(:call, s(:params), :[], s(:lit, :x))))),
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
   end
+
+  def test_mixed_in_csrf_protection
+    assert_no_warning :type => :controller,
+      :warning_type => "Cross-Site Request Forgery",
+      :line => 1,
+      :message => /^'protect_from_forgery'\ should\ be\ called\ /,
+      :relative_path => "app/controllers/mixed_controller.rb"
+  end
 end
