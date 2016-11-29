@@ -89,15 +89,15 @@ module Brakeman
     end
 
     def initializer_paths
-      @initializer_paths ||= find_paths("config/initializers")
+      @initializer_paths ||= prioritize_concerns(find_paths("config/initializers"))
     end
 
     def controller_paths
-      @controller_paths ||= find_paths("app/**/controllers")
+      @controller_paths ||= prioritize_concerns(find_paths("app/**/controllers"))
     end
 
     def model_paths
-      @model_paths ||= find_paths("app/**/models")
+      @model_paths ||= prioritize_concerns(find_paths("app/**/models"))
     end
 
     def template_paths
@@ -176,6 +176,10 @@ module Brakeman
       roots = ([@root] + abs).join(",")
       rel_engines = (rel + [""]).join("/,")
       @root_search_patrern = "{#{roots}}/{#{rel_engines}}"
+    end
+
+    def prioritize_concerns paths
+      paths.partition { |path| path.include? "concerns" }.flatten
     end
   end
 end
