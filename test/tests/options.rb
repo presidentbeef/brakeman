@@ -22,7 +22,8 @@ class BrakemanOptionsTest < Minitest::Test
     :install_rake_task      => "--rake",
     :show_version           => "-v",
     :show_help              => "-h",
-    :force_scan             => "--force-scan"
+    :force_scan             => "--force-scan",
+    :ensure_latest          => "--ensure-latest"
   }
 
   ALT_OPTION_INPUTS = {

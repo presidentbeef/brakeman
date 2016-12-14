@@ -9,6 +9,9 @@ module Brakeman
   #Exit code returned when no Rails application is detected
   No_App_Found_Exit_Code = 4
 
+  #Exit code returned when brakeman was outdated
+  Not_Latest_Version_Exit_Code = 5
+
   @debug = false
   @quiet = false
   @loaded_dependencies = []
@@ -321,6 +324,14 @@ module Brakeman
       notify "Output configuration to #{file}"
     else
       notify YAML.dump(options)
+    end
+  end
+
+  def self.ensure_latest
+    current = Brakeman::Version
+    latest = Gem.latest_version_for('brakeman').to_s
+    if current != latest
+      "Brakeman #{current} is not the latest version #{latest}"
     end
   end
 

@@ -141,6 +141,10 @@ module Brakeman::Options
           options[:engine_paths].merge paths
         end
 
+        opts.on "--ensure-latest", "Fail when brakeman is outdated" do
+          options[:ensure_latest] = true
+        end
+
         opts.on "-t", "--test Check1,Check2,etc", Array, "Only run the specified checks" do |checks|
           checks.each_with_index do |s, index|
             if s[0,5] != "Check"

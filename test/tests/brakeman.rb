@@ -341,6 +341,16 @@ class ConfigTests < Minitest::Test
     end
   end
 
+  def test_ensure_latest
+    Gem.stub :latest_version_for, Brakeman::Version do
+      refute Brakeman.ensure_latest
+    end
+
+    Gem.stub :latest_version_for, '0.1.2' do
+      assert_equal "Brakeman 3.4.1 is not the latest version 0.1.2", Brakeman.ensure_latest
+    end
+  end
+
   def test_dump_config_with_file
     test_file = "test.cfg"
     options = {:create_config => test_file, :test_option => "test"}
