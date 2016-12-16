@@ -15,7 +15,6 @@ class BrakemanOptionsTest < Minitest::Test
     :debug                  => "-d",
     :interactive_ignore     => "-I",
     :report_routes          => "-m",
-    :summary_only           => "--summary",
     :absolute_paths         => "--absolute-paths",
     :list_checks            => "-k",
     :list_optional_checks   => "--optional-checks",
@@ -318,6 +317,15 @@ class BrakemanOptionsTest < Minitest::Test
 
     options = setup_options_from_input("-C")
     assert options[:create_config]
+  end
+
+  def test_summary_options
+    options = setup_options_from_input("--summary")
+
+    assert_equal :summary_only, options[:summary_only]
+
+    options = setup_options_from_input("--no-summary")
+    assert_equal :no_summary, options[:summary_only]
   end
 
   private
