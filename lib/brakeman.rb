@@ -48,8 +48,7 @@ module Brakeman
   #  * :skip_libs - do not process lib/ directory (default: false)
   #  * :skip_checks - checks not to run (run all if not specified)
   #  * :absolute_paths - show absolute path of each file (default: false)
-  #  * :summary_only - only output summary section of report
-  #                    (does not apply to tabs format)
+  #  * :summary_only - only output summary section of report for plain/table (:summary_only, :no_summary, true)
   #
   #Alternatively, just supply a path as a string.
   def self.run options

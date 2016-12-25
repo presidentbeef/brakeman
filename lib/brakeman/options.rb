@@ -229,8 +229,12 @@ module Brakeman::Options
           options[:collapse_mass_assignment] = !separate
         end
 
-        opts.on "--summary", "Only output summary of warnings" do
-          options[:summary_only] = true
+        opts.on "--[no-]summary", "Only output summary of warnings" do |summary_only|
+          if summary_only
+            options[:summary_only] = :summary_only
+          else
+            options[:summary_only] = :no_summary
+          end
         end
 
         opts.on "--absolute-paths", "Output absolute file paths in reports" do

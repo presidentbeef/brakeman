@@ -7,13 +7,20 @@ class Brakeman::Report::Table < Brakeman::Report::Base
   end
 
   def generate_report
-    out = text_header <<
-    "\n\n+SUMMARY+\n\n" <<
-    truncate_table(generate_overview.to_s) << "\n\n" <<
-    truncate_table(generate_warning_overview.to_s) << "\n"
+    summary_option = tracker.options[:summary_only]
+    out = ""
+
+    unless summary_option == :no_summary
+      out << text_header <<
+        "\n\n+SUMMARY+\n\n" <<
+        truncate_table(generate_overview.to_s) << "\n\n" <<
+        truncate_table(generate_warning_overview.to_s) << "\n"
+    end
 
     #Return output early if only summarizing
-    return out if tracker.options[:summary_only]
+    if summary_option == :summary_only or summary_option == true
+      return out
+    end
 
     if tracker.options[:report_routes] or tracker.options[:debug]
       out << "\n+CONTROLLERS+\n" <<
