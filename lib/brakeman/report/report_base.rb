@@ -88,7 +88,7 @@ class Brakeman::Report::Base
     render_warnings generic_warnings,
                     :warning,
                     'security_warnings',
-                    ["Confidence", "Class", "Method", "Warning Type", "Message"],
+                    ["Confidence", "Class", "Method", "Warning Type", "Message", 'Fingerprint'],
                     'Class'
   end
 
@@ -97,7 +97,7 @@ class Brakeman::Report::Base
     render_warnings template_warnings,
                     :template,
                     'view_warnings',
-                    ['Confidence', 'Template', 'Warning Type', 'Message'],
+                    ['Confidence', 'Template', 'Warning Type', 'Message', 'Fingerprint'],
                     'Template'
 
   end
@@ -107,7 +107,7 @@ class Brakeman::Report::Base
     render_warnings model_warnings,
                     :model,
                     'model_warnings',
-                    ['Confidence', 'Model', 'Warning Type', 'Message'],
+                    ['Confidence', 'Model', 'Warning Type', 'Message', 'Fingerprint'],
                     'Model'
   end
 
@@ -116,7 +116,7 @@ class Brakeman::Report::Base
     render_warnings controller_warnings,
                     :controller,
                     'controller_warnings',
-                    ['Confidence', 'Controller', 'Warning Type', 'Message'],
+                    ['Confidence', 'Controller', 'Warning Type', 'Message', 'Fingerprint'],
                     'Controller'
   end
 
@@ -124,13 +124,14 @@ class Brakeman::Report::Base
     render_warnings ignored_warnings,
                     :ignored,
                     'ignored_warnings',
-                    ['Confidence', 'Warning Type', 'File', 'Message'],
+                    ['Confidence', 'Warning Type', 'File', 'Message', 'Fingerprint'],
                     'Warning Type'
   end
 
   def render_warnings warnings, type, template, cols, sort_col
     unless warnings.empty?
       rows = sort(convert_to_rows(warnings, type), sort_col)
+      return "" if @tracker.options[:ignore_file_only]
 
       values = rows.collect { |row| row.values_at(*cols) }
 
@@ -164,6 +165,7 @@ class Brakeman::Report::Base
   def convert_warning warning, original
     warning["Confidence"] = TEXT_CONFIDENCE[warning["Confidence"]]
     warning["Message"] = text_message original, warning["Message"]
+    return [] if warning["Message"].nil?
     warning
   end
 

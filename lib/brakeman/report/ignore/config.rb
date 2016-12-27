@@ -121,8 +121,13 @@ module Brakeman
         w
       end.sort_by { |w| w[:fingerprint] }
 
+      # For each white listed entry, we check if it's already in the ignored list, if not,
+      # we write them out.
+      @total_ignored ||= @already_ignored
+      warnings.reject! { |r| @ignored_fingerprints.include? r[:fingerprint] }
+      @total_ignored += warnings
       output = {
-        :ignored_warnings => warnings,
+        :ignored_warnings => @total_ignored,
         :updated => Time.now.to_s,
         :brakeman_version => Brakeman::Version
       }
@@ -130,11 +135,12 @@ module Brakeman
       File.open file, "w" do |f|
         f.puts JSON.pretty_generate(output)
       end
+
     end
 
     # Save old ignored warnings and newly ignored ones
-    def save_with_old
-      warnings = @ignored_warnings.dup
+    def save_with_old warning = nil, changed = false
+      warnings = warning || @ignored_warnings.dup
 
       # Only add ignored warnings not already ignored
       @already_ignored.each do |w|
@@ -145,7 +151,7 @@ module Brakeman
         end
       end
 
-      if @changed
+      if @changed or changed
         save_to_file warnings
       end
     end
