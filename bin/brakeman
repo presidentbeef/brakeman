@@ -57,6 +57,13 @@ if options[:quiet].nil?
 end
 
 begin
+  if options[:ensure_latest]
+    if error = Brakeman.ensure_latest
+      warn error
+      exit Brakeman::Not_Latest_Version_Exit_Code
+    end
+  end
+
   if options[:previous_results_json]
     require 'json'
     vulns = Brakeman.compare options.merge(:quiet => options[:quiet])
@@ -84,6 +91,6 @@ begin
     end
   end
 rescue Brakeman::NoApplication => e
-  $stderr.puts e.message
+  warn e.message
   exit Brakeman::No_App_Found_Exit_Code
 end
