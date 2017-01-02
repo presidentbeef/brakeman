@@ -25,7 +25,7 @@ class JSONOutputTests < Minitest::Test
   end
 
   def test_for_expected_warning_keys
-    expected = ["warning_type", "message", "file", "link", "code", "location",
+    expected = ["warning_type", "check_name", "message", "file", "link", "code", "location",
       "render_path", "user_input", "confidence", "line", "warning_code", "fingerprint"]
 
     @@json["warnings"].each do |warning|
