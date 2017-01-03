@@ -12,7 +12,7 @@ class Rails5Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 8,
+      :template => 9,
       :generic => 10
     }
   end
@@ -206,6 +206,19 @@ class Rails5Tests < Minitest::Test
       :confidence => 0,
       :relative_path => "app/views/layouts/users.html.erb",
       :code => s(:call, s(:call, s(:const, :User), :new), :name),
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_in_template_with_no_html_extension
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "dba79beeea8871929d0f5191b1df66822689d2e8cfffa4a58e45e07cb4c6ea43",
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/widget/no_html.haml",
+      :code => s(:call, s(:call, nil, :params), :[], s(:lit, :x)),
       :user_input => nil
   end
 
