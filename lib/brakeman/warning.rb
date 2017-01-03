@@ -238,6 +238,7 @@ class Brakeman::Warning
     { :warning_type => self.warning_type,
       :warning_code => @warning_code,
       :fingerprint => self.fingerprint,
+      :check_name => self.check.gsub(/^Brakeman::Check/, ''),
       :message => self.message,
       :file => self.file,
       :line => self.line,

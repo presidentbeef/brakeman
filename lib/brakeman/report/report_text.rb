@@ -132,6 +132,7 @@ class Brakeman::Report::Text < Brakeman::Report::Base
     out = [
       label('Confidence', confidence(w.confidence)),
       label('Category', w.warning_type.to_s),
+      label('Check', w.check.gsub(/^Brakeman::Check/, '')),
       label('Message', w.message)
     ]
 
