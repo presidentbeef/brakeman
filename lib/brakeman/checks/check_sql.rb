@@ -29,9 +29,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     end
 
     Brakeman.debug "Finding possible SQL calls on models"
-    calls = tracker.find_call :targets => active_record_models.keys,
-      :methods => @sql_targets,
-      :chained => true
+    calls = tracker.find_call :methods => @sql_targets,
+      :nested => true
 
     Brakeman.debug "Finding possible SQL calls with no target"
     calls.concat tracker.find_call(:target => nil, :methods => @sql_targets)
