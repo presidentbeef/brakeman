@@ -206,7 +206,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         user_input = dangerous_value
       end
 
-      if result[:call].target and not @expected_targets.include? result[:chain].first
+      if result[:call].target and result[:chain] and not @expected_targets.include? result[:chain].first
         confidence = case confidence
                      when CONFIDENCE[:high]
                        CONFIDENCE[:med]
