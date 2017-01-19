@@ -14,11 +14,15 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   @description = "Check for SQL injection"
 
   def run_check
-    narrow_targets = [:exists?]
+    narrow_targets = [:exists?, :select]
+
+    if version_between?("2.0.0", "4.0.99")
+      narrow_targets << :find
+    end
 
     @sql_targets = [:all, :average, :calculate, :count, :count_by_sql, :delete_all, :destroy_all,
-      :find, :find_by_sql, :first, :last, :maximum, :minimum, :pluck, :sum, :update_all]
-    @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :select, :where] if tracker.options[:rails3]
+                    :find_by_sql, :first, :last, :maximum, :minimum, :pluck, :sum, :update_all]
+    @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :where] if tracker.options[:rails3]
     @sql_targets << :find_by << :find_by! if tracker.options[:rails4]
 
     @connection_calls = [:delete, :execute, :insert, :select_all, :select_one,
