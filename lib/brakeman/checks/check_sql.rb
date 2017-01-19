@@ -16,10 +16,6 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def run_check
     narrow_targets = [:exists?, :select]
 
-    if version_between?("2.0.0", "4.0.99")
-      narrow_targets << :find
-    end
-
     @sql_targets = [:average, :calculate, :count, :count_by_sql, :delete_all, :destroy_all,
                     :find_by_sql, :maximum, :minimum, :pluck, :sum, :update_all]
     @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :where] if tracker.options[:rails3]
@@ -27,6 +23,10 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
     if version_between?("2.0.0", "3.9.9")
       @sql_targets << :first << :last << :all
+    end
+
+    if version_between?("2.0.0", "4.0.99")
+      @sql_targets << :find
     end
 
     @connection_calls = [:delete, :execute, :insert, :select_all, :select_one,
