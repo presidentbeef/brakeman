@@ -20,10 +20,14 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       narrow_targets << :find
     end
 
-    @sql_targets = [:all, :average, :calculate, :count, :count_by_sql, :delete_all, :destroy_all,
-                    :find_by_sql, :first, :last, :maximum, :minimum, :pluck, :sum, :update_all]
+    @sql_targets = [:average, :calculate, :count, :count_by_sql, :delete_all, :destroy_all,
+                    :find_by_sql, :maximum, :minimum, :pluck, :sum, :update_all]
     @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :where] if tracker.options[:rails3]
     @sql_targets << :find_by << :find_by! if tracker.options[:rails4]
+
+    if version_between?("2.0.0", "3.9.9")
+      @sql_targets << :first << :last << :all
+    end
 
     @connection_calls = [:delete, :execute, :insert, :select_all, :select_one,
       :select_rows, :select_value, :select_values]
