@@ -14,7 +14,7 @@ class Rails3Tests < Minitest::Test
       :controller => 1,
       :model => 9,
       :template => 42,
-      :generic => 75
+      :generic => 76
     }
 
     if RUBY_PLATFORM == 'java'
@@ -375,12 +375,16 @@ class Rails3Tests < Minitest::Test
   end
 
   def test_sql_injection_non_active_record_model
-    assert_no_warning :type => :warning,
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "f804d0d9f3f0ecddf8cec14aa7bdc0020db864252cd2e7d7e3a7081c45363a7d",
       :warning_type => "SQL Injection",
       :line => 30,
       :message => /^Possible\ SQL\ injection/,
-      :confidence => 0,
-      :file => /other_controller\.rb/
+      :confidence => 1,
+      :relative_path => "app/controllers/other_controller.rb",
+      :code => s(:call, s(:const, :Noticia), :where, s(:call, s(:params), :[], s(:lit, :bad_stuff))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :bad_stuff))
   end
 
   def test_csrf_protection
