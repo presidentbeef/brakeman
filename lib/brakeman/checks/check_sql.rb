@@ -451,7 +451,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       unsafe_sql? exp.then_clause or unsafe_sql? exp.else_clause
     when :call
       unless IGNORE_METHODS_IN_SQL.include? exp.method
-        if has_immediate_user_input? exp or has_immediate_model? exp
+        if has_immediate_user_input? exp
           exp
         elsif exp.method == :to_s
           find_dangerous_value exp.target, ignore_hash
@@ -468,7 +468,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     when :block, :rlist
       unsafe_sql? exp.last
     else
-      if has_immediate_user_input? exp or has_immediate_model? exp
+      if has_immediate_user_input? exp
         exp
       else
         nil
