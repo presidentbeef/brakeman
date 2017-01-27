@@ -12,6 +12,9 @@ module Brakeman
   #Exit code returned when brakeman was outdated
   Not_Latest_Version_Exit_Code = 5
 
+  #Exit code returned when user requests non-existent checks
+  Missing_Checks_Exit_Code = 6
+
   @debug = false
   @quiet = false
   @loaded_dependencies = []
@@ -351,6 +354,8 @@ module Brakeman
     scanner = Scanner.new options
     tracker = scanner.tracker
 
+    check_for_missing_checks options[:run_checks], options[:skip_checks]
+
     notify "Processing application in #{tracker.app_path}"
     scanner.process
 
@@ -516,8 +521,17 @@ module Brakeman
     end if options[:additional_checks_path]
   end
 
+  def self.check_for_missing_checks included_checks, excluded_checks
+    missing = Brakeman::Checks.missing_checks(included_checks || Set.new, excluded_checks || Set.new)
+
+    unless missing.empty?
+      raise MissingChecksError, "Could not find specified check#{missing.length > 1 ? 's' : ''}: #{missing.to_a.join(', ')}"
+    end
+  end
+
   class DependencyError < RuntimeError; end
   class RakeInstallError < RuntimeError; end
   class NoBrakemanError < RuntimeError; end
   class NoApplication < RuntimeError; end
+  class MissingChecksError < RuntimeError; end
 end
