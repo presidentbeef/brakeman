@@ -93,4 +93,7 @@ begin
 rescue Brakeman::NoApplication => e
   warn e.message
   exit Brakeman::No_App_Found_Exit_Code
+rescue Brakeman::MissingChecksError => e
+  warn e.message
+  exit Brakeman::Missing_Checks_Exit_Code
 end
