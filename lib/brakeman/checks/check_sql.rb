@@ -21,11 +21,11 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :where] if tracker.options[:rails3]
     @sql_targets << :find_by << :find_by! if tracker.options[:rails4]
 
-    if version_between?("2.0.0", "3.9.9")
+    if version_between?("2.0.0", "3.9.9") or tracker.config.rails_version.nil?
       @sql_targets << :first << :last << :all
     end
 
-    if version_between?("2.0.0", "4.0.99")
+    if version_between?("2.0.0", "4.0.99") or tracker.config.rails_version.nil?
       @sql_targets << :find
     end
 
