@@ -1,3 +1,18 @@
+# 3.5.0
+
+* Allow `-t None`
+* Fail on invalid checks specified by `-x` or `-t`
+* Avoid warning about all, first, or last after Rails 4.0
+* Avoid warning about models in SQLi
+* Lower confidence of SQLi when maybe not on models
+* Warn about SQLi even potentially on non-models
+* Report check name in JSON and plain reports
+* Treat templates without `.html` as HTML anyway
+* Add `--ensure-latest` option (tamgrosser / Michael Grosser)
+* Add `--no-summary` to hide summaries in HTML/text reports
+* Handle `included` block in concerns
+* Process concerns before controllers
+
 # 3.4.1
 
 * Show action help at start of interactive ignore
