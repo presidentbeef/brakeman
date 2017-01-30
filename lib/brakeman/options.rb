@@ -43,6 +43,10 @@ module Brakeman::Options
           options[:exit_on_warn] = exit_on_warn
         end
 
+        opts.on "--ensure-latest", "Fail when Brakeman is outdated" do
+          options[:ensure_latest] = true
+        end
+
         opts.on "-3", "--rails3", "Force Rails 3 mode" do
           options[:rails3] = true
         end
@@ -139,10 +143,6 @@ module Brakeman::Options
         opts.on "--add-engines-path path1,path2,etc", Array, "Include these engines in the scan" do |paths|
           options[:engine_paths] ||= Set.new
           options[:engine_paths].merge paths
-        end
-
-        opts.on "--ensure-latest", "Fail when brakeman is outdated" do
-          options[:ensure_latest] = true
         end
 
         opts.on "-t", "--test Check1,Check2,etc", Array, "Only run the specified checks" do |checks|
@@ -257,7 +257,7 @@ module Brakeman::Options
           options[:min_confidence] =  3 - level.to_i
         end
 
-        opts.on "--compare FILE", "Compare the results of a previous brakeman scan (only JSON is supported)" do |file|
+        opts.on "--compare FILE", "Compare the results of a previous Brakeman scan (only JSON is supported)" do |file|
           options[:previous_results_json] = File.expand_path(file)
         end
 
