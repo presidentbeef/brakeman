@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2017-01-31T23:41:46-08:00</updated>
+  <updated>2017-01-31T23:44:29-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -71,7 +71,7 @@
 
 &lt;h3&gt;Fail on Invalid Checks&lt;/h3&gt;
 
-&lt;p&gt;When use &lt;code&gt;-t&lt;/code&gt; or -x&lt;code&gt;to control which checks are run, Brakeman will now fail if the options supplied do not match existing check names.&lt;/code&gt;-t None` may be used to avoid running any checks.&lt;/p&gt;
+&lt;p&gt;When use &lt;code&gt;-t&lt;/code&gt; or &lt;code&gt;-x&lt;/code&gt; to control which checks are run, Brakeman will now fail if the options supplied do not match existing check names. &lt;code&gt;-t None&lt;/code&gt; may be used to avoid running any checks.&lt;/p&gt;
 
 &lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/986&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
