@@ -347,7 +347,7 @@ class ConfigTests < Minitest::Test
     end
 
     Gem.stub :latest_version_for, '0.1.2' do
-      assert_equal "Brakeman 3.4.1 is not the latest version 0.1.2", Brakeman.ensure_latest
+      assert_equal "Brakeman #{Brakeman::Version} is not the latest version 0.1.2", Brakeman.ensure_latest
     end
   end
 
