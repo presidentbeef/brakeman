@@ -4,13 +4,101 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2017-01-29T18:46:30-08:00</updated>
+  <updated>2017-01-31T23:41:46-08:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 3.5.0 Released</title>
+    <link href="http://brakemanscanner.org/blog/2017/01/31/brakeman-3-dot-5-0-released/"/>
+    <updated>2017-01-31T23:30:00-08:00</updated>
+    <id>http://brakemanscanner.org/blog/2017/01/31/brakeman-3-dot-5-0-released</id>
+    <content type="html">&lt;p&gt;&lt;em&gt;Changes since 3.4.1&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Warn about SQL injection even if target is not known ActiveRecord model&lt;/li&gt;
+&lt;li&gt;Avoid warning about models as SQL injection (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/655&quot;&gt;#655&lt;/a&gt;, &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/680&quot;&gt;#680&lt;/a&gt;, &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/833&quot;&gt;#833&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Avoid warning about SQLi in &lt;code&gt;all&lt;/code&gt;, &lt;code&gt;first&lt;/code&gt;, or &lt;code&gt;last&lt;/code&gt; after Rails 4.0&lt;/li&gt;
+&lt;li&gt;Treat templates without &lt;code&gt;.html&lt;/code&gt; as HTML anyway (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/790&quot;&gt;#790&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Report check name in JSON and plain reports (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/971&quot;&gt;#971&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add &lt;code&gt;--ensure-latest&lt;/code&gt; option (&lt;a href=&quot;https://github.com/tamgrosser&quot;&gt;tamgrosser&lt;/a&gt; / &lt;a href=&quot;https://github.com/grosser&quot;&gt;Michael Grosser&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add &lt;code&gt;--no-summary&lt;/code&gt; to hide summaries in HTML/text reports (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/963&quot;&gt;#963&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Fail on invalid checks specified by &lt;code&gt;-x&lt;/code&gt; or &lt;code&gt;-t&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/970&quot;&gt;#970&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Handle &lt;code&gt;included&lt;/code&gt; block in concerns (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/958&quot;&gt;#958&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Updated RubyParser/Ruby2Ruby dependencies&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;SQL Injection Improvements&lt;/h3&gt;
+
+&lt;p&gt;This release includes several changes to the SQL Injection check.&lt;/p&gt;
+
+&lt;p&gt;First, Brakeman will no longer restrict SQL injection warnings to calls on known ActiveRecord models. While this may lead to a few false positives, there were too many reports of obvious SQL injection being missed. This reverses a decision made previously. Warnings that may involve non-models are given a lower confidence.&lt;/p&gt;
+
+&lt;p&gt;Next, SQL that includes calls on model targets will no longer generate warnings. There were too many false positives and no known vulnerabilities flagged by this.&lt;/p&gt;
+
+&lt;p&gt;Finally, Brakeman will no longer check calls to &lt;code&gt;all&lt;/code&gt;, &lt;code&gt;first&lt;/code&gt;, and &lt;code&gt;last&lt;/code&gt; as they changed in Rails 4.1.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/985&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Extensionless Templates&lt;/h3&gt;
+
+&lt;p&gt;Templates which do not specify any extension (e.g. just &lt;code&gt;.erb&lt;/code&gt; instead of &lt;code&gt;.html.erb&lt;/code&gt;) will still be treated as HTML instead of being ignored.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/980&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Check Name in Reports&lt;/h3&gt;
+
+&lt;p&gt;The plain and JSON reports now include the name of the check that generated the warning.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/981&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Option to Enforce Latest Brakeman&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code&gt;--ensure-latest&lt;/code&gt; option has been added. If there is a newer version of Brakeman available, this option will cause Brakeman to exit with a non-zero exit code.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/974&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Option to Hide Summary&lt;/h3&gt;
+
+&lt;p&gt;When using &lt;code&gt;--no-summary&lt;/code&gt; and either the plain or &quot;table&quot; output, Brakeman will only report warnings, no metadata. Probably most useful in combination with &lt;code&gt;--quiet&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/976&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Fail on Invalid Checks&lt;/h3&gt;
+
+&lt;p&gt;When use &lt;code&gt;-t&lt;/code&gt; or -x&lt;code&gt;to control which checks are run, Brakeman will now fail if the options supplied do not match existing check names.&lt;/code&gt;-t None` may be used to avoid running any checks.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/986&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Handle Included Concerns&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will now handle the &lt;code&gt;included&lt;/code&gt; block in Concerns. Additionally, to support this, Concerns are processed prior to other classes.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/966&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;49fd8b3e6c1f348304bdbfc3b5d4cfbd465a5b5d4feec8337bbe3df7836787be  brakeman-3.5.0.gem
+2ef50a61ca4aa1cff1f28dfe6308ea53157d996975519f5ae5c9266bf5772fb0  brakeman-min-3.5.0.gem
+766c9da778e3be36ca709e637276f090514dbc0ddde5e261a1baff6da351480e  brakeman-lib-3.5.0.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release.&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hanging out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 3.4.1 Released</title>
@@ -1692,73 +1780,6 @@ end
 &lt;pre&gt;&lt;code&gt;87413b544b5eae0cac9f037e2b62b1fe3f0fee5e  brakeman-3.0.2.gem
 cfcf3080a992ca173c64dd98fe239e8bd9bb0eaa  brakeman-min-3.0.2.gem
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 3.0.1 Released</title>
-    <link href="http://brakemanscanner.org/blog/2015/01/22/brakeman-3-dot-0-1-released/"/>
-    <updated>2015-01-22T18:38:00-08:00</updated>
-    <id>http://brakemanscanner.org/blog/2015/01/22/brakeman-3-dot-0-1-released</id>
-    <content type="html">&lt;p&gt;This is a small release, but may change some fingerprints of warnings in libraries. Also, the Slim dependency has been removed due to conflicts. See below for details.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Remove Slim dependency (&lt;a href=&quot;https://github.com/cwest&quot;&gt;Casey West&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Properly process libraries (&lt;a href=&quot;https://github.com/ptoomey3&quot;&gt;Patrick Toomey&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Add &lt;code&gt;--add-libs-path&lt;/code&gt; for additional libraries (&lt;a href=&quot;https://github.com/ptoomey3&quot;&gt;Patrick Toomey&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Allow for controllers/models/templates in directories under &lt;code&gt;app/&lt;/code&gt; (&lt;a href=&quot;https://github.com/nealharris&quot;&gt;Neal Harris&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Avoid &lt;code&gt;protect_from_forgery&lt;/code&gt; warning unless &lt;code&gt;ApplicationController&lt;/code&gt; inherits from &lt;code&gt;ActionController::Base&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/573&quot;&gt;#573&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Properly format command interpolation (again)&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;Slim Gem Dependency Removed&lt;/h3&gt;
-
-&lt;p&gt;Since &lt;a href=&quot;https://github.com/slim-template/slim-rails/releases/tag/3.0.1&quot;&gt;Rails 4.2 requires Slim 3.0.1&lt;/a&gt; and &lt;a href=&quot;https://github.com/slim-template/slim/blob/bb7ca78c1ea9629d8b57a06fcb99c938c9d7640e/CHANGES#L8&quot;&gt;Slim 3.0 dropped support for Ruby 1.8.7&lt;/a&gt;, there is no way to satisfy dependencies for Slim, Rails 4.2, and retain support for Ruby 1.8.7 when Brakeman is added as a dependency in a &lt;code&gt;Gemfile&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;The only acceptable solution is to not include Slim as a dependency at all and let users sort it out for themselves. Sorry for the unfortunate situation, but there is no way to add Brakeman to a &lt;code&gt;Gemfile&lt;/code&gt; and avoid Bundler attempting to resolve Brakeman's dependencies against the application's dependencies, despite there being no relation.&lt;/p&gt;
-
-&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/cwest&quot;&gt;Casey West&lt;/a&gt; for working through solutions for this issue.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/602&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Library Processing&lt;/h3&gt;
-
-&lt;p&gt;Libraries were added to the call index (which meant they were scanned during checks) in the 3.0.0 release, but there were still not being processed like most other code. This led to some checks not finding issues they should have. &lt;a href=&quot;https://github.com/ptoomey3&quot;&gt;Patrick Toomey&lt;/a&gt; pointed this out and contributed a fix.&lt;/p&gt;
-
-&lt;p&gt;This change may affect existing warning fingerprints for warnings in libraries. Apologies for the inconvenience.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/605&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Allow Additional Library Paths&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/ptoomey3&quot;&gt;Patrick Toomey&lt;/a&gt; also added a new option &lt;code&gt;--add-libs-path&lt;/code&gt; to treat more paths as if they were in &lt;code&gt;lib/&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/606&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Scan Application Subdirectories&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/nealharris&quot;&gt;Neal Harris&lt;/a&gt; contributed a change to support applications with multiple applications under &lt;code&gt;app/&lt;/code&gt;, such as &lt;code&gt;app/cool_team/controllers/&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/607&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Avoid CSRF Warning for APIs&lt;/h3&gt;
-
-&lt;p&gt;Brakeman will no longer warn about missing &lt;code&gt;protect_from_forgery&lt;/code&gt; if &lt;code&gt;ApplicationController&lt;/code&gt; does not inherit from &lt;code&gt;ActionController::Base&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/573&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Command Interpolation Format Fix&lt;/h3&gt;
-
-&lt;p&gt;Previous release had an incomplete fix for this. There should be no impact to warning fingerprints.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/608&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
 &lt;h3&gt;Reporting Issues&lt;/h3&gt;
 
