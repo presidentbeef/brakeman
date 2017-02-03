@@ -13,7 +13,7 @@ class Rails5Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 9,
-      :generic => 10
+      :generic => 11
     }
   end
 
@@ -297,6 +297,19 @@ class Rails5Tests < Minitest::Test
       :relative_path => "app/models/user.rb",
       :code => s(:call, s(:const, :User), :where, s(:call, s(:const, :User), :access_condition, s(:lvar, :user))),
       :user_input => s(:call, s(:const, :User), :access_condition, s(:lvar, :user))
+  end
+
+  def test_targetless_sql_injection_outside_of_AR_model
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "fe0098fc5ab1051854573b487855f348bd9320c8eb5ae55302b4649d0147d7dd",
+      :warning_type => "SQL Injection",
+      :line => 3,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "lib/a_lib.rb",
+      :code => s(:call, nil, :joins, s(:dstr, "INNER JOIN things ON id = ", s(:evstr, s(:call, s(:params), :[], s(:lit, :id))))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :id))
   end
 
   def test_cross_site_scripting_CVE_2015_7578
