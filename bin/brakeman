@@ -90,6 +90,11 @@ begin
       exit Brakeman::Warnings_Found_Exit_Code
     end
   end
+
+  #Return error code if --exit-on-error is used and errors were found
+  if tracker.options[:exit_on_error] and tracker.errors.any?
+    exit Brakeman::Errors_Found_Exit_Code
+  end
 rescue Brakeman::NoApplication => e
   warn e.message
   exit Brakeman::No_App_Found_Exit_Code
