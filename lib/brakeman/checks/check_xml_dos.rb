@@ -17,12 +17,6 @@ class Brakeman::CheckXMLDoS < Brakeman::BaseCheck
                     "4.2.2"
                   when version_between?("4.0.0", "4.0.99")
                     "4.2.2"
-                  when (version.nil? and tracker.options[:rails3])
-                    version = "3.x"
-                    "3.2.22"
-                  when (version.nil? and tracker.options[:rails4])
-                    version = "4.x"
-                    "4.2.2"
                   else
                     return
                   end
