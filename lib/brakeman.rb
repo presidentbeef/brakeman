@@ -15,6 +15,10 @@ module Brakeman
   #Exit code returned when user requests non-existent checks
   Missing_Checks_Exit_Code = 6
 
+  #Exit code returned when errors were found and the --exit-on-error
+  #option is set
+  Errors_Found_Exit_Code = 7
+
   @debug = false
   @quiet = false
   @loaded_dependencies = []

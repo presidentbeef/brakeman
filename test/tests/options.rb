@@ -3,6 +3,7 @@ require 'brakeman/options'
 class BrakemanOptionsTest < Minitest::Test
   EASY_OPTION_INPUTS = {
     :exit_on_warn           => "-z",
+    :exit_on_error          => "--exit-on-error",
     :rails3                 => "-3",
     :run_all_checks         => "-A",
     :assume_all_routes      => "-a",
