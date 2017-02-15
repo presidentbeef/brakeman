@@ -122,6 +122,20 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
+  def test_call_array_append
+    assert_output <<-INPUT, <<-OUTPUT
+      config.x += [1]
+      config.x << 2
+      config.x << 3
+      config.x << 4
+    INPUT
+      config.x += [1]
+      config.x << 2
+      config.x << 3
+      config.x << 4
+    OUTPUT
+  end
+
   def test_array_new_append
     assert_alias '[1, 2, 3]', <<-RUBY
       x = Array.new

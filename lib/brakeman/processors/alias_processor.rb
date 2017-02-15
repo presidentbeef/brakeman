@@ -847,7 +847,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   #Finds the inner most call target which is not the target of a call to <<
   def find_push_target exp
-    if call? exp and exp.method == :<<
+    if call? exp
       find_push_target exp.target
     else
       exp
