@@ -1,5 +1,5 @@
 script:
-  - "bundle exec ruby test/test.rb"
+  - "bundle exec rake"
   - "bundle exec codeclimate-test-reporter"
 
 branches:

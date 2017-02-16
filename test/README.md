@@ -1,9 +1,9 @@
 ## Testing
 
-Run `rake` or if you want to avoid bundler `cd test && ruby test.rb`.
+Run `bundle exec rake`
 
 This runs Brakeman against full apps in the `apps` directory and checks the results against what is expected.
 
 ## Test Generation
 
-Run `cd test && ruby to_test.rb apps/some_app > tests/test_some_app.rb` to generate a test suite with tests for each warning reported.
+Run `cd test && ruby to_test.rb apps/some_app > tests/some_app_test.rb` to generate a test suite with tests for each warning reported.
