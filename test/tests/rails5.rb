@@ -312,6 +312,19 @@ class Rails5Tests < Minitest::Test
       :user_input => s(:call, s(:params), :[], s(:lit, :id))
   end
 
+  def test_sql_injection_in_interp_branch
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "13c2dbdbce47c04755e5019dba4fc03729167c71a63e1d4bab81d672ff3975a0",
+      :warning_type => "SQL Injection",
+      :line => 93,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:call, s(:const, :User), :connection), :execute, s(:dstr, "SELECT * FROM foo WHERE ", s(:evstr, s(:if, s(:true), s(:dstr, "bar = ", s(:evstr, s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :quote, s(:true)))), nil)))),
+      :user_input => s(:if, s(:true), s(:dstr, "bar = ", s(:evstr, s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :quote, s(:true)))), nil)
+  end
+
   def test_cross_site_scripting_CVE_2015_7578
     assert_warning :type => :warning,
       :warning_code => 96,

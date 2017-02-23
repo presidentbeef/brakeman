@@ -594,6 +594,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       safe_value? exp.last
     when :or
       safe_value? exp.lhs and safe_value? exp.rhs
+    when :dstr
+      not unsafe_string_interp? exp
     else
       false
     end
