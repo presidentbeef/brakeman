@@ -852,4 +852,106 @@ class AliasProcessorTests < Minitest::Test
     params[:x].presence
     OUTPUT
   end
+
+  def test_case_basic
+    assert_output <<-INPUT, <<-OUTPUT
+      z = 3
+
+      case x
+      when 1
+        y = 1
+      when 2
+        y = 2
+      else
+        z = z + 1
+        y = z
+      end
+
+      p y
+    INPUT
+      z = 3
+
+      case x
+      when 1
+        y = 1
+      when 2
+        y = 2
+      else
+        z = 4
+        y = 4
+      end
+
+      p(((1 or 2) or 4))
+    OUTPUT
+  end
+
+  def test_case_assignment
+    assert_output <<-INPUT, <<-OUTPUT
+      y = case x
+      when 1
+        1
+      when 2
+        2
+      else
+        3
+      end
+
+      p y
+    INPUT
+      y = case x
+      when 1
+        1
+      when 2
+        2
+      else
+        3
+      end
+
+      p(((1 or 2) or 3))
+    OUTPUT
+  end
+
+  def test_case_value
+    assert_output <<-INPUT, <<-OUTPUT
+      y = case x
+      when 1
+        x + 1
+      when 2
+        x + 2
+      else
+        x + 3
+      end
+
+      p y
+    INPUT
+      y = case x
+      when 1
+        2
+      when 2
+        4
+      else
+        x + 3
+      end
+
+      p(((2 or 4) or (x + 3)))
+    OUTPUT
+  end
+
+  def test_case_value_params
+    assert_output <<-INPUT, <<-OUTPUT
+      case params[:x]
+      when 1
+        y(params[:x])
+      when 2
+        z(params[:x])
+      end
+    INPUT
+      case params[:x]
+      when 1
+        y(1)
+      when 2
+        z(2)
+      end
+    OUTPUT
+  end
 end

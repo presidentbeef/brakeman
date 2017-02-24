@@ -14,6 +14,61 @@ class WidgetController < ApplicationController
   def render_inline
     render :inline => "<%= xss.html_safe %>", :content_type => "text/html", :locals => { :xss => params[:xss] }
   end
+
+  def sql_with_case
+    group_by_col =
+      case params[:group_by]
+      when 'brand'            then 'brand'
+      when 'year'             then 'YEAR(date_utc)'
+      when 'month'            then "CONCAT(YEAR(date_utc), '-', LPAD(MONTH(date_utc), 2, '0'))"
+      when 'week'             then "CONCAT(YEAR(date_utc), '-', LPAD(WEEK(date_utc, 1), 2, '0'))"
+      when 'day'              then "DATE(date_utc)"
+      else raise ArgumentError, 'Invalid group by value'
+      end
+
+    query = "SELECT id, #{group_by_col} AS group_by_col, COUNT(*) FROM records"
+
+    # No warnings
+    rows = User.connection.select_rows(query)
+  end
+
+  def sql_with_another_case
+    subset_clause = case script_subset
+                    when :greasyfork
+                      "AND `sensitive` = false"
+                    when :sleazyfork
+                      "AND `sensitive` = true"
+                    else
+                      ""
+                    end
+    sql =<<-EOF
+  SELECT
+    text, SUM(daily_installs) install_count, COUNT(s.id) script_count
+  FROM script_applies_tos
+  JOIN scripts s ON script_id = s.id
+  WHERE
+    domain
+    AND script_type_id = 1
+    AND script_delete_type_id IS NULL
+    AND !tld_extra
+    #{subset_clause}
+  GROUP BY text
+  ORDER BY text
+    EOF
+
+    # No warnings
+    by_sites = User.connection.select_rows(sql)
+  end
+
+  def render_with_case
+    # No warnings
+    case params[:switch_case_on_this]
+    when "one"
+      render partial: params[:switch_case_on_this], locals: { x: 1 }
+    when "two"
+      render partial: params[:switch_case_on_this], locals: { x: 2 }
+    end
+  end
 end
 
 IDENTIFIER_NAMESPACE = 'apis'
