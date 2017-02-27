@@ -10,7 +10,7 @@ require 'brakeman/version'
 begin
   options, parser = Brakeman::Options.parse! ARGV
 rescue OptionParser::ParseError => e
-  $stderr.puts e.message.capitalize
+  $stderr.puts e.message
   $stderr.puts "Please see `brakeman --help` for valid options"
   exit(-1)
 end
