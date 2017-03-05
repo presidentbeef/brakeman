@@ -102,7 +102,7 @@
 * Update ruby_parser dependency to 3.8.1
 * Remove `fastercsv` dependency
 * Fix finding calls with `targets: nil`
-* Remove `multi_json` dependecy
+* Remove `multi_json` dependency
 * Handle CoffeeScript in HAML
 * Avoid render warnings about params[:action]/params[:controller]
 * Index calls in class bodies but outside methods
@@ -118,7 +118,7 @@
 * Add check for mime-type denial of service (CVE-2016-0751)
 * Add check for basic auth timing attack (CVE-2015-7576)
 * Add initial Rails 5 support
-* Check for implict integer comparison in dynamic finders
+* Check for implicit integer comparison in dynamic finders
 * Support directories better in --only-files and --skip-files (Patrick Toomey)
 * Avoid warning about `permit` in SQL
 * Handle guards using `detect`
@@ -235,7 +235,7 @@
 * Remove formatting newlines in HAML template output
 * Ignore case value in XSS checks
 * Fix CSV output when there are no warnings
-* Handle processing of explictly shadowed block arguments
+* Handle processing of explicitly shadowed block arguments
 
 # 3.0.1
 
@@ -285,7 +285,7 @@
 * Add `-4` option to force Rails 4 mode
 * Check entire call for `send`
 * Check for .gitignore of secrets in subdirectories
-* Fix block statment endings in Erubis
+* Fix block statement endings in Erubis
 * Fix undefined variable in controller processing error (Jason Barnabe) 
 
 # 2.6.1
