@@ -14,7 +14,7 @@ The safe way to do this query is to use a parameterized query:
 
     User.first(:conditions => ["username = ?", params[:username]])
 
-Brakeman also understands the new Rails 3.x way of doing things (and local variables and concatentation):
+Brakeman also understands the new Rails 3.x way of doing things (and local variables and concatenation):
 
     username = params[:user][:name].downcase
     password = params[:user][:password]
