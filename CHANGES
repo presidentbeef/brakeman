@@ -1,3 +1,13 @@
+# Unreleased
+
+* Branch inside of `case` expressions
+* Print command line option errors without modification
+* Fix issue with nested interpolation inside SQL strings
+* Ignore GraphQL tags inside ERB templates
+* Add `--exit-on-error` (Michael Grosser)
+* Only report CVE-2015-3227 when exact version is known
+* Check targetless SQL calls outside of known models
+
 # 3.5.0
 
 * Allow `-t None`
