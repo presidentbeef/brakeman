@@ -1,5 +1,6 @@
-# Unreleased
+# 3.6.0 
 
+* Avoid recursive Concerns
 * Branch inside of `case` expressions
 * Print command line option errors without modification
 * Fix issue with nested interpolation inside SQL strings
