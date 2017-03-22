@@ -16,6 +16,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     @current_module = nil
     @visibility = :public
     @file_name = nil
+    @concerns = Set.new
   end
 
   #Use this method to process a Controller
@@ -65,7 +66,8 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     return unless @current_class
 
     if mod = @tracker.find_class(concern_name)
-      if mod.options[:included]
+      if mod.options[:included] and not @concerns.include? concern_name
+        @concerns << concern_name
         process mod.options[:included].deep_clone
       end
     end
