@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2017-03-23T00:47:23-07:00</updated>
+  <updated>2017-03-23T00:56:34-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -96,7 +96,7 @@
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hanging out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;
 
 &lt;p&gt;If you find Brakeman valuable and want to support its development, check out &lt;a href=&quot;https://brakemanpro.com/&quot;&gt;Brakeman Pro&lt;/a&gt;.&lt;/p&gt;
 </content>
