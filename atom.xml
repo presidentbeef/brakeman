@@ -4,13 +4,103 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2017-01-31T23:44:29-08:00</updated>
+  <updated>2017-03-23T00:47:23-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 3.6.0 Released</title>
+    <link href="http://brakemanscanner.org/blog/2017/03/22/brakeman-3-dot-6-0-released/"/>
+    <updated>2017-03-22T10:30:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2017/03/22/brakeman-3-dot-6-0-released</id>
+    <content type="html">&lt;p&gt;&lt;em&gt;Changes since 3.5.0:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Branch inside of &lt;code&gt;case&lt;/code&gt; expressions (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/944&quot;&gt;#944&lt;/a&gt;, &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/972&quot;&gt;#972&lt;/a&gt;, &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1002&quot;&gt;#1002&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Check targetless SQL calls outside of known models&lt;/li&gt;
+&lt;li&gt;Fix issue with nested interpolation inside SQL strings (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1008&quot;&gt;#1008&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add &lt;code&gt;--exit-on-error&lt;/code&gt; (&lt;a href=&quot;https://github.com/grosser&quot;&gt;Michael Grosser&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Only report CVE-2015-3227 when exact version is known (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/993&quot;&gt;#933&lt;/a&gt;, &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/995&quot;&gt;#995&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Print command line option errors without modification (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1010&quot;&gt;#1010&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Ignore GraphQL tags inside ERB templates&lt;/li&gt;
+&lt;li&gt;Avoid recursive &lt;code&gt;Concern&lt;/code&gt;s&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Case Expressions&lt;/h3&gt;
+
+&lt;p&gt;At long last, Brakeman will now treat &lt;code&gt;case&lt;/code&gt; expressions similarly to &lt;code&gt;if&lt;/code&gt;s. This includes tracking variable assignments inside of &lt;code&gt;when&lt;/code&gt; clauses and better handling &lt;code&gt;case&lt;/code&gt; expressions as values.&lt;/p&gt;
+
+&lt;p&gt;Note that at this time Brakeman does not handle nested &lt;code&gt;case&lt;/code&gt; expressions.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1018&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Targetless SQL Calls&lt;/h3&gt;
+
+&lt;p&gt;Brakeman 3.5.0 broadened the check for SQL injection to calls that &lt;em&gt;may&lt;/em&gt; not be on models (because models are often defined outside the application). However, calls with no target were still checking to see if they were called inside of model classes. This led to missing some SQL injection vulnerabilities.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/994&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Nested SQL Interpolation&lt;/h3&gt;
+
+&lt;p&gt;Some cases of nested string interpolation in SQL calls were generating false positives. This should be fixed now.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1009&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Exit on Errors&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/grosser&quot;&gt;Michael Grosser&lt;/a&gt; added the &lt;code&gt;--exit-on-error&lt;/code&gt; option to cause Brakeman to exit with a non-zero exit code if any errors are encountered. Normally Brakeman attempts to always generate a report regardless of any errors during the scan.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/991&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Spurious CVE Warning&lt;/h3&gt;
+
+&lt;p&gt;Brakeman was reporting CVE-2015-3227 on any application using an unknown Rails version.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/996&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Option Errors&lt;/h3&gt;
+
+&lt;p&gt;In an attempt to make command line option errors prettier, Brakeman was inadvertently messing up the error messages. It will no longer do so.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1011&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;GraphQL in ERB&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will now ignore &lt;code&gt;&amp;lt;%graphql&lt;/code&gt; tags in ERB templates.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/997&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Recursive Concerns&lt;/h3&gt;
+
+&lt;p&gt;Concerns that &lt;code&gt;include&lt;/code&gt; themselves will no longer cause infinite loops.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1019&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;c9bcc82a14359fe5f010551b1256eb1cea6848115f3429c7db74a386d6b0cf8c  brakeman-3.6.0.gem
+4793a407f79970a284474db3235d355f9927e987b71e33f1ce99fac3f3c249aa  brakeman-min-3.6.0.gem
+5c0a7aab7fc14d069d9dc208b653e10f71c355cb959fd144d6e8f7430c88a8e7  brakeman-lib-3.6.0.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release.&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hanging out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;
+
+&lt;p&gt;If you find Brakeman valuable and want to support its development, check out &lt;a href=&quot;https://brakemanpro.com/&quot;&gt;Brakeman Pro&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 3.5.0 Released</title>
@@ -1666,119 +1756,6 @@ end
 
 &lt;pre&gt;&lt;code&gt;170c3dd6925373b7da2e27fd1decf2957b35dc43  brakeman-3.0.3.gem
 f126e305404a61e99f9ddb848996d87325d1485a  brakeman-min-3.0.3.gem
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 3.0.2 Released</title>
-    <link href="http://brakemanscanner.org/blog/2015/03/09/brakeman-3-dot-0-2-released/"/>
-    <updated>2015-03-09T14:54:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2015/03/09/brakeman-3-dot-0-2-released</id>
-    <content type="html">&lt;p&gt;This is entirely a bugfix release, no new features. However, the fixes may cause line numbers and warning fingerprints to change.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 3.0.1&lt;/em&gt;:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Fix HTML reports with GitHub repos (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/624&quot;&gt;#624&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Handle processing of explictly shadowed block arguments (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/612&quot;&gt;#612&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Fix CSV output when there are no warnings (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/615&quot;&gt;#615&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Update &lt;code&gt;ruby_parser&lt;/code&gt; to ~&gt; 3.6.2&lt;/li&gt;
-&lt;li&gt;Treat &lt;code&gt;primary_key&lt;/code&gt;, &lt;code&gt;table_name_prefix&lt;/code&gt;, &lt;code&gt;table_name_suffix&lt;/code&gt; as safe in SQL&lt;/li&gt;
-&lt;li&gt;Fix using &lt;code&gt;--compare&lt;/code&gt; and &lt;code&gt;--add-checks-path&lt;/code&gt; together&lt;/li&gt;
-&lt;li&gt;Alias process methods called in class scope on models&lt;/li&gt;
-&lt;li&gt;Avoid warning about mass assignment with string literals&lt;/li&gt;
-&lt;li&gt;Only report original regex DoS locations&lt;/li&gt;
-&lt;li&gt;Report correct file for &lt;code&gt;simple_format&lt;/code&gt; usage CVE warning&lt;/li&gt;
-&lt;li&gt;Ignore case value in XSS checks&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;HTML Reports with GitHub Repo&lt;/h3&gt;
-
-&lt;p&gt;HTML reports were sometimes causing an error when linking to a GitHub repo.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/625&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Shadowed Block Arguments&lt;/h3&gt;
-
-&lt;p&gt;There was an error handling explicitly shadowed block arguments like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;some_array.each do |item; x, y|
-  # Stuff
-end
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/613&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;CSV Output&lt;/h3&gt;
-
-&lt;p&gt;Empty tables caused the CSV report to fail.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/616&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;RubyParser Update&lt;/h3&gt;
-
-&lt;p&gt;Brakeman has been very behind on RubyParser versions due to a line number issue which is nearly always present in HAML templates. As a workaround, Brakeman now strips newline literals from HAML templates. While this does cause some line numbers to be off, but typically newline literals are caused by HAML formatting. Removing them allows Brakeman to use the latest RubyParser.&lt;/p&gt;
-
-&lt;p&gt;Brakeman now requires RubyParser 3.6.2 as a minimum.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/620&quot;&gt;HAML changes&lt;/a&gt;, &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/621&quot;&gt;dependency change&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;More SQL-safe Methods&lt;/h3&gt;
-
-&lt;p&gt;Brakeman will no longer warn about &lt;code&gt;primary_key&lt;/code&gt;, &lt;code&gt;table_name_prefix&lt;/code&gt;, and &lt;code&gt;table_name_suffix&lt;/code&gt; in SQL.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/635&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Compare with External Checks&lt;/h3&gt;
-
-&lt;p&gt;Fix an issue when using &lt;code&gt;--compare&lt;/code&gt; and &lt;code&gt;--add-checks-path&lt;/code&gt; together.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/635&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Process Class-Scope Method Calls&lt;/h3&gt;
-
-&lt;p&gt;Previously, Brakeman would process method calls at the class scope (e.g., &lt;code&gt;belongs_to&lt;/code&gt;) in models and then throw away the call. This meant the call never received data flow analysis. This was particularly noticeable when those calls involved blocks. This has been fixed and has improved results, especially where constants are used.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/634&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Mass Assignment with Literals&lt;/h3&gt;
-
-&lt;p&gt;Brakeman no longer warns about mass assignment if the arguments are a string or symbol. In those cases it probably isn't an ActiveRecord subclass in any case.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/631&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Reduce Regex DoS Duplicates&lt;/h3&gt;
-
-&lt;p&gt;Duplicate regular expression denial of service warnings were being reported due to data flow analysis.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/627&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;File for simple_format CVE&lt;/h3&gt;
-
-&lt;p&gt;Warnings regarding the old &lt;code&gt;simple_format&lt;/code&gt; CVE will now point to the file where &lt;code&gt;simple_format&lt;/code&gt; was called, not the Gemfile.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/623/files&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Ignore Case Value&lt;/h3&gt;
-
-&lt;p&gt;Do not report about XSS regarding the value used in &lt;code&gt;case&lt;/code&gt; expressions.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/619&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;SHAs&lt;/h3&gt;
-
-&lt;p&gt;The SHA1 sums for this release are&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;87413b544b5eae0cac9f037e2b62b1fe3f0fee5e  brakeman-3.0.2.gem
-cfcf3080a992ca173c64dd98fe239e8bd9bb0eaa  brakeman-min-3.0.2.gem
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3&gt;Reporting Issues&lt;/h3&gt;

@@ -109,6 +109,140 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2015/03/09/brakeman-3-dot-0-2-released/">Brakeman 3.0.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2015-03-09 14:54:00 -0700" pubdate  updated >Mar 9<span>th</span>, 2015</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is entirely a bugfix release, no new features. However, the fixes may cause line numbers and warning fingerprints to change.</p>
+
+<p><em>Changes since 3.0.1</em>:</p>
+
+<ul>
+<li>Fix HTML reports with GitHub repos (<a href="https://github.com/presidentbeef/brakeman/issues/624">#624</a>)</li>
+<li>Handle processing of explictly shadowed block arguments (<a href="https://github.com/presidentbeef/brakeman/issues/612">#612</a>)</li>
+<li>Fix CSV output when there are no warnings (<a href="https://github.com/presidentbeef/brakeman/issues/615">#615</a>)</li>
+<li>Update <code>ruby_parser</code> to ~> 3.6.2</li>
+<li>Treat <code>primary_key</code>, <code>table_name_prefix</code>, <code>table_name_suffix</code> as safe in SQL</li>
+<li>Fix using <code>--compare</code> and <code>--add-checks-path</code> together</li>
+<li>Alias process methods called in class scope on models</li>
+<li>Avoid warning about mass assignment with string literals</li>
+<li>Only report original regex DoS locations</li>
+<li>Report correct file for <code>simple_format</code> usage CVE warning</li>
+<li>Ignore case value in XSS checks</li>
+</ul>
+
+
+<h3>HTML Reports with GitHub Repo</h3>
+
+<p>HTML reports were sometimes causing an error when linking to a GitHub repo.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/625">changes</a>)</p>
+
+<h3>Shadowed Block Arguments</h3>
+
+<p>There was an error handling explicitly shadowed block arguments like this:</p>
+
+<pre><code>some_array.each do |item; x, y|
+  # Stuff
+end
+</code></pre>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/613">changes</a>)</p>
+
+<h3>CSV Output</h3>
+
+<p>Empty tables caused the CSV report to fail.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/616">changes</a>)</p>
+
+<h3>RubyParser Update</h3>
+
+<p>Brakeman has been very behind on RubyParser versions due to a line number issue which is nearly always present in HAML templates. As a workaround, Brakeman now strips newline literals from HAML templates. While this does cause some line numbers to be off, but typically newline literals are caused by HAML formatting. Removing them allows Brakeman to use the latest RubyParser.</p>
+
+<p>Brakeman now requires RubyParser 3.6.2 as a minimum.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/620">HAML changes</a>, <a href="https://github.com/presidentbeef/brakeman/pull/621">dependency change</a>)</p>
+
+<h3>More SQL-safe Methods</h3>
+
+<p>Brakeman will no longer warn about <code>primary_key</code>, <code>table_name_prefix</code>, and <code>table_name_suffix</code> in SQL.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/635">changes</a>)</p>
+
+<h3>Compare with External Checks</h3>
+
+<p>Fix an issue when using <code>--compare</code> and <code>--add-checks-path</code> together.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/635">changes</a>)</p>
+
+<h3>Process Class-Scope Method Calls</h3>
+
+<p>Previously, Brakeman would process method calls at the class scope (e.g., <code>belongs_to</code>) in models and then throw away the call. This meant the call never received data flow analysis. This was particularly noticeable when those calls involved blocks. This has been fixed and has improved results, especially where constants are used.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/634">changes</a>)</p>
+
+<h3>Mass Assignment with Literals</h3>
+
+<p>Brakeman no longer warns about mass assignment if the arguments are a string or symbol. In those cases it probably isn&#8217;t an ActiveRecord subclass in any case.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/631">changes</a>)</p>
+
+<h3>Reduce Regex DoS Duplicates</h3>
+
+<p>Duplicate regular expression denial of service warnings were being reported due to data flow analysis.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/627">changes</a>)</p>
+
+<h3>File for simple_format CVE</h3>
+
+<p>Warnings regarding the old <code>simple_format</code> CVE will now point to the file where <code>simple_format</code> was called, not the Gemfile.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/623/files">changes</a>)</p>
+
+<h3>Ignore Case Value</h3>
+
+<p>Do not report about XSS regarding the value used in <code>case</code> expressions.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/619">changes</a>)</p>
+
+<h3>SHAs</h3>
+
+<p>The SHA1 sums for this release are</p>
+
+<pre><code>87413b544b5eae0cac9f037e2b62b1fe3f0fee5e  brakeman-3.0.2.gem
+cfcf3080a992ca173c64dd98fe239e8bd9bb0eaa  brakeman-min-3.0.2.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2015/01/22/brakeman-3-dot-0-1-released/">Brakeman 3.0.1 Released</a></h1>
     
     
@@ -1097,129 +1231,6 @@ be5743d77140e64b75eefc53f8697f767ab370d9  brakeman-min-2.4.3.gem
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2014/03/20/brakeman-2-dot-4-2-released/">Brakeman 2.4.2 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2014-03-20 22:37:00 -0700" pubdate  updated >Mar 20<span>th</span>, 2014</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This release is only internal changes and bug fixes, but some scans may see significant time and memory improvements.</p>
-
-<p><em>Changes since 2.4.1</em>:</p>
-
-<ul>
-<li>Skip identically rendered templates</li>
-<li>Improve HAML template processing</li>
-<li>Only track original template output locations</li>
-<li>Reuse duplicate call location information</li>
-<li>Fix duplicate warnings about sanitize CVE</li>
-<li>Remove <code>rescue Exception</code></li>
-</ul>
-
-
-<h3>Drop Identical Templates</h3>
-
-<p>For a long time now Brakeman has skipped processing templates if the template had already been processed with an identical environment. However, there are many times when a template is rendered with different environments but the actual output is the same. Brakeman now drops these templates (they are rendered, then discarded if they are duplicates). This reduces peak memory overhead, sometimes drastically. It can also speed up call indexing and vulnerability checks since fewer templates are searched.</p>
-
-<p>The location and render path of template warnings may change slightly due to this change. Also, the rendered template debug output will no longer include all rendered templates since duplicates will not be tracked.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/442">changes</a>)</p>
-
-<h3>Better HAML Processing</h3>
-
-<p>HAML templates will be processed more accurately with this release.</p>
-
-<p>For example, a template like this</p>
-
-<pre><code>#content
-  .nav
-    = @navigation_menu
-</code></pre>
-
-<p>used to produce output like</p>
-
-<pre><code>+-------------------------------------------------------------------------------------------------+
-| Output                                                                                          |
-+-------------------------------------------------------------------------------------------------+
-| [Output] "&lt;div id='content'&gt;; &lt;div class='nav'&gt;; #{[Escaped] @navigation_menu}; &lt;/div&gt;;&lt;/div&gt;;" |
-+-------------------------------------------------------------------------------------------------+
-</code></pre>
-
-<p>but now it will look like this instead</p>
-
-<pre><code>+-----------------------------------+
-| Output                            |
-+-----------------------------------+
-| [Escaped Output] @navigation_menu |
-+-----------------------------------+
-</code></pre>
-
-<p>Besides looking much nicer, this improves warnings and reduces how much code Brakeman has to search. Additionally, these <code>push_text</code> methods can often interpolate multiple values into the output string, which were not being properly detected as output. This is fixed now.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/441">changes</a>)</p>
-
-<h3>Duplicate Template Outputs</h3>
-
-<p>Aliased values in templates were being counted multiple times as output. This did not affect warnings generated, but it did create duplicate output values to check and extraneous debug output.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/443">changes</a>)</p>
-
-<h3>Call Location Reuse</h3>
-
-<p>For large applications, many calls in the call index actually have the same location (class+method or template). Instead of creating a new location hash for each call, the locations are cached and reused.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/444">changes</a>)</p>
-
-<h3>Sanitize CVE Duplicates</h3>
-
-<p>Don&#8217;t worry - <a href="https://groups.google.com/d/msg/rubyonrails-security/zAAU7vGTPvI/1vZDWXqBuXgJ">CVE-2013-1857</a> is one year old this week. But Brakeman was not properly preventing duplicate warnings for it. Hopefully this was affecting exactly no one.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/445">changes</a>)</p>
-
-<h3>Narrower Exception Handling</h3>
-
-<p>All instances of <code>rescue Exception</code> were removed from Brakeman and replaced with bare <code>rescue</code>s to catch <code>StandardError</code> and subclasses. <code>Exception</code> has some unfortunate subclasses, such as <code>NoMemoryError</code> and <code>Interrupt</code> which Brakeman should not be rescuing.</p>
-
-<p>This does mean there may be some newly unhandled exceptions. Please report these so they can be rescued properly.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/446">changes</a>)</p>
-
-<h3>SHAs</h3>
-
-<p>The SHA1 sums for this release are</p>
-
-<pre><code>02842dc497bf22b5b427cfd02635c005c4fc4fd4  brakeman-2.4.2.gem
-4893cedbcb015e96c82f4777b00a49ca8d0ae22f  brakeman-min-2.4.2.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1274,6 +1285,10 @@ be5743d77140e64b75eefc53f8697f767ab370d9  brakeman-min-2.4.3.gem
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/03/22/brakeman-3-dot-6-0-released/">Brakeman 3.6.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/01/31/brakeman-3-dot-5-0-released/">Brakeman 3.5.0 Released</a>
       </li>
     
@@ -1287,10 +1302,6 @@ be5743d77140e64b75eefc53f8697f767ab370d9  brakeman-min-2.4.3.gem
     
       <li class="post">
         <a href="/blog/2016/08/12/brakeman-3-dot-3-4-released/">Brakeman 3.3.4/3.3.5 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/07/20/brakeman-3-dot-3-3-released/">Brakeman 3.3.3 Released</a>
       </li>
     
   </ul>
