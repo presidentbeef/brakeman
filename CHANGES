@@ -1,3 +1,7 @@
+# 3.6.1
+
+* Fix error when using `--compare` (Sean Gransee)
+
 # 3.6.0 
 
 * Avoid recursive Concerns
