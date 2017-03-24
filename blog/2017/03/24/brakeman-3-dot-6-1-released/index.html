@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Testing Brakeman</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman 3.6.1 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/testing_brakeman/index.html"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2017/03/24/brakeman-3-dot-6-1-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -101,120 +101,119 @@
   <div id="main">
     <div id="content">
       <div>
-<article>
+<article class="hentry">
   
   <header>
-    <h1 class="entry-title">Testing Brakeman</h1>
+    <div class="articlelogo">&nbsp;</div>
+    
+      <h1 class="entry-title">Brakeman 3.6.1 Released</h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2017-03-24 13:15:00 -0700" pubdate  updated >Mar 24<span>th</span>, 2017</time>
+
+
+</p>
+    
   </header>
-  
-  <p>Tests for Brakeman are written using the standard library&#8217;s <a href="http://rubydoc.info/stdlib/test/1.8.7/Test/Unit">test/unit</a>.</p>
 
-<p>The main test file is in <code>test/test.rb</code>. It can be run using <code>ruby test/test.rb</code> (or from any directory).</p>
 
-<h3>Structure</h3>
+<div class="entry-content"><p>This is a small bug fix release to fix an issue when using <code>--compare</code>.</p>
 
-<p>Brakeman is tested by running it against full Rails applications and then checking the reported warnings.</p>
-
-<pre><code>test/test.rb #Main test runner
-test/apps/   #Apps to check against
-test/tests/  #Actual tests
-</code></pre>
-
-<p>There are several Rails applications, including:</p>
-
-<pre><code>test/apps/rails2    #Rails 2.3.11
-test/apps/rails3    #Rails 3.0.5
-test/apps/rails3.1  #Rails 3.1.0
-</code></pre>
-
-<p>There are corresponding sets of tests for each application:</p>
-
-<pre><code>test/tests/rails2.rb
-test/tests/rails3.rb
-test/tests/rails31.rb
-</code></pre>
-
-<h3>Test Setup</h3>
-
-<p>Each of the test files starts off like this:</p>
-
-<pre><code>class Rails3Tests &lt; Test::Unit::TestCase
-  include BrakemanTester::FindWarning
-  include BrakemanTester::CheckExpected
-
-  def report
-    @@report ||= BrakemanTester.run_scan "rails3", "Rails 3"
-  end
-
-  def expected
-    @expected ||= {
-      :controller =&gt; 1,
-      :model =&gt; 5,
-      :template =&gt; 18,
-      :warning =&gt; 22
-    }
-  end
-</code></pre>
-
-<p>The <code>report</code> method runs the scan once. The first argument is the directory of the application, assumed to be under <code>test/apps/</code>. The second argument is just a name for the application. After that, any options that would normally be given to <code>Brakeman.run</code> can be provided.</p>
-
-<p>The result of <code>BrakemanTester.run_scan</code> is a big hash of the warnings found during the scan. This is generated using <code>Brakeman::Report#to_test</code>.</p>
-
-<p>Two modules are included in the test suite. <code>FindWarning</code> provides a search capability for finding warnings in the report. <code>CheckExpected</code> calls <code>expected</code> and checks the numbers there against the actual report.</p>
-
-<h3>Testing a Warning</h3>
-
-<p>To test for the presence of a warning, use the <code>assert_warning</code> method. This method takes a hash of options describing the warning:</p>
-
-<pre><code>def test_eval_params
-  assert_warning :type =&gt; :warning,
-    :warning_code =&gt; 13,
-    :fingerprint =&gt; "4efdd73fb759135f5980b5da1d9804aa4eb5c7475eabfd0f0cf41299d1d7ec42",
-    :warning_type =&gt; "Dangerous Eval",
-    :line =&gt; 41,
-    :message =&gt; /^User input in eval near line 41: eval\(pa/,
-    :confidence =&gt; 0,
-    :file =&gt; /home_controller\.rb/
-end
-</code></pre>
-
-<p>Each key in the hash is a method on <code>Brakeman::Warning</code>, except <code>:type</code>. The value will be tested using <code>===</code> against the result of calling the method. This means regular expressions can be used to match against strings.</p>
-
-<p>It is best to be as specific as possible, because <code>assert_warning</code> expects <em>exactly</em> one warning to match.</p>
-
-<p>Options:</p>
+<p><em>Changes since 3.6.0</em>:</p>
 
 <ul>
-<li><code>:type</code> - This determines which category of warnings to search (controller, model, template, or just &#8216;warning&#8217;)</li>
-<li><code>:fingerprint</code> - The warning fingerprint</li>
-<li><code>:warning_code</code> - Integer representing the warning type</li>
-<li><code>:warning_type</code> - This matches against the category of warning</li>
-<li><code>:line</code> - The line number reported in the warning</li>
-<li><code>:message</code> - The text of the warning message</li>
-<li><code>:confidence</code> - Confidence level (0 - high, 1 - medium, 3 - weak)</li>
-<li><code>:file</code> - File where warning was found</li>
+<li><ul>
+<li>Fix error when using <code>--compare</code> (<a href="https://github.com/seangransee">Sean Gransee</a>)</li>
+</ul>
+</li>
 </ul>
 
 
-<p>For the message matching, it is generally enough to just include the first part of the message, instead of trying for an exact match.</p>
+<h3>Error With Compare</h3>
 
-<p>For the file name, generally just the name of the file (without the path) is used, although it is matched against the full path.</p>
+<p>Although comparison scans using <code>--compare</code> would complete successfully, an exception was being thrown afterwards.</p>
 
-<hr />
+<p>Thanks to <a href="https://github.com/anthlam">Anthony Lamorte</a> for reporting and <a href="https://github.com/seangransee">Sean Gransee</a> for the fix!</p>
 
-<p><a href="/docs">More documentation</a></p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1024">changes</a>)</p>
 
-<p><a href="/docs/contributing/adding_tests">Adding tests</a></p>
+<h3>Checksums</h3>
 
+<p>The SHA256 sums for this release are:</p>
+
+<pre><code>3c10b2a9fd8b7b3baab956e6fcc2c7780768f1905433297e8dd940591f1bbb3b  brakeman-3.6.1.gem
+98f6bd7531e0e3fbe273b9d185446bd28602176a392d5df8f9c52c36460afdaa  brakeman-lib-3.6.1.gem
+44342c843867fce585f6fef09cd093a0544510adfeec15217efe44c6120e3192  brakeman-min-3.6.1.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release.</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
+<p>If you find Brakeman valuable and want to support its development, check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-    <footer>
-      <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
+
+      
+
+
+
+
+<time datetime="2017-03-24 13:15:00 -0700" pubdate  updated >Mar 24<span>th</span>, 2017</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
   
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2017/03/24/brakeman-3-dot-6-1-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2017/03/24/brakeman-3-dot-6-1-released/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread"><div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'brakeman';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2017/03/24/brakeman-3-dot-6-1-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2017/03/24/brakeman-3-dot-6-1-released/';
+  //var disqus_developer = 1;
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 

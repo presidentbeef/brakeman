@@ -4,13 +4,59 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2017-03-23T00:56:34-07:00</updated>
+  <updated>2017-03-24T13:57:16-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 3.6.1 Released</title>
+    <link href="http://brakemanscanner.org/blog/2017/03/24/brakeman-3-dot-6-1-released/"/>
+    <updated>2017-03-24T13:15:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2017/03/24/brakeman-3-dot-6-1-released</id>
+    <content type="html">&lt;p&gt;This is a small bug fix release to fix an issue when using &lt;code&gt;--compare&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 3.6.0&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;ul&gt;
+&lt;li&gt;Fix error when using &lt;code&gt;--compare&lt;/code&gt; (&lt;a href=&quot;https://github.com/seangransee&quot;&gt;Sean Gransee&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Error With Compare&lt;/h3&gt;
+
+&lt;p&gt;Although comparison scans using &lt;code&gt;--compare&lt;/code&gt; would complete successfully, an exception was being thrown afterwards.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/anthlam&quot;&gt;Anthony Lamorte&lt;/a&gt; for reporting and &lt;a href=&quot;https://github.com/seangransee&quot;&gt;Sean Gransee&lt;/a&gt; for the fix!&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1024&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;3c10b2a9fd8b7b3baab956e6fcc2c7780768f1905433297e8dd940591f1bbb3b  brakeman-3.6.1.gem
+98f6bd7531e0e3fbe273b9d185446bd28602176a392d5df8f9c52c36460afdaa  brakeman-lib-3.6.1.gem
+44342c843867fce585f6fef09cd093a0544510adfeec15217efe44c6120e3192  brakeman-min-3.6.1.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release.&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;
+
+&lt;p&gt;If you find Brakeman valuable and want to support its development, check out &lt;a href=&quot;https://brakemanpro.com/&quot;&gt;Brakeman Pro&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 3.6.0 Released</title>
@@ -1664,98 +1710,6 @@ c62cc782595d4995aa385b6bd96c2485ac932077  brakeman-3.0.5.gem
 
 &lt;pre&gt;&lt;code&gt;bf6ae72a0b516ecf65b9165d07e86259ef9fa5d3  brakeman-3.0.4.gem
 c1c2ea5402d8a89fe4a645947ec324d0603d3976  brakeman-min-3.0.4.gem
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and joining the &lt;a href=&quot;http://brakemanscanner.org/contact/&quot;&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 3.0.3 Released</title>
-    <link href="http://brakemanscanner.org/blog/2015/04/30/brakeman-3-dot-0-3-released/"/>
-    <updated>2015-04-30T09:50:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2015/04/30/brakeman-3-dot-0-3-released</id>
-    <content type="html">&lt;p&gt;This is mostly a bug fix release, but does introduce a new warning code for when &lt;code&gt;protect_from_forgery&lt;/code&gt; is not set to raise exceptions in Rails 4.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 3.0.2&lt;/em&gt;:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Warn about &lt;code&gt;protect_from_forgery&lt;/code&gt; without exceptions (&lt;a href=&quot;https://github.com/oreoshake&quot;&gt;Neil Matatall&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Add Rake task to exit with error code on warnings (&lt;a href=&quot;https://github.com/masarakki&quot;&gt;masarakki&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Ignore &lt;code&gt;quoted_table_name&lt;/code&gt; in SQL (&lt;a href=&quot;https://github.com/sobrinho&quot;&gt;Gabriel Sobhrinho&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Ignore more Arel methods in SQL (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/604&quot;&gt;#604&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Warn about RCE and file access with &lt;code&gt;open&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Handle &lt;code&gt;Array#include?&lt;/code&gt; guard conditionals (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/604&quot;&gt;#604&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Handle lambdas as filters&lt;/li&gt;
-&lt;li&gt;Do not ignore targets of &lt;code&gt;to_s&lt;/code&gt; in SQL (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/638&quot;&gt;#638&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;New CSRF Warning&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/oreoshake&quot;&gt;Neil Matatall&lt;/a&gt; has added a warning for Rails 4 applications that do not pass the &lt;code&gt;with: :exception&lt;/code&gt; option to &lt;code&gt;protect_from_forgery&lt;/code&gt;. The default behavior of clearing out the session (but still processing the request) has lead to vulnerabilities in some applications. GitHub &lt;a href=&quot;https://bounty.github.com/researchers/LukasReschke.html&quot;&gt;recently awarded a bug bounty&lt;/a&gt; for a vulnerability caused by this behavior.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/648&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Additional Rake Task&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/masarakki&quot;&gt;Masarakki&lt;/a&gt; added a Rake task that will exit with an error code if any warnings are found (like &lt;code&gt;brakeman -z&lt;/code&gt;). The task can be run with &lt;code&gt;rake brakeman:check&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;However, please note the use of Rake tasks to run Brakeman is discouraged, since it loads the entire Rails application which is unnecessary and may cause conflicts with Brakeman dependencies.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/637&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Reduce SQL Injection False Positives&lt;/h3&gt;
-
-&lt;p&gt;A patch from &lt;a href=&quot;https://github.com/sobrinho&quot;&gt;Gabriel Sobhrinho&lt;/a&gt; removes warnings about &lt;code&gt;quoted_table_name&lt;/code&gt; in SQL queries.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/647&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;p&gt;An additional change was made to ignore more Arel methods nested inside of other queries. This should reduce many of the false positives seen with combining Arel and ActiveRecord queries.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/653&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Remote Code Execution in open()&lt;/h3&gt;
-
-&lt;p&gt;As noted in &lt;a href=&quot;http://sakurity.com/blog/2015/02/28/openuri.html&quot;&gt;Egor Homakov's blog post&lt;/a&gt;, &lt;code&gt;open&lt;/code&gt; can actually be used to spawn new processes by starting the argument with a pipe &lt;code&gt;|&lt;/code&gt;. Brakeman will now warn about remote code execution via &lt;code&gt;open&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/643&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Simple Guard Conditions&lt;/h3&gt;
-
-&lt;p&gt;Brakeman should now recognize guard conditions that look exactly like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;if [1, 2, &quot;a&quot;, &quot;b&quot;].include? x
-  do_something_dangerous_with x
-end
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This may resolve some false positives. If you have code similar to this, please consider &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;opening an issue&lt;/a&gt; and perhaps it can be handled similarly.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/640&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Lambda Filters&lt;/h3&gt;
-
-&lt;p&gt;Filters that use lambdas instead of blocks should now be handled correctly.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/649&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Handle to_s in SQL&lt;/h3&gt;
-
-&lt;p&gt;Values with &lt;code&gt;to_s&lt;/code&gt; called on them were being ignored when checking for SQL injection. This has been fixed.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/639&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;SHAs&lt;/h3&gt;
-
-&lt;p&gt;The SHA1 sums for this release are&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;170c3dd6925373b7da2e27fd1decf2957b35dc43  brakeman-3.0.3.gem
-f126e305404a61e99f9ddb848996d87325d1485a  brakeman-min-3.0.3.gem
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3&gt;Reporting Issues&lt;/h3&gt;
