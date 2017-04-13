@@ -15,7 +15,7 @@ class Rails4Tests < Minitest::Test
       :controller => 0,
       :model => 3,
       :template => 8,
-      :generic => 80
+      :generic => 81
     }
   end
 
@@ -71,6 +71,34 @@ class Rails4Tests < Minitest::Test
       :confidence => 0,
       :relative_path => "app/controllers/friendly_controller.rb",
       :user_input => s(:params, s(:lit, :host), s(:call, s(:params), :[], s(:lit, :host)))
+  end
+
+  def test_redirect_with_only_path_in_wrong_method
+    assert_warning :type => :warning,
+    :warning_code => 18,
+    :warning_type => "Redirect",
+    :line => 34,
+    :message => /^Possible\ unprotected\ redirect/,
+    :confidence => 0,
+    :relative_path => "app/controllers/application_controller.rb"
+  end
+
+  def test_redirect_with_unsafe_hash_and_only_path_do_not_warn
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :warning_type => "Redirect",
+      :line => 38,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/application_controller.rb"
+
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :warning_type => "Redirect",
+      :line => 42,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/application_controller.rb"
   end
 
   def test_session_secret_token
