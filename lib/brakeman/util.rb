@@ -129,9 +129,6 @@ module Brakeman::Util
       key = Sexp.new(:call, s(:params), key)
     end
 
-      # p call
-      # p call.find_index(key)
-
     if index = call.find_index(key)
       return true
     end
