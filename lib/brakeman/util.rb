@@ -210,17 +210,18 @@ module Brakeman::Util
                         exp.node_type == :rlist)
   end
 
+  PARAMS_METH = [:+, :[], :delete, :dig, :except, :extract!, :fetch, :html_safe,
+                 :inspect, :keep_if, :merge, :merge!, :permit, :permit!, :reject,
+                 :reject!, :require, :select, :select!, :slice, :to_h, :to_s,
+                 :to_sym, :to_unsafe_h, :to_unsafe_hash, :values_at]
+
   #Check if _exp_ is a params hash
   def params? exp
     if exp.is_a? Sexp
       return true if exp.node_type == :params or ALL_PARAMETERS.include? exp
 
-      if call? exp
-        if params? exp[1]
-          return true
-        elsif exp[2] == :[]
-          return params? exp[1]
-        end
+      if call? exp and PARAMS_METH.include? exp.method
+        return params? exp[1]
       end
     end
 
@@ -231,12 +232,8 @@ module Brakeman::Util
     if exp.is_a? Sexp
       return true if exp.node_type == :cookies or exp == COOKIES
 
-      if call? exp
-        if cookies? exp[1]
-          return true
-        elsif exp[2] == :[]
-          return cookies? exp[1]
-        end
+      if call? exp and PARAMS_METH.include? exp.method
+        return cookies? exp[1]
       end
     end
 

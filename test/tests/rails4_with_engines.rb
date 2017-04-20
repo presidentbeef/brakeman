@@ -52,7 +52,7 @@ class Rails4WithEnginesTests < Minitest::Test
       :confidence => 0,
       :relative_path => "alt_engines/admin_stuff/app/controllers/admin_controller.rb",
       :code => s(:call, s(:call, s(:call, s(:params), :[], s(:lit, :class)), :classify), :constantize),
-      :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :class)), :classify)
+      :user_input => s(:call, s(:params), :[], s(:lit, :class))
   end
 
   def test_i18n_xss_CVE_2013_4491

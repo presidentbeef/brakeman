@@ -71,7 +71,6 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       add_result exp
 
       message = "Unescaped #{friendly_type_of input}"
-
       warn :template => @current_template,
         :warning_type => "Cross Site Scripting",
         :warning_code => :cross_site_scripting,
