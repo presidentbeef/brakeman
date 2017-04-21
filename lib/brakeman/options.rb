@@ -290,10 +290,6 @@ module Brakeman::Options
           options[:list_optional_checks] = true
         end
 
-        opts.on "--rake", "Create rake task to run Brakeman" do
-          options[:install_rake_task] = true
-        end
-
         opts.on "-v", "--version", "Show Brakeman version" do
           options[:show_version] = true
         end
