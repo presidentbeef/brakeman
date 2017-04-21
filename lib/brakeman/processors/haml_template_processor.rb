@@ -170,6 +170,14 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       exp
     when :block, :rlist, :dstr
       exp.map! { |e| get_pushed_value e }
+    when :if
+      clauses = [get_pushed_value(exp.then_clause), get_pushed_value(exp.else_clause)].compact
+
+      if clauses.length > 1
+        s(:or, *clauses)
+      else
+        clauses.first
+      end
     else
       if call? exp and exp.target == HAML_HELPERS and exp.method == :html_escape
         add_escaped_output exp.first_arg
