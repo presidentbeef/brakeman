@@ -19,7 +19,6 @@ class BrakemanOptionsTest < Minitest::Test
     :absolute_paths         => "--absolute-paths",
     :list_checks            => "-k",
     :list_optional_checks   => "--optional-checks",
-    :install_rake_task      => "--rake",
     :show_version           => "-v",
     :show_help              => "-h",
     :force_scan             => "--force-scan",
