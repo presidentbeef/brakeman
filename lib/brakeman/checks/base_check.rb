@@ -6,6 +6,7 @@ require 'brakeman/util'
 #Basis of vulnerability checks.
 class Brakeman::BaseCheck < Brakeman::SexpProcessor
   include Brakeman::ProcessorHelper
+  include Brakeman::SafeCallHelper
   include Brakeman::Util
   attr_reader :tracker, :warnings
 
