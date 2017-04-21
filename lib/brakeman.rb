@@ -269,43 +269,6 @@ module Brakeman
     end
   end
 
-  #Installs Rake task for running Brakeman,
-  #which basically means copying `lib/brakeman/brakeman.rake` to
-  #`lib/tasks/brakeman.rake` in the current Rails application.
-  def self.install_rake_task install_path = nil
-    if install_path
-      rake_path = File.join(install_path, "Rakefile")
-      task_path = File.join(install_path, "lib", "tasks", "brakeman.rake")
-    else
-      rake_path = "Rakefile"
-      task_path = File.join("lib", "tasks", "brakeman.rake")
-    end
-
-    if not File.exist? rake_path
-      raise RakeInstallError, "No Rakefile detected"
-    elsif File.exist? task_path
-      raise RakeInstallError, "Task already exists"
-    end
-
-    require 'fileutils'
-
-    if not File.exist? "lib/tasks"
-      notify "Creating lib/tasks"
-      FileUtils.mkdir_p "lib/tasks"
-    end
-
-    path = File.expand_path(File.dirname(__FILE__))
-
-    FileUtils.cp "#{path}/brakeman/brakeman.rake", task_path
-
-    if File.exist? task_path
-      notify "Task created in #{task_path}"
-      notify "Usage: rake brakeman:run[output_file]"
-    else
-      raise RakeInstallError, "Could not create task"
-    end
-  end
-
   #Output configuration to YAML
   def self.dump_config options
     require 'yaml'
@@ -534,7 +497,6 @@ module Brakeman
   end
 
   class DependencyError < RuntimeError; end
-  class RakeInstallError < RuntimeError; end
   class NoBrakemanError < RuntimeError; end
   class NoApplication < RuntimeError; end
   class MissingChecksError < RuntimeError; end
