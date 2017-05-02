@@ -212,13 +212,13 @@ class Rails5Tests < Minitest::Test
   def test_cross_site_scripting_in_template_with_no_html_extension
     assert_warning :type => :template,
       :warning_code => 2,
-      :fingerprint => "dba79beeea8871929d0f5191b1df66822689d2e8cfffa4a58e45e07cb4c6ea43",
+      :fingerprint => "dbec030dda82f21c5ea860e38746de64a6f3b9c49508ae2db947759a753a386c",
       :warning_type => "Cross Site Scripting",
       :line => 1,
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 0,
       :relative_path => "app/views/widget/no_html.haml",
-      :code => s(:call, s(:call, nil, :params), :[], s(:lit, :x)),
+      :code => s(:call, s(:params), :[], s(:lit, :x)),
       :user_input => nil
   end
 
