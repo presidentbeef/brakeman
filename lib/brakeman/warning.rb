@@ -150,13 +150,9 @@ class Brakeman::Warning
 
     @format_message = self.message.dup
 
-    if self.line
-      @format_message << " near line #{self.line}"
-    end
-
-    if self.code
-      @format_message << ": #{format_code}"
-    end
+    @format_message << " near line #{self.line}" if self.line
+    @format_message << " in file #{self.file}" if self.file
+    @format_message << ": #{format_code}" if self.code
 
     @format_message
   end
