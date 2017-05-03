@@ -22,6 +22,10 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
     process exp
   end
 
+  def process_default exp
+    process_all exp
+  end
+
   #Process body of method
   def process_defn exp
     return exp unless @current_method
