@@ -39,6 +39,8 @@ unless options[:app_path]
   end
 end
 
+options = Brakeman.default_options.merge(Brakeman.load_options(options)).merge(options)
+
 trap("INT") do
   $stderr.puts "\nInterrupted - exiting."
 
