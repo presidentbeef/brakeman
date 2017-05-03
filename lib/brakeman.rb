@@ -1,5 +1,7 @@
 require 'set'
 
+require 'brakeman/railtie' if defined?(Rails)
+
 module Brakeman
 
   #This exit code is used when warnings are found and the --exit-on-warn
