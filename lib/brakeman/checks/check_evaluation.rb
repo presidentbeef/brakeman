@@ -29,7 +29,8 @@ class Brakeman::CheckEvaluation < Brakeman::BaseCheck
         :message => "User input in eval",
         :code => result[:call],
         :user_input => input,
-        :confidence => CONFIDENCE[:high]
+        :confidence => CONFIDENCE[:high],
+        :link_path => "dangerous_evaluation"
     end
   end
 end
