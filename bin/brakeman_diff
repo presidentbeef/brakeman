@@ -1,0 +1,75 @@
+#!/usr/bin/env ruby
+require 'pathname'
+require 'readline'
+require 'rubygems'
+require 'brakeman'
+require 'optparse'
+
+options = {:quiet => false}
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: #{File.basename($PROGRAM_NAME)} [options]"
+
+  opts.on( "-q", "--quiet", "Don't output brakeman output.") do |opt|
+    options[:quiet] = opt
+  end
+
+end.parse!
+
+class String # backport for 1.8.6
+  def lines; split("\n") end
+end
+
+def prompt q, opts={}
+  default = opts[:default]
+  completions = opts[:completions]
+
+  if completions
+    Readline.completion_append_character = nil # setting to " " doesn't work on macos x, ha ha ha
+    completions = completions.map { |x| x + " " } # instead we do this horrible thing
+    Readline.completion_proc = lambda { |prefix| completions.select { |c| c[0 ... prefix.length] == prefix } }
+  else
+    Readline.completion_proc = lambda { |x| [] } # hellish
+  end
+
+  unless q =~ /:\s*$/
+    q += " [#{default}]" if default
+    q += ": "
+  end
+
+  ans = Readline.readline q
+  ans = default if ans.empty? && default
+  ans = ans.strip
+  Readline::HISTORY.push ans
+  ans
+end
+
+# Get branches to diff
+all_heads = `git show-ref --heads`.map { |l| l =~ %r{refs/heads/(.+)$} && $1 }.compact
+default_head = `git symbolic-ref HEAD`.map { |l| l =~ %r{refs/heads/(.+)$} && $1 }.first
+puts default_head
+my_branch = prompt "Code head/branch to check", :default => "#{default_head}", :completions => all_heads
+master = prompt "Code head/branch to diff against", :default => "master", :completions => all_heads
+
+# Run brakeman
+system("git checkout #{master}")
+puts "**** Scanning branch #{master} ****"
+master_checks = Brakeman.run(:app_path => '.', :quiet => options[:quiet]).checks
+
+system("git checkout #{my_branch}")
+puts "**** Scanning branch #{my_branch} ****"
+my_branch_checks = Brakeman.run(:app_path => '.', :quiet => options[:quiet]).checks
+
+diffs = my_branch_checks.diff master_checks
+
+# Output results
+puts "---------------------------------------------------------------------\n\n"
+
+puts "#{diffs[:fixed].size} existing warnings fixed by this branch."
+puts ""
+puts "#{diffs[:new].size} new warnings introduced by this branch."
+puts ""
+
+if diffs[:new].size != 0
+  diffs[:new].each { |w| puts w }
+end
