@@ -97,7 +97,11 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       process_all exp.body
 
       if is_route and not @rendered
-        process_default_render exp
+        if controller = @tracker.controllers[@current_class] and controller.private_method? meth_name
+          Brakeman.debug "Skipping default render in private method `#{meth_name}`"
+        else
+          process_default_render exp
+        end
       end
     end
 

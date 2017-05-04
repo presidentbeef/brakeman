@@ -70,6 +70,10 @@ module Brakeman
       nil
     end
 
+    def private_method? method_name
+      @methods[:private].include? method_name or @methods[:protected].include? method_name
+    end
+
     def file
       @files.first
     end
