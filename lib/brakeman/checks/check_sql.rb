@@ -164,7 +164,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     dangerous_value = case method
                       when :find
                         check_find_arguments call.second_arg
-                      when :exists?, :delete_all, :destroy_all
+                      when :exists?
+                        check_exists call.first_arg
+                      when :delete_all, :destroy_all
                         check_find_arguments call.first_arg
                       when :named_scope, :scope
                         check_scope_arguments call
@@ -630,6 +632,14 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       check_call exp.target
     else
       nil
+    end
+  end
+
+  def check_exists arg
+    if call? arg and arg.method == :to_s
+      false
+    else
+      check_find_arguments arg
     end
   end
 
