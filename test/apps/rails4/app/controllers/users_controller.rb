@@ -120,4 +120,8 @@ class UsersController < ApplicationController
     User.find_by(params.permit(:OMG)[:OMG]) # Warn
     User.where("#{params.permit(:OMG)}") # Warn
   end
+
+  def exists_with_to_s
+    User.exists? params[:x].to_s # Don't warn
+  end
 end
