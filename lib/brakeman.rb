@@ -114,6 +114,14 @@ module Brakeman
         # After parsing the yaml config file for options, convert any string keys into symbols.
         options.keys.select {|k| k.is_a? String}.map {|k| k.to_sym }.each {|k| options[k] = options[k.to_s]; options.delete(k.to_s) }
 
+        unless line_options[:allow_check_paths_in_config]
+          if options.include? :additional_checks_path
+            options.delete :additional_checks_path
+
+            notify "[Notice] Ignoring additional check paths in config file. Use --allow-check-paths-in-config to allow" unless (options[:quiet] || quiet)
+          end
+        end
+
         # notify if options[:quiet] and quiet is nil||false
         notify "[Notice] Using configuration in #{config}" unless (options[:quiet] || quiet)
         options
