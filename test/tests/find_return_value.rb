@@ -176,4 +176,13 @@ class FindReturnValueTests < Minitest::Test
       end
     RUBY
   end
+
+  def test_empty_if_expression
+    assert_returns "nil", <<-RUBY
+    def x
+      if y
+      end
+    end
+    RUBY
+  end
 end
