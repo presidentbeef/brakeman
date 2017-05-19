@@ -10,6 +10,8 @@
 * Avoid warning about SQLi with `to_s` in `exists?`
 * Update RubyParser to 3.9.0
 * Do not honor additional check paths in config by default
+* Handle empty `if` expressions when finding return values
+* Fix finding return value from empty `if`
 
 # 3.6.1
 
