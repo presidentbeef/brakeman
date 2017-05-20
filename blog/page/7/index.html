@@ -109,6 +109,107 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/03/05/brakeman-1-dot-5-1-released/">Brakeman 1.5.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-03-05 18:50:00 -0800" pubdate  updated >Mar 5<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>After the excitment yesterday with a mass assignment vulnerability being exploited in a very public manner on <a href="https://gist.github.com/1978249">Github</a>, interest in Brakeman has skyrocketed.</p>
+
+<p>This lead to re-examination of Brakeman&#8217;s code for detecting that mass assignment has been globally disabled - and it turns out there was a bug or two. So here is a bug-fix release of Brakeman to correct that and some other minor issues.</p>
+
+<p>Upgrading to 1.5.1 may increase the number of warnings reported.</p>
+
+<p><em>Changes since 1.5.0</em>:</p>
+
+<ul>
+<li>Fix detection of global mass assignment setting</li>
+<li>Fix partial rendering in Rails 3</li>
+<li>Show backtrace when interrupt received (Ruby 1.9 only)</li>
+<li>More debug output</li>
+<li>Internal fixes:
+
+<ul>
+<li>Remove duplicate method in Brakeman::Rails2XSSErubis</li>
+<li>Add tracking of module and class to Brakeman::BaseProcessor</li>
+<li>Report module when using Brakeman::FindCall</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Mass Assignment</h3>
+
+<p>Mass assignment is not a particularly new issue, but the amount of attention suddenly focused on it this weekend was amazing.</p>
+
+<p>This release of Brakeman can detect three different methods for defaulting all models to a whitelist of allowed attributes that can be mass assigned.</p>
+
+<p>The first is probably the most widely-seen version. In an intializer, do</p>
+
+<pre><code>ActiveRecord::Base.send(:attr_accessible, nil)
+</code></pre>
+
+<p>The second is essentially equivalent, but 1.5.1 adds support for it as well:</p>
+
+<pre><code>module ActiveRecord
+  class Base
+    attr_accessible nil
+  end
+end
+</code></pre>
+
+<p>The third option is only available for Rails 3.1.0 and newer. The following configuration setting can be added to <code>application.rb</code>:</p>
+
+<pre><code>config.active_record.whitelist_attributes = true
+</code></pre>
+
+<p>Brakeman should correctly detect all of these.</p>
+
+<p><a href="http://pragtob.wordpress.com/2012/03/06/secure-your-rails-apps/">This is a very nice post</a> explaining the dangers of mass assignment (mentioning Brakeman is nice, too.)</p>
+
+<h3>Partials in Rails 3</h3>
+
+<p>In Rails 3, <code>render 'blah'</code> is now equivalent to <code>render :partial =&gt; 'blah'</code> when used inside a template.</p>
+
+<p>Brakeman now supports this correctly.</p>
+
+<h3>Debug Output</h3>
+
+<p>More debugging output has been added for use with the <code>-d</code> option.</p>
+
+<p>Additionally, when interrupting the application (for example, with <code>^C</code>), a stack trace will be output. Please note, however, that this only works with Ruby 1.9.</p>
+
+<h3>Internal Changes</h3>
+
+<p>There have been a few internal changes. There is a possibility that these will affect some warnings. However, it should only result in accurate reporting of class names.</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any problems on <a href="https://github.com/presidentbeef/brakeman/issues">Github</a>!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/03/01/brakeman-1-dot-5-0-released/">Brakeman 1.5.0 Released</a></h1>
     
     
@@ -946,52 +1047,6 @@ Brakeman.run :app_path =&gt; 'my_app'
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2011/11/21/brakeman-0-dot-9-2-released/">Brakeman 0.9.2 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-11-21 17:12:00 -0800" pubdate  updated >Nov 21<span>st</span>, 2011</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Changes:</p>
-
-<ul>
-<li>Fix Rails 3 configuration parsing</li>
-<li>Check both t() and translate() for cross-site scripting bug</li>
-</ul>
-
-
-<p>Just a small release to get the Rails 3 config fix out.</p>
-
-<h3>Rails 3 Configuration Parsing</h3>
-
-<p>There was an issue that would cause Brakeman to crash on certain configurations. This has been fixed.</p>
-
-<h3>Look for t()</h3>
-
-<p>Both the <code>translate</code> and its shorter alias <code>t</code> will cause the warning about the cross-site scripting bug in them to be set to high confidence. If neither of these functions are found in the application, the confidence is set to medium.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1046,6 +1101,10 @@ Brakeman.run :app_path =&gt; 'my_app'
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/05/19/brakeman-3-dot-6-2-released/">Brakeman 3.6.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/03/24/brakeman-3-dot-6-1-released/">Brakeman 3.6.1 Released</a>
       </li>
     
@@ -1059,10 +1118,6 @@ Brakeman.run :app_path =&gt; 'my_app'
     
       <li class="post">
         <a href="/blog/2016/11/02/brakeman-3-dot-4-1-released/">Brakeman 3.4.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/09/07/brakeman-3-dot-4-0-released/">Brakeman 3.4.0 Released</a>
       </li>
     
   </ul>

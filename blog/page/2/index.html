@@ -109,6 +109,163 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2016/05/05/brakeman-3-dot-3-0-released/">Brakeman 3.3.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2016-05-05 09:49:00 -0700" pubdate  updated >May 5<span>th</span>, 2016</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Brakeman 3.3.0 introduces a new packaging method for Brakeman which vendors all dependencies and does not include any gem dependencies in the gemspec. Please test and provide feedback if it does not work as expected.</p>
+
+<p><em>Changes since 3.2.1</em>:</p>
+
+<ul>
+<li>Bundle all dependencies in gem</li>
+<li>Return exit code <code>4</code> if no Rails application is detected (<a href="https://github.com/presidentbeef/brakeman/issues/869">#869</a>)</li>
+<li>Add optional check for secrets in source code (<a href="https://github.com/presidentbeef/brakeman/issues/201">#201</a>)</li>
+<li>Track constants globally</li>
+<li>Skip if branches with <code>Rails.env.test?</code> (<a href="https://github.com/presidentbeef/brakeman/issues/862">#862</a>)</li>
+<li>Skip processing obviously false if branches (more broadly)</li>
+<li>Handle HAML <code>find_and_preserve</code> with a block (<a href="https://github.com/presidentbeef/brakeman/issues/837">#837</a>)</li>
+<li>Process <code>Array#first</code></li>
+<li>Allow non-Hash arguments in <code>protect_from_forgery</code> (<a href="https://github.com/jsyeo">Jason Yeo</a>)</li>
+<li>Avoid warning about <code>u</code> helper (<a href="https://github.com/cdollins">Chad Dollins</a>)</li>
+<li>Avoid warning about mass assignment and SQL injection with <code>params.slice</code> (<a href="https://github.com/presidentbeef/brakeman/issues/866">#866</a>)</li>
+<li>Avoid warning about <code>slice</code> in <code>redirect_to</code> and <code>link_to</code> (<a href="https://github.com/presidentbeef/brakeman/issues/832">#832</a>)</li>
+<li>Avoid warning on <code>popen</code> with array (<a href="https://github.com/presidentbeef/brakeman/issues/851">#851</a>)</li>
+<li>[Code Climate engine] When possible, output to /dev/stdout (<a href="https://github.com/GordonDiggs">Gordon Diggs</a>)</li>
+<li>[Code Climate engine] Remove nil entries from <code>include_paths</code> (<a href="https://github.com/GordonDiggs">Gordon Diggs</a>)</li>
+<li>[Code Climate engine] Report end lines for issues (<a href="https://github.com/GordonDiggs">Gordon Diggs</a>)</li>
+</ul>
+
+
+<h3>Dependency Bundling</h3>
+
+<p>In its gem form, Brakeman no longer declares any external dependencies. Its dependencies are bundled with the gem itself. This should prevent the conflicts which sometimes occur when Brakeman is declared as a dependency of a Rails application. The disadvantage is you will no longer be able to update Brakeman dependencies (like RubyParser) without updating Brakeman itself.</p>
+
+<p>As this is a new way of distributing Brakeman, please report any issues that may arise.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/845">changes</a>)</p>
+
+<h3>New Exit Code</h3>
+
+<p>A new exit code has been added for the case when Brakeman does not detect a Rails application.</p>
+
+<p>For reference, these are Brakeman&#8217;s current exit codes:</p>
+
+<ul>
+<li><code>0</code> - Normal exit</li>
+<li><code>3</code> - Warnings found (with <code>-z</code>)</li>
+<li><code>4</code> - No Rails application detected</li>
+<li><code>255</code> - Error</li>
+</ul>
+
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/870">changes</a>)</p>
+
+<h3>Secrets Check</h3>
+
+<p>A new optional check has been added to look for hard-coded secrets in the source code. It will warn when constants like <code>PASSWORD</code> are assigned string literals. To run the new check, use <code>-t Secrets</code> or <code>-A</code> to run all checks including optional ones.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/861">changes</a>)</p>
+
+<h3>Constant Values</h3>
+
+<p>This release includes initial support for tracking and matching constants across the application. For example, if a model contains a constant <code>Model::KEYS</code> which is used elsewhere, Brakeman should be able to track this value. This helps prevents false positives when safe values have been declared as constants.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/855">changes</a>)</p>
+
+<h3>Skipping Test Code</h3>
+
+<p>Brakeman will now ignore <code>if</code> branches that check <code>Rails.env.test?</code>. Additionally, branch skipping behavior (e.g. <code>if false...</code>) has been expanded to most of Brakeman&#8217;s processing instead of just in data flow analysis.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/868">changes</a>)</p>
+
+<h3>HAML <code>find_and_preserve</code></h3>
+
+<p>Brakeman will now handle uses of <code>find_and_preserve</code> in HAML with a block.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/839">changes</a>)</p>
+
+<h3>Array#first</h3>
+
+<p>Calls to <code>Array#first</code> will be replaced with the first value in the array when known.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/856">changes</a>)</p>
+
+<h3>Forgery Option</h3>
+
+<p><a href="https://github.com/jsyeo">Jason Yeo</a> provided a fix for when Brakeman encounters a non-Hash argument to <code>protect_from_forgery</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/849">changes</a>)</p>
+
+<h3><code>u</code> Helper</h3>
+
+<p><a href="https://github.com/cdollins">Chad Dollins</a> fixed XSS false positives when the <code>u</code> alias for <code>url_encode</code> is used.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/863">changes</a>)</p>
+
+<h3>Fewer <code>slice</code> False Positives</h3>
+
+<p>Brakeman should no longer warn when using <code>params.slice</code> in mass assignment, SQL injection, links, and open redirects.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/867">changes</a> and <a href="https://github.com/presidentbeef/brakeman/pull/871">other changes</a>)</p>
+
+<h3>Safe popen</h3>
+
+<p>Brakeman will no longer warn about uses of <code>popen</code> when the argument is an array, in which case the arguments are escaped.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/854">changes</a>)</p>
+
+<h3>Code Climate Engine</h3>
+
+<p><a href="https://github.com/GordonDiggs">Gordon Diggs</a> provided several improvements to the Code Climate Engine in this release:</p>
+
+<ul>
+<li>Remove <code>nil</code> entries from the <code>include_paths</code> option</li>
+<li>Force output to stdout when possible</li>
+<li>Report end lines to conform with spec</li>
+</ul>
+
+
+<h3>SHAs</h3>
+
+<p>The SHA256 sums for this release are</p>
+
+<pre><code>c01ec64d35218887fc5ea2ae8babc88e9e0e7cc3c161b020725d2b17c4189858  brakeman-3.3.0.gem
+f1adce1a696799342dc9f50b51975024060360dc9018358c5d8e34c1c4681bd1  brakeman-min-3.3.0.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed improvements in this release.</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion. Please note the mailing list is no longer in use and has apparently not been delivering mail for some time.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2016/02/24/brakeman-3-dot-2-1-released/">Brakeman 3.2.1 Released</a></h1>
     
     
@@ -1133,80 +1290,6 @@ c62cc782595d4995aa385b6bd96c2485ac932077  brakeman-3.0.5.gem
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2015/06/18/brakeman-3-dot-0-4-released/">Brakeman 3.0.4 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2015-06-18 10:50:00 -0700" pubdate  updated >Jun 18<span>th</span>, 2015</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a small release prompted by Tuesday&#8217;s CVE announcements. New checks for the CVEs directly in Rails have been added, and can also test for the suggested workarounds. Please consider using <a href="https://github.com/rubysec/bundler-audit">bundler-audit</a> for detecting known vulnerable versions of gems, as Brakeman has only limited coverage.</p>
-
-<p>Note this release also upgrades the RubyParser dependency. The latest RubyParser has several bug fixes and initial support for new Ruby 2.2 syntax.</p>
-
-<p><em>Changes since 3.0.3</em>:</p>
-
-<ul>
-<li>Add check for CVE-2015-3226 (XSS via JSON keys)</li>
-<li>Add check for CVE-2015-3227 (XML DoS)</li>
-<li>Treat <code>&lt;%==</code> as unescaped output (<a href="https://github.com/presidentbeef/brakeman/issues/661">#661</a>)</li>
-<li>Update <code>ruby_parser</code> dependency to 3.7.0</li>
-</ul>
-
-
-<h3>Cross Site Scripting in JSON</h3>
-
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/7VlB_pck3hU/3QZrGIaQW6cJ">CVE-2015-3226</a> is an issue with converting hashes to JSON. The keys do not properly escape HTML entities, leading to potential cross site scripting vulnerabilities. Brakeman will warn unless the workaround is included in an initializer (essentially verbatim). The warning is high confidence if there is evidence of explicitly converting values to JSON, otherwise medium.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/665">changes</a>)</p>
-
-<h3>XML Denial of Service</h3>
-
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/bahr2JLnxvk/x4EocXnHPp8J">CVE-2015-3227</a> is a potential denial of service when parsing deeply nested XML requests. Brakeman will warn about this unless there is an initializer changing the XML parser as described in the CVE. Currently it looks for either <code>LibXML</code> or <code>Nokogiri</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/666">changes</a>)</p>
-
-<h3>Double Equals is Unescaped Output</h3>
-
-<p>Brakeman will now treat <code>&lt;%== x %&gt;</code> in ERB templates as unescaped output.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/663">changes</a>)</p>
-
-<h3>SHAs</h3>
-
-<p>The SHA1 sums for this release are</p>
-
-<pre><code>bf6ae72a0b516ecf65b9165d07e86259ef9fa5d3  brakeman-3.0.4.gem
-c1c2ea5402d8a89fe4a645947ec324d0603d3976  brakeman-min-3.0.4.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1261,6 +1344,10 @@ c1c2ea5402d8a89fe4a645947ec324d0603d3976  brakeman-min-3.0.4.gem
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/05/19/brakeman-3-dot-6-2-released/">Brakeman 3.6.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/03/24/brakeman-3-dot-6-1-released/">Brakeman 3.6.1 Released</a>
       </li>
     
@@ -1274,10 +1361,6 @@ c1c2ea5402d8a89fe4a645947ec324d0603d3976  brakeman-min-3.0.4.gem
     
       <li class="post">
         <a href="/blog/2016/11/02/brakeman-3-dot-4-1-released/">Brakeman 3.4.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/09/07/brakeman-3-dot-4-0-released/">Brakeman 3.4.0 Released</a>
       </li>
     
   </ul>
