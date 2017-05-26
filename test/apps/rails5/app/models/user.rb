@@ -12,4 +12,11 @@ class User < ApplicationRecord
       User.where(params)
     end
   end
+
+  has_many :things,
+    -> { where(Thing.canadian.where_values_hash) }
+
+  def self.all_that_jazz(user)
+    User.where(User.access_condition(user))
+  end
 end

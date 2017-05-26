@@ -71,6 +71,19 @@ class BrakemanTests < Minitest::Test
     assert contains_foo_model
     assert contains_foo_view
   end
+
+  def test_engines_path
+    require 'brakeman/options'
+    relative_path = File.expand_path(File.join(TEST_PATH, "/apps/rails4_with_engines"))
+    input = ["-p", relative_path.to_s,
+             "--add-engines-path", "engine/user_removal"]
+    options, _ = Brakeman::Options.parse input
+    at = Brakeman::AppTree.from_options options
+
+    expected_controllers = %w{application_controller.rb removal_controller.rb users_controller.rb}
+    basename = Proc.new { |path| File.basename path }
+    assert (at.controller_paths.map(&basename) - expected_controllers).empty?
+  end
 end
 
 class UtilTests < Minitest::Test
@@ -325,6 +338,16 @@ class ConfigTests < Minitest::Test
 
     assert_output nil, "---\n:test_option:\n- test\n- test2\n" do
       Brakeman.dump_config(options)
+    end
+  end
+
+  def test_ensure_latest
+    Gem.stub :latest_version_for, Brakeman::Version do
+      refute Brakeman.ensure_latest
+    end
+
+    Gem.stub :latest_version_for, '0.1.2' do
+      assert_equal "Brakeman #{Brakeman::Version} is not the latest version 0.1.2", Brakeman.ensure_latest
     end
   end
 

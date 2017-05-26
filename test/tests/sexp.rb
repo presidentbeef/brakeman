@@ -306,7 +306,7 @@ class SexpTests < Minitest::Test
     exp = parse "blah; x = 1"
 
     assert_equal s(:lasgn, :x, s(:lit, 1)), exp.lasgn(true)
-    assert_equal nil, exp.lasgn #Was deleted
+    assert_nil exp.lasgn #Was deleted
   end
 
   def test_iasgn
@@ -315,7 +315,7 @@ class SexpTests < Minitest::Test
     exp = parse "blah; @x = 1"
 
     assert_equal s(:iasgn, :@x, s(:lit, 1)), exp.iasgn(true)
-    assert_equal nil, exp.iasgn #Was deleted
+    assert_nil exp.iasgn #Was deleted
   end
 
   def test_each_arg

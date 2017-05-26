@@ -1,3 +1,58 @@
+# 3.6.2
+
+* Handle safe call operator in checks
+* Better handling of `if` expressions in HAML rendering
+* Remove `--rake` option
+* Properly handle template names without `.html` or `.js`
+* Set template file names during rendering for better errors
+* Limit Slim dependency to before 3.0.8
+* Catch YAML parsing errors in session settings check
+* Avoid warning about SQLi with `to_s` in `exists?`
+* Update RubyParser to 3.9.0
+* Do not honor additional check paths in config by default
+* Handle empty `if` expressions when finding return values
+* Fix finding return value from empty `if`
+
+# 3.6.1
+
+* Fix error when using `--compare` (Sean Gransee)
+
+# 3.6.0 
+
+* Avoid recursive Concerns
+* Branch inside of `case` expressions
+* Print command line option errors without modification
+* Fix issue with nested interpolation inside SQL strings
+* Ignore GraphQL tags inside ERB templates
+* Add `--exit-on-error` (Michael Grosser)
+* Only report CVE-2015-3227 when exact version is known
+* Check targetless SQL calls outside of known models
+
+# 3.5.0
+
+* Allow `-t None`
+* Fail on invalid checks specified by `-x` or `-t`
+* Avoid warning about all, first, or last after Rails 4.0
+* Avoid warning about models in SQLi
+* Lower confidence of SQLi when maybe not on models
+* Warn about SQLi even potentially on non-models
+* Report check name in JSON and plain reports
+* Treat templates without `.html` as HTML anyway
+* Add `--ensure-latest` option (tamgrosser / Michael Grosser)
+* Add `--no-summary` to hide summaries in HTML/text reports
+* Handle `included` block in concerns
+* Process concerns before controllers
+
+# 3.4.1
+
+* Show action help at start of interactive ignore
+* Check CSRF setting in direct subclasses of `ActionController::Base` (Jason Yeo)
+* Configurable engines path (Jason Yeo)
+* Use Ruby version to turn off SymbolDoS check
+* Pull Ruby version from `.ruby-version` or Gemfile
+* Avoid warning about `where_values_hash` in SQLi
+* Fix ignoring link interpolation not at beginning of string
+
 # 3.4.0
 
 * Add new `plain` report format
@@ -77,7 +132,7 @@
 * Update ruby_parser dependency to 3.8.1
 * Remove `fastercsv` dependency
 * Fix finding calls with `targets: nil`
-* Remove `multi_json` dependecy
+* Remove `multi_json` dependency
 * Handle CoffeeScript in HAML
 * Avoid render warnings about params[:action]/params[:controller]
 * Index calls in class bodies but outside methods
@@ -93,7 +148,7 @@
 * Add check for mime-type denial of service (CVE-2016-0751)
 * Add check for basic auth timing attack (CVE-2015-7576)
 * Add initial Rails 5 support
-* Check for implict integer comparison in dynamic finders
+* Check for implicit integer comparison in dynamic finders
 * Support directories better in --only-files and --skip-files (Patrick Toomey)
 * Avoid warning about `permit` in SQL
 * Handle guards using `detect`
@@ -210,7 +265,7 @@
 * Remove formatting newlines in HAML template output
 * Ignore case value in XSS checks
 * Fix CSV output when there are no warnings
-* Handle processing of explictly shadowed block arguments
+* Handle processing of explicitly shadowed block arguments
 
 # 3.0.1
 
@@ -260,7 +315,7 @@
 * Add `-4` option to force Rails 4 mode
 * Check entire call for `send`
 * Check for .gitignore of secrets in subdirectories
-* Fix block statment endings in Erubis
+* Fix block statement endings in Erubis
 * Fix undefined variable in controller processing error (Jason Barnabe) 
 
 # 2.6.1

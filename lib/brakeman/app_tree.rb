@@ -19,6 +19,7 @@ module Brakeman
         init_options[:only_files] = regex_for_paths(options[:only_files])
       end
       init_options[:additional_libs_path] = options[:additional_libs_path]
+      init_options[:engine_paths] = options[:engine_paths]
       new(root, init_options)
     end
 
@@ -57,6 +58,9 @@ module Brakeman
       @skip_files = init_options[:skip_files]
       @only_files = init_options[:only_files]
       @additional_libs_path = init_options[:additional_libs_path] || []
+      @engine_paths = init_options[:engine_paths] || []
+      @absolute_engine_paths = @engine_paths.select { |path| path.start_with?(File::SEPARATOR) }
+      @relative_engine_paths = @engine_paths - @absolute_engine_paths
     end
 
     def expand_path(path)
@@ -85,24 +89,24 @@ module Brakeman
     end
 
     def initializer_paths
-      @initializer_paths ||= find_paths("config/initializers")
+      @initializer_paths ||= prioritize_concerns(find_paths("config/initializers"))
     end
 
     def controller_paths
-      @controller_paths ||= find_paths("app/**/controllers")
+      @controller_paths ||= prioritize_concerns(find_paths("app/**/controllers"))
     end
 
     def model_paths
-      @model_paths ||= find_paths("app/**/models")
+      @model_paths ||= prioritize_concerns(find_paths("app/**/models"))
     end
 
     def template_paths
-      @template_paths ||= find_paths("app/**/views", "*.{#{VIEW_EXTENSIONS}}")
+      @template_paths ||= find_paths("app/**/views", "*.{#{VIEW_EXTENSIONS}}") +
+                          find_paths("app/**/views", "*.{erb,haml,slim}").reject { |path| File.basename(path).count(".") > 1 }
     end
 
     def layout_exists?(name)
-      pattern = "#{@root}/{engines/*/,}app/views/layouts/#{name}.html.{erb,haml,slim}"
-      !Dir.glob(pattern).empty?
+      !Dir.glob("#{root_search_pattern}app/views/layouts/#{name}.html.{erb,haml,slim}").empty?
     end
 
     def lib_paths
@@ -121,10 +125,14 @@ module Brakeman
       @additional_libs_path.collect{ |path| find_paths path }.flatten
     end
 
-    def find_paths(directory, extensions = "*.rb")
-      pattern = @root + "/{engines/*/,}#{directory}/**/#{extensions}"
+    def find_paths(directory, extensions = ".rb")
+      select_files(glob_files(directory, "*", extensions).sort)
+    end
 
-      select_files(Dir.glob(pattern).sort)
+    def glob_files(directory, name, extensions = ".rb")
+      pattern = "#{root_search_pattern}#{directory}/**/#{name}#{extensions}"
+
+      Dir.glob(pattern)
     end
 
     def select_files(paths)
@@ -159,6 +167,20 @@ module Brakeman
       )
 
       files.match(project_relative_path)
+    end
+
+    def root_search_pattern
+      return @root_search_pattern if @root_search_pattern
+      abs = @absolute_engine_paths.to_a.map { |path| path.gsub /#{File::SEPARATOR}+$/, '' }
+      rel = @relative_engine_paths.to_a.map { |path| path.gsub /#{File::SEPARATOR}+$/, '' }
+
+      roots = ([@root] + abs).join(",")
+      rel_engines = (rel + [""]).join("/,")
+      @root_search_patrern = "{#{roots}}/{#{rel_engines}}"
+    end
+
+    def prioritize_concerns paths
+      paths.partition { |path| path.include? "concerns" }.flatten
     end
   end
 end

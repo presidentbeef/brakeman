@@ -5,7 +5,7 @@ module Brakeman
     include Util
 
     attr_reader :rails, :tracker
-    attr_accessor :rails_version
+    attr_accessor :rails_version, :ruby_version
     attr_writer :erubis, :escape_html
     attr_reader :gems
 
@@ -16,6 +16,7 @@ module Brakeman
       @settings = {}
       @escape_html = nil
       @erubis = nil
+      @ruby_version = ""
     end
 
     def allow_forgery_protection?
@@ -89,6 +90,14 @@ module Brakeman
       if get_gem :rails_xss
         @escape_html = true
         Brakeman.notify "[Notice] Escaping HTML by default"
+      end
+    end
+
+    def set_ruby_version version
+      return unless version.is_a? String
+
+      if version =~ /(\d+\.\d+\.\d+)/
+        self.ruby_version = $1
       end
     end
 

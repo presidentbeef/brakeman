@@ -9,6 +9,16 @@ module Brakeman
   #Exit code returned when no Rails application is detected
   No_App_Found_Exit_Code = 4
 
+  #Exit code returned when brakeman was outdated
+  Not_Latest_Version_Exit_Code = 5
+
+  #Exit code returned when user requests non-existent checks
+  Missing_Checks_Exit_Code = 6
+
+  #Exit code returned when errors were found and the --exit-on-error
+  #option is set
+  Errors_Found_Exit_Code = 7
+
   @debug = false
   @quiet = false
   @loaded_dependencies = []
@@ -48,8 +58,7 @@ module Brakeman
   #  * :skip_libs - do not process lib/ directory (default: false)
   #  * :skip_checks - checks not to run (run all if not specified)
   #  * :absolute_paths - show absolute path of each file (default: false)
-  #  * :summary_only - only output summary section of report
-  #                    (does not apply to tabs format)
+  #  * :summary_only - only output summary section of report for plain/table (:summary_only, :no_summary, true)
   #
   #Alternatively, just supply a path as a string.
   def self.run options
@@ -105,6 +114,14 @@ module Brakeman
         # After parsing the yaml config file for options, convert any string keys into symbols.
         options.keys.select {|k| k.is_a? String}.map {|k| k.to_sym }.each {|k| options[k] = options[k.to_s]; options.delete(k.to_s) }
 
+        unless line_options[:allow_check_paths_in_config]
+          if options.include? :additional_checks_path
+            options.delete :additional_checks_path
+
+            notify "[Notice] Ignoring additional check paths in config file. Use --allow-check-paths-in-config to allow" unless (options[:quiet] || quiet)
+          end
+        end
+
         # notify if options[:quiet] and quiet is nil||false
         notify "[Notice] Using configuration in #{config}" unless (options[:quiet] || quiet)
         options
@@ -146,7 +163,8 @@ module Brakeman
       :relative_path => false,
       :report_progress => true,
       :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css",
-      :output_color => true
+      :output_color => true,
+      :engine_paths => ["engines/*"]
     }
   end
 
@@ -259,43 +277,6 @@ module Brakeman
     end
   end
 
-  #Installs Rake task for running Brakeman,
-  #which basically means copying `lib/brakeman/brakeman.rake` to
-  #`lib/tasks/brakeman.rake` in the current Rails application.
-  def self.install_rake_task install_path = nil
-    if install_path
-      rake_path = File.join(install_path, "Rakefile")
-      task_path = File.join(install_path, "lib", "tasks", "brakeman.rake")
-    else
-      rake_path = "Rakefile"
-      task_path = File.join("lib", "tasks", "brakeman.rake")
-    end
-
-    if not File.exist? rake_path
-      raise RakeInstallError, "No Rakefile detected"
-    elsif File.exist? task_path
-      raise RakeInstallError, "Task already exists"
-    end
-
-    require 'fileutils'
-
-    if not File.exist? "lib/tasks"
-      notify "Creating lib/tasks"
-      FileUtils.mkdir_p "lib/tasks"
-    end
-
-    path = File.expand_path(File.dirname(__FILE__))
-
-    FileUtils.cp "#{path}/brakeman/brakeman.rake", task_path
-
-    if File.exist? task_path
-      notify "Task created in #{task_path}"
-      notify "Usage: rake brakeman:run[output_file]"
-    else
-      raise RakeInstallError, "Could not create task"
-    end
-  end
-
   #Output configuration to YAML
   def self.dump_config options
     require 'yaml'
@@ -323,6 +304,14 @@ module Brakeman
     end
   end
 
+  def self.ensure_latest
+    current = Brakeman::Version
+    latest = Gem.latest_version_for('brakeman').to_s
+    if current != latest
+      "Brakeman #{current} is not the latest version #{latest}"
+    end
+  end
+
   #Run a scan. Generally called from Brakeman.run instead of directly.
   def self.scan options
     #Load scanner
@@ -339,6 +328,8 @@ module Brakeman
     #Start scanning
     scanner = Scanner.new options
     tracker = scanner.tracker
+
+    check_for_missing_checks options[:run_checks], options[:skip_checks]
 
     notify "Processing application in #{tracker.app_path}"
     scanner.process
@@ -505,8 +496,16 @@ module Brakeman
     end if options[:additional_checks_path]
   end
 
+  def self.check_for_missing_checks included_checks, excluded_checks
+    missing = Brakeman::Checks.missing_checks(included_checks || Set.new, excluded_checks || Set.new)
+
+    unless missing.empty?
+      raise MissingChecksError, "Could not find specified check#{missing.length > 1 ? 's' : ''}: #{missing.to_a.join(', ')}"
+    end
+  end
+
   class DependencyError < RuntimeError; end
-  class RakeInstallError < RuntimeError; end
   class NoBrakemanError < RuntimeError; end
   class NoApplication < RuntimeError; end
+  class MissingChecksError < RuntimeError; end
 end

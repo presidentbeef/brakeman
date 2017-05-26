@@ -187,7 +187,7 @@ class RescannerTests < Minitest::Test
     before_rescan_of model do
       add_method model, <<-'RUBY'
       def bad_sql input
-        find(:all, :conditions => "x > #{input}")
+        User.find(:all, :conditions => "x > #{input}")
       end
       RUBY
     end

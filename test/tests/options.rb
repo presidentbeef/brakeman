@@ -3,6 +3,7 @@ require 'brakeman/options'
 class BrakemanOptionsTest < Minitest::Test
   EASY_OPTION_INPUTS = {
     :exit_on_warn           => "-z",
+    :exit_on_error          => "--exit-on-error",
     :rails3                 => "-3",
     :run_all_checks         => "-A",
     :assume_all_routes      => "-a",
@@ -15,14 +16,14 @@ class BrakemanOptionsTest < Minitest::Test
     :debug                  => "-d",
     :interactive_ignore     => "-I",
     :report_routes          => "-m",
-    :summary_only           => "--summary",
     :absolute_paths         => "--absolute-paths",
     :list_checks            => "-k",
     :list_optional_checks   => "--optional-checks",
-    :install_rake_task      => "--rake",
     :show_version           => "-v",
     :show_help              => "-h",
-    :force_scan             => "--force-scan"
+    :force_scan             => "--force-scan",
+    :ensure_latest          => "--ensure-latest",
+    :allow_check_paths_in_config => "--allow-check-paths-in-config",
   }
 
   ALT_OPTION_INPUTS = {
@@ -318,6 +319,15 @@ class BrakemanOptionsTest < Minitest::Test
 
     options = setup_options_from_input("-C")
     assert options[:create_config]
+  end
+
+  def test_summary_options
+    options = setup_options_from_input("--summary")
+
+    assert_equal :summary_only, options[:summary_only]
+
+    options = setup_options_from_input("--no-summary")
+    assert_equal :no_summary, options[:summary_only]
   end
 
   private

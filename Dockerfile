@@ -1,20 +1,13 @@
-FROM ruby:2.2.3-slim
+FROM ruby:2.4-alpine
 MAINTAINER Justin Collins
 
 WORKDIR /usr/src/app
-COPY Gemfile* /usr/src/app/
-COPY brakeman.gemspec /usr/src/app/
-COPY gem_common.rb /usr/src/app/
-COPY lib/brakeman/version.rb /usr/src/app/lib/brakeman/
-
-RUN apt-get update && \
-    apt-get install -y git && \
-    bundle install --jobs 4 --without "development test" && \
-    adduser --uid 9000 app
-
 COPY . /usr/src/app
-RUN chown -R app:app /usr/src/app
+RUN adduser -u 9000 -D app && \
+    chown -R app:app /usr/src/app
 USER app
+
+RUN bundle install --jobs 4 --without "development test"
 
 VOLUME /code
 WORKDIR /code

@@ -14,10 +14,20 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   @description = "Check for SQL injection"
 
   def run_check
-    @sql_targets = [:all, :average, :calculate, :count, :count_by_sql, :exists?, :delete_all, :destroy_all,
-      :find, :find_by_sql, :first, :last, :maximum, :minimum, :pluck, :sum, :update_all]
-    @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :select, :where] if tracker.options[:rails3]
+    narrow_targets = [:exists?, :select]
+
+    @sql_targets = [:average, :calculate, :count, :count_by_sql, :delete_all, :destroy_all,
+                    :find_by_sql, :maximum, :minimum, :pluck, :sum, :update_all]
+    @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :where] if tracker.options[:rails3]
     @sql_targets << :find_by << :find_by! if tracker.options[:rails4]
+
+    if version_between?("2.0.0", "3.9.9") or tracker.config.rails_version.nil?
+      @sql_targets << :first << :last << :all
+    end
+
+    if version_between?("2.0.0", "4.0.99") or tracker.config.rails_version.nil?
+      @sql_targets << :find
+    end
 
     @connection_calls = [:delete, :execute, :insert, :select_all, :select_one,
       :select_rows, :select_value, :select_values]
@@ -28,10 +38,12 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       @connection_calls.concat [:add_limit!, :add_offset_limit!, :add_lock!]
     end
 
+    @expected_targets = active_record_models.keys + [:connection, :"ActiveRecord::Base"]
+
     Brakeman.debug "Finding possible SQL calls on models"
-    calls = tracker.find_call :targets => active_record_models.keys,
-      :methods => @sql_targets,
-      :chained => true
+    calls = tracker.find_call(:methods => @sql_targets, :nested => true)
+
+    calls.concat tracker.find_call(:targets => active_record_models.keys, :methods => narrow_targets, :chained => true)
 
     Brakeman.debug "Finding possible SQL calls with no target"
     calls.concat tracker.find_call(:target => nil, :methods => @sql_targets)
@@ -39,8 +51,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     Brakeman.debug "Finding possible SQL calls using constantized()"
     calls.concat tracker.find_call(:methods => @sql_targets).select { |result| constantize_call? result }
 
-    connect_targets = active_record_models.keys + [:connection, :"ActiveRecord::Base"]
-    calls.concat tracker.find_call(:targets => connect_targets, :methods => @connection_calls, :chained => true).select { |result| connect_call? result }
+    calls.concat tracker.find_call(:targets => @expected_targets, :methods => @connection_calls, :chained => true).select { |result| connect_call? result }
 
     Brakeman.debug "Finding calls to named_scope or scope"
     calls.concat find_scope_calls
@@ -146,8 +157,6 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #
   def process_result result
     return if duplicate?(result) or result[:call].original_line
-    return if result[:target].nil? && !active_record_models.include?(result[:location][:class])
-
 
     call = result[:call]
     method = call.method
@@ -155,7 +164,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     dangerous_value = case method
                       when :find
                         check_find_arguments call.second_arg
-                      when :exists?, :delete_all, :destroy_all
+                      when :exists?
+                        check_exists call.first_arg
+                      when :delete_all, :destroy_all
                         check_find_arguments call.first_arg
                       when :named_scope, :scope
                         check_scope_arguments call
@@ -201,6 +212,17 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       else
         confidence = CONFIDENCE[:med]
         user_input = dangerous_value
+      end
+
+      if result[:call].target and result[:chain] and not @expected_targets.include? result[:chain].first
+        confidence = case confidence
+                     when CONFIDENCE[:high]
+                       CONFIDENCE[:med]
+                     when CONFIDENCE[:med]
+                       CONFIDENCE[:low]
+                     else
+                       confidence
+                     end
       end
 
       warn :result => result,
@@ -429,7 +451,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       unsafe_sql? exp.then_clause or unsafe_sql? exp.else_clause
     when :call
       unless IGNORE_METHODS_IN_SQL.include? exp.method
-        if has_immediate_user_input? exp or has_immediate_model? exp
+        if has_immediate_user_input? exp
           exp
         elsif exp.method == :to_s
           find_dangerous_value exp.target, ignore_hash
@@ -446,7 +468,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     when :block, :rlist
       unsafe_sql? exp.last
     else
-      if has_immediate_user_input? exp or has_immediate_model? exp
+      if has_immediate_user_input? exp
         exp
       else
         nil
@@ -549,7 +571,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     :quoted_primary_key, :to_i, :to_f, :sanitize_sql, :sanitize_sql_array,
     :sanitize_sql_for_assignment, :sanitize_sql_for_conditions, :sanitize_sql_hash,
     :sanitize_sql_hash_for_assignment, :sanitize_sql_hash_for_conditions,
-    :to_sql, :sanitize, :primary_key, :table_name_prefix, :table_name_suffix]
+    :to_sql, :sanitize, :primary_key, :table_name_prefix, :table_name_suffix,
+    :where_values_hash
+  ]
 
   def safe_value? exp
     return true unless sexp? exp
@@ -572,6 +596,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       safe_value? exp.last
     when :or
       safe_value? exp.lhs and safe_value? exp.rhs
+    when :dstr
+      not unsafe_string_interp? exp
     else
       false
     end
@@ -606,6 +632,14 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       check_call exp.target
     else
       nil
+    end
+  end
+
+  def check_exists arg
+    if call? arg and arg.method == :to_s
+      false
+    else
+      check_find_arguments arg
     end
   end
 

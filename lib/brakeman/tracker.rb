@@ -198,6 +198,16 @@ class Brakeman::Tracker
     @constants.get_literal name unless @options[:disable_constant_tracking]
   end
 
+  def find_class name
+    [@controllers, @models, @libs].each do |collection|
+      if c = collection[name]
+        return c
+      end
+    end
+
+    nil
+  end
+
   def index_call_sites
     finder = Brakeman::FindAllCalls.new self
 

@@ -108,6 +108,10 @@ class Brakeman::Scanner
       tracker.config.escape_html = true
       Brakeman.notify "[Notice] Escaping HTML by default"
     end
+
+    if @app_tree.exists? ".ruby-version"
+      tracker.config.set_ruby_version @app_tree.read ".ruby-version"
+    end
   end
 
   def process_config_file file

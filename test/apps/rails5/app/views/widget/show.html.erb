@@ -1,1 +1,4 @@
 <%= params[:x].html_safe unless this_is_a_bad_idea? %>
+
+<%= link_to("Thing", "#{ENV['SOME_URL']}#{params[:x]}") %>
+<%= link_to("Email!", "mailto:#{params[:x]}") %>

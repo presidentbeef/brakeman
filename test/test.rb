@@ -10,13 +10,6 @@ rescue LoadError => e
   $stderr.puts "Install simplecov for test coverage report"
 end
 
-begin
-  require "codeclimate-test-reporter"
-  CodeClimate::TestReporter.start
-rescue LoadError => e
-  $stderr.puts "Skipping Code Climate test reporting"
-end
-
 require 'brakeman'
 require 'brakeman/scanner'
 require 'minitest/autorun'

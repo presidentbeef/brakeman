@@ -71,4 +71,11 @@ class Brakeman::Rails3Erubis < ::Erubis::Eruby
       @newline_pending = 0
     end
   end
+
+  # This is borrowed from graphql's erb plugin:
+  # https://github.com/github/graphql-client/blob/51e76bd8d8b2ac0021d8fef7468b9a294e4bd6e8/lib/graphql/client/erubis.rb#L33-L38
+  def convert_input(src, input)
+    input = input.gsub(/<%graphql/, "<%#")
+    super(src, input)
+  end
 end

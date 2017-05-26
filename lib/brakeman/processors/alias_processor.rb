@@ -654,6 +654,75 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     exp
   end
 
+  def simple_when? exp
+    node_type? exp[1], :array and
+      not node_type? exp[1][1], :splat, :array and
+      (exp[1].length == 2 or
+       exp[1].all? { |e| e.is_a? Symbol or node_type? e, :lit, :str })
+  end
+
+  def process_case exp
+    if @ignore_ifs.nil?
+      @ignore_ifs = @tracker && @tracker.options[:ignore_ifs]
+    end
+
+    if @ignore_ifs
+      process_default exp
+      return exp
+    end
+
+    branch_scopes = []
+    was_inside = @inside_if
+    @inside_if = true
+
+    exp[1] = process exp[1] if exp[1]
+
+    case_value = if node_type? exp[1], :lvar, :ivar, :call
+      exp[1].deep_clone
+    end
+
+    exp.each_sexp do |e|
+      if node_type? e, :when
+        scope do
+          @branch_env = env.current
+
+          # set value of case var if possible
+          if case_value and simple_when? e
+            @branch_env[case_value] = e[1][1]
+          end
+
+          # when blocks aren't blocks, they are lists of expressions
+          process_default e
+
+          branch_scopes << env.current
+
+          @branch_env = nil
+        end
+      end
+    end
+
+    # else clause
+    if sexp? exp.last
+      scope do
+        @branch_env = env.current
+
+        process_default exp[-1]
+
+        branch_scopes << env.current
+
+        @branch_env = nil
+      end
+    end
+
+    @inside_if = was_inside
+
+    branch_scopes.each do |s|
+      merge_if_branch s
+    end
+
+    exp
+  end
+
   def process_if_branch exp
     if sexp? exp
       if block? exp
@@ -972,6 +1041,36 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
   end
 
+  def value_from_case exp
+    result = []
+
+    exp.each do |e|
+      if node_type? e, :when
+        result << e.last
+      end
+    end
+
+    result << exp.last if exp.last # else
+
+    result.reduce do |c, e|
+      if c.nil?
+        e
+      elsif node_type? e, :if
+        c.combine(value_from_if e)
+      elsif raise? e
+        c # ignore exceptions
+      elsif e
+        c.combine e
+      else # when e is nil
+        c
+      end
+    end
+  end
+
+  def raise? exp
+    call? exp and exp.method == :raise
+  end
+
   #Set variable to given value.
   #Creates "branched" versions of values when appropriate.
   #Avoids creating multiple branched versions inside same
@@ -979,6 +1078,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def set_value var, value
     if node_type? value, :if
       value = value_from_if(value)
+    elsif node_type? value, :case
+      value = value_from_case(value)
     end
 
     if @ignore_ifs or not @inside_if

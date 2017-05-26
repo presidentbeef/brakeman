@@ -10,7 +10,7 @@ require 'brakeman/version'
 begin
   options, parser = Brakeman::Options.parse! ARGV
 rescue OptionParser::ParseError => e
-  $stderr.puts e.message.capitalize
+  $stderr.puts e.message
   $stderr.puts "Please see `brakeman --help` for valid options"
   exit(-1)
 end
@@ -27,9 +27,6 @@ elsif options[:show_help]
   exit
 elsif options[:show_version]
   puts "brakeman #{Brakeman::Version}"
-  exit
-elsif options[:install_rake_task]
-  Brakeman.install_rake_task
   exit
 end
 
@@ -57,6 +54,13 @@ if options[:quiet].nil?
 end
 
 begin
+  if options[:ensure_latest]
+    if error = Brakeman.ensure_latest
+      warn error
+      exit Brakeman::Not_Latest_Version_Exit_Code
+    end
+  end
+
   if options[:previous_results_json]
     require 'json'
     vulns = Brakeman.compare options.merge(:quiet => options[:quiet])
@@ -82,8 +86,17 @@ begin
     if tracker.options[:exit_on_warn] and not tracker.filtered_warnings.empty?
       exit Brakeman::Warnings_Found_Exit_Code
     end
+
+    #Return error code if --exit-on-error is used and errors were found
+    if tracker.options[:exit_on_error] and tracker.errors.any?
+      exit Brakeman::Errors_Found_Exit_Code
+    end
   end
+
 rescue Brakeman::NoApplication => e
-  $stderr.puts e.message
+  warn e.message
   exit Brakeman::No_App_Found_Exit_Code
+rescue Brakeman::MissingChecksError => e
+  warn e.message
+  exit Brakeman::Missing_Checks_Exit_Code
 end

@@ -81,7 +81,9 @@ class Brakeman::FindReturnValue
       then_clause = exp.then_clause
       else_clause = exp.else_clause
 
-      if then_clause.nil?
+      if then_clause.nil? and else_clause.nil?
+        nil
+      elsif then_clause.nil?
         last_value else_clause
       elsif else_clause.nil?
         last_value then_clause

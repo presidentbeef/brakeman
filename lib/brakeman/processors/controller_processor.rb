@@ -16,6 +16,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     @current_module = nil
     @visibility = :public
     @file_name = nil
+    @concerns = Set.new
   end
 
   #Use this method to process a Controller
@@ -61,6 +62,17 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     handle_module exp, Brakeman::Controller, parent
   end
 
+  def process_concern concern_name
+    return unless @current_class
+
+    if mod = @tracker.find_class(concern_name)
+      if mod.options[:included] and not @concerns.include? concern_name
+        @concerns << concern_name
+        process mod.options[:included].deep_clone
+      end
+    end
+  end
+
   #Look for specific calls inside the controller
   def process_call exp
     return exp if process_call_defn? exp
@@ -89,7 +101,11 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
       else
         case method
         when :include
-          @current_class.add_include class_name(first_arg) if @current_class
+          if @current_class
+            concern = class_name(first_arg)
+            @current_class.add_include concern
+            process_concern concern
+          end
         when :before_filter, :append_before_filter, :before_action, :append_before_action
           if node_type? exp.first_arg, :iter
             add_lambda_filter exp

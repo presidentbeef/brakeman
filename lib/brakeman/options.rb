@@ -43,6 +43,14 @@ module Brakeman::Options
           options[:exit_on_warn] = exit_on_warn
         end
 
+        opts.on "--[no-]exit-on-error", "Exit code is non-zero if errors found" do |exit_on_error|
+          options[:exit_on_error] = exit_on_error
+        end
+
+        opts.on "--ensure-latest", "Fail when Brakeman is outdated" do
+          options[:ensure_latest] = true
+        end
+
         opts.on "-3", "--rails3", "Force Rails 3 mode" do
           options[:rails3] = true
         end
@@ -136,6 +144,11 @@ module Brakeman::Options
           options[:additional_libs_path].merge paths
         end
 
+        opts.on "--add-engines-path path1,path2,etc", Array, "Include these engines in the scan" do |paths|
+          options[:engine_paths] ||= Set.new
+          options[:engine_paths].merge paths
+        end
+
         opts.on "-t", "--test Check1,Check2,etc", Array, "Only run the specified checks" do |checks|
           checks.each_with_index do |s, index|
             if s[0,5] != "Check"
@@ -224,8 +237,12 @@ module Brakeman::Options
           options[:collapse_mass_assignment] = !separate
         end
 
-        opts.on "--summary", "Only output summary of warnings" do
-          options[:summary_only] = true
+        opts.on "--[no-]summary", "Only output summary of warnings" do |summary_only|
+          if summary_only
+            options[:summary_only] = :summary_only
+          else
+            options[:summary_only] = :no_summary
+          end
         end
 
         opts.on "--absolute-paths", "Output absolute file paths in reports" do
@@ -244,7 +261,7 @@ module Brakeman::Options
           options[:min_confidence] =  3 - level.to_i
         end
 
-        opts.on "--compare FILE", "Compare the results of a previous brakeman scan (only JSON is supported)" do |file|
+        opts.on "--compare FILE", "Compare the results of a previous Brakeman scan (only JSON is supported)" do |file|
           options[:previous_results_json] = File.expand_path(file)
         end
 
@@ -263,6 +280,10 @@ module Brakeman::Options
           end
         end
 
+        opts.on "--allow-check-paths-in-config", "Allow loading checks from configuration file (Unsafe)" do
+          options[:allow_check_paths_in_config] = true
+        end
+
         opts.separator ""
 
         opts.on "-k", "--checks", "List all available vulnerability checks" do
@@ -271,10 +292,6 @@ module Brakeman::Options
 
         opts.on "--optional-checks", "List optional checks" do
           options[:list_optional_checks] = true
-        end
-
-        opts.on "--rake", "Create rake task to run Brakeman" do
-          options[:install_rake_task] = true
         end
 
         opts.on "-v", "--version", "Show Brakeman version" do

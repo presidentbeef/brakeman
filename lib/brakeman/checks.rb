@@ -37,6 +37,24 @@ class Brakeman::Checks
     end
   end
 
+  def self.missing_checks included_checks, excluded_checks
+    included_checks = included_checks.map(&:to_s).to_set
+    excluded_checks = excluded_checks.map(&:to_s).to_set
+
+    if included_checks == Set['CheckNone']
+      return []
+    else
+      loaded = self.checks.map { |name| name.to_s.gsub('Brakeman::', '') }.to_set
+      missing = (included_checks - loaded) + (excluded_checks - loaded)
+
+      unless missing.empty?
+        return missing
+      end
+    end
+
+    []
+  end
+
   #No need to use this directly.
   def initialize options = { }
     if options[:min_confidence]

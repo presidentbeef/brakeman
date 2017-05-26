@@ -3,12 +3,18 @@ Brakeman.load_brakeman_dependency 'highline'
 class Brakeman::Report::Text < Brakeman::Report::Base
   def generate_report
     HighLine.use_color = !!tracker.options[:output_color]
+    summary_option = tracker.options[:summary_only]
     @output_string = "\n"
 
-    add_chunk generate_header
-    add_chunk generate_overview
-    add_chunk generate_warning_overview
-    return @output_string if tracker.options[:summary_only]
+    unless summary_option == :no_summary
+      add_chunk generate_header
+      add_chunk generate_overview
+      add_chunk generate_warning_overview
+    end
+
+    if summary_option == :summary_only or summary_option == true
+      return @output_string
+    end
 
     add_chunk generate_controllers if tracker.options[:debug] or tracker.options[:report_routes]
     add_chunk generate_templates if tracker.options[:debug]
@@ -126,6 +132,7 @@ class Brakeman::Report::Text < Brakeman::Report::Base
     out = [
       label('Confidence', confidence(w.confidence)),
       label('Category', w.warning_type.to_s),
+      label('Check', w.check.gsub(/^Brakeman::Check/, '')),
       label('Message', w.message)
     ]
 

@@ -12,8 +12,8 @@ class Rails5Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 7,
-      :generic => 10
+      :template => 9,
+      :generic => 11
     }
   end
 
@@ -196,6 +196,32 @@ class Rails5Tests < Minitest::Test
       :user_input => nil
   end
 
+  def test_cross_site_scripting_in_layout
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "7aec2bbe8fa40f49f08b70dfc8c0b6afdc9be252eb0459a3d5313bc904d9ec77",
+      :warning_type => "Cross Site Scripting",
+      :line => 2,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :relative_path => "app/views/layouts/users.html.erb",
+      :code => s(:call, s(:call, s(:const, :User), :new), :name),
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_in_template_with_no_html_extension
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "dbec030dda82f21c5ea860e38746de64a6f3b9c49508ae2db947759a753a386c",
+      :warning_type => "Cross Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/widget/no_html.haml",
+      :code => s(:call, s(:params), :[], s(:lit, :x)),
+      :user_input => nil
+  end
+
   def test_if_expression_in_templates
     assert_warning :type => :template,
       :warning_code => 2,
@@ -245,6 +271,58 @@ class Rails5Tests < Minitest::Test
       :relative_path => "app/helpers/users_helper.rb",
       :code => s(:call, nil, :eval, s(:call, s(:params), :[], s(:lit, :x))),
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_sql_injection_where_values_hash_fp
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "2a77f56c4c09590a4cac1fe68dd00c0fa0a7820ea6f0d4bad20451ecc07dc68e",
+      :warning_type => "SQL Injection",
+      :line => 17,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb",
+      :code => s(:call, nil, :where, s(:call, s(:call, s(:const, :Thing), :canadian), :where_values_hash)),
+      :user_input => s(:call, s(:call, s(:const, :Thing), :canadian), :where_values_hash)
+  end
+
+  def test_sql_injection_from_model_call_fp
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "dcfa0c30b2d303c58bde5b376f423cff6282bbc71ed460077478ca97e1f4d0f7",
+      :warning_type => "SQL Injection",
+      :line => 20,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb",
+      :code => s(:call, s(:const, :User), :where, s(:call, s(:const, :User), :access_condition, s(:lvar, :user))),
+      :user_input => s(:call, s(:const, :User), :access_condition, s(:lvar, :user))
+  end
+
+  def test_targetless_sql_injection_outside_of_AR_model
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "fe0098fc5ab1051854573b487855f348bd9320c8eb5ae55302b4649d0147d7dd",
+      :warning_type => "SQL Injection",
+      :line => 3,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "lib/a_lib.rb",
+      :code => s(:call, nil, :joins, s(:dstr, "INNER JOIN things ON id = ", s(:evstr, s(:call, s(:params), :[], s(:lit, :id))))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :id))
+  end
+
+  def test_sql_injection_in_interp_branch
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "13c2dbdbce47c04755e5019dba4fc03729167c71a63e1d4bab81d672ff3975a0",
+      :warning_type => "SQL Injection",
+      :line => 93,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:call, s(:const, :User), :connection), :execute, s(:dstr, "SELECT * FROM foo WHERE ", s(:evstr, s(:if, s(:true), s(:dstr, "bar = ", s(:evstr, s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :quote, s(:true)))), nil)))),
+      :user_input => s(:if, s(:true), s(:dstr, "bar = ", s(:evstr, s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :quote, s(:true)))), nil)
   end
 
   def test_cross_site_scripting_CVE_2015_7578
@@ -358,5 +436,37 @@ class Rails5Tests < Minitest::Test
       :confidence => 0,
       :relative_path => "app/models/user.rb",
       :user_input => s(:params)
+  end
+
+  def test_link_to_href_safe_interpolation
+    assert_no_warning :type => :template,
+      :warning_code => 4,
+      :fingerprint => "840e79fc7cc526a9e744b8a3d49f6689aa572941f46b030d14cdec01f3675a4a",
+      :warning_type => "Cross Site Scripting",
+      :line => 3,
+      :message => /^Unsafe\ parameter\ value\ in\ link_to\ href/,
+      :confidence => 0,
+      :relative_path => "app/views/widget/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, "Thing"), s(:dstr, "", s(:evstr, s(:call, s(:const, :ENV), :[], s(:str, "SOME_URL"))), s(:evstr, s(:call, s(:params), :[], s(:lit, :x))))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+
+    assert_no_warning :type => :template,
+      :warning_code => 4,
+      :fingerprint => "ea91f7cfb339ae9522f00fb1f3bc176f789110b6e0cbc4f8704e95d0999b0e71",
+      :warning_type => "Cross Site Scripting",
+      :line => 4,
+      :message => /^Unsafe\ parameter\ value\ in\ link_to\ href/,
+      :confidence => 0,
+      :relative_path => "app/views/widget/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, "Email!"), s(:dstr, "mailto:", s(:evstr, s(:call, s(:params), :[], s(:lit, :x))))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_mixed_in_csrf_protection
+    assert_no_warning :type => :controller,
+      :warning_type => "Cross-Site Request Forgery",
+      :line => 1,
+      :message => /^'protect_from_forgery'\ should\ be\ called\ /,
+      :relative_path => "app/controllers/mixed_controller.rb"
   end
 end

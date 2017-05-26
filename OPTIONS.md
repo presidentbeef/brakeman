@@ -247,12 +247,6 @@ To show checks which are optional (not run by default):
 
     brakeman --optional-checks
 
-To generate a Rake task to run Brakeman:
-
-    brakeman --rake
-
-Note this is not recommended, since Rake will load your entire Rails app, which is not necessary for Brakeman and may cause library conflicts.
-
 To see Brakeman's version:
 
     brakeman --version

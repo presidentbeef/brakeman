@@ -36,7 +36,9 @@ Outside of Rails root:
 
 # Compatibility
 
-Brakeman works with Rails 2.x, 3.x, and 4.x.
+Brakeman should work with any version of Rails from 2.3.x to 5.x.
+
+Brakeman can analyze code written with Ruby 1.8 syntax and newer, but requires at least Ruby 1.9.3 to run.
 
 # Basic Options
 
@@ -101,7 +103,7 @@ To create and manage this file, use:
 
 # Warning information
 
-See [WARNING\_TYPES](WARNING_TYPES) for more information on the warnings reported by this tool.
+See [warning\_types](docs/warning_types) for more information on the warnings reported by this tool.
 
 # Warning context
 

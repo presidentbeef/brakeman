@@ -88,4 +88,8 @@ class UsersController < ApplicationController
       User.find_by(params.slice(:id))
       redirect_to params.slice(:back_to)
     end
+
+    def nested_sql_interp 
+      User.connection.execute("SELECT * FROM foo WHERE #{true ? "bar = #{ActiveRecord::Base.connection.quote(true)}" : "bar = 0"}")
+    end
 end
