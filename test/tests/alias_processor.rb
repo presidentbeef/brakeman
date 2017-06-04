@@ -954,4 +954,28 @@ class AliasProcessorTests < Minitest::Test
       end
     OUTPUT
   end
+
+  def test_less_copying_of_arrays_and_hashes
+    assert_output <<-'INPUT', <<-'OUTPUT'
+      x = {}
+      x[y] = x[z]
+      x[z] = x[q] + x[y]
+      x[g] = x[z] + x[y]
+    INPUT
+      x = {}
+      x[y] = x[z]
+      x[z] = x[q] + x[z]
+      x[g] = x[q] + x[z] + x[z]
+    OUTPUT
+  end
+
+  def test_less_copying_of_arrays_and_hashes_and_params
+    assert_output <<-INPUT, <<-OUTPUT
+      x = params
+      x.symbolize_keys[:x]
+    INPUT
+      x = params
+      params.symbolize_keys[:x]
+    OUTPUT
+  end
 end

@@ -430,7 +430,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   # x[:y] = 1
   def process_attrasgn exp
     tar_variable = exp.target
-    target = exp.target = process(exp.target)
+    target = process(exp.target)
     method = exp.method
     index_arg = exp.first_arg
     value_arg = exp.second_arg
@@ -444,6 +444,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
       if hash? target
         env[tar_variable] = hash_insert target.deep_clone, index, value
+      else
+        exp.target = target
       end
     elsif method.to_s[-1,1] == "="
       exp.first_arg = process(index_arg)
@@ -452,6 +454,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       match = Sexp.new(:call, target, method.to_s[0..-2].to_sym)
 
       set_value match, value
+      exp.target = target
     else
       raise "Unrecognized assignment: #{exp}"
     end
