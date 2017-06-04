@@ -116,6 +116,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       exp.target = t.deep_clone(exp.line)
       exp
     else
+      exp.target = process_default exp.target
       exp
     end
   end
