@@ -88,22 +88,52 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   end
 
   def process_bracket_call exp
-    if r = env[exp]
-      return r.deep_clone(exp.line)
+    r = replace(exp)
+
+    if r != exp
+      return r
     end
 
     exp.arglist = process_default(exp.arglist)
 
-    if r = env[exp]
-      return r.deep_clone(exp.line)
+    r = replace(exp)
+
+    if r != exp
+      return r
     end
 
-    t = env[exp.target]
+    t = replace(exp.target)
 
-    if node_type? t, :hash
+    # sometimes t[blah] has a match in the env
+    # but we don't want to actually set the target
+    # in case the target is big...which is what this
+    # whole method is trying to avoid
+    if t != exp.target
+      e = exp.deep_clone
+      e.target = t
+
+      r = replace(e)
+
+      if r != e
+        return r
+      end
+    else
+      t = nil
+    end
+
+    if hash? t
       if v = hash_access(t, exp.first_arg)
         v.deep_clone(exp.line)
       else
+        case t.node_type
+        when :params
+          exp.target = PARAMS_SEXP.deep_clone(exp.target.line)
+        when :session
+          exp.target = SESSION_SEXP.deep_clone(exp.target.line)
+        when :cookies
+          exp.target = COOKIES_SEXP.deep_clone(exp.target.line)
+        end
+
         exp
       end
     elsif array? t
@@ -113,12 +143,13 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         exp
       end
     elsif t
-      exp.target = t.deep_clone(exp.line)
+      exp.target = t
       exp
     else
       if exp.target # `self` target is reported as `nil` https://github.com/seattlerb/ruby_parser/issues/250
         exp.target = process_default exp.target
       end
+
       exp
     end
   end
@@ -446,7 +477,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
       if hash? target
         env[tar_variable] = hash_insert target.deep_clone, index, value
-      else
+      end
+
+      unless node_type? target, :hash
         exp.target = target
       end
     elsif method.to_s[-1,1] == "="
