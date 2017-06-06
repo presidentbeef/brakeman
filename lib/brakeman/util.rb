@@ -124,18 +124,6 @@ module Brakeman::Util
     nil
   end
 
-  def call_has_param call, key
-    if key.is_a? Symbol
-      key = Sexp.new(:call, s(:params), key)
-    end
-
-    if index = call.find_index(key)
-      return true
-    end
-
-    false
-  end
-
   #These are never modified
   PARAMS_SEXP = Sexp.new(:params)
   SESSION_SEXP = Sexp.new(:session)

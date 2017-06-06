@@ -119,6 +119,17 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     return call_has_param(arg, :to_unsafe_hash) || call_has_param(arg, :to_unsafe_h)
   end
 
+  def call_has_param arg, key
+    if call? arg and call? arg.target
+      target = arg.target
+      method = target.method
+
+      node_type? target.target, :params and method == key
+    else
+      false
+    end
+  end
+
   def has_only_path? arg
     if value = hash_access(arg, :only_path)
       return true if true?(value)
