@@ -87,6 +87,73 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
   end
 
+  def process_bracket_call exp
+    r = replace(exp)
+
+    if r != exp
+      return r
+    end
+
+    exp.arglist = process_default(exp.arglist)
+
+    r = replace(exp)
+
+    if r != exp
+      return r
+    end
+
+    t = replace(exp.target)
+
+    # sometimes t[blah] has a match in the env
+    # but we don't want to actually set the target
+    # in case the target is big...which is what this
+    # whole method is trying to avoid
+    if t != exp.target
+      e = exp.deep_clone
+      e.target = t
+
+      r = replace(e)
+
+      if r != e
+        return r
+      end
+    else
+      t = nil
+    end
+
+    if hash? t
+      if v = hash_access(t, exp.first_arg)
+        v.deep_clone(exp.line)
+      else
+        case t.node_type
+        when :params
+          exp.target = PARAMS_SEXP.deep_clone(exp.target.line)
+        when :session
+          exp.target = SESSION_SEXP.deep_clone(exp.target.line)
+        when :cookies
+          exp.target = COOKIES_SEXP.deep_clone(exp.target.line)
+        end
+
+        exp
+      end
+    elsif array? t
+      if v = process_array_access(t, exp.args)
+        v.deep_clone(exp.line)
+      else
+        exp
+      end
+    elsif t
+      exp.target = t
+      exp
+    else
+      if exp.target # `self` target is reported as `nil` https://github.com/seattlerb/ruby_parser/issues/250
+        exp.target = process_default exp.target
+      end
+
+      exp
+    end
+  end
+
   ARRAY_CONST = s(:const, :Array)
   HASH_CONST = s(:const, :Hash)
   RAILS_TEST = s(:call, s(:call, s(:const, :Rails), :env), :test?)
@@ -99,7 +166,12 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     if exp.node_type == :safe_call
       exp.node_type = :call
     end
-    exp = process_default exp
+
+    if exp.method == :[]
+      return process_bracket_call exp
+    else
+      exp = process_default exp
+    end
 
     #In case it is replaced with something else
     unless call? exp
@@ -391,7 +463,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   # x[:y] = 1
   def process_attrasgn exp
     tar_variable = exp.target
-    target = exp.target = process(exp.target)
+    target = process(exp.target)
     method = exp.method
     index_arg = exp.first_arg
     value_arg = exp.second_arg
@@ -406,6 +478,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       if hash? target
         env[tar_variable] = hash_insert target.deep_clone, index, value
       end
+
+      unless node_type? target, :hash
+        exp.target = target
+      end
     elsif method.to_s[-1,1] == "="
       exp.first_arg = process(index_arg)
       value = get_rhs(exp)
@@ -413,6 +489,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       match = Sexp.new(:call, target, method.to_s[0..-2].to_sym)
 
       set_value match, value
+      exp.target = target
     else
       raise "Unrecognized assignment: #{exp}"
     end
