@@ -14,7 +14,7 @@ module Brakeman
       spec.add_dependency "terminal-table", "~>1.4"
       spec.add_dependency "highline", ">=1.6.20", "<2.0"
       spec.add_dependency "erubis", "~>2.6"
-      spec.add_dependency "haml", ">=3.0", "<5.0"
+      spec.add_dependency "haml", ">=4.0", "<6.0"
       spec.add_dependency "sass", "~>3.0"
       spec.add_dependency "slim", ">=1.3.6", "<3.0.8"
     end
