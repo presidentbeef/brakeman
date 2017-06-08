@@ -70,7 +70,7 @@ module Brakeman::RenderHelper
     #Hash the environment and the source of the template to avoid
     #pointlessly processing templates, which can become prohibitively
     #expensive in terms of time and memory.
-    digest = Digest::SHA1.new.update(template_env.instance_variable_get(:@env).to_a.sort.to_s << name).to_s.to_sym
+    digest = template_env.instance_variable_get(:@env).to_a.sort.push(name).hash
 
     if @tracker.template_cache.include? digest
       #Already processed this template with identical environment
@@ -130,7 +130,7 @@ module Brakeman::RenderHelper
       #TODO: Add in :locals => { ... } to environment
       src = Brakeman::TemplateAliasProcessor.new(@tracker, template, called_from).process_safely(template.src, template_env)
 
-      digest = Digest::SHA1.new.update(name + src.to_s).to_s.to_sym
+      digest = [name, src].hash
 
       if @tracker.template_cache.include? digest
         return
