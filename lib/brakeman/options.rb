@@ -280,6 +280,10 @@ module Brakeman::Options
           end
         end
 
+        opts.on "--allow-check-paths-in-config", "Allow loading checks from configuration file (Unsafe)" do
+          options[:allow_check_paths_in_config] = true
+        end
+
         opts.separator ""
 
         opts.on "-k", "--checks", "List all available vulnerability checks" do

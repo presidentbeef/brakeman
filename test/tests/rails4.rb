@@ -354,6 +354,19 @@ class Rails4Tests < Minitest::Test
       :user_input => s(:call, s(:params), :[], s(:lit, :user_search))
   end
 
+  def test_sql_injection_exists_to_s
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "7161505aefba0df5f732d479904a220ea52f0aff3ab1bfa4d8b6170854943d7e",
+      :warning_type => "SQL Injection",
+      :line => 125,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :User), :exists?, s(:call, s(:call, s(:params), :[], s(:lit, :x)), :to_s)),
+      :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :x)), :to_s)
+  end
+
   def test_dynamic_render_path_with_before_action
     assert_warning :type => :warning,
       :warning_code => 99,

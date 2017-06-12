@@ -1,3 +1,18 @@
+# 3.6.2
+
+* Handle safe call operator in checks
+* Better handling of `if` expressions in HAML rendering
+* Remove `--rake` option
+* Properly handle template names without `.html` or `.js`
+* Set template file names during rendering for better errors
+* Limit Slim dependency to before 3.0.8
+* Catch YAML parsing errors in session settings check
+* Avoid warning about SQLi with `to_s` in `exists?`
+* Update RubyParser to 3.9.0
+* Do not honor additional check paths in config by default
+* Handle empty `if` expressions when finding return values
+* Fix finding return value from empty `if`
+
 # 3.6.1
 
 * Fix error when using `--compare` (Sean Gransee)

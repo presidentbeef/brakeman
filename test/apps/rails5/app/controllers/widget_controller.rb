@@ -69,6 +69,10 @@ class WidgetController < ApplicationController
       render partial: params[:switch_case_on_this], locals: { x: 2 }
     end
   end
+
+  def no_html
+    @x = params[:x].html_safe
+  end
 end
 
 IDENTIFIER_NAMESPACE = 'apis'

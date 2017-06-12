@@ -22,11 +22,11 @@ module Brakeman
         src = case type
               when :erb
                 type = :erubis if erubis?
-                parse_erb text
+                parse_erb path, text
               when :haml
-                parse_haml text
+                parse_haml path, text
               when :slim
-                parse_slim text
+                parse_slim path, text
               else
                 tracker.error "Unknown template type in #{path}"
                 nil
@@ -46,21 +46,21 @@ module Brakeman
       nil
     end
 
-    def parse_erb text
+    def parse_erb path, text
       if tracker.config.escape_html?
         if tracker.options[:rails3]
           require 'brakeman/parsers/rails3_erubis'
-          Brakeman::Rails3Erubis.new(text).src
+          Brakeman::Rails3Erubis.new(text, :filename => path).src
         else
           require 'brakeman/parsers/rails2_xss_plugin_erubis'
-          Brakeman::Rails2XSSPluginErubis.new(text).src
+          Brakeman::Rails2XSSPluginErubis.new(text, :filename => path).src
         end
       elsif tracker.config.erubis?
         require 'brakeman/parsers/rails2_erubis'
-        Brakeman::ScannerErubis.new(text).src
+        Brakeman::ScannerErubis.new(text, :filename => path).src
       else
         require 'erb'
-        src = ERB.new(text, nil, "-").src
+        src = ERB.new(text, nil, path).src
         src.sub!(/^#.*\n/, '') if Brakeman::Scanner::RUBY_1_9
         src
       end
@@ -71,25 +71,27 @@ module Brakeman
         tracker.config.erubis?
     end
 
-    def parse_haml text
+    def parse_haml path, text
       Brakeman.load_brakeman_dependency 'haml'
       Brakeman.load_brakeman_dependency 'sass'
 
       Haml::Engine.new(text,
+                       :filename => path,
                        :escape_html => tracker.config.escape_html?).precompiled.gsub(/([^\\])\\n/, '\1')
     end
 
-    def parse_slim text
+    def parse_slim path, text
       Brakeman.load_brakeman_dependency 'slim'
 
-      Slim::Template.new(:disable_capture => true,
+      Slim::Template.new(path,
+                         :disable_capture => true,
                          :generator => Temple::Generators::RailsOutputBuffer) { text }.precompiled_template
     end
 
     def self.parse_inline_erb tracker, text
       fp = Brakeman::FileParser.new(nil, nil)
       tp = self.new(tracker, fp)
-      src = tp.parse_erb text
+      src = tp.parse_erb '_inline_', text
       type = tp.erubis? ? :erubis : :erb
 
       return type, fp.parse_ruby(src, "_inline_")

@@ -115,7 +115,13 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
       yaml = @app_tree.read secrets_file
       require 'date' # https://github.com/dtao/safe_yaml/issues/80
       require 'safe_yaml/load'
-      secrets = SafeYAML.load yaml
+      begin
+        secrets = SafeYAML.load yaml
+      rescue Psych::SyntaxError, RuntimeError => e
+        Brakeman.notify "[Notice] #{self.class}: Unable to parse `#{secrets_file}`"
+        Brakeman.debug "Failed to parse #{secrets_file}: #{e.inspect}"
+        return
+      end
 
       if secrets["production"] and secret = secrets["production"]["secret_key_base"]
         unless secret.include? "<%="
