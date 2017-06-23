@@ -120,14 +120,6 @@ class Sexp
     old_find_node(*args)
   end
 
-  #Iterates over the Sexps in an Sexp, skipping values that are not
-  #an Sexp.
-  def each_sexp
-    self.each do |e|
-      yield e if Sexp === e
-    end
-  end
-
   #Raise a WrongSexpError if the nodes type does not match one of the expected
   #types.
   def expect *types
