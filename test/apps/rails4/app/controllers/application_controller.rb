@@ -29,4 +29,16 @@ class ApplicationController < ActionController::API
   def set_bad_thing
     @bad_thing = params[:x]
   end
+
+  def wrong_redirect_only_path
+    redirect_to(params.bla.merge(:only_path => true, :display => nil))
+  end
+
+  def redirect_only_path_with_unsafe_hash
+    redirect_to(params.to_unsafe_hash.merge(:only_path => true, :display => nil))
+  end
+
+  def redirect_only_path_with_unsafe_h
+    redirect_to(params.to_unsafe_h.merge(:only_path => true, :display => nil))
+  end
 end

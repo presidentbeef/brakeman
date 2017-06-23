@@ -154,6 +154,10 @@ class HomeController < ApplicationController
     POSIX::Spawn::spawn params[:cmd]
   end
 
+  def test_only_path_also_correct
+    redirect_to(params.merge(:only_path => true, :display => nil))
+  end
+
   private
 
   def filter_it

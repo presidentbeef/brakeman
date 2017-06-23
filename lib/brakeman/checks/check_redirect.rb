@@ -105,11 +105,34 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     arg = call.first_arg
 
     if hash? arg
-      if value = hash_access(arg, :only_path)
-        return true if true?(value)
-      end
+      return has_only_path? arg
     elsif call? arg and arg.method == :url_for
       return check_url_for(arg)
+    elsif call? arg and hash? arg.first_arg and use_unsafe_hash_method? arg
+      return has_only_path? arg.first_arg
+    end
+
+    false
+  end
+
+  def use_unsafe_hash_method? arg
+    return call_has_param(arg, :to_unsafe_hash) || call_has_param(arg, :to_unsafe_h)
+  end
+
+  def call_has_param arg, key
+    if call? arg and call? arg.target
+      target = arg.target
+      method = target.method
+
+      node_type? target.target, :params and method == key
+    else
+      false
+    end
+  end
+
+  def has_only_path? arg
+    if value = hash_access(arg, :only_path)
+      return true if true?(value)
     end
 
     false

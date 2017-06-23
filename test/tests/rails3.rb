@@ -297,6 +297,15 @@ class Rails3Tests < Minitest::Test
       :file => /home_controller\.rb/
   end
 
+  def test_redirect_url_only_path
+    assert_no_warning :type => :warning,
+      :warning_type => "Redirect",
+      :line => 158,
+      :message => /^Possible unprotected redirect near line 159: redirect_to\(params\[/,
+      :confidence => 0,
+      :file => /home_controller\.rb/
+  end
+
   def test_render_path
     assert_warning :type => :warning,
       :warning_type => "Dynamic Render Path",
