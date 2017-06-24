@@ -144,6 +144,19 @@ class Rails5Tests < Minitest::Test
       :user_input => s(:call, s(:params), :slice, s(:lit, :back_to))
   end
 
+  def test_redirect_with_return_guard
+    assert_no_warning :type => :warning,
+      :warning_code => 23,
+      :fingerprint => "208deedcfef17a235e5c2139c74bbb408b2a948334880be58fcc441c09b9d799",
+      :warning_type => "Dangerous Send",
+      :line => 82,
+      :message => /^User\ controlled\ method\ execution/,
+      :confidence => 0,
+      :relative_path => "app/controllers/widget_controller.rb",
+      :code => s(:call, nil, :send, s(:dstr, "", s(:evstr, s(:call, s(:params), :[], s(:lit, :goto))), s(:str, "_event_path")), s(:call, s(:params), :[], s(:lit, :event))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :goto))
+  end
+
   def test_cross_site_scripting_with_slice
     assert_no_warning :type => :template,
       :warning_code => 4,

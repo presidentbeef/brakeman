@@ -675,6 +675,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
             env.current[var] = condition.target[1]
             exp[branch_index] = process_if_branch branch
             env.current[var] = previous_value
+          elsif i == 1 and array_include_all_literals? condition and node_type? branch, :return
+            var = condition.first_arg
+            env.current[var] = condition.target[1]
+            exp[branch_index] = process_if_branch branch
           else
             exp[branch_index] = process_if_branch branch
           end

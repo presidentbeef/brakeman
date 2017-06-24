@@ -73,6 +73,14 @@ class WidgetController < ApplicationController
   def no_html
     @x = params[:x].html_safe
   end
+
+  def guard_with_return
+    goto = params[:goto]
+    event = params[:event]
+    return redirect_to user_path unless %w[comment subscribe].include?(goto)
+
+    redirect_to send("#{goto}_event_path", event) # should not warn
+  end
 end
 
 IDENTIFIER_NAMESPACE = 'apis'
