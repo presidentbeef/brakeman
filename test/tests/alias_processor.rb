@@ -853,6 +853,16 @@ class AliasProcessorTests < Minitest::Test
     OUTPUT
   end
 
+  def test_branch_array_include_return
+    assert_output <<-INPUT, <<-OUTPUT
+    return unless ['a', 'b'].include? x
+    x
+    INPUT
+    return unless ['a', 'b'].include? x
+    'a'
+    OUTPUT
+  end
+
   def test_case_basic
     assert_output <<-INPUT, <<-OUTPUT
       z = 3
