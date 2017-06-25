@@ -2,14 +2,18 @@ require 'brakeman/processors/output_processor'
 
 module Brakeman
   class Constant
-    attr_reader :name, :name_array, :file, :value
+    attr_reader :name, :name_array, :file, :value, :context
 
-    def initialize name, value = nil, context = nil 
+    def initialize name, value, context = {}
       set_name name, context
       @value = value
       @context = context
 
       if @context
+        if @context[:class].is_a? Brakeman::Controller
+          @context[:class] = @context[:class].name
+        end
+
         @file = @context[:file]
       end
     end
@@ -86,6 +90,11 @@ module Brakeman
       end
 
       nil
+    end
+
+    def find_all exp
+      base_name = Constants.get_constant_base_name(exp)
+      @constants[base_name]
     end
 
     def add name, value, context = nil
