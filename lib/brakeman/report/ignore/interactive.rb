@@ -101,7 +101,7 @@ module Brakeman
     end
 
     def pre_show_help
-      say "-" * 20
+      say "-" * 30
       say "Actions:", :cyan
       show_help
     end
@@ -189,7 +189,11 @@ q - Quit, do not update ignored warnings
     end
 
     def process_warnings
-      @new_warnings.each do |w|
+      @warning_count = @new_warnings.length
+
+      @new_warnings.each_with_index do |w, index|
+        @current_index = index
+
         if skip_ignored? w or @skip_rest
           next
         elsif @ignore_rest
@@ -261,7 +265,8 @@ q - Quit, do not update ignored warnings
     end
 
     def pretty_display warning
-      say "-" * 20
+      progress = "#{@current_index + 1}/#{@warning_count}"
+      say "-------- #{progress} #{"-" * (20 - progress.length)}", :cyan
       show_confidence warning
 
       label "Category"
@@ -302,7 +307,7 @@ q - Quit, do not update ignored warnings
     end
 
     def summarize_changes
-      say "-" * 20
+      say "-" * 30
 
       say "Ignoring #{@ignore_config.ignored_warnings.length} warnings", :yellow
       say "Showing #{@ignore_config.shown_warnings.length} warnings", :green
