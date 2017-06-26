@@ -102,7 +102,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       return r
     end
 
-    t = replace(exp.target)
+    t = process(exp.target.deep_clone)
 
     # sometimes t[blah] has a match in the env
     # but we don't want to actually set the target
