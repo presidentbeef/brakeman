@@ -97,4 +97,25 @@ class ConstantTests < Minitest::Test
     assert_equal s(:const, :D), @constants[s(:const, :D)]
     assert_nil @constants[s(:colon2, s(:call, s(:call, nil, :x), :constantize), :Y)]
   end
+
+  def test_constants_find_all
+    @constants.add :A, s(:lit, 1)
+    @constants.add s(:colon2, s(:const, :B), :A), s(:lit, 2)
+
+    consts = @constants.find_all s(:const, :A)
+
+    assert_equal 2, consts.length
+  end
+
+  def test_constants_context
+    @constants.add :A, s(:lit, 1).line(10), file: "file.rb", class: :CoolClass
+
+    const = @constants.find_all(s(:const, :A)).first
+
+    assert_equal s(:lit, 1), const.value
+    assert_equal 10, const.value.line
+    assert_equal "file.rb", const.file
+    assert_equal "file.rb", const.context[:file]
+    assert_equal :CoolClass, const.context[:class]
+  end
 end
