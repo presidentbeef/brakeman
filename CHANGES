@@ -1,3 +1,11 @@
+# Unreleased
+
+* Track more information about constant assignments
+* Show progress indicator in interactive mode
+* Handle simple conditional guards that use `return`
+* Fix false positive for redirect_to in Rails 4 (Mário Areias)
+* Avoid interpolating hashes/arrays on failed access
+
 # 3.6.2
 
 * Handle safe call operator in checks
