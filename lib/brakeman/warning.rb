@@ -208,13 +208,16 @@ class Brakeman::Warning
    output
   end
 
-  def fingerprint
+  def fingerprint_as_s
     loc = self.location
     location_string = loc && loc.sort_by { |k, v| k.to_s }.inspect
     warning_code_string = sprintf("%03d", @warning_code)
     code_string = @code.inspect
+    "#{warning_code_string}#{code_string}#{location_string}#{@relative_path}#{self.confidence}"
+  end
 
-    Digest::SHA2.new(256).update("#{warning_code_string}#{code_string}#{location_string}#{@relative_path}#{self.confidence}").to_s
+  def fingerprint
+    Digest::SHA2.new(256).update(fingerprint_as_s).to_s
   end
 
   def location include_renderer = true
@@ -238,6 +241,7 @@ class Brakeman::Warning
     { :warning_type => self.warning_type,
       :warning_code => @warning_code,
       :fingerprint => self.fingerprint,
+      :fingerprint_as_s => self.fingerprint_as_s,
       :check_name => self.check.gsub(/^Brakeman::Check/, ''),
       :message => self.message,
       :file => self.file,
@@ -263,4 +267,3 @@ class Brakeman::Warning
     formatted
   end
 end
-
