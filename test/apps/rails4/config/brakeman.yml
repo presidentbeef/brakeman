@@ -2,3 +2,4 @@
 :run_all_checks: true
 :additional_libs_path:
 - app/api/
+:rails4: true

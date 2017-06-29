@@ -90,6 +90,13 @@ module Brakeman
       options[:quiet] = true
     end
 
+    if options[:rails4]
+      options[:rails3] = true
+    elsif options[:rails5]
+      options[:rails3] = true
+      options[:rails4] = true
+    end
+
     options[:output_formats] = get_output_formats options
     options[:github_url] = get_github_url options
 
