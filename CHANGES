@@ -1,5 +1,6 @@
-# Unreleased
+# 3.7.0
 
+* Improve support for rails4/rails5 options in config file
 * Track more information about constant assignments
 * Show progress indicator in interactive mode
 * Handle simple conditional guards that use `return`
