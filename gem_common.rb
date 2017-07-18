@@ -5,9 +5,9 @@ module Brakeman
     end
 
     def self.base_dependencies spec
-      spec.add_dependency "ruby_parser", "~>3.9.0"
-      spec.add_dependency "sexp_processor", "~> 4.7"
-      spec.add_dependency "ruby2ruby", "~>2.3.0"
+      spec.add_dependency "ruby_parser", "~>3.10"
+      spec.add_dependency "sexp_processor", "~>4.10"
+      spec.add_dependency "ruby2ruby", "~>2.4"
       spec.add_dependency "safe_yaml", ">= 1.0"
     end
 
