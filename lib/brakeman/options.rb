@@ -20,7 +20,23 @@ module Brakeman::Options
     def get_options args, destructive = false
       options = {}
 
-      parser = OptionParser.new do |opts|
+      parser = create_option_parser options
+
+      if destructive
+        parser.parse! args
+      else
+        parser.parse args
+      end
+
+      if options[:previous_results_json] and options[:output_files]
+        options[:comparison_output_file] = options[:output_files].shift
+      end
+
+      return options, parser
+    end
+
+    def create_option_parser options
+      OptionParser.new do |opts|
         opts.banner = "Usage: brakeman [options] rails/root/path"
 
         opts.on "-n", "--no-threads", "Run checks sequentially" do
@@ -306,18 +322,6 @@ module Brakeman::Options
           options[:show_help] = true
         end
       end
-
-      if destructive
-        parser.parse! args
-      else
-        parser.parse args
-      end
-
-      if options[:previous_results_json] and options[:output_files]
-        options[:comparison_output_file] = options[:output_files].shift
-      end
-
-      return options, parser
     end
   end
 end
