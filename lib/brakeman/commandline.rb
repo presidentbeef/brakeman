@@ -96,7 +96,11 @@ module Brakeman
           quit(-1)
         end
 
-        app_path = argv[-1] if argv[-1]
+        if argv[-1]
+          app_path = argv[-1]
+        else
+          app_path = "."
+        end
 
         return options, app_path
       end
