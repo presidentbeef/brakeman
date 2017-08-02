@@ -66,6 +66,31 @@ module Brakeman::RenderHelper
     end
 
     template_env = only_ivars(:include_request_vars)
+    options = get_options args
+
+    if hash? options[:locals]
+      hash_iterate options[:locals] do |key, value|
+        template_env[Sexp.new(:call, nil, key.value)] = value
+      end
+    end
+
+    if options[:collection]
+
+      #The collection name is the name of the partial without the leading
+      #underscore.
+      variable = template.name.to_s.match(/[^\/_][^\/]+$/)[0].to_sym
+
+      #Unless the :as => :variable_name option is used
+      if options[:as]
+        if string? options[:as] or symbol? options[:as]
+          variable = options[:as].value.to_sym
+        end
+      end
+
+      collection = get_class_target(options[:collection]) || Brakeman::Tracker::UNKNOWN_MODEL
+
+      template_env[Sexp.new(:call, nil, variable)] = Sexp.new(:call, Sexp.new(:const, collection), :new)
+    end
 
     #Hash the environment and the source of the template to avoid
     #pointlessly processing templates, which can become prohibitively
@@ -78,8 +103,6 @@ module Brakeman::RenderHelper
     else
       @tracker.template_cache << digest
 
-      options = get_options args
-
       #Process layout
       if string? options[:layout]
         process_template "layouts/#{options[:layout][1]}", nil, nil, nil
@@ -89,30 +112,6 @@ module Brakeman::RenderHelper
         #Don't do this for partials
         
         process_layout
-      end
-
-      if hash? options[:locals]
-        hash_iterate options[:locals] do |key, value|
-          template_env[Sexp.new(:call, nil, key.value)] = value
-        end
-      end
-
-      if options[:collection]
-
-        #The collection name is the name of the partial without the leading
-        #underscore.
-        variable = template.name.to_s.match(/[^\/_][^\/]+$/)[0].to_sym
-
-        #Unless the :as => :variable_name option is used
-        if options[:as]
-          if string? options[:as] or symbol? options[:as]
-            variable = options[:as].value.to_sym
-          end
-        end
-
-        collection = get_class_target(options[:collection]) || Brakeman::Tracker::UNKNOWN_MODEL
-
-        template_env[Sexp.new(:call, nil, variable)] = Sexp.new(:call, Sexp.new(:const, collection), :new)
       end
 
       #Set original_line for values so it is clear
