@@ -30,22 +30,18 @@ class Brakeman::OutputProcessor < Ruby2Ruby
   end
 
   def process_ignore exp
-    exp.clear
     "[ignored]"
   end
 
   def process_params exp
-    exp.clear
     "params"
   end
 
   def process_session exp
-    exp.clear
     "session"
   end
 
   def process_cookies exp
-    exp.clear
     "cookies"
   end
 
@@ -58,13 +54,15 @@ class Brakeman::OutputProcessor < Ruby2Ruby
         res
       end
     end.compact.join("\n")
-    exp.clear
+
     out
   end
 
   def process_defn exp
     # Copied from Ruby2Ruby except without the whole
     # "convert methods to attr_*" stuff
+    exp = exp.deep_clone
+    exp.shift
     name = exp.shift
     args = process exp.shift
     args = "" if args == "()"
@@ -84,10 +82,10 @@ class Brakeman::OutputProcessor < Ruby2Ruby
   end
 
   def process_iter exp
-    call = process exp[0]
-    block = process_rlist exp[2..-1]
+    call = process exp[1]
+    block = process_rlist exp[3..-1]
     out = "#{call} do\n #{block}\n end"
-    exp.clear
+
     out
   end
 
@@ -109,10 +107,10 @@ class Brakeman::OutputProcessor < Ruby2Ruby
   end
 
   def output_format exp, tag
-    out = if exp[0].node_type == :str or exp[0].node_type == :ignore
+    out = if exp[1].node_type == :str or exp[1].node_type == :ignore
             ""
           else
-            res = process exp[0]
+            res = process exp[1]
 
             if res == ""
               ""
@@ -120,26 +118,27 @@ class Brakeman::OutputProcessor < Ruby2Ruby
               "[#{tag}] #{res}"
             end
           end
-    exp.clear
+
     out
   end
 
   def process_const exp
-    if exp[0] == Brakeman::Tracker::UNKNOWN_MODEL
-      exp.clear
+    if exp[1] == Brakeman::Tracker::UNKNOWN_MODEL
       "(Unresolved Model)"
     else
-      out = exp[0].to_s
-      exp.clear
+      out = exp[1].to_s
       out
     end
   end
 
   def process_render exp
+    exp = exp.deep_clone
+    exp.shift
+
     exp[1] = process exp[1] if sexp? exp[1]
     exp[2] = process exp[2] if sexp? exp[2]
     out = "render(#{exp[0]} => #{exp[1]}, #{exp[2]})"
-    exp.clear
+
     out
   end
 end
