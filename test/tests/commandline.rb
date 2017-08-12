@@ -58,6 +58,11 @@ class CommandlineTests < Minitest::Test
     end
   end
 
+  def setup
+    Brakeman.debug = false
+    Brakeman.quiet = false
+  end
+
   # Tests
 
   def test_nonexistent_scan_path
@@ -102,7 +107,9 @@ class CommandlineTests < Minitest::Test
 
   def test_show_help
     assert_stdout /\AUsage: brakeman \[options\] rails\/root\/path/ do
-      cl_with_options "--help"
+      assert_exit do
+        cl_with_options "--help"
+      end
     end
   end
 

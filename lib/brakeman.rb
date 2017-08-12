@@ -511,6 +511,14 @@ module Brakeman
     end
   end
 
+  def self.debug= val
+    @debug = val
+  end
+
+  def self.quiet= val
+    @quiet = val
+  end
+
   class DependencyError < RuntimeError; end
   class NoBrakemanError < RuntimeError; end
   class NoApplication < RuntimeError; end
