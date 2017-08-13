@@ -81,6 +81,19 @@ class Rails5Tests < Minitest::Test
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
   end
 
+  def test_dangerous_send_with_early_return
+    assert_no_warning :type => :warning,
+      :warning_code => 23,
+      :fingerprint => "04f96cff9e890ab6c0a54c62465602eb92fe74f4fb91c10dcad51aaeb96ff7d7",
+      :warning_type => "Dangerous Send",
+      :line => 16,
+      :message => /^User\ controlled\ method\ execution/,
+      :confidence => 0,
+      :relative_path => "app/controllers/mixed_controller.rb",
+      :code => s(:call, s(:colon2, s(:const, :Statistics), :AdminWithdrawal), :send, s(:dstr, "export_", s(:evstr, s(:call, s(:call, s(:params), :[], s(:lit, :filename)), :first)), s(:str, "_#inc!"))),
+      :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :filename)), :first)
+  end
+
   def test_no_symbol_denial_of_service
     assert_no_warning :type => :warning,
       :warning_code => 59,
