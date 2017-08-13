@@ -682,7 +682,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
             env.current[var] = condition.target[1]
             exp[branch_index] = process_if_branch branch
             env.current[var] = previous_value
-          elsif i == 1 and array_include_all_literals? condition and node_type? branch, :return
+          elsif i == 1 and array_include_all_literals? condition and early_return? branch
             var = condition.first_arg
             env.current[var] = condition.target[1]
             exp[branch_index] = process_if_branch branch
@@ -702,6 +702,16 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
 
     exp
+  end
+
+  def early_return? exp
+    return true if node_type? exp, :return
+
+    if node_type? exp, :block, :rlist
+      node_type? exp.last, :return
+    else
+      false
+    end
   end
 
   def simple_when? exp
