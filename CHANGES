@@ -1,3 +1,11 @@
+# Unreleased
+
+* Handle simple guard with return at end of branch
+* Modularize bin/brakeman
+* Improve multi-value Sexp error message
+* Add more collection methods for iteration detection
+* Update ruby2ruby and ruby_parser
+
 # 3.7.0
 
 * Improve support for rails4/rails5 options in config file
