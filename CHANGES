@@ -1,4 +1,4 @@
-# Unreleased
+# 3.7.1
 
 * Handle simple guard with return at end of branch
 * Modularize bin/brakeman
