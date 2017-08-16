@@ -1,4 +1,5 @@
 require 'set'
+require 'brakeman/version'
 
 module Brakeman
 
