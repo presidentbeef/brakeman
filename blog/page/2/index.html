@@ -109,6 +109,68 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2016/06/10/brakeman-3-dot-3-2-released/">Brakeman 3.3.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2016-06-10 08:49:00 -0700" pubdate  updated >Jun 10<span>th</span>, 2016</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a bug fix release.</p>
+
+<p><em>Changes since 3.3.2</em>:</p>
+
+<ul>
+<li>Fix performance regression in global constant tracking</li>
+</ul>
+
+
+<p>Brakeman 3.3.0 introduced a new feature to track constant values across the application. This helped reduce false positives, for example when checking a value against a constant array of values. However, the lookup of constant values was very slow for moderate to large numbers of constants. In some test cases it added up to a minute of scan time. This has been resolved along with some changes to how dynamic constant names are handled.</p>
+
+<p>Additionally, the <code>--faster</code> option will turn off global constant tracking entirely.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/891">changes</a>)</p>
+
+<h3>SHAs</h3>
+
+<p>The SHA256 sums for this release are</p>
+
+<pre><code>58bb2179de2bd479d32dc2d2018e40caf478916e283ea88089fe0bcb30a55e6c  brakeman-3.3.2.gem
+4f72ff02a163d78244554c4a26ea35e88d76dd6b60c3d21573db8518abcba6fc  brakeman-min-3.3.2.gem
+c0beeabe95aa693a5273bd48922028f48a190940b18c795813bd0f96068452b4  brakeman-lib-3.3.2.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
+
+<p>Thank you to the reporters of the performance issue in the 3.3.0 release.</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
+<p>For commercial support, please consider <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2016/06/03/brakeman-3-dot-3-1-released/">Brakeman 3.3.1 Released</a></h1>
     
     
@@ -1179,193 +1241,6 @@ d820c872cbe7bc8452c9bd8bd46d990ff1c0d53ee621c09f1997270fc978f783  brakeman-min-3
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2015/08/30/brakeman-3-dot-1-0-released/">Brakeman 3.1.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2015-08-30 21:46:00 -0700" pubdate  updated >Aug 30<span>th</span>, 2015</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>There are several changes in this release which may affect consumers of the JSON report as well as anyone relying on the ignore configuration file. Please try out <a href="https://gist.github.com/presidentbeef/52d5cce0fd26b901179e">this script</a> to migrate ignore configurations.</p>
-
-<p>Additionally, some dependencies have been updated to versions no longer supporting Ruby 1.8. As a consequence, Brakeman no longer runs &#8220;out of the box&#8221; on Ruby 1.8, although you may be able to use the <code>brakeman-min</code> gem. No more attempts will be made to support running on Ruby 1.8 in future releases. Please note that does not mean Ruby 1.8 code cannot be analyzed; that still works fine.</p>
-
-<p><em>Changes since 3.0.5</em>:</p>
-
-<ul>
-<li>Update dependencies to Ruby 1.8 incompatible versions</li>
-<li>Update render path information in JSON reports</li>
-<li>Remove renaming of several <code>Sexp</code> nodes</li>
-<li>Treat <code>html_safe</code> like <code>raw</code></li>
-<li>Use railties version if rails gem is missing (<a href="https://github.com/lucasmazza">Lucas Mazza</a>)</li>
-<li>Warn about unverified SSL mode in <code>Net::HTTP.start</code></li>
-<li>Expand XSS safe methods</li>
-<li>Avoid warning on path creation methods in <code>link_to</code></li>
-<li>Add support for <code>gems.rb</code>/<code>gems.locked</code> (<a href="https://github.com/presidentbeef/brakeman/pull/705">#705</a>)</li>
-<li>Fix low confidence XSS warning code</li>
-<li>Avoid duplicate <code>eval</code> warnings</li>
-<li>Convert YAML config keys to symbols (<a href="https://github.com/KarlGl">Karl Glaser</a>)</li>
-</ul>
-
-
-<h3>Ruby 1.8 Incompatibility</h3>
-
-<p>Ruby 1.8.7 has been unsupported by the Ruby core team for over a year now (and that was after it had a six month extension). Several libraries Brakeman depends on have stopped supporting Ruby 1.8. Unfortunately, there is no way to specify depending on different gem versions for different Ruby versions. This left Brakeman in a difficult place - use old libraries (and cause conflicts in Gemfiles&#8230;), use new libraries (and lose 1.8 support), or don&#8217;t declare dependencies (and force users to install dependencies themselves). In the end, it seems most people are okay with dropping Ruby 1.8 support.</p>
-
-<p>That being said, Brakeman 3.1.0 should run fine on Ruby 1.8 if dependencies are set up manually to be compatible.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/684">changes</a>)</p>
-
-<h3>Render Path Improvements</h3>
-
-<p>Previously, render paths were arrays of strings. The strings represented the locations of calls to <code>render</code> (implicit or explicit), either in the form <code>&lt;Controller&gt;#&lt;method&gt;</code> or <code>Template:&lt;template/path&gt;</code>. While the information was somewhat useful to humans, it was not easily manipulated by computers and it was difficult to link the strings back to application code.</p>
-
-<p>Now, render paths are arrays of hashes. The hash has a <code>type</code> key with a value of either <code>controller</code> or <code>template</code>. For controllers, the hash includes <code>class</code>, <code>method</code>, <code>line</code>, and <code>file</code>. For templates, the hash includes <code>name</code>, <code>line</code>, and <code>file</code>.</p>
-
-<p>Example:</p>
-
-<pre><code>[
-  {
-    "type": "controller",
-    "class": "ProductsController",
-    "method": "create",
-    "line": 50,
-    "file": "app/controllers/products_controller.rb"
-  },
-  {
-    "type": "template",
-    "name": "products/new",
-    "line": 2,
-    "file": "app/views/products/new.html.erb"
-  }
-]
-</code></pre>
-
-<p>Implicit renders from controller actions point to the line at the end of the method.</p>
-
-<p>Rendered templates in JSON reports used to include the render location as well. For example:</p>
-
-<pre><code>"location": {
-  "type": "template",
-  "template": "home/index (HomeController#index)"
-}
-</code></pre>
-
-<p>Since this information is redundant with the render path, it has been removed.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/702">changes</a>)</p>
-
-<h3>S-Expression Names</h3>
-
-<p>Starting a long time ago, Brakeman rewrote several s-expression names for no reason other than clarity (for example, <code>dstr</code> becomes <code>string_interp</code>). However, not all nodes were changed, leading to code that must check for both the original name from RubyParser and Brakeman&#8217;s name. This leads to messy code and subtle bugs.</p>
-
-<p>The following node names were removed: <code>string_interp</code>, <code>string_eval</code>, <code>methdef</code>, <code>selfdef</code>, <code>call_with_block</code>.</p>
-
-<p>While this seems like a silly internal change, it will unfortunately change any fingerprints containing these node types. A <a href="https://gist.github.com/presidentbeef/52d5cce0fd26b901179e">quick script is available</a> to migrate ignore files without having to manually update the fingerprints.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/701">changes</a>)</p>
-
-<h3>html_safe</h3>
-
-<p>As we hopefully all know now, <code>html_safe</code> is not safe, it marks a string so it is <em>not</em> escaped when output in a template. Since this is essentially the same as calling <code>raw</code> on a string, Brakeman will treat them both as unescaped output.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/675">changes</a>)</p>
-
-<h3>Use railties Version</h3>
-
-<p>Thanks to <a href="https://github.com/lucasmazza">Lucas Mazza</a>, if an application depends on <code>railties</code> instead of <code>rails</code>, Brakeman will now use the gem version of <code>railties</code> as the Rails version.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/695/files">changes</a>)</p>
-
-<h3>SSL Verify Mode</h3>
-
-<p>As suggested by <a href="https://github.com/gmcnaughton">Gordon McNaughton</a>, Brakeman now warns when SSL certificate verification is turned off in calls to <code>Net::HTTP.start</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/694">changes</a>)</p>
-
-<h3>Safe Methods</h3>
-
-<p>The <code>--safe-methods</code> option (which only applies to XSS warnings) and <code>--url-safe-methods</code> (which applies to values pass to <code>link_to</code>) now work on methods that have a target. For example, <code>--url-safe-methods this_is_safe</code> will ignore <code>link_to util.this_is_safe(params[:x])</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/674">changes</a>)</p>
-
-<h3>More Safe Methods</h3>
-
-<p>Brakeman warns about user input in the href parameter of <code>link_to</code> because it is possible to pass in a string starting with <code>javascript:</code>, which will execute the XSS payload when the victim clicks on it. However, it will no longer warn about methods that look like path helpers or URL generation methods. It will still warn about URL methods on models, since those may be direct user input.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/674">changes</a>)</p>
-
-<h3>gems.rb/gems.locked</h3>
-
-<p><code>gems.rb</code>/<code>gems.locked</code> are alternative names for <code>Gemfile</code>/<code>Gemfile.lock</code>. Brakeman now supports either pair.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/705">changes</a>)</p>
-
-<h3>Weak Confidence XSS Warnings</h3>
-
-<p>A small bug caused weak confidence XSS warnings to have a warning code of <code>5</code> (which is for unescaped JSON) instead of <code>2</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/commit/9fec336e7cbbbb74add9ef9c6c90c65efa0ebcc7">changes</a>)</p>
-
-<h3>Duplicate Eval Warnings</h3>
-
-<p>There should now be fewer duplicate warnings about dangerous calls to <code>eval</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/670/files">changes</a>)</p>
-
-<h3>Configuration Keys</h3>
-
-<p><a href="https://github.com/KarlGl">Karl Glaser</a> added a change so Brakeman configuration files may use string or symbol keys in the YAML file. However, it is recommended to use <code>brakeman -C</code> to generate configurations automatically, because writing YAML by hand is annoying.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/696">changes</a>)</p>
-
-<h3>Internal Changes</h3>
-
-<p>Internally, most of the information Brakeman tracks is kept in hash tables. This is changing, starting with the addition of <code>Controller</code>, <code>Model</code>, <code>Template</code>, and <code>Config</code> classes.</p>
-
-<p>Unfortunately, this will probably break any code that relies on Brakeman&#8217;s internals (such as custom checks).</p>
-
-<p>Fortunately, in almost all cases it will simplify code and in many cases it just means changing a hash access (like <code>template[:name]</code>) to a method call (<code>template.name</code>).</p>
-
-<p>See <a href="https://github.com/presidentbeef/brakeman/pull/690">the pull request</a> for examples.</p>
-
-<p>Also note this is just the beginning of these internal changes&#8230;sorry! Hopefully this leads to improvements and makes it easier to write Brakeman code.</p>
-
-<h3>SHAs</h3>
-
-<p>The SHA1 sums for this release are</p>
-
-<pre><code>236af597e5cbcc0e647c02c4087ceb5965510435  brakeman-3.1.0.gem
-fe06faf67e781c4c4dc5ee362918ef2dfd8e1ce2  brakeman-min-3.1.0.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1420,6 +1295,10 @@ fe06faf67e781c4c4dc5ee362918ef2dfd8e1ce2  brakeman-min-3.1.0.gem
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/08/15/brakeman-3-dot-7-1-released/">Brakeman 3.7.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/06/29/brakeman-3-dot-7-0-released/">Brakeman 3.7.0 Released</a>
       </li>
     
@@ -1433,10 +1312,6 @@ fe06faf67e781c4c4dc5ee362918ef2dfd8e1ce2  brakeman-min-3.1.0.gem
     
       <li class="post">
         <a href="/blog/2017/03/22/brakeman-3-dot-6-0-released/">Brakeman 3.6.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/01/31/brakeman-3-dot-5-0-released/">Brakeman 3.5.0 Released</a>
       </li>
     
   </ul>
