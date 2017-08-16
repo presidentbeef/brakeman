@@ -1,3 +1,7 @@
+# 3.7.2
+
+* Fix --ensure-latest (David Guyon)
+
 # 3.7.1
 
 * Handle simple guard with return at end of branch
