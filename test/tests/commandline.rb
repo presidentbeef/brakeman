@@ -113,9 +113,21 @@ class CommandlineTests < Minitest::Test
     end
   end
 
-  def test_exit_on_warn
+  def test_exit_on_warn_default
     assert_exit Brakeman::Warnings_Found_Exit_Code do
-      scan_app "--exit-on-warn"
+      scan_app
+    end
+  end
+
+  def test_no_exit_on_warn
+    assert_exit do
+      scan_app "--no-exit-on-warn"
+    end
+  end
+
+  def test_exit_on_warn_no_warnings
+    assert_exit do
+      scan_app "-t", "None"
     end
   end
 end
