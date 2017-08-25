@@ -213,10 +213,12 @@ module Brakeman
       [:to_markdown]
     when :cc, :to_cc, :codeclimate, :to_codeclimate
       [:to_codeclimate]
-    when :plain ,:to_plain
-      [:to_plain]
+    when :plain ,:to_plain, :text, :to_text, :to_s
+      [:to_text]
+    when :table, :to_table
+      [:to_table]
     else
-      [:to_s]
+      [:to_text]
     end
   end
   private_class_method :get_formats_from_output_format
@@ -239,9 +241,11 @@ module Brakeman
       when /(\.cc|\.codeclimate)$/i
         :to_codeclimate
       when /\.plain$/i
-        :to_plain
+        :to_text
+      when /\.table$/i
+        :to_table
       else
-        :to_s
+        :to_text
       end
     end
   end
