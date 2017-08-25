@@ -52,7 +52,7 @@ class TestReportGeneration < Minitest::Test
   def test_obsolete_reporting
     report = @@report.to_s
 
-    assert report.include? "+Obsolete Ignore Entries+"
+    assert report.include? "Obsolete Ignore Entries"
     assert report.include? "abcdef01234567890ba28050e7faf1d54f218dfa9435c3f65f47cb378c18cf98"
   end
 
@@ -101,7 +101,7 @@ class TestReportGeneration < Minitest::Test
   def test_controller_output
     text_report = @@report.to_s
 
-    assert text_report.include? "+CONTROLLERS+"
+    assert text_report.include? "Controller Overview"
 
     html_report = @@report.to_html
 
