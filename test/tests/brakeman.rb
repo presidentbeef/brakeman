@@ -260,15 +260,15 @@ class ConfigTests < Minitest::Test
     output_format_tester({:output_format => :to_tabs}, [:to_tabs])
     output_format_tester({:output_format => :markdown}, [:to_markdown])
     output_format_tester({:output_format => :to_markdown}, [:to_markdown])
-    output_format_tester({:output_format => :others}, [:to_s])
+    output_format_tester({:output_format => :others}, [:to_text])
 
     output_format_tester({:output_files => ['xx.html', 'xx.pdf']}, [:to_html, :to_pdf])
     output_format_tester({:output_files => ['xx.pdf', 'xx.json']}, [:to_pdf, :to_json])
     output_format_tester({:output_files => ['xx.json', 'xx.tabs']}, [:to_json, :to_tabs])
     output_format_tester({:output_files => ['xx.tabs', 'xx.csv']}, [:to_tabs, :to_csv])
-    output_format_tester({:output_files => ['xx.csv', 'xx.xxx']}, [:to_csv, :to_s])
-    output_format_tester({:output_files => ['xx.md', 'xx.xxx']}, [:to_markdown, :to_s])
-    output_format_tester({:output_files => ['xx.xx', 'xx.xx']}, [:to_s, :to_s])
+    output_format_tester({:output_files => ['xx.csv', 'xx.xxx']}, [:to_csv, :to_text])
+    output_format_tester({:output_files => ['xx.md', 'xx.xxx']}, [:to_markdown, :to_text])
+    output_format_tester({:output_files => ['xx.xx', 'xx.xx']}, [:to_text, :to_text])
     output_format_tester({:output_files => ['xx.html', 'xx.pdf', 'xx.csv', 'xx.tabs', 'xx.json', 'xx.md']}, [:to_html, :to_pdf, :to_csv, :to_tabs, :to_json, :to_markdown])
   end
 

@@ -6,7 +6,7 @@ require 'brakeman/report/report_base'
 class Brakeman::Report
   attr_reader :tracker
 
-  VALID_FORMATS = [:to_html, :to_pdf, :to_csv, :to_json, :to_tabs, :to_hash, :to_s, :to_markdown, :to_codeclimate, :to_plain]
+  VALID_FORMATS = [:to_html, :to_pdf, :to_csv, :to_json, :to_tabs, :to_hash, :to_s, :to_markdown, :to_codeclimate, :to_plain, :to_text]
 
   def initialize app_tree, tracker
     @app_tree = app_tree
@@ -34,10 +34,10 @@ class Brakeman::Report
       Brakeman::Report::Hash
     when :to_markdown
       return self.to_markdown
-    when :to_plain
+    when :to_plain, :to_text, :to_s
       return self.to_plain
-    when :to_s
-      return self.to_s
+    when :to_table
+      return self.to_table
     when :to_pdf
       raise "PDF output is not yet supported."
     else
@@ -64,7 +64,7 @@ class Brakeman::Report
     generate Brakeman::Report::JSON
   end
 
-  def to_s
+  def to_table
     require_report 'table'
     generate Brakeman::Report::Table
   end
@@ -74,10 +74,13 @@ class Brakeman::Report
     generate Brakeman::Report::Markdown
   end
 
-  def to_plain
+  def to_text
     require_report 'text'
     generate Brakeman::Report::Text
   end
+
+  alias to_plain to_text
+  alias to_s to_text
 
   def generate reporter
     reporter.new(@app_tree, @tracker).generate_report
