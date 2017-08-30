@@ -117,11 +117,11 @@ module Brakeman
       def regular_report options
         tracker = run_brakeman options 
 
-        if options[:exit_on_warn] and not tracker.filtered_warnings.empty?
+        if tracker.options[:exit_on_warn] and not tracker.filtered_warnings.empty?
           quit Brakeman::Warnings_Found_Exit_Code
         end
 
-        if options[:exit_on_error] and tracker.errors.any?
+        if tracker.options[:exit_on_error] and tracker.errors.any?
           quit Brakeman::Errors_Found_Exit_Code
         end
       end

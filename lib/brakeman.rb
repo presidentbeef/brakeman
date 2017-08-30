@@ -71,6 +71,7 @@ module Brakeman
     if @quiet
       options[:report_progress] = false
     end
+
     scan options
   end
 
@@ -156,23 +157,24 @@ module Brakeman
   #Default set of options
   def self.default_options
     { :assume_all_routes => true,
-      :skip_checks => Set.new,
       :check_arguments => true,
-      :safe_methods => Set.new,
-      :min_confidence => 2,
-      :combine_locations => true,
       :collapse_mass_assignment => false,
+      :combine_locations => true,
+      :engine_paths => ["engines/*"],
+      :exit_on_warn => true,
       :highlight_user_input => true,
-      :ignore_redirect_to_model => true,
+      :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css",
       :ignore_model_output => false,
+      :ignore_redirect_to_model => true,
       :index_libs => true,
       :message_limit => 100,
+      :min_confidence => 2,
+      :output_color => true,
       :parallel_checks => true,
       :relative_path => false,
       :report_progress => true,
-      :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css",
-      :output_color => true,
-      :engine_paths => ["engines/*"]
+      :safe_methods => Set.new,
+      :skip_checks => Set.new,
     }
   end
 
@@ -512,7 +514,7 @@ module Brakeman
     missing = Brakeman::Checks.missing_checks(included_checks || Set.new, excluded_checks || Set.new)
 
     unless missing.empty?
-      raise MissingChecksError, "Could not find specified check#{missing.length > 1 ? 's' : ''}: #{missing.to_a.join(', ')}"
+      raise MissingChecksError, "Could not find specified check#{missing.length > 1 ? 's' : ''}: #{missing.map {|c| "`#{c}`"}.join(', ')}"
     end
   end
 
