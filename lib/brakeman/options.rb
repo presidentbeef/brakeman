@@ -59,7 +59,7 @@ module Brakeman::Options
           options[:exit_on_warn] = exit_on_warn
         end
 
-        opts.on "--[no-]exit-on-error", "Exit code is non-zero if errors found" do |exit_on_error|
+        opts.on "--[no-]exit-on-error", "Exit code is non-zero if errors raised (Default)" do |exit_on_error|
           options[:exit_on_error] = exit_on_error
         end
 

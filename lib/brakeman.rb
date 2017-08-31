@@ -38,7 +38,8 @@ module Brakeman
   #  * :combine_locations - combine warning locations (default: true)
   #  * :config_file - configuration file
   #  * :escape_html - escape HTML by default (automatic)
-  #  * :exit_on_warn - return false if warnings found, true otherwise. Not recommended for library use (default: false)
+  #  * :exit_on_error - only affects Commandline module (default: true)
+  #  * :exit_on_warn - only affects Commandline module (default: true)
   #  * :github_repo - github repo to use for file links (user/repo[/path][@ref])
   #  * :highlight_user_input - highlight user input in reported warnings (default: true)
   #  * :html_style - path to CSS file
@@ -161,6 +162,7 @@ module Brakeman
       :collapse_mass_assignment => false,
       :combine_locations => true,
       :engine_paths => ["engines/*"],
+      :exit_on_error => true,
       :exit_on_warn => true,
       :highlight_user_input => true,
       :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css",
