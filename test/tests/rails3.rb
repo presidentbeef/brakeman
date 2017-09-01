@@ -14,7 +14,7 @@ class Rails3Tests < Minitest::Test
       :controller => 1,
       :model => 9,
       :template => 42,
-      :generic => 76
+      :generic => 74
     }
 
     if RUBY_PLATFORM == 'java'
@@ -844,7 +844,7 @@ class Rails3Tests < Minitest::Test
   end
 
   def test_user_input_in_mass_assignment
-    assert_warning :warning_type => "Mass Assignment",
+    assert_no_warning :warning_type => "Mass Assignment",
       :line => 58,
       :message => /^Unprotected mass assignment/,
       :confidence => 2,
@@ -878,7 +878,7 @@ class Rails3Tests < Minitest::Test
   end
 
   def test_mass_assignment_first_or_create!
-    assert_warning :type => :warning,
+    assert_no_warning :type => :warning,
       :warning_type => "Mass Assignment",
       :line => 115,
       :message => /^Unprotected\ mass\ assignment/,

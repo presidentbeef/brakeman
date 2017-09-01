@@ -85,7 +85,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
             confidence = CONFIDENCE[:high]
           end
         else
-          confidence = CONFIDENCE[:low]
+          return
         end
       elsif node_type? call.first_arg, :lit, :str
         return
