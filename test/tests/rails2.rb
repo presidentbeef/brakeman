@@ -1486,13 +1486,13 @@ class Rails2WithOptionsTests < Minitest::Test
       @expected ||= {
         :controller => 1,
         :model => 4,
-        :template => 47,
+        :template => 46,
         :generic => 57 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
-        :template => 47,
+        :template => 46,
         :generic => 58 }
     end
   end
