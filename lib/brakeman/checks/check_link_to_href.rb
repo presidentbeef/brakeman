@@ -78,6 +78,8 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     method = exp.method
 
     return true unless model_find_call? target
+
+    return true unless method.to_s =~ /url|uri|link|page|site/
     
     ignore_call? target, method or
       IGNORE_MODEL_METHODS.include? method or
