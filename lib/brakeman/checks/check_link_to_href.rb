@@ -55,7 +55,33 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
           :confidence => CONFIDENCE[:high],
           :link_path => "link_to_href"
       end
+    elsif not tracker.options[:ignore_model_output] and input = has_immediate_model?(url_arg)
+      return if ignore_model_call? url_arg, input or duplicate? result
+      add_result result
+
+      message = "Potentially unsafe model attribute in link_to href"
+
+      warn :result => result,
+        :warning_type => "Cross Site Scripting",
+        :warning_code => :xss_link_to_href,
+        :message => message,
+        :user_input => input,
+        :confidence => CONFIDENCE[:low],
+        :link_path => "link_to_href"
     end
+  end
+
+  def ignore_model_call? url_arg, exp
+    return true unless call? exp
+
+    target = exp.target
+    method = exp.method
+
+    return true unless model_find_call? target
+    
+    ignore_call? target, method or
+      IGNORE_MODEL_METHODS.include? method or
+      ignore_interpolation? url_arg, exp
   end
 
   #Ignore situations where the href is an interpolated string
