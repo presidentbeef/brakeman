@@ -3,6 +3,7 @@ require 'brakeman/util'
 require 'brakeman/version'
 require 'brakeman/report/renderer'
 require 'brakeman/processors/output_processor'
+require 'brakeman/warning'
 
 # Base class for report formats
 class Brakeman::Report::Base
