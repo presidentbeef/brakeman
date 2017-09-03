@@ -706,9 +706,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   def early_return? exp
     return true if node_type? exp, :return
+    return true if call? exp and [:fail, :raise].include? exp.method
 
     if node_type? exp, :block, :rlist
-      node_type? exp.last, :return
+      node_type? exp.last, :return or
+        (call? exp and [:fail, :raise].include? exp.method)
     else
       false
     end
