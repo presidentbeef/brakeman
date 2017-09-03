@@ -36,7 +36,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     @matched = false
     url_arg = process call.second_arg
 
-    if call? url_arg and url_arg.method == :url_for
+    if check_argument? url_arg
       url_arg = url_arg.first_arg
     end
 
@@ -71,6 +71,17 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     end
   end
 
+  def check_argument? url_arg
+    return unless call? url_arg
+
+    target = url_arg.target
+    method = url_arg.method
+
+    method == :url_for or
+      method == :h or
+      cgi_escaped? target, method
+  end
+
   def ignore_model_call? url_arg, exp
     return true unless call? exp
 
@@ -80,7 +91,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     return true unless model_find_call? target
 
     return true unless method.to_s =~ /url|uri|link|page|site/
-    
+
     ignore_call? target, method or
       IGNORE_MODEL_METHODS.include? method or
       ignore_interpolation? url_arg, exp
