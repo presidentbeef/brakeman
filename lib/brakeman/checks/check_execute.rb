@@ -56,9 +56,9 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     if failure and original? result
 
       if failure.type == :interp #Not from user input
-        confidence = CONFIDENCE[:med]
+        confidence = :medium
       else
-        confidence = CONFIDENCE[:high]
+        confidence = :high
       end
 
       warn :result => result,
@@ -79,7 +79,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
           :warning_code => :command_injection,
           :message => "Possible command injection in open()",
           :user_input => match,
-          :confidence => CONFIDENCE[:high]
+          :confidence => :high
       end
     end
   end
@@ -111,9 +111,9 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     exp = result[:call]
 
     if input = include_user_input?(exp)
-      confidence = CONFIDENCE[:high]
+      confidence = :high
     elsif input = dangerous?(exp)
-      confidence = CONFIDENCE[:med]
+      confidence = :medium
     else
       return
     end

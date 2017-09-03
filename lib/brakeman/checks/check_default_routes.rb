@@ -21,7 +21,7 @@ class Brakeman::CheckDefaultRoutes < Brakeman::BaseCheck
         :warning_code => :all_default_routes,
         :message => "All public methods in controllers are available as actions in routes.rb",
         :line => tracker.routes[:allow_all_actions].line,
-        :confidence => CONFIDENCE[:high],
+        :confidence => :high,
         :file => "#{tracker.app_path}/config/routes.rb"
     end
   end
@@ -43,7 +43,7 @@ class Brakeman::CheckDefaultRoutes < Brakeman::BaseCheck
           :warning_code => :controller_default_routes,
           :message => "Any public method in #{name} can be used as an action for #{verb} requests.",
           :line => actions[2],
-          :confidence => CONFIDENCE[:med],
+          :confidence => :medium,
           :file => "#{tracker.app_path}/config/routes.rb"
       end
     end
@@ -67,9 +67,9 @@ class Brakeman::CheckDefaultRoutes < Brakeman::BaseCheck
     end
 
     if allow_all_actions? or @actions_allowed_on_controller
-      confidence = CONFIDENCE[:high]
+      confidence = :high
     else
-      confidence = CONFIDENCE[:med]
+      confidence = :medium
     end
 
     warn :warning_type => "Remote Code Execution",

@@ -10,7 +10,9 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   include Brakeman::Util
   attr_reader :tracker, :warnings
 
-  CONFIDENCE = { :high => 0, :med => 1, :low => 2 }
+  # This is for legacy support.
+  # Use :high, :medium, or :low instead when creating warnings.
+  CONFIDENCE = Brakeman::Warning::CONFIDENCE
 
   Match = Struct.new(:type, :match)
 

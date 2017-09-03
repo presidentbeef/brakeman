@@ -19,9 +19,9 @@ class Brakeman::CheckDigestDoS < Brakeman::BaseCheck
     end
 
     if with_http_digest?
-      confidence = CONFIDENCE[:high]
+      confidence = :high
     else
-      confidence = CONFIDENCE[:low]
+      confidence = :weak
     end
 
     warn :warning_type => "Denial of Service",

@@ -51,15 +51,15 @@ class Brakeman::CheckCreateWith < Brakeman::BaseCheck
     if call? exp and exp.method == :permit
       nil
     elsif request_value? exp
-      CONFIDENCE[:high]
+      :high
     elsif hash? exp
       nil
     elsif has_immediate_user_input?(exp)
-      CONFIDENCE[:high]
+      :high
     elsif include_user_input? exp
-      CONFIDENCE[:med]
+      :medium
     else
-      CONFIDENCE[:low]
+      :weak
     end
   end
 
@@ -68,7 +68,7 @@ class Brakeman::CheckCreateWith < Brakeman::BaseCheck
         :warning_code => :CVE_2014_3514,
         :message => @message,
         :gem_info => gemfile_or_environment,
-        :confidence => CONFIDENCE[:med],
+        :confidence => :medium,
         :link_path => "https://groups.google.com/d/msg/rubyonrails-security/M4chq5Sb540/CC1Fh0Y_NWwJ"
   end
 end

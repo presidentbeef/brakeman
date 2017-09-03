@@ -30,7 +30,7 @@ class Brakeman::CheckRenderDoS < Brakeman::BaseCheck
     warn :warning_type => "Denial of Service",
       :warning_code => :CVE_2014_0082,
       :message => message,
-      :confidence => CONFIDENCE[:high],
+      :confidence => :high,
       :link_path => "https://groups.google.com/d/msg/rubyonrails-security/LMxO_3_eCuc/ozGBEhKaJbIJ",
       :gem_info => gemfile_or_environment
   end

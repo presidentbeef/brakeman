@@ -11,11 +11,11 @@ class Brakeman::CheckModelAttrAccessible < Brakeman::BaseCheck
   @description = "Reports models which have dangerous attributes defined under the attr_accessible whitelist."
 
   SUSP_ATTRS = [
-    [:admin, CONFIDENCE[:high]], # Very dangerous unless some Rails authorization used
-    [:role, CONFIDENCE[:med]],
-    [:banned, CONFIDENCE[:med]],
-    [:account_id, CONFIDENCE[:high]],
-    [/\S*_id(s?)\z/, CONFIDENCE[:low]] # All other foreign keys have weak/low confidence
+    [:admin, :high], # Very dangerous unless some Rails authorization used
+    [:role, :medium],
+    [:banned, :medium],
+    [:account_id, :high],
+    [/\S*_id(s?)\z/, :weak] # All other foreign keys have weak/low confidence
   ]
 
   def run_check

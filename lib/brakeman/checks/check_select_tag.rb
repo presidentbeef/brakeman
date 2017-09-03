@@ -50,7 +50,7 @@ class Brakeman::CheckSelectTag < Brakeman::BaseCheck
           :warning_code => :CVE_2012_3463,
           :result => result,
           :message => @message,
-          :confidence => CONFIDENCE[:high],
+          :confidence => :high,
           :user_input => input,
           :link_path => "https://groups.google.com/d/topic/rubyonrails-security/fV3QUToSMSw/discussion"
       end

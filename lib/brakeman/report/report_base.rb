@@ -10,7 +10,7 @@ class Brakeman::Report::Base
 
   attr_reader :tracker, :checks
 
-  TEXT_CONFIDENCE = [ "High", "Medium", "Weak" ]
+  TEXT_CONFIDENCE = Brakeman::Warning::TEXT_CONFIDENCE
 
   def initialize app_tree, tracker
     @app_tree = app_tree

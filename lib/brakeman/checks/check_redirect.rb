@@ -41,9 +41,9 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
         res = include_user_input?(call)
 
       if res.type == :immediate
-        confidence = CONFIDENCE[:high]
+        confidence = :high
       else
-        confidence = CONFIDENCE[:low]
+        confidence = :weak
       end
 
       warn :result => result,

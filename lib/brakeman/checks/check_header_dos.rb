@@ -18,7 +18,7 @@ class Brakeman::CheckHeaderDoS < Brakeman::BaseCheck
       warn :warning_type => "Denial of Service",
         :warning_code => :CVE_2013_6414,
         :message => message,
-        :confidence => CONFIDENCE[:med],
+        :confidence => :medium,
         :gem_info => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/msg/ruby-security-ann/A-ebV4WxzKg/KNPTbX8XAQUJ"
     end

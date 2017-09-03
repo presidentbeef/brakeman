@@ -29,7 +29,7 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
             :warning_type => "Cross-Site Request Forgery",
             :warning_code => :csrf_not_protected_by_raising_exception,
             :message => "protect_from_forgery should be configured with 'with: :exception'",
-            :confidence => CONFIDENCE[:med],
+            :confidence => :medium,
             :file => controller.file
           }
 
@@ -50,7 +50,7 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
     opts = {
       :controller => :ApplicationController,
       :warning_type => "Cross-Site Request Forgery",
-      :confidence => CONFIDENCE[:high]
+      :confidence => :high
     }.merge opts
 
     warn opts
