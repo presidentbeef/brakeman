@@ -18,9 +18,9 @@ class Brakeman::CheckSessionManipulation < Brakeman::BaseCheck
 
     if input = has_immediate_user_input?(index)
       if params? index
-        confidence = CONFIDENCE[:high]
+        confidence = :high
       else
-        confidence = CONFIDENCE[:med]
+        confidence = :medium
       end
 
       warn :result => result,

@@ -28,7 +28,7 @@ class Brakeman::CheckXMLDoS < Brakeman::BaseCheck
     warn :warning_type => "Denial of Service",
       :warning_code => :CVE_2015_3227,
       :message => message,
-      :confidence => CONFIDENCE[:med],
+      :confidence => :medium,
       :gem_info => gemfile_or_environment,
       :link_path => "https://groups.google.com/d/msg/rubyonrails-security/bahr2JLnxvk/x4EocXnHPp8J"
   end

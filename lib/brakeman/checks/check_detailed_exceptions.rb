@@ -18,7 +18,7 @@ class Brakeman::CheckDetailedExceptions < Brakeman::BaseCheck
       warn :warning_type => "Information Disclosure",
            :warning_code => :local_request_config,
            :message => "Detailed exceptions are enabled in production",
-           :confidence => CONFIDENCE[:high],
+           :confidence => :high,
            :file => "config/environments/production.rb"
     end
   end
@@ -32,9 +32,9 @@ class Brakeman::CheckDetailedExceptions < Brakeman::BaseCheck
 
         if method_name == :show_detailed_exceptions? and not safe? body
           if true? body
-            confidence = CONFIDENCE[:high]
+            confidence = :high
           else
-            confidence = CONFIDENCE[:med]
+            confidence = :medium
           end
 
           warn :warning_type => "Information Disclosure",

@@ -34,7 +34,7 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
     warn :warning_type => "Cross Site Scripting",
       :warning_code => :CVE_2014_0081,
       :message => message,
-      :confidence => CONFIDENCE[:med],
+      :confidence => :medium,
       :gem_info => gemfile_or_environment,
       :link_path => "https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ"
   end
@@ -67,7 +67,7 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
       :warning_type => "Cross Site Scripting",
       :warning_code => :CVE_2014_0081_call,
       :message => "Format options in #{result[:call].method} are not safe in Rails #{rails_version}",
-      :confidence => CONFIDENCE[:high],
+      :confidence => :high,
       :link_path => "https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ",
       :user_input => match
   end

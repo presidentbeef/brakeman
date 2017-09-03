@@ -35,12 +35,12 @@ class Brakeman::CheckRegexDoS < Brakeman::BaseCheck
       next unless sexp? component
 
       if match = has_immediate_user_input?(component)
-        confidence = CONFIDENCE[:high]
+        confidence = :high
       elsif match = has_immediate_model?(component)
         match = Match.new(:model, match)
-        confidence = CONFIDENCE[:med]
+        confidence = :medium
       elsif match = include_user_input?(component)
-        confidence = CONFIDENCE[:low]
+        confidence = :weak
       end
 
       if match

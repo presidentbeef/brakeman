@@ -21,7 +21,7 @@ class Brakeman::CheckI18nXSS < Brakeman::BaseCheck
       warn :warning_type => "Cross Site Scripting",
         :warning_code => :CVE_2013_4491,
         :message => message,
-        :confidence => CONFIDENCE[:med],
+        :confidence => :medium,
         :gem_info => gemfile_or_environment(:i18n),
         :link_path => "https://groups.google.com/d/msg/ruby-security-ann/pLrh6DUw998/bLFEyIO4k_EJ"
     end

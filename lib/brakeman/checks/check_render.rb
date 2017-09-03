@@ -36,12 +36,12 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
 
       if input = has_immediate_user_input?(view)
         if string_interp? view
-          confidence = CONFIDENCE[:med]
+          confidence = :medium
         else
-          confidence = CONFIDENCE[:high]
+          confidence = :high
         end
       elsif input = include_user_input?(view)
-        confidence = CONFIDENCE[:low]
+        confidence = :weak
       else
         return
       end
@@ -77,7 +77,7 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
           :warning_code => :dynamic_render_path_rce,
           :message => "Passing query parameters to render() is vulnerable in Rails #{rails_version} (CVE-2016-0752)",
           :user_input => view,
-          :confidence => CONFIDENCE[:high]
+          :confidence => :high
       end
     end
   end

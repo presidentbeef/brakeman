@@ -13,7 +13,7 @@ class Brakeman::CheckResponseSplitting < Brakeman::BaseCheck
       warn :warning_type => "Response Splitting",
         :warning_code => :CVE_2011_3186,
         :message => "Versions before 2.3.14 have a vulnerability content type handling allowing injection of headers: CVE-2011-3186",
-        :confidence => CONFIDENCE[:med],
+        :confidence => :medium,
         :gem_info => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/topic/rubyonrails-security/b_yTveAph2g/discussion"
     end

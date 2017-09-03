@@ -105,7 +105,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
         :warning_code => :xss_content_tag,
         :message => message,
         :user_input => input,
-        :confidence => CONFIDENCE[:high],
+        :confidence => :high,
         :link_path => "content_tag"
 
     elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(arg)
@@ -113,9 +113,9 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
         add_result result
 
         if likely_model_attribute? match
-          confidence = CONFIDENCE[:high]
+          confidence = :high
         else
-          confidence = CONFIDENCE[:med]
+          confidence = :medium
         end
 
         warn :result => result,
@@ -139,7 +139,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
         :warning_code => :xss_content_tag,
         :message => message,
         :user_input => @matched,
-        :confidence => CONFIDENCE[:med],
+        :confidence => :medium,
         :link_path => "content_tag"
     end
   end
@@ -159,9 +159,9 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
   def check_cve_2016_6316
     if cve_2016_6316?
       confidence = if @content_tags.any?
-                     CONFIDENCE[:high]
+                     :high
                    else
-                     CONFIDENCE[:med]
+                     :medium
                    end
 
       fix_version = case

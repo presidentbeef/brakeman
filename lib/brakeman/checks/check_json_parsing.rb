@@ -30,7 +30,7 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
       warn :warning_type => "Remote Code Execution",
         :warning_code => :CVE_2013_0333,
         :message => message,
-        :confidence => CONFIDENCE[:high],
+        :confidence => :high,
         :gem_info => gem_info,
         :link_path => "https://groups.google.com/d/topic/rubyonrails-security/1h2DR63ViGo/discussion"
     end
@@ -71,11 +71,11 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
               (version >= "1.5.5" and version < "1.6.0")
 
     warning_type = "Denial of Service"
-    confidence = CONFIDENCE[:med]
+    confidence = :medium
     message = "#{name} gem version #{version} has a symbol creation vulnerablity: upgrade to "
 
     if version >= "1.7.0"
-      confidence = CONFIDENCE[:high]
+      confidence = :high
       warning_type = "Remote Code Execution"
       message = "#{name} gem version #{version} has a remote code vulnerablity: upgrade to 1.7.7"
     elsif version >= "1.6.0"
@@ -83,12 +83,12 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
     elsif version >= "1.5.0"
       message << "1.5.5"
     else
-      confidence = CONFIDENCE[:low]
+      confidence = :weak
       message << "1.5.5"
     end
 
-    if confidence == CONFIDENCE[:med] and uses_json_parse?
-      confidence = CONFIDENCE[:high]
+    if confidence == :medium and uses_json_parse?
+      confidence = :high
     end
 
     warn :warning_type => warning_type,

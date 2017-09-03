@@ -49,9 +49,9 @@ class Brakeman::CheckModelSerialize < Brakeman::BaseCheck
       end
 
       if attrs.empty?
-        confidence = CONFIDENCE[:med]
+        confidence = :medium
       else
-        confidence = CONFIDENCE[:high]
+        confidence = :high
       end
 
       warn :model => model.name,

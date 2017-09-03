@@ -52,7 +52,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
           :warning_code => :xss_link_to_href,
           :message => message,
           :user_input => input,
-          :confidence => CONFIDENCE[:high],
+          :confidence => :high,
           :link_path => "link_to_href"
       end
     elsif has_immediate_model? url_arg or model_find_call? url_arg
@@ -85,7 +85,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
           :warning_code => :xss_link_to_href,
           :message => message,
           :user_input => @matched,
-          :confidence => CONFIDENCE[:med],
+          :confidence => :medium,
           :link_path => "link_to_href"
       end
     end

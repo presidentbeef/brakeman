@@ -28,7 +28,7 @@ class Brakeman::CheckSkipBeforeFilter < Brakeman::BaseCheck
         :warning_code => :csrf_blacklist,
         :message => "Use whitelist (:only => [..]) when skipping CSRF check",
         :code => filter,
-        :confidence => CONFIDENCE[:med],
+        :confidence => :medium,
         :file => controller.file
 
     when :login_required, :authenticate_user!, :require_user
@@ -37,7 +37,7 @@ class Brakeman::CheckSkipBeforeFilter < Brakeman::BaseCheck
         :warning_type => "Authentication",
         :message => "Use whitelist (:only => [..]) when skipping authentication",
         :code => filter,
-        :confidence => CONFIDENCE[:med],
+        :confidence => :medium,
         :link => "authentication_whitelist",
         :file => controller.file
     end

@@ -91,7 +91,7 @@ class Brakeman::CheckValidationRegex < Brakeman::BaseCheck
       :warning_code => :validation_regex,
       :message => "Insufficient validation for '#{get_name validator}' using #{regex.inspect}. Use \\A and \\z as anchors",
       :line => value.line,
-      :confidence => CONFIDENCE[:high]
+      :confidence => :high
     end
   end
 

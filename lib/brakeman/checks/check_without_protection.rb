@@ -42,11 +42,11 @@ class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
           add_result res
 
           if input = include_user_input?(call.arglist)
-            confidence = CONFIDENCE[:high]
+            confidence = :high
           elsif all_literals? call
             return
           else
-            confidence = CONFIDENCE[:med]
+            confidence = :medium
           end
 
           warn :result => res, 

@@ -24,7 +24,7 @@ class Brakeman::CheckMimeTypeDoS < Brakeman::BaseCheck
     warn :warning_type => "Denial of Service",
       :warning_code => :CVE_2016_0751,
       :message => message,
-      :confidence => CONFIDENCE[:med],
+      :confidence => :medium,
       :gem_info => gemfile_or_environment,
       :link_path => "https://groups.google.com/d/msg/rubyonrails-security/9oLY_FCzvoc/w9oI9XxbFQAJ"
   end

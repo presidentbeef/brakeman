@@ -21,7 +21,7 @@ class Brakeman::CheckSymbolDoSCVE < Brakeman::BaseCheck
       warn :warning_type => "Denial of Service",
         :warning_code => :CVE_2013_1854,
         :message => "Rails #{rails_version} has a denial of service vulnerability in ActiveRecord: upgrade to #{fix_version} or patch",
-        :confidence => CONFIDENCE[:med],
+        :confidence => :medium,
         :gem_info => gemfile_or_environment,
         :link => "https://groups.google.com/d/msg/rubyonrails-security/jgJ4cjjS8FE/BGbHRxnDRTIJ"
     end
