@@ -38,7 +38,7 @@ class Brakeman::CheckNestedAttributesBypass < Brakeman::BaseCheck
       :message => message,
       :file => model.file,
       :line => args.line,
-      :confidence => CONFIDENCE[:med],
+      :confidence => :medium,
       :link_path => "https://groups.google.com/d/msg/rubyonrails-security/cawsWcQ6c8g/tegZtYdbFQAJ"
   end
 

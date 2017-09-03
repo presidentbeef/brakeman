@@ -46,16 +46,16 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
       message = "Rails #{rails_version} has a vulnerability in #{method}: upgrade to #{@fix_version} or patch"
 
       if include_user_input? result[:call]
-        confidence = CONFIDENCE[:high]
+        confidence = :high
       else
-        confidence = CONFIDENCE[:medium]
+        confidence = :medium
       end
 
       warn :result => result,
         :warning_type => "Cross Site Scripting",
         :warning_code => code,
         :message => message,
-        :confidence => CONFIDENCE[:high],
+        :confidence => :high,
         :link_path => link
     end
   end
@@ -64,9 +64,9 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
     message = "rails-html-sanitizer #{tracker.config.gem_version(:'rails-html-sanitizer')} is vulnerable (#{cve}). Upgrade to 1.0.3"
 
     if tracker.find_call(:target => false, :method => :sanitize).any?
-      confidence = CONFIDENCE[:high]
+      confidence = :high
     else
-      confidence = CONFIDENCE[:med]
+      confidence = :medium
     end
 
     warn :warning_type => "Cross Site Scripting",

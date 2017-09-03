@@ -27,7 +27,7 @@ class Brakeman::CheckYAMLParsing < Brakeman::BaseCheck
       warn :warning_type => "Remote Code Execution",
         :warning_code => :CVE_2013_0156,
         :message => message,
-        :confidence => CONFIDENCE[:high],
+        :confidence => :high,
         :gem_info => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion"
     end
@@ -39,7 +39,7 @@ class Brakeman::CheckYAMLParsing < Brakeman::BaseCheck
       warn :warning_type => "Remote Code Execution",
         :warning_code => :CVE_2013_0156,
         :message => message,
-        :confidence => CONFIDENCE[:high],
+        :confidence => :high,
         :gem_info => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion"
     end

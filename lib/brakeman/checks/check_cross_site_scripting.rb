@@ -77,7 +77,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
         :warning_code => :cross_site_scripting,
         :message => message,
         :code => input.match,
-        :confidence => CONFIDENCE[:high]
+        :confidence => :high
 
     elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(out)
       method = if call? match
@@ -90,9 +90,9 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
         add_result exp
 
         if likely_model_attribute? match
-          confidence = CONFIDENCE[:high]
+          confidence = :high
         else
-          confidence = CONFIDENCE[:med]
+          confidence = :medium
         end
 
         message = "Unescaped model attribute"
@@ -178,14 +178,14 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
           warning_code = :cross_site_scripting
 
           if @known_dangerous.include? exp.method
-            confidence = CONFIDENCE[:high]
+            confidence = :high
             if exp.method == :to_json
               message += " in JSON hash"
               link_path += "_to_json"
               warning_code = :xss_to_json
             end
           else
-            confidence = CONFIDENCE[:low]
+            confidence = :weak
           end
 
           warn :template => @current_template,

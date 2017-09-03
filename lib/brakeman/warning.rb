@@ -10,27 +10,39 @@ class Brakeman::Warning
 
   attr_accessor :code, :context, :file, :message, :relative_path
 
-  TEXT_CONFIDENCE = [ "High", "Medium", "Weak" ]
+  TEXT_CONFIDENCE = {
+    0 => "High",
+    1 => "Medium",
+    2 => "Weak",
+  }
 
-  OPTIONS = {:called_from => :@called_from,
-              :check => :@check,
-              :class => :@class,
-              :code => :@code,
-              :confidence => :@confidence,
-              :controller => :@controller,
-              :file => :@file,
-              :gem_info => :@gem_info,
-              :line => :@line,
-              :link_path => :@link_path,
-              :message => :@message,
-              :method => :@method,
-              :model => :@model,
-              :relative_path => :@relative_path,
-              :template => :@template,
-              :user_input => :@user_input,
-              :warning_set => :@warning_set,
-              :warning_type => :@warning_type
-            }
+  CONFIDENCE = {
+    :high => 0,
+    :med => 1,
+    :medium => 1,
+    :low => 2,
+    :weak => 2,
+  }
+
+  OPTIONS = {
+    :called_from => :@called_from,
+    :check => :@check,
+    :class => :@class,
+    :code => :@code,
+    :controller => :@controller,
+    :file => :@file,
+    :gem_info => :@gem_info,
+    :line => :@line,
+    :link_path => :@link_path,
+    :message => :@message,
+    :method => :@method,
+    :model => :@model,
+    :relative_path => :@relative_path,
+    :template => :@template,
+    :user_input => :@user_input,
+    :warning_set => :@warning_set,
+    :warning_type => :@warning_type,
+  }
 
   #+options[:result]+ can be a result from Tracker#find_call. Otherwise, it can be +nil+.
   def initialize options = {}
@@ -39,6 +51,8 @@ class Brakeman::Warning
     OPTIONS.each do |key, var|
       self.instance_variable_set(var, options[key])
     end
+
+    self.confidence = options[:confidence]
 
     result = options[:result]
     if result
@@ -111,6 +125,20 @@ class Brakeman::Warning
 
   def eql? other_warning
     self.hash == other_warning.hash
+  end
+
+  def confidence= conf
+    @confidence = case conf
+                  when Integer
+                    conf
+                  when Symbol
+                    CONFIDENCE[conf]
+                  else
+                    raise "Could not set confidence to `#{conf}`"
+                  end
+
+    raise "Could not set confidence to `#{conf}`" unless @confidence
+    raise "Invalid confidence: `#{@confidence}`" unless TEXT_CONFIDENCE[@confidence]
   end
 
   #Returns name of a view, including where it was rendered from

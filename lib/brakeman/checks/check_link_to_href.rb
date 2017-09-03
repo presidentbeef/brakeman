@@ -52,7 +52,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
           :warning_code => :xss_link_to_href,
           :message => message,
           :user_input => input,
-          :confidence => CONFIDENCE[:high],
+          :confidence => :high,
           :link_path => "link_to_href"
       end
     elsif not tracker.options[:ignore_model_output] and input = has_immediate_model?(url_arg)
@@ -66,7 +66,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
         :warning_code => :xss_link_to_href,
         :message => message,
         :user_input => input,
-        :confidence => CONFIDENCE[:low],
+        :confidence => :weak,
         :link_path => "link_to_href"
     end
   end

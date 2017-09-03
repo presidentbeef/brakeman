@@ -3,6 +3,7 @@ require 'brakeman/util'
 require 'brakeman/version'
 require 'brakeman/report/renderer'
 require 'brakeman/processors/output_processor'
+require 'brakeman/warning'
 
 # Base class for report formats
 class Brakeman::Report::Base
@@ -10,7 +11,7 @@ class Brakeman::Report::Base
 
   attr_reader :tracker, :checks
 
-  TEXT_CONFIDENCE = [ "High", "Medium", "Weak" ]
+  TEXT_CONFIDENCE = Brakeman::Warning::TEXT_CONFIDENCE
 
   def initialize app_tree, tracker
     @app_tree = app_tree

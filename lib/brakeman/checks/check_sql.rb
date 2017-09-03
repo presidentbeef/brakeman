@@ -207,19 +207,19 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
       input = include_user_input? dangerous_value
       if input
-        confidence = CONFIDENCE[:high]
+        confidence = :high
         user_input = input
       else
-        confidence = CONFIDENCE[:med]
+        confidence = :medium
         user_input = dangerous_value
       end
 
       if result[:call].target and result[:chain] and not @expected_targets.include? result[:chain].first
         confidence = case confidence
-                     when CONFIDENCE[:high]
-                       CONFIDENCE[:med]
-                     when CONFIDENCE[:med]
-                       CONFIDENCE[:low]
+                     when :high
+                       :medium
+                     when :medium
+                       :weak
                      else
                        confidence
                      end
@@ -235,9 +235,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
     if check_for_limit_or_offset_vulnerability call.last_arg
       if include_user_input? call.last_arg
-        confidence = CONFIDENCE[:high]
+        confidence = :high
       else
-        confidence = CONFIDENCE[:low]
+        confidence = :weak
       end
 
       warn :result => result,

@@ -25,7 +25,7 @@ class Brakeman::CheckSecrets < Brakeman::BaseCheck
           warn :warning_code => :secret_in_source,
             :warning_type => "Authentication",
             :message => "Hardcoded value for #{name} in source code",
-            :confidence => CONFIDENCE[:med],
+            :confidence => :medium,
             :file => constant.file,
             :line => constant.line
         end

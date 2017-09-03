@@ -13,7 +13,7 @@ class Brakeman::CheckFilterSkipping < Brakeman::BaseCheck
       warn :warning_type => "Default Routes",
         :warning_code => :CVE_2011_2929,
         :message => "Versions before 3.0.10 have a vulnerability which allows filters to be bypassed: CVE-2011-2929",
-        :confidence => CONFIDENCE[:high],
+        :confidence => :high,
         :gem_info => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/topic/rubyonrails-security/NCCsca7TEtY/discussion"
     end

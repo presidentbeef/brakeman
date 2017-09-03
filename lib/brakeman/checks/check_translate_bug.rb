@@ -13,9 +13,9 @@ class Brakeman::CheckTranslateBug < Brakeman::BaseCheck
         version_between?('3.1.0', '3.1.1')
 
       confidence = if uses_translate?
-        CONFIDENCE[:high]
+        :high
       else
-        CONFIDENCE[:med]
+        :medium
       end
 
       description = "have a vulnerability in the translate helper with keys ending in _html"

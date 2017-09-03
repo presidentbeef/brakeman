@@ -137,7 +137,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
     warn :warning_type => "Session Setting",
       :warning_code => :http_cookies,
       :message => "Session cookies should be set to HTTP only",
-      :confidence => CONFIDENCE[:high],
+      :confidence => :high,
       :line => line,
       :file => file
 
@@ -147,7 +147,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
     warn :warning_type => "Session Setting",
       :warning_code => :session_secret,
       :message => "Session secret should not be included in version control",
-      :confidence => CONFIDENCE[:high],
+      :confidence => :high,
       :line => line,
       :file => file
   end
@@ -156,7 +156,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
     warn :warning_type => "Session Setting",
       :warning_code => :secure_cookies,
       :message => "Session cookie should be set to secure only",
-      :confidence => CONFIDENCE[:high],
+      :confidence => :high,
       :line => line,
       :file => file
   end

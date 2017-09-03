@@ -34,7 +34,7 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
         :warning_code => :CVE_2011_2931,
         :message => message,
         :gem_info => gemfile_or_environment,
-        :confidence => CONFIDENCE[:high],
+        :confidence => :high,
         :link_path => "https://groups.google.com/d/topic/rubyonrails-security/K5EwdJt06hI/discussion"
     end
   end
@@ -56,7 +56,7 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
     warn :warning_type => "Cross Site Scripting",
       :warning_code => :CVE_2012_3465,
       :message => message,
-      :confidence => CONFIDENCE[:high],
+      :confidence => :high,
       :gem_info => gemfile_or_environment,
       :link_path => "https://groups.google.com/d/topic/rubyonrails-security/FgVEtBajcTY/discussion"
   end
@@ -64,9 +64,9 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
   def cve_2015_7579
     if tracker.config.gem_version(:'rails-html-sanitizer') == '1.0.2'
       if uses_strip_tags?
-        confidence = CONFIDENCE[:high]
+        confidence = :high
       else
-        confidence = CONFIDENCE[:med]
+        confidence = :medium
       end
 
       message = "rails-html-sanitizer 1.0.2 is vulnerable (CVE-2015-7579). Upgrade to 1.0.3"

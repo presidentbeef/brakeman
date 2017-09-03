@@ -21,7 +21,7 @@ class Brakeman::CheckRouteDoS < Brakeman::BaseCheck
       warn :warning_type => "Denial of Service",
         :warning_code => :CVE_2015_7581,
         :message => message,
-        :confidence => CONFIDENCE[:med],
+        :confidence => :medium,
         :gem_info => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/msg/rubyonrails-security/dthJ5wL69JE/YzPnFelbFQAJ"
     end

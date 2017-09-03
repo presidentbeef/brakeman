@@ -70,7 +70,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
 
     message = "Unescaped #{friendly_type_of input} in link_to"
 
-    warn_xss(result, message, input, CONFIDENCE[:high])
+    warn_xss(result, message, input, :high)
   end
 
   # Check if we should warn about the specified method
@@ -81,8 +81,8 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
     method = match.method
     return false if IGNORE_MODEL_METHODS.include? method
 
-    confidence = CONFIDENCE[:med]
-    confidence = CONFIDENCE[:high] if likely_model_attribute? match
+    confidence = :medium
+    confidence = :high if likely_model_attribute? match
     warn_xss(result, "Unescaped model attribute in link_to", match, confidence)
   end
 
@@ -93,7 +93,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
 
     message = "Unescaped #{friendly_type_of matched} in link_to"
 
-    warn_xss(result, message, @matched, CONFIDENCE[:med])
+    warn_xss(result, message, @matched, :medium)
   end
 
   # Create a warn for this xss

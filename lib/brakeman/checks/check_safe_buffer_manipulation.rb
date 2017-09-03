@@ -25,7 +25,7 @@ class Brakeman::CheckSafeBufferManipulation < Brakeman::BaseCheck
     warn :warning_type => "Cross Site Scripting",
       :warning_code => :safe_buffer_vuln, 
       :message => message,
-      :confidence => CONFIDENCE[:med],
+      :confidence => :medium,
       :gem_info => gemfile_or_environment
   end
 end

@@ -12,9 +12,9 @@ class Brakeman::CheckQuoteTableName < Brakeman::BaseCheck
         version_between?('3.0.0', '3.0.9'))
 
       if uses_quote_table_name?
-        confidence = CONFIDENCE[:high]
+        confidence = :high
       else
-        confidence = CONFIDENCE[:med]
+        confidence = :medium
       end
 
       if rails_version =~ /^3/

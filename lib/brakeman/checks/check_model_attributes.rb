@@ -31,7 +31,7 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
           :warning_type => "Attribute Restriction",
           :warning_code => :no_attr_accessible,
           :message => "Mass assignment is not restricted using attr_accessible",
-          :confidence => CONFIDENCE[:high]
+          :confidence => :high
       end
 
       unless protected_names.empty?
@@ -60,7 +60,7 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
             :warning_type => "Attribute Restriction",
             :warning_code => :no_attr_accessible,
             :message => "Mass assignment is not restricted using attr_accessible",
-            :confidence => CONFIDENCE[:high]
+            :confidence => :high
         elsif not tracker.options[:ignore_attr_protected]
           message, confidence, link = check_for_attr_protected_bypass
 
@@ -106,11 +106,11 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
 
     if upgrade_version
       message = "attr_protected is bypassable in #{rails_version}, use attr_accessible or upgrade to #{upgrade_version}"
-      confidence = CONFIDENCE[:high]
+      confidence = :high
       link = "https://groups.google.com/d/topic/rubyonrails-security/AFBKNY7VSH8/discussion"
     else
       message = "attr_accessible is recommended over attr_protected"
-      confidence = CONFIDENCE[:med]
+      confidence = :medium
       link = nil
     end
 

@@ -36,9 +36,9 @@ class Brakeman::CheckDeserialize < Brakeman::BaseCheck
     method = result[:call].method
 
     if input = has_immediate_user_input?(arg)
-      confidence = CONFIDENCE[:high]
+      confidence = :high
     elsif input = include_user_input?(arg)
-      confidence = CONFIDENCE[:med]
+      confidence = :medium
     end
 
     if confidence

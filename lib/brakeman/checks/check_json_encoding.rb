@@ -16,9 +16,9 @@ class Brakeman::CheckJSONEncoding < Brakeman::BaseCheck
       end
 
       if tracker.find_call(:methods => [:to_json, :encode]).any?
-        confidence = CONFIDENCE[:high]
+        confidence = :high
       else
-        confidence = CONFIDENCE[:med]
+        confidence = :medium
       end
 
       warn :warning_type => "Cross Site Scripting",

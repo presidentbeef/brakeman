@@ -15,4 +15,10 @@ class BaseController < ActionController::Base
 
     Statistics::AdminWithdrawal.send("export_#{bank_name}_#inc!")
   end
+
+  def yet_another_early_return
+    scope_name = params[:scope].presence
+    fail ActiveRecord::RecordNotFound unless ['safe', 'also_safe'].include?(scope_name)
+    Model.public_send(scope_name)
+  end
 end
