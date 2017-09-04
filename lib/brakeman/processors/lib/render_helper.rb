@@ -62,7 +62,7 @@ module Brakeman::RenderHelper
     template = @tracker.templates[name.to_sym]
     unless template
       Brakeman.debug "[Notice] No such template: #{name}"
-      return 
+      return
     end
 
     template_env = only_ivars(:include_request_vars)
@@ -87,7 +87,7 @@ module Brakeman::RenderHelper
         #nothing
       elsif not template.name.to_s.match(/[^\/_][^\/]+$/)
         #Don't do this for partials
-        
+
         process_layout
       end
 
@@ -117,7 +117,7 @@ module Brakeman::RenderHelper
 
       #Set original_line for values so it is clear
       #that values came from another file
-      template_env.all.each do |var, value|
+      template_env.all.each do |_var, value|
         unless value.original_line
           #TODO: This has been broken for a while now and no one noticed
           #so maybe we can skip it

@@ -62,7 +62,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   #Default Sexp processing. Iterates over each value in the Sexp
   #and processes them if they are also Sexps.
   def process_default exp
-    exp.each_with_index do |e, i|
+    exp.each_with_index do |e, _i|
       if sexp? e
         process e
       else

@@ -17,7 +17,7 @@ class Brakeman::CheckBasicAuth < Brakeman::BaseCheck
   end
 
   def check_basic_auth_filter
-    controllers = tracker.controllers.select do |name, c|
+    controllers = tracker.controllers.select do |_name, c|
       c.options[:http_basic_authenticate_with]
     end
 

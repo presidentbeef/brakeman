@@ -53,7 +53,7 @@ module Brakeman
     end
 
     def each_method
-      @methods.each do |vis, meths|
+      @methods.each do |_vis, meths|
         meths.each do |name, info|
           yield name, info
         end

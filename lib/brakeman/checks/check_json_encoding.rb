@@ -40,7 +40,7 @@ class Brakeman::CheckJSONEncoding < Brakeman::BaseCheck
                            s(:args),
                            s(:self))))))
 
-    tracker.initializers.any? do |name, initializer|
+    tracker.initializers.any? do |_name, initializer|
       initializer == workaround
     end
   end

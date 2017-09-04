@@ -46,7 +46,7 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
       next unless arg
 
       if not check_helper_option(result, arg) and hash? arg
-        hash_iterate(arg) do |key, value|
+        hash_iterate(arg) do |_key, value|
           break if check_helper_option(result, value)
         end
       end

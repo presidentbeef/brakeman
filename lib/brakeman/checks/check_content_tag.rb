@@ -66,7 +66,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
 
     #Attribute keys are never escaped, so check them for user input
     if not @matched and hash? attributes and not request_value? attributes
-      hash_iterate(attributes) do |k, v|
+      hash_iterate(attributes) do |k, _v|
         check_argument result, k
         return if @matched
       end
@@ -79,7 +79,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
       if request_value? attributes or not hash? attributes
         check_argument result, attributes
       else #check hash values
-        hash_iterate(attributes) do |k, v|
+        hash_iterate(attributes) do |_k, v|
           check_argument result, v
           return if @matched
         end

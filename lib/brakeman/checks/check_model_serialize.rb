@@ -17,7 +17,7 @@ class Brakeman::CheckModelSerialize < Brakeman::BaseCheck
 
     return unless @upgrade_version
 
-    tracker.models.each do |name, model|
+    tracker.models.each do |_name, model|
       check_for_serialize model
     end
   end

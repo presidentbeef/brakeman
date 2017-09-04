@@ -219,7 +219,7 @@ class Brakeman::Tracker
       finder.process_source definition, :class => set_name, :file => file
     end
 
-    self.each_template do |name, template|
+    self.each_template do |_name, template|
       finder.process_source template.src, :template => template, :file => template.file
     end
 
@@ -270,7 +270,7 @@ class Brakeman::Tracker
     end
 
     if locations.include? :templates
-      self.each_template do |name, template|
+      self.each_template do |_name, template|
         finder.process_source template.src, :template => template, :file => template.file
       end
     end
@@ -283,7 +283,7 @@ class Brakeman::Tracker
   #controllers (but not those rendered from other templates)
   def reset_templates options = { :only_rendered => false }
     if options[:only_rendered]
-      @templates.delete_if do |name, template|
+      @templates.delete_if do |_name, template|
         template.rendered_from_controller?
       end
     else
