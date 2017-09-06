@@ -13,7 +13,7 @@ class Rails5Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 9,
-      :generic => 11
+      :generic => 12
     }
   end
 
@@ -297,6 +297,19 @@ class Rails5Tests < Minitest::Test
       :relative_path => "app/controllers/widget_controller.rb",
       :code => s(:render, :action, s(:call, s(:call, s(:params), :[], s(:lit, :x)), :thing?), s(:hash)),
       :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :x)), :thing?)
+  end
+
+  def test_render_inline_cookies
+    assert_warning :type => :warning,
+      :warning_code => 84,
+      :fingerprint => "8badd2e174576484eca32fb6015d903700d6694e9b3486be64d737aa215a36ea",
+      :warning_type => "Cross Site Scripting",
+      :line => 86,
+      :message => /^Unescaped\ cookie\ value\ rendered\ inline/,
+      :confidence => 0,
+      :relative_path => "app/controllers/widget_controller.rb",
+      :code => s(:render, :inline, s(:call, s(:call, s(:call, nil, :request), :cookies), :[], s(:str, "value")), s(:hash)),
+      :user_input => s(:call, s(:call, s(:call, nil, :request), :cookies), :[], s(:str, "value"))
   end
 
   def test_warning_in_helper_method

@@ -18,9 +18,13 @@ module Brakeman::Util
 
   COOKIES = Sexp.new(:call, nil, :cookies)
 
+  REQUEST_COOKIES = s(:call, s(:call, nil, :request), :cookies)
+
   SESSION = Sexp.new(:call, nil, :session)
 
   ALL_PARAMETERS = Set[PARAMETERS, QUERY_PARAMETERS, PATH_PARAMETERS, REQUEST_PARAMETERS, REQUEST_PARAMS]
+
+  ALL_COOKIES = Set[COOKIES, REQUEST_COOKIES]
 
   #Convert a string from "something_like_this" to "SomethingLikeThis"
   #
@@ -229,7 +233,7 @@ module Brakeman::Util
 
   def cookies? exp
     if exp.is_a? Sexp
-      return true if exp.node_type == :cookies or exp == COOKIES
+      return true if exp.node_type == :cookies or ALL_COOKIES.include? exp
 
       if call? exp
         if cookies? exp[1]
