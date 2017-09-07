@@ -36,7 +36,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     @matched = false
     url_arg = process call.second_arg
 
-    if call? url_arg and url_arg.method == :url_for
+    if check_argument? url_arg
       url_arg = url_arg.first_arg
     end
 
@@ -55,40 +55,46 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
           :confidence => :high,
           :link_path => "link_to_href"
       end
-    elsif has_immediate_model? url_arg or model_find_call? url_arg
+    elsif not tracker.options[:ignore_model_output] and input = has_immediate_model?(url_arg)
+      return if ignore_model_call? url_arg, input or duplicate? result
+      add_result result
 
-      # Decided NOT warn on models.  polymorphic_path is called it a model is
-      # passed to link_to (which passes it to url_for)
+      message = "Potentially unsafe model attribute in link_to href"
 
-    elsif array? url_arg
-      # Just like models, polymorphic path/url is called if the argument is
-      # an array
-
-    elsif hash? url_arg
-
-      # url_for uses the key/values pretty carefully and I don't see a risk.
-      # IF you have default routes AND you accept user input for :controller
-      # and :only_path, then MAYBE you could trigger a javascript:/data:
-      # attack.
-
-    elsif @matched
-      if @matched.type == :model and not tracker.options[:ignore_model_output]
-        message = "Unsafe model attribute in link_to href"
-      elsif @matched.type == :params and not call_on_params? @matched.match
-        message = "Unsafe parameter value in link_to href"
-      end
-
-      if message and not duplicate? result and not ignore_interpolation? url_arg, @matched.match
-        add_result result
-        warn :result => result,
-          :warning_type => "Cross Site Scripting",
-          :warning_code => :xss_link_to_href,
-          :message => message,
-          :user_input => @matched,
-          :confidence => :medium,
-          :link_path => "link_to_href"
-      end
+      warn :result => result,
+        :warning_type => "Cross Site Scripting",
+        :warning_code => :xss_link_to_href,
+        :message => message,
+        :user_input => input,
+        :confidence => :weak,
+        :link_path => "link_to_href"
     end
+  end
+
+  def check_argument? url_arg
+    return unless call? url_arg
+
+    target = url_arg.target
+    method = url_arg.method
+
+    method == :url_for or
+      method == :h or
+      cgi_escaped? target, method
+  end
+
+  def ignore_model_call? url_arg, exp
+    return true unless call? exp
+
+    target = exp.target
+    method = exp.method
+
+    return true unless model_find_call? target
+
+    return true unless method.to_s =~ /url|uri|link|page|site/
+
+    ignore_call? target, method or
+      IGNORE_MODEL_METHODS.include? method or
+      ignore_interpolation? url_arg, exp
   end
 
   #Ignore situations where the href is an interpolated string

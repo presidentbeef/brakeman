@@ -843,13 +843,14 @@ class Rails4Tests < Minitest::Test
   def test_cross_site_scripting_warn_on_url_methods_in_href
     assert_warning :type => :template,
       :warning_code => 4,
-      :fingerprint => "92d5f7afb5676d2aca85d6dc796d3606ec225c178a3727ba6a790138276a7c1c",
+      :fingerprint => "31b5a196d06699ced844270d876e7af818f5487dd82d713a47790798c1d6effd",
       :warning_type => "Cross Site Scripting",
       :line => 2,
-      :message => /^Unsafe\ parameter\ value\ in\ link_to\ href/,
-      :confidence => 1,
+      :message => /^Potentially\ unsafe\ model\ attribute\ in\ li/,
+      :confidence => 2,
       :relative_path => "app/views/another/various_xss.html.erb",
-      :user_input => s(:call, nil, :params)
+      :code => s(:call, nil, :link_to, s(:str, "stuff"), s(:call, s(:call, s(:const, :User), :find, s(:call, s(:call, nil, :params), :[], s(:lit, :id))), :home_url)),
+      :user_input => s(:call, s(:call, s(:const, :User), :find, s(:call, s(:call, nil, :params), :[], s(:lit, :id))), :home_url)
   end
 
   def test_cross_site_scripting_no_warning_on_path_methods_in_href

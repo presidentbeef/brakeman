@@ -13,7 +13,7 @@ class Rails3Tests < Minitest::Test
     @expected ||= {
       :controller => 1,
       :model => 9,
-      :template => 42,
+      :template => 41,
       :generic => 74
     }
 
@@ -565,18 +565,17 @@ class Rails3Tests < Minitest::Test
       :confidence => 0,
       :file => /test_params\.html\.erb/
 
-    assert_warning :type => :template,
+    assert_no_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 16,
       :message => /^Unsafe parameter value in link_to href/,
-      :confidence => 1,
       :file => /test_params\.html\.erb/
 
     assert_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 18,
       :message => /^Unsafe parameter value in link_to href/,
-      :confidence => 1,
+      :confidence => 0,
       :file => /test_params\.html\.erb/
   end
 

@@ -14,13 +14,13 @@ class Rails2Tests < Minitest::Test
       @expected ||= {
         :controller => 1,
         :model => 3,
-        :template => 47,
+        :template => 46,
         :generic => 57 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
-        :template => 47,
+        :template => 46,
         :generic => 58 }
     end
   end
@@ -537,7 +537,7 @@ class Rails2Tests < Minitest::Test
       :file => /test_params\.html\.erb/,
       :relative_path => "app/views/home/test_params.html.erb"
 
-    assert_warning :type => :template,
+    assert_no_warning :type => :template,
       :warning_type => "Cross Site Scripting",
       :line => 16,
       :message => /^Unsafe parameter value in link_to href/,
@@ -549,7 +549,7 @@ class Rails2Tests < Minitest::Test
       :warning_type => "Cross Site Scripting",
       :line => 18,
       :message => /^Unsafe parameter value in link_to href/,
-      :confidence => 1,
+      :confidence => 0,
       :file => /test_params\.html\.erb/,
       :relative_path => "app/views/home/test_params.html.erb"
   end
@@ -1486,13 +1486,13 @@ class Rails2WithOptionsTests < Minitest::Test
       @expected ||= {
         :controller => 1,
         :model => 4,
-        :template => 47,
+        :template => 46,
         :generic => 57 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
-        :template => 47,
+        :template => 46,
         :generic => 58 }
     end
   end
