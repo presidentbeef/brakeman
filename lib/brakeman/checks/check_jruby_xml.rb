@@ -23,9 +23,7 @@ class Brakeman::CheckJRubyXML < Brakeman::BaseCheck
     tracker.check_initializers(:"ActiveSupport::XmlMini", :backend=).each do |result|
       arg = result.call.first_arg
 
-      if string? arg and arg.value == "REXML"
-        return
-      end
+      return if string? arg and arg.value == "REXML"
     end
 
     warn :warning_type => "File Access",

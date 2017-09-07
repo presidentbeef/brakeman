@@ -143,7 +143,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
     #Search for processed template and process it.
     #Search for rendered versions of template and re-render (if necessary)
-    tracker.templates.each do |name, template|
+    tracker.templates.each do |_name, template|
       if template.file == path or template.file.nil?
         next unless template.render_path and template.name.to_sym == template_name.to_sym
 
@@ -204,7 +204,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
     lib = nil
 
-    tracker.libs.each do |name, library|
+    tracker.libs.each do |_name, library|
       if library.files.include?(path)
         lib = library
         break
@@ -267,7 +267,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     rendered_from_view = /^#{template_name}\.Template:(.+)/
 
     #Remove any rendered versions, or partials rendered from it
-    tracker.templates.delete_if do |name, template|
+    tracker.templates.delete_if do |_name, template|
       template.file == path or template.name.to_sym == template_name.to_sym
     end
   end
@@ -275,7 +275,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def rescan_deleted_lib path
     deleted_lib = nil
 
-    tracker.libs.delete_if do |name, lib|
+    tracker.libs.delete_if do |_name, lib|
       if lib.files.include?(path)
         deleted_lib = lib
         true
@@ -295,7 +295,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     deleted = false
 
     [:controllers, :models, :libs].each do |collection|
-      tracker.send(collection).delete_if do |name, data|
+      tracker.send(collection).delete_if do |_name, data|
         if data.files.include?(path)
           deleted = true
           true
@@ -303,7 +303,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
       end
     end
 
-    tracker.templates.delete_if do |name, data|
+    tracker.templates.delete_if do |_name, data|
       if data.file == path
         deleted = true
         true
@@ -340,14 +340,14 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def rescan_mixin lib
     method_names = []
 
-    lib.each_method do |name, meth|
+    lib.each_method do |name, _meth|
       method_names << name
     end
 
     to_rescan = []
 
     #Rescan controllers that mixed in library
-    tracker.controllers.each do |name, controller|
+    tracker.controllers.each do |_name, controller|
       if controller.includes.include? lib.name
         controller.files.each do |path|
           unless @paths.include? path

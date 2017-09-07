@@ -20,7 +20,7 @@ class Brakeman::CheckFilterSkipping < Brakeman::BaseCheck
   end
 
   def uses_arbitrary_actions?
-    tracker.routes.each do |name, actions|
+    tracker.routes.each do |_name, actions|
       if actions.include? :allow_all_actions
         return true
       end

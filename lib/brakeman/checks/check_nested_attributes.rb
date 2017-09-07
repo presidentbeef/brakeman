@@ -29,7 +29,7 @@ class Brakeman::CheckNestedAttributes < Brakeman::BaseCheck
   end
 
   def uses_nested_attributes?
-    active_record_models.each do |name, model|
+    active_record_models.each do |_name, model|
       return true if model.options[:accepts_nested_attributes_for]
     end
 

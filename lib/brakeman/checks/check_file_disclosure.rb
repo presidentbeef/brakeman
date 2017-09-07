@@ -3,7 +3,7 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckFileDisclosure < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
-  @description = "Checks for versions with file existence disclosure vulnerability"
+  @description = 'Checks for versions with file existence disclosure vulnerability'
 
   def run_check
     fix_version = case

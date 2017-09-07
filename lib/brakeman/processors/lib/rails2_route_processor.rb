@@ -184,7 +184,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BasicProcessor
 
     controller = check_for_controller_name exp
     self.current_controller = controller if controller
-    
+
     #Check for default route
     if string? exp.first
       if exp.first.value == ":controller/:action/:id"
@@ -202,7 +202,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BasicProcessor
     exp.last.each_with_index do |e,i|
       if symbol? e and e.value == :action
         action = exp.last[i + 1]
-        
+
         if node_type? action, :lit
           @tracker.routes[@current_controller] << action.value.to_sym
         end
@@ -220,7 +220,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BasicProcessor
     @nested = Sexp.new(:lvar, exp.block_args.value)
 
     self.current_controller = check_for_controller_name exp.block_call.args
-    
+
     #process block
     process exp.block
 
@@ -258,7 +258,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BasicProcessor
     return unless exp.node_type == :hash
     routes = @tracker.routes[@current_controller]
 
-    hash_iterate(exp) do |action, type|
+    hash_iterate(exp) do |action, _type|
       routes << action.value
     end
   end
@@ -283,14 +283,14 @@ end
 #This is for a really specific case where a hash is used as arguments
 #to one of the map methods.
 class Brakeman::RouteAliasProcessor < Brakeman::AliasProcessor
-  
+
   #This replaces
   # { :some => :hash }.keys
-  #with 
+  #with
   # [:some]
   def process_call exp
     process_default exp
-    
+
     if hash? exp.target and exp.method == :keys
       keys = get_keys exp.target
       exp.clear
@@ -304,7 +304,7 @@ class Brakeman::RouteAliasProcessor < Brakeman::AliasProcessor
   #Returns an array Sexp containing the keys from the hash
   def get_keys hash
     keys = Sexp.new(:array)
-    hash_iterate(hash) do |key, value|
+    hash_iterate(hash) do |key, _value|
       keys << key
     end
 

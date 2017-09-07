@@ -364,7 +364,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   #(Seems unlikely, but if a user can control the column names queried, that
   #could be bad)
   def check_hash_keys exp
-    hash_iterate(exp) do |key, value|
+    hash_iterate(exp) do |key, _value|
       unless symbol?(key)
         unsafe_key = unsafe_sql? key
         return unsafe_key if unsafe_key

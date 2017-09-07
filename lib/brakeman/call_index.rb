@@ -67,7 +67,7 @@ class Brakeman::CallIndex
 
   def remove_template_indexes template_name = nil
     [@calls_by_method, @calls_by_target].each do |calls_by|
-      calls_by.each do |name, calls|
+      calls_by.each do |_name, calls|
         calls.delete_if do |call|
           from_template call, template_name
         end
@@ -77,7 +77,7 @@ class Brakeman::CallIndex
 
   def remove_indexes_by_class classes
     [@calls_by_method, @calls_by_target].each do |calls_by|
-      calls_by.each do |name, calls|
+      calls_by.each do |_name, calls|
         calls.delete_if do |call|
           call[:location][:type] == :class and classes.include? call[:location][:class]
         end

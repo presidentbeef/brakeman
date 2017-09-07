@@ -40,7 +40,7 @@ class Brakeman::CheckSingleQuotes < Brakeman::BaseCheck
   #Process initializers to see if they use workaround
   #by replacing Erb::Util.html_escape
   def uses_rack_escape?
-    @tracker.initializers.each do |name, src|
+    @tracker.initializers.each do |_name, src|
       process src
     end
 
