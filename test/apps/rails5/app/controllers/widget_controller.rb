@@ -81,6 +81,10 @@ class WidgetController < ApplicationController
 
     redirect_to send("#{goto}_event_path", event) # should not warn
   end
+
+  def render_cookies
+    render inline: request.cookies["value"]
+  end
 end
 
 IDENTIFIER_NAMESPACE = 'apis'
