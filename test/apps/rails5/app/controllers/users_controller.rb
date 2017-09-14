@@ -61,14 +61,6 @@ class UsersController < ApplicationController
     end
   end
 
-	def linky
-    @category = User.first
-		link_url = '/profile?uid=' + get_uid(@category.userid).to_s
-		name = User.where(id: @category.userid).first.name
-		the_link = sanitize link_to name, link_url
-		@page_author = the_link.html_safe
-	end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
