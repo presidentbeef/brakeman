@@ -1,3 +1,4 @@
+require_relative '../test'
 require 'brakeman/rescanner'
 
 class CVETests < Minitest::Test

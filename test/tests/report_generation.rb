@@ -1,4 +1,5 @@
 require 'json'
+require_relative '../test'
 
 class TestReportGeneration < Minitest::Test
   def setup

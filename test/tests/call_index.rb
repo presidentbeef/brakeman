@@ -1,3 +1,4 @@
+require_relative '../test'
 require 'brakeman/processors/lib/find_all_calls'
 
 class CallIndexTests < Minitest::Test

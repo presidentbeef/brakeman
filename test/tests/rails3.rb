@@ -1,4 +1,4 @@
-abort "Please run using test/test.rb" unless defined? BrakemanTester
+require_relative '../test'
 
 class Rails3Tests < Minitest::Test
   include BrakemanTester::FindWarning

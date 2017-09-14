@@ -1,9 +1,9 @@
 # NOTE: Please do not add any further tests to the Rails 3.2 application unless
 # the issue being tested specifically applies to Rails 3.2 and not the other
 # versions.
-# If possible, please use the rails3, rails3.1, or rails4 apps.
+# If possible, please use the rails5 app. 
 
-abort "Please run using test/test.rb" unless defined? BrakemanTester
+require_relative '../test'
 
 class Rails32Tests < Minitest::Test
   include BrakemanTester::FindWarning

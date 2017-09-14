@@ -1,3 +1,4 @@
+require_relative '../test'
 require 'brakeman/warning'
 
 class WarningTests < Minitest::Test

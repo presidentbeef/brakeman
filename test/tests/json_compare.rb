@@ -1,3 +1,4 @@
+require_relative '../test'
 require 'json'
 
 class JSONCompareTests < Minitest::Test

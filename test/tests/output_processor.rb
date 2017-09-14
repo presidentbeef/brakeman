@@ -1,3 +1,5 @@
+require_relative '../test'
+
 class OutputProcessorTests < Minitest::Test
   def assert_output expected, original
     output = Brakeman::OutputProcessor.new.format original

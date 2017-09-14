@@ -1,5 +1,5 @@
 #Set paths
-TEST_PATH = File.expand_path(File.dirname(__FILE__))
+TEST_PATH = File.expand_path(File.dirname(__FILE__)) unless defined? TEST_PATH
 $LOAD_PATH.unshift "#{TEST_PATH}/../lib"
 
 begin
@@ -257,6 +257,8 @@ module BrakemanTester::DiffHelper
   end
 end
 
-Dir.glob "#{TEST_PATH}/tests/*.rb" do |file|
-  require file
+if __FILE__ == $0
+  Dir.glob "#{TEST_PATH}/tests/*.rb" do |file|
+    require file
+  end
 end

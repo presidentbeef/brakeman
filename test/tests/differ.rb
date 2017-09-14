@@ -1,3 +1,4 @@
+require_relative '../test'
 require 'brakeman/differ'
 
 class DifferTests < Minitest::Test

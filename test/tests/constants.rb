@@ -1,3 +1,5 @@
+require_relative '../test'
+
 class ConstantTests < Minitest::Test
   def setup
     @constants = Brakeman::Constants.new
