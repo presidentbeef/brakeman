@@ -1,3 +1,5 @@
+require_relative '../test'
+
 class TestCodeClimateOutput < Minitest::Test
   def setup
     @@report ||= Brakeman.run("#{TEST_PATH}/apps/rails2").report.to_codeclimate

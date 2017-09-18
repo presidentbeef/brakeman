@@ -1,3 +1,4 @@
+require_relative '../test'
 require 'brakeman/processors/base_processor'
 
 class SexpTests < Minitest::Test

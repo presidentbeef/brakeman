@@ -1,3 +1,4 @@
+require_relative '../test'
 require 'brakeman/options'
 
 class BrakemanOptionsTest < Minitest::Test

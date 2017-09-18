@@ -1,6 +1,8 @@
 #Set paths
-TEST_PATH = File.expand_path(File.dirname(__FILE__))
-$LOAD_PATH.unshift "#{TEST_PATH}/../lib"
+unless defined? TEST_PATH
+  TEST_PATH = File.expand_path(File.dirname(__FILE__))
+  $LOAD_PATH.unshift "#{TEST_PATH}/../lib"
+end
 
 begin
   require 'simplecov'
@@ -13,6 +15,7 @@ end
 require 'brakeman'
 require 'brakeman/scanner'
 require 'minitest/autorun'
+require 'minitest/pride'
 
 class Minitest::Test
   def assert_nothing_raised *args
@@ -257,6 +260,8 @@ module BrakemanTester::DiffHelper
   end
 end
 
-Dir.glob "#{TEST_PATH}/tests/*.rb" do |file|
-  require file
+if __FILE__ == $0
+  Dir.glob "#{TEST_PATH}/tests/*.rb" do |file|
+    require file
+  end
 end

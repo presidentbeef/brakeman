@@ -1,3 +1,5 @@
+require_relative '../test'
+
 class TestMarkdownOutput < Minitest::Test
   def setup
     @@report ||= Brakeman.run(

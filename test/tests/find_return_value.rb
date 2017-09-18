@@ -1,3 +1,4 @@
+require_relative '../test'
 require 'brakeman/processors/lib/find_return_value'
 
 class FindReturnValueTests < Minitest::Test

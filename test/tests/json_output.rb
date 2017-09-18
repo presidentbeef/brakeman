@@ -1,3 +1,4 @@
+require_relative '../test'
 require 'json'
 
 class JSONOutputTests < Minitest::Test

@@ -1,4 +1,5 @@
 require 'tempfile'
+require_relative '../test'
 
 class BrakemanTests < Minitest::Test
   def test_exception_on_no_application

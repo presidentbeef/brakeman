@@ -1,3 +1,5 @@
+require_relative '../test'
+
 class AliasProcessorTests < Minitest::Test
   def assert_alias expected, original, full = false
     original_sexp = RubyParser.new.parse original
