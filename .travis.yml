@@ -1,3 +1,6 @@
+before_install:
+  - gem update bundler
+
 script:
   - "bundle exec ruby test/test.rb"
   - "bundle exec codeclimate-test-reporter"
