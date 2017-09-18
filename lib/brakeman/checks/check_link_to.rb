@@ -100,7 +100,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
   def warn_xss(result, message, user_input, confidence)
     add_result(result)
     warn :result => result,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :warning_code => :xss_link_to,
       :message => message,
       :user_input => user_input,

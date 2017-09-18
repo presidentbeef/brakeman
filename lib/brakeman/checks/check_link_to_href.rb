@@ -48,7 +48,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
       unless duplicate? result or call_on_params? url_arg or ignore_interpolation? url_arg, input.match
         add_result result
         warn :result => result,
-          :warning_type => "Cross Site Scripting",
+          :warning_type => "Cross-Site Scripting",
           :warning_code => :xss_link_to_href,
           :message => message,
           :user_input => input,
@@ -62,7 +62,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
       message = "Potentially unsafe model attribute in link_to href"
 
       warn :result => result,
-        :warning_type => "Cross Site Scripting",
+        :warning_type => "Cross-Site Scripting",
         :warning_code => :xss_link_to_href,
         :message => message,
         :user_input => input,
