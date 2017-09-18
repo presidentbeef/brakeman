@@ -1,4 +1,4 @@
-Cross site scripting (or XSS) is #3 on the 2013 [OWASP Top Ten](https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_(XSS\)) web security risks and it pops up nearly everywhere.
+Cross-site scripting (or XSS) is #3 on the 2013 [OWASP Top Ten](https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_(XSS\)) web security risks and it pops up nearly everywhere.
 
 XSS occurs when a user-controlled value is displayed on a web page without properly escaping it, allowing someone to inject Javascript or HTML into the page which will be interpreted and executed by the browser..
 

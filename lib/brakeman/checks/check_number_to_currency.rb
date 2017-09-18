@@ -31,7 +31,7 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
       message << "4.0.3"
     end
 
-    warn :warning_type => "Cross Site Scripting",
+    warn :warning_type => "Cross-Site Scripting",
       :warning_code => :CVE_2014_0081,
       :message => message,
       :confidence => :medium,
@@ -64,7 +64,7 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
 
   def warn_on_number_helper result, match
     warn :result => result,
-      :warning_type => "Cross Site Scripting",
+      :warning_type => "Cross-Site Scripting",
       :warning_code => :CVE_2014_0081_call,
       :message => "Format options in #{result[:call].method} are not safe in Rails #{rails_version}",
       :confidence => :high,

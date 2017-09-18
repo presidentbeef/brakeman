@@ -21,7 +21,7 @@ class Brakeman::CheckJSONEncoding < Brakeman::BaseCheck
         confidence = :medium
       end
 
-      warn :warning_type => "Cross Site Scripting",
+      warn :warning_type => "Cross-Site Scripting",
         :warning_code => :CVE_2015_3226,
         :message => message,
         :confidence => confidence,

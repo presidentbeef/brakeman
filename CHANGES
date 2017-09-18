@@ -300,7 +300,7 @@
 # 3.0.0
 
 * Add check for CVE-2014-7829
-* Add check for cross site scripting via inline renders
+* Add check for cross-site scripting via inline renders
 * Fix formatting of command interpolation
 * Local variables are no longer formatted as `(local var)`
 * Actually skip skipped before filters

@@ -73,7 +73,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
       message = "Unescaped #{friendly_type_of input}"
 
       warn :template => @current_template,
-        :warning_type => "Cross Site Scripting",
+        :warning_type => "Cross-Site Scripting",
         :warning_code => :cross_site_scripting,
         :message => message,
         :code => input.match,
@@ -106,7 +106,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
         end
 
         warn :template => @current_template,
-          :warning_type => "Cross Site Scripting",
+          :warning_type => "Cross-Site Scripting",
           :warning_code => warning_code,
           :message => message,
           :code => match,
@@ -189,7 +189,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
           end
 
           warn :template => @current_template,
-            :warning_type => "Cross Site Scripting",
+            :warning_type => "Cross-Site Scripting",
             :warning_code => warning_code,
             :message => message,
             :code => exp,
