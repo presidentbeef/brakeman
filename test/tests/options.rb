@@ -25,6 +25,7 @@ class BrakemanOptionsTest < Minitest::Test
     :force_scan             => "--force-scan",
     :ensure_latest          => "--ensure-latest",
     :allow_check_paths_in_config => "--allow-check-paths-in-config",
+    :pager                  => "--pager",
   }
 
   ALT_OPTION_INPUTS = {
