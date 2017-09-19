@@ -172,6 +172,7 @@ module Brakeman
       :message_limit => 100,
       :min_confidence => 2,
       :output_color => true,
+      :pager => true,
       :parallel_checks => true,
       :relative_path => false,
       :report_progress => true,
@@ -396,11 +397,40 @@ module Brakeman
       tracker.options[:output_color] = false
     end
 
-    output_formats.each do |output_format|
-      puts tracker.report.format(output_format)
+    if not $stdout.tty? or not tracker.options[:pager] or output_formats.length > 1 # does this ever happen??
+      output_formats.each do |output_format|
+        puts tracker.report.format(output_format)
+      end
+    else
+      page_output tracker.report.format(output_formats.first)
     end
   end
   private_class_method :write_report_to_formats
+
+  def self.page_output text
+    if system("which less")
+      # Adapted from https://github.com/piotrmurach/tty-pager/
+      write_io = open("|less -R", 'w')
+      pid = write_io.pid
+
+      write_io.write(text)
+      write_io.close
+
+      Process.waitpid2(pid, Process::WNOHANG)
+    else
+      load_brakeman_dependency 'highline'
+      h = ::HighLine.new
+      h.page_at = :auto
+      h.say tracker.report.format(output_formats.first)
+    end
+  rescue Errno::ECHILD
+    # on jruby 9x waiting on pid raises (per tty-pager)
+    true
+  rescue => e
+    warn "[Error] #{e}"
+    warn "[Error] Could not use pager. Set --no-pager to avoid this issue."
+    puts tracker.report.format(output_formats.first)
+  end
 
   #Rescan a subset of files in a Rails application.
   #

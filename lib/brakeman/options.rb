@@ -240,6 +240,10 @@ module Brakeman::Options
           options[:message_limit] = limit.to_i
         end
 
+        opts.on "--[no-]pager", "Use pager for output to terminal (Default)" do |pager|
+          options[:pager] = pager
+        end
+
         opts.on "--table-width WIDTH", "Limit table width in text report" do |width|
           options[:table_width] = width.to_i
         end
