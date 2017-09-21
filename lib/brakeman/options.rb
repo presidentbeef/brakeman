@@ -89,7 +89,7 @@ module Brakeman::Options
           options[:run_all_checks] = true
         end
 
-        opts.on "-a", "--[no-]assume-routes", "Assume all controller methods are actions (default)" do |assume|
+        opts.on "-a", "--[no-]assume-routes", "Assume all controller methods are actions (Default)" do |assume|
           options[:assume_all_routes] = assume
         end
 
@@ -111,7 +111,7 @@ module Brakeman::Options
           options[:ignore_attr_protected] = true
         end
 
-        opts.on "--[no-]index-libs", "Add libraries to call index (default)" do |index|
+        opts.on "--[no-]index-libs", "Add libraries to call index (Default)" do |index|
           options[:index_libs] = index
         end
 
@@ -238,6 +238,10 @@ module Brakeman::Options
 
         opts.on "--message-limit LENGTH", "Limit message length in HTML report" do |limit|
           options[:message_limit] = limit.to_i
+        end
+
+        opts.on "--[no-]pager", "Use pager for output to terminal (Default)" do |pager|
+          options[:pager] = pager
         end
 
         opts.on "--table-width WIDTH", "Limit table width in text report" do |width|
