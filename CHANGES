@@ -1,3 +1,17 @@
+# 4.0.0
+
+* Add simple pager for reports output to terminal
+* Rename "Cross Site Scripting" to "Cross-Site Scripting" (Paul Tetreau)
+* Rearrange tests a little bit
+* Treat `request.cookies` like `cookies`
+* Treat `fail`/`raise` like early returns
+* Remove reliance on `CONFIDENCE` constant in checks
+* Remove low confidence mass assignment warnings
+* Reduce warnings about XSS in `link_to`
+* "Plain" report output is now the default
+* --exit-on-error and --exit-on-warn are now the default
+* Fix --exit-on-error and --exit-on-warn in config files
+
 # 3.7.2
 
 * Fix --ensure-latest (David Guyon)
