@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2017-09-24T23:05:09-07:00</updated>
+  <updated>2017-09-25T04:07:52-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -59,6 +59,13 @@ To put that into historical context, Rails 3.0 was released a few days later!&lt
 &lt;/ul&gt;
 
 
+&lt;p&gt;&lt;em&gt;Changes since 4.0.0&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Do not use pager when &lt;code&gt;CI&lt;/code&gt; environment variable is set&lt;/li&gt;
+&lt;/ul&gt;
+
+
 &lt;h3&gt;New Default Exit Codes&lt;/h3&gt;
 
 &lt;p&gt;&lt;code&gt;--exit-on-warn&lt;/code&gt; and &lt;code&gt;--exit-on-error&lt;/code&gt; are now default behavior.&lt;/p&gt;
@@ -82,6 +89,8 @@ To put that into historical context, Rails 3.0 was released a few days later!&lt
 &lt;p&gt;By default, output to the terminal will be paged with &lt;code&gt;less&lt;/code&gt; or Highline's simple pager.&lt;/p&gt;
 
 &lt;p&gt;To disable, use &lt;code&gt;--no-pager&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;In 4.0.1 Brakeman will automatically disable the pager when the &lt;code&gt;CI&lt;/code&gt; environment variable is set to &lt;code&gt;true&lt;/code&gt;. This should be compatible with Travis CI, Circle CI, Codeship, and Bitbucket Pipelines.&lt;/p&gt;
 
 &lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1098&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 

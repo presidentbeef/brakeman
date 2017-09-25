@@ -166,6 +166,13 @@ To put that into historical context, Rails 3.0 was released a few days later!</p
 </ul>
 
 
+<p><em>Changes since 4.0.0</em>:</p>
+
+<ul>
+<li>Do not use pager when <code>CI</code> environment variable is set</li>
+</ul>
+
+
 <h3>New Default Exit Codes</h3>
 
 <p><code>--exit-on-warn</code> and <code>--exit-on-error</code> are now default behavior.</p>
@@ -189,6 +196,8 @@ To put that into historical context, Rails 3.0 was released a few days later!</p
 <p>By default, output to the terminal will be paged with <code>less</code> or Highline&#8217;s simple pager.</p>
 
 <p>To disable, use <code>--no-pager</code>.</p>
+
+<p>In 4.0.1 Brakeman will automatically disable the pager when the <code>CI</code> environment variable is set to <code>true</code>. This should be compatible with Travis CI, Circle CI, Codeship, and Bitbucket Pipelines.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1098">changes</a>)</p>
 

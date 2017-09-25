@@ -312,6 +312,11 @@ brakeman --test SQL
 
 <p>This will output JSON with two lists: one of fixed warnings and one of new warnings.</p>
 
+<p>By default, Brakeman pages output to the terminal with the <code>less</code> pager. To have Brakeman output directly to terminal, use</p>
+
+<pre><code>brakeman --no-pager
+</code></pre>
+
 <h2>Ignoring Stuff</h2>
 
 <p>Brakeman will ignore warnings if configured to do so. By default, it looks for a configuration file in <code>config/brakeman.ignore</code>.</p>
