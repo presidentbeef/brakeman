@@ -173,7 +173,7 @@ To compare results of a scan with a previous scan, use the JSON output option an
 
 This will output JSON with two lists: one of fixed warnings and one of new warnings.
 
-By default, brakeman opens output in editor. To have brakeman output to terminal, use
+By default, brakeman opens output in `less` pager. To have brakeman output directly to terminal, use
 
     brakeman --no-pager
 
