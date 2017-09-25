@@ -7,6 +7,7 @@ require "json"
 options = {
   :output_format => :codeclimate,
   :quiet => true,
+  :pager => false,
   :app_path => Dir.pwd
 }
 
