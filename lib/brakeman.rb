@@ -408,7 +408,11 @@ module Brakeman
   private_class_method :write_report_to_formats
 
   def self.page_output text
-    if system("which less")
+    ci = ENV["CI"]
+
+    if ci.is_a? String and ci.downcase == "true"
+      puts text
+    elsif system("which less")
       # Adapted from https://github.com/piotrmurach/tty-pager/
       write_io = open("|less -R", 'w')
       pid = write_io.pid
@@ -421,7 +425,7 @@ module Brakeman
       load_brakeman_dependency 'highline'
       h = ::HighLine.new
       h.page_at = :auto
-      h.say tracker.report.format(output_formats.first)
+      h.say text
     end
   rescue Errno::ECHILD
     # on jruby 9x waiting on pid raises (per tty-pager)
@@ -429,7 +433,7 @@ module Brakeman
   rescue => e
     warn "[Error] #{e}"
     warn "[Error] Could not use pager. Set --no-pager to avoid this issue."
-    puts tracker.report.format(output_formats.first)
+    puts text
   end
 
   #Rescan a subset of files in a Rails application.
