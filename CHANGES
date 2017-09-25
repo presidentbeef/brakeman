@@ -1,3 +1,8 @@
+# 4.0.1
+
+* Disable pager when `CI` environment variable is set
+* Fix output when pager fails
+
 # 4.0.0
 
 * Add simple pager for reports output to terminal
