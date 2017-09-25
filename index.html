@@ -108,6 +108,161 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2017/09/25/brakeman-4-dot-0-released/">Brakeman 4.0 Released!</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2017-09-25 06:31:00 -0700" pubdate  updated >Sep 25<span>th</span>, 2017</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>This release has breaking changes!</strong></p>
+
+<p>This is the 101st official release of Brakeman! It has been seven years and one month since the first release of Brakeman.
+To put that into historical context, Rails 3.0 was released a few days later!</p>
+
+<p>How about some more numbers?</p>
+
+<ul>
+<li><a href="https://rubygems.org/gems/brakeman">7.6 million gem downloads</a></li>
+<li>14,093 lines of Ruby code (excluding tests)</li>
+<li><a href="https://github.com/presidentbeef/brakeman/graphs/contributors">2,937 commits from 74 contributors</a></li>
+<li><a href="https://github.com/presidentbeef/brakeman/issues?q=is%3Aissue+is%3Aclosed">385 issues closed</a></li>
+</ul>
+
+
+<p>Thank you so much to everyone who has used, contributed to, or promoted Brakeman over the past seven years!</p>
+
+<p>As a token of our appreciation, we have a limited edition 2017 Brakeman sticker:</p>
+
+<p><img src="/images/brakeman_anniversary_sticker.png" alt="Brakeman Sticker" /></p>
+
+<p>Just email stickers@brakeman.org with your name and address (anywhere in the world) and we&#8217;ll send you one. While supplies last!</p>
+
+<p><small>If you have benefited from Brakeman, please consider supporting continued development via <a href="https://brakemanpro.com">Brakeman Pro</a>.</small></p>
+
+<p><em>Changes since 3.7.2</em>:</p>
+
+<ul>
+<li><code>--exit-on-warn</code> is now the default (<a href="https://github.com/presidentbeef/brakeman/issues/852">#852</a>)</li>
+<li><code>--exit-on-error</code> is now the default (<a href="https://github.com/presidentbeef/brakeman/issues/1083">#1083</a>)</li>
+<li>&#8220;Plain&#8221; report output is now the default</li>
+<li>Add simple pager for reports output to terminal</li>
+<li>Remove low confidence mass assignment warnings</li>
+<li>Reduce warnings about XSS in <code>link_to</code></li>
+<li>Treat <code>request.cookies</code> like <code>cookies</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1090">#1090</a>)</li>
+<li>Treat <code>fail</code>/<code>raise</code> like early returns (<a href="https://github.com/presidentbeef/brakeman/issues/754">#754</a>)</li>
+<li>Rename &#8220;Cross Site Scripting&#8221; to &#8220;Cross-Site Scripting&#8221; (<a href="https://github.com/paultetreau">Paul Tetreau</a>)</li>
+<li>Remove reliance on <code>CONFIDENCE</code> constant in checks</li>
+<li>Fix <code>--exit-on-error</code> and <code>--exit-on-warn</code> in config files</li>
+</ul>
+
+
+<h3>New Default Exit Codes</h3>
+
+<p><code>--exit-on-warn</code> and <code>--exit-on-error</code> are now default behavior.</p>
+
+<p>If any warnings are found or errors are raised during the scan, Brakeman&#8217;s exit code will be non-zero. This may break things! In particular, CI jobs or scripts that assume Brakeman will exit normally.</p>
+
+<p>You may use <code>--no-exit-on-warn</code> and <code>--no-exit-on-error</code> to revert back to previous behavior and always exit with error code 0.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1085">changes</a> and <a href="https://github.com/presidentbeef/brakeman/pull/1086">changes</a>)</p>
+
+<h3>New Default Report Format</h3>
+
+<p>The &#8220;plain&#8221; report format is now the default.</p>
+
+<p>To revert back to the table format, use <code>-f tables</code> or <code>-o report.tables</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1084">changes</a>)</p>
+
+<h3>Paged Output</h3>
+
+<p>By default, output to the terminal will be paged with <code>less</code> or Highline&#8217;s simple pager.</p>
+
+<p>To disable, use <code>--no-pager</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1098">changes</a>)</p>
+
+<h3>Fewer Mass Assignment Warnings</h3>
+
+<p>Low confidence mass assignment warnings have been removed in this release. Brakeman should now only warn when user input is used directly in the instantiation or update of a model.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1087">changes</a>)</p>
+
+<h3>Fewer <code>link_to</code> Warnings</h3>
+
+<p>Warnings about XSS in <code>link_to</code> have confused quite a few people over the years. The danger is that links may have <code>javascript:</code> or <code>data:</code> values with XSS payloads.</p>
+
+<p>Brakeman should now only warn when directly using user input or when using what looks like a URL from the database.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1093">changes</a>)</p>
+
+<h3>More Cookies</h3>
+
+<p><code>request.cookies</code> will now be treated like cookies in general.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1094">changes</a>)</p>
+
+<h3>More Early Returns</h3>
+
+<p>Calls to <code>raise</code> or <code>fail</code> will be treated like early returns when considering simple guard expressions.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1089">changes</a>)</p>
+
+<h3>Cross-Site Scripting</h3>
+
+<p>Messages about &#8220;Cross Site Scripting&#8221; will now include a hyphen. This does not affect warning fingerprints.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/936">changes</a>)</p>
+
+<h3>CONFIDENCE</h3>
+
+<p>Brakeman checks previously used the <code>CONFIDENCE</code> hash when creating warnings, e.g. <code>:confidence =&gt; CONFIDENCE[:high]</code>. Now it&#8217;s possible to use <code>:confidence =&gt; :high</code> instead.</p>
+
+<p>For those with custom checks, the <code>CONFIDENCE</code> hash is still available and nothing should break.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1088">changes</a>)</p>
+
+<h3>Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<pre><code>0038932b43dcf2bf698ad6637500f69b5e4226b10c011a4a6bcce93a77a5e045  brakeman-4.0.0.gem
+3688303859a7c9b452ddcef00f00f97789ce103774446d42851a763ecbf8df87  brakeman-lib-4.0.0.gem
+559196c6e41e5b180448564d9aca84fb775a39b77dd7d8d880a0ce0e77df8ae2  brakeman-min-4.0.0.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release.</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
+<p>If you find Brakeman valuable and want to support its development, check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2017/08/15/brakeman-3-dot-7-1-released/">Brakeman 3.7.1/3.7.2 Released</a></h1>
     
     
@@ -1010,115 +1165,6 @@ a7f8e6fa8eb4254b7ad17080180289794a02641b1f2ec362de57cfdb2f1535be  brakeman-min-3
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2016/07/20/brakeman-3-dot-3-3-released/">Brakeman 3.3.3 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2016-07-20 18:11:00 -0700" pubdate  updated >Jul 20<span>th</span>, 2016</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This release is mostly bug fixes and internal improvements, although it may find more warnings due to indexing of view helpers.</p>
-
-<ul>
-<li>Index calls in view helpers</li>
-<li>Process inline template renders (<a href="https://github.com/presidentbeef/brakeman/issues/672">#672</a>)</li>
-<li>Show path when no Rails app found (<a href="https://github.com/oreoshake">Neil Matatall</a>)</li>
-<li>Avoid warning about hashes in <code>link_to</code> hrefs (<a href="https://github.com/presidentbeef/brakeman/issues/897">#897</a>)</li>
-<li>Improve return value guesses</li>
-<li>Ignore boolean methods in render paths</li>
-<li>Reduce open redirect duplicates</li>
-<li>Fix SymbolDoS error with unknown Rails version</li>
-</ul>
-
-
-<h3>View Helpers</h3>
-
-<p>Calls in view helpers are now indexed, which means Brakeman will search them for potential vulnerabilities.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/907">changes</a>)</p>
-
-<h3>Inline Templates</h3>
-
-<p>Brakeman will now process inline templates in controllers, if they are using ERB (the default):</p>
-
-<pre><code>render :inline =&gt; "&lt;%= params[:x].html_safe %&gt;"
-</code></pre>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/905">changes</a>)</p>
-
-<h3>Rails App Path</h3>
-
-<p>Thanks to <a href="https://github.com/oreoshake">Neil Matatall</a>, Brakeman will now display the path it tried to search for a Rails application if it cannot find it:</p>
-
-<pre><code>Please supply the path to a Rails application (looking in /some/path/).
-</code></pre>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/909">changes</a>)</p>
-
-<h3>Hashes as URLs</h3>
-
-<p>Brakeman will no longer warn about obvious hash arguments in the HREF for <code>link_to</code> calls, as well as handling <code>url_for</code> better.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/904">changes</a>)</p>
-
-<h3>Return Values</h3>
-
-<p>In some cases, Brakeman attempts to determine the possible return value(s) of a method call.
-This release includes a number of improvements to those guesses which may make some warnings easier to understand
-and fix some false positives.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/896">changes</a>)</p>
-
-<h3>Render Path Booleans</h3>
-
-<p>The check for dynamic render paths will no longer warn about methods ending in <code>?</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/899">changes</a>)</p>
-
-<h3>Redirect Duplicates</h3>
-
-<p>This release refactored much of the warning duplicate tracking, and as such there should be fewer duplicate warnings about open redirects.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/901">changes</a>)</p>
-
-<h3>SHAs</h3>
-
-<p>The SHA256 sums for this release are</p>
-
-<pre><code>490bf7b47d4edbb29fd3f87c5dafa50aec2888d495b64275a635df324a8476e9  brakeman-3.3.3.gem
-793f1c69cca2681bdd0c98f11307ace4f1a43ed594dd45cbe5b67f0383e76e2f  brakeman-lib-3.3.3.gem
-dcc3a75b12f84cac582d383a375d3b85d033e25ba42af051bedcdc8b5377c2c5  brakeman-min-3.3.3.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed improvements in this release.</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1171,6 +1217,10 @@ dcc3a75b12f84cac582d383a375d3b85d033e25ba42af051bedcdc8b5377c2c5  brakeman-min-3
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/09/25/brakeman-4-dot-0-released/">Brakeman 4.0 Released!</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/08/15/brakeman-3-dot-7-1-released/">Brakeman 3.7.1/3.7.2 Released</a>
       </li>
     
@@ -1184,10 +1234,6 @@ dcc3a75b12f84cac582d383a375d3b85d033e25ba42af051bedcdc8b5377c2c5  brakeman-min-3
     
       <li class="post">
         <a href="/blog/2017/03/24/brakeman-3-dot-6-1-released/">Brakeman 3.6.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/03/22/brakeman-3-dot-6-0-released/">Brakeman 3.6.0 Released</a>
       </li>
     
   </ul>
