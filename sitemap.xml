@@ -483,6 +483,10 @@
         <lastmod>2015-01-02T17:06:48-08:00</lastmod>
     </url>
     <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/cross-site_scripting/</loc>
+        <lastmod>2017-09-27T12:19:38-07:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/docs/warning_types/unscoped_find/</loc>
         <lastmod>2015-01-02T17:06:48-08:00</lastmod>
     </url>
@@ -557,6 +561,10 @@
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/mass_assignment/</loc>
         <lastmod>2016-05-03T09:28:35-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/cross-site_scripting_to_json/</loc>
+        <lastmod>2017-09-27T12:20:16-07:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/CVE-2011-0446/</loc>
