@@ -170,7 +170,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
                     when version_between?("4.0.0", "4.2.7.0")
                       "4.2.7.1"
                     when version_between?("5.0.0", "5.0.0")
-                      "5.0.0"
+                      "5.0.0.1"
                     when (version.nil? and tracker.options[:rails3])
                       "3.2.22.4"
                     when (version.nil? and tracker.options[:rails4])
