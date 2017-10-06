@@ -3,34 +3,12 @@ $:.unshift "#{File.expand_path(File.dirname(__FILE__))}/../lib"
 
 require "brakeman"
 require "json"
+require "brakeman/codeclimate/engine_configuration"
 
-options = {
-  :output_format => :codeclimate,
-  :quiet => true,
-  :pager => false,
-  :app_path => Dir.pwd
-}
+engine_options = {}
 
 if File.exist?("/config.json")
-  engine_config = JSON.parse(File.read("/config.json"))
-else
-  engine_config = {}
+  engine_options = JSON.parse(File.read("/config.json"))
 end
 
-debug = engine_config["config"] && engine_config["config"]["debug"]
-
-# ATM this gets parsed as a string instead of bool: "config":{ "debug":"true" }
-if debug && debug.to_s.downcase == "true"
-  options[:debug] = true
-  options[:report_progress] = false
-end
-
-if engine_config["include_paths"]
-  options[:only_files] = engine_config["include_paths"].compact
-end
-
-if system("test -w /dev/stdout")
-  options[:output_files] = ["/dev/stdout"]
-end
-
-Brakeman.run options
+Brakeman.run Brakeman::Codeclimate::EngineConfiguration.new(engine_options).options
