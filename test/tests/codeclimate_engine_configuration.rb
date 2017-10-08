@@ -2,12 +2,14 @@ require_relative '../test'
 require 'brakeman/codeclimate/engine_configuration'
 
 class EngineConfigurationTests < Minitest::Test
-  def test_keys_exist
+  def test_for_expected_keys
     config = {
       "include_paths" => ["/foo"]
     }
-    assert_equal [:app_path, :only_files, :output_files, :output_format, :pager, :quiet],
-      Brakeman::Codeclimate::EngineConfiguration.new(config).options.keys.sort
+
+    expected = [:app_path, :only_files, :output_files, :output_format, :pager, :quiet]
+    actual = Brakeman::Codeclimate::EngineConfiguration.new(config).options.keys.sort
+    assert_equal expected, actual
   end
 
   def test_debug_key

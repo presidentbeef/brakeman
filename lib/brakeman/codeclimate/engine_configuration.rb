@@ -1,3 +1,5 @@
+require 'pathname'
+
 module Brakeman
   module Codeclimate
     class EngineConfiguration
@@ -37,6 +39,12 @@ module Brakeman
 
         if engine_config["include_paths"]
           @configured_options[:only_files] = engine_config["include_paths"].compact
+        end
+
+        if brakeman_configuration["app_path"]
+          @configured_options[:path_prefix] = brakeman_configuration["app_path"]
+          path = Pathname.new(Dir.pwd) + brakeman_configuration["app_path"]
+          @configured_options[:app_path] = path.to_s
         end
         @configured_options
       end
