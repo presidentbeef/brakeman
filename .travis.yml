@@ -1,22 +1,36 @@
 before_install:
   - gem update bundler
 
+before_script:
+  - |
+    bash -c "
+      if [ ! -z "$CC_TEST_REPORTER_ID" ]; then
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter && \
+        chmod +x ./cc-test-reporter && \
+        ./cc-test-reporter before-build
+      fi
+    "
 script:
   - "bundle exec ruby test/test.rb"
-  - "bundle exec codeclimate-test-reporter"
+
+after_script:
+  - |
+    bash -c "
+      if [ ! -z "$CC_TEST_REPORTER_ID" ]; then
+        ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+      fi
+    "
+
+matrix:
+  include:
+    - rvm: "1.9.3"
+    - rvm: "2.2.7"
+    - rvm: "2.3.4"
+    - rvm: "2.4.1"
+      env: CC_TEST_REPORTER_ID=521d341f3320acda1902d0db0a3a92fb16b11ebfe3d5ab730218d4fc0fb3db13
 
 branches:
   only:
     - master
-
-rvm:
-  - "1.9.3"
-  - "2.2.7"
-  - "2.3.4"
-  - "2.4.1"
-
-addons:
-  code_climate:
-    repo_token: 521d341f3320acda1902d0db0a3a92fb16b11ebfe3d5ab730218d4fc0fb3db13
 
 sudo: false
