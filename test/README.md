@@ -15,3 +15,19 @@ Run `ruby test/tests/some_file.rb` to run a single file of tests.
 ## Single Test
 
 Ruby `ruby test/test.rb --name test_something` to run a single test.
+
+## With Docker
+
+1. Make the docker development image
+
+```
+docker build -t brakeman-development -f Dockerfile.development .
+```
+
+2. Run tests mounting the current directory
+
+(mounting the current directory allows code changes without requiring an image rebuild)
+
+```
+docker run --mount type=bind,source="$(pwd)",target=/usr/src/app --rm brakeman-development ruby test/tests/codeclimate_output.rb
+```

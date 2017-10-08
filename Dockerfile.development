@@ -1,0 +1,18 @@
+FROM ruby:2.4-alpine
+MAINTAINER Justin Collins
+
+WORKDIR /usr/src/app
+
+COPY Gemfile /usr/src/app
+COPY brakeman.gemspec /usr/src/app
+COPY gem_common.rb /usr/src/app
+COPY lib/brakeman/version.rb /usr/src/app/lib/brakeman/
+
+RUN DOCKER_DEVELOPMENT=1 bundle install --jobs 4
+
+RUN adduser -u 9000 -D app && \
+    chown -R app:app /usr/src/app
+USER app
+
+ENV DOCKER_DEVELOPMENT=1
+CMD ["/usr/src/app/bin/codeclimate-brakeman"]
