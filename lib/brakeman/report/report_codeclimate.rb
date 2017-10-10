@@ -1,5 +1,6 @@
 require "json"
 require "yaml"
+require "pathname"
 
 class Brakeman::Report::CodeClimate < Brakeman::Report::Base
   DOCUMENTATION_PATH = File.expand_path("../../../../docs/warning_types", __FILE__)
@@ -24,7 +25,7 @@ class Brakeman::Report::CodeClimate < Brakeman::Report::Base
       severity: severity_level_for(warning.confidence),
       remediation_points: remediation_points_for(warning_code_name),
       location: {
-        path: warning.relative_path,
+        path: file_path(warning),
         lines: {
           begin: warning.line || 1,
           end: warning.line || 1,
@@ -66,5 +67,13 @@ class Brakeman::Report::CodeClimate < Brakeman::Report::Base
     filename = File.join(DOCUMENTATION_PATH, directory, "index.markdown")
 
     File.read(filename) if File.exist?(filename)
+  end
+
+  def file_path(warning)
+    fp = Pathname.new(warning.relative_path)
+    if tracker.options[:path_prefix]
+      fp = Pathname.new(tracker.options[:path_prefix]) + fp
+    end
+    fp.to_s
   end
 end
