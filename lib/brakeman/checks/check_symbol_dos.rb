@@ -29,8 +29,6 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
 
     if input = args.map{ |arg| has_immediate_user_input?(arg) }.compact.first
       confidence = :high
-    elsif input = args.map{ |arg| include_user_input?(arg) }.compact.first
-      confidence = :medium
     end
 
     if confidence
