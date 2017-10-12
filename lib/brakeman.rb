@@ -412,7 +412,7 @@ module Brakeman
 
     if ci.is_a? String and ci.downcase == "true"
       puts text
-    elsif system("which less")
+    elsif system("which less > /dev/null")
       # Adapted from https://github.com/piotrmurach/tty-pager/
       write_io = open("|less -R", 'w')
       pid = write_io.pid
