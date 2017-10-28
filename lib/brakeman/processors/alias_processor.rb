@@ -500,6 +500,12 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #
   # x, y = z, w
   def process_masgn exp
+    exp[2] = process exp[2] if sexp? exp[2]
+
+    if node_type? exp[2], :to_ary and array? exp[2][1]
+      exp[2] = exp[2][1]
+    end
+
     unless array? exp[1] and array? exp[2] and exp[1].length == exp[2].length
       return process_default(exp)
     end
@@ -514,9 +520,20 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     vars.each_with_index do |var, i|
       val = vals[i]
       if val
-        assign = var.dup
-        assign.rhs = val
-        process assign
+
+        # This happens with nested destructuring like
+        #   x, (a, b) = blah
+        if node_type? var, :masgn
+          # Need to add value to masgn exp
+          m = var.dup
+          m[2] = s(:to_ary, val)
+
+          process_masgn m
+        else
+          assign = var.dup
+          assign.rhs = val
+          process assign
+        end
       end
     end
 

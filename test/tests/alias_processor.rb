@@ -1030,4 +1030,12 @@ class AliasProcessorTests < Minitest::Test
       params.symbolize_keys[:x]
     OUTPUT
   end
+
+  def test_array_destructuring_asgn
+    assert_alias "1", <<-INPUT
+    x = [:a, [0, 1], :b, :c]
+    a, (x, y), b, c = x
+    y
+    INPUT
+  end
 end
