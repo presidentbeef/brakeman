@@ -196,11 +196,11 @@ class Brakeman::Warning
       if @link_path.start_with? "http"
         @link = @link_path
       else
-        @link = "http://brakemanscanner.org/docs/warning_types/#{@link_path}"
+        @link = "https://brakemanscanner.org/docs/warning_types/#{@link_path}"
       end
     else
       warning_path = self.warning_type.to_s.downcase.gsub(/\s+/, '_') + "/"
-      @link = "http://brakemanscanner.org/docs/warning_types/#{warning_path}"
+      @link = "https://brakemanscanner.org/docs/warning_types/#{warning_path}"
     end
 
     @link
