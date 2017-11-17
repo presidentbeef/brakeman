@@ -1038,4 +1038,30 @@ class AliasProcessorTests < Minitest::Test
     y
     INPUT
   end
+
+  def test_if_equals
+    assert_output <<-'INPUT', <<-'OUTPUT'
+      if x == 1
+        p x
+      end
+    INPUT
+      if x == 1
+        p 1
+      end
+    OUTPUT
+  end
+
+  def test_comparison
+    assert_output <<-'INPUT', <<-'OUTPUT'
+      y = 1
+      x = 1
+      z = y == x
+      p z
+    INPUT
+      y = 1
+      x = 1
+      z = true 
+      p true
+    OUTPUT
+  end
 end

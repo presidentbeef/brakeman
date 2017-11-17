@@ -294,6 +294,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       if array? target and first_arg.nil? and sexp? target[1]
         exp = target[1]
       end
+    when :==
+      if target == first_arg
+       return s(:true)
+      end
     end
 
     exp
@@ -658,6 +662,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     exp.target.all? { |e| e.is_a? Symbol or node_type? e, :lit, :str }
   end
 
+  def comparison_condition? exp
+    call? exp and exp.method == :==
+  end
+
   #Sets @inside_if = true
   def process_if exp
     if @ignore_ifs.nil?
@@ -703,6 +711,12 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
             var = condition.first_arg
             env.current[var] = condition.target[1]
             exp[branch_index] = process_if_branch branch
+          elsif i == 0 and comparison_condition? condition
+            var = condition.target
+            previous_value = env.current[var]
+            env.current[var] = condition.first_arg
+            exp[branch_index] = process_if_branch branch
+            env.current[var] = previous_value
           else
             exp[branch_index] = process_if_branch branch
           end
