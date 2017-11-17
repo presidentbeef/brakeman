@@ -402,10 +402,31 @@ module Brakeman
         puts tracker.report.format(output_format)
       end
     else
+      unless pager_opts.include? "-R "
+        tracker.options[:output_color] = false
+      end
+
       page_output tracker.report.format(output_formats.first)
     end
   end
   private_class_method :write_report_to_formats
+
+  def self.pager_opts
+    opts = []
+
+    if system("which less > /dev/null")
+      less_help = `less -?`
+
+      ["-R ", "-F ", "-X "].each do |opt|
+        if less_help.include? opt
+          opts << opt
+        end
+      end
+    end
+
+    opts
+  end
+  private_class_method :pager_opts
 
   def self.page_output text
     ci = ENV["CI"]
@@ -417,7 +438,7 @@ module Brakeman
       # -R show colors
       # -F exit if output fits on one screen
       # -X do not clear screen after less exits
-      write_io = open("|less -RFX", 'w')
+      write_io = open("|less #{pager_opts.join}", 'w')
       pid = write_io.pid
 
       write_io.write(text)
