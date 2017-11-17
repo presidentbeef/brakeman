@@ -21,4 +21,9 @@ class BaseController < ActionController::Base
     fail ActiveRecord::RecordNotFound unless ['safe', 'also_safe'].include?(scope_name)
     Model.public_send(scope_name)
   end
+
+  def redirect_to_strong_params
+    redirect_to params.permit(:domain) # should warn
+    redirect_to params.permit(:page, :sort) # should not warn
+  end
 end
