@@ -286,6 +286,19 @@ class Rails5Tests < Minitest::Test
       :user_input => s(:call, s(:params), :[], s(:lit, :IdentifierClass))
   end
 
+  def test_equality_condition
+    assert_no_warning :type => :warning,
+      :warning_code => 24,
+      :fingerprint => "2611f1c57ef8965aab809c497bc79ec095c4f42628efd29c9e06cbe90dd188db",
+      :warning_type => "Remote Code Execution",
+      :line => 8,
+      :message => /^Unsafe\ reflection\ method\ const_get\ calle/,
+      :confidence => 0,
+      :relative_path => "app/controllers/application_controller.rb",
+      :code => s(:call, s(:const, :Object), :const_get, s(:call, s(:params), :[], s(:lit, :x))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
   def test_dynamic_render_path_with_boolean
     assert_no_warning :type => :warning,
       :warning_code => 15,
