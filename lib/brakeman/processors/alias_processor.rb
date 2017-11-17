@@ -663,7 +663,13 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   end
 
   def comparison_condition? exp
-    call? exp and exp.method == :==
+    if call? exp and exp.method == :==
+      if request_value? exp.target
+        node_type? exp.first_arg, :lit, :str, :hash, :array
+      else
+        true
+      end
+    end
   end
 
   #Sets @inside_if = true
