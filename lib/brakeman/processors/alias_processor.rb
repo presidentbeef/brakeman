@@ -235,14 +235,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       end
     when :/
       if number? target and number? first_arg
-        if first_arg.value == 0 and not target.value.is_a? Float
-          if @tracker
-            location = [@current_class, @current_method, "line #{first_arg.line}"].compact.join(' ')
-            require 'brakeman/processors/output_processor'
-            code = Brakeman::OutputProcessor.new.format(exp)
-            @tracker.error Exception.new("Potential divide by zero: #{code} (#{location})")
-          end
-        else
+        unless first_arg.value == 0 and not target.value.is_a? Float
           exp = Sexp.new(:lit, target.value / first_arg.value)
         end
       end
