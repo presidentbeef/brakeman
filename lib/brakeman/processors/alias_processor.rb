@@ -678,6 +678,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       @ignore_ifs = @tracker && @tracker.options[:ignore_ifs]
     end
 
+    if comparison_condition? exp.condition
+      comparison_target = exp.condition.target.deep_clone(exp.line)
+    end
+
     condition = exp.condition = process exp.condition
 
     #Check if a branch is obviously going to be taken
@@ -717,8 +721,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
             var = condition.first_arg
             env.current[var] = condition.target[1]
             exp[branch_index] = process_if_branch branch
-          elsif i == 0 and comparison_condition? condition
-            var = condition.target
+          elsif i == 0 and comparison_target
+            var = comparison_target
             previous_value = env.current[var]
             env.current[var] = condition.first_arg
             exp[branch_index] = process_if_branch branch
