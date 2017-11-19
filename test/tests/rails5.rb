@@ -13,7 +13,7 @@ class Rails5Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 9,
-      :generic => 12
+      :generic => 13
     }
   end
 
@@ -181,6 +181,32 @@ class Rails5Tests < Minitest::Test
       :relative_path => "app/controllers/widget_controller.rb",
       :code => s(:call, nil, :send, s(:dstr, "", s(:evstr, s(:call, s(:params), :[], s(:lit, :goto))), s(:str, "_event_path")), s(:call, s(:params), :[], s(:lit, :event))),
       :user_input => s(:call, s(:params), :[], s(:lit, :goto))
+  end
+
+  def test_redirect_with_unsafe_permit_values
+    assert_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "9187972b879413888afcc0f94c02d9e5c47d56ecb15add404d6706f95efc08ee",
+      :warning_type => "Redirect",
+      :line => 26,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/mixed_controller.rb",
+      :code => s(:call, nil, :redirect_to, s(:call, s(:params), :permit, s(:lit, :domain))),
+      :user_input => s(:call, s(:params), :permit, s(:lit, :domain))
+  end
+
+  def test_redirect_with_safe_permit_values
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "b148908432d722a877a87c9c70e62cdf67328a2f25f6f62eefebce94ef01b7ec",
+      :warning_type => "Redirect",
+      :line => 27,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/mixed_controller.rb",
+      :code => s(:call, nil, :redirect_to, s(:call, s(:params), :permit, s(:lit, :page), s(:lit, :sort))),
+      :user_input => s(:call, s(:params), :permit, s(:lit, :page), s(:lit, :sort))
   end
 
   def test_cross_site_scripting_with_slice
