@@ -1,3 +1,19 @@
+# Unreleased
+
+* Better processing of op_asgn1 (e.g. x[:y] += 1)
+* Add optional check for divide by zero
+* Remove errors about divide by zero
+* Avoid warning about file access for temp files
+* Do not warn on params.permit with safe values
+* Add Sexp#call_chain
+* Use HTTPS for warning links
+* Handle nested destructuring/multiple assignment
+* Leave results on screen after paging
+* Do not page if results fit on screen
+* Support "app_path" configuration for Code Climate engine (Noah Davis)
+* Refactor Code Climate engine options parsing (Noah Davis)
+* Fix upgrade version for CVE-2016-6316
+
 # 4.0.1
 
 * Disable pager when `CI` environment variable is set
