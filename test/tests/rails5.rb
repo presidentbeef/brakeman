@@ -13,7 +13,7 @@ class Rails5Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 9,
-      :generic => 13
+      :generic => 15
     }
   end
 
@@ -66,6 +66,32 @@ class Rails5Tests < Minitest::Test
       :confidence => 1,
       :relative_path => "app/models/thing.rb",
       :user_input => s(:call, nil, :quoted_primary_key)
+  end
+
+  def test_divide_by_zero_1
+    assert_warning :type => :warning,
+      :warning_code => 104,
+      :fingerprint => "f0729f7446e41e51883e58c74aa0789c0c7a48ab832f16c17b7eaba01a21ce6e",
+      :warning_type => "Divide by Zero",
+      :line => 8,
+      :message => /^Potential\ division\ by\ zero/,
+      :confidence => 2,
+      :relative_path => "lib/a_lib.rb",
+      :code => s(:call, s(:call, nil, :whatever), :/, s(:lit, 0)),
+      :user_input => s(:lit, 0)
+  end
+
+  def test_divide_by_zero_2
+    assert_warning :type => :warning,
+      :warning_code => 104,
+      :fingerprint => "9ca769ad11ef57b7490caccc70af1bb8a623dfca2e84e5593d8dec901d3841f2",
+      :warning_type => "Divide by Zero",
+      :line => 12,
+      :message => /^Potential\ division\ by\ zero/,
+      :confidence => 1,
+      :relative_path => "lib/a_lib.rb",
+      :code => s(:call, s(:lit, 100), :/, s(:lit, 0)),
+      :user_input => s(:lit, 0)
   end
 
   def test_dangerous_send_with_safe_call
