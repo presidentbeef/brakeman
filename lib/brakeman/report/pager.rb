@@ -11,27 +11,29 @@ module Brakeman
         set_color
       end
 
-      page_output report.format(format)
+      text = report.format(format)
+
+      if in_ci?
+        no_pager text
+      else
+        page_output text
+      end
     end
 
     def page_output text
-      if in_ci? 
+      case @pager
+      when :none
         no_pager text
-      else
-        case @pager
-        when :none
-          no_pager text
-        when :highline
-          page_via_highline text
-        when :less
-          if less_available? 
-            page_via_less text
-          else
-            page_via_highline text
-          end
+      when :highline
+        page_via_highline text
+      when :less
+        if less_available?
+          page_via_less text
         else
-          no_pager text
+          page_via_highline text
         end
+      else
+        no_pager text
       end
     end
 
@@ -73,7 +75,7 @@ module Brakeman
 
     def less_available?
       return @less_available unless @less_available.nil?
-      
+
       @less_available = system("which less > /dev/null")
     end
 
