@@ -15,6 +15,22 @@ class ReportPagerTests < Minitest::Test
     assert_equal @@text, out.string
   end
 
+  def test_unknown_pager
+    out = StringIO.new
+    pager = Brakeman::Pager.new(nil, :unknown, out)
+
+    pager.page_output(@@text)
+
+    assert_equal @@text, out.string
+  end
+
+  def test_less_sort_of
+    out = StringIO.new
+    pager = Brakeman::Pager.new(nil, :less, out)
+
+    pager.page_output(".")
+  end
+
   def test_highline
     out = StringIO.new
     $stdin = StringIO.new("\r\r\r\r\r\r\r")
@@ -41,5 +57,16 @@ class ReportPagerTests < Minitest::Test
   def test_set_color
     pager = Brakeman::Pager.new(Brakeman::Tracker.new(nil))
     pager.set_color
+  end
+
+  def test_output_report
+    out = $stdout = StringIO.new
+    app_path = File.expand_path "#{TEST_PATH}/apps/rails5"
+    tracker = Brakeman.run app_path: app_path, run_checks: [], quiet: true, summary_only: :no_summary
+    pager = Brakeman::Pager.new(tracker)
+
+    pager.page_report(tracker.report, :to_text)
+  ensure
+    $stdout = STDOUT
   end
 end
