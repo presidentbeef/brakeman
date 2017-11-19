@@ -13,4 +13,9 @@ class JustAClass
 
     1.0 / 0 # does not warn
   end
+
+  def tempfile
+    FileUtils.move(params.permit(:my_upload => ([:upload])).dig("my_upload", "upload").tempfile.path, "/tmp/new_temp_file")
+    FileUtils.move(params.permit(:my_upload => ([:upload])).dig("my_upload", "upload").path, "/tmp/new_temp_file")
+  end
 end

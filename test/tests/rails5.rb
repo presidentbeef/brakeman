@@ -13,7 +13,7 @@ class Rails5Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 9,
-      :generic => 14
+      :generic => 15
     }
   end
 
@@ -209,6 +209,32 @@ class Rails5Tests < Minitest::Test
       :user_input => s(:call, s(:params), :[], s(:lit, :goto))
   end
 
+  def test_redirect_with_unsafe_permit_values
+    assert_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "9187972b879413888afcc0f94c02d9e5c47d56ecb15add404d6706f95efc08ee",
+      :warning_type => "Redirect",
+      :line => 26,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/mixed_controller.rb",
+      :code => s(:call, nil, :redirect_to, s(:call, s(:params), :permit, s(:lit, :domain))),
+      :user_input => s(:call, s(:params), :permit, s(:lit, :domain))
+  end
+
+  def test_redirect_with_safe_permit_values
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "b148908432d722a877a87c9c70e62cdf67328a2f25f6f62eefebce94ef01b7ec",
+      :warning_type => "Redirect",
+      :line => 27,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/mixed_controller.rb",
+      :code => s(:call, nil, :redirect_to, s(:call, s(:params), :permit, s(:lit, :page), s(:lit, :sort))),
+      :user_input => s(:call, s(:params), :permit, s(:lit, :page), s(:lit, :sort))
+  end
+
   def test_cross_site_scripting_with_slice
     assert_no_warning :type => :template,
       :warning_code => 4,
@@ -401,6 +427,30 @@ class Rails5Tests < Minitest::Test
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, s(:call, s(:const, :User), :connection), :execute, s(:dstr, "SELECT * FROM foo WHERE ", s(:evstr, s(:if, s(:true), s(:dstr, "bar = ", s(:evstr, s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :quote, s(:true)))), nil)))),
       :user_input => s(:if, s(:true), s(:dstr, "bar = ", s(:evstr, s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :quote, s(:true)))), nil)
+  end
+
+  def test_tempfile_access
+    assert_no_warning :type => :warning,
+      :warning_code => 16,
+      :fingerprint => "4c1ffee385f7f0318d609a3675b13d9eeaf6da3ce6a7953df523c7d6ba4d24b5",
+      :warning_type => "File Access",
+      :line => 8,
+      :message => /^Parameter\ value\ used\ in\ file\ name/,
+      :confidence => 0,
+      :relative_path => "lib/a_lib.rb",
+      :code => s(:call, s(:const, :FileUtils), :move, s(:call, s(:call, s(:call, s(:call, s(:params), :permit, s(:hash, s(:lit, :my_upload), s(:array, s(:lit, :upload)))), :dig, s(:str, "my_upload"), s(:str, "upload")), :tempfile), :path), s(:str, "/tmp/new_temp_file")),
+      :user_input => s(:call, s(:call, s(:call, s(:call, s(:params), :permit, s(:hash, s(:lit, :my_upload), s(:array, s(:lit, :upload)))), :dig, s(:str, "my_upload"), s(:str, "upload")), :tempfile), :path)
+
+    assert_no_warning :type => :warning,
+      :warning_code => 16,
+      :fingerprint => "9783fd98e5657e76e8337bc7b319b101e8cf5ab3b290d69d5f00eee3a86e4ebd",
+      :warning_type => "File Access",
+      :line => 9,
+      :message => /^Parameter\ value\ used\ in\ file\ name/,
+      :confidence => 0,
+      :relative_path => "lib/a_lib.rb",
+      :code => s(:call, s(:const, :FileUtils), :move, s(:call, s(:call, s(:call, s(:params), :permit, s(:hash, s(:lit, :my_upload), s(:array, s(:lit, :upload)))), :dig, s(:str, "my_upload"), s(:str, "upload")), :path), s(:str, "/tmp/new_temp_file")),
+      :user_input => s(:call, s(:call, s(:call, s(:params), :permit, s(:hash, s(:lit, :my_upload), s(:array, s(:lit, :upload)))), :dig, s(:str, "my_upload"), s(:str, "upload")), :path)
   end
 
   def test_cross_site_scripting_CVE_2015_7578

@@ -34,10 +34,13 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     call = result[:call]
     method = call.method
 
+    opt = call.first_arg
+
     if method == :redirect_to and
         not only_path?(call) and
-        not explicit_host?(call.first_arg) and
-        not slice_call?(call.first_arg) and
+        not explicit_host?(opt) and
+        not slice_call?(opt) and
+        not safe_permit?(opt) and
         res = include_user_input?(call)
 
       if res.type == :immediate
@@ -231,5 +234,21 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   def slice_call? exp
     return unless call? exp
     exp.method == :slice
+  end
+
+  DANGEROUS_KEYS = [:host, :subdomain, :domain, :port]
+
+  def safe_permit? exp
+    if call? exp and params? exp.target and exp.method == :permit
+      exp.each_arg do |opt|
+        if symbol? opt and DANGEROUS_KEYS.include? opt.value
+          return false 
+        end
+      end
+
+      return true
+    end
+
+    false
   end
 end

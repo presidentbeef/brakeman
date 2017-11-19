@@ -4,6 +4,7 @@
 class Sexp
   attr_accessor :original_line, :or_depth
   ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cvasgn, :cdecl, :or, :and, :colon2, :op_asgn_or]
+  CALLS = [:call, :attrasgn, :safe_call, :safe_attrasgn]
 
   def method_missing name, *args
     #Brakeman does not use this functionality,
@@ -305,6 +306,21 @@ class Sexp
     else
       nil
     end
+  end
+
+  def call_chain
+    expect :call, :attrasgn, :safe_call, :safe_attrasgn
+
+    chain = []
+    call = self
+
+    while call.class == Sexp and CALLS.include? call.first 
+      chain << call.method
+      call = call.target
+    end
+
+    chain.reverse!
+    chain
   end
 
   #Returns condition of an if expression:

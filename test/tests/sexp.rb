@@ -404,4 +404,23 @@ class SexpTests < Minitest::Test
       s(:blah, 1, 2).value
     end
   end
+
+  def test_call_chain
+    s = RubyParser.new.parse "w.new.x.y(:stuff).z.to_s(1)"
+    cc = [:w, :new, :x, :y, :z, :to_s]
+
+    assert_equal cc, s.call_chain
+  end
+
+  def test_short_call_chain
+    s = Sexp.new(:call, nil, :x)
+
+    assert_equal [:x], s.call_chain
+  end
+
+  def test_local_call_chain
+    s = Sexp.new(:call, s(:lvar, :z), :x)
+
+    assert_equal [:x], s.call_chain
+  end
 end
