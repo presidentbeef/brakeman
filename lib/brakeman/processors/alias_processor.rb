@@ -560,19 +560,26 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #Assignments like this
   # x[:y] ||= 1
   def process_op_asgn1 exp
-    return process_default(exp) if exp[3] != :"||"
+    target_var = exp[1]
+    target_var &&= target_var.deep_clone
 
     target = exp[1] = process(exp[1])
     index = exp[2][1] = process(exp[2][1])
     value = exp[4] = process(exp[4])
     match = Sexp.new(:call, target, :[], index)
 
-    unless env[match]
-      if request_value? target
-        env[match] = match.combine(value)
-      else
-        env[match] = value
+    if exp[3] == :"||"
+      unless env[match]
+        if request_value? target
+          env[match] = match.combine(value)
+        else
+          env[match] = value
+        end
       end
+    else
+      new_value = process s(:call, s(:call, target_var, :[], index), exp[3], value)
+
+      env[match] = new_value
     end
 
     exp

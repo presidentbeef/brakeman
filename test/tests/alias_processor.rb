@@ -173,6 +173,19 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
+  def test_hash_update
+    assert_alias "2", <<-RUBY
+      @foo = {
+        :denominator => 0
+      }
+
+      @foo[:denominator] += 2
+
+      x = @foo[:denominator]
+      x
+    RUBY
+  end
+
   def test_obvious_if
     assert_alias "'Yes!'", <<-RUBY
       condition = true
