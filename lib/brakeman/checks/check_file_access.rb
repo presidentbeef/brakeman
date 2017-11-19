@@ -47,7 +47,8 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
       end
     end
 
-    if match
+    if match and not temp_file? match.match
+
       message = "#{friendly_type_of(match).capitalize} used in file name"
 
       warn :result => result,
@@ -57,6 +58,14 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
         :confidence => confidence,
         :code => call,
         :user_input => match
+    end
+  end
+
+  def temp_file? exp
+    if call? exp
+      return true if exp.call_chain.include? :tempfile
+
+      params? exp.target and exp.method == :path
     end
   end
 end
