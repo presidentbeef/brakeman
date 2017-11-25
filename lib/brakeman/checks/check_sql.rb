@@ -38,7 +38,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       @connection_calls.concat [:add_limit!, :add_offset_limit!, :add_lock!]
     end
 
-    @expected_targets = active_record_models.keys + [:connection, :"ActiveRecord::Base"]
+    @expected_targets = active_record_models.keys + [:connection, :"ActiveRecord::Base", :Arel]
 
     Brakeman.debug "Finding possible SQL calls on models"
     calls = tracker.find_call(:methods => @sql_targets, :nested => true)
@@ -52,6 +52,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     calls.concat tracker.find_call(:methods => @sql_targets).select { |result| constantize_call? result }
 
     calls.concat tracker.find_call(:targets => @expected_targets, :methods => @connection_calls, :chained => true).select { |result| connect_call? result }
+
+    calls.concat tracker.find_call(:target => :Arel, :method => :sql)
 
     Brakeman.debug "Finding calls to named_scope or scope"
     calls.concat find_scope_calls
@@ -193,6 +195,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                       when :lock
                         check_lock_arguments call.first_arg
                       when :pluck
+                        unsafe_sql? call.first_arg
+                      when :sql
                         unsafe_sql? call.first_arg
                       when :update_all, :select
                         check_update_all_arguments call.args
