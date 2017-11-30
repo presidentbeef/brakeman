@@ -37,8 +37,8 @@ module Brakeman
           @configured_options[:report_progress] = false
         end
 
-        if engine_config["include_paths"]
-          @configured_options[:only_files] = engine_config["include_paths"].compact
+        if active_include_paths
+          @configured_options[:only_files] = active_include_paths
         end
 
         if brakeman_configuration["app_path"]
@@ -57,6 +57,22 @@ module Brakeman
         end
       end
 
+      def active_include_paths
+        @active_include_paths ||=
+          if brakeman_configuration["app_path"]
+            stripped_include_paths(brakeman_configuration["app_path"])
+          else
+            engine_config["include_paths"] && engine_config["include_paths"].compact
+          end
+      end
+
+      def stripped_include_paths(prefix)
+        engine_config["include_paths"] && engine_config["include_paths"].map do |path|
+          if path && path.start_with?(prefix)
+            path.sub(%r{^#{prefix}/?}, "")
+          end
+        end.compact
+      end
     end
   end
 end
