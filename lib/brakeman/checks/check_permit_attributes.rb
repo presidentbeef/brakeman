@@ -22,18 +22,22 @@ class Brakeman::CheckPermitAttributes < Brakeman::BaseCheck
     call = result[:call]
 
     call.each_arg do |arg|
-      if symbol? arg and SUSPICIOUS_KEYS.key? arg.value
-        warn_on_permit_key result, arg
+      if symbol? arg
+        if SUSPICIOUS_KEYS.key? arg.value
+          warn_on_permit_key result, arg
+        elsif arg.value.match /_id$/
+          warn_on_permit_key result, arg, :medium
+        end
       end
     end
   end
 
-  def warn_on_permit_key result, key
+  def warn_on_permit_key result, key, confidence = nil
     warn :result => result,
       :warning_type => "Mass Assignment",
       :warning_code => :dangerous_permit_key,
       :message => "Potentially dangerous key allowed for mass assignment",
-      :confidence => SUSPICIOUS_KEYS[key.value],
+      :confidence => (confidence || SUSPICIOUS_KEYS[key.value]),
       :user_input => key
   end
 end
