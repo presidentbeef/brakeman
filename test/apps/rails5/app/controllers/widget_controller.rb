@@ -85,6 +85,11 @@ class WidgetController < ApplicationController
   def render_cookies
     render inline: request.cookies["value"]
   end
+
+  def dangerous_permits
+    params.permit(:admin)
+    params.permit(:role_id)
+  end
 end
 
 IDENTIFIER_NAMESPACE = 'apis'
