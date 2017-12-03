@@ -13,7 +13,7 @@ class Rails5Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 9,
-      :generic => 16
+      :generic => 18
     }
   end
 
@@ -41,6 +41,32 @@ class Rails5Tests < Minitest::Test
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, s(:call, s(:params), :slice, s(:lit, :id)), :permit!),
       :user_input => nil
+  end
+
+  def test_mass_assignment_permit_high
+    assert_warning :type => :warning,
+      :warning_code => 105,
+      :fingerprint => "615627822842388859734b6124bf99e0db057a2572f35c92ff42b5ad46f4415f",
+      :warning_type => "Mass Assignment",
+      :line => 90,
+      :message => /^Potentially\ dangerous\ key\ allowed\ for\ ma/,
+      :confidence => 0,
+      :relative_path => "app/controllers/widget_controller.rb",
+      :code => s(:call, s(:params), :permit, s(:lit, :admin)),
+      :user_input => s(:lit, :admin)
+  end
+
+  def test_mass_assignment_permit_medium
+    assert_warning :type => :warning,
+      :warning_code => 105,
+      :fingerprint => "c4c89a39b0a2dc707027f47747312d27308ea219a009e4f0116a759a71ad561b",
+      :warning_type => "Mass Assignment",
+      :line => 91,
+      :message => /^Potentially\ dangerous\ key\ allowed\ for\ ma/,
+      :confidence => 1,
+      :relative_path => "app/controllers/widget_controller.rb",
+      :code => s(:call, s(:params), :permit, s(:lit, :role_id)),
+      :user_input => s(:lit, :role_id)
   end
 
   def test_sql_injection_with_slice
