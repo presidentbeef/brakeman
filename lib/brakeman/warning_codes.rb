@@ -106,6 +106,7 @@ module Brakeman::WarningCodes
     :CVE_2016_6316 => 102,
     :CVE_2016_6317 => 103,
     :divide_by_zero => 104,
+    :dangerous_permit_key => 105,
   }
 
   def self.code name
