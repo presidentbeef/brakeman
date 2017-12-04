@@ -67,11 +67,26 @@ module Brakeman
       end
 
       def stripped_include_paths(prefix)
+        subprefixes = path_subprefixes(prefix)
         engine_config["include_paths"] && engine_config["include_paths"].map do |path|
-          if path && path.start_with?(prefix)
-            path.sub(%r{^#{prefix}/?}, "")
+          next unless path
+          if path.start_with?(prefix)
+            path.sub(%r{^#{prefix}/?}, "./")
+          elsif subprefixes.any? { |subprefix| path =~ %r{^#{subprefix}/?$} }
+            "./"
           end
         end.compact
+      end
+
+      def path_subprefixes(path)
+        Pathname.new(path).each_filename.inject([]) do |memo, piece|
+         memo <<
+           if memo.any?
+             File.join(memo.last, piece)
+           else
+             File.join(piece)
+           end
+        end
       end
     end
   end

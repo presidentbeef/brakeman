@@ -50,14 +50,58 @@ class EngineConfigurationTests < Minitest::Test
       Brakeman::Codeclimate::EngineConfiguration.new(config).options[:app_path]
   end
 
-  def test_custom_app_include_paths
+  def test_custom_app_path_include_paths
     config = {
       "include_paths" => ["foo/bar", "foo/42.rb", "foo/blub/neat", "README", "baz"],
       "config" => {
         "app_path" => "foo"
       }
     }
-    assert_equal ["bar", "42.rb", "blub/neat"],
+    assert_equal ["./bar", "./42.rb", "./blub/neat"],
+      Brakeman::Codeclimate::EngineConfiguration.new(config).options[:only_files]
+  end
+
+  def test_custom_app_path_include_paths_exact_match
+    config = {
+      "include_paths" => ["foo/"],
+      "config" => {
+        "app_path" => "foo/"
+      }
+    }
+    assert_equal ["./"],
+      Brakeman::Codeclimate::EngineConfiguration.new(config).options[:only_files]
+  end
+
+  def test_custom_nested_app_path_include_paths
+    config = {
+      "include_paths" => ["foo/"],
+      "config" => {
+        "app_path" => "foo/bar/baz"
+      }
+    }
+    assert_equal ["./"],
+      Brakeman::Codeclimate::EngineConfiguration.new(config).options[:only_files]
+  end
+
+  def test_custom_nested_app_path_include_paths_no_trailing_slash
+    config = {
+      "include_paths" => ["foo"],
+      "config" => {
+        "app_path" => "foo/bar/baz"
+      }
+    }
+    assert_equal ["./"],
+      Brakeman::Codeclimate::EngineConfiguration.new(config).options[:only_files]
+  end
+
+  def test_custom_nested_app_path_include_paths_not_a_parent
+    config = {
+      "include_paths" => ["foo/nope"],
+      "config" => {
+        "app_path" => "foo/bar/baz"
+      }
+    }
+    assert_equal [],
       Brakeman::Codeclimate::EngineConfiguration.new(config).options[:only_files]
   end
 end
