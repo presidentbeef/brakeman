@@ -39,6 +39,8 @@ module Brakeman
         tracker.error e, "could not parse #{path}"
       rescue Haml::Error => e
         tracker.error e, ["While compiling HAML in #{path}"] << e.backtrace
+      rescue Sass::SyntaxError => e
+        tracker.error e, "While processing #{path}"
       rescue StandardError, LoadError => e
         tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
       end
