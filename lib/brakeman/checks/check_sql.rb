@@ -40,6 +40,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
     @expected_targets = active_record_models.keys + [:connection, :"ActiveRecord::Base"]
 
+    @ignore_methods = IGNORE_METHODS_IN_SQL.merge(tracker.options[:sql_safe_methods] || [])
+
     Brakeman.debug "Finding possible SQL calls on models"
     calls = tracker.find_call(:methods => @sql_targets, :nested => true)
 
@@ -450,7 +452,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     when :if
       unsafe_sql? exp.then_clause or unsafe_sql? exp.else_clause
     when :call
-      unless IGNORE_METHODS_IN_SQL.include? exp.method
+      unless @ignore_methods.include? exp.method
         if has_immediate_user_input? exp
           exp
         elsif exp.method == :to_s
@@ -585,7 +587,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       if exp.method == :to_s or exp.method == :to_sym
         safe_value? exp.target
       else
-        IGNORE_METHODS_IN_SQL.include? exp.method or
+        @ignore_methods.include? exp.method or
         quote_call? exp or
         arel? exp or
         exp.method.to_s.end_with? "_id"
