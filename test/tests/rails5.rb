@@ -13,7 +13,7 @@ class Rails5Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 9,
-      :generic => 17
+      :generic => 18
     }
   end
 
@@ -453,6 +453,19 @@ class Rails5Tests < Minitest::Test
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, s(:call, s(:const, :User), :connection), :execute, s(:dstr, "SELECT * FROM foo WHERE ", s(:evstr, s(:if, s(:true), s(:dstr, "bar = ", s(:evstr, s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :quote, s(:true)))), nil)))),
       :user_input => s(:if, s(:true), s(:dstr, "bar = ", s(:evstr, s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :quote, s(:true)))), nil)
+  end
+
+  def test_sql_injection_arel_sql
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "672fb59ead203af7b429e4efa722101b9246e60334470daa7c07a62078974350",
+      :warning_type => "SQL Injection",
+      :line => 97,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :Arel), :sql, s(:dstr, "select ", s(:evstr, s(:call, s(:params), :[], s(:lit, :s))))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :s))
   end
 
   def test_tempfile_access

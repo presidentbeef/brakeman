@@ -92,4 +92,8 @@ class UsersController < ApplicationController
     def nested_sql_interp 
       User.connection.execute("SELECT * FROM foo WHERE #{true ? "bar = #{ActiveRecord::Base.connection.quote(true)}" : "bar = 0"}")
     end
+
+    def arel_sql
+      Arel.sql("select #{params[:s]}")
+    end
 end
