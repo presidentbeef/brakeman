@@ -404,7 +404,7 @@ module Brakeman
     else
       require "brakeman/report/pager"
 
-      Brakeman::Pager.new(tracker, :highline).page_report(tracker.report, output_formats.first)
+      Brakeman::Pager.new(tracker).page_report(tracker.report, output_formats.first)
     end
   end
   private_class_method :write_report_to_formats
