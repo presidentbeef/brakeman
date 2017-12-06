@@ -37,8 +37,8 @@ module Brakeman
           @configured_options[:report_progress] = false
         end
 
-        if engine_config["include_paths"]
-          @configured_options[:only_files] = engine_config["include_paths"].compact
+        if active_include_paths
+          @configured_options[:only_files] = active_include_paths
         end
 
         if brakeman_configuration["app_path"]
@@ -57,6 +57,41 @@ module Brakeman
         end
       end
 
+      def active_include_paths
+        @active_include_paths ||=
+          if brakeman_configuration["app_path"]
+            stripped_include_paths(brakeman_configuration["app_path"])
+          else
+            engine_config["include_paths"] && engine_config["include_paths"].compact
+          end
+      end
+
+      def stripped_include_paths(prefix)
+        subprefixes = path_subprefixes(prefix)
+        engine_config["include_paths"] && engine_config["include_paths"].map do |path|
+          next unless path
+          stripped_include_path(prefix, subprefixes, path)
+        end.compact
+      end
+
+      def path_subprefixes(path)
+        Pathname.new(path).each_filename.inject([]) do |memo, piece|
+         memo <<
+           if memo.any?
+             File.join(memo.last, piece)
+           else
+             File.join(piece)
+           end
+        end
+      end
+
+      def stripped_include_path(prefix, subprefixes, path)
+        if path.start_with?(prefix)
+          path.sub(%r{^#{prefix}/?}, "./")
+        elsif subprefixes.any? { |subprefix| path =~ %r{^#{subprefix}/?$} }
+          "./"
+        end
+      end
     end
   end
 end
