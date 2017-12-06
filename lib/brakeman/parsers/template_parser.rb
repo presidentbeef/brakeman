@@ -36,7 +36,7 @@ module Brakeman
           @file_parser.file_list[:templates] << TemplateFile.new(path, ast, name, type)
         end
       rescue Racc::ParseError => e
-        tracker.error e, "could not parse #{path}"
+        tracker.error e, "Could not parse #{path}"
       rescue Haml::Error => e
         tracker.error e, ["While compiling HAML in #{path}"] << e.backtrace
       rescue Sass::SyntaxError => e
