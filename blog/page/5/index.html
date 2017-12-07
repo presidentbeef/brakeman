@@ -20,6 +20,7 @@
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="http://s3.amazonaws.com/ender-js/jeesh.min.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/atom.xml" rel="alternate" title="Brakeman - Rails Security Scanner" type="application/atom+xml"/>
   
@@ -52,16 +53,16 @@
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = 'https://platform.twitter.com/widgets.js';
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>
 
 
   <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
-<link href='https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
-<script language="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
+<link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<script language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
 <script src="/javascripts/jquery.github_badge.js"></script>
 <meta property="twitter:account_id" content="23978537" />
 
@@ -80,7 +81,7 @@
   <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
   
 </ul>
-<form action="https://google.com/search" method="get">
+<form action="http://google.com/search" method="get">
   <fieldset role="site-search">
     <input type="hidden" name="q" value="site:brakemanscanner.org" />
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
@@ -101,178 +102,6 @@
     <div id="content">
       <div class="blog-index">
 
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2013/10/28/brakeman-2-dot-2-0-released/">Brakeman 2.2.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2013-10-28 10:30:00 -0700" pubdate  updated >Oct 28<span>th</span>, 2013</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a small release, with some bug and false positive fixes alongside initial support for Rails engines and a new check for detailed exceptions.</p>
-
-<p><em>Changes since 2.2.0:</em></p>
-
-<ul>
-<li>Support scanning Rails engines (<a href="https://github.com/phene">Geoffrey Hichborn</a>)</li>
-<li>Ignore redirects to models using <code>friendly_id</code> (<a href="https://github.com/aj0strow">AJ Ostrow</a>)</li>
-<li>Add check for detailed exceptions in production (<a href="https://github.com/presidentbeef/brakeman/issues/391">#391</a>)</li>
-<li>Use Rails version from Gemfile if it is available (<a href="https://github.com/presidentbeef/brakeman/issues/398">#398</a>)</li>
-<li>Only add routes with actual names (<a href="https://github.com/presidentbeef/brakeman/issues/395">#395</a>)</li>
-<li>Reduce command injection false positives</li>
-</ul>
-
-
-<h3>Rails Engines</h3>
-
-<p><a href="https://github.com/phene">Geoffrey Hichborn</a> added support for checking Rails engines paths when searching for controllers, models, and views. Please let us know if there are any issues or files missed with this change.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/397">changes</a>)</p>
-
-<h3>Redirects with Friendly ID</h3>
-
-<p>Thanks to <a href="https://github.com/aj0strow">AJ Ostrow</a>, Brakeman should no longer warn on redirects to models using <code>friendly_id</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/400">changes</a>)</p>
-
-<h3>Detailed Exceptions</h3>
-
-<p><a href="https://github.com/ntalbott">Nathaniel Talbott</a> suggested checking that detailed exceptions (treating requests as local) are not enabled in production.</p>
-
-<p>Brakeman now generates a warning in a new category called &#8221;<a href="http://brakemanscanner.org/docs/warning_types/information_disclosure/">Information Disclosure</a>&#8221; if <code>config.consider_all_requests_local</code> is set to <code>true</code> in production or a controller overrides <code>show_detailed_exceptions?</code> to return something other than <code>false</code>.</p>
-
-<p>Please see the <a href="https://github.com/presidentbeef/brakeman/pull/396">changes</a> regarding the new category and two new warning codes associated with these warnings.</p>
-
-<h3>Better Version Detection</h3>
-
-<p>Brakeman now uses the Rails version found in <code>Gemfile</code> or <code>Gemfile.lock</code> to determine when to enable Rails 3/4 mode, which seems obvious in retrospect. This required swapping when the <code>Gemfile</code> and the configuration files are processed.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/402">changes</a>)</p>
-
-<h3>Rails 3 Routes</h3>
-
-<p>A small fix prevents Brakeman from raising an error when a route is a redirect or any value other than a string or symbol.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/403">changes</a>)</p>
-
-<h3>Command Injection False Positives</h3>
-
-<p>There should be fewer false positives for command injection when interpolated values are literals. The check also now ignores commonly used values <code>RAILS_ROOT</code>, <code>Rails.env</code>, and <code>Rails.root</code>.</p>
-
-<p>Additionally, reported &#8220;dangerous&#8221; values (<code>user_input</code> in JSON reports) for command injection are more specific. For example:</p>
-
-<pre><code>system "rm -rf #{some_var}"
-</code></pre>
-
-<p>used to report the entire string <code>"rm -rf #{some_var}"</code> as dangerous, even though it&#8217;s really warning about the interpolation of <code>some_var</code>. Now Brakeman will report the first potentially dangerous interpolated value. Note that this does not change fingerprints for existing warnings.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/404">changes</a>)</p>
-
-<h3>Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-
-<h3>Verification</h3>
-
-<p>The SHA-1 for the Brakeman 2.2.0 gem is:</p>
-
-<pre><code>f3a2b369bda79c677a913cdb2350cbda8bce8a90  brakeman-2.2.0.gem
-</code></pre>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update/">Brakeman 2.1.2 Released - Important Security Update</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2013-09-18 01:38:00 -0700" pubdate  updated >Sep 18<span>th</span>, 2013</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Important</em>: Contrary to the &#8220;Brakeman Philosophy,&#8221; there is one situation in which Brakeman attempts to load files from an application. This is a security risk since the code in the files would be executed (typical <code>require</code> behavior). Note that this is only a real problem if running Brakeman against code outside one&#8217;s control. Since most users are scanning their own code, this should not be a concern for the majority of Brakeman users.</p>
-
-<p><em>Changes since 2.1.1:</em></p>
-
-<ul>
-<li>Do not attempt to load custom Haml filters</li>
-<li>Do not warn about <code>to_json</code> XSS in Rails 4</li>
-<li>Remove fuzzy matching on dangerous <code>attr_accessible</code> values</li>
-<li>Add &#8211;table-width option to set width of text reports (<a href="https://github.com/ssendev">ssendev</a>)</li>
-</ul>
-
-
-<h3>Custom Haml Filters</h3>
-
-<p>Brakeman no longer attempts to load custom Haml filters. This was a hack (from nearly three years ago) to help compile some Haml templates. It was recently noted that this introduces a security risk when scanning untrusted code.</p>
-
-<p>For now, custom Haml filters will cause a Brakeman error and the Haml templates using them will not be scanned.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/commit/8a6ae98df3039bf5f3d7cc0852efb1006362f143#L1L3">changes</a>)</p>
-
-<h3>JSON Output in Rails 4</h3>
-
-<p>As of Rails 4, the output of <code>to_json</code> is now safe by default. Brakeman should no longer warn about cross-site scripting with <code>to_json</code> in Rails 4 applications.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/392">changes</a>)</p>
-
-<h3>Less Fuzzy Mass Assignment</h3>
-
-<p>Brakeman no longer uses fuzzy matching for potentially dangerous model attributes allowed for mass assignment, such as any value containing <code>admin</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/390">changes</a>)</p>
-
-<h3>Text Report Width Option</h3>
-
-<p>The width of text reports can now be controlled with the <code>--table-width</code> option. For example, this can be useful when capturing text output to a file.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/387">changes</a>)</p>
-
-<h3>Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-</div>
-  
-  
-
-
-  </article>
 
 
   <article>
@@ -1359,6 +1188,313 @@ end
 
   </article>
 
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2012/12/25/brakeman-1-dot-9-0-released/">Brakeman 1.9.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-12-25 11:00:00 -0800" pubdate  updated >Dec 25<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Happy <a href="https://en.wikipedia.org/wiki/Eggnog_Riot">Eggnog Riot</a> day!</p>
+
+<p>This is a major release: 95 changed files with 1,775 additions and 14,484 deletions. This provides ample room for new bugs, so please report any issues.</p>
+
+<p><em>Changes since 1.8.3</em>:</p>
+
+<ul>
+<li>Update to RubyParser 3</li>
+<li>Ignore route information by default</li>
+<li>Add optional &#8220;interprocedural&#8221; analysis for controllers</li>
+<li>Properly pass instance variables between before_filters</li>
+<li>Support <code>strong_parameters</code> (<a href="https://github.com/presidentbeef/brakeman/issues/88">#88</a>)</li>
+<li>Support newer <code>validates :format</code> call (<a href="https://github.com/presidentbeef/brakeman/issues/198">#198</a>)</li>
+<li>Add scan time to reports (<a href="https://github.com/presidentbeef/brakeman/issues/158">#158</a>)</li>
+<li>Add Brakeman version to reports</li>
+<li>Don&#8217;t mangle whitespace in JSON code formatting</li>
+<li>Fix <code>CheckExecute</code> to warn on all string interpolation (<a href="https://github.com/presidentbeef/brakeman/issues/213">#213</a>)</li>
+<li>Fix false positive on <code>to_sql</code> calls</li>
+<li>Add AppTree as facade for filesystem (<a href="https://github.com/brynary">Bryan Helmkamp</a>)</li>
+<li>Add link for translate vulnerability warning (<a href="https://github.com/grosser">Michael Grosser</a>)</li>
+<li>Add Rakefile to run tests (<a href="https://github.com/grosser">Michael Grosser</a>)</li>
+<li>Better default config file locations (<a href="https://github.com/grosser">Michael Grosser</a>)</li>
+<li>Remove &#8220;find by regex&#8221; feature from <code>CallIndex</code></li>
+<li>Reduce Sexp creation</li>
+<li>Handle empty model files</li>
+</ul>
+
+
+<h3>Update to RubyParser 3</h3>
+
+<p>With the update to use RubyParser 3.x, Brakeman no longer includes a vendored version of RubyParser (which was only used with running with Ruby 1.9), which reduced code size by about 14,000 lines.</p>
+
+<p>RubyParser 3 supports Ruby 1.9 much more fully, so there should be very few parse errors. Additionally, Brakeman no longer chooses parsers based on the current Ruby version.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/190">changes</a>)</p>
+
+<h3>Route Information Ignored by Default</h3>
+
+<p>Route information is only used in Brakeman to determine whether a controller method should perform an implicit render. Since determining Rails routes statically is quite difficult to get right, it is better to assume a method is a routable action. Previous versions provided the <code>-a</code> option for this, which is now on by default. To turn off this behavior (and revert to the old), use <code>--no-assume-routes</code>.</p>
+
+<p>This does not affect default route warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/219">changes</a>)</p>
+
+<h3>Optional Interprocedural Analysis for Controllers</h3>
+
+<p>Currently, Brakeman essentially looks at each method in isolation. Values are propagated from controller actions (including before_filters) through rendered views and templates. But if a controller action calls another method which has an effect on the eventual output of the action, Brakeman does not processed the invoked method.</p>
+
+<p>This release includes optional, experimental support for analyzing controller methods called from within controller actions.</p>
+
+<p>For a simple example, instance variables set in helper methods will now be added to a rendered view. Also, values returned from called methods will be tracked:</p>
+
+<pre><code>def create
+  get_user 
+  #@user is now User.find(params[:id])
+
+  @account = find_account(@user)  
+  #@account is now Account.where(:user =&gt; User.find(params[:id]).id
+end
+
+private
+
+def get_user
+  @user = User.find(params[:id])
+end
+
+def find_account
+  Account.where(:user =&gt; @user.id)
+end
+</code></pre>
+
+<p>This is limited to methods available in the controller (via a parent class or mixins). It is also limited to a &#8220;depth of one&#8221;, meaning it will not try to analyze methods called by helper methods (<code>get_user</code> and <code>find_account</code> above).</p>
+
+<p>Since this feature is still experimental and will definitely increase scan times, it is turned off by default. Use <code>--interprocedural</code> to enable it. (Better name pending suggestions&#8230;)</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/218">changes</a>)</p>
+
+<h3>Pass Instance Variables between Filters</h3>
+
+<p>While instance variables set in <code>before_filters</code> were set properly, <code>before_filter</code> which used instance variables from an earlier filter could not see those variables. This has been fixed, which will likely lead to new or more accurate warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/224">changes</a>)</p>
+
+<h3>Support for <code>strong_parameters</code></h3>
+
+<p>In Rails 4, the responsibility for mass assignment protection will move from models to controllers where mass assignment is actually used. A preview of the new functionality is available in the <a href="https://github.com/rails/strong_parameters">strong_parameters</a> gem. Brakeman should no longer warn on mass assignment for models protected with <code>strong_parameters</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/204">changes</a>)</p>
+
+<h3>Support <code>validates :format</code></h3>
+
+<p>In Rails 3, format validation changed from <code>validates_format_of</code> to the more generic <code>validates</code> method. Brakeman will now check <code>validates</code> calls for proper anchors on regular expressions for <code>:format</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/205">changes</a>)</p>
+
+<h3>Report Changes</h3>
+
+<p>Reports will now contain Brakeman version and scan duration. JSON reports contain <code>start_time</code> and <code>end_time</code> timestamps. For now, JSON reports will still have a <code>timestamp</code> key, but it will be identical to <code>end_time</code>. It will be removed in Brakeman 2.0.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/193">changes</a>)</p>
+
+<p>Additionally, code formatting in JSON reports has changed slightly. Previously, code was formatted with the HTML output in mind, so line breaks were removed. Now JSON reports include the code formatted from Ruby2Ruby without any mangling.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/191">changes</a>)</p>
+
+<h3>Fix Command Injection Check</h3>
+
+<p>The command injection check will now (again) warn on any form on string interpolation used for process execution, whether or not user input is involved.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/216">changes</a>)</p>
+
+<h3>Fix <code>to_sql</code> False Positives</h3>
+
+<p>SQL code generated from Arel&#8217;s <code>to_sql</code> method will be considered safe.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/194">changes</a>)</p>
+
+<h3>File System Facade</h3>
+
+<p>Bryan Helmkamp cleaned up Brakeman&#8217;s file access into a single object. This should simplify future changes and add some consistency to how Brakeman handles files.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/197">changes</a>)</p>
+
+<h3>Run Tests via Rake</h3>
+
+<p>Thanks to Michael Grosser, running <code>rake</code> will now run Brakeman&#8217;s tests.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/183">changes</a>)</p>
+
+<h3>Improved Config File Locations</h3>
+
+<p>Also thanks to Michael Grosser, Brakeman will check more sane locations for Brakeman configuration files. This version adds <code>./config/brakeman.yml</code>, <code>~/.brakeman/config.yml</code>, and <code>/etc/brakeman/config.yml</code> as default locations for configuration files. The old locations are deprecated now, and will be removed in Brakeman 2.0.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/182">changes</a></p>
+
+<h3>More Internal Changes</h3>
+
+<p>Call indexing performance has been given another <a href="http://blog.presidentbeef.com/">slight boost</a> with the removal of the ability to search for call targets via regular expressions (which was not being used anywhere).</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/189">changes</a>)</p>
+
+<p>The number of s-expressions generated by Brakeman has been reduced, although this did not lead to any major performance improvement.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/207">changes</a>)</p>
+
+<p>Data-flow/alias processing was performing two passes. This has been reduced to just one.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/224">changes</a>)</p>
+
+<p>Empty model files will no longer cause errors.</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2012/11/13/brakeman-1-dot-8-3-released/">Brakeman 1.8.3 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-11-13 09:20:00 -0800" pubdate  updated >Nov 13<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is primarily a false positive reduction release. One major change is the change in dependency from the <code>json_pure</code> gem to <code>multi_json</code>.</p>
+
+<p><em>Changes since 1.8.2</em>:</p>
+
+<ul>
+<li>Use <code>multi_json</code> gem for better harmony (<a href="https://github.com/presidentbeef/brakeman/issues/164">#164</a>)</li>
+<li>Performance improvement for call indexing</li>
+<li>Fix issue with processing HAML files (<a href="https://github.com/presidentbeef/brakeman/issues/168">#168</a>)</li>
+<li>Handle pre-release versions when processing <code>Gemfile.lock</code> (<a href="https://github.com/presidentbeef/brakeman/issues/174">#174</a>)</li>
+<li>Only check first argument of <code>redirect_to</code> (<a href="https://github.com/presidentbeef/brakeman/issues/98">#98</a>)</li>
+<li>Fix false positives from <code>Model.arel_table</code> accesses</li>
+<li>Fix false positives on redirects to models decorated with Draper gem (<a href="https://github.com/presidentbeef/brakeman/issues/172">#172</a>)</li>
+<li>Fix false positive on redirect to model association (<a href="https://github.com/presidentbeef/brakeman/issues/111">#111</a>)</li>
+<li>Fix false positive on <code>YAML.load</code> (<a href="https://github.com/presidentbeef/brakeman/issues/142">#142</a>)</li>
+<li>Fix false positive XSS on any <code>to_i</code> output</li>
+<li>Fix error on Rails 2 named routes with no args</li>
+<li>Fix error in rescan of mixins with symbols in method name</li>
+<li>Do not rescan non-Ruby files in config/</li>
+</ul>
+
+
+<h3>Change to MultiJSON</h3>
+
+<p>Brakeman now depends on the <a href="http://rdoc.info/github/intridea/multi_json">multijson</a> gem instead of <code>json_pure</code>. This should make it easier for people who include Brakeman as a dependency.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/166">changes</a>)</p>
+
+<h3>Faster Call Indexing</h3>
+
+<p>Dumb code in the <code>CallIndex</code> was causing call indexing to be slow on some large applications. This should now be faster and require less memory!</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/180">changes</a>)</p>
+
+<h3>Fix HAML Processing</h3>
+
+<p>Some HAML files were causing Brakeman&#8217;s alias processing to slow to a crawl. This was due to the template code (sometimes) directly appending to the output variable via <code>&lt;&lt;</code>. Since Brakeman attempts to treat targets of <code>&lt;&lt;</code> as arrays, Brakeman was generating large data structures each time <code>&lt;&lt;</code> was encountered.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/170">changes</a>]</p>
+
+<h3>Handle Pre-release Versions</h3>
+
+<p>When a <code>Gemfile.lock</code> file is present in a Rails application, Brakeman uses it to determine the version of Rails in use. Previous versions did not accept pre-release version numbers (like <code>3.1.2.rc1</code>), leading to version inappropriate warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/176">changes</a>)</p>
+
+<h3>Redirect False Positives</h3>
+
+<p>Several false positives related to redirects have been fixed, and the scope of the redirect check is somewhat reduced.</p>
+
+<p>Calls beginning with <code>Model.arel_table</code> should no longer be treated as user input (in any context).</p>
+
+<p>Model instances returned by the <code>decorate</code> method in the <a href="https://github.com/drapergem/draper">Draper</a> gem are considered safe.</p>
+
+<p>Redirects to model associations (e.g, <code>belongs_to :account</code>) are considered safe.</p>
+
+<p>Redirects to method calls with safe values should no longer warn. For example:</p>
+
+<pre><code>redirect_to blah(User.first) #No warning
+</code></pre>
+
+<p>Additionally, only the first argument of <code>redirect_to</code> will be checked for user input.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/177">changes</a>)</p>
+
+<h3>YAML False Positive</h3>
+
+<p>File access warnings for YAML calls have been reduced to only those calls which actually access files.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/178">changes</a>)</p>
+
+<h3>Integer Output False Positives</h3>
+
+<p>Calls to <code>to_i</code> should not trigger XSS warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/179">changes</a>)</p>
+
+<h3>Errors on Named Routes</h3>
+
+<p>Rails 2 named routes with no arguments were causing errors, which have now been fixed.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/181">changes</a>)</p>
+
+<h3>Future Work</h3>
+
+<p>Now that RubyParser 3.x is officially released, work is underway to use the new version. This will increase Ruby 1.9 syntax compatibility and remove the need to parse applications with the same Ruby version as the application uses. Additionally, it will allow us to get rid of the vendored version of RubyParser that Brakeman uses for Ruby 1.9. Unfortunately, RubyParser 3.x introduces a lot of incompatibilities and upgrading requires a significant amount of effort.</p>
+
+<p>Another exciting feature in development is limited interprocedural analysis. Brakeman will be able to handle simple things like calls to helper methods in controllers which set instance variables or return user input. This should help with the &#8220;obvious&#8221; vulnerabilities that Brakeman often misses.</p>
+
+<h3>Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
 <nav role="pagination">
   <div>
     
@@ -1376,7 +1512,7 @@ end
     (function () {
       var s = document.createElement('script'); s.async = true;
       s.type = 'text/javascript';
-      s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+      s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
     }());
 </script>
@@ -1406,19 +1542,11 @@ end
     });
 </script>
 <div id="github"></div>
-<a href="https://travis-ci.org/#!/presidentbeef/brakeman"><img src="https://secure.travis-ci.org/presidentbeef/brakeman.png" /></a>
+<a href="http://travis-ci.org/#!/presidentbeef/brakeman"><img src="https://secure.travis-ci.org/presidentbeef/brakeman.png" /></a>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2017/09/25/brakeman-4-dot-0-released/">Brakeman 4.0 Released!</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/08/15/brakeman-3-dot-7-1-released/">Brakeman 3.7.1/3.7.2 Released</a>
-      </li>
     
       <li class="post">
         <a href="/blog/2017/06/29/brakeman-3-dot-7-0-released/">Brakeman 3.7.0 Released</a>
@@ -1430,6 +1558,14 @@ end
     
       <li class="post">
         <a href="/blog/2017/03/24/brakeman-3-dot-6-1-released/">Brakeman 3.6.1 Released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/03/22/brakeman-3-dot-6-0-released/">Brakeman 3.6.0 Released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/01/31/brakeman-3-dot-5-0-released/">Brakeman 3.5.0 Released</a>
       </li>
     
   </ul>
