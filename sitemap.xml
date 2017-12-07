@@ -327,6 +327,14 @@
         <lastmod>2017-06-29T18:30:27-07:00</lastmod>
     </url>
     <url>
+        <loc>http://brakemanscanner.org/blog/2017/08/15/brakeman-3-dot-7-1-released/</loc>
+        <lastmod>2017-12-06T18:18:11-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/blog/2017/09/25/brakeman-4-dot-0-released/</loc>
+        <lastmod>2017-12-06T18:18:11-08:00</lastmod>
+    </url>
+    <url>
         <loc>http://brakemanscanner.org/contact/</loc>
         <lastmod>2016-01-13T23:04:46-08:00</lastmod>
     </url>
@@ -336,7 +344,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/blog/archives/</loc>
-        <lastmod>2017-06-29T18:30:27-07:00</lastmod>
+        <lastmod>2017-12-06T18:18:11-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/content_license/</loc>
@@ -344,7 +352,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/brakeman_users/</loc>
-        <lastmod>2016-05-23T18:58:05-07:00</lastmod>
+        <lastmod>2017-12-06T18:18:11-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/brakeman_as_a_library/</loc>
@@ -400,7 +408,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/video/</loc>
-        <lastmod>2016-02-25T19:22:15-08:00</lastmod>
+        <lastmod>2017-12-06T18:18:11-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/confidence/</loc>
@@ -457,6 +465,10 @@
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/ssl_verification_bypass/</loc>
         <lastmod>2014-01-07T23:03:47-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/cross-site_scripting_to_json/</loc>
+        <lastmod>2017-12-06T18:18:11-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/basic_authentication/</loc>
@@ -517,6 +529,10 @@
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/CVE-2011-0446/</loc>
         <lastmod>2013-05-16T19:22:12-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://brakemanscanner.org/docs/warning_types/cross-site_scripting/</loc>
+        <lastmod>2017-12-06T18:18:11-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/warning_types/</loc>
@@ -588,7 +604,7 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/options/</loc>
-        <lastmod>2014-10-13T17:30:29-07:00</lastmod>
+        <lastmod>2017-12-06T18:18:11-08:00</lastmod>
     </url>
     <url>
         <loc>http://brakemanscanner.org/docs/ignoring_false_positives/</loc>
@@ -604,6 +620,6 @@
     </url>
     <url>
         <loc>http://brakemanscanner.org/</loc>
-        <lastmod>2017-06-29T18:30:27-07:00</lastmod>
+        <lastmod>2017-12-06T18:18:11-08:00</lastmod>
     </url>
 </urlset>

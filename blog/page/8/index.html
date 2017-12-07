@@ -20,21 +20,21 @@
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="http://s3.amazonaws.com/ender-js/jeesh.min.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/atom.xml" rel="alternate" title="Brakeman - Rails Security Scanner" type="application/atom+xml"/>
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-12578396-3']);
-    _gaq.push(['_trackPageview']);
+<!--second website-->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
+ga('create', 'UA-57927555-1', 'auto', {'allowLinker': true});
+ga('create', 'UA-12578396-3', 'auto','cdt');
+ga('require', 'linker');
+ga('linker:autoLink', ['brakemanpro.com'] );
+ga('send', 'pageview');
+ga('cdt.send', 'pageview');
+
+</script>
 
 
   
@@ -53,16 +53,16 @@
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      twitterWidgets.src = 'https://platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>
 
 
   <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
-<script language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
+<link href='https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<script language="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
 <script src="/javascripts/jquery.github_badge.js"></script>
 <meta property="twitter:account_id" content="23978537" />
 
@@ -81,7 +81,7 @@
   <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
   
 </ul>
-<form action="http://google.com/search" method="get">
+<form action="https://google.com/search" method="get">
   <fieldset role="site-search">
     <input type="hidden" name="q" value="site:brakemanscanner.org" />
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
@@ -102,6 +102,253 @@
     <div id="content">
       <div class="blog-index">
 
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2011/12/21/brakeman-1-dot-1-released/">Brakeman 1.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2011-12-21 19:12:00 -0800" pubdate  updated >Dec 21<span>st</span>, 2011</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This was supposed to be a 1.0.1 release, but quite a bit of code changed.</p>
+
+<p>Changes since 1.0:</p>
+
+<ul>
+<li>Relax required versions for dependencies (this is for Bundler users)</li>
+<li>Performance improvements for source processing</li>
+<li>Better progress reporting</li>
+<li>Handle basic operators like &lt;&lt; + - * /</li>
+<li>Rescue more errors to prevent Brakeman from completely bailing out</li>
+<li>Compatibility with newer Haml versions</li>
+<li>Fix some 1.9 warnings</li>
+</ul>
+
+
+<h3>Relax Dependencies</h3>
+
+<p>The version dependencies for Brakeman have been relaxed somewhat, so it should work fine if included in a Rails 3 Gemfile. Unfortunately, this makes it a little harder to be sure it will work with all setups. Please report any problems!</p>
+
+<h3>Performance Improvements</h3>
+
+<p>The 1.0 release reduced the time taken for running the vulnerability checks, but (unrelatedly) the time for processing the source code increased.</p>
+
+<p>This release makes some improvements that should improve scan times. If it takes an intolerable amount of time for scans (more than 5-10 minutes), try using the <code>--faster</code> option. This will possibly report fewer vulnerabilities, but should be much faster.</p>
+
+<h3>Progress Reporting</h3>
+
+<p>Brakeman will now provide better feedback about its progress while processing applications. For even more output, use the <code>--debug</code> option.</p>
+
+<h3>Handle More Operators</h3>
+
+<p>See <a href="https://github.com/presidentbeef/brakeman/wiki/Using-Brakeman::AliasProcessor">here</a> for the kinds of simple processing Brakeman can do.</p>
+
+<h3>Rescue More Errors</h3>
+
+<p>Brakeman does its best to never completely abort execution and tries to always provide an analysis of whatever it can manage. This release rescues exceptions that may occur while processing configurations and Gemfiles.</p>
+
+<h3>Problems</h3>
+
+<p>If you run into any problems, don&#8217;t hesitate to send a tweet to <a href="http://twitter.com/brakemanscanner">@Brakemanscanner</a> or <a href="https://github.com/presidentbeef/brakeman/issues">file an issue</a> on GitHub!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2011/12/08/brakeman-1-dot-0-released/">Brakeman 1.0 Released!</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2011-12-08 01:35:00 -0800" pubdate  updated >Dec 8<span>th</span>, 2011</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>While the step up to 1.0 was essentially forced by major changes since 0.9.2, this is still an important release for Brakeman. Internally, Brakeman is no longer reliant on a global options variable, allowing it to be used as a library inside other applications. Also, all Brakeman modules, classes, and constants have been placed inside the Brakeman namespace.</p>
+
+
+
+
+<p>Support for Rails 3 is continuing to improve, although it is probably a good idea to run Brakeman with the <code>-m</code> option to see what routes it is seeing. If you receive a message that says &#8220;Error while processing routes - assuming all public controller methods are actions,&#8221; please consider opening an issue and (if possible) providing your <code>routes.rb</code> file as evidence.</p>
+
+
+
+
+<p>The performance of vulnerability checks that search for calls to specific methods (CheckExecute, CheckFileAccess, CheckSQL, etc.) has been drastically improved with the introduction of a call site index. If your scans were spending a lot of time running checks, you should see significant decrease in run time (although memory use may be slightly higher).</p>
+
+
+
+
+<p>If you are looking for an introduction to Brakeman, there are some <a href="http://brakemanscanner.org/docs/presentations/">presentations available</a> to watch or read.</p>
+
+
+
+
+<p>As usual, please <a href="https://github.com/presidentbeef/brakeman/issues">report</a> any issues! You can also send a tweet to <a href="http://twitter.com/brakeman">@Brakeman</a> if you have any questions.</p>
+
+
+
+
+<p><em>Changes since 1.0rc1:</em></p>
+
+
+
+
+<ul>
+<li>Better handling of assignments inside ifs</li>
+<li>Check more expressions for SQL injection</li>
+<li>Use latest ruby_parser for better 1.9 syntax support</li>
+<li>Better behavior for Brakeman as a library</li>
+</ul>
+
+
+
+
+<h3>Assignments Inside &#8216;if&#8217; Branches</h3>
+
+
+
+
+<p>Brakeman is now a little smarter about handling assignments inside <code>if</code>.</p>
+
+
+
+
+<p>For example:</p>
+
+
+
+
+<pre><code>if some_condition
+  x = params[:blah]
+else
+  x = "no blah"
+end
+</code></pre>
+
+
+
+
+<p>Previously, <code>x</code> would end up with the last value encountered, with no regard for execution branches. In this release, Brakeman will now combine the branches (unfortunately, Brakeman still operates along a &#8216;no branching&#8217; policy) and <code>x</code> will be given the value of <code>params[:blah] or "no blah"</code>.</p>
+
+
+
+
+<p>While not strictly semantically sound (and, trust me, Brakeman does many things that are not), it will still catch problems like</p>
+
+
+
+
+<pre><code>User.all(conditions =&gt; "blah = '#{x}'")
+</code></pre>
+
+
+
+
+<p>Thanks to <a href="http://osdir.com/ml/RubyonRails:Core/2011-11/msg00098.html">this message</a> on Rails Core for mentioning this problem.</p>
+
+
+
+
+<h3>Use Latest ruby_parser</h3>
+
+
+
+
+<p>A few releases ago, Brakeman included a slightly modified version of <a href="https://github.com/seattlerb/ruby_parser">ruby_parser</a> to help with Ruby 1.9 syntax issues.</p>
+
+
+
+
+<p>The very latest ruby_parser source has much better 1.9 support, but there has been no official release yet. So Brakeman comes with the latest code. This is necessary because Rails 3 will generate 1.9 syntax if you happen to run it with Ruby 1.9 when generating code.</p>
+
+
+
+
+<h3>Brakeman as a Library</h3>
+
+
+
+
+<p>While it is now possible to use Brakeman as a library (essentially just <code>Brakeman.run</code>), it is not very well polished. This release improves it slightly from the release candidate.</p>
+
+
+
+
+<h3>More SQL Injection</h3>
+
+
+
+
+<p><code>CheckSQL</code> will now search most expressions inside a SQL call for user input and string interpolation.</p>
+
+
+
+
+<h3>Changes Since 0.9.2</h3>
+
+
+
+
+<p>As a summary, here are the changes since 0.9.2:</p>
+
+
+
+
+<ul>
+<li>Brakeman can now be used as a library</li>
+<li>Faster call search</li>
+<li>Add option to return error code if warnings are found (tw-ngreen)</li>
+<li>Allow truncated messages to be expanded in HTML</li>
+<li>Keep expanded context in view in HTML output</li>
+<li>Fix summary when using warning thresholds</li>
+<li>Better support for Rails 3 routes</li>
+<li>Reduce SQL injection duplicate warnings</li>
+<li>Lower confidence on mass assignment with no user input</li>
+<li>Ignore mass assignment using all literal arguments</li>
+</ul>
+
+
+
+
+<p>See the <a href="http://brakemanscanner.org/blog/2011/12/05/brakeman-1-dot-0-release-candidate-available/">earlier post</a> for more details.</p>
+
+</div>
+  
+  
+
+
+  </article>
 
 
   <article>
@@ -609,46 +856,10 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2011/08/27/one-year-anniversary-and-a-website/">One Year Anniversary</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-08-27 01:00:00 -0700" pubdate  updated >Aug 27<span>th</span>, 2011</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>One year ago, Brakeman 0.0.1 was released as a gem. Then it was promptly yanked and replaced with <a href="http://rubygems.org/gems/brakeman/versions/0.0.2">Brakeman 0.0.2</a>.</p>
-
-<p>In celebration of this grand anniversary, there have been several new releases today.</p>
-
-<p>The first is <a href="http://rubygems.org/gems/brakeman/versions/0.7.2">Brakeman 0.7.2</a>, a minor release adding CVE numbers for the <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/f878a33159ac9967">latest vulnerabilities</a> and fixing how nested params/cookie accesses are handled (e.g., <code>params[:user][:name]</code> is now considered a direct use of a parameter).</p>
-
-<p>Next up, Brakeman has its own Twitter feed <a href="https://twitter.com/brakemanscanner">@BrakemanScanner</a>.</p>
-
-<p>Lastly, there is this new website. Look forward to tutorials and more in-depth information about how to use Brakeman effectively.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
+    
+      <a class="prev" href="/blog/page/9/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -662,7 +873,7 @@ end
     (function () {
       var s = document.createElement('script'); s.async = true;
       s.type = 'text/javascript';
-      s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+      s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
     }());
 </script>
@@ -692,11 +903,19 @@ end
     });
 </script>
 <div id="github"></div>
-<a href="http://travis-ci.org/#!/presidentbeef/brakeman"><img src="https://secure.travis-ci.org/presidentbeef/brakeman.png" /></a>
+<a href="https://travis-ci.org/#!/presidentbeef/brakeman"><img src="https://secure.travis-ci.org/presidentbeef/brakeman.png" /></a>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/09/25/brakeman-4-dot-0-released/">Brakeman 4.0 Released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/08/15/brakeman-3-dot-7-1-released/">Brakeman 3.7.1/3.7.2 Released</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2017/06/29/brakeman-3-dot-7-0-released/">Brakeman 3.7.0 Released</a>
@@ -708,14 +927,6 @@ end
     
       <li class="post">
         <a href="/blog/2017/03/24/brakeman-3-dot-6-1-released/">Brakeman 3.6.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/03/22/brakeman-3-dot-6-0-released/">Brakeman 3.6.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/01/31/brakeman-3-dot-5-0-released/">Brakeman 3.5.0 Released</a>
       </li>
     
   </ul>

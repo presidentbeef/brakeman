@@ -20,21 +20,21 @@
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="http://s3.amazonaws.com/ender-js/jeesh.min.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/atom.xml" rel="alternate" title="Brakeman - Rails Security Scanner" type="application/atom+xml"/>
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-12578396-3']);
-    _gaq.push(['_trackPageview']);
+<!--second website-->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
+ga('create', 'UA-57927555-1', 'auto', {'allowLinker': true});
+ga('create', 'UA-12578396-3', 'auto','cdt');
+ga('require', 'linker');
+ga('linker:autoLink', ['brakemanpro.com'] );
+ga('send', 'pageview');
+ga('cdt.send', 'pageview');
+
+</script>
 
 
   
@@ -53,16 +53,16 @@
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      twitterWidgets.src = 'https://platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>
 
 
   <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
-<script language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
+<link href='https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<script language="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
 <script src="/javascripts/jquery.github_badge.js"></script>
 <meta property="twitter:account_id" content="23978537" />
 
@@ -81,7 +81,7 @@
   <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
   
 </ul>
-<form action="http://google.com/search" method="get">
+<form action="https://google.com/search" method="get">
   <fieldset role="site-search">
     <input type="hidden" name="q" value="site:brakemanscanner.org" />
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
@@ -164,11 +164,19 @@ as a user ID. If the ID matches an existing account, the attacker will now have 
     });
 </script>
 <div id="github"></div>
-<a href="http://travis-ci.org/#!/presidentbeef/brakeman"><img src="https://secure.travis-ci.org/presidentbeef/brakeman.png" /></a>
+<a href="https://travis-ci.org/#!/presidentbeef/brakeman"><img src="https://secure.travis-ci.org/presidentbeef/brakeman.png" /></a>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/09/25/brakeman-4-dot-0-released/">Brakeman 4.0 Released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/08/15/brakeman-3-dot-7-1-released/">Brakeman 3.7.1/3.7.2 Released</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2017/06/29/brakeman-3-dot-7-0-released/">Brakeman 3.7.0 Released</a>
@@ -180,14 +188,6 @@ as a user ID. If the ID matches an existing account, the attacker will now have 
     
       <li class="post">
         <a href="/blog/2017/03/24/brakeman-3-dot-6-1-released/">Brakeman 3.6.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/03/22/brakeman-3-dot-6-0-released/">Brakeman 3.6.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/01/31/brakeman-3-dot-5-0-released/">Brakeman 3.5.0 Released</a>
       </li>
     
   </ul>
