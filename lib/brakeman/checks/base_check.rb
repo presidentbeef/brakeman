@@ -445,39 +445,14 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     false
   end
 
-  #Returns true if low_version <= RAILS_VERSION <= high_version
-  #
-  #If the Rails version is unknown, returns false.
-  def version_between? low_version, high_version, current_version = nil
-    current_version ||= rails_version
-    return false unless current_version
-
-    version = current_version.split(".").map! { |n| n.to_i }
-    low_version = low_version.split(".").map! { |n| n.to_i }
-    high_version = high_version.split(".").map! { |n| n.to_i }
-
-    version.each_with_index do |v, i|
-      if v < low_version.fetch(i, 0)
-        return false
-      elsif v > low_version.fetch(i, 0)
-        break
-      end
-    end
-
-    version.each_with_index do |v, i|
-      if v > high_version.fetch(i, 0)
-        return false
-      elsif v < high_version.fetch(i, 0)
-        break
-      end
-    end
-
-    true
-  end
-
   def lts_version? version
     tracker.config.has_gem? :'railslts-version' and
     version_between? version, "2.3.18.99", tracker.config.gem_version(:'railslts-version')
+  end
+
+
+  def version_between? low_version, high_version, current_version = nil
+    tracker.config.version_between? low_version, high_version, current_version
   end
 
   def gemfile_or_environment gem_name = :rails

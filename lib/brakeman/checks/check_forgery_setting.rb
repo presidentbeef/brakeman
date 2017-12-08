@@ -10,6 +10,8 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
   @description = "Verifies that protect_from_forgery is enabled in direct subclasses of ActionController::Base"
 
   def run_check
+    return if tracker.config.default_protect_from_forgery?
+
     tracker.controllers
     .select { |_, controller| controller.parent == :"ActionController::Base" }
     .each do |name, controller|

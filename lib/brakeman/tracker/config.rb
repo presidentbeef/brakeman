@@ -24,6 +24,20 @@ module Brakeman
         @rails[:action_controller][:allow_forgery_protection] == Sexp.new(:false)
     end
 
+    def default_protect_from_forgery?
+      if version_between? "5.2.0", "9.9.9"
+        if @rails[:action_controller] and
+            @rails[:action_controller][:default_protect_from_forgery] == Sexp.new(:false)
+
+          return false
+        else
+          return true
+        end
+      end
+
+      false
+    end
+
     def erubis?
       @erubis
     end
@@ -99,6 +113,36 @@ module Brakeman
       if version =~ /(\d+\.\d+\.\d+)/
         self.ruby_version = $1
       end
+    end
+
+    #Returns true if low_version <= RAILS_VERSION <= high_version
+    #
+    #If the Rails version is unknown, returns false.
+    def version_between? low_version, high_version, current_version = nil
+      current_version ||= rails_version
+      return false unless current_version
+
+      version = current_version.split(".").map!(&:to_i)
+      low_version = low_version.split(".").map!(&:to_i)
+      high_version = high_version.split(".").map!(&:to_i)
+
+      version.each_with_index do |v, i|
+        if v < low_version.fetch(i, 0)
+          return false
+        elsif v > low_version.fetch(i, 0)
+          break
+        end
+      end
+
+      version.each_with_index do |v, i|
+        if v > high_version.fetch(i, 0)
+          return false
+        elsif v < high_version.fetch(i, 0)
+          break
+        end
+      end
+
+      true
     end
 
     def session_settings
