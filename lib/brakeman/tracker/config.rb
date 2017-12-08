@@ -101,6 +101,36 @@ module Brakeman
       end
     end
 
+    #Returns true if low_version <= RAILS_VERSION <= high_version
+    #
+    #If the Rails version is unknown, returns false.
+    def version_between? low_version, high_version, current_version = nil
+      current_version ||= rails_version
+      return false unless current_version
+
+      version = current_version.split(".").map!(&:to_i)
+      low_version = low_version.split(".").map!(&:to_i)
+      high_version = high_version.split(".").map!(&:to_i)
+
+      version.each_with_index do |v, i|
+        if v < low_version.fetch(i, 0)
+          return false
+        elsif v > low_version.fetch(i, 0)
+          break
+        end
+      end
+
+      version.each_with_index do |v, i|
+        if v > high_version.fetch(i, 0)
+          return false
+        elsif v < high_version.fetch(i, 0)
+          break
+        end
+      end
+
+      true
+    end
+
     def session_settings
       @rails[:action_controller] &&
         @rails[:action_controller][:session]
