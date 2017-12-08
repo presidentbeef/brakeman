@@ -2,8 +2,8 @@
 [![Brakeman Pro Logo](https://brakemanpro.com/images/bmp_square_white.png)](https://brakemanpro.com)
 
 [![Build Status](https://travis-ci.org/presidentbeef/brakeman.svg?branch=master)](https://travis-ci.org/presidentbeef/brakeman)
-[![Code Climate](https://codeclimate.com/github/presidentbeef/brakeman/badges/gpa.svg)](https://codeclimate.com/github/presidentbeef/brakeman)
-[![Test Coverage](https://codeclimate.com/github/presidentbeef/brakeman/badges/coverage.svg)](https://codeclimate.com/github/presidentbeef/brakeman/coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/1b08a5c74695cb0d11ec/maintainability)](https://codeclimate.com/github/presidentbeef/brakeman/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/1b08a5c74695cb0d11ec/test_coverage)](https://codeclimate.com/github/presidentbeef/brakeman/test_coverage)
 [![Gitter](https://badges.gitter.im/presidentbeef/brakeman.svg)](https://gitter.im/presidentbeef/brakeman)
 
 # Brakeman
