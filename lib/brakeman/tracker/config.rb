@@ -24,6 +24,20 @@ module Brakeman
         @rails[:action_controller][:allow_forgery_protection] == Sexp.new(:false)
     end
 
+    def default_protect_from_forgery?
+      if version_between? "5.2.0", "9.9.9"
+        if @rails[:action_controller] and
+            @rails[:action_controller][:default_protect_from_forgery] == Sexp.new(:false)
+
+          return false
+        else
+          return true
+        end
+      end
+
+      false
+    end
+
     def erubis?
       @erubis
     end
