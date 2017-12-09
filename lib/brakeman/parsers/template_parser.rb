@@ -37,10 +37,6 @@ module Brakeman
         end
       rescue Racc::ParseError => e
         tracker.error e, "Could not parse #{path}"
-      rescue Haml::Error => e
-        tracker.error e, ["While compiling HAML in #{path}"] << e.backtrace
-      rescue Sass::SyntaxError => e
-        tracker.error e, "While processing #{path}"
       rescue StandardError, LoadError => e
         tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
       end
@@ -80,6 +76,12 @@ module Brakeman
       Haml::Engine.new(text,
                        :filename => path,
                        :escape_html => tracker.config.escape_html?).precompiled.gsub(/([^\\])\\n/, '\1')
+    rescue Haml::Error => e
+      tracker.error e, ["While compiling HAML in #{path}"] << e.backtrace
+      nil
+    rescue Sass::SyntaxError => e
+      tracker.error e, "While processing #{path}"
+      nil
     end
 
     def parse_slim path, text
