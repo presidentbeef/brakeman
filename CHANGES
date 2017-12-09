@@ -1,5 +1,12 @@
 # Unreleased
 
+* Process models as root sexp instead of each sexp
+* Avoid CSRF warning in Rails 5.2 default config
+* Show better location for Sass errors (Andrew Bromwich)
+* Warn about dynamic values in `Arel.sql`
+* Fix `include_paths` for Code Climate engine (Will Fleming)
+* Add check for dangerous keys in `permit`
+* Try to guess options for `less` pager
 * Better processing of op_asgn1 (e.g. x[:y] += 1)
 * Add optional check for divide by zero
 * Remove errors about divide by zero
@@ -10,7 +17,7 @@
 * Handle nested destructuring/multiple assignment
 * Leave results on screen after paging
 * Do not page if results fit on screen
-* Support "app_path" configuration for Code Climate engine (Noah Davis)
+* Support `app_path` configuration for Code Climate engine (Noah Davis)
 * Refactor Code Climate engine options parsing (Noah Davis)
 * Fix upgrade version for CVE-2016-6316
 
