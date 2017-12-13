@@ -1,4 +1,4 @@
-# Unreleased
+# 4.1.0
 
 * Process models as root sexp instead of each sexp
 * Avoid CSRF warning in Rails 5.2 default config
