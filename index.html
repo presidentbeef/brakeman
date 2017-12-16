@@ -109,6 +109,155 @@ ga('cdt.send', 'pageview');
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2017/12/12/brakeman-4-dot-1-0-released/">Brakeman 4.1.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2017-12-12 18:01:00 -0800" pubdate  updated >Dec 12<span>th</span>, 2017</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Wow, it has been <em>too</em> long since the last release!</p>
+
+<p>Happy December!</p>
+
+<p><em>Changes since 4.0.1:</em></p>
+
+<ul>
+<li>Add check for dangerous keys in <code>permit</code></li>
+<li>Add optional check for divide by zero</li>
+<li>Remove errors about divide by zero</li>
+<li>Warn about dynamic values in <code>Arel.sql</code></li>
+<li>Show better location for Sass errors (<a href="https://github.com/abrom">Andrew Bromwich</a>)</li>
+<li>Avoid warning about file access for temp files (<a href="https://github.com/presidentbeef/brakeman/issues/1110">#1110</a>)</li>
+<li>Avoid CSRF warning in Rails 5.2 default config (<a href="https://github.com/presidentbeef/brakeman/issues/1132">#1132</a>)</li>
+<li>Better processing of <code>op_asgn1</code> (e.g. <code>x[:y] += 1</code>) (<a href="https://github.com/presidentbeef/brakeman/issues/1103">#1103</a>)</li>
+<li>Handle nested destructuring/multiple assignment</li>
+<li>Do not warn on <code>params.permit</code> with safe values (<a href="https://github.com/presidentbeef/brakeman/issues/1000">#1000</a>)</li>
+<li>Use HTTPS for warning links</li>
+<li>Try to guess options for <code>less</code> pager (<a href="https://github.com/presidentbeef/brakeman/issues/1118">#1118</a>)</li>
+<li>Do not page if results fit on screen</li>
+<li>Leave results on screen after paging</li>
+<li>Fix upgrade version for CVE-2016-6316</li>
+<li>Fix <code>include_paths</code> for Code Climate engine (<a href="https://github.com/wfleming">Will Fleming</a>)</li>
+<li>Support <code>app_path</code> configuration for Code Climate engine (<a href="https://github.com/noahd1">Noah Davis</a>)</li>
+<li>Refactor Code Climate engine options parsing (<a href="https://github.com/noahd1">Noah Davis</a>)</li>
+</ul>
+
+
+<h3>New Check for Dangerous Permit Keys</h3>
+
+<p>Very similar to warning about potentially dangerous keys in <code>attr_accessible</code>, Brakeman now warns about potentially dangerous keys whitelisted for mass assignment via <code>params.permit</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1128">changes</a>)</p>
+
+<h3>New Optional Check for Division by Zero</h3>
+
+<p>Previously, Brakeman would report errors when it encountered potential division by zero. Now, it optionally reports warnings instead.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1122">changes</a>)</p>
+
+<h3>Arel.sql</h3>
+
+<p><code>Arel.sql</code> allows one to add raw SQL to queries. Brakeman now warns about potential SQL injection when using <code>Arel.sql</code> with dynamic values.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1129">changes</a>)</p>
+
+<h3>Sass Error Locations</h3>
+
+<p>Thanks to <a href="https://github.com/abrom">Andrew</a>, Brakeman now reports actual file names for errors involving Sass.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1133">changes</a>)</p>
+
+<h3>Temp Files</h3>
+
+<p>Brakeman no longer warns about file access with <code>params[:blah].tempfile.path</code> or <code>params[:blah].path</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1121">changes</a>)</p>
+
+<h3>Rails 5.2 CSRF Configuration</h3>
+
+<p>In Rails 5.2, CSRF protection is enabled by default. Brakeman will now respect this.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1138">changes</a>)</p>
+
+<h3>Attribute Combination Assignment</h3>
+
+<p>This release handles code like <code>x[:y] += 1</code> better. Previously, it would not update the value for <code>x[:y]</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1123">changes</a>)</p>
+
+<h3>Nested Destructuring</h3>
+
+<p>Brakeman now can handle nested multiple assignment, like <code>x, (a, b), y = z</code>, assuming <code>z</code> is known to be an array.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1113">changes</a>)</p>
+
+<h3>Pager Updates</h3>
+
+<p>The default pager (<code>less</code>) now leaves the output in the terminal after exiting and now exits immediately if the output fits on the screen.</p>
+
+<p>Additionally, Brakeman attempts to detect if these options are actually supported by <code>less</code> before using them.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1112">changes</a> and <a href="https://github.com/presidentbeef/brakeman/pull/1120">here</a>)</p>
+
+<h3>CVE-2016-6316</h3>
+
+<p>In case this one was keeping you up at night, Brakeman now reports the correct upgrade version for CVE-2016-6316.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1105">changes</a>)</p>
+
+<h3>HTTPS for Warning Links</h3>
+
+<p>Links to brakemanscanner.org in reports are now HTTPS! Only makes sense.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1114">changes</a>)</p>
+
+<h3>Code Climate Updates</h3>
+
+<p>The Brakeman engine on <a href="https://docs.codeclimate.com/docs/brakeman">Code Climate</a> now supports <code>app_path</code> and <code>include_paths</code>, together.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1126">changes</a>)</p>
+
+<h3>Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<pre><code>1dd62ee8aa872acf5d0aace6dc0745b55c78da68640f04754bf11c12a58842bf  brakeman-4.1.0.gem
+a16bd3082223655f132ff4c601f5d1930290082116fc256c5c1e652ff3ba933a  brakeman-lib-4.1.0.gem
+29d9be77b06195675e6b803141da979438983c0970c182fe8b8ccf3145ecda9f  brakeman-min-4.1.0.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release.</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
+<p>If you find Brakeman valuable and want to support its development (and get more features!), check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2017/09/25/brakeman-4-dot-0-released/">Brakeman 4.0 Released!</a></h1>
     
     
@@ -1093,92 +1242,6 @@ e3d61c1de5549984a0d9eb3a3a53a4ef17b1b41db1be7d504237dd05a0cfa203  brakeman-lib-3
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2016/08/12/brakeman-3-dot-3-4-released/">Brakeman 3.3.4/3.3.5 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2016-08-12 08:26:00 -0700" pubdate  updated >Aug 12<span>th</span>, 2016</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a quick release to add warnings for <a href="https://groups.google.com/d/msg/ruby-security-ann/8B2iV2tPRSE/JkjCJkSoCgAJ">CVE-2016-6316</a> and <a href="https://groups.google.com/d/msg/ruby-security-ann/WccgKSKiPZA/9DrsDVSoCgAJ">CVE-2016-6317</a>. There was a bug in 3.3.4 that affected debug output which has been fixed in 3.3.5.</p>
-
-<p><em>Changes since 3.3.3</em>:</p>
-
-<ul>
-<li>Add generic warning for CVE-2016-6316</li>
-<li>Warn about dangerous use of <code>content_tag</code> with CVE-2016-6316</li>
-<li>Add warning for CVE-2016-6317</li>
-<li>Use Minitest</li>
-</ul>
-
-
-<p><em>Changes since 3.3.4</em>:</p>
-
-<ul>
-<li>Fix bug in reports when using <code>--debug</code></li>
-</ul>
-
-
-<h3>CVE-2016-6316</h3>
-
-<p>Typically Rails will escape attribute values passed to tag helpers like <code>content_tag</code>. If the attribute has already been marked as &#8220;safe&#8221; with <code>.html_safe</code> or (more likely) a different escaping helper like <code>sanitize</code>, the tag helper will not escape the value again (that is the purpose of <code>.html_safe</code>). However, not all sanitizers/escape methods escape double quotes, which are dangerous inside of tag attributes. In particular, double quotes allow an attacker to close the current attribute and insert new attributes (like <code>onmouseover</code>) that can execute JavaScript.</p>
-
-<p>Brakeman will issue a generic warning about CVE-2016-6316 for affected versions and may generate warnings for potentially dangerous calls to <code>content_tag</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/917">changes</a>)</p>
-
-<h3>CVE-2016-6317</h3>
-
-<p>The <a href="https://groups.google.com/d/msg/rubyonrails-security/8SA-M3as7A8/Mr9fi9X4kNgJ">JSON bug</a> is back. Specially-crafted queries can cause parameters to be interpreted as empty hashes, which may cause unexpected behavior in SQL queries.</p>
-
-<p>Brakeman will generate a generic warning for affected versions (4.2 series).</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/918">changes</a>)</p>
-
-<h3>Minitest</h3>
-
-<p>Unrelated, Brakeman now uses Minitest instead of test-unit.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/912/">changes</a>)</p>
-
-<h3>SHAs</h3>
-
-<p>The SHA256 sums for this release are</p>
-
-<pre><code>7231e00bdb4353ee7e91e5f1e60e34cf29b5563e6f7e1e5478223e72568c493a  brakeman-3.3.5.gem
-c07e282c2e1733f8d7db4a4ffefe22e7e38a62ddfd750f0866c0b49070cb61c9  brakeman-lib-3.3.5.gem
-a7f8e6fa8eb4254b7ad17080180289794a02641b1f2ec362de57cfdb2f1535be  brakeman-min-3.3.5.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs.</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1231,6 +1294,10 @@ a7f8e6fa8eb4254b7ad17080180289794a02641b1f2ec362de57cfdb2f1535be  brakeman-min-3
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/12/12/brakeman-4-dot-1-0-released/">Brakeman 4.1.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/09/25/brakeman-4-dot-0-released/">Brakeman 4.0 Released!</a>
       </li>
     
@@ -1244,10 +1311,6 @@ a7f8e6fa8eb4254b7ad17080180289794a02641b1f2ec362de57cfdb2f1535be  brakeman-min-3
     
       <li class="post">
         <a href="/blog/2017/05/19/brakeman-3-dot-6-2-released/">Brakeman 3.6.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/03/24/brakeman-3-dot-6-1-released/">Brakeman 3.6.1 Released</a>
       </li>
     
   </ul>

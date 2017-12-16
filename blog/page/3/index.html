@@ -109,6 +109,134 @@ ga('cdt.send', 'pageview');
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2015/10/28/brakeman-3-dot-1-2-released/">Brakeman 3.1.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2015-10-28 15:59:00 -0700" pubdate  updated >Oct 28<span>th</span>, 2015</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release is mostly bug fixes and false positive reduction. However, please note fingerprints for inline render warnings will change.</p>
+
+<p><em>Changes since 3.1.1</em>:</p>
+
+<ul>
+<li>Sortable tables in HTML report (David Lanner)</li>
+<li>Add line numbers to class-level warnings</li>
+<li>Warn on SQL query keys, not values in hashes (<a href="https://github.com/presidentbeef/brakeman/issues/738">#738</a>)</li>
+<li>Set user input value for inline renders</li>
+<li>Avoid warning on inline renders with safe content types</li>
+<li>Treat <code>current_user</code> like a model (<a href="https://github.com/presidentbeef/brakeman/issues/744">#744</a>)</li>
+<li>Avoid warning about model <code>find/find_by*</code> in hrefs</li>
+<li>Handle <code>private def ...</code></li>
+<li>Handle empty interpolation in HAML filters (<a href="https://github.com/presidentbeef/brakeman/issues/732">#732</a>)</li>
+<li>Catch divide-by-zero in alias processing (<a href="https://github.com/presidentbeef/brakeman/issues/729">#729</a>)</li>
+<li>Ignore filters that are not method names</li>
+<li>Search for config file relative to application root</li>
+<li>Use SafeYAML to load configuration files</li>
+<li>Allow inspection of recursive Sexps</li>
+<li>Reduce string allocations in <code>Warning#initialize</code></li>
+</ul>
+
+
+<h3>Sortable Tables</h3>
+
+<p><a href="https://github.com/dlanner">David Lanner</a> added the ability to sort tables in the HTML report by clicking on the column headers.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/726">changes</a>)</p>
+
+<h3>Line Numbers for Class Warnings</h3>
+
+<p>When warning about an entire class (like a model missing <code>attr_accessible</code>), the warning line number will point to the beginning of the class.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/733">changes</a>)</p>
+
+<h3>SQL Query Hashes</h3>
+
+<p>A long-standing bug in Brakeman caused it to warn about values in query hashes (e.g., <code>User.where(:x =&gt; params[:x])</code>) when it was intended to warn about user input in the <em>keys</em>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/740">changes</a>)</p>
+
+<h3>Inline Renders</h3>
+
+<p>Brakeman will now report the <code>render</code> call as the <code>code</code> value and the user input as <code>user_input</code>. Please note the code will look a little different from what Brakeman reports, as render calls are turned into a slightly different AST node internally. This will definitely change fingerprints for these warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/751">changes</a>)</p>
+
+<h3>current_user</h3>
+
+<p>In a couple places, Brakeman will treat <code>current_user</code> like a model instance, which it almost always is. This will probably be expanded in future releases.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/749">changes</a>)</p>
+
+<h3>Inline Privates</h3>
+
+<p>Calls to <code>private</code> using the return value of <code>def</code> will now work properly:</p>
+
+<pre><code>private def secret_stuff
+# ...
+end
+</code></pre>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/731">changes</a>)</p>
+
+<h3>Empty HAML Interpolation</h3>
+
+<p>Empty HAML interpolation inside of filters will no longer cause crashes and will be handled properly.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/750">changes</a>)</p>
+
+<h3>Divide-by-Zero</h3>
+
+<p>Brakeman sometimes divides by zero when it performs simple arithmetic during constant folding. While this is now reported as an error (and used to be, too), someday it should be a warning instead.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/730">changes</a>)</p>
+
+<h3>Config File Changes</h3>
+
+<p>When looking for the <code>config/brakeman.yml</code> configuration file, Brakeman will now look relative to the application path instead of the working directory.</p>
+
+<p>Additionally, the <code>SafeYAML</code> gem is used to prevent code execution for those running Brakeman against untrusted code.</p>
+
+<p>(changes <a href="https://github.com/presidentbeef/brakeman/pull/725">here</a> and <a href="https://github.com/presidentbeef/brakeman/pull/741">here</a>)</p>
+
+<h3>SHAs</h3>
+
+<p>The SHA256 sums for this release are</p>
+
+<pre><code>c01f07ccc2490d0421e5974499c57f519aa371bfab5d25ba3b224e7ae9e2c415  brakeman-3.1.2.gem
+d820c872cbe7bc8452c9bd8bd46d990ff1c0d53ee621c09f1997270fc978f783  brakeman-min-3.1.2.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs fixed in this release.</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter, joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>, or hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2015/09/23/brakeman-3-dot-1-1-released/">Brakeman 3.1.1 Released</a></h1>
     
     
@@ -1161,102 +1289,6 @@ b5cefd6f14edb57f12d1fe9fcc0fb24e05a05aaf  brakeman-min-3.0.0.gem
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2014/08/27/brakeman-is-four-years-old/">Brakeman Is Four Years Old!</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2014-08-27 02:41:00 -0700" pubdate  updated >Aug 27<span>th</span>, 2014</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Brakeman was first <a href="https://github.com/presidentbeef/brakeman/commit/cd1663fb22bbe2e1097bac8f9ee96fcdadc07fd2">publicly released</a> four years ago today!</p>
-
-<p>In those four years, Brakeman has gradually become a widely-used static analysis security tool for Ruby on Rails, leaving other web frameworks jealous.</p>
-
-<blockquote class="twitter-tweet" lang="en"><p>Is there something like Rails’ brakeman gem (automated security checks) for Django?</p>&mdash; Fabio Akita (@AkitaOnRails) <a href="https://twitter.com/AkitaOnRails/statuses/409037162987155457">December 6, 2013</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-
-
-<blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/nodesecurity">@nodesecurity</a> do you know of an equivalent module in <a href="https://twitter.com/hashtag/nodejs?src=hash">#nodejs</a> to the <a href="https://twitter.com/brakeman">@brakeman</a> gem?</p>&mdash; Erik Isaksen (@eisaksen) <a href="https://twitter.com/eisaksen/statuses/423965742883950592">January 16, 2014</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-
-
-<blockquote class="twitter-tweet" lang="en"><p>Is there something like <a href="https://twitter.com/brakeman">@brakeman</a> that would check security of an Ubuntu server? /cc <a href="https://twitter.com/roidrage">@roidrage</a> <a href="https://twitter.com/zuzur">@zuzur</a> <a href="https://twitter.com/envygeeks">@envygeeks</a> <a href="https://twitter.com/postmodern_mod3">@postmodern_mod3</a> <a href="https://twitter.com/gcouprie">@gcouprie</a></p>&mdash; Thibaut Barrère (@thibaut_barrere) <a href="https://twitter.com/thibaut_barrere/statuses/302394306277285889">February 15, 2013</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<p>Brakeman is used in all kinds of organizations, from hobby projects to open source applications to start-ups to large corporations. If your organization uses Brakeman, <a href="http://brakemanscanner.org/brakeman_users/">please consider being listed</a>!</p>
-
-<blockquote class="twitter-tweet" lang="en"><p>congrats to the @brakemanscanner project on their 1.0 release today, we appreciate your work within <a href="https://twitter.com/twitter">@twitter</a> <a href="http://t.co/SHjQM5k2">http://t.co/SHjQM5k2</a></p>&mdash; Twitter Open Source (@TwitterOSS) <a href="https://twitter.com/TwitterOSS/statuses/144865822941265920">December 8, 2011</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<p>Brakeman also helps power <a href="https://github.com/presidentbeef/brakeman/wiki/Brakeman-as-a-Service">several SaaS offerings</a>!</p>
-
-<blockquote class="twitter-tweet" lang="en"><p>Rails Security Monitor is powered by <a href="https://twitter.com/brakeman">@brakeman</a> which we &lt;3 and contribute to. We hope fans Brakeman fans will like it: <a href="http://t.co/2yI8S20l">http://t.co/2yI8S20l</a></p>&mdash; Bryan Helmkamp (@brynary) <a href="https://twitter.com/brynary/statuses/301070119176642560">February 11, 2013</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<p>Did you know Brakeman even won a Ruby award?</p>
-
-<blockquote class="twitter-tweet" lang="en"><p>Thanks <a href="https://twitter.com/yukihiro_matz">@yukihiro_matz</a> and other judges! This is an awesome trophy and I&#39;m honored to receive it. <a href="http://t.co/Dz1W8b1qof">pic.twitter.com/Dz1W8b1qof</a></p>&mdash; Justin Collins (@presidentbeef) <a href="https://twitter.com/presidentbeef/statuses/321756142449598464">April 9, 2013</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<p>Because Brakeman is so old, it still supports Rails 2.3 (2009!) and Ruby 1.8.7 (2008!) while usually adding support for new releases fairly quickly, making it useful for nearly any Rails application. If it doesn&#8217;t work for you - <a href="https://github.com/presidentbeef/brakeman/issues">please file an issue</a>!</p>
-
-<p>Many thanks to the many people who have contributed to Brakeman. All contributions - patches, bug reports, documentation updates, promoting Brakeman, or even just asking questions - are sincerely appreciated. Lots of gratitude to the open source projects underlying Brakeman and their maintainers, especially <a href="https://twitter.com/the_zenspider">Ryan Davis</a>. And a big thank you to the companies who have funded Brakeman&#8217;s development!</p>
-
-<ul>
-<li>4 years</li>
-<li>39 contributors</li>
-<li>69 releases</li>
-<li>181 closed issues</li>
-<li>2,043 commits</li>
-<li>700,000+ gem downloads</li>
-</ul>
-
-
-<p>Here’s to four more years?</p>
-
-<p><em>By the way - stickers have returned! Send your name and address (yes, international is fine) to <a href='mail&#116;o&#58;st%69&#99;&#107;%65&#37;72s&#64;bra&#107;&#101;&#109;&#97;&#37;&#54;&#69;&#46;or&#103;'>stic&#107;ers&#64;brakeman&#46;org</a>.</em></p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1311,6 +1343,10 @@ b5cefd6f14edb57f12d1fe9fcc0fb24e05a05aaf  brakeman-min-3.0.0.gem
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/12/12/brakeman-4-dot-1-0-released/">Brakeman 4.1.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/09/25/brakeman-4-dot-0-released/">Brakeman 4.0 Released!</a>
       </li>
     
@@ -1324,10 +1360,6 @@ b5cefd6f14edb57f12d1fe9fcc0fb24e05a05aaf  brakeman-min-3.0.0.gem
     
       <li class="post">
         <a href="/blog/2017/05/19/brakeman-3-dot-6-2-released/">Brakeman 3.6.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/03/24/brakeman-3-dot-6-1-released/">Brakeman 3.6.1 Released</a>
       </li>
     
   </ul>

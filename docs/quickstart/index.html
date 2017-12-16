@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Brakeman 0.9.0 Released</title>
+  <title>Brakeman - Rails Security Scanner: Quickstart</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/blog/2011/11/16/brakeman-0-dot-9-0-released/"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/quickstart/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -101,117 +101,46 @@ ga('cdt.send', 'pageview');
   <div id="main">
     <div id="content">
       <div>
-<article class="hentry">
+<article>
   
   <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-      <h1 class="entry-title">Brakeman 0.9.0 Released</h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-11-16 16:23:00 -0800" pubdate  updated >Nov 16<span>th</span>, 2011</time>
-
-
-</p>
-    
+    <h1 class="entry-title">Quickstart</h1>
   </header>
+  
+  <p>The fastest way to get started with Brakeman is to simply install and run:</p>
 
+<pre><code>gem install brakeman
 
-<div class="entry-content"><p>Changes:</p>
-
-<ul>
-<li>Process Rails 3 configuration files</li>
-<li>Check for config.active_record.whitelist_attributes = true</li>
-<li>Always produce a warning for without_protection => true</li>
-<li>Fix CSV output</li>
-</ul>
-
-
-<p>This is just a small release on the way to 1.0.</p>
-
-<h3>Rails 3 Configs</h3>
-
-<p>Configurations in <code>config/application</code> and <code>config/environments/production.rb</code> will now be parsed.</p>
-
-<h3>Check for Disabled Mass Assignment</h3>
-
-<p>A new option was added in Rails 3.1 to globally disable mass assignment using <code>config.active_record.whitelist_attributes = true</code>. Brakeman will now turn off mass assignment warnings if this configuration setting is detected.</p>
-
-<h3>Always Warn on without_protection</h3>
-
-<p>Rails 3.1 adds a way to bypass attribute protection when doing mass assignment.</p>
-
-<p>For example:</p>
-
-<pre><code>User.new(params, :without_protection =&gt; true)
+brakeman your/rails_app/
 </code></pre>
 
-<p>Brakeman will now <em>always</em> warn when <code>without_protection</code> is used, even if mass assignment is disabled or attributes are protected on that model.</p>
+<p>If you are in the root of your application, you can just run</p>
 
-<h3>Fix CSV Output</h3>
+<pre><code>brakeman
+</code></pre>
 
-<p>Brakeman reports using the CSV format should work once again.</p>
+<p>This will output a report directory to STDOUT.</p>
 
-<p>There is a bug in Ruport when using Ruby 1.9.2 and CSV output. A temporary patch has been added until this is resolved.</p>
-</div>
+<h3>With Bundler</h3>
 
+<p>You may include Brakeman in your Gemfile - but make sure to update it regularly!</p>
 
-  <footer>
-    <p class="meta">
-      
+<pre><code>gem "brakeman"
+</code></pre>
+
+<p><em>The default Brakeman gem vendors all its dependencies and should be safe to include in your Gemfile.</em></p>
+
+<h3>Additional Report Formats</h3>
+
   
-
-<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
-
-      
-
-
-
-
-<time datetime="2011-11-16 16:23:00 -0800" pubdate  updated >Nov 16<span>th</span>, 2011</time>
-
-
-
-      
-
-
-    </p>
-    
-      <div class="sharing">
+    <footer>
+      <p class="meta">
+        
+        
+      </p>
+    </footer>
   
-  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2011/11/16/brakeman-0-dot-9-0-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2011/11/16/brakeman-0-dot-9-0-released/" >Tweet</a>
-  
-  
-  <g:plusone size="medium"></g:plusone>
-  
-</div>
-
-    
-  </footer>
 </article>
-
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread"><div id="disqus_thread"></div>
-<script type="text/javascript">
-  var disqus_shortname = 'brakeman';
-  var disqus_identifier = 'http://brakemanscanner.org/blog/2011/11/16/brakeman-0-dot-9-0-released/';
-  var disqus_url = 'http://brakemanscanner.org/blog/2011/11/16/brakeman-0-dot-9-0-released/';
-  //var disqus_developer = 1;
-  (function() {
-    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-    dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-  </section>
 
 </div>
 
