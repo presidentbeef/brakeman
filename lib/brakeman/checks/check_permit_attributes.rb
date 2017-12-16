@@ -19,6 +19,8 @@ class Brakeman::CheckPermitAttributes < Brakeman::BaseCheck
   end
 
   def check_permit result
+    return unless original? result
+
     call = result[:call]
 
     call.each_arg do |arg|

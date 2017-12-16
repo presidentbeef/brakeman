@@ -12,6 +12,8 @@ class Brakeman::CheckDivideByZero < Brakeman::BaseCheck
   end
 
   def check_division result
+    return unless original? result
+
     call = result[:call]
 
     denominator = call.first_arg
