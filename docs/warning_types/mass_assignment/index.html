@@ -114,7 +114,10 @@ ga('cdt.send', 'pageview');
 <pre><code>User.new(params[:user])
 </code></pre>
 
-<p>Unfortunately, if there is a user field called <code>admin</code> which controls administrator access, now any user can make themselves an administrator.</p>
+<p>Unfortunately, if there is a user field called <code>admin</code> which controls administrator access, now any user can make themselves an administrator with a query like</p>
+
+<pre><code>?user[admin]=true
+</code></pre>
 
 <h3>Rails With Strong Parameters</h3>
 
@@ -124,7 +127,9 @@ ga('cdt.send', 'pageview');
 
 <p>   User.new(params.permit(:name, :password))</p>
 
-<p>Care should be taken to only whitelist values that are safe for a user (or attacker) to set. Brakeman will warn on potentially dangerous attributes that are whitelisted.</p>
+<p>Care should be taken to only whitelist values that are safe for a user (or attacker) to set. Foreign keys such as <code>account_id</code> are likely unsafe, allowing an attacker to manipulate records belonging to other accounts.</p>
+
+<p>Brakeman will warn on potentially dangerous attributes that are whitelisted.</p>
 
 <p>Brakeman will also warn about uses of <code>params.permit!</code>, since that allows everything.</p>
 
