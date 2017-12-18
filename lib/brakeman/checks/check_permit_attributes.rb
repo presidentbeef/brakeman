@@ -27,8 +27,6 @@ class Brakeman::CheckPermitAttributes < Brakeman::BaseCheck
       if symbol? arg
         if SUSPICIOUS_KEYS.key? arg.value
           warn_on_permit_key result, arg
-        elsif arg.value.match /_id$/
-          warn_on_permit_key result, arg, :medium
         end
       end
     end
