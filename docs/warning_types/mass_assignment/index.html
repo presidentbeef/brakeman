@@ -114,9 +114,29 @@ ga('cdt.send', 'pageview');
 <pre><code>User.new(params[:user])
 </code></pre>
 
-<p>Unfortunately, if there is a user field called <code>admin</code> which controls administrator access, now any user can make themselves an administrator.</p>
+<p>Unfortunately, if there is a user field called <code>admin</code> which controls administrator access, now any user can make themselves an administrator with a query like</p>
 
-<p><code>attr_accessible</code> and <code>attr_protected</code> can be used to limit mass assignment. However, Brakeman will warn unless <code>attr_accessible</code> is used, or mass assignment is completely disabled.</p>
+<pre><code>?user[admin]=true
+</code></pre>
+
+<h3>Rails With Strong Parameters</h3>
+
+<p>In Rails 4 and newer, protection for mass assignment is on by default.</p>
+
+<p>Query parameters must be explicitly whitelisted via <code>permit</code> in order to be used in mass assignment:</p>
+
+<p>   User.new(params.permit(:name, :password))</p>
+
+<p>Care should be taken to only whitelist values that are safe for a user (or attacker) to set. Foreign keys such as <code>account_id</code> are likely unsafe, allowing an attacker to manipulate records belonging to other accounts.</p>
+
+<p>Brakeman will warn on potentially dangerous attributes that are whitelisted.</p>
+
+<p>Brakeman will also warn about uses of <code>params.permit!</code>, since that allows everything.</p>
+
+<h3>Rails Without Strong Parameters</h3>
+
+<p>In older versions of Rails, <code>attr_accessible</code> and <code>attr_protected</code> can be used to limit mass assignment.
+However, Brakeman will warn unless <code>attr_accessible</code> is used, or mass assignment is completely disabled.</p>
 
 <p>There are two different mass assignment warnings which can arise. The first is when mass assignment actually occurs, such as the example above. This results in a warning like</p>
 
@@ -141,6 +161,11 @@ ga('cdt.send', 'pageview');
 </code></pre>
 
 <p>Brakeman will warn on uses of <code>without_protection</code>.</p>
+
+<h3>More Information</h3>
+
+<p><a href="http://edgeguides.rubyonrails.org/action_controller_overview.html#strong-parameters">Strong Parameters in Rails Security Guide</a>
+<a href="http://guides.rubyonrails.org/v3.2.8/security.html#mass-assignment">Mass Assignment in Rails Security Guide</a></p>
 
 <hr />
 
