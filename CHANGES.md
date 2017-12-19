@@ -1,3 +1,8 @@
+# 4.1.1
+
+* Remove check for use of `permit` with `*_id` keys
+* Avoid duplicate warnings about permitted attributes
+
 # 4.1.0
 
 * Process models as root sexp instead of each sexp
