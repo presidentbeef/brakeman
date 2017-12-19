@@ -13,7 +13,7 @@ class Rails5Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 9,
-      :generic => 18
+      :generic => 17
     }
   end
 
@@ -57,7 +57,7 @@ class Rails5Tests < Minitest::Test
   end
 
   def test_mass_assignment_permit_medium
-    assert_warning :type => :warning,
+    assert_no_warning :type => :warning,
       :warning_code => 105,
       :fingerprint => "c4c89a39b0a2dc707027f47747312d27308ea219a009e4f0116a759a71ad561b",
       :warning_type => "Mass Assignment",
