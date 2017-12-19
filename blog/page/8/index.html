@@ -109,6 +109,91 @@ ga('cdt.send', 'pageview');
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/01/20/brakeman-1-dot-2-1-released/">Brakeman 1.2.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-01-20 12:16:00 -0800" pubdate  updated >Jan 20<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is essentially just a bugfix release, but due to the fixes for <code>link_to</code> warnings, there is a good possibility the number of reported warnings will decrease when upgrading to this version.</p>
+
+<p>Changes since 1.2.0:</p>
+
+<ul>
+<li>Remove link_to warning for Rails 3.x or when using rails_xss</li>
+<li>Don&#8217;t warn if first argument to link_to is escaped</li>
+<li>Detect usage of attr_accessible with no arguments</li>
+<li>Fix error when rendering a partial from a view but not through a controller</li>
+<li>Fix some issues with rails_xss, CheckCrossSiteScripting, and CheckTranslateBug</li>
+<li>Simplify Brakeman Rake task</li>
+<li>Avoid modifying $VERBOSE</li>
+<li>Add Brakeman::RescanReport#to_s</li>
+<li>Add Brakeman::Warning#to_s</li>
+</ul>
+
+
+<h3>link_to Changes</h3>
+
+<p>Prior to Rails 3.0, there <a href="https://rails.lighthouseapp.com/projects/8994/tickets/3518-link_to-doesnt-escape-its-input">was a bug</a> in <code>link_to</code> that caused the body of the link tag to be output without escaping. While this was fixed in Rails 3.0, Brakeman has still been warning on it. This was also fixed in the <a href="https://github.com/rails/rails_xss/commit/afc1610fe4b94150faee98c16f15a24290d20900">rails_xss</a>, so Brakeman should no longer warn on <code>link_to</code> for Rails 2.x when using the rails_xss plugin.</p>
+
+<p>Brakeman was also warning on <code>link_to</code> even if the body argument was manually escaped. This should be resolved now.</p>
+
+<p>One other related issue was a silly bug causing Brakeman to sometimes ignore <code>--escape-html</code> or the rails_xss plugin, leading to some confusing output. This is fixed.</p>
+
+<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/32">Neil Matatall</a> for reporting the <code>link_to</code> issue and <a href="https://github.com/a5sk4s">Andreas</a> for reporting the rails_xss problems.</p>
+
+<h3>attr_accessible with No Arguments</h3>
+
+<p>Brakeman was not detecting the case where <code>attr_accessible</code> is called with zero arguments, causing spurious mass assignment warnings.</p>
+
+<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/31">Justin Wiley</a> for reporting this.</p>
+
+<h3>Brakeman Rake Task</h3>
+
+<p>The Brakeman Rake task (installed via <code>--rake</code>) is even <a href="/docs/rake">simpler now</a>.</p>
+
+<h3>$VERBOSE</h3>
+
+<p>Brakeman was using <code>$VERBOSE</code> and <code>Kernel.warn</code> for controlling debug output. This has changed and <code>$VERBOSE</code> will no longer be modified when using Brakeman.</p>
+
+<h3>Rails 3.2 Support</h3>
+
+<p>So far, there have not been any issues with Brakeman and Rails 3.2. Please <a href="https://github.com/presidentbeef/brakeman/issues">report</a> any that come up!</p>
+
+<h3>JRuby Performance</h3>
+
+<p>Prior to Brakeman 1.2, <a href="http://jruby.org/">JRuby</a> was very slow when running Brakeman. This has changed, and now JRuby is probably the fastest option for scanning large applications. Give it a try, especially if you are using Ruby 1.8.7!</p>
+
+<h3>Mailing List</h3>
+
+<p>There is now a Brakeman mailing list on <a href="http://librelist.com/browser/brakeman/">librelist</a>.</p>
+
+<p>To subscribe, send any email to <a href='&#109;ailto&#58;b&#114;%&#54;1k&#37;65m&#37;&#54;1n&#64;&#37;6Ci&#98;%&#55;2&#101;l%&#54;&#57;st&#46;com'>brakeman&#64;libr&#101;&#108;ist&#46;com</a>. You will be asked to confirm your subscription.</p>
+
+<p>Archives are available for browsing on <a href="http://www.mail-archive.com/brakeman@librelist.com/maillist.html">The Mail Archive</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/01/13/brakeman-1-dot-2-released/">Brakeman 1.2 Released</a></h1>
     
     
@@ -813,44 +898,6 @@ Brakeman.run :app_path =&gt; 'my_app'
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2011/10/21/brakeman-plugin-officially-available-for-jenkins/">Brakeman Plugin &#8216;Officially&#8217; Available for Jenkins</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-10-21 11:54:00 -0700" pubdate  updated >Oct 21<span>st</span>, 2011</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>While a Brakeman plugin for the <a href="http://jenkins-ci.org">Jenkins</a>/<a href="http://hudson-ci.org">Hudson</a> continuous integration tool has been available since January, thanks to <a href="https://github.com/presidentbeef/brakeman-jenkins-plugin/issues/1">some prodding</a> the plugin is now available through the official Jenkins plugin manager.</p>
-
-<p><img src="/images/brakeman_trend_graph.png" title="Example Plugin Graph" alt="Example Plugin Graph" /></p>
-
-<p>Installation of the plugin is no longer an arduous manual process. Just go to <code>Manage Jenkins -&gt; Manage Plugins -&gt; Available</code> and search for &#8220;Brakeman&#8221;. Check the box and then click the &#8220;Install&#8221; button down at the bottom of the page.</p>
-
-<p>Some more information about the plugin can be found on the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Brakeman+Plugin">Jenkins wiki</a>.</p>
-
-<p>See the <a href="docs/jenkins/setup">instructions</a> for how to set up a job to use the Brakeman plugin.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -905,6 +952,10 @@ Brakeman.run :app_path =&gt; 'my_app'
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/12/18/brakeman-4-dot-1-1-released/">Brakeman 4.1.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/12/12/brakeman-4-dot-1-0-released/">Brakeman 4.1.0 Released</a>
       </li>
     
@@ -918,10 +969,6 @@ Brakeman.run :app_path =&gt; 'my_app'
     
       <li class="post">
         <a href="/blog/2017/06/29/brakeman-3-dot-7-0-released/">Brakeman 3.7.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/05/19/brakeman-3-dot-6-2-released/">Brakeman 3.6.2 Released</a>
       </li>
     
   </ul>
