@@ -37,11 +37,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     exp = exp.dup
 
     exp.each_with_index do |e, i|
-      if sexp? e and not e.empty?
-        exp[i] = process e
-      else
-        e
-      end
+      exp[i] = process e if sexp? e and not e.empty?
     end
 
     exp
