@@ -19,4 +19,6 @@ class User < ApplicationRecord
   def self.all_that_jazz(user)
     User.where(User.access_condition(user))
   end
+
+  belongs_to :matched_user, class_name: 'User', optional: true
 end

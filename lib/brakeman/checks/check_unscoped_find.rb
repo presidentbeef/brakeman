@@ -10,7 +10,11 @@ class Brakeman::CheckUnscopedFind < Brakeman::BaseCheck
     Brakeman.debug("Finding instances of #find on models with associations")
 
     associated_model_names = active_record_models.keys.select do |name|
-      active_record_models[name].associations[:belongs_to]
+      if belongs_to = active_record_models[name].associations[:belongs_to]
+        not optional_belongs_to? belongs_to
+      else
+        false
+      end
     end
 
     calls = tracker.find_call :method => [:find, :find_by_id, :find_by_id!],
@@ -37,5 +41,17 @@ class Brakeman::CheckUnscopedFind < Brakeman::BaseCheck
       :code         => result[:call],
       :confidence   => :weak,
       :user_input   => input
+  end
+
+  def optional_belongs_to? exp
+    return false unless exp.is_a? Array
+
+    exp.each do |e|
+      if hash? e and true? hash_access(e, :optional)
+        return true
+      end
+    end
+
+    false
   end
 end
