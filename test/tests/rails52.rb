@@ -13,7 +13,7 @@ class Rails52Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 0,
-      :generic => 0
+      :generic => 1
     }
   end
 
@@ -25,5 +25,18 @@ class Rails52Tests < Minitest::Test
       :message => /^'protect_from_forgery'\ should\ be\ called\ /,
       :confidence => 0,
       :relative_path => "app/controllers/application_controller.rb"
+  end
+
+  def test_sql_injection_not
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "659ce3a1ad4a44065f64f44e73c857c80c9505ecf74a3ebe40f3454dc7185845",
+      :warning_type => "SQL Injection",
+      :line => 3,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 2,
+      :relative_path => "app/models/user.rb",
+      :code => s(:call, s(:call, nil, :where), :not, s(:dstr, "blah == ", s(:evstr, s(:lvar, :thing)))),
+      :user_input => s(:lvar, :thing)
   end
 end
