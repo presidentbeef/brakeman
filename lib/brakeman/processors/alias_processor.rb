@@ -431,9 +431,12 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     match = Sexp.new(:gvar, exp.lhs)
     exp.rhs = process(exp.rhs)
     value = get_rhs(exp)
-    value.line = exp.line
 
-    set_value match, value
+    if value
+      value.line = exp.line
+
+      set_value match, value
+    end
 
     exp
   end
