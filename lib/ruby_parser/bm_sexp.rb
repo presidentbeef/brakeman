@@ -506,6 +506,10 @@ class Sexp
 
     self.slice!(index..-1) #Remove old body
 
+    if exp.first == :rlist
+      exp = exp[1..-1]
+    end
+
     #Insert new body
     exp.each do |e|
       self[index] = e

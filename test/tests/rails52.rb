@@ -39,4 +39,17 @@ class Rails52Tests < Minitest::Test
       :code => s(:call, s(:call, nil, :where), :not, s(:dstr, "blah == ", s(:evstr, s(:lvar, :thing)))),
       :user_input => s(:lvar, :thing)
   end
+
+  def test_command_injection_1
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "d8881688ca97faef7a0f300a902237ea201e52a511a45561dcd7462ef85ae720",
+      :warning_type => "Command Injection",
+      :line => 7,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/initthing.rb",
+      :code => s(:dxstr, "", s(:evstr, s(:ivar, :@blah))),
+      :user_input => s(:ivar, :@blah)
+  end
 end
