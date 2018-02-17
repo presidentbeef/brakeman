@@ -423,4 +423,25 @@ class SexpTests < Minitest::Test
 
     assert_equal [:x], s.call_chain
   end
+
+  def test_body_list_set
+    exp = parse <<-RUBY
+    def x(y)
+      z
+      y
+    end
+    RUBY
+
+    exp2 = parse <<-RUBY
+    def z
+      z
+    end
+    RUBY
+
+    assert_equal s(:rlist, s(:call, nil, :z)), exp2.body_list
+
+    exp.body = exp2.body_list
+
+    assert_equal s(s(:call, nil, :z)), exp.body
+  end
 end
