@@ -13,6 +13,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
     @alias_processor = Brakeman::AliasProcessor.new tracker
     @current_module = nil
     @current_class = nil
+    @intializer_env = nil
   end
 
   def process_library src, file_name = nil
@@ -29,7 +30,14 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
   end
 
   def process_defn exp
-    exp = @alias_processor.process exp
+    if exp.method_name == :initialize
+      @alias_processor.process_safely exp.body_list
+      @initializer_env = @alias_processor.only_ivars
+    elsif node_type? exp, :defn
+      exp = @alias_processor.process_safely exp, @initializer_env
+    else
+      exp = @alias_processor.process exp
+    end
 
     if @current_class
       exp.body = process_all! exp.body
