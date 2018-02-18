@@ -17,6 +17,10 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
                   s(:call, s(:const, :Rails), :root),
                   s(:call, s(:const, :Rails), :env)]
 
+  SHELL_ESCAPES = [:escape, :shellescape, :join]
+
+  SHELLWORDS = s(:const, :Shellwords)
+
   #Check models, controllers, and views for command injection.
   def run_check
     Brakeman.debug "Finding system calls using ``"
@@ -127,14 +131,16 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       :confidence => confidence
   end
 
+  # This method expects a :dstr or :evstr node
   def dangerous? exp
     exp.each_sexp do |e|
-      next if node_type? e, :lit, :str
-      next if SAFE_VALUES.include? e
-
       if call? e and e.method == :to_s
         e = e.target
       end
+
+      next if node_type? e, :lit, :str
+      next if SAFE_VALUES.include? e
+      next if shell_escape? e
 
       if node_type? e, :or, :evstr, :dstr
         if res = dangerous?(e)
@@ -160,5 +166,17 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     end
 
     false
+  end
+
+  def shell_escape? exp
+    return false unless call? exp
+
+    if exp.target == SHELLWORDS and SHELL_ESCAPES.include? exp.method
+      true
+    elsif exp.method == :shelljoin
+      true
+    else
+      false
+    end
   end
 end

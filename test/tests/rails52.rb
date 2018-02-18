@@ -52,4 +52,17 @@ class Rails52Tests < Minitest::Test
       :code => s(:dxstr, "", s(:evstr, s(:ivar, :@blah))),
       :user_input => s(:ivar, :@blah)
   end
+
+  def test_command_injection_shellwords
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "89b886281c6329f5c5f319932d98ea96527d50f1d188fde9fd85ff93130b7c50",
+      :warning_type => "Command Injection",
+      :line => 9,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/shell.rb",
+      :code => s(:dxstr, "dig +short -x ", s(:evstr, s(:call, s(:const, :Shellwords), :shellescape, s(:lvar, :ip))), s(:str, " @"), s(:evstr, s(:call, s(:const, :Shellwords), :shellescape, s(:lvar, :one))), s(:str, " -p "), s(:evstr, s(:call, s(:const, :Shellwords), :escape, s(:lvar, :two)))),
+      :user_input => s(:call, s(:const, :Shellwords), :shellescape, s(:lvar, :ip))
+  end
 end
