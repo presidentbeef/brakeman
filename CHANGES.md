@@ -1,3 +1,14 @@
+# Unreleased
+
+* Avoid warning about command injection with `Shellwords.escape`
+* Use ivars from `initialize` in libraries
+* `Sexp#body=` can accept `:rlist` from `Sexp#body_list`
+* Update RubyParser to 3.11.0
+* Fix multiple assignment of globals
+* Warn about SQL injection in `not`
+* Exclude template folders in `lib/` (kru0096)
+* Handle ERb use of `String#<<` method for Ruby 2.5 (Pocke)
+
 # 4.1.1
 
 * Remove check for use of `permit` with `*_id` keys
