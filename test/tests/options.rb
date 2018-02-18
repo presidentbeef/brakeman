@@ -142,6 +142,11 @@ class BrakemanOptionsTest < Minitest::Test
     assert_equal Set[:test_method1, :test_method2], options[:safe_methods]
   end
 
+  def test__sql_safe_option
+    options = setup_options_from_input("--sql-safe-methods", "test_method2,test_method1,test_method2")
+    assert_equal Set[:test_method1, :test_method2], options[:sql_safe_methods]
+  end
+
   def test__url_safe_option
     options = setup_options_from_input("--url-safe-methods", "test_method2,test_method1,test_method2")
     assert_equal Set[:test_method1, :test_method2], options[:url_safe_methods]
