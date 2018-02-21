@@ -1,5 +1,7 @@
-# Unreleased
+# 4.2.0
 
+* Avoid warning about symbol DoS on `Model#attributes`
+* Avoid warning about open redirects with model methods ending with `_path`
 * Avoid warning about command injection with `Shellwords.escape`
 * Use ivars from `initialize` in libraries
 * `Sexp#body=` can accept `:rlist` from `Sexp#body_list`
