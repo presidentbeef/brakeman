@@ -90,6 +90,18 @@ class WidgetController < ApplicationController
     params.permit(:admin)
     params.permit(:role_id)
   end
+
+  def redirect_to_path
+    session = User.find_by_token params[:session]
+
+    if session
+      # proceed with extracting user context from session and more and redirect to the last path the user was shown to
+      login(session.user)
+      redirect_to session.user.current_path
+    else
+      redirect_to expired_or_invalid_session_path
+    end
+  end
 end
 
 IDENTIFIER_NAMESPACE = 'apis'
