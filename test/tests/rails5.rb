@@ -261,6 +261,19 @@ class Rails5Tests < Minitest::Test
       :user_input => s(:call, s(:params), :permit, s(:lit, :page), s(:lit, :sort))
   end
 
+  def test_redirect_with_path_on_model
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "1f0dba58823930667b1fbf060329a5ce7462b517b776d1985da014321f399362",
+      :warning_type => "Redirect",
+      :line => 100,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/widget_controller.rb",
+      :code => s(:call, nil, :redirect_to, s(:call, s(:call, s(:call, s(:const, :User), :find_by_token, s(:call, s(:params), :[], s(:lit, :session))), :user), :current_path)),
+      :user_input => s(:call, s(:call, s(:call, s(:const, :User), :find_by_token, s(:call, s(:params), :[], s(:lit, :session))), :user), :current_path)
+  end
+
   def test_cross_site_scripting_with_slice
     assert_no_warning :type => :template,
       :warning_code => 4,
