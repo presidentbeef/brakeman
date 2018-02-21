@@ -43,4 +43,8 @@ class User < ActiveRecord::Base
   end
 
   accepts_nested_attributes_for :something, allow_destroy: false, reject_if: proc { |attributes| stuff }
+
+  def more_symbol_stuff stuff
+    User.find(stuff).attributes.symbolize_keys # meh, don't warn
+  end
 end

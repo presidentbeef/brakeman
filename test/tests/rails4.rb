@@ -536,6 +536,19 @@ class Rails4Tests < Minitest::Test
       :user_input => s(:call, s(:params), :[], s(:lit, :action))
   end
 
+  def test_symbol_dos_on_model_attributes
+    assert_no_warning :type => :warning,
+      :warning_code => 59,
+      :fingerprint => "0bc13d07b15305ddff2b095ccaf49ab8301fc0d917e5a444bcfe418429324a68",
+      :warning_type => "Denial of Service",
+      :line => 48,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(mo/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :code => s(:call, s(:call, s(:call, s(:const, :User), :find, s(:lvar, :stuff)), :attributes), :symbolize_keys),
+      :user_input => s(:call, s(:call, s(:const, :User), :find, s(:lvar, :stuff)), :attributes)
+  end
+
   def test_regex_denial_of_service
     assert_warning :type => :warning,
       :warning_code => 76,
