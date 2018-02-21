@@ -33,8 +33,10 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
       confidence = :medium
     end
 
+
     if confidence
       return if safe_parameter? input.match
+      return if symbolizing_attributes? input
 
       message = "Symbol conversion from unsafe string (#{friendly_type_of input})"
 
@@ -59,5 +61,11 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
     else
       false
     end
+  end
+
+  def symbolizing_attributes? input
+    input.type == :model and
+      call? input.match and
+      input.match.method == :attributes
   end
 end
