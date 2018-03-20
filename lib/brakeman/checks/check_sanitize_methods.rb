@@ -28,6 +28,8 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
       warn_sanitizer_cve "CVE-2015-7578", "https://groups.google.com/d/msg/rubyonrails-security/uh--W4TDwmI/JbvSRpdbFQAJ"
       warn_sanitizer_cve "CVE-2015-7580", "https://groups.google.com/d/msg/rubyonrails-security/uh--W4TDwmI/m_CVZtdbFQAJ"
     end
+
+    check_cve_2018_8048
   end
 
   def check_cve_2013_1855
@@ -58,6 +60,31 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
         :confidence => :high,
         :link_path => link
     end
+  end
+
+  def check_cve_2018_8048
+    if loofah_vulnerable_cve_2018_8048?
+      message = "Loofah #{tracker.config.gem_version(:loofah)} is vulnerable (CVE-2018-8048). Upgrade to 2.1.2"
+
+      if tracker.find_call(:target => false, :method => :sanitize).any?
+        confidence = :high
+      else
+        confidence = :medium
+      end
+
+      warn :warning_type => "Cross-Site Scripting",
+        :warning_code => :CVE_2018_8048,
+        :message => message,
+        :gem_info => gemfile_or_environment,
+        :confidence => confidence,
+        :link_path => "https://github.com/flavorjones/loofah/issues/144"
+    end
+  end
+
+  def loofah_vulnerable_cve_2018_8048?
+    loofah_version = tracker.config.gem_version(:loofah)
+
+    loofah_version and loofah_version < "2.1.2"
   end
 
   def warn_sanitizer_cve cve, link

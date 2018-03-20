@@ -13,7 +13,7 @@ class Rails5Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 9,
-      :generic => 17
+      :generic => 18
     }
   end
 
@@ -600,6 +600,18 @@ class Rails5Tests < Minitest::Test
       :warning_type => "Cross-Site Scripting",
       :line => 115,
       :message => /^Rails\ 5\.0\.0\ content_tag\ does\ not\ escape\ /,
+      :confidence => 0,
+      :relative_path => "Gemfile.lock",
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_loofah_CVE_2018_8048
+    assert_warning :type => :warning,
+      :warning_code => 106,
+      :fingerprint => "cdfb1541fdcc9cdcf0784ce5bd90013dc39316cb822eedea3f03b2521c06137f",
+      :warning_type => "Cross-Site Scripting",
+      :line => 115,
+      :message => /^Loofah\ 2\.0\.3\ is\ vulnerable\ \(CVE\-2018\-804/,
       :confidence => 0,
       :relative_path => "Gemfile.lock",
       :user_input => nil
