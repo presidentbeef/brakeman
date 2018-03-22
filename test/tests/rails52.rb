@@ -13,7 +13,7 @@ class Rails52Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 0,
-      :generic => 2
+      :generic => 3
     }
   end
 
@@ -51,6 +51,19 @@ class Rails52Tests < Minitest::Test
       :relative_path => "lib/initthing.rb",
       :code => s(:dxstr, "", s(:evstr, s(:ivar, :@blah))),
       :user_input => s(:ivar, :@blah)
+  end
+
+  def test_command_injection_in_job
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "e712e2741ad78f4e947bec84f36a0d703849d3b0facdabd8cc74851d7b702a48",
+      :warning_type => "Command Injection",
+      :line => 3,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "app/jobs/delete_stuff_job.rb",
+      :code => s(:dxstr, "rm -rf ", s(:evstr, s(:lvar, :file))),
+      :user_input => s(:lvar, :file)
   end
 
   def test_command_injection_shellwords
