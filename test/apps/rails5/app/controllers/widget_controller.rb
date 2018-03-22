@@ -102,6 +102,11 @@ class WidgetController < ApplicationController
       redirect_to expired_or_invalid_session_path
     end
   end
+
+  def render_safely
+    slug = params[:slug].to_s
+    render slug if template_exists?(slug, 'pages')
+  end
 end
 
 IDENTIFIER_NAMESPACE = 'apis'

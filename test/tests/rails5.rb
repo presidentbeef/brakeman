@@ -390,6 +390,19 @@ class Rails5Tests < Minitest::Test
       :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :x)), :thing?)
   end
 
+  def test_dynamic_render_path_template_exists
+    assert_no_warning :type => :warning,
+      :warning_code => 15,
+      :fingerprint => "5c250fd85fe088bf628d517af37038fa516acc4b6103ee6d8a15e857079ad434",
+      :warning_type => "Dynamic Render Path",
+      :line => 108,
+      :message => /^Render\ path\ contains\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/widget_controller.rb",
+      :code => s(:render, :action, s(:call, s(:call, s(:params), :[], s(:lit, :slug)), :to_s), s(:hash)),
+      :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :slug)), :to_s)
+  end
+
   def test_render_inline_cookies
     assert_warning :type => :warning,
       :warning_code => 84,

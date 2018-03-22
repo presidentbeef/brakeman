@@ -114,6 +114,8 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
 
     if method == :head
       @rendered = true
+    elsif exp.target.nil? and method == :template_exists?
+      env[exp.first_arg] = Sexp.new(:lit, :"brakeman:existing_template")
     elsif @tracker.options[:interprocedural] and
       @current_method and (exp.target.nil? or exp.target.node_type == :self)
 
