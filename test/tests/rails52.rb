@@ -13,7 +13,7 @@ class Rails52Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 0,
-      :generic => 1
+      :generic => 2
     }
   end
 
@@ -64,5 +64,17 @@ class Rails52Tests < Minitest::Test
       :relative_path => "lib/shell.rb",
       :code => s(:dxstr, "dig +short -x ", s(:evstr, s(:call, s(:const, :Shellwords), :shellescape, s(:lvar, :ip))), s(:str, " @"), s(:evstr, s(:call, s(:const, :Shellwords), :shellescape, s(:lvar, :one))), s(:str, " -p "), s(:evstr, s(:call, s(:const, :Shellwords), :escape, s(:lvar, :two)))),
       :user_input => s(:call, s(:const, :Shellwords), :shellescape, s(:lvar, :ip))
+  end
+
+  def test_cross_site_scripting_loofah_CVE_2018_8048
+    assert_warning :type => :warning,
+      :warning_code => 106,
+      :fingerprint => "c8adc1c0caf2c9251d1d8de588fb949070212d0eed5e1580aee88bab2287b772",
+      :warning_type => "Cross-Site Scripting",
+      :line => 109,
+      :message => /^Loofah\ 2\.1\.1\ is\ vulnerable\ \(CVE\-2018\-804/,
+      :confidence => 1,
+      :relative_path => "Gemfile.lock",
+      :user_input => nil
   end
 end
