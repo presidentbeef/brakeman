@@ -1,3 +1,10 @@
+# 4.2.1
+
+* Add warning for CVE-2018-3741
+* Add warning for CVE-2018-8048
+* Scan `app/jobs/` directory
+* Handle `template_exists?` in controllers
+
 # 4.2.0
 
 * Avoid warning about symbol DoS on `Model#attributes`
