@@ -90,4 +90,16 @@ class Rails52Tests < Minitest::Test
       :relative_path => "Gemfile.lock",
       :user_input => nil
   end
+
+  def test_cross_site_scripting_CVE_2018_3741
+    assert_warning :type => :warning,
+      :warning_code => 107,
+      :fingerprint => "e0636b950dd005468b5f9a0426ed50936e136f18477ca983cfc51b79e29f6463",
+      :warning_type => "Cross-Site Scripting",
+      :line => 109,
+      :message => /^rails\-html\-sanitizer\ 1\.0\.3\ is\ vulnerable/,
+      :confidence => 1,
+      :relative_path => "Gemfile.lock",
+      :user_input => nil
+  end
 end

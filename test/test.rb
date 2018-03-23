@@ -84,7 +84,7 @@ module BrakemanTester::CheckExpected
         warnings = report[(type.to_s << "_warnings").to_sym]
       end
 
-      assert_equal number, warnings.length, "Expected #{number} #{type} warnings, but found #{warnings.length}"
+      assert_equal number, warnings.length, "Expected #{number} #{type} warnings, but found #{warnings.length}: #{warnings}"
     end
   end
 
