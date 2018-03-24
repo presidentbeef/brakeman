@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2018-03-23T17:37:11-07:00</updated>
+  <updated>2018-03-23T17:54:33-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -17,7 +17,7 @@
     <link href="http://brakemanscanner.org/blog/2018/03/23/brakeman-4-dot-2-1-released/"/>
     <updated>2018-03-23T17:19:00-07:00</updated>
     <id>http://brakemanscanner.org/blog/2018/03/23/brakeman-4-dot-2-1-released</id>
-    <content type="html">&lt;p&gt;This is a small release to add warnings for &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/tP7W3kLc5u4/uDy2Br7xBgAJ&quot;&gt;CVE-2018-3741&lt;/a&gt; and &lt;a href=&quot;&quot;&gt;CVE-2018-8048&lt;/a&gt;.&lt;/p&gt;
+    <content type="html">&lt;p&gt;This is a small release to add warnings for &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/tP7W3kLc5u4/uDy2Br7xBgAJ&quot;&gt;CVE-2018-3741&lt;/a&gt; and &lt;a href=&quot;https://groups.google.com/d/msg/rubyonrails-security/b__OeLG9bts/waZTvSM2AQAJ&quot;&gt;CVE-2018-8048&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Please note there have been a number of vulnerabilities in the Rails HTML sanitization methods over the years. Only use sanitization when an application &lt;em&gt;must&lt;/em&gt; accept and render HTML from an untrusted source. Otherwise, escape outputs instead.&lt;/p&gt;
 
