@@ -109,6 +109,94 @@ ga('cdt.send', 'pageview');
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2015/01/22/brakeman-3-dot-0-1-released/">Brakeman 3.0.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2015-01-22 18:38:00 -0800" pubdate  updated >Jan 22<span>nd</span>, 2015</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a small release, but may change some fingerprints of warnings in libraries. Also, the Slim dependency has been removed due to conflicts. See below for details.</p>
+
+<ul>
+<li>Remove Slim dependency (<a href="https://github.com/cwest">Casey West</a>)</li>
+<li>Properly process libraries (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
+<li>Add <code>--add-libs-path</code> for additional libraries (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
+<li>Allow for controllers/models/templates in directories under <code>app/</code> (<a href="https://github.com/nealharris">Neal Harris</a>)</li>
+<li>Avoid <code>protect_from_forgery</code> warning unless <code>ApplicationController</code> inherits from <code>ActionController::Base</code> (<a href="https://github.com/presidentbeef/brakeman/issues/573">#573</a>)</li>
+<li>Properly format command interpolation (again)</li>
+</ul>
+
+
+<h3>Slim Gem Dependency Removed</h3>
+
+<p>Since <a href="https://github.com/slim-template/slim-rails/releases/tag/3.0.1">Rails 4.2 requires Slim 3.0.1</a> and <a href="https://github.com/slim-template/slim/blob/bb7ca78c1ea9629d8b57a06fcb99c938c9d7640e/CHANGES#L8">Slim 3.0 dropped support for Ruby 1.8.7</a>, there is no way to satisfy dependencies for Slim, Rails 4.2, and retain support for Ruby 1.8.7 when Brakeman is added as a dependency in a <code>Gemfile</code>.</p>
+
+<p>The only acceptable solution is to not include Slim as a dependency at all and let users sort it out for themselves. Sorry for the unfortunate situation, but there is no way to add Brakeman to a <code>Gemfile</code> and avoid Bundler attempting to resolve Brakeman&#8217;s dependencies against the application&#8217;s dependencies, despite there being no relation.</p>
+
+<p>Thanks to <a href="https://github.com/cwest">Casey West</a> for working through solutions for this issue.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/602">changes</a>)</p>
+
+<h3>Library Processing</h3>
+
+<p>Libraries were added to the call index (which meant they were scanned during checks) in the 3.0.0 release, but there were still not being processed like most other code. This led to some checks not finding issues they should have. <a href="https://github.com/ptoomey3">Patrick Toomey</a> pointed this out and contributed a fix.</p>
+
+<p>This change may affect existing warning fingerprints for warnings in libraries. Apologies for the inconvenience.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/605">changes</a>)</p>
+
+<h3>Allow Additional Library Paths</h3>
+
+<p><a href="https://github.com/ptoomey3">Patrick Toomey</a> also added a new option <code>--add-libs-path</code> to treat more paths as if they were in <code>lib/</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/606">changes</a>)</p>
+
+<h3>Scan Application Subdirectories</h3>
+
+<p><a href="https://github.com/nealharris">Neal Harris</a> contributed a change to support applications with multiple applications under <code>app/</code>, such as <code>app/cool_team/controllers/</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/607">changes</a>)</p>
+
+<h3>Avoid CSRF Warning for APIs</h3>
+
+<p>Brakeman will no longer warn about missing <code>protect_from_forgery</code> if <code>ApplicationController</code> does not inherit from <code>ActionController::Base</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/issues/573">changes</a>)</p>
+
+<h3>Command Interpolation Format Fix</h3>
+
+<p>Previous release had an incomplete fix for this. There should be no impact to warning fingerprints.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/608">changes</a>)</p>
+
+<h3>Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2015/01/02/brakeman-3-dot-0-0-released/">Brakeman 3.0.0 Released</a></h1>
     
     
@@ -1132,83 +1220,6 @@ be5743d77140e64b75eefc53f8697f767ab370d9  brakeman-min-2.4.3.gem
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2014/02/19/brakeman-2-dot-4-1-released/">Brakeman 2.4.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2014-02-19 10:53:00 -0800" pubdate  updated >Feb 19<span>th</span>, 2014</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This release only adds checks for the latest CVEs, no other changes.</p>
-
-<p><em>Changes since 2.4.0</em>:</p>
-
-<ul>
-<li>Add check for CVE-2014-0080</li>
-<li>Add check for CVE-2014-0081, replaces CVE-2013-6415</li>
-<li>Add check for CVE-2014-0082</li>
-</ul>
-
-
-<h3>CVE-2014-0080</h3>
-
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/Wu96YkTUR6s/pPLBMZrlwvYJ">CVE-2014-0080</a> is a SQL injection issue only affects applications using PostgreSQL with Rails 4.x. If Brakeman detects the <code>pg</code> gem and an affected version, it will warn about this CVE.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/447">changes</a>)</p>
-
-<h3>CVE-2014-0081</h3>
-
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/tfp6gZCtzr4/j8LUHmu7fIEJ">CVE-2014-0081</a> is a vulnerability in <code>number_to_currency</code>, <code>number_to_percentage</code>, and <code>number_to_human</code>. Values passed in as options may not be properly escaped. It affects all previous versions of Rails.</p>
-
-<p>Brakeman will warn on unsafe uses of these methods. If no unsafe calls are found, it will generate a generic medium confidence warning.</p>
-
-<p>Warnings for CVE-2014-0081 replace warnings for CVE-2013-6415, which was about just <code>number_to_currency</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/448">changes</a>)</p>
-
-<h3>CVE-2014-0082</h3>
-
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/LMxO_3_eCuc/ozGBEhKaJbIJ">CVE-2014-0082</a> is a potential symbol denial of service problem when handling <code>render :text</code> in Rails 3.x.</p>
-
-<p>Brakeman will only warn about this CVE if it detects use of <code>render :text</code> in affected versions.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/449">changes</a>)</p>
-
-<h3>SHAs</h3>
-
-<p>The SHA1 sums for this release are</p>
-
-<pre><code>e9fb5439d5a322b4a9c9611d75d994e7df83d4d2  brakeman-2.4.1.gem
-b84ad90a7ec9b6e6bbce8fc69c50d1d8b3214d0f  brakeman-min-2.4.1.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter or joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1263,6 +1274,10 @@ b84ad90a7ec9b6e6bbce8fc69c50d1d8b3214d0f  brakeman-min-2.4.1.gem
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/03/23/brakeman-4-dot-2-1-released/">Brakeman 4.2.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/02/21/brakeman-4-dot-2-0-released/">Brakeman 4.2.0 Released</a>
       </li>
     
@@ -1276,10 +1291,6 @@ b84ad90a7ec9b6e6bbce8fc69c50d1d8b3214d0f  brakeman-min-2.4.1.gem
     
       <li class="post">
         <a href="/blog/2017/09/25/brakeman-4-dot-0-released/">Brakeman 4.0 Released!</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/08/15/brakeman-3-dot-7-1-released/">Brakeman 3.7.1/3.7.2 Released</a>
       </li>
     
   </ul>
