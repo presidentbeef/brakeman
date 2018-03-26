@@ -81,7 +81,7 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
       warn :warning_type => "Cross-Site Scripting",
         :warning_code => :CVE_2018_8048,
         :message => message,
-        :gem_info => gemfile_or_environment,
+        :gem_info => gemfile_or_environment(:loofah),
         :confidence => confidence,
         :link_path => "https://github.com/flavorjones/loofah/issues/144"
     end
@@ -105,7 +105,7 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
     warn :warning_type => "Cross-Site Scripting",
       :warning_code => cve.tr('-', '_').to_sym,
       :message => message,
-      :gem_info => gemfile_or_environment,
+      :gem_info => gemfile_or_environment(:'rails-html-sanitizer'),
       :confidence => confidence,
       :link_path => link
   end
