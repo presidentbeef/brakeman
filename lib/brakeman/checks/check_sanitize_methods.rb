@@ -46,12 +46,6 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
 
       message = "Rails #{rails_version} has a vulnerability in #{method}: upgrade to #{@fix_version} or patch"
 
-      if include_user_input? result[:call]
-        confidence = :high
-      else
-        confidence = :medium
-      end
-
       warn :result => result,
         :warning_type => "Cross-Site Scripting",
         :warning_code => code,
