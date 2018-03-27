@@ -46,12 +46,6 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
 
       message = "Rails #{rails_version} has a vulnerability in #{method}: upgrade to #{@fix_version} or patch"
 
-      if include_user_input? result[:call]
-        confidence = :high
-      else
-        confidence = :medium
-      end
-
       warn :result => result,
         :warning_type => "Cross-Site Scripting",
         :warning_code => code,
@@ -87,7 +81,7 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
       warn :warning_type => "Cross-Site Scripting",
         :warning_code => :CVE_2018_8048,
         :message => message,
-        :gem_info => gemfile_or_environment,
+        :gem_info => gemfile_or_environment(:loofah),
         :confidence => confidence,
         :link_path => "https://github.com/flavorjones/loofah/issues/144"
     end
@@ -111,7 +105,7 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
     warn :warning_type => "Cross-Site Scripting",
       :warning_code => cve.tr('-', '_').to_sym,
       :message => message,
-      :gem_info => gemfile_or_environment,
+      :gem_info => gemfile_or_environment(:'rails-html-sanitizer'),
       :confidence => confidence,
       :link_path => link
   end
