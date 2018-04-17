@@ -102,7 +102,9 @@ module Brakeman
     end
 
     def set_color
-      unless @tracker and less_options.include? "-R "
+      return unless @tracker
+
+      unless less_options.include? "-R " or @tracker.options[:output_color] == :force
         @tracker.options[:output_color] = false
       end
     end

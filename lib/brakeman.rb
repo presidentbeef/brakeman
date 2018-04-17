@@ -376,7 +376,7 @@ module Brakeman
 
   def self.write_report_to_files tracker, output_files
     require 'fileutils'
-    tracker.options[:output_color] = false
+    tracker.options[:output_color] = false unless tracker.options[:output_color] == :force
 
     output_files.each_with_index do |output_file, idx|
       dir = File.dirname(output_file)
@@ -393,7 +393,7 @@ module Brakeman
   private_class_method :write_report_to_files
 
   def self.write_report_to_formats tracker, output_formats
-    unless $stdout.tty?
+    unless $stdout.tty? or tracker.options[:output_color] == :force
       tracker.options[:output_color] = false
     end
 

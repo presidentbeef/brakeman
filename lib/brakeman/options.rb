@@ -229,7 +229,11 @@ module Brakeman::Options
         end
 
         opts.on "--[no-]color", "Use ANSI colors in report (Default)" do |color|
-          options[:output_color] = color
+          if color
+            options[:output_color] = :force
+          else
+            options[:output_color] = color
+          end
         end
 
         opts.on "-m", "--routes", "Report controller information" do

@@ -267,12 +267,11 @@ class BrakemanOptionsTest < Minitest::Test
 
   def test_output_color_option
     options = setup_options_from_input("--color")
-    assert options[:output_color]
+    assert_equal :force, options[:output_color]
 
     options = setup_options_from_input("--no-color")
-    assert !options[:output_color]
+    assert_equal false, options[:output_color]
   end
-
 
   def test_sperate_models_option
     options = setup_options_from_input("--separate-models")
