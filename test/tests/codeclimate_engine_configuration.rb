@@ -57,7 +57,7 @@ class EngineConfigurationTests < Minitest::Test
         "app_path" => "foo"
       }
     }
-    assert_equal ["./bar", "./42.rb", "./blub/neat"],
+    assert_equal ["/bar", "/42.rb", "/blub/neat"],
       Brakeman::Codeclimate::EngineConfiguration.new(config).options[:only_files]
   end
 
@@ -68,7 +68,7 @@ class EngineConfigurationTests < Minitest::Test
         "app_path" => "foo/"
       }
     }
-    assert_equal ["./"],
+    assert_equal ["/"],
       Brakeman::Codeclimate::EngineConfiguration.new(config).options[:only_files]
   end
 
@@ -79,7 +79,7 @@ class EngineConfigurationTests < Minitest::Test
         "app_path" => "foo/bar/baz"
       }
     }
-    assert_equal ["./"],
+    assert_equal ["/"],
       Brakeman::Codeclimate::EngineConfiguration.new(config).options[:only_files]
   end
 
@@ -90,7 +90,7 @@ class EngineConfigurationTests < Minitest::Test
         "app_path" => "foo/bar/baz"
       }
     }
-    assert_equal ["./"],
+    assert_equal ["/"],
       Brakeman::Codeclimate::EngineConfiguration.new(config).options[:only_files]
   end
 
