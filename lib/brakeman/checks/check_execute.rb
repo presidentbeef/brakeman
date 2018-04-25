@@ -15,7 +15,8 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
 
   SAFE_VALUES = [s(:const, :RAILS_ROOT),
                   s(:call, s(:const, :Rails), :root),
-                  s(:call, s(:const, :Rails), :env)]
+                  s(:call, s(:const, :Rails), :env),
+                  s(:call, s(:const, :Process), :pid)]
 
   SHELL_ESCAPES = [:escape, :shellescape, :join]
 

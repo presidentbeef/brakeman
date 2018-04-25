@@ -12,4 +12,9 @@ class ShellStuff
   def backticks_target(path)
     `echo #{path}`.chomp
   end
+
+  def process_pid
+    # should not warn
+    `something #{Process.pid}`
+  end
 end
