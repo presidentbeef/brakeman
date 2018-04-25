@@ -8,7 +8,7 @@ begin
   require 'simplecov'
 
   SimpleCov.start
-rescue LoadError => e
+rescue LoadError
   $stderr.puts "Install simplecov for test coverage report"
 end
 
@@ -84,7 +84,7 @@ module BrakemanTester::CheckExpected
         warnings = report[(type.to_s << "_warnings").to_sym]
       end
 
-      assert_equal number, warnings.length, "Expected #{number} #{type} warnings, but found #{warnings.length}: #{warnings}"
+      assert_equal number, warnings.length, lambda { "Expected #{number} #{type} warnings, but found #{warnings.length}: #{warnings}" }
     end
   end
 
