@@ -8,4 +8,8 @@ class ShellStuff
     ip = Shellwords.shellescape(ip)
     `dig +short -x #{ip} @#{@one} -p #{@two}`
   end
+
+  def backticks_target(path)
+    `echo #{path}`.chomp
+  end
 end

@@ -13,7 +13,7 @@ class Rails52Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 0,
-      :generic => 4
+      :generic => 5
     }
   end
 
@@ -77,6 +77,19 @@ class Rails52Tests < Minitest::Test
       :relative_path => "lib/shell.rb",
       :code => s(:dxstr, "dig +short -x ", s(:evstr, s(:call, s(:const, :Shellwords), :shellescape, s(:lvar, :ip))), s(:str, " @"), s(:evstr, s(:call, s(:const, :Shellwords), :shellescape, s(:lvar, :one))), s(:str, " -p "), s(:evstr, s(:call, s(:const, :Shellwords), :escape, s(:lvar, :two)))),
       :user_input => s(:call, s(:const, :Shellwords), :shellescape, s(:lvar, :ip))
+  end
+
+  def test_command_injection_as_target
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "9af991a12b23b815013ce0c69727b7a14cfb08e62f4e66a8851513af7cc6a757",
+      :warning_type => "Command Injection",
+      :line => 13,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/shell.rb",
+      :code => s(:dxstr, "echo ", s(:evstr, s(:lvar, :path))),
+      :user_input => s(:lvar, :path)
   end
 
   def test_cross_site_scripting_loofah_CVE_2018_8048

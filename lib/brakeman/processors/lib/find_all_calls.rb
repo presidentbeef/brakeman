@@ -189,7 +189,7 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
   def create_call_hash exp
     target = get_target exp.target
 
-    if call? target
+    if call? target or node_type? target, :dxstr # need to index `` even if target of a call
       already_in_target = @in_target
       @in_target = true
       process target
