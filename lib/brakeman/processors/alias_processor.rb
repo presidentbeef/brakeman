@@ -197,7 +197,6 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       return Sexp.new(:false)
     end
 
-
     #See if it is possible to simplify some basic cases
     #of addition/concatenation.
     case method
@@ -286,6 +285,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     when :first
       if array? target and first_arg.nil? and sexp? target[1]
         exp = target[1]
+      end
+    when :freeze
+      if string? target
+        exp = process exp.target
       end
     end
 

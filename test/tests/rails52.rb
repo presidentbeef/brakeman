@@ -40,6 +40,19 @@ class Rails52Tests < Minitest::Test
       :user_input => s(:lvar, :thing)
   end
 
+  def test_sql_injection_string_freeze
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "b1ed6e8858db8a9a176fba44374a9a43c6277ea5df3ed04236a5870eed44e43c",
+      :warning_type => "SQL Injection",
+      :line => 11,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :code => s(:call, s(:call, s(:call, s(:self), :class), :select, s(:dstr, "", s(:evstr, s(:call, s(:str, "my_table_alias"), :freeze)), s(:str, ".*"))), :from, s(:dstr, "", s(:evstr, s(:call, nil, :table_name)), s(:str, " AS "), s(:evstr, s(:call, s(:str, "my_table_alias"), :freeze)))),
+      :user_input => s(:call, s(:str, "my_table_alias"), :freeze)
+  end
+
   def test_command_injection_1
     assert_no_warning :type => :warning,
       :warning_code => 14,
