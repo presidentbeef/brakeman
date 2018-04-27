@@ -87,9 +87,9 @@ module Brakeman
 
       def stripped_include_path(prefix, subprefixes, path)
         if path.start_with?(prefix)
-          path.sub(%r{^#{prefix}/?}, "./")
+          path.sub(%r{^#{prefix}/?}, "/")
         elsif subprefixes.any? { |subprefix| path =~ %r{^#{subprefix}/?$} }
-          "./"
+          "/"
         end
       end
     end
