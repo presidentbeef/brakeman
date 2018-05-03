@@ -71,14 +71,15 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     end
   end
 
+  CHECK_INSIDE_METHODS = [:url_for, :h, :sanitize]
+
   def check_argument? url_arg
     return unless call? url_arg
 
     target = url_arg.target
     method = url_arg.method
 
-    method == :url_for or
-      method == :h or
+    CHECK_INSIDE_METHODS.include? method or
       cgi_escaped? target, method
   end
 
