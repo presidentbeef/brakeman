@@ -5,3 +5,5 @@
 
 <%= link_to("good", params.merge(:page => 2)) %>
 <%= link_to("xss", url_for(params[:bad])) %>
+
+<%= link_to(image_tag("icons/twitter-gray.svg"), sanitize(@user.home_page), target: "_blank") %>

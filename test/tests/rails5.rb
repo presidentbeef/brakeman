@@ -12,7 +12,7 @@ class Rails5Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 9,
+      :template => 10,
       :generic => 19
     }
   end
@@ -677,6 +677,19 @@ class Rails5Tests < Minitest::Test
       :relative_path => "app/views/widget/show.html.erb",
       :code => s(:call, nil, :link_to, s(:str, "Email!"), s(:dstr, "mailto:", s(:evstr, s(:call, s(:params), :[], s(:lit, :x))))),
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_cross_site_scripting_sanitize_in_link_to
+    assert_warning :type => :template,
+      :warning_code => 4,
+      :fingerprint => "2247b0928591e951ddb428e97bf4174a36080a196a2f6d6fedd2d7c4428db2a9",
+      :warning_type => "Cross-Site Scripting",
+      :line => 9,
+      :message => /^Potentially\ unsafe\ model\ attribute\ in\ li/,
+      :confidence => 2,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:call, nil, :image_tag, s(:str, "icons/twitter-gray.svg")), s(:call, nil, :sanitize, s(:call, s(:call, s(:const, :User), :new, s(:call, nil, :user_params)), :home_page)), s(:hash, s(:lit, :target), s(:str, "_blank"))),
+      :user_input => s(:call, s(:call, s(:const, :User), :new, s(:call, nil, :user_params)), :home_page)
   end
 
   def test_mixed_in_csrf_protection
