@@ -115,6 +115,11 @@ class BrakemanOptionsTest < Minitest::Test
     assert !options[:report_progress]
   end
 
+  def test_parser_timeout_option
+    options = setup_options_from_input("--parser-timeout", "1000")
+    assert_equal 1000, options[:parser_timeout]
+  end
+
   def test_quiet_option
     options = setup_options_from_input("-q")
     assert options[:quiet]
