@@ -51,6 +51,7 @@ module Brakeman
   #  * :output_files - files for output
   #  * :output_formats - formats for output (:to_s, :to_tabs, :to_csv, :to_html)
   #  * :parallel_checks - run checks in parallel (default: true)
+  #  * :parser_timeout - set timeout for parsing an individual file (default: 10 seconds)
   #  * :print_report - if no output file specified, print to stdout (default: false)
   #  * :quiet - suppress most messages (default: true)
   #  * :rails3 - force Rails 3 mode (automatic)
@@ -174,6 +175,7 @@ module Brakeman
       :output_color => true,
       :pager => true,
       :parallel_checks => true,
+      :parser_timeout => 10,
       :relative_path => false,
       :report_progress => true,
       :safe_methods => Set.new,

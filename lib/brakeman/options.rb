@@ -127,6 +127,10 @@ module Brakeman::Options
           options[:branch_limit] = limit
         end
 
+        opts.on "--parser-timeout SECONDS", Integer, "Set parse timeout (Default: 10)" do |timeout|
+          options[:parser_timeout] = timeout
+        end
+
         opts.on "-r", "--report-direct", "Only report direct use of untrusted data" do |option|
           options[:check_arguments] = !option
         end
