@@ -119,7 +119,10 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
   #Does not actually process string interpolation, but notes that it occurred.
   def process_dstr exp
-    @string_interp = Match.new(:interp, exp)
+    unless @string_interp # don't overwrite existing value
+      @string_interp = Match.new(:interp, exp)
+    end
+
     process_default exp
   end
 
