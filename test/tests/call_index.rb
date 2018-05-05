@@ -18,6 +18,7 @@ class CallIndexTests < Minitest::Test
       def x
         x.y.z(1)
         params[:x].y.z(2)
+        third(second.thing(first.thing))
       end
     RUBY
 
@@ -25,6 +26,7 @@ class CallIndexTests < Minitest::Test
     class A
       do_a_thing
 
+      # Not indexed
       def x
         x.y.z(1)
         params[:x].y.z(2)
@@ -96,6 +98,21 @@ class CallIndexTests < Minitest::Test
 
   def test_find_class_scope_call_by_method
     assert_found 1, :method => :do_a_thing
+  end
+
+  def test_parent_call
+    first = @call_index.find_calls(method: :first, nested: true).first
+    first_thing = @call_index.find_calls(target: :first, method: :thing).first
+    second = @call_index.find_calls(method: :second, nested: true).first
+    second_thing = @call_index.find_calls(target: :second, method: :thing).first
+    third = @call_index.find_calls(target: nil, method: :third).first
+
+    assert_equal second_thing, first_thing[:parent]
+    assert_equal third, second_thing[:parent]
+
+    assert_equal second_thing, first[:parent]
+    assert_equal third, second[:parent]
+    assert_nil third[:parent]
   end
 
   def test_find_error

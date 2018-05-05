@@ -19,6 +19,7 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
     @current_method = opts[:method]
     @current_template = opts[:template]
     @current_file = opts[:file]
+    @current_call = nil
     process exp
   end
 
@@ -111,7 +112,8 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
                 :method => method_name,
                 :call => exp,
                 :nested => false,
-                :location => make_location }
+                :location => make_location,
+                :parent => @current_call }
   end
 
   #Gets the target of a call as a Symbol
@@ -199,13 +201,24 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
     end
 
     method = exp.method
-    process_call_args exp
 
-    { :target => target,
+    call_hash = {
+      :target => target,
       :method => method,
       :call => exp,
       :nested => @in_target,
       :chain => get_chain(exp),
-      :location => make_location }
+      :location => make_location,
+      :parent => @current_call
+    }
+
+    old_parent = @current_call
+    @current_call = call_hash
+
+    process_call_args exp
+
+    @current_call = old_parent
+
+    call_hash
   end
 end
