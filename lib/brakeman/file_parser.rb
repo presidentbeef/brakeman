@@ -7,6 +7,7 @@ module Brakeman
 
     def initialize tracker, app_tree
       @tracker = tracker
+      @timeout = @tracker.options[:parser_timeout]
       @app_tree = app_tree
       @file_list = {}
     end
@@ -33,9 +34,12 @@ module Brakeman
     def parse_ruby input, path
       begin
         Brakeman.debug "Parsing #{path}"
-        RubyParser.new.parse input, path
+        RubyParser.new.parse input, path, @timeout
       rescue Racc::ParseError => e
         @tracker.error e, "Could not parse #{path}"
+        nil
+      rescue Timeout::Error => e
+        @tracker.error Exception.new("Parsing #{path} took too long (> #{@timeout} seconds). Try increasing the limit with --parser-timeout"), caller
         nil
       rescue => e
         @tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
