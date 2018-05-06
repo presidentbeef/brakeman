@@ -22,4 +22,9 @@ class ShellStuff
     filename = Shellwords.escape("#{file_prefix}.txt")
     system "echo #{filename}"
   end
+
+  def system_array_join
+    command = ["ruby", method_that_returns_user_input, "--some-flag"].join(" ")
+    system(command)
+  end
 end
