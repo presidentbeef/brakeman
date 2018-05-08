@@ -92,6 +92,19 @@ class Rails52Tests < Minitest::Test
       :user_input => s(:call, s(:const, :Shellwords), :shellescape, s(:lvar, :ip))
   end
 
+  def test_command_injection_nested_shellwords
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "acb19548a2a44c3070d35c62754216f4b3365f372d6004470417cca587af0f47",
+      :warning_type => "Command Injection",
+      :line => 23,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/shell.rb",
+      :code => s(:call, nil, :system, s(:dstr, "echo ", s(:evstr, s(:call, s(:const, :Shellwords), :escape, s(:dstr, "", s(:evstr, s(:call, nil, :file_prefix)), s(:str, ".txt")))))),
+      :user_input => s(:call, nil, :file_prefix)
+  end
+
   def test_command_injection_as_target
     assert_warning :type => :warning,
       :warning_code => 14,

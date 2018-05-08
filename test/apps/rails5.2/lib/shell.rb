@@ -17,4 +17,9 @@ class ShellStuff
     # should not warn
     `something #{Process.pid}`
   end
+
+  def nested_system_interp
+    filename = Shellwords.escape("#{file_prefix}.txt")
+    system "echo #{filename}"
+  end
 end
