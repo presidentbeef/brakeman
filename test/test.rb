@@ -77,6 +77,8 @@ end
 #This is mainly to look for new warnings that are not being tested.
 module BrakemanTester::CheckExpected
   def test_number_of_warnings
+    require 'pp'
+
     expected.each do |type, number|
       if type == :warning
         warnings = report[:warnings]
@@ -84,7 +86,7 @@ module BrakemanTester::CheckExpected
         warnings = report[(type.to_s << "_warnings").to_sym]
       end
 
-      assert_equal number, warnings.length, lambda { "Expected #{number} #{type} warnings, but found #{warnings.length}: #{warnings}" }
+      assert_equal number, warnings.length, lambda { "Expected #{number} #{type} warnings, but found #{warnings.length}:\n#{warnings.map { |w| w.to_hash.pretty_inspect }.join("\n")}" }
     end
   end
 
