@@ -290,9 +290,76 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       if string? target
         exp = process exp.target
       end
+    when :join
+      if array? target and target.length > 2 and (string? first_arg or first_arg.nil?)
+        begin
+        exp = process_array_join(target, first_arg)
+        rescue => e
+          p e
+        end
+      end
     end
 
     exp
+  end
+
+  # Painful conversion of Array#join into string interpolation
+  def process_array_join array, join_str
+    result = s()
+
+    join_value = if string? join_str
+                   join_str.value
+                 else
+                   nil
+                 end
+
+    array[1..-2].each do |e|
+      result << join_item(e, join_value)
+    end
+
+    result << join_item(array.last, nil)
+
+    # Combine the strings at the beginning because that's what RubyParser does
+    combined_first = ""
+    result.each do |e|
+      if string? e
+        combined_first << e.value
+      elsif e.is_a? String
+        combined_first << e
+      else
+        break
+      end
+    end
+
+    # Remove the strings at the beginning
+    result.reject! do |e|
+      if e.is_a? String or string? e
+        true
+      else
+        break
+      end
+    end
+
+    result.unshift combined_first
+
+    # Have to fix up strings that follow interpolation
+    result.reduce(s(:dstr)) do |memo, e|
+      if string? e and node_type? memo.last, :evstr
+        e.value = "#{join_value}#{e.value}"
+      end
+
+      memo << e
+    end
+  end
+
+  def join_item item, join_value
+    if item.is_a? String
+      "#{item}#{join_value}"
+    elsif string? item or symbol? item or number? item
+      s(:str, "#{item.value}#{join_value}")
+    else
+      s(:evstr, item)
+    end
   end
 
   def process_iter exp

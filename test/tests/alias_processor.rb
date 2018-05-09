@@ -1051,4 +1051,18 @@ class AliasProcessorTests < Minitest::Test
     y
     INPUT
   end
+
+  def test_array_join_to_interpolation
+    assert_alias '"blah 1 #{thing} else"', <<-'INPUT'
+      x = ["blah", 1, thing, "else"].join(' ')
+      x
+    INPUT
+  end
+
+  def test_array_join_no_separater
+    assert_alias '"blah1#{thing}else"', <<-'INPUT'
+      x = ["blah", 1, thing, "else"].join
+      x
+    INPUT
+  end
 end
