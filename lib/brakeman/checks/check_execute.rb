@@ -33,7 +33,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     calls = tracker.find_call :targets => [:IO, :Open3, :Kernel, :'POSIX::Spawn', :Process, nil],
       :methods => [:capture2, :capture2e, :capture3, :exec, :pipeline, :pipeline_r,
         :pipeline_rw, :pipeline_start, :pipeline_w, :popen, :popen2, :popen2e,
-        :popen3, :spawn, :syscall, :system]
+        :popen3, :spawn, :syscall, :system], :nested => true
 
     Brakeman.debug "Processing system calls"
     calls.each do |result|
