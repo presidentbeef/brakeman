@@ -13,7 +13,7 @@ class Rails52Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 0,
-      :generic => 6
+      :generic => 7
     }
   end
 
@@ -105,7 +105,7 @@ class Rails52Tests < Minitest::Test
       :user_input => s(:call, nil, :file_prefix)
   end
 
-  def test_command_injection_as_target
+  def test_command_injection_backticks_as_target
     assert_warning :type => :warning,
       :warning_code => 14,
       :fingerprint => "9af991a12b23b815013ce0c69727b7a14cfb08e62f4e66a8851513af7cc6a757",
@@ -129,6 +129,19 @@ class Rails52Tests < Minitest::Test
       :relative_path => "lib/shell.rb",
       :code => s(:call, nil, :system, s(:dstr, "ruby ", s(:evstr, s(:call, nil, :method_that_returns_user_input)), s(:str, " --some-flag"))),
       :user_input => s(:call, nil, :method_that_returns_user_input)
+  end
+
+  def test_command_injection_as_target
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "18e51f5a40dc0e63a90908e88ec5f2ed585fa3a645622f997026ada323cf7552",
+      :warning_type => "Command Injection",
+      :line => 32,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/shell.rb",
+      :code => s(:call, nil, :system, s(:dstr, "echo ", s(:evstr, s(:call, nil, :foo)))),
+      :user_input => s(:call, nil, :foo)
   end
 
   def test_cross_site_scripting_loofah_CVE_2018_8048

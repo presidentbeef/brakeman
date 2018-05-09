@@ -27,4 +27,8 @@ class ShellStuff
     command = ["ruby", method_that_returns_user_input, "--some-flag"].join(" ")
     system(command)
   end
+
+  def system_as_target
+    !system("echo #{foo}")
+  end
 end
