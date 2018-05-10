@@ -342,6 +342,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     result.reduce(s(:dstr)) do |memo, e|
       if string? e and node_type? memo.last, :evstr
         e.value = "#{join_value}#{e.value}"
+      elsif join_value and node_type? memo.last, :evstr and node_type? e, :evstr
+        memo << s(:str, join_value)
       end
 
       memo << e
