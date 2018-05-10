@@ -1,3 +1,19 @@
+# 4.3.0
+
+* Check exec-type calls even if they are targets
+* Convert `Array#join` to string interpolation
+* `BaseCheck#include_interp?` should return first string interpolation
+* Add `--parser-timeout` option
+* Track parent calls in CallIndex
+* Warn about dangerous `link_to` href with `sanitize()`
+* Ignore `params#to_h` and `params#to_hash` in SQL checks
+* Change "".freeze to just ""
+* Ignore `Process.pid` in system calls
+* Index Kernel#\` calls even if they are targets
+* Code Climate: omit leading dot from `only_files` (Todd Mazierski)
+* `--color` can be used to force color output
+* Fix reported line numbers for CVE-2018-3741 and CVE-2018-8048
+
 # 4.2.1
 
 * Add warning for CVE-2018-3741
