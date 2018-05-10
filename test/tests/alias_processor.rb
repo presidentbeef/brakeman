@@ -1064,5 +1064,22 @@ class AliasProcessorTests < Minitest::Test
       x = ["blah", 1, thing, "else"].join
       x
     INPUT
+
+    assert_alias '"#{this}#{that}#{annd}#{uh}"', <<-'INPUT'
+      x = [this, that, annd, uh].join
+      x
+    INPUT
+  end
+
+  def test_array_join_lots_of_interp
+    assert_alias '"blah:#{this}:#{that}:end"', <<-'INPUT'
+      x = ["blah", this, that, "end"].join(':')
+      x
+    INPUT
+
+    assert_alias '"#{this}!#{that}!#{annd}!#{uh}"', <<-'INPUT'
+      x = [this, that, annd, uh].join('!')
+      x
+    INPUT
   end
 end
