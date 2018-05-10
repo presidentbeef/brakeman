@@ -292,11 +292,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       end
     when :join
       if array? target and target.length > 2 and (string? first_arg or first_arg.nil?)
-        begin
         exp = process_array_join(target, first_arg)
-        rescue => e
-          p e
-        end
       end
     end
 
