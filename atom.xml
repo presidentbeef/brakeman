@@ -4,13 +4,154 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2018-03-23T17:54:33-07:00</updated>
+  <updated>2018-05-11T11:08:11-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman 4.3.0 Released</title>
+    <link href="http://brakemanscanner.org/blog/2018/05/10/brakeman-4-dot-3-0-released/"/>
+    <updated>2018-05-10T15:36:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2018/05/10/brakeman-4-dot-3-0-released</id>
+    <content type="html">&lt;p&gt;Did you know we recently broke &lt;a href=&quot;http://bestgems.org/gems/brakeman&quot;&gt;11 million gem downloads&lt;/a&gt;? Wow!&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 4.2.1:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add &lt;code&gt;--parser-timeout&lt;/code&gt; option&lt;/li&gt;
+&lt;li&gt;Improve timeout error messages&lt;/li&gt;
+&lt;li&gt;Check exec-type calls even if they are targets (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1199&quot;&gt;#1199&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Index Kernel#` calls even if they are targets (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1183&quot;&gt;#1183&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;BaseCheck#include_interp?&lt;/code&gt; should return first string interpolation (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1189&quot;&gt;#1189&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Ignore &lt;code&gt;Process.pid&lt;/code&gt; in system calls&lt;/li&gt;
+&lt;li&gt;Warn about dangerous &lt;code&gt;link_to&lt;/code&gt; href with &lt;code&gt;sanitize()&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1187&quot;&gt;#1187&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Ignore &lt;code&gt;params#to_h&lt;/code&gt; and &lt;code&gt;params#to_hash&lt;/code&gt; in SQL checks (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1180&quot;&gt;#1180&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Convert &lt;code&gt;Array#join&lt;/code&gt; to string interpolation (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1179&quot;&gt;#1179&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Change &lt;code&gt;&quot;&quot;.freeze&lt;/code&gt; to just &lt;code&gt;&quot;&quot;&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1182&quot;&gt;#1182&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--color&lt;/code&gt; can be used to force color output (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1175&quot;&gt;#1175&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Track parent calls in call index&lt;/li&gt;
+&lt;li&gt;Fix reported line numbers for CVE-2018-3741 and CVE-2018-8048&lt;/li&gt;
+&lt;li&gt;Code Climate: omit leading dot from &lt;code&gt;only_files&lt;/code&gt; (&lt;a href=&quot;https://github.com/toddmazierski&quot;&gt;Todd Mazierski&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;&lt;code&gt;--color&lt;/code&gt; Option&lt;/h3&gt;
+
+&lt;p&gt;Previously, &lt;code&gt;--no-color&lt;/code&gt; could be used to turn off ANSI color in text reports. Now, &lt;code&gt;--color&lt;/code&gt; can be used to force color output.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1176&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;&lt;code&gt;--parser-timeout&lt;/code&gt; Option&lt;/h3&gt;
+
+&lt;p&gt;The default timeout for parsing a single file is 10 seconds. For some files, this may not be enough.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;--parser-timeout&lt;/code&gt; option can be used to specify a per-file timeout (in seconds).&lt;/p&gt;
+
+&lt;p&gt;Additionally, the error message for parsing timeouts has been improved considerably.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1194&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Command Injection Fixes&lt;/h3&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/JacobEvelyn&quot;&gt;Jacob Evelyn&lt;/a&gt; reporting a number of issues around command injection, there are several improvements.&lt;/p&gt;
+
+&lt;p&gt;Use of backticks as targets of a call will now be checked for command injection.&lt;/p&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;`blah #{something}` == &quot;expected output&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Previously, use of backticks was not being indexed in this case.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1185&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;Somewhat similarly, other calls (such as &lt;code&gt;system&lt;/code&gt;) would not warn if they were targets of a call.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1200&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;Brakeman will no longer warn about &lt;code&gt;Process.pid&lt;/code&gt; in system calls.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/commit/f9195312931caa49e369730a0798dad750150f76&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;Also fixed an issue where searching for string interpolation would return the innermost instance instead of the first instance (typically you want the first one).&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1195&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Freeze Calls&lt;/h3&gt;
+
+&lt;p&gt;Calls to &lt;code&gt;String#freeze&lt;/code&gt; will essentially be ignored.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&quot;blah&quot;.freeze
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;will be treated like&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&quot;blah&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1188&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;More Strong Parameters in SQL&lt;/h3&gt;
+
+&lt;p&gt;Calls to &lt;code&gt;to_h&lt;/code&gt; and &lt;code&gt;to_hash&lt;/code&gt; on &lt;code&gt;params&lt;/code&gt; will be ignored in the context of SQL injection.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1191&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Sanitize in &lt;code&gt;link_to&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will now warn on uses of &lt;code&gt;sanitize&lt;/code&gt; in attempts to avoid XSS in &lt;code&gt;link_to&lt;/code&gt;. Unfortunately, it does not work that way.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1192&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;&lt;code&gt;Array#join&lt;/code&gt; to String Interpolation&lt;/h3&gt;
+
+&lt;p&gt;Uses of &lt;code&gt;Array#join&lt;/code&gt; will now be converted to string interpolation.&lt;/p&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[1, thing, &quot;here&quot;].join(' ')
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;will be changed to&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&quot;1 #{thing} here&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This both fixes some false positives and helps detect more vulnerabilities in checks that are looking at string interpolation.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1198&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Parent Calls&lt;/h3&gt;
+
+&lt;p&gt;Brakeman now tracks the parent method call (I'm sure there's a better way to say that) of an argument. While this ended up not being needed for this release, it will help improve checks and messages in the future.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1193&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;9284a1a9413743b4c915eda40312395e0ee574c6286893a27074b6f9527648f4  brakeman-4.3.0.gem
+89ba3385fab967114c31da1462401c03caa8847d1115566a77039d0bda95181e  brakeman-lib-4.3.0.gem
+1834031c1e949242ea6d08b3b1036d3f7c12c28257cdfa94cf3d0459b6f851b6  brakeman-min-4.3.0.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;
+
+&lt;p&gt;If you find Brakeman valuable and want to support its development (and get more features!), check out &lt;a href=&quot;https://brakemanpro.com/&quot;&gt;Brakeman Pro&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 4.2.1 Released</title>
@@ -1613,89 +1754,6 @@ f1adce1a696799342dc9f50b51975024060360dc9018358c5d8e34c1c4681bd1  brakeman-min-3
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hanging out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion. Please note the mailing list is no longer in use and has apparently not been delivering mail for some time.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 3.2.0 Released</title>
-    <link href="http://brakemanscanner.org/blog/2016/02/24/brakeman-3-dot-2-0-released/"/>
-    <updated>2016-02-24T15:46:00-08:00</updated>
-    <id>http://brakemanscanner.org/blog/2016/02/24/brakeman-3-dot-2-0-released</id>
-    <content type="html">&lt;p&gt;This release sheds a couple dependencies and adds support for new Ruby 2.3 syntax.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 3.1.5&lt;/em&gt;:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Support calls using &lt;code&gt;&amp;amp;.&lt;/code&gt; operator (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/796&quot;&gt;#796&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Handle CoffeeScript in HAML (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/813&quot;&gt;#813&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Avoid render warnings about &lt;code&gt;params[:action]&lt;/code&gt;/&lt;code&gt;params[:controller]&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/812&quot;&gt;#812&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Only update ignore config file on changes (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/824&quot;&gt;#824&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Sort ignore config file&lt;/li&gt;
-&lt;li&gt;Index calls in class bodies but outside methods (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/814&quot;&gt;#814&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Skip Symbol DoS check on Rails 5&lt;/li&gt;
-&lt;li&gt;Fix finding calls with &lt;code&gt;targets: nil&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Remove &lt;code&gt;fastercsv&lt;/code&gt; dependency&lt;/li&gt;
-&lt;li&gt;Remove &lt;code&gt;multi-json&lt;/code&gt; dependecy&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;Ruby 2.3 Lonely Operator&lt;/h3&gt;
-
-&lt;p&gt;With the update of RubyParser to 3.8.1 (and Ruby2Ruby to 2.3), Brakeman now supports the new &lt;code&gt;&amp;amp;.&lt;/code&gt; operator and should treat it like a regular method call.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/827&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;CoffeeScript in HAML&lt;/h3&gt;
-
-&lt;p&gt;This release handles CoffeeScript embedded in HAML better and should reduce some false positives.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/817&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Render Warnings on Safe Parameters&lt;/h3&gt;
-
-&lt;p&gt;Brakeman will no longer warn on &lt;code&gt;render params[:action]&lt;/code&gt; or &lt;code&gt;render params[:controller]&lt;/code&gt;, as those values are not able to be controlled by an attacker.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/816&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;'Ignore' Configuration Changes&lt;/h3&gt;
-
-&lt;p&gt;The &quot;ignore config&quot; files generated by Brakeman are now sorted and will only update on changes, instead of always writing a new file.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/828&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Index Calls Outside Methods&lt;/h3&gt;
-
-&lt;p&gt;Calls that are outside methods (but inside class bodies) can now be found in Brakeman checks.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/815&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Skip Symbol DoS with Rails 5&lt;/h3&gt;
-
-&lt;p&gt;Rails 5 requires Ruby &gt;= 2.2.2, which now garbage collects symbols. If the &lt;code&gt;SymbolDoS&lt;/code&gt; check is run on a Rails 5 application (it's already optional), it will no longer warn.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/829&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Dependency Removal&lt;/h3&gt;
-
-&lt;p&gt;Since Ruby 1.8 is no longer supported, this release removes the legacy &lt;code&gt;fastercsv&lt;/code&gt; and &lt;code&gt;multi-json&lt;/code&gt; dependencies.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/822&quot;&gt;fastercsv&lt;/a&gt;, &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/818&quot;&gt;multi-json&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;SHAs&lt;/h3&gt;
-
-&lt;p&gt;The SHA256 sums for this release are&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;d1d1468fcca0ec5dd99c53af2018b781a8efe06483190aef9d13b1abcbb7e2a0  brakeman-min-3.2.0.gem
-07023148564668cc39911eec0354ca03774be1f8a03d66162f53a5dde44bb502  brakeman-3.2.0.gem
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Thank you to everyone who reported bugs and contributed improvements in this release.&lt;/p&gt;
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
