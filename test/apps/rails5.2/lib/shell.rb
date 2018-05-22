@@ -31,4 +31,12 @@ class ShellStuff
   def system_as_target
     !system("echo #{foo}")
   end
+
+  def interpolated_conditional
+    `echo #{"foo" if foo} bar`
+  end
+
+  def interpolated_ternary
+    `echo #{foo ? "bar" : "baz"}`
+  end
 end

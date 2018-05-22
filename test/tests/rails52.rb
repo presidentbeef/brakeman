@@ -144,6 +144,28 @@ class Rails52Tests < Minitest::Test
       :user_input => s(:call, nil, :foo)
   end
 
+  def test_command_injection_interpolated_conditional
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "eae19504b13ab3f112216fa589e1ec19dfce6df912bd43f00066b77c94c10568",
+      :warning_type => "Command Injection",
+      :line => 36,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/shell.rb"
+  end
+
+  def test_command_injection_interpolated_ternary
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "007232cf2f1dc81f49d8ae2b3e1d77b6491b6a7fcf82cfc424982e05b1cab9b5",
+      :warning_type => "Command Injection",
+      :line => 40,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/shell.rb"
+  end
+
   def test_cross_site_scripting_loofah_CVE_2018_8048
     assert_warning :type => :warning,
       :warning_code => 106,
