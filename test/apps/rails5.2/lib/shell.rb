@@ -32,11 +32,19 @@ class ShellStuff
     !system("echo #{foo}")
   end
 
-  def interpolated_conditional
+  def interpolated_conditional_safe
     `echo #{"foo" if foo} bar`
   end
 
-  def interpolated_ternary
+  def interpolated_ternary_safe
     `echo #{foo ? "bar" : "baz"}`
+  end
+
+  def interpolated_conditional_dangerous
+    `echo #{bar if foo} baz`
+  end
+
+  def interpolated_ternary_dangerous
+    `echo #{foo ? "bar" : bar} baz`
   end
 end

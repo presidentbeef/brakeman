@@ -13,7 +13,7 @@ class Rails52Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 0,
-      :generic => 7
+      :generic => 9
     }
   end
 
@@ -144,7 +144,7 @@ class Rails52Tests < Minitest::Test
       :user_input => s(:call, nil, :foo)
   end
 
-  def test_command_injection_interpolated_conditional
+  def test_command_injection_interpolated_conditional_safe
     assert_no_warning :type => :warning,
       :warning_code => 14,
       :fingerprint => "eae19504b13ab3f112216fa589e1ec19dfce6df912bd43f00066b77c94c10568",
@@ -155,7 +155,7 @@ class Rails52Tests < Minitest::Test
       :relative_path => "lib/shell.rb"
   end
 
-  def test_command_injection_interpolated_ternary
+  def test_command_injection_interpolated_ternary_safe
     assert_no_warning :type => :warning,
       :warning_code => 14,
       :fingerprint => "007232cf2f1dc81f49d8ae2b3e1d77b6491b6a7fcf82cfc424982e05b1cab9b5",
@@ -164,6 +164,32 @@ class Rails52Tests < Minitest::Test
       :message => /^Possible\ command\ injection/,
       :confidence => 1,
       :relative_path => "lib/shell.rb"
+  end
+
+  def test_command_injection_interpolated_conditional_dangerous
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "35e75c9db1462a5945016a6d4dbc195cba7b2d105a0ef71070bdd6f305a0efef",
+      :warning_type => "Command Injection",
+      :line => 44,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/shell.rb",
+      :code => s(:dxstr, "echo ", s(:evstr, s(:if, s(:call, nil, :foo), s(:call, nil, :bar), nil)), s(:str, " baz")),
+      :user_input => s(:call, nil, :bar)
+  end
+
+  def test_command_injection_interpolated_ternary_dangerous
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "a88fd53a2f217af569c90edcef2d1b086a347b100d67cae52f519073050d48af",
+      :warning_type => "Command Injection",
+      :line => 48,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/shell.rb",
+      :code => s(:dxstr, "echo ", s(:evstr, s(:if, s(:call, nil, :foo), s(:str, "bar"), s(:call, nil, :bar))), s(:str, " baz")),
+      :user_input => s(:call, nil, :bar)
   end
 
   def test_cross_site_scripting_loofah_CVE_2018_8048
