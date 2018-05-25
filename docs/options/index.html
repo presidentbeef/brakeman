@@ -140,9 +140,9 @@ ga('cdt.send', 'pageview');
 
 <p>Note all Brakeman output except reports are sent to stderr, making it simple to redirect stdout to a file and just get the report.</p>
 
-<p>Brakeman returns 0 as an exit code unless something went very wrong. To return an error code when warnings were found:</p>
+<p>By default, Brakeman will return a non-zero exit code if any security warnings are found or scanning errors are encountered. To disable this:</p>
 
-<pre><code>brakeman -z
+<pre><code>brakeman --no-exit-on-warn --no-exit-on-error
 </code></pre>
 
 <p>To force Brakeman into Rails 3 mode:</p>
