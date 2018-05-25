@@ -27,6 +27,17 @@ class Rails52Tests < Minitest::Test
       :relative_path => "app/controllers/application_controller.rb"
   end
 
+  def test_query_with_symbolize_keys
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "b7614315999c9f0db62649515da3bc9ce32ec418d69ea13af0564841392c98af",
+      :warning_type => "SQL Injection",
+      :line => 9,
+      :message => /^Possible SQL injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb"
+  end
+
   def test_sql_injection_not
     assert_warning :type => :warning,
       :warning_code => 0,
