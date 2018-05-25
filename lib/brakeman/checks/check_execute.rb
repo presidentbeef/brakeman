@@ -143,7 +143,13 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       next if SAFE_VALUES.include? e
       next if shell_escape? e
 
-      if node_type? e, :or, :evstr, :dstr
+      if node_type? e, :if
+        # If we're in a conditional, evaluate the `then` and `else` clauses to
+        # see if they're dangerous.
+        if res = dangerous?(e.values[1..-1])
+          return res
+        end
+      elsif node_type? e, :or, :evstr, :dstr
         if res = dangerous?(e)
           return res
         end
