@@ -24,9 +24,9 @@ To suppress informational warnings and just output the report:
 
 Note all Brakeman output except reports are sent to stderr, making it simple to redirect stdout to a file and just get the report.
 
-Brakeman returns 0 as an exit code unless something went very wrong. To return an error code when warnings were found:
+By default, Brakeman will return a non-zero exit code if any security warnings are found or scanning errors are encountered. To disable this:
 
-    brakeman -z
+    brakeman --no-exit-on-warn --no-exit-on-error
 
 To force Brakeman into Rails 3 mode:
 
