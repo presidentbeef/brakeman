@@ -58,7 +58,11 @@ module Brakeman
         Brakeman::ScannerErubis.new(text, :filename => path).src
       else
         require 'erb'
-        src = ERB.new(text, nil, path).src
+        src = if ERB.instance_method(:initialize).parameters.assoc(:key) # Ruby 2.6+
+          ERB.new(text, trim_mode: path).src
+        else
+          ERB.new(text, nil, path).src
+        end
         src.sub!(/^#.*\n/, '') if Brakeman::Scanner::RUBY_1_9
         src
       end
