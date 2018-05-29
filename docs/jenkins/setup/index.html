@@ -128,7 +128,7 @@ ga('cdt.send', 'pageview');
 <p>If Ruby is installed globally, then this should work:</p>
 
 <pre><code>gem install brakeman --no-ri --no-rdoc &amp;&amp;    
-brakeman -o brakeman-output.tabs
+brakeman --no-progress -o brakeman-output.tabs
 </code></pre>
 
 <h3>With RVM</h3>
@@ -137,7 +137,7 @@ brakeman -o brakeman-output.tabs
 
 <pre><code>bash -l -c '
 gem install brakeman --no-ri --no-rdoc &amp;&amp;
-brakeman -o brakeman-output.tabs'
+brakeman --no-progress -o brakeman-output.json'
 </code></pre>
 
 <p>It might make sense to also set up a separate gemset:</p>
@@ -146,7 +146,7 @@ brakeman -o brakeman-output.tabs'
 rvm gemset create my-brakeman-job &amp;&amp;
 rvm gemset use my-brakeman-job &amp;&amp;
 gem install brakeman --no-ri --no-rdoc &amp;&amp;
-brakeman -o brakeman-output.tabs'
+brakeman --no-progress -o brakeman-output.json'
 </code></pre>
 
   
