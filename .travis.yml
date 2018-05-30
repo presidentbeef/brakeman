@@ -23,10 +23,11 @@ after_script:
 
 matrix:
   include:
+    - rvm: "ruby-head"
     - rvm: "1.9.3"
     - rvm: "2.3.5"
     - rvm: "2.4.2"
-    - rvm: "2.5.0"
+    - rvm: "2.5.1"
       env: CC_TEST_REPORTER_ID=521d341f3320acda1902d0db0a3a92fb16b11ebfe3d5ab730218d4fc0fb3db13
 
 branches:
