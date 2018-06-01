@@ -317,6 +317,14 @@ module Brakeman::Util
     exp == SAFE_LITERAL
   end
 
+  def safe_literal_target? exp
+    if call? exp
+      safe_literal_target? exp.target
+    else
+      safe_literal? exp
+    end
+  end
+
   def rails_version
     @tracker.config.rails_version
   end
