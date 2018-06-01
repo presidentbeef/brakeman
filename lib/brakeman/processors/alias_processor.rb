@@ -2,6 +2,7 @@ require 'brakeman/util'
 require 'ruby_parser/bm_sexp_processor'
 require 'brakeman/processors/lib/processor_helper'
 require 'brakeman/processors/lib/safe_call_helper'
+require 'brakeman/processors/lib/call_conversion_helper'
 
 #Returns an s-expression with aliases replaced with their value.
 #This does not preserve semantics (due to side effects, etc.), but it makes
@@ -10,6 +11,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   include Brakeman::ProcessorHelper
   include Brakeman::SafeCallHelper
   include Brakeman::Util
+  include Brakeman::CallConversionHelper
 
   attr_reader :result, :tracker
 
@@ -202,49 +204,19 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     case method
     when :+
       if array? target and array? first_arg
-        joined = join_arrays target, first_arg
-        joined.line(exp.line)
-        exp = joined
+        exp = join_arrays(target, first_arg, exp)
       elsif string? first_arg
-        if string? target # "blah" + "blah"
-          joined = join_strings target, first_arg
-          joined.line(exp.line)
-          exp = joined
-        elsif call? target and target.method == :+ and string? target.first_arg
-          joined = join_strings target.first_arg, first_arg
-          joined.line(exp.line)
-          target.first_arg = joined
-          exp = target
-        end
+        exp = join_strings(target, first_arg, exp)
       elsif number? first_arg
-        if number? target
-          exp = Sexp.new(:lit, target.value + first_arg.value)
-        elsif call? target and target.method == :+ and number? target.first_arg
-          target.first_arg = Sexp.new(:lit, target.first_arg.value + first_arg.value)
-          exp = target
-        end
+        exp = math_op(:+, target, first_arg, exp)
       end
-    when :-
-      if number? target and number? first_arg
-        exp = Sexp.new(:lit, target.value - first_arg.value)
-      end
-    when :*
-      if number? target and number? first_arg
-        exp = Sexp.new(:lit, target.value * first_arg.value)
-      end
-    when :/
-      if number? target and number? first_arg
-        unless first_arg.value == 0 and not target.value.is_a? Float
-          exp = Sexp.new(:lit, target.value / first_arg.value)
-        end
-      end
+    when :-, :*, :/
+      exp = math_op(method, target, first_arg, exp)
     when :[]
       if array? target
-        temp_exp = process_array_access target, exp.args
-        exp = temp_exp if temp_exp
+        exp = process_array_access(target, exp.args, exp)
       elsif hash? target
-        temp_exp = process_hash_access target, first_arg
-        exp = temp_exp if temp_exp
+        exp = process_hash_access(target, first_arg, exp)
       end
     when :merge!, :update
       if hash? target and hash? first_arg
@@ -909,45 +881,6 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     node_type? exp, :or and
     exp.or_depth and
     exp.or_depth >= @or_depth_limit
-  end
-
-  #Process single integer access to an array.
-  #
-  #Returns the value inside the array, if possible.
-  def process_array_access target, args
-    if args.length == 1 and integer? args.first
-      index = args.first.value
-
-      #Have to do this because first element is :array and we have to skip it
-      target[1..-1][index]
-    else
-      nil
-    end
-  end
-
-  #Process hash access by returning the value associated
-  #with the given argument.
-  def process_hash_access target, index
-    hash_access(target, index)
-  end
-
-  #Join two array literals into one.
-  def join_arrays array1, array2
-    result = Sexp.new(:array)
-    result.concat array1[1..-1]
-    result.concat array2[1..-1]
-  end
-
-  #Join two string literals into one.
-  def join_strings string1, string2
-    result = Sexp.new(:str)
-    result.value = string1.value + string2.value
-
-    if result.value.length > 50
-      string1
-    else
-      result
-    end
   end
 
   # Change x.send(:y, 1) to x.y(1)
