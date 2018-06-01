@@ -47,4 +47,27 @@ class ShellStuff
   def interpolated_ternary_dangerous
     `echo #{foo ? "bar" : bar} baz`
   end
+
+  COMMANDS = { foo: "echo", bar: "cat" }
+  MORE_COMMANDS = { foo: "touch" }
+
+  def safe(arg)
+    command = if Date.today.tuesday? # Some condition.
+                COMMANDS[arg]
+              else
+                MORE_COMMANDS[arg]
+              end
+
+    `#{command} file1.txt`
+  end
+
+  EXPRESSIONS = ["users.email", "concat_ws(' ', users.first_name, users.last_name)"]
+
+  def perform_commands
+    EXPRESSIONS.each { |exp| `echo #{exp}` }
+  end
+
+  def scopes(base_scope)
+    EXPRESSIONS.map { |exp| base_scope.where("#{exp} ILIKE '%foo%'") }
+  end
 end

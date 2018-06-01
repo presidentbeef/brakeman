@@ -64,6 +64,19 @@ class Rails52Tests < Minitest::Test
       :user_input => s(:call, s(:str, "my_table_alias"), :freeze)
   end
 
+  def test_sql_injection_with_array_map
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "d3e36e5e530dc926b4fd38c605cf39341bf9e48169310f34ac439caf129e1f6f",
+      :warning_type => "SQL Injection",
+      :line => 71,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 2,
+      :relative_path => "lib/shell.rb",
+      :code => s(:call, s(:lvar, :base_scope), :where, s(:dstr, "", s(:evstr, s(:lvar, :exp)), s(:str, " ILIKE '%foo%'"))),
+      :user_input => s(:lvar, :exp)
+  end
+
   def test_command_injection_1
     assert_no_warning :type => :warning,
       :warning_code => 14,
@@ -201,6 +214,32 @@ class Rails52Tests < Minitest::Test
       :relative_path => "lib/shell.rb",
       :code => s(:dxstr, "echo ", s(:evstr, s(:if, s(:call, nil, :foo), s(:str, "bar"), s(:call, nil, :bar))), s(:str, " baz")),
       :user_input => s(:call, nil, :bar)
+  end
+
+  def test_command_injection_with_hash_unknown_key_access
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "d24b0ba3ecb378e00bc0c8034eb2651f145ec6247f7471f8a41b31d44d4cdd33",
+      :warning_type => "Command Injection",
+      :line => 61,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/shell.rb",
+      :code => s(:dxstr, "", s(:evstr, s(:or, s(:call, s(:const, :COMMANDS), :[], s(:lvar, :arg)), s(:call, s(:const, :MORE_COMMANDS), :[], s(:lvar, :arg)))), s(:str, " file1.txt")),
+      :user_input => s(:call, s(:const, :COMMANDS), :[], s(:lvar, :arg))
+  end
+
+  def test_command_injection_with_array_each
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "760cf49f3f216b99e9720a8282ace8096c3b844ebd1da16cf20478d00449cd90",
+      :warning_type => "Command Injection",
+      :line => 67,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/shell.rb",
+      :code => s(:dxstr, "echo ", s(:evstr, s(:lvar, :exp))),
+      :user_input => s(:lvar, :exp)
   end
 
   def test_cross_site_scripting_loofah_CVE_2018_8048
