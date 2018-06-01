@@ -26,6 +26,8 @@ module Brakeman::Util
 
   ALL_COOKIES = Set[COOKIES, REQUEST_COOKIES]
 
+  SAFE_LITERAL = s(:lit, :BRAKEMAN_SAFE_LITERAL)
+
   #Convert a string from "something_like_this" to "SomethingLikeThis"
   #
   #Taken from ActiveSupport.
@@ -305,6 +307,14 @@ module Brakeman::Util
     end
 
     call
+  end
+
+  def safe_literal line = nil
+    s(:lit, :BRAKEMAN_SAFE_LITERAL).line(line)
+  end
+
+  def safe_literal? exp
+    exp == SAFE_LITERAL
   end
 
   def rails_version

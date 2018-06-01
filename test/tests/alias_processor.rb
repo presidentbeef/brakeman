@@ -141,7 +141,7 @@ class AliasProcessorTests < Minitest::Test
   end
 
   def test_array_detect
-    assert_alias '1', <<-RUBY
+    assert_alias ':BRAKEMAN_SAFE_LITERAL', <<-RUBY
       x = [1,2,3].detect { |x| x.odd? }
       x
     RUBY
@@ -844,8 +844,8 @@ class AliasProcessorTests < Minitest::Test
     x
     INPUT
     if [1,2,3].include? x
-      y = 3
-      p 3
+      y = :BRAKEMAN_SAFE_LITERAL
+      p :BRAKEMAN_SAFE_LITERAL
     end
 
     x
@@ -861,7 +861,7 @@ class AliasProcessorTests < Minitest::Test
     INPUT
     x = params[:x].presence
     if ['a','b'].include? params[:x].presence
-      User.a
+      User.BRAKEMAN_SAFE_LITERAL
     end
 
     params[:x].presence
@@ -874,7 +874,7 @@ class AliasProcessorTests < Minitest::Test
     x
     INPUT
     return unless ['a', 'b'].include? x
-    'a'
+    :BRAKEMAN_SAFE_LITERAL
     OUTPUT
   end
 
@@ -894,7 +894,7 @@ class AliasProcessorTests < Minitest::Test
       do_stuff
       return
     end
-    'a'
+    :BRAKEMAN_SAFE_LITERAL
     OUTPUT
   end
 
@@ -904,7 +904,7 @@ class AliasProcessorTests < Minitest::Test
     x
     INPUT
     fail unless ['a', 'b'].include? x
-    'a'
+    :BRAKEMAN_SAFE_LITERAL
     OUTPUT
   end
 
@@ -914,7 +914,7 @@ class AliasProcessorTests < Minitest::Test
     x
     INPUT
     raise Z unless ['a', 'b'].include? x
-    'a'
+    :BRAKEMAN_SAFE_LITERAL
     OUTPUT
   end
 

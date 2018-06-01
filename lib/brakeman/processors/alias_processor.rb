@@ -336,7 +336,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     @exp_context.push exp
     exp[1] = process exp.block_call
     if array_detect_all_literals? exp[1]
-      return exp.block_call.target[1]
+      return safe_literal(exp.line)
     end
 
     @exp_context.pop
@@ -739,12 +739,12 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
             # set x to "a" inside the true branch
             var = condition.first_arg
             previous_value = env.current[var]
-            env.current[var] = condition.target[1]
+            env.current[var] = safe_literal(var.line)
             exp[branch_index] = process_if_branch branch
             env.current[var] = previous_value
           elsif i == 1 and array_include_all_literals? condition and early_return? branch
             var = condition.first_arg
-            env.current[var] = condition.target[1]
+            env.current[var] = safe_literal(var.line)
             exp[branch_index] = process_if_branch branch
           else
             exp[branch_index] = process_if_branch branch

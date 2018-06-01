@@ -28,6 +28,8 @@ module Brakeman
         joined = join_strings lhs.first_arg, rhs
         lhs.first_arg = joined
         lhs
+      elsif safe_literal? lhs or safe_literal? rhs
+        safe_literal(lhs.line)
       else
         original_exp
       end
@@ -46,6 +48,8 @@ module Brakeman
         # (x + 1) + 2 -> (x + 3)
         lhs.first_arg = Sexp.new(:lit, lhs.first_arg.value + rhs.value).line(lhs.first_arg.line)
         lhs
+      elsif safe_literal? lhs or safe_literal? rhs
+        safe_literal(lhs.line)
       else
         original_exp
       end
