@@ -30,7 +30,7 @@ module Brakeman
         else
           result
         end
-      elsif call? lhs and lhs.method == :+ and string? lhs.first_arg
+      elsif call? lhs and lhs.method == :+ and string? lhs.first_arg and string? rhs
         joined = join_strings lhs.first_arg, rhs
         lhs.first_arg = joined
         lhs
@@ -50,7 +50,7 @@ module Brakeman
           value = lhs.value.send(op, rhs.value)
           Sexp.new(:lit, value).line(lhs.line)
         end
-      elsif call? lhs and lhs.method == :+ and number? lhs.first_arg
+      elsif call? lhs and lhs.method == :+ and number? lhs.first_arg and number? rhs
         # (x + 1) + 2 -> (x + 3)
         lhs.first_arg = Sexp.new(:lit, lhs.first_arg.value + rhs.value).line(lhs.first_arg.line)
         lhs
