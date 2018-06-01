@@ -77,6 +77,19 @@ class Rails52Tests < Minitest::Test
       :user_input => s(:lvar, :exp)
   end
 
+  def test_sql_injection_safe_literal_to_s_singularize
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "4de07c156fa4b7694024871f100409e41fbcac4f65813a34ba749e1751b95204",
+      :warning_type => "SQL Injection",
+      :line => 16,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 2,
+      :relative_path => "app/models/user.rb",
+      :code => s(:call, s(:call, nil, :articles), :sum, s(:dstr, "calculated_", s(:evstr, s(:call, s(:call, s(:lit, :BRAKEMAN_SAFE_LITERAL), :to_s), :singularize)), s(:str, "_cents * quantity"))),
+      :user_input => s(:call, s(:call, s(:lit, :BRAKEMAN_SAFE_LITERAL), :to_s), :singularize)
+  end
+
   def test_command_injection_1
     assert_no_warning :type => :warning,
       :warning_code => 14,
