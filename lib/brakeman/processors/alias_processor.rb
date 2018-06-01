@@ -687,18 +687,14 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def array_include_all_literals? exp
     call? exp and
     exp.method == :include? and
-    node_type? exp.target, :array and
-    exp.target.length > 1 and
-    exp.target.all? { |e| e.is_a? Symbol or node_type? e, :lit, :str }
+    all_literals? exp.target
   end
 
   def array_detect_all_literals? exp
     call? exp and
     [:detect, :find].include? exp.method and
-    node_type? exp.target, :array and
-    exp.target.length > 1 and
     exp.first_arg.nil? and
-    exp.target.all? { |e| e.is_a? Symbol or node_type? e, :lit, :str }
+    all_literals? exp.target
   end
 
   #Sets @inside_if = true
