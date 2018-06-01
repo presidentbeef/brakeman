@@ -310,7 +310,7 @@ module Brakeman::Util
   end
 
   def safe_literal line = nil
-    s(:lit, :BRAKEMAN_SAFE_LITERAL).line(line)
+    s(:lit, :BRAKEMAN_SAFE_LITERAL).line(line || 0)
   end
 
   def safe_literal? exp
