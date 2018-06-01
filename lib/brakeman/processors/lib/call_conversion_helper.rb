@@ -78,7 +78,13 @@ module Brakeman
     # Process hash access by returning the value associated
     # with the given argument.
     def process_hash_access hash, index, original_exp = nil
-      hash_access(hash, index) or original_exp
+      if value = hash_access(hash, index)
+        value # deep_clone?
+      elsif all_literals? hash, :hash
+        safe_literal(hash.line)
+      else
+        original_exp
+      end
     end
   end
 end

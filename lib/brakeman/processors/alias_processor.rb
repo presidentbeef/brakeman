@@ -124,7 +124,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
 
     if hash? t
-      if v = hash_access(t, exp.first_arg)
+      if v = process_hash_access(t, exp.first_arg)
         v.deep_clone(exp.line)
       else
         case t.node_type
