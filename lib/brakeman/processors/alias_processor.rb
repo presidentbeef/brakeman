@@ -345,12 +345,12 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       call = exp.block_call
       block_args = exp.block_args
 
-      if [:each, :map].include? call.method and all_literals? call.target and block_args.length == 2 and block_args.last.is_a? Symbol
+      if call? call and [:each, :map].include? call.method and all_literals? call.target and block_args.length == 2 and block_args.last.is_a? Symbol
         # Iterating over an array of all literal values
         local = Sexp.new(:lvar, block_args.last)
         env.current[local] = safe_literal(exp.line)
       else
-        exp.block_args.each do |e|
+        block_args.each do |e|
           #Force block arg(s) to be local
           if node_type? e, :lasgn
             env.current[Sexp.new(:lvar, e.lhs)] = Sexp.new(:lvar, e.lhs)
