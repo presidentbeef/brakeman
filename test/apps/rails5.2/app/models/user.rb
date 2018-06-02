@@ -10,4 +10,10 @@ class User < ActiveRecord::Base
       select("#{SUBQUERY_TABLE_ALIAS}.*").
       from("#{table_name} AS #{SUBQUERY_TABLE_ALIAS}")
   end
+
+  def singularize_safe_literal
+    [:fees, :fair].each do |type|
+      Money.new(articles.sum("calculated_#{type.to_s.singularize}_cents * quantity"))
+    end
+  end
 end

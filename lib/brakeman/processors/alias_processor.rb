@@ -2,6 +2,7 @@ require 'brakeman/util'
 require 'ruby_parser/bm_sexp_processor'
 require 'brakeman/processors/lib/processor_helper'
 require 'brakeman/processors/lib/safe_call_helper'
+require 'brakeman/processors/lib/call_conversion_helper'
 
 #Returns an s-expression with aliases replaced with their value.
 #This does not preserve semantics (due to side effects, etc.), but it makes
@@ -10,6 +11,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   include Brakeman::ProcessorHelper
   include Brakeman::SafeCallHelper
   include Brakeman::Util
+  include Brakeman::CallConversionHelper
 
   attr_reader :result, :tracker
 
@@ -122,7 +124,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
 
     if hash? t
-      if v = hash_access(t, exp.first_arg)
+      if v = process_hash_access(t, exp.first_arg)
         v.deep_clone(exp.line)
       else
         case t.node_type
@@ -202,49 +204,19 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     case method
     when :+
       if array? target and array? first_arg
-        joined = join_arrays target, first_arg
-        joined.line(exp.line)
-        exp = joined
+        exp = join_arrays(target, first_arg, exp)
       elsif string? first_arg
-        if string? target # "blah" + "blah"
-          joined = join_strings target, first_arg
-          joined.line(exp.line)
-          exp = joined
-        elsif call? target and target.method == :+ and string? target.first_arg
-          joined = join_strings target.first_arg, first_arg
-          joined.line(exp.line)
-          target.first_arg = joined
-          exp = target
-        end
+        exp = join_strings(target, first_arg, exp)
       elsif number? first_arg
-        if number? target
-          exp = Sexp.new(:lit, target.value + first_arg.value)
-        elsif call? target and target.method == :+ and number? target.first_arg
-          target.first_arg = Sexp.new(:lit, target.first_arg.value + first_arg.value)
-          exp = target
-        end
+        exp = math_op(:+, target, first_arg, exp)
       end
-    when :-
-      if number? target and number? first_arg
-        exp = Sexp.new(:lit, target.value - first_arg.value)
-      end
-    when :*
-      if number? target and number? first_arg
-        exp = Sexp.new(:lit, target.value * first_arg.value)
-      end
-    when :/
-      if number? target and number? first_arg
-        unless first_arg.value == 0 and not target.value.is_a? Float
-          exp = Sexp.new(:lit, target.value / first_arg.value)
-        end
-      end
+    when :-, :*, :/
+      exp = math_op(method, target, first_arg, exp)
     when :[]
       if array? target
-        temp_exp = process_array_access target, exp.args
-        exp = temp_exp if temp_exp
+        exp = process_array_access(target, exp.args, exp)
       elsif hash? target
-        temp_exp = process_hash_access target, first_arg
-        exp = temp_exp if temp_exp
+        exp = process_hash_access(target, first_arg, exp)
       end
     when :merge!, :update
       if hash? target and hash? first_arg
@@ -364,28 +336,37 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     @exp_context.push exp
     exp[1] = process exp.block_call
     if array_detect_all_literals? exp[1]
-      return exp.block_call.target[1]
+      return safe_literal(exp.line)
     end
 
     @exp_context.pop
 
     env.scope do
-      exp.block_args.each do |e|
-        #Force block arg(s) to be local
-        if node_type? e, :lasgn
-          env.current[Sexp.new(:lvar, e.lhs)] = Sexp.new(:lvar, e.lhs)
-        elsif node_type? e, :kwarg
-          env.current[Sexp.new(:lvar, e[1])] = e[2]
-        elsif node_type? e, :masgn, :shadow
-          e[1..-1].each do |var|
-            local = Sexp.new(:lvar, var)
+      call = exp.block_call
+      block_args = exp.block_args
+
+      if call? call and [:each, :map].include? call.method and all_literals? call.target and block_args.length == 2 and block_args.last.is_a? Symbol
+        # Iterating over an array of all literal values
+        local = Sexp.new(:lvar, block_args.last)
+        env.current[local] = safe_literal(exp.line)
+      else
+        block_args.each do |e|
+          #Force block arg(s) to be local
+          if node_type? e, :lasgn
+            env.current[Sexp.new(:lvar, e.lhs)] = Sexp.new(:lvar, e.lhs)
+          elsif node_type? e, :kwarg
+            env.current[Sexp.new(:lvar, e[1])] = e[2]
+          elsif node_type? e, :masgn, :shadow
+            e[1..-1].each do |var|
+              local = Sexp.new(:lvar, var)
+              env.current[local] = local
+            end
+          elsif e.is_a? Symbol
+            local = Sexp.new(:lvar, e)
             env.current[local] = local
+          else
+            raise "Unexpected value in block args: #{e.inspect}"
           end
-        elsif e.is_a? Symbol
-          local = Sexp.new(:lvar, e)
-          env.current[local] = local
-        else
-          raise "Unexpected value in block args: #{e.inspect}"
         end
       end
 
@@ -715,18 +696,14 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def array_include_all_literals? exp
     call? exp and
     exp.method == :include? and
-    node_type? exp.target, :array and
-    exp.target.length > 1 and
-    exp.target.all? { |e| e.is_a? Symbol or node_type? e, :lit, :str }
+    all_literals? exp.target
   end
 
   def array_detect_all_literals? exp
     call? exp and
     [:detect, :find].include? exp.method and
-    node_type? exp.target, :array and
-    exp.target.length > 1 and
     exp.first_arg.nil? and
-    exp.target.all? { |e| e.is_a? Symbol or node_type? e, :lit, :str }
+    all_literals? exp.target
   end
 
   #Sets @inside_if = true
@@ -767,12 +744,12 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
             # set x to "a" inside the true branch
             var = condition.first_arg
             previous_value = env.current[var]
-            env.current[var] = condition.target[1]
+            env.current[var] = safe_literal(var.line)
             exp[branch_index] = process_if_branch branch
             env.current[var] = previous_value
           elsif i == 1 and array_include_all_literals? condition and early_return? branch
             var = condition.first_arg
-            env.current[var] = condition.target[1]
+            env.current[var] = safe_literal(var.line)
             exp[branch_index] = process_if_branch branch
           else
             exp[branch_index] = process_if_branch branch
@@ -909,45 +886,6 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     node_type? exp, :or and
     exp.or_depth and
     exp.or_depth >= @or_depth_limit
-  end
-
-  #Process single integer access to an array.
-  #
-  #Returns the value inside the array, if possible.
-  def process_array_access target, args
-    if args.length == 1 and integer? args.first
-      index = args.first.value
-
-      #Have to do this because first element is :array and we have to skip it
-      target[1..-1][index]
-    else
-      nil
-    end
-  end
-
-  #Process hash access by returning the value associated
-  #with the given argument.
-  def process_hash_access target, index
-    hash_access(target, index)
-  end
-
-  #Join two array literals into one.
-  def join_arrays array1, array2
-    result = Sexp.new(:array)
-    result.concat array1[1..-1]
-    result.concat array2[1..-1]
-  end
-
-  #Join two string literals into one.
-  def join_strings string1, string2
-    result = Sexp.new(:str)
-    result.value = string1.value + string2.value
-
-    if result.value.length > 50
-      string1
-    else
-      result
-    end
   end
 
   # Change x.send(:y, 1) to x.y(1)

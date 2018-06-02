@@ -404,6 +404,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       nil
     elsif call? value and value.method == :to_s
       unsafe_string_interp? value.target
+    elsif call? value and safe_literal_target? value
+      nil
     else
       case value.node_type
       when :or
