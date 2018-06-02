@@ -64,7 +64,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
     res = process_default exp
 
     if node_type? res, :iter and call? exp.block_call # sometimes this changes after processing
-      if exp.block_call.method == :included
+      if exp.block_call.method == :included and (@current_module or @current_class)
         (@current_module || @current_class).options[:included] = res.block
       end
     end
