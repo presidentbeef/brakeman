@@ -16,4 +16,11 @@ class User < ActiveRecord::Base
       Money.new(articles.sum("calculated_#{type.to_s.singularize}_cents * quantity"))
     end
   end
+
+  def foreign_key_thing
+    assoc_reflection = reflect_on_association(:foos)
+    foreign_key = assoc_reflection.foreign_key
+
+    User.joins("INNER JOIN <complex join involving custom SQL and #{foreign_key} interpolation>")
+  end
 end

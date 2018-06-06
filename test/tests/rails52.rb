@@ -90,6 +90,19 @@ class Rails52Tests < Minitest::Test
       :user_input => s(:call, s(:call, s(:lit, :BRAKEMAN_SAFE_LITERAL), :to_s), :singularize)
   end
 
+  def test_sql_injection_foreign_key
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "efc0a7f6a2f171db9cd6369da3335f0250478f9f50603118884f4d2ca0ca5161",
+      :warning_type => "SQL Injection",
+      :line => 24,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :code => s(:call, s(:const, :User), :joins, s(:dstr, "INNER JOIN <complex join involving custom SQL and ", s(:evstr, s(:call, s(:call, nil, :reflect_on_association, s(:lit, :foos)), :foreign_key)), s(:str, " interpolation>"))),
+      :user_input => s(:call, s(:call, nil, :reflect_on_association, s(:lit, :foos)), :foreign_key)
+  end
+
   def test_command_injection_1
     assert_no_warning :type => :warning,
       :warning_code => 14,
