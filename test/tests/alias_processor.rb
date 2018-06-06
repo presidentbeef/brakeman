@@ -1082,4 +1082,11 @@ class AliasProcessorTests < Minitest::Test
       x
     INPUT
   end
+
+  def test_ignore_freeze
+    assert_alias "blah", <<-INPUT
+    x = blah.freeze
+    x
+    INPUT
+  end
 end

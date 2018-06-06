@@ -259,8 +259,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         exp = target[1]
       end
     when :freeze
-      if string? target
-        exp = process exp.target
+      unless target.nil?
+        exp = target
       end
     when :join
       if array? target and target.length > 2 and (string? first_arg or first_arg.nil?)

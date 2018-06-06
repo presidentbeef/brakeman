@@ -103,6 +103,19 @@ class Rails52Tests < Minitest::Test
       :user_input => s(:call, s(:call, nil, :reflect_on_association, s(:lit, :foos)), :foreign_key)
   end
 
+  def test_ignoring_freeze_generally
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "fdfde80ab27695c4a296f68f953391581df6e9b5568d921622982c32baffaa25",
+      :warning_type => "SQL Injection",
+      :line => 18,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 2,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :Person), :where, s(:dstr, "", s(:evstr, s(:lvar, :foo)), s(:str, " >= 1"))),
+      :user_input => s(:lvar, :foo)
+  end
+
   def test_command_injection_1
     assert_no_warning :type => :warning,
       :warning_code => 14,
