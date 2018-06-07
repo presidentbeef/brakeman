@@ -8,7 +8,7 @@
 * Use safe literal when accessing literal hash with unknown key
 * Avoid deprecated use of ERB in Ruby 2.6 (Koichi ITO)
 * Allow `symbolize_keys` to be called on `params` in SQL (Jacob Evelyn)
-* Improve handling of conditionals in shell commands (Jacob Evenlyn)
+* Improve handling of conditionals in shell commands (Jacob Evelyn)
 * Fix error when setting line number in implicit renders
 
 # 4.3.0
