@@ -1,3 +1,16 @@
+# 4.3.1
+
+* Ignore `Object#freeze`, use the target instead
+* Ignore `foreign_key` calls in SQL
+* Handle `included` calls outside of classes/modules
+* Add `:BRAKEMAN_SAFE_LITERAL` to represent known-safe literals
+* Handle `Array#map` and `Array#each` over literal arrays
+* Use safe literal when accessing literal hash with unknown key
+* Avoid deprecated use of ERB in Ruby 2.6 (Koichi ITO)
+* Allow `symbolize_keys` to be called on `params` in SQL (Jacob Evelyn)
+* Improve handling of conditionals in shell commands (Jacob Evenlyn)
+* Fix error when setting line number in implicit renders
+
 # 4.3.0
 
 * Check exec-type calls even if they are targets
