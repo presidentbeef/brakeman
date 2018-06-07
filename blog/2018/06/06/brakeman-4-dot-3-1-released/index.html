@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Brakeman 3.4.1 Released</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman 4.3.1 Released</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/blog/2016/11/02/brakeman-3-dot-4-1-released/"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2018/06/06/brakeman-4-dot-3-1-released/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -106,7 +106,7 @@ ga('cdt.send', 'pageview');
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 3.4.1 Released</h1>
+      <h1 class="entry-title">Brakeman 4.3.1 Released</h1>
     
     
       <p class="meta">
@@ -114,7 +114,7 @@ ga('cdt.send', 'pageview');
 
 
 
-<time datetime="2016-11-02 13:07:00 -0700" pubdate  updated >Nov 2<span>nd</span>, 2016</time>
+<time datetime="2018-06-06 19:55:00 -0700" pubdate  updated >Jun 6<span>th</span>, 2018</time>
 
 
 </p>
@@ -122,58 +122,111 @@ ga('cdt.send', 'pageview');
   </header>
 
 
-<div class="entry-content"><ul>
-<li>Configurable engines path (<a href="https://github.com/jsyeo">Jason Yeo</a>)</li>
-<li>Check CSRF setting in direct subclasses of <code>ActionController::Base</code> (<a href="https://github.com/jsyeo">Jason Yeo</a>)</li>
-<li>Pull Ruby version from <code>.ruby-version</code> or Gemfile</li>
-<li>Use Ruby version to turn off SymbolDoS check (<a href="https://github.com/presidentbeef/brakeman/issues/928">#928</a>)</li>
-<li>Fix ignoring link interpolation not at beginning of string (<a href="https://github.com/presidentbeef/brakeman/issues/939">#939</a>)</li>
-<li>Show action help at start of interactive ignore (<a href="https://github.com/presidentbeef/brakeman/issues/949">#949</a>)</li>
-<li>Avoid warning about <code>where_values_hash</code> in SQLi (<a href="https://github.com/presidentbeef/brakeman/issues/942">#942</a>)</li>
+<div class="entry-content"><p>Mostly false positive reduction and bug fixes in this one!</p>
+
+<p><em>Changes since 4.3.1:</em></p>
+
+<ul>
+<li>Add <code>:BRAKEMAN_SAFE_LITERAL</code> to represent known-safe literals</li>
+<li>Handle <code>Array#map</code> and <code>Array#each</code> over literal arrays (<a href="https://github.com/presidentbeef/brakeman/issues/1208">#1208</a> / <a href="https://github.com/presidentbeef/brakeman/issues/1224">#1224</a>)</li>
+<li>Use safe literal when accessing literal hash with unknown key (<a href="https://github.com/presidentbeef/brakeman/issues/1213">#1213</a>)</li>
+<li>Allow <code>symbolize_keys</code> to be called on <code>params</code> in SQL (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
+<li>Improve handling of conditionals in shell commands (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
+<li>Avoid deprecated use of ERB in Ruby 2.6 (<a href="https://github.com/koic">Koichi ITO</a>)</li>
+<li>Ignore <code>Object#freeze</code>, use the target instead (<a href="https://github.com/presidentbeef/brakeman/issues/1211">#1211</a>)</li>
+<li>Ignore <code>foreign_key</code> calls in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/1202">#1202</a>)</li>
+<li>Handle <code>included</code> calls outside of classes/modules (<a href="https://github.com/presidentbeef/brakeman/issues/1209">#1209</a>)</li>
+<li>Fix error when setting line number in implicit renders (<a href="https://github.com/presidentbeef/brakeman/issues/1210">#1210</a>)</li>
 </ul>
 
 
-<h3>Engine Paths Option</h3>
+<h3>Safe Literals</h3>
 
-<p>Thanks to the work of Jason Yeo, Brakeman now supports custom paths to Rails engines uses the <code>--add-engines-path</code> option.</p>
+<p>This version of Brakeman introduces a new way of handling &#8220;known safe&#8221; values (integers, string literals, etc.) where the <em>exact</em> value is unknown. The uses of the values will be replaced with <code>:BRAKEMAN_SAFE_LITERAL</code> instead of actual values, as Brakeman had done previously. The new approach avoids some unhelpful side-effects and allows for more of this kind of thing in the future.</p>
 
-<p>Multiple comma-separated paths may be configured. To include all subdirectories, use <code>*</code> (e.g. <code>my_engines/*</code>). Absolute paths may be used for engines outside the application.</p>
+<p>These changes fix up a number of false positives.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/948">changes</a>)</p>
+<h4>Array Safe Literals</h4>
 
-<h3>Expanded CSRF Check</h3>
+<p>In situations like</p>
 
-<p>Also thanks to Jason Yeo, any controller with <code>ActionController::Base</code> as a direct parent will be checked for a <code>protect_from_forgery</code> call.</p>
+<pre><code>["hello", "there"].each do |s|
+  something_with(s)
+end
+</code></pre>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/953">changes</a>)</p>
+<p>Brakeman will replace <code>s</code> inside the block with <code>:BRAKEMAN_SAFE_LITERAL</code>, since the value must be a string (or <code>nil</code>, but Brakeman doesn&#8217;t worrry about that).</p>
 
-<h3>Ruby Version Info</h3>
+<p><code>Array#map</code> and <code>Array#each</code> are currently supported.</p>
 
-<p>Brakeman will now pull information about the Ruby version used for an application either from the <code>Gemfile</code> or <code>.ruby-version</code>. Right now this is only used for disabling (the already optional) Symbol DoS check for versions of Ruby that have symbol garbage collection.</p>
+<h4>Hash Access with Unknown Key</h4>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/947">changes</a>)</p>
+<p>In code like</p>
 
-<h3>Link Interpolation False Positive</h3>
+<pre><code>some_hash = { x: 1, y: 2}
+result = some_hash[some_var]
+</code></pre>
 
-<p>Brakeman&#8217;s warning about interpolating user input into URLs has always checked to see if the interpolation was at the beginning of the string. However, that check didn&#8217;t work if the first thing in the string was another interpolation. This has been fixed.</p>
+<p>Brakeman will replace <code>result</code> with <code>:BRAKEMAN_SAFE_LITERAL</code> since the value must be an integer.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/940">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1227">changes</a>)</p>
 
-<h3>More Help in Interactive Ignore</h3>
+<h3>Symbolized Keys in Params</h3>
 
-<p>For clarity, &#8220;interactive ignore&#8221; mode will now display the action options before going through each warning.</p>
+<p>Calls to <code>params.symbolize_keys</code> in ActiveRecord methods will not be treated as dangerous.</p>
 
-<p><img src="https://cloud.githubusercontent.com/assets/75613/19423195/e1d4846c-93d2-11e6-9e07-92ffdf545dbd.png" alt="image" /></p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1217">changes</a>)</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/950">changes</a>)</p>
+<h3>Conditionals in Shell Commands</h3>
+
+<p>Use of interpolated <code>if</code> expressions (or the ternary version) in shell commands is now handled better, thanks to <a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>. The values of the branches will be checked for dangerous values before warning.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1214">changes</a>)</p>
+
+<h3>Update ERB Use for Ruby 2.6</h3>
+
+<p>The interface for ERB will be <a href="https://github.com/ruby/ruby/blob/2311087/NEWS#stdlib-updates-outstanding-ones-only">updated in Ruby 2.6</a>. <a href="https://github.com/koic">Koichi ITO</a> provided a fix in preparation for this change.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1220">changes</a>)</p>
+
+<h3>Frozen Objects</h3>
+
+<p>Since the use of <code>freeze</code> is of little interest to Brakeman and obscures the object it is freezing, these calls are now ignored.</p>
+
+<p>This, especially combined with the safe literals above, cleans up some false positives.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1230">changes</a>)</p>
+
+<h3>Foreign Keys in SQL</h3>
+
+<p>Brakeman will now ignore calls to <code>foreign_key</code> in SQL strings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1229">changes</a>)</p>
+
+<h3>Not <code>Module#included</code> Calls</h3>
+
+<p>Calls to <code>included</code> outside of modules/classes will be ignored instead of causing an error.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1228">changes</a>)</p>
+
+<h3>Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<pre><code>70722056ed1b168e2a56baff048fa155948e1d214513f0debe9e2b78f82691f8  brakeman-4.3.1.gem
+01078dd352a273965aa207dbffd01b8fe511d2302137f1984ea8bbddc38da3ce  brakeman-lib-4.3.1.gem
+1497a934e0fe929d4b2685a3282e7976ebd75e901c56183601b5c528ff4021e0  brakeman-min-4.3.1.gem
+</code></pre>
 
 <h3>Reporting Issues</h3>
 
-<p>Thank you to everyone who reported bugs and contributed to this release.</p>
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
 
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
 
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
+<p>If you find Brakeman valuable and want to support its development (and get more features!), check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
 </div>
 
 
@@ -189,7 +242,7 @@ ga('cdt.send', 'pageview');
 
 
 
-<time datetime="2016-11-02 13:07:00 -0700" pubdate  updated >Nov 2<span>nd</span>, 2016</time>
+<time datetime="2018-06-06 19:55:00 -0700" pubdate  updated >Jun 6<span>th</span>, 2018</time>
 
 
 
@@ -200,7 +253,7 @@ ga('cdt.send', 'pageview');
     
       <div class="sharing">
   
-  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2016/11/02/brakeman-3-dot-4-1-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2016/11/02/brakeman-3-dot-4-1-released/" >Tweet</a>
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2018/06/06/brakeman-4-dot-3-1-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2018/06/06/brakeman-4-dot-3-1-released/" >Tweet</a>
   
   
   <g:plusone size="medium"></g:plusone>
@@ -216,8 +269,8 @@ ga('cdt.send', 'pageview');
     <div id="disqus_thread"><div id="disqus_thread"></div>
 <script type="text/javascript">
   var disqus_shortname = 'brakeman';
-  var disqus_identifier = 'http://brakemanscanner.org/blog/2016/11/02/brakeman-3-dot-4-1-released/';
-  var disqus_url = 'http://brakemanscanner.org/blog/2016/11/02/brakeman-3-dot-4-1-released/';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2018/06/06/brakeman-4-dot-3-1-released/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2018/06/06/brakeman-4-dot-3-1-released/';
   //var disqus_developer = 1;
   (function() {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

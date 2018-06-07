@@ -109,6 +109,140 @@ ga('cdt.send', 'pageview');
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2018/06/06/brakeman-4-dot-3-1-released/">Brakeman 4.3.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2018-06-06 19:55:00 -0700" pubdate  updated >Jun 6<span>th</span>, 2018</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Mostly false positive reduction and bug fixes in this one!</p>
+
+<p><em>Changes since 4.3.1:</em></p>
+
+<ul>
+<li>Add <code>:BRAKEMAN_SAFE_LITERAL</code> to represent known-safe literals</li>
+<li>Handle <code>Array#map</code> and <code>Array#each</code> over literal arrays (<a href="https://github.com/presidentbeef/brakeman/issues/1208">#1208</a> / <a href="https://github.com/presidentbeef/brakeman/issues/1224">#1224</a>)</li>
+<li>Use safe literal when accessing literal hash with unknown key (<a href="https://github.com/presidentbeef/brakeman/issues/1213">#1213</a>)</li>
+<li>Allow <code>symbolize_keys</code> to be called on <code>params</code> in SQL (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
+<li>Improve handling of conditionals in shell commands (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
+<li>Avoid deprecated use of ERB in Ruby 2.6 (<a href="https://github.com/koic">Koichi ITO</a>)</li>
+<li>Ignore <code>Object#freeze</code>, use the target instead (<a href="https://github.com/presidentbeef/brakeman/issues/1211">#1211</a>)</li>
+<li>Ignore <code>foreign_key</code> calls in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/1202">#1202</a>)</li>
+<li>Handle <code>included</code> calls outside of classes/modules (<a href="https://github.com/presidentbeef/brakeman/issues/1209">#1209</a>)</li>
+<li>Fix error when setting line number in implicit renders (<a href="https://github.com/presidentbeef/brakeman/issues/1210">#1210</a>)</li>
+</ul>
+
+
+<h3>Safe Literals</h3>
+
+<p>This version of Brakeman introduces a new way of handling &#8220;known safe&#8221; values (integers, string literals, etc.) where the <em>exact</em> value is unknown. The uses of the values will be replaced with <code>:BRAKEMAN_SAFE_LITERAL</code> instead of actual values, as Brakeman had done previously. The new approach avoids some unhelpful side-effects and allows for more of this kind of thing in the future.</p>
+
+<p>These changes fix up a number of false positives.</p>
+
+<h4>Array Safe Literals</h4>
+
+<p>In situations like</p>
+
+<pre><code>["hello", "there"].each do |s|
+  something_with(s)
+end
+</code></pre>
+
+<p>Brakeman will replace <code>s</code> inside the block with <code>:BRAKEMAN_SAFE_LITERAL</code>, since the value must be a string (or <code>nil</code>, but Brakeman doesn&#8217;t worrry about that).</p>
+
+<p><code>Array#map</code> and <code>Array#each</code> are currently supported.</p>
+
+<h4>Hash Access with Unknown Key</h4>
+
+<p>In code like</p>
+
+<pre><code>some_hash = { x: 1, y: 2}
+result = some_hash[some_var]
+</code></pre>
+
+<p>Brakeman will replace <code>result</code> with <code>:BRAKEMAN_SAFE_LITERAL</code> since the value must be an integer.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1227">changes</a>)</p>
+
+<h3>Symbolized Keys in Params</h3>
+
+<p>Calls to <code>params.symbolize_keys</code> in ActiveRecord methods will not be treated as dangerous.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1217">changes</a>)</p>
+
+<h3>Conditionals in Shell Commands</h3>
+
+<p>Use of interpolated <code>if</code> expressions (or the ternary version) in shell commands is now handled better, thanks to <a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>. The values of the branches will be checked for dangerous values before warning.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1214">changes</a>)</p>
+
+<h3>Update ERB Use for Ruby 2.6</h3>
+
+<p>The interface for ERB will be <a href="https://github.com/ruby/ruby/blob/2311087/NEWS#stdlib-updates-outstanding-ones-only">updated in Ruby 2.6</a>. <a href="https://github.com/koic">Koichi ITO</a> provided a fix in preparation for this change.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1220">changes</a>)</p>
+
+<h3>Frozen Objects</h3>
+
+<p>Since the use of <code>freeze</code> is of little interest to Brakeman and obscures the object it is freezing, these calls are now ignored.</p>
+
+<p>This, especially combined with the safe literals above, cleans up some false positives.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1230">changes</a>)</p>
+
+<h3>Foreign Keys in SQL</h3>
+
+<p>Brakeman will now ignore calls to <code>foreign_key</code> in SQL strings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1229">changes</a>)</p>
+
+<h3>Not <code>Module#included</code> Calls</h3>
+
+<p>Calls to <code>included</code> outside of modules/classes will be ignored instead of causing an error.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1228">changes</a>)</p>
+
+<h3>Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<pre><code>70722056ed1b168e2a56baff048fa155948e1d214513f0debe9e2b78f82691f8  brakeman-4.3.1.gem
+01078dd352a273965aa207dbffd01b8fe511d2302137f1984ea8bbddc38da3ce  brakeman-lib-4.3.1.gem
+1497a934e0fe929d4b2685a3282e7976ebd75e901c56183601b5c528ff4021e0  brakeman-min-4.3.1.gem
+</code></pre>
+
+<h3>Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
+<p>If you find Brakeman valuable and want to support its development (and get more features!), check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2018/05/10/brakeman-4-dot-3-0-released/">Brakeman 4.3.0 Released</a></h1>
     
     
@@ -1195,73 +1329,6 @@ d3da0a86dedcee84c35a14e00b7a9d22874aed89d7d031d1fe60b68ce4ae7c7a  brakeman-lib-3
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2017/03/24/brakeman-3-dot-6-1-released/">Brakeman 3.6.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2017-03-24 13:15:00 -0700" pubdate  updated >Mar 24<span>th</span>, 2017</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a small bug fix release to fix an issue when using <code>--compare</code>.</p>
-
-<p><em>Changes since 3.6.0</em>:</p>
-
-<ul>
-<li><ul>
-<li>Fix error when using <code>--compare</code> (<a href="https://github.com/seangransee">Sean Gransee</a>)</li>
-</ul>
-</li>
-</ul>
-
-
-<h3>Error With Compare</h3>
-
-<p>Although comparison scans using <code>--compare</code> would complete successfully, an exception was being thrown afterwards.</p>
-
-<p>Thanks to <a href="https://github.com/anthlam">Anthony Lamorte</a> for reporting and <a href="https://github.com/seangransee">Sean Gransee</a> for the fix!</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1024">changes</a>)</p>
-
-<h3>Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<pre><code>3c10b2a9fd8b7b3baab956e6fcc2c7780768f1905433297e8dd940591f1bbb3b  brakeman-3.6.1.gem
-98f6bd7531e0e3fbe273b9d185446bd28602176a392d5df8f9c52c36460afdaa  brakeman-lib-3.6.1.gem
-44342c843867fce585f6fef09cd093a0544510adfeec15217efe44c6120e3192  brakeman-min-3.6.1.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release.</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-
-<p>If you find Brakeman valuable and want to support its development, check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1314,6 +1381,10 @@ d3da0a86dedcee84c35a14e00b7a9d22874aed89d7d031d1fe60b68ce4ae7c7a  brakeman-lib-3
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/06/06/brakeman-4-dot-3-1-released/">Brakeman 4.3.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/05/10/brakeman-4-dot-3-0-released/">Brakeman 4.3.0 Released</a>
       </li>
     
@@ -1327,10 +1398,6 @@ d3da0a86dedcee84c35a14e00b7a9d22874aed89d7d031d1fe60b68ce4ae7c7a  brakeman-lib-3
     
       <li class="post">
         <a href="/blog/2017/12/18/brakeman-4-dot-1-1-released/">Brakeman 4.1.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/12/12/brakeman-4-dot-1-0-released/">Brakeman 4.1.0 Released</a>
       </li>
     
   </ul>
