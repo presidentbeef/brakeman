@@ -1,0 +1,37 @@
+class Brakeman::CheckSprocketsPathTraversal < Brakeman::BaseCheck
+  Brakeman::Checks.add self
+
+  @description = "Checks for CVE-2018-3760"
+
+  def run_check
+    sprockets_version = tracker.config.gem_version(:sprockets)
+
+    return unless sprockets_version
+
+    upgrade_version = case
+                      when version_between?("0.0.0", "2.12.4", sprockets_version)
+                        "2.12.5"
+                      when version_between?("3.0.0", "3.7.1", sprockets_version)
+                        "3.7.2"
+                      when version_between?("4.0.0.beta1", "4.0.0.beta7", sprockets_version)
+                        "4.0.0.beta8"
+                      else
+                        return
+                      end
+
+    return if has_workaround?
+
+    message = "Sprockets #{sprockets_version} has a path traversal vulnerability (CVE-2018-3760). Upgrade to version #{upgrade_version} or newer"
+
+    warn :warning_type => "Path Traversal",
+      :warning_code => :CVE_2018_3760,
+      :message => message,
+      :confidence => :high,
+      :gem_info => gemfile_or_environment(:sprockets),
+      :link_path => "https://groups.google.com/d/msg/rubyonrails-security/ft_J--l55fM/7roDfQ50BwAJ"
+  end
+
+  def has_workaround?
+    false? (tracker.config.rails[:assets] and tracker.config.rails[:assets][:compile])
+  end
+end
