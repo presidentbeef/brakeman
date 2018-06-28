@@ -168,4 +168,4 @@ Chat: https://gitter.im/presidentbeef/brakeman
 
 # License
 
-see [MIT-LICENSE](MIT-LICENSE)
+See [COPYING](COPYING)
