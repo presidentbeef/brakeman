@@ -4,13 +4,38 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2018-06-06T22:13:29-07:00</updated>
+  <updated>2018-06-28T13:39:11-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
+  
+  <entry>
+    <title>Brakeman Has Been Acquired by Synopsys</title>
+    <link href="http://brakemanscanner.org/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/"/>
+    <updated>2018-06-28T13:37:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys</id>
+    <content type="html">&lt;p&gt;We are excited to announce &lt;a href=&quot;https://brakemanpro.com&quot;&gt;Brakeman Pro&lt;/a&gt; has been acquired by Synopsys.&lt;/p&gt;
+
+&lt;p&gt;Started in 2014, Brakeman Pro has been a partnership between &lt;a href=&quot;https://twitter.com/presidentbeef&quot;&gt;Justin Collins&lt;/a&gt;, &lt;a href=&quot;https://twitter.com/ndm&quot;&gt;Neil Matatall&lt;/a&gt;, &lt;a href=&quot;https://twitter.com/manicode&quot;&gt;Jim Manico&lt;/a&gt;, and &lt;a href=&quot;https://twitter.com/adamkorman&quot;&gt;Adam Korman&lt;/a&gt;. Although it’s been an unconventional journey, we are all grateful to have traveled it together. Sincere thanks to the many folks who supported, promoted, and encouraged us along the way.&lt;/p&gt;
+
+&lt;p&gt;Justin Collins will be joining Synopsys to help integrate the Brakeman Pro Engine into their static application security testing (SAST) offerings, as well as continuing to develop and support the Brakeman OSS project. This is an exciting opportunity to focus on improving and expanding SAST for the Ruby community.&lt;/p&gt;
+
+&lt;h3&gt;Brakeman OSS&lt;/h3&gt;
+
+&lt;p&gt;This Brakeman OSS project is part of the acquisition, and Synopsys now owns the copyright previously held by Brakeman, Inc.&lt;/p&gt;
+
+&lt;p&gt;The project going forward and any future contributions will be made available under the &lt;a href=&quot;https://creativecommons.org/licenses/by-nc-sa/4.0/&quot;&gt;Creative Commons Attribution-NonCommercial-ShareAlike 4.0 Public License&lt;/a&gt;. For most users who are using Brakeman for internal purposes or assessments, nothing will change. Brakeman OSS will continue to be maintained by the same folks, free, and open source. Code will remain available on &lt;a href=&quot;https://github.com/presidentbeef/brakeman&quot;&gt;GitHub&lt;/a&gt;, and Ruby gems will be distributed from &lt;a href=&quot;https://rubygems.org/gems/brakeman&quot;&gt;RubyGems.org&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;However, under the new license, it is no longer possible to use Brakeman OSS for the development of a commercial product or online service or to resell Brakeman OSS as a service. Companies wishing to do either will require a commercial agreement with Synopsys.&lt;/p&gt;
+
+&lt;h3&gt;Thank You&lt;/h3&gt;
+
+&lt;p&gt;Thank you again to our customers, friends, and family who supported us in making the web a little bit safer!&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Brakeman 4.3.1 Released</title>
@@ -1694,142 +1719,6 @@ c0beeabe95aa693a5273bd48922028f48a190940b18c795813bd0f96068452b4  brakeman-lib-3
 &lt;pre&gt;&lt;code&gt;5c22721c8b486fa9d283cabf65c7e77b2f7428056d4d907b7f74a91dd112616a  brakeman-3.3.1.gem
 7aa57ed8b42c0cadef09214f5544424659ab3972912137fad37da1a052d8a792  brakeman-lib-3.3.1.gem
 95e68202493d8c504ad72276c8bfa46abb1c78c309bc2b80b433a6220f3722eb  brakeman-min-3.3.1.gem
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Thank you to everyone who reported bugs and contributed improvements in this release.&lt;/p&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hanging out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion. Please note the mailing list is no longer in use and has apparently not been delivering mail for some time.&lt;/p&gt;
-</content>
-  </entry>
-  
-  <entry>
-    <title>Brakeman 3.3.0 Released</title>
-    <link href="http://brakemanscanner.org/blog/2016/05/05/brakeman-3-dot-3-0-released/"/>
-    <updated>2016-05-05T09:49:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2016/05/05/brakeman-3-dot-3-0-released</id>
-    <content type="html">&lt;p&gt;Brakeman 3.3.0 introduces a new packaging method for Brakeman which vendors all dependencies and does not include any gem dependencies in the gemspec. Please test and provide feedback if it does not work as expected.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 3.2.1&lt;/em&gt;:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Bundle all dependencies in gem&lt;/li&gt;
-&lt;li&gt;Return exit code &lt;code&gt;4&lt;/code&gt; if no Rails application is detected (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/869&quot;&gt;#869&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Add optional check for secrets in source code (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/201&quot;&gt;#201&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Track constants globally&lt;/li&gt;
-&lt;li&gt;Skip if branches with &lt;code&gt;Rails.env.test?&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/862&quot;&gt;#862&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Skip processing obviously false if branches (more broadly)&lt;/li&gt;
-&lt;li&gt;Handle HAML &lt;code&gt;find_and_preserve&lt;/code&gt; with a block (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/837&quot;&gt;#837&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Process &lt;code&gt;Array#first&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Allow non-Hash arguments in &lt;code&gt;protect_from_forgery&lt;/code&gt; (&lt;a href=&quot;https://github.com/jsyeo&quot;&gt;Jason Yeo&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Avoid warning about &lt;code&gt;u&lt;/code&gt; helper (&lt;a href=&quot;https://github.com/cdollins&quot;&gt;Chad Dollins&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Avoid warning about mass assignment and SQL injection with &lt;code&gt;params.slice&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/866&quot;&gt;#866&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Avoid warning about &lt;code&gt;slice&lt;/code&gt; in &lt;code&gt;redirect_to&lt;/code&gt; and &lt;code&gt;link_to&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/832&quot;&gt;#832&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Avoid warning on &lt;code&gt;popen&lt;/code&gt; with array (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/851&quot;&gt;#851&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;[Code Climate engine] When possible, output to /dev/stdout (&lt;a href=&quot;https://github.com/GordonDiggs&quot;&gt;Gordon Diggs&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;[Code Climate engine] Remove nil entries from &lt;code&gt;include_paths&lt;/code&gt; (&lt;a href=&quot;https://github.com/GordonDiggs&quot;&gt;Gordon Diggs&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;[Code Climate engine] Report end lines for issues (&lt;a href=&quot;https://github.com/GordonDiggs&quot;&gt;Gordon Diggs&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;Dependency Bundling&lt;/h3&gt;
-
-&lt;p&gt;In its gem form, Brakeman no longer declares any external dependencies. Its dependencies are bundled with the gem itself. This should prevent the conflicts which sometimes occur when Brakeman is declared as a dependency of a Rails application. The disadvantage is you will no longer be able to update Brakeman dependencies (like RubyParser) without updating Brakeman itself.&lt;/p&gt;
-
-&lt;p&gt;As this is a new way of distributing Brakeman, please report any issues that may arise.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/845&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;New Exit Code&lt;/h3&gt;
-
-&lt;p&gt;A new exit code has been added for the case when Brakeman does not detect a Rails application.&lt;/p&gt;
-
-&lt;p&gt;For reference, these are Brakeman's current exit codes:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;0&lt;/code&gt; - Normal exit&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;3&lt;/code&gt; - Warnings found (with &lt;code&gt;-z&lt;/code&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;4&lt;/code&gt; - No Rails application detected&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;255&lt;/code&gt; - Error&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/870&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Secrets Check&lt;/h3&gt;
-
-&lt;p&gt;A new optional check has been added to look for hard-coded secrets in the source code. It will warn when constants like &lt;code&gt;PASSWORD&lt;/code&gt; are assigned string literals. To run the new check, use &lt;code&gt;-t Secrets&lt;/code&gt; or &lt;code&gt;-A&lt;/code&gt; to run all checks including optional ones.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/861&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Constant Values&lt;/h3&gt;
-
-&lt;p&gt;This release includes initial support for tracking and matching constants across the application. For example, if a model contains a constant &lt;code&gt;Model::KEYS&lt;/code&gt; which is used elsewhere, Brakeman should be able to track this value. This helps prevents false positives when safe values have been declared as constants.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/855&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Skipping Test Code&lt;/h3&gt;
-
-&lt;p&gt;Brakeman will now ignore &lt;code&gt;if&lt;/code&gt; branches that check &lt;code&gt;Rails.env.test?&lt;/code&gt;. Additionally, branch skipping behavior (e.g. &lt;code&gt;if false...&lt;/code&gt;) has been expanded to most of Brakeman's processing instead of just in data flow analysis.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/868&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;HAML &lt;code&gt;find_and_preserve&lt;/code&gt;&lt;/h3&gt;
-
-&lt;p&gt;Brakeman will now handle uses of &lt;code&gt;find_and_preserve&lt;/code&gt; in HAML with a block.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/839&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Array#first&lt;/h3&gt;
-
-&lt;p&gt;Calls to &lt;code&gt;Array#first&lt;/code&gt; will be replaced with the first value in the array when known.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/856&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Forgery Option&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/jsyeo&quot;&gt;Jason Yeo&lt;/a&gt; provided a fix for when Brakeman encounters a non-Hash argument to &lt;code&gt;protect_from_forgery&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/849&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;&lt;code&gt;u&lt;/code&gt; Helper&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/cdollins&quot;&gt;Chad Dollins&lt;/a&gt; fixed XSS false positives when the &lt;code&gt;u&lt;/code&gt; alias for &lt;code&gt;url_encode&lt;/code&gt; is used.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/863&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Fewer &lt;code&gt;slice&lt;/code&gt; False Positives&lt;/h3&gt;
-
-&lt;p&gt;Brakeman should no longer warn when using &lt;code&gt;params.slice&lt;/code&gt; in mass assignment, SQL injection, links, and open redirects.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/867&quot;&gt;changes&lt;/a&gt; and &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/871&quot;&gt;other changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Safe popen&lt;/h3&gt;
-
-&lt;p&gt;Brakeman will no longer warn about uses of &lt;code&gt;popen&lt;/code&gt; when the argument is an array, in which case the arguments are escaped.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/854&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3&gt;Code Climate Engine&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/GordonDiggs&quot;&gt;Gordon Diggs&lt;/a&gt; provided several improvements to the Code Climate Engine in this release:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Remove &lt;code&gt;nil&lt;/code&gt; entries from the &lt;code&gt;include_paths&lt;/code&gt; option&lt;/li&gt;
-&lt;li&gt;Force output to stdout when possible&lt;/li&gt;
-&lt;li&gt;Report end lines to conform with spec&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h3&gt;SHAs&lt;/h3&gt;
-
-&lt;p&gt;The SHA256 sums for this release are&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;c01ec64d35218887fc5ea2ae8babc88e9e0e7cc3c161b020725d2b17c4189858  brakeman-3.3.0.gem
-f1adce1a696799342dc9f50b51975024060360dc9018358c5d8e34c1c4681bd1  brakeman-min-3.3.0.gem
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3&gt;Reporting Issues&lt;/h3&gt;

@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Brakeman 2.4.2 Released</title>
+  <title>Brakeman - Rails Security Scanner: Brakeman Has Been Acquired by Synopsys</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/blog/2014/03/20/brakeman-2-dot-4-2-released/"/>
+  <link rel="canonical" href="http://brakemanscanner.org/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -106,7 +106,7 @@ ga('cdt.send', 'pageview');
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 2.4.2 Released</h1>
+      <h1 class="entry-title">Brakeman Has Been Acquired by Synopsys</h1>
     
     
       <p class="meta">
@@ -114,7 +114,7 @@ ga('cdt.send', 'pageview');
 
 
 
-<time datetime="2014-03-20 22:37:00 -0700" pubdate  updated >Mar 20<span>th</span>, 2014</time>
+<time datetime="2018-06-28 13:37:00 -0700" pubdate  updated >Jun 28<span>th</span>, 2018</time>
 
 
 </p>
@@ -122,100 +122,23 @@ ga('cdt.send', 'pageview');
   </header>
 
 
-<div class="entry-content"><p>This release is only internal changes and bug fixes, but some scans may see significant time and memory improvements.</p>
+<div class="entry-content"><p>We are excited to announce <a href="https://brakemanpro.com">Brakeman Pro</a> has been acquired by Synopsys.</p>
 
-<p><em>Changes since 2.4.1</em>:</p>
+<p>Started in 2014, Brakeman Pro has been a partnership between <a href="https://twitter.com/presidentbeef">Justin Collins</a>, <a href="https://twitter.com/ndm">Neil Matatall</a>, <a href="https://twitter.com/manicode">Jim Manico</a>, and <a href="https://twitter.com/adamkorman">Adam Korman</a>. Although it’s been an unconventional journey, we are all grateful to have traveled it together. Sincere thanks to the many folks who supported, promoted, and encouraged us along the way.</p>
 
-<ul>
-<li>Skip identically rendered templates</li>
-<li>Improve HAML template processing</li>
-<li>Only track original template output locations</li>
-<li>Reuse duplicate call location information</li>
-<li>Fix duplicate warnings about sanitize CVE</li>
-<li>Remove <code>rescue Exception</code></li>
-</ul>
+<p>Justin Collins will be joining Synopsys to help integrate the Brakeman Pro Engine into their static application security testing (SAST) offerings, as well as continuing to develop and support the Brakeman OSS project. This is an exciting opportunity to focus on improving and expanding SAST for the Ruby community.</p>
 
+<h3>Brakeman OSS</h3>
 
-<h3>Drop Identical Templates</h3>
+<p>This Brakeman OSS project is part of the acquisition, and Synopsys now owns the copyright previously held by Brakeman, Inc.</p>
 
-<p>For a long time now Brakeman has skipped processing templates if the template had already been processed with an identical environment. However, there are many times when a template is rendered with different environments but the actual output is the same. Brakeman now drops these templates (they are rendered, then discarded if they are duplicates). This reduces peak memory overhead, sometimes drastically. It can also speed up call indexing and vulnerability checks since fewer templates are searched.</p>
+<p>The project going forward and any future contributions will be made available under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 Public License</a>. For most users who are using Brakeman for internal purposes or assessments, nothing will change. Brakeman OSS will continue to be maintained by the same folks, free, and open source. Code will remain available on <a href="https://github.com/presidentbeef/brakeman">GitHub</a>, and Ruby gems will be distributed from <a href="https://rubygems.org/gems/brakeman">RubyGems.org</a>.</p>
 
-<p>The location and render path of template warnings may change slightly due to this change. Also, the rendered template debug output will no longer include all rendered templates since duplicates will not be tracked.</p>
+<p>However, under the new license, it is no longer possible to use Brakeman OSS for the development of a commercial product or online service or to resell Brakeman OSS as a service. Companies wishing to do either will require a commercial agreement with Synopsys.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/442">changes</a>)</p>
+<h3>Thank You</h3>
 
-<h3>Better HAML Processing</h3>
-
-<p>HAML templates will be processed more accurately with this release.</p>
-
-<p>For example, a template like this</p>
-
-<pre><code>#content
-  .nav
-    = @navigation_menu
-</code></pre>
-
-<p>used to produce output like</p>
-
-<pre><code>+-------------------------------------------------------------------------------------------------+
-| Output                                                                                          |
-+-------------------------------------------------------------------------------------------------+
-| [Output] "&lt;div id='content'&gt;; &lt;div class='nav'&gt;; #{[Escaped] @navigation_menu}; &lt;/div&gt;;&lt;/div&gt;;" |
-+-------------------------------------------------------------------------------------------------+
-</code></pre>
-
-<p>but now it will look like this instead</p>
-
-<pre><code>+-----------------------------------+
-| Output                            |
-+-----------------------------------+
-| [Escaped Output] @navigation_menu |
-+-----------------------------------+
-</code></pre>
-
-<p>Besides looking much nicer, this improves warnings and reduces how much code Brakeman has to search. Additionally, these <code>push_text</code> methods can often interpolate multiple values into the output string, which were not being properly detected as output. This is fixed now.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/441">changes</a>)</p>
-
-<h3>Duplicate Template Outputs</h3>
-
-<p>Aliased values in templates were being counted multiple times as output. This did not affect warnings generated, but it did create duplicate output values to check and extraneous debug output.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/443">changes</a>)</p>
-
-<h3>Call Location Reuse</h3>
-
-<p>For large applications, many calls in the call index actually have the same location (class+method or template). Instead of creating a new location hash for each call, the locations are cached and reused.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/444">changes</a>)</p>
-
-<h3>Sanitize CVE Duplicates</h3>
-
-<p>Don&#8217;t worry - <a href="https://groups.google.com/d/msg/rubyonrails-security/zAAU7vGTPvI/1vZDWXqBuXgJ">CVE-2013-1857</a> is one year old this week. But Brakeman was not properly preventing duplicate warnings for it. Hopefully this was affecting exactly no one.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/445">changes</a>)</p>
-
-<h3>Narrower Exception Handling</h3>
-
-<p>All instances of <code>rescue Exception</code> were removed from Brakeman and replaced with bare <code>rescue</code>s to catch <code>StandardError</code> and subclasses. <code>Exception</code> has some unfortunate subclasses, such as <code>NoMemoryError</code> and <code>Interrupt</code> which Brakeman should not be rescuing.</p>
-
-<p>This does mean there may be some newly unhandled exceptions. Please report these so they can be rescued properly.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/446">changes</a>)</p>
-
-<h3>SHAs</h3>
-
-<p>The SHA1 sums for this release are</p>
-
-<pre><code>02842dc497bf22b5b427cfd02635c005c4fc4fd4  brakeman-2.4.2.gem
-4893cedbcb015e96c82f4777b00a49ca8d0ae22f  brakeman-min-2.4.2.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
+<p>Thank you again to our customers, friends, and family who supported us in making the web a little bit safer!</p>
 </div>
 
 
@@ -231,7 +154,7 @@ ga('cdt.send', 'pageview');
 
 
 
-<time datetime="2014-03-20 22:37:00 -0700" pubdate  updated >Mar 20<span>th</span>, 2014</time>
+<time datetime="2018-06-28 13:37:00 -0700" pubdate  updated >Jun 28<span>th</span>, 2018</time>
 
 
 
@@ -242,7 +165,7 @@ ga('cdt.send', 'pageview');
     
       <div class="sharing">
   
-  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2014/03/20/brakeman-2-dot-4-2-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2014/03/20/brakeman-2-dot-4-2-released/" >Tweet</a>
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/" >Tweet</a>
   
   
   <g:plusone size="medium"></g:plusone>
@@ -258,8 +181,8 @@ ga('cdt.send', 'pageview');
     <div id="disqus_thread"><div id="disqus_thread"></div>
 <script type="text/javascript">
   var disqus_shortname = 'brakeman';
-  var disqus_identifier = 'http://brakemanscanner.org/blog/2014/03/20/brakeman-2-dot-4-2-released/';
-  var disqus_url = 'http://brakemanscanner.org/blog/2014/03/20/brakeman-2-dot-4-2-released/';
+  var disqus_identifier = 'http://brakemanscanner.org/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/';
+  var disqus_url = 'http://brakemanscanner.org/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/';
   //var disqus_developer = 1;
   (function() {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
