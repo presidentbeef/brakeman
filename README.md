@@ -168,4 +168,6 @@ Chat: https://gitter.im/presidentbeef/brakeman
 
 # License
 
-See [COPYING](COPYING)
+Brakeman can be freely used, modified, or distributed for any purpose except as a feature of a commercial product.
+
+See [COPYING](COPYING) for details.
