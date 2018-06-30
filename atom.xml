@@ -4,7 +4,7 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2018-06-28T13:39:11-07:00</updated>
+  <updated>2018-06-30T07:06:58-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
@@ -29,7 +29,7 @@
 
 &lt;p&gt;The project going forward and any future contributions will be made available under the &lt;a href=&quot;https://creativecommons.org/licenses/by-nc-sa/4.0/&quot;&gt;Creative Commons Attribution-NonCommercial-ShareAlike 4.0 Public License&lt;/a&gt;. For most users who are using Brakeman for internal purposes or assessments, nothing will change. Brakeman OSS will continue to be maintained by the same folks, free, and open source. Code will remain available on &lt;a href=&quot;https://github.com/presidentbeef/brakeman&quot;&gt;GitHub&lt;/a&gt;, and Ruby gems will be distributed from &lt;a href=&quot;https://rubygems.org/gems/brakeman&quot;&gt;RubyGems.org&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;However, under the new license, it is no longer possible to use Brakeman OSS for the development of a commercial product or online service or to resell Brakeman OSS as a service. Companies wishing to do either will require a commercial agreement with Synopsys.&lt;/p&gt;
+&lt;p&gt;However, under the new license, it is no longer possible to use Brakeman OSS for the development of a commercial product or online service or to resell Brakeman OSS as a service. Companies wishing to do either will require a commercial agreement with Synopsys. Please see &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1238#issuecomment-401448976&quot;&gt;here&lt;/a&gt; for more details.&lt;/p&gt;
 
 &lt;h3&gt;Thank You&lt;/h3&gt;
 
