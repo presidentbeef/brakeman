@@ -13,7 +13,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
     @alias_processor = Brakeman::AliasProcessor.new tracker
     @current_module = nil
     @current_class = nil
-    @intializer_env = nil
+    @initializer_env = nil
   end
 
   def process_library src, file_name = nil
