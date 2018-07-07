@@ -183,8 +183,6 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BasicProcessor
       else
         add_route route[1], route[0]
       end
-    elsif in_controller_block? and symbol? first_arg
-      add_route first_arg
     else hash? first_arg
       hash_iterate first_arg do |k, v|
         if string? k
