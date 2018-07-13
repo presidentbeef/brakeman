@@ -18,7 +18,8 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
                   s(:call, s(:const, :Rails), :env),
                   s(:call, s(:const, :Process), :pid)]
 
-  SHELL_ESCAPES = [:escape, :shellescape, :join]
+  SHELL_ESCAPE_MODULE_METHODS = Set[:escape, :join, :shellescape, :shelljoin]
+  SHELL_ESCAPE_MIXIN_METHODS = Set[:shellescape, :shelljoin]
 
   SHELLWORDS = s(:const, :Shellwords)
 
@@ -178,9 +179,9 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
   def shell_escape? exp
     return false unless call? exp
 
-    if exp.target == SHELLWORDS and SHELL_ESCAPES.include? exp.method
+    if exp.target == SHELLWORDS and SHELL_ESCAPE_MODULE_METHODS.include? exp.method
       true
-    elsif exp.method == :shelljoin
+    elsif SHELL_ESCAPE_MIXIN_METHODS.include?(exp.method)
       true
     else
       false
