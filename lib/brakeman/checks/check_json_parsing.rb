@@ -21,11 +21,7 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
                     end
 
       message = "Rails #{rails_version} has a serious JSON parsing vulnerability: upgrade to #{new_version} or patch"
-      if uses_yajl?
-        gem_info = gemfile_or_environment(:yajl)
-      else
-        gem_info = gemfile_or_environment
-      end
+      gem_info = gemfile_or_environment
 
       warn :warning_type => "Remote Code Execution",
         :warning_code => :CVE_2013_0333,
