@@ -516,6 +516,15 @@ class Rails5Tests < Minitest::Test
       :relative_path => "lib/a_lib.rb",
       :code => s(:call, s(:const, :FileUtils), :move, s(:call, s(:call, s(:call, s(:params), :permit, s(:hash, s(:lit, :my_upload), s(:array, s(:lit, :upload)))), :dig, s(:str, "my_upload"), s(:str, "upload")), :path), s(:str, "/tmp/new_temp_file")),
       :user_input => s(:call, s(:call, s(:call, s(:params), :permit, s(:hash, s(:lit, :my_upload), s(:array, s(:lit, :upload)))), :dig, s(:str, "my_upload"), s(:str, "upload")), :path)
+
+    assert_no_warning :type => :warning,
+      :warning_code => 16,
+      :fingerprint => "4aa7ea06f3d7c93776701ecfff0dcf8a9a4ef1789864f804efb9708539760d4c",
+      :warning_type => "File Access",
+      :line => 3,
+      :message => /^Parameter\ value\ used\ in\ file\ name/,
+      :confidence => 2,
+      :relative_path => "app/controllers/file_controller.rb"
   end
 
   def test_cross_site_scripting_CVE_2015_7578

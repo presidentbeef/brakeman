@@ -29,7 +29,10 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
   def process_result result
     return unless original? result
     call = result[:call]
+
     file_name = call.first_arg
+
+    return if called_on_tempfile?(file_name)
 
     if match = has_immediate_user_input?(file_name)
       confidence = :high
@@ -47,7 +50,7 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
       end
     end
 
-    if match and not temp_file? match.match
+    if match and not temp_file_method? match.match
 
       message = "#{friendly_type_of(match).capitalize} used in file name"
 
@@ -61,7 +64,14 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
     end
   end
 
-  def temp_file? exp
+  # When using Tempfile, there is no risk of unauthorized file access, since
+  # Tempfile adds a unique string onto the end of every provided filename, and
+  # ensures that the filename does not already exist in the system.
+  def called_on_tempfile? file_name
+    call?(file_name) && file_name.target == s(:const, :Tempfile)
+  end
+
+  def temp_file_method? exp
     if call? exp
       return true if exp.call_chain.include? :tempfile
 
