@@ -9,7 +9,8 @@ module Brakeman
     # Join two array literals into one.
     def join_arrays lhs, rhs, original_exp = nil
       if array? lhs and array? rhs
-        result = Sexp.new(:array).line(lhs.line)
+        result = Sexp.new(:array)
+        result.line(lhs.line || rhs.line)
         result.concat lhs[1..-1]
         result.concat rhs[1..-1]
         result
