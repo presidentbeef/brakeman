@@ -155,6 +155,22 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
+  def test_array_plus_equals
+    assert_alias '[1, 2, 3]', <<-RUBY
+    x = [1]
+    x += [2, 3]
+    x
+    RUBY
+  end
+
+  def test_array_plu
+    assert_alias '[1, 2, 3]', <<-RUBY
+    x = [1]
+    y = x + [2, 3]
+    y
+    RUBY
+  end
+
   def test_hash_index
     assert_alias "'You say goodbye, I say :hello'", <<-RUBY
       x = {:goodbye => "goodbye cruel world" }
