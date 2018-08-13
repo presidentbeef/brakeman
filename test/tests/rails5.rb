@@ -13,7 +13,7 @@ class Rails5Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 10,
-      :generic => 19
+      :generic => 20
     }
   end
 
@@ -648,6 +648,19 @@ class Rails5Tests < Minitest::Test
       :message => /^rails\-html\-sanitizer\ 1\.0\.2\ is\ vulnerable/,
       :confidence => 0,
       :relative_path => "Gemfile.lock",
+      :user_input => nil
+  end
+
+  def test_path_traversal_sprockets_CVE_2018_3760
+    assert_warning :type => :warning,
+      :warning_code => 108,
+      :fingerprint => "d4c4f9fab93a12c4fabb5b5f9541700e94f4948bc1b90a1aea38f1425d8d0dc9",
+      :warning_type => "Path Traversal",
+      :line => 144,
+      :message => /^Sprockets\ 3\.5\.2\ has\ a\ path\ traversal\ vul/,
+      :confidence => 0,
+      :relative_path => "Gemfile.lock",
+      :code => nil,
       :user_input => nil
   end
 

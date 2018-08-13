@@ -245,4 +245,14 @@ class CVETests < Minitest::Test
     assert_version "5.0.0.1"
     assert_fixed 3 # 3 for CVE-2016-6316
   end
+
+  def test_CVE_2018_3760_sprockets
+    before_rescan_of ["Gemfile.lock", "config/environments/production.rb"], "rails5.2" do
+      replace "Gemfile.lock", "sprockets (3.7.1)", "sprockets (4.0.0.beta2)"
+      replace "config/environments/production.rb", "config.assets.compile = false", "config.assets.compile = true"
+    end
+
+    assert_version "4.0.0.beta2", :sprockets
+    assert_new 1 # CVE-2018-3760
+  end
 end
