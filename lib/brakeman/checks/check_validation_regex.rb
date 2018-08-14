@@ -89,7 +89,7 @@ class Brakeman::CheckValidationRegex < Brakeman::BaseCheck
       warn :model => @current_model,
       :warning_type => "Format Validation",
       :warning_code => :validation_regex,
-      :message => msg("Insufficient validation for ", msg_code(get_name validator), " using ", msg_code(regex.inspect), ". Use \\A and \\z as anchors"),
+      :message => msg("Insufficient validation for ", msg_code(get_name validator), " using ", msg_code(regex.inspect), ". Use ", msg_code("\\A"), " and ", msg_code("\\z"), " as anchors"),
       :line => value.line,
       :confidence => :high
     end
