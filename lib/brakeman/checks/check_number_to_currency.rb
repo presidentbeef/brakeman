@@ -23,12 +23,12 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
   end
 
   def generic_warning
-    message = "Rails #{rails_version} has a vulnerability in number helpers (CVE-2014-0081). Upgrade to Rails version "
+    message = msg(msg_version(rails_version), " has a vulnerability in number helpers (CVE-2014-0081). Upgrade to ")
 
     if version_between? "2.3.0", "3.2.16"
-      message << "3.2.17"
+      message << msg_version("3.2.17")
     else
-      message << "4.0.3"
+      message << msg_version("4.0.3")
     end
 
     warn :warning_type => "Cross-Site Scripting",
@@ -66,7 +66,7 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
     warn :result => result,
       :warning_type => "Cross-Site Scripting",
       :warning_code => :CVE_2014_0081_call,
-      :message => "Format options in #{result[:call].method} are not safe in Rails #{rails_version}",
+      :message => msg("Format options in ", msg_code(result[:call].method), " are not safe in ", msg_version(rails_version)),
       :confidence => :high,
       :link_path => "https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ",
       :user_input => match

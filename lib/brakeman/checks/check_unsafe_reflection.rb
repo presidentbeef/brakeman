@@ -37,7 +37,7 @@ class Brakeman::CheckUnsafeReflection < Brakeman::BaseCheck
     end
 
     if confidence
-      message = "Unsafe reflection method #{method} called with #{friendly_type_of input}"
+      message = msg("Unsafe reflection method ", msg_code(method), " called with ", msg_input(input))
 
       warn :result => result,
         :warning_type => "Remote Code Execution",

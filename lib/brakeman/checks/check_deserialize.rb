@@ -42,7 +42,7 @@ class Brakeman::CheckDeserialize < Brakeman::BaseCheck
     end
 
     if confidence
-      message = "#{target}.#{method} called with #{friendly_type_of input}"
+      message = msg(msg_code("#{target}.#{method}"), " called with ", msg_input(input))
 
       warn :result => result,
         :warning_type => "Remote Code Execution",

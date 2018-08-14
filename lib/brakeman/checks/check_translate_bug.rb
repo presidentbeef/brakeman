@@ -18,15 +18,15 @@ class Brakeman::CheckTranslateBug < Brakeman::BaseCheck
         :medium
       end
 
-      description = "have a vulnerability in the translate helper with keys ending in _html"
+      description = [" has a vulnerability in the translate helper with keys ending in ", msg_code("_html")]
 
       message = if rails_version =~ /^3\.1/
-        "Versions before 3.1.2 #{description}."
-      elsif rails_version =~ /^3\.0/
-        "Versions before 3.0.11 #{description}."
-      else
-        "Rails 2.3.x using the rails_xss plugin #{description}."
-      end
+                  msg(msg_version(rails_version), *description, ". Upgrade to ", msg_version("3.1.2"))
+                elsif rails_version =~ /^3\.0/
+                  msg(msg_version(rails_version), *description, ". Upgrade to ", msg_version("3.0.11"))
+                else
+                  msg("Rails 2.3.x using the rails_xss plugin", *description)
+                end
 
       warn :warning_type => "Cross-Site Scripting",
         :warning_code => :translate_vuln,

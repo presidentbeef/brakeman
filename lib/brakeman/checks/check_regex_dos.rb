@@ -44,7 +44,7 @@ class Brakeman::CheckRegexDoS < Brakeman::BaseCheck
       end
 
       if match
-        message = "#{friendly_type_of(match).capitalize} used in regex"
+        message = msg(msg_input(match), " used in regular expression")
 
         warn :result => result,
           :warning_type => "Denial of Service",

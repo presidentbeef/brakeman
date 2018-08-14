@@ -38,7 +38,7 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
       return if safe_parameter? input.match
       return if symbolizing_attributes? input
 
-      message = "Symbol conversion from unsafe string (#{friendly_type_of input})"
+      message = msg("Symbol conversion from unsafe string in ", msg_input(input))
 
       warn :result => result,
         :warning_type => "Denial of Service",

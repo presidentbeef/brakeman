@@ -166,7 +166,7 @@ class Rails31Tests < Minitest::Test
   def test_translate_bug
     assert_warning :type => :warning,
       :warning_type => "Cross-Site Scripting",
-      :message => /^Versions before 3.1.2 have a vulnerability/,
+      :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ the\ t/,
       :confidence => 0,
       :file => /Gemfile/
   end
@@ -523,7 +523,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 3,
-      :message => /^Upgrade to Rails 3.1.4, 3.1.0 select\(\) helper is vulnerable/,
+      :message => /^Upgrade to Rails 3.1.4. In Rails 3.1.0 `select` helper is vulnerable/,
       :confidence => 1,
       :file => /edit\.html\.erb/
   end
@@ -531,7 +531,7 @@ class Rails31Tests < Minitest::Test
   def test_string_buffer_manipulation_bug
     assert_warning :type => :warning,
       :warning_type => "Cross-Site Scripting",
-      :message => /^Rails 3.1.0 has a vulnerabilty in SafeBuffer. Upgrade to 3.1.4/,
+      :message => /^Rails 3.1.0 has a vulnerability in `SafeBuffer`. Upgrade to Rails 3.1.4/,
       :confidence => 1,
       :file => /Gemfile/
   end
@@ -540,7 +540,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Cross-Site Request Forgery",
       :line => 91,
-      :message => /^Use\ whitelist\ \(:only\ =>\ \[\.\.\]\)\ when\ skipp/,
+      :message => /^Use\ whitelist\ \(`:only\ =>\ \[\.\.\]`\)\ when\ skipp/,
       :confidence => 1,
       :file => /users_controller\.rb/
   end
@@ -549,7 +549,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :controller,
       :warning_type => "Authentication",
       :line => 3,
-      :message => /^Use\ whitelist\ \(:only\ =>\ \[\.\.\]\)\ when\ skipp/,
+      :message => /^Use\ whitelist\ \(`:only\ =>\ \[\.\.\]`\)\ when\ skipp/,
       :confidence => 1,
       :file => /admin_controller\.rb/
   end
@@ -558,7 +558,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :controller,
       :warning_type => "Authentication",
       :line => 5,
-      :message => /^Use\ whitelist\ \(:only\ =>\ \[\.\.\]\)\ when\ skipp/,
+      :message => /^Use\ whitelist\ \(`:only\ =>\ \[\.\.\]`\)\ when\ skipp/,
       :confidence => 1,
       :file => /admin_controller\.rb/
   end
@@ -567,7 +567,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :controller,
       :warning_type => "Authentication",
       :line => 4,
-      :message => /^Use\ whitelist\ \(:only\ =>\ \[\.\.\]\)\ when\ skipp/,
+      :message => /^Use\ whitelist\ \(`:only\ =>\ \[\.\.\]`\)\ when\ skipp/,
       :confidence => 1,
       :file => /admin_controller\.rb/
   end
@@ -720,7 +720,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 3,
-      :message => /^Upgrade\ to\ Rails\ 3\.1\.8,\ 3\.1\.0\ select_tag/,
+      :message => /^Upgrade\ to\ Rails\ 3\.1\.8. In Rails\ 3\.1\.0\ `select_tag`/,
       :confidence => 0,
       :file => /test_select_tag\.html\.erb/
   end
@@ -780,7 +780,7 @@ class Rails31Tests < Minitest::Test
   def test_strip_tags_CVE_2012_3465
     assert_warning :type => :warning,
       :warning_type => "Cross-Site Scripting",
-      :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ strip/,
+      :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ `strip/,
       :confidence => 0,
       :file => /Gemfile/
   end
@@ -804,7 +804,7 @@ class Rails31Tests < Minitest::Test
   def test_denial_of_service_CVE_2013_0269
     assert_warning :type => :warning,
       :warning_type => "Denial of Service",
-      :message => /^json\ gem\ version\ 1\.5\.4\ has\ a\ symbol\ crea/,
+      :message => /^json\ gem\ 1\.5\.4\ has\ a\ symbol\ crea/,
       :confidence => 1,
       :file => /Gemfile/
   end
@@ -813,7 +813,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Cross-Site Scripting",
       :line => 64,
-      :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ sanit/,
+      :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ `sanit/,
       :confidence => 0,
       :file => /other_controller\.rb/
   end
@@ -822,7 +822,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Cross-Site Scripting",
       :line => 65,
-      :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ sanitize_css/,
+      :message => /^Rails\ 3\.1\.0\ has\ a\ vulnerability\ in\ `sanitize_css`/,
       :confidence => 0,
       :file => /other_controller\.rb/
   end
@@ -1130,7 +1130,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :model,
       :warning_type => "Format Validation",
       :line => 2,
-      :message => /^Insufficient\ validation\ for\ 'username'\ u/,
+      :message => /^Insufficient\ validation\ for\ `username`\ u/,
       :confidence => 0,
       :file => /account\.rb/
   end
@@ -1139,7 +1139,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :model,
       :warning_type => "Format Validation",
       :line => 3,
-      :message => /^Insufficient\ validation\ for\ 'phone'\ usin/,
+      :message => /^Insufficient\ validation\ for\ `phone`\ usin/,
       :confidence => 0,
       :file => /account\.rb/
   end
@@ -1148,7 +1148,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :model,
       :warning_type => "Format Validation",
       :line => 4,
-      :message => /^Insufficient\ validation\ for\ 'first_name'/,
+      :message => /^Insufficient\ validation\ for\ `first_name`/,
       :confidence => 0,
       :file => /account\.rb/
   end
@@ -1166,7 +1166,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 9,
-      :message => /^Unsafe\ reflection\ method\ constantize\ cal/,
+      :message => /^Unsafe\ reflection\ method\ `constantize`\ cal/,
       :confidence => 0,
       :file => /admin_controller\.rb/
   end
@@ -1176,7 +1176,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 12,
-      :message => /^Unsafe\ reflection\ method\ safe_constantiz/,
+      :message => /^Unsafe\ reflection\ method\ `safe_constantiz/,
       :confidence => 0,
       :file => /admin_controller\.rb/
   end
@@ -1185,7 +1185,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 14,
-      :message => /^Unsafe\ reflection\ method\ qualified_const/,
+      :message => /^Unsafe\ reflection\ method\ `qualified_const/,
       :confidence => 0,
       :file => /admin_controller\.rb/
   end
@@ -1195,7 +1195,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 16,
-      :message => /^Unsafe\ reflection\ method\ const_get\ calle/,
+      :message => /^Unsafe\ reflection\ method\ `const_get`\ calle/,
       :confidence => 0,
       :file => /admin_controller\.rb/
   end
@@ -1204,7 +1204,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 18,
-      :message => /^Unsafe\ reflection\ method\ constantize\ cal/,
+      :message => /^Unsafe\ reflection\ method\ `constantize`\ cal/,
       :confidence => 1,
       :file => /admin_controller\.rb/
   end
@@ -1215,7 +1215,7 @@ class Rails31Tests < Minitest::Test
       :fingerprint => "3b58b691bf7ef0b244ee463aa812e4e6ffe3fe1075c8bd138c0cb5a77f365f41",
       :warning_type => "Remote Code Execution",
       :line => 69,
-      :message => /^CSV\.load\ called\ with\ parameter\ value/,
+      :message => /^`CSV\.load`\ called\ with\ parameter\ value/,
       :confidence => 0,
       :relative_path => "app/controllers/other_controller.rb"
   end
@@ -1226,7 +1226,7 @@ class Rails31Tests < Minitest::Test
       :fingerprint => "ecdb984aa40fbe7d42a74ab474a412579b42b36c630bcac640d382e108109437",
       :warning_type => "Remote Code Execution",
       :line => 71,
-      :message => /^Marshal\.load\ called\ with\ parameter\ value/,
+      :message => /^`Marshal\.load`\ called\ with\ parameter\ value/,
       :confidence => 0,
       :relative_path => "app/controllers/other_controller.rb"
   end
@@ -1237,7 +1237,7 @@ class Rails31Tests < Minitest::Test
       :fingerprint => "78ef96a81c8b02f97992a7056e4d9696ab238e12bc8a7a3204df29ef11e0a3fe",
       :warning_type => "Remote Code Execution",
       :line => 73,
-      :message => /^Marshal\.restore\ called\ with\ model\ attrib/,
+      :message => /^`Marshal\.restore`\ called\ with\ model\ attrib/,
       :confidence => 1,
       :relative_path => "app/controllers/other_controller.rb"
   end
@@ -1290,7 +1290,7 @@ class Rails31Tests < Minitest::Test
       :fingerprint => "e427e61359aa0f4f1e1a689066ff1c5034a54c9518da46755e308252b35b054d",
       :warning_type => "Information Disclosure",
       :line => 29,
-      :message => /^Detailed\ exceptions\ may\ be\ enabled\ in\ 's/,
+      :message => /^Detailed\ exceptions\ may\ be\ enabled\ in\ `s/,
       :confidence => 1,
       :relative_path => "app/controllers/admin_controller.rb"
   end
@@ -1369,7 +1369,7 @@ class Rails31Tests < Minitest::Test
       :fingerprint => "1a1b3368951a20d02976c9207e5981df37d1bfa7dbbdb925eecd9013ecfeaa0f",
       :warning_type => "Cross-Site Scripting",
       :line => 69,
-      :message => /^Rails\ 3\.1\.0\ content_tag\ does\ not\ escape\ /,
+      :message => /^Rails\ 3\.1\.0\ `content_tag`\ does\ not\ escape\ /,
       :confidence => 1,
       :relative_path => "Gemfile.lock",
       :user_input => nil

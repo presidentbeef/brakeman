@@ -39,7 +39,7 @@ class Brakeman::CheckDetailedExceptions < Brakeman::BaseCheck
 
           warn :warning_type => "Information Disclosure",
                :warning_code => :detailed_exceptions,
-               :message => "Detailed exceptions may be enabled in 'show_detailed_exceptions?'",
+               :message => msg("Detailed exceptions may be enabled in ", msg_code("show_detailed_exceptions?")),
                :confidence => confidence,
                :code => src,
                :file => definition[:file]

@@ -22,7 +22,7 @@ class Brakeman::CheckFileDisclosure < Brakeman::BaseCheck
     if fix_version and serves_static_assets?
       warn :warning_type => "File Access",
         :warning_code => :CVE_2014_7829,
-        :message => "Rails #{rails_version} has a file existence disclosure. Upgrade to #{fix_version} or disable serving static assets",
+        :message => msg(msg_version(rails_version), " has a file existence disclosure. Upgrade to ", msg_version(fix_version), " or disable serving static assets"),
         :confidence => :high,
         :gem_info => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/msg/rubyonrails-security/23fiuwb1NBA/MQVM1-5GkPMJ"

@@ -149,7 +149,7 @@ class Rails2Tests < Minitest::Test
       :fingerprint => "d77e92530f810b945b9bd04db2e25afab968b4379d08062f7c5a822671a159a6",
       :warning_type => "Remote Code Execution",
       :line => 77,
-      :message => /^Passing\ query\ parameters\ to\ render\(\)\ is\ /,
+      :message => /^Passing\ query\ parameters\ to\ `render` is\ /,
       :confidence => 0,
       :relative_path => "app/controllers/home_controller.rb",
       :code => s(:render, :action, s(:call, s(:params), :[], s(:lit, :my_action)), s(:hash)),
@@ -355,7 +355,7 @@ class Rails2Tests < Minitest::Test
   def test_csrf_protection
     assert_warning :type => :controller,
       :warning_type => "Cross-Site Request Forgery",
-      :message => /^'protect_from_forgery' should be called /,
+      :message => /^`protect_from_forgery` should be called /,
       :confidence => 0,
       :file => /application_controller\.rb/,
       :relative_path => "app/controllers/application_controller.rb"
@@ -375,7 +375,7 @@ class Rails2Tests < Minitest::Test
     assert_warning :type => :model,
       :warning_type => "Format Validation",
       :line => 2,
-      :message => /^Insufficient validation for 'name' using/,
+      :message => /^Insufficient validation for `name` using/,
       :confidence => 0,
       :file => /account\.rb/,
       :relative_path => "app/models/account.rb"
@@ -478,7 +478,7 @@ class Rails2Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 7,
-      :message => /^Unescaped model attribute in link_to/,
+      :message => /^Unescaped model attribute in `link_to`/,
       :confidence => 0,
       :file => /test_model\.html\.erb/,
       :relative_path => "app/views/home/test_model.html.erb"
@@ -490,7 +490,7 @@ class Rails2Tests < Minitest::Test
       :fingerprint => "8941c902e7c71d0df4ebb1888c8ed9ac99affaf385be657838452ac3eefe563c",
       :warning_type => "Cross-Site Scripting",
       :line => 9,
-      :message => /^Unescaped\ model\ attribute\ in\ l/,
+      :message => /^Unescaped\ model\ attribute\ in\ `l/,
       :confidence => 1,
       :relative_path => "app/views/home/test_link_to.html.erb"
   end
@@ -499,7 +499,7 @@ class Rails2Tests < Minitest::Test
     assert_no_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 10,
-      :message => /^Unescaped parameter value in link_to/,
+      :message => /^Unescaped parameter value in `link_to`/,
       :confidence => 1,
       :file => /test_params\.html\.erb/,
       :relative_path => "app/views/home/test_params.html.erb"
@@ -511,7 +511,7 @@ class Rails2Tests < Minitest::Test
       :fingerprint => "1803557ac730919bef3de68329461c47d5bee2a6bcdc8f467e6ee896504e6355",
       :warning_type => "Cross-Site Scripting",
       :line => 22,
-      :message => /^Unescaped\ parameter\ value\ in\ link_to/,
+      :message => /^Unescaped\ parameter\ value\ in\ `link_to`/,
       :confidence => 0,
       :relative_path => "app/views/home/test_params.html.erb",
       :code => s(:call, nil, :link_to, s(:call, s(:params), :[], s(:lit, :w00t)), s(:str, "some_url")),
@@ -522,7 +522,7 @@ class Rails2Tests < Minitest::Test
     assert_no_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 12,
-      :message => /^Unsafe parameter value in link_to href/,
+      :message => /^Unsafe parameter value in `link_to` href/,
       :confidence => 0,
       :file => /test_params\.html\.erb/,
       :relative_path => "app/views/home/test_params.html.erb"
@@ -532,7 +532,7 @@ class Rails2Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 14,
-      :message => /^Unsafe parameter value in link_to href/,
+      :message => /^Unsafe parameter value in `link_to` href/,
       :confidence => 0,
       :file => /test_params\.html\.erb/,
       :relative_path => "app/views/home/test_params.html.erb"
@@ -540,7 +540,7 @@ class Rails2Tests < Minitest::Test
     assert_no_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 16,
-      :message => /^Unsafe parameter value in link_to href/,
+      :message => /^Unsafe parameter value in `link_to` href/,
       :confidence => 1,
       :file => /test_params\.html\.erb/,
       :relative_path => "app/views/home/test_params.html.erb"
@@ -548,7 +548,7 @@ class Rails2Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 18,
-      :message => /^Unsafe parameter value in link_to href/,
+      :message => /^Unsafe parameter value in `link_to` href/,
       :confidence => 0,
       :file => /test_params\.html\.erb/,
       :relative_path => "app/views/home/test_params.html.erb"
@@ -558,7 +558,7 @@ class Rails2Tests < Minitest::Test
     assert_no_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 9,
-      :message => /^Unsafe parameter value in link_to href/,
+      :message => /^Unsafe parameter value in `link_to` href/,
       :confidence => 1,
       :file => /test_model\.html\.erb/,
       :relative_path => "app/views/home/test_model.html.erb"
@@ -566,7 +566,7 @@ class Rails2Tests < Minitest::Test
     assert_no_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 11,
-      :message => /^Unsafe parameter value in link_to href/,
+      :message => /^Unsafe parameter value in `link_to` href/,
       :confidence => 1,
       :file => /test_model\.html\.erb/,
       :relative_path => "app/views/home/test_model.html.erb"
@@ -578,7 +578,7 @@ class Rails2Tests < Minitest::Test
       :fingerprint => "395a4782d1e015e32c62aff7b3811533d91015935bc1b4258ad17b264dcdf6fe",
       :warning_type => "Cross-Site Scripting",
       :line => 15,
-      :message => /^Unsafe\ parameter\ value\ in\ link_to\ href/,
+      :message => /^Unsafe\ parameter\ value\ in\ `link_to`\ href/,
       :confidence => 0,
       :relative_path => "app/views/home/test_model.html.erb",
       :code => s(:call, nil, :link_to, s(:str, "test"), s(:call, s(:params), :[], s(:lit, :user_id))),
@@ -589,7 +589,7 @@ class Rails2Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 7,
-      :message => /^Unescaped parameter value in link_to/,
+      :message => /^Unescaped parameter value in `link_to`/,
       :confidence => 0,
       :file => /test_link_to\.html\.erb/,
       :relative_path => "app/views/home/test_link_to.html.erb"
@@ -855,7 +855,7 @@ class Rails2Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 5,
-      :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
+      :message => /^Unescaped\ model\ attribute\ in\ `content_tag`/,
       :confidence => 0,
       :file => /test_content_tag\.html\.erb/,
       :relative_path => "app/views/home/test_content_tag.html.erb"
@@ -865,7 +865,7 @@ class Rails2Tests < Minitest::Test
     assert_no_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 8,
-      :message => /^Unescaped\ cookie\ value\ in\ content_tag/,
+      :message => /^Unescaped\ cookie\ value\ in\ `content_tag`/,
       :confidence => 0,
       :file => /test_content_tag\.html\.erb/,
       :relative_path => "app/views/home/test_content_tag.html.erb"
@@ -875,7 +875,7 @@ class Rails2Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 11,
-      :message => /^Unescaped\ cookie\ value\ in\ content_tag/,
+      :message => /^Unescaped\ cookie\ value\ in\ `content_tag`/,
       :confidence => 0,
       :file => /test_content_tag\.html\.erb/,
       :relative_path => "app/views/home/test_content_tag.html.erb"
@@ -885,7 +885,7 @@ class Rails2Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 17,
-      :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
+      :message => /^Unescaped\ model\ attribute\ in\ `content_tag`/,
       :confidence => 0,
       :file => /test_content_tag\.html\.erb/,
       :relative_path => "app/views/home/test_content_tag.html.erb"
@@ -895,7 +895,7 @@ class Rails2Tests < Minitest::Test
     assert_no_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 20,
-      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :message => /^Unescaped\ parameter\ value\ in\ `content_tag`/,
       :confidence => 0,
       :file => /test_content_tag\.html\.erb/,
       :relative_path => "app/views/home/test_content_tag.html.erb"
@@ -907,7 +907,7 @@ class Rails2Tests < Minitest::Test
       :fingerprint => "e0279d86dea74b0da8c9cf5fce0b38c1023c1c407e84671d03ce0ca3440f03da",
       :warning_type => "Cross-Site Scripting",
       :line => 29,
-      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :message => /^Unescaped\ parameter\ value\ in\ `content_tag`/,
       :confidence => 0,
       :relative_path => "app/views/home/test_content_tag.html.erb",
       :code => s(:call, nil, :content_tag, s(:lit, :span), s(:call, s(:params), :[], s(:lit, :url))),
@@ -929,7 +929,7 @@ class Rails2Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 23,
-      :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
+      :message => /^Unescaped\ model\ attribute\ in\ `content_tag`/,
       :confidence => 0,
       :file => /test_content_tag\.html\.erb/,
       :relative_path => "app/views/home/test_content_tag.html.erb"
@@ -939,7 +939,7 @@ class Rails2Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 26,
-      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :message => /^Unescaped\ parameter\ value\ in\ `content_tag`/,
       :confidence => 1,
       :file => /test_content_tag\.html\.erb/,
       :relative_path => "app/views/home/test_content_tag.html.erb"
@@ -1048,7 +1048,7 @@ class Rails2Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 5,
-      :message => /^Rails\ 2\.3\.11\ has\ a\ vulnerability\ in\ sani/,
+      :message => /^Rails\ 2\.3\.11\ has\ a\ vulnerability\ in\ `sani/,
       :confidence => 0,
       :file => /not_used\.html\.erb/,
       :relative_path => "app/views/other/not_used.html.erb"
@@ -1298,7 +1298,7 @@ class Rails2Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 89,
-      :message => /^Unsafe\ reflection\ method\ constantize\ cal/,
+      :message => /^Unsafe\ reflection\ method\ `constantize`\ cal/,
       :confidence => 0,
       :file => /home_controller\.rb/,
       :relative_path => "app/controllers/home_controller.rb"
@@ -1308,7 +1308,7 @@ class Rails2Tests < Minitest::Test
       :warning_code => 24,
       :warning_type => "Remote Code Execution",
       :line => 1,
-      :message => /^Unsafe\ reflection\ method\ constantize\ cal/,
+      :message => /^Unsafe\ reflection\ method\ `constantize`\ cal/,
       :confidence => 0,
       :relative_path => "app/views/home/test_send_target.html.erb"
   end
@@ -1317,7 +1317,7 @@ class Rails2Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 160,
-      :message => /^Unsafe\ reflection\ method\ constantize\ cal/,
+      :message => /^Unsafe\ reflection\ method\ `constantize`\ cal/,
       :confidence => 0,
       :file => /home_controller\.rb/,
       :relative_path => "app/controllers/home_controller.rb"
@@ -1359,7 +1359,7 @@ class Rails2Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Denial of Service",
       :line => 86,
-      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(pa/,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ in pa/,
       :confidence => 0,
       :file => /other_controller\.rb/,
       :relative_path => "app/controllers/other_controller.rb"
@@ -1369,7 +1369,7 @@ class Rails2Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Denial of Service",
       :line => 88,
-      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(pa/,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ in pa/,
       :confidence => 1,
       :file => /other_controller\.rb/,
       :relative_path => "app/controllers/other_controller.rb"
@@ -1379,7 +1379,7 @@ class Rails2Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Denial of Service",
       :line => 44,
-      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(pa/,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ in pa/,
       :confidence => 1,
       :file => /application_controller\.rb/,
       :relative_path => "app/controllers/application_controller.rb"
@@ -1391,7 +1391,7 @@ class Rails2Tests < Minitest::Test
       :fingerprint => "de95ff1870e84933cb5a67bdd5c10cfa666b0bcd95cc78d7dd962215be9ed20c",
       :warning_type => "Denial of Service",
       :line => 74,
-      :message => /^Parameter\ value\ used\ in\ regex/,
+      :message => /^Parameter\ value\ used\ in\ regular\ expression/,
       :confidence => 0,
       :relative_path => "app/controllers/other_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :regex))
@@ -1403,7 +1403,7 @@ class Rails2Tests < Minitest::Test
       :fingerprint => "afdb18fa56308063ad491b76821fb76724dd6f0bd9d3e6aac83c933af0b4baac",
       :warning_type => "Denial of Service",
       :line => 82,
-      :message => /^Parameter\ value\ used\ in\ regex/,
+      :message => /^Parameter\ value\ used\ in\ regular\ expression/,
       :confidence => 2,
       :relative_path => "app/controllers/other_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :regex))
@@ -1415,7 +1415,7 @@ class Rails2Tests < Minitest::Test
       :fingerprint => "b9c29fc37080f827527feb53f29d618b91d9a5aaac9047383baf46361f08c4cc",
       :warning_type => "Denial of Service",
       :line => 49,
-      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(pa/,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ in pa/,
       :confidence => 0,
       :relative_path => "app/controllers/other_controller.rb"
   end
@@ -1426,7 +1426,7 @@ class Rails2Tests < Minitest::Test
       :fingerprint => "b9c29fc37080f827527feb53f29d618b91d9a5aaac9047383baf46361f08c4cc",
       :warning_type => "Denial of Service",
       :line => 53,
-      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(pa/,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ in pa/,
       :confidence => 0,
       :relative_path => "app/controllers/other_controller.rb"
   end
@@ -1470,7 +1470,7 @@ class Rails2Tests < Minitest::Test
       :fingerprint => "97cfe8a3ca261dfd2dcbd9f3aae6a007bc107c5ab6045e0f9cfaa7e66333c8c8",
       :warning_type => "Unscoped Find",
       :line => 3,
-      :message => /^Unscoped\ call\ to\ Email\#find/,
+      :message => /^Unscoped\ call\ to\ `Email\#find`/,
       :confidence => 2,
       :relative_path => "app/controllers/emails_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :email_id))

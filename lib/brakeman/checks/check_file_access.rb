@@ -52,7 +52,7 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
 
     if match and not temp_file_method? match.match
 
-      message = "#{friendly_type_of(match).capitalize} used in file name"
+      message = msg(msg_input(match), " used in file name")
 
       warn :result => result,
         :warning_type => "File Access",

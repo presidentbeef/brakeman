@@ -16,7 +16,7 @@ class Brakeman::CheckCreateWith < Brakeman::BaseCheck
       return
     end
 
-    @message = "create_with is vulnerable to strong params bypass. Upgrade to Rails #{suggested_version} or patch"
+    @message = msg(msg_code("create_with"), " is vulnerable to strong params bypass. Upgrade to ", msg_version(suggested_version), " or patch")
 
     tracker.find_call(:method => :create_with, :nested => true).each do |result|
       process_result result

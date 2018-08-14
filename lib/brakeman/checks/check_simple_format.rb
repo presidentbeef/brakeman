@@ -16,7 +16,7 @@ class Brakeman::CheckSimpleFormat < Brakeman::CheckCrossSiteScripting
   end
 
   def generic_warning
-    message = "Rails #{rails_version} has a vulnerability in simple_format (CVE-2013-6416). Upgrade to Rails version 4.0.2"
+    message = msg(msg_version(rails_version), " has a vulnerability in ", msg_code("simple_format"), " (CVE-2013-6416). Upgrade to ", msg_version("4.0.2"))
 
     warn :warning_type => "Cross-Site Scripting",
       :warning_code => :CVE_2013_6416,
@@ -50,7 +50,7 @@ class Brakeman::CheckSimpleFormat < Brakeman::CheckCrossSiteScripting
     warn :result => result,
       :warning_type => "Cross-Site Scripting",
       :warning_code => :CVE_2013_6416_call,
-      :message => "Values passed to simple_format are not safe in Rails #{rails_version}",
+      :message => msg("Values passed to ", msg_code("simple_format"), " are not safe in ", msg_version(rails_version)),
       :confidence => :high,
       :link_path => "https://groups.google.com/d/msg/ruby-security-ann/5ZI1-H5OoIM/ZNq4FoR2GnIJ",
       :user_input => match

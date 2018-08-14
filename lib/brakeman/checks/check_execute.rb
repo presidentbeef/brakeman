@@ -82,7 +82,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
         warn :result => result,
           :warning_type => "Command Injection",
           :warning_code => :command_injection,
-          :message => "Possible command injection in open()",
+          :message => msg("Possible command injection in ", msg_code("open")),
           :user_input => match,
           :confidence => :high
       end

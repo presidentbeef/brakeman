@@ -68,7 +68,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
     input = has_immediate_user_input?(argument)
     return false unless input
 
-    message = "Unescaped #{friendly_type_of input} in link_to"
+    message = msg("Unescaped ", msg_input(input), " in ", msg_code("link_to"))
 
     warn_xss(result, message, input, :high)
   end
@@ -83,7 +83,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
 
     confidence = :medium
     confidence = :high if likely_model_attribute? match
-    warn_xss(result, "Unescaped model attribute in link_to", match, confidence)
+    warn_xss(result, msg("Unescaped model attribute in ", msg_code("link_to")), match, confidence)
   end
 
   # Check if we should warn about the matched result
@@ -91,7 +91,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
     return false unless matched
     return false if matched.type == :model and tracker.options[:ignore_model_output]
 
-    message = "Unescaped #{friendly_type_of matched} in link_to"
+    message = msg("Unescaped ", msg_input(matched), " in ", msg_code("link_to"))
 
     warn_xss(result, message, @matched, :medium)
   end

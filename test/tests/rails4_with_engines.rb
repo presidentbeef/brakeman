@@ -48,7 +48,7 @@ class Rails4WithEnginesTests < Minitest::Test
       :fingerprint => "5a59773cc5a29469202c4e8908e37cdb9ef7926af05f68de1c6e765854e869c0",
       :warning_type => "Remote Code Execution",
       :line => 3,
-      :message => /^Unsafe\ reflection\ method\ constantize\ cal/,
+      :message => /^Unsafe\ reflection\ method\ `constantize`\ cal/,
       :confidence => 0,
       :relative_path => "alt_engines/admin_stuff/app/controllers/admin_controller.rb",
       :code => s(:call, s(:call, s(:call, s(:params), :[], s(:lit, :class)), :classify), :constantize),
@@ -84,7 +84,7 @@ class Rails4WithEnginesTests < Minitest::Test
       :fingerprint => "e5b270bcb5bf77069b7e4adf0c46221d1277f0b126c795e43b700a6b0f4747ae",
       :warning_type => "Cross-Site Scripting",
       :line => 20,
-      :message => /^Values\ passed\ to\ simple_format\ are\ not\ s/,
+      :message => /^Values\ passed\ to\ `simple_format`\ are\ not\ s/,
       :confidence => 0,
       :relative_path => "engines/user_removal/app/views/users/show.html.erb",
       :user_input => s(:call, s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))), :likes)
@@ -94,7 +94,7 @@ class Rails4WithEnginesTests < Minitest::Test
       :fingerprint => "e31d9365f0e99e55bb3d62deda2bf1ee0bc4e5970dd5791fcde8056f6558f51f",
       :warning_type => "Cross-Site Scripting",
       :line => 21,
-      :message => /^Values\ passed\ to\ simple_format\ are\ not\ s/,
+      :message => /^Values\ passed\ to\ `simple_format`\ are\ not\ s/,
       :confidence => 0,
       :relative_path => "engines/user_removal/app/views/users/show.html.erb",
       :user_input => s(:call, s(:params), :[], s(:lit, :color))
@@ -131,7 +131,7 @@ class Rails4WithEnginesTests < Minitest::Test
       :fingerprint => "98c76e0940c4e2ebb0dafd2b022c6818e7f620f196ce7e5c612af7d6ac06cd39",
       :warning_type => "Mass Assignment",
       :line => 4,
-      :message => /^create_with\ is\ vulnerable\ to\ strong\ para/,
+      :message => /^`create_with`\ is\ vulnerable\ to\ strong\ para/,
       :confidence => 1,
       :relative_path => "gems.rb",
       :user_input => nil
@@ -318,7 +318,7 @@ class Rails4WithEnginesTests < Minitest::Test
       :warning_code => 86,
       :fingerprint => "4d109bd02e4ccb3ea4c51485c947be435ee006a61af7d2cd37d1b358c7469189",
       :warning_type => "Cross-Site Request Forgery",
-      :message => "protect_from_forgery should be configured with 'with: :exception'",
+      :message => "`protect_from_forgery` should be configured with `with: :exception`",
       :confidence => 1,
       :relative_path => "app/controllers/application_controller.rb"
   end
@@ -329,7 +329,7 @@ class Rails4WithEnginesTests < Minitest::Test
       :fingerprint => "bdd5f4f1cdd2e9fb24adc4e9333f2b2eb1d0325badcab7c0b89c25952a2454e8",
       :warning_type => "Cross-Site Request Forgery",
       :line => 1,
-      :message => /^'protect_from_forgery'\ should\ be\ called\ /,
+      :message => /^`protect_from_forgery`\ should\ be\ called\ /,
       :confidence => 0,
       :relative_path => "engines/user_removal/app/controllers/base_controller.rb",
       :user_input => nil
@@ -365,7 +365,7 @@ class Rails4WithEnginesTests < Minitest::Test
       :fingerprint => "2b1b6ac6e2348889ac0e1a7fdf0861dba7af91d794c454f8b4b07e7655a19610",
       :warning_type => "Nested Attributes",
       :line => 4,
-      :message => /^Rails\ 4\.0\.0\ does\ not\ call\ :reject_if\ opt/,
+      :message => /^Rails\ 4\.0\.0\ does\ not\ call\ `:reject_if`\ opt/,
       :confidence => 1,
       :relative_path => "engines/user_removal/app/models/user.rb",
       :user_input => nil
@@ -377,7 +377,7 @@ class Rails4WithEnginesTests < Minitest::Test
       :fingerprint => "88b10c71ffa09afd9ec3dec09e08647caceb9977e23c80abc0de6bf024bb85b9",
       :warning_type => "Cross-Site Scripting",
       :line => 4,
-      :message => /^Rails\ 4\.0\.0\ content_tag\ does\ not\ escape\ /,
+      :message => /^Rails\ 4\.0\.0\ `content_tag`\ does\ not\ escape\ /,
       :confidence => 1,
       :relative_path => "gems.rb",
       :user_input => nil

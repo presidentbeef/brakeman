@@ -202,7 +202,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "e023f55d7d83631e750435a7d8f432e7e6d0d87b0a82706f91f247ce004830c2",
       :warning_type => "Information Disclosure",
       :line => 6,
-      :message => /^Detailed\ exceptions\ may\ be\ enabled\ in\ 's/,
+      :message => /^Detailed\ exceptions\ may\ be\ enabled\ in\ `s/,
       :confidence => 0,
       :relative_path => "app/controllers/application_controller.rb"
   end
@@ -401,7 +401,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "4b5d8c35b22fbdfbfabfd07343c8466ec941d5b78afbd574cf6ce76c68080c85",
       :warning_type => "Remote Code Execution",
       :line => 14,
-      :message => /^Passing\ query\ parameters\ to\ render/,
+      :message => /^Passing\ query\ parameters\ to\ `render`/,
       :confidence => 0,
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:render, :action, s(:call, s(:params), :[], s(:lit, :page)), s(:hash)),
@@ -414,7 +414,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "dd7110db0e7948d5e7047029e73ad570435e62e3ef8f3091eef57e15a11b6654",
       :warning_type => "Remote Code Execution",
       :line => 19,
-      :message => /^Passing\ query\ parameters\ to\ render/,
+      :message => /^Passing\ query\ parameters\ to\ `render`/,
       :confidence => 0,
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:render, :action, s(:call, s(:params), :[], s(:lit, :page)), s(:hash)),
@@ -463,7 +463,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "320daba73937ffd333f10e5b578520dd90ba681962079bb92a775fb602e2d185",
       :warning_type => "Cross-Site Request Forgery",
       :line => 11,
-      :message => /^Use\ whitelist\ \(:only\ =>\ \[\.\.\]\)\ when\ skipp/,
+      :message => /^Use\ whitelist\ \(`:only\ =>\ \[\.\.\]`\)\ when\ skipp/,
       :confidence => 1,
       :relative_path => "app/controllers/users_controller.rb",
       :user_input => nil
@@ -555,7 +555,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "f162a94e8ba3c94a8e997b470687e9d5e44a7692b99248b8bc3e689c1a1b86ff",
       :warning_type => "Denial of Service",
       :line => 38,
-      :message => /^Parameter\ value\ used\ in\ regex/,
+      :message => /^Parameter\ value\ used\ in\ regular expression/,
       :confidence => 0,
       :relative_path => "app/controllers/another_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
@@ -697,7 +697,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "2d06291f03b443619407093e5921ee1e4eb77b1bf045607d776d9493da4a3f95",
       :warning_type => "Cross-Site Scripting",
       :line => 9,
-      :message => /^Format\ options\ in\ number_to_currency\ are/,
+      :message => /^Format\ options\ in\ `number_to_currency`\ are/,
       :confidence => 0,
       :relative_path => "app/views/users/index.html.erb",
       :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :currency))
@@ -707,7 +707,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "c5f481595217e42fbeaf40f32e6407e66d64d246a9729c2c199053e64365ac96",
       :warning_type => "Cross-Site Scripting",
       :line => 13,
-      :message => /^Format\ options\ in\ number_to_percentage\ a/,
+      :message => /^Format\ options\ in\ `number_to_percentage`\ a/,
       :confidence => 0,
       :relative_path => "app/views/users/index.html.erb",
       :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :format))
@@ -859,7 +859,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "31b5a196d06699ced844270d876e7af818f5487dd82d713a47790798c1d6effd",
       :warning_type => "Cross-Site Scripting",
       :line => 2,
-      :message => /^Potentially\ unsafe\ model\ attribute\ in\ li/,
+      :message => /^Potentially\ unsafe\ model\ attribute\ in\ `li/,
       :confidence => 2,
       :relative_path => "app/views/another/various_xss.html.erb",
       :code => s(:call, nil, :link_to, s(:str, "stuff"), s(:call, s(:call, s(:const, :User), :find, s(:call, s(:call, nil, :params), :[], s(:lit, :id))), :home_url)),
@@ -980,7 +980,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "80fce17f43faed45ada3a85acd3902ab32478e585190b25dbb4d5ce483a463f7",
       :warning_type => "Denial of Service",
       :line => 13,
-      :message => /^Symbol\ conversion\ from\ unsafe\ string\ \(mo/,
+      :message => /^Symbol\ conversion\ from\ unsafe\ string\ in mo/,
       :confidence => 1,
       :relative_path => "app/models/user.rb",
       :user_input => s(:call, s(:const, :User), :table_name)
@@ -1125,7 +1125,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "d2bfa987fd0e59d1d515a0bc0baaf378d1dd75483184c945b662b96d370add28",
       :warning_type => "Format Validation",
       :line => 8,
-      :message => /^Insufficient\ validation\ for\ 'email'\ usin/,
+      :message => /^Insufficient\ validation\ for\ `email`\ usin/,
       :confidence => 0,
       :relative_path => "app/models/email.rb",
       :user_input => nil
@@ -1194,7 +1194,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "e5316ae15f7db1b2232599d86859229ce01fb6eff1e6d273dbc154345c374d67",
       :warning_type => "Command Injection",
       :line => 81,
-      :message => /^Possible\ command\ injection\ in\ open\(\)/,
+      :message => /^Possible\ command\ injection\ in\ `open`/,
       :confidence => 0,
       :relative_path => "app/controllers/users_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :url))
@@ -1204,7 +1204,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "b35ce0b104d755d40bec760daf5ca33578036f737094e453b9c79e0c441ef2b7",
       :warning_type => "Command Injection",
       :line => 83,
-      :message => /^Possible\ command\ injection\ in\ open\(\)/,
+      :message => /^Possible\ command\ injection\ in\ `open`/,
       :confidence => 0,
       :relative_path => "app/controllers/users_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
@@ -1336,7 +1336,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "c4a619b7316e45a5927b098294ff39d7206f84bac084402630318bf6f89f396d",
       :warning_type => "Mass Assignment",
       :line => 57,
-      :message => /^create_with\ is\ vulnerable\ to\ strong\ para/,
+      :message => /^`create_with`\ is\ vulnerable\ to\ strong\ para/,
       :confidence => 0,
       :relative_path => "app/controllers/users_controller.rb",
       :user_input => nil
@@ -1346,7 +1346,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "c4a619b7316e45a5927b098294ff39d7206f84bac084402630318bf6f89f396d",
       :warning_type => "Mass Assignment",
       :line => 58,
-      :message => /^create_with\ is\ vulnerable\ to\ strong\ para/,
+      :message => /^`create_with`\ is\ vulnerable\ to\ strong\ para/,
       :confidence => 0,
       :relative_path => "app/controllers/users_controller.rb",
       :user_input => nil
@@ -1356,7 +1356,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "8c55b05e3467934ac900567d47b4ac496e9761424b66b246585d14ba5b2b0240",
       :warning_type => "Mass Assignment",
       :line => 61,
-      :message => /^create_with\ is\ vulnerable\ to\ strong\ para/,
+      :message => /^`create_with`\ is\ vulnerable\ to\ strong\ para/,
       :confidence => 1,
       :relative_path => "app/controllers/users_controller.rb",
       :user_input => nil
@@ -1366,7 +1366,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "aafdaf40064466b1eea16ca053072fb2ef20c999411108d606c8555ade2ce629",
       :warning_type => "Mass Assignment",
       :line => 62,
-      :message => /^create_with\ is\ vulnerable\ to\ strong\ para/,
+      :message => /^`create_with`\ is\ vulnerable\ to\ strong\ para/,
       :confidence => 2,
       :relative_path => "app/controllers/users_controller.rb",
       :user_input => nil
@@ -1403,7 +1403,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "04494b2a7fe6aff45ef9c1d72f4bcce132979a8725e8a3d313d17d5c3411c4d0",
       :warning_type => "Nested Attributes",
       :line => 45,
-      :message => /^Rails\ 4\.0\.0\ does\ not\ call\ :reject_if\ opt/,
+      :message => /^Rails\ 4\.0\.0\ does\ not\ call\ `:reject_if`\ opt/,
       :confidence => 1,
       :relative_path => "app/models/user.rb",
       :user_input => nil
@@ -1427,7 +1427,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "263bacc3390a9dd1ddec7a7f5bbb609a837de55725571234708d2a3b83a017fe",
       :warning_type => "Cross-Site Scripting",
       :line => 4,
-      :message => /^Rails\ 4\.0\.0\ content_tag\ does\ not\ escape\ /,
+      :message => /^Rails\ 4\.0\.0\ `content_tag`\ does\ not\ escape\ /,
       :confidence => 1,
       :relative_path => "Gemfile",
       :user_input => nil
@@ -1534,7 +1534,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "4d88d42b82e11010ba1fb67f587bb756068caefe73bb74cc9c3e6f3b9842810f",
       :warning_type => "Unscoped Find",
       :line => 66,
-      :message => /^Unscoped\ call\ to\ Email\#find_by_id!/,
+      :message => /^Unscoped\ call\ to\ `Email\#find_by_id!`/,
       :confidence => 2,
       :relative_path => "app/controllers/users_controller.rb",
       :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :id))

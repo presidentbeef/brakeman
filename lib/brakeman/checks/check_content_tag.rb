@@ -96,7 +96,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
     end
 
     if input = has_immediate_user_input?(arg)
-      message = "Unescaped #{friendly_type_of input} in content_tag"
+      message = msg("Unescaped ", msg_input(input), " in ", msg_code("content_tag"))
 
       add_result result
 
@@ -121,7 +121,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
         warn :result => result,
           :warning_type => "Cross-Site Scripting",
           :warning_code => :xss_content_tag,
-          :message => "Unescaped model attribute in content_tag",
+          :message => msg("Unescaped model attribute in ", msg_code("content_tag")),
           :user_input => match,
           :confidence => confidence,
           :link_path => "content_tag"
@@ -130,7 +130,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
     elsif @matched
       return if @matched.type == :model and tracker.options[:ignore_model_output]
 
-      message = "Unescaped #{friendly_type_of @matched} in content_tag"
+      message = msg("Unescaped ", msg_input(@matched), " in ", msg_code("content_tag"))
 
       add_result result
 
@@ -181,7 +181,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
 
       warn :warning_type => "Cross-Site Scripting",
         :warning_code => :CVE_2016_6316,
-        :message => "Rails #{rails_version} content_tag does not escape double quotes in attribute values (CVE-2016-6316). Upgrade to #{fix_version}",
+        :message => msg(msg_version(rails_version), " ", msg_code("content_tag"), " does not escape double quotes in attribute values (CVE-2016-6316). Upgrade to ", msg_version(fix_version)),
         :confidence => confidence,
         :gem_info => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/msg/ruby-security-ann/8B2iV2tPRSE/JkjCJkSoCgAJ"

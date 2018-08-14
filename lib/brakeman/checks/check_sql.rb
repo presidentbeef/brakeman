@@ -247,7 +247,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       warn :result => result,
         :warning_type => "SQL Injection",
         :warning_code => :sql_injection_limit_offset,
-        :message => "Upgrade to Rails >= 2.1.2 to escape :limit and :offset. Possible SQL injection",
+        :message => msg("Upgrade to Rails >= 2.1.2 to escape ", msg_code(":limit"), " and ", msg_code("offset"), ". Possible SQL injection"),
         :confidence => confidence
     end
   end

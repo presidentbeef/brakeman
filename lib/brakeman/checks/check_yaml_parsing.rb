@@ -22,7 +22,7 @@ class Brakeman::CheckYAMLParsing < Brakeman::BaseCheck
                       "3.2.11"
                     end
 
-      message = "Rails #{rails_version} has a remote code execution vulnerability: upgrade to #{new_version} or disable XML parsing"
+      message = msg(msg_version(rails_version), " has a remote code execution vulnerability. Upgrade to ", msg_version(new_version), " or disable XML parsing")
 
       warn :warning_type => "Remote Code Execution",
         :warning_code => :CVE_2013_0156,

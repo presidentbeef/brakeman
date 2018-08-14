@@ -160,7 +160,7 @@ class OnlyFilesOptionTests < Minitest::Test
       :fingerprint => "1a1b3368951a20d02976c9207e5981df37d1bfa7dbbdb925eecd9013ecfeaa0f",
       :warning_type => "Cross-Site Scripting",
       :line => 64,
-      :message => /^Rails\ 3\.2\.9\.rc2\ content_tag\ does\ not\ esc/,
+      :message => /^Rails\ 3\.2\.9\.rc2\ `content_tag`\ does\ not\ esc/,
       :confidence => 1,
       :relative_path => "Gemfile.lock",
       :user_input => nil

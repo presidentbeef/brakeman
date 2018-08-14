@@ -287,7 +287,7 @@ class Rails52Tests < Minitest::Test
       :fingerprint => "c8adc1c0caf2c9251d1d8de588fb949070212d0eed5e1580aee88bab2287b772",
       :warning_type => "Cross-Site Scripting",
       :line => 90,
-      :message => /^Loofah\ 2\.1\.1\ is\ vulnerable\ \(CVE\-2018\-804/,
+      :message => /^loofah\ gem 2\.1\.1\ is\ vulnerable\ \(CVE\-2018\-804/,
       :confidence => 1,
       :relative_path => "Gemfile.lock",
       :user_input => nil

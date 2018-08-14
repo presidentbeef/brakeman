@@ -20,7 +20,7 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
                       "3.0.20"
                     end
 
-      message = "Rails #{rails_version} has a serious JSON parsing vulnerability: upgrade to #{new_version} or patch"
+      message = msg(msg_version(rails_version), " has a serious JSON parsing vulnerability. Upgrade to ", msg_version(new_version), " or patch")
       gem_info = gemfile_or_environment
 
       warn :warning_type => "Remote Code Execution",
@@ -68,19 +68,20 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
 
     warning_type = "Denial of Service"
     confidence = :medium
-    message = "#{name} gem version #{version} has a symbol creation vulnerablity: upgrade to "
+    gem_name = "#{name} gem"
+    message = msg(msg_version(version, gem_name), " has a symbol creation vulnerablity: upgrade to ")
 
     if version >= "1.7.0"
       confidence = :high
       warning_type = "Remote Code Execution"
-      message = "#{name} gem version #{version} has a remote code vulnerablity: upgrade to 1.7.7"
+      message = msg(msg_version(version, "json gem"), " has a remote code execution vulnerability: upgrade to ", msg_version("1.7.7", "json gem"))
     elsif version >= "1.6.0"
-      message << "1.6.8"
+      message << msg_version("1.6.8", gem_name)
     elsif version >= "1.5.0"
-      message << "1.5.5"
+      message << msg_version("1.5.5", gem_name)
     else
       confidence = :weak
-      message << "1.5.5"
+      message << msg_version("1.5.5", gem_name)
     end
 
     if confidence == :medium and uses_json_parse?

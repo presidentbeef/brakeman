@@ -18,7 +18,7 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
       if controller and not controller.protect_from_forgery?
         csrf_warning :controller => name,
           :warning_code => :csrf_protection_missing,
-          :message => "'protect_from_forgery' should be called in #{name}",
+          :message => msg(msg_code("protect_from_forgery"), " should be called in ", msg_code(name)),
           :file => controller.file,
           :line => controller.top_line
       elsif version_between? "4.0.0", "100.0.0" and forgery_opts = controller.options[:protect_from_forgery]
@@ -30,7 +30,7 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
             :controller => name,
             :warning_type => "Cross-Site Request Forgery",
             :warning_code => :csrf_not_protected_by_raising_exception,
-            :message => "protect_from_forgery should be configured with 'with: :exception'",
+            :message => msg(msg_code("protect_from_forgery"), " should be configured with ", msg_code("with: :exception")),
             :confidence => :medium,
             :file => controller.file
           }
@@ -73,7 +73,7 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
     @warned_cve_2011_0447 = true # only warn once
 
     csrf_warning :warning_code => :CVE_2011_0447,
-      :message => "CSRF protection is flawed in unpatched versions of Rails #{rails_version} (CVE-2011-0447). Upgrade to #{new_version} or apply patches as needed",
+      :message => msg("CSRF protection is flawed in unpatched versions of ", msg_version(rails_version), " (CVE-2011-0447). Upgrade to ", msg_version(new_version), " or apply patches as needed"),
       :gem_info => gemfile_or_environment,
       :file => nil,
       :link_path => "https://groups.google.com/d/topic/rubyonrails-security/LZWjzCPgNmU/discussion"

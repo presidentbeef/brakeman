@@ -43,7 +43,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
     return if call? url_arg and ignore_call? url_arg.target, url_arg.method
 
     if input = has_immediate_user_input?(url_arg)
-      message = "Unsafe #{friendly_type_of input} in link_to href"
+      message = msg("Unsafe ", msg_input(input), " in ", msg_code("link_to"), " href")
 
       unless duplicate? result or call_on_params? url_arg or ignore_interpolation? url_arg, input.match
         add_result result
@@ -59,7 +59,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
       return if ignore_model_call? url_arg, input or duplicate? result
       add_result result
 
-      message = "Potentially unsafe model attribute in link_to href"
+      message = msg("Potentially unsafe model attribute in ", msg_code("link_to"), " href")
 
       warn :result => result,
         :warning_type => "Cross-Site Scripting",

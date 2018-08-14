@@ -402,7 +402,7 @@ class Rails3Tests < Minitest::Test
       :fingerprint => "6f5239fb87c64764d0c209014deb5cf504c2c10ee424bd33590f0a4f22e01d8f",
       :warning_type => "Cross-Site Request Forgery",
       :line => 1,
-      :message => /^'protect_from_forgery'\ should\ be\ called\ /,
+      :message => /^`protect_from_forgery`\ should\ be\ called\ /,
       :confidence => 0,
       :relative_path => "app/controllers/application_controller.rb",
       :user_input => nil
@@ -431,7 +431,7 @@ class Rails3Tests < Minitest::Test
   def test_attr_protected
     assert_warning :type => :model,
       :warning_type => "Attribute Restriction",
-      :message => /^attr_protected is bypassable in/,
+      :message => /^`attr_protected` is bypassable in/,
       :confidence => 0,
       :file => /product\.rb/
   end
@@ -440,7 +440,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :model,
       :warning_type => "Format Validation",
       :line => 2,
-      :message => /^Insufficient validation for 'name' using/,
+      :message => /^Insufficient validation for `name` using/,
       :confidence => 0,
       :file => /account\.rb/
   end
@@ -449,7 +449,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :model,
       :warning_type => "Format Validation",
       :line => 3,
-      :message => /^Insufficient validation for 'blah' using/,
+      :message => /^Insufficient validation for `blah` using/,
       :confidence => 0,
       :file => /account\.rb/
   end
@@ -458,7 +458,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :model,
       :warning_type => "Format Validation",
       :line => 4,
-      :message => /^Insufficient validation for 'something' using/,
+      :message => /^Insufficient validation for `something` using/,
       :confidence => 0,
       :file => /account\.rb/
   end
@@ -543,7 +543,7 @@ class Rails3Tests < Minitest::Test
     assert_no_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 8,
-      :message => /^Unescaped model attribute in link_to/,
+      :message => /^Unescaped model attribute in `link_to`/,
       :confidence => 0,
       :file => /test_model\.html\.erb/
   end
@@ -552,7 +552,7 @@ class Rails3Tests < Minitest::Test
     assert_no_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 12,
-      :message => /^Unsafe parameter value in link_to href/,
+      :message => /^Unsafe parameter value in `link_to` href/,
       :confidence => 0,
       :file => /test_params\.html\.erb/
   end
@@ -561,20 +561,20 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 14,
-      :message => /^Unsafe parameter value in link_to href/,
+      :message => /^Unsafe parameter value in `link_to` href/,
       :confidence => 0,
       :file => /test_params\.html\.erb/
 
     assert_no_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 16,
-      :message => /^Unsafe parameter value in link_to href/,
+      :message => /^Unsafe parameter value in `link_to` href/,
       :file => /test_params\.html\.erb/
 
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 18,
-      :message => /^Unsafe parameter value in link_to href/,
+      :message => /^Unsafe parameter value in `link_to` href/,
       :confidence => 0,
       :file => /test_params\.html\.erb/
   end
@@ -586,7 +586,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 5,
-      :message => /^Unsafe parameter value in link_to href/,
+      :message => /^Unsafe parameter value in `link_to` href/,
       :confidence => 0,
       :file => /test_newlines\.html\.erb/
 
@@ -597,7 +597,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 12,
-      :message => /^Unsafe parameter value in link_to href/,
+      :message => /^Unsafe parameter value in `link_to` href/,
       :confidence => 0,
       :file => /test_newlines\.html\.erb/
   end
@@ -606,14 +606,14 @@ class Rails3Tests < Minitest::Test
     assert_no_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 10,
-      :message => /^Unsafe parameter value in link_to href/,
+      :message => /^Unsafe parameter value in `link_to` href/,
       :confidence => 1,
       :file => /test_model\.html\.erb/
 
     assert_no_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 12,
-      :message => /^Unsafe parameter value in link_to href/,
+      :message => /^Unsafe parameter value in `link_to` href/,
       :confidence => 1,
       :file => /test_model\.html\.erb/
   end
@@ -933,7 +933,7 @@ class Rails3Tests < Minitest::Test
   def test_translate_bug
     assert_warning :type => :warning,
       :warning_type => "Cross-Site Scripting",
-      :message => /^Versions before 3.0.11 have a vulnerability/,
+      :message => /^Rails\ 3\.0\.3\ has\ a\ vulnerability\ in\ the\ t/, 
       :confidence => 1,
       :file => /Gemfile/
   end
@@ -949,7 +949,7 @@ class Rails3Tests < Minitest::Test
   def test_string_buffer_manipulation_bug
     assert_warning :type => :warning,
       :warning_type => "Cross-Site Scripting",
-      :message => /^Rails 3\.\d\.\d has a vulnerabilty in SafeBuffer. Upgrade to 3.0.12/,
+      :message => /^Rails 3\.\d\.\d has a vulnerability in `SafeBuffer`. Upgrade to Rails 3.0.12/,
       :confidence => 1,
       :file => /Gemfile/
   end
@@ -967,7 +967,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 8,
-      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :message => /^Unescaped\ parameter\ value\ in\ `content_tag`/,
       :confidence => 0,
       :file => /test_content_tag\.html\.erb/
   end
@@ -976,7 +976,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 14,
-      :message => /^Unescaped\ cookie\ value\ in\ content_tag/,
+      :message => /^Unescaped\ cookie\ value\ in\ `content_tag`/,
       :confidence => 0,
       :file => /test_content_tag\.html\.erb/
   end
@@ -985,7 +985,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 20,
-      :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
+      :message => /^Unescaped\ model\ attribute\ in\ `content_tag`/,
       :confidence => 0,
       :file => /test_content_tag\.html\.erb/
   end
@@ -994,7 +994,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 26,
-      :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
+      :message => /^Unescaped\ model\ attribute\ in\ `content_tag`/,
       :confidence => 0,
       :file => /test_content_tag\.html\.erb/
   end
@@ -1003,7 +1003,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 32,
-      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :message => /^Unescaped\ parameter\ value\ in\ `content_tag`/,
       :confidence => 0,
       :file => /test_content_tag\.html\.erb/
   end
@@ -1014,7 +1014,7 @@ class Rails3Tests < Minitest::Test
       :fingerprint => "2bfdd98472f9f235b3ea683a4d911749b0c1b7ae169be697657304724d780595",
       :warning_type => "Cross-Site Scripting",
       :line => 38,
-      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :message => /^Unescaped\ parameter\ value\ in\ `content_tag`/,
       :confidence => 0,
       :relative_path => "app/views/home/test_content_tag.html.erb",
       :code => s(:call, nil, :content_tag, s(:lit, :span), s(:str, "test"), s(:hash, s(:call, s(:params), :[], s(:lit, :class)), s(:str, "display:none"))),
@@ -1063,7 +1063,7 @@ class Rails3Tests < Minitest::Test
       :fingerprint => "0787a388cdb27d68d2e1591d02a3c84f0bc6938ede52139471082386798f7327",
       :warning_type => "Cross-Site Scripting",
       :line => 11,
-      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :message => /^Unescaped\ parameter\ value\ in\ `content_tag`/,
       :confidence => 0,
       :relative_path => "app/views/home/test_content_tag.html.erb",
       :code => s(:call, nil, :content_tag, s(:lit, :div), s(:str, "Blah!"), s(:hash, s(:lit, :class), s(:call, s(:params), :[], s(:lit, :class))), s(:true)),
@@ -1074,7 +1074,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 35,
-      :message => /^Unescaped\ model\ attribute\ in\ content_tag/,
+      :message => /^Unescaped\ model\ attribute\ in\ `content_tag`/,
       :confidence => 0,
       :file => /test_content_tag\.html\.erb/
   end
@@ -1085,7 +1085,7 @@ class Rails3Tests < Minitest::Test
       :fingerprint => "e1d77d0c162fb0a1c4cc55655045755217c9e46f575d5c89848cfa2207fd1406",
       :warning_type => "Cross-Site Scripting",
       :line => 23,
-      :message => /^Unescaped\ parameter\ value\ in\ content_tag/,
+      :message => /^Unescaped\ parameter\ value\ in\ `content_tag`/,
       :confidence => 0,
       :relative_path => "app/views/home/test_content_tag.html.erb",
       :code => s(:call, nil, :content_tag, s(:lit, :div), s(:str, "Blah!"), s(:hash, s(:lit, :class), s(:call, s(:params), :[], s(:lit, :class)))),
@@ -1126,7 +1126,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 3,
-      :message => /^Upgrade\ to\ Rails\ 3\.0\.17,\ 3\.0\.3\ select_ta/,
+      :message => /^Upgrade\ to\ Rails\ 3\.0\.17\. In Rails 3\.0\.3\ `select_ta/,
       :confidence => 0,
       :file => /test_select_tag\.html\.erb/
   end
@@ -1161,7 +1161,7 @@ class Rails3Tests < Minitest::Test
       :fingerprint => "036a26cc74453c8ca220442bb647911effbb1e6d0b1c47f1131a967a2e0922d5",
       :warning_type => "Mail Link",
       :line => 1,
-      :message => /^Vulnerability\ in\ mail_to\ using\ javascrip/,
+      :message => /^Vulnerability\ in\ `mail_to`\ using\ javascrip/,
       :confidence => 0,
       :relative_path => "Gemfile.lock"
   end
@@ -1218,7 +1218,7 @@ class Rails3Tests < Minitest::Test
   def test_denial_of_service_CVE_2013_0269
     assert_warning :type => :warning,
       :warning_type => "Denial of Service",
-      :message => /^json_pure\ gem\ version\ 1\.6\.4\ has\ a\ symbol/,
+      :message => /^json_pure gem\ 1\.6\.4\ has\ a\ symbol/,
       :confidence => 0,
       :file => /Gemfile/
   end
@@ -1227,7 +1227,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Cross-Site Scripting",
       :line => 40,
-      :message => /^Rails\ 3\.0\.3\ has\ a\ vulnerability\ in\ sanit/,
+      :message => /^Rails\ 3\.0\.3\ has\ a\ vulnerability\ in\ `sanit/,
       :confidence => 0,
       :file => /user\.rb/
   end
@@ -1343,7 +1343,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 106,
-      :message => /^YAML\.load\ called\ with\ parameter\ value/,
+      :message => /^`YAML\.load`\ called\ with\ parameter\ value/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end
@@ -1352,7 +1352,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 123,
-      :message => /^YAML\.load\ called\ with\ parameter\ value/,
+      :message => /^`YAML\.load`\ called\ with\ parameter\ value/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end
@@ -1361,7 +1361,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 125,
-      :message => /^YAML\.load\ called\ with\ cookie\ value/,
+      :message => /^`YAML\.load`\ called\ with\ cookie\ value/,
       :confidence => 1,
       :file => /home_controller\.rb/
   end
@@ -1370,7 +1370,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 126,
-      :message => /^YAML\.load\ called\ with\ model\ attribute/,
+      :message => /^`YAML\.load`\ called\ with\ model\ attribute/,
       :confidence => 1,
       :file => /home_controller\.rb/
   end
@@ -1379,7 +1379,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 130,
-      :message => /^YAML\.load_documents\ called\ with\ paramete/,
+      :message => /^`YAML\.load_documents`\ called\ with\ paramete/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end
@@ -1389,7 +1389,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 131,
-      :message => /^YAML\.load_stream\ called\ with\ cookie\ value/,
+      :message => /^`YAML\.load_stream`\ called\ with\ cookie\ value/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end
@@ -1399,7 +1399,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 132,
-      :message => /^YAML\.parse_documents\ called\ with\ paramet/,
+      :message => /^`YAML\.parse_documents`\ called\ with\ paramet/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end
@@ -1409,7 +1409,7 @@ class Rails3Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 133,
-      :message => /^YAML\.parse_stream\ called\ with\ model\ attr/,
+      :message => /^`YAML\.parse_stream`\ called\ with\ model\ attr/,
       :confidence => 1,
       :file => /home_controller\.rb/
   end
@@ -1444,7 +1444,7 @@ class Rails3Tests < Minitest::Test
       :fingerprint => "331e69e4654f158601d9a0e124304f825da4e0156d2c94759eb02611e280feaa",
       :warning_type => "Cross-Site Scripting",
       :line => 49,
-      :message => /^Rails\ 3\.0\.3\ content_tag\ does\ not\ escape\ /,
+      :message => /^Rails\ 3\.0\.3\ `content_tag`\ does\ not\ escape\ /,
       :confidence => 0,
       :relative_path => "Gemfile.lock",
       :user_input => nil
