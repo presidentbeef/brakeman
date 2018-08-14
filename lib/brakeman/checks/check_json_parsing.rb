@@ -69,12 +69,12 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
     warning_type = "Denial of Service"
     confidence = :medium
     gem_name = "#{name} gem"
-    message = msg(msg_version(version, gem_name), " has a symbol creation vulnerablity: upgrade to ")
+    message = msg(msg_version(version, gem_name), " has a symbol creation vulnerablity. Upgrade to ")
 
     if version >= "1.7.0"
       confidence = :high
       warning_type = "Remote Code Execution"
-      message = msg(msg_version(version, "json gem"), " has a remote code execution vulnerability: upgrade to ", msg_version("1.7.7", "json gem"))
+      message = msg(msg_version(version, "json gem"), " has a remote code execution vulnerability. Upgrade to ", msg_version("1.7.7", "json gem"))
     elsif version >= "1.6.0"
       message << msg_version("1.6.8", gem_name)
     elsif version >= "1.5.0"
