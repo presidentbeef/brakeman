@@ -12,4 +12,4 @@ RUN bundle install --jobs 4 --without "development test"
 VOLUME /code
 WORKDIR /code
 
-ENTRYPOINT ["/usr/src/app/bin/codeclimate-brakeman"]
+ENTRYPOINT ["/usr/src/app/bin/brakeman"]
