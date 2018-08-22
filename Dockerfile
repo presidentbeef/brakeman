@@ -1,5 +1,5 @@
 FROM ruby:2.4-alpine
-MAINTAINER Justin Collins
+LABEL maintainer="Justin Collins"
 
 WORKDIR /usr/src/app
 COPY . /usr/src/app
