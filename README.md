@@ -41,7 +41,7 @@ Outside of Rails root:
 
 From a Rails application's root directory:
 
-	docker run -v "$(pwd)":/code brakeman -o brakeman_results.html
+    docker run -v "$(pwd)":/code brakeman -o brakeman_results.html
 
 Outside of Rails root:
 
