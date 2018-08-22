@@ -22,7 +22,12 @@ Using Bundler:
       gem 'brakeman'
     end
 
+Using Docker:
+
+	docker build . -t brakeman
+
 # Usage
+#### Running locally
 
 From a Rails application's root directory:
 
@@ -31,6 +36,17 @@ From a Rails application's root directory:
 Outside of Rails root:
 
     brakeman /path/to/rails/application
+
+#### Running with Docker
+
+From a Rails application's root directory:
+
+	docker run -v "$(pwd)":/code brakeman -o brakeman_results.html
+
+Outside of Rails root:
+
+    docker run -v 'path/to/rails/application':/code brakeman -o brakeman_results.html
+
 
 # Compatibility
 
