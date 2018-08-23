@@ -43,7 +43,7 @@ From a Rails application's root directory:
 
     docker run -v "$(pwd)":/code brakeman -o brakeman_results.html
 
-Outside of Rails root:
+Outside of Rails root: (Note that the output file is relative to path/to/rails/application)
 
     docker run -v 'path/to/rails/application':/code brakeman -o brakeman_results.html
 
