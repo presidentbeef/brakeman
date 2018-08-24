@@ -19,7 +19,7 @@ RUN bundle install --jobs 4 --without "development test"
 # Copy in the latest Brakeman source code as the final stage
 COPY . /usr/src/app
 
-VOLUME /code
+# Default to looking for source in /code
 WORKDIR /code
 
 ENTRYPOINT ["/usr/src/app/bin/brakeman"]
