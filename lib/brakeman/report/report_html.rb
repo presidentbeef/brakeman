@@ -113,29 +113,16 @@ class Brakeman::Report::HTML < Brakeman::Report::Base
 
   #Generate HTML for warnings, including context show/hidden via Javascript
   def with_context warning, message
-    context = context_for(@app_tree, warning)
-    full_message = nil
-
-    if tracker.options[:message_limit] and tracker.options[:message_limit] > 0 and message.length > tracker.options[:message_limit]
-      full_message = html_message(warning, message)
-      message = message[0..tracker.options[:message_limit]] << "..."
-    end
-
-    message = html_message(warning, message)
-    return message if context.empty? and not full_message
-
     @element_id += 1
+    context = context_for(@app_tree, warning)
+    message = html_message(warning, message)
+
     code_id = "context#@element_id"
     message_id = "message#@element_id"
     full_message_id = "full_message#@element_id"
     alt = false
     output = "<div class='warning_message' onClick=\"toggle('#{code_id}');toggle('#{message_id}');toggle('#{full_message_id}')\" >" <<
-    if full_message
-      "<span id='#{message_id}' style='display:block' >#{message}</span>" <<
-      "<span id='#{full_message_id}' style='display:none'>#{full_message}</span>"
-    else
-      message
-    end <<
+    message <<
     "<table id='#{code_id}' class='context' style='display:none'>" <<
     "<caption>#{CGI.escapeHTML warning_file(warning) || ''}</caption>"
 
@@ -199,18 +186,35 @@ class Brakeman::Report::HTML < Brakeman::Report::Base
 
   #Escape warning message and highlight user input in HTML output
   def html_message warning, message
-    message = CGI.escapeHTML(message)
+    message = message.to_html
 
     if warning.file
-      github_url = github_url warning.file, warning.line
-      message.gsub!(/(near line \d+)/, "<a href=\"#{github_url}\" target='_blank'>\\1</a>") if github_url
+      if github_url = github_url(warning.file, warning.line)
+        message << " <a href=\"#{github_url}\" target='_blank'>near line #{warning.line}</a>"
+      elsif warning.line
+        message << " near line #{warning.line}"
+      end
     end
 
-    if @highlight_user_input and warning.user_input
-      user_input = CGI.escapeHTML(warning.format_user_input)
-      message.gsub!(user_input, "<span class=\"user_input\">#{user_input}</span>")
-    end
+    if warning.code
+      code = warning.format_with_user_input do |_, user_input|
+        "[BMP_UI]#{user_input}[/BMP_UI]"
+      end
 
-    message
+      code = "<span class=\"code\">#{CGI.escapeHTML(code).gsub("[BMP_UI]", "<span class=\"user_input\">").gsub("[/BMP_UI]", "</span>")}</span>"
+      full_message = "#{message}: #{code}"
+
+      if warning.code.mass > 20
+        message_id = "message#@element_id"
+        full_message_id = "full_message#@element_id"
+
+        "<span id='#{message_id}' style='display:block'>#{message}: ...</span>" <<
+        "<span id='#{full_message_id}' style='display:none'>#{full_message}</span>"
+      else
+        full_message
+      end
+    else
+      message
+    end
   end
 end

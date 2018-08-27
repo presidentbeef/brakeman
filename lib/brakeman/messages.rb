@@ -61,6 +61,20 @@ class Brakeman::Messages::Message
 
     output
   end
+
+  def to_html
+    require 'cgi'
+
+    output = @parts.map(&:to_html).join
+
+    case @parts.first
+    when Brakeman::Messages::Code, Brakeman::Messages::Version
+    else
+      output[0] = output[0].capitalize
+    end
+
+    output
+  end
 end
 
 class Brakeman::Messages::Plain
@@ -70,6 +84,10 @@ class Brakeman::Messages::Plain
 
   def to_s
     @value
+  end
+
+  def to_html
+    CGI.escapeHTML(@value)
   end
 end
 
@@ -101,15 +119,23 @@ class Brakeman::Messages::Input
   def to_s
     @value
   end
+
+  def to_html
+    self.to_s
+  end
 end
 
 class Brakeman::Messages::Code
   def initialize code
-    @code = code
+    @code = code.to_s
   end
 
   def to_s
     "`#{@code}`"
+  end
+
+  def to_html
+    "<span class=\"code\">#{CGI.escapeHTML(@code)}</span>"
   end
 end
 
@@ -121,6 +147,10 @@ class Brakeman::Messages::FileName
   def to_s
     "`#{@file}`"
   end
+
+  def to_html
+    "<span class=\"filename\">#{CGI.escapeHTML(@file)}</span>"
+  end
 end
 
 class Brakeman::Messages::Version
@@ -131,5 +161,9 @@ class Brakeman::Messages::Version
 
   def to_s
     "#{@library} #{@version}"
+  end
+
+  def to_html
+    CGI.escapeHTML(self.to_s)
   end
 end
