@@ -92,16 +92,23 @@ class Brakeman::Report::Markdown < Brakeman::Report::Table
 
   # Escape and code format warning message
   def markdown_message warning, message
+    message = message.to_s
+
     if warning.file
       github_url = github_url warning.file, warning.line
-      message.gsub!(/(near line \d+)/, "[\\1](#{github_url})") if github_url
-    end
-    if warning.code
-      code = warning.format_code
-      message.gsub(code, "`#{code.gsub('`','``').gsub(/\A``|``\z/, '` `')}`")
-    else
-      message
-    end
-  end
 
+      if github_url
+        message << " near line [#{warning.line}](#{github_url})"
+      elsif warning.line
+        message << " near line #{warning.line}"
+      end
+    end
+
+    if warning.code
+      code = warning.format_code.gsub('`','``').gsub(/\A``|``\z/, '` `')
+      message << ": `#{code}`"
+    end
+
+    message
+  end
 end
