@@ -26,6 +26,10 @@ Using Docker:
 
 	docker build . -t brakeman
 
+If you wish to use the codeclimate-brakeman docker image directly:
+
+	docker build . -f "${PWD}/Dockerfile.codeclimate" -t codeclimate-brakeman
+
 # Usage
 #### Running locally
 
