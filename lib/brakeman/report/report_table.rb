@@ -100,6 +100,37 @@ class Brakeman::Report::Table < Brakeman::Report::Base
     end
   end
 
+  def convert_warning warning, original
+    super
+
+    warning["Message"] = text_message original, warning["Message"]
+
+    warning
+  end
+
+  #Escape warning message and highlight user input in text output
+  def text_message warning, message
+    message = message.to_s
+
+    if warning.line
+      message << " near line #{warning.line}"
+    end
+
+    if warning.code
+      if @highlight_user_input and warning.user_input
+        code = warning.format_with_user_input do |user_input, user_input_string|
+          "+#{user_input_string}+"
+        end
+      else
+        code = warning.format_code
+      end
+
+      message << ": #{code}"
+    end
+
+    message
+  end
+
   #Generate header for text output
   def text_header
     <<-HEADER

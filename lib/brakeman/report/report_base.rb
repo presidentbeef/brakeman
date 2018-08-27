@@ -164,7 +164,6 @@ class Brakeman::Report::Base
 
   def convert_warning warning, original
     warning["Confidence"] = TEXT_CONFIDENCE[warning["Confidence"]]
-    warning["Message"] = text_message original, warning["Message"]
     warning
   end
 
@@ -277,16 +276,6 @@ class Brakeman::Report::Base
       "3.x"
     else
       "Unknown"
-    end
-  end
-
-  #Escape warning message and highlight user input in text output
-  def text_message warning, message
-    if @highlight_user_input and warning.user_input
-      user_input = warning.format_user_input
-      message.gsub(user_input, "+#{user_input}+")
-    else
-      message
     end
   end
 end
