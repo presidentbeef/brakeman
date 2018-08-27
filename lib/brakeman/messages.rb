@@ -36,7 +36,14 @@ end
 
 class Brakeman::Messages::Message
   def initialize *args
-    @parts = args
+    @parts = args.map do |a|
+      case a
+      when String, Symbol
+        Brakeman::Messages::Plain.new(a.to_s)
+      else
+        a
+      end
+    end
   end
 
   def << msg
