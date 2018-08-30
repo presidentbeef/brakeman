@@ -108,6 +108,44 @@ ga('cdt.send', 'pageview');
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2018/08/30/happy-8th-birthday/">Happy 8th Birthday, Brakeman!</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2018-08-30 08:54:00 -0700" pubdate  updated >Aug 30<span>th</span>, 2018</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In celebration of Brakeman&#8217;s 8th birthday this week, we&#8217;d like to share an update to keep you apprised of what we’ve been up to since our acquisition by Synopsys in June of this year.</p>
+
+<p>Stemming from the acquisition, Synopsys welcomed Justin Collins of the original Brakeman core team. He is working closely with the Synopsys Static Analysis division to integrate the Brakeman Pro Engine into the Coverity proprietary product offering. This is an exciting opportunity to build Ruby on Rails support into an enterprise-class engine that is <a href="https://www.synopsys.com/software-integrity/resources/analyst-reports/2018-gartner-magic-quadrant.html">quickly emerging as a leader</a> in static application security testing.</p>
+
+<p>As for the Brakeman project, we&#8217;d like to assure you that Synopsys is committed to the continued success of the project.</p>
+
+<p>Synopsys has a rich history of working with the open source community through <a href="https://scan.coverity.com/">Coverity Scan</a>, providing testing as a free service to support building quality and security into the open source software (OSS) development process. To-date since its inception in 2006, Coverity Scan has provided scanning support to over 4,600 open source projects. The December 2017 acquisition of Black Duck Software is another testament to Synopsys’ dedication to securing the growing use of open source.</p>
+
+<p>Rest easy knowing that Brakeman will continue to be maintained by the same team. Code will remain available on <a href="https://github.com/presidentbeef/brakeman">GitHub</a>, and Ruby gems will continue being distributed via <a href="https://rubygems.org/gems/brakeman">RubyGems.org</a>..</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/">Brakeman Has Been Acquired by Synopsys</a></h1>
     
     
@@ -1141,108 +1179,6 @@ x.send(params[:x]) # Will no longer warn because `params[:x]` must be 'safe'
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2017/06/29/brakeman-3-dot-7-0-released/">Brakeman 3.7.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2017-06-29 18:00:00 -0700" pubdate  updated >Jun 29<span>th</span>, 2017</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Changes since 3.6.2</em>:</p>
-
-<ul>
-<li>Avoid interpolating hashes/arrays on failed access (<a href="https://github.com/presidentbeef/brakeman/issues/921">#921</a>)</li>
-<li>Fix false positive for <code>redirect_to</code> in Rails 4 (<a href="https://github.com/mario-areias">Mário Areias</a>)</li>
-<li>Show progress indicator in interactive mode (<a href="https://github.com/presidentbeef/brakeman/issues/1012">#1012</a>)</li>
-<li>Handle simple conditional guards that use <code>return</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1057">#1057</a>)</li>
-<li>Improve support for <code>rails4</code>/<code>rails5</code> options in config file (<a href="https://github.com/presidentbeef/brakeman/issues/1059">#1059</a>)</li>
-<li>Updated RubyParser to master</li>
-</ul>
-
-
-<h3>Performance Improvement with Hash/Array Accesses</h3>
-
-<p>When Brakeman sees a hash or array access that it cannot resolve (i.e. can&#8217;t find the value for the key), it will no longer copy the entire hash/array value to the call site.</p>
-
-<p>For some applications, this will significantly improve performance.</p>
-
-<p>This may cause some warning fingerprints to change.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1056">changes</a>)</p>
-
-<h3>Unsafe Hash in Redirects</h3>
-
-<p>Thanks to <a href="https://github.com/mario-areias">Mário Areias</a>, Brakeman correctly handles <code>to_unsafe_hash</code> and <code>to_unsafe_h</code> in <code>redirect_to</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1029">changes</a>)</p>
-
-<h3>Progress Indicator in Interactive Mode</h3>
-
-<p>When using <code>-I</code> to manage false positives, Brakeman will now show how far you are through the warnings.</p>
-
-<p><img src="https://user-images.githubusercontent.com/75613/27519704-f7c60006-59ad-11e7-82e8-ce0e096ad678.png" alt="image" /></p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1064">changes</a>)</p>
-
-<h3>Simple Guards with Return</h3>
-
-<p>Brakeman can now recognize <em>simple</em> guard conditions such as:</p>
-
-<pre><code>return unless [:safe, :values].include? params[:x]
-</code></pre>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1062">changes</a>)</p>
-
-<h3>Rails Version Option in Brakeman Configuration</h3>
-
-<p>It is now possible to specify just <code>:rails4: true</code> or <code>:rails5: true</code> in a Brakeman configuration file.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1066">changes</a>)</p>
-
-<h3>Updated RubyParser</h3>
-
-<p>The main <code>brakeman</code> gem bundles as-of-yet unreleased changes in RubyParser. This includes &#8220;squiggly heredoc&#8221; support (<code>&lt;&lt;~</code>), improved line numbers, and a few other fixes.</p>
-
-<h3>Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<pre><code>f46550d7c7827644a5663ccc10a6ca222e2534648f68630e3a777cb73df59824  brakeman-3.7.0.gem
-0ea5359ae802284695500b92a03bf1d022574953a0da44607ff7f715f456c37e  brakeman-min-3.7.0.gem
-f6f17e9f1f71a68b486d68f2b3413607fb47154a0fb6a6da23d9d7be87f37967  brakeman-lib-3.7.0.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release.</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-
-<p>If you find Brakeman valuable and want to support its development, check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -1293,6 +1229,10 @@ f6f17e9f1f71a68b486d68f2b3413607fb47154a0fb6a6da23d9d7be87f37967  brakeman-lib-3
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/08/30/happy-8th-birthday/">Happy 8th Birthday, Brakeman!</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/">Brakeman Has Been Acquired by Synopsys</a>
       </li>
     
@@ -1306,10 +1246,6 @@ f6f17e9f1f71a68b486d68f2b3413607fb47154a0fb6a6da23d9d7be87f37967  brakeman-lib-3
     
       <li class="post">
         <a href="/blog/2018/03/23/brakeman-4-dot-2-1-released/">Brakeman 4.2.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2018/02/21/brakeman-4-dot-2-0-released/">Brakeman 4.2.0 Released</a>
       </li>
     
   </ul>
