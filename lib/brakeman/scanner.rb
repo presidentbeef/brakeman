@@ -143,7 +143,11 @@ class Brakeman::Scanner
       gem_files[:gemlock] = { :src => @app_tree.read("gems.locked"), :file => "gems.locked" }
     end
 
-    if gem_files[:gemfile] or gem_files[:gemlock]
+    if @app_tree.gemspec
+      gem_files[:gemspec] = { :src => parse_ruby(@app_tree.read(@app_tree.gemspec)), :file => @app_tree.gemspec }
+    end
+
+    if not gem_files.empty?
       @processor.process_gems gem_files
     end
   rescue => e

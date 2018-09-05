@@ -61,6 +61,7 @@ module Brakeman
       @engine_paths = init_options[:engine_paths] || []
       @absolute_engine_paths = @engine_paths.select { |path| path.start_with?(File::SEPARATOR) }
       @relative_engine_paths = @engine_paths - @absolute_engine_paths
+      @gemspec = nil
     end
 
     def expand_path(path)
@@ -114,6 +115,18 @@ module Brakeman
                      find_additional_lib_paths +
                      find_helper_paths +
                      find_job_paths
+    end
+
+    def gemspec
+      return @gemspec unless @gemspec.nil?
+
+      gemspecs =  Dir.glob(File.join(@root, "*.gemspec"))
+
+      if gemspecs.length > 1 or gemspecs.empty?
+        @gemspec = false
+      else
+        @gemspec = File.basename(gemspecs.first)
+      end
     end
 
   private
