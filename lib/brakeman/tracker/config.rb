@@ -81,7 +81,7 @@ module Brakeman
     def set_rails_version
       # Ignore ~>, etc. when using values from Gemfile
       version = gem_version(:rails) || gem_version(:railties)
-      if version and version.match(/(\d+\.\d+\.\d+.*)/)
+      if version and version.match(/(\d+\.\d+(\.\d+.*)?)/)
         @rails_version = $1
 
         if tracker.options[:rails3].nil? and tracker.options[:rails4].nil?
