@@ -116,6 +116,19 @@ class Rails52Tests < Minitest::Test
       :user_input => s(:lvar, :foo)
   end
 
+  def test_treat_if_not_like_unless
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "c5788857ecda6ae28a0cf4db2823a49e5dbcd029a65c9a8d6d750e43d4596268",
+      :warning_type => "SQL Injection",
+      :line => 24,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 2,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :Person), :where, s(:dstr, "", s(:evstr, s(:lvar, :foo)), s(:str, " >= 1"))),
+      :user_input => s(:lvar, :foo)
+  end
+
   def test_command_injection_1
     assert_no_warning :type => :warning,
       :warning_code => 14,
