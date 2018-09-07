@@ -52,4 +52,21 @@ class Brakeman::Report::CSV < Brakeman::Report::Table
     header << CSV.generate_line([File.expand_path(tracker.app_path), Time.now.to_s, checks.checks_run.sort.join(", "), rails_version])
     "BRAKEMAN REPORT\n\n" + header
   end
+
+  # rely on Terminal::Table to build the structure, extract the data out in CSV format
+  def table_to_csv table
+    return "" unless table
+
+    Brakeman.load_brakeman_dependency 'terminal-table'
+    headings = table.headings
+    if headings.is_a? Array
+      headings = headings.first
+    end
+
+    output = CSV.generate_line(headings.cells.map{|cell| cell.to_s.strip})
+    table.rows.each do |row|
+      output << CSV.generate_line(row.cells.map{|cell| cell.to_s.strip})
+    end
+    output
+  end
 end

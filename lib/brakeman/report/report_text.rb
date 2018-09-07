@@ -33,6 +33,22 @@ class Brakeman::Report::Text < Brakeman::Report::Base
     end
   end
 
+  def generate_controllers
+    double_space "Controller Overview", controller_information.map { |ci|
+      controller = [
+        label("Controller", ci["Name"]),
+        label("Parent", ci["Parent"]),
+        label("Routes", ci["Routes"])
+      ]
+
+      if ci["Includes"] and not ci["Includes"].empty?
+        controller.insert(2, label("Includes", ci["Includes"]))
+      end
+
+      controller
+    }
+  end
+
   def generate_header
     [
       header("Brakeman Report"), 

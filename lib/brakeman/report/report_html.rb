@@ -1,9 +1,10 @@
 require 'cgi'
+require 'brakeman/report/report_table.rb'
 
-class Brakeman::Report::HTML < Brakeman::Report::Base
+class Brakeman::Report::HTML < Brakeman::Report::Table
   HTML_CONFIDENCE = [ "<span class='high-confidence'>High</span>",
-    "<span class='med-confidence'>Medium</span>",
-    "<span class='weak-confidence'>Weak</span>" ]
+                      "<span class='med-confidence'>Medium</span>",
+                      "<span class='weak-confidence'>Weak</span>" ]
 
   def initialize *args
     super
@@ -66,7 +67,7 @@ class Brakeman::Report::HTML < Brakeman::Report::Base
   end
 
   def convert_warning warning, original
-    warning["Confidence"] = HTML_CONFIDENCE[warning["Confidence"]]
+    warning["Confidence"] = HTML_CONFIDENCE[original.confidence]
     warning["Message"] = with_context original, warning["Message"]
     warning["Warning Type"] = with_link original, warning["Warning Type"]
     warning
@@ -77,9 +78,7 @@ class Brakeman::Report::HTML < Brakeman::Report::Base
   end
 
   def convert_template_warning warning, original
-    warning["Confidence"] = HTML_CONFIDENCE[warning["Confidence"]]
-    warning["Message"] = with_context original, warning["Message"]
-    warning["Warning Type"] = with_link original, warning["Warning Type"]
+    warning = convert_warning warning, original
     warning["Called From"] = original.called_from
     warning["Template Name"] = original.template.name
     warning
