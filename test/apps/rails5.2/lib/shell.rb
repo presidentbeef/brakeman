@@ -7,6 +7,11 @@ class ShellStuff
   def run(ip)
     ip = Shellwords.shellescape(ip)
     `dig +short -x #{ip} @#{@one} -p #{@two}`
+    `command #{Shellwords.escape(@one)}`
+    `command #{Shellwords.join(@two)}`
+    `command #{Shellwords.shelljoin(@two)}`
+    `command #{@one.shellescape}`
+    `command #{@two.shelljoin}`
   end
 
   def backticks_target(path)

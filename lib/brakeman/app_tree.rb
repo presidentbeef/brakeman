@@ -176,12 +176,13 @@ module Brakeman
 
     def root_search_pattern
       return @root_search_pattern if @root_search_pattern
+
       abs = @absolute_engine_paths.to_a.map { |path| path.gsub /#{File::SEPARATOR}+$/, '' }
       rel = @relative_engine_paths.to_a.map { |path| path.gsub /#{File::SEPARATOR}+$/, '' }
 
       roots = ([@root] + abs).join(",")
       rel_engines = (rel + [""]).join("/,")
-      @root_search_patrern = "{#{roots}}/{#{rel_engines}}"
+      @root_search_pattern = "{#{roots}}/{#{rel_engines}}"
     end
 
     def prioritize_concerns paths

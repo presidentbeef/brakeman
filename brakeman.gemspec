@@ -17,7 +17,13 @@ Gem::Specification.new do |s|
   s.signing_key = gem_priv_key if File.exist? gem_priv_key and $0 =~ /gem\z/
 
   if File.exist? 'bundle/load.rb'
-    s.files += Dir['bundle/ruby/*/gems/**/*'] + ['bundle/load.rb']
+    # Pull in vendored dependencies
+    s.files << 'bundle/load.rb'
+
+    s.files += Dir['bundle/ruby/*/gems/**/*'].reject do |path|
+      # Skip unnecessary files in dependencies
+      path =~ /^bundle\/ruby\/\d\.\d\.\d\/gems\/[^\/]+\/(Rakefile|benchmark|bin|doc|example|man|site|spec|test)/
+    end
   else
     Brakeman::GemDependencies.dev_dependencies(s) unless ENV['BM_PACKAGE']
     Brakeman::GemDependencies.base_dependencies(s)
