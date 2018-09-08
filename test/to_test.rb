@@ -55,10 +55,10 @@ class #{name}Tests < Test::Unit::TestCase
       :fingerprint => #{w.fingerprint.inspect},
       :warning_type => #{w.warning_type.inspect},
       :line => #{w.line.inspect},
-      :message => /^#{Regexp.escape w.message[0,40]}/,
+      :message => /^#{Regexp.escape w.message.to_s[0,40]}/,
       :confidence => #{w.confidence},
       :relative_path => #{w.relative_path.inspect},
-      :code => #{w.code},
+      :code => #{w.code.inspect},
       :user_input => #{w.user_input.inspect}
   end
       RUBY
