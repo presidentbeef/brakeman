@@ -657,7 +657,7 @@ class Rails5Tests < Minitest::Test
       :fingerprint => "d4c4f9fab93a12c4fabb5b5f9541700e94f4948bc1b90a1aea38f1425d8d0dc9",
       :warning_type => "Path Traversal",
       :line => 144,
-      :message => /^Sprockets\ 3\.5\.2\ has\ a\ path\ traversal\ vul/,
+      :message => /^sprockets\ 3\.5\.2\ has\ a\ path\ traversal\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile.lock",
       :code => nil,

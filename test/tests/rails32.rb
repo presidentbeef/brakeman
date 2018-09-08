@@ -194,7 +194,7 @@ class Rails32Tests < Minitest::Test
       :fingerprint => "f22053251239417f0571439b41f7ea8ff49a7e97f4147578f021a568c2c3ba16",
       :warning_type => "Path Traversal",
       :line => 87,
-      :message => /^Sprockets\ 2\.1\.3\ has\ a\ path\ traversal\ vul/,
+      :message => /^sprockets\ 2\.1\.3\ has\ a\ path\ traversal\ vul/,
       :confidence => 2,
       :relative_path => "Gemfile.lock",
       :code => nil,
