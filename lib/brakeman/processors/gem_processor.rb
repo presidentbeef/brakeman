@@ -10,8 +10,17 @@ class Brakeman::GemProcessor < Brakeman::BasicProcessor
 
   def process_gems gem_files
     @gem_files = gem_files
-    @gemfile = gem_files[:gemfile][:file]
-    process gem_files[:gemfile][:src]
+    @gemfile = gem_files[:gemfile] && gem_files[:gemfile][:file]
+    @gemspec = gem_files[:gemspec] && gem_files[:gemspec][:file]
+
+
+    if @gemspec
+      process gem_files[:gemspec][:src]
+    end
+
+    if @gemfile
+      process gem_files[:gemfile][:src]
+    end
 
     if gem_files[:gemlock]
       process_gem_lock
@@ -41,9 +50,28 @@ class Brakeman::GemProcessor < Brakeman::BasicProcessor
           @tracker.config.set_ruby_version version.value
         end
       end
+    elsif @inside_gemspec and exp.method == :add_dependency
+      if string? exp.first_arg and string? exp.last_arg
+        @tracker.config.add_gem exp.first_arg.value, exp.last_arg.value, @gemspec, exp.line
+      end
     end
 
     exp
+  end
+
+  GEM_SPEC = s(:colon2, s(:const, :Gem), :Specification)
+
+  def process_iter exp
+    if exp.block_call.target == GEM_SPEC and exp.block_call.method == :new
+      @inside_gemspec = true
+      process exp.block if sexp? exp.block
+
+      exp
+    else
+      process_default exp
+    end
+  ensure
+    @inside_gemspec = false
   end
 
   def process_gem_lock

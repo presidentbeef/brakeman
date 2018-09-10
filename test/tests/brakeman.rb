@@ -144,6 +144,10 @@ class BaseCheckTests < Minitest::Test
     assert !lts_version?('2.3.18.1', '2.3.18.6')
     assert !lts_version?(nil, '2.3.18.6')
   end
+
+  def test_major_minor_version
+    assert version_between?("4.0", "4.0.0", "4.0.1")
+  end
 end
 
 class ConfigTests < Minitest::Test
