@@ -17,4 +17,10 @@ class UsersController < ApplicationController
 
     Person.where("#{foo} >= 1")
   end
+
+  def safe_one(foo)
+    return if !ALLOWED_FOOS.include?(foo)
+
+    Person.where("#{foo} >= 1")
+  end
 end

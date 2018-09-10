@@ -731,6 +731,13 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         exp[2 + i] = process_if_branch branch
       end
     else
+      # Translate `if !...` into `unless ...`
+      # Technically they are different but that's only if someone overrides `!`
+      if call? condition and condition.method == :!
+        condition = condition.target
+        exps.reverse!
+      end
+
       was_inside = @inside_if
       @inside_if = true
 
