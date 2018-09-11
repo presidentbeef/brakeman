@@ -44,13 +44,13 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
 
     case
     when (version_between?('2.0.0', '2.3.14') and tracker.config.escape_html?)
-      message = msg("All Rails 2.x versions have a vulnerability in ", msg_code("strip_tags"), " (CVE-2012-3465)")
+      message = msg("All Rails 2.x versions have a vulnerability in ", msg_code("strip_tags"), " ", msg_cve("CVE-2012-3465"))
     when version_between?('3.0.10', '3.0.16')
       message << msg_version('3.0.17')
     when version_between?('3.1.0', '3.1.7')
       message << msg_version('3.1.8')
     when version_between?('3.2.0', '3.2.7')
-      message << mmsg_version('3.2.8')
+      message << msg_version('3.2.8')
     else
       return
     end
