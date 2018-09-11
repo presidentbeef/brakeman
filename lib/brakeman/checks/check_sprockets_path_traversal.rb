@@ -23,7 +23,7 @@ class Brakeman::CheckSprocketsPathTraversal < Brakeman::BaseCheck
       return
     end
 
-    message = msg(msg_version(sprockets_version, "sprockets"), " has a path traversal vulnerability (CVE-2018-3760). Upgrade to ", msg_version(upgrade_version, "sprockets"), " or newer")
+    message = msg(msg_version(sprockets_version, "sprockets"), " has a path traversal vulnerability ", msg_cve("CVE-2018-3760"), ". Upgrade to ", msg_version(upgrade_version, "sprockets"), " or newer")
 
     warn :warning_type => "Path Traversal",
       :warning_code => :CVE_2018_3760,

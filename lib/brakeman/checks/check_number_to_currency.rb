@@ -23,7 +23,7 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
   end
 
   def generic_warning
-    message = msg(msg_version(rails_version), " has a vulnerability in number helpers (CVE-2014-0081). Upgrade to ")
+    message = msg(msg_version(rails_version), " has a vulnerability in number helpers ", msg_cve("CVE-2014-0081"), ". Upgrade to ")
 
     if version_between? "2.3.0", "3.2.16"
       message << msg_version("3.2.17")

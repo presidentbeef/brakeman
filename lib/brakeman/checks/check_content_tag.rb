@@ -181,7 +181,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
 
       warn :warning_type => "Cross-Site Scripting",
         :warning_code => :CVE_2016_6316,
-        :message => msg(msg_version(rails_version), " ", msg_code("content_tag"), " does not escape double quotes in attribute values (CVE-2016-6316). Upgrade to ", msg_version(fix_version)),
+        :message => msg(msg_version(rails_version), " ", msg_code("content_tag"), " does not escape double quotes in attribute values ", msg_cve("CVE-2016-6316"), ". Upgrade to ", msg_version(fix_version)),
         :confidence => confidence,
         :gem_info => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/msg/ruby-security-ann/8B2iV2tPRSE/JkjCJkSoCgAJ"

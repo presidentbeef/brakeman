@@ -7,7 +7,7 @@ class Brakeman::CheckJSONEncoding < Brakeman::BaseCheck
 
   def run_check
     if (version_between? "4.1.0", "4.1.10" or version_between? "4.2.0", "4.2.1") and not has_workaround?
-      message = msg(msg_version(rails_version), " does not encode JSON keys (CVE-2015-3226). Upgrade to ")
+      message = msg(msg_version(rails_version), " does not encode JSON keys ", msg_cve("CVE-2015-3226"), ". Upgrade to ")
 
       if version_between? "4.1.0", "4.1.10"
         message << msg_version("4.1.11")

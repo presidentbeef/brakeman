@@ -30,7 +30,7 @@ class Brakeman::CheckNestedAttributesBypass < Brakeman::BaseCheck
   end
 
   def warn_about_nested_attributes name, model, args
-    message = msg(msg_version(rails_version), " does not call ", msg_code(":reject_if"), " option when ", msg_code(":allow_destroy"), " is ", msg_code("false"), " (CVE-2015-7577)")
+    message = msg(msg_version(rails_version), " does not call ", msg_code(":reject_if"), " option when ", msg_code(":allow_destroy"), " is ", msg_code("false"), " ", msg_cve("CVE-2015-7577"))
 
     warn :model => name,
       :warning_type => "Nested Attributes",

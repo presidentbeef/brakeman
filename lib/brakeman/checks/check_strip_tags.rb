@@ -25,9 +25,9 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
   def cve_2011_2931
     if version_between?('2.0.0', '2.3.12') or version_between?('3.0.0', '3.0.9')
       if rails_version =~ /^3/
-        message = msg("Versions before 3.0.10 have a vulnerability in ", msg_code("strip_tags"), " (CVE-2011-2931)")
+        message = msg("Versions before 3.0.10 have a vulnerability in ", msg_code("strip_tags"), " ", msg_cve("CVE-2011-2931"))
       else
-        message = msg("Versions before 2.3.13 have a vulnerability in ", msg_code("strip_tags"), " (CVE-2011-2931)")
+        message = msg("Versions before 2.3.13 have a vulnerability in ", msg_code("strip_tags"), " ", msg_cve("CVE-2011-2931"))
       end
 
       warn :warning_type => "Cross-Site Scripting",
@@ -40,15 +40,17 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
   end
 
   def cve_2012_3465
+    message = msg(msg_version(rails_version), " has a vulnerability in ", msg_code("strip_tags"), " ", msg_cve("CVE-2012-3465"), ". Upgrade to ")
+
     case
     when (version_between?('2.0.0', '2.3.14') and tracker.config.escape_html?)
       message = msg("All Rails 2.x versions have a vulnerability in ", msg_code("strip_tags"), " (CVE-2012-3465)")
     when version_between?('3.0.10', '3.0.16')
-      message = msg(msg_version(rails_version), " has a vulnerability in ", msg_code("strip_tags"), " (CVE-2012-3465). Upgrade to 3.0.17")
+      message << msg_version('3.0.17')
     when version_between?('3.1.0', '3.1.7')
-      message = msg(msg_version(rails_version), " has a vulnerability in ", msg_code("strip_tags"), " (CVE-2012-3465). Upgrade to 3.1.8")
+      message << msg_version('3.1.8')
     when version_between?('3.2.0', '3.2.7')
-      message = msg(msg_version(rails_version), " has a vulnerability in ", msg_code("strip_tags"), " (CVE-2012-3465). Upgrade to 3.2.8")
+      message << mmsg_version('3.2.8')
     else
       return
     end

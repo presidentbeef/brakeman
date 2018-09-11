@@ -16,7 +16,7 @@ class Brakeman::CheckSimpleFormat < Brakeman::CheckCrossSiteScripting
   end
 
   def generic_warning
-    message = msg(msg_version(rails_version), " has a vulnerability in ", msg_code("simple_format"), " (CVE-2013-6416). Upgrade to ", msg_version("4.0.2"))
+    message = msg(msg_version(rails_version), " has a vulnerability in ", msg_code("simple_format"), " ", msg_cve("CVE-2013-6416"), ". Upgrade to ", msg_version("4.0.2"))
 
     warn :warning_type => "Cross-Site Scripting",
       :warning_code => :CVE_2013_6416,

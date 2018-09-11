@@ -17,9 +17,9 @@ class Brakeman::CheckSingleQuotes < Brakeman::BaseCheck
     return if uses_rack_escape?
 
     if version_between? '2.0.0', '2.3.14'
-      message = "All Rails 2.x versions do not escape single quotes (CVE-2012-3464)"
+      message = msg("All Rails 2.x versions do not escape single quotes ", msg_cve("CVE-2012-3464"))
     else
-      message = msg(msg_version(rails_version), " does not escape single quotes (CVE-2012-3464). Upgrade to ")
+      message = msg(msg_version(rails_version), " does not escape single quotes ", msg_cve("CVE-2012-3464"), ". Upgrade to ")
 
       case
       when version_between?('3.0.0', '3.0.16')

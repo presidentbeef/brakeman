@@ -16,6 +16,10 @@ module Brakeman
       Code.new code
     end
 
+    def msg_cve cve
+      CVE.new cve
+    end
+
     def msg_version version, lib = "Rails"
       Version.new version, lib
     end
@@ -136,6 +140,20 @@ class Brakeman::Messages::Code
 
   def to_html
     "<span class=\"code\">#{CGI.escapeHTML(@code)}</span>"
+  end
+end
+
+class Brakeman::Messages::CVE
+  def initialize cve
+    @cve = cve
+  end
+
+  def to_s
+    "(#{@cve})"
+  end
+
+  def to_html
+    "<a href=\"https://cve.mitre.org/cgi-bin/cvename.cgi?name=#{@cve}\" target=\"_blank\" rel=\"noreferrer\">#{@cve}</a>"
   end
 end
 

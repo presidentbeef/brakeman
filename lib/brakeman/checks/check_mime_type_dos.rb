@@ -19,7 +19,7 @@ class Brakeman::CheckMimeTypeDoS < Brakeman::BaseCheck
 
     return if has_workaround?
 
-    message = msg(msg_version(rails_version), " is vulnerable to denial of service via mime type caching (CVE-2016-0751). Upgrade to ", msg_version(fix_version))
+    message = msg(msg_version(rails_version), " is vulnerable to denial of service via mime type caching ", msg_cve("CVE-2016-0751"), ". Upgrade to ", msg_version(fix_version))
 
     warn :warning_type => "Denial of Service",
       :warning_code => :CVE_2016_0751,

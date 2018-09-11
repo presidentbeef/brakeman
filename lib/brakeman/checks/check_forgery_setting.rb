@@ -73,7 +73,7 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
     @warned_cve_2011_0447 = true # only warn once
 
     csrf_warning :warning_code => :CVE_2011_0447,
-      :message => msg("CSRF protection is flawed in unpatched versions of ", msg_version(rails_version), " (CVE-2011-0447). Upgrade to ", msg_version(new_version), " or apply patches as needed"),
+      :message => msg("CSRF protection is flawed in unpatched versions of ", msg_version(rails_version), " ", msg_cve("CVE-2011-0447"), ". Upgrade to ", msg_version(new_version), " or apply patches as needed"),
       :gem_info => gemfile_or_environment,
       :file => nil,
       :link_path => "https://groups.google.com/d/topic/rubyonrails-security/LZWjzCPgNmU/discussion"

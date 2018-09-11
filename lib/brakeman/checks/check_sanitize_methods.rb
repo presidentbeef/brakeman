@@ -94,7 +94,7 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
   end
 
   def warn_sanitizer_cve cve, link, upgrade_version
-    message = msg(msg_version(tracker.config.gem_version(:'rails-html-sanitizer'), "rails-html-sanitizer"), " is vulnerable (", msg_plain(cve), "). Upgrade to ", msg_version(upgrade_version, "rails-html-sanitizer"))
+    message = msg(msg_version(tracker.config.gem_version(:'rails-html-sanitizer'), "rails-html-sanitizer"), " is vulnerable ", msg_cve(cve), ". Upgrade to ", msg_version(upgrade_version, "rails-html-sanitizer"))
 
     if tracker.find_call(:target => false, :method => :sanitize).any?
       confidence = :high
