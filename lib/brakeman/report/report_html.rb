@@ -74,7 +74,7 @@ class Brakeman::Report::HTML < Brakeman::Report::Table
   end
 
   def with_link warning, message
-    "<a rel=\"no-referrer\" href=\"#{warning.link}\">#{message}</a>"
+    "<a rel=\"noreferrer\" href=\"#{warning.link}\">#{message}</a>"
   end
 
   def convert_template_warning warning, original
