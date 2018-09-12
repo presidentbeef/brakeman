@@ -18,4 +18,14 @@ class JustAClass
     FileUtils.move(params.permit(:my_upload => ([:upload])).dig("my_upload", "upload").tempfile.path, "/tmp/new_temp_file")
     FileUtils.move(params.permit(:my_upload => ([:upload])).dig("my_upload", "upload").path, "/tmp/new_temp_file")
   end
+
+  def modulo_by_zero
+    x = 0
+
+    if condition?
+      x = 1
+    end
+
+    1 % x
+  end
 end
