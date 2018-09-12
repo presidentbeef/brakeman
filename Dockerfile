@@ -1,5 +1,5 @@
 FROM ruby:2.4-alpine
-LABEL maintainer="Justin Collins"
+LABEL maintainer="Justin Collins <gem@brakeman.org>"
 
 WORKDIR /usr/src/app
 

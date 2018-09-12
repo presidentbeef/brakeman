@@ -26,11 +26,8 @@ Using Docker:
 
 	docker build . -t brakeman
 
-If you wish to use the codeclimate-brakeman docker image directly:
-
-	docker build . -f "${PWD}/Dockerfile.codeclimate" -t codeclimate-brakeman
-
 # Usage
+
 #### Running locally
 
 From a Rails application's root directory:
@@ -50,7 +47,6 @@ From a Rails application's root directory:
 Outside of Rails root: (Note that the output file is relative to path/to/rails/application)
 
     docker run -v 'path/to/rails/application':/code brakeman -o brakeman_results.html
-
 
 # Compatibility
 
