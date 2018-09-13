@@ -39,20 +39,19 @@ class Brakeman::CheckWeakHash < Brakeman::BaseCheck
       confidence = :medium
     end
 
+    message = msg("Weak hashing algorithm used")
 
-    alg = case call.target.last
-          when :MD5
-           " (MD5)"
-           when :SHA1
-            " (SHA1)"
-          else
-            ""
-          end
+    case call.target.last
+    when :MD5
+      message << ": " << msg_lit("MD5")
+    when :SHA1
+      message << ": " << msg_lit("SHA1")
+    end
 
     warn :result => result,
       :warning_type => "Weak Hash",
       :warning_code => :weak_hash_digest,
-      :message => msg("Weak hashing algorithm", msg_lit(alg), " used"),
+      :message => message,
       :confidence => confidence,
       :user_input => input
   end
@@ -62,19 +61,19 @@ class Brakeman::CheckWeakHash < Brakeman::BaseCheck
 
     call = result[:call]
 
-    alg = case call.third_arg.last
-           when :MD5
-             'MD5'
-           when :SHA1
-             'SHA1'
-           else
-             return
-           end
+    message = msg("Weak hashing algorithm used in HMAC")
+
+    case call.third_arg.last
+    when :MD5
+      message << ": " << msg_lit("MD5")
+    when :SHA1
+      message << ": " << msg_lit("SHA1")
+    end
 
     warn :result => result,
       :warning_type => "Weak Hash",
       :warning_code => :weak_hash_hmac,
-      :message => msg("Weak hashing algorithm (", msg_lit(alg), ") used in HMAC"),
+      :message => message,
       :confidence => :medium
   end
 
@@ -90,7 +89,7 @@ class Brakeman::CheckWeakHash < Brakeman::BaseCheck
         warn :result => result,
           :warning_type => "Weak Hash",
           :warning_code => :weak_hash_digest,
-          :message => msg("Weak hashing algorithm (", msg_lit(alg), ") used"),
+          :message => msg("Weak hashing algorithm used: ", msg_lit(alg)),
           :confidence => :medium
       end
     end
