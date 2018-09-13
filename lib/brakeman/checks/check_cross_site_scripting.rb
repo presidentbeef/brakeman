@@ -70,7 +70,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     if input = has_immediate_user_input?(out)
       add_result exp
 
-      message = "Unescaped #{friendly_type_of input}"
+      message = msg("Unescaped ", msg_input(input))
 
       warn :template => @current_template,
         :warning_type => "Cross-Site Scripting",
@@ -168,7 +168,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
       if @matched
         unless @matched.type and tracker.options[:ignore_model_output]
-          message = "Unescaped #{friendly_type_of @matched}"
+          message = msg("Unescaped ", msg_input(@matched))
         end
 
         if message and not duplicate? exp
@@ -180,7 +180,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
           if @known_dangerous.include? exp.method
             confidence = :high
             if exp.method == :to_json
-              message += " in JSON hash"
+              message << msg_plain(" in JSON hash")
               link_path += "_to_json"
               warning_code = :xss_to_json
             end

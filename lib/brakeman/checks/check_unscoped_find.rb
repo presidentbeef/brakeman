@@ -37,7 +37,7 @@ class Brakeman::CheckUnscopedFind < Brakeman::BaseCheck
     warn :result => result,
       :warning_type => "Unscoped Find",
       :warning_code => :unscoped_find,
-      :message      => "Unscoped call to #{result[:target]}##{result[:method]}",
+      :message      => msg("Unscoped call to ", msg_code("#{result[:target]}##{result[:method]}")),
       :code         => result[:call],
       :confidence   => :weak,
       :user_input   => input

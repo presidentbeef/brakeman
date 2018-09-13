@@ -11,12 +11,12 @@ class Brakeman::CheckMailTo < Brakeman::BaseCheck
 
   def run_check
     if (version_between? "2.3.0", "2.3.10" or version_between? "3.0.0", "3.0.3") and result = mail_to_javascript?
-      message = "Vulnerability in mail_to using javascript encoding (CVE-2011-0446). Upgrade to Rails version "
+      message = msg("Vulnerability in ", msg_code("mail_to"), " using javascript encoding ", msg_cve("CVE-2011-0446"), ". Upgrade to ")
 
       if version_between? "2.3.0", "2.3.10"
-        message << "2.3.11"
+        message << msg_version("2.3.11")
       else
-        message << "3.0.4"
+        message << msg_version("3.0.4")
       end
 
       warn :result => result,

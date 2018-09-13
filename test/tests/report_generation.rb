@@ -13,7 +13,7 @@ class TestReportGeneration < Minitest::Test
     assert report.is_a? String
     assert report.match(/\A<!DOCTYPE HTML SYSTEM>.*<\/html>\z/m)
     report.scan(/<a[^>]+>/).each do |a|
-      assert a.include?("no-referrer"), "#{a} does not include 'no-referrer'"
+      assert a.include?("noreferrer"), "#{a} does not include 'noreferrer'"
     end
   end
 

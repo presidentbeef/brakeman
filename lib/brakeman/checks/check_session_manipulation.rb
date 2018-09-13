@@ -26,7 +26,7 @@ class Brakeman::CheckSessionManipulation < Brakeman::BaseCheck
       warn :result => result,
         :warning_type => "Session Manipulation",
         :warning_code => :session_key_manipulation,
-        :message => "#{friendly_type_of(input).capitalize} used as key in session hash",
+        :message => msg(msg_input(input), " used as key in session hash"),
         :code => result[:call],
         :user_input => input,
         :confidence => confidence

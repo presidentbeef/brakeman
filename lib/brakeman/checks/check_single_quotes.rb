@@ -16,17 +16,21 @@ class Brakeman::CheckSingleQuotes < Brakeman::BaseCheck
   def run_check
     return if uses_rack_escape?
 
-    case
-    when version_between?('2.0.0', '2.3.14')
-      message = "All Rails 2.x versions do not escape single quotes (CVE-2012-3464)"
-    when version_between?('3.0.0', '3.0.16')
-      message = "Rails #{rails_version} does not escape single quotes (CVE-2012-3464). Upgrade to 3.0.17"
-    when version_between?('3.1.0', '3.1.7')
-      message = "Rails #{rails_version} does not escape single quotes (CVE-2012-3464). Upgrade to 3.1.8"
-    when version_between?('3.2.0', '3.2.7')
-      message = "Rails #{rails_version} does not escape single quotes (CVE-2012-3464). Upgrade to 3.2.8"
+    if version_between? '2.0.0', '2.3.14'
+      message = msg("All Rails 2.x versions do not escape single quotes ", msg_cve("CVE-2012-3464"))
     else
-      return
+      message = msg(msg_version(rails_version), " does not escape single quotes ", msg_cve("CVE-2012-3464"), ". Upgrade to ")
+
+      case
+      when version_between?('3.0.0', '3.0.16')
+        message << msg_version('3.0.17')
+      when version_between?('3.1.0', '3.1.7')
+        message << msg_version('3.1.8')
+      when version_between?('3.2.0', '3.2.7')
+        message << msg_version('3.2.8')
+      else
+        return
+      end
     end
 
     warn :warning_type => "Cross-Site Scripting",

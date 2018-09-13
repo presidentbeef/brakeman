@@ -11,12 +11,12 @@ class Brakeman::CheckNestedAttributes < Brakeman::BaseCheck
     version = rails_version
 
     if (version == "2.3.9" or version == "3.0.0") and uses_nested_attributes?
-      message = "Vulnerability in nested attributes (CVE-2010-3933). Upgrade to Rails version "
+      message = msg("Vulnerability in nested attributes ", msg("CVE-2010-3933"), ". Upgrade to ")
 
       if version == "2.3.9"
-        message << "2.3.10"
+        message << msg_version("2.3.10")
       else
-        message << "3.0.1"
+        message << msg_version("3.0.1")
       end
 
       warn :warning_type => "Nested Attributes",

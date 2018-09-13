@@ -1,6 +1,7 @@
 require 'json'
 require 'digest/sha2'
 require 'brakeman/warning_codes'
+require 'brakeman/messages'
 
 #The Warning class stores information about warnings
 class Brakeman::Warning
@@ -115,6 +116,10 @@ class Brakeman::Warning
 
     Brakeman.debug("Warning created without warning code: #{options[:warning_code]}") unless @warning_code
 
+    if options[:message].is_a? String
+      @message = Brakeman::Messages::Message.new(options[:message])
+    end
+
     @format_message = nil
     @row = nil
   end
@@ -176,7 +181,7 @@ class Brakeman::Warning
   def format_message
     return @format_message if @format_message
 
-    @format_message = self.message.dup
+    @format_message = self.message.to_s.dup
 
     if self.line
       @format_message << " near line #{self.line}"
@@ -208,9 +213,9 @@ class Brakeman::Warning
 
   #Generates a hash suitable for inserting into a table
   def to_row type = :warning
-    @row = { "Confidence" => self.confidence,
+    @row = { "Confidence" => TEXT_CONFIDENCE[self.confidence],
       "Warning Type" => self.warning_type.to_s,
-      "Message" => self.format_message }
+      "Message" => self.message }
 
     case type
     when :template
@@ -267,7 +272,7 @@ class Brakeman::Warning
       :warning_code => @warning_code,
       :fingerprint => self.fingerprint,
       :check_name => self.check.gsub(/^Brakeman::Check/, ''),
-      :message => self.message,
+      :message => self.message.to_s,
       :file => self.file,
       :line => self.line,
       :link => self.link,

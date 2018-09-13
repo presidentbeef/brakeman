@@ -6,14 +6,14 @@ class Brakeman::CheckDigestDoS < Brakeman::BaseCheck
   @description = "Checks for digest authentication DoS vulnerability"
 
   def run_check
-    message = "Vulnerability in digest authentication (CVE-2012-3424). Upgrade to Rails version "
+    message = msg("Vulnerability in digest authentication ", msg_cve("CVE-2012-3424"), ". Upgrade to ")
 
     if version_between? "3.0.0", "3.0.15"
-      message << "3.0.16"
+      message << msg_version("3.0.16")
     elsif version_between? "3.1.0", "3.1.6"
-      message << "3.1.7"
+      message << msg_version("3.1.7")
     elsif version_between? "3.2.0", "3.2.5"
-      message << "3.2.7"
+      message << msg_version("3.2.7")
     else
       return
     end

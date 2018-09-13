@@ -49,7 +49,7 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
       return if input.type == :model #skip models
       return if safe_param? input.match
 
-      message = "Render path contains #{friendly_type_of input}"
+      message = msg("Render path contains ", msg_input(input))
 
       warn :result => result,
         :warning_type => "Dynamic Render Path",
@@ -75,7 +75,7 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
         warn :result => result,
           :warning_type => "Remote Code Execution",
           :warning_code => :dynamic_render_path_rce,
-          :message => "Passing query parameters to render() is vulnerable in Rails #{rails_version} (CVE-2016-0752)",
+          :message => msg("Passing query parameters to ", msg_code("render"), " is vulnerable in ", msg_version(rails_version), " ", msg_cve("CVE-2016-0752")),
           :user_input => view,
           :confidence => :high
       end

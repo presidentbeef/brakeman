@@ -241,7 +241,7 @@ class RailsWithXssPluginTests < Minitest::Test
     assert_warning :type => :controller,
       :warning_type => "Cross-Site Request Forgery",
       #noline,
-      :message => /^'protect_from_forgery'\ should\ be\ called\ /,
+      :message => /^`protect_from_forgery`\ should\ be\ called\ /,
       :confidence => 0,
       :file => /application_controller\.rb/
   end
@@ -252,7 +252,7 @@ class RailsWithXssPluginTests < Minitest::Test
       :fingerprint => "3ec8749301aa7cdb1d3ec5610120492138060f05d65af0aa53dbb1a3b7c493ac",
       :warning_type => "Cross-Site Scripting",
       :line => 1,
-      :message => /^Rails\ 2\.3\.14\ has\ a\ vulnerability\ in\ sani/,
+      :message => /^Rails\ 2\.3\.14\ has\ a\ vulnerability\ in\ `sani/,
       :confidence => 0,
       :relative_path => "app/views/users/test_sanitize.html.erb",
       :user_input => nil
@@ -264,7 +264,7 @@ class RailsWithXssPluginTests < Minitest::Test
       :fingerprint => "9d90d446941026c42502e1213ef6d9122a2ad587266cdb002d9f30bb3c77523d",
       :warning_type => "Cross-Site Scripting",
       :line => 1,
-      :message => /^Rails\ 2\.3\.14\ has\ a\ vulnerability\ in\ sani/,
+      :message => /^Rails\ 2\.3\.14\ has\ a\ vulnerability\ in\ `sani/,
       :confidence => 0,
       :relative_path => "app/views/users/test_sanitize.html.erb",
       :user_input => nil
@@ -284,7 +284,7 @@ class RailsWithXssPluginTests < Minitest::Test
     assert_warning :type => :model,
       :warning_type => "Format Validation",
       :line => 5,
-      :message => /^Insufficient\ validation\ for\ 'user_name'\ /,
+      :message => /^Insufficient\ validation\ for\ `user_name`\ /,
       :confidence => 0,
       :file => /user\.rb/
   end
@@ -294,7 +294,7 @@ class RailsWithXssPluginTests < Minitest::Test
     assert_warning :type => :model,
       :warning_type => "Format Validation",
       :line => 7,
-      :message => /^Insufficient\ validation\ for\ 'display_nam/,
+      :message => /^Insufficient\ validation\ for\ `display_nam/,
       :confidence => 0,
       :file => /user\.rb/
   end
@@ -375,7 +375,7 @@ class RailsWithXssPluginTests < Minitest::Test
   def test_denial_of_service_CVE_2013_0269
     assert_warning :type => :warning,
       :warning_type => "Denial of Service",
-      :message => /^json\ gem\ version\ 1\.1\.0\ has\ a\ symbol\ crea/,
+      :message => /^json\ gem\ 1\.1\.0\ has\ a\ symbol\ crea/,
       :confidence => 2,
       :file => /Gemfile/
   end

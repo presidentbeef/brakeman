@@ -2,12 +2,14 @@ require 'brakeman/processors/output_processor'
 require 'brakeman/processors/lib/processor_helper'
 require 'brakeman/warning'
 require 'brakeman/util'
+require 'brakeman/messages'
 
 #Basis of vulnerability checks.
 class Brakeman::BaseCheck < Brakeman::SexpProcessor
   include Brakeman::ProcessorHelper
   include Brakeman::SafeCallHelper
   include Brakeman::Util
+  include Brakeman::Messages
   attr_reader :tracker, :warnings
 
   # This is for legacy support.
@@ -482,24 +484,5 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     end
 
     @active_record_models
-  end
-
-  def friendly_type_of input_type
-    if input_type.is_a? Match
-      input_type = input_type.type
-    end
-
-    case input_type
-    when :params
-      "parameter value"
-    when :cookies
-      "cookie value"
-    when :request
-      "request value"
-    when :model
-      "model attribute"
-    else
-      "user input"
-    end
   end
 end

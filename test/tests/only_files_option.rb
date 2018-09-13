@@ -160,7 +160,7 @@ class OnlyFilesOptionTests < Minitest::Test
       :fingerprint => "1a1b3368951a20d02976c9207e5981df37d1bfa7dbbdb925eecd9013ecfeaa0f",
       :warning_type => "Cross-Site Scripting",
       :line => 64,
-      :message => /^Rails\ 3\.2\.9\.rc2\ content_tag\ does\ not\ esc/,
+      :message => /^Rails\ 3\.2\.9\.rc2\ `content_tag`\ does\ not\ esc/,
       :confidence => 1,
       :relative_path => "Gemfile.lock",
       :user_input => nil
@@ -172,7 +172,7 @@ class OnlyFilesOptionTests < Minitest::Test
       :fingerprint => "f22053251239417f0571439b41f7ea8ff49a7e97f4147578f021a568c2c3ba16",
       :warning_type => "Path Traversal",
       :line => 87,
-      :message => /^Sprockets\ 2\.1\.3\ has\ a\ path\ traversal\ vul/,
+      :message => /^sprockets\ 2\.1\.3\ has\ a\ path\ traversal\ vul/,
       :confidence => 2,
       :relative_path => "Gemfile.lock",
       :code => nil,

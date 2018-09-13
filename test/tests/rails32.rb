@@ -58,7 +58,7 @@ class Rails32Tests < Minitest::Test
   def test_remote_code_execution_CVE_2013_0269
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
-      :message => /^json\ gem\ version\ 1\.7\.5\ has\ a\ remote\ code/,
+      :message => /^json\ gem\ 1\.7\.5\ has\ a\ remote\ code/,
       :confidence => 0,
       :file => /Gemfile/
   end
@@ -67,7 +67,7 @@ class Rails32Tests < Minitest::Test
     assert_warning :type => :template,
       :warning_type => "Cross-Site Scripting",
       :line => 2,
-      :message => /^Rails\ 3\.2\.9\.rc2\ has\ a\ vulnerability\ in\ s/,
+      :message => /^Rails\ 3\.2\.9\.rc2\ has\ a\ vulnerability\ in\ `s/,
       :confidence => 0,
       :file => /sanitized\.html\.erb/
   end
@@ -159,7 +159,7 @@ class Rails32Tests < Minitest::Test
       :fingerprint => "ab42647fbdea61e25c4b794e82a8b315054e2fac4328bb3fd4be6a744889a987",
       :warning_type => "Denial of Service",
       :line => 64,
-      :message => /^Rails\ 3\.2\.9\.rc2 is vulnerable to denial of service via XML parsing \(CVE-2015-3227\). Upgrade to Rails version 3.2.22/,
+      :message => /^Rails\ 3\.2\.9\.rc2 is vulnerable to denial of service via XML parsing \(CVE-2015-3227\). Upgrade to Rails 3.2.22/,
       :confidence => 1,
       :relative_path => "Gemfile.lock",
       :user_input => nil
@@ -182,7 +182,7 @@ class Rails32Tests < Minitest::Test
       :fingerprint => "1a1b3368951a20d02976c9207e5981df37d1bfa7dbbdb925eecd9013ecfeaa0f",
       :warning_type => "Cross-Site Scripting",
       :line => 64,
-      :message => /^Rails\ 3\.2\.9\.rc2\ content_tag\ does\ not\ esc/,
+      :message => /^Rails\ 3\.2\.9\.rc2\ `content_tag`\ does\ not\ esc/,
       :confidence => 1,
       :relative_path => "Gemfile.lock",
       :user_input => nil
@@ -194,7 +194,7 @@ class Rails32Tests < Minitest::Test
       :fingerprint => "f22053251239417f0571439b41f7ea8ff49a7e97f4147578f021a568c2c3ba16",
       :warning_type => "Path Traversal",
       :line => 87,
-      :message => /^Sprockets\ 2\.1\.3\ has\ a\ path\ traversal\ vul/,
+      :message => /^sprockets\ 2\.1\.3\ has\ a\ path\ traversal\ vul/,
       :confidence => 2,
       :relative_path => "Gemfile.lock",
       :code => nil,
@@ -401,49 +401,49 @@ class Rails32Tests < Minitest::Test
     # Test to ensure warnings are generated for loose routes
     assert_warning :type => :controller,
       :warning_type => "Default Routes",
-      :message => /GlobGetController.*get requests/,
+      :message => /`GlobGetController.*get` requests/,
       :fingerprint => "6550aaf3da845a600a9c8fb767d08489679a9e3d89554db3c920ddb4eafcfb8e",
       :file => /routes\.rb/
 
     assert_warning :type => :controller,
       :warning_type => "Default Routes",
-      :message => /GlobMatchController.*matched requests/,
+      :message => /`GlobMatchController.*matched` requests/,
       :fingerprint => "fb878909d1635de22ddc819e33e6a75e7f2cce0ff1efd2b7e76b361be88bb73e",
       :file => /routes\.rb/
 
     assert_warning :type => :controller,
       :warning_type => "Default Routes",
-      :message => /GlobPostController.*post requests/,
+      :message => /`GlobPostController.*post` requests/,
       :fingerprint => "e5364369e3c89e5632aac3645e183037cc18de49f1b67547dca0c7febb6c849f",
       :file => /routes\.rb/
 
     assert_warning :type => :controller,
       :warning_type => "Default Routes",
-      :message => /GlobPutController.*put requests/,
+      :message => /`GlobPutController.*put` requests/,
       :fingerprint => "b85eeac90866fc04b4bea19c971aed4f2458afe53c908aa7162eb1e46b84f9b6",
       :file => /routes\.rb/
 
     assert_warning :type => :controller,
       :warning_type => "Default Routes",
-      :message => /FooPostController.*post requests/,
+      :message => /`FooPostController.*post` requests/,
       :fingerprint => "880355a0a87704aa0d615dea6a175ba78711d1593843a596935f95cac3abc8a5",
       :file => /routes\.rb/
 
     assert_warning :type => :controller,
       :warning_type => "Default Routes",
-      :message => /FooGetController.*get requests/,
+      :message => /`FooGetController.*get` requests/,
       :fingerprint => "e4f29dc75741f74327ce95678173d3d5fe296335275f062c06d1348678f6a339",
       :file => /routes\.rb/
 
     assert_warning :type => :controller,
       :warning_type => "Default Routes",
-      :message => /FooPutController.*put requests/,
+      :message => /`FooPutController.*put` requests/,
       :fingerprint => "05a92f06689436b7b8189c358baab371de5f0fb7936ab206a11b251b0e5f7570",
       :file => /routes\.rb/
 
     assert_warning :type => :controller,
       :warning_type => "Default Routes",
-      :message => /BarMatchController.*matched requests/,
+      :message => /`BarMatchController.*matched` requests/,
       :fingerprint => "857efc249dfd1b5086dcf79c35e31ef19a7782d03b3beaa12f55f8634b543d2d",
       :file => /routes\.rb/
   end

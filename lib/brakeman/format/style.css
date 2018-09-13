@@ -131,3 +131,11 @@ p {
  div.template_name:hover {
    background-color: white;
  }
+
+ span.code {
+   font-family: monospace;
+ }
+
+ span.filename {
+   font-family: monospace;
+ }

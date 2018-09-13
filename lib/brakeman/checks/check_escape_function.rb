@@ -12,7 +12,7 @@ class Brakeman::CheckEscapeFunction < Brakeman::BaseCheck
 
       warn :warning_type => 'Cross-Site Scripting',
         :warning_code => :CVE_2011_2932,
-        :message => 'Versions before 2.3.14 have a vulnerability in escape method when used with Ruby 1.8: CVE-2011-2932',
+        :message => msg("Rails versions before 2.3.14 have a vulnerability in the ", msg_code("escape"), " method when used with Ruby 1.8 ", msg_cve("CVE-2011-2932")),
         :confidence => :high,
         :gem_info => gemfile_or_environment,
         :link_path => "https://groups.google.com/d/topic/rubyonrails-security/Vr_7WSOrEZU/discussion"

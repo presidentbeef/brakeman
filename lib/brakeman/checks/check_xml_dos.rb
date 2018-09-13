@@ -23,7 +23,7 @@ class Brakeman::CheckXMLDoS < Brakeman::BaseCheck
 
     return if has_workaround?
 
-    message = "Rails #{version} is vulnerable to denial of service via XML parsing (CVE-2015-3227). Upgrade to Rails version #{fix_version}"
+    message = msg(msg_version(version), " is vulnerable to denial of service via XML parsing ", msg_cve("CVE-2015-3227"), ". Upgrade to ", msg_version(fix_version))
 
     warn :warning_type => "Denial of Service",
       :warning_code => :CVE_2015_3227,

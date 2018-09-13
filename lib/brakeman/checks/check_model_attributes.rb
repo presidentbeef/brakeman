@@ -30,7 +30,7 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
         warn :model => no_accessible_names.sort.join(", "),
           :warning_type => "Attribute Restriction",
           :warning_code => :no_attr_accessible,
-          :message => "Mass assignment is not restricted using attr_accessible",
+          :message => msg("Mass assignment is not restricted using ", msg_code("attr_accessible")),
           :confidence => :high
       end
 
@@ -59,7 +59,7 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
             :line => model.top_line,
             :warning_type => "Attribute Restriction",
             :warning_code => :no_attr_accessible,
-            :message => "Mass assignment is not restricted using attr_accessible",
+            :message => msg("Mass assignment is not restricted using ", msg_code("attr_accessible")),
             :confidence => :high
         elsif not tracker.options[:ignore_attr_protected]
           message, confidence, link = check_for_attr_protected_bypass
@@ -105,11 +105,11 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
                       end
 
     if upgrade_version
-      message = "attr_protected is bypassable in #{rails_version}, use attr_accessible or upgrade to #{upgrade_version}"
+      message = msg(msg_code("attr_protected"), " is bypassable in ", msg_version(rails_version), " use ", msg_code("attr_accessible"), " or upgrade to ", msg_version(upgrade_version))
       confidence = :high
       link = "https://groups.google.com/d/topic/rubyonrails-security/AFBKNY7VSH8/discussion"
     else
-      message = "attr_accessible is recommended over attr_protected"
+      message = msg(msg_code("attr_accessible"), " is recommended over ", msg_code("attr_protected"))
       confidence = :medium
       link = nil
     end

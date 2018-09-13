@@ -16,7 +16,7 @@ class Brakeman::CheckRouteDoS < Brakeman::BaseCheck
                   end
 
     if controller_wildcards?
-      message = "Rails #{rails_version} has a denial of service vulnerability with :controller routes (CVE-2015-7581). Upgrade to Rails #{fix_version}"
+      message = msg(msg_version(rails_version), " has a denial of service vulnerability with ", msg_code(":controller"), " routes ", msg("CVE-2015-7581"), ". Upgrade to ", msg_version(fix_version))
 
       warn :warning_type => "Denial of Service",
         :warning_code => :CVE_2015_7581,

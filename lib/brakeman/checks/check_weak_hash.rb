@@ -52,7 +52,7 @@ class Brakeman::CheckWeakHash < Brakeman::BaseCheck
     warn :result => result,
       :warning_type => "Weak Hash",
       :warning_code => :weak_hash_digest,
-      :message => "Weak hashing algorithm#{alg} used",
+      :message => msg("Weak hashing algorithm", msg_plain(alg), " used"),
       :confidence => confidence,
       :user_input => input
   end
@@ -74,7 +74,7 @@ class Brakeman::CheckWeakHash < Brakeman::BaseCheck
     warn :result => result,
       :warning_type => "Weak Hash",
       :warning_code => :weak_hash_hmac,
-      :message => "Weak hashing algorithm (#{alg}) used in HMAC",
+      :message => msg("Weak hashing algorithm (", msg_plain(alg), ") used in HMAC"),
       :confidence => :medium
   end
 
@@ -90,7 +90,7 @@ class Brakeman::CheckWeakHash < Brakeman::BaseCheck
         warn :result => result,
           :warning_type => "Weak Hash",
           :warning_code => :weak_hash_digest,
-          :message => "Weak hashing algorithm (#{alg}) used",
+          :message => msg("Weak hashing algorithm (", msg_plain(alg), ") used"),
           :confidence => :medium
       end
     end
