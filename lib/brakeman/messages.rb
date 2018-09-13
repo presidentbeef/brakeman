@@ -20,6 +20,10 @@ module Brakeman
       CVE.new cve
     end
 
+    def msg_lit str
+      Literal.new str
+    end
+
     def msg_version version, lib = "Rails"
       Version.new version, lib
     end
@@ -58,7 +62,7 @@ class Brakeman::Messages::Message
     output = @parts.map(&:to_s).join
 
     case @parts.first
-    when Brakeman::Messages::Code, Brakeman::Messages::Version
+    when Brakeman::Messages::Code, Brakeman::Messages::Literal, Brakeman::Messages::Version
     else
       output[0] = output[0].capitalize
     end
@@ -72,7 +76,7 @@ class Brakeman::Messages::Message
     output = @parts.map(&:to_html).join
 
     case @parts.first
-    when Brakeman::Messages::Code, Brakeman::Messages::Version
+    when Brakeman::Messages::Code, Brakeman::Messages::Literal, Brakeman::Messages::Version
     else
       output[0] = output[0].capitalize
     end
@@ -96,7 +100,7 @@ class Brakeman::Messages::Plain
 end
 
 class Brakeman::Messages::Input
-  def initialize input 
+  def initialize input
     @input = input
     @value = friendly_type_of(@input)
   end
@@ -168,6 +172,20 @@ class Brakeman::Messages::FileName
 
   def to_html
     "<span class=\"filename\">#{CGI.escapeHTML(@file)}</span>"
+  end
+end
+
+class Brakeman::Messages::Literal
+  def initialize value
+    @value = value.to_s
+  end
+
+  def to_s
+    @value
+  end
+
+  def to_html
+    @value
   end
 end
 
