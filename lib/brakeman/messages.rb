@@ -153,7 +153,7 @@ class Brakeman::Messages::CVE
   end
 
   def to_html
-    "<a href=\"https://cve.mitre.org/cgi-bin/cvename.cgi?name=#{@cve}\" target=\"_blank\" rel=\"noreferrer\">#{@cve}</a>"
+    "(<a href=\"https://cve.mitre.org/cgi-bin/cvename.cgi?name=#{@cve}\" target=\"_blank\" rel=\"noreferrer\">#{@cve}</a>)"
   end
 end
 
