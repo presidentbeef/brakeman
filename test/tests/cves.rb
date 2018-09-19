@@ -255,4 +255,16 @@ class CVETests < Minitest::Test
     assert_version "4.0.0.beta2", :sprockets
     assert_new 1 # CVE-2018-3760
   end
+
+  def test_CVE_2013_0276
+    before_rescan_of "app/models/protected.rb", "rails2", :collapse_mass_assignment => true do
+      replace "app/models/protected.rb", "attr_accessible nil", "attr_protected :admin"
+    end
+
+    warning = new.find do |w|
+      w.warning_code == 51 # CVE-2013-0276
+    end
+
+    refute_nil warning
+  end
 end
