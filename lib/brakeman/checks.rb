@@ -37,15 +37,14 @@ class Brakeman::Checks
     end
   end
 
-  def self.missing_checks included_checks, excluded_checks
-    included_checks = included_checks.map(&:to_s).to_set
-    excluded_checks = excluded_checks.map(&:to_s).to_set
+  def self.missing_checks check_args
+    check_args = check_args.to_a.map(&:to_s).to_set
 
-    if included_checks == Set['CheckNone']
+    if check_args == Set['CheckNone']
       return []
     else
       loaded = self.checks.map { |name| name.to_s.gsub('Brakeman::', '') }.to_set
-      missing = (included_checks - loaded) + (excluded_checks - loaded)
+      missing = check_args - loaded
 
       unless missing.empty?
         return missing
@@ -170,8 +169,16 @@ class Brakeman::Checks
     to_run = if tracker.options[:run_all_checks] or tracker.options[:run_checks]
                @checks + @optional_checks
              else
-               @checks
+               @checks.dup
              end
+
+    if enabled_checks = tracker.options[:enable_checks]
+      @optional_checks.each do |c|
+        if enabled_checks.include? self.get_check_name(c)
+          to_run << c
+        end
+      end
+    end
 
     self.filter_checks to_run, tracker
   end

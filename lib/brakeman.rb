@@ -348,7 +348,7 @@ module Brakeman
     scanner = Scanner.new options
     tracker = scanner.tracker
 
-    check_for_missing_checks options[:run_checks], options[:skip_checks]
+    check_for_missing_checks options[:run_checks], options[:skip_checks], options[:enable_checks]
 
     notify "Processing application in #{tracker.app_path}"
     scanner.process
@@ -521,8 +521,10 @@ module Brakeman
     end if options[:additional_checks_path]
   end
 
-  def self.check_for_missing_checks included_checks, excluded_checks
-    missing = Brakeman::Checks.missing_checks(included_checks || Set.new, excluded_checks || Set.new)
+  def self.check_for_missing_checks included_checks, excluded_checks, enabled_checks
+    checks = included_checks.to_a + excluded_checks.to_a + enabled_checks.to_a
+
+    missing = Brakeman::Checks.missing_checks(checks)
 
     unless missing.empty?
       raise MissingChecksError, "Could not find specified check#{missing.length > 1 ? 's' : ''}: #{missing.map {|c| "`#{c}`"}.join(', ')}"

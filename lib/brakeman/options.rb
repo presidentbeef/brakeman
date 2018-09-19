@@ -169,6 +169,19 @@ module Brakeman::Options
           options[:engine_paths].merge paths
         end
 
+        opts.on "-E", "--enable Check1,Check2,etc", Array, "Enable the specified checks" do |checks|
+          checks.map! do |check|
+            if check.start_with? "Check"
+              check
+            else
+              "Check" << check
+            end
+          end
+
+          options[:enable_checks] ||= Set.new
+          options[:enable_checks].merge checks
+        end
+
         opts.on "-t", "--test Check1,Check2,etc", Array, "Only run the specified checks" do |checks|
           checks.each_with_index do |s, index|
             if s[0,5] != "Check"
