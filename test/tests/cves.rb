@@ -255,4 +255,36 @@ class CVETests < Minitest::Test
     assert_version "4.0.0.beta2", :sprockets
     assert_new 1 # CVE-2018-3760
   end
+
+  def test_CVE_2013_0276
+    before_rescan_of "app/models/protected.rb", "rails2", :collapse_mass_assignment => true do
+      replace "app/models/protected.rb", "attr_accessible nil", "attr_protected :admin"
+    end
+
+    warning = new.find do |w|
+      w.warning_code == 51 # CVE-2013-0276
+    end
+
+    refute_nil warning
+  end
+
+  def test_CVE_2010_3933_rails3
+    before_rescan_of ["Gemfile.lock", "app/models/a.rb"], "rails3", :run_checks => ["CheckNestedAttributes"] do
+      replace "Gemfile.lock", "rails (3.0.3)", "rails (3.0.0)"
+      write_file "app/models/a.rb", <<-RUBY
+      class A < ActiveRecord::Base
+        accepts_nested_attributes_for :b
+      end
+      RUBY
+    end
+
+    assert_version "3.0.0"
+
+    warning = new.find do |w|
+      w.warning_code == 31 # CVE_2010_3933
+      w.message.to_s == "Vulnerability in nested attributes (CVE-2010-3933). Upgrade to Rails 3.0.1"
+    end
+
+    refute_nil warning
+  end
 end
