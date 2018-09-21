@@ -1,0 +1,5 @@
+{
+  "name": "rails_with_empty_secrets_yml",
+  "private": true,
+  "dependencies": {}
+}
