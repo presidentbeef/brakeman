@@ -123,7 +123,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
         return
       end
 
-      if secrets["production"] and secret = secrets["production"]["secret_key_base"]
+      if secrets && secrets["production"] and secret = secrets["production"]["secret_key_base"]
         unless secret.include? "<%="
           line = yaml.lines.find_index { |l| l.include? secret } + 1
 
