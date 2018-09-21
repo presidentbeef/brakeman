@@ -1,5 +1,4 @@
 [![Brakeman Logo](http://brakemanscanner.org/images/logo_medium.png)](http://brakemanscanner.org/)
-[![Brakeman Pro Logo](https://brakemanpro.com/images/bmp_square_white.png)](https://brakemanpro.com)
 
 [![Build Status](https://travis-ci.org/presidentbeef/brakeman.svg?branch=master)](https://travis-ci.org/presidentbeef/brakeman)
 [![Maintainability](https://api.codeclimate.com/v1/badges/1b08a5c74695cb0d11ec/maintainability)](https://codeclimate.com/github/presidentbeef/brakeman/maintainability)
@@ -24,13 +23,16 @@ Using Bundler:
 
 Using Docker:
 
-	docker build . -t brakeman
+    docker pull presidentbeef/brakeman
 
-If you wish to use the codeclimate-brakeman docker image directly:
+Using Docker to build from source:
 
-	docker build . -f "${PWD}/Dockerfile.codeclimate" -t codeclimate-brakeman
+    git clone https://github.com/presidentbeef/brakeman.git
+    cd brakeman
+    docker build . -t brakeman
 
 # Usage
+
 #### Running locally
 
 From a Rails application's root directory:
@@ -45,12 +47,19 @@ Outside of Rails root:
 
 From a Rails application's root directory:
 
+    docker run -v "$(pwd)":/code brakeman
+
+With a little nicer color:
+
+    docker run -v "$(pwd)":/code brakeman --color
+
+For an HTML report:
+
     docker run -v "$(pwd)":/code brakeman -o brakeman_results.html
 
-Outside of Rails root: (Note that the output file is relative to path/to/rails/application)
+Outside of Rails root (note that the output file is relative to path/to/rails/application):
 
     docker run -v 'path/to/rails/application':/code brakeman -o brakeman_results.html
-
 
 # Compatibility
 
@@ -188,4 +197,4 @@ Chat: https://gitter.im/presidentbeef/brakeman
 
 Brakeman can be freely used, modified, or distributed for any purpose except as a feature of a commercial product.
 
-See [COPYING](COPYING) for details.
+See [COPYING](COPYING.md) for details.
