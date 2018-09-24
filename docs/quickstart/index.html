@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Brakeman 4.1.1 Released</title>
+  <title>Brakeman - Rails Security Scanner: Quickstart</title>
   <meta name="author" content="Justin Collins">
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
@@ -16,7 +16,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/blog/2017/12/18/brakeman-4-dot-1-1-released/"/>
+  <link rel="canonical" href="http://brakemanscanner.org/docs/quickstart/index.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -100,91 +100,211 @@ ga('cdt.send', 'pageview');
   <div id="main">
     <div id="content">
       <div>
-<article class="hentry">
+<article>
   
   <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-      <h1 class="entry-title">Brakeman 4.1.1 Released</h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2017-12-18 23:16:00 -0800" pubdate  updated >Dec 18<span>th</span>, 2017</time>
-
-
-</p>
-    
+    <h1 class="entry-title">Quickstart</h1>
   </header>
+  
+  <h3>Introduction</h3>
 
+<p>Brakeman is a command-line tool that analyzes the source code of Ruby on Rails applications to find potential security vulnerabilities.</p>
 
-<div class="entry-content"><p>Just a small fix-up release!</p>
+<h3>Install Brakeman</h3>
 
-<p><em>Changes since 4.1.0</em>:</p>
+<p>Brakeman can be installed as a <a href="https://rubygems.org/">Ruby gem</a> or via <a href="https://www.docker.com/">Docker</a>.</p>
+
+<h4>Using Rubygems</h4>
+
+<pre><code>gem install brakeman
+</code></pre>
+
+<h4>Using Bundler</h4>
+
+<p>Add the following to your <code>Gemfile</code> or <code>gems.rb</code>:</p>
+
+<pre><code>gem "brakeman"
+</code></pre>
+
+<p>Then run</p>
+
+<pre><code>bundle install
+</code></pre>
+
+<h4>Using Docker</h4>
+
+<p>To fetch the latest build of Brakeman:</p>
+
+<pre><code>docker pull presidentbeef/brakeman
+</code></pre>
+
+<h4>Building from Source</h4>
+
+<p>You will need Git, Ruby, and RubyGems installed.</p>
+
+<pre><code>git clone https://github.com/presidentbeef/brakeman.git
+cd brakeman
+gem build brakeman.gemspec
+gem install brakeman-*.gem
+</code></pre>
+
+<h3>Run Brakeman</h3>
+
+<p>Brakeman is run as a command-line tool. The only information it needs to get started is the <em>root</em> directory of the Ruby on Rails application (the directory containing <code>app/</code>, <code>config/</code>, <code>db</code>, etc.) to scan.</p>
+
+<h4>Using Rubygems</h4>
+
+<p>Either specify the path to the root of your Ruby on Rails application:</p>
+
+<pre><code>brakeman path/to/your/app
+</code></pre>
+
+<p>Or run it from the root of your Ruby on Rails application:</p>
+
+<pre><code>cd path/to/your/app
+brakeman 
+</code></pre>
+
+<h4>Using Docker</h4>
+
+<p>Either specify the path to the root of your Ruby on Rails application:</p>
+
+<pre><code>docker run -v "path/to/your/app":/code brakeman --color
+</code></pre>
+
+<p>Or run it from the root of your Ruby on Rails application:</p>
+
+<pre><code>cd path/to/your/app
+docker run -v "$(pwd)":/code brakeman --color
+</code></pre>
+
+<p>The <code>-v</code> option is necessary because the Ruby on Rails application needs to be mounted inside the Docker container.</p>
+
+<p>The <code>--color</code> option is not required, but it makes the default report a little prettier.</p>
+
+<h3>Reporting</h3>
+
+<p>The default report is text that looks like this:</p>
+
+<p><img src="/images/brakeman_text_report.png" alt="Brakeman Default Text Report" /></p>
+
+<p>To write the report out to a file, use <code>-o</code>:</p>
+
+<pre><code>brakeman -o report.text
+</code></pre>
+
+<p>To specify a different format, use <code>-f</code>:</p>
+
+<pre><code>brakeman -f html -o report
+</code></pre>
+
+<p>Or just use the extension of the report file:</p>
+
+<pre><code>brakeman -o report.html
+</code></pre>
+
+<p>The available report types are:</p>
 
 <ul>
-<li>Remove check for use of <code>permit</code> with <code>*_id</code> keys</li>
-<li>Avoid duplicate warnings about permitted attributes</li>
-<li>Avoid duplicate warnings about division by zero</li>
+<li><code>text</code> (default)</li>
+<li><code>html</code></li>
+<li><code>json</code> (recommended for automation)</li>
+<li><code>markdown</code> (with GitHub support)</li>
+<li><code>table</code> (old default)</li>
+<li><code>tabs</code> (tab-separated, originally for the Jenkins plugin, deprecated)</li>
+<li><code>csv</code> (deprecated)</li>
+<li><code>codeclimate</code> (for use with the Code Climate engine)</li>
 </ul>
 
 
-<h3>Checksums</h3>
+<h3>Next Steps</h3>
 
-<p>The SHA256 sums for this release are:</p>
+<p>Once Brakeman is running and producting reports, it&#8217;s time to start fixing those issues!</p>
 
-<pre><code>7b65d6694b488aaa09e147f5a39d7e544385a11ec52ae93058b04b17999925b6  brakeman-4.1.1.gem
-ffb525462d391f9a7f85b9b1ebbf7b165d03cd2eaed7093c3f1b4fdb135947e2  brakeman-lib-4.1.1.gem
-b50a7b19d56a7606cd3a625611f8e720d47da8a57d126e7dcf443714cec98194  brakeman-min-4.1.1.gem
+<h4>Remediation</h4>
+
+<p>Brakeman reports issues in order of &#8220;confidence&#8221;. You can think of this as a combination of &#8220;how likely is this to be a problem?&#8221; and &#8220;how big of a problem is it?&#8221;</p>
+
+<p>Start with the &#8220;High&#8221; confidence issues and work your way down.</p>
+
+<p>Take a look at our <a href="/docs/warning_types/">documentation about different warnings</a>.</p>
+
+<p>After fixing an issue, run Brakeman again. Sometimes one issue will mask a different one on the same line of code.</p>
+
+<p>Keep in mind Brakeman can only <em>guess</em> at the meaning of your code. There is plenty of room for &#8220;false positives&#8221; - warnings reported that are not truly security issues. Please consult with your security team or <a href="/contact">ask</a> if you are unsure about the meaning of a warning.</p>
+
+<p>Take a look at <a href="https://brakemanscanner.org/docs/ignoring_false_positives/">our documentation for ignoring warnings</a>, if necessary.</p>
+
+<h4>Automation</h4>
+
+<p>It is cumbersome to manually run Brakeman over and over.</p>
+
+<p>Thankfully, Brakeman is designed to be run in an automated fashion.</p>
+
+<p>The best output format to use with automation is JSON. Great care is taken to make sure the JSON format is stable.</p>
+
+<pre><code>brakeman -o report.json
 </code></pre>
 
-<h3>Reporting Issues</h3>
+<p>Note you can output multiple formats at the same time:</p>
 
-<p>Thank you to everyone who reported bugs and contributed to this release.</p>
+<pre><code>brakeman -o report.json -o report.html
+</code></pre>
 
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+<p>The exit codes for Brakeman can be helpful:</p>
 
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+<ul>
+<li>0 -   Everything was fine, no errors or issues</li>
+<li>1 -   Unhandled exception raised</li>
+<li>3 -   Warnings  were reported</li>
+<li>4 -   Path did not look like a Rails application, no scan run</li>
+<li>5 -   A newer version of Brakeman is available (when <code>--ensure-latest</code> is used)</li>
+<li>6 -   Non-existent checks were specified</li>
+<li>7 -   Recoverable errors encountered during scan</li>
+<li>255 - Failure, non-recoverable error</li>
+</ul>
 
-<p>If you find Brakeman valuable and want to support its development (and get more features!), check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
-</div>
+
+<h5>Tools</h5>
+
+<p>You can run Brakeman with:</p>
+
+<ul>
+<li><a href="https://github.com/guard/guard-brakeman">Guard::Brakeman</a> (runs on file save)</li>
+<li>The <a href="https://github.com/w0rp/ale">ALE</a> plugin for VIM (runs on file save)</li>
+<li><a href="/docs/jenkins">Jenkins</a> continuous integration tool</li>
+<li>Many <a href="https://github.com/presidentbeef/brakeman/wiki/Brakeman-as-a-Service">Brakeman-as-a-Service</a> providers</li>
+</ul>
 
 
-  <footer>
-    <p class="meta">
-      
+<p>Documentation for setting up Brakeman in various CI tools:</p>
+
+<ul>
+<li><a href="https://rietta.com/blog/2017/10/03/automate-security-scans-with-continuous-integration/">Travis CI</a></li>
+<li><a href="https://semaphoreci.com/community/tutorials/automatic-security-testing-of-rails-applications-using-brakeman">Semaphore CI</a></li>
+<li><a href="https://electric-cloud.com/plugins/directory/p/brakeman/">Electric Cloud</a></li>
+<li><a href="https://medium.com/digital-banking-labs/setup-gitlab-ci-for-a-rails-application-ee38ea8c907d">GitLab CI</a></li>
+</ul>
+
+
+<h3>More Help</h3>
+
+<p><a href="https://github.com/presidentbeef/brakeman/issues">Brakeman on GitHub</a></p>
+
+<p><a href="https://gitter.im/presidentbeef/brakeman">Chat on Gitter</a></p>
+
+<hr />
+
+<p><a href="/docs">More documentation</a></p>
+
   
-
-<span class="byline author vcard">Posted by <span class="fn">Justin Collins</span></span>
-
-      
-
-
-
-
-<time datetime="2017-12-18 23:16:00 -0800" pubdate  updated >Dec 18<span>th</span>, 2017</time>
-
-
-
-      
-
-
-    </p>
-    
-      <div class="sharing">
+    <footer>
+      <p class="meta">
+        
+        
+      </p>
+    </footer>
   
-  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://brakemanscanner.org/blog/2017/12/18/brakeman-4-dot-1-1-released/" data-via="brakeman" data-counturl="http://brakemanscanner.org/blog/2017/12/18/brakeman-4-dot-1-1-released/" >Tweet</a>
-  
-  
-  <g:plusone size="medium"></g:plusone>
-  
-</div>
-
-    
-  </footer>
 </article>
 
   <section>
@@ -192,8 +312,8 @@ b50a7b19d56a7606cd3a625611f8e720d47da8a57d126e7dcf443714cec98194  brakeman-min-4
     <div id="disqus_thread"><div id="disqus_thread"></div>
 <script type="text/javascript">
   var disqus_shortname = 'brakeman';
-  var disqus_identifier = 'http://brakemanscanner.org/blog/2017/12/18/brakeman-4-dot-1-1-released/';
-  var disqus_url = 'http://brakemanscanner.org/blog/2017/12/18/brakeman-4-dot-1-1-released/';
+  var disqus_identifier = 'http://brakemanscanner.org/docs/quickstart/index.html';
+  var disqus_url = 'http://brakemanscanner.org/docs/quickstart/index.html';
   //var disqus_developer = 1;
   (function() {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

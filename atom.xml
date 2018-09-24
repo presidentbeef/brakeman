@@ -4,30 +4,13 @@
   <title>Brakeman - Rails Security Scanner</title>
   <link href="http://brakemanscanner.org/atom.xml" rel="self"/>
   <link href="http://brakemanscanner.org/"/>
-  <updated>2018-08-30T08:59:57-07:00</updated>
+  <updated>2018-09-24T12:43:56-07:00</updated>
   <id>http://brakemanscanner.org/</id>
   <author>
     <name>Justin Collins</name>
     
   </author>
 
-  
-  <entry>
-    <title>Happy 8th Birthday, Brakeman!</title>
-    <link href="http://brakemanscanner.org/blog/2018/08/30/happy-8th-birthday/"/>
-    <updated>2018-08-30T08:54:00-07:00</updated>
-    <id>http://brakemanscanner.org/blog/2018/08/30/happy-8th-birthday</id>
-    <content type="html">&lt;p&gt;In celebration of Brakeman's 8th birthday this week, we'd like to share an update to keep you apprised of what we’ve been up to since our acquisition by Synopsys in June of this year.&lt;/p&gt;
-
-&lt;p&gt;Stemming from the acquisition, Synopsys welcomed Justin Collins of the original Brakeman core team. He is working closely with the Synopsys Static Analysis division to integrate the Brakeman Pro Engine into the Coverity proprietary product offering. This is an exciting opportunity to build Ruby on Rails support into an enterprise-class engine that is &lt;a href=&quot;https://www.synopsys.com/software-integrity/resources/analyst-reports/2018-gartner-magic-quadrant.html&quot;&gt;quickly emerging as a leader&lt;/a&gt; in static application security testing.&lt;/p&gt;
-
-&lt;p&gt;As for the Brakeman project, we'd like to assure you that Synopsys is committed to the continued success of the project.&lt;/p&gt;
-
-&lt;p&gt;Synopsys has a rich history of working with the open source community through &lt;a href=&quot;https://scan.coverity.com/&quot;&gt;Coverity Scan&lt;/a&gt;, providing testing as a free service to support building quality and security into the open source software (OSS) development process. To-date since its inception in 2006, Coverity Scan has provided scanning support to over 4,600 open source projects. The December 2017 acquisition of Black Duck Software is another testament to Synopsys’ dedication to securing the growing use of open source.&lt;/p&gt;
-
-&lt;p&gt;Rest easy knowing that Brakeman will continue to be maintained by the same team. Code will remain available on &lt;a href=&quot;https://github.com/presidentbeef/brakeman&quot;&gt;GitHub&lt;/a&gt;, and Ruby gems will continue being distributed via &lt;a href=&quot;https://rubygems.org/gems/brakeman&quot;&gt;RubyGems.org&lt;/a&gt;..&lt;/p&gt;
-</content>
-  </entry>
   
   <entry>
     <title>Brakeman Has Been Acquired by Synopsys</title>
@@ -1633,6 +1616,118 @@ c0beeabe95aa693a5273bd48922028f48a190940b18c795813bd0f96068452b4  brakeman-lib-3
 &lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hanging out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;
 
 &lt;p&gt;For commercial support, please consider &lt;a href=&quot;https://brakemanpro.com/&quot;&gt;Brakeman Pro&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Brakeman 3.3.1 Released</title>
+    <link href="http://brakemanscanner.org/blog/2016/06/03/brakeman-3-dot-3-1-released/"/>
+    <updated>2016-06-03T08:15:00-07:00</updated>
+    <id>http://brakemanscanner.org/blog/2016/06/03/brakeman-3-dot-3-1-released</id>
+    <content type="html">&lt;p&gt;&lt;em&gt;Changes since 3.3.1&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Improved line number accuracy in ERB templates (&lt;a href=&quot;https://github.com/ptoomey3&quot;&gt;Patrick Toomey&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Allow multiple line regex in &lt;code&gt;validates_format_of&lt;/code&gt; (&lt;a href=&quot;https://github.com/c0va23&quot;&gt;Dmitrij Fedorenko&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Avoid overwriting instance/class methods with same name (&lt;a href=&quot;https://github.com/imtayadeway&quot;&gt;Tim Wade&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add &lt;code&gt;--force-scan&lt;/code&gt; option (&lt;a href=&quot;https://github.com/oreoshake&quot;&gt;Neil Matatall&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Only consider &lt;code&gt;if&lt;/code&gt; branches in templates&lt;/li&gt;
+&lt;li&gt;Support more safe &lt;code&gt;&amp;amp;.&lt;/code&gt; operations&lt;/li&gt;
+&lt;li&gt;Avoid warning about SQL injection with &lt;code&gt;quoted_primary_key&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/884&quot;&gt;#884&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Delay loading vendored gems and modifying load path&lt;/li&gt;
+&lt;li&gt;Added &lt;code&gt;brakeman-lib&lt;/code&gt; gem&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;ERB Template Line Numbers&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/ptoomey3&quot;&gt;Patrick Toomey&lt;/a&gt; contributed a series of patches to bring Brakeman's handling of ERB/Erubis templates in line with the Rails implementation. This has the effect of correcting some line numbers and fixed processing of &lt;code&gt;case&lt;/code&gt; statements in templates.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/878&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Multiline Regex Validation&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/c0va23&quot;&gt;Dmitrij Fedorenko&lt;/a&gt; added a change to support multiline extended regular expressions for model validations.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/885&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Class Methods&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/imtayadeway&quot;&gt;Tim Wade&lt;/a&gt; fixed an issue where class methods and instance methods with the same name on the same class would overwrite each other. This may cause a few warning fingerprints to change, since all method names are now stored as symbols (some were strings before).&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/881&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Force Scan&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/oreoshake&quot;&gt;Neil Matatall&lt;/a&gt; added the &lt;code&gt;--force-scan&lt;/code&gt; option to force Brakeman to scan an application even if it doesn't look like a Rails app.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/879&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Branches in Templates&lt;/h3&gt;
+
+&lt;p&gt;When looking at template output, Brakeman will no longer treat the conditional as output, just the branches. This helps find more potential instances of cross-site scripting.&lt;/p&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;%= params[:x].html_safe unless this_is_a_bad_idea? %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now Brakeman will just consider the &lt;code&gt;params[:x].html_safe&lt;/code&gt; value which is clearly dangerous.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/883/&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;More Safe Calls&lt;/h3&gt;
+
+&lt;p&gt;Brakeman can now handle more instances of the &quot;safe call&quot; or &quot;lonely&quot; operator such as &lt;code&gt;a&amp;amp;.b ||= 1&lt;/code&gt; and &lt;code&gt;x&amp;amp;.y += z 1&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/887&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Quoted Primary Key&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will no longer warn about use of &lt;code&gt;quoted_primary_key&lt;/code&gt; in SQL strings.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/888&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Delayed Load Path Modification&lt;/h3&gt;
+
+&lt;p&gt;Brakeman 3.3.0 started vendoring all its dependencies to avoid conflicts with application dependencies. However, if Brakeman is included in a Gemfile without &lt;code&gt;require: false&lt;/code&gt;, it will still modify the load path and potentially cause conflicts.&lt;/p&gt;
+
+&lt;p&gt;This version delays loading any dependencies until Brakeman actually runs. This is almost like having &lt;code&gt;require: false&lt;/code&gt; automatically.&lt;/p&gt;
+
+&lt;p&gt;Please keep in mind it is really not recommended to include Brakeman in Gemfiles unless it is actually being used as a library. Otherwise it's like mixing your browser's dependencies with your applications. It doesn't make sense.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/889&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;brakeman-lib&lt;/h3&gt;
+
+&lt;p&gt;For those who don't want Brakeman to bundle and vendor its own dependencies, the &lt;a href=&quot;https://rubygems.org/gems/brakeman-lib&quot;&gt;brakeman-lib&lt;/a&gt; gem is identical to the &lt;code&gt;brakeman&lt;/code&gt; gem but without the bundling. Consider using it if the bundling and modified load paths are causing issues.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/commit/fa310a9b736d858a929715802d98b1a3f0887569&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;RailsConf Security Talks&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/presidentbeef&quot;&gt;Justin Collins&lt;/a&gt; gave &lt;a href=&quot;https://www.youtube.com/watch?v=DHHHnPwSY5I&amp;amp;feature=youtu.be&amp;amp;t=55m6s&quot;&gt;a lightning talk&lt;/a&gt; about Brakeman and &lt;a href=&quot;https://www.youtube.com/watch?v=3P9naxOfUC4&amp;amp;feature=youtu.be&quot;&gt;a regular talk&lt;/a&gt; about real-world examples of vulnerabilities Rails won't save you from.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://twitter.com/secretmike&quot;&gt;Mike Milner&lt;/a&gt; spoke about &lt;a href=&quot;https://youtu.be/UoiCylwUoq4&quot;&gt;the security breaches of 2015&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://twitter.com/JessRudder&quot;&gt;Jessica Rudder&lt;/a&gt; talked through &lt;a href=&quot;https://youtu.be/2GHWAYys1is&quot;&gt;examples of SQL injection&lt;/a&gt; in ActiveRecord.&lt;/p&gt;
+
+&lt;h3&gt;SHAs&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;5c22721c8b486fa9d283cabf65c7e77b2f7428056d4d907b7f74a91dd112616a  brakeman-3.3.1.gem
+7aa57ed8b42c0cadef09214f5544424659ab3972912137fad37da1a052d8a792  brakeman-lib-3.3.1.gem
+95e68202493d8c504ad72276c8bfa46abb1c78c309bc2b80b433a6220f3722eb  brakeman-min-3.3.1.gem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed improvements in this release.&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release! Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Also consider following &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hanging out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion. Please note the mailing list is no longer in use and has apparently not been delivering mail for some time.&lt;/p&gt;
 </content>
   </entry>
   
