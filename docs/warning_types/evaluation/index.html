@@ -5,8 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Dangerous Evaluation</title>
-  <meta name="author" content="Justin Collins">
+  <title>Brakeman: Dangerous Evaluation</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -16,48 +15,15 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/warning_types/evaluation/index.html"/>
+  <link rel="canonical" href="https://brakemanscanner.org/docs/warning_types/evaluation/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="Brakeman - Rails Security Scanner" type="application/atom+xml"/>
+  <link href="feed.xml" rel="alternate" title="Brakeman" type="application/atom+xml"/>
   
-<!--second website-->
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-57927555-1', 'auto', {'allowLinker': true});
-ga('create', 'UA-12578396-3', 'auto','cdt');
-ga('require', 'linker');
-ga('linker:autoLink', ['brakemanpro.com'] );
-ga('send', 'pageview');
-ga('cdt.send', 'pageview');
-
-</script>
-
 
   
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-  
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'https://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
 
   <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
 <link href='https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
@@ -70,20 +36,20 @@ ga('cdt.send', 'pageview');
 
 <body  >
   <header><hgroup>
-  <h1><a href="/">Brakeman - Rails Security Scanner</a></h1>
+  <h1><a href="/">Brakeman</a></h1>
   
-    <h2>Static analysis security scanner for Ruby on Rails</h2>
+    <h2>Ruby on Rails Static Analysis Security Tool</h2>
   
 </hgroup>
 
 </header>
   <nav role=navigation><ul role=subscription data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  <li><a href="feed.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
   
 </ul>
-<form action="https://google.com/search" method="get">
+<form action="" method="get">
   <fieldset role="site-search">
-    <input type="hidden" name="q" value="site:brakemanscanner.org" />
+    <input type="hidden" name="q" value="site:https://brakemanscanner.org" />
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
   </fieldset>
 </form>
@@ -110,7 +76,6 @@ ga('cdt.send', 'pageview');
 window.location.replace("http://brakemanscanner.org/docs/warning_types/dangerous_eval/");
 </script>
 
-
 <p>Content moved to <a href="dangerous_eval/">Dangerous Eval</a>.</p>
 
   
@@ -126,13 +91,13 @@ window.location.replace("http://brakemanscanner.org/docs/warning_types/dangerous
 </div>
 
 <aside role=sidebar>
-  
-    <section>
+  <section>
   <p></p>
   <p>Brakeman is a free vulnerability scanner specifically designed for Ruby on Rails applications. It statically analyzes Rails application code to find security issues at any stage of development.</p>
   <p><a href="/docs/quickstart">Get started!</a></p>
 </section>
-<section>
+
+  <section>
 <script type='text/javascript'>
     $(document).ready(function(){
         $("#github").GitHubBadge({
@@ -150,33 +115,35 @@ window.location.replace("http://brakemanscanner.org/docs/warning_types/dangerous
 <div id="github"></div>
 <a href="https://travis-ci.org/#!/presidentbeef/brakeman"><img src="https://secure.travis-ci.org/presidentbeef/brakeman.png" /></a>
 </section>
-<section>
+
+  <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/">Brakeman Has Been Acquired by Synopsys</a>
+        <a href="/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/index.html">Brakeman Has Been Acquired by Synopsys</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2018/06/06/brakeman-4-dot-3-1-released/">Brakeman 4.3.1 Released</a>
+        <a href="/blog/2018/06/06/brakeman-4-dot-3-1-released">Brakeman 4.3.1 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2018/05/10/brakeman-4-dot-3-0-released/">Brakeman 4.3.0 Released</a>
+        <a href="/blog/2018/05/10/brakeman-4-dot-3-0-released">Brakeman 4.3.0 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2018/03/23/brakeman-4-dot-2-1-released/">Brakeman 4.2.1 Released</a>
+        <a href="/blog/2018/03/23/brakeman-4-dot-2-1-released">Brakeman 4.2.1 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2018/02/21/brakeman-4-dot-2-0-released/">Brakeman 4.2.0 Released</a>
+        <a href="/blog/2018/02/21/brakeman-4-dot-2-0-released">Brakeman 4.2.0 Released</a>
       </li>
     
   </ul>
 </section>
-<section>
+
+  <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
     <a class="twitter-timeline" data-dnt=true href="https://twitter.com/brakeman" data-widget-id="258654953097273345">Tweets by @brakeman</a>
@@ -184,7 +151,6 @@ window.location.replace("http://brakemanscanner.org/docs/warning_types/dangerous
   </ul>
 </section>
 
-  
 </aside>
 
 

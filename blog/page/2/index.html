@@ -5,8 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner</title>
-  <meta name="author" content="Justin Collins">
+  <title>Brakeman</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -16,48 +15,15 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/blog/page/2/index.html"/>
+  <link rel="canonical" href="https://brakemanscanner.org/blog/page/2/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="Brakeman - Rails Security Scanner" type="application/atom+xml"/>
+  <link href="feed.xml" rel="alternate" title="Brakeman" type="application/atom+xml"/>
   
-<!--second website-->
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-57927555-1', 'auto', {'allowLinker': true});
-ga('create', 'UA-12578396-3', 'auto','cdt');
-ga('require', 'linker');
-ga('linker:autoLink', ['brakemanpro.com'] );
-ga('send', 'pageview');
-ga('cdt.send', 'pageview');
-
-</script>
-
 
   
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-  
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'https://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
 
   <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
 <link href='https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
@@ -70,20 +36,20 @@ ga('cdt.send', 'pageview');
 
 <body  >
   <header><hgroup>
-  <h1><a href="/">Brakeman - Rails Security Scanner</a></h1>
+  <h1><a href="/">Brakeman</a></h1>
   
-    <h2>Static analysis security scanner for Ruby on Rails</h2>
+    <h2>Ruby on Rails Static Analysis Security Tool</h2>
   
 </hgroup>
 
 </header>
   <nav role=navigation><ul role=subscription data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  <li><a href="feed.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
   
 </ul>
-<form action="https://google.com/search" method="get">
+<form action="" method="get">
   <fieldset role="site-search">
-    <input type="hidden" name="q" value="site:brakemanscanner.org" />
+    <input type="hidden" name="q" value="site:https://brakemanscanner.org" />
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
   </fieldset>
 </form>
@@ -108,7 +74,7 @@ ga('cdt.send', 'pageview');
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-    <h1 class="entry-title"><a href="/blog/2017/05/19/brakeman-3-dot-6-2-released/">Brakeman 3.6.2 Released</a></h1>
+    <h1 class="entry-title"><a href="/blog/2017/12/18/brakeman-4-dot-1-1-released">Brakeman 4.1.1 Released</a></h1>
     
     
       <p class="meta">
@@ -116,7 +82,7 @@ ga('cdt.send', 'pageview');
 
 
 
-<time datetime="2017-05-19 09:01:00 -0700" pubdate  updated >May 19<span>th</span>, 2017</time>
+<time datetime="2017-12-18 23:16:00 -0800" pubdate  updated >2017-12-18 23:16:00 -0800</time>
 
 
 </p>
@@ -124,100 +90,339 @@ ga('cdt.send', 'pageview');
   </header>
 
 
-  <div class="entry-content"><p><em>Changes since 3.6.1:</em></p>
+  <div class="entry-content"><p>Just a small fix-up release!</p>
+
+<p><em>Changes since 4.1.0</em>:</p>
 
 <ul>
-<li>Remove <code>--rake</code> option</li>
-<li>By default, do not honor additional check paths in config</li>
-<li>Properly handle template names without <code>.html</code> or <code>.js</code></li>
-<li>Catch YAML parsing errors in session settings check (<a href="https://github.com/presidentbeef/brakeman/issues/1046">#1046</a>)</li>
-<li>Better handling of <code>if</code> expressions in HAML rendering (<a href="https://github.com/presidentbeef/brakeman/issues/1032">#1032</a>)</li>
-<li>Avoid warning about SQLi with <code>to_s</code> in <code>exists?</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1045">#1045</a>)</li>
-<li>Handle safe call operator in checks (<a href="https://github.com/presidentbeef/brakeman/issues/1031">#1031</a>)</li>
-<li>Handle empty <code>if</code> expressions when finding return values</li>
-<li>Set template file names during rendering for better errors</li>
-<li>Limit Slim dependency to before 3.0.8</li>
-<li>Update RubyParser to 3.9.0</li>
+  <li>Remove check for use of <code class="highlighter-rouge">permit</code> with <code class="highlighter-rouge">*_id</code> keys</li>
+  <li>Avoid duplicate warnings about permitted attributes</li>
+  <li>Avoid duplicate warnings about division by zero</li>
 </ul>
 
-
-<h3>Rake Option Removed</h3>
-
-<p>The Rake task generated by <code>--rake</code> has caused quite a few problems. When Rake is run with a Rails application, it loads all of the app&#8217;s dependencies, which may conflict with Brakeman&#8217;s dependencies.</p>
-
-<p>It is recommended to either not use a Rake task to run Brakeman or just shell out to Brakeman instead of using it as a library.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1038">changes</a>)</p>
-
-<h3>Check Paths in Config Files</h3>
-
-<p>Brakeman allows loading custom checks with <code>--add-checks-path</code>.
-To avoid silently loading arbitary code, Brakeman will not support this option in configuration files unless explicitly enabled with <code>--allow-check-paths-in-config</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1052">changes</a>)</p>
-
-<h3>Templates without Format Extension</h3>
-
-<p>The <a href="http://brakemanscanner.org/blog/2017/01/31/brakeman-3-dot-5-0-released/">3.5.0 release</a> added support for templates with a bare extension (like <code>my_template.haml</code>) but template names derived internally did not handle these bare extensions properly. When rendering templates, Brakeman was not able to match render names to the correct files.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1041">changes</a>)</p>
-
-<h3>YAML Errors</h3>
-
-<p>When checking session settings, Brakeman parses <code>config/secrets.yml</code>. Sometimes this file has unsafe values or interpolated code which causes the parsing to fail. Brakeman will now only output a notice about this failure instead of an error.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1047">changes</a>)</p>
-
-<h3>If Expressions in HAML</h3>
-
-<p>Typically Brakeman assumes all <code>if</code> branches in templates are taken and ignores the condition. This was not happening in all cases in rendered HAML templates.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1035/files">changes</a>)</p>
-
-<h3><code>to_s</code> False Positive with <code>exists?</code></h3>
-
-<p>Brakeman will no longer warn about arguments calling <code>to_s</code> in <code>exists?</code>, since that is the recommended way to avoid SQL injection with that particular method.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1049">changes</a>)</p>
-
-<h3>Better Safe Call Handling</h3>
-
-<p>The safe call operation <code>&amp;.</code> will be handled better in all checks instead of being ignored.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1033">changes</a>)</p>
-
-<h3>Empty Ifs</h3>
-
-<p>This release fixes an issue when finding return values from methods ending in an empty <code>if</code> expression.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1053">changes</a>)</p>
-
-<h3>More Template Names</h3>
-
-<p>Template file names will now be set when passing code to template rendering libraries, in order to produce better error messages when something goes wrong.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1042">changes</a>)</p>
-
-<h3>Dependencies</h3>
-
-<p>RubyParser has been updated to <code>3.9.0</code> which resolves some issues.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1048">changes</a>)</p>
-
-<p>Slim is limited to <code>&lt;3.0.8</code> since the <code>3.0.8</code> gem requires Ruby 2.0.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1050">changes</a>)</p>
-
-<h3>Checksums</h3>
+<h3 id="checksums">Checksums</h3>
 
 <p>The SHA256 sums for this release are:</p>
 
-<pre><code>ba89440a5e94f463ad9b6f3602e83d16313857753a5cc9b754757bd3e58e2202  brakeman-3.6.2.gem
-adae09f9aa3a4d311fe2de41fee5d9b821eff600c1c05e314b3b930adb85b4d7  brakeman-min-3.6.2.gem
-d3da0a86dedcee84c35a14e00b7a9d22874aed89d7d031d1fe60b68ce4ae7c7a  brakeman-lib-3.6.2.gem
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7b65d6694b488aaa09e147f5a39d7e544385a11ec52ae93058b04b17999925b6  brakeman-4.1.1.gem
+ffb525462d391f9a7f85b9b1ebbf7b165d03cd2eaed7093c3f1b4fdb135947e2  brakeman-lib-4.1.1.gem
+b50a7b19d56a7606cd3a625611f8e720d47da8a57d126e7dcf443714cec98194  brakeman-min-4.1.1.gem
+</code></pre></div></div>
 
-<h3>Reporting Issues</h3>
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release.</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
+<p>If you find Brakeman valuable and want to support its development (and get more features!), check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2017/12/12/brakeman-4-dot-1-0-released">Brakeman 4.1.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2017-12-12 18:01:00 -0800" pubdate  updated >2017-12-12 18:01:00 -0800</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Wow, it has been <em>too</em> long since the last release!</p>
+
+<p>Happy December!</p>
+
+<p><em>Changes since 4.0.1:</em></p>
+
+<ul>
+  <li>Add check for dangerous keys in <code class="highlighter-rouge">permit</code></li>
+  <li>Add optional check for divide by zero</li>
+  <li>Remove errors about divide by zero</li>
+  <li>Warn about dynamic values in <code class="highlighter-rouge">Arel.sql</code></li>
+  <li>Show better location for Sass errors (<a href="https://github.com/abrom">Andrew Bromwich</a>)</li>
+  <li>Avoid warning about file access for temp files (<a href="https://github.com/presidentbeef/brakeman/issues/1110">#1110</a>)</li>
+  <li>Avoid CSRF warning in Rails 5.2 default config (<a href="https://github.com/presidentbeef/brakeman/issues/1132">#1132</a>)</li>
+  <li>Better processing of <code class="highlighter-rouge">op_asgn1</code> (e.g. <code class="highlighter-rouge">x[:y] += 1</code>) (<a href="https://github.com/presidentbeef/brakeman/issues/1103">#1103</a>)</li>
+  <li>Handle nested destructuring/multiple assignment</li>
+  <li>Do not warn on <code class="highlighter-rouge">params.permit</code> with safe values (<a href="https://github.com/presidentbeef/brakeman/issues/1000">#1000</a>)</li>
+  <li>Use HTTPS for warning links</li>
+  <li>Try to guess options for <code class="highlighter-rouge">less</code> pager (<a href="https://github.com/presidentbeef/brakeman/issues/1118">#1118</a>)</li>
+  <li>Do not page if results fit on screen</li>
+  <li>Leave results on screen after paging</li>
+  <li>Fix upgrade version for CVE-2016-6316</li>
+  <li>Fix <code class="highlighter-rouge">include_paths</code> for Code Climate engine (<a href="https://github.com/wfleming">Will Fleming</a>)</li>
+  <li>Support <code class="highlighter-rouge">app_path</code> configuration for Code Climate engine (<a href="https://github.com/noahd1">Noah Davis</a>)</li>
+  <li>Refactor Code Climate engine options parsing (<a href="https://github.com/noahd1">Noah Davis</a>)</li>
+</ul>
+
+<h3 id="new-check-for-dangerous-permit-keys">New Check for Dangerous Permit Keys</h3>
+
+<p>Very similar to warning about potentially dangerous keys in <code class="highlighter-rouge">attr_accessible</code>, Brakeman now warns about potentially dangerous keys whitelisted for mass assignment via <code class="highlighter-rouge">params.permit</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1128">changes</a>)</p>
+
+<h3 id="new-optional-check-for-division-by-zero">New Optional Check for Division by Zero</h3>
+
+<p>Previously, Brakeman would report errors when it encountered potential division by zero. Now, it optionally reports warnings instead.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1122">changes</a>)</p>
+
+<h3 id="arelsql">Arel.sql</h3>
+
+<p><code class="highlighter-rouge">Arel.sql</code> allows one to add raw SQL to queries. Brakeman now warns about potential SQL injection when using <code class="highlighter-rouge">Arel.sql</code> with dynamic values.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1129">changes</a>)</p>
+
+<h3 id="sass-error-locations">Sass Error Locations</h3>
+
+<p>Thanks to <a href="https://github.com/abrom">Andrew</a>, Brakeman now reports actual file names for errors involving Sass.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1133">changes</a>)</p>
+
+<h3 id="temp-files">Temp Files</h3>
+
+<p>Brakeman no longer warns about file access with <code class="highlighter-rouge">params[:blah].tempfile.path</code> or <code class="highlighter-rouge">params[:blah].path</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1121">changes</a>)</p>
+
+<h3 id="rails-52-csrf-configuration">Rails 5.2 CSRF Configuration</h3>
+
+<p>In Rails 5.2, CSRF protection is enabled by default. Brakeman will now respect this.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1138">changes</a>)</p>
+
+<h3 id="attribute-combination-assignment">Attribute Combination Assignment</h3>
+
+<p>This release handles code like <code class="highlighter-rouge">x[:y] += 1</code> better. Previously, it would not update the value for <code class="highlighter-rouge">x[:y]</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1123">changes</a>)</p>
+
+<h3 id="nested-destructuring">Nested Destructuring</h3>
+
+<p>Brakeman now can handle nested multiple assignment, like <code class="highlighter-rouge">x, (a, b), y = z</code>, assuming <code class="highlighter-rouge">z</code> is known to be an array.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1113">changes</a>)</p>
+
+<h3 id="pager-updates">Pager Updates</h3>
+
+<p>The default pager (<code class="highlighter-rouge">less</code>) now leaves the output in the terminal after exiting and now exits immediately if the output fits on the screen.</p>
+
+<p>Additionally, Brakeman attempts to detect if these options are actually supported by <code class="highlighter-rouge">less</code> before using them.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1112">changes</a> and <a href="https://github.com/presidentbeef/brakeman/pull/1120">here</a>)</p>
+
+<h3 id="cve-2016-6316">CVE-2016-6316</h3>
+
+<p>In case this one was keeping you up at night, Brakeman now reports the correct upgrade version for CVE-2016-6316.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1105">changes</a>)</p>
+
+<h3 id="https-for-warning-links">HTTPS for Warning Links</h3>
+
+<p>Links to brakemanscanner.org in reports are now HTTPS! Only makes sense.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1114">changes</a>)</p>
+
+<h3 id="code-climate-updates">Code Climate Updates</h3>
+
+<p>The Brakeman engine on <a href="https://docs.codeclimate.com/docs/brakeman">Code Climate</a> now supports <code class="highlighter-rouge">app_path</code> and <code class="highlighter-rouge">include_paths</code>, together.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1126">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1dd62ee8aa872acf5d0aace6dc0745b55c78da68640f04754bf11c12a58842bf  brakeman-4.1.0.gem
+a16bd3082223655f132ff4c601f5d1930290082116fc256c5c1e652ff3ba933a  brakeman-lib-4.1.0.gem
+29d9be77b06195675e6b803141da979438983c0970c182fe8b8ccf3145ecda9f  brakeman-min-4.1.0.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release.</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
+<p>If you find Brakeman valuable and want to support its development (and get more features!), check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2017/09/25/brakeman-4-dot-0-released">Brakeman 4.0 Released!</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2017-09-25 06:31:00 -0700" pubdate  updated >2017-09-25 06:31:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>This release has breaking changes!</strong></p>
+
+<p>This is the 101st official release of Brakeman! It has been seven years and one month since the first release of Brakeman.
+To put that into historical context, Rails 3.0 was released a few days later!</p>
+
+<p>How about some more numbers?</p>
+
+<ul>
+  <li><a href="https://rubygems.org/gems/brakeman">7.6 million gem downloads</a></li>
+  <li>14,093 lines of Ruby code (excluding tests)</li>
+  <li><a href="https://github.com/presidentbeef/brakeman/graphs/contributors">2,937 commits from 74 contributors</a></li>
+  <li><a href="https://github.com/presidentbeef/brakeman/issues?q=is%3Aissue+is%3Aclosed">385 issues closed</a></li>
+</ul>
+
+<p>Thank you so much to everyone who has used, contributed to, or promoted Brakeman over the past seven years!</p>
+
+<p>As a token of our appreciation, we have a limited edition 2017 Brakeman sticker:</p>
+
+<p><img src="/images/brakeman_anniversary_sticker.png" alt="Brakeman Sticker" /></p>
+
+<p>Just email stickers@brakeman.org with your name and address (anywhere in the world) and we’ll send you one. While supplies last!</p>
+
+<p><small>If you have benefited from Brakeman, please consider supporting continued development via <a href="https://brakemanpro.com">Brakeman Pro</a>.</small></p>
+
+<p><em>Changes since 3.7.2</em>:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">--exit-on-warn</code> is now the default (<a href="https://github.com/presidentbeef/brakeman/issues/852">#852</a>)</li>
+  <li><code class="highlighter-rouge">--exit-on-error</code> is now the default (<a href="https://github.com/presidentbeef/brakeman/issues/1083">#1083</a>)</li>
+  <li>“Plain” report output is now the default</li>
+  <li>Add simple pager for reports output to terminal</li>
+  <li>Remove low confidence mass assignment warnings</li>
+  <li>Reduce warnings about XSS in <code class="highlighter-rouge">link_to</code></li>
+  <li>Treat <code class="highlighter-rouge">request.cookies</code> like <code class="highlighter-rouge">cookies</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1090">#1090</a>)</li>
+  <li>Treat <code class="highlighter-rouge">fail</code>/<code class="highlighter-rouge">raise</code> like early returns (<a href="https://github.com/presidentbeef/brakeman/issues/754">#754</a>)</li>
+  <li>Rename “Cross Site Scripting” to “Cross-Site Scripting” (<a href="https://github.com/paultetreau">Paul Tetreau</a>)</li>
+  <li>Remove reliance on <code class="highlighter-rouge">CONFIDENCE</code> constant in checks</li>
+  <li>Fix <code class="highlighter-rouge">--exit-on-error</code> and <code class="highlighter-rouge">--exit-on-warn</code> in config files</li>
+</ul>
+
+<p><em>Changes since 4.0.0</em>:</p>
+
+<ul>
+  <li>Do not use pager when <code class="highlighter-rouge">CI</code> environment variable is set</li>
+</ul>
+
+<h3 id="new-default-exit-codes">New Default Exit Codes</h3>
+
+<p><code class="highlighter-rouge">--exit-on-warn</code> and <code class="highlighter-rouge">--exit-on-error</code> are now default behavior.</p>
+
+<p>If any warnings are found or errors are raised during the scan, Brakeman’s exit code will be non-zero. This may break things! In particular, CI jobs or scripts that assume Brakeman will exit normally.</p>
+
+<p>You may use <code class="highlighter-rouge">--no-exit-on-warn</code> and <code class="highlighter-rouge">--no-exit-on-error</code> to revert back to previous behavior and always exit with error code 0.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1085">changes</a> and <a href="https://github.com/presidentbeef/brakeman/pull/1086">changes</a>)</p>
+
+<h3 id="new-default-report-format">New Default Report Format</h3>
+
+<p>The “plain” report format is now the default.</p>
+
+<p>To revert back to the table format, use <code class="highlighter-rouge">-f tables</code> or <code class="highlighter-rouge">-o report.tables</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1084">changes</a>)</p>
+
+<h3 id="paged-output">Paged Output</h3>
+
+<p>By default, output to the terminal will be paged with <code class="highlighter-rouge">less</code> or Highline’s simple pager.</p>
+
+<p>To disable, use <code class="highlighter-rouge">--no-pager</code>.</p>
+
+<p>In 4.0.1 Brakeman will automatically disable the pager when the <code class="highlighter-rouge">CI</code> environment variable is set to <code class="highlighter-rouge">true</code>. This should be compatible with Travis CI, Circle CI, Codeship, and Bitbucket Pipelines.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1098">changes</a>)</p>
+
+<h3 id="fewer-mass-assignment-warnings">Fewer Mass Assignment Warnings</h3>
+
+<p>Low confidence mass assignment warnings have been removed in this release. Brakeman should now only warn when user input is used directly in the instantiation or update of a model.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1087">changes</a>)</p>
+
+<h3 id="fewer-link_to-warnings">Fewer <code class="highlighter-rouge">link_to</code> Warnings</h3>
+
+<p>Warnings about XSS in <code class="highlighter-rouge">link_to</code> have confused quite a few people over the years. The danger is that links may have <code class="highlighter-rouge">javascript:</code> or <code class="highlighter-rouge">data:</code> values with XSS payloads.</p>
+
+<p>Brakeman should now only warn when directly using user input or when using what looks like a URL from the database.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1093">changes</a>)</p>
+
+<h3 id="more-cookies">More Cookies</h3>
+
+<p><code class="highlighter-rouge">request.cookies</code> will now be treated like cookies in general.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1094">changes</a>)</p>
+
+<h3 id="more-early-returns">More Early Returns</h3>
+
+<p>Calls to <code class="highlighter-rouge">raise</code> or <code class="highlighter-rouge">fail</code> will be treated like early returns when considering simple guard expressions.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1089">changes</a>)</p>
+
+<h3 id="cross-site-scripting">Cross-Site Scripting</h3>
+
+<p>Messages about “Cross Site Scripting” will now include a hyphen. This does not affect warning fingerprints.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/936">changes</a>)</p>
+
+<h3 id="confidence">CONFIDENCE</h3>
+
+<p>Brakeman checks previously used the <code class="highlighter-rouge">CONFIDENCE</code> hash when creating warnings, e.g. <code class="highlighter-rouge">:confidence =&gt; CONFIDENCE[:high]</code>. Now it’s possible to use <code class="highlighter-rouge">:confidence =&gt; :high</code> instead.</p>
+
+<p>For those with custom checks, the <code class="highlighter-rouge">CONFIDENCE</code> hash is still available and nothing should break.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1088">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for these releases are:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0038932b43dcf2bf698ad6637500f69b5e4226b10c011a4a6bcce93a77a5e045  brakeman-4.0.0.gem
+3688303859a7c9b452ddcef00f00f97789ce103774446d42851a763ecbf8df87  brakeman-lib-4.0.0.gem
+559196c6e41e5b180448564d9aca84fb775a39b77dd7d8d880a0ce0e77df8ae2  brakeman-min-4.0.0.gem
+
+d93d6f8e9c2655520153fe0512b338753cc36fac56b80947f652fd33e9f80dfb  brakeman-4.0.1.gem
+82ab1e51f712ad10109a4fe080f6389b28bbbef83e0ecd6c33defa90319b4bc5  brakeman-lib-4.0.1.gem
+579f240cb8e5357fe5e45c09eb43f3512481f7086052337437e5c436c617da8b  brakeman-min-4.0.1.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
 
 <p>Thank you to everyone who reported bugs and contributed to this release.</p>
 
@@ -239,7 +444,7 @@ d3da0a86dedcee84c35a14e00b7a9d22874aed89d7d031d1fe60b68ce4ae7c7a  brakeman-lib-3
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-    <h1 class="entry-title"><a href="/blog/2017/03/24/brakeman-3-dot-6-1-released/">Brakeman 3.6.1 Released</a></h1>
+    <h1 class="entry-title"><a href="/blog/2017/08/15/brakeman-3-dot-7-1-released">Brakeman 3.7.1/3.7.2 Released</a></h1>
     
     
       <p class="meta">
@@ -247,7 +452,7 @@ d3da0a86dedcee84c35a14e00b7a9d22874aed89d7d031d1fe60b68ce4ae7c7a  brakeman-lib-3
 
 
 
-<time datetime="2017-03-24 13:15:00 -0700" pubdate  updated >Mar 24<span>th</span>, 2017</time>
+<time datetime="2017-08-15 23:38:00 -0700" pubdate  updated >2017-08-15 23:38:00 -0700</time>
 
 
 </p>
@@ -255,844 +460,187 @@ d3da0a86dedcee84c35a14e00b7a9d22874aed89d7d031d1fe60b68ce4ae7c7a  brakeman-lib-3
   </header>
 
 
-  <div class="entry-content"><p>This is a small bug fix release to fix an issue when using <code>--compare</code>.</p>
+  <div class="entry-content"><p>Just a little release. Next up: 4.0!</p>
 
-<p><em>Changes since 3.6.0</em>:</p>
-
-<ul>
-<li><ul>
-<li>Fix error when using <code>--compare</code> (<a href="https://github.com/seangransee">Sean Gransee</a>)</li>
-</ul>
-</li>
-</ul>
-
-
-<h3>Error With Compare</h3>
-
-<p>Although comparison scans using <code>--compare</code> would complete successfully, an exception was being thrown afterwards.</p>
-
-<p>Thanks to <a href="https://github.com/anthlam">Anthony Lamorte</a> for reporting and <a href="https://github.com/seangransee">Sean Gransee</a> for the fix!</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1024">changes</a>)</p>
-
-<h3>Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<pre><code>3c10b2a9fd8b7b3baab956e6fcc2c7780768f1905433297e8dd940591f1bbb3b  brakeman-3.6.1.gem
-98f6bd7531e0e3fbe273b9d185446bd28602176a392d5df8f9c52c36460afdaa  brakeman-lib-3.6.1.gem
-44342c843867fce585f6fef09cd093a0544510adfeec15217efe44c6120e3192  brakeman-min-3.6.1.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release.</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-
-<p>If you find Brakeman valuable and want to support its development, check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2017/03/22/brakeman-3-dot-6-0-released/">Brakeman 3.6.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2017-03-22 10:30:00 -0700" pubdate  updated >Mar 22<span>nd</span>, 2017</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Changes since 3.5.0:</em></p>
+<p><em>Changes since 3.7.1</em>:</p>
 
 <ul>
-<li>Branch inside of <code>case</code> expressions (<a href="https://github.com/presidentbeef/brakeman/issues/944">#944</a>, <a href="https://github.com/presidentbeef/brakeman/issues/972">#972</a>, <a href="https://github.com/presidentbeef/brakeman/issues/1002">#1002</a>)</li>
-<li>Check targetless SQL calls outside of known models</li>
-<li>Fix issue with nested interpolation inside SQL strings (<a href="https://github.com/presidentbeef/brakeman/issues/1008">#1008</a>)</li>
-<li>Add <code>--exit-on-error</code> (<a href="https://github.com/grosser">Michael Grosser</a>)</li>
-<li>Only report CVE-2015-3227 when exact version is known (<a href="https://github.com/presidentbeef/brakeman/issues/993">#933</a>, <a href="https://github.com/presidentbeef/brakeman/issues/995">#995</a>)</li>
-<li>Print command line option errors without modification (<a href="https://github.com/presidentbeef/brakeman/issues/1010">#1010</a>)</li>
-<li>Ignore GraphQL tags inside ERB templates</li>
-<li>Avoid recursive <code>Concern</code>s</li>
+  <li>Fix <code class="highlighter-rouge">--ensure-latest</code> (<a href="https://github.com/presidentbeef/brakeman/pull/1079">David Guyon</a>)</li>
 </ul>
 
-
-<h3>Case Expressions</h3>
-
-<p>At long last, Brakeman will now treat <code>case</code> expressions similarly to <code>if</code>s. This includes tracking variable assignments inside of <code>when</code> clauses and better handling <code>case</code> expressions as values.</p>
-
-<p>Note that at this time Brakeman does not handle nested <code>case</code> expressions.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1018">changes</a>)</p>
-
-<h3>Targetless SQL Calls</h3>
-
-<p>Brakeman 3.5.0 broadened the check for SQL injection to calls that <em>may</em> not be on models (because models are often defined outside the application). However, calls with no target were still checking to see if they were called inside of model classes. This led to missing some SQL injection vulnerabilities.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/994">changes</a>)</p>
-
-<h3>Nested SQL Interpolation</h3>
-
-<p>Some cases of nested string interpolation in SQL calls were generating false positives. This should be fixed now.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1009">changes</a>)</p>
-
-<h3>Exit on Errors</h3>
-
-<p><a href="https://github.com/grosser">Michael Grosser</a> added the <code>--exit-on-error</code> option to cause Brakeman to exit with a non-zero exit code if any errors are encountered. Normally Brakeman attempts to always generate a report regardless of any errors during the scan.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/991">changes</a>)</p>
-
-<h3>Spurious CVE Warning</h3>
-
-<p>Brakeman was reporting CVE-2015-3227 on any application using an unknown Rails version.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/996">changes</a>)</p>
-
-<h3>Option Errors</h3>
-
-<p>In an attempt to make command line option errors prettier, Brakeman was inadvertently messing up the error messages. It will no longer do so.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1011">changes</a>)</p>
-
-<h3>GraphQL in ERB</h3>
-
-<p>Brakeman will now ignore <code>&lt;%graphql</code> tags in ERB templates.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/997">changes</a>)</p>
-
-<h3>Recursive Concerns</h3>
-
-<p>Concerns that <code>include</code> themselves will no longer cause infinite loops.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1019">changes</a>)</p>
-
-<h3>Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<pre><code>c9bcc82a14359fe5f010551b1256eb1cea6848115f3429c7db74a386d6b0cf8c  brakeman-3.6.0.gem
-4793a407f79970a284474db3235d355f9927e987b71e33f1ce99fac3f3c249aa  brakeman-min-3.6.0.gem
-5c0a7aab7fc14d069d9dc208b653e10f71c355cb959fd144d6e8f7430c88a8e7  brakeman-lib-3.6.0.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release.</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-
-<p>If you find Brakeman valuable and want to support its development, check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2017/01/31/brakeman-3-dot-5-0-released/">Brakeman 3.5.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2017-01-31 23:30:00 -0800" pubdate  updated >Jan 31<span>st</span>, 2017</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Changes since 3.4.1</em>:</p>
+<p><em>Changes since 3.7.0:</em></p>
 
 <ul>
-<li>Warn about SQL injection even if target is not known ActiveRecord model</li>
-<li>Avoid warning about models as SQL injection (<a href="https://github.com/presidentbeef/brakeman/issues/655">#655</a>, <a href="https://github.com/presidentbeef/brakeman/issues/680">#680</a>, <a href="https://github.com/presidentbeef/brakeman/issues/833">#833</a>)</li>
-<li>Avoid warning about SQLi in <code>all</code>, <code>first</code>, or <code>last</code> after Rails 4.0</li>
-<li>Treat templates without <code>.html</code> as HTML anyway (<a href="https://github.com/presidentbeef/brakeman/issues/790">#790</a>)</li>
-<li>Report check name in JSON and plain reports (<a href="https://github.com/presidentbeef/brakeman/issues/971">#971</a>)</li>
-<li>Add <code>--ensure-latest</code> option (<a href="https://github.com/tamgrosser">tamgrosser</a> / <a href="https://github.com/grosser">Michael Grosser</a>)</li>
-<li>Add <code>--no-summary</code> to hide summaries in HTML/text reports (<a href="https://github.com/presidentbeef/brakeman/issues/963">#963</a>)</li>
-<li>Fail on invalid checks specified by <code>-x</code> or <code>-t</code> (<a href="https://github.com/presidentbeef/brakeman/issues/970">#970</a>)</li>
-<li>Handle <code>included</code> block in concerns (<a href="https://github.com/presidentbeef/brakeman/pull/958">#958</a>)</li>
-<li>Updated RubyParser/Ruby2Ruby dependencies</li>
+  <li>Handle simple guard with <code class="highlighter-rouge">return</code> at end of branch (<a href="https://github.com/presidentbeef/brakeman/issues/1073">#1073</a>)</li>
+  <li>Add more collection methods for iteration detection</li>
+  <li>Modularize <code class="highlighter-rouge">bin/brakeman</code></li>
+  <li>Improve multi-value <code class="highlighter-rouge">Sexp</code> error message</li>
+  <li>Update <code class="highlighter-rouge">ruby2ruby</code> and <code class="highlighter-rouge">ruby_parser</code> dependencies</li>
 </ul>
 
+<h3 id="another-simple-guard">Another Simple Guard</h3>
 
-<h3>SQL Injection Improvements</h3>
-
-<p>This release includes several changes to the SQL Injection check.</p>
-
-<p>First, Brakeman will no longer restrict SQL injection warnings to calls on known ActiveRecord models. While this may lead to a few false positives, there were too many reports of obvious SQL injection being missed. This reverses a decision made previously. Warnings that may involve non-models are given a lower confidence.</p>
-
-<p>Next, SQL that includes calls on model targets will no longer generate warnings. There were too many false positives and no known vulnerabilities flagged by this.</p>
-
-<p>Finally, Brakeman will no longer check calls to <code>all</code>, <code>first</code>, and <code>last</code> as they changed in Rails 4.1.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/985">changes</a>)</p>
-
-<h3>Extensionless Templates</h3>
-
-<p>Templates which do not specify any extension (e.g. just <code>.erb</code> instead of <code>.html.erb</code>) will still be treated as HTML instead of being ignored.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/980">changes</a>)</p>
-
-<h3>Check Name in Reports</h3>
-
-<p>The plain and JSON reports now include the name of the check that generated the warning.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/981">changes</a>)</p>
-
-<h3>Option to Enforce Latest Brakeman</h3>
-
-<p>The <code>--ensure-latest</code> option has been added. If there is a newer version of Brakeman available, this option will cause Brakeman to exit with a non-zero exit code.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/974">changes</a>)</p>
-
-<h3>Option to Hide Summary</h3>
-
-<p>When using <code>--no-summary</code> and either the plain or &#8220;table&#8221; output, Brakeman will only report warnings, no metadata. Probably most useful in combination with <code>--quiet</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/976">changes</a>)</p>
-
-<h3>Fail on Invalid Checks</h3>
-
-<p>When use <code>-t</code> or <code>-x</code> to control which checks are run, Brakeman will now fail if the options supplied do not match existing check names. <code>-t None</code> may be used to avoid running any checks.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/986">changes</a>)</p>
-
-<h3>Handle Included Concerns</h3>
-
-<p>Brakeman will now handle the <code>included</code> block in Concerns. Additionally, to support this, Concerns are processed prior to other classes.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/966">changes</a>)</p>
-
-<h3>Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<pre><code>49fd8b3e6c1f348304bdbfc3b5d4cfbd465a5b5d4feec8337bbe3df7836787be  brakeman-3.5.0.gem
-2ef50a61ca4aa1cff1f28dfe6308ea53157d996975519f5ae5c9266bf5772fb0  brakeman-min-3.5.0.gem
-766c9da778e3be36ca709e637276f090514dbc0ddde5e261a1baff6da351480e  brakeman-lib-3.5.0.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release.</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2016/11/02/brakeman-3-dot-4-1-released/">Brakeman 3.4.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2016-11-02 13:07:00 -0700" pubdate  updated >Nov 2<span>nd</span>, 2016</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><ul>
-<li>Configurable engines path (<a href="https://github.com/jsyeo">Jason Yeo</a>)</li>
-<li>Check CSRF setting in direct subclasses of <code>ActionController::Base</code> (<a href="https://github.com/jsyeo">Jason Yeo</a>)</li>
-<li>Pull Ruby version from <code>.ruby-version</code> or Gemfile</li>
-<li>Use Ruby version to turn off SymbolDoS check (<a href="https://github.com/presidentbeef/brakeman/issues/928">#928</a>)</li>
-<li>Fix ignoring link interpolation not at beginning of string (<a href="https://github.com/presidentbeef/brakeman/issues/939">#939</a>)</li>
-<li>Show action help at start of interactive ignore (<a href="https://github.com/presidentbeef/brakeman/issues/949">#949</a>)</li>
-<li>Avoid warning about <code>where_values_hash</code> in SQLi (<a href="https://github.com/presidentbeef/brakeman/issues/942">#942</a>)</li>
-</ul>
-
-
-<h3>Engine Paths Option</h3>
-
-<p>Thanks to the work of Jason Yeo, Brakeman now supports custom paths to Rails engines uses the <code>--add-engines-path</code> option.</p>
-
-<p>Multiple comma-separated paths may be configured. To include all subdirectories, use <code>*</code> (e.g. <code>my_engines/*</code>). Absolute paths may be used for engines outside the application.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/948">changes</a>)</p>
-
-<h3>Expanded CSRF Check</h3>
-
-<p>Also thanks to Jason Yeo, any controller with <code>ActionController::Base</code> as a direct parent will be checked for a <code>protect_from_forgery</code> call.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/953">changes</a>)</p>
-
-<h3>Ruby Version Info</h3>
-
-<p>Brakeman will now pull information about the Ruby version used for an application either from the <code>Gemfile</code> or <code>.ruby-version</code>. Right now this is only used for disabling (the already optional) Symbol DoS check for versions of Ruby that have symbol garbage collection.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/947">changes</a>)</p>
-
-<h3>Link Interpolation False Positive</h3>
-
-<p>Brakeman&#8217;s warning about interpolating user input into URLs has always checked to see if the interpolation was at the beginning of the string. However, that check didn&#8217;t work if the first thing in the string was another interpolation. This has been fixed.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/940">changes</a>)</p>
-
-<h3>More Help in Interactive Ignore</h3>
-
-<p>For clarity, &#8220;interactive ignore&#8221; mode will now display the action options before going through each warning.</p>
-
-<p><img src="https://cloud.githubusercontent.com/assets/75613/19423195/e1d4846c-93d2-11e6-9e07-92ffdf545dbd.png" alt="image" /></p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/950">changes</a>)</p>
-
-<h3>Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release.</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2016/09/07/brakeman-3-dot-4-0-released/">Brakeman 3.4.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2016-09-07 13:55:00 -0700" pubdate  updated >Sep 7<span>th</span>, 2016</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Oops! Brakeman&#39;s 6th birthday was August 27th! 🎉 6 years, 61 contributors, 91 releases, 3.3 million gem downloads 🎉</p>&mdash; Brakeman Scanner (@brakeman) <a href="https://twitter.com/brakeman/status/772844048402964481">September 5, 2016</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<p><em>Changes since 3.3.5</em>:</p>
-
-<ul>
-<li>Show obsolete ignore entries in reports (<a href="https://github.com/jcheatham">Jonathan Cheatham</a>)</li>
-<li>Add option to prune ignore file with <code>-I</code></li>
-<li>Add new <code>plain</code> report format (<a href="https://github.com/presidentbeef/brakeman/issues/914">#914</a>)</li>
-<li>Support creating reports in non-existent paths (<a href="https://github.com/presidentbeef/brakeman/issues/924">#924</a>)</li>
-<li>Add <code>--no-exit-warn</code> (<a href="https://github.com/presidentbeef/brakeman/issues/925">#925</a>)</li>
-<li>Improved Slim template support</li>
-</ul>
-
-
-<h3>Obsolete Ignore Entries</h3>
-
-<p>The &#8220;ignore&#8221; configuration file can sometimes grow large due to stale entries that no longer correspond to existing warnings. Thanks to <a href="https://github.com/jcheatham">Jonathan Cheatham</a>, these obsolete entires will now be noted in the default and JSON reports.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/894">changes</a>)</p>
-
-<p>When using the <code>-I</code> option it is now possible to prune the ignore file.</p>
-
-<p><img src="https://cloud.githubusercontent.com/assets/75613/18257206/f9631f9a-7374-11e6-92bc-94b9d3a635f4.png" alt="image" /></p>
-
-<p><img src="https://cloud.githubusercontent.com/assets/75613/18257236/6868e726-7375-11e6-8a5b-30b6baed093a.png" alt="image" /></p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/934">changes</a>)</p>
-
-<h3>New Report Format</h3>
-
-<p>This release adds a new &#8220;plain text&#8221; report format. It will eventually replace the default &#8220;table&#8221; report in Brakeman 4.0.</p>
-
-<p><img src="https://cloud.githubusercontent.com/assets/75613/18259647/329a3da4-739b-11e6-8258-b7ab2073483b.png" alt="image" /></p>
-
-<p>To output in the new format, use <code>-f plain</code> or <code>-o report.plain</code>.</p>
-
-<p>The color codes should be disabled automatically if outputing to a file, but <code>--no-color</code> can be used to turn colors off.</p>
-
-<p>Feedback on the new report format is encouraged prior to the 4.0 release.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/935">changes</a>)</p>
-
-<h3>Report Paths</h3>
-
-<p>If the specified output file is in a non-existent path, Brakeman will now attempt to create the path before writing out the report.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/927">changes</a>)</p>
-
-<h3>No Exit Code on Warnings</h3>
-
-<p><code>--no-exit-warn</code> has been added to complement <code>--exit-warn</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/926">changes</a>)</p>
-
-<h3>Improved Slim Support</h3>
-
-<p>Most users will not notice any changes, but internally Slim templates are handled a bit better.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/932">changes</a> and <a href="https://github.com/presidentbeef/brakeman/pull/931">more</a>)</p>
-
-<h3>SHAs</h3>
-
-<p>The SHA256 sums for this release are</p>
-
-<pre><code>0cfd4b9cb8515ed9cbd254710761bfc409c604f3351e200b22955a1c3f93f8d8  brakeman-3.4.0.gem
-7d07d87aa0732465bb6f0c17279f78edcfd0b1d841ddb63a95529ba762841395  brakeman-min-3.4.0.gem
-e3d61c1de5549984a0d9eb3a3a53a4ef17b1b41db1be7d504237dd05a0cfa203  brakeman-lib-3.4.0.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs.</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2016/08/12/brakeman-3-dot-3-4-released/">Brakeman 3.3.4/3.3.5 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2016-08-12 08:26:00 -0700" pubdate  updated >Aug 12<span>th</span>, 2016</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a quick release to add warnings for <a href="https://groups.google.com/d/msg/ruby-security-ann/8B2iV2tPRSE/JkjCJkSoCgAJ">CVE-2016-6316</a> and <a href="https://groups.google.com/d/msg/ruby-security-ann/WccgKSKiPZA/9DrsDVSoCgAJ">CVE-2016-6317</a>. There was a bug in 3.3.4 that affected debug output which has been fixed in 3.3.5.</p>
-
-<p><em>Changes since 3.3.3</em>:</p>
-
-<ul>
-<li>Add generic warning for CVE-2016-6316</li>
-<li>Warn about dangerous use of <code>content_tag</code> with CVE-2016-6316</li>
-<li>Add warning for CVE-2016-6317</li>
-<li>Use Minitest</li>
-</ul>
-
-
-<p><em>Changes since 3.3.4</em>:</p>
-
-<ul>
-<li>Fix bug in reports when using <code>--debug</code></li>
-</ul>
-
-
-<h3>CVE-2016-6316</h3>
-
-<p>Typically Rails will escape attribute values passed to tag helpers like <code>content_tag</code>. If the attribute has already been marked as &#8220;safe&#8221; with <code>.html_safe</code> or (more likely) a different escaping helper like <code>sanitize</code>, the tag helper will not escape the value again (that is the purpose of <code>.html_safe</code>). However, not all sanitizers/escape methods escape double quotes, which are dangerous inside of tag attributes. In particular, double quotes allow an attacker to close the current attribute and insert new attributes (like <code>onmouseover</code>) that can execute JavaScript.</p>
-
-<p>Brakeman will issue a generic warning about CVE-2016-6316 for affected versions and may generate warnings for potentially dangerous calls to <code>content_tag</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/917">changes</a>)</p>
-
-<h3>CVE-2016-6317</h3>
-
-<p>The <a href="https://groups.google.com/d/msg/rubyonrails-security/8SA-M3as7A8/Mr9fi9X4kNgJ">JSON bug</a> is back. Specially-crafted queries can cause parameters to be interpreted as empty hashes, which may cause unexpected behavior in SQL queries.</p>
-
-<p>Brakeman will generate a generic warning for affected versions (4.2 series).</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/918">changes</a>)</p>
-
-<h3>Minitest</h3>
-
-<p>Unrelated, Brakeman now uses Minitest instead of test-unit.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/912/">changes</a>)</p>
-
-<h3>SHAs</h3>
-
-<p>The SHA256 sums for this release are</p>
-
-<pre><code>7231e00bdb4353ee7e91e5f1e60e34cf29b5563e6f7e1e5478223e72568c493a  brakeman-3.3.5.gem
-c07e282c2e1733f8d7db4a4ffefe22e7e38a62ddfd750f0866c0b49070cb61c9  brakeman-lib-3.3.5.gem
-a7f8e6fa8eb4254b7ad17080180289794a02641b1f2ec362de57cfdb2f1535be  brakeman-min-3.3.5.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs.</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2016/07/20/brakeman-3-dot-3-3-released/">Brakeman 3.3.3 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2016-07-20 18:11:00 -0700" pubdate  updated >Jul 20<span>th</span>, 2016</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This release is mostly bug fixes and internal improvements, although it may find more warnings due to indexing of view helpers.</p>
-
-<ul>
-<li>Index calls in view helpers</li>
-<li>Process inline template renders (<a href="https://github.com/presidentbeef/brakeman/issues/672">#672</a>)</li>
-<li>Show path when no Rails app found (<a href="https://github.com/oreoshake">Neil Matatall</a>)</li>
-<li>Avoid warning about hashes in <code>link_to</code> hrefs (<a href="https://github.com/presidentbeef/brakeman/issues/897">#897</a>)</li>
-<li>Improve return value guesses</li>
-<li>Ignore boolean methods in render paths</li>
-<li>Reduce open redirect duplicates</li>
-<li>Fix SymbolDoS error with unknown Rails version</li>
-</ul>
-
-
-<h3>View Helpers</h3>
-
-<p>Calls in view helpers are now indexed, which means Brakeman will search them for potential vulnerabilities.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/907">changes</a>)</p>
-
-<h3>Inline Templates</h3>
-
-<p>Brakeman will now process inline templates in controllers, if they are using ERB (the default):</p>
-
-<pre><code>render :inline =&gt; "&lt;%= params[:x].html_safe %&gt;"
-</code></pre>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/905">changes</a>)</p>
-
-<h3>Rails App Path</h3>
-
-<p>Thanks to <a href="https://github.com/oreoshake">Neil Matatall</a>, Brakeman will now display the path it tried to search for a Rails application if it cannot find it:</p>
-
-<pre><code>Please supply the path to a Rails application (looking in /some/path/).
-</code></pre>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/909">changes</a>)</p>
-
-<h3>Hashes as URLs</h3>
-
-<p>Brakeman will no longer warn about obvious hash arguments in the HREF for <code>link_to</code> calls, as well as handling <code>url_for</code> better.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/904">changes</a>)</p>
-
-<h3>Return Values</h3>
-
-<p>In some cases, Brakeman attempts to determine the possible return value(s) of a method call.
-This release includes a number of improvements to those guesses which may make some warnings easier to understand
-and fix some false positives.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/896">changes</a>)</p>
-
-<h3>Render Path Booleans</h3>
-
-<p>The check for dynamic render paths will no longer warn about methods ending in <code>?</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/899">changes</a>)</p>
-
-<h3>Redirect Duplicates</h3>
-
-<p>This release refactored much of the warning duplicate tracking, and as such there should be fewer duplicate warnings about open redirects.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/901">changes</a>)</p>
-
-<h3>SHAs</h3>
-
-<p>The SHA256 sums for this release are</p>
-
-<pre><code>490bf7b47d4edbb29fd3f87c5dafa50aec2888d495b64275a635df324a8476e9  brakeman-3.3.3.gem
-793f1c69cca2681bdd0c98f11307ace4f1a43ed594dd45cbe5b67f0383e76e2f  brakeman-lib-3.3.3.gem
-dcc3a75b12f84cac582d383a375d3b85d033e25ba42af051bedcdc8b5377c2c5  brakeman-min-3.3.3.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed improvements in this release.</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2016/06/10/brakeman-3-dot-3-2-released/">Brakeman 3.3.2 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2016-06-10 08:49:00 -0700" pubdate  updated >Jun 10<span>th</span>, 2016</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a bug fix release.</p>
-
-<p><em>Changes since 3.3.2</em>:</p>
-
-<ul>
-<li>Fix performance regression in global constant tracking</li>
-</ul>
-
-
-<p>Brakeman 3.3.0 introduced a new feature to track constant values across the application. This helped reduce false positives, for example when checking a value against a constant array of values. However, the lookup of constant values was very slow for moderate to large numbers of constants. In some test cases it added up to a minute of scan time. This has been resolved along with some changes to how dynamic constant names are handled.</p>
-
-<p>Additionally, the <code>--faster</code> option will turn off global constant tracking entirely.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/891">changes</a>)</p>
-
-<h3>SHAs</h3>
-
-<p>The SHA256 sums for this release are</p>
-
-<pre><code>58bb2179de2bd479d32dc2d2018e40caf478916e283ea88089fe0bcb30a55e6c  brakeman-3.3.2.gem
-4f72ff02a163d78244554c4a26ea35e88d76dd6b60c3d21573db8518abcba6fc  brakeman-min-3.3.2.gem
-c0beeabe95aa693a5273bd48922028f48a190940b18c795813bd0f96068452b4  brakeman-lib-3.3.2.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Thank you to the reporters of the performance issue in the 3.3.0 release.</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-
-<p>For commercial support, please consider <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2016/06/03/brakeman-3-dot-3-1-released/">Brakeman 3.3.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2016-06-03 08:15:00 -0700" pubdate  updated >Jun 3<span>rd</span>, 2016</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Changes since 3.3.1</em>:</p>
-
-<ul>
-<li>Improved line number accuracy in ERB templates (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
-<li>Allow multiple line regex in <code>validates_format_of</code> (<a href="https://github.com/c0va23">Dmitrij Fedorenko</a>)</li>
-<li>Avoid overwriting instance/class methods with same name (<a href="https://github.com/imtayadeway">Tim Wade</a>)</li>
-<li>Add <code>--force-scan</code> option (<a href="https://github.com/oreoshake">Neil Matatall</a>)</li>
-<li>Only consider <code>if</code> branches in templates</li>
-<li>Support more safe <code>&amp;.</code> operations</li>
-<li>Avoid warning about SQL injection with <code>quoted_primary_key</code> (<a href="https://github.com/presidentbeef/brakeman/issues/884">#884</a>)</li>
-<li>Delay loading vendored gems and modifying load path</li>
-<li>Added <code>brakeman-lib</code> gem</li>
-</ul>
-
-
-<h3>ERB Template Line Numbers</h3>
-
-<p><a href="https://github.com/ptoomey3">Patrick Toomey</a> contributed a series of patches to bring Brakeman&#8217;s handling of ERB/Erubis templates in line with the Rails implementation. This has the effect of correcting some line numbers and fixed processing of <code>case</code> statements in templates.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/878">changes</a>)</p>
-
-<h3>Multiline Regex Validation</h3>
-
-<p><a href="https://github.com/c0va23">Dmitrij Fedorenko</a> added a change to support multiline extended regular expressions for model validations.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/885">changes</a>)</p>
-
-<h3>Class Methods</h3>
-
-<p><a href="https://github.com/imtayadeway">Tim Wade</a> fixed an issue where class methods and instance methods with the same name on the same class would overwrite each other. This may cause a few warning fingerprints to change, since all method names are now stored as symbols (some were strings before).</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/881">changes</a>)</p>
-
-<h3>Force Scan</h3>
-
-<p><a href="https://github.com/oreoshake">Neil Matatall</a> added the <code>--force-scan</code> option to force Brakeman to scan an application even if it doesn&#8217;t look like a Rails app.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/879">changes</a>)</p>
-
-<h3>Branches in Templates</h3>
-
-<p>When looking at template output, Brakeman will no longer treat the conditional as output, just the branches. This helps find more potential instances of cross-site scripting.</p>
+<p>Brakeman will now handle when the branch in a simple guard condition ends in <code class="highlighter-rouge">return</code>.</p>
 
 <p>For example:</p>
 
-<pre><code>&lt;%= params[:x].html_safe unless this_is_a_bad_idea? %&gt;
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unless [:valid, :value].include? params[:x]
+  do_stuff
+  more_stuff
+  return
+end
 
-<p>Now Brakeman will just consider the <code>params[:x].html_safe</code> value which is clearly dangerous.</p>
+x.send(params[:x]) # Will no longer warn because `params[:x]` must be 'safe'
+</code></pre></div></div>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/883/">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1077">changes</a>)</p>
 
-<h3>More Safe Calls</h3>
+<h3 id="more-collection-methods">More Collection Methods</h3>
 
-<p>Brakeman can now handle more instances of the &#8220;safe call&#8221; or &#8220;lonely&#8221; operator such as <code>a&amp;.b ||= 1</code> and <code>x&amp;.y += z 1</code>.</p>
+<p>Brakeman attempts to detect when a template is iterating over records from a database query.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/887">changes</a>)</p>
+<p>This release adds a few more methods that might return a collection of records.</p>
 
-<h3>Quoted Primary Key</h3>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1074">changes</a>)</p>
 
-<p>Brakeman will no longer warn about use of <code>quoted_primary_key</code> in SQL strings.</p>
+<h3 id="modularize-commandline">Modularize Commandline</h3>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/888">changes</a>)</p>
+<p>The logic in the <code class="highlighter-rouge">brakeman</code> executable has now entirely been moved to <a href="https://github.com/presidentbeef/brakeman/blob/49f675a88ba12ad4fa799770f5499c952650a56c/lib/brakeman/commandline.rb"><code class="highlighter-rouge">Brakeman::Commandline</code></a> for easier testing and custom behavior.</p>
 
-<h3>Delayed Load Path Modification</h3>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1076">changes</a>)</p>
 
-<p>Brakeman 3.3.0 started vendoring all its dependencies to avoid conflicts with application dependencies. However, if Brakeman is included in a Gemfile without <code>require: false</code>, it will still modify the load path and potentially cause conflicts.</p>
+<h3 id="checksums">Checksums</h3>
 
-<p>This version delays loading any dependencies until Brakeman actually runs. This is almost like having <code>require: false</code> automatically.</p>
+<p>The SHA256 sums for this release are:</p>
 
-<p>Please keep in mind it is really not recommended to include Brakeman in Gemfiles unless it is actually being used as a library. Otherwise it&#8217;s like mixing your browser&#8217;s dependencies with your applications. It doesn&#8217;t make sense.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>9ad563247cc6a57b965e59e5bbbaefa202ce34ceb6d10e97ce500406d60cdb6e  brakeman-3.7.2.gem
+5b753206f8e5937c33494edd323a9e6573e07958d9f8f5bb662b0f6085eafe19  brakeman-lib-3.7.2.gem
+517a074cb92ece8a7e426ea221d63ddbcae6e3b851664083b7e73e6d7e0dd138  brakeman-min-3.7.2.gem
+</code></pre></div></div>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/889">changes</a>)</p>
+<h3 id="brakeman-40-plans">Brakeman 4.0 Plans</h3>
 
-<h3>brakeman-lib</h3>
+<p>If all goes well, Brakeman 4.0 will be released on August 27th, which is also the 7th anniversary of Brakeman’s first release. It will also be the 101st release of Brakeman!</p>
 
-<p>For those who don&#8217;t want Brakeman to bundle and vendor its own dependencies, the <a href="https://rubygems.org/gems/brakeman-lib">brakeman-lib</a> gem is identical to the <code>brakeman</code> gem but without the bundling. Consider using it if the bundling and modified load paths are causing issues.</p>
+<p>At least two major changes will be coming in Brakeman 4.0:</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/commit/fa310a9b736d858a929715802d98b1a3f0887569">changes</a>)</p>
+<ul>
+  <li>The <code class="highlighter-rouge">plain</code> report format will be the default instead of tables</li>
+  <li><code class="highlighter-rouge">-z</code> or <code class="highlighter-rouge">--exit-on-warn</code> (sets exit code if any warnings are found) will be on by default</li>
+</ul>
 
-<h3>RailsConf Security Talks</h3>
+<p>There will likely be other changes, but these two will be the most obvious.</p>
 
-<p><a href="https://github.com/presidentbeef">Justin Collins</a> gave <a href="https://www.youtube.com/watch?v=DHHHnPwSY5I&amp;feature=youtu.be&amp;t=55m6s">a lightning talk</a> about Brakeman and <a href="https://www.youtube.com/watch?v=3P9naxOfUC4&amp;feature=youtu.be">a regular talk</a> about real-world examples of vulnerabilities Rails won&#8217;t save you from.</p>
+<h3 id="reporting-issues">Reporting Issues</h3>
 
-<p><a href="https://twitter.com/secretmike">Mike Milner</a> spoke about <a href="https://youtu.be/UoiCylwUoq4">the security breaches of 2015</a>.</p>
-
-<p><a href="https://twitter.com/JessRudder">Jessica Rudder</a> talked through <a href="https://youtu.be/2GHWAYys1is">examples of SQL injection</a> in ActiveRecord.</p>
-
-<h3>SHAs</h3>
-
-<p>The SHA256 sums for this release are</p>
-
-<pre><code>5c22721c8b486fa9d283cabf65c7e77b2f7428056d4d907b7f74a91dd112616a  brakeman-3.3.1.gem
-7aa57ed8b42c0cadef09214f5544424659ab3972912137fad37da1a052d8a792  brakeman-lib-3.3.1.gem
-95e68202493d8c504ad72276c8bfa46abb1c78c309bc2b80b433a6220f3722eb  brakeman-min-3.3.1.gem
-</code></pre>
-
-<h3>Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed improvements in this release.</p>
+<p>Thank you to everyone who reported bugs and contributed to this release.</p>
 
 <p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
 
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion. Please note the mailing list is no longer in use and has apparently not been delivering mail for some time.</p>
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
+<p>If you find Brakeman valuable and want to support its development, check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2017/06/29/brakeman-3-dot-7-0-released">Brakeman 3.7.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2017-06-29 18:00:00 -0700" pubdate  updated >2017-06-29 18:00:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>Changes since 3.6.2</em>:</p>
+
+<ul>
+  <li>Avoid interpolating hashes/arrays on failed access (<a href="https://github.com/presidentbeef/brakeman/issues/921">#921</a>)</li>
+  <li>Fix false positive for <code class="highlighter-rouge">redirect_to</code> in Rails 4 (<a href="https://github.com/mario-areias">Mário Areias</a>)</li>
+  <li>Show progress indicator in interactive mode (<a href="https://github.com/presidentbeef/brakeman/issues/1012">#1012</a>)</li>
+  <li>Handle simple conditional guards that use <code class="highlighter-rouge">return</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1057">#1057</a>)</li>
+  <li>Improve support for <code class="highlighter-rouge">rails4</code>/<code class="highlighter-rouge">rails5</code> options in config file (<a href="https://github.com/presidentbeef/brakeman/issues/1059">#1059</a>)</li>
+  <li>Updated RubyParser to master</li>
+</ul>
+
+<h3 id="performance-improvement-with-hasharray-accesses">Performance Improvement with Hash/Array Accesses</h3>
+
+<p>When Brakeman sees a hash or array access that it cannot resolve (i.e. can’t find the value for the key), it will no longer copy the entire hash/array value to the call site.</p>
+
+<p>For some applications, this will significantly improve performance.</p>
+
+<p>This may cause some warning fingerprints to change.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1056">changes</a>)</p>
+
+<h3 id="unsafe-hash-in-redirects">Unsafe Hash in Redirects</h3>
+
+<p>Thanks to <a href="https://github.com/mario-areias">Mário Areias</a>, Brakeman correctly handles <code class="highlighter-rouge">to_unsafe_hash</code> and <code class="highlighter-rouge">to_unsafe_h</code> in <code class="highlighter-rouge">redirect_to</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1029">changes</a>)</p>
+
+<h3 id="progress-indicator-in-interactive-mode">Progress Indicator in Interactive Mode</h3>
+
+<p>When using <code class="highlighter-rouge">-I</code> to manage false positives, Brakeman will now show how far you are through the warnings.</p>
+
+<p><img src="https://user-images.githubusercontent.com/75613/27519704-f7c60006-59ad-11e7-82e8-ce0e096ad678.png" alt="image" /></p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1064">changes</a>)</p>
+
+<h3 id="simple-guards-with-return">Simple Guards with Return</h3>
+
+<p>Brakeman can now recognize <em>simple</em> guard conditions such as:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>return unless [:safe, :values].include? params[:x]
+</code></pre></div></div>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1062">changes</a>)</p>
+
+<h3 id="rails-version-option-in-brakeman-configuration">Rails Version Option in Brakeman Configuration</h3>
+
+<p>It is now possible to specify just <code class="highlighter-rouge">:rails4: true</code> or <code class="highlighter-rouge">:rails5: true</code> in a Brakeman configuration file.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1066">changes</a>)</p>
+
+<h3 id="updated-rubyparser">Updated RubyParser</h3>
+
+<p>The main <code class="highlighter-rouge">brakeman</code> gem bundles as-of-yet unreleased changes in RubyParser. This includes “squiggly heredoc” support (<code class="highlighter-rouge">&lt;&lt;~</code>), improved line numbers, and a few other fixes.</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f46550d7c7827644a5663ccc10a6ca222e2534648f68630e3a777cb73df59824  brakeman-3.7.0.gem
+0ea5359ae802284695500b92a03bf1d022574953a0da44607ff7f715f456c37e  brakeman-min-3.7.0.gem
+f6f17e9f1f71a68b486d68f2b3413607fb47154a0fb6a6da23d9d7be87f37967  brakeman-lib-3.7.0.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release.</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
+<p>If you find Brakeman valuable and want to support its development, check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
 </div>
   
   
@@ -1102,35 +650,19 @@ c0beeabe95aa693a5273bd48922028f48a190940b18c795813bd0f96068452b4  brakeman-lib-3
 
 <nav role="pagination">
   <div>
-    
-      <a class="prev" href="/blog/page/3/">&larr; Older</a>
-    
     <a href="/blog/archives">Blog Archives</a>
-    
-    <a class="next" href="/">Newer &rarr;</a>
-    
   </div>
 </nav>
 
-<script type="text/javascript">
-    var disqus_shortname = 'brakeman';
-    (function () {
-      var s = document.createElement('script'); s.async = true;
-      s.type = 'text/javascript';
-      s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
-      (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
-</script>
-
 </div>
 <aside role=sidebar>
-  
-    <section>
+  <section>
   <p></p>
   <p>Brakeman is a free vulnerability scanner specifically designed for Ruby on Rails applications. It statically analyzes Rails application code to find security issues at any stage of development.</p>
   <p><a href="/docs/quickstart">Get started!</a></p>
 </section>
-<section>
+
+  <section>
 <script type='text/javascript'>
     $(document).ready(function(){
         $("#github").GitHubBadge({
@@ -1148,33 +680,35 @@ c0beeabe95aa693a5273bd48922028f48a190940b18c795813bd0f96068452b4  brakeman-lib-3
 <div id="github"></div>
 <a href="https://travis-ci.org/#!/presidentbeef/brakeman"><img src="https://secure.travis-ci.org/presidentbeef/brakeman.png" /></a>
 </section>
-<section>
+
+  <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/">Brakeman Has Been Acquired by Synopsys</a>
+        <a href="/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/index.html">Brakeman Has Been Acquired by Synopsys</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2018/06/06/brakeman-4-dot-3-1-released/">Brakeman 4.3.1 Released</a>
+        <a href="/blog/2018/06/06/brakeman-4-dot-3-1-released">Brakeman 4.3.1 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2018/05/10/brakeman-4-dot-3-0-released/">Brakeman 4.3.0 Released</a>
+        <a href="/blog/2018/05/10/brakeman-4-dot-3-0-released">Brakeman 4.3.0 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2018/03/23/brakeman-4-dot-2-1-released/">Brakeman 4.2.1 Released</a>
+        <a href="/blog/2018/03/23/brakeman-4-dot-2-1-released">Brakeman 4.2.1 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2018/02/21/brakeman-4-dot-2-0-released/">Brakeman 4.2.0 Released</a>
+        <a href="/blog/2018/02/21/brakeman-4-dot-2-0-released">Brakeman 4.2.0 Released</a>
       </li>
     
   </ul>
 </section>
-<section>
+
+  <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
     <a class="twitter-timeline" data-dnt=true href="https://twitter.com/brakeman" data-widget-id="258654953097273345">Tweets by @brakeman</a>
@@ -1182,7 +716,6 @@ c0beeabe95aa693a5273bd48922028f48a190940b18c795813bd0f96068452b4  brakeman-lib-3
   </ul>
 </section>
 
-  
 </aside>
 
     </div>

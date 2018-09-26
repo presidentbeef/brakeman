@@ -1,0 +1,4 @@
+<files *.jsgz>
+AddType "text/javascript;charset=UTF-8" .jsgz
+AddEncoding gzip .jsgz
+</files>

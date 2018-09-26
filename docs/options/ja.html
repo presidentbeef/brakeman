@@ -5,8 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman - Rails Security Scanner: Options</title>
-  <meta name="author" content="Justin Collins">
+  <title>Brakeman: Options</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -16,48 +15,15 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="http://brakemanscanner.org/docs/options/ja.html"/>
+  <link rel="canonical" href="https://brakemanscanner.org/docs/options/ja.html"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="Brakeman - Rails Security Scanner" type="application/atom+xml"/>
+  <link href="feed.xml" rel="alternate" title="Brakeman" type="application/atom+xml"/>
   
-<!--second website-->
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-57927555-1', 'auto', {'allowLinker': true});
-ga('create', 'UA-12578396-3', 'auto','cdt');
-ga('require', 'linker');
-ga('linker:autoLink', ['brakemanpro.com'] );
-ga('send', 'pageview');
-ga('cdt.send', 'pageview');
-
-</script>
-
 
   
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-  
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'https://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
 
   <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
 <link href='https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
@@ -70,20 +36,20 @@ ga('cdt.send', 'pageview');
 
 <body  >
   <header><hgroup>
-  <h1><a href="/">Brakeman - Rails Security Scanner</a></h1>
+  <h1><a href="/">Brakeman</a></h1>
   
-    <h2>Static analysis security scanner for Ruby on Rails</h2>
+    <h2>Ruby on Rails Static Analysis Security Tool</h2>
   
 </hgroup>
 
 </header>
   <nav role=navigation><ul role=subscription data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  <li><a href="feed.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
   
 </ul>
-<form action="https://google.com/search" method="get">
+<form action="" method="get">
   <fieldset role="site-search">
-    <input type="hidden" name="q" value="site:brakemanscanner.org" />
+    <input type="hidden" name="q" value="site:https://brakemanscanner.org" />
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
   </fieldset>
 </form>
@@ -110,361 +76,311 @@ ga('cdt.send', 'pageview');
 
 <p>共同翻訳者は@jnchitoです。</p>
 
-<h2>スキャン関連のオプション</h2>
+<h2 id="スキャン関連のオプション">スキャン関連のオプション</h2>
 
 <p>チェック項目のいくつかはデフォルトでは実行されません。すべてのチェックを実行したい場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman -A
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -A
+</code></pre></div></div>
 
 <p>各チェックはデフォルトで別々のスレッドで実行されます。この振る舞いを無効にしたい場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman -n
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -n
+</code></pre></div></div>
 
 <p>Brakemanはデフォルトでカレントディレクトリをスキャンします。次のようにして、特定のパスをそのまま引数として渡すこともできます。</p>
 
-<p><code>
-brakeman some/path/to/app
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman some/path/to/app
+</code></pre></div></div>
 
-<p>しかし、もっと明示的にしたい場合は、<code>-p</code>または<code>--path</code>オプションが使えます。</p>
+<p>しかし、もっと明示的にしたい場合は、<code class="highlighter-rouge">-p</code>または<code class="highlighter-rouge">--path</code>オプションが使えます。</p>
 
-<p><code>
-brakeman -p path/to/app
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -p path/to/app
+</code></pre></div></div>
 
 <p>警告の出力を抑制し、レポートだけを出力したい場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman -q
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -q
+</code></pre></div></div>
 
 <p>レポート以外のBrakemanの出力はすべて標準エラー出力に出力されます。ですので、標準出力をファイルにリダイレクトするだけで、レポートを作成することができます。</p>
 
 <p>Brakemanは大きな問題がない限り、セキュリティの脆弱性かスキャンのエラーが見つかったら、0でないエラーを返します。
 その動作を無効にするために次のオプションを使ってください：</p>
 
-<p><code>
-brakeman --no-exit-on-warn --no-exit-on-error
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-exit-on-warn --no-exit-on-error
+</code></pre></div></div>
 
 <p>Rails 3モードで動かしたい場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman -3
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -3
+</code></pre></div></div>
 
 <p>Rails 4モードであれば次のようになります。</p>
 
-<p><code>
-brakeman -4
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -4
+</code></pre></div></div>
 
-<p>Brakemanの振る舞いやチェック項目の中には、特定のバージョン名に依存したものがある点に注意してください。とはいえ、<code>Gemfile.lock</code>を使っている最近のRailsアプリケーションであれば問題にならないはずです。</p>
+<p>Brakemanの振る舞いやチェック項目の中には、特定のバージョン名に依存したものがある点に注意してください。とはいえ、<code class="highlighter-rouge">Gemfile.lock</code>を使っている最近のRailsアプリケーションであれば問題にならないはずです。</p>
 
-<p>Brakemanは以前、<code>routes.rb</code>をパースして、コントローラのどのメソッドがアクションとして使われているのかを推測しようとしていました。しかし、この方法は完璧ではありません（特にRails 3/4において）。そのため、現在はすべてのコントローラのメソッドがアクションと見なされます。この振る舞いを無効にしたい場合は次のオプションを使います。</p>
+<p>Brakemanは以前、<code class="highlighter-rouge">routes.rb</code>をパースして、コントローラのどのメソッドがアクションとして使われているのかを推測しようとしていました。しかし、この方法は完璧ではありません（特にRails 3/4において）。そのため、現在はすべてのコントローラのメソッドがアクションと見なされます。この振る舞いを無効にしたい場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman --no-assume-routes
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-assume-routes
+</code></pre></div></div>
 
 <p>このオプションはあまり必要ではないかもしれませんが、次のようなオプションを使うと、Brakemanに対して、アプリケーションの出力がデフォルトですべてエスケープされていると伝えることができます。</p>
 
-<p><code>
-brakeman --escape-html
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --escape-html
+</code></pre></div></div>
 
 <p>もしBrakemanの実行が遅ければ、次のオプションを試してください。</p>
 
-<p><code>
-brakeman --faster
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --faster
+</code></pre></div></div>
 
-<p>上のオプションを使うといくつかの機能が無効になります。そのかわり、ずっと速く実行できるかもしれません（現時点では<code>--skip-libs --no-branching</code>を指定したことと同じになります）。 <strong>警告:</strong> このオプションを使うと、Brakemanはいくつかの脆弱性を見逃すかもしれません。</p>
+<p>上のオプションを使うといくつかの機能が無効になります。そのかわり、ずっと速く実行できるかもしれません（現時点では<code class="highlighter-rouge">--skip-libs --no-branching</code>を指定したことと同じになります）。 <strong>警告:</strong> このオプションを使うと、Brakemanはいくつかの脆弱性を見逃すかもしれません。</p>
 
-<p><code>if</code>文におけるデータフロー感度（flow sensitivity、経路や順序の解析）を無効にする場合は次のオプションを使います。</p>
+<p><code class="highlighter-rouge">if</code>文におけるデータフロー感度（flow sensitivity、経路や順序の解析）を無効にする場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman --no-branching
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-branching
+</code></pre></div></div>
 
 <p>すべて無効にするかわりに、解析する分岐の数を指定することもできます。</p>
 
-<p><code>
-brakeman --branch-limit LIMIT
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --branch-limit LIMIT
+</code></pre></div></div>
 
-<p><code>LIMIT</code>は整数値を指定してください。<code>0</code>は<code>--no-branching</code>とほぼ同じなので、<code>--no-branching</code>の方がいいでしょう。デフォルト値は<code>5</code>です。一般的に数字が小さくなるほどBrakemanの実行が速くなります。<code>-1</code>は無制限の意味になります。</p>
+<p><code class="highlighter-rouge">LIMIT</code>は整数値を指定してください。<code class="highlighter-rouge">0</code>は<code class="highlighter-rouge">--no-branching</code>とほぼ同じなので、<code class="highlighter-rouge">--no-branching</code>の方がいいでしょう。デフォルト値は<code class="highlighter-rouge">5</code>です。一般的に数字が小さくなるほどBrakemanの実行が速くなります。<code class="highlighter-rouge">-1</code>は無制限の意味になります。</p>
 
 <p>特定のファイル、またはディレクトリをスキップする場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman --skip-files file1,/path1/,path2/
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --skip-files file1,/path1/,path2/
+</code></pre></div></div>
 
-<p>ディレクトリはアプリケーションのルートパスからの相対パスにマッチします。また、使用しているプラットフォームのパスセパレータ（たとえば<code>/</code>）で終わる必要があります。上の実行例は以下ルールでマッチ、スキップします。</p>
+<p>ディレクトリはアプリケーションのルートパスからの相対パスにマッチします。また、使用しているプラットフォームのパスセパレータ（たとえば<code class="highlighter-rouge">/</code>）で終わる必要があります。上の実行例は以下ルールでマッチ、スキップします。</p>
 
 <ul>
-<li><code>file1</code>という名前のあらゆるファイル。<code>file1</code>がパスの一部に含まれるファイルはスキャン対象になります。</li>
-<li><code>/path1</code>の中のあらゆるファイル。<code>/</code>で始まっているので、アプリケーションのルートディレクトリ以下のディレクトリにだけマッチします。たとえば、<code>/lib/path1/some_path1_file.rb</code>はスキャン対象になります。</li>
-<li><code>path2</code>という名前のあらゆるディレクトリ。<code>/</code>で始まっていないので、パスの一部に<code>path2</code>という名前が含まれるディレクトリがスキップされます。たとえば、<code>/lib/path2/some_lib_for_testing.rb</code>はスキャンされません。</li>
+  <li><code class="highlighter-rouge">file1</code>という名前のあらゆるファイル。<code class="highlighter-rouge">file1</code>がパスの一部に含まれるファイルはスキャン対象になります。</li>
+  <li><code class="highlighter-rouge">/path1</code>の中のあらゆるファイル。<code class="highlighter-rouge">/</code>で始まっているので、アプリケーションのルートディレクトリ以下のディレクトリにだけマッチします。たとえば、<code class="highlighter-rouge">/lib/path1/some_path1_file.rb</code>はスキャン対象になります。</li>
+  <li><code class="highlighter-rouge">path2</code>という名前のあらゆるディレクトリ。<code class="highlighter-rouge">/</code>で始まっていないので、パスの一部に<code class="highlighter-rouge">path2</code>という名前が含まれるディレクトリがスキップされます。たとえば、<code class="highlighter-rouge">/lib/path2/some_lib_for_testing.rb</code>はスキャンされません。</li>
 </ul>
-
 
 <p>Brakemanは「全体プログラム（whole program）」解析を実行する点に注意してください。そのため、ファイルをスキップするとそれ以外のファイルからも警告が出力されるかもしれません。</p>
 
 <p>その反対で、特定のファイルだけを指定する、ちょっと危険なオプションもあります。</p>
 
-<p><code>
-brakeman --only-files file1,/path2/,path2/
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --only-files file1,/path2/,path2/
+</code></pre></div></div>
 
 <p>繰り返しになりますが、Brakemanはプログラム全体を解析します。そのため、ファイルの一部だけをスキャンすると、予期しない動きをするかもしれません。また、特定のファイルが除外されると、Brakemanは正常に機能しないかもしれません。</p>
 
-<p><code>lib/</code>ディレクトリに対する処理をスキップする場合は次のオプションを使います。</p>
+<p><code class="highlighter-rouge">lib/</code>ディレクトリに対する処理をスキップする場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman --skip-libs
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --skip-libs
+</code></pre></div></div>
 
 <p>チェック項目の一部を実行する場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman --test Check1,Check2,etc
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --test Check1,Check2,etc
+</code></pre></div></div>
 
 <p>特定のチェック項目を除外する場合はこうします。</p>
 
-<p><code>
-brakeman --except Check1,Check2,etc
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --except Check1,Check2,etc
+</code></pre></div></div>
 
-<p>チェック項目名の<code>Check</code>の部分は省略可能です。たとえば、次の2つのオプションは同じ意味になります。</p>
+<p>チェック項目名の<code class="highlighter-rouge">Check</code>の部分は省略可能です。たとえば、次の2つのオプションは同じ意味になります。</p>
 
-<p><code>
-brakeman --test CheckSQL
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --test CheckSQL
 brakeman --test SQL
-</code></p>
+</code></pre></div></div>
 
-<h2>出力オプション</h2>
+<h2 id="出力オプション">出力オプション</h2>
 
 <p>デバッグ情報をすべて見たい場合は次のオプションを実行します。</p>
 
-<p><code>
-brakeman -d
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -d
+</code></pre></div></div>
 
 <p>実行結果の出力ファイルを指定する場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman -o output_file
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o output_file
+</code></pre></div></div>
 
-<p>出力フォーマットはファイル拡張子、もしくは<code>-f</code>オプションによって決まります。現在有効なオプションは、<code>text</code>、<code>html</code>、<code>tabs</code>、<code>json</code>、<code>markdown</code>、<code>csv</code>です。</p>
+<p>出力フォーマットはファイル拡張子、もしくは<code class="highlighter-rouge">-f</code>オプションによって決まります。現在有効なオプションは、<code class="highlighter-rouge">text</code>、<code class="highlighter-rouge">html</code>、<code class="highlighter-rouge">tabs</code>、<code class="highlighter-rouge">json</code>、<code class="highlighter-rouge">markdown</code>、<code class="highlighter-rouge">csv</code>です。</p>
 
 <p>複数の出力ファイルを指定することもできます。</p>
 
-<p><code>
-brakeman -o output.html -o output.json
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o output.html -o output.json
+</code></pre></div></div>
 
 <p>HTMLレポートには特定のCSSスタイルシートが使えます。</p>
 
-<p><code>
-brakeman --css-file my_cool_styling
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --css-file my_cool_styling
+</code></pre></div></div>
 
 <p>デフォルトではBrakemanは同じ行にある同じタイプの警告を1個しか出力しません。これを無効にする場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman --no-combine-locations
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-combine-locations
+</code></pre></div></div>
 
-<p>&#8220;dangerous&#8221;な値や、&#8221;user input&#8221;による値の警告ハイライトを無効にする場合は次のオプションを使います。</p>
+<p>“dangerous”な値や、”user input”による値の警告ハイライトを無効にする場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman --no-highlights
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-highlights
+</code></pre></div></div>
 
 <p>コントローラとルーティングの情報を報告する場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman --routes
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --routes
+</code></pre></div></div>
 
-<p>ですが、アプリケーションにどんなルーティングが設定されているか確認したい場合は、次のコマンドを使ってください（訳注: Rails 5以降は<code>rails routes</code>になります）。</p>
+<p>ですが、アプリケーションにどんなルーティングが設定されているか確認したい場合は、次のコマンドを使ってください（訳注: Rails 5以降は<code class="highlighter-rouge">rails routes</code>になります）。</p>
 
-<p><code>
-rake routes
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake routes
+</code></pre></div></div>
 
 <p>HTMLレポートのメッセージの長さを制限する場合は、次のオプションを使います。</p>
 
-<p><code>
-brakeman --message-limit LIMIT
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --message-limit LIMIT
+</code></pre></div></div>
 
 <p>デフォルトは無制限です。</p>
 
-<p>Brakemanは<code>attr_accessible</code>を持たないモデルに対して警告を発します。HTMLレポートでは次のオプションを使って、全モデルの警告を1つの警告にまとめた方が便利かもしれません（訳注: <code>attr_accessible</code>はRails 3以前のオプションだったので、最近のRailsアプリケーションでは無関係かもしれません）。</p>
+<p>Brakemanは<code class="highlighter-rouge">attr_accessible</code>を持たないモデルに対して警告を発します。HTMLレポートでは次のオプションを使って、全モデルの警告を1つの警告にまとめた方が便利かもしれません（訳注: <code class="highlighter-rouge">attr_accessible</code>はRails 3以前のオプションだったので、最近のRailsアプリケーションでは無関係かもしれません）。</p>
 
-<p><code>
-brakeman --no-separate-models
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-separate-models
+</code></pre></div></div>
 
 <p>巨大なレポートではなく、サマリーだけを取得したい場合もあるかもしれません。そんな場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman --summary
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --summary
+</code></pre></div></div>
 
 <p>デフォルトではレポートには相対パスが使われます。かわりに絶対パスを使いたい場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman --absolute-paths
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --absolute-paths
+</code></pre></div></div>
 
 <p>上のオプションはHTMLとタブ区切りのレポートには影響しません。</p>
 
 <p>Markdown出力時にGitHub上のファイルへリンクを貼りたい場合は、次のオプションを使ってください。</p>
 
-<p><code>
-brakeman --github-repo USER/REPO[/PATH][@REF]
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --github-repo USER/REPO[/PATH][@REF]
+</code></pre></div></div>
 
 <p>次はその使用例です。</p>
 
-<p><code>
-brakeman --github-repo presidentbeef/inject-some-sql
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --github-repo presidentbeef/inject-some-sql
+</code></pre></div></div>
 
 <p>前回実行したスキャン結果と今回の結果を比較したい場合は、JSON出力と次のオプションを使ってください。</p>
 
-<p><code>
-brakeman --compare old_report.json
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --compare old_report.json
+</code></pre></div></div>
 
 <p>上のオプションを付けて実行すると、修正された警告と新しい警告の2種類のリストが出力されます。</p>
 
-<p>デフォルトではBrakemanは<code>less</code>ページャー（<code>less</code>コマンド）を使って結果を出力します。ターミナルに直接出力したい場合は、次のオプションを使ってください。</p>
+<p>デフォルトではBrakemanは<code class="highlighter-rouge">less</code>ページャー（<code class="highlighter-rouge">less</code>コマンド）を使って結果を出力します。ターミナルに直接出力したい場合は、次のオプションを使ってください。</p>
 
-<p><code>
-brakeman --no-pager
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-pager
+</code></pre></div></div>
 
-<h2>無視に関するオプション</h2>
+<h2 id="無視に関するオプション">無視に関するオプション</h2>
 
-<p>Brakemanは設定次第で警告を無視することができます。デフォルトでは<code>config/brakeman.ignore</code>という設定ファイルが使われます。</p>
+<p>Brakemanは設定次第で警告を無視することができます。デフォルトでは<code class="highlighter-rouge">config/brakeman.ignore</code>という設定ファイルが使われます。</p>
 
 <p>設定ファイルを指定したいときは次のオプションを使います。</p>
 
-<p><code>
-brakeman -i path/to/config.ignore
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -i path/to/config.ignore
+</code></pre></div></div>
 
 <p>このファイルの作成と管理を行う場合は次のオプションを使ってください。</p>
 
-<p><code>
-brakeman -I
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -I
+</code></pre></div></div>
 
 <p>モデルの属性に関するXSSの疑いを無視する場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman --ignore-model-output
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --ignore-model-output
+</code></pre></div></div>
 
-<p>Brakemanは<code>attr_protected</code>を使っているモデルに対して警告を発します。この警告を抑制する場合は次のオプションを使います（訳注: <code>attr_protected</code>もRails 3以前のオプションだったので、最近のRailsアプリケーションでは無関係かもしれません）。</p>
+<p>Brakemanは<code class="highlighter-rouge">attr_protected</code>を使っているモデルに対して警告を発します。この警告を抑制する場合は次のオプションを使います（訳注: <code class="highlighter-rouge">attr_protected</code>もRails 3以前のオプションだったので、最近のRailsアプリケーションでは無関係かもしれません）。</p>
 
-<p><code>
-brakeman --ignore-protected
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --ignore-protected
+</code></pre></div></div>
 
 <p>信頼できないデータを扱う未知のメソッドがあった場合、Brakemanは危険な処理と見なします。たとえば、次のコードは警告の対象になります（Rails 2の場合）。</p>
 
-<p><code>
-&lt;%= some_method(:option =&gt; params[:input]) %&gt;
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= some_method(:option =&gt; params[:input]) %&gt;
+</code></pre></div></div>
 
 <p>信頼できないデータが直接使われている場合のみ警告を出したいときは、次のオプションを使います。</p>
 
-<p><code>
-brakeman --report-direct
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --report-direct
+</code></pre></div></div>
 
 <p>とはいえ、各チェック項目における上記オプションのサポート状況にはあまり一貫性がありません。</p>
 
 <p>特定のメソッドが適切にエスケープされた値を出力し、そのメソッドがXSSチェックで警告されないようにするためには、次のオプションを使います。</p>
 
-<p><code>
-brakeman --safe-methods benign_method_escapes_output,totally_safe_from_xss
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --safe-methods benign_method_escapes_output,totally_safe_from_xss
+</code></pre></div></div>
 
-<p>Brakemanは<code>link_to</code>メソッドを使って作成されたURLにユーザー入力が含まれていると警告を発します。Railsにはこの方法で作成されたURLを安全にする方法がないため（例：プロトコルをHTTP(S)に限定する、など）、安全なメソッドを無視したい場合は次のオプションを使ってください。</p>
+<p>Brakemanは<code class="highlighter-rouge">link_to</code>メソッドを使って作成されたURLにユーザー入力が含まれていると警告を発します。Railsにはこの方法で作成されたURLを安全にする方法がないため（例：プロトコルをHTTP(S)に限定する、など）、安全なメソッドを無視したい場合は次のオプションを使ってください。</p>
 
-<p><code>
-brakeman --url-safe-methods ensure_safe_protocol_or_something
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --url-safe-methods ensure_safe_protocol_or_something
+</code></pre></div></div>
 
-<h2>Confidenceレベル（自信レベル）</h2>
+<h2 id="confidenceレベル自信レベル">Confidenceレベル（自信レベル）</h2>
 
 <p>Brakemanは各警告にconfidenceレベルを設定しています。これは出力された警告がどれくらい問題なのか、大まかに見積もった値です。当然ながら、この値を絶対的なものとして信用するのはよくありません。</p>
 
 <p>confidenceレベルは3段階あります。</p>
 
 <ul>
-<li>High - 軽微な警告（boolean値）だったり、ユーザー入力が安全でない方法で使われたりしていることを意味する。</li>
-<li>Medium - 主に変数の使い方が安全でないことを示す。しかし、その変数はユーザー入力かどうか定かではない。</li>
-<li>Weak - 主にユーザー入力が、安全性が疑われる方法で間接的に使われていることを意味する。</li>
+  <li>High - 軽微な警告（boolean値）だったり、ユーザー入力が安全でない方法で使われたりしていることを意味する。</li>
+  <li>Medium - 主に変数の使い方が安全でないことを示す。しかし、その変数はユーザー入力かどうか定かではない。</li>
+  <li>Weak - 主にユーザー入力が、安全性が疑われる方法で間接的に使われていることを意味する。</li>
 </ul>
-
 
 <p>指定したconfidenceレベル以上の警告だけを受け取りたい場合は、次のオプションを使います。</p>
 
-<p><code>
-brakeman -w3
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -w3
+</code></pre></div></div>
 
-<p><code>-w</code>スイッチには1から3までの数字を指定できます。1は低レベル（全警告を出力）で、3は高レベル（confidenceレベルが最高の警告のみ出力）です。</p>
+<p><code class="highlighter-rouge">-w</code>スイッチには1から3までの数字を指定できます。1は低レベル（全警告を出力）で、3は高レベル（confidenceレベルが最高の警告のみ出力）です。</p>
 
-<h2>設定ファイル</h2>
+<h2 id="設定ファイル">設定ファイル</h2>
 
-<p>BrakemanのオプションはYAMLファイルで読み書きできます。設定ファイルを作成する手間を省きたい場合は<code>-C</code>オプションを使うと、そこで指定されているオプションを出力することができます。</p>
+<p>BrakemanのオプションはYAMLファイルで読み書きできます。設定ファイルを作成する手間を省きたい場合は<code class="highlighter-rouge">-C</code>オプションを使うと、そこで指定されているオプションを出力することができます。</p>
 
 <p>コマンドラインで指定されたオプションは設定ファイルよりも優先されます。</p>
 
-<p>設定ファイルのデフォルトの場所は<code>./config/brakeman.yml</code>、<code>~/.brakeman/config.yml</code>、<code>/etc/brakeman/config.yml</code>です。</p>
+<p>設定ファイルのデフォルトの場所は<code class="highlighter-rouge">./config/brakeman.yml</code>、<code class="highlighter-rouge">~/.brakeman/config.yml</code>、<code class="highlighter-rouge">/etc/brakeman/config.yml</code>です。</p>
 
-<p><code>-c</code>オプションを使うと、使用する設定ファイルを指定できます。</p>
+<p><code class="highlighter-rouge">-c</code>オプションを使うと、使用する設定ファイルを指定できます。</p>
 
-<h2>その他</h2>
+<h2 id="その他">その他</h2>
 
 <p>利用可能なチェック項目を簡単な説明付きで一覧表示する場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman --checks
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --checks
+</code></pre></div></div>
 
 <p>任意で実行される（デフォルトでは実行されない）チェック項目を表示する場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman --optional-checks
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --optional-checks
+</code></pre></div></div>
 
 <p>Brakemanのバージョンを確認する場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman --version
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --version
+</code></pre></div></div>
 
 <p>オプションの一覧を見たい場合は次のオプションを使います。</p>
 
-<p><code>
-brakeman --help
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --help
+</code></pre></div></div>
 
 <hr />
 
@@ -483,13 +399,13 @@ brakeman --help
 </div>
 
 <aside role=sidebar>
-  
-    <section>
+  <section>
   <p></p>
   <p>Brakeman is a free vulnerability scanner specifically designed for Ruby on Rails applications. It statically analyzes Rails application code to find security issues at any stage of development.</p>
   <p><a href="/docs/quickstart">Get started!</a></p>
 </section>
-<section>
+
+  <section>
 <script type='text/javascript'>
     $(document).ready(function(){
         $("#github").GitHubBadge({
@@ -507,33 +423,35 @@ brakeman --help
 <div id="github"></div>
 <a href="https://travis-ci.org/#!/presidentbeef/brakeman"><img src="https://secure.travis-ci.org/presidentbeef/brakeman.png" /></a>
 </section>
-<section>
+
+  <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/">Brakeman Has Been Acquired by Synopsys</a>
+        <a href="/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/index.html">Brakeman Has Been Acquired by Synopsys</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2018/06/06/brakeman-4-dot-3-1-released/">Brakeman 4.3.1 Released</a>
+        <a href="/blog/2018/06/06/brakeman-4-dot-3-1-released">Brakeman 4.3.1 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2018/05/10/brakeman-4-dot-3-0-released/">Brakeman 4.3.0 Released</a>
+        <a href="/blog/2018/05/10/brakeman-4-dot-3-0-released">Brakeman 4.3.0 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2018/03/23/brakeman-4-dot-2-1-released/">Brakeman 4.2.1 Released</a>
+        <a href="/blog/2018/03/23/brakeman-4-dot-2-1-released">Brakeman 4.2.1 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2018/02/21/brakeman-4-dot-2-0-released/">Brakeman 4.2.0 Released</a>
+        <a href="/blog/2018/02/21/brakeman-4-dot-2-0-released">Brakeman 4.2.0 Released</a>
       </li>
     
   </ul>
 </section>
-<section>
+
+  <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
     <a class="twitter-timeline" data-dnt=true href="https://twitter.com/brakeman" data-widget-id="258654953097273345">Tweets by @brakeman</a>
@@ -541,7 +459,6 @@ brakeman --help
   </ul>
 </section>
 
-  
 </aside>
 
 
