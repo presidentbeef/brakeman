@@ -72,7 +72,9 @@
     <h1 class="entry-title">Redirect</h1>
   </header>
   
-  <p>Unvalidated redirects and forwards are #10 on the <a href="https://www.owasp.org/index.php/Top_10_2010-A10">OWASP Top Ten</a>.</p>
+  <h3 id="open-redirects">Open Redirects</h3>
+
+<p>Unvalidated redirects and forwards are #10 on the 2010 <a href="https://www.owasp.org/index.php/Top_10_2010-A10">OWASP Top Ten</a>.</p>
 
 <p>Redirects which rely on user-supplied values can be used to “spoof” websites or hide malicious links in otherwise harmless-looking URLs. They can also allow access to restricted areas of a site if the destination is not validated.</p>
 
@@ -89,6 +91,8 @@
 </code></pre></div></div>
 
 <p>This is because <code class="highlighter-rouge">params</code> could contain <code class="highlighter-rouge">:host =&gt; 'evilsite.com'</code> which would redirect away from your site and to a malicious site.</p>
+
+<p><em>Note: newer versions of Rails will not allow using <code class="highlighter-rouge">params</code> directly with <code class="highlighter-rouge">redirect_to</code>.</em></p>
 
 <p>If the first argument to <code class="highlighter-rouge">redirect_to</code> is a hash, then adding <code class="highlighter-rouge">:only_path =&gt; true</code> will limit the redirect to the current host. Another option is to specify the host explicitly.</p>
 

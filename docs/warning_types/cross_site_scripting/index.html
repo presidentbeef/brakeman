@@ -72,19 +72,19 @@
     <h1 class="entry-title">Cross Site Scripting</h1>
   </header>
   
-  <p>Cross site scripting (or XSS) is #2 on the 2010 <a href="https://www.owasp.org/index.php/Top_10_2010-A2">OWASP Top Ten</a> web security risks and it pops up nearly everywhere.</p>
+  <p>Cross site scripting (or XSS) is #7 on the 2017 <a href="https://www.owasp.org/index.php/Top_10-2017_A7-Cross-Site_Scripting_(XSS)">OWASP Top Ten</a> web security risks and it pops up nearly everywhere.</p>
 
 <p>XSS occurs when a user-manipulatable value is displayed on a web page without escaping it, allowing someone to inject Javascript or HTML into the page.</p>
 
-<p>In Rails 2.x, values need to be explicitly escaped (e.g., by using the <code class="highlighter-rouge">h</code> method). In Rails 3.x, auto-escaping in views is enabled by default. However, one can still use the <code class="highlighter-rouge">raw</code> method to output a value directly.</p>
+<p>In Rails 2.x, values need to be explicitly escaped (e.g., by using the <code class="highlighter-rouge">h</code> method). In Rails 3.x and newer, auto-escaping in views is enabled by default. However, one can still use the <code class="highlighter-rouge">raw</code> or <code class="highlighter-rouge">html_safe</code> methods to output a value directly without proper escaping.</p>
 
 <p>See <a href="http://guides.rubyonrails.org/security.html#cross-site-scripting-xss">the Ruby Security Guide</a> for more details.</p>
 
 <h3 id="query-parameters-and-cookies">Query Parameters and Cookies</h3>
 
-<p>Rails 2.x example in ERB:</p>
+<p>Example in ERB:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= params[:query] %&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= raw params[:query] %&gt;
 </code></pre></div></div>
 
 <p>Brakeman looks for several situations that can allow XSS. The simplest is like the example above: a value from the <code class="highlighter-rouge">params</code> or <code class="highlighter-rouge">cookies</code> is being directly output to a view. In such cases, it will issue a warning like:</p>
@@ -121,7 +121,7 @@ end
 
 <p>and there is a view with</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= @user.name %&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= @user.name.html_safe %&gt;
 </code></pre></div></div>
 
 <p>Brakeman will raise a warning like</p>

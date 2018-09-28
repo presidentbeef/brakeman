@@ -74,8 +74,14 @@
   
   <p>“Authentication” is the act of verifying that a user or client is who they say they are.</p>
 
-<p>Right now, the only Brakeman warning in the authentication category is regarding hardcoded passwords.
-Brakeman will warn about constants with literal string values that appear to be passwords.</p>
+<h3 id="hardcoded-credentials">Hardcoded Credentials</h3>
+
+<p>Brakeman will warn about constants with literal string values that appear to be passwords.</p>
+
+<p>For example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SUPER_SECRET_PASSWORD = "password"
+</code></pre></div></div>
 
 <p>Hardcoded passwords are security issues since they imply a single password and that password is stored in the source code.
 Typically source code is available to a wide number of people inside an organization, and there have been many instances of source

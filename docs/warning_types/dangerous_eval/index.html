@@ -72,7 +72,9 @@
     <h1 class="entry-title">Dangerous Evaluation</h1>
   </header>
   
-  <p>User input in an <code class="highlighter-rouge">eval</code> statement is VERY dangerous, so this will always raise a warning. Brakeman looks for calls to <code class="highlighter-rouge">eval</code>, <code class="highlighter-rouge">instance_eval</code>, <code class="highlighter-rouge">class_eval</code>, and <code class="highlighter-rouge">module_eval</code>.</p>
+  <p>Evaluation of user-controllable values as code is extremely dangerous.</p>
+
+<p>Brakeman will warn about user input in calls to <code class="highlighter-rouge">eval</code>, <code class="highlighter-rouge">instance_eval</code>, <code class="highlighter-rouge">class_eval</code>, and <code class="highlighter-rouge">module_eval</code>.</p>
 
 <hr />
 <p>Back to <a href="/docs/warning_types">Warning Types</a></p>

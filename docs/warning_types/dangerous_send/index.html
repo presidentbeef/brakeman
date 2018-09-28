@@ -72,11 +72,11 @@
     <h1 class="entry-title">Dangerous Send</h1>
   </header>
   
-  <p>Using unfiltered user data to select a Class or Method to be dynamically sent is dangerous.</p>
+  <p>Using unfiltered user data to select a Class or Method to be dynamically called is dangerous.</p>
 
 <p>It is much safer to whitelist the desired target or method.</p>
 
-<p>Unsafe use of method:</p>
+<p>Unsafe use of <code class="highlighter-rouge">send</code> method:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>method = params[:method]
 @result = User.send(method.to_sym)
@@ -101,15 +101,10 @@
 @result = target.send(:method, *args)
 </code></pre></div></div>
 
-<p>Including user data in the arguments passed to an Object#send is safe, as long as the method can properly handle potentially bad data.</p>
-
-<p>Safe:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>args = params["args"] || []
-@result = User.send(:method, *args)
-</code></pre></div></div>
-
 <hr />
+
+<p>See also: <a href="/docs/warning_types/remote_code_execution">Remote Code Execution</a>.</p>
+
 <p>Back to <a href="/docs/warning_types">Warning Types</a></p>
 
   

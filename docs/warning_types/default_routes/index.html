@@ -72,7 +72,9 @@
     <h1 class="entry-title">Default Routes</h1>
   </header>
   
-  <p>The general default routes warning means there is a call to</p>
+  <h3 id="global-default-routes">Global Default Routes</h3>
+
+<p>The general default routes warning means there is a call to</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#Rails 2.x
 map.connect ":controller/:action/:id"
@@ -85,6 +87,8 @@ match ':controller(/:action(/:id(.:format)))'
 </code></pre></div></div>
 
 <p>in <code class="highlighter-rouge">config/routes.rb</code>. This allows any public method on any controller to be called as an action.</p>
+
+<h3 id="controller-default-routes">Controller Default Routes</h3>
 
 <p>If this warning is reported for a particular controller, it means there is a route to that controller containing <code class="highlighter-rouge">:action</code>.</p>
 

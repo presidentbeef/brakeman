@@ -72,7 +72,9 @@
     <h1 class="entry-title">Command Injection</h1>
   </header>
   
-  <p>Injection is #1 on the 2010 <a href="https://www.owasp.org/index.php/Top_10_2010-A1">OWASP Top Ten</a> web security risks. Command injection occurs when shell commands unsafely include user-manipulatable values.</p>
+  <p>Injection is #1 on the 2017 <a href="https://www.owasp.org/index.php/Top_10-2017_A1-Injection">OWASP Top Ten</a> web security risks.</p>
+
+<p>Command injection occurs when shell commands unsafely include user-controllable values.</p>
 
 <p>There are many ways to run commands in Ruby:</p>
 
@@ -83,9 +85,9 @@ system("ls #{params[:dir]}")
 exec("md5sum #{params[:input]}")
 </code></pre></div></div>
 
-<p>Brakeman will warn on any method like these that uses user input or unsafely interpolates variables.</p>
+<p>Brakeman will warn on any method calls like these that unsafely interpolate variables.</p>
 
-<p>See <a href="http://guides.rubyonrails.org/security.html#command-line-injection">the Ruby Security Guide</a> for details.</p>
+<p>See <a href="http://guides.rubyonrails.org/security.html#command-line-injection">the Ruby Security Guide</a> for more information about command injection.</p>
 
 <hr />
 <p>Back to <a href="/docs/warning_types">Warning Types</a></p>

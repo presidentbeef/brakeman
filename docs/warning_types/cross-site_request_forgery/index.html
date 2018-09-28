@@ -72,11 +72,21 @@
     <h1 class="entry-title">Cross Site Request Forgery</h1>
   </header>
   
-  <p>Cross-site request forgery is #5 on the <a href="https://www.owasp.org/index.php/Top_10_2010-A5">OWASP Top Ten</a>. CSRF allows an attacker to perform actions on a website as if they are an authenticated user.</p>
+  <p>Cross-site request forgery (CSRF) is a dangerous security vulnerability that allows an attacker to perform actions on a website as if they are an authenticated user.</p>
 
-<p>This warning is raised when no call to <code class="highlighter-rouge">protect_from_forgery</code> is found in <code class="highlighter-rouge">ApplicationController</code>. This method prevents CSRF.</p>
+<p>The built-in CSRF protection in Ruby on Rails uses the “synchronizer token pattern”. A token valued is supplied when a page is rendered. When a non-GET request is received, the request must include the same token. If not, the request will fail.</p>
 
-<p>For Rails 4 applications, it is recommended that you use <code class="highlighter-rouge">protect_from_forgery :with =&gt; :exception</code>. This code is inserted into newly generated applications. The default is to <code class="highlighter-rouge">nil</code> out the session object, which has been a source of many CSRF bypasses due to session memoization.</p>
+<p>The <code class="highlighter-rouge">protect_from_forgery</code> method is called in controllers to enforce the presence of the CSRF token.</p>
+
+<h3 id="missing-protection">Missing Protection</h3>
+
+<p>This warning is raised when no call to <code class="highlighter-rouge">protect_from_forgery</code> is found in controllers which inherit from <code class="highlighter-rouge">ActionController::Base</code>.</p>
+
+<h3 id="insufficient-protection">Insufficient Protection</h3>
+
+<p>For Rails 4.0 and newer applications, it is recommended that you use <code class="highlighter-rouge">protect_from_forgery :with =&gt; :exception</code>. This code is inserted into newly generated applications. The default is to <code class="highlighter-rouge">nil</code> out the session object, which has been a source of CSRF protection bypasses due to session memoization.</p>
+
+<h3 id="more-information">More Information</h3>
 
 <p>See <a href="http://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf">the Ruby Security Guide</a> for details.</p>
 
