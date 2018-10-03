@@ -105,7 +105,7 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
                       end
 
     if upgrade_version
-      message = msg(msg_code("attr_protected"), " is bypassable in ", msg_version(rails_version), " use ", msg_code("attr_accessible"), " or upgrade to ", msg_version(upgrade_version))
+      message = msg(msg_code("attr_protected"), " is bypassable in ", msg_version(rails_version), ". Use ", msg_code("attr_accessible"), " or upgrade to ", msg_version(upgrade_version))
       confidence = :high
       link = "https://groups.google.com/d/topic/rubyonrails-security/AFBKNY7VSH8/discussion"
     else
