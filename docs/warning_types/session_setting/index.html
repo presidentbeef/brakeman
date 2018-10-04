@@ -72,9 +72,9 @@
     <h1 class="entry-title">Session Settings</h1>
   </header>
   
-  <h3 id="httponly-attribute">HTTPOnly Attribute</h3>
+  <h3 id="http-only">HTTP Only</h3>
 
-<p>It is recommended that session and all other sensitive cookies be set to “http-only”. This helps prevent stealing of cookies via cross site scripting.</p>
+<p>It is recommended that session cookies be set to “http-only”. This helps prevent stealing of cookies via cross site scripting.</p>
 
 <h3 id="secret-length">Secret Length</h3>
 
@@ -82,7 +82,7 @@
 
 <h3 id="version-control-inclusion">Version control inclusion</h3>
 
-<p>Brakeman will warn if the <code class="highlighter-rouge">config/initializers/secret_token.rb</code> file is included in the version control. It is recommended that <code class="highlighter-rouge">secret_token.rb</code> is excluded from version control, and included in <code class="highlighter-rouge">.gitignore</code>.</p>
+<p>Brakeman will warn if the config/initializers/secret_token.rb is included in the version control. It is recommended that secret_token.rb is excluded from version control, and included in .gitignore</p>
 
 <hr />
 <p>Back to <a href="/docs/warning_types">Warning Types</a></p>
@@ -131,6 +131,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/08/30/happy-8th-birthday/index.html">Happy 8th Birthday, Brakeman!</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/index.html">Brakeman Has Been Acquired by Synopsys</a>
       </li>
     
@@ -144,10 +148,6 @@
     
       <li class="post">
         <a href="/blog/2018/03/23/brakeman-4-dot-2-1-released">Brakeman 4.2.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2018/02/21/brakeman-4-dot-2-0-released">Brakeman 4.2.0 Released</a>
       </li>
     
   </ul>

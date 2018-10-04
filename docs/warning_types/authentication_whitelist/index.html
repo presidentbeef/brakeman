@@ -72,16 +72,7 @@
     <h1 class="entry-title">Authentication Whitelist</h1>
   </header>
   
-  <p>Brakeman will warn about use of <code class="highlighter-rouge">skip_before_action ..., except: ...</code> when the filter appears to be related to authentication or CSRF protection.</p>
-
-<p>For example:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>skip_before_action :login_required, except: [:delete, :destroy]
-</code></pre></div></div>
-
-<p>This code only requires users to be logged in for the <code class="highlighter-rouge">delete</code> and <code class="highlighter-rouge">destroy</code> actions. That means the default is to <em>not</em> require login.</p>
-
-<p>It is safer to specify which actions do <em>not</em> require login (i.e. whitelist logged-out actions).</p>
+  <p>When skipping <code class="highlighter-rouge">before_filter</code>s with security implications, a “whitelist” approach using <code class="highlighter-rouge">only</code> should be used instead of <code class="highlighter-rouge">except</code>. This ensures actions are protected by default, and unprotected only by exception.</p>
 
 <hr />
 <p>Back to <a href="/docs/warning_types">Warning Types</a></p>
@@ -129,6 +120,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/08/30/happy-8th-birthday/index.html">Happy 8th Birthday, Brakeman!</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/index.html">Brakeman Has Been Acquired by Synopsys</a>
       </li>
     
@@ -142,10 +137,6 @@
     
       <li class="post">
         <a href="/blog/2018/03/23/brakeman-4-dot-2-1-released">Brakeman 4.2.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2018/02/21/brakeman-4-dot-2-0-released">Brakeman 4.2.0 Released</a>
       </li>
     
   </ul>

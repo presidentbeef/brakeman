@@ -72,24 +72,37 @@
     <h1 class="entry-title">SQL Injection</h1>
   </header>
   
-  <p>Injection is #1 on the 2017 <a href="https://www.owasp.org/index.php/Top_10-2017_A1-Injection">OWASP Top Ten</a> web security risks.</p>
-
-<p>SQL injection is possible when a user is able to manipulate a value which is used unsafely inside a SQL query. This can lead to data leaks, data loss, elevation of privilege, and other unpleasant outcomes.</p>
+  <p>Injection is #1 on the 2010 <a href="https://www.owasp.org/index.php/Top_10_2010-A1">OWASP Top Ten</a> web security risks. SQL injection is when a user is able to manipulate a value which is used unsafely inside a SQL query. This can lead to data leaks, data loss, elevation of privilege, and other unpleasant outcomes.</p>
 
 <p>Brakeman focuses on ActiveRecord methods dealing with building SQL statements.</p>
 
-<p>For example, this code:</p>
+<p>A basic (Rails 2.x) example looks like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.where("name = #{params[:name]}")
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.first(:conditions =&gt; "username = '#{params[:username]}'")
 </code></pre></div></div>
 
-<p>would be reported with a warning like this:</p>
+<p>Brakeman would produce a warning like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Confidence: High
-Category: SQL Injection
-Check: SQL
-Description: Possible SQL injection
-Code: User.where("name = #{params[:name]}")
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Possible SQL injection near line 30: User.first(:conditions =&gt; ("username = '#{params[:username]}'")) 
+</code></pre></div></div>
+
+<p>The safe way to do this query is to use a parameterized query:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.first(:conditions =&gt; ["username = ?", params[:username]])
+</code></pre></div></div>
+
+<p>Brakeman also understands the new Rails 3.x way of doing things (and local variables and concatentation):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username = params[:user][:name].downcase
+password = params[:user][:password]
+
+User.first.where("username = '" + username + "' AND password = '" + password + "'")
+</code></pre></div></div>
+
+<p>This results in this kind of warning:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Possible SQL injection near line 37:
+User.first.where((((("username = '" + params[:user][:name].downcase) + "' AND password = '") + params[:user][:password]) + "'"))
 </code></pre></div></div>
 
 <p>See <a href="http://guides.rubyonrails.org/security.html#sql-injection">the Ruby Security Guide</a> for more information and <a href="http://rails-sqli.org">Rails-SQLi.org</a> for many examples of SQL injection in Rails.</p>
@@ -140,6 +153,10 @@ Code: User.where("name = #{params[:name]}")
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/08/30/happy-8th-birthday/index.html">Happy 8th Birthday, Brakeman!</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/index.html">Brakeman Has Been Acquired by Synopsys</a>
       </li>
     
@@ -153,10 +170,6 @@ Code: User.where("name = #{params[:name]}")
     
       <li class="post">
         <a href="/blog/2018/03/23/brakeman-4-dot-2-1-released">Brakeman 4.2.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2018/02/21/brakeman-4-dot-2-0-released">Brakeman 4.2.0 Released</a>
       </li>
     
   </ul>

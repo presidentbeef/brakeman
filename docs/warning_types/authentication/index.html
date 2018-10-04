@@ -74,14 +74,8 @@
   
   <p>“Authentication” is the act of verifying that a user or client is who they say they are.</p>
 
-<h3 id="hardcoded-credentials">Hardcoded Credentials</h3>
-
-<p>Brakeman will warn about constants with literal string values that appear to be passwords.</p>
-
-<p>For example:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SUPER_SECRET_PASSWORD = "password"
-</code></pre></div></div>
+<p>Right now, the only Brakeman warning in the authentication category is regarding hardcoded passwords.
+Brakeman will warn about constants with literal string values that appear to be passwords.</p>
 
 <p>Hardcoded passwords are security issues since they imply a single password and that password is stored in the source code.
 Typically source code is available to a wide number of people inside an organization, and there have been many instances of source
@@ -136,6 +130,10 @@ Each user should have their own password to make it easier to audit and revoke a
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/08/30/happy-8th-birthday/index.html">Happy 8th Birthday, Brakeman!</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/index.html">Brakeman Has Been Acquired by Synopsys</a>
       </li>
     
@@ -149,10 +147,6 @@ Each user should have their own password to make it easier to audit and revoke a
     
       <li class="post">
         <a href="/blog/2018/03/23/brakeman-4-dot-2-1-released">Brakeman 4.2.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2018/02/21/brakeman-4-dot-2-0-released">Brakeman 4.2.0 Released</a>
       </li>
     
   </ul>

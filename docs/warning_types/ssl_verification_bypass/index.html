@@ -72,14 +72,14 @@
     <h1 class="entry-title">SSL Verification Bypass</h1>
   </header>
   
-  <p>Simply using SSL isn’t enough to ensure the data you are sending is secure. Man in the middle (MITM) attacks are well known and widely used. In some cases, these attacks rely on the client to establish a connection that doesn’t check the validity of the SSL certificate presented by the server. In this case, the attacker can present their own certificate and act as a “man in the middle”.</p>
+  <p>Simply using SSL isn’t enough to ensure the data you are sending is secure. Man in the middle (MITM) attacks are well known and widely used. In some cases, these attacks rely on the client to establish a connection that doesn’t check the validity of the SSL certificate presented by the server. In this case, the attacker can present their own certificate and act as a man in the middle.</p>
 
 <p>In Ruby, this happens when the OpenSSL verification mode is set to <code class="highlighter-rouge">VERIFY_NONE</code></p>
 
-<p>require “net/https”
-	require “uri”</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require "net/https"
+require "uri"
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>uri = URI.parse("https://ssl-site.com/")
+uri = URI.parse("https://ssl-site.com/")
 http = Net::HTTP.new(uri.host, uri.port)
 http.use_ssl = true
 http.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -89,7 +89,7 @@ request = Net::HTTP::Get.new(uri.request_uri)
 response = http.request(request)
 </code></pre></div></div>
 
-<p>In this case, if an invalid certificate was presented, no verification would occur, providing an opportunity for attack. When successful, the data transmitted (cookies, request parameters, POST bodies, etc.) would all be able to be intercepted by the attacker.</p>
+<p>In this case, if an invalid certificate was presented, no verification would occur, providing an opportunity for attack. When successful, the data transmitted (cookies, request parameters, POST bodies, etc.) would all be able to be intercepted by the MITM.</p>
 
 <p>Brakeman would produce a warning like this:</p>
 
@@ -101,7 +101,7 @@ response = http.request(request)
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http.verify_mode = OpenSSL::SSL::VERIFY_PEER
 </code></pre></div></div>
 
-<p>If the server certificate is invalid or <code class="highlighter-rouge">context.ca_file</code> is not set when verifying peers an <code class="highlighter-rouge">OpenSSL::SSL::SSLError</code> will be raised.</p>
+<p>If the server certificate is invalid or context.ca_file is not set when verifying peers an OpenSSL::SSL::SSLError will be raised.</p>
 
 <p>For more information on the impact of this issue, see the paper <a href="https://www.cs.utexas.edu/~shmat/shmat_ccs12.pdf">The Most Dangerous Code in the World</a>.</p>
 
@@ -151,6 +151,10 @@ response = http.request(request)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/08/30/happy-8th-birthday/index.html">Happy 8th Birthday, Brakeman!</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/index.html">Brakeman Has Been Acquired by Synopsys</a>
       </li>
     
@@ -164,10 +168,6 @@ response = http.request(request)
     
       <li class="post">
         <a href="/blog/2018/03/23/brakeman-4-dot-2-1-released">Brakeman 4.2.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2018/02/21/brakeman-4-dot-2-0-released">Brakeman 4.2.0 Released</a>
       </li>
     
   </ul>

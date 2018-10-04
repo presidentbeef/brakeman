@@ -72,11 +72,11 @@
     <h1 class="entry-title">Dynamic Render Path</h1>
   </header>
   
-  <p>When a call to <code class="highlighter-rouge">render</code> uses a dynamically generated path, template name, file name, or action, there is the possibility that a user can access templates that should be restricted. The issue may be worse if those templates execute code.</p>
+  <p>When a call to <code class="highlighter-rouge">render</code> uses a dynamically generated path, template name, file name, or action, there is the possibility that a user can access templates that should be restricted. The issue may be worse if those templates execute code or modify the database.</p>
 
-<p>This warning is reported whenever the path to be rendered is not a static string or symbol.</p>
+<p>This warning is shown whenever the path to be rendered is not a static string or symbol.</p>
 
-<p>These warnings are often false positives, however, because it can be difficult to manipulate Rails’ assumptions about paths to perform malicious behavior. Reports of dynamic render paths should be checked carefully to see if they can be manipulated maliciously by the user.</p>
+<p>These warnings are often false positives, however, because it can be difficult to manipulate Rails’ assumptions about paths to perform malicious behavior. Reports of dynamic render paths should be checked carefully to see if they can actually be manipulated maliciously by the user.</p>
 
 <hr />
 <p>Back to <a href="/docs/warning_types">Warning Types</a></p>
@@ -124,6 +124,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/08/30/happy-8th-birthday/index.html">Happy 8th Birthday, Brakeman!</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/index.html">Brakeman Has Been Acquired by Synopsys</a>
       </li>
     
@@ -137,10 +141,6 @@
     
       <li class="post">
         <a href="/blog/2018/03/23/brakeman-4-dot-2-1-released">Brakeman 4.2.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2018/02/21/brakeman-4-dot-2-0-released">Brakeman 4.2.0 Released</a>
       </li>
     
   </ul>

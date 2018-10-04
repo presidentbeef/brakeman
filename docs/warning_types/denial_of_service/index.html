@@ -74,8 +74,6 @@
   
   <p>Denial of Service (DoS) is any attack which causes a service to become unavailable for legitimate clients.</p>
 
-<h3 id="dynamic-symbol-creation">Dynamic Symbol Creation</h3>
-
 <p>For issues that Brakeman detects, this typically arises in the form of memory leaks. In particular, since Symbols are not garbage collected, creation of large numbers of Symbols could lead to a server running out of memory.</p>
 
 <p>Brakeman checks for instances of user input which is converted to a Symbol. When this is not restricted, an attacker could create an unlimited number of Symbols.</p>
@@ -91,7 +89,17 @@ if valid_values.include? params[:value]
 end
 </code></pre></div></div>
 
-<hr />
+<p>However, Brakeman will still warn about this, because it cannot tell a valid guard expression has been used.</p>
+
+<p>Avoiding the warning itself becomes silly:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>valid_values.each do |v|
+  if v == params[:value]
+    symbolized = v.to_sym
+    break
+  end
+end ---
+</code></pre></div></div>
 
 <p>Back to <a href="/docs/warning_types">Warning Types</a></p>
 
@@ -138,6 +146,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/08/30/happy-8th-birthday/index.html">Happy 8th Birthday, Brakeman!</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/index.html">Brakeman Has Been Acquired by Synopsys</a>
       </li>
     
@@ -151,10 +163,6 @@ end
     
       <li class="post">
         <a href="/blog/2018/03/23/brakeman-4-dot-2-1-released">Brakeman 4.2.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2018/02/21/brakeman-4-dot-2-0-released">Brakeman 4.2.0 Released</a>
       </li>
     
   </ul>
