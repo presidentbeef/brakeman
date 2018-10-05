@@ -110,6 +110,7 @@ module Brakeman::WarningCodes
     :CVE_2018_8048 => 106,
     :CVE_2018_3741 => 107,
     :CVE_2018_3760 => 108,
+    :render_inline_template_injection => 109,
   }
 
   def self.code name

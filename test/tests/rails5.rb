@@ -405,11 +405,11 @@ class Rails5Tests < Minitest::Test
 
   def test_render_inline_cookies
     assert_warning :type => :warning,
-      :warning_code => 84,
-      :fingerprint => "8badd2e174576484eca32fb6015d903700d6694e9b3486be64d737aa215a36ea",
-      :warning_type => "Cross-Site Scripting",
+      :warning_code => 109,
+      :fingerprint => "576d9563329ad0a9bc32f0a070db7f9c24eecb0e09fc96ccb87db4928773e31f",
+      :warning_type => "Remote Code Execution",
       :line => 86,
-      :message => /^Unescaped\ cookie\ value\ rendered\ inline/,
+      :message => /^Potential\ remote\ code\ execution\ via\ temp/,
       :confidence => 0,
       :relative_path => "app/controllers/widget_controller.rb",
       :code => s(:render, :inline, s(:call, s(:call, s(:call, nil, :request), :cookies), :[], s(:str, "value")), s(:hash)),

@@ -16,27 +16,23 @@ class Brakeman::CheckRenderInline < Brakeman::CheckCrossSiteScripting
 
     call = result[:call]
 
-    if node_type? call, :render and
-      (call.render_type == :text or call.render_type == :inline)
+    if node_type? call, :render and call.render_type == :text and not content_type_set? call[3]
+      render_value = call[2]
 
-      unless call.render_type == :text and content_type_set? call[3]
-        render_value = call[2]
-
-        if input = has_immediate_user_input?(render_value)
-          warn :result => result,
-            :warning_type => "Cross-Site Scripting",
-            :warning_code => :cross_site_scripting_inline,
-            :message => msg("Unescaped ", msg_input(input), " rendered inline"),
-            :user_input => input,
-            :confidence => :high
-        elsif input = has_immediate_model?(render_value)
-          warn :result => result,
-            :warning_type => "Cross-Site Scripting",
-            :warning_code => :cross_site_scripting_inline,
-            :message => "Unescaped model attribute rendered inline",
-            :user_input => input,
-            :confidence => :medium
-        end
+      if input = has_immediate_user_input?(render_value)
+        warn :result => result,
+          :warning_type => "Cross-Site Scripting",
+          :warning_code => :cross_site_scripting_inline,
+          :message => msg("Unescaped ", msg_input(input), " rendered inline"),
+          :user_input => input,
+          :confidence => :high
+      elsif input = has_immediate_model?(render_value)
+        warn :result => result,
+          :warning_type => "Cross-Site Scripting",
+          :warning_code => :cross_site_scripting_inline,
+          :message => "Unescaped model attribute rendered inline",
+          :user_input => input,
+          :confidence => :medium
       end
     end
   end
