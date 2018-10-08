@@ -103,6 +103,18 @@ class WidgetController < ApplicationController
     end
   end
 
+  def redirect_to_url
+    session = User.find_by_token params[:session]
+
+    if session
+      # proceed with extracting user context from session and more and redirect to the last url the user was shown to
+      login(session.user)
+      redirect_to session.user.current_url
+    else
+      redirect_to expired_or_invalid_session_path
+    end
+  end
+
   def render_safely
     slug = params[:slug].to_s
     render slug if template_exists?(slug, 'pages')
