@@ -5,8 +5,8 @@ class Brakeman::CallIndex
 
   #Initialize index with calls from FindAllCalls
   def initialize calls
-    @calls_by_method = Hash.new { |h, k| h[k] = [] }
-    @calls_by_target = Hash.new { |h, k| h[k] = [] }
+    @calls_by_method = {}
+    @calls_by_target = {}
 
     index_calls calls
   end
@@ -87,13 +87,16 @@ class Brakeman::CallIndex
 
   def index_calls calls
     calls.each do |call|
+      @calls_by_method[call[:method]] ||= []
       @calls_by_method[call[:method]] << call
 
       target = call[:target]
 
       if not target.is_a? Sexp
+        @calls_by_target[target] ||= []
         @calls_by_target[target] << call
       elsif target.node_type == :params or target.node_type == :session
+        @calls_by_target[target.node_type] ||= []
         @calls_by_target[target.node_type] << call
       end
     end
@@ -116,7 +119,7 @@ class Brakeman::CallIndex
     if target.is_a? Array
       calls_by_targets target
     else
-      @calls_by_target[target]
+      @calls_by_target[target] || []
     end
   end
 
@@ -136,7 +139,7 @@ class Brakeman::CallIndex
     elsif method.is_a? Regexp
       calls_by_methods_regex method
     else
-      @calls_by_method[method.to_sym]
+      @calls_by_method[method.to_sym] || []
     end
   end
 
