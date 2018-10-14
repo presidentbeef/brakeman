@@ -73,6 +73,8 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
 
           process block if sexp? block
         end
+      else
+        super
       end
     end
 

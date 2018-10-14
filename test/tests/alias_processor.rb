@@ -1105,4 +1105,16 @@ class AliasProcessorTests < Minitest::Test
     x
     INPUT
   end
+
+  def test_array_each_block_arg
+    assert_output <<-INPUT, <<-OUTPUT
+    [params[:x]].each do |x|
+      puts x
+    end
+    INPUT
+    [params[:x]].each do |x|
+      puts params[:x]
+    end
+    OUTPUT
+  end
 end

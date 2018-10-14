@@ -12,7 +12,7 @@ class Rails52Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 0,
+      :template => 1,
       :generic => 9
     }
   end
@@ -25,6 +25,19 @@ class Rails52Tests < Minitest::Test
       :message => /^'protect_from_forgery'\ should\ be\ called\ /,
       :confidence => 0,
       :relative_path => "app/controllers/application_controller.rb"
+  end
+
+  def test_cross_site_scripting_iteration
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "78f03003acbd7f361e6b73cbb8cddcc3f4c3fc03a01649006e23dbfa4b9fc676",
+      :warning_type => "Cross-Site Scripting",
+      :line => 4,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/home/index.html.erb",
+      :code => s(:call, s(:params), :[], s(:lit, :x)),
+      :user_input => nil
   end
 
   def test_query_with_symbolize_keys

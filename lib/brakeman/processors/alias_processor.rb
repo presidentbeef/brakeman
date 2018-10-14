@@ -349,6 +349,14 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         # Iterating over an array of all literal values
         local = Sexp.new(:lvar, block_args.last)
         env.current[local] = safe_literal(exp.line)
+      elsif call? call and [:each, :map].include? call.method and array? call.target and block_args.length == 2 and block_args.last.is_a? Symbol and call.target.length < @or_depth_limit
+        local = Sexp.new(:lvar, block_args.last)
+        values = call.target[1..-1].reverse.reduce { |s, v| Sexp.new(:or, v, s) }
+        env.current[local] = values
+      elsif call? call and [:each, :map].include? call.method and block_args.length == 2 and block_args.last.is_a? Symbol and call.target.length < @or_depth_limit
+        local = Sexp.new(:lvar, block_args.last)
+        value = Sexp.new(:call, call.target, :[], safe_literal)
+        env.current[local] = value
       else
         block_args.each do |e|
           #Force block arg(s) to be local

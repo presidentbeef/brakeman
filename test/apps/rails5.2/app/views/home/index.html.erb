@@ -1,1 +1,5 @@
 <%= t(:my_translation, timeago: timeago(user.created_at)) %>
+
+<% [params[:x]].each do |x| %>
+  <%= x.html_safe %>
+<% end %>
