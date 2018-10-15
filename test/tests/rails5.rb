@@ -274,6 +274,19 @@ class Rails5Tests < Minitest::Test
       :user_input => s(:call, s(:call, s(:call, s(:const, :User), :find_by_token, s(:call, s(:params), :[], s(:lit, :session))), :user), :current_path)
   end
 
+  def test_redirect_with_url_on_model
+    assert_no_warning :type => :warning,
+                      :warning_code => 18,
+                      :fingerprint => "30666ad621e97ffcdacff38d70b1bafd35e7ed26dff01097df386c43158198f0",
+                      :warning_type => "Redirect",
+                      :line => 112,
+                      :message => /^Possible\ unprotected\ redirect/,
+                      :confidence => 0,
+                      :relative_path => "app/controllers/widget_controller.rb",
+                      :code => s(:call, nil, :redirect_to, s(:call, s(:call, s(:call, s(:const, :User), :find_by_token, s(:call, s(:params), :[], s(:lit, :session))), :user), :current_url)),
+                      :user_input => s(:call, s(:call, s(:call, s(:const, :User), :find_by_token, s(:call, s(:params), :[], s(:lit, :session))), :user), :current_url)
+  end
+
   def test_cross_site_scripting_with_slice
     assert_no_warning :type => :template,
       :warning_code => 4,
@@ -395,7 +408,7 @@ class Rails5Tests < Minitest::Test
       :warning_code => 15,
       :fingerprint => "5c250fd85fe088bf628d517af37038fa516acc4b6103ee6d8a15e857079ad434",
       :warning_type => "Dynamic Render Path",
-      :line => 108,
+      :line => 120,
       :message => /^Render\ path\ contains\ parameter\ value/,
       :confidence => 0,
       :relative_path => "app/controllers/widget_controller.rb",

@@ -79,7 +79,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     end
 
     if res = has_immediate_model?(arg)
-      unless call? arg and arg.method.to_s =~ /_path/
+      unless call? arg and arg.method.to_s =~ /_path|_url/
         return Match.new(immediate, res)
       end
     elsif call? arg
