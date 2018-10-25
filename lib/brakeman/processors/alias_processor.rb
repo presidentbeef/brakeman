@@ -758,6 +758,21 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
             var = condition.first_arg
             env.current[var] = safe_literal(var.line)
             exp[branch_index] = process_if_branch branch
+          elsif i == 0 and type_guard? condition
+            var = condition.target
+
+            env.current[var] = case condition.first_arg.value
+                               when :Hash
+                                 s(:call, var, :to_h)
+                               when :Array
+                                 s(:call, var, :to_a)
+                               when :Integer
+                                 s(:call, var, :to_i)
+                               when :String
+                                 s(:call, var, :to_s)
+                               end
+
+            exp[branch_index] = process_if_branch branch
           else
             exp[branch_index] = process_if_branch branch
           end
@@ -793,6 +808,13 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       not node_type? exp[1][1], :splat, :array and
       (exp[1].length == 2 or
        exp[1].all? { |e| e.is_a? Symbol or node_type? e, :lit, :str })
+  end
+
+  def type_guard? exp
+    call? exp and
+      exp.method == :is_a? and
+      node_type? exp.first_arg, :const and
+      [:Hash, :Array, :Integer, :String].include? exp.first_arg.value
   end
 
   def process_case exp

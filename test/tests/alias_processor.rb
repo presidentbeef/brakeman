@@ -1105,4 +1105,16 @@ class AliasProcessorTests < Minitest::Test
     x
     INPUT
   end
+
+  def test_class_check_if
+    assert_output <<-INPUT, <<-OUTPUT
+    if x.is_a? Hash
+      puts x
+    end
+    INPUT
+    if x.is_a? Hash
+      puts x.to_h
+    end
+    OUTPUT
+  end
 end

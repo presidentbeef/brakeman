@@ -23,4 +23,9 @@ class UsersController < ApplicationController
 
     Person.where("#{foo} >= 1")
   end
+
+  def type_guards
+    @user = User
+    @user = @user.where(params[:conditions]) if params[:conditions].is_a?(Hash)
+  end
 end
