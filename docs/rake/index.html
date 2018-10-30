@@ -72,11 +72,16 @@
     <h1 class="entry-title">Brakeman with Rake</h1>
   </header>
   
-  <p><strong>Running Brakeman via Rake is discouraged because it loads the entire Rails application.</strong> This is unnecessary and can cause strange behavior.</p>
+  <p><em>Running Brakeman via Rake is discouraged because it loads the entire Rails application</em></p>
 
-<h3 id="example">Example</h3>
+<p>Brakeman can generate and install a basic Rake task for a Rails application.</p>
 
-<p>Here is a simple Rake task to run Brakeman. It can be added to your <code class="highlighter-rouge">Rakefile</code> or in the <code class="highlighter-rouge">tasks/</code> directory.</p>
+<p>To do so, just run this at the root directory of the Rails application:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --rake
+</code></pre></div></div>
+
+<p>This will create a task in <code class="highlighter-rouge">lib/tasks/brakeman.rake</code> that looks like this:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>namespace :brakeman do
 
