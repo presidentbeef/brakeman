@@ -53,6 +53,21 @@ class ChecksTests < Minitest::Test
     assert_equal expected, Brakeman::Checks.checks_to_run(t).length
   end
 
+  def test_enable_optional_checks_duplicate
+    t = setup_tracker enable_checks: ["CheckUnscopedFind"], run_checks: ["CheckUnscopedFind"]
+
+    assert_includes Brakeman::Checks.checks_to_run(t), Brakeman::CheckUnscopedFind
+    assert_equal 1, Brakeman::Checks.checks_to_run(t).length
+  end
+
+  def test_enable_optional_checks_with_explicit
+    t = setup_tracker enable_checks: ["CheckUnscopedFind"], run_checks: ["CheckCrossSiteScripting"]
+
+    assert_includes Brakeman::Checks.checks_to_run(t), Brakeman::CheckUnscopedFind
+    assert_includes Brakeman::Checks.checks_to_run(t), Brakeman::CheckCrossSiteScripting
+    assert_equal 2, Brakeman::Checks.checks_to_run(t).length
+  end
+
   def test_missing_checks
     checks = ["Checkarghlbarghl", "CheckUnscopedFind"]
 
