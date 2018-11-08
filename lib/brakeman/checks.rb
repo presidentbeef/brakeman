@@ -170,7 +170,7 @@ class Brakeman::Checks
                @checks + @optional_checks
              else
                @checks.dup
-             end
+             end.to_set
 
     if enabled_checks = tracker.options[:enable_checks]
       @optional_checks.each do |c|
@@ -186,12 +186,13 @@ class Brakeman::Checks
   def self.filter_checks checks, tracker
     skipped = tracker.options[:skip_checks]
     explicit = tracker.options[:run_checks]
+    enabled = tracker.options[:enable_checks] || []
 
     checks.reject do |c|
       check_name = self.get_check_name(c)
 
       skipped.include? check_name or
-        (explicit and not explicit.include? check_name)
+        (explicit and not explicit.include? check_name and not enabled.include? check_name)
     end
   end
 
