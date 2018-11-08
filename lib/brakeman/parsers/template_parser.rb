@@ -59,9 +59,9 @@ module Brakeman
       else
         require 'erb'
         src = if ERB.instance_method(:initialize).parameters.assoc(:key) # Ruby 2.6+
-          ERB.new(text, trim_mode: path).src
+          ERB.new(text, trim_mode: '-').src
         else
-          ERB.new(text, nil, path).src
+          ERB.new(text, nil, '-').src
         end
         src.sub!(/^#.*\n/, '') if Brakeman::Scanner::RUBY_1_9
         src
