@@ -65,6 +65,11 @@ module Brakeman::RenderHelper
       return
     end
 
+    if called_from
+      # Track actual template that was rendered
+      called_from.last_template = template
+    end
+
     template_env = only_ivars(:include_request_vars)
 
     #Hash the environment and the source of the template to avoid

@@ -13,6 +13,29 @@ class JSONOutputTests < Minitest::Test
     end
   end
 
+  def test_for_render_path_keys
+    controller_keys = %w[type class method line file].sort
+    template_keys = %w[type name line file].sort
+    rendered_keys = %w[name file].sort
+
+    @@json["warnings"].each do |warning|
+      if rp = warning["render_path"]
+        case rp["type"]
+        when "controller"
+          assert_equal controller_keys, rp.keys.sort
+        when "template"
+          assert_equal template_keys, rp.keys.sort
+        else
+          raise "Unknown render path type: #{rp["type"]}"
+        end
+
+        if rp["rendered"]
+          assert_equal rendered_keys, rp["rendered"].keys.sort
+        end
+      end
+    end
+  end
+
   def test_for_expected_keys
     assert (@@json.keys - ["warnings", "ignored_warnings", "scan_info", "errors", "obsolete"]).empty?
   end
