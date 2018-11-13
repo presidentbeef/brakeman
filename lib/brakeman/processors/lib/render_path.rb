@@ -29,6 +29,17 @@ module Brakeman
       self
     end
 
+    def last_template= template
+      if @path.last
+        @path.last[:rendered] = {
+          name: template.name,
+          file: template.file,
+        }
+      else
+        Brakeman.debug "[Notice] No render path to add template information"
+      end
+    end
+
     def include_template? name
       name = name.to_sym
 
@@ -69,6 +80,10 @@ module Brakeman
 
     def length
       @path.length
+    end
+
+    def map &block
+      @path.map &block
     end
 
     def to_a
