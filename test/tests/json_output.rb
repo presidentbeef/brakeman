@@ -3,7 +3,7 @@ require 'json'
 
 class JSONOutputTests < Minitest::Test
   def setup
-    @@json ||= JSON.parse(Brakeman.run("#{TEST_PATH}/apps/rails4").report.to_json)
+    @@json ||= JSON.parse(Brakeman.run("#{TEST_PATH}/apps/rails3.2").report.to_json)
   end
 
   def test_for_render_path
@@ -14,23 +14,25 @@ class JSONOutputTests < Minitest::Test
   end
 
   def test_for_render_path_keys
-    controller_keys = %w[type class method line file].sort
-    template_keys = %w[type name line file].sort
+    controller_keys = %w[type class method line file rendered].sort
+    template_keys = %w[type name line file rendered].sort
     rendered_keys = %w[name file].sort
 
     @@json["warnings"].each do |warning|
-      if rp = warning["render_path"]
-        case rp["type"]
-        when "controller"
-          assert_equal controller_keys, rp.keys.sort
-        when "template"
-          assert_equal template_keys, rp.keys.sort
-        else
-          raise "Unknown render path type: #{rp["type"]}"
-        end
+      if warning["render_path"]
+        warning["render_path"].each do |rp|
+          case rp["type"]
+          when "controller"
+            assert_equal controller_keys, rp.keys.sort
+          when "template"
+            assert_equal template_keys, rp.keys.sort
+          else
+            raise "Unknown render path type: #{rp["type"]}"
+          end
 
-        if rp["rendered"]
-          assert_equal rendered_keys, rp["rendered"].keys.sort
+          if rp["rendered"]
+            assert_equal rendered_keys, rp["rendered"].keys.sort
+          end
         end
       end
     end
@@ -62,7 +64,8 @@ class JSONOutputTests < Minitest::Test
   end
 
   def test_for_obsolete
-    assert_equal ["abcdef01234567890ba28050e7faf1d54f218dfa9435c3f65f47cb378c18cf98"], @@json["obsolete"]
+    json = JSON.parse(Brakeman.run("#{TEST_PATH}/apps/rails4").report.to_json)
+    assert_equal ["abcdef01234567890ba28050e7faf1d54f218dfa9435c3f65f47cb378c18cf98"], json["obsolete"]
   end
 
   def test_paths
