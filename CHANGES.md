@@ -1,3 +1,23 @@
+# Unreleased
+
+* Add rendered template information to render paths
+* Fix trim mode for ERb templates in old Rails versions
+* Fix thread-safety issue in CallIndex
+* Add `--enable` option to enable optional checks
+* Support reading gem versions from gemspecs
+* Support gem versions which are just major.minor (e.g. 3.0)
+* Treat `if not` like `unless`
+* Handle empty `secrets.yml` files (Naoki Kimura)
+* Correctly set `rel="noreferrer"` in HTML reports
+* Avoid warning about command injection when `String#shellescape` and `Shellwords.shelljoin` are used (George Ogata)
+* Add Dockerfile to run Brakeman inside Docker (Ryan Kemper)
+* Trim some unnecessary files from bundled gems
+* Add check for CVE-2018-3760
+* Avoid nils when concatenating arrays
+* Ignore Tempfiles in FileAccess warnings (Christina Koller)
+* Complete overhaul of warning message construction
+* Deadcode and typo fixes found via Coverity
+
 # 4.3.1
 
 * Ignore `Object#freeze`, use the target instead
