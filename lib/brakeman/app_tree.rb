@@ -77,7 +77,8 @@ module Brakeman
     # of AppTree using project-root based paths (e.g. app/models/user.rb)
     # instead of full paths, but I suspect it's an incompatible change.
     def read_path(path)
-      File.read(path)
+      # Read files to be parsed in binary mode, like RubyParser's utilities do
+      File.read(path, mode: "rb")
     end
 
     def exists?(path)
