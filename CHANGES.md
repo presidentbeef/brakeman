@@ -1,5 +1,8 @@
-# Unreleased
+# 4.4.0
 
+* Set default encoding to UTF-8
+* Update to Slim 4.0.1 (Jake Peterson)
+* Update to RubyParser 3.12.0
 * Add rendered template information to render paths
 * Fix trim mode for ERb templates in old Rails versions
 * Fix thread-safety issue in CallIndex
