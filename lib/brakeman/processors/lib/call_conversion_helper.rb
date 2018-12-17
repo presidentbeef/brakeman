@@ -40,6 +40,10 @@ module Brakeman
       else
         original_exp
       end
+    rescue Encoding::CompatibilityError => e
+      # If the two strings are different encodings, we can't join them.
+      Brakeman.debug e.inspect
+      original_exp
     end
 
     def math_op op, lhs, rhs, original_exp = nil
