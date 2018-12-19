@@ -217,7 +217,7 @@ class Sexp
       if self[1]
         self[1..-1].unshift :arglist
       else
-        Sexp.new(:arglist)
+        Sexp.new(:arglist).line(self.line)
       end
     end
   end
@@ -234,13 +234,13 @@ class Sexp
       if self[3]
         self[3..-1]
       else
-        Sexp.new
+        Sexp.new.line(self.line)
       end
     when :super, :zsuper
       if self[1]
         self[1..-1]
       else
-        Sexp.new
+        Sexp.new.line(self.line)
       end
     end
   end
@@ -423,7 +423,7 @@ class Sexp
   def block_args
     expect :iter
     if self[2] == 0 # ?! See https://github.com/presidentbeef/brakeman/issues/331
-      return Sexp.new(:args)
+      return Sexp.new(:args).line(self.line)
     else
       self[2]
     end
@@ -549,7 +549,7 @@ class Sexp
   #Like Sexp#body, except the returned Sexp is of type :rlist
   #instead of untyped.
   def body_list
-    self.body.unshift :rlist
+    self.body.unshift(:rlist).line(self.line)
   end
 
   def render_type

@@ -192,11 +192,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       res = process_or_simple_operation(exp)
       return res if res
     elsif target == ARRAY_CONST and method == :new
-      return Sexp.new(:array, *exp.args)
+      return Sexp.new(:array, *exp.args).line(exp.line)
     elsif target == HASH_CONST and method == :new and first_arg.nil? and !node_type?(@exp_context.last, :iter)
-      return Sexp.new(:hash)
+      return Sexp.new(:hash).line(exp.line)
     elsif exp == RAILS_TEST
-      return Sexp.new(:false)
+      return Sexp.new(:false).line(exp.line)
     end
 
     #See if it is possible to simplify some basic cases
@@ -234,7 +234,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         env[target_var] = target
         return target
       elsif string? target and string_interp? first_arg
-        exp = Sexp.new(:dstr, target.value + first_arg[1]).concat(first_arg[2..-1])
+        exp = Sexp.new(:dstr, target.value + first_arg[1]).line(exp.line).concat(first_arg[2..-1])
         env[target_var] = exp
       elsif string? first_arg and string_interp? target
         if string? target.last
@@ -273,7 +273,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   # Painful conversion of Array#join into string interpolation
   def process_array_join array, join_str
-    result = s()
+    line = array.line
+    result = s().line(line)
 
     join_value = if string? join_str
                    join_str.value
@@ -311,11 +312,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     result.unshift combined_first
 
     # Have to fix up strings that follow interpolation
-    result.reduce(s(:dstr)) do |memo, e|
+    result.reduce(s(:dstr).line(line)) do |memo, e|
       if string? e and node_type? memo.last, :evstr
         e.value = "#{join_value}#{e.value}"
       elsif join_value and node_type? memo.last, :evstr and node_type? e, :evstr
-        memo << s(:str, join_value)
+        memo << s(:str, join_value).line(line)
       end
 
       memo << e
@@ -326,9 +327,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     if item.is_a? String
       "#{item}#{join_value}"
     elsif string? item or symbol? item or number? item
-      s(:str, "#{item.value}#{join_value}")
+      s(:str, "#{item.value}#{join_value}").line(item.line)
     else
-      s(:evstr, item)
+      s(:evstr, item).line(item.line)
     end
   end
 
@@ -353,16 +354,16 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         block_args.each do |e|
           #Force block arg(s) to be local
           if node_type? e, :lasgn
-            env.current[Sexp.new(:lvar, e.lhs)] = Sexp.new(:lvar, e.lhs)
+            env.current[Sexp.new(:lvar, e.lhs)] = Sexp.new(:lvar, e.lhs).line(e.line)
           elsif node_type? e, :kwarg
             env.current[Sexp.new(:lvar, e[1])] = e[2]
           elsif node_type? e, :masgn, :shadow
             e[1..-1].each do |var|
-              local = Sexp.new(:lvar, var)
+              local = Sexp.new(:lvar, var).line(e.line)
               env.current[local] = local
             end
           elsif e.is_a? Symbol
-            local = Sexp.new(:lvar, e)
+            local = Sexp.new(:lvar, e).line(exp.line)
             env.current[local] = local
           else
             raise "Unexpected value in block args: #{e.inspect}"
@@ -571,7 +572,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         if node_type? var, :masgn
           # Need to add value to masgn exp
           m = var.dup
-          m[2] = s(:to_ary, val)
+          m[2] = s(:to_ary, val).line(val.line)
 
           process_masgn m
         else
@@ -629,7 +630,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         end
       end
     else
-      new_value = process s(:call, s(:call, target_var, :[], index), exp[3], value)
+      new_value = process s(:call, s(:call, target_var, :[], index), exp[3], value).line(exp.line)
 
       env[match] = new_value
     end

@@ -61,9 +61,9 @@ class Brakeman::TemplateProcessor < Brakeman::BaseProcessor
       branches = [arg.then_clause, arg.else_clause].compact
 
       if branches.empty?
-        s(:nil)
+        s(:nil).line(arg.line)
       elsif branches.length == 2
-        Sexp.new(:or, *branches)
+        Sexp.new(:or, *branches).line(arg.line)
       else
         branches.first
       end
