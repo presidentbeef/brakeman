@@ -369,6 +369,9 @@ class SexpTests < Minitest::Test
 
     s.line(0)
     assert_equal 0, s.line
+
+    # Setting line to nil should still return the Sexp
+    assert_equal s, s.line(nil)
   end
 
   def test_sexp_original_line_set

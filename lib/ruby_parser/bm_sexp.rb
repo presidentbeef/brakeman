@@ -46,6 +46,20 @@ class Sexp
     s
   end
 
+  def line l = :retrieve
+    # The intent of this method is to either get the line value or set the line value in a chainable way.
+    # However, I keep running into issues where I accidentally set the line to `nil` and still expect
+    # `self` to be returned. Instead, I get `nil`.
+    #
+    # Overriding with a sigil for the default value instead of `nil`.
+    if l == :retrieve
+      @line ||= nil
+    else
+      @line = l
+      self
+    end
+  end
+
   def paren
     @paren ||= false
   end
