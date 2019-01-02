@@ -14,7 +14,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   @description = "Check for SQL injection"
 
   def run_check
-    narrow_targets = [:exists?, :select]
+    # Avoid reporting `user_input` on silly values when generating warning.
+    # Note that we retroactively find `user_input` inside the "dangerous" value.
+    @safe_input_attributes.merge IGNORE_METHODS_IN_SQL
 
     @sql_targets = [:average, :calculate, :count, :count_by_sql, :delete_all, :destroy_all,
                     :find_by_sql, :maximum, :minimum, :pluck, :sum, :update_all]
@@ -43,6 +45,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     Brakeman.debug "Finding possible SQL calls on models"
     calls = tracker.find_call(:methods => @sql_targets, :nested => true)
 
+    narrow_targets = [:exists?, :select]
     calls.concat tracker.find_call(:targets => active_record_models.keys, :methods => narrow_targets, :chained => true)
 
     Brakeman.debug "Finding possible SQL calls with no target"

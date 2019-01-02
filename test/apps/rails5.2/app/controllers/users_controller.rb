@@ -23,4 +23,11 @@ class UsersController < ApplicationController
 
     Person.where("#{foo} >= 1")
   end
+
+  def better_user_input_reporting
+    table = Something.selection.select { |x| some_condition? x }.map { |x| "#{User.table_name}.#{x}" } 
+
+    # Should report SQLi, but not about User.table_name specifically
+    User.find_by_sql("SELECT #{"#{table}.name"} where name = #{params[:name]}")
+  end
 end
