@@ -1,7 +1,7 @@
 ## Copyright Assignment
 
 By opening a pull request to https://github.com/presidentbeef/brakeman,
-you agree to assign all rights to the code to Synopsys, Inc.
+you agree to assign all rights to the code to Synopsys, Inc. under the [Brakeman Public Use License](LICENSE.md).
 
 ## Submitting a Pull Request
 
