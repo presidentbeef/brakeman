@@ -146,7 +146,7 @@ module Brakeman::Util
   #Check if _exp_ represents a hash: s(:hash, {...})
   #This also includes pseudo hashes params, session, and cookies.
   def hash? exp
-    exp.is_a? Sexp and (exp.node_type == :hash or
+    exp.is_a? Sexp and ((exp.node_type == :hash and not node_type? exp[1], :kwsplat) or
                         exp.node_type == :params or
                         exp.node_type == :session or
                         exp.node_type == :cookies)
@@ -262,6 +262,13 @@ module Brakeman::Util
 
   def constant? exp
     node_type? exp, :const, :colon2, :colon3
+  end
+
+  def kwsplat? exp
+    exp.is_a? Sexp and
+      exp.node_type == :hash and
+      exp[1].is_a? Sexp and
+      exp[1].node_type == :kwsplat
   end
 
   #Check if _exp_ is a Sexp.
