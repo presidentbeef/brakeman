@@ -13,7 +13,7 @@ class Rails52Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 0,
-      :generic => 9
+      :generic => 10
     }
   end
 
@@ -101,6 +101,19 @@ class Rails52Tests < Minitest::Test
       :relative_path => "app/models/user.rb",
       :code => s(:call, s(:const, :User), :joins, s(:dstr, "INNER JOIN <complex join involving custom SQL and ", s(:evstr, s(:call, s(:call, nil, :reflect_on_association, s(:lit, :foos)), :foreign_key)), s(:str, " interpolation>"))),
       :user_input => s(:call, s(:call, nil, :reflect_on_association, s(:lit, :foos)), :foreign_key)
+  end
+
+  def test_sql_injection_user_input
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "f7affe2dfe9e3a48f39f1fb86224e150e60555a73f2e78fb499eadd298233625",
+      :warning_type => "SQL Injection",
+      :line => 31,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :User), :find_by_sql, s(:dstr, "SELECT ", s(:evstr, s(:iter, s(:call, s(:iter, s(:call, s(:call, s(:const, :Something), :selection), :select), s(:args, :x), s(:call, nil, :some_condition?, s(:lvar, :x))), :map), s(:args, :x), s(:dstr, "", s(:evstr, s(:call, s(:const, :User), :table_name)), s(:str, "."), s(:evstr, s(:lvar, :x))))), s(:str, ".name"), s(:str, " where name = "), s(:evstr, s(:call, s(:params), :[], s(:lit, :name))))),
+      :user_input => s(:iter, s(:call, s(:iter, s(:call, s(:call, s(:const, :Something), :selection), :select), s(:args, :x), s(:call, nil, :some_condition?, s(:lvar, :x))), :map), s(:args, :x), s(:dstr, "", s(:evstr, s(:call, s(:const, :User), :table_name)), s(:str, "."), s(:evstr, s(:lvar, :x))))
   end
 
   def test_ignoring_freeze_generally
