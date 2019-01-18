@@ -27,7 +27,6 @@ class Brakeman::CheckEvaluation < Brakeman::BaseCheck
         :warning_type => "Dangerous Eval",
         :warning_code => :code_eval,
         :message => "User input in eval",
-        :code => result[:call],
         :user_input => input,
         :confidence => :high
     end
