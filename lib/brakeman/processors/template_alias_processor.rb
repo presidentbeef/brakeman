@@ -27,9 +27,9 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
         return
       end
 
-      super name, args, @called_from.dup.add_template_render(@template.name, line, @file_name)
+      super name, args, @called_from.dup.add_template_render(@template.name, line, @file_name), line
     else
-      super name, args, Brakeman::RenderPath.new.add_template_render(@template.name, line, @file_name)
+      super name, args, Brakeman::RenderPath.new.add_template_render(@template.name, line, @file_name), line
     end
   end
 
