@@ -30,4 +30,12 @@ class UsersController < ApplicationController
     # Should report SQLi, but not about User.table_name specifically
     User.find_by_sql("SELECT #{"#{table}.name"} where name = #{params[:name]}")
   end
+
+  def splat_args 
+    Person.where(*params[:foo]).qualify.all
+  end
+
+  def splat_kwargs
+    User.where(**params[:foo]).qualify.all
+  end
 end

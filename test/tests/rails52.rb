@@ -13,7 +13,7 @@ class Rails52Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 0,
-      :generic => 10
+      :generic => 12
     }
   end
 
@@ -114,6 +114,32 @@ class Rails52Tests < Minitest::Test
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, s(:const, :User), :find_by_sql, s(:dstr, "SELECT ", s(:evstr, s(:iter, s(:call, s(:iter, s(:call, s(:call, s(:const, :Something), :selection), :select), s(:args, :x), s(:call, nil, :some_condition?, s(:lvar, :x))), :map), s(:args, :x), s(:dstr, "", s(:evstr, s(:call, s(:const, :User), :table_name)), s(:str, "."), s(:evstr, s(:lvar, :x))))), s(:str, ".name"), s(:str, " where name = "), s(:evstr, s(:call, s(:params), :[], s(:lit, :name))))),
       :user_input => s(:iter, s(:call, s(:iter, s(:call, s(:call, s(:const, :Something), :selection), :select), s(:args, :x), s(:call, nil, :some_condition?, s(:lvar, :x))), :map), s(:args, :x), s(:dstr, "", s(:evstr, s(:call, s(:const, :User), :table_name)), s(:str, "."), s(:evstr, s(:lvar, :x))))
+  end
+
+  def test_sql_injection_splat
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "c869a301cba116872eac10eda8b3f99dff818c5014cd2552110a8eb4dcdfe661",
+      :warning_type => "SQL Injection",
+      :line => 35,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :Person), :where, s(:splat, s(:call, s(:params), :[], s(:lit, :foo)))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :foo))
+  end
+
+  def test_sql_injection_kwsplat
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "624ecefdd9521b00ceb9ae845c523fe456c6494d59f8fa2217474a1d4d46e512",
+      :warning_type => "SQL Injection",
+      :line => 39,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :User), :where, s(:hash, s(:kwsplat, s(:call, s(:params), :[], s(:lit, :foo))))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :foo))
   end
 
   def test_ignoring_freeze_generally

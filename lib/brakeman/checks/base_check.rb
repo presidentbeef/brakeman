@@ -348,6 +348,22 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       when :or
         has_immediate_user_input? exp.lhs or
         has_immediate_user_input? exp.rhs
+      when :splat, :kwsplat
+        exp.each_sexp do |e|
+          match = has_immediate_user_input?(e)
+          return match if match
+        end
+
+        false
+      when :hash
+        if kwsplat? exp
+          exp[1].each_sexp do |e|
+            match = has_immediate_user_input?(e)
+            return match if match
+          end
+
+          false
+        end
       else
         false
       end
