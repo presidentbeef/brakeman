@@ -10,7 +10,13 @@ jobs:
           BUNDLE_JOBS: 4
           BUNDLE_RETRY: 3
           BUNDLE_PATH: vendor/bundle
+    parallelism: 4
     steps:
       - checkout
       - run: bundle check || bundle install
-      - run: bundle exec rake
+      - run:
+          command: |
+            TESTFILES=$(circleci tests glob "test/tests/*.rb" | circleci tests split --split-by=timings)
+            bundle exec ruby -e 'ARGV.each {|f| require File.join(".", f) }' -- $TESTFILES
+      - store_test_results:
+          path: test-results
