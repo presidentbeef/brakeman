@@ -16,6 +16,11 @@ require 'brakeman'
 require 'brakeman/scanner'
 require 'minitest/autorun'
 require 'minitest/pride'
+require 'minitest/ci'
+
+if ENV["CIRCLECI"]
+  Minitest::Ci.report_dir = File.join("test-results", "minitest")
+end
 
 class Minitest::Test
   def assert_nothing_raised *args
