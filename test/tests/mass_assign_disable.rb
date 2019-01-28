@@ -1,4 +1,5 @@
 require_relative '../test'
+require 'brakeman/rescanner'
 
 class MassAssignDisableTest < Minitest::Test
   include BrakemanTester::RescanTestHelper

@@ -98,6 +98,15 @@ end
 module BrakemanTester::RescanTestHelper
   attr_reader :original, :rescan, :rescanner
 
+  def self.included _
+    unless Brakeman::Rescanner.instance_methods.include? :reindex
+      Brakeman::Rescanner.class_eval do
+        #For access to internals
+        attr_reader :changes, :reindex
+      end
+    end
+  end
+
   #Takes care of copying files to a temporary directory, scanning the files,
   #performing operations in the block (if provided), then rescanning the files
   #given in `changed`.
