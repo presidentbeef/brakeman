@@ -1116,4 +1116,13 @@ class AliasProcessorTests < Minitest::Test
     a
     INPUT
   end
+
+  def test_join_very_long_string
+    long_string = "*" * 50
+
+    assert_alias "#{long_string.inspect}", <<-INPUT
+    a = #{long_string.inspect} + '1'
+    a
+    INPUT
+  end
 end
