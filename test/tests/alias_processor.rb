@@ -1105,4 +1105,24 @@ class AliasProcessorTests < Minitest::Test
     x
     INPUT
   end
+
+  def test_join_incompatible_strings
+    # Fails to completely join strings
+    # because of encoding issues, but that's better
+    # than raising an exception
+    assert_alias '"P1\xC0f\xB88\x01" + "\xcd\x80"', <<-'INPUT'
+    # -*- coding: binary -*-
+    a = "\x50" + "\x31\xc0" + "\x66\xb8\x38\x01" + "\xcd\x80"
+    a
+    INPUT
+  end
+
+  def test_join_very_long_string
+    long_string = "*" * 50
+
+    assert_alias "#{long_string.inspect}", <<-INPUT
+    a = #{long_string.inspect} + '1'
+    a
+    INPUT
+  end
 end
