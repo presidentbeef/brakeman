@@ -45,6 +45,16 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
   def process_result result
     return if duplicate? result
 
+    case result[:location][:type]
+    when :template
+      @current_template = result[:location][:template]
+    when :class
+      @current_class = result[:location][:class]
+      @current_method = result[:location][:method]
+    end
+
+    @current_file = result[:location][:file]
+
     call = result[:call] = result[:call].dup
 
     args = call.arglist
@@ -85,6 +95,8 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
         end
       end
     end
+  ensure
+    @current_template = @current_class = @current_method = @current_file = nil
   end
 
   def check_argument result, exp
