@@ -66,7 +66,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         end
       end
     rescue => err
-      @tracker.error err if @tracker
+      if @tracker
+        @tracker.error err
+      else
+        raise err
+      end
     end
 
     result = replace(exp)
