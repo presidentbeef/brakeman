@@ -1125,4 +1125,13 @@ class AliasProcessorTests < Minitest::Test
     a
     INPUT
   end
+
+  def test_alias_processor_failure
+    assert_raises do
+      Brakeman::AliasProcessor.new.process s(:block, s(:attrasgn, s(:call, nil, :x), :"[]!", s(:lit, 1), s(:lit, 2)))
+    end
+
+    # Does not raise because the error is caught and handled by the Tracker
+    assert Brakeman::AliasProcessor.new(Brakeman::Tracker.new(nil)).process s(:block, s(:attrasgn, s(:call, nil, :x), :"[]!", s(:lit, 1), s(:lit, 2)))
+  end
 end
