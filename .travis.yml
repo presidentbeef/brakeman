@@ -25,7 +25,6 @@ matrix:
   include:
     - rvm: "ruby-head"
     - rvm: "jruby"
-    - rvm: "1.9.3"
     - rvm: "2.3.5"
     - rvm: "2.4.2"
     - rvm: "2.5.1"
