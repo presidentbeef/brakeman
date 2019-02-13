@@ -234,7 +234,12 @@ class CVETests < Minitest::Test
     end
 
     assert_version "3.2.22.4"
-    assert_fixed 30 # 3 for CVE-2016-6316
+    expected = if RUBY_PLATFORM == "java"
+                 31 # 1 for CVE_2013_1856
+               else
+                 30
+               end
+    assert_fixed expected # 3 for CVE-2016-6316
   end
 
   def test_CVE_2016_6316_rails5
