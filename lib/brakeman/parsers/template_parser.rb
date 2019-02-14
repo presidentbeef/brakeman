@@ -89,6 +89,7 @@ module Brakeman
 
     def parse_slim path, text
       Brakeman.load_brakeman_dependency 'slim'
+      require_relative 'slim_embedded'
 
       Slim::Template.new(path,
                          :disable_capture => true,
