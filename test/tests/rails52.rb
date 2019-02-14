@@ -12,7 +12,7 @@ class Rails52Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 0,
+      :template => 1,
       :generic => 12
     }
   end
@@ -331,6 +331,19 @@ class Rails52Tests < Minitest::Test
       :relative_path => "lib/shell.rb",
       :code => s(:dxstr, "echo ", s(:evstr, s(:lvar, :exp))),
       :user_input => s(:lvar, :exp)
+  end
+
+  def test_cross_site_scripting_haml_sass
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "db7e1700f76fd10d65a9218a32e8e6d03802a80a0830960c9221473ee313bd49",
+      :warning_type => "Cross-Site Scripting",
+      :line => 4,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 2,
+      :relative_path => "app/views/users/one.html.haml",
+      :code => s(:call, nil, :raw, s(:call, s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))), :name)),
+      :user_input => s(:call, s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))), :name)
   end
 
   def test_cross_site_scripting_loofah_CVE_2018_8048
