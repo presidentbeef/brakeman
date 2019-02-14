@@ -75,16 +75,12 @@ module Brakeman
 
     def parse_haml path, text
       Brakeman.load_brakeman_dependency 'haml'
-      Brakeman.load_brakeman_dependency 'sass'
 
       Haml::Engine.new(text,
                        :filename => path,
                        :escape_html => tracker.config.escape_html?).precompiled.gsub(/([^\\])\\n/, '\1')
     rescue Haml::Error => e
       tracker.error e, ["While compiling HAML in #{path}"] << e.backtrace
-      nil
-    rescue Sass::SyntaxError => e
-      tracker.error e, "While processing #{path}"
       nil
     end
 
