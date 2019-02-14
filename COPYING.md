@@ -1,4 +1,4 @@
-Code committed on or after June 15, 2018 is licensed under the [Brakeman Public Use Licese](https://github.com/presidentbeef/brakeman/blob/master/LICENSE.md) and is owned by Synopsys, Inc.
+Code committed on or after June 15, 2018 is licensed under the [Brakeman Public Use License](https://github.com/presidentbeef/brakeman/blob/master/LICENSE.md) and is owned by Synopsys, Inc.
 
 Code committed prior to June 15, 2018 is licensed under the MIT license and is owned by the respective copyright holders.
 
