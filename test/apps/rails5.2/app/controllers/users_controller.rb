@@ -42,4 +42,8 @@ class UsersController < ApplicationController
   def one
     @user = User.find(params[:id])
   end
+
+  def two
+    @user = User.find(params[:id])
+  end
 end
