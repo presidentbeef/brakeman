@@ -75,9 +75,7 @@ module Brakeman
 
     def parse_haml path, text
       Brakeman.load_brakeman_dependency 'haml'
-      require_relative 'haml_coffee'
-      require_relative 'haml_markdown'
-      require_relative 'haml_sass'
+      require_relative 'haml_embedded'
 
       Haml::Engine.new(text,
                        :filename => path,
