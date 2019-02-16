@@ -12,7 +12,7 @@ class Rails52Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 0,
+      :template => 2,
       :generic => 12
     }
   end
@@ -331,6 +331,32 @@ class Rails52Tests < Minitest::Test
       :relative_path => "lib/shell.rb",
       :code => s(:dxstr, "echo ", s(:evstr, s(:lvar, :exp))),
       :user_input => s(:lvar, :exp)
+  end
+
+  def test_cross_site_scripting_haml_sass
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "45a1c26b6a6b4735351d7d6ce91e33e9b7295865e7e8e49cbafd5945c9429862",
+      :warning_type => "Cross-Site Scripting",
+      :line => 4,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :relative_path => "app/views/users/one.html.haml",
+      :code => s(:call, s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))), :name),
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_slim_sass
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "4a2b104710afbfb3861dc1e6f1b4b6e2459e422662561e009722b31e6e8f6d87",
+      :warning_type => "Cross-Site Scripting",
+      :line => 6,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :relative_path => "app/views/users/two.html.slim",
+      :code => s(:call, s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))), :name),
+      :user_input => nil
   end
 
   def test_cross_site_scripting_loofah_CVE_2018_8048

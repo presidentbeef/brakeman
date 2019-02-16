@@ -8,6 +8,7 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
   OUTPUT_BUFFER = s(:ivar, :@output_buffer)
   TEMPLE_UTILS = s(:colon2, s(:colon3, :Temple), :Utils)
   ATTR_MERGE = s(:call, s(:call, s(:array), :reject, s(:block_pass, s(:lit, :empty?))), :join, s(:str, " "))
+  EMBEDDED_FILTER = s(:const, :BrakemanFilter)
 
   def process_call exp
     target = exp.target
@@ -42,6 +43,21 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
       exp.arglist = process exp.arglist
       exp
     end
+  end
+
+  def normalize_output arg
+    arg = super(arg)
+
+    if embedded_filter? arg
+      super(arg.first_arg)
+    else
+      arg
+    end
+  end
+
+  # Handle our "fake" embedded filters
+  def embedded_filter? arg
+    call? arg and arg.method == :render and arg.target == EMBEDDED_FILTER
   end
 
   #Slim likes to interpolate output into strings then pass them to safe_concat.

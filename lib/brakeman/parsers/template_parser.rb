@@ -75,7 +75,7 @@ module Brakeman
 
     def parse_haml path, text
       Brakeman.load_brakeman_dependency 'haml'
-      Brakeman.load_brakeman_dependency 'sass'
+      require_relative 'haml_embedded'
 
       Haml::Engine.new(text,
                        :filename => path,
@@ -83,13 +83,11 @@ module Brakeman
     rescue Haml::Error => e
       tracker.error e, ["While compiling HAML in #{path}"] << e.backtrace
       nil
-    rescue Sass::SyntaxError => e
-      tracker.error e, "While processing #{path}"
-      nil
     end
 
     def parse_slim path, text
       Brakeman.load_brakeman_dependency 'slim'
+      require_relative 'slim_embedded'
 
       Slim::Template.new(path,
                          :disable_capture => true,

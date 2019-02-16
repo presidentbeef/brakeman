@@ -57,12 +57,12 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
     if exp.node_type == :output
       out = exp.value
-    elsif exp.node_type == :escaped_output
-      if raw_call? exp
-        out = exp.value.first_arg
-      elsif html_safe_call? exp
-        out = exp.value.target
-      end
+    end
+
+    if raw_call? exp
+      out = exp.value.first_arg
+    elsif html_safe_call? exp
+      out = exp.value.target
     end
 
     return if call? out and ignore_call? out.target, out.method

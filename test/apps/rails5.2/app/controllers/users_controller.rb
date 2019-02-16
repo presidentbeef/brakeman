@@ -38,4 +38,12 @@ class UsersController < ApplicationController
   def splat_kwargs
     User.where(**params[:foo]).qualify.all
   end
+
+  def one
+    @user = User.find(params[:id])
+  end
+
+  def two
+    @user = User.find(params[:id])
+  end
 end
