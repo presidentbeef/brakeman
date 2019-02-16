@@ -336,14 +336,14 @@ class Rails52Tests < Minitest::Test
   def test_cross_site_scripting_haml_sass
     assert_warning :type => :template,
       :warning_code => 2,
-      :fingerprint => "db7e1700f76fd10d65a9218a32e8e6d03802a80a0830960c9221473ee313bd49",
+      :fingerprint => "45a1c26b6a6b4735351d7d6ce91e33e9b7295865e7e8e49cbafd5945c9429862",
       :warning_type => "Cross-Site Scripting",
       :line => 4,
       :message => /^Unescaped\ model\ attribute/,
-      :confidence => 2,
+      :confidence => 0,
       :relative_path => "app/views/users/one.html.haml",
-      :code => s(:call, nil, :raw, s(:call, s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))), :name)),
-      :user_input => s(:call, s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))), :name)
+      :code => s(:call, s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))), :name),
+      :user_input => nil
   end
 
   def test_cross_site_scripting_slim_sass
