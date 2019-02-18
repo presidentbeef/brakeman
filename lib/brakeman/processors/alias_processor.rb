@@ -589,6 +589,25 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     exp
   end
 
+  def process_hash exp
+    exp = process_default(exp)
+
+    # Handle { **kw }
+    # This could be very ineffecient for large hashes with several kwsplats, but that seems rare
+    if node_type? exp, :hash # Can't use hash? because it checks for even arg length
+      if exp.any? { |e| node_type? e, :kwsplat and node_type? e.value, :hash }
+        exp.dup.each_with_index do |e, i|
+          if node_type? e, :kwsplat and node_type? e.value, :hash
+            exp.delete_at(i)
+            exp = process_hash_merge! exp, e.value
+          end
+        end
+      end
+    end
+
+    exp
+  end
+
   #Merge values into hash when processing
   #
   # h.merge! :something => "value"
