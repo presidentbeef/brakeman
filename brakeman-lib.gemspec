@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://brakemanscanner.org"
   s.files = ["bin/brakeman", "CHANGES.md", "FEATURES", "README.md"] + Dir["lib/**/*"]
   s.executables = ["brakeman"]
-  s.license = "CC-BY-NC-SA-4.0"
+  s.license = "Brakeman Public Use License"
   s.cert_chain  = ['brakeman-public_cert.pem']
   s.signing_key = gem_priv_key if File.exist? gem_priv_key and $0 =~ /gem\z/
 
