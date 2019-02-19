@@ -5,7 +5,7 @@ module Slim
       def on_slim_embedded(engine, body, attrs)
         # Override this method to avoid Slim trying to load sass/scss and failing
         case engine
-        when :sass, :scss
+        when :sass, :scss, :coffee
           tilt_engine = nil # Doesn't really matter, ignored below
         else
           # Original Slim code
@@ -27,5 +27,18 @@ module Slim
          "BrakemanFilter.render(#{text.inspect}, #{self.class})"]
       end
     end
+
+    class CoffeeEngine < TiltEngine
+      protected
+
+      def tilt_render(tilt_engine, tilt_options, text)
+        [:dynamic,
+         "BrakemanFilter.render(#{text.inspect}, #{self.class})"]
+      end
+    end
+
+    # Override the engine for CoffeeScript, because Slim doesn't have
+    # one, it just uses Tilt's
+    register :coffee, JavaScriptEngine, engine: CoffeeEngine
   end
 end
