@@ -94,8 +94,18 @@ module Brakeman::Util
   # end
   # names #["bob"]
   def hash_iterate hash
+    hash = remove_kwsplat(hash)
+
     1.step(hash.length - 1, 2) do |i|
       yield hash[i], hash[i + 1]
+    end
+  end
+
+  def remove_kwsplat exp
+    if exp.any? { |e| node_type? e, :kwsplat }
+      exp.reject { |e| node_type? e, :kwsplat }
+    else
+      exp
     end
   end
 
@@ -146,7 +156,7 @@ module Brakeman::Util
   #Check if _exp_ represents a hash: s(:hash, {...})
   #This also includes pseudo hashes params, session, and cookies.
   def hash? exp
-    exp.is_a? Sexp and ((exp.node_type == :hash and not node_type? exp[1], :kwsplat) or
+    exp.is_a? Sexp and (exp.node_type == :hash or
                         exp.node_type == :params or
                         exp.node_type == :session or
                         exp.node_type == :cookies)
