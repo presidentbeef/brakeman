@@ -1,0 +1,3 @@
+- known = { d: params[:x] }
+= render partial: "foo", locals: { **known, a: 1 }
+= render partial: "foo2", locals: { **unknown, e: params[:x] }
