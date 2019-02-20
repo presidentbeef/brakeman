@@ -589,6 +589,24 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     exp
   end
 
+  def process_hash exp
+    exp = process_default(exp)
+
+    # Handle { **kw }
+    if node_type? exp, :hash
+      if exp.any? { |e| node_type? e, :kwsplat and node_type? e.value, :hash }
+        kwsplats, rest = exp.partition { |e| node_type? e, :kwsplat and node_type? e.value, :hash }
+        exp = Sexp.new.concat(rest).line(exp)
+
+        kwsplats.each do |e|
+          exp = process_hash_merge! exp, e.value
+        end
+      end
+    end
+
+    exp
+  end
+
   #Merge values into hash when processing
   #
   # h.merge! :something => "value"

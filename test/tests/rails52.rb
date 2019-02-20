@@ -12,7 +12,7 @@ class Rails52Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 2,
+      :template => 4,
       :generic => 12
     }
   end
@@ -356,6 +356,32 @@ class Rails52Tests < Minitest::Test
       :confidence => 0,
       :relative_path => "app/views/users/two.html.slim",
       :code => s(:call, s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))), :name),
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_kwsplat_known_values
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "bc1e6c1ff0c94366d1936050698bad21b33cb7377528169a18ef609c39c373b9",
+      :warning_type => "Cross-Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/users/_foo.html.haml",
+      :code => s(:call, s(:call, nil, :params), :[], s(:lit, :x)),
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_kwsplat_unknown_values
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "f4393261a50f25e93f61ff8387643e110a2c386f9063806c99dadc8226eb6c0e",
+      :warning_type => "Cross-Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/users/_foo2.html.haml",
+      :code => s(:call, s(:call, nil, :params), :[], s(:lit, :x)),
       :user_input => nil
   end
 

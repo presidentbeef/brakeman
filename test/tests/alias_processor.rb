@@ -202,6 +202,14 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
+  def test_hash_double_splat
+    assert_alias "1", <<-RUBY
+      a = { a: 1, b: "two", c: :three }
+      b = { **a, d: 4 }
+      b[:a]
+    RUBY
+  end
+
   def test_obvious_if
     assert_alias "'Yes!'", <<-RUBY
       condition = true

@@ -297,7 +297,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         # Model.where(params[:where])
         arg
       end
-    elsif hash? arg
+    elsif hash? arg and not kwsplat? arg
       #This is generally going to be a hash of column names and values, which
       #would escape the values. But the keys _could_ be user input.
       check_hash_keys arg
