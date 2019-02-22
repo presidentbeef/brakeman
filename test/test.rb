@@ -16,9 +16,9 @@ require 'brakeman'
 require 'brakeman/scanner'
 require 'minitest/autorun'
 require 'minitest/pride'
-require 'minitest/ci'
 
 if ENV["CIRCLECI"]
+  require 'minitest/ci'
   Minitest::Ci.report_dir = File.join("test-results", "minitest")
 end
 
