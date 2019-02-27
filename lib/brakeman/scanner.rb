@@ -118,7 +118,7 @@ class Brakeman::Scanner
     path = "config/#{file}"
 
     if @app_tree.exists?(path)
-      @processor.process_config(parse_ruby(@app_tree.read(path)), path)
+      @processor.process_config(parse_ruby_file(path), path)
     end
 
   rescue => e
@@ -132,9 +132,9 @@ class Brakeman::Scanner
   def process_gems
     gem_files = {}
     if @app_tree.exists? "Gemfile"
-      gem_files[:gemfile] = { :src => parse_ruby(@app_tree.read("Gemfile")), :file => "Gemfile" }
+      gem_files[:gemfile] = { :src => parse_ruby_file("Gemfile"), :file => "Gemfile" }
     elsif @app_tree.exists? "gems.rb"
-      gem_files[:gemfile] = { :src => parse_ruby(@app_tree.read("gems.rb")), :file => "gems.rb" }
+      gem_files[:gemfile] = { :src => parse_ruby_file("gems.rb"), :file => "gems.rb" }
     end
 
     if @app_tree.exists? "Gemfile.lock"
@@ -144,7 +144,7 @@ class Brakeman::Scanner
     end
 
     if @app_tree.gemspec
-      gem_files[:gemspec] = { :src => parse_ruby(@app_tree.read(@app_tree.gemspec)), :file => @app_tree.gemspec }
+      gem_files[:gemspec] = { :src => parse_ruby_file(@app_tree.gemspec), :file => @app_tree.gemspec }
     end
 
     if not gem_files.empty?
@@ -214,10 +214,9 @@ class Brakeman::Scanner
   #Adds parsed information to tracker.routes
   def process_routes
     if @app_tree.exists?("config/routes.rb")
-      begin
-        @processor.process_routes parse_ruby(@app_tree.read("config/routes.rb"))
-      rescue => e
-        tracker.error e.exception(e.message + "\nWhile processing routes.rb"), e.backtrace
+      if routes_sexp = parse_ruby_file("config/routes.rb")
+        @processor.process_routes routes_sexp
+      else
         Brakeman.notify "[Notice] Error while processing routes - assuming all public controller methods are actions."
         options[:assume_all_routes] = true
       end
@@ -316,8 +315,9 @@ class Brakeman::Scanner
     tracker.index_call_sites
   end
 
-  def parse_ruby input
-    RubyParser.new.parse input
+  def parse_ruby_file path
+    fp = Brakeman::FileParser.new(self.tracker, @app_tree)
+    fp.parse_ruby(@app_tree.read(path), path)
   end
 end
 
