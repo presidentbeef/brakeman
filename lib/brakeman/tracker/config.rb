@@ -122,22 +122,22 @@ module Brakeman
       current_version ||= rails_version
       return false unless current_version
 
-      version = current_version.split(".").map!(&:to_i)
-      low_version = low_version.split(".").map!(&:to_i)
-      high_version = high_version.split(".").map!(&:to_i)
+      version = current_version.split(".").map! { |v| convert_version_number v }
+      low_version = low_version.split(".").map! { |v| convert_version_number v }
+      high_version = high_version.split(".").map! { |v| convert_version_number v }
 
       version.each_with_index do |v, i|
-        if v < low_version.fetch(i, 0)
+        if lower? v, low_version.fetch(i, 0)
           return false
-        elsif v > low_version.fetch(i, 0)
+        elsif higher? v, low_version.fetch(i, 0)
           break
         end
       end
 
       version.each_with_index do |v, i|
-        if v > high_version.fetch(i, 0)
+        if higher? v, high_version.fetch(i, 0)
           return false
-        elsif v < high_version.fetch(i, 0)
+        elsif lower? v, high_version.fetch(i, 0)
           break
         end
       end
@@ -150,5 +150,30 @@ module Brakeman
         @rails[:action_controller][:session]
     end
 
+    private
+
+    def convert_version_number value
+      if value.match(/\A\d+\z/)
+        value.to_i
+      else
+        value
+      end
+    end
+
+    def lower? lhs, rhs
+      if lhs.class == rhs.class
+        lhs < rhs
+      else
+        false
+      end
+    end
+
+    def higher? lhs, rhs
+      if lhs.class == rhs.class
+        lhs > rhs
+      else
+        false
+      end
+    end
   end
 end

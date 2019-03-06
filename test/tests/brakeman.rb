@@ -148,6 +148,12 @@ class BaseCheckTests < Minitest::Test
   def test_major_minor_version
     assert version_between?("4.0", "4.0.0", "4.0.1")
   end
+
+  def test_beta_versions
+    assert version_between?("4.0.0.beta2", "4.0.0.beta1", "4.0.0.beta5")
+    refute version_between?("4.0.0.beta8", "4.0.0.beta1", "4.0.0.beta5")
+    refute version_between?("4.0.1", "4.0.0.beta1", "4.0.0.beta5")
+  end
 end
 
 class ConfigTests < Minitest::Test
