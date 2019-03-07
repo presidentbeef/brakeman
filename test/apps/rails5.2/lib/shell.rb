@@ -75,4 +75,13 @@ class ShellStuff
   def scopes(base_scope)
     EXPRESSIONS.map { |exp| base_scope.where("#{exp} ILIKE '%foo%'") }
   end
+
+  def shell_escape_model
+    a = User.new
+    z = Shellwords.escape(a.z)
+    result, status = Open3.capture2e("ls",
+                                     z)  # Should not warn
+
+    `ls #{z}` # Also should not warn
+  end
 end

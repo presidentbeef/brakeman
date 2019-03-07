@@ -90,6 +90,24 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     end
   end
 
+  def include_user_input? exp
+    if node_type? exp, :arglist, :dstr, :evstr, :dxstr
+      exp.each_sexp do |e|
+        if res = include_user_input?(e)
+          return res
+        end
+      end
+
+      false
+    else
+      if shell_escape? exp
+        false
+      else
+        super exp
+      end
+    end
+  end
+
   def dangerous_open_arg? exp
     if string_interp? exp
       # Check for input at start of string

@@ -333,6 +333,30 @@ class Rails52Tests < Minitest::Test
       :user_input => s(:lvar, :exp)
   end
 
+  def test_command_injection_shell_escape_model
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "fc6e48ece7bd1e6a9e6d03cdedfcdf7818c86515b563a9a09bb49c5da00d8324",
+      :warning_type => "Command Injection",
+      :line => 82,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "lib/shell.rb",
+      :code => s(:call, s(:const, :Open3), :capture2e, s(:str, "ls"), s(:call, s(:const, :Shellwords), :escape, s(:call, s(:call, s(:const, :User), :new), :z))),
+      :user_input => s(:call, s(:call, s(:const, :User), :new), :z)
+
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "781301c915efbc0f26482d8114744b062001946fb9450c969220fcf4f516ac2f",
+      :warning_type => "Command Injection",
+      :line => 85,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "lib/shell.rb",
+      :code => s(:dxstr, "ls ", s(:evstr, s(:call, s(:const, :Shellwords), :escape, s(:call, s(:call, s(:const, :User), :new), :z)))),
+      :user_input => s(:call, s(:call, s(:const, :User), :new), :z)
+  end
+
   def test_cross_site_scripting_haml_sass
     assert_warning :type => :template,
       :warning_code => 2,
