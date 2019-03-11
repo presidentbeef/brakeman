@@ -1,3 +1,19 @@
+# Unreleased
+
+* More thoroughly handle `Shellwords` escaping
+* Handle non-integer version number comparisons
+* Use `FileParser` in `Scanner` to parse files
+* Add original exception to `Tracker#errors` list
+* Add support for CoffeeScript in Slim templates
+* Improve support for embedded template "filters"
+* Remove Sass dependency
+* Set location information in `CheckContentTag`
+* Stop swallowing exceptions in `AliasProcessor`
+* Avoid joining strings with different encodings
+* Handle `**` inside Hash literals
+* Better handling of splat/kwsplat arguments
+* Improve "user input" reported for SQL injection
+
 # 4.4.0
 
 * Set default encoding to UTF-8
