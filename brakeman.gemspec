@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.license = "Brakeman Public Use License"
   s.cert_chain  = ['brakeman-public_cert.pem']
   s.signing_key = gem_priv_key if File.exist? gem_priv_key and $0 =~ /gem\z/
+  s.required_ruby_version = '>= 2.3.0'
 
   if File.exist? 'bundle/load.rb'
     # Pull in vendored dependencies
