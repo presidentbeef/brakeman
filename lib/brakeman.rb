@@ -55,6 +55,9 @@ module Brakeman
   #  * :print_report - if no output file specified, print to stdout (default: false)
   #  * :quiet - suppress most messages (default: true)
   #  * :rails3 - force Rails 3 mode (automatic)
+  #  * :rails4 - force Rails 4 mode (automatic)
+  #  * :rails5 - force Rails 5 mode (automatic)
+  #  * :rails6 - force Rails 6 mode (automatic)
   #  * :report_routes - show found routes on controllers (default: false)
   #  * :run_checks - array of checks to run (run all if not specified)
   #  * :safe_methods - array of methods to consider safe
@@ -99,6 +102,10 @@ module Brakeman
     elsif options[:rails5]
       options[:rails3] = true
       options[:rails4] = true
+    elsif options[:rails6]
+      options[:rails3] = true
+      options[:rails4] = true
+      options[:rails5] = true
     end
 
     options[:output_formats] = get_output_formats options

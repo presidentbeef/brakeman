@@ -95,7 +95,7 @@ class Brakeman::Scanner
   #
   #Stores parsed information in tracker.config
   def process_config
-    if options[:rails3] or options[:rails4] or options[:rails5]
+    if options[:rails3] or options[:rails4] or options[:rails5] or options[:rails6]
       process_config_file "application.rb"
       process_config_file "environments/production.rb"
     else
