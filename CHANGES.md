@@ -1,5 +1,6 @@
-# Unreleased
+# 4.5.0
 
+* Update `ruby_parser`, use `ruby_parser-legacy`
 * More thoroughly handle `Shellwords` escaping
 * Handle non-integer version number comparisons
 * Use `FileParser` in `Scanner` to parse files
