@@ -47,19 +47,19 @@ Outside of Rails root:
 
 From a Rails application's root directory:
 
-    docker run -v "$(pwd)":/code brakeman
+    docker run -v "$(pwd)":/code presidentbeef/brakeman
 
 With a little nicer color:
 
-    docker run -v "$(pwd)":/code brakeman --color
+    docker run -v "$(pwd)":/code presidentbeef/brakeman --color
 
 For an HTML report:
 
-    docker run -v "$(pwd)":/code brakeman -o brakeman_results.html
+    docker run -v "$(pwd)":/code presidentbeef/brakeman -o brakeman_results.html
 
 Outside of Rails root (note that the output file is relative to path/to/rails/application):
 
-    docker run -v 'path/to/rails/application':/code brakeman -o brakeman_results.html
+    docker run -v 'path/to/rails/application':/code presidentbeef/brakeman -o brakeman_results.html
 
 # Compatibility
 
