@@ -9,6 +9,7 @@ class Brakeman::CheckDeserialize < Brakeman::BaseCheck
     check_yaml
     check_csv
     check_marshal
+    check_oj
   end
 
   def check_yaml
@@ -21,6 +22,26 @@ class Brakeman::CheckDeserialize < Brakeman::BaseCheck
 
   def check_marshal
     check_methods :Marshal, :load, :restore
+  end
+
+  def check_oj
+    check_methods :Oj, :object_load # Always unsafe, regardless of mode
+
+    unsafe_mode = :object
+    safe_default = oj_safe_default?
+
+    tracker.find_call(:target => :Oj, :method => :load).each do |result|
+      call = result[:call]
+      options = call.second_arg
+
+      if options and hash? options and mode = hash_access(options, :mode)
+        if symbol? mode and mode.value == unsafe_mode
+          check_deserialize result, :Oj
+        end
+      elsif not safe_default
+        check_deserialize result, :Oj
+      end
+    end
   end
 
   def check_methods target, *methods
@@ -52,5 +73,36 @@ class Brakeman::CheckDeserialize < Brakeman::BaseCheck
         :confidence => confidence,
         :link_path => "unsafe_deserialization"
     end
+  end
+
+  private
+
+  def oj_safe_default?
+    safe_default = false
+
+    # TODO: Can we just index initializers already??
+    if tracker.check_initializers(:Oj, :mimic_JSON).any?
+      safe_default = true
+    end
+
+    if result = tracker.check_initializers(:Oj, :default_options=).first
+      options = result.call.first_arg
+
+      if oj_safe_mode? options
+        safe_default = true
+      end
+    end
+
+    safe_default
+  end
+
+  def oj_safe_mode? options
+    if hash? options and mode = hash_access(options, :mode)
+      if symbol? mode and mode != :object
+        return true
+      end
+    end
+
+    false
   end
 end

@@ -13,7 +13,7 @@ class Rails52Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 12
+      :generic => 15
     }
   end
 
@@ -407,6 +407,45 @@ class Rails52Tests < Minitest::Test
       :relative_path => "app/views/users/_foo2.html.haml",
       :code => s(:call, s(:call, nil, :params), :[], s(:lit, :x)),
       :user_input => nil
+  end
+
+  def test_remote_code_execution_oj_load
+    assert_warning :type => :warning,
+      :warning_code => 25,
+      :fingerprint => "97ecaa5677c8eadaed09217a704e59092921fab24cc751e05dfb7b167beda2cf",
+      :warning_type => "Remote Code Execution",
+      :line => 51,
+      :message => /^`Oj\.load`\ called\ with\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :Oj), :load, s(:call, s(:params), :[], s(:lit, :json))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :json))
+  end
+
+  def test_remote_code_execution_oj_load_mode
+    assert_warning :type => :warning,
+      :warning_code => 25,
+      :fingerprint => "006ac5fe3834bf2e73ee51b67eb111066f618be46e391d493c541ea2a906a82f",
+      :warning_type => "Remote Code Execution",
+      :line => 52,
+      :message => /^`Oj\.load`\ called\ with\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :Oj), :load, s(:call, s(:params), :[], s(:lit, :json)), s(:hash, s(:lit, :mode), s(:lit, :object))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :json))
+  end
+
+  def test_remote_code_execution_oj_object_load
+    assert_warning :type => :warning,
+      :warning_code => 25,
+      :fingerprint => "3bc375c9cb79d8bcd9e7f1c09a574fa3deeab17f924cf20455cbd4c15e9c66eb",
+      :warning_type => "Remote Code Execution",
+      :line => 53,
+      :message => /^`Oj\.object_load`\ called\ with\ parameter\ v/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :Oj), :object_load, s(:call, s(:params), :[], s(:lit, :json)), s(:hash, s(:lit, :mode), s(:lit, :strict))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :json))
   end
 
   def test_cross_site_scripting_loofah_CVE_2018_8048
