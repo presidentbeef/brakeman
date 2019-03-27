@@ -58,8 +58,6 @@ jobs:
       - image: circleci/jruby:latest
   upload-coverage:
     <<: *default
-    environment:
-      - CC_TEST_REPORTER_ID: 521d341f3320acda1902d0db0a3a92fb16b11ebfe3d5ab730218d4fc0fb3db13
     working_directory: ~/repo
     steps:
       - attach_workspace:
