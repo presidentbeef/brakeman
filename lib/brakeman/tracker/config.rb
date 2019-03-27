@@ -97,6 +97,12 @@ module Brakeman
             tracker.options[:rails4] = true
             tracker.options[:rails5] = true
             Brakeman.notify "[Notice] Detected Rails 5 application"
+          elsif @rails_version.start_with? "6"
+            tracker.options[:rails3] = true
+            tracker.options[:rails4] = true
+            tracker.options[:rails5] = true
+            tracker.options[:rails6] = true
+            Brakeman.notify "[Notice] Detected Rails 6 application"
           end
         end
       end
