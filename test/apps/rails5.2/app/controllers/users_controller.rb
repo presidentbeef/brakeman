@@ -46,4 +46,11 @@ class UsersController < ApplicationController
   def two
     @user = User.find(params[:id])
   end
+
+  def some_api
+    Oj.load(params[:json]) # Unsafe by default
+    Oj.load(params[:json], mode: :object) # Unsafe, regardless of default
+    Oj.object_load(params[:json], mode: :strict) # Always unsafe, regardless of mode
+    Oj.load(params[:json], mode: :strict) # Safe
+  end
 end
