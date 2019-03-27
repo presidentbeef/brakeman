@@ -1,22 +1,82 @@
-version: 2
+version: 2.1
 jobs:
-  build:
-    branches:
-      ignore:
-        - gh-pages
+  default: &default
     docker:
-      - image: circleci/ruby:2.5.1-stretch-node-browsers
-        environment:
-          BUNDLE_JOBS: 4
-          BUNDLE_RETRY: 3
-          BUNDLE_PATH: vendor/bundle
-    parallelism: 4
+      - image: circleci/ruby:latest
     steps:
       - checkout
       - run: bundle check || bundle install
       - run:
-          command: |
-            TESTFILES=$(circleci tests glob "test/tests/*.rb" | circleci tests split --split-by=timings)
-            bundle exec ruby -e 'ARGV.each {|f| require File.join(".", f) }' -- $TESTFILES
+          command: bundle exec rake
       - store_test_results:
           path: test-results
+  test-2-3:
+    <<: *default
+    docker:
+      - image: circleci/ruby:2.3
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/repo/tmp
+      - run:
+          name:  Download cc-test-reporter
+          command: |
+            mkdir -p tmp/
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
+            chmod +x ./tmp/cc-test-reporter
+      - run: bundle check || bundle install
+      - run:
+          command: |
+            bundle exec rake
+            ./tmp/cc-test-reporter format-coverage -t simplecov -o tmp/codeclimate.json coverage/.resultset.json
+      - store_test_results:
+          path: test-results
+      - persist_to_workspace:
+          root: tmp
+          paths:
+            - codeclimate.json
+            - cc-test-reporter
+  test-2-4:
+    <<: *default
+    docker:
+      - image: circleci/ruby:2.4
+  test-2-5:
+    <<: *default
+    docker:
+      - image: circleci/ruby:2.5
+  test-2-6:
+    <<: *default
+    docker:
+      - image: circleci/ruby:2.6
+  test-latest:
+    <<: *default
+    docker:
+      - image: circleci/ruby:latest
+  test-jruby:
+    <<: *default
+    docker:
+      - image: circleci/jruby:latest
+  upload-coverage:
+    <<: *default
+    environment:
+      - CC_TEST_REPORTER_ID: 521d341f3320acda1902d0db0a3a92fb16b11ebfe3d5ab730218d4fc0fb3db13
+    working_directory: ~/repo
+    steps:
+      - attach_workspace:
+          at: ~/repo/tmp
+      - run:
+          name: Upload coverage results to Code Climate
+          command: "./tmp/cc-test-reporter upload-coverage -i ./tmp/codeclimate.json"
+workflows:
+  version: 2
+  tests:
+    jobs:
+      - default
+      - test-2-3
+      - test-2-4
+      - test-2-5
+      - test-2-6
+      - test-jruby
+      - upload-coverage:
+          requires:
+            - test-2-3
