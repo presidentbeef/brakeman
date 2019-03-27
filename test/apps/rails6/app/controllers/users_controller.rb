@@ -61,6 +61,11 @@ class UsersController < ApplicationController
     end
   end
 
+  def destroy_them_all
+    @user.destroy_by(params[:user])
+    @user.delete_by(params[:user])
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
