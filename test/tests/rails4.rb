@@ -15,7 +15,7 @@ class Rails4Tests < Minitest::Test
       :controller => 0,
       :model => 3,
       :template => 8,
-      :generic => 81
+      :generic => 84
     }
   end
 
@@ -1117,6 +1117,45 @@ class Rails4Tests < Minitest::Test
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, s(:const, :User), :where, s(:dstr, "", s(:evstr, s(:call, s(:params), :permit, s(:lit, :OMG))))),
       :user_input => s(:call, s(:params), :permit, s(:lit, :OMG))
+  end
+
+  def test_sql_injection_find_or_create_by
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "8fe189a91028c0718f3dc3791f628c102dd60874ecb80ea1354adfead9037147",
+      :warning_type => "SQL Injection",
+      :line => 130,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :User), :find_or_create_by, s(:call, s(:params), :[], s(:lit, :user))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :user))
+  end
+
+  def test_sql_injection_find_or_create_by!
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "9ecd0a3bb160b221bbe95ab201f53c1675561ffd11a6e6ff8fc0c3c95bd8b9e8",
+      :warning_type => "SQL Injection",
+      :line => 131,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :User), :find_or_create_by!, s(:call, s(:params), :[], s(:lit, :user))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :user))
+  end
+
+  def test_sql_injection_find_or_initialize_by
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "fc70a38d4ecc2220739b9075e790f2d433bb2d2b3484513ad99dea5236330c99",
+      :warning_type => "SQL Injection",
+      :line => 132,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:const, :User), :find_or_initialize_by, s(:call, s(:params), :[], s(:lit, :user))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :user))
   end
 
   def test_format_validation_model_alias_processing

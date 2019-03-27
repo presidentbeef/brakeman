@@ -21,7 +21,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     @sql_targets = [:average, :calculate, :count, :count_by_sql, :delete_all, :destroy_all,
                     :find_by_sql, :maximum, :minimum, :pluck, :sum, :update_all]
     @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :where] if tracker.options[:rails3]
-    @sql_targets << :find_by << :find_by! << :not if tracker.options[:rails4]
+    @sql_targets.concat [:find_by, :find_by!, :find_or_create_by, :find_or_create_by!, :find_or_initialize_by, :not] if tracker.options[:rails4]
     @sql_targets << :delete_by << :destroy_by if tracker.options[:rails6]
 
     if version_between?("2.0.0", "3.9.9") or tracker.config.rails_version.nil?
@@ -188,7 +188,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                         else
                           check_find_arguments call.last_arg
                         end
-                      when :where, :having, :find_by, :find_by!, :not, :delete_by, :destroy_by
+                      when :where, :having, :find_by, :find_by!, :find_or_create_by, :find_or_create_by!, :find_or_initialize_by,:not, :delete_by, :destroy_by
                         check_query_arguments call.arglist
                       when :order, :group, :reorder
                         check_order_arguments call.arglist
