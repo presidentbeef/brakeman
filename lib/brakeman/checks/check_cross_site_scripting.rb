@@ -33,6 +33,11 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   FORM_BUILDER = Sexp.new(:call, Sexp.new(:const, :FormBuilder), :new)
 
+  def initialize *args
+    super
+    @matched = @mark = false
+  end
+
   #Run check
   def run_check
     setup

@@ -201,8 +201,8 @@ class Brakeman::Report::Text < Brakeman::Report::Base
 
   # ONLY used for generate_controllers to avoid duplication
   def render_array name, cols, values, locals
-    controllers = values.map do |name, parent, includes, routes|
-      c = [ label("Controller", name) ]
+    controllers = values.map do |controller_name, parent, includes, routes|
+      c = [ label("Controller", controller_name) ]
       c << label("Parent", parent) unless parent.empty?
       c << label("Includes", includes) unless includes.empty?
       c << label("Routes", routes)

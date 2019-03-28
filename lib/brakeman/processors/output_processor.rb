@@ -8,6 +8,11 @@ require 'brakeman/util'
 class Brakeman::OutputProcessor < Ruby2Ruby
   include Brakeman::Util
 
+  def initialize *args
+    super
+    @user_input = nil
+  end
+
   #Copies +exp+ and then formats it.
   def format exp, user_input = nil, &block
     @user_input = user_input

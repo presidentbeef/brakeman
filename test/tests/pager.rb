@@ -32,6 +32,7 @@ class ReportPagerTests < Minitest::Test
   end
 
   def test_highline
+    require 'highline/io_console_compatible' # For StringIO compatibility
     out = StringIO.new
     $stdin = StringIO.new("\r\r\r\r\r\r\r")
     pager = Brakeman::Pager.new(nil, :highline, out)
@@ -54,13 +55,17 @@ class ReportPagerTests < Minitest::Test
     end
   end
 
-  def test_set_color
-    pager = Brakeman::Pager.new(Brakeman::Tracker.new(nil))
+  def test_set_color_force
+    t = Brakeman::Tracker.new(nil)
+    t.options[:output_color] = :force 
+    pager = Brakeman::Pager.new(t)
     pager.set_color
+
+    assert t.options[:output_color]
   end
 
-  def test_output_report
-    out = $stdout = StringIO.new
+  def test_pager_output_report
+    $stdout = StringIO.new
     app_path = File.expand_path "#{TEST_PATH}/apps/rails5"
     tracker = Brakeman.run app_path: app_path, run_checks: [], quiet: true, summary_only: :no_summary
     pager = Brakeman::Pager.new(tracker)

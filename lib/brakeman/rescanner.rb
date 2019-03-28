@@ -263,9 +263,6 @@ class Brakeman::Rescanner < Brakeman::Scanner
     #Remove template
     tracker.reset_template template_name
 
-    rendered_from_controller = /^#{template_name}\.(.+Controller)#(.+)/
-    rendered_from_view = /^#{template_name}\.Template:(.+)/
-
     #Remove any rendered versions, or partials rendered from it
     tracker.templates.delete_if do |_name, template|
       template.file == path or template.name.to_sym == template_name.to_sym
@@ -371,7 +368,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
       next unless template.render_path
 
       if template.render_path.include_any_method? method_names
-        name.to_s.match /^([^.]+)/
+        name.to_s.match(/^([^.]+)/)
 
         original = tracker.templates[$1.to_sym]
 

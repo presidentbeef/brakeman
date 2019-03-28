@@ -24,7 +24,6 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
   #s(:class, NAME, PARENT, BODY)
   def process_class exp
     name = class_name(exp.class_name)
-    parent = class_name(exp.parent_name)
 
     #If inside an inner class we treat it as a library.
     if @current_class

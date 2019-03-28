@@ -1438,7 +1438,7 @@ class Rails3Tests < Minitest::Test
       :user_input => nil
   end
 
-  def test_cross_site_scripting_CVE_2016_6316
+  def test_cross_site_scripting_CVE_2016_6316_Gemfile
     assert_warning :type => :warning,
       :warning_code => 102,
       :fingerprint => "331e69e4654f158601d9a0e124304f825da4e0156d2c94759eb02611e280feaa",

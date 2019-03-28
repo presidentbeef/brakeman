@@ -38,7 +38,7 @@ class Brakeman::CheckSkipBeforeFilter < Brakeman::BaseCheck
         :message => msg("Use whitelist (", msg_code(":only => [..]"), ") when skipping authentication"),
         :code => filter,
         :confidence => :medium,
-        :link => "authentication_whitelist",
+        :link_path => "authentication_whitelist",
         :file => controller.file
     end
   end

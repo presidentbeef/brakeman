@@ -62,6 +62,7 @@ module Brakeman
       @absolute_engine_paths = @engine_paths.select { |path| path.start_with?(File::SEPARATOR) }
       @relative_engine_paths = @engine_paths - @absolute_engine_paths
       @gemspec = nil
+      @root_search_pattern = nil
     end
 
     def expand_path(path)
@@ -190,8 +191,8 @@ module Brakeman
     def root_search_pattern
       return @root_search_pattern if @root_search_pattern
 
-      abs = @absolute_engine_paths.to_a.map { |path| path.gsub /#{File::SEPARATOR}+$/, '' }
-      rel = @relative_engine_paths.to_a.map { |path| path.gsub /#{File::SEPARATOR}+$/, '' }
+      abs = @absolute_engine_paths.to_a.map { |path| path.gsub(/#{File::SEPARATOR}+$/, '') }
+      rel = @relative_engine_paths.to_a.map { |path| path.gsub(/#{File::SEPARATOR}+$/, '') }
 
       roots = ([@root] + abs).join(",")
       rel_engines = (rel + [""]).join("/,")

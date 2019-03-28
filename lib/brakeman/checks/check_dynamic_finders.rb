@@ -43,6 +43,6 @@ class Brakeman::CheckDynamicFinders < Brakeman::BaseCheck
   end
 
   def potentially_dangerous? method_name
-    method_name.match /^find_by_.*(token|guid|password|api_key|activation|code|private|reset)/
+    method_name.match(/^find_by_.*(token|guid|password|api_key|activation|code|private|reset)/)
   end
 end

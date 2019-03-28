@@ -5,6 +5,11 @@ class Brakeman::CheckSimpleFormat < Brakeman::CheckCrossSiteScripting
 
   @description = "Checks for simple_format XSS vulnerability (CVE-2013-6416) in certain versions"
 
+  def initialize *args
+    super
+    @found_any = false
+  end
+
   def run_check
     if version_between? "4.0.0", "4.0.1"
       @inspect_arguments = true

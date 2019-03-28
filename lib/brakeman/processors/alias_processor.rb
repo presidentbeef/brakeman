@@ -26,7 +26,6 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     @inside_if = false
     @ignore_ifs = nil
     @exp_context = []
-    @current_module = nil
     @tracker = tracker #set in subclass as necessary
     @helper_method_cache = {}
     @helper_method_info = Hash.new({})

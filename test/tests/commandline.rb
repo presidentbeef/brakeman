@@ -49,13 +49,13 @@ class CommandlineTests < Minitest::Test
   # Helpers
 
   def cl_with_options *opts
-    TestCommandline.start *TestCommandline.parse_options(opts)
+    TestCommandline.start(*TestCommandline.parse_options(opts))
   end
 
   def scan_app *opts
     opts << "#{TEST_PATH}/apps/rails4"
     assert_output do
-      cl_with_options *opts 
+      cl_with_options(*opts)
     end
   end
 
@@ -81,13 +81,13 @@ class CommandlineTests < Minitest::Test
   end
 
   def test_list_checks
-    assert_stderr /\AAvailable Checks:/ do
+    assert_stderr(/\AAvailable Checks:/) do
       cl_with_options "--checks"
     end
   end
 
   def test_bad_options
-    assert_stderr /\Ainvalid option: --not-a-real-option\nPlease see `brakeman --help`/, -1 do
+    assert_stderr(/\Ainvalid option: --not-a-real-option\nPlease see `brakeman --help`/, -1) do
       cl_with_options "--not-a-real-option"
     end
   end
@@ -107,7 +107,7 @@ class CommandlineTests < Minitest::Test
   end
 
   def test_show_help
-    assert_stdout /\AUsage: brakeman \[options\] rails\/root\/path/ do
+    assert_stdout(/\AUsage: brakeman \[options\] rails\/root\/path/) do
       assert_exit do
         cl_with_options "--help"
       end

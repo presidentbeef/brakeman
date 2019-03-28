@@ -77,7 +77,6 @@ class ChecksTests < Minitest::Test
   def test_check_for_missing_checks
     require 'brakeman/options'
     options, _ = Brakeman::Options.parse(["-t", "blah"])
-    t = setup_tracker options
 
     assert_raises Brakeman::MissingChecksError do
       Brakeman.check_for_missing_checks options[:run_checks], options[:skip_checks], options[:enable_checks]
@@ -87,7 +86,6 @@ class ChecksTests < Minitest::Test
   def test_check_for_missing_skipped_checks
     require 'brakeman/options'
     options, _ = Brakeman::Options.parse(["-x", "blah"])
-    t = setup_tracker options
 
     assert_raises Brakeman::MissingChecksError do
       Brakeman.check_for_missing_checks options[:run_checks], options[:skip_checks], options[:enable_checks]
@@ -97,7 +95,6 @@ class ChecksTests < Minitest::Test
   def test_check_for_missing_enabled_checks
     require 'brakeman/options'
     options, _ = Brakeman::Options.parse(["-E", "blah"])
-    t = setup_tracker options
 
     assert_raises Brakeman::MissingChecksError do
       Brakeman.check_for_missing_checks options[:run_checks], options[:skip_checks], options[:enable_checks]

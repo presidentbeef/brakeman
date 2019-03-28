@@ -100,7 +100,6 @@ class SexpTests < Minitest::Test
 
   def test_stabby_lambda_no_args
     exp = parse "->{ hi }"
-    args = exp.block_args
 
     assert_equal s(:call, nil, :lambda), exp.block_call
     assert_equal s(:args), exp.block_args
@@ -358,6 +357,7 @@ class SexpTests < Minitest::Test
     s.line(10)
 
     refute_nil s.instance_variable_get(:@my_hash_value)
+    assert_equal s_hash, s.hash
   end
 
   def test_sexp_line_set
