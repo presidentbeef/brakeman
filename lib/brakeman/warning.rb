@@ -34,7 +34,7 @@ class Brakeman::Warning
     :file => :@file,
     :gem_info => :@gem_info,
     :line => :@line,
-    :link => :@link, # added to fix debug warning, not expected to set via new()
+    :link => :@link,
     :link_path => :@link_path,
     :message => :@message,
     :method => :@method,
