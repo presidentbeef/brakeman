@@ -34,6 +34,7 @@ class Brakeman::Warning
     :file => :@file,
     :gem_info => :@gem_info,
     :line => :@line,
+    :link => :@link, # added to fix debug warning, not expected to set via new()
     :link_path => :@link_path,
     :message => :@message,
     :method => :@method,
@@ -112,6 +113,8 @@ class Brakeman::Warning
 
     if options[:warning_code]
       @warning_code = Brakeman::WarningCodes.code options[:warning_code]
+    else
+      @warning_code = nil
     end
 
     Brakeman.debug("Warning created without warning code: #{options[:warning_code]}") unless @warning_code
@@ -253,16 +256,16 @@ class Brakeman::Warning
   def location include_renderer = true
     case @warning_set
     when :template
-      location = { :type => :template, :template => self.view_name(include_renderer) }
+      { :type => :template, :template => self.view_name(include_renderer) }
     when :model
-      location = { :type => :model, :model => self.model }
+      { :type => :model, :model => self.model }
     when :controller
-      location = { :type => :controller, :controller => self.controller }
+      { :type => :controller, :controller => self.controller }
     when :warning
       if self.class
-        location = { :type => :method, :class => self.class, :method => self.method }
+        { :type => :method, :class => self.class, :method => self.method }
       else
-        location = nil
+        nil
       end
     end
   end

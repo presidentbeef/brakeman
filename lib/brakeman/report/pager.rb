@@ -4,6 +4,7 @@ module Brakeman
       @tracker = tracker
       @pager = pager
       @output = output
+      @less_available = @less_options = nil
     end
 
     def page_report report, format

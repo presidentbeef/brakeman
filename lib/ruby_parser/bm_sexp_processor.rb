@@ -45,6 +45,7 @@ class Brakeman::SexpProcessor
     @expected            = Sexp
     @processors = self.class.processors
     @context    = []
+    @current_class = @current_module = @current_method = @visibility = nil
 
     if @processors.empty?
       public_methods.each do |name|

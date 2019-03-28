@@ -286,8 +286,8 @@ class CVETests < Minitest::Test
     assert_version "3.0.0"
 
     warning = new.find do |w|
-      w.warning_code == 31 # CVE_2010_3933
-      w.message.to_s == "Vulnerability in nested attributes (CVE-2010-3933). Upgrade to Rails 3.0.1"
+      w.warning_code == 31 and # CVE_2010_3933
+        w.message.to_s == "Vulnerability in nested attributes (CVE-2010-3933). Upgrade to Rails 3.0.1"
     end
 
     refute_nil warning

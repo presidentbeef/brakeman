@@ -35,6 +35,6 @@ class Brakeman::CheckSecrets < Brakeman::BaseCheck
 
   def looks_like_secret? name
     # REST_AUTH_SITE_KEY is the pepper in Devise
-    name.match /password|secret|(rest_auth_site|api)_key$/i
+    name.match(/password|secret|(rest_auth_site|api)_key$/i)
   end
 end

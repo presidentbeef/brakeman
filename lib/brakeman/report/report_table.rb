@@ -199,10 +199,6 @@ class Brakeman::Report::Table < Brakeman::Report::Base
     end
   end
 
-  def convert_warning warning, original
-    warning
-  end
-
   def convert_ignored_warning warning, original
     convert_warning warning, original
   end

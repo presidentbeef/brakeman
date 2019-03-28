@@ -83,7 +83,7 @@ module Brakeman
     end
 
     def map &block
-      @path.map &block
+      @path.map(&block)
     end
 
     def to_a

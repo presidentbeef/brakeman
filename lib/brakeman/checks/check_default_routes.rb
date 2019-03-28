@@ -6,6 +6,11 @@ class Brakeman::CheckDefaultRoutes < Brakeman::BaseCheck
 
   @description = "Checks for default routes"
 
+  def initialize *args
+    super
+    @actions_allowed_on_controller = nil
+  end
+
   #Checks for :allow_all_actions globally and for individual routes
   #if it is not enabled globally.
   def run_check

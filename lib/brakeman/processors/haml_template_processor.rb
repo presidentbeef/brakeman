@@ -7,6 +7,11 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
   JAVASCRIPT_FILTER = s(:colon2, s(:colon2, s(:const, :Haml), :Filters), :Javascript)
   COFFEE_FILTER = s(:colon2, s(:colon2, s(:const, :Haml), :Filters), :Coffee)
 
+  def initialize *args
+    super
+    @javascript = false
+  end
+
   #Processes call, looking for template output
   def process_call exp
     target = exp.target

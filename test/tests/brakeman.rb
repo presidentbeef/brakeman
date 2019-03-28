@@ -203,7 +203,7 @@ class ConfigTests < Minitest::Test
     }
 
     assert_output "" do
-      final_options = Brakeman.set_options(options)
+      Brakeman.set_options(options)
     end
   end
 

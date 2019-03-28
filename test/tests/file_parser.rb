@@ -21,6 +21,6 @@ class FileParserTests < Minitest::Test
     RUBY
 
     assert_equal 1, @tracker.errors.length
-    assert_match /parse error on value \"\$end\" \(\$end\)/, @tracker.errors.first[:error]
+    assert_match(/parse error on value \"\$end\" \(\$end\)/, @tracker.errors.first[:error])
   end
 end

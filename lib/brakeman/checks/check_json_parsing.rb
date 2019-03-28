@@ -5,6 +5,11 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
 
   @description = "Checks for JSON parsing vulnerabilities CVE-2013-0333 and CVE-2013-0269"
 
+  def initialize *args
+    super
+    @uses_json_parse = nil
+  end
+
   def run_check
     check_cve_2013_0333
     check_cve_2013_0269
