@@ -124,4 +124,11 @@ class UsersController < ApplicationController
   def exists_with_to_s
     User.exists? params[:x].to_s # Don't warn
   end
+
+  def find_and_create_em
+    # These all call find_by(), which we already know is dangerous
+    User.find_or_create_by(params[:user])
+    User.find_or_create_by!(params[:user])
+    User.find_or_initialize_by(params[:user])
+  end
 end
