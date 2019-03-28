@@ -32,6 +32,7 @@ class ReportPagerTests < Minitest::Test
   end
 
   def test_highline
+    require 'highline/io_console_compatible' # For StringIO compatibility
     out = StringIO.new
     $stdin = StringIO.new("\r\r\r\r\r\r\r")
     pager = Brakeman::Pager.new(nil, :highline, out)
