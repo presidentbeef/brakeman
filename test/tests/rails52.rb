@@ -12,7 +12,7 @@ class Rails52Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 4,
+      :template => 5,
       :generic => 15
     }
   end
@@ -407,6 +407,19 @@ class Rails52Tests < Minitest::Test
       :relative_path => "app/views/users/_foo2.html.haml",
       :code => s(:call, s(:call, nil, :params), :[], s(:lit, :x)),
       :user_input => nil
+  end
+
+  def test_cross_site_scripting_link_to_with_block
+    assert_warning :type => :template,
+      :warning_code => 4,
+      :fingerprint => "caefec37f50032631e8b0352437a13f792076ef2d7460040c96aa68c5ac1c863",
+      :warning_type => "Cross-Site Scripting",
+      :line => 1,
+      :message => /^Unsafe\ parameter\ value\ in\ `link_to`\ href/,
+      :confidence => 0,
+      :relative_path => "app/views/users/link.html.erb",
+      :code => s(:call, nil, :link_to, s(:call, s(:call, nil, :params), :[], s(:lit, :x))),
+      :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :x))
   end
 
   def test_remote_code_execution_oj_load

@@ -14,13 +14,13 @@ class Rails2Tests < Minitest::Test
       @expected ||= {
         :controller => 1,
         :model => 3,
-        :template => 46,
+        :template => 47,
         :generic => 57 }
     else
       @expected ||= {
         :controller => 1,
         :model => 3,
-        :template => 46,
+        :template => 48,
         :generic => 58 }
     end
   end
@@ -1254,6 +1254,19 @@ class Rails2Tests < Minitest::Test
       :user_input => nil
   end
 
+  def test_cross_site_scripting_in_link_to_with_block
+    assert_warning :type => :template,
+      :warning_code => 4,
+      :fingerprint => "a594a83998a7cbace5d65680e78dbd6e74b7b3ded069c83f8ac5452ef0ada08f",
+      :warning_type => "Cross-Site Scripting",
+      :line => 3,
+      :message => /^Unsafe\ parameter\ value\ in\ `link_to`\ href/,
+      :confidence => 0,
+      :relative_path => "app/views/home/test_link_to.html.erb",
+      :code => s(:call, nil, :link_to, s(:call, s(:call, nil, :params), :[], s(:lit, :evil_url))),
+      :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :evil_url))
+  end
+
   def test_dangerous_send_try
     assert_warning :type => :warning,
       :warning_type => "Dangerous Send",
@@ -1486,13 +1499,13 @@ class Rails2WithOptionsTests < Minitest::Test
       @expected ||= {
         :controller => 1,
         :model => 4,
-        :template => 46,
+        :template => 47,
         :generic => 57 }
     else
       @expected ||= {
         :controller => 1,
         :model => 4,
-        :template => 46,
+        :template => 47,
         :generic => 58 }
     end
   end
