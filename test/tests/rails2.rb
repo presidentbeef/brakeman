@@ -10,19 +10,11 @@ class Rails2Tests < Minitest::Test
   include BrakemanTester::CheckExpected
 
   def expected
-    if Brakeman::Scanner::RUBY_1_9
-      @expected ||= {
-        :controller => 1,
-        :model => 3,
-        :template => 47,
-        :generic => 57 }
-    else
-      @expected ||= {
-        :controller => 1,
-        :model => 3,
-        :template => 48,
-        :generic => 58 }
-    end
+    @expected ||= {
+      :controller => 1,
+      :model => 3,
+      :template => 47,
+      :generic => 57 }
   end
 
   def report
@@ -206,20 +198,6 @@ class Rails2Tests < Minitest::Test
       :confidence => 0,
       :file => /session_store\.rb/,
       :relative_path => "config/initializers/session_store.rb"
-  end
-
-  def test_rails_cve_2011_2932
-    unless Brakeman::Scanner::RUBY_1_9
-      assert_warning :type => :warning,
-        :warning_code => 83,
-        :fingerprint => "19e0b7ab34bebe1c887bc388a195a8619136abe5875d62010628958f0792479c",
-        :warning_type => "Cross-Site Scripting",
-        :line => nil,
-        :message => /^Versions\ before\ 2\.3\.14\ have\ a\ vulnerabil/,
-        :confidence => 0,
-        :relative_path => "config/environment.rb",
-        :user_input => nil
-    end
   end
 
   def test_rails_cve_2012_2660
@@ -1495,19 +1473,11 @@ class Rails2WithOptionsTests < Minitest::Test
   include BrakemanTester::CheckExpected
 
   def expected
-    if Brakeman::Scanner::RUBY_1_9
-      @expected ||= {
-        :controller => 1,
-        :model => 4,
-        :template => 47,
-        :generic => 57 }
-    else
-      @expected ||= {
-        :controller => 1,
-        :model => 4,
-        :template => 47,
-        :generic => 58 }
-    end
+    @expected ||= {
+      :controller => 1,
+      :model => 4,
+      :template => 47,
+      :generic => 57 }
   end
 
   def report
