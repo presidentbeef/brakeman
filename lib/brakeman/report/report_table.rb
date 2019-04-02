@@ -267,4 +267,24 @@ Duration: #{tracker.duration} seconds
 Checks run: #{checks.checks_run.sort.join(", ")}
 HEADER
   end
+
+  def truncate_table str
+    @terminal_width ||= if @tracker.options[:table_width]
+                          @tracker.options[:table_width]
+                        elsif $stdin && $stdin.tty?
+                          Brakeman.load_brakeman_dependency 'highline'
+                          ::HighLine.default_instance.terminal.terminal_size[0]
+                        else
+                          80
+                        end
+    lines = str.lines
+
+    lines.map do |line|
+      if line.chomp.length > @terminal_width
+        line[0..(@terminal_width - 3)] + ">>\n"
+      else
+        line
+      end
+    end.join
+  end
 end
