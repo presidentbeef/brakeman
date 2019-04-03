@@ -22,6 +22,7 @@ module Brakeman
     def filter_ignored
       @shown_warnings = []
       @ignored_warnings = []
+      @used_fingerprints = Set.new
 
       @new_warnings.each do |w|
         if ignored? w

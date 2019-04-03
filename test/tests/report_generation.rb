@@ -17,6 +17,11 @@ class TestReportGeneration < Minitest::Test
     end
   end
 
+  def test_table_sanity
+    require 'highline/io_console_compatible' # For StringIO compatibility
+    report = @@report.to_table
+  end
+
   def test_json_sanity
     report = @@report.to_json
     expected_keys = ["scan_info", "warnings", "errors"]
