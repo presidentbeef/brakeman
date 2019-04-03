@@ -16,7 +16,6 @@ end
 #Scans the Rails application.
 class Brakeman::Scanner
   attr_reader :options
-  RUBY_1_9 = RUBY_VERSION >= "1.9.0"
 
   #Pass in path to the root of the Rails application
   def initialize options, processor = nil

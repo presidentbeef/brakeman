@@ -63,7 +63,7 @@ module Brakeman
         else
           ERB.new(text, nil, '-').src
         end
-        src.sub!(/^#.*\n/, '') if Brakeman::Scanner::RUBY_1_9
+        src.sub!(/^#.*\n/, '')
         src
       end
     end
