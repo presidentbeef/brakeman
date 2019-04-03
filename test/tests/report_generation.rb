@@ -20,12 +20,6 @@ class TestReportGeneration < Minitest::Test
   def test_table_sanity
     require 'highline/io_console_compatible' # For StringIO compatibility
     report = @@report.to_table
-
-    assert report.include? <<-SUMMARY
-+-------------------+---------+
-| Scanned/Reported  | Total   |
-+-------------------+---------+
-    SUMMARY
   end
 
   def test_json_sanity
