@@ -312,6 +312,20 @@ class ConfigTests < Minitest::Test
     assert final_options[:github_url], "https://www.github.com/presidentbeef/brakeman"
   end
 
+  def test_rails_version_options
+    versions = [:rails3, :rails4, :rails5, :rails6]
+
+    versions.each_with_index do |v, i|
+      options = { v => true, :app_path => "/tmp" }
+
+      final_options = Brakeman.set_options(options)
+
+      versions[0..i].each do |opt|
+        assert final_options[opt]
+      end
+    end
+  end
+
   def test_optional_check_options
     options = {:list_optional_checks => true}
     check_list = capture_io {
