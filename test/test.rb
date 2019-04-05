@@ -91,7 +91,7 @@ module BrakemanTester::CheckExpected
         warnings = report[(type.to_s << "_warnings").to_sym]
       end
 
-      assert_equal number, warnings.length, lambda { "Expected #{number} #{type} warnings, but found #{warnings.length}:\n#{warnings.map { |w| w.to_hash.pretty_inspect }.join("\n")}" }
+      assert_equal number, warnings.length, lambda { "Expected #{number} #{type} warnings, but found #{warnings.length}:\n#{warnings.map { |w| w.message }.join("\n")}" }
     end
   end
 
