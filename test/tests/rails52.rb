@@ -422,6 +422,17 @@ class Rails52Tests < Minitest::Test
       :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :x))
   end
 
+  def test_cross_site_scripting_not_not_false_positive
+    assert_no_warning :type => :template,
+      :warning_code => 2,
+      :warning_type => "Cross-Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 2,
+      :relative_path => "app/views/users/not_not.html.erb",
+      :user_input => s(:call, s(:call, s(:call, s(:params), :[], s(:lit, :header_row)), :!), :!)
+  end
+
   def test_remote_code_execution_oj_load
     assert_warning :type => :warning,
       :warning_code => 25,

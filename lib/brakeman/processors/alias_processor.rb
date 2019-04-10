@@ -269,6 +269,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       if array? target and target.length > 2 and (string? first_arg or first_arg.nil?)
         exp = process_array_join(target, first_arg)
       end
+    when :!
+      #  Convert `!!a` to boolean
+      if call? target and target.method == :!
+        exp = s(:or, s(:true).line(exp.line), s(:false).line(exp.line)).line(exp.line)
+      end
     end
 
     exp
