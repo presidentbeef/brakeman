@@ -13,7 +13,7 @@ class Rails52Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 5,
-      :generic => 15
+      :generic => 16
     }
   end
 
@@ -459,6 +459,19 @@ class Rails52Tests < Minitest::Test
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, s(:const, :Oj), :object_load, s(:call, s(:params), :[], s(:lit, :json)), s(:hash, s(:lit, :mode), s(:lit, :strict))),
       :user_input => s(:call, s(:params), :[], s(:lit, :json))
+  end
+
+  def test_missing_encryption_force_ssl
+    assert_warning :type => :warning,
+      :warning_code => 109,
+      :fingerprint => "6a26086cd2400fbbfb831b2f8d7291e320bcc2b36984d2abc359e41b3b63212b",
+      :warning_type => "Missing Encryption",
+      :line => 50,
+      :message => /^The\ application\ does\ not\ force\ use\ of\ HT/,
+      :confidence => 0,
+      :relative_path => "config/environments/production.rb",
+      :code => nil,
+      :user_input => nil
   end
 
   def test_cross_site_scripting_loofah_CVE_2018_8048

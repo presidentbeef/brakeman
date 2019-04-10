@@ -13,7 +13,7 @@ class Rails5Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 10,
-      :generic => 20
+      :generic => 21
     }
   end
 
@@ -525,6 +525,19 @@ class Rails5Tests < Minitest::Test
       :message => /^Parameter\ value\ used\ in\ file\ name/,
       :confidence => 2,
       :relative_path => "app/controllers/file_controller.rb"
+  end
+
+  def test_missing_encryption_force_ssl
+    assert_warning :type => :warning,
+      :warning_code => 109,
+      :fingerprint => "6a26086cd2400fbbfb831b2f8d7291e320bcc2b36984d2abc359e41b3b63212b",
+      :warning_type => "Missing Encryption",
+      :line => 1,
+      :message => /^The application does not force use of HTTPS/,
+      :confidence => 0,
+      :relative_path => "config/environments/production.rb",
+      :code => nil,
+      :user_input => nil
   end
 
   def test_cross_site_scripting_CVE_2015_7578

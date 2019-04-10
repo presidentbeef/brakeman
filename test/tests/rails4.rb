@@ -15,7 +15,7 @@ class Rails4Tests < Minitest::Test
       :controller => 0,
       :model => 3,
       :template => 8,
-      :generic => 84
+      :generic => 85
     }
   end
 
@@ -667,6 +667,19 @@ class Rails4Tests < Minitest::Test
       :confidence => 1,
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, s(:colon2, s(:const, :OpenSSL), :Digest), :new, s(:str, "SHA1")),
+      :user_input => nil
+  end
+
+  def test_missing_encryption_force_ssl
+    assert_warning :type => :warning,
+      :warning_code => 109,
+      :fingerprint => "6a26086cd2400fbbfb831b2f8d7291e320bcc2b36984d2abc359e41b3b63212b",
+      :warning_type => "Missing Encryption",
+      :line => 1,
+      :message => /^The application does not force use of HTTPS/,
+      :confidence => 0,
+      :relative_path => "config/environments/production.rb",
+      :code => nil,
       :user_input => nil
   end
 
