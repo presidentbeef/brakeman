@@ -53,4 +53,9 @@ class UsersController < ApplicationController
     Oj.object_load(params[:json], mode: :strict) # Always unsafe, regardless of mode
     Oj.load(params[:json], mode: :strict) # Safe
   end
+
+  def not_not
+    si = ManualCSVImport.new(header_row: !!params[:header_row], archive: !!params[:archive])
+    @errors = [si.results[:invalid_info], si.results[:ignored_info]].flatten
+  end
 end

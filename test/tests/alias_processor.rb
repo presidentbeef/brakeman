@@ -1134,6 +1134,13 @@ class AliasProcessorTests < Minitest::Test
     INPUT
   end
 
+  def test_bang_bang
+    assert_alias "true or false", <<-INPUT
+    x = !!a
+    x
+    INPUT
+  end
+
   def test_alias_processor_failure
     assert_raises do
       Brakeman::AliasProcessor.new.process s(:block, s(:attrasgn, s(:call, nil, :x), :"[]!", s(:lit, 1), s(:lit, 2)))
