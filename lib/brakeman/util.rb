@@ -455,12 +455,7 @@ module Brakeman::Util
   end
 
   def relative_path file
-    pname = Pathname.new file
-    if file and not file.empty? and pname.absolute?
-      pname.relative_path_from(Pathname.new(@tracker.app_path)).to_s
-    else
-      file
-    end
+    @tracker.app_tree.relative_path(file)
   end
 
   #Convert path/filename to view name

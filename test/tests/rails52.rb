@@ -13,7 +13,7 @@ class Rails52Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 5,
-      :generic => 16
+      :generic => 17
     }
   end
 
@@ -355,6 +355,19 @@ class Rails52Tests < Minitest::Test
       :relative_path => "lib/shell.rb",
       :code => s(:dxstr, "ls ", s(:evstr, s(:call, s(:const, :Shellwords), :escape, s(:call, s(:call, s(:const, :User), :new), :z)))),
       :user_input => s(:call, s(:call, s(:const, :User), :new), :z)
+  end
+
+  def test_command_injection_with__file__
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "8aeaa50052306c0c79e3b1ece079ba369e30356658b455b049da9543fd729d75",
+      :warning_type => "Command Injection",
+      :line => 90,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/shell.rb",
+      :code => s(:dxstr, "cp lib/shell.rb ", s(:evstr, s(:call, nil, :somewhere_else))),
+      :user_input => s(:call, nil, :somewhere_else)
   end
 
   def test_cross_site_scripting_haml_sass

@@ -5,16 +5,17 @@ module Brakeman
   class FileParser
     attr_reader :file_list
 
-    def initialize tracker, app_tree
+    def initialize tracker
       @tracker = tracker
       @timeout = @tracker.options[:parser_timeout]
-      @app_tree = app_tree
+      @app_tree = @tracker.app_tree
       @file_list = {}
     end
 
     def parse_files list, type
       read_files list, type do |path, contents|
-        if ast = parse_ruby(contents, path)
+        relative_path = @app_tree.relative_path(path) # For consistency in __FILE__ handling
+        if ast = parse_ruby(contents, relative_path)
           ASTFile.new(path, ast)
         end
       end

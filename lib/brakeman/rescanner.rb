@@ -132,7 +132,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     template_name = template_path_to_name(path)
 
     tracker.reset_template template_name
-    fp = Brakeman::FileParser.new(tracker, @app_tree)
+    fp = Brakeman::FileParser.new(tracker)
     template_parser = Brakeman::TemplateParser.new(tracker, fp)
     template_parser.parse_template path, @app_tree.read_path(path)
     process_template fp.file_list[:templates].first
@@ -386,7 +386,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
   def parse_ruby_files list
     paths = list.select { |path| @app_tree.path_exists? path }
-    file_parser = Brakeman::FileParser.new(tracker, @app_tree)
+    file_parser = Brakeman::FileParser.new(tracker)
     file_parser.parse_files paths, :rescan
     file_parser.file_list[:rescan]
   end

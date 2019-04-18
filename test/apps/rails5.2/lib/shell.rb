@@ -84,4 +84,9 @@ class ShellStuff
 
     `ls #{z}` # Also should not warn
   end
+
+  def file_constant_use
+    # __FILE__ should not change based on absolute path
+    `cp #{__FILE__} #{somewhere_else}`
+  end
 end

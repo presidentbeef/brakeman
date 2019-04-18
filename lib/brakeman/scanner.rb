@@ -65,7 +65,7 @@ class Brakeman::Scanner
   end
 
   def parse_files
-    fp = Brakeman::FileParser.new tracker, @app_tree
+    fp = Brakeman::FileParser.new tracker
 
     files = {
       :initializers => @app_tree.initializer_paths,
@@ -316,8 +316,8 @@ class Brakeman::Scanner
   end
 
   def parse_ruby_file path
-    fp = Brakeman::FileParser.new(self.tracker, @app_tree)
-    fp.parse_ruby(@app_tree.read(path), path)
+    fp = Brakeman::FileParser.new(self.tracker)
+    fp.parse_ruby(@app_tree.read(path), @app_tree.relative_path(path))
   end
 end
 
