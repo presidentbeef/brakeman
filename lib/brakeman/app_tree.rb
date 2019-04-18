@@ -73,6 +73,15 @@ module Brakeman
       File.read(File.join(@root, path))
     end
 
+    def relative_path(path)
+      pname = Pathname.new path
+      if path and not path.empty? and pname.absolute?
+        pname.relative_path_from(Pathname.new(self.root)).to_s
+      else
+        path
+      end
+    end
+
     # This variation requires full paths instead of paths based
     # off the project root. I'd prefer to get all the code outside
     # of AppTree using project-root based paths (e.g. app/models/user.rb)

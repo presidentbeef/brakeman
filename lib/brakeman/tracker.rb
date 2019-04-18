@@ -12,7 +12,7 @@ class Brakeman::Tracker
   attr_accessor :controllers, :constants, :templates, :models, :errors,
     :checks, :initializers, :config, :routes, :processor, :libs,
     :template_cache, :options, :filter_cache, :start_time, :end_time,
-    :duration, :ignored_filter
+    :duration, :ignored_filter, :app_tree
 
   #Place holder when there should be a model, but it is not
   #clear what model it will be.
