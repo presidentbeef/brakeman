@@ -1,3 +1,15 @@
+# Unreleased
+
+* Use relative paths for `__FILE__`
+* Convert `!!` calls to boolean value
+* Add optional check for `config.force_ssl`
+* Remove code for Ruby versions prior to 1.9
+* Check `link_to` with block for href XSS
+* Add SQL injection checks for `find_or_create_by` and friends
+* Add deserialization warning for `Oj.load/object_load`
+* Add initial Rails 6 support
+* Add SQL injection checks for `destroy_all`/`delete_all`
+
 # 4.5.0
 
 * Update `ruby_parser`, use `ruby_parser-legacy`
