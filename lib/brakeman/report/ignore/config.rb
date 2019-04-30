@@ -3,12 +3,14 @@ require 'json'
 
 module Brakeman
   class IgnoreConfig
+    include Util
     attr_reader :shown_warnings, :ignored_warnings
     attr_accessor :file
 
-    def initialize file, new_warnings
+    def initialize file, tracker
       @file = file
-      @new_warnings = new_warnings
+      @tracker = tracker
+      @new_warnings = tracker.warnings
       @already_ignored = []
       @ignored_fingerprints = Set.new
       @used_fingerprints = Set.new
@@ -115,6 +117,7 @@ module Brakeman
         if w.is_a? Warning
           w_hash = w.to_hash
           w_hash[:file] = w.relative_path
+          w_hash[:render_path] = convert_render_path w_hash[:render_path]
           w = w_hash
         end
 

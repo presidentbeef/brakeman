@@ -16,7 +16,7 @@ class IgnoreConfigTests < Minitest::Test
   end
 
   def make_config file = @config_file.path
-    c = Brakeman::IgnoreConfig.new file, report.all_warnings
+    c = Brakeman::IgnoreConfig.new file, report
     c.read_from_file
     c.filter_ignored
     c
@@ -27,7 +27,7 @@ class IgnoreConfigTests < Minitest::Test
   end
 
   def report
-    @@report ||= Brakeman.run(File.join(TEST_PATH, "apps", "rails5.2")).checks
+    @@report ||= Brakeman.run(File.join(TEST_PATH, "apps", "rails5.2"))
   end
 
   def test_sanity
@@ -39,7 +39,7 @@ class IgnoreConfigTests < Minitest::Test
   end
   
   def test_shown_warnings
-    expected = report.all_warnings.length - config.ignored_warnings.length
+    expected = report.warnings.length - config.ignored_warnings.length
 
     assert_equal expected, config.shown_warnings.length
   end

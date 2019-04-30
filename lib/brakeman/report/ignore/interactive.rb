@@ -2,9 +2,9 @@ Brakeman.load_brakeman_dependency 'highline'
 
 module Brakeman
   class InteractiveIgnorer
-    def initialize file, warnings
-      @ignore_config = Brakeman::IgnoreConfig.new(file, warnings)
-      @new_warnings = warnings
+    def initialize file, tracker
+      @ignore_config = Brakeman::IgnoreConfig.new(file, tracker)
+      @new_warnings = tracker.warnings
       @skip_ignored = false
       @skip_rest = false
       @ignore_rest = false
