@@ -38,6 +38,10 @@ module BrakemanTester
 
       Brakeman.run(opts).report.to_hash
     end
+
+    def new_tracker options = {}
+      Brakeman::Tracker.new(Brakeman::AppTree.new("/tmp/FAKE_BRAKEMAN_PATH#{rand(10000)}"))
+    end
   end
 end
 

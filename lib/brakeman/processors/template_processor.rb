@@ -6,9 +6,9 @@ class Brakeman::TemplateProcessor < Brakeman::BaseProcessor
 
   #Initializes template information.
   def initialize tracker, template_name, called_from = nil, file_name = nil
-    super(tracker) 
+    super(tracker)
     @current_template = Brakeman::Template.new template_name, called_from, file_name, tracker
-    @file_name = file_name
+    @file_name = @current_template.file
 
     if called_from
       template_name = (template_name.to_s + "." + called_from.to_s).to_sym

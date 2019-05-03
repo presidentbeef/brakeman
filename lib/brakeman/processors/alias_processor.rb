@@ -43,8 +43,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #
   #This method returns a new Sexp with variables replaced with their values,
   #where possible.
-  def process_safely src, set_env = nil, file_name = nil
-    @file_name = file_name
+  def process_safely src, set_env = nil, file_name = @file_name
     @env = set_env || SexpProcessor::Environment.new
     @result = src.deep_clone
     process @result

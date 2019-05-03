@@ -34,7 +34,7 @@ class Brakeman::Tracker
     #we can match models later without knowing precisely what
     #class they are.
     @models = {}
-    @models[UNKNOWN_MODEL] = Brakeman::Model.new(UNKNOWN_MODEL, nil, nil, nil, self)
+    @models[UNKNOWN_MODEL] = Brakeman::Model.new(UNKNOWN_MODEL, nil, "NOT_REAL.rb", nil, self)
     @routes = {}
     @initializers = {}
     @errors = []
@@ -80,6 +80,10 @@ class Brakeman::Tracker
 
   def app_path
     @app_path ||= File.expand_path @options[:app_path]
+  end
+
+  def file_path path
+    Brakeman::FilePath.from_tracker(self, path)
   end
 
   #Iterate over all methods in controllers and models.

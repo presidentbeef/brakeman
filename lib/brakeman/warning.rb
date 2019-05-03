@@ -274,6 +274,12 @@ class Brakeman::Warning
   end
 
   def to_hash absolute_paths: true
+    if self.called_from and not absolute_paths
+      render_path = self.called_from.with_relative_paths
+    else
+      render_path = self.called_from
+    end
+
     { :warning_type => self.warning_type,
       :warning_code => @warning_code,
       :fingerprint => self.fingerprint,
@@ -283,7 +289,7 @@ class Brakeman::Warning
       :line => self.line,
       :link => self.link,
       :code => (@code && self.format_code(false)),
-      :render_path => self.called_from,
+      :render_path => render_path,
       :location => self.location(false),
       :user_input => (@user_input && self.format_user_input(false)),
       :confidence => TEXT_CONFIDENCE[self.confidence]

@@ -36,30 +36,6 @@ class Brakeman::Report::JSON < Brakeman::Report::Base
   end
 
   def convert_to_hashes warnings
-    warnings.map do |w|
-      hash = w.to_hash(absolute_paths: absolute_paths?)
-      hash[:render_path] = convert_render_path hash[:render_path]
-
-      hash
-    end.sort_by { |w| "#{w[:fingerprint]}#{w[:line]}" }
-  end
-
-  def convert_render_path render_path
-    return unless render_path and not @tracker.options[:absolute_paths]
-
-    render_path.map do |r|
-      r = r.dup
-
-      if r[:file]
-        r[:file] = relative_path(r[:file])
-      end
-
-      if r[:rendered] and r[:rendered][:file]
-        r[:rendered] = r[:rendered].dup
-        r[:rendered][:file] = relative_path(r[:rendered][:file])
-      end
-
-      r
-    end
+    warnings.map(&:to_hash).sort_by { |w| "#{w[:fingerprint]}#{w[:line]}" }
   end
 end

@@ -114,6 +114,23 @@ module Brakeman
       JSON.generate(@path)
     end
 
+    def with_relative_paths 
+      @path.map do |loc|
+        r = loc.dup
+
+        if r[:file]
+          r[:file] = r[:file].relative
+        end
+
+        if r[:rendered] and r[:rendered][:file]
+          r[:rendered] = r[:rendered].dup
+          r[:rendered][:file] = r[:rendered][:file].relative
+        end
+
+        r
+      end
+    end
+
     def initialize_copy original
       @path = original.path.dup
       self

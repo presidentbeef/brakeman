@@ -26,7 +26,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       return
     else
       @current_class = name
-      @file_name = file_name
+      @file_name = @tracker.file_path(file_name)
 
       process_default src
 
@@ -37,6 +37,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #Process modules mixed into the controller, in case they contain actions.
   def process_mixins
     controller = @tracker.controllers[@current_class]
+    original_file = @file_name
 
     controller.includes.each do |i|
       mixin = @tracker.libs[i]
@@ -64,6 +65,8 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
         process method
       end
     end
+  ensure
+    @file_name = original_file
   end
 
   #Skip it, must be an inner class
@@ -187,7 +190,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       end
     end
 
-    render_path = Brakeman::RenderPath.new.add_controller_render(@current_class, @current_method, line, relative_path(@file_name))
+    render_path = Brakeman::RenderPath.new.add_controller_render(@current_class, @current_method, line, @file_name)
     super name, args, render_path, line
   end
 

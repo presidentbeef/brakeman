@@ -1,4 +1,5 @@
 require 'brakeman/util'
+require 'brakeman/file_path'
 
 module Brakeman
   class Collection
@@ -9,7 +10,7 @@ module Brakeman
     def initialize name, parent, file_name, src, tracker
       @name = name
       @parent = parent
-      @file_name = file_name
+      @file_name = Brakeman::FilePath.from_tracker(tracker, file_name)
       @files = [ file_name ]
       @src = { file_name => src }
       @includes = []
@@ -31,6 +32,7 @@ module Brakeman
     end
 
     def add_file file_name, src
+      file_name = Brakeman::FilePath.from_tracker(tracker, file_name)
       @files << file_name unless @files.include? file_name
       @src[file_name] = src
     end

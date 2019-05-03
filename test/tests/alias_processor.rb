@@ -528,7 +528,7 @@ class AliasProcessorTests < Minitest::Test
     [x, y]
     RUBY
 
-    tracker = Brakeman::Tracker.new(nil, nil, :branch_limit => 4)
+    tracker = Brakeman::Tracker.for_tests(:branch_limit => 4)
 
     assert_equal 4, tracker.options[:branch_limit]
 
