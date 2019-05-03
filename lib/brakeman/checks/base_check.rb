@@ -3,6 +3,7 @@ require 'brakeman/processors/lib/processor_helper'
 require 'brakeman/warning'
 require 'brakeman/util'
 require 'brakeman/messages'
+require 'brakeman/file_path'
 
 #Basis of vulnerability checks.
 class Brakeman::BaseCheck < Brakeman::SexpProcessor
@@ -144,8 +145,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     extra_opts = { :check => self.class.to_s }
 
     warning = Brakeman::Warning.new(options.merge(extra_opts))
-    warning.file = file_for warning
-    warning.relative_path = relative_path(warning.file)
+    warning.file = Brakeman::FilePath.from_tracker(tracker, file_for(warning))
 
     @warnings << warning
   end

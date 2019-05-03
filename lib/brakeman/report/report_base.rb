@@ -123,13 +123,17 @@ class Brakeman::Report::Base
     Set.new(tracker.templates.map {|k,v| v.name.to_s[/[^.]+/]}).length
   end
 
-  def warning_file warning, absolute = @tracker.options[:absolute_paths]
+  def absolute_paths?
+    @tracker.options[:absolute_paths]
+  end
+
+  def warning_file warning
     return nil if warning.file.nil?
 
-    if absolute
-      warning.file
+    if absolute_paths?
+      warning.file.absolute
     else
-      relative_path warning.file
+      warning.file.relative
     end
   end
 
