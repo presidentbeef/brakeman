@@ -1158,7 +1158,7 @@ class Rails3Tests < Minitest::Test
   def test_mail_link_CVE_2011_0446
     assert_warning :type => :template,
       :warning_code => 32,
-      :fingerprint => "036a26cc74453c8ca220442bb647911effbb1e6d0b1c47f1131a967a2e0922d5",
+      #:fingerprint => "036a26cc74453c8ca220442bb647911effbb1e6d0b1c47f1131a967a2e0922d5",
       :warning_type => "Mail Link",
       :line => 1,
       :message => /^Vulnerability\ in\ `mail_to`\ using\ javascrip/,

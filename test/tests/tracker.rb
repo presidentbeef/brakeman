@@ -2,7 +2,7 @@ require_relative '../test'
 
 class TrackerTests < Minitest::Test
   def setup
-    @tracker = Brakeman::Tracker.new(nil)
+    @tracker = BrakemanTester.new_tracker
   end
 
   def test_exception_in_error_list

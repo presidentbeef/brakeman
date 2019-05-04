@@ -13,12 +13,14 @@ module Brakeman
     def self.from_app_tree app_tree, path
       return path if path.is_a? Brakeman::FilePath
 
-      relative = app_tree.relative_path(path).freeze
       absolute = app_tree.expand_path(path).freeze
 
       if fp = @cache[absolute]
+        puts "CACHED!"
         return fp 
       end
+
+      relative = app_tree.relative_path(path).freeze
 
       self.new(absolute, relative).tap { |fp| @cache[absolute] = fp }
     end
@@ -26,6 +28,11 @@ module Brakeman
     def initialize absolute_path, relative_path
       @absolute = absolute_path
       @relative = relative_path
+    end
+
+    def <=> rhs
+      raise ArgumentError unless rhs.is_a? Brakeman::FilePath
+      self.relative <=> rhs.relative
     end
 
     def == rhs

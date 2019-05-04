@@ -10,7 +10,7 @@ module Brakeman
     def initialize name, parent, file_name, src, tracker
       @name = name
       @parent = parent
-      @file_name = Brakeman::FilePath.from_tracker(tracker, file_name)
+      file_name = Brakeman::FilePath.from_tracker(tracker, file_name)
       @files = [ file_name ]
       @src = { file_name => src }
       @includes = []

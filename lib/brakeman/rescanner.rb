@@ -13,7 +13,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def initialize options, processor, changed_files
     super(options, processor)
 
-    @paths = changed_files.map {|f| @app_tree.expand_path(f) }
+    @paths = changed_files.map {|f| Brakeman::FilePath.from_tracker(tracker, f) }
     @old_results = tracker.filtered_warnings  #Old warnings from previous scan
     @changes = nil                 #True if files had to be rescanned
     @reindex = Set.new
@@ -127,7 +127,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def rescan_template path
-    return unless path.match KNOWN_TEMPLATE_EXTENSIONS and @app_tree.path_exists?(path)
+    return unless path.relative.match KNOWN_TEMPLATE_EXTENSIONS and @app_tree.path_exists?(path)
 
     template_name = template_path_to_name(path)
 
@@ -256,7 +256,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def rescan_deleted_template path
-    return unless path.match KNOWN_TEMPLATE_EXTENSIONS
+    return unless path.relative.match KNOWN_TEMPLATE_EXTENSIONS
 
     template_name = template_path_to_name(path)
 

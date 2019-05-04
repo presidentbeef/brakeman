@@ -29,5 +29,11 @@ module Brakeman
         false
       end
     end
+
+    def file
+      f = super
+      abort @files.map(&:class).to_s unless f.is_a? Brakeman::FilePath
+      f
+    end
   end
 end

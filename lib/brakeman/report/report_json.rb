@@ -36,6 +36,8 @@ class Brakeman::Report::JSON < Brakeman::Report::Base
   end
 
   def convert_to_hashes warnings
-    warnings.map(&:to_hash).sort_by { |w| "#{w[:fingerprint]}#{w[:line]}" }
+    warnings.map do |w|
+      w.to_hash(absolute_paths: false)
+    end.sort_by { |w| "#{w[:fingerprint]}#{w[:line]}" }
   end
 end
