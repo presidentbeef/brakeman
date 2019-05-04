@@ -149,4 +149,13 @@ class Brakeman::Report::Base
       "Unknown"
     end
   end
+
+  def github_url file, line=nil
+    if repo_url = @tracker.options[:github_url] and file 
+      url = "#{repo_url}/#{file.relative}"
+      url << "#L#{line}" if line
+    else
+      nil
+    end
+  end
 end

@@ -386,13 +386,4 @@ module Brakeman::Util
     names.last.gsub!(/(\.(html|js)\..*|\.(rhtml|haml|erb|slim))$/, '')
     names[(names.index("views") + 1)..-1].join("/").to_sym
   end
-
-  def github_url file, line=nil
-    if repo_url = @tracker.options[:github_url] and file and not file.empty? and file.start_with? '/'
-      url = "#{repo_url}/#{relative_path(file)}"
-      url << "#L#{line}" if line
-    else
-      nil
-    end
-  end
 end
