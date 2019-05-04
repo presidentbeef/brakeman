@@ -100,9 +100,11 @@ class Brakeman::Warning
     unless @warning_set
       if self.model
         @warning_set = :model
+        @file ||= self.model.file
       elsif self.template
         @warning_set = :template
         @called_from = self.template.render_path
+        @file ||= self.template.file
       elsif self.controller
         @warning_set = :controller
       else
@@ -124,6 +126,7 @@ class Brakeman::Warning
 
     @format_message = nil
     @row = nil
+    abort "File is nil: #{self} #{@warning_set} #{@template.file}" if @file.nil? and @template
   end
 
   def hash
@@ -227,7 +230,7 @@ class Brakeman::Warning
     when :template
       @row["Template"] = self.view_name.to_s
     when :model
-      @row["Model"] = self.model.to_s
+      @row["Model"] = self.model.name.to_s
     when :controller
       @row["Controller"] = self.controller.to_s
     when :warning
@@ -261,7 +264,7 @@ class Brakeman::Warning
     when :template
       { :type => :template, :template => self.view_name(include_renderer) }
     when :model
-      { :type => :model, :model => self.model }
+      { :type => :model, :model => self.model.name }
     when :controller
       { :type => :controller, :controller => self.controller }
     when :warning

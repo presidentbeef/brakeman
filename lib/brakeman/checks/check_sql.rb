@@ -72,23 +72,23 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     scope_calls = []
 
     if version_between?("2.1.0", "3.0.9")
-      ar_scope_calls(:named_scope) do |name, args|
+      ar_scope_calls(:named_scope) do |model, args|
         call = make_call(nil, :named_scope, args).line(args.line)
-        scope_calls << scope_call_hash(call, name, :named_scope)
+        scope_calls << scope_call_hash(call, model, :named_scope)
       end
     elsif version_between?("3.1.0", "9.9.9")
-      ar_scope_calls(:scope) do |name, args|
+      ar_scope_calls(:scope) do |model, args|
         second_arg = args[2]
         next unless sexp? second_arg
 
         if second_arg.node_type == :iter and node_type? second_arg.block, :block, :call, :safe_call
-          process_scope_with_block(name, args)
+          process_scope_with_block(model, args)
         elsif call? second_arg
           call = second_arg
-          scope_calls << scope_call_hash(call, name, call.method)
+          scope_calls << scope_call_hash(call, model, call.method)
         else
           call = make_call(nil, :scope, args).line(args.line)
-          scope_calls << scope_call_hash(call, name, :scope)
+          scope_calls << scope_call_hash(call, model, :scope)
         end
       end
     end
@@ -97,37 +97,34 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   end
 
   def ar_scope_calls(symbol_name = :named_scope, &block)
-    return_array = []
     active_record_models.each do |name, model|
       model_args = model.options[symbol_name]
       if model_args
         model_args.each do |args|
-          yield name, args
-          return_array << [name, args]
+          yield model, args
         end
       end
     end
-    return_array
   end
 
-  def scope_call_hash(call, name, method)
-    { :call => call, :location => { :type => :class, :class => name }, :method => :named_scope }
+  def scope_call_hash(call, model, method)
+    { :call => call, :location => { :type => :class, :class => model.name, :file => model.file }, :method => :named_scope }
   end
 
 
-  def process_scope_with_block model_name, args
+  def process_scope_with_block model, args
     scope_name = args[1][1]
     block = args[-1][-1]
 
     # Search lambda for calls to query methods
     if block.node_type == :block
       find_calls = Brakeman::FindAllCalls.new(tracker)
-      find_calls.process_source(block, :class => model_name, :method => scope_name)
+      find_calls.process_source(block, :class => model.name, :method => scope_name, :file => model.file)
       find_calls.calls.each { |call| process_result(call) if @sql_targets.include?(call[:method]) }
     elsif call? block
       while call? block
         process_result :target => block.target, :method => block.method, :call => block,
-         :location => { :type => :class, :class => model_name, :method => scope_name }
+          :location => { :type => :class, :class => model.name, :method => scope_name, :file => model.file }
 
         block = block.target
       end

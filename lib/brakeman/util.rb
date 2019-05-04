@@ -346,86 +346,10 @@ module Brakeman::Util
     @tracker.config.rails_version
   end
 
-  #Return file name related to given warning. Uses +warning.file+ if it exists
-  def file_for warning, tracker = nil
-    if tracker.nil?
-      tracker = @tracker || self.tracker
-    end
-
-    if warning.file
-      File.expand_path warning.file, tracker.app_path
-    elsif warning.template and warning.template.file
-      warning.template.file
-    else
-      case warning.warning_set
-      when :controller
-        file_by_name warning.controller, :controller, tracker
-      when :template
-        file_by_name warning.template.name, :template, tracker
-      when :model
-        file_by_name warning.model, :model, tracker
-      when :warning
-        file_by_name warning.class, nil, tracker
-      else
-        nil
-      end
-    end
-  end
-
-  #Attempt to determine path to context file based on the reported name
-  #in the warning.
-  #
-  #For example,
-  #
-  #  file_by_name FileController #=> "/rails/root/app/controllers/file_controller.rb
-  def file_by_name name, type, tracker = nil
-    return nil unless name
-    string_name = name.to_s
-    name = name.to_sym
-
-    unless type
-      if string_name =~ /Controller$/
-        type = :controller
-      elsif camelize(string_name) == string_name # This is not always true
-        type = :model
-      else
-        type = :template
-      end
-    end
-
-    path = tracker.app_path
-
-    case type
-    when :controller
-      if tracker.controllers[name]
-        path = tracker.controllers[name].file
-      else
-        path += "/app/controllers/#{underscore(string_name)}.rb"
-      end
-    when :model
-      if tracker.models[name]
-        path = tracker.models[name].file
-      else
-        path += "/app/models/#{underscore(string_name)}.rb"
-      end
-    when :template
-      if tracker.templates[name] and tracker.templates[name].file
-        path = tracker.templates[name].file
-      elsif string_name.include? " "
-        name = string_name.split[0].to_sym
-        path = file_for tracker, name, :template
-      else
-        path = nil
-      end
-    end
-
-    path
-  end
-
   #Return array of lines surrounding the warning location from the original
   #file.
-  def context_for app_tree, warning, tracker = nil
-    file = file_for warning, tracker
+  def context_for app_tree, warning
+    file = warning.file
     context = []
     return context unless warning.line and file and @app_tree.path_exists? file
 
@@ -452,10 +376,6 @@ module Brakeman::Util
     end
 
     context
-  end
-
-  def relative_path file
-    @tracker.app_tree.relative_path(file)
   end
 
   #Convert path/filename to view name

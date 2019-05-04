@@ -7,7 +7,7 @@ class RailsWithXssPluginTests < Minitest::Test
   def expected
     @expected ||= {
       :controller => 1,
-      :model => 3,
+      :model => 4,
       :template => 4,
       :generic => 29 }
   end
@@ -270,15 +270,31 @@ class RailsWithXssPluginTests < Minitest::Test
       :user_input => nil
   end
 
-  def test_attribute_restriction_19
+  def test_attribute_restriction_1
     assert_warning :type => :model,
+      :warning_code => 19,
+      :fingerprint => "180c16a1a0b36556203c87328d46531665774859d07c95d6e31e94322b5395d3",
       :warning_type => "Attribute Restriction",
-      #noline,
+      :line => 1,
       :message => /^Mass\ assignment\ is\ not\ restricted\ using\ /,
       :confidence => 0,
-      :file => /post,\ user\.rb/
+      :relative_path => "app/models/post.rb",
+      :code => nil,
+      :user_input => nil
   end
 
+  def test_attribute_restriction_2
+    assert_warning :type => :model,
+      :warning_code => 19,
+      :fingerprint => "b325ae8a4570599cde146875ae86427506befae36a3b4a97ce2223930846fec5",
+      :warning_type => "Attribute Restriction",
+      :line => 1,
+      :message => /^Mass\ assignment\ is\ not\ restricted\ using\ /,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb",
+      :code => nil,
+      :user_input => nil
+  end
 
   def test_format_validation_20
     assert_warning :type => :model,

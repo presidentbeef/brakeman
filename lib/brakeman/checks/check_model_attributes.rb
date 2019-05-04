@@ -2,9 +2,6 @@ require 'brakeman/checks/base_check'
 
 #Check if mass assignment is used with models
 #which inherit from ActiveRecord::Base.
-#
-#If tracker.options[:collapse_mass_assignment] is +true+ (default), all models
-#which do not use attr_accessible will be reported in a single warning
 class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
@@ -15,26 +12,19 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
 
     #Roll warnings into one warning for all models
     if tracker.options[:collapse_mass_assignment]
-      no_accessible_names = []
-      protected_names = []
+      Brakeman.notify "[Notice] The `collapse_mass_assignment` option has been removed."
+    end
 
-      check_models do |name, model|
-        if model.attr_protected.nil?
-          no_accessible_names << name.to_s
-        elsif not tracker.options[:ignore_attr_protected]
-          protected_names << name.to_s
-        end
-      end
-
-      unless no_accessible_names.empty?
-        warn :model => no_accessible_names.sort.join(", "),
+    check_models do |name, model|
+      if model.attr_protected.nil?
+        warn :model => model,
+          :file => model.file,
+          :line => model.top_line,
           :warning_type => "Attribute Restriction",
           :warning_code => :no_attr_accessible,
           :message => msg("Mass assignment is not restricted using ", msg_code("attr_accessible")),
           :confidence => :high
-      end
-
-      unless protected_names.empty?
+      elsif not tracker.options[:ignore_attr_protected]
         message, confidence, link = check_for_attr_protected_bypass
 
         if link
@@ -43,41 +33,13 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
           warning_code = :attr_protected_used
         end
 
-        warn :model => protected_names.sort.join(", "),
+        warn :model => model,
+          :file => model.file,
+          :line => model.attr_protected.first.line,
           :warning_type => "Attribute Restriction",
           :warning_code => warning_code,
           :message => message,
-          :confidence => confidence,
-          :link => link
-      end
-    else #Output one warning per model
-
-      check_models do |name, model|
-        if model.attr_protected.nil?
-          warn :model => name,
-            :file => model.file,
-            :line => model.top_line,
-            :warning_type => "Attribute Restriction",
-            :warning_code => :no_attr_accessible,
-            :message => msg("Mass assignment is not restricted using ", msg_code("attr_accessible")),
-            :confidence => :high
-        elsif not tracker.options[:ignore_attr_protected]
-          message, confidence, link = check_for_attr_protected_bypass
-
-          if link
-            warning_code = :CVE_2013_0276
-          else
-            warning_code = :attr_protected_used
-          end
-
-          warn :model => name,
-            :file => model.file,
-            :line => model.attr_protected.first.line,
-            :warning_type => "Attribute Restriction",
-            :warning_code => warning_code,
-            :message => message,
-            :confidence => confidence
-        end
+          :confidence => confidence
       end
     end
   end

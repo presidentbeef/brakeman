@@ -17,7 +17,7 @@ class Brakeman::CheckValidationRegex < Brakeman::BaseCheck
 
   def run_check
     active_record_models.each do |name, model|
-      @current_model = name
+      @current_model = model
       format_validations = model.options[:validates_format_of]
 
       if format_validations
