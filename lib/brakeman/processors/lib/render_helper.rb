@@ -36,7 +36,7 @@ module Brakeman::RenderHelper
 
   #Determines file name for partial and then processes it
   def process_partial name, args, line
-    if name == "" or !(string? name or symbol? name)
+    if !(string? name or symbol? name) or name.value == ""
       return
     end
 

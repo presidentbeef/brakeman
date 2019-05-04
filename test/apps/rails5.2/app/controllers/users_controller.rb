@@ -58,4 +58,7 @@ class UsersController < ApplicationController
     si = ManualCSVImport.new(header_row: !!params[:header_row], archive: !!params[:archive])
     @errors = [si.results[:invalid_info], si.results[:ignored_info]].flatten
   end
+
+  def test_empty_partial_name
+  end
 end
