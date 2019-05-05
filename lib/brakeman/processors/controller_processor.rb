@@ -8,20 +8,20 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
   FORMAT_HTML = Sexp.new(:call, Sexp.new(:lvar, :format), :html)
 
-  def initialize app_tree, tracker, file_name = nil
+  def initialize app_tree, tracker, current_file = nil
     super(tracker)
     @app_tree = app_tree
     @current_class = nil
     @current_method = nil
     @current_module = nil
     @visibility = :public
-    @file_name = file_name
+    @current_file = current_file
     @concerns = Set.new
   end
 
   #Use this method to process a Controller
-  def process_controller src, file_name = @file_name
-    @file_name = file_name
+  def process_controller src, current_file = @current_file
+    @current_file = current_file
     process src
   end
 
@@ -35,7 +35,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     #a real controller, so we can't take this shortcut.
     if @current_class and @current_class.name.to_s.end_with? "Controller"
       Brakeman.debug "[Notice] Treating inner class as library: #{name}"
-      Brakeman::LibraryProcessor.new(@tracker).process_library exp, @file_name
+      Brakeman::LibraryProcessor.new(@tracker).process_library exp, @current_file
       return exp
     end
 

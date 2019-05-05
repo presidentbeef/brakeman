@@ -20,13 +20,13 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     @method_cache = {} #Cache method lookups
   end
 
-  def process_controller name, src, file_name
+  def process_controller name, src, current_file
     if not node_type? src, :class
       Brakeman.debug "#{name} is not a class, it's a #{src.node_type}"
       return
     else
       @current_class = name
-      @file_name = @tracker.file_path(file_name)
+      @current_file = @tracker.file_path(current_file)
 
       process_default src
 
@@ -37,7 +37,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #Process modules mixed into the controller, in case they contain actions.
   def process_mixins
     controller = @tracker.controllers[@current_class]
-    original_file = @file_name
+    original_file = @current_file
 
     controller.includes.each do |i|
       mixin = @tracker.libs[i]
@@ -60,13 +60,13 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
           method = processor.process method
         end
 
-        @file_name = mixin.file
+        @current_file = mixin.file
         #Then process it like any other method in the controller
         process method
       end
     end
   ensure
-    @file_name = original_file
+    @current_file = original_file
   end
 
   #Skip it, must be an inner class
@@ -190,7 +190,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       end
     end
 
-    render_path = Brakeman::RenderPath.new.add_controller_render(@current_class, @current_method, line, @file_name)
+    render_path = Brakeman::RenderPath.new.add_controller_render(@current_class, @current_method, line, @current_file)
     super name, args, render_path, line
   end
 

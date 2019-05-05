@@ -14,7 +14,7 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
   def initialize tracker, template, called_from = nil
     super tracker
     @template = template
-    @file_name = template.file
+    @current_file = template.file
     @called_from = called_from
   end
 
@@ -26,9 +26,9 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
         return
       end
 
-      super name, args, @called_from.dup.add_template_render(@template.name, line, @file_name), line
+      super name, args, @called_from.dup.add_template_render(@template.name, line, @current_file), line
     else
-      super name, args, Brakeman::RenderPath.new.add_template_render(@template.name, line, @file_name), line
+      super name, args, Brakeman::RenderPath.new.add_template_render(@template.name, line, @current_file), line
     end
   end
 

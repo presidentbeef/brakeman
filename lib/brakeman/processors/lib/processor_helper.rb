@@ -73,10 +73,10 @@ module Brakeman::ProcessorHelper
     end
   end
 
-  def current_file_name
+  def current_file
     case
-    when @file_name
-      @file_name
+    when @current_file
+      @current_file
     when @current_class.is_a?(Brakeman::Collection)
       @current_class.file
     when @current_module.is_a?(Brakeman::Collection)
