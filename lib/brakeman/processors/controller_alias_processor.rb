@@ -50,7 +50,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       methods.each do |name|
         #Need to process the method like it was in a controller in order
         #to get the renders set
-        processor = Brakeman::ControllerProcessor.new(@app_tree, @tracker)
+        processor = Brakeman::ControllerProcessor.new(@app_tree, @tracker, mixin.file)
         method = mixin.get_method(name)[:src].deep_clone
 
         if node_type? method, :defn

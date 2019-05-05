@@ -8,19 +8,19 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
   FORMAT_HTML = Sexp.new(:call, Sexp.new(:lvar, :format), :html)
 
-  def initialize app_tree, tracker
+  def initialize app_tree, tracker, file_name = nil
     super(tracker)
     @app_tree = app_tree
     @current_class = nil
     @current_method = nil
     @current_module = nil
     @visibility = :public
-    @file_name = nil
+    @file_name = file_name
     @concerns = Set.new
   end
 
   #Use this method to process a Controller
-  def process_controller src, file_name = nil
+  def process_controller src, file_name = @file_name
     @file_name = file_name
     process src
   end
