@@ -16,7 +16,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
   end
 
   #Process model source
-  def process_model src, file_name = nil
+  def process_model src, file_name = file_name
     @file_name = file_name
     process src
   end

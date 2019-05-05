@@ -16,7 +16,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
     @initializer_env = nil
   end
 
-  def process_library src, file_name = nil
+  def process_library src, file_name = @file_name
     @file_name = file_name
     process src
   end
