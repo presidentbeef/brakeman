@@ -576,6 +576,16 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
+  def test_block_args_trailing_comma
+    # Just testing it doesn't blow up
+    assert_alias '1', <<-RUBY
+    blah do |x,|
+    end
+
+    1
+    RUBY
+  end
+
   def test_block_with_local
     assert_output <<-INPUT, <<-OUTPUT
       def a
