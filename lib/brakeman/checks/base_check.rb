@@ -144,10 +144,11 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   def warn options
     extra_opts = { :check => self.class.to_s }
 
-    warning = Brakeman::Warning.new(options.merge(extra_opts))
-    warning.file = @app_tree.file_path(warning.file)
+    if options[:file]
+      options[:file] = @app_tree.file_path(options[:file])
+    end
 
-    @warnings << warning
+    @warnings << Brakeman::Warning.new(options.merge(extra_opts))
   end
 
   #Run _exp_ through OutputProcessor to get a nice String.
@@ -476,11 +477,11 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     if gem_name and info = tracker.config.get_gem(gem_name)
       info
     elsif @app_tree.exists?("Gemfile")
-      "Gemfile"
+      @app_tree.file_path "Gemfile"
     elsif @app_tree.exists?("gems.rb")
-      "gems.rb"
+      @app_tree.file_path "gems.rb"
     else
-      "config/environment.rb"
+      @app_tree.file_path "config/environment.rb"
     end
   end
 
