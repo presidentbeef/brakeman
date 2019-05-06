@@ -66,19 +66,7 @@ module Brakeman
     end
 
     def expand_path(path)
-      if path.is_a? Brakeman::FilePath
-        raise "should use FilePath#absolute"
-      end
-
       File.expand_path(path, @root)
-    end
-
-    def read(path)
-     unless path.is_a? Brakeman::FilePath
-        raise "should use FilePath"
-      end
-
-     raise "Use FilePath.read"
     end
 
     def file_path(path)
@@ -86,10 +74,6 @@ module Brakeman
     end
 
     def relative_path(path)
-      if path.is_a? Brakeman::FilePath
-        raise "should use FilePath#relative"
-      end
-
       pname = Pathname.new path
       if path and not path.empty? and pname.absolute?
         pname.relative_path_from(Pathname.new(self.root)).to_s
