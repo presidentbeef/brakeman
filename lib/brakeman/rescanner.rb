@@ -134,7 +134,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     tracker.reset_template template_name
     fp = Brakeman::FileParser.new(tracker)
     template_parser = Brakeman::TemplateParser.new(tracker, fp)
-    template_parser.parse_template path, @app_tree.read_path(path)
+    template_parser.parse_template path, path.read
     process_template fp.file_list[:templates].first
 
     @processor.process_template_alias tracker.templates[template_name]

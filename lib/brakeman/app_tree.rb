@@ -98,17 +98,9 @@ module Brakeman
       end
     end
 
-    # This variation requires full paths instead of paths based
-    # off the project root. I'd prefer to get all the code outside
-    # of AppTree using project-root based paths (e.g. app/models/user.rb)
-    # instead of full paths, but I suspect it's an incompatible change.
-    def read_path(path)
-      File.read(path)
-    end
-
     def exists?(path)
       if path.is_a? Brakeman::FilePath
-        File.exist?(path.absolute)
+        path.exists?
       else
         File.exist?(File.join(@root, path))
       end

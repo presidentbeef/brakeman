@@ -111,7 +111,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   def check_secrets_yaml
     secrets_file = @app_tree.file_path("config/secrets.yml")
 
-    if @app_tree.exists? secrets_file and not ignored? "secrets.yml" and not ignored? "config/*.yml"
+    if secrets_file.exists? and not ignored? "secrets.yml" and not ignored? "config/*.yml"
       yaml = secrets_file.read
       require 'date' # https://github.com/dtao/safe_yaml/issues/80
       require 'safe_yaml/load'

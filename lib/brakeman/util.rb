@@ -351,7 +351,7 @@ module Brakeman::Util
   def context_for app_tree, warning
     file = warning.file
     context = []
-    return context unless warning.line and file and @app_tree.path_exists? file
+    return context unless warning.line and file and file.exists?
 
     current_line = 0
     start_line = warning.line - 5

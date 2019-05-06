@@ -117,7 +117,7 @@ class Brakeman::Scanner
   def process_config_file file
     path = @app_tree.file_path("config/#{file}")
 
-    if @app_tree.exists?(path)
+    if path.exists?
       @processor.process_config(parse_ruby_file(path), path)
     end
 
