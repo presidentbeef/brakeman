@@ -24,11 +24,9 @@ module Brakeman
       @file_list[type] ||= []
 
       list.each do |path|
-        unless path.is_a? Brakeman::FilePath
-          path = Brakeman::FilePath.from_tracker(@tracker, path)
-        end
+        file = @app_tree.file_path(path)
 
-        result = yield path, read_path(path)
+        result = yield file, file.read
         if result
           @file_list[type] << result
         end
@@ -53,10 +51,6 @@ module Brakeman
         @tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
         nil
       end
-    end
-
-    def read_path path
-      @app_tree.read_path path
     end
   end
 end

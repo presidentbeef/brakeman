@@ -47,6 +47,10 @@ module Brakeman
       @relative = relative_path
     end
 
+    def read
+      File.read self.absolute
+    end
+
     # Compare FilePaths. Raises an ArgumentError unless both objects are FilePaths.
     def <=> rhs
       raise ArgumentError unless rhs.is_a? Brakeman::FilePath

@@ -74,7 +74,15 @@ module Brakeman
     end
 
     def read(path)
-      File.read(File.join(@root, path))
+     unless path.is_a? Brakeman::FilePath
+        raise "should use FilePath"
+      end
+
+     raise "Use FilePath.read"
+    end
+
+    def file_path(path)
+      Brakeman::FilePath.from_app_tree(self, path)
     end
 
     def relative_path(path)
@@ -99,7 +107,11 @@ module Brakeman
     end
 
     def exists?(path)
-      File.exist?(File.join(@root, path))
+      if path.is_a? Brakeman::FilePath
+        File.exist?(path.absolute)
+      else
+        File.exist?(File.join(@root, path))
+      end
     end
 
     # This is a pair for #read_path. Again, would like to kill these
@@ -143,7 +155,7 @@ module Brakeman
       if gemspecs.length > 1 or gemspecs.empty?
         @gemspec = false
       else
-        @gemspec = File.basename(gemspecs.first)
+        @gemspec = file_path(File.basename(gemspecs.first))
       end
     end
 
