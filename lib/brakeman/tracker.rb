@@ -83,7 +83,8 @@ class Brakeman::Tracker
   end
 
   def file_path path
-    Brakeman::FilePath.from_tracker(self, path)
+    raise "Use app_tree.file_path"
+    self.app_tree.file_path(path)
   end
 
   #Iterate over all methods in controllers and models.

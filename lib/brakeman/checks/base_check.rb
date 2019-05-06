@@ -145,7 +145,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     extra_opts = { :check => self.class.to_s }
 
     warning = Brakeman::Warning.new(options.merge(extra_opts))
-    warning.file = Brakeman::FilePath.from_tracker(tracker, warning.file)
+    warning.file = @app_tree.file_path(warning.file)
 
     @warnings << warning
   end

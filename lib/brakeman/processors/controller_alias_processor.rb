@@ -26,7 +26,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       return
     else
       @current_class = name
-      @current_file = @tracker.file_path(current_file)
+      @current_file = @app_tree.file_path(current_file)
 
       process_default src
 

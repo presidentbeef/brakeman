@@ -10,13 +10,14 @@ module Brakeman
     def initialize name, parent, file_name, src, tracker
       @name = name
       @parent = parent
-      file_name = Brakeman::FilePath.from_tracker(tracker, file_name)
-      @files = [ file_name ]
-      @src = { file_name => src }
+      @files = []
+      @src = {}
       @includes = []
       @methods = { :public => {}, :private => {}, :protected => {} }
       @options = {}
       @tracker = tracker
+
+      add_file file_name, src
     end
 
     def ancestor? parent, seen={}
@@ -32,7 +33,7 @@ module Brakeman
     end
 
     def add_file file_name, src
-      file_name = Brakeman::FilePath.from_tracker(tracker, file_name)
+      file_name = tracker.app_tree.file_path(file_name)
       @files << file_name unless @files.include? file_name
       @src[file_name] = src
     end
