@@ -8,12 +8,8 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
 
   FORMAT_HTML = Sexp.new(:call, Sexp.new(:lvar, :format), :html)
 
-  def initialize app_tree, tracker, current_file = nil
+  def initialize tracker, current_file = nil
     super(tracker)
-    @app_tree = app_tree
-    @current_class = nil
-    @current_method = nil
-    @current_module = nil
     @visibility = :public
     @current_file = current_file
     @concerns = Set.new

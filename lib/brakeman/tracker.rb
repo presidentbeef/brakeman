@@ -71,7 +71,7 @@ class Brakeman::Tracker
   #Run a set of checks on the current information. Results will be stored
   #in Tracker#checks.
   def run_checks
-    @checks = Brakeman::Checks.run_checks(@app_tree, self)
+    @checks = Brakeman::Checks.run_checks(self)
 
     @end_time = Time.now
     @duration = @end_time - @start_time
@@ -177,7 +177,7 @@ class Brakeman::Tracker
 
   #Returns a Report with this Tracker's information
   def report
-    Brakeman::Report.new(@app_tree, self)
+    Brakeman::Report.new(self)
   end
 
   def warnings

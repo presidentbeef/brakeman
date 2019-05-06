@@ -15,6 +15,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     super()
     @last = nil
     @tracker = tracker
+    @app_tree = tracker.app_tree if tracker
     @current_template = @current_module = @current_class = @current_method = @current_file = nil
   end
 

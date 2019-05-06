@@ -8,8 +8,8 @@ class Brakeman::Report
 
   VALID_FORMATS = [:to_html, :to_pdf, :to_csv, :to_json, :to_tabs, :to_hash, :to_s, :to_markdown, :to_codeclimate, :to_plain, :to_text]
 
-  def initialize app_tree, tracker
-    @app_tree = app_tree
+  def initialize tracker
+    @app_tree = tracker.app_tree
     @tracker = tracker
   end
 
@@ -83,6 +83,6 @@ class Brakeman::Report
   alias to_s to_text
 
   def generate reporter
-    reporter.new(@app_tree, @tracker).generate_report
+    reporter.new(@tracker).generate_report
   end
 end

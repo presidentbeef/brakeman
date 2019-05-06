@@ -28,9 +28,9 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   end
 
   #Initialize Check with Checks.
-  def initialize(app_tree, tracker)
+  def initialize(tracker)
     super()
-    @app_tree = app_tree
+    @app_tree = tracker.app_tree
     @results = [] #only to check for duplicates
     @warnings = []
     @tracker = tracker

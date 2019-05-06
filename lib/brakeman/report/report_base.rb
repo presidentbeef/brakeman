@@ -13,8 +13,8 @@ class Brakeman::Report::Base
 
   TEXT_CONFIDENCE = Brakeman::Warning::TEXT_CONFIDENCE
 
-  def initialize app_tree, tracker
-    @app_tree = app_tree
+  def initialize tracker
+    @app_tree = tracker.app_tree
     @tracker = tracker
     @checks = tracker.checks
     @ignore_filter = tracker.ignored_filter

@@ -96,14 +96,9 @@ class UtilTests < Minitest::Test
 end
 
 class BaseCheckTests < Minitest::Test
-  FakeTracker = Struct.new(:config)
-  FakeAppTree = Struct.new(:root)
-
   def setup
-    @tracker = FakeTracker.new
-    @tracker.config = Brakeman::Config.new(@tracker)
-    app_tree = FakeAppTree.new
-    @check = Brakeman::BaseCheck.new app_tree, @tracker
+    @tracker = BrakemanTester.new_tracker
+    @check = Brakeman::BaseCheck.new(@tracker)
   end
 
   def version_between? version, low, high
@@ -392,16 +387,12 @@ class ConfigTests < Minitest::Test
 end
 
 class GemProcessorTests < Minitest::Test
-  FakeTracker = Struct.new(:config, :options)
-
   def assert_version version, name, msg = nil
     assert_equal version, @tracker.config.gem_version(name), msg
   end
 
   def setup
-    @tracker = FakeTracker.new
-    @tracker.options = {}
-    @tracker.config = Brakeman::Config.new(@tracker)
+    @tracker = BrakemanTester.new_tracker
     @gem_processor = Brakeman::GemProcessor.new @tracker
     @eol_representations = ["\r\n", "\n"]
     @gem_locks = @eol_representations.inject({}) {|h, eol|

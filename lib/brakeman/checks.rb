@@ -109,13 +109,13 @@ class Brakeman::Checks
 
   #Run all the checks on the given Tracker.
   #Returns a new instance of Checks with the results.
-  def self.run_checks(app_tree, tracker)
+  def self.run_checks(tracker)
     checks = self.checks_to_run(tracker)
     check_runner = self.new :min_confidence => tracker.options[:min_confidence]
-    self.actually_run_checks(checks, check_runner, app_tree, tracker)
+    self.actually_run_checks(checks, check_runner, tracker)
   end
 
-  def self.actually_run_checks(checks, check_runner, app_tree, tracker)
+  def self.actually_run_checks(checks, check_runner, tracker)
     threads = [] # Results for parallel
     results = [] # Results for sequential
     parallel = tracker.options[:parallel_checks]
@@ -127,10 +127,10 @@ class Brakeman::Checks
 
       if parallel
         threads << Thread.new do
-          self.run_a_check(c, error_mutex, app_tree, tracker)
+          self.run_a_check(c, error_mutex, tracker)
         end
       else
-        results << self.run_a_check(c, error_mutex, app_tree, tracker)
+        results << self.run_a_check(c, error_mutex, tracker)
       end
 
       #Maintain list of which checks were run
@@ -196,8 +196,8 @@ class Brakeman::Checks
     end
   end
 
-  def self.run_a_check klass, mutex, app_tree, tracker
-    check = klass.new(app_tree, tracker)
+  def self.run_a_check klass, mutex, tracker
+    check = klass.new(tracker)
 
     begin
       check.run_check
