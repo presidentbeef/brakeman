@@ -66,6 +66,10 @@ module Brakeman
     end
 
     def expand_path(path)
+      if path.is_a? Brakeman::FilePath
+        raise "should use FilePath#absolute"
+      end
+
       File.expand_path(path, @root)
     end
 
@@ -125,7 +129,7 @@ module Brakeman
     end
 
     def lib_paths
-      @lib_files ||= find_paths("lib").reject { |path| path.include? "/generators/" or path.include? "lib/tasks/" or path.include? "lib/templates/" } +
+      @lib_files ||= find_paths("lib").reject { |path| path.relative.include? "/generators/" or path.relative.include? "lib/tasks/" or path.relative.include? "lib/templates/" } +
                      find_additional_lib_paths +
                      find_helper_paths +
                      find_job_paths
@@ -169,7 +173,8 @@ module Brakeman
 
     def select_files(paths)
       paths = select_only_files(paths)
-      reject_skipped_files(paths)
+      paths = reject_skipped_files(paths)
+      convert_to_file_paths(paths)
     end
 
     def select_only_files(paths)
@@ -213,7 +218,11 @@ module Brakeman
     end
 
     def prioritize_concerns paths
-      paths.partition { |path| path.include? "concerns" }.flatten
+      paths.partition { |path| path.relative.include? "concerns" }.flatten
+    end
+
+    def convert_to_file_paths paths
+      paths.map { |path| Brakeman::FilePath.from_app_tree(self, path) }
     end
   end
 end
