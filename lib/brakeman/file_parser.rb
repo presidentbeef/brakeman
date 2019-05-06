@@ -14,8 +14,7 @@ module Brakeman
 
     def parse_files list, type
       read_files list, type do |path, contents|
-        relative_path = @app_tree.relative_path(path) # For consistency in __FILE__ handling
-        if ast = parse_ruby(contents, relative_path)
+        if ast = parse_ruby(contents, path.relative)
           ASTFile.new(path, ast)
         end
       end
@@ -25,7 +24,9 @@ module Brakeman
       @file_list[type] ||= []
 
       list.each do |path|
-        result = yield path, read_path(path)
+        file = @app_tree.file_path(path)
+
+        result = yield file, file.read
         if result
           @file_list[type] << result
         end
@@ -50,10 +51,6 @@ module Brakeman
         @tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
         nil
       end
-    end
-
-    def read_path path
-      @app_tree.read_path path
     end
   end
 end

@@ -6,7 +6,7 @@ class ConstantTests < Minitest::Test
   end
 
   def assert_alias expected, original, full = false
-    tracker = Brakeman::Tracker.new(nil)
+    tracker = BrakemanTester.new_tracker
     original_sexp = Brakeman::BaseProcessor.new(tracker).process(RubyParser.new.parse original)
     expected_sexp = Brakeman::BaseProcessor.new(tracker).process(RubyParser.new.parse expected)
     processed_sexp = Brakeman::AliasProcessor.new(tracker).process_safely original_sexp

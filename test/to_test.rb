@@ -57,7 +57,7 @@ class #{name}Tests < Test::Unit::TestCase
       :line => #{w.line.inspect},
       :message => /^#{Regexp.escape w.message.to_s[0,40]}/,
       :confidence => #{w.confidence},
-      :relative_path => #{w.relative_path.inspect},
+      :relative_path => #{w.file.relative.inspect},
       :code => #{w.code.inspect},
       :user_input => #{w.user_input.inspect}
   end

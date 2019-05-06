@@ -17,11 +17,11 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BasicProcessor
     @current_controller = nil
     @with_options = nil #For use inside map.with_options
     @controller_block = false
-    @file_name = "config/routes.rb"
+    @current_file = "config/routes.rb"
   end
 
   def process_routes exp
-    process Brakeman::AliasProcessor.new.process_safely(exp, nil, @file_name)
+    process Brakeman::AliasProcessor.new.process_safely(exp, nil, @current_file)
   end
 
   def process_call exp

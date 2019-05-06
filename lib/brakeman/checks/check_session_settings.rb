@@ -19,7 +19,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   def run_check
     settings = tracker.config.session_settings 
 
-    check_for_issues settings, @app_tree.expand_path("config/environment.rb")
+    check_for_issues settings, @app_tree.file_path("config/environment.rb")
 
     ["session_store.rb", "secret_token.rb"].each do |file|
       if tracker.initializers[file] and not ignored? file
@@ -42,13 +42,13 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   #in Rails 4.x apps
   def process_attrasgn exp
     if not tracker.options[:rails3] and exp.target == @session_settings and exp.method == :session=
-      check_for_issues exp.first_arg, @app_tree.expand_path("config/initializers/session_store.rb")
+      check_for_issues exp.first_arg, @app_tree.file_path("config/initializers/session_store.rb")
     end
 
     if tracker.options[:rails3] and settings_target?(exp.target) and
       (exp.method == :secret_token= or exp.method == :secret_key_base=) and string? exp.first_arg
 
-      warn_about_secret_token exp.line, @app_tree.expand_path("config/initializers/secret_token.rb")
+      warn_about_secret_token exp.line, @app_tree.file_path("config/initializers/secret_token.rb")
     end
 
     exp
@@ -58,7 +58,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   #in Rails 3.x apps
   def process_call exp
     if tracker.options[:rails3] and settings_target?(exp.target) and exp.method == :session_store
-      check_for_rails3_issues exp.second_arg, @app_tree.expand_path("config/initializers/session_store.rb")
+      check_for_rails3_issues exp.second_arg, @app_tree.file_path("config/initializers/session_store.rb")
     end
 
     exp
@@ -109,10 +109,10 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
   end
 
   def check_secrets_yaml
-    secrets_file = "config/secrets.yml"
+    secrets_file = @app_tree.file_path("config/secrets.yml")
 
-    if @app_tree.exists? secrets_file and not ignored? "secrets.yml" and not ignored? "config/*.yml"
-      yaml = @app_tree.read secrets_file
+    if secrets_file.exists? and not ignored? "secrets.yml" and not ignored? "config/*.yml"
+      yaml = secrets_file.read
       require 'date' # https://github.com/dtao/safe_yaml/issues/80
       require 'safe_yaml/load'
       begin
@@ -127,7 +127,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
         unless secret.include? "<%="
           line = yaml.lines.find_index { |l| l.include? secret } + 1
 
-          warn_about_secret_token line, @app_tree.expand_path(secrets_file)
+          warn_about_secret_token line, @app_tree.file_path(secrets_file)
         end
       end
     end
@@ -163,9 +163,9 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
 
   def ignored? file
     [".", "config", "config/initializers"].each do |dir|
-      ignore_file = "#{dir}/.gitignore"
+      ignore_file = @app_tree.file_path("#{dir}/.gitignore")
       if @app_tree.exists? ignore_file
-        input = @app_tree.read(ignore_file)
+        input = ignore_file.read 
 
         return true if input.include? file
       end

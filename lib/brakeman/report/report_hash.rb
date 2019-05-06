@@ -11,7 +11,7 @@ class Brakeman::Report::Hash < Brakeman::Report::Base
       report[meth] = self.send(meth)
       report[meth].each do |w|
         w.message = w.format_message
-        w.context = context_for(@app_tree, w).join("\n")
+        w.context = context_for(w).join("\n")
       end
     end
 

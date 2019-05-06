@@ -38,6 +38,10 @@ module BrakemanTester
 
       Brakeman.run(opts).report.to_hash
     end
+
+    def new_tracker options = {}
+      Brakeman::Tracker.new(Brakeman::AppTree.new("/tmp/FAKE_BRAKEMAN_PATH#{rand(10000)}"), nil, options)
+    end
   end
 end
 
@@ -69,7 +73,11 @@ module BrakemanTester::FindWarning
     else
       warnings.select do |w|
         opts.all? do |k,v|
-          v === w.send(k)
+          if k == :relative_path
+            v === w.file.relative
+          else
+            v === w.send(k)
+          end
         end
       end
     end

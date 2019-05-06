@@ -2,7 +2,7 @@ require_relative '../test'
 
 class FileParserTests < Minitest::Test
   def setup
-    @tracker = Brakeman::Tracker.new(nil)
+    @tracker = BrakemanTester.new_tracker
     @file_parser = Brakeman::FileParser.new(@tracker)
   end
 

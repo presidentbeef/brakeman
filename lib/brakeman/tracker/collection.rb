@@ -9,13 +9,14 @@ module Brakeman
     def initialize name, parent, file_name, src, tracker
       @name = name
       @parent = parent
-      @file_name = file_name
-      @files = [ file_name ]
-      @src = { file_name => src }
+      @files = []
+      @src = {}
       @includes = []
       @methods = { :public => {}, :private => {}, :protected => {} }
       @options = {}
       @tracker = tracker
+
+      add_file file_name, src
     end
 
     def ancestor? parent, seen={}

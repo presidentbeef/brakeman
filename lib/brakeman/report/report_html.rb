@@ -86,7 +86,7 @@ class Brakeman::Report::HTML < Brakeman::Report::Table
 
   def convert_ignored_warning warning, original
     warning = convert_warning(warning, original)
-    warning['File'] = original.relative_path
+    warning['File'] = original.file.relative
     warning['Note'] = CGI.escapeHTML(@ignore_filter.note_for(original) || "")
     warning
   end
@@ -113,7 +113,7 @@ class Brakeman::Report::HTML < Brakeman::Report::Table
   #Generate HTML for warnings, including context show/hidden via Javascript
   def with_context warning, message
     @element_id += 1
-    context = context_for(@app_tree, warning)
+    context = context_for(warning)
     message = html_message(warning, message)
 
     code_id = "context#@element_id"

@@ -13,9 +13,9 @@ module Brakeman::ModuleHelper
 
     if @tracker.libs[name]
       @current_module = @tracker.libs[name]
-      @current_module.add_file @file_name, exp
+      @current_module.add_file @current_file, exp
     else
-      @current_module = tracker_class.new name, parent, @file_name, exp, @tracker
+      @current_module = tracker_class.new name, parent, @current_file, exp, @tracker
       @tracker.libs[name] = @current_module
     end
 
@@ -45,9 +45,9 @@ module Brakeman::ModuleHelper
 
     if collection[name]
       @current_class = collection[name]
-      @current_class.add_file @file_name, exp
+      @current_class.add_file @current_file, exp
     else
-      @current_class = tracker_class.new name, parent, @file_name, exp, @tracker 
+      @current_class = tracker_class.new name, parent, @current_file, exp, @tracker
       collection[name] = @current_class
     end
 
@@ -85,9 +85,9 @@ module Brakeman::ModuleHelper
     @current_method = nil
 
     if @current_class
-      @current_class.add_method @visibility, name, res, @file_name
+      @current_class.add_method @visibility, name, res, @current_file
     elsif @current_module
-      @current_module.add_method @visibility, name, res, @file_name
+      @current_module.add_method @visibility, name, res, @current_file
     end
     res
   end
@@ -101,9 +101,9 @@ module Brakeman::ModuleHelper
     @current_method = nil
 
     if @current_class
-      @current_class.add_method @visibility, name, res, @file_name
+      @current_class.add_method @visibility, name, res, @current_file
     elsif @current_module
-      @current_module.add_method @visibility, name, res, @file_name
+      @current_module.add_method @visibility, name, res, @current_file
     end
 
     res

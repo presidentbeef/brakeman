@@ -12,12 +12,12 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     @current_method = nil
     @current_module = nil
     @visibility = :public
-    @file_name = nil
+    @current_file = nil
   end
 
   #Process model source
-  def process_model src, file_name = nil
-    @file_name = file_name
+  def process_model src, current_file = @current_file
+    @current_file = current_file
     process src
   end
 
@@ -28,7 +28,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     #If inside an inner class we treat it as a library.
     if @current_class
       Brakeman.debug "[Notice] Treating inner class as library: #{name}"
-      Brakeman::LibraryProcessor.new(@tracker).process_library exp, @file_name
+      Brakeman::LibraryProcessor.new(@tracker).process_library exp, @current_file
       return exp
     end
 
