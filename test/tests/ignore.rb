@@ -16,7 +16,7 @@ class IgnoreConfigTests < Minitest::Test
   end
 
   def make_config file = @config_file.path
-    c = Brakeman::IgnoreConfig.new file, report.all_warnings
+    c = Brakeman::IgnoreConfig.new file, report.warnings
     c.read_from_file
     c.filter_ignored
     c
@@ -27,7 +27,7 @@ class IgnoreConfigTests < Minitest::Test
   end
 
   def report
-    @@report ||= Brakeman.run(File.join(TEST_PATH, "apps", "rails5.2")).checks
+    @@report ||= Brakeman.run(File.join(TEST_PATH, "apps", "rails5.2"))
   end
 
   def test_sanity
@@ -37,9 +37,9 @@ class IgnoreConfigTests < Minitest::Test
   def test_ignored_warnings
     assert_equal 3, config.ignored_warnings.length
   end
-  
+
   def test_shown_warnings
-    expected = report.all_warnings.length - config.ignored_warnings.length
+    expected = report.warnings.length - config.ignored_warnings.length
 
     assert_equal expected, config.shown_warnings.length
   end
@@ -148,7 +148,7 @@ class IgnoreConfigTests < Minitest::Test
     known_warnings.delete first_ignored
 
     config.filter_ignored
-    assert_includes config.obsolete_fingerprints, first_ignored.fingerprint 
+    assert_includes config.obsolete_fingerprints, first_ignored.fingerprint
 
     config.prune_obsolete
     refute_includes config.ignored_warnings, first_ignored
@@ -174,6 +174,37 @@ class IgnoreConfigTests < Minitest::Test
     new_config = make_config
 
     assert new_config.ignored? first_ignored
+  end
+
+  def test_relative_paths_everywhere
+    require 'pathname'
+
+    config.shown_warnings.each do |w|
+      config.ignore w
+    end
+
+    config.filter_ignored
+    config.save_with_old
+
+    JSON.parse(File.read(config.file), symbolize_names: true)[:ignored_warnings].each do |w|
+      assert_relative w[:file]
+
+      if w[:render_path]
+        w[:render_path].each do |loc|
+          assert_relative loc[:file]
+
+          if loc[:rendered]
+            assert_relative loc[:rendered][:file]
+          end
+        end
+      end
+    end
+  end
+
+  private
+
+  def assert_relative path
+    assert Pathname.new(path).relative?, "#{path} is not relative"
   end
 end
 
