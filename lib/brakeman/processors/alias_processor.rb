@@ -372,6 +372,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
           elsif e.is_a? Symbol
             local = Sexp.new(:lvar, e)
             env.current[local] = local
+          elsif e.nil? # trailing comma, argument destructuring
+            next # Punt for now
           else
             raise "Unexpected value in block args: #{e.inspect}"
           end
