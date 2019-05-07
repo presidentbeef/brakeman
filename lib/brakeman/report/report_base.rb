@@ -13,8 +13,8 @@ class Brakeman::Report::Base
 
   TEXT_CONFIDENCE = Brakeman::Warning::TEXT_CONFIDENCE
 
-  def initialize app_tree, tracker
-    @app_tree = app_tree
+  def initialize tracker
+    @app_tree = tracker.app_tree
     @tracker = tracker
     @checks = tracker.checks
     @ignore_filter = tracker.ignored_filter
@@ -123,14 +123,50 @@ class Brakeman::Report::Base
     Set.new(tracker.templates.map {|k,v| v.name.to_s[/[^.]+/]}).length
   end
 
-  def warning_file warning, absolute = @tracker.options[:absolute_paths]
+  def absolute_paths?
+    @tracker.options[:absolute_paths]
+  end
+
+  def warning_file warning
     return nil if warning.file.nil?
 
-    if absolute
-      warning.file
+    if absolute_paths?
+      warning.file.absolute
     else
-      relative_path warning.file
+      warning.file.relative
     end
+  end
+
+  #Return array of lines surrounding the warning location from the original
+  #file.
+  def context_for warning
+    file = warning.file
+    context = []
+    return context unless warning.line and file and file.exists?
+
+    current_line = 0
+    start_line = warning.line - 5
+    end_line = warning.line + 5
+
+    start_line = 1 if start_line < 0
+
+    File.open file do |f|
+      f.each_line do |line|
+        current_line += 1
+
+        next if line.strip == ""
+
+        if current_line > end_line
+          break
+        end
+
+        if current_line >= start_line
+          context << [current_line, line]
+        end
+      end
+    end
+
+    context
   end
 
   def rails_version
@@ -143,6 +179,15 @@ class Brakeman::Report::Base
       "3.x"
     else
       "Unknown"
+    end
+  end
+
+  def github_url file, line=nil
+    if repo_url = @tracker.options[:github_url] and file
+      url = "#{repo_url}/#{file.relative}"
+      url << "#L#{line}" if line
+    else
+      nil
     end
   end
 end

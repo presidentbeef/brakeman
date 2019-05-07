@@ -20,7 +20,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #The recommended usage is:
   #
   # AliasProcessor.new.process_safely src
-  def initialize tracker = nil, file_name = nil
+  def initialize tracker = nil, current_file = nil
     super()
     @env = SexpProcessor::Environment.new
     @inside_if = false
@@ -31,7 +31,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     @helper_method_info = Hash.new({})
     @or_depth_limit = (tracker && tracker.options[:branch_limit]) || 5 #arbitrary default
     @meth_env = nil
-    @file_name = file_name
+    @current_file = current_file
     set_env_defaults
   end
 
@@ -43,8 +43,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #
   #This method returns a new Sexp with variables replaced with their values,
   #where possible.
-  def process_safely src, set_env = nil, file_name = nil
-    @file_name = file_name
+  def process_safely src, set_env = nil, current_file = @current_file
+    @current_file = current_file
     @env = set_env || SexpProcessor::Environment.new
     @result = src.deep_clone
     process @result
@@ -699,7 +699,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     if @tracker
       @tracker.add_constant exp.lhs,
         exp.rhs,
-        :file => current_file_name,
+        :file => @current_file,
         :module => @current_module,
         :class => @current_class,
         :method => @current_method

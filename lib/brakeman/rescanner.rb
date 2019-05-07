@@ -13,7 +13,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def initialize options, processor, changed_files
     super(options, processor)
 
-    @paths = changed_files.map {|f| @app_tree.expand_path(f) }
+    @paths = changed_files.map {|f| tracker.app_tree.file_path(f) }
     @old_results = tracker.filtered_warnings  #Old warnings from previous scan
     @changes = nil                 #True if files had to be rescanned
     @reindex = Set.new
@@ -67,7 +67,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def rescan_file path, type = nil
     type ||= file_type path
 
-    unless @app_tree.path_exists?(path)
+    unless path.exists?
       return rescan_deleted_file path, type
     end
 
@@ -127,14 +127,14 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def rescan_template path
-    return unless path.match KNOWN_TEMPLATE_EXTENSIONS and @app_tree.path_exists?(path)
+    return unless path.relative.match KNOWN_TEMPLATE_EXTENSIONS and path.exists?
 
     template_name = template_path_to_name(path)
 
     tracker.reset_template template_name
     fp = Brakeman::FileParser.new(tracker)
     template_parser = Brakeman::TemplateParser.new(tracker, fp)
-    template_parser.parse_template path, @app_tree.read_path(path)
+    template_parser.parse_template path, path.read
     process_template fp.file_list[:templates].first
 
     @processor.process_template_alias tracker.templates[template_name]
@@ -256,7 +256,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def rescan_deleted_template path
-    return unless path.match KNOWN_TEMPLATE_EXTENSIONS
+    return unless path.relative.match KNOWN_TEMPLATE_EXTENSIONS
 
     template_name = template_path_to_name(path)
 
@@ -385,7 +385,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def parse_ruby_files list
-    paths = list.select { |path| @app_tree.path_exists? path }
+    paths = list.select(&:exists?)
     file_parser = Brakeman::FileParser.new(tracker)
     file_parser.parse_files paths, :rescan
     file_parser.file_list[:rescan]

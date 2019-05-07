@@ -110,14 +110,14 @@ class Brakeman::Scanner
     end
 
     if @app_tree.exists? ".ruby-version"
-      tracker.config.set_ruby_version @app_tree.read ".ruby-version"
+      tracker.config.set_ruby_version @app_tree.file_path(".ruby-version").read
     end
   end
 
   def process_config_file file
-    path = "config/#{file}"
+    path = @app_tree.file_path("config/#{file}")
 
-    if @app_tree.exists?(path)
+    if path.exists?
       @processor.process_config(parse_ruby_file(path), path)
     end
 
@@ -131,16 +131,21 @@ class Brakeman::Scanner
   #Process Gemfile
   def process_gems
     gem_files = {}
+
     if @app_tree.exists? "Gemfile"
-      gem_files[:gemfile] = { :src => parse_ruby_file("Gemfile"), :file => "Gemfile" }
+      file = @app_tree.file_path("Gemfile")
+      gem_files[:gemfile] = { :src => parse_ruby_file(file), :file => file }
     elsif @app_tree.exists? "gems.rb"
-      gem_files[:gemfile] = { :src => parse_ruby_file("gems.rb"), :file => "gems.rb" }
+      file = @app_tree.file_path("gems.rb")
+      gem_files[:gemfile] = { :src => parse_ruby_file(file), :file => file }
     end
 
     if @app_tree.exists? "Gemfile.lock"
-      gem_files[:gemlock] = { :src => @app_tree.read("Gemfile.lock"), :file => "Gemfile.lock" }
+      file = @app_tree.file_path("Gemfile.lock")
+      gem_files[:gemlock] = { :src => file.read, :file => file }
     elsif @app_tree.exists? "gems.locked"
-      gem_files[:gemlock] = { :src => @app_tree.read("gems.locked"), :file => "gems.locked" }
+      file = @app_tree.file_path("gems.locked")
+      gem_files[:gemlock] = { :src => file.read, :file => file }
     end
 
     if @app_tree.gemspec
@@ -214,7 +219,8 @@ class Brakeman::Scanner
   #Adds parsed information to tracker.routes
   def process_routes
     if @app_tree.exists?("config/routes.rb")
-      if routes_sexp = parse_ruby_file("config/routes.rb")
+      file = @app_tree.file_path("config/routes.rb")
+      if routes_sexp = parse_ruby_file(file)
         @processor.process_routes routes_sexp
       else
         Brakeman.notify "[Notice] Error while processing routes - assuming all public controller methods are actions."
@@ -315,9 +321,9 @@ class Brakeman::Scanner
     tracker.index_call_sites
   end
 
-  def parse_ruby_file path
+  def parse_ruby_file file
     fp = Brakeman::FileParser.new(self.tracker)
-    fp.parse_ruby(@app_tree.read(path), @app_tree.relative_path(path))
+    fp.parse_ruby(file.read, file)
   end
 end
 

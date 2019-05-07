@@ -113,9 +113,7 @@ module Brakeman
     def save_to_file warnings, file = @file
       warnings = warnings.map do |w|
         if w.is_a? Warning
-          w_hash = w.to_hash
-          w_hash[:file] = w.relative_path
-          w = w_hash
+          w = w.to_hash(absolute_paths: false)
         end
 
         w[:note] = @notes[w[:fingerprint]] || ""

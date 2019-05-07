@@ -3,7 +3,7 @@ require_relative '../test'
 
 class TestReportGeneration < Minitest::Test
   def setup
-    @@tracker||= Brakeman.run(:app_path => "#{TEST_PATH}/apps/rails4", :quiet => true, :report_routes => true)
+    @@tracker ||= Brakeman.run(:app_path => "#{TEST_PATH}/apps/rails4", :quiet => true, :report_routes => true)
     @@report ||= @@tracker.report
   end
 
@@ -122,5 +122,16 @@ class TestReportGeneration < Minitest::Test
     assert report.match(/Overview.*Warning Types.*Controller Overview.*Template Output.*Warnings/m)
   ensure
     @@tracker.options[:debug] = false
+  end
+
+  def test_github_markdown_sanity
+    @@tracker.options[:github_url] = "https://github.com/presidentbeef/brakeman/blob/master/"
+
+    report = @@report.to_markdown
+
+    assert report.is_a? String
+    assert report.include? @@tracker.options[:github_url]
+  ensure
+    @@tracker.options[:github_url] = nil
   end
 end

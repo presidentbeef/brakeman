@@ -280,9 +280,9 @@ q - Quit, do not update ignored warnings
         say warning.format_code
       end
 
-      if warning.relative_path
+      if warning.file
         label "File"
-        say warning.relative_path
+        say warning.file.relative
       end
 
       if warning.line

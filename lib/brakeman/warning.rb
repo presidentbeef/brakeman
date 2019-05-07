@@ -9,7 +9,7 @@ class Brakeman::Warning
     :line, :method, :model, :template, :user_input, :user_input_type,
     :warning_code, :warning_set, :warning_type
 
-  attr_accessor :code, :context, :file, :message, :relative_path
+  attr_accessor :code, :context, :file, :message
 
   TEXT_CONFIDENCE = {
     0 => "High",
@@ -39,7 +39,6 @@ class Brakeman::Warning
     :message => :@message,
     :method => :@method,
     :model => :@model,
-    :relative_path => :@relative_path,
     :template => :@template,
     :user_input => :@user_input,
     :warning_set => :@warning_set,
@@ -101,9 +100,11 @@ class Brakeman::Warning
     unless @warning_set
       if self.model
         @warning_set = :model
+        @file ||= self.model.file
       elsif self.template
         @warning_set = :template
         @called_from = self.template.render_path
+        @file ||= self.template.file
       elsif self.controller
         @warning_set = :controller
       else
@@ -224,7 +225,7 @@ class Brakeman::Warning
     when :template
       @row["Template"] = self.view_name.to_s
     when :model
-      @row["Model"] = self.model.to_s
+      @row["Model"] = self.model.name.to_s
     when :controller
       @row["Controller"] = self.controller.to_s
     when :warning
@@ -238,7 +239,7 @@ class Brakeman::Warning
   def to_s
    output =  "(#{TEXT_CONFIDENCE[self.confidence]}) #{self.warning_type} - #{self.message}"
    output << " near line #{self.line}" if self.line
-   output << " in #{self.file}" if self.file
+   output << " in #{self.file.relative}" if self.file
    output << ": #{self.format_code}" if self.code
 
    output
@@ -250,7 +251,7 @@ class Brakeman::Warning
     warning_code_string = sprintf("%03d", @warning_code)
     code_string = @code.inspect
 
-    Digest::SHA2.new(256).update("#{warning_code_string}#{code_string}#{location_string}#{@relative_path}#{self.confidence}").to_s
+    Digest::SHA2.new(256).update("#{warning_code_string}#{code_string}#{location_string}#{self.file.relative}#{self.confidence}").to_s
   end
 
   def location include_renderer = true
@@ -258,7 +259,7 @@ class Brakeman::Warning
     when :template
       { :type => :template, :template => self.view_name(include_renderer) }
     when :model
-      { :type => :model, :model => self.model }
+      { :type => :model, :model => self.model.name }
     when :controller
       { :type => :controller, :controller => self.controller }
     when :warning
@@ -270,17 +271,23 @@ class Brakeman::Warning
     end
   end
 
-  def to_hash
+  def to_hash absolute_paths: true
+    if self.called_from and not absolute_paths
+      render_path = self.called_from.with_relative_paths
+    else
+      render_path = self.called_from
+    end
+
     { :warning_type => self.warning_type,
       :warning_code => @warning_code,
       :fingerprint => self.fingerprint,
       :check_name => self.check.gsub(/^Brakeman::Check/, ''),
       :message => self.message.to_s,
-      :file => self.file,
+      :file => (absolute_paths ? self.file.absolute : self.file.relative),
       :line => self.line,
       :link => self.link,
       :code => (@code && self.format_code(false)),
-      :render_path => self.called_from,
+      :render_path => render_path,
       :location => self.location(false),
       :user_input => (@user_input && self.format_user_input(false)),
       :confidence => TEXT_CONFIDENCE[self.confidence]

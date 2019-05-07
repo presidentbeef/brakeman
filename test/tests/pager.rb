@@ -46,7 +46,7 @@ class ReportPagerTests < Minitest::Test
   end
 
   def test_in_ci_test
-    pager = Brakeman::Pager.new(Brakeman::Tracker.new(nil))
+    pager = Brakeman::Pager.new(BrakemanTester.new_tracker)
 
     if ENV["CI"]
       assert pager.in_ci?
@@ -56,7 +56,7 @@ class ReportPagerTests < Minitest::Test
   end
 
   def test_set_color_force
-    t = Brakeman::Tracker.new(nil)
+    t = BrakemanTester.new_tracker
     t.options[:output_color] = :force 
     pager = Brakeman::Pager.new(t)
     pager.set_color

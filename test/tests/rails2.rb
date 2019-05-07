@@ -12,7 +12,7 @@ class Rails2Tests < Minitest::Test
   def expected
     @expected ||= {
       :controller => 1,
-      :model => 3,
+      :model => 4,
       :template => 47,
       :generic => 57 }
   end
@@ -339,14 +339,30 @@ class Rails2Tests < Minitest::Test
       :relative_path => "app/controllers/application_controller.rb"
   end
 
-  def test_attribute_restriction
+  def test_attribute_restriction_1
     assert_warning :type => :model,
+      :warning_code => 19,
+      :fingerprint => "91d73b1b9d6920156b920729c0146292eb9f10f4ba9515740442dbe82d4dee78",
       :warning_type => "Attribute Restriction",
-      :warning_code => Brakeman::WarningCodes::Codes[:no_attr_accessible],
-      :message => /^Mass assignment is not restricted using /,
+      :line => 1,
+      :message => /^Mass\ assignment\ is\ not\ restricted\ using\ /,
       :confidence => 0,
-      :file => /account, user\.rb/,
-      :relative_path => "app/models/account, user.rb" #TODO: kinda broken
+      :relative_path => "app/models/account.rb",
+      :code => nil,
+      :user_input => nil
+  end
+
+  def test_attribute_restriction_2
+    assert_warning :type => :model,
+      :warning_code => 19,
+      :fingerprint => "b325ae8a4570599cde146875ae86427506befae36a3b4a97ce2223930846fec5",
+      :warning_type => "Attribute Restriction",
+      :line => 1,
+      :message => /^Mass\ assignment\ is\ not\ restricted\ using\ /,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb",
+      :code => nil,
+      :user_input => nil
   end
 
   def test_format_validation

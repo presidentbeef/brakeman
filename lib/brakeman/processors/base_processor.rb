@@ -15,11 +15,12 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     super()
     @last = nil
     @tracker = tracker
-    @current_template = @current_module = @current_class = @current_method = @file_name = nil
+    @app_tree = tracker.app_tree if tracker
+    @current_template = @current_module = @current_class = @current_method = @current_file = nil
   end
 
-  def process_file exp, file_name
-    @file_name = file_name
+  def process_file exp, current_file
+    @current_file = current_file
     process exp
   end
 
@@ -182,7 +183,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     if @tracker
       @tracker.add_constant exp.lhs,
         exp.rhs,
-        :file => current_file_name,
+        :file => current_file,
         :module => @current_module,
         :class => @current_class,
         :method => @current_method
@@ -287,7 +288,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     template_name = "#@current_method/inline@#{value.line}:#{class_or_module}".to_sym
     type, ast = Brakeman::TemplateParser.parse_inline_erb(@tracker, value.value)
     ast = ast.deep_clone(value.line)
-    @tracker.processor.process_template(template_name, ast, type, nil, @file_name)
+    @tracker.processor.process_template(template_name, ast, type, nil, @current_file)
     @tracker.processor.process_template_alias(@tracker.templates[template_name])
 
     return s(:lit, template_name), options

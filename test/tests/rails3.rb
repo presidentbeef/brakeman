@@ -1158,12 +1158,12 @@ class Rails3Tests < Minitest::Test
   def test_mail_link_CVE_2011_0446
     assert_warning :type => :template,
       :warning_code => 32,
-      :fingerprint => "036a26cc74453c8ca220442bb647911effbb1e6d0b1c47f1131a967a2e0922d5",
+      :fingerprint => "0102737200d60593b78d62a93bd19fbced21fe017ec20c738104cc55afb551bb",
       :warning_type => "Mail Link",
       :line => 1,
-      :message => /^Vulnerability\ in\ `mail_to`\ using\ javascrip/,
+      :message => /^Vulnerability\ in\ `mail_to`\ using\ javascr/,
       :confidence => 0,
-      :relative_path => "Gemfile.lock"
+      :relative_path => "app/views/other/test_mail_to.html.erb"
   end
 
   def test_sql_injection_CVE_2013_0155

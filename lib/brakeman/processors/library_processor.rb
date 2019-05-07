@@ -9,15 +9,15 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
   def initialize tracker
     super
-    @file_name = nil
+    @current_file = nil
     @alias_processor = Brakeman::AliasProcessor.new tracker
     @current_module = nil
     @current_class = nil
     @initializer_env = nil
   end
 
-  def process_library src, file_name = nil
-    @file_name = file_name
+  def process_library src, current_file = @current_file
+    @current_file = current_file
     process src
   end
 
@@ -41,10 +41,10 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
 
     if @current_class
       exp.body = process_all! exp.body
-      @current_class.add_method :public, exp.method_name, exp, @file_name
+      @current_class.add_method :public, exp.method_name, exp, @current_file
     elsif @current_module
       exp.body = process_all! exp.body
-      @current_module.add_method :public, exp.method_name, exp, @file_name
+      @current_module.add_method :public, exp.method_name, exp, @current_file
     end
 
     exp

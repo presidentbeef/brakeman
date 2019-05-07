@@ -1,4 +1,5 @@
 require 'pathname'
+require 'brakeman/file_path'
 
 module Brakeman
   class AppTree
@@ -65,14 +66,19 @@ module Brakeman
       @root_search_pattern = nil
     end
 
+    # Create a new Brakeman::FilePath
+    def file_path(path)
+      Brakeman::FilePath.from_app_tree(self, path)
+    end
+
+    # Should only be used by Brakeman::FilePath.
+    # Use AppTree#file_path(path).absolute instead.
     def expand_path(path)
       File.expand_path(path, @root)
     end
 
-    def read(path)
-      File.read(File.join(@root, path))
-    end
-
+    # Should only be used by Brakeman::FilePath
+    # Use AppTree#file_path(path).relative instead.
     def relative_path(path)
       pname = Pathname.new path
       if path and not path.empty? and pname.absolute?
@@ -82,21 +88,12 @@ module Brakeman
       end
     end
 
-    # This variation requires full paths instead of paths based
-    # off the project root. I'd prefer to get all the code outside
-    # of AppTree using project-root based paths (e.g. app/models/user.rb)
-    # instead of full paths, but I suspect it's an incompatible change.
-    def read_path(path)
-      File.read(path)
-    end
-
     def exists?(path)
-      File.exist?(File.join(@root, path))
-    end
-
-    # This is a pair for #read_path. Again, would like to kill these
-    def path_exists?(path)
-      File.exist?(path)
+      if path.is_a? Brakeman::FilePath
+        path.exists?
+      else
+        File.exist?(File.join(@root, path))
+      end
     end
 
     def initializer_paths
@@ -121,7 +118,7 @@ module Brakeman
     end
 
     def lib_paths
-      @lib_files ||= find_paths("lib").reject { |path| path.include? "/generators/" or path.include? "lib/tasks/" or path.include? "lib/templates/" } +
+      @lib_files ||= find_paths("lib").reject { |path| path.relative.include? "/generators/" or path.relative.include? "lib/tasks/" or path.relative.include? "lib/templates/" } +
                      find_additional_lib_paths +
                      find_helper_paths +
                      find_job_paths
@@ -135,7 +132,7 @@ module Brakeman
       if gemspecs.length > 1 or gemspecs.empty?
         @gemspec = false
       else
-        @gemspec = File.basename(gemspecs.first)
+        @gemspec = file_path(File.basename(gemspecs.first))
       end
     end
 
@@ -165,7 +162,8 @@ module Brakeman
 
     def select_files(paths)
       paths = select_only_files(paths)
-      reject_skipped_files(paths)
+      paths = reject_skipped_files(paths)
+      convert_to_file_paths(paths)
     end
 
     def select_only_files(paths)
@@ -209,7 +207,11 @@ module Brakeman
     end
 
     def prioritize_concerns paths
-      paths.partition { |path| path.include? "concerns" }.flatten
+      paths.partition { |path| path.relative.include? "concerns" }.flatten
+    end
+
+    def convert_to_file_paths paths
+      paths.map { |path| file_path(path) }
     end
   end
 end

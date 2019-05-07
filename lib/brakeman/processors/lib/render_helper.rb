@@ -148,7 +148,7 @@ module Brakeman::RenderHelper
       #This information will be stored in tracker.templates, but with a name
       #specifying this particular route. The original source should remain
       #pristine (so it can be processed within other environments).
-      @tracker.processor.process_template name, src, template.type, called_from
+      @tracker.processor.process_template name, src, template.type, called_from, template.file
     end
   end
 

@@ -528,7 +528,7 @@ class AliasProcessorTests < Minitest::Test
     [x, y]
     RUBY
 
-    tracker = Brakeman::Tracker.new(nil, nil, :branch_limit => 4)
+    tracker = BrakemanTester.new_tracker(:branch_limit => 4)
 
     assert_equal 4, tracker.options[:branch_limit]
 
@@ -1157,6 +1157,6 @@ class AliasProcessorTests < Minitest::Test
     end
 
     # Does not raise because the error is caught and handled by the Tracker
-    assert Brakeman::AliasProcessor.new(Brakeman::Tracker.new(nil)).process s(:block, s(:attrasgn, s(:call, nil, :x), :"[]!", s(:lit, 1), s(:lit, 2)))
+    assert Brakeman::AliasProcessor.new(BrakemanTester.new_tracker).process s(:block, s(:attrasgn, s(:call, nil, :x), :"[]!", s(:lit, 1), s(:lit, 2)))
   end
 end
