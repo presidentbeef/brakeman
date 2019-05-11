@@ -1,5 +1,8 @@
-# Unreleased
+# 4.5.1 
 
+* Add `Brakeman::FilePath` to represent file paths
+* Handle trailing comma in block args
+* Properly handle empty partial name
 * Use relative paths for `__FILE__`
 * Convert `!!` calls to boolean value
 * Add optional check for `config.force_ssl`
@@ -8,7 +11,7 @@
 * Add SQL injection checks for `find_or_create_by` and friends
 * Add deserialization warning for `Oj.load/object_load`
 * Add initial Rails 6 support
-* Add SQL injection checks for `destroy_all`/`delete_all`
+* Add SQL injection checks for `destroy_by`/`delete_by`
 
 # 4.5.0
 
