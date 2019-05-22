@@ -111,6 +111,7 @@ module Brakeman::WarningCodes
     :CVE_2018_3741 => 107,
     :CVE_2018_3760 => 108,
     :force_ssl_disabled => 109,
+    :custom_check => 8888
   }
 
   def self.code name
