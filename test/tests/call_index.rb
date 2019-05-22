@@ -47,6 +47,7 @@ class CallIndexTests < Minitest::Test
 
   def test_find_by_method_regex
     assert_found 2, :method => %r{do_it(?:_now)?}
+    assert_found 2, :target => :world, :method => %r{oo}
   end
 
   def test_find_by_method
@@ -55,6 +56,20 @@ class CallIndexTests < Minitest::Test
 
   def test_find_by_target
     assert_found 3, :target => :world
+  end
+
+  def test_find_by_target_regex
+    # x.y.z
+    assert_found 1, :targets => %r{^x\.y$}
+
+    # x.y.z
+    # params[].y.z
+    assert_found 2, :targets => %r{\.y$}
+
+
+    # the_bar.foo
+    # the_baz.foo
+    assert_found 2, :targets => %r{^the}, methods: [:foo, :goodbye]
   end
 
   def test_find_by_methods
@@ -77,6 +92,14 @@ class CallIndexTests < Minitest::Test
     assert_found 2, :target => [:world, :the_bar], :methods => :foo
   end
 
+  def test_find_by_more_targets
+    assert_found 2, :target => [:world, :the_bar], :methods => [:foo]
+  end
+
+  def test_find_by_more_methods
+    assert_found 2, :target => [:world], :methods => [:foo, :hello]
+  end
+
   def test_find_by_no_target_and_method
     assert_found 1, :target => nil, :method => :do_it
     assert_found 0, :targets => nil, :method => :with_target
@@ -94,6 +117,11 @@ class CallIndexTests < Minitest::Test
   def test_find_params_and_method_in_chain
     assert_found 0, :target => :params, :method => :z
     assert_found 1, :target => :params, :method => :z, :chained => true
+  end
+
+  def test_filter_by_chain
+    assert_found 1, :target => [:params], :method => :z, :chained => true
+    assert_found 1, :target => /^x$/, :method => :z, :chained => true
   end
 
   def test_find_class_scope_call_by_method

@@ -27,13 +27,19 @@ class Brakeman::CallIndex
     if options[:chained]
       return find_chain options
     #Find by narrowest category
-    elsif target and method and target.is_a? Array and method.is_a? Array
+    elsif target.is_a? Array and method.is_a? Array
       if target.length > method.length
         calls = filter_by_target calls_by_methods(method), target
       else
         calls = calls_by_targets(target)
         calls = filter_by_method calls, method
       end
+
+    elsif target.is_a? Regexp and method
+      calls = filter_by_target(calls_by_method(method), target)
+
+    elsif method.is_a? Regexp and target
+      calls = filter_by_method(calls_by_target(target), method)
 
     #Find by target, then by methods, if provided
     elsif target
@@ -116,8 +122,11 @@ class Brakeman::CallIndex
   end
 
   def calls_by_target target
-    if target.is_a? Array
+    case target
+    when Array
       calls_by_targets target
+    when Regexp
+      calls_by_targets_regex target
     else
       @calls_by_target[target] || []
     end
@@ -133,10 +142,24 @@ class Brakeman::CallIndex
     calls
   end
 
+  def calls_by_targets_regex targets_regex
+    calls = []
+
+    @calls_by_target.each do |key, value|
+      case key
+      when String, Symbol
+        calls.concat value if key.match targets_regex
+      end
+    end
+
+    calls
+  end
+
   def calls_by_method method
-    if method.is_a? Array
+    case method
+    when Array
       calls_by_methods method
-    elsif method.is_a? Regexp
+    when Regexp
       calls_by_methods_regex method
     else
       @calls_by_method[method.to_sym] || []
@@ -156,26 +179,28 @@ class Brakeman::CallIndex
 
   def calls_by_methods_regex methods_regex
     calls = []
+
     @calls_by_method.each do |key, value|
-      calls.concat value if key.to_s.match methods_regex
+      calls.concat value if key.match methods_regex
     end
+
     calls
   end
 
-  def calls_with_no_target
-    @calls_by_target[nil]
-  end
-
   def filter calls, key, value
-    if value.is_a? Array
+    case value
+    when Array
       values = Set.new value
 
       calls.select do |call|
         values.include? call[key]
       end
-    elsif value.is_a? Regexp
+    when Regexp
       calls.select do |call|
-        call[key].to_s.match value
+        case call[key]
+        when String, Symbol
+          call[key].match value
+        end
       end
     else
       calls.select do |call|
@@ -197,15 +222,19 @@ class Brakeman::CallIndex
   end
 
   def filter_by_chain calls, target
-    if target.is_a? Array
+    case target
+    when Array
       targets = Set.new target
 
       calls.select do |call|
         targets.include? call[:chain].first
       end
-    elsif target.is_a? Regexp
+    when Regexp
       calls.select do |call|
-        call[:chain].first.to_s.match target
+        case call[:chain].first
+        when String, Symbol
+          call[:chain].first.match target
+        end
       end
     else
       calls.select do |call|
