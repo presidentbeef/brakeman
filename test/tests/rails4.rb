@@ -15,7 +15,7 @@ class Rails4Tests < Minitest::Test
       :controller => 0,
       :model => 3,
       :template => 8,
-      :generic => 85
+      :generic => 86
     }
   end
 
@@ -1650,6 +1650,19 @@ class Rails4Tests < Minitest::Test
       :confidence => 0,
       :relative_path => "app/controllers/application_controller.rb",
       :user_input => nil
+  end
+
+  def test_external_check
+    assert_warning :type => :warning,
+      :warning_code => 8888,
+      :fingerprint => "65220b437f54534bb937fc737591682fc1b1a724074e41b1b57fc82f7debd4ff",
+      :warning_type => "Shady Call",
+      :line => 16,
+      :message => /^Called\ something\ shady!/,
+      :confidence => 0,
+      :relative_path => "lib/sweet_lib.rb",
+      :code => s(:call, nil, :call_shady_method, s(:call, s(:params), :[], s(:lit, :x))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
   end
 
   #Verify checks external to Brakeman are loaded

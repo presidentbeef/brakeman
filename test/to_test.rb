@@ -80,4 +80,4 @@ end
 
 tracker = Brakeman.run options
 
-puts Brakeman::Report::Tests.new(nil, tracker).generate_report
+puts Brakeman::Report::Tests.new(tracker).generate_report
