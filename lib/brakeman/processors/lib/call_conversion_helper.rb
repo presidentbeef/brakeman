@@ -6,6 +6,8 @@ module Brakeman
         exp.all? { |e| e.is_a? Symbol or node_type? e, :lit, :str }
     end
 
+    ARRAY_LIMIT = 100
+
     # Join two array literals into one.
     def join_arrays lhs, rhs, original_exp = nil
       if array? lhs and array? rhs
@@ -13,24 +15,30 @@ module Brakeman
         result.line(lhs.line || rhs.line)
         result.concat lhs[1..-1]
         result.concat rhs[1..-1]
+
+        if result.length > ARRAY_LIMIT
+          raise "OMG Long array: #{result.length}"
+        end
+
         result
       else
         original_exp
       end
     end
 
+    STRING_LIMIT = 50
+
     # Join two string literals into one.
     def join_strings lhs, rhs, original_exp = nil
       if string? lhs and string? rhs
+        if lhs.value.length + rhs.value.length > STRING_LIMIT
+          raise "OMG long string: #{lhs.value.length + rhs.value.length}"
+          return lhs
+        end
+
         result = Sexp.new(:str).line(lhs.line)
         result.value = lhs.value + rhs.value
-
-        if result.value.length > 50
-          # Avoid gigantic strings
-          lhs
-        else
-          result
-        end
+        result
       elsif call? lhs and lhs.method == :+ and string? lhs.first_arg and string? rhs
         joined = join_strings lhs.first_arg, rhs
         lhs.first_arg = joined
