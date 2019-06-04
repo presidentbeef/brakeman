@@ -179,7 +179,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       clauses = [get_pushed_value(exp.then_clause), get_pushed_value(exp.else_clause)].compact
 
       if clauses.length > 1
-        s(:or, *clauses)
+        s(:or, *clauses).line(exp.line)
       else
         clauses.first
       end

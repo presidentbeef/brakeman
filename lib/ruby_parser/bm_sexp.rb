@@ -40,7 +40,7 @@ class Sexp
       s.line(line)
     else
       s.original_line = self.original_line
-      s.line(self.line)
+      s.line(self.line) if self.line
     end
 
     s
