@@ -12,7 +12,7 @@ class Rails6Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 1,
+      :template => 4,
       :generic => 2
     }
   end
@@ -49,6 +49,45 @@ class Rails6Tests < Minitest::Test
       :fingerprint => "9e949d88329883f879b7ff46bdb096ba43e791aacb6558f47beddc34b9d42c4c",
       :warning_type => "Cross-Site Scripting",
       :line => 5,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, s(:call, s(:const, :User), :new, s(:call, nil, :user_params)), :name),
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_2
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "9e949d88329883f879b7ff46bdb096ba43e791aacb6558f47beddc34b9d42c4c",
+      :warning_type => "Cross-Site Scripting",
+      :line => 6,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, s(:call, s(:const, :User), :new, s(:call, nil, :user_params)), :name),
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_3
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "9e949d88329883f879b7ff46bdb096ba43e791aacb6558f47beddc34b9d42c4c",
+      :warning_type => "Cross-Site Scripting",
+      :line => 7,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, s(:call, s(:const, :User), :new, s(:call, nil, :user_params)), :name),
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_4
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "9e949d88329883f879b7ff46bdb096ba43e791aacb6558f47beddc34b9d42c4c",
+      :warning_type => "Cross-Site Scripting",
+      :line => 8,
       :message => /^Unescaped\ model\ attribute/,
       :confidence => 0,
       :relative_path => "app/views/users/show.html.erb",
