@@ -77,9 +77,13 @@ class Brakeman::TemplateProcessor < Brakeman::BaseProcessor
   end
 
   def add_output output, type = :output
-    s = Sexp.new(type, output)
-    s.line(output.line)
-    @current_template.add_output s
-    s
+    if node_type? output, :or
+      Sexp.new(:or, add_output(output.lhs, type), add_output(output.rhs, type)).line(output.line)
+    else
+      s = Sexp.new(type, output)
+      s.line(output.line)
+      @current_template.add_output s
+      s
+    end
   end
 end
