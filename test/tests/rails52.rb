@@ -13,7 +13,7 @@ class Rails52Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 5,
-      :generic => 17
+      :generic => 18
     }
   end
 
@@ -483,6 +483,19 @@ class Rails52Tests < Minitest::Test
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, s(:const, :Oj), :object_load, s(:call, s(:params), :[], s(:lit, :json)), s(:hash, s(:lit, :mode), s(:lit, :strict))),
       :user_input => s(:call, s(:params), :[], s(:lit, :json))
+  end
+
+  def test_remote_code_execution_cookie_serialization_config
+    assert_warning :type => :warning,
+      :warning_code => 110,
+      :fingerprint => "9ae68e59cfee3e5256c0540dadfeb74e6b72c91997fdb60411063a6e8518144a",
+      :warning_type => "Remote Code Execution",
+      :line => 5,
+      :message => /^Use\ of\ unsafe\ cookie\ serialization\ strat/,
+      :confidence => 1,
+      :relative_path => "config/initializers/cookies_serializer.rb",
+      :code => s(:attrasgn, s(:call, s(:call, s(:call, s(:const, :Rails), :application), :config), :action_dispatch), :cookies_serializer=, s(:lit, :hybrid)),
+      :user_input => nil
   end
 
   def test_missing_encryption_force_ssl
