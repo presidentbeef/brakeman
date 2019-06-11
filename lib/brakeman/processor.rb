@@ -90,7 +90,7 @@ module Brakeman
     def process_initializer file_name, src
       res = BaseProcessor.new(@tracker).process_file src, file_name
       res = AliasProcessor.new(@tracker).process_safely res, nil, file_name
-      @tracker.initializers[Pathname.new(file_name).basename.to_s] = res
+      @tracker.initializers[file_name] = res
     end
 
     #Process source for a library file

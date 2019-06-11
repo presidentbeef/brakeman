@@ -5,9 +5,9 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
 
   def initialize tracker
     super
-    @current_class = nil
-    @current_method = nil
+
     @in_target = false
+    @processing_class = false
     @calls = []
     @cache = {}
   end
@@ -23,10 +23,33 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
     process exp
   end
 
+  #For whatever reason, originally the indexing of calls
+  #was performed on individual method bodies (see process_defn).
+  #This method explicitly indexes all calls everywhere given any
+  #source.
+  def process_all_source exp, opts
+    @processing_class = true
+    process_source exp, opts
+  ensure
+    @processing_class = false
+  end
+
   #Process body of method
   def process_defn exp
-    return exp unless @current_method
-    process_all exp.body
+    return exp unless @current_method or @processing_class
+
+    # 'Normal' processing assumes the method name was given
+    # as an option to `process_source` but for `process_all_source`
+    # we don't want to do that.
+    if @current_method.nil?
+      @current_method = exp.method_name
+      process_all exp.body
+      @current_method = nil
+    else
+      process_all exp.body
+    end
+
+    exp
   end
 
   alias process_defs process_defn

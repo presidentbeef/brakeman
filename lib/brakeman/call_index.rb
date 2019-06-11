@@ -91,6 +91,16 @@ class Brakeman::CallIndex
     end
   end
 
+  def remove_indexes_by_file file
+    [@calls_by_method, @calls_by_target].each do |calls_by|
+      calls_by.each do |_name, calls|
+        calls.delete_if do |call|
+          call[:location][:file] == file
+        end
+      end
+    end
+  end
+
   def index_calls calls
     calls.each do |call|
       @calls_by_method[call[:method]] ||= []

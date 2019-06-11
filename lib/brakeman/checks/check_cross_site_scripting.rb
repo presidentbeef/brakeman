@@ -316,11 +316,11 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
     end
 
     json_escape_on = false
-    initializers = tracker.check_initializers :ActiveSupport, :escape_html_entities_in_json=
-    initializers.each {|result| json_escape_on = true?(result.call.first_arg) }
+    initializers = tracker.find_call(target: :ActiveSupport, method: :escape_html_entities_in_json=)
+    initializers.each {|result| json_escape_on = true?(result[:call].first_arg) }
 
     if tracker.config.escape_html_entities_in_json?
-        json_escape_on = true
+      json_escape_on = true
     elsif version_between? "4.0.0", "9.9.9"
       json_escape_on = true
     end

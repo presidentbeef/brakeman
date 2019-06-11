@@ -41,8 +41,8 @@ class Brakeman::CheckI18nXSS < Brakeman::BaseCheck
   end
 
   def has_workaround?
-    tracker.check_initializers(:I18n, :const_defined?).any? do |match|
-      match.last.first_arg == s(:lit, :MissingTranslation)
+    tracker.find_call(target: :I18n, method: :const_defined?, chained: true).any? do |match|
+      match[:call].first_arg == s(:lit, :MissingTranslation)
     end
   end
 end

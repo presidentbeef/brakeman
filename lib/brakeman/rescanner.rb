@@ -226,9 +226,13 @@ class Brakeman::Rescanner < Brakeman::Scanner
   end
 
   def rescan_initializer path
+    tracker.reset_initializer path
+
     parse_ruby_files([path]).each do |astfile|
       process_initializer astfile
     end
+
+    @reindex << :initializers
   end
 
   #Handle rescanning when a file is deleted

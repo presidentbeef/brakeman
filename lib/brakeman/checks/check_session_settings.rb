@@ -21,8 +21,11 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
 
     check_for_issues settings, @app_tree.file_path("config/environment.rb")
 
-    ["session_store.rb", "secret_token.rb"].each do |file|
-      if tracker.initializers[file] and not ignored? file
+    session_store = @app_tree.file_path("config/initializers/session_store.rb")
+    secret_token = @app_tree.file_path("config/initializers/secret_token.rb")
+
+    [session_store, secret_token].each do |file|
+      if tracker.initializers[file] and not ignored? file.basename
         process tracker.initializers[file]
       end
     end

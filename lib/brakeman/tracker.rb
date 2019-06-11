@@ -227,6 +227,10 @@ class Brakeman::Tracker
       finder.process_source template.src, :template => template, :file => template.file
     end
 
+    self.initializers.each do |file_name, src|
+      finder.process_all_source src, :file => file_name
+    end
+
     @call_index = Brakeman::CallIndex.new finder.calls
   end
 
@@ -237,8 +241,8 @@ class Brakeman::Tracker
   #
   #This will limit reindexing to the given sets
   def reindex_call_sites locations
-    #If reindexing templates, models, and controllers, just redo
-    #everything
+    #If reindexing templates, models, controllers,
+    #just redo everything.
     if locations.length == 3
       return index_call_sites
     end
@@ -276,6 +280,12 @@ class Brakeman::Tracker
     if locations.include? :templates
       self.each_template do |_name, template|
         finder.process_source template.src, :template => template, :file => template.file
+      end
+    end
+
+    if locations.include? :initializers
+      self.initializers.each do |file_name, src|
+        finder.process_all_source src, :file => file_name
       end
     end
 
@@ -362,5 +372,13 @@ class Brakeman::Tracker
   #Clear information about routes
   def reset_routes
     @routes = {}
+  end
+
+  def reset_initializer path
+    @initializers.delete_if do |file, src|
+      path.relative.include? file
+    end
+
+    @call_index.remove_indexes_by_file path
   end
 end

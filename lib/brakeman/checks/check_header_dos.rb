@@ -25,7 +25,7 @@ class Brakeman::CheckHeaderDoS < Brakeman::BaseCheck
   end
 
   def has_workaround?
-    tracker.check_initializers(:ActiveSupport, :on_load).any? and
-    tracker.check_initializers(:"ActionView::LookupContext::DetailsKey", :class_eval).any?
+    tracker.find_call(target: :ActiveSupport, method: :on_load).any? and
+      tracker.find_call(target: :"ActionView::LookupContext::DetailsKey", method: :class_eval).any?
   end
 end

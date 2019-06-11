@@ -53,6 +53,6 @@ class Brakeman::CheckNestedAttributesBypass < Brakeman::BaseCheck
   end
 
   def workaround?
-    tracker.check_initializers([], :will_be_destroyed?).any?
+    tracker.find_call(method: :will_be_destroyed?).any?
   end
 end

@@ -20,8 +20,8 @@ class Brakeman::CheckJRubyXML < Brakeman::BaseCheck
       end
 
     #Check for workaround
-    tracker.check_initializers(:"ActiveSupport::XmlMini", :backend=).each do |result|
-      arg = result.call.first_arg
+    tracker.find_call(target: :"ActiveSupport::XmlMini", method: :backend=, chained: true).each do |result|
+      arg = result[:call].first_arg
 
       return if string? arg and arg.value == "REXML"
     end

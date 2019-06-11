@@ -14,6 +14,7 @@ class OjSettingsTests < Minitest::Test
     end
 
     assert_changes
+    assert_reindex :initializers
     assert_fixed 1 # Fix default Oj.load() behavior
     assert_new 0
   end
@@ -24,6 +25,7 @@ class OjSettingsTests < Minitest::Test
     end
 
     assert_changes
+    assert_reindex :initializers
     assert_fixed 1 # Fix default Oj.load() behavior
     assert_new 0
   end
@@ -34,6 +36,7 @@ class OjSettingsTests < Minitest::Test
     end
 
     assert_changes
+    assert_reindex :initializers
     assert_fixed 0 # Default is still bad, no changes 
     assert_new 0
   end
