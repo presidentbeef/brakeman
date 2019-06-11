@@ -303,7 +303,7 @@ class RescannerTests < Minitest::Test
     end
 
     assert_changes
-    assert_reindex :none
+    assert_reindex :initializers
     assert_fixed 1
     assert_new 0
   end

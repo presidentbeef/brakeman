@@ -60,7 +60,7 @@ class MassAssignDisableTest < Minitest::Test
 
     #We disable whitelist, but add strong_parameters globally, so
     #there should be no change.
-    assert_reindex :none
+    assert_reindex :initializers
     assert_changes
     assert_fixed 0
     assert_new 0
@@ -111,7 +111,7 @@ class MassAssignDisableTest < Minitest::Test
 
     #We disable whitelist, but add strong_parameters globally, so
     #there should be no change.
-    assert_reindex :none
+    assert_reindex :initializers
     assert_changes
     assert_fixed 0
     assert_new 0
