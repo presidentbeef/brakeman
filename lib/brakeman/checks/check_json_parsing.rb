@@ -44,13 +44,13 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
 
   #Check for `ActiveSupport::JSON.backend = "JSONGem"`
   def uses_gem_backend?
-    matches = tracker.check_initializers(:'ActiveSupport::JSON', :backend=)
+    matches = tracker.find_call(target: :'ActiveSupport::JSON', method: :backend=, chained: true)
 
     unless matches.empty?
       json_gem = s(:str, "JSONGem")
 
       matches.each do |result|
-        if result.call.first_arg == json_gem
+        if result[:call].first_arg == json_gem
           return true
         end
       end

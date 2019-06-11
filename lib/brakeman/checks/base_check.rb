@@ -170,8 +170,9 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       @mass_assign_disabled = true
     else
       #Check for ActiveRecord::Base.send(:attr_accessible, nil)
-      tracker.check_initializers(:"ActiveRecord::Base", :attr_accessible).each do |result|
-        call = result.call
+      tracker.find_call(target: :"ActiveRecord::Base", method: :attr_accessible).each do |result|
+        call = result[:call]
+
         if call? call
           if call.first_arg == Sexp.new(:nil)
             @mass_assign_disabled = true
@@ -181,8 +182,9 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       end
 
       unless @mass_assign_disabled
-        tracker.check_initializers(:"ActiveRecord::Base", :send).each do |result|
-          call = result.call
+        tracker.find_call(target: :"ActiveRecord::Base", method: :send).each do |result|
+          call = result[:call]
+
           if call? call
             if call.first_arg == Sexp.new(:lit, :attr_accessible) and call.second_arg == Sexp.new(:nil)
               @mass_assign_disabled = true
@@ -197,9 +199,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
         #  class ActiveRecord::Base
         #    attr_accessible nil
         #  end
-        matches = tracker.check_initializers([], :attr_accessible)
-
-        matches.each do |result|
+        tracker.check_initializers([], :attr_accessible).each do |result|
           if result.module == "ActiveRecord" and result.result_class == :Base
             arg = result.call.first_arg
 
@@ -227,10 +227,8 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       end
 
       unless @mass_assign_disabled
-        matches = tracker.check_initializers(:"ActiveRecord::Base", [:send, :include])
-
-        matches.each do |result|
-          call = result.call
+        tracker.find_call(target: :"ActiveRecord::Base", method: [:send, :include]).each do |result|
+          call = result[:call]
           if call? call and (call.first_arg == forbidden_protection or call.second_arg == forbidden_protection)
             @mass_assign_disabled = true
           end

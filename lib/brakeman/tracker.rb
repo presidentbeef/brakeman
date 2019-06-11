@@ -241,9 +241,9 @@ class Brakeman::Tracker
   #
   #This will limit reindexing to the given sets
   def reindex_call_sites locations
-    #If reindexing templates, models, controllers, and initializers,
+    #If reindexing templates, models, controllers,
     #just redo everything.
-    if locations.length == 4
+    if locations.length == 3
       return index_call_sites
     end
 

@@ -80,13 +80,10 @@ class Brakeman::CheckDeserialize < Brakeman::BaseCheck
   def oj_safe_default?
     safe_default = false
 
-    # TODO: Can we just index initializers already??
-    if tracker.check_initializers(:Oj, :mimic_JSON).any?
+    if tracker.find_call(target: :Oj, method: :mimic_JSON).any?
       safe_default = true
-    end
-
-    if result = tracker.check_initializers(:Oj, :default_options=).first
-      options = result.call.first_arg
+    elsif result = tracker.find_call(target: :Oj, method: :default_options=).first
+      options = result[:call].first_arg
 
       if oj_safe_mode? options
         safe_default = true

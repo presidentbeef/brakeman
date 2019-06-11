@@ -34,8 +34,8 @@ class Brakeman::CheckXMLDoS < Brakeman::BaseCheck
   end
 
   def has_workaround?
-    tracker.check_initializers(:"ActiveSupport::XmlMini", :backend=).any? do |match|
-      arg = match.call.first_arg
+    tracker.find_call(target: :"ActiveSupport::XmlMini", method: :backend=).any? do |match|
+      arg = match[:call].first_arg
       if string? arg
         value = arg.value
         value == 'Nokogiri' or value == 'LibXML'

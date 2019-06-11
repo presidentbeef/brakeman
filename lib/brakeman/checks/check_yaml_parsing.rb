@@ -48,21 +48,17 @@ class Brakeman::CheckYAMLParsing < Brakeman::BaseCheck
   def disabled_xml_parser?
     if version_between? "0.0.0", "2.3.14"
       #Look for ActionController::Base.param_parsers.delete(Mime::XML)
-      params_parser = s(:call,
-                        s(:colon2, s(:const, :ActionController), :Base),
-                        :param_parsers)
-
-      matches = tracker.check_initializers(params_parser, :delete)
+      matches = tracker.find_call(target: :"ActionController::Base.param_parsers", method: :delete)
     else
       #Look for ActionDispatch::ParamsParser::DEFAULT_PARSERS.delete(Mime::XML)
-      matches = tracker.check_initializers(:"ActionDispatch::ParamsParser::DEFAULT_PARSERS", :delete)
+      matches = tracker.find_call(target: :"ActionDispatch::ParamsParser::DEFAULT_PARSERS", method: :delete)
     end
 
     unless matches.empty?
       mime_xml = s(:colon2, s(:const, :Mime), :XML)
 
       matches.each do |result|
-        if result.call.first_arg == mime_xml
+        if result[:call].first_arg == mime_xml
           return true
         end
       end
@@ -74,18 +70,14 @@ class Brakeman::CheckYAMLParsing < Brakeman::BaseCheck
   #Look for ActionController::Base.param_parsers[Mime::YAML] = :yaml
   #in Rails 2.x apps
   def enabled_yaml_parser?
-    param_parsers = s(:call,
-                      s(:colon2, s(:const, :ActionController), :Base),
-                      :param_parsers)
-
-    matches = tracker.check_initializers(param_parsers, :[]=)
+    matches = tracker.find_call(target: :'ActionController::Base.param_parsers', method: :[]=)
 
     mime_yaml = s(:colon2, s(:const, :Mime), :YAML)
 
     matches.each do |result|
-      if result.call.first_arg == mime_yaml and
-        symbol? result.call.second_arg and
-        result.call.second_arg.value == :yaml
+      if result[:call].first_arg == mime_yaml and
+        symbol? result[:call].second_arg and
+        result[:call].second_arg.value == :yaml
 
         return true
       end
@@ -96,16 +88,16 @@ class Brakeman::CheckYAMLParsing < Brakeman::BaseCheck
 
   def disabled_xml_dangerous_types?
     if version_between? "0.0.0", "2.3.14"
-      matches = tracker.check_initializers(:"ActiveSupport::CoreExtensions::Hash::Conversions::XML_PARSING", :delete)
+      matches = tracker.find_call(target: :"ActiveSupport::CoreExtensions::Hash::Conversions::XML_PARSING", method: :delete)
     else
-      matches = tracker.check_initializers(:"ActiveSupport::XmlMini::PARSING", :delete)
+      matches = tracker.find_call(target: :"ActiveSupport::XmlMini::PARSING", method: :delete)
     end
 
     symbols_off = false
     yaml_off = false
 
     matches.each do |result|
-      arg = result.call.first_arg
+      arg = result[:call].first_arg
 
       if string? arg
         if arg.value == "yaml"

@@ -30,8 +30,8 @@ class Brakeman::CheckMimeTypeDoS < Brakeman::BaseCheck
   end
 
   def has_workaround?
-    tracker.check_initializers(:Mime, :const_set).any? do |match|
-      arg = match.call.first_arg
+    tracker.find_call(target: :Mime, method: :const_set).any? do |match|
+      arg = match[:call].first_arg
 
       symbol? arg and arg.value == :LOOKUP
     end
