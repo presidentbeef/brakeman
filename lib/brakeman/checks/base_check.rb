@@ -44,19 +44,9 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   end
 
   #Add result to result list, which is used to check for duplicates
-  def add_result result, location = nil
-    location ||= (@current_template && @current_template.name) || @current_class || @current_module || @current_set || result[:location][:class] || result[:location][:template] || result[:location][:file].to_s
-    location = location[:name] if location.is_a? Hash
-    location = location.name if location.is_a? Brakeman::Collection
-    location = location.to_sym
-
-    if result.is_a? Hash
-      line = result[:call].original_line || result[:call].line
-    elsif sexp? result
-      line = result.original_line || result.line
-    else
-      raise ArgumentError
-    end
+  def add_result result
+    location = get_location result
+    location, line = get_location result
 
     @results << [line, location, result]
   end
@@ -235,6 +225,22 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   #This is to avoid reporting duplicates. Checks if the result has been
   #reported already from the same line number.
   def duplicate? result, location = nil
+    location, line = get_location result
+
+    @results.each do |r|
+      if r[0] == line and r[1] == location
+        if tracker.options[:combine_locations]
+          return true
+        elsif r[2] == result
+          return true
+        end
+      end
+    end
+
+    false
+  end
+
+  def get_location result
     if result.is_a? Hash
       line = result[:call].original_line || result[:call].line
     elsif sexp? result
@@ -249,17 +255,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     location = location.name if location.is_a? Brakeman::Collection
     location = location.to_sym
 
-    @results.each do |r|
-      if r[0] == line and r[1] == location
-        if tracker.options[:combine_locations]
-          return true
-        elsif r[2] == result
-          return true
-        end
-      end
-    end
-
-    false
+    return location, line
   end
 
   #Checks if an expression contains string interpolation.
