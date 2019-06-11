@@ -182,19 +182,6 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       end
 
       unless @mass_assign_disabled
-        tracker.find_call(target: :"ActiveRecord::Base", method: :send).each do |result|
-          call = result[:call]
-
-          if call? call
-            if call.first_arg == Sexp.new(:lit, :attr_accessible) and call.second_arg == Sexp.new(:nil)
-              @mass_assign_disabled = true
-              break
-            end
-          end
-        end
-      end
-
-      unless @mass_assign_disabled
         #Check for
         #  class ActiveRecord::Base
         #    attr_accessible nil
