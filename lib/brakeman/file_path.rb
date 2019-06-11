@@ -35,6 +35,11 @@ module Brakeman
       @relative = relative_path
     end
 
+    # Just the file name, no path
+    def basename
+      @basename ||= File.basename(self.relative)
+    end
+
     # Read file from absolute path.
     def read
       File.read self.absolute
