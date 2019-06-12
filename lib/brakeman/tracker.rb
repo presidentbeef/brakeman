@@ -264,6 +264,12 @@ class Brakeman::Tracker
       method_sets << self.controllers
     end
 
+    if locations.include? :initializers
+      self.initializers.each do |file_name, src|
+        @call_index.remove_indexes_by_file file_name
+      end
+    end
+
     @call_index.remove_indexes_by_class classes_to_reindex
 
     finder = Brakeman::FindAllCalls.new self

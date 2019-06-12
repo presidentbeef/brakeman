@@ -111,6 +111,7 @@ module Brakeman::WarningCodes
     :CVE_2018_3741 => 107,
     :CVE_2018_3760 => 108,
     :force_ssl_disabled => 109,
+    :unsafe_cookie_serialization => 110,
     :custom_check => 8888
   }
 

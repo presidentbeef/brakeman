@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 2
+      :generic => 3
     }
   end
 
@@ -92,6 +92,19 @@ class Rails6Tests < Minitest::Test
       :confidence => 0,
       :relative_path => "app/views/users/show.html.erb",
       :code => s(:call, s(:call, s(:const, :User), :new, s(:call, nil, :user_params)), :name),
+      :user_input => nil
+  end
+
+  def test_remote_code_execution_cookie_serialization
+    assert_warning :type => :warning,
+      :warning_code => 110,
+      :fingerprint => "d882f63ce96c28fb6c6e0982f2a171460e4b933bfd9b9a5421dca21eef3f76da",
+      :warning_type => "Remote Code Execution",
+      :line => 5,
+      :message => /^Use\ of\ unsafe\ cookie\ serialization\ strat/,
+      :confidence => 1,
+      :relative_path => "config/initializers/cookies_serializer.rb",
+      :code => s(:attrasgn, s(:call, s(:call, s(:call, s(:const, :Rails), :application), :config), :action_dispatch), :cookies_serializer=, s(:lit, :marshal)),
       :user_input => nil
   end
 end
