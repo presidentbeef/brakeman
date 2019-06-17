@@ -1,3 +1,12 @@
+# Unreleased
+
+* Add check for cookie serialization with Marshal
+* Index calls in initializers
+* Improve template output handling in conditional branches
+* Avoid assigning `nil` line numbers to `Sexp`s
+* Add special warning code for custom checks
+* Add call matching by regular expression
+
 # 4.5.1 
 
 * Add `Brakeman::FilePath` to represent file paths
