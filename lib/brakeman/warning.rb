@@ -271,6 +271,10 @@ class Brakeman::Warning
     end
   end
 
+  def relative_path
+    self.file.relative
+  end
+
   def to_hash absolute_paths: true
     if self.called_from and not absolute_paths
       render_path = self.called_from.with_relative_paths
