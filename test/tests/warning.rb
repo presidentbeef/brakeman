@@ -27,4 +27,13 @@ class WarningTests < Minitest::Test
       Brakeman::Warning.new(confidence: 10)
     end
   end
+
+  def test_relative_path
+    tracker = BrakemanTester.new_tracker
+    path = tracker.app_tree.file_path("app/controllers/some_controller.rb")
+
+    w = Brakeman::Warning.new(file: path, confidence: :high)
+
+    refute w.relative_path.start_with? "/"
+  end
 end
