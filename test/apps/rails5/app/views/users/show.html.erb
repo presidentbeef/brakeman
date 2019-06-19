@@ -7,3 +7,5 @@
 <%= link_to("xss", url_for(params[:bad])) %>
 
 <%= link_to(image_tag("icons/twitter-gray.svg"), sanitize(@user.home_page), target: "_blank") %>
+
+<%= link_to("", "", target: "_blank", rel: "noopener") %>

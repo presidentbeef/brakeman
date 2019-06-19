@@ -12,7 +12,7 @@ class Rails5Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 10,
+      :template => 11,
       :generic => 21
     }
   end
@@ -746,5 +746,38 @@ class Rails5Tests < Minitest::Test
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))),
       :user_input => s(:call, s(:params), :[], s(:lit, :id))
+  end
+
+  def test_reverse_tabnabbing
+    assert_warning :type => :template,
+      :warning_type => "Reverse Tabnabbing",
+      :warning_code => :reverse_tabnabbing,
+      :line => 9,
+      :message => /^The newly opened tab can control/,
+      :relative_path => "app/views/users/show.html.erb"
+  end
+
+  def test_reverse_tabnabbing
+    assert_warning :type => :template,
+      :warning_code => 111,
+      :fingerprint => "aef50775245520547ce753ac26a6a857b90292350f4d1df76d31a5644cac47ce",
+      :warning_type => "Reverse Tabnabbing",
+      :line => 9,
+      :message => /^The\ newly\ opened\ tab\ can\ control\ the\ par/,
+      :confidence => 2,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:call, nil, :image_tag, s(:str, "icons/twitter-gray.svg")), s(:call, nil, :sanitize, s(:call, s(:call, s(:const, :User), :new, s(:call, nil, :user_params)), :home_page)), s(:hash, s(:lit, :target), s(:str, "_blank"))),
+      :user_input => nil
+
+    assert_no_warning :type => :template,
+      :warning_code => 111,
+      :fingerprint => "8850f2c03e8f044db915e90b2e33f77f7836f6bd910bbbfecac94b8ac20c04fc",
+      :warning_type => "Reverse Tabnabbing",
+      :line => 11,
+      :message => /^The\ newly\ opened\ tab\ can\ control\ the\ par/,
+      :confidence => 2,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, ""), s(:str, ""), s(:hash, s(:lit, :target), s(:str, "_blank"), s(:lit, :rel), s(:str, "noopene"))),
+      :user_input => nil
   end
 end
