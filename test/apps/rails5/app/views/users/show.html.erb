@@ -8,4 +8,14 @@
 
 <%= link_to(image_tag("icons/twitter-gray.svg"), sanitize(@user.home_page), target: "_blank") %>
 
-<%= link_to("", "", target: "_blank", rel: "noopener") %>
+<%= link_to '', 'something_static', target: '_blank' %> No warning
+<%= link_to '', some_url, target: '_blank' %> Warn
+<%= link_to some_url, target: '_blank' do -%>
+  Warn
+<% end %>
+<%= link_to '', some_url, target: '_blank', rel: 'noopener' %> Weak warning
+<%= link_to '', some_url, target: '_blank', rel: 'noreferrer' %> Weak warning
+<%= link_to '', some_url, target: '_blank', rel: 'noopener noreferrer' %> No warning
+<%= link_to some_url, target: '_blank', rel: 'noopener noreferrer' do -%>
+  No Warning
+<% end %>

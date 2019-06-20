@@ -12,7 +12,7 @@ class Rails5Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 11,
+      :template => 16,
       :generic => 21
     }
   end
@@ -749,35 +749,93 @@ class Rails5Tests < Minitest::Test
   end
 
   def test_reverse_tabnabbing
-    assert_warning :type => :template,
-      :warning_type => "Reverse Tabnabbing",
-      :warning_code => :reverse_tabnabbing,
-      :line => 9,
-      :message => /^The newly opened tab can control/,
-      :relative_path => "app/views/users/show.html.erb"
-  end
 
-  def test_reverse_tabnabbing
     assert_warning :type => :template,
       :warning_code => 111,
-      :fingerprint => "aef50775245520547ce753ac26a6a857b90292350f4d1df76d31a5644cac47ce",
+      :fingerprint => "a72829f1e36e4d7c4fd71a1b9e39b011137dc3b317a17df2fc7795e08b37cf75",
       :warning_type => "Reverse Tabnabbing",
       :line => 9,
       :message => /^The\ newly\ opened\ tab\ can\ control\ the\ par/,
-      :confidence => 2,
+      :confidence => 1,
       :relative_path => "app/views/users/show.html.erb",
       :code => s(:call, nil, :link_to, s(:call, nil, :image_tag, s(:str, "icons/twitter-gray.svg")), s(:call, nil, :sanitize, s(:call, s(:call, s(:const, :User), :new, s(:call, nil, :user_params)), :home_page)), s(:hash, s(:lit, :target), s(:str, "_blank"))),
       :user_input => nil
 
-    assert_no_warning :type => :template,
+    assert_warning :type => :template,
       :warning_code => 111,
-      :fingerprint => "8850f2c03e8f044db915e90b2e33f77f7836f6bd910bbbfecac94b8ac20c04fc",
+      :fingerprint => "19baa582a2e584150460db2b4a13e95a826e556e6bf3dc98b7b48afd01b1bd19",
       :warning_type => "Reverse Tabnabbing",
       :line => 11,
       :message => /^The\ newly\ opened\ tab\ can\ control\ the\ par/,
+      :confidence => 1,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, ""), s(:str, "something_static"), s(:hash, s(:lit, :target), s(:str, "_blank"))),
+      :user_input => nil
+
+    assert_warning :type => :template,
+      :warning_code => 111,
+      :fingerprint => "24b8934e896e96588d39e012e8ad1eb77d10a9daaaac1c08e9e0e920b6b82748",
+      :warning_type => "Reverse Tabnabbing",
+      :line => 12,
+      :message => /^The\ newly\ opened\ tab\ can\ control\ the\ par/,
+      :confidence => 1,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, ""), s(:call, nil, :some_url), s(:hash, s(:lit, :target), s(:str, "_blank"))),
+      :user_input => nil
+
+    assert_warning :type => :template,
+      :warning_code => 111,
+      :fingerprint => "d81b4e129ad9a43a905c335deb5ca98ef62ce9509cd29d536fcff70c2431dccf",
+      :warning_type => "Reverse Tabnabbing",
+      :line => 13,
+      :message => /^The\ newly\ opened\ tab\ can\ control\ the\ par/,
+      :confidence => 1,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:call, nil, :some_url), s(:hash, s(:lit, :target), s(:str, "_blank"))),
+      :user_input => nil
+
+    assert_warning :type => :template,
+      :warning_code => 111,
+      :fingerprint => "7678f236bb756de38a16d0aeb753a47db32e44c1371aee64e86f04f7bcd7c067",
+      :warning_type => "Reverse Tabnabbing",
+      :line => 15,
+      :message => /^The\ newly\ opened\ tab\ can\ control\ the\ par/,
       :confidence => 2,
       :relative_path => "app/views/users/show.html.erb",
-      :code => s(:call, nil, :link_to, s(:str, ""), s(:str, ""), s(:hash, s(:lit, :target), s(:str, "_blank"), s(:lit, :rel), s(:str, "noopene"))),
+      :code => s(:call, nil, :link_to, s(:str, ""), s(:call, nil, :some_url), s(:hash, s(:lit, :target), s(:str, "_blank"), s(:lit, :rel), s(:str, "noopener"))),
+      :user_input => nil
+
+    assert_warning :type => :template,
+      :warning_code => 111,
+      :fingerprint => "2a3657324d7d873ae9fb3667534ee2a4df0f7822ec0b379740828aecc2941d8c",
+      :warning_type => "Reverse Tabnabbing",
+      :line => 16,
+      :message => /^The\ newly\ opened\ tab\ can\ control\ the\ par/,
+      :confidence => 2,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, ""), s(:call, nil, :some_url), s(:hash, s(:lit, :target), s(:str, "_blank"), s(:lit, :rel), s(:str, "noreferrer"))),
+      :user_input => nil
+
+    assert_no_warning :type => :template,
+      :warning_code => 111,
+      :fingerprint => "8003277810880b3f1dcd5bb6090e149b49b068105013ab3c9ae6466fb8e0ae70",
+      :warning_type => "Reverse Tabnabbing",
+      :line => 17,
+      :message => /^The\ newly\ opened\ tab\ can\ control\ the\ par/,
+      :confidence => 2,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, ""), s(:call, nil, :some_url), s(:hash, s(:lit, :target), s(:str, "_blank"), s(:lit, :rel), s(:str, "noopener noreferrer"))),
+      :user_input => nil
+
+    assert_no_warning :type => :template,
+      :warning_code => 111,
+      :fingerprint => "2f4fa46d6094bcc3ddd85e9d705d9f3a717356aa9d19ccd724538b7ce43f3aad",
+      :warning_type => "Reverse Tabnabbing",
+      :line => 19,
+      :message => /^The\ newly\ opened\ tab\ can\ control\ the\ par/,
+      :confidence => 2,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:call, nil, :some_url), s(:hash, s(:lit, :target), s(:str, "_blank"), s(:lit, :rel), s(:str, "noopener noreferrer"))),
       :user_input => nil
   end
 end
