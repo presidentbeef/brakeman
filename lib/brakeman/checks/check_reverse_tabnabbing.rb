@@ -13,12 +13,13 @@ class Brakeman::CheckReverseTabnabbing < Brakeman::BaseCheck
   end
 
   def process_result result
-    return unless original? result and result[:call].third_arg
+    return unless original? result and result[:call].last_arg
 
-    html_opts = result[:call].third_arg
-    _, target = hash_access html_opts, :target
-    _, rel = hash_access html_opts, :rel
-    return unless target
+    html_opts = result[:call].last_arg
+    return unless hash? html_opts
+
+    target = hash_access html_opts, :target
+    return unless target && string?(target) && target.value == "_blank"
 
     target_url = result[:call].second_arg
 
@@ -26,18 +27,28 @@ class Brakeman::CheckReverseTabnabbing < Brakeman::BaseCheck
     # That means that an adversary would need to run javascript on
     # the victim application's domain. If that is the case, the adversary
     # already has the ability to redirect the victim user anywhere.
-    if target_url[0] == :call then
+    if call? target_url then
       func_s = target_url.method.to_s
       return unless !func_s.end_with?("url") && !func_s.end_with?("path")
     end
 
-    if target == "_blank" && (!rel || (rel && !rel.include?("noopener"))) then
-      warn :result => result,
-        :warning_type => "Reverse Tabnabbing",
-        :warning_code => :reverse_tabnabbing,
-        :message => "The newly opened tab can control the parent tab's " +
-                    "location, thus redirect it to a phishing page",
-        :confidence => :weak
+    rel = hash_access html_opts, :rel
+
+    if !rel then
+      confidence = :medium
+    elsif !string?(rel)
+      return
+    elsif rel.include?("noopener") && !rel.include?("noreferrer") then
+      confidence = :weak
+    else
+      confidence = :medium
     end
+
+    warn :result => result,
+      :warning_type => "Reverse Tabnabbing",
+      :warning_code => :reverse_tabnabbing,
+      :message => "The newly opened tab can control the parent tab's " +
+                  "location, thus redirect it to a phishing page",
+      :confidence => confidence
   end
 end
