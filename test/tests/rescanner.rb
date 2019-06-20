@@ -56,7 +56,6 @@ class RescannerTests < Minitest::Test
     assert_changes
     assert_new 0
     assert_fixed 1
-    assert_nil @original.templates[:"users/show"] #tracker is modified
   end
 
   def test_controller_remove_method
