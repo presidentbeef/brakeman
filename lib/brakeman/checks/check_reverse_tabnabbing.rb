@@ -23,25 +23,16 @@ class Brakeman::CheckReverseTabnabbing < Brakeman::BaseCheck
 
     target_url = result[:call].second_arg
 
-    # `_url` and `_path` lead to urls on to the same origin.
-    # That means that an adversary would need to run javascript on
-    # the victim application's domain. If that is the case, the adversary
-    # already has the ability to redirect the victim user anywhere.
-    if call? target_url then
-      func_s = target_url.method.to_s
-      return unless !func_s.end_with?("url") && !func_s.end_with?("path")
-    end
-
     rel = hash_access html_opts, :rel
+    confidence = :medium
 
-    if !rel then
-      confidence = :medium
-    elsif !string?(rel)
-      return
-    elsif rel.include?("noopener") && !rel.include?("noreferrer") then
-      confidence = :weak
-    else
-      confidence = :medium
+    if rel && string?(rel) then
+      rel = rel.value
+      return if rel.include?("noopener") && rel.include?("noreferrer")
+
+      if rel.include?("noopener") ^ rel.include?("noreferrer") then
+        confidence = :weak
+      end
     end
 
     warn :result => result,
