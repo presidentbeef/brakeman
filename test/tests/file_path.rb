@@ -62,6 +62,24 @@ class FilePathTests < Minitest::Test
     refute_includes [fp3], fp2
   end
 
+
+  def test_file_path_equality_not_cached
+    fp1 = Brakeman::FilePath.new("/tmp/blah/thing.rb", "thing.rb")
+    fp2 = Brakeman::FilePath.new("/tmp/blah/thing.rb", "thing.rb")
+
+    assert_equal fp1, fp2
+    assert_equal fp2, fp1
+    assert_equal fp1.hash, fp2.hash
+    assert fp1.eql?(fp2)
+    assert fp2.eql?(fp1)
+
+    # Ensure FilePaths used as hash keys are equal
+    h = {fp1 => 1}
+
+    assert_equal 1, h[fp1]
+    assert_equal 1, h[fp2]
+  end
+
   def test_file_path_cache
     at = Brakeman::AppTree.new("/tmp/blah")
     fp1 = Brakeman::FilePath.from_app_tree at, "/tmp/blah/thing.rb"
