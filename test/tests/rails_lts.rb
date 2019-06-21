@@ -11,8 +11,7 @@ class RailsLTSTests < Minitest::Test
       append gemfile, "railslts-version (2.3.18.6)"
     end
 
-    #@original is actually modified
-    assert @original.config.gem_version(:'railslts-version'), "2.3.18.6"
+    assert @rescanner.tracker.config.gem_version(:'railslts-version'), "2.3.18.6"
     assert_reindex :none
     assert_changes
     assert_new 0
@@ -26,8 +25,7 @@ class RailsLTSTests < Minitest::Test
       append gemfile, "railslts-version (2.3.18.7)"
     end
 
-    #@original is actually modified
-    assert @original.config.gem_version(:'railslts-version'), "2.3.18.7"
+    assert @rescanner.tracker.config.gem_version(:'railslts-version'), "2.3.18.7"
     assert_reindex :none
     assert_changes
     assert_new 0
@@ -41,8 +39,7 @@ class RailsLTSTests < Minitest::Test
       append gemfile, "railslts-version (2.3.18.8)"
     end
 
-    #@original is actually modified
-    assert @original.config.gem_version(:'railslts-version'), "2.3.18.8"
+    assert @rescanner.tracker.config.gem_version(:'railslts-version'), "2.3.18.8"
     assert_reindex :none
     assert_changes
     assert_new 0
@@ -56,8 +53,7 @@ class RailsLTSTests < Minitest::Test
       append gemfile, "railslts-version (2.3.18.9)"
     end
 
-    #@original is actually modified
-    assert @original.config.gem_version(:'railslts-version'), "2.3.18.9"
+    assert @rescanner.tracker.config.gem_version(:'railslts-version'), "2.3.18.9"
     assert_reindex :none
     assert_changes
     assert_new 0

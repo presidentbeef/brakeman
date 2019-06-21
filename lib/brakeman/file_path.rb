@@ -72,5 +72,14 @@ module Brakeman
     def to_s
       self.to_str
     end
+
+    def hash
+      @hash ||= [@absolute, @relative].hash
+    end
+
+    def eql? rhs
+      @absolute == rhs.absolute and
+        @relative == rhs.relative
+    end
   end
 end

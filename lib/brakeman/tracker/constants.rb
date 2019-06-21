@@ -49,7 +49,7 @@ module Brakeman
     include Brakeman::Util
 
     def initialize
-      @constants = Hash.new { |h, k| h[k] = [] }
+      @constants = {}
     end
 
     def size
@@ -103,6 +103,7 @@ module Brakeman
       end
 
       base_name = Constants.get_constant_base_name(name)
+      @constants[base_name] ||= []
       @constants[base_name] << Constant.new(name, value, context)
     end
 

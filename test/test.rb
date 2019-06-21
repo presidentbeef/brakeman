@@ -137,7 +137,13 @@ module BrakemanTester::RescanTestHelper
 
       yield dir if block_given?
 
-      @rescanner = Brakeman::Rescanner.new(@original.options, @original.processor, changed)
+      File.open(File.join(dir, '.brakeman.dump'), "w") do |f|
+        f.print(Marshal.dump(@original))
+      end
+
+      t = Marshal.load(File.read(File.join(dir, '.brakeman.dump')))
+
+      @rescanner = Brakeman::Rescanner.new(t.options, t.processor, changed)
       @rescan = @rescanner.recheck
 
       assert_existing
@@ -158,7 +164,7 @@ module BrakemanTester::RescanTestHelper
 
   #Check how many fixed warnings were reported
   def assert_fixed expected
-    assert_equal expected, fixed.length, "Expected #{expected} fixed warnings, but found #{fixed.length}"
+    assert_equal expected, fixed.length, lambda { "Expected #{expected} fixed warnings, but found #{fixed.length}:\n#{fixed.map {|w| "\t#{w.message}" }.join("\n")}" }
   end
 
   #Check how many new warnings were reported
