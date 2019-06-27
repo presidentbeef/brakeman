@@ -12,7 +12,7 @@ class Rails5Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 16,
+      :template => 15,
       :generic => 21
     }
   end
@@ -761,7 +761,7 @@ class Rails5Tests < Minitest::Test
       :code => s(:call, nil, :link_to, s(:call, nil, :image_tag, s(:str, "icons/twitter-gray.svg")), s(:call, nil, :sanitize, s(:call, s(:call, s(:const, :User), :new, s(:call, nil, :user_params)), :home_page)), s(:hash, s(:lit, :target), s(:str, "_blank"))),
       :user_input => nil
 
-    assert_warning :type => :template,
+    assert_no_warning :type => :template,
       :warning_code => 111,
       :fingerprint => "19baa582a2e584150460db2b4a13e95a826e556e6bf3dc98b7b48afd01b1bd19",
       :warning_type => "Reverse Tabnabbing",
@@ -836,6 +836,17 @@ class Rails5Tests < Minitest::Test
       :confidence => 2,
       :relative_path => "app/views/users/show.html.erb",
       :code => s(:call, nil, :link_to, s(:call, nil, :some_url), s(:hash, s(:lit, :target), s(:str, "_blank"), s(:lit, :rel), s(:str, "noopener noreferrer"))),
+      :user_input => nil
+
+    assert_no_warning :type => :template,
+      :warning_code => 111,
+      :fingerprint => "0d587aec5157de1f19f4a92f4800c6a9da9fceb5c9b75bdb4b115a01d8fd5eb6",
+      :warning_type => "Reverse Tabnabbing",
+      :line => 20,
+      :message => /^The\ newly\ opened\ tab\ can\ control\ the\ par/,
+      :confidence => 1,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, ""), s(:hash, s(:lit, :target), s(:str, "_blank"))),
       :user_input => nil
   end
 end
