@@ -21,7 +21,15 @@ class Brakeman::CheckReverseTabnabbing < Brakeman::BaseCheck
     target = hash_access html_opts, :target
     return unless target && string?(target) && target.value == "_blank"
 
-    target_url = result[:call].second_arg
+    target_url = result[:block] ? result[:call].first_arg : result[:call].second_arg
+
+    # `url_for` and `_path` calls lead to urls on to the same origin.
+    # That means that an adversary would need to run javascript on
+    # the victim application's domain. If that is the case, the adversary
+    # already has the ability to redirect the victim user anywhere.
+    # Also statically provided URLs (interpolated or otherwise) are also
+    # ignored as they produce many false positives.
+    return if !call?(target_url) || target_url.method.match(/^url_for$|_path$/)
 
     rel = hash_access html_opts, :rel
     confidence = :medium
