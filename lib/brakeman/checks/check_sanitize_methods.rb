@@ -70,7 +70,7 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
 
   def check_cve_2018_8048
     if loofah_vulnerable_cve_2018_8048?
-      message = msg(msg_version(tracker.config.gem_version(:loofah), "loofah gem"), " is vulnerable (CVE-2018-8048). Upgrade to 2.1.2")
+      message = msg(msg_version(tracker.config.gem_version(:loofah), "loofah gem"), " is vulnerable (CVE-2018-8048). Upgrade to 2.2.1")
 
       if tracker.find_call(:target => false, :method => :sanitize).any?
         confidence = :high
@@ -90,7 +90,7 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
   def loofah_vulnerable_cve_2018_8048?
     loofah_version = tracker.config.gem_version(:loofah)
 
-    loofah_version and loofah_version < "2.1.2"
+    loofah_version and loofah_version < "2.2.1"
   end
 
   def warn_sanitizer_cve cve, link, upgrade_version
