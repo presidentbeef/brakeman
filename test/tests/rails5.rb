@@ -527,6 +527,19 @@ class Rails5Tests < Minitest::Test
       :relative_path => "app/controllers/file_controller.rb"
   end
 
+  def test_activestorage_sanitized
+    assert_no_warning :type => :warning,
+      :warning_code => 16,
+      :fingerprint => "9dae00164405a05fa97d79fcf1eedba0e9cd9767c94193ecda9cc99db0cec89a",
+      :warning_type => "File Access",
+      :line => 7,
+      :message => /^Parameter\ value\ used\ in\ file\ name/,
+      :confidence => 2,
+      :relative_path => "app/controllers/file_controller.rb",
+      :code => s(:call, nil, :send_file, s(:call, s(:call, s(:colon2, s(:const, :ActiveStorage), :Filename), :new, s(:dstr, "", s(:evstr, s(:call, s(:params), :[], s(:lit, :file_name))), s(:str, ".jpg"))), :sanitized)),
+      :user_input => s(:call, s(:params), :[], s(:lit, :file_name))
+  end
+
   def test_missing_encryption_force_ssl
     assert_warning :type => :warning,
       :warning_code => 109,
