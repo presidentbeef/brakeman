@@ -32,7 +32,7 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
 
     file_name = call.first_arg
 
-    return if called_on_tempfile?(file_name)
+    return if called_on_tempfile?(file_name) || sanitized?(file_name)
 
     if match = has_immediate_user_input?(file_name)
       confidence = :high
@@ -69,6 +69,12 @@ class Brakeman::CheckFileAccess < Brakeman::BaseCheck
   # ensures that the filename does not already exist in the system.
   def called_on_tempfile? file_name
     call?(file_name) && file_name.target == s(:const, :Tempfile)
+  end
+
+  def sanitized? file
+    call?(file) &&
+      call?(file.target) &&
+      class_name(file.target.target) == :"ActiveStorage::Filename"
   end
 
   def temp_file_method? exp
