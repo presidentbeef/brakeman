@@ -52,10 +52,6 @@ jobs:
     <<: *default
     docker:
       - image: circleci/ruby:latest
-  test-jruby:
-    <<: *default
-    docker:
-      - image: circleci/jruby:latest
   upload-coverage:
     <<: *default
     working_directory: ~/repo
@@ -74,7 +70,6 @@ workflows:
       - test-2-4
       - test-2-5
       - test-2-6
-      - test-jruby
       - upload-coverage:
           requires:
             - test-2-3
