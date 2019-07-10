@@ -111,6 +111,8 @@ module Brakeman
         @escape_html = true
         Brakeman.notify "[Notice] Escaping HTML by default"
       end
+
+      check_haml_version
     end
 
     def set_ruby_version version
@@ -158,6 +160,21 @@ module Brakeman
 
     private
 
+    # Brakeman does not support Haml 5 yet.
+    # (https://github.com/presidentbeef/brakeman/issues/1370) Fortunately, Haml
+    # 5 doesn't add much new syntax, and brakeman (which uses the haml 4 parser)
+    # will parse most Haml 5 files without errors. Therefore, we only print a
+    # warning here, instead of raising an error.
+    def check_haml_version
+      return if supported_haml_version?
+      Brakeman.notify <<~EOS
+        Brakeman does not fully support Haml 5 yet. Your Gemfile (or gemspec)
+        allows Haml 5. Brakeman uses the Haml 4 parser and thus may produce
+        errors when parsing Haml 5 syntax. If Brakeman encounters such an error,
+        it will be unable to scan that file.
+      EOS
+    end
+
     def convert_version_number value
       if value.match(/\A\d+\z/)
         value.to_i
@@ -171,6 +188,20 @@ module Brakeman
         lhs < rhs
       else
         false
+      end
+    end
+
+    # Brakeman does not support Haml 5 yet. See `check_haml_version`.
+    #
+    # This method is messy because all we have is a version `Requirement` (like
+    # `~> 5.0.3`, or `> 4.99`) The only way I could think of was to loop over
+    # known Haml 5 versions and test whether the `Requirement` is satisfied. I
+    # included '5.99.99' in the list so that this method might stand a chance of
+    # working in the future.
+    def supported_haml_version?
+      requirement = Gem::Requirement.new(gem_version(:haml))
+      ['5.99.99', '5.1.1', '5.1.0', '5.0.4', '5.0.3', '5.0.2', '5.0.1', '5.0.0'].none? do |v|
+        requirement.satisfied_by?(Gem::Version.new(v))
       end
     end
 

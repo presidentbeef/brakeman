@@ -2,6 +2,24 @@ require 'tempfile'
 require_relative '../test'
 
 class BrakemanTests < Minitest::Test
+  def test_haml_5_warning
+    config = Tempfile.new("config")
+    config.write <<-YAML.strip
+    ---
+    :quiet: false
+    YAML
+    config.close
+    options = {
+      :quiet => :command_line,
+      :config_file => config.path,
+      :app_path => "#{TEST_PATH}/apps/rails5.2",
+      :run_checks => []
+    }
+    _out, err = capture_io { Brakeman.run options }
+    config.unlink
+    assert_includes err, "Brakeman does not fully support Haml 5 yet."
+  end
+
   def test_exception_on_no_application
     assert_raises Brakeman::NoApplication do
       Brakeman.run "/tmp#{rand}" #better not exist
