@@ -29,6 +29,14 @@ class Brakeman::GemProcessor < Brakeman::BasicProcessor
     @tracker.config.set_rails_version
   end
 
+  # Known issue: Brakeman does not yet support `gem` calls with multiple
+  # "version requirements". Consider the following example from the ruby docs:
+  #
+  #     gem 'rake', '>= 1.1.a', '< 2'
+  #
+  # We are assuming that `second_arg` (eg. '>= 1.1.a') is the only requirement.
+  # Perhaps we should instantiate an array of `::Gem::Requirement`s or even a
+  # `::Gem::Dependency` and pass that to `Tracker::Config#add_gem`?
   def process_call exp
     if exp.target == nil
       if exp.method == :gem
