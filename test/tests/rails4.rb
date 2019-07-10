@@ -1654,8 +1654,8 @@ class Rails4Tests < Minitest::Test
 
   def test_external_check
     assert_warning :type => :warning,
-      :warning_code => 8888,
-      :fingerprint => "65220b437f54534bb937fc737591682fc1b1a724074e41b1b57fc82f7debd4ff",
+      :warning_code => 9090,
+      :fingerprint => "07b0c22fbd40737617b517a9d896bf63870cf7942dff81ad8ae1d0b80ed6b998",
       :warning_type => "Shady Call",
       :line => 16,
       :message => /^Called\ something\ shady!/,
