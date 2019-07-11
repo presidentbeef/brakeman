@@ -1,5 +1,8 @@
 # Unreleased
 
+* Avoid warning about file access with `ActiveStorage::Filename#sanitized` (Tejas Bubane)
+* Update loofah version for fixing CVE-2018-8048 (Markus Nölle)
+* Restore `Warning#relative_path`
 * Add check for cookie serialization with Marshal
 * Index calls in initializers
 * Improve template output handling in conditional branches
