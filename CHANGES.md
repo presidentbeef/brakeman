@@ -9,6 +9,7 @@
 * Avoid assigning `nil` line numbers to `Sexp`s
 * Add special warning code for custom checks
 * Add call matching by regular expression
+* Warn people that Haml 5 is not fully supported
 
 # 4.5.1 
 
