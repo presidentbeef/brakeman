@@ -1,7 +1,6 @@
 [![Brakeman Logo](http://brakemanscanner.org/images/logo_medium.png)](http://brakemanscanner.org/)
 
 [![Build Status](https://circleci.com/gh/presidentbeef/brakeman.svg?style=svg)](https://circleci.com/gh/presidentbeef/brakeman)
-[![Maintainability](https://api.codeclimate.com/v1/badges/1b08a5c74695cb0d11ec/maintainability)](https://codeclimate.com/github/presidentbeef/brakeman/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/1b08a5c74695cb0d11ec/test_coverage)](https://codeclimate.com/github/presidentbeef/brakeman/test_coverage)
 [![Gitter](https://badges.gitter.im/presidentbeef/brakeman.svg)](https://gitter.im/presidentbeef/brakeman)
 
