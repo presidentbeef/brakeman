@@ -59,8 +59,8 @@ class Brakeman::GemProcessor < Brakeman::BasicProcessor
         end
       end
     elsif @inside_gemspec and exp.method == :add_dependency
-      if string? exp.first_arg and string? exp.last_arg
-        @tracker.config.add_gem exp.first_arg.value, exp.last_arg.value, @gemspec, exp.line
+      if string? exp.first_arg and string? exp.second_arg
+        @tracker.config.add_gem exp.first_arg.value, exp.second_arg.value, @gemspec, exp.line
       end
     end
 

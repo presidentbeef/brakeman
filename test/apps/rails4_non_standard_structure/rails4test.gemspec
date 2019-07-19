@@ -5,4 +5,5 @@ Gem::Specification.new do |s|
   s.description = "And this file is to test Brakeman's handling of gemspecs"
 
   s.add_dependency 'rails', '>= 4.1.8'
+  s.add_dependency 'haml'
 end

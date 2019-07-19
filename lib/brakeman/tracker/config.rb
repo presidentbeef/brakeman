@@ -19,16 +19,9 @@ module Brakeman
       @ruby_version = ""
     end
 
-    def allow_forgery_protection?
-      @rails[:action_controller] and
-        @rails[:action_controller][:allow_forgery_protection] == Sexp.new(:false)
-    end
-
     def default_protect_from_forgery?
       if version_between? "5.2.0", "9.9.9"
-        if @rails[:action_controller] and
-            @rails[:action_controller][:default_protect_from_forgery] == Sexp.new(:false)
-
+        if @rails.dig(:action_controller, :default_protect_from_forgery) == Sexp.new(:false)
           return false
         else
           return true
@@ -48,17 +41,15 @@ module Brakeman
 
     def escape_html_entities_in_json?
       #TODO add version-specific information here
-      @rails[:active_support] and
-        true? @rails[:active_support][:escape_html_entities_in_json]
+      true? @rails.dig(:active_support, :escape_html_entities_in_json)
     end
 
     def whitelist_attributes?
-      @rails[:active_record] and
-        @rails[:active_record][:whitelist_attributes] == Sexp.new(:true)
+      @rails.dig(:active_record, :whitelist_attributes) == Sexp.new(:true)
     end
 
     def gem_version name
-      @gems[name] and @gems[name][:version]
+      @gems.dig(name, :version)
     end
 
     def add_gem name, version, file, line
@@ -154,8 +145,7 @@ module Brakeman
     end
 
     def session_settings
-      @rails[:action_controller] &&
-        @rails[:action_controller][:session]
+      @rails.dig(:action_controller, :session)
     end
 
     private
@@ -199,7 +189,10 @@ module Brakeman
     # included '5.99.99' in the list so that this method might stand a chance of
     # working in the future.
     def supported_haml_version?
-      requirement = Gem::Requirement.new(gem_version(:haml))
+      haml_version = gem_version(:haml)
+      return true unless haml_version
+
+      requirement = Gem::Requirement.new(haml_version)
       ['5.99.99', '5.1.1', '5.1.0', '5.0.4', '5.0.3', '5.0.2', '5.0.1', '5.0.0'].none? do |v|
         requirement.satisfied_by?(Gem::Version.new(v))
       end
