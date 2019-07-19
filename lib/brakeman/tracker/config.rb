@@ -19,10 +19,6 @@ module Brakeman
       @ruby_version = ""
     end
 
-    def allow_forgery_protection?
-      @rails.dig(:action_controller, :allow_forgery_protection) == Sexp.new(:false)
-    end
-
     def default_protect_from_forgery?
       if version_between? "5.2.0", "9.9.9"
         if @rails.dig(:action_controller, :default_protect_from_forgery) == Sexp.new(:false)
