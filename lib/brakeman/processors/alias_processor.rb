@@ -265,6 +265,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       unless target.nil?
         exp = target
       end
+    when :dup
+      unless target.nil?
+        exp = target
+      end
     when :join
       if array? target and target.length > 2 and (string? first_arg or first_arg.nil?)
         exp = process_array_join(target, first_arg)

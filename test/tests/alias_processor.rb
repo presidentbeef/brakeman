@@ -1124,6 +1124,13 @@ class AliasProcessorTests < Minitest::Test
     INPUT
   end
 
+  def test_ignore_dup
+    assert_alias "blah", <<-INPUT
+    x = blah.dup
+    x
+    INPUT
+  end
+
   def test_join_incompatible_strings
     # Fails to completely join strings
     # because of encoding issues, but that's better

@@ -107,4 +107,17 @@ class Rails6Tests < Minitest::Test
       :code => s(:attrasgn, s(:call, s(:call, s(:call, s(:const, :Rails), :application), :config), :action_dispatch), :cookies_serializer=, s(:lit, :marshal)),
       :user_input => nil
   end
+
+  def test_dup_call
+    assert_no_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "5c2a887ac2e7ba5ae8d27160c0b4540d9ddb93ae8cde64f84558544e2235c83e",
+      :warning_type => "Redirect",
+      :line => 6,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, nil, :redirect_to, s(:call, s(:call, s(:const, :Group), :find, s(:call, s(:params), :[], s(:lit, :id))), :dup)),
+      :user_input => s(:call, s(:call, s(:const, :Group), :find, s(:call, s(:params), :[], s(:lit, :id))), :dup)
+  end
 end
