@@ -1,5 +1,9 @@
 # Unreleased
 
+* Skip calls to `dup`
+* Add reverse tabnabbing check (Linos Giannopoulos)
+* Better handling of gems with no version declared
+* Warn people that Haml 5 is not fully supported (Jared Beck)
 * Avoid warning about file access with `ActiveStorage::Filename#sanitized` (Tejas Bubane)
 * Update loofah version for fixing CVE-2018-8048 (Markus Nölle)
 * Restore `Warning#relative_path`
@@ -9,7 +13,6 @@
 * Avoid assigning `nil` line numbers to `Sexp`s
 * Add special warning code for custom checks
 * Add call matching by regular expression
-* Warn people that Haml 5 is not fully supported
 
 # 4.5.1 
 
