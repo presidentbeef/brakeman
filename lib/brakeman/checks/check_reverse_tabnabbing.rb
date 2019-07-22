@@ -35,10 +35,10 @@ class Brakeman::CheckReverseTabnabbing < Brakeman::BaseCheck
     confidence = :medium
 
     if rel && string?(rel) then
-      rel = rel.value
-      return if rel.include?("noopener") && rel.include?("noreferrer")
+      rel_opt = rel.value
+      return if rel_opt.include?("noopener") && rel_opt.include?("noreferrer")
 
-      if rel.include?("noopener") ^ rel.include?("noreferrer") then
+      if rel_opt.include?("noopener") ^ rel_opt.include?("noreferrer") then
         confidence = :weak
       end
     end
@@ -46,8 +46,9 @@ class Brakeman::CheckReverseTabnabbing < Brakeman::BaseCheck
     warn :result => result,
       :warning_type => "Reverse Tabnabbing",
       :warning_code => :reverse_tabnabbing,
-      :message => "The newly opened tab can control the parent tab's " +
-                  "location, thus redirect it to a phishing page",
-      :confidence => confidence
+      :message => msg("When opening a link in a new tab without setting ", msg_code('rel: "noopener noreferr"'),
+                      ", the new tab can control the parent tab's location. For example, an attacker could redirect to a phishing page."),
+      :confidence => confidence,
+      :user_input => rel
   end
 end
