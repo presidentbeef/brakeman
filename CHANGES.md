@@ -1,4 +1,4 @@
-# Unreleased
+# 4.6.0
 
 * Skip calls to `dup`
 * Add reverse tabnabbing check (Linos Giannopoulos)
