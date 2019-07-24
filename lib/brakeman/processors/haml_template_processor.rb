@@ -2,8 +2,9 @@ require 'brakeman/processors/template_processor'
 
 #Processes HAML templates.
 class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
-  HAML_FORMAT_METHOD = /format_script_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)_(true|false)/
+  HAML_BUFFER = s(:call, s(:call, nil, :_hamlout), :buffer)
   HAML_HELPERS = s(:colon2, s(:const, :Haml), :Helpers)
+  HAML_HELPERS2 = s(:colon2, s(:colon3, :Haml), :Helpers)
   JAVASCRIPT_FILTER = s(:colon2, s(:colon2, s(:const, :Haml), :Filters), :Javascript)
   COFFEE_FILTER = s(:colon2, s(:colon2, s(:const, :Haml), :Filters), :Coffee)
 
@@ -19,92 +20,32 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       target = process target
     end
 
-    method = exp.method
-
-    if (call? target and target.method == :_hamlout)
-      res = case method
-            when :adjust_tabs, :rstrip!, :attributes #Check attributes, maybe?
-              ignore
-            when :options, :buffer
-              exp
-            when :open_tag
-              process_call_args exp
-            else
-              arg = exp.first_arg
-
-              if arg
-                @inside_concat = true
-                exp.first_arg = process(arg)
-                out = normalize_output(exp.first_arg)
-                @inside_concat = false
-              else
-                raise "Empty _hamlout.#{method}()?"
-              end
-
-              if string? out
-                ignore
-              else
-                r = case method.to_s
-                    when "push_text"
-                      build_output_from_push_text(out)
-                    when HAML_FORMAT_METHOD
-                      if $4 == "true"
-                        if string_interp? out
-                          build_output_from_push_text(out, :escaped_output)
-                        else
-                          Sexp.new :format_escaped, out
-                        end
-                      else
-                        if string_interp? out
-                          build_output_from_push_text(out)
-                        else
-                          Sexp.new :format, out
-                        end
-                      end
-
-                    else
-                      raise "Unrecognized action on _hamlout: #{method}"
-                    end
-
-                @javascript = false
-                r
-              end
-            end
-
-      res.line(exp.line)
-      res
-
-      #_hamlout.buffer <<
-      #This seems to be used rarely, but directly appends args to output buffer.
-      #Has something to do with values of blocks?
-    elsif sexp? target and method == :<< and is_buffer_target? target
-      @inside_concat = true
-      exp.first_arg = process(exp.first_arg)
-      out = normalize_output(exp.first_arg)
-      @inside_concat = false
-
-      if out.node_type == :str #ignore plain strings
-        ignore
-      else
-        add_output out
-      end
-    elsif target == nil and method == :render
-      #Process call to render()
-      exp.arglist = process exp.arglist
-      make_render_in_view exp
-    elsif target == nil and method == :find_and_preserve and exp.first_arg
-      process exp.first_arg
-    elsif method == :render_with_options
-      if target == JAVASCRIPT_FILTER or target == COFFEE_FILTER
-        @javascript = true
-      end
-
-      process exp.first_arg
-    else
-      exp.target = target
-      exp.arglist = process exp.arglist
-      exp
+    if buffer_append? exp
+      output = normalize_output(exp.first_arg)
+      res = get_pushed_value(output)
     end
+
+    res || exp
+  end
+
+  # _haml_out.buffer << ...
+  def buffer_append? exp
+    call? exp and
+      exp.target == HAML_BUFFER and
+      exp.method == :<<
+  end
+
+  def frozen_string_literal? exp
+    call? exp and
+      exp.method == :freeze and
+      string? exp.target
+  end
+
+  def find_and_preserve? exp
+    call? exp and
+      exp.target.nil? and
+      exp.method == :find_and_preserve and
+      exp.first_arg
   end
 
   #If inside an output stream, only return the final expression
@@ -129,15 +70,6 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       end
       Sexp.new(:rlist).concat(exp).compact
     end
-  end
-
-  #Checks if the buffer is the target in a method call Sexp.
-  #TODO: Test this
-  def is_buffer_target? exp
-    exp.node_type == :call and
-    node_type? exp.target, :lvar and
-    exp.target.value == :_hamlout and
-    exp.method == :buffer
   end
 
   #HAML likes to put interpolated values into _hamlout.push_text
@@ -173,10 +105,12 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       exp
     when :str, :ignore, :output, :escaped_output
       exp
-    when :block, :rlist, :dstr
-      exp.map! { |e| get_pushed_value e }
+    when :block, :rlist
+      exp.map! { |e| get_pushed_value(e, default) }
+    when :dstr
+      build_output_from_push_text(exp, default)
     when :if
-      clauses = [get_pushed_value(exp.then_clause), get_pushed_value(exp.else_clause)].compact
+      clauses = [get_pushed_value(exp.then_clause, default), get_pushed_value(exp.else_clause, default)].compact
 
       if clauses.length > 1
         s(:or, *clauses).line(exp.line)
@@ -184,13 +118,35 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
         clauses.first
       end
     else
-      if call? exp and exp.target == HAML_HELPERS and exp.method == :html_escape
-        add_escaped_output exp.first_arg
+      if call? exp and exp.method == :to_s
+        get_pushed_value(exp.target, default)
+      elsif call? exp and haml_helpers? exp.target and exp.method == :html_escape
+        get_pushed_value(exp.first_arg, :escaped_output)
       elsif @javascript and call? exp and (exp.method == :j or exp.method == :escape_javascript)
-        add_escaped_output exp.first_arg
+        get_pushed_value(exp.first_arg, :escaped_output)
+      elsif find_and_preserve? exp
+        get_pushed_value(exp.first_arg, default)
+      elsif call? exp and exp.target.nil? and exp.method == :render
+        #Process call to render()
+        exp.arglist = process exp.arglist
+        make_render_in_view exp
+      elsif call? exp and exp.method == :render_with_options
+        if exp.target == JAVASCRIPT_FILTER or exp.target == COFFEE_FILTER
+         @javascript = true
+        end
+
+        get_pushed_value(exp.first_arg, default)
+        @javascript = false
       else
         add_output exp, default
       end
     end
+  end
+
+  def haml_helpers? exp
+    # Sometimes its Haml::Helpers and
+    # sometimes its ::Haml::Helpers
+    exp == HAML_HELPERS or
+      exp == HAML_HELPERS2
   end
 end
