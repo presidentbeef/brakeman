@@ -1,6 +1,6 @@
 module Brakeman
   module FakeHamlFilter
-    # Copied from Haml - force delayed compilation
+    # Copied from Haml 4 - force delayed compilation
     def compile(compiler, text)
       filter = self
       compiler.instance_eval do

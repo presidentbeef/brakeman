@@ -44,6 +44,12 @@ module Brakeman
       true? @rails.dig(:active_support, :escape_html_entities_in_json)
     end
 
+    def escape_filter_interpolations?
+      # TODO see if app is actually turning this off itself
+      has_gem?(:haml) and
+        version_between? "5.0.0", "5.99", gem_version(:haml)
+    end
+
     def whitelist_attributes?
       @rails.dig(:active_record, :whitelist_attributes) == Sexp.new(:true)
     end
