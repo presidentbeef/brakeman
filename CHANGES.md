@@ -1,3 +1,7 @@
+# 4.6.1
+
+* Fix Reverse Tabnabbing warning message (Steffen Schildknecht / Jörg Schiller)
+
 # 4.6.0
 
 * Skip calls to `dup`
