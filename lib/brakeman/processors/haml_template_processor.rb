@@ -25,7 +25,11 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       res = get_pushed_value(output)
     end
 
-    res || exp
+    if node_type? res, :render, :output, :escaped_output
+      res
+    else
+      exp
+    end
   end
 
   # _haml_out.buffer << ...
