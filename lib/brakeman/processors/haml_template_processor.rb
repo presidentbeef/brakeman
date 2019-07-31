@@ -128,7 +128,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
         get_pushed_value(exp.first_arg, :escaped_output)
       elsif @javascript and (exp.method == :j or exp.method == :escape_javascript) # TODO: Remove - this is not safe
         get_pushed_value(exp.first_arg, :escaped_output)
-      elsif find_and_preserve? exp
+      elsif find_and_preserve? exp or fix_textareas? exp
         get_pushed_value(exp.first_arg, default)
       elsif hamlout_attributes? exp
         ignore # ignore _hamlout.attributes calls
@@ -162,5 +162,11 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
     call? exp and
       exp.target == HAMLOUT and
       exp.method == :attributes
+  end
+
+  def fix_textareas? exp
+    call? exp and
+      exp.target == HAMLOUT and
+      exp.method == :fix_textareas! 
   end
 end

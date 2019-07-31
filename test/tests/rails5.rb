@@ -858,4 +858,15 @@ class Rails5Tests < Minitest::Test
       :code => s(:call, s(:call, nil, :_hamlout), :attributes, s(:hash, s(:str, "data-text"), s(:dstr, "", s(:evstr, s(:call, s(:params), :[], s(:lit, :name))))), s(:nil)),
       :user_input => s(:call, s(:params), :[], s(:lit, :name))
   end
+
+  def test_haml_textareas
+    assert_no_warning :type => :template,
+      :warning_code => 2,
+      :warning_type => "Cross-Site Scripting",
+      :line => 3,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 2,
+      :relative_path => "app/views/widget/attributes.html.haml",
+      :code => s(:call, s(:call, nil, :_hamlout), :fix_textareas!, s(:call, s(:colon2, s(:colon3, :Haml), :Helpers), :preserve, s(:call, s(:call, s(:colon2, s(:colon3, :Haml), :Helpers), :html_escape, s(:call, s(:call, s(:params), :[], s(:lit, :blah)), :to_s)), :strip)))
+  end
 end
