@@ -94,7 +94,6 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
     end
   end
 
-  #Gets outputs from values interpolated into _hamlout.push_text
   def get_pushed_value exp, default = :output
     return exp unless sexp? exp
 
@@ -121,22 +120,22 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       else
         clauses.first
       end
-    else
-      if call? exp and exp.method == :to_s
+    when :call
+      if exp.method == :to_s
         get_pushed_value(exp.target, default)
-      elsif call? exp and haml_helpers? exp.target and exp.method == :html_escape
+      elsif haml_helpers? exp.target and exp.method == :html_escape
         get_pushed_value(exp.first_arg, :escaped_output)
-      elsif @javascript and call? exp and (exp.method == :j or exp.method == :escape_javascript)
+      elsif @javascript and (exp.method == :j or exp.method == :escape_javascript) # TODO: Remove - this is not safe
         get_pushed_value(exp.first_arg, :escaped_output)
       elsif find_and_preserve? exp
         get_pushed_value(exp.first_arg, default)
-      elsif call? exp and exp.target.nil? and exp.method == :render
+      elsif exp.target.nil? and exp.method == :render
         #Process call to render()
         exp.arglist = process exp.arglist
         make_render_in_view exp
-      elsif call? exp and exp.method == :render_with_options
+      elsif exp.method == :render_with_options
         if exp.target == JAVASCRIPT_FILTER or exp.target == COFFEE_FILTER
-         @javascript = true
+          @javascript = true
         end
 
         get_pushed_value(exp.first_arg, default)
@@ -144,6 +143,8 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       else
         add_output exp, default
       end
+    else
+      add_output exp, default
     end
   end
 
