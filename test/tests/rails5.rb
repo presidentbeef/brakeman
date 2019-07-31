@@ -846,4 +846,16 @@ class Rails5Tests < Minitest::Test
       :confidence => 1,
       :relative_path => "app/views/users/show.html.erb"
   end
+
+  def test_haml_attributes
+    assert_no_warning :type => :template,
+      :warning_code => 2,
+      :warning_type => "Cross-Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 2,
+      :relative_path => "app/views/widget/attributes.html.haml",
+      :code => s(:call, s(:call, nil, :_hamlout), :attributes, s(:hash, s(:str, "data-text"), s(:dstr, "", s(:evstr, s(:call, s(:params), :[], s(:lit, :name))))), s(:nil)),
+      :user_input => s(:call, s(:params), :[], s(:lit, :name))
+  end
 end

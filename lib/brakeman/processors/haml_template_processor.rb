@@ -2,7 +2,8 @@ require 'brakeman/processors/template_processor'
 
 #Processes HAML templates.
 class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
-  HAML_BUFFER = s(:call, s(:call, nil, :_hamlout), :buffer)
+  HAMLOUT = s(:call, nil, :_hamlout)
+  HAML_BUFFER = s(:call, HAMLOUT, :buffer)
   HAML_HELPERS = s(:colon2, s(:const, :Haml), :Helpers)
   HAML_HELPERS2 = s(:colon2, s(:colon3, :Haml), :Helpers)
   JAVASCRIPT_FILTER = s(:colon2, s(:colon2, s(:const, :Haml), :Filters), :Javascript)
@@ -129,6 +130,8 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
         get_pushed_value(exp.first_arg, :escaped_output)
       elsif find_and_preserve? exp
         get_pushed_value(exp.first_arg, default)
+      elsif hamlout_attributes? exp
+        ignore # ignore _hamlout.attributes calls
       elsif exp.target.nil? and exp.method == :render
         #Process call to render()
         exp.arglist = process exp.arglist
@@ -153,5 +156,11 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
     # sometimes its ::Haml::Helpers
     exp == HAML_HELPERS or
       exp == HAML_HELPERS2
+  end
+
+  def hamlout_attributes? exp
+    call? exp and
+      exp.target == HAMLOUT and
+      exp.method == :attributes
   end
 end
