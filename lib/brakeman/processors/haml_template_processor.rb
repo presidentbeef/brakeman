@@ -46,10 +46,11 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       string? exp.target
   end
 
+  PRESERVE_METHODS = [:find_and_preserve, :preserve]
+
   def find_and_preserve? exp
     call? exp and
-      exp.target.nil? and
-      exp.method == :find_and_preserve and
+      PRESERVE_METHODS.include?(exp.method) and
       exp.first_arg
   end
 
