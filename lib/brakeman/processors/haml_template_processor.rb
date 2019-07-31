@@ -122,7 +122,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
         clauses.first
       end
     when :call
-      if exp.method == :to_s
+      if exp.method == :to_s or exp.method == :strip
         get_pushed_value(exp.target, default)
       elsif haml_helpers? exp.target and exp.method == :html_escape
         get_pushed_value(exp.first_arg, :escaped_output)
