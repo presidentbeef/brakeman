@@ -9,7 +9,7 @@ class Brakeman::CheckCookieSerialization < Brakeman::BaseCheck
     tracker.find_call(target: :'Rails.application.config.action_dispatch', method: :cookies_serializer=).each do |result|
       setting = result[:call].first_arg
 
-      if symbol? setting and setting.value == :marshal or setting.value == :hybrid
+      if symbol? setting and [:marshal, :hybrid].include? setting.value
         warn :result => result,
           :warning_type => "Remote Code Execution",
           :warning_code => :unsafe_cookie_serialization,
