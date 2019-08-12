@@ -62,6 +62,10 @@ module Brakeman
       @classes.length
     end
 
+    def select &block
+      @class_index.select &block
+    end
+
     def sort_by &block
       @class_index.sort_by &block
     end

@@ -32,11 +32,11 @@ class Brakeman::Tracker
 
     @config = Brakeman::Config.new(self)
     @templates = {}
-    @controllers = {}
+    @controllers = Brakeman::ClassCollection.new
+    @models = Brakeman::ClassCollection.new
     #Initialize models with the unknown model so
     #we can match models later without knowing precisely what
     #class they are.
-    @models = Brakeman::ClassCollection.new
     @models[UNKNOWN_MODEL] = Brakeman::Model.new(UNKNOWN_MODEL, nil, @app_tree.file_path("NOT_REAL.rb"), nil, self)
     @routes = {}
     @initializers = {}
