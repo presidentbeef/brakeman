@@ -6,13 +6,16 @@ require 'brakeman/processors/lib/find_call'
 require 'brakeman/processors/lib/find_all_calls'
 require 'brakeman/tracker/config'
 require 'brakeman/tracker/constants'
+require 'brakeman/tracker/class_name'
 
 #The Tracker keeps track of all the processed information.
 class Brakeman::Tracker
-  attr_accessor :controllers, :constants, :templates, :models, :errors,
+  attr_accessor :ignored_filter
+
+  attr_reader :controllers, :constants, :templates, :models, :errors,
     :checks, :initializers, :config, :routes, :processor, :libs,
     :template_cache, :options, :filter_cache, :start_time, :end_time,
-    :duration, :ignored_filter, :app_tree
+    :duration, :app_tree
 
   #Place holder when there should be a model, but it is not
   #clear what model it will be.
@@ -33,7 +36,7 @@ class Brakeman::Tracker
     #Initialize models with the unknown model so
     #we can match models later without knowing precisely what
     #class they are.
-    @models = {}
+    @models = Brakeman::ClassCollection.new
     @models[UNKNOWN_MODEL] = Brakeman::Model.new(UNKNOWN_MODEL, nil, @app_tree.file_path("NOT_REAL.rb"), nil, self)
     @routes = {}
     @initializers = {}
