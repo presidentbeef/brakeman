@@ -276,7 +276,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def rescan_deleted_lib path
     deleted_lib = nil
 
-    tracker.libs.delete_if do |_name, lib|
+    tracker.libs.delete_if do |lib|
       if lib.files.include?(path)
         deleted_lib = lib
         true
@@ -296,7 +296,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     deleted = false
 
     [:controllers, :models, :libs].each do |collection|
-      tracker.send(collection).delete_if do |_name, data|
+      tracker.send(collection).delete_if do |data|
         if data.files.include?(path)
           deleted = true
           true

@@ -43,7 +43,7 @@ module Brakeman
 
     def delete_if &block
       @classes.delete_if do |klass|
-        if yield(klass, klass) #TODO fix
+        if yield(klass)
           @class_index.delete klass.name
           true
         end
