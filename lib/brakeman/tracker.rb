@@ -41,7 +41,7 @@ class Brakeman::Tracker
     @routes = {}
     @initializers = {}
     @errors = []
-    @libs = {}
+    @libs = Brakeman::ClassCollection.new
     @constants = Brakeman::Constants.new
     @checks = nil
     @processed = nil
