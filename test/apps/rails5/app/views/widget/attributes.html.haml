@@ -1,3 +1,18 @@
 %a{"data-text" => "#{params[:name]}"} No warning
 
 %pre.codeBlock.u-margin= params[:blah]
+
+= @taxon = User.first
+
+
+= form_tag taxa_create_obsolete_combination_path do
+  %p
+    This page is for creating missing obsolete combination records. A new record will be created when "Create" is pressed. The new record will have:
+  %ul
+    %li its genus set to the obsolete genus
+    %li the name will be: obsolete genus name + #{@taxon.name.epithet_html.html_safe}
+    %li its current valid name set to #{@taxon.name_with_fossil}
+    %li
+      the status set to
+      %code obsolete combination
+    %li and the protonym set to the protonym of #{@taxon.name_with_fossil}

@@ -16,21 +16,12 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
 
   #Processes call, looking for template output
   def process_call exp
-    target = exp.target
-    if sexp? target
-      target = process target
-    end
-
     if buffer_append? exp
       output = normalize_output(exp.first_arg)
       res = get_pushed_value(output)
     end
 
-    if node_type? res, :render, :output, :escaped_output
-      res
-    else
-      exp
-    end
+    res or exp
   end
 
   # _haml_out.buffer << ...
@@ -58,24 +49,17 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
   def process_block exp
     exp = exp.dup
     exp.shift
-    if @inside_concat
-      @inside_concat = false
-      exp[0..-2].each do |e|
-        process e
+
+    exp.map! do |e|
+      res = process e
+      if res.empty?
+        nil
+      else
+        res
       end
-      @inside_concat = true
-      process exp[-1]
-    else
-      exp.map! do |e|
-        res = process e
-        if res.empty?
-          nil
-        else
-          res
-        end
-      end
-      Sexp.new(:rlist).concat(exp).compact
     end
+
+    Sexp.new(:rlist).concat(exp).compact
   end
 
   #HAML likes to put interpolated values into _hamlout.push_text

@@ -114,6 +114,8 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     exp.unshift :rlist
   end
 
+  alias process_rlist process_block
+
   #Processes the inside of an interpolated String.
   def process_evstr exp
     exp = exp.dup
