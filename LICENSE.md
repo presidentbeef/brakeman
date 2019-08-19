@@ -37,7 +37,7 @@ Example of uses that are not Commercial Uses, and are subject to the terms of th
 * Using the Software to analyze Licensee's software.
 * Any non-commercial use of the Software.
 
-To purchase a license to the Software for Commercial Use, or if Licensee is unsure whether it needs to purchase a Commercial Use license, contact Synopsys at \[sig-sales@synopsys.com\].
+To purchase a license to the Software for Commercial Use, or if Licensee is unsure whether it needs to purchase a Commercial Use license, contact Synopsys at \[sig-sales-ww@synopsys.com\].
 Synopsys may grant commercial licenses at no monetary cost at its own discretion if the commercial usage is deemed by Synopsys to significantly benefit the development of the Software.
 
 ## 3. License Grant
