@@ -33,7 +33,7 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
   end
 
   def process_lasgn exp
-    if exp.lhs == :haml_temp
+    if exp.lhs == :haml_temp or (node_type? exp.rhs, :iter and [:capture, :capture_haml].include? exp.rhs.block_call.method)
       exp.rhs = process exp.rhs
 
       # Avoid propagating contents of block
