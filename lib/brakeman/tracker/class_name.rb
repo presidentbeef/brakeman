@@ -2,12 +2,45 @@ require 'set'
 
 module Brakeman
   class ClassName
+    attr_reader :names
+
     def initialize name
       @names = [name.to_sym]
+
+      name.to_s.split('::').reverse.inject do |full, current|
+        @names << full.to_sym
+        current << "::" << full
+      end
     end
 
-    def key_name
+    def key
       @names.first
+    end
+
+    def include? name
+      if name.is_a? ClassName
+        (@names & name.names).any?
+      else
+        @names.include? name
+      end
+    end
+
+    def == name
+      return true if self.object_id == name.object_id
+
+      self.include? name
+    end
+
+    def to_sym
+      self.key.to_sym
+    end
+
+    def to_s
+      self.key.to_s
+    end
+
+    def inspect
+      self.to_sym.inspect
     end
   end
 
@@ -18,20 +51,39 @@ module Brakeman
     end
 
     def []= name, klass
-      @class_index[name.to_sym] = klass
+      if name.is_a? ClassName
+        @class_index[name.key] = klass
+      else
+        @class_index[name.to_sym] = klass
+      end
+
       @classes << klass
     end
 
     def [] name
-      if klass = @class_index[name]
+      return nil if name.nil? # TODO why are we looking up nil class names?
+
+      if name.is_a? ClassName
+        if klass = @class_index[name.key]
+          return klass
+        end
+
+        @classes.each do |klass|
+          klass.name == name
+        end
+      elsif klass = @class_index[name]
         return klass
       end
 
       @classes.each do |klass|
-        return klass if klass.name == klass
+        return klass if klass.name == name
       end
 
       nil
+    end
+
+    def << klass
+      self[klass.name] = klass
     end
 
     def delete name

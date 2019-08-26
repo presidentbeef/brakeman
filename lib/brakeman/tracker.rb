@@ -19,7 +19,7 @@ class Brakeman::Tracker
 
   #Place holder when there should be a model, but it is not
   #clear what model it will be.
-  UNKNOWN_MODEL = :BrakemanUnresolvedModel
+  UNKNOWN_MODEL = Brakeman::ClassName.new(:BrakemanUnresolvedModel)
 
   #Creates a new Tracker.
   #
