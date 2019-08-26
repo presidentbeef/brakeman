@@ -76,8 +76,8 @@ module Brakeman
       while controller
         filters = filters - controller.get_skipped_filters(processor, method)
 
-        controller = tracker.controllers[controller.parent] ||
-          tracker.libs[controller.parent]
+        controller = tracker.controllers[controller.parent, :strict] ||
+          tracker.libs[controller.parent, :strict]
       end
 
       filters
