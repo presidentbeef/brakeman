@@ -25,7 +25,12 @@ class TestClassName < Minitest::Test
   def test_collection
     x = Brakeman::ClassCollection.new
     c = Brakeman::Model.new(:Thing, nil, nil, nil, BrakemanTester.new_tracker)
+
+    assert x.empty?
+
     x << c
+
+    refute x.empty?
 
     assert_equal c, x[:Thing]
   end

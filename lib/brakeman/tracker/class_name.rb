@@ -110,6 +110,16 @@ module Brakeman
       @class_index.each_value &block
     end
 
+    def any?
+      raise ArgumentError if block_given?
+
+      !self.empty?
+    end
+
+    def empty?
+      @classes.empty?
+    end
+
     def include? class_name
       !!self[class_name]
     end
