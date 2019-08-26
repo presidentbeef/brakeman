@@ -106,6 +106,14 @@ module Brakeman
       @class_index.each &block
     end
 
+    def each_class &block
+      @class_index.each_value &block
+    end
+
+    def include? class_name
+      !!self[class_name]
+    end
+
     def keys
       @class_index.keys
     end
