@@ -60,7 +60,7 @@ module Brakeman
       @classes << klass
     end
 
-    def [] name, strict = false
+    def [] name, strict = true
       return nil if name.nil? # TODO why are we looking up nil class names?
 
       if name.is_a? ClassName
@@ -121,7 +121,7 @@ module Brakeman
     end
 
     def include? class_name
-      !!self[class_name]
+      !!self[class_name, false]
     end
 
     def keys
