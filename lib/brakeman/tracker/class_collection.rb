@@ -60,19 +60,19 @@ module Brakeman
       @classes << klass
     end
 
-    def [] name
+    def [] name, strict = false
       return nil if name.nil? # TODO why are we looking up nil class names?
 
       if name.is_a? ClassName
         if klass = @class_index[name.key]
           return klass
-        end
-
-        @classes.each do |klass|
-          klass.name == name
+        elsif strict
+          return nil
         end
       elsif klass = @class_index[name]
         return klass
+      elsif strict
+        return nil
       end
 
       @classes.each do |klass|

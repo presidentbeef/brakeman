@@ -6,7 +6,7 @@ require 'brakeman/processors/lib/find_call'
 require 'brakeman/processors/lib/find_all_calls'
 require 'brakeman/tracker/config'
 require 'brakeman/tracker/constants'
-require 'brakeman/tracker/class_name'
+require 'brakeman/tracker/class_collection'
 
 #The Tracker keeps track of all the processed information.
 class Brakeman::Tracker
