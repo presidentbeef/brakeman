@@ -113,4 +113,17 @@ class TestClassName < Minitest::Test
 
     assert_equal c, x[:Thing]
   end
+
+  def test_top
+    a = Brakeman::ClassName.new(:"::Top")
+    b = Brakeman::ClassName.new(:"A::Top")
+
+    refute_equal a, b
+  end
+
+  def test_unknown
+    tracker = BrakemanTester.new_tracker
+
+    assert tracker.models.include? Brakeman::Tracker::UNKNOWN_MODEL
+  end
 end

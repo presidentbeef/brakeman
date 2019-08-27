@@ -8,9 +8,11 @@ module Brakeman
     def initialize name
       @names = [name.to_sym]
 
-      name.to_s.split('::').reverse.inject do |full, current|
-        @names << full.to_sym
-        current << "::" << full
+      unless name.to_s.start_with? "::"
+        name.to_s.split('::').reverse.inject do |full, current|
+          @names << full.to_sym
+          current << "::" << full
+        end
       end
     end
 
