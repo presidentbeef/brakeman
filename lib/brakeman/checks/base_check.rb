@@ -249,7 +249,12 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       raise ArgumentError
     end
 
+    begin
     location ||= (@current_template && @current_template.name) || @current_class || @current_module || @current_set || result[:location][:class] || result[:location][:template] || result[:location][:file].to_s
+    rescue => e
+      p result
+      raise e
+    end
 
     location = location[:name] if location.is_a? Hash
     location = location.name if location.is_a? Brakeman::Collection

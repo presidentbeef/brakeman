@@ -79,7 +79,9 @@ module Brakeman
 
       Haml::Engine.new(text,
                        :filename => path,
-                       :escape_html => tracker.config.escape_html?).precompiled.gsub(/([^\\])\\n/, '\1')
+                       :escape_html => tracker.config.escape_html?,
+                       :escape_filter_interpolations => tracker.config.escape_filter_interpolations?
+                      ).precompiled.gsub(/([^\\])\\n/, '\1')
     rescue Haml::Error => e
       tracker.error e, ["While compiling HAML in #{path}"] << e.backtrace
       nil
