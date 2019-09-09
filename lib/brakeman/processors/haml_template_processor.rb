@@ -16,6 +16,8 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
 
   #Processes call, looking for template output
   def process_call exp
+    exp = process_default exp
+
     if buffer_append? exp
       output = normalize_output(exp.first_arg)
       res = get_pushed_value(output)
