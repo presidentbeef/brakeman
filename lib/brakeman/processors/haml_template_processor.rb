@@ -117,6 +117,8 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
         get_pushed_value(exp.first_arg, :escaped_output)
       elsif find_and_preserve? exp or fix_textareas? exp
         get_pushed_value(exp.first_arg, default)
+      elsif raw? exp
+        get_pushed_value(exp.first_arg, :output)
       elsif hamlout_attributes? exp
         ignore # ignore _hamlout.attributes calls
       elsif exp.target.nil? and exp.method == :render
@@ -155,5 +157,10 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
     call? exp and
       exp.target == HAMLOUT and
       exp.method == :fix_textareas! 
+  end
+
+  def raw? exp
+    call? exp and
+      exp.method == :raw
   end
 end
