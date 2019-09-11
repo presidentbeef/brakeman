@@ -12,7 +12,7 @@ class Rails5Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 15,
+      :template => 16,
       :generic => 21
     }
   end
@@ -857,6 +857,19 @@ class Rails5Tests < Minitest::Test
       :relative_path => "app/views/widget/attributes.html.haml",
       :code => s(:call, s(:call, nil, :_hamlout), :attributes, s(:hash, s(:str, "data-text"), s(:dstr, "", s(:evstr, s(:call, s(:params), :[], s(:lit, :name))))), s(:nil)),
       :user_input => s(:call, s(:params), :[], s(:lit, :name))
+  end
+
+  def test_haml_interpolation
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "c16c1a10087e9e1b703a21ab8d9eac942f033c50be9afe9a56fff5ba5c62c739",
+      :warning_type => "Cross-Site Scripting",
+      :line => 13,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :relative_path => "app/views/widget/attributes.html.haml",
+      :code => s(:call, s(:call, s(:call, s(:const, :User), :first), :name), :stuff_html),
+      :user_input => nil
   end
 
   def test_haml_textareas
