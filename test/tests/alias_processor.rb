@@ -66,6 +66,14 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
+  def test_string_new_append
+    assert_alias "'hello world'", <<-RUBY
+      x = String.new
+      x << "hello" << " " << "world"
+      x
+    RUBY
+  end
+
   def test_string_append_call
     assert_alias "'hello ' << params[:x]", <<-RUBY
     x = ""
