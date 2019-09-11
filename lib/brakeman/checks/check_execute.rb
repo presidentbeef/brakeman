@@ -21,6 +21,10 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
   SHELL_ESCAPE_MODULE_METHODS = Set[:escape, :join, :shellescape, :shelljoin]
   SHELL_ESCAPE_MIXIN_METHODS = Set[:shellescape, :shelljoin]
 
+  # These are common shells that are known to allow the execution of commands
+  # via a -c flag. See dash_c_shell_command? for more info.
+  KNOWN_SHELL_COMMANDS = Set.new(["sh", "bash", "ksh", "csh", "tcsh", "zsh"])
+
   SHELLWORDS = s(:const, :Shellwords)
 
   #Check models, controllers, and views for command injection.
@@ -42,6 +46,8 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     end
   end
 
+  private
+
   #Processes results from Tracker#find_call.
   def process_result result
     call = result[:call]
@@ -54,7 +60,17 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
         failure = include_user_input?(args) || dangerous_interp?(args)
       end
     when :system, :exec
-      failure = include_user_input?(first_arg) || dangerous_interp?(first_arg)
+      # Normally, if we're in a `system` or `exec` call, we only are worried
+      # about shell injection when there's a single argument, because comma-
+      # separated arguments are always escaped by Ruby. However, an exception is
+      # when the first two arguments are something like "bash -c" because then
+      # the third argument is effectively the command being run and might be
+      # a malicious executable if it comes (partially or fully) from user input.
+      if dash_c_shell_command?(first_arg, args)
+        failure = include_user_input?(args[3]) || dangerous_interp?(args[3])
+      else
+        failure = include_user_input?(first_arg) || dangerous_interp?(first_arg)
+      end
     else
       failure = include_user_input?(args) || dangerous_interp?(args)
     end
@@ -75,6 +91,15 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
         :user_input => failure,
         :confidence => confidence
     end
+  end
+
+  # @return [Boolean] true iff the command given by `first_arg`, `args` is of
+  #   invoking a new shell process via `<shell_command> -c` (like `bash -c`)
+  def dash_c_shell_command?(first_arg, args)
+    first_arg.size <= 2 &&
+    KNOWN_SHELL_COMMANDS.include?(first_arg.value) &&
+    args[2]&.size <= 2 &&
+    args[2].value == "-c"
   end
 
   def check_open_calls

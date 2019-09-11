@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 3
+      :generic => 5
     }
   end
 
@@ -119,5 +119,31 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/controllers/groups_controller.rb",
       :code => s(:call, nil, :redirect_to, s(:call, s(:call, s(:const, :Group), :find, s(:call, s(:params), :[], s(:lit, :id))), :dup)),
       :user_input => s(:call, s(:call, s(:const, :Group), :find, s(:call, s(:params), :[], s(:lit, :id))), :dup)
+  end
+
+  def test_basic_dash_c_command_injection
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "22f0226c43eeb59bff49e4f0ea10014c2882c8be2f51e4d36876a26960b100d9",
+      :warning_type => "Command Injection",
+      :line => 70,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, nil, :system, s(:str, "bash"), s(:str, "-c"), s(:call, s(:params), :[], s(:lit, :script))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :script))
+  end
+
+  def test_complex_dash_c_command_injection
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "d5b5eeed916c878c897bcde8b922bb18cdcf9fc1acfb8e37b30eb02422e8c43e",
+      :warning_type => "Command Injection",
+      :line => 75,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, nil, :exec, s(:str, "zsh"), s(:str, "-c"), s(:dstr, "", s(:evstr, s(:call, s(:params), :[], s(:lit, :script))), s(:str, " -e ./"))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :script))
   end
 end
