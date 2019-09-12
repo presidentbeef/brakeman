@@ -33,12 +33,6 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
       exp.method == :<<
   end
 
-  def frozen_string_literal? exp
-    call? exp and
-      exp.method == :freeze and
-      string? exp.target
-  end
-
   PRESERVE_METHODS = [:find_and_preserve, :preserve]
 
   def find_and_preserve? exp
