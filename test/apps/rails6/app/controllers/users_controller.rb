@@ -66,6 +66,24 @@ class UsersController < ApplicationController
     @user.delete_by(params[:user])
   end
 
+  def dangerous_system_call
+    system("bash", "-c", params[:script])
+  end
+
+  def dangerous_exec_call
+    shell = "zsh"
+    exec(shell, SHELL_FLAG, "#{params[:script]} -e ./")
+  end
+  SHELL_FLAG = "-c"
+
+  def safe_system_call
+    system("bash", "-c", "echo", params[:argument])
+  end
+
+  def safe_system_call_without_shell_dash_c
+    system("echo", "-c", params[:argument])
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
