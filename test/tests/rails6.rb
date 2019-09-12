@@ -146,4 +146,16 @@ class Rails6Tests < Minitest::Test
       :code => s(:call, nil, :exec, s(:str, "zsh"), s(:str, "-c"), s(:dstr, "", s(:evstr, s(:call, s(:params), :[], s(:lit, :script))), s(:str, " -e ./"))),
       :user_input => s(:call, s(:params), :[], s(:lit, :script))
   end
+
+  def test_without_shell_dash_c_is_not_command_injection
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :warning_type => "Command Injection",
+      :line => 84,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, nil, :system, s(:str, "bash"), s(:str, "-c"), s(:call, s(:params), :[], s(:lit, :argument))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :argument))
+  end
 end

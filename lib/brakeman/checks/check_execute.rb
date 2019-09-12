@@ -23,7 +23,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
 
   # These are common shells that are known to allow the execution of commands
   # via a -c flag. See dash_c_shell_command? for more info.
-  KNOWN_SHELL_COMMANDS = Set.new(["sh", "bash", "ksh", "csh", "tcsh", "zsh"])
+  KNOWN_SHELL_COMMANDS = Set["sh", "bash", "ksh", "csh", "tcsh", "zsh"]
 
   SHELLWORDS = s(:const, :Shellwords)
 
@@ -66,7 +66,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       # when the first two arguments are something like "bash -c" because then
       # the third argument is effectively the command being run and might be
       # a malicious executable if it comes (partially or fully) from user input.
-      if dash_c_shell_command?(first_arg, args)
+      if dash_c_shell_command?(first_arg, call.second_arg)
         failure = include_user_input?(args[3]) || dangerous_interp?(args[3])
       else
         failure = include_user_input?(first_arg) || dangerous_interp?(first_arg)
@@ -93,13 +93,13 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     end
   end
 
-  # @return [Boolean] true iff the command given by `first_arg`, `args` is of
-  #   invoking a new shell process via `<shell_command> -c` (like `bash -c`)
-  def dash_c_shell_command?(first_arg, args)
-    first_arg.size <= 2 &&
+  # @return [Boolean] true iff the command given by `first_arg`, `second_arg`
+  #   invokes a new shell process via `<shell_command> -c` (like `bash -c`)
+  def dash_c_shell_command?(first_arg, second_arg)
+    string?(first_arg) &&
     KNOWN_SHELL_COMMANDS.include?(first_arg.value) &&
-    args[2]&.size <= 2 &&
-    args[2].value == "-c"
+    string?(second_arg) &&
+    second_arg.value == "-c"
   end
 
   def check_open_calls

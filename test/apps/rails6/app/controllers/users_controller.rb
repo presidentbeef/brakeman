@@ -80,6 +80,10 @@ class UsersController < ApplicationController
     system("bash", "-c", "echo", params[:argument])
   end
 
+  def safe_system_call_without_shell_dash_c
+    system("echo", "-c", params[:argument])
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
