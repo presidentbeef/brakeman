@@ -107,6 +107,12 @@ class WidgetController < ApplicationController
     slug = params[:slug].to_s
     render slug if template_exists?(slug, 'pages')
   end
+
+  def attributes
+  end
+
+  def haml_test
+  end
 end
 
 IDENTIFIER_NAMESPACE = 'apis'

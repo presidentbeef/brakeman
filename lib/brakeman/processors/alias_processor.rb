@@ -249,6 +249,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         end
         env[target_var] = target
         return first_arg
+      elsif new_string? target
+        env[target_var] = first_arg
+        return first_arg
       elsif array? target
         target << first_arg
         env[target_var] = target
@@ -1196,6 +1199,13 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   def raise? exp
     call? exp and exp.method == :raise
+  end
+
+  STRING_NEW = s(:call, s(:const, :String), :new)
+
+  # String.new ?
+  def new_string? exp
+    exp == STRING_NEW
   end
 
   #Set variable to given value.

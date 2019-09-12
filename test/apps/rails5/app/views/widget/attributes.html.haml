@@ -1,0 +1,23 @@
+%a{"data-text" => "#{params[:name]}"} No warning
+
+%pre.ksd.margin= params[:blah]
+
+= @user = User.first
+
+
+= form_tag create_thing_path do
+  %p
+    Stuff
+  %ul
+    %li things
+    %li blah + #{@user.name.stuff_html.html_safe}
+    %li other stuff #{@user.name_with_stuff}
+    %li
+      asdoasd
+      %code arghlagb
+    %li and the things #{@user.name_with_stuff}
+
+= blah = capture do
+  %p= params[:x]
+
+= link_to stuff, blah

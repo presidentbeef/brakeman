@@ -12,7 +12,7 @@ class Rails5Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 15,
+      :template => 17,
       :generic => 21
     }
   end
@@ -845,5 +845,54 @@ class Rails5Tests < Minitest::Test
       :line => 20,
       :confidence => 1,
       :relative_path => "app/views/users/show.html.erb"
+  end
+
+  def test_haml_attributes
+    assert_no_warning :type => :template,
+      :warning_code => 2,
+      :warning_type => "Cross-Site Scripting",
+      :line => 1,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 2,
+      :relative_path => "app/views/widget/attributes.html.haml",
+      :code => s(:call, s(:call, nil, :_hamlout), :attributes, s(:hash, s(:str, "data-text"), s(:dstr, "", s(:evstr, s(:call, s(:params), :[], s(:lit, :name))))), s(:nil)),
+      :user_input => s(:call, s(:params), :[], s(:lit, :name))
+  end
+
+  def test_haml_interpolation
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "c16c1a10087e9e1b703a21ab8d9eac942f033c50be9afe9a56fff5ba5c62c739",
+      :warning_type => "Cross-Site Scripting",
+      :line => 13,
+      :message => /^Unescaped\ model\ attribute/,
+      :confidence => 0,
+      :relative_path => "app/views/widget/attributes.html.haml",
+      :code => s(:call, s(:call, s(:call, s(:const, :User), :first), :name), :stuff_html),
+      :user_input => nil
+  end
+
+  def test_haml_textareas
+    assert_no_warning :type => :template,
+      :warning_code => 2,
+      :warning_type => "Cross-Site Scripting",
+      :line => 3,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 2,
+      :relative_path => "app/views/widget/attributes.html.haml",
+      :code => s(:call, s(:call, nil, :_hamlout), :fix_textareas!, s(:call, s(:colon2, s(:colon3, :Haml), :Helpers), :preserve, s(:call, s(:call, s(:colon2, s(:colon3, :Haml), :Helpers), :html_escape, s(:call, s(:call, s(:params), :[], s(:lit, :blah)), :to_s)), :strip)))
+  end
+
+  def test_cross_site_scripting_haml_interpolation
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "01ff71dc776c03921089d8559dabd1a75480411ec7f1de7f2886659085c26045",
+      :warning_type => "Cross-Site Scripting",
+      :line => 6,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/widget/haml_test.html.haml",
+      :code => s(:call, s(:params), :[], s(:lit, :y)),
+      :user_input => nil
   end
 end

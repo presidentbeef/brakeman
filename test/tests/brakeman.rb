@@ -2,28 +2,6 @@ require 'tempfile'
 require_relative '../test'
 
 class BrakemanTests < Minitest::Test
-  def test_haml_5_warning
-    options = {
-      :quiet => :command_line,
-      :app_path => "#{TEST_PATH}/apps/rails5.2",
-      :run_checks => []
-    }
-
-    _out, err = capture_io { Brakeman.run options }
-    assert_includes err, "Brakeman does not fully support Haml 5 yet."
-  end
-
-  def test_no_haml_5_warning
-    options = {
-      :quiet => :command_line,
-      :app_path => "#{TEST_PATH}/apps/rails3.2",
-      :run_checks => []
-    }
-
-    _out, err = capture_io { Brakeman.run options }
-    refute_includes err, "Brakeman does not fully support Haml 5 yet."
-  end
-
   def test_exception_on_no_application
     assert_raises Brakeman::NoApplication do
       Brakeman.run "/tmp#{rand}" #better not exist

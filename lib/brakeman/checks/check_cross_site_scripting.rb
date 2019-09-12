@@ -287,7 +287,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
 
   def setup
     @ignore_methods = Set[:==, :!=, :button_to, :check_box, :content_tag, :escapeHTML, :escape_once,
-                           :field_field, :fields_for, :h, :hidden_field,
+                           :field_field, :fields_for, :form_for, :h, :hidden_field,
                            :hidden_field, :hidden_field_tag, :image_tag, :label,
                            :link_to, :mail_to, :radio_button, :select,
                            :submit_tag, :text_area, :text_field,
