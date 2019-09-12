@@ -12,7 +12,7 @@ class Rails5Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 16,
+      :template => 17,
       :generic => 21
     }
   end
@@ -881,5 +881,18 @@ class Rails5Tests < Minitest::Test
       :confidence => 2,
       :relative_path => "app/views/widget/attributes.html.haml",
       :code => s(:call, s(:call, nil, :_hamlout), :fix_textareas!, s(:call, s(:colon2, s(:colon3, :Haml), :Helpers), :preserve, s(:call, s(:call, s(:colon2, s(:colon3, :Haml), :Helpers), :html_escape, s(:call, s(:call, s(:params), :[], s(:lit, :blah)), :to_s)), :strip)))
+  end
+
+  def test_cross_site_scripting_haml_interpolation
+    assert_warning :type => :template,
+      :warning_code => 2,
+      :fingerprint => "01ff71dc776c03921089d8559dabd1a75480411ec7f1de7f2886659085c26045",
+      :warning_type => "Cross-Site Scripting",
+      :line => 6,
+      :message => /^Unescaped\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/views/widget/haml_test.html.haml",
+      :code => s(:call, s(:params), :[], s(:lit, :y)),
+      :user_input => nil
   end
 end

@@ -1,0 +1,15 @@
+%li
+  = "#{ params[:x] } No warning, escaped by default"
+
+%p
+  :javascript
+    var x = #{ raw params[:y] }; // This better warn!
+
+
+= form_for [:admin, @user], :html => { :onsubmit => "event.stop(); addField(this)" } do |f|
+  %p
+    %label{:for=>"page_field_name"}= t('name')
+
+%pre.unobstrusive= something? ? @user.name : "No warning, escaped"
+
+%td #{link_to @user.description, edit_user_path(@user)} # No warning

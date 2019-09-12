@@ -110,6 +110,9 @@ class WidgetController < ApplicationController
 
   def attributes
   end
+
+  def haml_test
+  end
 end
 
 IDENTIFIER_NAMESPACE = 'apis'
