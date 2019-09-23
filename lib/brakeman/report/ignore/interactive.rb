@@ -292,11 +292,6 @@ q - Quit, do not update ignored warnings
         say file
       end
 
-      if warning.line
-        label "Line"
-        say warning.line
-      end
-
       if already_ignored? warning
         show_note warning
         say "Already ignored", :red
