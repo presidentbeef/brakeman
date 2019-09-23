@@ -282,7 +282,14 @@ q - Quit, do not update ignored warnings
 
       if warning.file
         label "File"
-        say warning.file.relative
+
+        file = if warning.line
+          "#{warning.file.relative}:#{warning.line}"
+        else
+          warning.file.relative
+        end
+
+        say file
       end
 
       if warning.line
