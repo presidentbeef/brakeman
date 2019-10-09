@@ -123,6 +123,7 @@ class BaseCheckTests < Minitest::Test
     assert_equal false, version_between?("3.2.1", "2.0.0", "3.0.0")
     assert_equal false, version_between?("3.2.1", "3.0.0", "3.2.0")
     assert_equal false, version_between?("0.0.0", "3.0.0", "3.2.0")
+    assert_equal false, version_between?("3.2.1", "3.2.1.beta1", "3.2.1.beta7")
   end
 
   def test_version_between_longer

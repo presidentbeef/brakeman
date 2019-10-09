@@ -20,7 +20,7 @@ module Brakeman
     end
 
     def default_protect_from_forgery?
-      if version_between? "5.2.0", "9.9.9"
+      if version_between? "5.2.0.beta1", "9.9.9"
         if @rails.dig(:action_controller, :default_protect_from_forgery) == Sexp.new(:false)
           return false
         else
@@ -55,7 +55,10 @@ module Brakeman
     end
 
     def gem_version name
-      @gems.dig(name, :version)
+      version = @gems.dig(name, :version)
+
+      # Ignore ~>, etc. when using values from Gemfile
+      version[/\d+\.\d+(\.\d+.*)?/] if version
     end
 
     def add_gem name, version, file, line
@@ -76,10 +79,9 @@ module Brakeman
     end
 
     def set_rails_version
-      # Ignore ~>, etc. when using values from Gemfile
       version = gem_version(:rails) || gem_version(:railties)
-      if version and version.match(/(\d+\.\d+(\.\d+.*)?)/)
-        @rails_version = $1
+      if version
+        @rails_version = version
 
         if tracker.options[:rails3].nil? and tracker.options[:rails4].nil?
           if @rails_version.start_with? "3"
@@ -125,57 +127,15 @@ module Brakeman
       current_version ||= rails_version
       return false unless current_version
 
-      version = current_version.split(".").map! { |v| convert_version_number v }
-      low_version = low_version.split(".").map! { |v| convert_version_number v }
-      high_version = high_version.split(".").map! { |v| convert_version_number v }
+      low = Gem::Version.new(low_version)
+      high = Gem::Version.new(high_version)
+      current = Gem::Version.new(current_version)
 
-      version.each_with_index do |v, i|
-        if lower? v, low_version.fetch(i, 0)
-          return false
-        elsif higher? v, low_version.fetch(i, 0)
-          break
-        end
-      end
-
-      version.each_with_index do |v, i|
-        if higher? v, high_version.fetch(i, 0)
-          return false
-        elsif lower? v, high_version.fetch(i, 0)
-          break
-        end
-      end
-
-      true
+      current.between?(low, high)
     end
 
     def session_settings
       @rails.dig(:action_controller, :session)
-    end
-
-    private
-
-    def convert_version_number value
-      if value.match(/\A\d+\z/)
-        value.to_i
-      else
-        value
-      end
-    end
-
-    def lower? lhs, rhs
-      if lhs.class == rhs.class
-        lhs < rhs
-      else
-        false
-      end
-    end
-
-    def higher? lhs, rhs
-      if lhs.class == rhs.class
-        lhs > rhs
-      else
-        false
-      end
     end
   end
 end
