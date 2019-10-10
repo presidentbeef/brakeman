@@ -21,6 +21,11 @@ class FileParserTests < Minitest::Test
     RUBY
 
     assert_equal 1, @tracker.errors.length
-    assert_match(/parse error on value \"\$end\" \(\$end\)/, @tracker.errors.first[:error])
+
+    if RubyParser::Parser::VERSION.split(".").map(&:to_i).zip([3,14,0]).all? { |a, b| a >= b }
+      assert_match(/parse error on value false \(\$end\)/, @tracker.errors.first[:error])
+    else
+      assert_match(/parse error on value \"\$end\" \(\$end\)/, @tracker.errors.first[:error])
+    end
   end
 end
