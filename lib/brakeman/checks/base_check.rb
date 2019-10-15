@@ -39,6 +39,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     @active_record_models = nil
     @mass_assign_disabled = nil
     @has_user_input = nil
+    @in_array = false
     @safe_input_attributes = Set[:to_i, :to_f, :arel_table, :id]
     @comparison_ops  = Set[:==, :!=, :>, :<, :>=, :<=]
   end
@@ -109,9 +110,16 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     exp
   end
 
+  def process_array exp
+    @in_array = true
+    process_default exp
+  ensure
+    @in_array = false
+  end
+
   #Does not actually process string interpolation, but notes that it occurred.
   def process_dstr exp
-    unless @string_interp # don't overwrite existing value
+    unless array_interp? exp or @string_interp # don't overwrite existing value
       @string_interp = Match.new(:interp, exp)
     end
 
@@ -119,6 +127,20 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   end
 
   private
+
+  # Checking for
+  #
+  #   %W[#{a}]
+  #
+  # which will be parsed as
+  #
+  #    s(:array, s(:dstr, "", s(:evstr, s(:call, nil, :a))))
+  def array_interp? exp
+    @in_array and
+      string_interp? exp and
+      exp[1] == "".freeze and
+      exp.length == 3 # only one interpolated value
+  end
 
   def always_safe_method? meth
     @safe_input_attributes.include? meth or
