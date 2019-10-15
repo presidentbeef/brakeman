@@ -102,7 +102,7 @@ class BaseCheckTests < Minitest::Test
   end
 
   def version_between? version, low, high
-    @tracker.config.rails_version = version
+    @tracker.config.set_rails_version version
     @check.send(:version_between?, low, high)
   end
 
@@ -135,7 +135,7 @@ class BaseCheckTests < Minitest::Test
   end
 
   def test_lts_version
-    @tracker.config.rails_version = "2.3.18"
+    @tracker.config.set_rails_version "2.3.18"
     assert lts_version? '2.3.18.6', '2.3.18.6'
     assert !lts_version?('2.3.18.1', '2.3.18.6')
     assert !lts_version?(nil, '2.3.18.6')

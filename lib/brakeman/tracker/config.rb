@@ -4,10 +4,8 @@ module Brakeman
   class Config
     include Util
 
-    attr_reader :rails, :tracker
-    attr_accessor :rails_version, :ruby_version
+    attr_reader :gems, :rails, :ruby_version, :tracker
     attr_writer :erubis, :escape_html
-    attr_reader :gems
 
     def initialize tracker
       @tracker = tracker
@@ -55,10 +53,7 @@ module Brakeman
     end
 
     def gem_version name
-      version = @gems.dig(name, :version)
-
-      # Ignore ~>, etc. when using values from Gemfile
-      version[/\d+\.\d+(\.\d+.*)?/] if version
+      extract_version @gems.dig(name, :version)
     end
 
     def add_gem name, version, file, line
@@ -78,8 +73,14 @@ module Brakeman
       @gems[name]
     end
 
-    def set_rails_version
-      version = gem_version(:rails) || gem_version(:railties)
+    def set_rails_version version = nil
+      version = if version
+                  # Only used by Rails2ConfigProcessor right now
+                  extract_version(version)
+                else
+                  gem_version(:rails) || gem_version(:railties)
+                end
+
       if version
         @rails_version = version
 
@@ -112,12 +113,20 @@ module Brakeman
       end
     end
 
+    def rails_version
+      # This needs to be here because Util#rails_version calls Tracker::Config#rails_version
+      # but Tracker::Config includes Util...
+      @rails_version
+    end
+
     def set_ruby_version version
+      @ruby_version = extract_version(version)
+    end
+
+    def extract_version version
       return unless version.is_a? String
 
-      if version =~ /(\d+\.\d+\.\d+)/
-        self.ruby_version = $1
-      end
+      version[/\d+\.\d+(\.\d+.*)?/]
     end
 
     #Returns true if low_version <= RAILS_VERSION <= high_version

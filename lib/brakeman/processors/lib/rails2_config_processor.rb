@@ -75,7 +75,7 @@ class Brakeman::Rails2ConfigProcessor < Brakeman::BasicProcessor
   def process_cdecl exp
     #Set Rails version required
     if exp.lhs == :RAILS_GEM_VERSION
-      @tracker.config.rails_version = exp.rhs.value
+      @tracker.config.set_rails_version exp.rhs.value
     end
 
     exp
