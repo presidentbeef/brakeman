@@ -55,7 +55,7 @@ module BrakemanTester::FindWarning
 
   def assert_no_warning opts
     warnings = find opts
-    assert_equal 0, warnings.length
+    assert_equal 0, warnings.length, "Found warning when no warning was expected"
   end
 
   def find opts = {}, &block
