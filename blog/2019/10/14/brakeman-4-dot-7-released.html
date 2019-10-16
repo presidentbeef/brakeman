@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Brakeman 3.7.1/3.7.2 Released</title>
+  <title>Brakeman: Brakeman 4.7.0 Released</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,7 +15,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="https://brakemanscanner.org/blog/2017/08/15/brakeman-3-dot-7-1-released"/>
+  <link rel="canonical" href="https://brakemanscanner.org/blog/2019/10/14/brakeman-4-dot-7-released"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -34,7 +34,7 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Brakeman 3.7.1/3.7.2 Released" />
+<meta name="twitter:title" content="Brakeman - Brakeman 4.7.0 Released" />
 <meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
 <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 
@@ -77,7 +77,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 3.7.1/3.7.2 Released</h1>
+      <h1 class="entry-title">Brakeman 4.7.0 Released</h1>
     
     
       <p class="meta">
@@ -85,7 +85,7 @@
 
 
 
-<time datetime="2017-08-15 23:38:00 -0700" pubdate  updated >2017-08-15 23:38:00 -0700</time>
+<time datetime="2019-10-14 16:00:00 -0700" pubdate  updated >2019-10-14 16:00:00 -0700</time>
 
 
 </p>
@@ -93,86 +93,98 @@
   </header>
 
 
-<div class="entry-content"><p>Just a little release. Next up: 4.0!</p>
+<div class="entry-content"><p>This release updates Haml support to Haml 5.x!</p>
 
-<p><em>Changes since 3.7.1</em>:</p>
-
-<ul>
-  <li>Fix <code class="highlighter-rouge">--ensure-latest</code> (<a href="https://github.com/presidentbeef/brakeman/pull/1079">David Guyon</a>)</li>
-</ul>
-
-<p><em>Changes since 3.7.0:</em></p>
+<p><em>Changes since 4.6.1:</em></p>
 
 <ul>
-  <li>Handle simple guard with <code class="highlighter-rouge">return</code> at end of branch (<a href="https://github.com/presidentbeef/brakeman/issues/1073">#1073</a>)</li>
-  <li>Add more collection methods for iteration detection</li>
-  <li>Modularize <code class="highlighter-rouge">bin/brakeman</code></li>
-  <li>Improve multi-value <code class="highlighter-rouge">Sexp</code> error message</li>
-  <li>Update <code class="highlighter-rouge">ruby2ruby</code> and <code class="highlighter-rouge">ruby_parser</code> dependencies</li>
+  <li>Update Haml support to Haml 5.x (<a href="https://github.com/presidentbeef/brakeman/issues/1044">#1044</a>)</li>
+  <li>Catch shell injection from <code class="highlighter-rouge">-c</code> shell commands (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
+  <li>Correctly handle non-symbols in <code class="highlighter-rouge">CheckCookieSerialization</code> (<a href="https://github.com/philipturnbull">Phil Turnbull</a>)</li>
+  <li>Refactor <code class="highlighter-rouge">Brakeman::Differ#second_pass</code> (<a href="https://github.com/Becojo">Benoit Côté-Jodoin</a>)</li>
+  <li>Fix <code class="highlighter-rouge">version_between?</code> (<a href="https://github.com/aglushkov">Andrey Glushkov</a>)</li>
+  <li>Ignore interpolation in <code class="highlighter-rouge">%W[]</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1399">#1399</a>)</li>
+  <li>Ignore <code class="highlighter-rouge">form_for</code> for XSS check</li>
 </ul>
 
-<h3 id="another-simple-guard">Another Simple Guard</h3>
+<h3 id="haml-support-update">Haml Support Update</h3>
 
-<p>Brakeman will now handle when the branch in a simple guard condition ends in <code class="highlighter-rouge">return</code>.</p>
+<p>Haml 5 introduced a completely different “compiled” format, so adding support was a significant effort taking a few months to complete.
+Due to the large number of changes, you may expect some changes to warnings for Haml templates.</p>
 
-<p>For example:</p>
+<p>Please report any bugs or odd behavior with Haml templates!</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unless [:valid, :value].include? params[:x]
-  do_stuff
-  more_stuff
-  return
-end
+<p>Haml 3.x and 4.x are no longer supported, although in general Haml is mostly backwards-compatible.</p>
 
-x.send(params[:x]) # Will no longer warn because `params[:x]` must be 'safe'
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1397">changes</a>)</p>
+
+<h3 id="shell-commands">Shell Commands</h3>
+
+<p><a href="https://github.com/JacobEvelyn">Jacob Evelyn</a> added support for detecting command injection with <code class="highlighter-rouge">-c</code> in known-dangerous commands (such as <code class="highlighter-rouge">bash</code> or <code class="highlighter-rouge">echo</code>).</p>
+
+<p>An example of dangerous code would be:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system("echo", "-c", params[:command])
 </code></pre></div></div>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1077">changes</a>)</p>
+<p>Of course not all dangerous shell commands are covered - so in general be careful passing any user-controlled input to a shell command.</p>
 
-<h3 id="more-collection-methods">More Collection Methods</h3>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1396/">changes</a>)</p>
 
-<p>Brakeman attempts to detect when a template is iterating over records from a database query.</p>
+<h3 id="cookieserialization-bug">CookieSerialization Bug</h3>
 
-<p>This release adds a few more methods that might return a collection of records.</p>
+<p><a href="https://github.com/philipturnbull">Phil Turnbull</a> fixed an issue in <code class="highlighter-rouge">CheckCookieSerialization</code> where non-symbol cookie serialization options were handled poorly.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1074">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1391">changes</a>)</p>
 
-<h3 id="modularize-commandline">Modularize Commandline</h3>
+<h3 id="brakemandiffer-refactor">Brakeman::Differ Refactor</h3>
 
-<p>The logic in the <code class="highlighter-rouge">brakeman</code> executable has now entirely been moved to <a href="https://github.com/presidentbeef/brakeman/blob/49f675a88ba12ad4fa799770f5499c952650a56c/lib/brakeman/commandline.rb"><code class="highlighter-rouge">Brakeman::Commandline</code></a> for easier testing and custom behavior.</p>
+<p><a href="https://github.com/Becojo">Benoit Côté-Jodoin</a> refactored <code class="highlighter-rouge">Brakeman::Differ</code> to compare warnings more efficiently and remove old fallback behavior.
+All warnings are compared by fingerprint now when using <code class="highlighter-rouge">--compare</code>.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1076">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1406">changes</a>)</p>
+
+<h3 id="version-comparisons">Version Comparisons</h3>
+
+<p><a href="https://github.com/aglushkov">Andrey Glushkov</a> updated the code for comparing library versions so it uses <code class="highlighter-rouge">Gem::Version</code> and handles “beta”/pre-release versions better.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1405">changes</a>)</p>
+
+<h3 id="w-interpolation">%W Interpolation</h3>
+
+<p>String interpolation when using <code class="highlighter-rouge">%W</code> is no longer considered dangerous in shell commands where regular interpolation would be.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1408">changes</a>)</p>
+
+<h3 id="form_for"><code class="highlighter-rouge">form_for</code></h3>
+
+<p><code class="highlighter-rouge">form_for</code> is considered a safe method in XSS checks.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1397/commits/a99cb25c6e76eb6240589f3a399e1245c0514257">changes</a>)</p>
+
+<h3 id="stringnew">String.new</h3>
+
+<p><code class="highlighter-rouge">String.new &lt;&lt; 'some string'</code> is now treated like <code class="highlighter-rouge">'' &lt;&lt; 'some string'</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1397/commits/931bed18481679086a7102bc063ecf9b1d727d40">changes</a>)</p>
 
 <h3 id="checksums">Checksums</h3>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>9ad563247cc6a57b965e59e5bbbaefa202ce34ceb6d10e97ce500406d60cdb6e  brakeman-3.7.2.gem
-5b753206f8e5937c33494edd323a9e6573e07958d9f8f5bb662b0f6085eafe19  brakeman-lib-3.7.2.gem
-517a074cb92ece8a7e426ea221d63ddbcae6e3b851664083b7e73e6d7e0dd138  brakeman-min-3.7.2.gem
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f43d949f1de9c0bb67b7bc7d41000ac70a1fb6c2250c5e7332015f0cc5ce36c5  brakeman-4.7.0.gem
+c02dbaa4ad0c7402ef99697c7b1916b7d9558dd5aa45e1a36efed117628498cc  brakeman-lib-4.7.0.gem
+3ab80a47bbfbb0f869bb1289292ed62b9643b5e0884a4a79e2c7e44218ce3b07  brakeman-min-4.7.0.gem
 </code></pre></div></div>
-
-<h3 id="brakeman-40-plans">Brakeman 4.0 Plans</h3>
-
-<p>If all goes well, Brakeman 4.0 will be released on August 27th, which is also the 7th anniversary of Brakeman’s first release. It will also be the 101st release of Brakeman!</p>
-
-<p>At least two major changes will be coming in Brakeman 4.0:</p>
-
-<ul>
-  <li>The <code class="highlighter-rouge">plain</code> report format will be the default instead of tables</li>
-  <li><code class="highlighter-rouge">-z</code> or <code class="highlighter-rouge">--exit-on-warn</code> (sets exit code if any warnings are found) will be on by default</li>
-</ul>
-
-<p>There will likely be other changes, but these two will be the most obvious.</p>
 
 <h3 id="reporting-issues">Reporting Issues</h3>
 
-<p>Thank you to everyone who reported bugs and contributed to this release.</p>
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
 
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
 
 <p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
 
-<p>If you find Brakeman valuable and want to support its development, check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
 </div>
 
 
@@ -186,7 +198,7 @@ x.send(params[:x]) # Will no longer warn because `params[:x]` must be 'safe'
 
 
 
-<time datetime="2017-08-15 23:38:00 -0700" pubdate  updated >2017-08-15 23:38:00 -0700</time>
+<time datetime="2019-10-14 16:00:00 -0700" pubdate  updated >2019-10-14 16:00:00 -0700</time>
 
 
 
