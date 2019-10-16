@@ -1,3 +1,14 @@
+# 4.7.0
+
+* Refactor `Brakeman::Differ#second_pass` (Benoit Côté-Jodoin)
+* Ignore interpolation in `%W[]`
+* Fix `version_between?` (Andrey Glushkov)
+* Add support for `ruby_parser` 3.14.0
+* Ignore `form_for` for XSS check
+* Update Haml support to Haml 5.x
+* Catch shell injection from `-c` shell commands (Jacob Evelyn)
+* Correctly handle non-symbols in `CheckCookieSerialization` (Phil Turnbull)
+
 # 4.6.1
 
 * Fix Reverse Tabnabbing warning message (Steffen Schildknecht / Jörg Schiller)
