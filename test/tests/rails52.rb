@@ -370,6 +370,18 @@ class Rails52Tests < Minitest::Test
       :user_input => s(:call, nil, :somewhere_else)
   end
 
+  def test_command_injection_percent_W
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :warning_type => "Command Injection",
+      :line => 95,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/shell.rb",
+      :code => s(:call, nil, :system, s(:splat, s(:array, s(:str, "foo"), s(:str, "bar"), s(:dstr, "", s(:evstr, s(:call, nil, :value)))))),
+      :user_input => s(:call, nil, :value)
+  end
+
   def test_cross_site_scripting_haml_sass
     assert_warning :type => :template,
       :warning_code => 2,

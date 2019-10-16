@@ -89,4 +89,9 @@ class ShellStuff
     # __FILE__ should not change based on absolute path
     `cp #{__FILE__} #{somewhere_else}`
   end
+
+  def interpolated_in_percent_W
+    # Should not warn
+    system(*%W(foo bar #{value}))
+  end
 end
