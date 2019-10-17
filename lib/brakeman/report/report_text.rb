@@ -19,7 +19,7 @@ class Brakeman::Report::Text < Brakeman::Report::Base
     add_chunk generate_controllers if tracker.options[:debug] or tracker.options[:report_routes]
     add_chunk generate_templates if tracker.options[:debug]
     add_chunk generate_obsolete
-    add_chunk generate_errors 
+    add_chunk generate_errors
     add_chunk generate_warnings
   end
 
@@ -51,7 +51,7 @@ class Brakeman::Report::Text < Brakeman::Report::Base
 
   def generate_header
     [
-      header("Brakeman Report"), 
+      header("Brakeman Report"),
       label("Application Path", tracker.app_path),
       label("Rails Version", rails_version),
       label("Brakeman Version", Brakeman::Version),
@@ -92,7 +92,7 @@ class Brakeman::Report::Text < Brakeman::Report::Base
       HighLine.color("No warnings found", :bold, :green)
     else
       warnings = tracker.filtered_warnings.sort_by do |w|
-        [w.confidence, w.warning_type, w.fingerprint]
+        [w.confidence, w.warning_type, w.file, w.line, w.fingerprint]
       end.map do |w|
         output_warning w
       end
@@ -211,4 +211,3 @@ class Brakeman::Report::Text < Brakeman::Report::Base
     double_space "Controller Overview", controllers
   end
 end
-
