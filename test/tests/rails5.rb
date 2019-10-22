@@ -12,7 +12,7 @@ class Rails5Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 17,
+      :template => 19,
       :generic => 21
     }
   end
@@ -762,7 +762,6 @@ class Rails5Tests < Minitest::Test
   end
 
   def test_reverse_tabnabbing
-
     assert_warning :type => :template,
       :warning_code => 111,
       :fingerprint => "a72829f1e36e4d7c4fd71a1b9e39b011137dc3b317a17df2fc7795e08b37cf75",
@@ -794,9 +793,20 @@ class Rails5Tests < Minitest::Test
 
     assert_warning :type => :template,
       :warning_code => 111,
-      :fingerprint => "d81b4e129ad9a43a905c335deb5ca98ef62ce9509cd29d536fcff70c2431dccf",
+      :fingerprint => "83d6722a5dca630fc2a8ba0bee5b457b3fd9399fabb4575df63ce25b280f5a19",
       :warning_type => "Reverse Tabnabbing",
       :line => 13,
+      :message => /^When\ opening\ a\ link\ in\ a\ new\ tab\ without\ setting\ `rel:\ "noopener\ noreferrer"`/,
+      :confidence => 1,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:str, ""), s(:call, nil, :some_url), s(:hash, s(:lit, :target), s(:lit, :_blank))),
+      :user_input => nil
+
+    assert_warning :type => :template,
+      :warning_code => 111,
+      :fingerprint => "d81b4e129ad9a43a905c335deb5ca98ef62ce9509cd29d536fcff70c2431dccf",
+      :warning_type => "Reverse Tabnabbing",
+      :line => 14,
       :message => /^When\ opening\ a\ link\ in\ a\ new\ tab\ without\ setting\ `rel:\ "noopener\ noreferrer"`/,
       :confidence => 1,
       :relative_path => "app/views/users/show.html.erb",
@@ -805,9 +815,20 @@ class Rails5Tests < Minitest::Test
 
     assert_warning :type => :template,
       :warning_code => 111,
+      :fingerprint => "89231ee3d208edba36dd6c445d4172216c282887e3d9a7b22ab47767ca033b92",
+      :warning_type => "Reverse Tabnabbing",
+      :line => 16,
+      :message => /^When\ opening\ a\ link\ in\ a\ new\ tab\ without\ setting\ `rel:\ "noopener\ noreferrer"`/,
+      :confidence => 1,
+      :relative_path => "app/views/users/show.html.erb",
+      :code => s(:call, nil, :link_to, s(:call, nil, :some_url), s(:hash, s(:lit, :target), s(:lit, :_blank))),
+      :user_input => nil
+
+    assert_warning :type => :template,
+      :warning_code => 111,
       :fingerprint => "7678f236bb756de38a16d0aeb753a47db32e44c1371aee64e86f04f7bcd7c067",
       :warning_type => "Reverse Tabnabbing",
-      :line => 15,
+      :line => 18,
       :message => /^When\ opening\ a\ link\ in\ a\ new\ tab\ without\ setting\ `rel:\ "noopener\ noreferrer"`/,
       :confidence => 2,
       :relative_path => "app/views/users/show.html.erb",
@@ -818,7 +839,7 @@ class Rails5Tests < Minitest::Test
       :warning_code => 111,
       :fingerprint => "2a3657324d7d873ae9fb3667534ee2a4df0f7822ec0b379740828aecc2941d8c",
       :warning_type => "Reverse Tabnabbing",
-      :line => 16,
+      :line => 19,
       :message => /^When\ opening\ a\ link\ in\ a\ new\ tab\ without\ setting\ `rel:\ "noopener\ noreferrer"`/,
       :confidence => 2,
       :relative_path => "app/views/users/show.html.erb",
@@ -828,21 +849,21 @@ class Rails5Tests < Minitest::Test
     assert_no_warning :type => :template,
       :warning_code => 111,
       :warning_type => "Reverse Tabnabbing",
-      :line => 17,
+      :line => 22,
       :confidence => 2,
       :relative_path => "app/views/users/show.html.erb"
 
     assert_no_warning :type => :template,
       :warning_code => 111,
       :warning_type => "Reverse Tabnabbing",
-      :line => 19,
+      :line => 23,
       :confidence => 2,
       :relative_path => "app/views/users/show.html.erb"
 
     assert_no_warning :type => :template,
       :warning_code => 111,
       :warning_type => "Reverse Tabnabbing",
-      :line => 20,
+      :line => 24,
       :confidence => 1,
       :relative_path => "app/views/users/show.html.erb"
   end

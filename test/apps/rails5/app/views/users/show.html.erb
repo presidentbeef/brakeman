@@ -10,7 +10,11 @@
 
 <%= link_to '', 'something_static', target: '_blank' %> No warning
 <%= link_to '', some_url, target: '_blank' %> Warn
+<%= link_to '', some_url, target: :_blank %> Warn
 <%= link_to some_url, target: '_blank' do -%>
+  Warn
+<% end %>
+<%= link_to some_url, target: :_blank do -%>
   Warn
 <% end %>
 <%= link_to '', some_url, target: '_blank', rel: 'noopener' %> Weak warning

@@ -19,7 +19,11 @@ class Brakeman::CheckReverseTabnabbing < Brakeman::BaseCheck
     return unless hash? html_opts
 
     target = hash_access html_opts, :target
-    return unless target && string?(target) && target.value == "_blank"
+    unless target &&
+          (string?(target) && target.value == "_blank" ||
+          symbol?(target) && target.value == :_blank)
+      return
+    end
 
     target_url = result[:block] ? result[:call].first_arg : result[:call].second_arg
 
