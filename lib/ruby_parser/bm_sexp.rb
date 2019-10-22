@@ -371,7 +371,12 @@ class Sexp
   #       s(:block, s(:lvar, :y), s(:call, nil, :z, s(:arglist))))
   def block_call
     expect :iter
-    self[1]
+
+    if self[1].node_type == :lambda
+      s(:call, nil, :lambda).line(self.line)
+    else
+      self[1]
+    end
   end
 
   #Returns block of a call with a block.

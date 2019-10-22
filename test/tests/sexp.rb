@@ -101,11 +101,7 @@ class SexpTests < Minitest::Test
   def test_stabby_lambda_no_args
     exp = parse "->{ hi }"
 
-    if RubyParser::Parser::VERSION.split(".").map(&:to_i).zip([3,14,0]).all? { |a, b| a >= b }
-      assert_equal s(:lambda), exp.block_call
-    else
-      assert_equal s(:call, nil, :lambda), exp.block_call
-    end
+    assert_equal s(:call, nil, :lambda), exp.block_call
     assert_equal s(:args), exp.block_args
     assert_equal s(:call, nil, :hi), exp.block
   end
