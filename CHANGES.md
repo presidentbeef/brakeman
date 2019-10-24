@@ -1158,7 +1158,7 @@
 
   * Be more permissive with ActiveSupport version
 
-## 0.1.0 - 2011-0118
+## 0.1.0 - 2011-01-18
 
   * Check link_to for XSS (because arguments are not escaped)
   * Process layouts better (although not perfectly yet)
