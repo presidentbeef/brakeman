@@ -140,7 +140,7 @@ class Brakeman::Report::Text < Brakeman::Report::Base
     end
 
     double_space "Template Output", template_rows.sort_by { |name, value| name.to_s }.map { |template|
-      [HighLine.new.color(template.first.to_s << "\n", :cyan)] + template[1]
+      [HighLine.new.color("#{template.first}\n", :cyan)] + template[1]
     }.compact
   end
 
