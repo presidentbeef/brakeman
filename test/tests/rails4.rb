@@ -1667,8 +1667,8 @@ class Rails4Tests < Minitest::Test
 
   #Verify checks external to Brakeman are loaded
   def test_external_checks
-    assert defined? Brakeman::CheckExternalCheckTest
     #Initial "Check" removed from check names
     assert report[:checks_run].include? "ExternalCheckTest"
+    assert defined? Brakeman::CheckExternalCheckTest
   end
 end
