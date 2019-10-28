@@ -58,13 +58,23 @@ module BrakemanTester::FindWarning
     assert_equal 0, warnings.length, "Found warning when no warning was expected"
   end
 
-  def find opts = {}, &block
-    t = opts[:type]
-    if t.nil? or t == :warning
-      warnings = report[:generic_warnings]
+  def warning_table type
+    case type
+    when :warning, :generic, nil
+      :generic_warnings
+    when :template
+      :template_warnings
+    when :controller
+      :controller_warnings
+    when :model
+      :model_warnings
     else
-      warnings = report[(t.to_s << "_warnings").to_sym]
+      raise "Unknown warning type: #{type.inspect}"
     end
+  end
+
+  def find opts = {}, &block
+    warnings = report[warning_table(opts[:type])]
 
     opts.delete :type
 
@@ -93,11 +103,7 @@ module BrakemanTester::CheckExpected
     require 'pp'
 
     expected.each do |type, number|
-      if type == :warning
-        warnings = report[:warnings]
-      else
-        warnings = report[(type.to_s << "_warnings").to_sym]
-      end
+      warnings = report[warning_table(type)]
 
       assert_equal number, warnings.length, lambda { "Expected #{number} #{type} warnings, but found #{warnings.length}:\n#{warnings.map { |w| w.message }.join("\n")}" }
     end
