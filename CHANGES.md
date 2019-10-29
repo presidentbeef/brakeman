@@ -1,3 +1,13 @@
+# 4.7.1 - 2019-10-29 
+
+* Check string length against limit before joining
+* Fix errors from frozen `Symbol#to_s` in Ruby 2.7
+* Fix flaky rails4 test (Adam Kiczula)
+* Added release dates to each version in CHANGES (TheSpartan1980)
+* Catch reverse tabnabbing with `:_blank` symbol (Jacob Evelyn)
+* Convert `s(:lambda)` to `s(:call)` in `Sexp#block_call`
+* Sort text report by file and line (Jacob Evelyn)
+
 # 4.7.0 - 2019-10-16
 
 * Refactor `Brakeman::Differ#second_pass` (Benoit Côté-Jodoin)
