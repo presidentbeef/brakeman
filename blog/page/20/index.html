@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Reducing False Positives</title>
+  <title>Brakeman</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,7 +15,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="https://brakemanscanner.org/docs/reducing_false_positives/"/>
+  <link rel="canonical" href="https://brakemanscanner.org/blog/page/20/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -34,7 +34,7 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Reducing False Positives" />
+<meta name="twitter:title" content="Brakeman Security Scanner" />
 <meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
 <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 
@@ -71,81 +71,54 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article>
-  
+      <div class="blog-index">
+
+
+
+  <article>
+    
   <header>
-    <h1 class="entry-title">Reducing False Positives</h1>
-  </header>
-  
-  <p>By default, Brakeman reports as much as possible. Because there is no way for Brakeman to know if certain items are actually safe or not, it errs on the side of reporting <em>too much</em> rather than possibly not reporting a real problem. Sometimes, though, these false positives can become overwhelming. Brakeman does provides many options for customizing reports. It is also possible <a href="/docs/ignoring_false_positives">to ignore specific warnings</a>.</p>
-
-<p>It is recommended to always run Brakeman with the default settings first (and then periodically after that), but it is possible to narrow down the results to make them less annoying.</p>
-
-<h3 id="specify-checks-to-run">Specify Checks to Run</h3>
-
-<p>When running Brakeman, one can specify a set of checks to run or a set to exclude using the <code class="highlighter-rouge">--test</code> or <code class="highlighter-rouge">--except</code>, respectively. These options take a comma-separated list of check names, which are case-sensitive. Use <code class="highlighter-rouge">brakeman --checks</code> to get a list of the exact check names.</p>
-
-<p>For example, to only check for SQL injection and cross-site scripting:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --test CheckSQL,CheckCrossSiteScripting
-</code></pre></div></div>
-
-<p><em>(‘Check’ can actually be omitted from the names.)</em></p>
-
-<p>To exclude checks for dynamic render paths:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --except CheckRender
-</code></pre></div></div>
-
-<h3 id="set-confidence-threshold">Set Confidence Threshold</h3>
-
-<p>Getting a ton of weak confidence warnings? Use <code class="highlighter-rouge">-w3</code> to only report high confidence warnings or <code class="highlighter-rouge">-w2</code> to only report high and medium confidence warnings.</p>
-
-<p>(Use of <code class="highlighter-rouge">-w3</code> is not recommended, however.)</p>
-
-<h3 id="mark-methods-as-safe">Mark Methods as Safe</h3>
-
-<p>If an applications has custome sanitizing methods or just methods which are known to be safe, then the <code class="highlighter-rouge">--safe-methods</code> option can be used to ignore those methods. Specify the methods as a comma-separated list.</p>
-
-<p>For example:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --safe-methods this_one,that_one,totally_safe,my_sanitizer
-</code></pre></div></div>
-
-<h3 id="only-reporting-direct-vulnerabilities">Only Reporting Direct Vulnerabilities</h3>
-
-<p>With the default settings, Brakeman will report cross-site scripting vulnerabilities if the return value of a method where user input is a <em>parameter</em> is output.</p>
-
-<p>For example, this will raise a warning unless <code class="highlighter-rouge">some_method</code> is marked as safe like above:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= some_method(params[:blah]) %&gt;
-</code></pre></div></div>
-
-<p>To ignore this kind of output, use the <code class="highlighter-rouge">--report-direct</code> option. This also applies to some other situations, such as checking calls to <code class="highlighter-rouge">redirect_to</code>.</p>
-
-<h3 id="ignoring-model-attributes">Ignoring Model Attributes</h3>
-
-<p>Brakeman assumes database values are suspect (and so should you). But for some applications this does not make sense. Use the <code class="highlighter-rouge">--ignore-model-output</code> option to suppress reporting model attributes as cross-site scripting vulnerabilities.</p>
-
-<hr />
-
-<p><a href="/docs/ignoring_false_positives">Ignoring false positives</a></p>
-
-<p><a href="/docs">More documentation</a></p>
-
-  
-    <footer>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2011/08/27/one-year-anniversary-and-a-website">One Year Anniversary</a></h1>
+    
+    
       <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+
+
+
+<time datetime="2011-08-27 01:00:00 -0700" pubdate  updated >2011-08-27 01:00:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One year ago, Brakeman 0.0.1 was released as a gem. Then it was promptly yanked and replaced with <a href="http://rubygems.org/gems/brakeman/versions/0.0.2">Brakeman 0.0.2</a>.</p>
+
+<p>In celebration of this grand anniversary, there have been several new releases today.</p>
+
+<p>The first is <a href="http://rubygems.org/gems/brakeman/versions/0.7.2">Brakeman 0.7.2</a>, a minor release adding CVE numbers for the <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/f878a33159ac9967">latest vulnerabilities</a> and fixing how nested params/cookie accesses are handled (e.g., <code class="highlighter-rouge">params[:user][:name]</code> is now considered a direct use of a parameter).</p>
+
+<p>Next up, Brakeman has its own Twitter feed <a href="https://twitter.com/brakemanscanner">@BrakemanScanner</a>.</p>
+
+<p>Lastly, there is this new website. Look forward to tutorials and more in-depth information about how to use Brakeman effectively.</p>
+</div>
   
-</article>
+  
+
+
+  </article>
+
+<nav role="pagination">
+  <div>
+    <a href="/blog/archives">Blog Archives</a>
+  </div>
+</nav>
 
 </div>
-
 <aside role=sidebar>
   <section>
   <p></p>
@@ -208,7 +181,6 @@
 </section>
 
 </aside>
-
 
     </div>
   </div>

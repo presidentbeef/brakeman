@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2019-10-17T16:31:11-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 4.7.0 Released</title><link href="https://brakemanscanner.org/blog/2019/10/14/brakeman-4-dot-7-released" rel="alternate" type="text/html" title="Brakeman 4.7.0 Released" /><published>2019-10-14T16:00:00-07:00</published><updated>2019-10-14T16:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2019/10/14/brakeman-4-dot-7-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2019/10/14/brakeman-4-dot-7-released">&lt;p&gt;This release updates Haml support to Haml 5.x!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2019-10-29T14:17:04-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 4.7.0 Released</title><link href="https://brakemanscanner.org/blog/2019/10/14/brakeman-4-dot-7-released" rel="alternate" type="text/html" title="Brakeman 4.7.0 Released" /><published>2019-10-14T16:00:00-07:00</published><updated>2019-10-14T16:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2019/10/14/brakeman-4-dot-7-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2019/10/14/brakeman-4-dot-7-released">&lt;p&gt;This release updates Haml support to Haml 5.x!&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 4.6.1:&lt;/em&gt;&lt;/p&gt;
 
@@ -88,7 +88,92 @@ c02dbaa4ad0c7402ef99697c7b1916b7d9558dd5aa45e1a36efed117628498cc  brakeman-lib-4
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">This release updates Haml support to Haml 5.x!</summary></entry><entry><title type="html">Brakeman 4.6.1 Released</title><link href="https://brakemanscanner.org/blog/2019/07/24/brakeman-4-dot-6-dot-1-released" rel="alternate" type="text/html" title="Brakeman 4.6.1 Released" /><published>2019-07-24T09:14:00-07:00</published><updated>2019-07-24T09:14:00-07:00</updated><id>https://brakemanscanner.org/blog/2019/07/24/brakeman-4-dot-6-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2019/07/24/brakeman-4-dot-6-dot-1-released">&lt;p&gt;This release corrects a typo in the reverse tabnabbing warning message.&lt;/p&gt;
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">This release updates Haml support to Haml 5.x!</summary></entry><entry><title type="html">Brakeman 4.7.1 Released</title><link href="https://brakemanscanner.org/blog/2019/10/14/brakeman-4-dot-7-dot-1-released" rel="alternate" type="text/html" title="Brakeman 4.7.1 Released" /><published>2019-10-14T16:00:00-07:00</published><updated>2019-10-14T16:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2019/10/14/brakeman-4-dot-7-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2019/10/14/brakeman-4-dot-7-dot-1-released">&lt;p&gt;This release includes a security fix in a dependency; please see below.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 4.7.0:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Address file permission issues in bundled &lt;code class=&quot;highlighter-rouge&quot;&gt;ruby_parser-legacy&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Sort text report by file and line (&lt;a href=&quot;https://github.com/JacobEvelyn&quot;&gt;Jacob Evelyn&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Catch reverse tabnabbing with &lt;code class=&quot;highlighter-rouge&quot;&gt;:_blank&lt;/code&gt; symbol (&lt;a href=&quot;https://github.com/JacobEvelyn&quot;&gt;Jacob Evelyn&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Convert &lt;code class=&quot;highlighter-rouge&quot;&gt;s(:lambda)&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;s(:call)&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;Sexp#block_call&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1410&quot;&gt;#1410&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Check string length against limit before joining&lt;/li&gt;
+  &lt;li&gt;Fix flaky rails4 test (&lt;a href=&quot;https://github.com/adamkiczula&quot;&gt;Adam Kiczula&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Fix errors from frozen &lt;code class=&quot;highlighter-rouge&quot;&gt;Symbol#to_s&lt;/code&gt; in Ruby 2.7&lt;/li&gt;
+  &lt;li&gt;Add release dates to each version in CHANGES (&lt;a href=&quot;https://github.com/TheSpartan1980&quot;&gt;TheSpartan1980&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;file-permissions&quot;&gt;File Permissions&lt;/h3&gt;
+
+&lt;p&gt;A security issue &lt;a href=&quot;https://github.com/zenspider/ruby_parser-legacy/issues/1&quot;&gt;was reported for the &lt;code class=&quot;highlighter-rouge&quot;&gt;ruby_parser-legacy&lt;/code&gt; gem&lt;/a&gt;, where some files are installed with world-writable permissions.
+This would allow any user on the system to edit code which would then be executed by Brakeman (or other dependent libraries) when loading the &lt;code class=&quot;highlighter-rouge&quot;&gt;ruby_parser-legacy&lt;/code&gt; gem.&lt;/p&gt;
+
+&lt;p&gt;In this release of the &lt;code class=&quot;highlighter-rouge&quot;&gt;brakeman&lt;/code&gt; gem, the permissions on these files have been corrected.
+However, there has not been a fixed release of &lt;code class=&quot;highlighter-rouge&quot;&gt;ruby_parser-legacy&lt;/code&gt; yet, so the &lt;code class=&quot;highlighter-rouge&quot;&gt;brakeman-lib&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;brakeman-min&lt;/code&gt; gems are still affected.&lt;/p&gt;
+
+&lt;h3 id=&quot;default-report-format-sorting&quot;&gt;Default Report Format Sorting&lt;/h3&gt;
+
+&lt;p&gt;Warnings in the default text report are now sorted by file and line number as well as confidence and category, thanks to &lt;a href=&quot;https://github.com/JacobEvelyn&quot;&gt;Jacob Evelyn&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1412&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;reverse-tabnabbing&quot;&gt;Reverse Tabnabbing&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/JacobEvelyn&quot;&gt;Jacob Evelyn&lt;/a&gt; also updated the reverse tabnabbing check to match links created with &lt;code class=&quot;highlighter-rouge&quot;&gt;target: :_blank&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1411&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;stabby-lambdas&quot;&gt;Stabby Lambdas&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ruby_parser&lt;/code&gt; 3.14.0 changed the AST representation of &lt;code class=&quot;highlighter-rouge&quot;&gt;-&amp;gt;{}&lt;/code&gt; lambdas, and Brakeman needed to adjust.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1415&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;string-length-limit&quot;&gt;String Length Limit&lt;/h3&gt;
+
+&lt;p&gt;Brakeman now checks the resulting length of joining two strings (e.g., &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;blah&quot; + &quot;blah blah&quot;&lt;/code&gt;) &lt;em&gt;before&lt;/em&gt; joining them.
+If the joined string would be longer than 50 characters, the strings are not joined.&lt;/p&gt;
+
+&lt;p&gt;Note the only change is when the length is checked, the limit was already in place.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1421&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;flaky-test-fixed&quot;&gt;Flaky Test Fixed&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/adamkiczula&quot;&gt;Adam Kiczula&lt;/a&gt; fixed an intermittently-failing test in the Brakeman test suite that had been
+plaguing CI builds for a long time. Thanks!&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1419&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;ruby-27-frozen-strings&quot;&gt;Ruby 2.7 Frozen Strings&lt;/h3&gt;
+
+&lt;p&gt;In Ruby 2.7, symbols and some other constant values (&lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;/&lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;, etc.) will return frozen strings.
+This affected Brakeman in only minor ways, but it is fixed now in preparation for Ruby 2.7.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1420&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;release-dates-in-changelog&quot;&gt;Release Dates in Changelog&lt;/h3&gt;
+
+&lt;p&gt;Brakeman’s &lt;a href=&quot;https://github.com/presidentbeef/brakeman/blob/master/CHANGES.md&quot;&gt;changelog&lt;/a&gt; now includes release dates thanks to &lt;a href=&quot;https://github.com/TheSpartan1980&quot;&gt;TheSpartan1980&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1418&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cdc6f4c86b5b35b5e94798cf443909385aa1b79235da8e1ee1fd4381acf03691  brakeman-4.7.1.gem
+2f7a7a6d79b1e5b8c6a390e04642e987c56cced2c8be3d63a1250f7bbc9e504d  brakeman-lib-4.7.1.gem
+598431f6bfc90b119fc6883ead7896c1718ba5d9a0e0450893c3e628a6c8e7b0  brakeman-min-4.7.1.gem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">This release includes a security fix in a dependency; please see below.</summary></entry><entry><title type="html">Brakeman 4.6.1 Released</title><link href="https://brakemanscanner.org/blog/2019/07/24/brakeman-4-dot-6-dot-1-released" rel="alternate" type="text/html" title="Brakeman 4.6.1 Released" /><published>2019-07-24T09:14:00-07:00</published><updated>2019-07-24T09:14:00-07:00</updated><id>https://brakemanscanner.org/blog/2019/07/24/brakeman-4-dot-6-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2019/07/24/brakeman-4-dot-6-dot-1-released">&lt;p&gt;This release corrects a typo in the reverse tabnabbing warning message.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 4.6.0:&lt;/em&gt;&lt;/p&gt;
 
@@ -802,135 +887,4 @@ result = some_hash[some_var]
 
 &lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;
 
-&lt;p&gt;If you find Brakeman valuable and want to support its development (and get more features!), check out &lt;a href=&quot;https://brakemanpro.com/&quot;&gt;Brakeman Pro&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">Mostly false positive reduction and bug fixes in this one!</summary></entry><entry><title type="html">Brakeman 4.3.0 Released</title><link href="https://brakemanscanner.org/blog/2018/05/10/brakeman-4-dot-3-0-released" rel="alternate" type="text/html" title="Brakeman 4.3.0 Released" /><published>2018-05-10T15:36:00-07:00</published><updated>2018-05-10T15:36:00-07:00</updated><id>https://brakemanscanner.org/blog/2018/05/10/brakeman-4-dot-3-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2018/05/10/brakeman-4-dot-3-0-released">&lt;p&gt;Did you know we recently broke &lt;a href=&quot;http://bestgems.org/gems/brakeman&quot;&gt;11 million gem downloads&lt;/a&gt;? Wow!&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 4.2.1:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Add &lt;code class=&quot;highlighter-rouge&quot;&gt;--parser-timeout&lt;/code&gt; option&lt;/li&gt;
-  &lt;li&gt;Improve timeout error messages&lt;/li&gt;
-  &lt;li&gt;Check exec-type calls even if they are targets (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1199&quot;&gt;#1199&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Index Kernel#` calls even if they are targets (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1183&quot;&gt;#1183&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;BaseCheck#include_interp?&lt;/code&gt; should return first string interpolation (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1189&quot;&gt;#1189&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Ignore &lt;code class=&quot;highlighter-rouge&quot;&gt;Process.pid&lt;/code&gt; in system calls&lt;/li&gt;
-  &lt;li&gt;Warn about dangerous &lt;code class=&quot;highlighter-rouge&quot;&gt;link_to&lt;/code&gt; href with &lt;code class=&quot;highlighter-rouge&quot;&gt;sanitize()&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1187&quot;&gt;#1187&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Ignore &lt;code class=&quot;highlighter-rouge&quot;&gt;params#to_h&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;params#to_hash&lt;/code&gt; in SQL checks (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1180&quot;&gt;#1180&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Convert &lt;code class=&quot;highlighter-rouge&quot;&gt;Array#join&lt;/code&gt; to string interpolation (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1179&quot;&gt;#1179&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Change &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;&quot;.freeze&lt;/code&gt; to just &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;&quot;&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1182&quot;&gt;#1182&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--color&lt;/code&gt; can be used to force color output (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1175&quot;&gt;#1175&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Track parent calls in call index&lt;/li&gt;
-  &lt;li&gt;Fix reported line numbers for CVE-2018-3741 and CVE-2018-8048&lt;/li&gt;
-  &lt;li&gt;Code Climate: omit leading dot from &lt;code class=&quot;highlighter-rouge&quot;&gt;only_files&lt;/code&gt; (&lt;a href=&quot;https://github.com/toddmazierski&quot;&gt;Todd Mazierski&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;--color-option&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--color&lt;/code&gt; Option&lt;/h3&gt;
-
-&lt;p&gt;Previously, &lt;code class=&quot;highlighter-rouge&quot;&gt;--no-color&lt;/code&gt; could be used to turn off ANSI color in text reports. Now, &lt;code class=&quot;highlighter-rouge&quot;&gt;--color&lt;/code&gt; can be used to force color output.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1176&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;--parser-timeout-option&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--parser-timeout&lt;/code&gt; Option&lt;/h3&gt;
-
-&lt;p&gt;The default timeout for parsing a single file is 10 seconds. For some files, this may not be enough.&lt;/p&gt;
-
-&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;--parser-timeout&lt;/code&gt; option can be used to specify a per-file timeout (in seconds).&lt;/p&gt;
-
-&lt;p&gt;Additionally, the error message for parsing timeouts has been improved considerably.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1194&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;command-injection-fixes&quot;&gt;Command Injection Fixes&lt;/h3&gt;
-
-&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/JacobEvelyn&quot;&gt;Jacob Evelyn&lt;/a&gt; reporting a number of issues around command injection, there are several improvements.&lt;/p&gt;
-
-&lt;p&gt;Use of backticks as targets of a call will now be checked for command injection.&lt;/p&gt;
-
-&lt;p&gt;For example:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`blah #{something}` == &quot;expected output&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Previously, use of backticks was not being indexed in this case.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1185&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;p&gt;Somewhat similarly, other calls (such as &lt;code class=&quot;highlighter-rouge&quot;&gt;system&lt;/code&gt;) would not warn if they were targets of a call.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1200&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;p&gt;Brakeman will no longer warn about &lt;code class=&quot;highlighter-rouge&quot;&gt;Process.pid&lt;/code&gt; in system calls.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/commit/f9195312931caa49e369730a0798dad750150f76&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;p&gt;Also fixed an issue where searching for string interpolation would return the innermost instance instead of the first instance (typically you want the first one).&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1195&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;freeze-calls&quot;&gt;Freeze Calls&lt;/h3&gt;
-
-&lt;p&gt;Calls to &lt;code class=&quot;highlighter-rouge&quot;&gt;String#freeze&lt;/code&gt; will essentially be ignored.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&quot;blah&quot;.freeze
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;will be treated like&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&quot;blah&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1188&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;more-strong-parameters-in-sql&quot;&gt;More Strong Parameters in SQL&lt;/h3&gt;
-
-&lt;p&gt;Calls to &lt;code class=&quot;highlighter-rouge&quot;&gt;to_h&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;to_hash&lt;/code&gt; on &lt;code class=&quot;highlighter-rouge&quot;&gt;params&lt;/code&gt; will be ignored in the context of SQL injection.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1191&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;sanitize-in-link_to&quot;&gt;Sanitize in &lt;code class=&quot;highlighter-rouge&quot;&gt;link_to&lt;/code&gt;&lt;/h3&gt;
-
-&lt;p&gt;Brakeman will now warn on uses of &lt;code class=&quot;highlighter-rouge&quot;&gt;sanitize&lt;/code&gt; in attempts to avoid XSS in &lt;code class=&quot;highlighter-rouge&quot;&gt;link_to&lt;/code&gt;. Unfortunately, it does not work that way.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1192&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;arrayjoin-to-string-interpolation&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Array#join&lt;/code&gt; to String Interpolation&lt;/h3&gt;
-
-&lt;p&gt;Uses of &lt;code class=&quot;highlighter-rouge&quot;&gt;Array#join&lt;/code&gt; will now be converted to string interpolation.&lt;/p&gt;
-
-&lt;p&gt;For example:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[1, thing, &quot;here&quot;].join(' ')
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;will be changed to&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&quot;1 #{thing} here&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;This both fixes some false positives and helps detect more vulnerabilities in checks that are looking at string interpolation.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1198&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;parent-calls&quot;&gt;Parent Calls&lt;/h3&gt;
-
-&lt;p&gt;Brakeman now tracks the parent method call (I’m sure there’s a better way to say that) of an argument. While this ended up not being needed for this release, it will help improve checks and messages in the future.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1193&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
-
-&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;9284a1a9413743b4c915eda40312395e0ee574c6286893a27074b6f9527648f4  brakeman-4.3.0.gem
-89ba3385fab967114c31da1462401c03caa8847d1115566a77039d0bda95181e  brakeman-lib-4.3.0.gem
-1834031c1e949242ea6d08b3b1036d3f7c12c28257cdfa94cf3d0459b6f851b6  brakeman-min-4.3.0.gem
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;
-
-&lt;p&gt;If you find Brakeman valuable and want to support its development (and get more features!), check out &lt;a href=&quot;https://brakemanpro.com/&quot;&gt;Brakeman Pro&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">Did you know we recently broke 11 million gem downloads? Wow!</summary></entry></feed>
+&lt;p&gt;If you find Brakeman valuable and want to support its development (and get more features!), check out &lt;a href=&quot;https://brakemanpro.com/&quot;&gt;Brakeman Pro&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">Mostly false positive reduction and bug fixes in this one!</summary></entry></feed>

@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Brakeman 3.7.0 Released</title>
+  <title>Brakeman: Brakeman 4.7.1 Released</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,7 +15,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="https://brakemanscanner.org/blog/2017/06/29/brakeman-3-dot-7-0-released"/>
+  <link rel="canonical" href="https://brakemanscanner.org/blog/2019/10/14/brakeman-4-dot-7-dot-1-released"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -34,7 +34,7 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Brakeman 3.7.0 Released" />
+<meta name="twitter:title" content="Brakeman - Brakeman 4.7.1 Released" />
 <meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
 <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 
@@ -77,7 +77,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 3.7.0 Released</h1>
+      <h1 class="entry-title">Brakeman 4.7.1 Released</h1>
     
     
       <p class="meta">
@@ -85,7 +85,7 @@
 
 
 
-<time datetime="2017-06-29 18:00:00 -0700" pubdate  updated >2017-06-29 18:00:00 -0700</time>
+<time datetime="2019-10-14 16:00:00 -0700" pubdate  updated >2019-10-14 16:00:00 -0700</time>
 
 
 </p>
@@ -93,78 +93,93 @@
   </header>
 
 
-<div class="entry-content"><p><em>Changes since 3.6.2</em>:</p>
+<div class="entry-content"><p>This release includes a security fix in a dependency; please see below.</p>
+
+<p><em>Changes since 4.7.0:</em></p>
 
 <ul>
-  <li>Avoid interpolating hashes/arrays on failed access (<a href="https://github.com/presidentbeef/brakeman/issues/921">#921</a>)</li>
-  <li>Fix false positive for <code class="highlighter-rouge">redirect_to</code> in Rails 4 (<a href="https://github.com/mario-areias">Mário Areias</a>)</li>
-  <li>Show progress indicator in interactive mode (<a href="https://github.com/presidentbeef/brakeman/issues/1012">#1012</a>)</li>
-  <li>Handle simple conditional guards that use <code class="highlighter-rouge">return</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1057">#1057</a>)</li>
-  <li>Improve support for <code class="highlighter-rouge">rails4</code>/<code class="highlighter-rouge">rails5</code> options in config file (<a href="https://github.com/presidentbeef/brakeman/issues/1059">#1059</a>)</li>
-  <li>Updated RubyParser to master</li>
+  <li>Address file permission issues in bundled <code class="highlighter-rouge">ruby_parser-legacy</code></li>
+  <li>Sort text report by file and line (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
+  <li>Catch reverse tabnabbing with <code class="highlighter-rouge">:_blank</code> symbol (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
+  <li>Convert <code class="highlighter-rouge">s(:lambda)</code> to <code class="highlighter-rouge">s(:call)</code> in <code class="highlighter-rouge">Sexp#block_call</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1410">#1410</a>)</li>
+  <li>Check string length against limit before joining</li>
+  <li>Fix flaky rails4 test (<a href="https://github.com/adamkiczula">Adam Kiczula</a>)</li>
+  <li>Fix errors from frozen <code class="highlighter-rouge">Symbol#to_s</code> in Ruby 2.7</li>
+  <li>Add release dates to each version in CHANGES (<a href="https://github.com/TheSpartan1980">TheSpartan1980</a>)</li>
 </ul>
 
-<h3 id="performance-improvement-with-hasharray-accesses">Performance Improvement with Hash/Array Accesses</h3>
+<h3 id="file-permissions">File Permissions</h3>
 
-<p>When Brakeman sees a hash or array access that it cannot resolve (i.e. can’t find the value for the key), it will no longer copy the entire hash/array value to the call site.</p>
+<p>A security issue <a href="https://github.com/zenspider/ruby_parser-legacy/issues/1">was reported for the <code class="highlighter-rouge">ruby_parser-legacy</code> gem</a>, where some files are installed with world-writable permissions.
+This would allow any user on the system to edit code which would then be executed by Brakeman (or other dependent libraries) when loading the <code class="highlighter-rouge">ruby_parser-legacy</code> gem.</p>
 
-<p>For some applications, this will significantly improve performance.</p>
+<p>In this release of the <code class="highlighter-rouge">brakeman</code> gem, the permissions on these files have been corrected.
+However, there has not been a fixed release of <code class="highlighter-rouge">ruby_parser-legacy</code> yet, so the <code class="highlighter-rouge">brakeman-lib</code> and <code class="highlighter-rouge">brakeman-min</code> gems are still affected.</p>
 
-<p>This may cause some warning fingerprints to change.</p>
+<h3 id="default-report-format-sorting">Default Report Format Sorting</h3>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1056">changes</a>)</p>
+<p>Warnings in the default text report are now sorted by file and line number as well as confidence and category, thanks to <a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>.</p>
 
-<h3 id="unsafe-hash-in-redirects">Unsafe Hash in Redirects</h3>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1412">changes</a>)</p>
 
-<p>Thanks to <a href="https://github.com/mario-areias">Mário Areias</a>, Brakeman correctly handles <code class="highlighter-rouge">to_unsafe_hash</code> and <code class="highlighter-rouge">to_unsafe_h</code> in <code class="highlighter-rouge">redirect_to</code>.</p>
+<h3 id="reverse-tabnabbing">Reverse Tabnabbing</h3>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1029">changes</a>)</p>
+<p><a href="https://github.com/JacobEvelyn">Jacob Evelyn</a> also updated the reverse tabnabbing check to match links created with <code class="highlighter-rouge">target: :_blank</code>.</p>
 
-<h3 id="progress-indicator-in-interactive-mode">Progress Indicator in Interactive Mode</h3>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1411">changes</a>)</p>
 
-<p>When using <code class="highlighter-rouge">-I</code> to manage false positives, Brakeman will now show how far you are through the warnings.</p>
+<h3 id="stabby-lambdas">Stabby Lambdas</h3>
 
-<p><img src="https://user-images.githubusercontent.com/75613/27519704-f7c60006-59ad-11e7-82e8-ce0e096ad678.png" alt="image" /></p>
+<p><code class="highlighter-rouge">ruby_parser</code> 3.14.0 changed the AST representation of <code class="highlighter-rouge">-&gt;{}</code> lambdas, and Brakeman needed to adjust.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1064">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1415">changes</a>)</p>
 
-<h3 id="simple-guards-with-return">Simple Guards with Return</h3>
+<h3 id="string-length-limit">String Length Limit</h3>
 
-<p>Brakeman can now recognize <em>simple</em> guard conditions such as:</p>
+<p>Brakeman now checks the resulting length of joining two strings (e.g., <code class="highlighter-rouge">"blah" + "blah blah"</code>) <em>before</em> joining them.
+If the joined string would be longer than 50 characters, the strings are not joined.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>return unless [:safe, :values].include? params[:x]
-</code></pre></div></div>
+<p>Note the only change is when the length is checked, the limit was already in place.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1062">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1421">changes</a>)</p>
 
-<h3 id="rails-version-option-in-brakeman-configuration">Rails Version Option in Brakeman Configuration</h3>
+<h3 id="flaky-test-fixed">Flaky Test Fixed</h3>
 
-<p>It is now possible to specify just <code class="highlighter-rouge">:rails4: true</code> or <code class="highlighter-rouge">:rails5: true</code> in a Brakeman configuration file.</p>
+<p><a href="https://github.com/adamkiczula">Adam Kiczula</a> fixed an intermittently-failing test in the Brakeman test suite that had been
+plaguing CI builds for a long time. Thanks!</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1066">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1419">changes</a>)</p>
 
-<h3 id="updated-rubyparser">Updated RubyParser</h3>
+<h3 id="ruby-27-frozen-strings">Ruby 2.7 Frozen Strings</h3>
 
-<p>The main <code class="highlighter-rouge">brakeman</code> gem bundles as-of-yet unreleased changes in RubyParser. This includes “squiggly heredoc” support (<code class="highlighter-rouge">&lt;&lt;~</code>), improved line numbers, and a few other fixes.</p>
+<p>In Ruby 2.7, symbols and some other constant values (<code class="highlighter-rouge">true</code>/<code class="highlighter-rouge">false</code>, etc.) will return frozen strings.
+This affected Brakeman in only minor ways, but it is fixed now in preparation for Ruby 2.7.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1420">changes</a>)</p>
+
+<h3 id="release-dates-in-changelog">Release Dates in Changelog</h3>
+
+<p>Brakeman’s <a href="https://github.com/presidentbeef/brakeman/blob/master/CHANGES.md">changelog</a> now includes release dates thanks to <a href="https://github.com/TheSpartan1980">TheSpartan1980</a>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1418">changes</a>)</p>
 
 <h3 id="checksums">Checksums</h3>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f46550d7c7827644a5663ccc10a6ca222e2534648f68630e3a777cb73df59824  brakeman-3.7.0.gem
-0ea5359ae802284695500b92a03bf1d022574953a0da44607ff7f715f456c37e  brakeman-min-3.7.0.gem
-f6f17e9f1f71a68b486d68f2b3413607fb47154a0fb6a6da23d9d7be87f37967  brakeman-lib-3.7.0.gem
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cdc6f4c86b5b35b5e94798cf443909385aa1b79235da8e1ee1fd4381acf03691  brakeman-4.7.1.gem
+2f7a7a6d79b1e5b8c6a390e04642e987c56cced2c8be3d63a1250f7bbc9e504d  brakeman-lib-4.7.1.gem
+598431f6bfc90b119fc6883ead7896c1718ba5d9a0e0450893c3e628a6c8e7b0  brakeman-min-4.7.1.gem
 </code></pre></div></div>
 
 <h3 id="reporting-issues">Reporting Issues</h3>
 
-<p>Thank you to everyone who reported bugs and contributed to this release.</p>
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
 
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
 
 <p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
 
-<p>If you find Brakeman valuable and want to support its development, check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
 </div>
 
 
@@ -178,7 +193,7 @@ f6f17e9f1f71a68b486d68f2b3413607fb47154a0fb6a6da23d9d7be87f37967  brakeman-lib-3
 
 
 
-<time datetime="2017-06-29 18:00:00 -0700" pubdate  updated >2017-06-29 18:00:00 -0700</time>
+<time datetime="2019-10-14 16:00:00 -0700" pubdate  updated >2019-10-14 16:00:00 -0700</time>
 
 
 
