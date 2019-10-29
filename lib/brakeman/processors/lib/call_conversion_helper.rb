@@ -19,16 +19,17 @@ module Brakeman
       end
     end
 
+    STRING_LENGTH_LIMIT = 50
+
     # Join two string literals into one.
     def join_strings lhs, rhs, original_exp = nil
       if string? lhs and string? rhs
-        result = Sexp.new(:str).line(lhs.line)
-        result.value = lhs.value + rhs.value
-
-        if result.value.length > 50
+        if (lhs.value.length + rhs.value.length > STRING_LENGTH_LIMIT)
           # Avoid gigantic strings
           lhs
         else
+          result = Sexp.new(:str).line(lhs.line)
+          result.value = lhs.value + rhs.value
           result
         end
       elsif call? lhs and lhs.method == :+ and string? lhs.first_arg and string? rhs
