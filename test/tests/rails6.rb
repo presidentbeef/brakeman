@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 5
+      :generic => 6
     }
   end
 
@@ -119,6 +119,19 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/controllers/groups_controller.rb",
       :code => s(:call, nil, :redirect_to, s(:call, s(:call, s(:const, :Group), :find, s(:call, s(:params), :[], s(:lit, :id))), :dup)),
       :user_input => s(:call, s(:call, s(:const, :Group), :find, s(:call, s(:params), :[], s(:lit, :id))), :dup)
+  end
+
+  def test_redirect_request_params
+    assert_warning :type => :warning,
+      :warning_code => 18,
+      :fingerprint => "1d18e872e5f74ff0fd445008fd00ea2f04d5b3086f18682e301621779cd609a2",
+      :warning_type => "Redirect",
+      :line => 88,
+      :message => /^Possible\ unprotected\ redirect/,
+      :confidence => 0,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, nil, :redirect_to, s(:call, s(:call, nil, :request), :params)),
+      :user_input => s(:call, s(:call, nil, :request), :params)
   end
 
   def test_basic_dash_c_command_injection
