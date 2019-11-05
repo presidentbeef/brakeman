@@ -35,7 +35,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     check_open_calls
 
     Brakeman.debug "Finding other system calls"
-    calls = tracker.find_call :targets => [:IO, :Open3, :Kernel, :'POSIX::Spawn', 'Gitlab::Popen.popen', :Process, nil],
+    calls = tracker.find_call :targets => [:IO, :Open3, :Kernel, :'POSIX::Spawn', 'Gitlab::Popen', :Process, nil],
       :methods => [:capture2, :capture2e, :capture3, :exec, :pipeline, :pipeline_r,
         :pipeline_rw, :pipeline_start, :pipeline_w, :popen, :popen2, :popen2e,
         :popen3, :spawn, :syscall, :system], :nested => true
