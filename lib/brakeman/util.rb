@@ -8,9 +8,11 @@ module Brakeman::Util
 
   PATH_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request), :path_parameters)
 
-  REQUEST_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request), :request_parameters)
+  REQUEST_REQUEST_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request), :request_parameters)
 
-  REQUEST_PARAMS = Sexp.new(:call, Sexp.new(:call, nil, :request), :parameters)
+  REQUEST_PARAMETERS = Sexp.new(:call, Sexp.new(:call, nil, :request), :parameters)
+
+  REQUEST_PARAMS = Sexp.new(:call, Sexp.new(:call, nil, :request), :params)
 
   REQUEST_ENV = Sexp.new(:call, Sexp.new(:call, nil, :request), :env)
 
@@ -22,7 +24,7 @@ module Brakeman::Util
 
   SESSION = Sexp.new(:call, nil, :session)
 
-  ALL_PARAMETERS = Set[PARAMETERS, QUERY_PARAMETERS, PATH_PARAMETERS, REQUEST_PARAMETERS, REQUEST_PARAMS]
+  ALL_PARAMETERS = Set[PARAMETERS, QUERY_PARAMETERS, PATH_PARAMETERS, REQUEST_REQUEST_PARAMETERS, REQUEST_PARAMETERS, REQUEST_PARAMS]
 
   ALL_COOKIES = Set[COOKIES, REQUEST_COOKIES]
 
