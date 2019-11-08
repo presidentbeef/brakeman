@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 6
+      :generic => 8
     }
   end
 
@@ -170,5 +170,31 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, nil, :system, s(:str, "bash"), s(:str, "-c"), s(:call, s(:params), :[], s(:lit, :argument))),
       :user_input => s(:call, s(:params), :[], s(:lit, :argument))
+  end
+
+  def test_mass_assignment_permit_bang_1
+    assert_warning :type => :warning,
+      :warning_code => 70,
+      :fingerprint => "58e42d4ef79c278374a8456b1c034c7768e28b9a156e5602bb99a1105349f350",
+      :warning_type => "Mass Assignment",
+      :line => 93,
+      :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:params), :permit!),
+      :user_input => nil
+  end
+
+  def test_mass_assignment_permit_bang_2
+    assert_warning :type => :warning,
+      :warning_code => 70,
+      :fingerprint => "58e42d4ef79c278374a8456b1c034c7768e28b9a156e5602bb99a1105349f350",
+      :warning_type => "Mass Assignment",
+      :line => 94,
+      :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
+      :confidence => 1,
+      :relative_path => "app/controllers/users_controller.rb",
+      :code => s(:call, s(:params), :permit!),
+      :user_input => nil
   end
 end
