@@ -289,6 +289,7 @@ class Brakeman::Warning
       :message => self.message.to_s,
       :file => (absolute_paths ? self.file.absolute : self.file.relative),
       :line => self.line,
+      :blame => blame(absolute_paths),
       :link => self.link,
       :code => (@code && self.format_code(false)),
       :render_path => render_path,
@@ -296,6 +297,10 @@ class Brakeman::Warning
       :user_input => (@user_input && self.format_user_input(false)),
       :confidence => TEXT_CONFIDENCE[self.confidence]
     }
+  end
+
+  def blame(absolute_paths)
+    `git blame -L #{self.line},#{self.line} #{absolute_paths ? self.file.absolute : self.file.relative}`
   end
 
   def to_json
