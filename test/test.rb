@@ -112,6 +112,14 @@ module BrakemanTester::CheckExpected
   def test_zero_errors
     assert_equal 0, report[:errors].length, "Unexpected warning found: #{report[:errors].inspect}"
   end
+
+  def test_every_warning_has_file
+    [:generic_warnings, :template_warnings, :controller_warnings, :model_warnings].each do |type|
+      report[type].each do |w|
+        refute_nil w.file, lambda { "Warning did not have a file: #{w.message}" }
+      end
+    end
+  end
 end
 
 module BrakemanTester::RescanTestHelper
