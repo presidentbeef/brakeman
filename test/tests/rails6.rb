@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 8
+      :generic => 9
     }
   end
 
@@ -195,6 +195,19 @@ class Rails6Tests < Minitest::Test
       :confidence => 1,
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, s(:params), :permit!),
+      :user_input => nil
+  end
+
+  def test_secrets_file_1
+    assert_warning :type => :warning,
+      :warning_code => 101,
+      :fingerprint => "6036cfd256d955c52298c798e37b363f923d9c38f0a77599bfae942839a1dc4e",
+      :warning_type => "Authentication",
+      :line => 3,
+      :message => /^Hardcoded\ value\ for\ `DEFAULT_PASSWORD`\ i/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :code => nil,
       :user_input => nil
   end
 end
