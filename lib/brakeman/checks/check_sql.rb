@@ -71,32 +71,32 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def find_scope_calls
     scope_calls = []
 
-    if version_between?("2.1.0", "3.0.9")
-      ar_scope_calls(:named_scope) do |model, args|
-        call = make_call(nil, :named_scope, args).line(args.line)
-        scope_calls << scope_call_hash(call, model, :named_scope)
-      end
-    elsif version_between?("3.1.0", "9.9.9")
-      ar_scope_calls(:scope) do |model, args|
-        second_arg = args[2]
-        next unless sexp? second_arg
+    # Used in pre-3.1.0 versions of Rails
+    ar_scope_calls(:named_scope) do |model, args|
+      call = make_call(nil, :named_scope, args).line(args.line)
+      scope_calls << scope_call_hash(call, model, :named_scope)
+    end
 
-        if second_arg.node_type == :iter and node_type? second_arg.block, :block, :call, :safe_call
-          process_scope_with_block(model, args)
-        elsif call? second_arg
-          call = second_arg
-          scope_calls << scope_call_hash(call, model, call.method)
-        else
-          call = make_call(nil, :scope, args).line(args.line)
-          scope_calls << scope_call_hash(call, model, :scope)
-        end
+    # Use in 3.1.0 and later
+    ar_scope_calls(:scope) do |model, args|
+      second_arg = args[2]
+      next unless sexp? second_arg
+
+      if second_arg.node_type == :iter and node_type? second_arg.block, :block, :call, :safe_call
+        process_scope_with_block(model, args)
+      elsif call? second_arg
+        call = second_arg
+        scope_calls << scope_call_hash(call, model, call.method)
+      else
+        call = make_call(nil, :scope, args).line(args.line)
+        scope_calls << scope_call_hash(call, model, :scope)
       end
     end
 
     scope_calls
   end
 
-  def ar_scope_calls(symbol_name = :named_scope, &block)
+  def ar_scope_calls(symbol_name, &block)
     active_record_models.each do |name, model|
       model_args = model.options[symbol_name]
       if model_args
