@@ -393,6 +393,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     nil
   end
 
+  TO_STRING_METHODS = [:to_s, :strip_heredoc]
+
   #Returns value if interpolated value is not something safe
   def unsafe_string_interp? exp
     if node_type? exp, :evstr
@@ -403,7 +405,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
     if not sexp? value
       nil
-    elsif call? value and value.method == :to_s
+    elsif call? value and TO_STRING_METHODS.include? value.method
       unsafe_string_interp? value.target
     elsif call? value and safe_literal_target? value
       nil
@@ -466,7 +468,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       unless IGNORE_METHODS_IN_SQL.include? exp.method
         if has_immediate_user_input? exp
           exp
-        elsif exp.method == :to_s
+        elsif TO_STRING_METHODS.include? exp.method
           find_dangerous_value exp.target, ignore_hash
         else
           check_call exp

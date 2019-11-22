@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 9
+      :generic => 10
     }
   end
 
@@ -41,6 +41,19 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, s(:ivar, :@user), :destroy_by, s(:call, s(:params), :[], s(:lit, :user))),
       :user_input => s(:call, s(:params), :[], s(:lit, :user))
+  end
+
+  def test_sql_injection_strip_heredoc
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "c567289064ac39d277b33a5b860641b79a8139cf85a9a079bc7bb36130784a93",
+      :warning_type => "SQL Injection",
+      :line => 11,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :code => s(:call, nil, :where, s(:call, s(:dstr, "      name = '", s(:evstr, s(:lvar, :name)), s(:str, "'\n")), :strip_heredoc)),
+      :user_input => s(:lvar, :name)
   end
 
   def test_cross_site_scripting_sanity
