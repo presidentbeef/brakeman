@@ -1,3 +1,11 @@
+# 4.7.2 - 2019-11-25
+
+* Remove version guard for `named_scope` vs. `scope`
+* Find SQL injection in `String#strip_heredoc` target
+* Handle more `permit!` cases
+* Ensure file name is set when processing model
+* Add `request.params` as query parameters
+
 # 4.7.1 - 2019-10-29 
 
 * Check string length against limit before joining
