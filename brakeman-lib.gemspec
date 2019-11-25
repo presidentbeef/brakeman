@@ -1,6 +1,5 @@
 require './lib/brakeman/version'
 require './gem_common'
-gem_priv_key = File.expand_path("~/.ssh/gem-private_key.pem")
 
 Gem::Specification.new do |s|
   s.name = %q{brakeman-lib}
@@ -13,8 +12,16 @@ Gem::Specification.new do |s|
   s.files = ["bin/brakeman", "CHANGES.md", "FEATURES", "README.md"] + Dir["lib/**/*"]
   s.executables = ["brakeman"]
   s.license = "Brakeman Public Use License"
-  s.cert_chain  = ['brakeman-public_cert.pem']
-  s.signing_key = gem_priv_key if File.exist? gem_priv_key and $0 =~ /gem\z/
+
+  s.metadata = {
+    "bug_tracker_uri"   => "https://github.com/presidentbeef/brakeman/issues",
+    "changelog_uri"     => "https://github.com/presidentbeef/brakeman/releases",
+    "documentation_uri" => "https://brakemanscanner.org/docs/",
+    "homepage_uri"      => "https://brakemanscanner.org/",
+    "mailing_list_uri"  => "https://gitter.im/presidentbeef/brakeman",
+    "source_code_uri"   => "https://github.com/presidentbeef/brakeman",
+    "wiki_uri"          => "https://github.com/presidentbeef/brakeman/wiki"
+  }
 
   Brakeman::GemDependencies.dev_dependencies(s)
   Brakeman::GemDependencies.base_dependencies(s)
