@@ -15,6 +15,7 @@ module Brakeman
       @escape_html = nil
       @erubis = nil
       @ruby_version = ""
+      @rails_version = nil
     end
 
     def default_protect_from_forgery?
