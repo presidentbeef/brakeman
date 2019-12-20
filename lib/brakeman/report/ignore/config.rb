@@ -97,7 +97,11 @@ module Brakeman
     # Read configuration to file
     def read_from_file file = @file
       if File.exist? file
-        @already_ignored = JSON.parse(File.read(file), :symbolize_names => true)[:ignored_warnings]
+        begin
+          @already_ignored = JSON.parse(File.read(file), :symbolize_names => true)[:ignored_warnings]
+        rescue => e
+          raise e, "\nError[#{e.class}] while reading brakeman ignore file: #{file}\n"
+        end
       else
         Brakeman.notify "[Notice] Could not find ignore configuration in #{file}"
         @already_ignored = []

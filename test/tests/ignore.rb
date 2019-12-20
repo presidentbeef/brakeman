@@ -176,6 +176,21 @@ class IgnoreConfigTests < Minitest::Test
     assert new_config.ignored? first_ignored
   end
 
+  def test_bad_ignore_json_error_message
+    file = Tempfile.new("brakeman.ignore2")
+    file.write "{[ This is bad json cuz I don't have a closing square bracket, bwahahaha...}"
+    file.close
+    begin
+      c = Brakeman::IgnoreConfig.new file.path, report.warnings
+      c.read_from_file
+    rescue => e
+      # The message should clearly show that there was a problem parsing the json
+      assert e.message.index("JSON::ParserError") > 0
+      # The message should clearly reference the file containing the bad json
+      assert e.message.index(file.path) > 0
+    end
+  end
+
   def test_relative_paths_everywhere
     require 'pathname'
 
