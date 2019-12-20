@@ -13,7 +13,7 @@ class Rails52Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 5,
-      :generic => 18
+      :generic => 22
     }
   end
 
@@ -380,6 +380,58 @@ class Rails52Tests < Minitest::Test
       :relative_path => "lib/shell.rb",
       :code => s(:call, nil, :system, s(:splat, s(:array, s(:str, "foo"), s(:str, "bar"), s(:dstr, "", s(:evstr, s(:call, nil, :value)))))),
       :user_input => s(:call, nil, :value)
+  end
+
+  def test_command_injection_with_concatenation
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "6a8f4711d1bbd58964c536edb77372c1d402ee18ed558390d46d60c57920d614",
+      :warning_type => "Command Injection",
+      :line => 103,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/shell.rb",
+      :code => s(:call, nil, :system, s(:call, s(:str, "echo "), :+, s(:call, nil, :foo))),
+      :user_input => s(:call, nil, :foo)
+  end
+
+  def test_dash_c_command_injection_with_concatenation
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "cbafca7ab394a7454815dc0c45e873ce35a23093431ef414f2cfad40ec37fb98",
+      :warning_type => "Command Injection",
+      :line => 115,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/shell.rb",
+      :code => s(:call, nil, :system, s(:str, "bash"), s(:str, "-c"), s(:call, s(:str, "echo "), :+, s(:call, nil, :foo))),
+      :user_input => s(:call, nil, :foo)
+  end
+
+  def test_dash_c_command_injection_with_popen
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "da6ffe8f2fadd19479a1ae5e060b76e04f517cbeb6c54c47b59d63196e7b05aa",
+      :warning_type => "Command Injection",
+      :line => 123,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "lib/shell.rb",
+      :code => s(:call, s(:const, :IO), :popen, s(:array, s(:str, "bash"), s(:str, "-c"), s(:call, s(:params), :[], s(:lit, :foo)))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :foo))
+  end
+
+  def test_command_injection_concatenation_with_popen
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "b801bc63d43acc99bffcb4c669a1d0d6acc0724cc7267d5739f9ec31c4067467",
+      :warning_type => "Command Injection",
+      :line => 127,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/shell.rb",
+      :code => s(:call, s(:const, :IO), :popen, s(:call, s(:str, "ls "), :+, s(:call, nil, :foo))),
+      :user_input => s(:call, nil, :foo)
   end
 
   def test_cross_site_scripting_haml_sass

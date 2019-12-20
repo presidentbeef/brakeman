@@ -56,8 +56,20 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
 
     case call.method
     when :popen
-      unless array? first_arg
-        failure = include_user_input?(args) || dangerous_interp?(args)
+      # Normally, if we're in a `popen` call, we only are worried about shell
+      # injection when the argument is not an array, because array elements
+      # are always escaped by Ruby. However, an exception is when the array
+      # contains two values are something like "bash -c" because then the third
+      # element is effectively the command being run and might be a malicious
+      # executable if it comes (partially or fully) from user input.
+      if !array?(first_arg)
+        failure = include_user_input?(first_arg) ||
+                  dangerous_interp?(first_arg) ||
+                  dangerous_string_building?(first_arg)
+      elsif dash_c_shell_command?(first_arg[1], first_arg[2])
+        failure = include_user_input?(first_arg[3]) ||
+                  dangerous_interp?(first_arg[3]) ||
+                  dangerous_string_building?(first_arg[3])
       end
     when :system, :exec
       # Normally, if we're in a `system` or `exec` call, we only are worried
@@ -67,12 +79,18 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       # the third argument is effectively the command being run and might be
       # a malicious executable if it comes (partially or fully) from user input.
       if dash_c_shell_command?(first_arg, call.second_arg)
-        failure = include_user_input?(args[3]) || dangerous_interp?(args[3])
+        failure = include_user_input?(args[3]) ||
+                  dangerous_interp?(args[3]) ||
+                  dangerous_string_building?(args[3])
       else
-        failure = include_user_input?(first_arg) || dangerous_interp?(first_arg)
+        failure = include_user_input?(first_arg) ||
+                  dangerous_interp?(first_arg) ||
+                  dangerous_string_building?(first_arg)
       end
     else
-      failure = include_user_input?(args) || dangerous_interp?(args)
+      failure = include_user_input?(args) ||
+                dangerous_interp?(args) ||
+                dangerous_string_building?(args)
     end
 
     if failure and original? result
@@ -214,6 +232,23 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       if res = dangerous?(e)
         return Match.new(:interp, res)
       end
+    end
+
+    false
+  end
+
+  #Checks if an expression contains string interpolation.
+  #
+  #Returns Match with :interp type if found.
+  def include_interp? exp
+    @string_interp = false
+    process exp
+    @string_interp
+  end
+
+  def dangerous_string_building? exp
+    if string_building?(exp) && res = dangerous?(exp)
+      return Match.new(:interp, res)
     end
 
     false
