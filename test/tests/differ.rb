@@ -81,4 +81,22 @@ class DifferTests < Minitest::Test
     assert_new 0
     assert_fixed 0
   end
+
+  # If the new report has no warnings, then
+  # all the old warnings have been fixed.
+  def test_no_new_warnings
+    run_diff [], @warnings
+
+    assert_new 0
+    assert_fixed @warnings.length
+  end
+
+  # If the old report has no warnings, then
+  # all the warnings are new.
+  def test_no_old_warnings
+    run_diff @warnings, []
+
+    assert_new @warnings.length
+    assert_fixed 0
+  end
 end

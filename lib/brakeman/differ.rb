@@ -1,8 +1,6 @@
 # extracting the diff logic to it's own class for consistency. Currently handles
 # an array of Brakeman::Warnings or plain hash representations.  
 class Brakeman::Differ
-  DEFAULT_HASH = {:new => [], :fixed => []}
-  OLD_WARNING_KEYS = [:warning_type, :location, :code, :message, :file, :link, :confidence, :user_input]
   attr_reader :old_warnings, :new_warnings
 
   def initialize new_warnings, old_warnings
@@ -11,9 +9,6 @@ class Brakeman::Differ
   end
 
   def diff
-    # get the type of elements
-    return DEFAULT_HASH if @new_warnings.empty?
-
     warnings = {}
     warnings[:new] = @new_warnings - @old_warnings
     warnings[:fixed] = @old_warnings - @new_warnings
