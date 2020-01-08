@@ -525,8 +525,6 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     false
   end
 
-  STRING_METHODS = Set[:<<, :+, :concat, :prepend]
-
   def check_for_string_building exp
     return unless call? exp
 
@@ -571,15 +569,6 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     else
       exp
     end
-  end
-
-  def string_building? exp
-    return false unless call? exp and STRING_METHODS.include? exp.method
-
-    node_type? exp.target, :str, :dstr or
-    node_type? exp.first_arg, :str, :dstr or
-    string_building? exp.target or
-    string_building? exp.first_arg
   end
 
   IGNORE_METHODS_IN_SQL = Set[:id, :merge_conditions, :table_name, :quoted_table_name,

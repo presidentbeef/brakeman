@@ -280,15 +280,6 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     return location, line
   end
 
-  #Checks if an expression contains string interpolation.
-  #
-  #Returns Match with :interp type if found.
-  def include_interp? exp
-    @string_interp = false
-    process exp
-    @string_interp
-  end
-
   #Checks if _exp_ includes user input in the form of cookies, parameters,
   #request environment, or model attributes.
   #
@@ -503,5 +494,17 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     end
 
     @active_record_models
+  end
+
+  STRING_METHODS = Set[:<<, :+, :concat, :prepend]
+  private_constant :STRING_METHODS
+
+  def string_building? exp
+    return false unless call? exp and STRING_METHODS.include? exp.method
+
+    node_type? exp.target, :str, :dstr or
+    node_type? exp.first_arg, :str, :dstr or
+    string_building? exp.target or
+    string_building? exp.first_arg
   end
 end

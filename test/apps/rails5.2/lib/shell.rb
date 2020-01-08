@@ -94,4 +94,38 @@ class ShellStuff
     # Should not warn
     system(*%W(foo bar #{value}))
   end
+
+  def completely_external
+    system(foo) # We assume this is safe and do not warn.
+  end
+
+  def string_concatenation
+    system("echo " + foo)
+  end
+
+  def escaped_string_concatenation
+    system("echo " + Shellwords.escape(foo))
+  end
+
+  def safe_string_concatenation
+    system("echo " + "foo")
+  end
+
+  def dash_c_dangerous_concatenation
+    system("bash", "-c", "echo " + foo)
+  end
+
+  def dash_c_safe_concatenation
+    system("bash", "-c", "echo " + Shellwords.escape(foo))
+  end
+
+  def popen_dash_c
+    IO.popen(["bash", "-c", params[:foo]]) {}
+  end
+
+  def popen_concatenation
+    IO.popen("ls " + foo) do |ls_io|
+      ls_io.read
+    end
+  end
 end
