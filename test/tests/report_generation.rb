@@ -87,6 +87,9 @@ class TestReportGeneration < Minitest::Test
     report = @@report.to_markdown
 
     assert report.is_a? String
+    assert report.include? "High"
+    assert report.include? "Medium"
+    assert report.include? "Weak"
   end
 
   def test_markdown_debug_sanity

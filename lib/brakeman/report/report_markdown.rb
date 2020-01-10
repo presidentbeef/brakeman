@@ -84,7 +84,6 @@ class Brakeman::Report::Markdown < Brakeman::Report::Table
   end
 
   def convert_warning warning, original
-    warning["Confidence"] = TEXT_CONFIDENCE[warning["Confidence"]]
     warning["Message"] = markdown_message original, warning["Message"]
     warning["Warning Type"] = "[#{warning['Warning Type']}](#{original.link})" if original.link
     warning
