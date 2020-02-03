@@ -64,14 +64,21 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
   #Process calls and check if they include user input
   def process_call exp
+    had_user_input = @has_user_input
+
     unless @comparison_ops.include? exp.method
       process exp.target if sexp? exp.target
+
+      had_user_input = @has_user_input  # I guess target might have matched
       process_call_args exp
     end
 
     target = exp.target
 
-    unless always_safe_method? exp.method
+    if always_safe_method? exp.method
+      # Clear potential matches on arguments to safe methods
+      @has_user_input = had_user_input
+    else
       if params? target
         @has_user_input = Match.new(:params, exp)
       elsif cookies? target
