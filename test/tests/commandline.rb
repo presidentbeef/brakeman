@@ -54,7 +54,7 @@ class CommandlineTests < Minitest::Test
 
   def scan_app *opts
     opts << "#{TEST_PATH}/apps/rails4"
-    assert_output do
+    capture_io do
       cl_with_options(*opts)
     end
   end
