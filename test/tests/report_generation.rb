@@ -137,4 +137,11 @@ class TestReportGeneration < Minitest::Test
   ensure
     @@tracker.options[:github_url] = nil
   end
+
+  def test_junit_sanity
+    report = @@report.to_junit
+
+    assert report.is_a? String
+    assert report.match(/\A.*<\/testsuites>\z/m)
+  end
 end

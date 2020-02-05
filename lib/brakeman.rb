@@ -231,6 +231,8 @@ module Brakeman
       [:to_text]
     when :table, :to_table
       [:to_table]
+    when :junit, :to_junit
+      [:to_junit]
     else
       [:to_text]
     end
