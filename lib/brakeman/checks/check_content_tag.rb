@@ -55,8 +55,7 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
 
     @current_file = result[:location][:file]
 
-    call = result[:call] = result[:call].dup
-
+    call = result[:call]
     args = call.arglist
 
     tag_name = args[1]
