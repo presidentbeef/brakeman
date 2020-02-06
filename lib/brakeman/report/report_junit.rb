@@ -43,11 +43,11 @@ class Brakeman::Report::JUnit < Brakeman::Report::Base
       warning = ignored.add_element 'brakeman:warning'
       warning.add_attribute 'brakeman:message', w.message
       warning.add_attribute 'brakeman:category', w.warning_type
-      warning.add_attribute 'brakeman:file', w.file.relative
+      warning.add_attribute 'brakeman:file', warning_file(w)
       warning.add_attribute 'brakeman:line', w.line
       warning.add_attribute 'brakeman:fingerprint', w.fingerprint
-      warning.add_attribute 'brakeman:confidence', w.confidence
-      warning.add_attribute 'brakeman:code', w.code
+      warning.add_attribute 'brakeman:confidence', TEXT_CONFIDENCE[w.confidence]
+      warning.add_attribute 'brakeman:code', w.format_code
       warning.add_text w.to_s
     }
 
@@ -85,10 +85,10 @@ class Brakeman::Report::JUnit < Brakeman::Report::Base
           failure.add_attribute 'message', warning.message
           failure.add_attribute 'type', warning.warning_type
           failure.add_attribute 'brakeman:fingerprint', warning.fingerprint
-          failure.add_attribute 'brakeman:file', warning.file.relative
+          failure.add_attribute 'brakeman:file', warning_file(warning)
           failure.add_attribute 'brakeman:line', warning.line
-          failure.add_attribute 'brakeman:confidence', warning.confidence
-          failure.add_attribute 'brakeman:code', warning.code
+          failure.add_attribute 'brakeman:confidence', TEXT_CONFIDENCE[warning.confidence]
+          failure.add_attribute 'brakeman:code', warning.format_code
           failure.add_text warning.to_s
         }
 
