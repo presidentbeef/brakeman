@@ -11,6 +11,8 @@ class Brakeman::CheckRegexDoS < Brakeman::BaseCheck
     ]
   }
 
+  ESCAPES.default = [].freeze
+
   @description = "Searches regexes including user input"
 
   #Process calls
@@ -56,13 +58,7 @@ class Brakeman::CheckRegexDoS < Brakeman::BaseCheck
     end
   end
 
-  def process_call(exp)
-    if escape_methods = ESCAPES[exp.target]
-      if escape_methods.include? exp.method
-        return exp
-      end
-    end
-
-    super
+  def per_check_safe_call? exp
+    ESCAPES[exp.target].include? exp.method
   end
 end
