@@ -210,8 +210,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     if dangerous_value
       add_result result
 
-      input = include_user_input? dangerous_value
-      if input
+      if input = include_user_input?(dangerous_value)
         confidence = :high
         user_input = input
       else
@@ -589,10 +588,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       if exp.method == :to_s or exp.method == :to_sym
         safe_value? exp.target
       else
-        IGNORE_METHODS_IN_SQL.include? exp.method or
-        quote_call? exp or
-        arel? exp or
-        exp.method.to_s.end_with? "_id"
+        per_check_safe_call? exp
       end
     when :if
       safe_value? exp.then_clause and safe_value? exp.else_clause
@@ -605,6 +601,15 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     else
       false
     end
+  end
+
+  def per_check_safe_call? exp
+    return false unless call? exp
+
+    IGNORE_METHODS_IN_SQL.include? exp.method or
+      quote_call? exp or
+      arel? exp or
+      exp.method.to_s.end_with? "_id"
   end
 
   QUOTE_METHODS = [:quote, :quote_column_name, :quoted_date, :quote_string, :quote_table_name]
