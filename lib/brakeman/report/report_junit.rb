@@ -66,12 +66,14 @@ class Brakeman::Report::JUnit < Brakeman::Report::Base
         test_suite.add_attribute 'id', i
         test_suite.add_attribute 'package', 'brakeman'
         test_suite.add_attribute 'name', file.relative
-        test_suite.add_attribute 'timestamp', tracker.start_time.iso8601
+        test_suite.add_attribute 'timestamp', tracker.start_time.strftime('%FT%T')
         test_suite.add_attribute 'hostname', hostname == '' ? 'localhost' : hostname
         test_suite.add_attribute 'tests', checks.checks_run.length
         test_suite.add_attribute 'failures', warnings.length
         test_suite.add_attribute 'errors', '0'
         test_suite.add_attribute 'time', '0'
+
+        test_suite.add_element 'properties'
 
         warnings.each { |warning|
           test_case = test_suite.add_element 'testcase'
@@ -89,6 +91,9 @@ class Brakeman::Report::JUnit < Brakeman::Report::Base
           failure.add_attribute 'brakeman:code', warning.code
           failure.add_text warning.to_s
         }
+
+        test_suite.add_element 'system-out'
+        test_suite.add_element 'system-err'
       }
 
     doc.add test_suites
