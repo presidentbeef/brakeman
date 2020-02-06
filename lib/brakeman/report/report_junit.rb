@@ -1,4 +1,5 @@
 require 'time'
+require "stringio"
 require 'rexml/document'
 
 class Brakeman::Report::JUnit < Brakeman::Report::Base
