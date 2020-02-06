@@ -60,7 +60,7 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
   end
 
   def process_call exp
-    @calls << create_call_hash(exp)
+    @calls << create_call_hash(exp).freeze
     exp
   end
 
@@ -72,6 +72,7 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
 
       call_hash[:block] = exp.block
       call_hash[:block_args] = exp.block_args
+      call_hash.freeze
 
       @calls << call_hash
 
@@ -136,7 +137,7 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
                 :call => exp,
                 :nested => false,
                 :location => make_location,
-                :parent => @current_call }
+                :parent => @current_call }.freeze
   end
 
   #Gets the target of a call as a Symbol

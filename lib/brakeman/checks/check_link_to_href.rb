@@ -30,9 +30,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
   end
 
   def process_result result
-    #Have to make a copy of this, otherwise it will be changed to
-    #an ignored method call by the code above.
-    call = result[:call] = result[:call].dup
+    call = result[:call]
     @matched = false
 
     url_arg = if result[:block]

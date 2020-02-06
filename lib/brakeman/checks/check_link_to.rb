@@ -34,7 +34,7 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
 
     #Have to make a copy of this, otherwise it will be changed to
     #an ignored method call by the code above.
-    call = result[:call] = result[:call].dup
+    call = result[:call]
 
     first_arg = call.first_arg
     second_arg = call.second_arg
