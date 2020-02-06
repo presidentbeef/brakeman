@@ -33,7 +33,6 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
       confidence = :medium
     end
 
-
     if confidence
       return if safe_parameter? input.match
       return if symbolizing_attributes? input
@@ -67,5 +66,9 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
     input.type == :model and
       call? input.match and
       input.match.method == :attributes
+  end
+
+  def per_check_safe_call? exp
+    safe_parameter? exp
   end
 end
