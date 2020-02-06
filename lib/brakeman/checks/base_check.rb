@@ -75,7 +75,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
 
     target = exp.target
 
-    if always_safe_method? exp.method
+    if always_safe_method? exp.method or per_check_safe_call? exp
       # Clear potential matches on arguments to safe methods
       @has_user_input = had_user_input
     else
@@ -513,5 +513,11 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     node_type? exp.first_arg, :str, :dstr or
     string_building? exp.target or
     string_building? exp.first_arg
+  end
+
+  # Override in subclasses to ignore safe calls
+  # and their arguments
+  def per_check_safe_call? exp
+    false
   end
 end
