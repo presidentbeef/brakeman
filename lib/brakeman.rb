@@ -260,6 +260,8 @@ module Brakeman
         :to_text
       when /\.table$/i
         :to_table
+      when /\.junit$/i
+        :to_junit
       else
         :to_text
       end
