@@ -6,7 +6,7 @@ require 'brakeman/report/report_base'
 class Brakeman::Report
   attr_reader :tracker
 
-  VALID_FORMATS = [:to_html, :to_pdf, :to_csv, :to_json, :to_tabs, :to_hash, :to_s, :to_markdown, :to_codeclimate, :to_plain, :to_text]
+  VALID_FORMATS = [:to_html, :to_pdf, :to_csv, :to_json, :to_tabs, :to_hash, :to_s, :to_markdown, :to_codeclimate, :to_plain, :to_text, :to_junit]
 
   def initialize tracker
     @app_tree = tracker.app_tree
@@ -40,6 +40,9 @@ class Brakeman::Report
       return self.to_table
     when :to_pdf
       raise "PDF output is not yet supported."
+    when :to_junit
+      require_report 'junit'
+      Brakeman::Report::JUnit
     else
       raise "Invalid format: #{format}. Should be one of #{VALID_FORMATS.inspect}"
     end
