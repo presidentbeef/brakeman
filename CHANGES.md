@@ -1,4 +1,4 @@
-# Unreleased
+# 4.8.0 - 2020-02-18 
 
 * Add JUnit-XML report format (Naoki Kimura)
 * Sort ignore files by fingerprint and line (Ngan Pham)
