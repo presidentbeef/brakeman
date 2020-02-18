@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Brakeman 1.5.2 Released - Important Fixes</title>
+  <title>Brakeman: Brakeman 4.8.0 Released</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,7 +15,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="https://brakemanscanner.org/blog/2012/03/22/brakeman-1-dot-5-2-released-important-fixes"/>
+  <link rel="canonical" href="https://brakemanscanner.org/blog/2020/02/18/brakeman-4-dot-8-dot-0-released"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -34,7 +34,7 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Brakeman 1.5.2 Released - Important Fixes" />
+<meta name="twitter:title" content="Brakeman - Brakeman 4.8.0 Released" />
 <meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
 <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 
@@ -77,7 +77,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 1.5.2 Released - Important Fixes</h1>
+      <h1 class="entry-title">Brakeman 4.8.0 Released</h1>
     
     
       <p class="meta">
@@ -85,7 +85,7 @@
 
 
 
-<time datetime="2012-03-22 13:34:00 -0700" pubdate  updated >2012-03-22 13:34:00 -0700</time>
+<time datetime="2020-02-18 10:00:00 -0800" pubdate  updated >2020-02-18 10:00:00 -0800</time>
 
 
 </p>
@@ -93,58 +93,92 @@
   </header>
 
 
-<div class="entry-content"><p>This is update includes some important fixes. All users of the <code class="highlighter-rouge">rails_xss</code> plugin are particularly encouraged to upgrade.</p>
+<div class="entry-content"><p>First release of 2020!
+This release comes with a brand new report format: JUnit XML.</p>
 
-<p><em>Changes since 1.5.1:</em></p>
+<p><em>Changes since 4.7.2:</em></p>
 
 <ul>
-  <li>Fix handling of views when using <code class="highlighter-rouge">rails_xss</code></li>
-  <li>Fix rescanning of lib files (Neil Matatall)</li>
-  <li>Fix <code class="highlighter-rouge">link_to</code> checks for Rails 2.0 and 2.3</li>
-  <li>Revert to <code class="highlighter-rouge">ruby_parser</code> 2.3.1 for Ruby 1.8 parsing</li>
-  <li>Only warn on user input in render paths</li>
-  <li>Output stack trace on interrupt when debugging</li>
-  <li>Ignore user input in if statement conditions</li>
-  <li>Fix –skip-files option with Ruby 1.8</li>
+  <li>Add JUnit XML report format (<a href="https://github.com/naokikimura">Naoki Kimurai</a>)</li>
+  <li>Sort ignore files by fingerprint and line (<a href="https://github.com/ngan">Ngan Pham</a>)</li>
+  <li>Catch dangerous concatenation in <code class="highlighter-rouge">CheckExecute</code> (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
+  <li>User-friendly message when ignore config file has invalid JSON (<a href="https://github.com/deevis">D. Hicks</a>)</li>
+  <li>Freeze call index results, fix thread-safety issue</li>
+  <li>Properly render confidence in Markdown report (<a href="https://github.com/presidentbeef/brakeman/issues/1446">#1446</a>)</li>
+  <li>Report old warnings as fixed if zero warnings reported</li>
 </ul>
 
-<h3 id="views-with-rails_xss">Views with rails_xss</h3>
+<h3 id="junit-xml-report">JUnit XML Report</h3>
 
-<p>Some previous changes to make sure Brakeman was processing ERB views the same way as the <code class="highlighter-rouge">rails_xss</code> plugin unfortunately broke the processing of those views.</p>
+<p>Thanks to <a href="https://github.com/naokikimura">Naoki Kimura</a>, Brakeman can now generate a JUnit XML format.
+JUnit XML is produced and consumed by a number of different testing tools, including CircleCI.</p>
 
-<p>These changes caused Brakeman to not report <em>any</em> output from ERB views when the <code class="highlighter-rouge">rails_xss</code> plugin was in use, hiding any XSS vulnerabilities in those views.</p>
+<p>Supporting this format makes it possible for Brakeman warnings to be consumed by general test infrastructure tools.</p>
 
-<p>This now fixed, so if you are using the <code class="highlighter-rouge">rails_xss</code> plugin, it is highly recommended to upgrade.</p>
+<p>To use the new format, either use <code class="highlighter-rouge">-f junit</code> or <code class="highlighter-rouge">-o report.junit</code>.</p>
 
-<h3 id="rescanning-lib-files">Rescanning lib/ Files</h3>
+<p><a href="https://github.com/presidentbeef/brakeman/pull/1453">changes</a></p>
 
-<p>Rescanning changed files in the <code class="highlighter-rouge">lib</code> directory was broken, but Neil fixed it!</p>
+<h3 id="sort-ignore-files">Sort Ignore Files</h3>
 
-<h3 id="link_to-checks">link_to Checks</h3>
+<p>Warnings in “ignore files” were previously only sorted by fingerprint.
+Thanks to <a href="https://github.com/ngan">Ngan Pham</a> they are now sorted by fingerprint then line number, to maintain stable ordering between warnings with the same fingerprint.</p>
 
-<p>In Rails 2.3, the URL is escaped, but not the body of the link. In Rails 2.0, neither argument is escaped.</p>
+<p><a href="https://github.com/presidentbeef/brakeman/pull/1457">changes</a></p>
 
-<p>In this release, the check for XSS in <code class="highlighter-rouge">link_to</code> has been updated to handle <code class="highlighter-rouge">link_to</code> with blocks and to warn in Rails 2.0.x if any user input is used as an argument.</p>
+<h3 id="dangerous-concatenation-in-commands">Dangerous Concatenation in Commands</h3>
 
-<h3 id="revert-to-ruby_parser-for-ruby-18">Revert to ruby_parser for Ruby 1.8</h3>
+<p><a href="https://github.com/JacobEvelyn">Jacob Evelyn</a> has updated the command injection check (<code class="highlighter-rouge">CheckExecute</code>) to also consider string concatenation with dangerous values.</p>
 
-<p>Brakeman has been using a vendored version of <a href="https://github.com/seattlerb/ruby_parser">ruby_parser</a> with some updates to Ruby 1.9 syntax parsing. Unfortunately, that version also introduced some regressions for parsing Ruby 1.8 syntax.</p>
+<p>For example:</p>
 
-<p>To handle this, Brakeman will now only use the vendored version for 1.9 parsing, but the regular gem version for 1.8 syntax parsing. This should fix some parse errors people are seeing for Ruby 1.8 apps.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system("ls " + maybe_dangerous)
+</code></pre></div></div>
 
-<h3 id="dynamic-render-path-updates">Dynamic Render Path Updates</h3>
+<p><a href="https://github.com/presidentbeef/brakeman/pull/1440">changes</a></p>
 
-<p>The check for dynamic render paths was not very good, but it is better now. “Dynamic Render Path” warnings should only be raised when user input is actually used to determine what view, partial, or file to render.</p>
+<h3 id="fix-thread-safety-issue">Fix Thread-safety Issue</h3>
 
-<h3 id="stacktrace-output">Stacktrace Output</h3>
+<p>Two checks were modifying shared data (call site results), which introduced a race condition.
+Sometimes a result would strangely become <code class="highlighter-rouge">nil</code> and cause intermittent errors.
+Note this only popped up when using real threads on JRuby.</p>
 
-<p>Brakeman will now output a stacktrace if interrupted while running with the <code class="highlighter-rouge">-d</code> option. This is mostly helpful when Brakeman appears to “hang”.</p>
+<p>Now results from the <code class="highlighter-rouge">CallIndex</code> are frozen to help prevent this kind of modification of shared data in the future.</p>
+
+<p><a href="https://github.com/presidentbeef/brakeman/pull/1452">changes</a></p>
+
+<h3 id="render-confidence-in-markdown">Render Confidence in Markdown</h3>
+
+<p>Due to a previous refactoring, confidence levels were not being rendered in Markdown reports.</p>
+
+<p><a href="https://github.com/presidentbeef/brakeman/pull/1448">changes</a></p>
+
+<h3 id="report-comparison-fix">Report Comparison Fix</h3>
+
+<p>Due to a <em>very</em> old bug, when comparing an old report with some warnings to a new report with zero warnings, the old warnings were not reported as fixed.
+Now they will be.</p>
+
+<p>Probably no one noticed because we generally only care about <em>new</em> warnings.</p>
+
+<p><a href="https://github.com/presidentbeef/brakeman/pull/1448">changes</a></p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2febb3ce4111fe14f57a8ea447c5770eeb32ba43333955b4ed27864ef045c277  brakeman-4.8.0.gem
+c513373a37576d8107af724bf9f8a47e8d76253c85bdd6fdb4d3e93471a47ee6  brakeman-lib-4.8.0.gem
+d82206b9a60ef1eb4c96d32ba0157774db301e3ca10dcbdd7b4171044b28eccf  brakeman-min-4.8.0.gem
+</code></pre></div></div>
 
 <h3 id="reporting-issues">Reporting Issues</h3>
 
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a>!</p>
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
 
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
 </div>
 
 
@@ -158,7 +192,7 @@
 
 
 
-<time datetime="2012-03-22 13:34:00 -0700" pubdate  updated >2012-03-22 13:34:00 -0700</time>
+<time datetime="2020-02-18 10:00:00 -0800" pubdate  updated >2020-02-18 10:00:00 -0800</time>
 
 
 

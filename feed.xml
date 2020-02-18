@@ -1,4 +1,88 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2020-01-09T15:06:05-08:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 4.7.2 Released</title><link href="https://brakemanscanner.org/blog/2019/11/25/brakeman-4-dot-7-dot-2-released" rel="alternate" type="text/html" title="Brakeman 4.7.2 Released" /><published>2019-11-25T14:00:00-08:00</published><updated>2019-11-25T14:00:00-08:00</updated><id>https://brakemanscanner.org/blog/2019/11/25/brakeman-4-dot-7-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2019/11/25/brakeman-4-dot-7-dot-2-released">&lt;p&gt;Some minor fixes for a minor release.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2020-02-18T12:05:35-08:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 4.8.0 Released</title><link href="https://brakemanscanner.org/blog/2020/02/18/brakeman-4-dot-8-dot-0-released" rel="alternate" type="text/html" title="Brakeman 4.8.0 Released" /><published>2020-02-18T10:00:00-08:00</published><updated>2020-02-18T10:00:00-08:00</updated><id>https://brakemanscanner.org/blog/2020/02/18/brakeman-4-dot-8-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2020/02/18/brakeman-4-dot-8-dot-0-released">&lt;p&gt;First release of 2020!
+This release comes with a brand new report format: JUnit XML.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 4.7.2:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Add JUnit XML report format (&lt;a href=&quot;https://github.com/naokikimura&quot;&gt;Naoki Kimurai&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Sort ignore files by fingerprint and line (&lt;a href=&quot;https://github.com/ngan&quot;&gt;Ngan Pham&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Catch dangerous concatenation in &lt;code class=&quot;highlighter-rouge&quot;&gt;CheckExecute&lt;/code&gt; (&lt;a href=&quot;https://github.com/JacobEvelyn&quot;&gt;Jacob Evelyn&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;User-friendly message when ignore config file has invalid JSON (&lt;a href=&quot;https://github.com/deevis&quot;&gt;D. Hicks&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Freeze call index results, fix thread-safety issue&lt;/li&gt;
+  &lt;li&gt;Properly render confidence in Markdown report (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1446&quot;&gt;#1446&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Report old warnings as fixed if zero warnings reported&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;junit-xml-report&quot;&gt;JUnit XML Report&lt;/h3&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/naokikimura&quot;&gt;Naoki Kimura&lt;/a&gt;, Brakeman can now generate a JUnit XML format.
+JUnit XML is produced and consumed by a number of different testing tools, including CircleCI.&lt;/p&gt;
+
+&lt;p&gt;Supporting this format makes it possible for Brakeman warnings to be consumed by general test infrastructure tools.&lt;/p&gt;
+
+&lt;p&gt;To use the new format, either use &lt;code class=&quot;highlighter-rouge&quot;&gt;-f junit&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;-o report.junit&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1453&quot;&gt;changes&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;sort-ignore-files&quot;&gt;Sort Ignore Files&lt;/h3&gt;
+
+&lt;p&gt;Warnings in “ignore files” were previously only sorted by fingerprint.
+Thanks to &lt;a href=&quot;https://github.com/ngan&quot;&gt;Ngan Pham&lt;/a&gt; they are now sorted by fingerprint then line number, to maintain stable ordering between warnings with the same fingerprint.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1457&quot;&gt;changes&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;dangerous-concatenation-in-commands&quot;&gt;Dangerous Concatenation in Commands&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/JacobEvelyn&quot;&gt;Jacob Evelyn&lt;/a&gt; has updated the command injection check (&lt;code class=&quot;highlighter-rouge&quot;&gt;CheckExecute&lt;/code&gt;) to also consider string concatenation with dangerous values.&lt;/p&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;system(&quot;ls &quot; + maybe_dangerous)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1440&quot;&gt;changes&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;fix-thread-safety-issue&quot;&gt;Fix Thread-safety Issue&lt;/h3&gt;
+
+&lt;p&gt;Two checks were modifying shared data (call site results), which introduced a race condition.
+Sometimes a result would strangely become &lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt; and cause intermittent errors.
+Note this only popped up when using real threads on JRuby.&lt;/p&gt;
+
+&lt;p&gt;Now results from the &lt;code class=&quot;highlighter-rouge&quot;&gt;CallIndex&lt;/code&gt; are frozen to help prevent this kind of modification of shared data in the future.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1452&quot;&gt;changes&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;render-confidence-in-markdown&quot;&gt;Render Confidence in Markdown&lt;/h3&gt;
+
+&lt;p&gt;Due to a previous refactoring, confidence levels were not being rendered in Markdown reports.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1448&quot;&gt;changes&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;report-comparison-fix&quot;&gt;Report Comparison Fix&lt;/h3&gt;
+
+&lt;p&gt;Due to a &lt;em&gt;very&lt;/em&gt; old bug, when comparing an old report with some warnings to a new report with zero warnings, the old warnings were not reported as fixed.
+Now they will be.&lt;/p&gt;
+
+&lt;p&gt;Probably no one noticed because we generally only care about &lt;em&gt;new&lt;/em&gt; warnings.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1448&quot;&gt;changes&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;2febb3ce4111fe14f57a8ea447c5770eeb32ba43333955b4ed27864ef045c277  brakeman-4.8.0.gem
+c513373a37576d8107af724bf9f8a47e8d76253c85bdd6fdb4d3e93471a47ee6  brakeman-lib-4.8.0.gem
+d82206b9a60ef1eb4c96d32ba0157774db301e3ca10dcbdd7b4171044b28eccf  brakeman-min-4.8.0.gem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">First release of 2020! This release comes with a brand new report format: JUnit XML.</summary></entry><entry><title type="html">Brakeman 4.7.2 Released</title><link href="https://brakemanscanner.org/blog/2019/11/25/brakeman-4-dot-7-dot-2-released" rel="alternate" type="text/html" title="Brakeman 4.7.2 Released" /><published>2019-11-25T14:00:00-08:00</published><updated>2019-11-25T14:00:00-08:00</updated><id>https://brakemanscanner.org/blog/2019/11/25/brakeman-4-dot-7-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2019/11/25/brakeman-4-dot-7-dot-2-released">&lt;p&gt;Some minor fixes for a minor release.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 4.7.1:&lt;/em&gt;&lt;/p&gt;
 
@@ -829,20 +913,4 @@ Please report any issues.&lt;/p&gt;
 
 &lt;p&gt;Synopsys has a rich history of working with the open source community through &lt;a href=&quot;https://scan.coverity.com/&quot;&gt;Coverity Scan&lt;/a&gt;, providing testing as a free service to support building quality and security into the open source software (OSS) development process. To-date since its inception in 2006, Coverity Scan has provided scanning support to over 4,600 open source projects. The December 2017 acquisition of Black Duck Software is another testament to Synopsys’ dedication to securing the growing use of open source.&lt;/p&gt;
 
-&lt;p&gt;Rest easy knowing that Brakeman will continue to be maintained by the same team. Code will remain available on &lt;a href=&quot;https://github.com/presidentbeef/brakeman&quot;&gt;GitHub&lt;/a&gt;, and Ruby gems will continue being distributed via &lt;a href=&quot;https://rubygems.org/gems/brakeman&quot;&gt;RubyGems.org&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">In celebration of Brakeman’s 8th birthday this week, we’d like to share an update to keep you apprised of what we’ve been up to since our acquisition by Synopsys in June of this year.</summary></entry><entry><title type="html">Brakeman Has Been Acquired by Synopsys</title><link href="https://brakemanscanner.org/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/index.html" rel="alternate" type="text/html" title="Brakeman Has Been Acquired by Synopsys" /><published>2018-06-28T13:37:00-07:00</published><updated>2018-06-28T13:37:00-07:00</updated><id>https://brakemanscanner.org/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/brakeman-has-been-acquired-by-synopsys</id><content type="html" xml:base="https://brakemanscanner.org/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/index.html">&lt;p&gt;We are excited to announce &lt;a href=&quot;https://brakemanpro.com&quot;&gt;Brakeman Pro&lt;/a&gt; has been acquired by Synopsys.&lt;/p&gt;
-
-&lt;p&gt;Started in 2014, Brakeman Pro has been a partnership between &lt;a href=&quot;https://twitter.com/presidentbeef&quot;&gt;Justin Collins&lt;/a&gt;, &lt;a href=&quot;https://twitter.com/ndm&quot;&gt;Neil Matatall&lt;/a&gt;, &lt;a href=&quot;https://twitter.com/manicode&quot;&gt;Jim Manico&lt;/a&gt;, and &lt;a href=&quot;https://twitter.com/adamkorman&quot;&gt;Adam Korman&lt;/a&gt;. Although it’s been an unconventional journey, we are all grateful to have traveled it together. Sincere thanks to the many folks who supported, promoted, and encouraged us along the way.&lt;/p&gt;
-
-&lt;p&gt;Justin Collins will be joining Synopsys to help integrate the Brakeman Pro Engine into their static application security testing (SAST) offerings, as well as continuing to develop and support the Brakeman OSS project. This is an exciting opportunity to focus on improving and expanding SAST for the Ruby community.&lt;/p&gt;
-
-&lt;h3 id=&quot;brakeman-oss&quot;&gt;Brakeman OSS&lt;/h3&gt;
-
-&lt;p&gt;This Brakeman OSS project is part of the acquisition, and Synopsys now owns the copyright previously held by Brakeman, Inc.&lt;/p&gt;
-
-&lt;p&gt;The project going forward and any future contributions will be made available under the &lt;a href=&quot;https://creativecommons.org/licenses/by-nc-sa/4.0/&quot;&gt;Creative Commons Attribution-NonCommercial-ShareAlike 4.0 Public License&lt;/a&gt;. For most users who are using Brakeman for internal purposes or assessments, nothing will change. Brakeman OSS will continue to be maintained by the same folks, free, and open source. Code will remain available on &lt;a href=&quot;https://github.com/presidentbeef/brakeman&quot;&gt;GitHub&lt;/a&gt;, and Ruby gems will be distributed from &lt;a href=&quot;https://rubygems.org/gems/brakeman&quot;&gt;RubyGems.org&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;However, under the new license, it is no longer possible to use Brakeman OSS for the development of a commercial product or online service or to resell Brakeman OSS as a service. Companies wishing to do either will require a commercial agreement with Synopsys. Please see &lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1238#issuecomment-401448976&quot;&gt;here&lt;/a&gt; for more details.&lt;/p&gt;
-
-&lt;h3 id=&quot;thank-you&quot;&gt;Thank You&lt;/h3&gt;
-
-&lt;p&gt;Thank you again to our customers, friends, and family who supported us in making the web a little bit safer!&lt;/p&gt;</content><author><name></name></author><summary type="html">We are excited to announce Brakeman Pro has been acquired by Synopsys.</summary></entry></feed>
+&lt;p&gt;Rest easy knowing that Brakeman will continue to be maintained by the same team. Code will remain available on &lt;a href=&quot;https://github.com/presidentbeef/brakeman&quot;&gt;GitHub&lt;/a&gt;, and Ruby gems will continue being distributed via &lt;a href=&quot;https://rubygems.org/gems/brakeman&quot;&gt;RubyGems.org&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">In celebration of Brakeman’s 8th birthday this week, we’d like to share an update to keep you apprised of what we’ve been up to since our acquisition by Synopsys in June of this year.</summary></entry></feed>
