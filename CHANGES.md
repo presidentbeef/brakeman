@@ -1,3 +1,15 @@
+# Unreleased
+
+* Add JUnit-XML report format (Naoki Kimura)
+* Sort ignore files by fingerprint and line (Ngan Pham)
+* Freeze call index results
+* Fix output test when using newer Minitest
+* Properly render confidence in Markdown report
+* Report old warnings as fixed if zero warnings reported
+* Catch dangerous concatenation in `CheckExecute` (Jacob Evelyn)
+* Show user-friendly message when ignore config file has invalid JSON (D. Hicks)
+* Initialize Rails version with `nil` (Carsten Wirth)
+
 # 4.7.2 - 2019-11-25
 
 * Remove version guard for `named_scope` vs. `scope`
