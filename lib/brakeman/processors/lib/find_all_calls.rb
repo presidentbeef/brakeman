@@ -89,7 +89,7 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
   #Calls to render() are converted to s(:render, ...) but we would
   #like them in the call cache still for speed
   def process_render exp
-    process exp.last if sexp? exp.last
+    process_all exp
 
     add_simple_call :render, exp
 
