@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 10
+      :generic => 12
     }
   end
 
@@ -183,6 +183,32 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, nil, :system, s(:str, "bash"), s(:str, "-c"), s(:call, s(:params), :[], s(:lit, :argument))),
       :user_input => s(:call, s(:params), :[], s(:lit, :argument))
+  end
+
+  def test_command_injection_in_render_1
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "6c1c068078e37b94af882d43bd6e239dd8e28912b7f0a56f11b82a504915c064",
+      :warning_type => "Command Injection",
+      :line => 10,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:dxstr, "", s(:evstr, s(:call, s(:params), :require, s(:str, "name"))), s(:str, " some optional text")),
+      :user_input => s(:call, s(:params), :require, s(:str, "name"))
+  end
+
+  def test_command_injection_in_render_2
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "6c1c068078e37b94af882d43bd6e239dd8e28912b7f0a56f11b82a504915c064",
+      :warning_type => "Command Injection",
+      :line => 11,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:dxstr, "", s(:evstr, s(:call, s(:params), :require, s(:str, "name"))), s(:str, " some optional text")),
+      :user_input => s(:call, s(:params), :require, s(:str, "name"))
   end
 
   def test_mass_assignment_permit_bang_1
