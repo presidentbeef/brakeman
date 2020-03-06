@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 12
+      :generic => 13
     }
   end
 
@@ -234,6 +234,19 @@ class Rails6Tests < Minitest::Test
       :confidence => 1,
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, s(:params), :permit!),
+      :user_input => nil
+  end
+
+  def test_mass_assignment_global_allow_all_parameters
+    assert_warning :type => :warning,
+      :warning_code => 112,
+      :fingerprint => "a02bb53bb433ffd7e52cfd58f9a3fdf20f53d082db36d2e47bf3c0aee32458ae",
+      :warning_type => "Mass Assignment",
+      :line => 2,
+      :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
+      :confidence => 0,
+      :relative_path => "config/initializers/allow_all_parameters.rb",
+      :code => s(:attrasgn, s(:colon2, s(:const, :ActionController), :Parameters), :permit_all_parameters=, s(:true)),
       :user_input => nil
   end
 

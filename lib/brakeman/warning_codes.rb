@@ -113,6 +113,7 @@ module Brakeman::WarningCodes
     :force_ssl_disabled => 109,
     :unsafe_cookie_serialization => 110,
     :reverse_tabnabbing => 111,
+    :mass_assign_permit_all => 112,
     :custom_check => 9090,
   }
 
