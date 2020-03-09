@@ -17,6 +17,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
   def run_check
     check_mass_assignment
     check_permit!
+    check_permit_all_parameters
   end
 
   def find_mass_assign_calls
@@ -192,5 +193,19 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
       :warning_code => :mass_assign_permit!,
       :message => "Parameters should be whitelisted for mass assignment",
       :confidence => confidence
+  end
+
+  def check_permit_all_parameters
+    tracker.find_call(target: :"ActionController::Parameters", method: :permit_all_parameters=).each do |result|
+      call = result[:call]
+
+      if true? call.first_arg
+        warn :result => result,
+          :warning_type => "Mass Assignment",
+          :warning_code => :mass_assign_permit_all,
+          :message => "Parameters should be whitelisted for mass assignment",
+          :confidence => :high
+      end
+    end
   end
 end
