@@ -74,11 +74,15 @@ To specify an output file for the results:
 
     brakeman -o output_file
 
-The output format is determined by the file extension or by using the `-f` option. Current options are: `text`, `html`, `tabs`, `json`, `markdown`, `csv`, and `codeclimate`.
+The output format is determined by the file extension or by using the `-f` option. Current options are: `text`, `html`, `tabs`, `json`, `junit`, `markdown`, `csv`, and `codeclimate`.
 
 Multiple output files can be specified:
 
     brakeman -o output.html -o output.json
+
+To output to both a file and to the console, with color:
+
+    brakeman --color -o /dev/stdout -o output.json
 
 To suppress informational warnings and just output the report:
 
