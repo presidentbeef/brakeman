@@ -17,8 +17,8 @@ class UsersController < ApplicationController
     @user = User.new
   end
 
-  # GET /users/1/edit
   def edit
+    render :edit, locals: { some_name.to_sym => 'stuff' }
   end
 
   # POST /users

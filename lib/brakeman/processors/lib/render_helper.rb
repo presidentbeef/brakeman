@@ -98,7 +98,9 @@ module Brakeman::RenderHelper
 
       if hash? options[:locals]
         hash_iterate options[:locals] do |key, value|
-          template_env[Sexp.new(:call, nil, key.value)] = value
+          if symbol? key
+            template_env[Sexp.new(:call, nil, key.value)] = value
+          end
         end
       end
 
