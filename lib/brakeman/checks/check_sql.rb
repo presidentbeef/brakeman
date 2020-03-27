@@ -405,7 +405,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
     if not sexp? value
       nil
-    elsif call? value and TO_STRING_METHODS.include? value.method
+    elsif call? value and string_interp? value.target
       unsafe_string_interp? value.target
     elsif call? value and safe_literal_target? value
       nil
