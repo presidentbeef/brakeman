@@ -10,4 +10,9 @@ class GroupsController < ApplicationController
     render text: `#{params.require('name')} some optional text`
     render json: `#{params.require('name')} some optional text`
   end
+
+  def squish_sql
+    ActiveRecord::Base.connection.execute "SELECT * FROM #{user_input}".squish
+    ActiveRecord::Base.connection.execute "SELECT * FROM #{user_input}".strip
+  end
 end

@@ -393,7 +393,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     nil
   end
 
-  TO_STRING_METHODS = [:to_s, :strip_heredoc]
+  TO_STRING_METHODS = [:to_s, :squish, :strip, :strip_heredoc]
 
   #Returns value if interpolated value is not something safe
   def unsafe_string_interp? exp
