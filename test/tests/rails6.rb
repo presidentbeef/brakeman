@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 13
+      :generic => 15
     }
   end
 
@@ -54,6 +54,32 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/models/user.rb",
       :code => s(:call, nil, :where, s(:call, s(:dstr, "      name = '", s(:evstr, s(:lvar, :name)), s(:str, "'\n")), :strip_heredoc)),
       :user_input => s(:lvar, :name)
+  end
+
+  def test_sql_injection_squish_string
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "061b514e5a37df58d8b64ec0c9c10002dcd9d7253d0e1c1a9bd61bdb27be158f",
+      :warning_type => "SQL Injection",
+      :line => 15,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :execute, s(:call, s(:dstr, "SELECT * FROM ", s(:evstr, s(:call, nil, :user_input))), :squish)),
+      :user_input => s(:call, nil, :user_input)
+  end
+
+  def test_sql_injection_strip_string
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "07fe35888f23cd4125c862d041b9ab3257c01c1263b66cd8c63804d55b8e1549",
+      :warning_type => "SQL Injection",
+      :line => 16,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :execute, s(:call, s(:dstr, "SELECT * FROM ", s(:evstr, s(:call, nil, :user_input))), :strip)),
+      :user_input => s(:call, nil, :user_input)
   end
 
   def test_cross_site_scripting_sanity
