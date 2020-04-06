@@ -1,3 +1,10 @@
+# Unreleased
+
+* Check SQL query strings using `String#strip` or `String.squish`
+* Handle non-symbol keys in locals hash for render()
+* Warn about global(!) mass assignment
+* Index calls in render arguments
+
 # 4.8.0 - 2020-02-18 
 
 * Add JUnit-XML report format (Naoki Kimura)
