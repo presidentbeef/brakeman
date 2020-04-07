@@ -1,4 +1,4 @@
-# Unreleased
+# 4.8.1 - 2020-04-06
 
 * Check SQL query strings using `String#strip` or `String.squish`
 * Handle non-symbol keys in locals hash for render()
