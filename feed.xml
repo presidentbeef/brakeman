@@ -1,4 +1,64 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2020-03-09T10:24:42-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 4.8.0 Released</title><link href="https://brakemanscanner.org/blog/2020/02/18/brakeman-4-dot-8-dot-0-released" rel="alternate" type="text/html" title="Brakeman 4.8.0 Released" /><published>2020-02-18T10:00:00-08:00</published><updated>2020-02-18T10:00:00-08:00</updated><id>https://brakemanscanner.org/blog/2020/02/18/brakeman-4-dot-8-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2020/02/18/brakeman-4-dot-8-dot-0-released">&lt;p&gt;First release of 2020!
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2020-04-06T22:12:32-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 4.8.1 Released</title><link href="https://brakemanscanner.org/blog/2020/04/06/brakeman-4-dot-8-dot-1-released" rel="alternate" type="text/html" title="Brakeman 4.8.1 Released" /><published>2020-04-06T10:00:00-07:00</published><updated>2020-04-06T10:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2020/04/06/brakeman-4-dot-8-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2020/04/06/brakeman-4-dot-8-dot-1-released">&lt;p&gt;Just a little bug fix release.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 4.8.0:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Warn about global(!) mass assignment&lt;/li&gt;
+  &lt;li&gt;Check SQL query strings using &lt;code class=&quot;highlighter-rouge&quot;&gt;String#strip&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;String.squish&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1469&quot;&gt;#1459&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Handle non-symbol keys in &lt;code class=&quot;highlighter-rouge&quot;&gt;locals&lt;/code&gt; hash for &lt;code class=&quot;highlighter-rouge&quot;&gt;render&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1465&quot;&gt;#1465&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Index calls in render arguments (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1459&quot;&gt;#1459&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;global-mass-assignment&quot;&gt;Global Mass Assignment&lt;/h3&gt;
+
+&lt;p&gt;Strong parameters can be disabled with:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;ActionController&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Parameters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;permit_all_parameters&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Brakeman will now warn about this (very rare) configuration.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1464&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;squished-and-stripped-sql&quot;&gt;Squished and Stripped SQL&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will now check string targets of &lt;code class=&quot;highlighter-rouge&quot;&gt;squish&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;strip&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;connection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;execute&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;SELECT * FROM &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user_input&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;squish&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1470&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;non-symbol-keys-in-locals-hash&quot;&gt;Non-Symbol Keys in Locals Hash&lt;/h3&gt;
+
+&lt;p&gt;Using a value other than symbol literals as keys in the &lt;code class=&quot;highlighter-rouge&quot;&gt;locals&lt;/code&gt; hash for &lt;code class=&quot;highlighter-rouge&quot;&gt;render&lt;/code&gt; will no longer cause an error.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1468&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;render-arguments&quot;&gt;Render Arguments&lt;/h3&gt;
+
+&lt;p&gt;Calls made as arguments to &lt;code class=&quot;highlighter-rouge&quot;&gt;render&lt;/code&gt; will be indexed and checked for all vulnerability types, like every other method call.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1460&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;5f3cc763fce471434adc33aa251298fa24ea2a1c01ef2549aec55be4b5b14d46  brakeman-4.8.1.gem
+c4a95b450fb7ec2440e68640a0821e3a6b62ea34f665e78264ba0b332e98e5df  brakeman-lib-4.8.1.gem
+ada41dbfc3a436c062cd44161893249654caf43296801599303952f6261f2e5e  brakeman-min-4.8.1.gem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Just a little bug fix release.</summary></entry><entry><title type="html">Brakeman 4.8.0 Released</title><link href="https://brakemanscanner.org/blog/2020/02/18/brakeman-4-dot-8-dot-0-released" rel="alternate" type="text/html" title="Brakeman 4.8.0 Released" /><published>2020-02-18T10:00:00-08:00</published><updated>2020-02-18T10:00:00-08:00</updated><id>https://brakemanscanner.org/blog/2020/02/18/brakeman-4-dot-8-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2020/02/18/brakeman-4-dot-8-dot-0-released">&lt;p&gt;First release of 2020!
 This release comes with a brand new report format: JUnit XML.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 4.7.2:&lt;/em&gt;&lt;/p&gt;
@@ -905,12 +965,4 @@ Please report any issues.&lt;/p&gt;
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Happy new year and apologies for the delay in releases! Brakeman should now return to the normal 1-2 month release cycle. There are already pull requests lined up for the next release.</summary></entry><entry><title type="html">Happy 8th Birthday, Brakeman!</title><link href="https://brakemanscanner.org/blog/2018/08/30/happy-8th-birthday/index.html" rel="alternate" type="text/html" title="Happy 8th Birthday, Brakeman!" /><published>2018-08-30T09:37:00-07:00</published><updated>2018-08-30T09:37:00-07:00</updated><id>https://brakemanscanner.org/blog/2018/08/30/happy-8th-birthday/happy-8th-birthday</id><content type="html" xml:base="https://brakemanscanner.org/blog/2018/08/30/happy-8th-birthday/index.html">&lt;p&gt;In celebration of Brakeman’s 8th birthday this week, we’d like to share an update to keep you apprised of what we’ve been up to since our acquisition by Synopsys in June of this year.&lt;/p&gt;
-
-&lt;p&gt;Stemming from the acquisition, Synopsys welcomed Justin Collins of the original Brakeman core team. He is working closely with the Synopsys Static Analysis division to integrate the Brakeman Pro Engine into the Coverity proprietary product offering. This is an exciting opportunity to build Ruby on Rails support into an enterprise-class engine that is &lt;a href=&quot;https://www.synopsys.com/software-integrity/resources/analyst-reports/2018-gartner-magic-quadrant.html&quot;&gt;quickly emerging as a leader&lt;/a&gt; in static application security testing.&lt;/p&gt;
-
-&lt;p&gt;As for the Brakeman project, we’d like to assure you that Synopsys is committed to the continued success of the project.&lt;/p&gt;
-
-&lt;p&gt;Synopsys has a rich history of working with the open source community through &lt;a href=&quot;https://scan.coverity.com/&quot;&gt;Coverity Scan&lt;/a&gt;, providing testing as a free service to support building quality and security into the open source software (OSS) development process. To-date since its inception in 2006, Coverity Scan has provided scanning support to over 4,600 open source projects. The December 2017 acquisition of Black Duck Software is another testament to Synopsys’ dedication to securing the growing use of open source.&lt;/p&gt;
-
-&lt;p&gt;Rest easy knowing that Brakeman will continue to be maintained by the same team. Code will remain available on &lt;a href=&quot;https://github.com/presidentbeef/brakeman&quot;&gt;GitHub&lt;/a&gt;, and Ruby gems will continue being distributed via &lt;a href=&quot;https://rubygems.org/gems/brakeman&quot;&gt;RubyGems.org&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">In celebration of Brakeman’s 8th birthday this week, we’d like to share an update to keep you apprised of what we’ve been up to since our acquisition by Synopsys in June of this year.</summary></entry></feed>
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Happy new year and apologies for the delay in releases! Brakeman should now return to the normal 1-2 month release cycle. There are already pull requests lined up for the next release.</summary></entry></feed>

@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Brakeman 0.8.3 Released</title>
+  <title>Brakeman: Brakeman 4.8.1 Released</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,7 +15,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="https://brakemanscanner.org/blog/2011/10/25/brakeman-0-dot-8-3-released"/>
+  <link rel="canonical" href="https://brakemanscanner.org/blog/2020/04/06/brakeman-4-dot-8-dot-1-released"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -34,7 +34,7 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Brakeman 0.8.3 Released" />
+<meta name="twitter:title" content="Brakeman - Brakeman 4.8.1 Released" />
 <meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
 <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 
@@ -77,7 +77,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 0.8.3 Released</h1>
+      <h1 class="entry-title">Brakeman 4.8.1 Released</h1>
     
     
       <p class="meta">
@@ -85,7 +85,7 @@
 
 
 
-<time datetime="2011-10-25 10:00:00 -0700" pubdate  updated >2011-10-25 10:00:00 -0700</time>
+<time datetime="2020-04-06 10:00:00 -0700" pubdate  updated >2020-04-06 10:00:00 -0700</time>
 
 
 </p>
@@ -93,48 +93,68 @@
   </header>
 
 
-<div class="entry-content"><p>Changes for 0.8.3:</p>
+<div class="entry-content"><p>Just a little bug fix release.</p>
+
+<p><em>Changes since 4.8.0:</em></p>
 
 <ul>
-  <li>Respect -w flag in .tabs format (<a href="https://github.com/tw-ngreen">tw-ngreen</a>)</li>
-  <li>Escape HTML output of error messages</li>
-  <li>Add –skip-libs option</li>
+  <li>Warn about global(!) mass assignment</li>
+  <li>Check SQL query strings using <code class="highlighter-rouge">String#strip</code> or <code class="highlighter-rouge">String.squish</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1469">#1459</a>)</li>
+  <li>Handle non-symbol keys in <code class="highlighter-rouge">locals</code> hash for <code class="highlighter-rouge">render</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1465">#1465</a>)</li>
+  <li>Index calls in render arguments (<a href="https://github.com/presidentbeef/brakeman/issues/1459">#1459</a>)</li>
 </ul>
 
-<p>Changes since 0.8.0:</p>
+<h3 id="global-mass-assignment">Global Mass Assignment</h3>
 
-<ul>
-  <li>Run checks in parallel threads by default</li>
-  <li>Fix compatibility with ruby_parser 2.3.1</li>
-  <li>Add option to assume all controller methods are actions</li>
-  <li>Recover from errors when parsing routes</li>
-</ul>
+<p>Strong parameters can be disabled with:</p>
 
-<h3 id="fix-for-tabs-format">Fix for .tabs Format</h3>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">ActionController</span><span class="o">::</span><span class="no">Parameters</span><span class="p">.</span><span class="nf">permit_all_parameters</span> <span class="o">=</span> <span class="kp">true</span>
+</code></pre></div></div>
 
-<p>Brakeman will now pay attention to the <code class="highlighter-rouge">-w</code> flag (setting minimum confidence levels) when using the <code class="highlighter-rouge">.tabs</code> format.</p>
+<p>Brakeman will now warn about this (very rare) configuration.</p>
 
-<h3 id="escape-error-messages-in-html">Escape Error Messages in HTML</h3>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1464">changes</a>)</p>
 
-<p>Error message will now be escaped in the HTML output so they do not mess up the formatting.</p>
+<h3 id="squished-and-stripped-sql">Squished and Stripped SQL</h3>
 
-<h3 id="skip-libs-option">–skip-libs Option</h3>
+<p>Brakeman will now check string targets of <code class="highlighter-rouge">squish</code> or <code class="highlighter-rouge">strip</code>.</p>
 
-<p>The <code class="highlighter-rouge">--skip-libs</code> option will cause Brakeman to not process the files in the <code class="highlighter-rouge">lib</code> directory. At the moment, the results from this directory are only used in a couple places, so it is unlikely that skipping them will cause any problems.</p>
+<p>For example:</p>
 
-<h3 id="parallel-checks">Parallel Checks</h3>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span><span class="p">.</span><span class="nf">connection</span><span class="p">.</span><span class="nf">execute</span> <span class="s2">"SELECT * FROM </span><span class="si">#{</span><span class="n">user_input</span><span class="si">}</span><span class="s2">"</span><span class="p">.</span><span class="nf">squish</span>
+</code></pre></div></div>
 
-<p>Checks are now run in separate threads by default. Thus far, there does not seem to be a big difference between using threads and the sequential approach. To turn off threads, use the <code class="highlighter-rouge">-n</code> option.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1470">changes</a>)</p>
 
-<h3 id="ruby_parser-compatibility">ruby_parser Compatibility</h3>
+<h3 id="non-symbol-keys-in-locals-hash">Non-Symbol Keys in Locals Hash</h3>
 
-<p>This is a stop-gap measure until <a href="https://github.com/seattlerb/ruby_parser">ruby_parser</a> supports Ruby 1.9, which is getting closer to reality.</p>
+<p>Using a value other than symbol literals as keys in the <code class="highlighter-rouge">locals</code> hash for <code class="highlighter-rouge">render</code> will no longer cause an error.</p>
 
-<h3 id="route-processing">Route Processing</h3>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1468">changes</a>)</p>
 
-<p>Brakeman will no longer crash if there are problems parsing <code class="highlighter-rouge">routes.rb</code>. Instead, it will assume all public methods on controllers are actions. The <code class="highlighter-rouge">-a</code> option will also turn this behavior on.</p>
+<h3 id="render-arguments">Render Arguments</h3>
 
-<p>Rails 3.1 route parsing is still a work in progress, so this should at least allow analysis of 3.1 apps, even if it means slightly reduced accuracy.</p>
+<p>Calls made as arguments to <code class="highlighter-rouge">render</code> will be indexed and checked for all vulnerability types, like every other method call.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1460">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5f3cc763fce471434adc33aa251298fa24ea2a1c01ef2549aec55be4b5b14d46  brakeman-4.8.1.gem
+c4a95b450fb7ec2440e68640a0821e3a6b62ea34f665e78264ba0b332e98e5df  brakeman-lib-4.8.1.gem
+ada41dbfc3a436c062cd44161893249654caf43296801599303952f6261f2e5e  brakeman-min-4.8.1.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
 </div>
 
 
@@ -148,7 +168,7 @@
 
 
 
-<time datetime="2011-10-25 10:00:00 -0700" pubdate  updated >2011-10-25 10:00:00 -0700</time>
+<time datetime="2020-04-06 10:00:00 -0700" pubdate  updated >2020-04-06 10:00:00 -0700</time>
 
 
 
