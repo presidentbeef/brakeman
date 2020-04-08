@@ -22,7 +22,7 @@ class Brakeman::CheckJSONEntityEscape < Brakeman::BaseCheck
   end
 
   def check_manual_disable
-    tracker.find_call(target: :'ActiveSupport::JSON::Encoding', method: :escape_html_entities_in_json=).each do |result|
+    tracker.find_call(targets: [:ActiveSupport, :'ActiveSupport::JSON::Encoding'], method: :escape_html_entities_in_json=).each do |result|
       setting = result[:call].first_arg
 
       if false? setting
