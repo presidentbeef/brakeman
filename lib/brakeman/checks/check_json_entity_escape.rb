@@ -1,7 +1,7 @@
 require 'brakeman/checks/base_check'
 
 class Brakeman::CheckJSONEntityEscape < Brakeman::BaseCheck
-  Brakeman::Checks.add_optional self
+  Brakeman::Checks.add self
 
   @description = "Check if HTML escaping is disabled for JSON output"
 
