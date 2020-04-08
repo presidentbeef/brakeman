@@ -114,6 +114,9 @@ module Brakeman::WarningCodes
     :unsafe_cookie_serialization => 110,
     :reverse_tabnabbing => 111,
     :mass_assign_permit_all => 112,
+    :json_html_escape_config => 113,
+    :json_html_escape_module => 114,
+
     :custom_check => 9090,
   }
 
