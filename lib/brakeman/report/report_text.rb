@@ -145,24 +145,45 @@ class Brakeman::Report::Text < Brakeman::Report::Base
   end
 
   def output_warning w
-    out = [
-      label('Confidence', confidence(w.confidence)),
-      label('Category', w.warning_type.to_s),
-      label('Check', w.check.gsub(/^Brakeman::Check/, '')),
+    text_format = tracker.options[:text_fields] ||
+      [:confidence, :category, :check, :message, :code, :file, :line]
+
+    text_format.map do |option|
+      format_line(w, option)
+    end.compact
+  end
+
+  def format_line w, option
+    case option
+    when :confidence
+      label('Confidence', confidence(w.confidence))
+    when :category
+      label('Category', w.warning_type.to_s)
+    when :check
+      label('Check', w.check.gsub(/^Brakeman::Check/, ''))
+    when :message
       label('Message', w.message)
-    ]
-
-    if w.code
-      out << label('Code', format_code(w))
+    when :code
+      if w.code
+        label('Code', format_code(w))
+      end
+    when :file
+      label('File', warning_file(w))
+    when :line
+      if w.line
+        label('Line', w.line)
+      end
+    when :link
+      label('Link', w.link)
+    when :fingerprint
+      label('Fingerprint', w.fingerprint)
+    when :category_id
+      label('Category ID', w.warning_code)
+    when :render_path
+      if w.called_from
+        label('Render Path', w.called_from.join(" > "))
+      end
     end
-
-    out << label('File', warning_file(w))
-
-    if w.line
-      out << label('Line', w.line)
-    end
-
-    out
   end
 
   def double_space title, values

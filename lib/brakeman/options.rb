@@ -301,6 +301,22 @@ module Brakeman::Options
           options[:github_repo] = repo
         end
 
+        opts.on "--text-fields field1,field2,etc.", Array, "Specify fields for text report format" do |format|
+          valid_options = [:category, :category_id, :check, :code, :confidence, :file, :fingerprint, :line, :link, :message, :render_path]
+
+          options[:text_fields] = format.map(&:to_sym)
+
+          if options[:text_fields] == [:all]
+            options[:text_fields] = valid_options
+          else
+            invalid_options = (options[:text_fields] - valid_options)
+
+            unless invalid_options.empty?
+              raise OptionParser::ParseError, "\nInvalid format options: #{invalid_options.inspect}"
+            end
+          end
+        end
+
         opts.on "-w",
           "--confidence-level LEVEL",
           ["1", "2", "3"],
