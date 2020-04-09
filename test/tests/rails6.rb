@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 15
+      :generic => 17
     }
   end
 
@@ -131,6 +131,32 @@ class Rails6Tests < Minitest::Test
       :confidence => 0,
       :relative_path => "app/views/users/show.html.erb",
       :code => s(:call, s(:call, s(:const, :User), :new, s(:call, nil, :user_params)), :name),
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_json_escape_config
+    assert_warning :type => :warning,
+      :warning_code => 113,
+      :fingerprint => "fea6a166c0704d9525d109c17d6ee95eda217dfb1ef56a4d4c91ec9bd384cbf8",
+      :warning_type => "Cross-Site Scripting",
+      :line => 1,
+      :message => /^HTML\ entities\ in\ JSON\ are\ not\ escaped\ by/,
+      :confidence => 1,
+      :relative_path => "config/environments/production.rb",
+      :code => nil,
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_json_escape_module
+    assert_warning :type => :warning,
+      :warning_code => 114,
+      :fingerprint => "8275f584e7cced41c26890e574cdbf6804bddff54374058834a562294c99d6f6",
+      :warning_type => "Cross-Site Scripting",
+      :line => 2,
+      :message => /^HTML\ entities\ in\ JSON\ are\ not\ escaped\ by/,
+      :confidence => 1,
+      :relative_path => "config/environments/production.rb",
+      :code => s(:attrasgn, s(:colon2, s(:colon2, s(:const, :ActiveSupport), :JSON), :Encoding), :escape_html_entities_in_json=, s(:false)),
       :user_input => nil
   end
 

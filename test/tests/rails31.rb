@@ -13,7 +13,7 @@ class Rails31Tests < Minitest::Test
       :model => 3,
       :template => 23,
       :controller => 4,
-      :generic => 86 }
+      :generic => 87 }
   end
 
   def test_without_protection
@@ -949,6 +949,19 @@ class Rails31Tests < Minitest::Test
       :message => /^Unescaped\ parameter\ value/,
       :confidence => 2,
       :relative_path => "app/views/users/interpolated_value.html.haml"
+  end
+
+  def test_cross_site_scripting_escape_html_entities_json
+    assert_warning :type => :warning,
+      :warning_code => 114,
+      :fingerprint => "c96eb07567e2a7b0ded7cda123645c4e736d3a1b124bb7c0ffaf5070f53dfcf3",
+      :warning_type => "Cross-Site Scripting",
+      :line => 2,
+      :message => /^HTML\ entities\ in\ JSON\ are\ not\ escaped\ by/,
+      :confidence => 1,
+      :relative_path => "config/environments/production.rb",
+      :code => s(:attrasgn, s(:const, :ActiveSupport), :escape_html_entities_in_json=, s(:false)),
+      :user_input => nil
   end
 
   def test_arel_table_in_sql

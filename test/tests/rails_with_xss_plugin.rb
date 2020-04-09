@@ -9,7 +9,7 @@ class RailsWithXssPluginTests < Minitest::Test
       :controller => 1,
       :model => 4,
       :template => 4,
-      :generic => 29 }
+      :generic => 30 }
   end
 
   def report
@@ -362,6 +362,19 @@ class RailsWithXssPluginTests < Minitest::Test
       :message => /^Upgrade\ to\ Rails\ 3\ or\ use\ options_for_se/,
       :confidence => 1,
       :relative_path => "app/views/users/index.html.erb",
+      :user_input => nil
+  end
+
+  def test_cross_site_scripting_html_entities_in_json
+    assert_warning :type => :warning,
+      :warning_code => 114,
+      :fingerprint => "c96eb07567e2a7b0ded7cda123645c4e736d3a1b124bb7c0ffaf5070f53dfcf3",
+      :warning_type => "Cross-Site Scripting",
+      :line => 21,
+      :message => /^HTML\ entities\ in\ JSON\ are\ not\ escaped\ by/,
+      :confidence => 1,
+      :relative_path => "config/environments/production.rb",
+      :code => s(:attrasgn, s(:const, :ActiveSupport), :escape_html_entities_in_json=, s(:false)),
       :user_input => nil
   end
 

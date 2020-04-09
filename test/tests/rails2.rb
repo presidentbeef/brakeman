@@ -14,7 +14,7 @@ class Rails2Tests < Minitest::Test
       :controller => 1,
       :model => 4,
       :template => 47,
-      :generic => 57 }
+      :generic => 58 }
   end
 
   def report
@@ -1261,6 +1261,19 @@ class Rails2Tests < Minitest::Test
       :user_input => s(:call, s(:call, nil, :params), :[], s(:lit, :evil_url))
   end
 
+  def test_cross_site_scripting_html_entities_in_json
+    assert_warning :type => :warning,
+      :warning_code => 114,
+      :fingerprint => "c96eb07567e2a7b0ded7cda123645c4e736d3a1b124bb7c0ffaf5070f53dfcf3",
+      :warning_type => "Cross-Site Scripting",
+      :line => 21,
+      :message => /^HTML\ entities\ in\ JSON\ are\ not\ escaped\ by/,
+      :confidence => 1,
+      :relative_path => "config/environments/production.rb",
+      :code => s(:attrasgn, s(:const, :ActiveSupport), :escape_html_entities_in_json=, s(:false)),
+      :user_input => nil
+  end
+
   def test_dangerous_send_try
     assert_warning :type => :warning,
       :warning_type => "Dangerous Send",
@@ -1493,7 +1506,7 @@ class Rails2WithOptionsTests < Minitest::Test
       :controller => 1,
       :model => 4,
       :template => 47,
-      :generic => 57 }
+      :generic => 58 }
   end
 
   def report
