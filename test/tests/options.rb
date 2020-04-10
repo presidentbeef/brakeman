@@ -344,7 +344,7 @@ class BrakemanOptionsTest < Minitest::Test
 
   def test_text_report_fields
     assert_raises OptionParser::ParseError do
-      setup_options_from_input("--text-fields not_a_real_field")
+      setup_options_from_input("--text-fields", "not_a_real_field")
     end
   end
 
