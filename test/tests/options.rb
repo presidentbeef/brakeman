@@ -342,6 +342,12 @@ class BrakemanOptionsTest < Minitest::Test
     assert_equal :no_summary, options[:summary_only]
   end
 
+  def test_text_report_fields
+    assert_raises OptionParser::ParseError do
+      setup_options_from_input("--text-fields not_a_real_field")
+    end
+  end
+
   private
 
   def setup_options_from_input(*args)
