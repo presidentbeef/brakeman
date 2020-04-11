@@ -16,9 +16,11 @@ Using RubyGems:
 
 Using Bundler:
 
-    group :development do
-      gem 'brakeman'
-    end
+```ruby
+group :development do
+  gem 'brakeman'
+end
+```
 
 Using Docker:
 
