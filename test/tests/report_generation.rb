@@ -3,7 +3,7 @@ require_relative '../test'
 
 class TestReportGeneration < Minitest::Test
   def setup
-    @@tracker ||= Brakeman.run(:app_path => "#{TEST_PATH}/apps/rails4", :quiet => true, :report_routes => true)
+    @@tracker ||= Brakeman.run(:app_path => "#{TEST_PATH}/apps/rails4", :quiet => true, :report_routes => true, :output_color => false)
     @@report ||= @@tracker.report
   end
 
@@ -81,6 +81,47 @@ class TestReportGeneration < Minitest::Test
     assert report.is_a? String
   ensure
     @@tracker.options[:debug] = false
+  end
+
+  def test_text_format_all
+    require 'brakeman/options'
+
+    options, _ = Brakeman::Options.parse(["--text-fields", "all"])
+    tracker = Brakeman.run(:app_path => "#{TEST_PATH}/apps/rails5", :quiet => true, :report_routes => true, :text_fields => options[:text_fields], :output_color => false)
+    report = tracker.report.to_s
+
+    assert_includes report, "Confidence:"
+    assert_includes report, "Category:"
+    assert_includes report, "Category ID:"
+    assert_includes report, "Check:"
+    assert_includes report, "Code:"
+    assert_includes report, "File:"
+    assert_includes report, "Fingerprint:"
+    assert_includes report, "Line:"
+    assert_includes report, "Link:"
+    assert_includes report, "Message:"
+    assert_includes report, "Render Path:"
+  end
+
+  def test_text_format
+    @@tracker.options[:text_fields] =
+      [:confidence, :category, :category_id, :code, :fingerprint, :line]
+
+    report = @@report.to_s
+
+    assert_includes report, "Confidence:"
+    assert_includes report, "Category:"
+    assert_includes report, "Category ID:"
+    assert_includes report, "Code:"
+    assert_includes report, "Fingerprint:"
+    assert_includes report, "Line:"
+    refute_includes report, "Check:"
+    refute_includes report, "File:"
+    refute_includes report, "Link:"
+    refute_includes report, "Message:"
+    refute_includes report, "Render Path:"
+  ensure
+    @@tracker.options.delete(:text_fields)
   end
 
   def test_markdown_sanity
