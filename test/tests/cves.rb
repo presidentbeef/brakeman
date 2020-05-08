@@ -292,4 +292,40 @@ class CVETests < Minitest::Test
 
     refute_nil warning
   end
+
+  def test_CVE_2020_8159_rails5_upgrade
+    before_rescan_of "Gemfile", "rails5", run_checks: ["CheckPageCachingCVE"] do
+      replace "Gemfile",
+        "gem 'actionpack-page_caching', '1.2.0'",
+        "gem 'actionpack-page_caching', '1.2.2'"
+    end
+
+    assert fixed.find { |w|
+      w.warning_code == Brakeman::WarningCodes.code(:CVE_2020_8159)
+    }
+
+    assert_fixed 1 # CVE-2020-8159
+    assert_new 0
+  end
+
+  def test_CVE_2020_8159_rails5_caches_page
+    before_rescan_of "app/controllers/test_cve_2020_8519.rb", "rails5", run_checks: ["CheckPageCachingCVE"] do
+      write_file "app/controllers/test_cve_2020_8519.rb", <<-RUBY
+      class TestCVEController < ApplicationController
+        caches_page :stuff
+      end
+      RUBY
+    end
+
+    warning = new.find do |w|
+      w.warning_code == Brakeman::WarningCodes.code(:CVE_2020_8159)
+    end
+
+    refute_nil warning
+
+    # Warning should be :high now
+    assert_equal 0, warning.confidence
+    assert_fixed 1
+    assert_new 1
+  end
 end
