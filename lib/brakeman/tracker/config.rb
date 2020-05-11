@@ -54,7 +54,7 @@ module Brakeman
     end
 
     def gem_version name
-      extract_version @gems.dig(name, :version)
+      extract_version @gems.dig(name.to_sym, :version)
     end
 
     def add_gem name, version, file, line
@@ -67,11 +67,11 @@ module Brakeman
     end
 
     def has_gem? name
-      !!@gems[name]
+      !!@gems[name.to_sym]
     end
 
     def get_gem name
-      @gems[name]
+      @gems[name.to_sym]
     end
 
     def set_rails_version version = nil

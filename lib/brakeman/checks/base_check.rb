@@ -467,7 +467,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   end
 
   def gemfile_or_environment gem_name = :rails
-    if gem_name and info = tracker.config.get_gem(gem_name)
+    if gem_name and info = tracker.config.get_gem(gem_name.to_sym)
       info
     elsif @app_tree.exists?("Gemfile")
       @app_tree.file_path "Gemfile"
