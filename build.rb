@@ -16,5 +16,7 @@ File.open "bundle/load.rb", "w" do |f|
     f.puts %Q[$:.unshift "\#{path}/#{dir}"]
   end
 end
+puts "?"
+gets
 
 system "BM_PACKAGE=true gem build brakeman.gemspec"
