@@ -52,4 +52,14 @@ class AdminController < ApplicationController
   def use_lambda_filter
     eval @thing
   end
+
+  def authenticate_token!
+    authenticate_token_or_basic do |username, password|
+      username == "foo"
+    end
+  end
+
+  def authenticate_token_or_basic(&block)
+    authenticate_or_request_with_http_basic(&block)
+  end
 end
