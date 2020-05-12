@@ -1,3 +1,10 @@
+# 4.8.2 - 2020-05-12
+
+* Add check for CVE-2020-8159
+* Fix `authenticate_or_request_with_http_basic` check for passed blocks (Hugo Corbucci)
+* Add `--text-fields` option
+* Add check for escaping HTML entities in JSON configuration
+
 # 4.8.1 - 2020-04-06
 
 * Check SQL query strings using `String#strip` or `String.squish`
