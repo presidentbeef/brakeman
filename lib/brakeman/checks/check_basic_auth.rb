@@ -57,6 +57,8 @@ class Brakeman::CheckBasicAuth < Brakeman::BaseCheck
 
   # Check if the block of a result contains a comparison of password to string
   def include_password_literal? result
+    return false if result[:block_args].nil?
+
     @password_var = result[:block_args].last
     @include_password = false
     process result[:block]
