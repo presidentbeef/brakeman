@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2020-05-12T16:42:11-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 4.8.2 Released</title><link href="https://brakemanscanner.org/blog/2020/04/12/brakeman-4-dot-8-dot-1-released" rel="alternate" type="text/html" title="Brakeman 4.8.2 Released" /><published>2020-04-12T16:00:00-07:00</published><updated>2020-04-12T16:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2020/04/12/brakeman-4-dot-8-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2020/04/12/brakeman-4-dot-8-dot-1-released">&lt;p&gt;This release introduces a new option and two new checks!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2020-05-12T16:46:40-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 4.8.2 Released</title><link href="https://brakemanscanner.org/blog/2020/04/12/brakeman-4-dot-8-dot-1-released" rel="alternate" type="text/html" title="Brakeman 4.8.2 Released" /><published>2020-04-12T16:00:00-07:00</published><updated>2020-04-12T16:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2020/04/12/brakeman-4-dot-8-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2020/04/12/brakeman-4-dot-8-dot-1-released">&lt;p&gt;This release introduces a new option and two new checks!&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 4.8.1:&lt;/em&gt;&lt;/p&gt;
 
@@ -63,9 +63,9 @@ The vulnerability allows arbitrary file writing and may be escalated to remote c
 
 &lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;548f717bebdcf40fca5cb724b882ffe179815fa5782f1cb3458d019a1baa4abe79c5b6141b34246206646e50c0a39c7e3ae1acb7b383148fca60261fadf6cb58  brakeman-4.8.2.gem
-d32ccd385bc480a4ff8335e65202a756f6dd844bb405d9807cae353fd2de0de82c28fd835964a3ff49dc6a3df4d0f94a44df95fb072b77422c37e15767da7449  brakeman-lib-4.8.2.gem
-0b4c95eb019640440212e49e656a8e6fb2b7bdc4b6f504b2534044ce1ac97e434aecdb2f9023e41845b1460d0ee88bf37a1b9c4f626f98d48c940525b6df1809  brakeman-min-4.8.2.gem
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;d7bf369896b4a3c41778f39f10b1e1d0844a965bbb582fa0a0566b1df4f07dec  brakeman-4.8.2.gem
+c13e9a9e5b213ba95a16803ddb50eb3c7119533ca71444ffec2bb6cea22b926a  brakeman-lib-4.8.2.gem
+a422a444b7db48682e1f112c83b1a7a7e3828ec02d52ed91c5b3eff235b801c1  brakeman-min-4.8.2.gem
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
