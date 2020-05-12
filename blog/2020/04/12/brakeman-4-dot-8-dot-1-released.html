@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Brakeman 1.0 Released!</title>
+  <title>Brakeman: Brakeman 4.8.2 Released</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,7 +15,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="https://brakemanscanner.org/blog/2011/12/08/brakeman-1-dot-0-released"/>
+  <link rel="canonical" href="https://brakemanscanner.org/blog/2020/04/12/brakeman-4-dot-8-dot-1-released"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -34,7 +34,7 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Brakeman 1.0 Released!" />
+<meta name="twitter:title" content="Brakeman - Brakeman 4.8.2 Released" />
 <meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
 <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 
@@ -77,7 +77,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 1.0 Released!</h1>
+      <h1 class="entry-title">Brakeman 4.8.2 Released</h1>
     
     
       <p class="meta">
@@ -85,7 +85,7 @@
 
 
 
-<time datetime="2011-12-08 01:35:00 -0800" pubdate  updated >2011-12-08 01:35:00 -0800</time>
+<time datetime="2020-04-12 16:00:00 -0700" pubdate  updated >2020-04-12 16:00:00 -0700</time>
 
 
 </p>
@@ -93,79 +93,84 @@
   </header>
 
 
-<div class="entry-content"><p>While the step up to 1.0 was essentially forced by major changes since 0.9.2, this is still an important release for Brakeman. Internally, Brakeman is no longer reliant on a global options variable, allowing it to be used as a library inside other applications. Also, all Brakeman modules, classes, and constants have been placed inside the Brakeman namespace.</p>
+<div class="entry-content"><p>This release introduces a new option and two new checks!</p>
 
-<p>Support for Rails 3 is continuing to improve, although it is probably a good idea to run Brakeman with the <code>-m</code> option to see what routes it is seeing. If you receive a message that says &#8220;Error while processing routes - assuming all public controller methods are actions,&#8221; please consider opening an issue and (if possible) providing your <code>routes.rb</code> file as evidence.</p>
-
-<p>The performance of vulnerability checks that search for calls to specific methods (CheckExecute, CheckFileAccess, CheckSQL, etc.) has been drastically improved with the introduction of a call site index. If your scans were spending a lot of time running checks, you should see significant decrease in run time (although memory use may be slightly higher).</p>
-
-<p>If you are looking for an introduction to Brakeman, there are some <a href="http://brakemanscanner.org/docs/presentations/">presentations available</a> to watch or read.</p>
-
-<p>As usual, please <a href="https://github.com/presidentbeef/brakeman/issues">report</a> any issues! You can also send a tweet to <a href="http://twitter.com/brakeman">@Brakeman</a> if you have any questions.</p>
-
-<p><em>Changes since 1.0rc1:</em></p>
+<p><em>Changes since 4.8.1:</em></p>
 
 <ul>
-<li>Better handling of assignments inside ifs</li>
-<li>Check more expressions for SQL injection</li>
-<li>Use latest ruby_parser for better 1.9 syntax support</li>
-<li>Better behavior for Brakeman as a library</li>
+  <li>Add <code class="highlighter-rouge">--text-fields</code> option</li>
+  <li>Add check for <a href="ihttps://groups.google.com/d/msg/rubyonrails-security/CFRVkEytdP8/c5gmICECAgAJ">CVE-2020-8159</a></li>
+  <li>Add check for escaping HTML entities in JSON configuration option</li>
+  <li>Fix <code class="highlighter-rouge">authenticate_or_request_with_http_basic</code> check for passed blocks (<a href="https://github.com/hugocorbucci">Hugo Corbucci</a>)</li>
 </ul>
 
-<h3>Assignments Inside &#8216;if&#8217; Branches</h3>
+<h3 id="text-fields-option">Text Fields Option</h3>
 
-<p>Brakeman is now a little smarter about handling assignments inside <code>if</code>.</p>
+<p>It is now possible to specify which text fields are reported and their order for the default “text” report format using the <code class="highlighter-rouge">--text-fields</code> option.</p>
 
-<p>For example:</p>
-
-<pre><code>if some_condition
-  x = params[:blah]
-else
-  x = "no blah"
-end
-</code></pre>
-
-<p>Previously, <code>x</code> would end up with the last value encountered, with no regard for execution branches. In this release, Brakeman will now combine the branches (unfortunately, Brakeman still operates along a &#8216;no branching&#8217; policy) and <code>x</code> will be given the value of <code>params[:blah] or "no blah"</code>.</p>
-
-<p>While not strictly semantically sound (and, trust me, Brakeman does many things that are not), it will still catch problems like</p>
-
-<pre><code>User.all(conditions =&gt; "blah = '#{x}'")
-</code></pre>
-
-<p>Thanks to <a href="http://osdir.com/ml/RubyonRails:Core/2011-11/msg00098.html">this message</a> on Rails Core for mentioning this problem.</p>
-
-<h3>Use Latest ruby_parser</h3>
-
-<p>A few releases ago, Brakeman included a slightly modified version of <a href="https://github.com/seattlerb/ruby_parser">ruby_parser</a> to help with Ruby 1.9 syntax issues.</p>
-
-<p>The very latest ruby_parser source has much better 1.9 support, but there has been no official release yet. So Brakeman comes with the latest code. This is necessary because Rails 3 will generate 1.9 syntax if you happen to run it with Ruby 1.9 when generating code.</p>
-
-<h3>Brakeman as a Library</h3>
-
-<p>While it is now possible to use Brakeman as a library (essentially just <code>Brakeman.run</code>), it is not very well polished. This release improves it slightly from the release candidate.</p>
-
-<h3>More SQL Injection</h3>
-
-<p><code>CheckSQL</code> will now search most expressions inside a SQL call for user input and string interpolation.</p>
-
-<h3>Changes Since 0.9.2</h3>
-
-<p>As a summary, here are the changes since 0.9.2:</p>
+<p>Possible options are:</p>
 
 <ul>
-<li>Brakeman can now be used as a library</li>
-<li>Faster call search</li>
-<li>Add option to return error code if warnings are found (tw-ngreen)</li>
-<li>Allow truncated messages to be expanded in HTML</li>
-<li>Keep expanded context in view in HTML output</li>
-<li>Fix summary when using warning thresholds</li>
-<li>Better support for Rails 3 routes</li>
-<li>Reduce SQL injection duplicate warnings</li>
-<li>Lower confidence on mass assignment with no user input</li>
-<li>Ignore mass assignment using all literal arguments</li>
+  <li><code class="highlighter-rouge">all</code></li>
+  <li><code class="highlighter-rouge">category</code></li>
+  <li><code class="highlighter-rouge">category_id</code></li>
+  <li><code class="highlighter-rouge">check</code></li>
+  <li><code class="highlighter-rouge">code</code></li>
+  <li><code class="highlighter-rouge">confidence</code></li>
+  <li><code class="highlighter-rouge">file</code></li>
+  <li><code class="highlighter-rouge">fingerprint</code></li>
+  <li><code class="highlighter-rouge">line</code></li>
+  <li><code class="highlighter-rouge">link</code></li>
+  <li><code class="highlighter-rouge">message</code></li>
+  <li><code class="highlighter-rouge">render_path</code></li>
 </ul>
 
-<p>See the <a href="http://brakemanscanner.org/blog/2011/12/05/brakeman-1-dot-0-release-candidate-available/">earlier post</a> for more details.</p>
+<p><code class="highlighter-rouge">--text-fields</code> accepts a comma-separated list of these options.</p>
+
+<p><em>Please keep in mind the JSON report should be used for structured reports/parsing.</em></p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1473">changes</a>)</p>
+
+<h3 id="cve-2020-8159">CVE-2020-8159</h3>
+
+<p>This release includes a check for <a href="ihttps://groups.google.com/d/msg/rubyonrails-security/CFRVkEytdP8/c5gmICECAgAJ">CVE-2020-8159</a> related to the <code class="highlighter-rouge">actionpack-page_caching</code> gem.
+The vulnerability allows arbitrary file writing and may be escalated to remote code execution.</p>
+
+<p>If <code class="highlighter-rouge">caches_page</code> is called in any controllers, this will be a High confidence warning. Otherwise, Weak.</p>
+
+<p><em>Reminder: Brakeman is not a ‘dependency’ scanner. It only includes checks for a small number of Rails-related CVEs. Use bundler-audit or related tools for dependency checking.</em></p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1477/">changes</a>)</p>
+
+<h3 id="json-escaping-configuration">JSON Escaping Configuration</h3>
+
+<p>Brakeman will now warn if HTML entity escaping in JSON is disabled globally with <code class="highlighter-rouge">ActiveSupport.escape_html_entities_in_json = false</code>. This is an unusual configuration.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1472">changes</a>)</p>
+
+<h3 id="basic-auth-check-fix">Basic Auth Check Fix</h3>
+
+<p><a href="https://github.com/hugocorbucci">Hugo Corbucci</a> fixed an error when checking calls to <code class="highlighter-rouge">authenticate_or_request_with_http_basic</code> without a block literal.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1478">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>548f717bebdcf40fca5cb724b882ffe179815fa5782f1cb3458d019a1baa4abe79c5b6141b34246206646e50c0a39c7e3ae1acb7b383148fca60261fadf6cb58  brakeman-4.8.2.gem
+d32ccd385bc480a4ff8335e65202a756f6dd844bb405d9807cae353fd2de0de82c28fd835964a3ff49dc6a3df4d0f94a44df95fb072b77422c37e15767da7449  brakeman-lib-4.8.2.gem
+0b4c95eb019640440212e49e656a8e6fb2b7bdc4b6f504b2534044ce1ac97e434aecdb2f9023e41845b1460d0ee88bf37a1b9c4f626f98d48c940525b6df1809  brakeman-min-4.8.2.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
 </div>
 
 
@@ -179,7 +184,7 @@ end
 
 
 
-<time datetime="2011-12-08 01:35:00 -0800" pubdate  updated >2011-12-08 01:35:00 -0800</time>
+<time datetime="2020-04-12 16:00:00 -0700" pubdate  updated >2020-04-12 16:00:00 -0700</time>
 
 
 
