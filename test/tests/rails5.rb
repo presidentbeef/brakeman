@@ -13,7 +13,7 @@ class Rails5Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 19,
-      :generic => 21
+      :generic => 22
     }
   end
 
@@ -686,6 +686,19 @@ class Rails5Tests < Minitest::Test
       :message => /^sprockets\ 3\.5\.2\ has\ a\ path\ traversal\ vul/,
       :confidence => 0,
       :relative_path => "Gemfile.lock",
+      :code => nil,
+      :user_input => nil
+  end
+
+  def test_directory_traversal_caching_page_CVE_2020_8159
+    assert_warning :type => :warning,
+      :warning_code => 115,
+      :fingerprint => "4022cb6c8f1bdeb4feec0fe01ba0ddc34441c551ae40c84845d76edb47464b8f",
+      :warning_type => "Directory Traversal",
+      :line => 24,
+      :message => /^Directory\ traversal\ vulnerability\ in\ act/,
+      :confidence => 2,
+      :relative_path => "Gemfile",
       :code => nil,
       :user_input => nil
   end
