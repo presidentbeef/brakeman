@@ -94,12 +94,12 @@ class Brakeman::Scanner
   #
   #Stores parsed information in tracker.config
   def process_config
+    process_config_file "environment.rb"
+    process_config_file "gems.rb"
+
     if options[:rails3] or options[:rails4] or options[:rails5] or options[:rails6]
       process_config_file "application.rb"
       process_config_file "environments/production.rb"
-    else
-      process_config_file "environment.rb"
-      process_config_file "gems.rb"
     end
 
     if @app_tree.exists?("vendor/plugins/rails_xss") or
