@@ -82,7 +82,6 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def replace exp, int = 0
     return exp if int > 3
 
-
     if replacement = env[exp] and not duplicate? replacement
       replace(replacement.deep_clone(exp.line), int + 1)
     elsif tracker and replacement = tracker.constant_lookup(exp) and not duplicate? replacement
@@ -731,14 +730,14 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def array_include_all_literals? exp
     call? exp and
     exp.method == :include? and
-    all_literals? exp.target
+    (all_literals? exp.target or dir_glob? exp.target)
   end
 
   def array_detect_all_literals? exp
     call? exp and
     [:detect, :find].include? exp.method and
     exp.first_arg.nil? and
-    all_literals? exp.target
+    (all_literals? exp.target or dir_glob? exp.target)
   end
 
   #Sets @inside_if = true
