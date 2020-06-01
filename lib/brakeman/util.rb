@@ -293,6 +293,22 @@ module Brakeman::Util
     exp.is_a? Sexp and types.include? exp.node_type
   end
 
+  LITERALS = [:lit, :false, :str, :true, :array, :hash]
+
+  def literal? exp
+    exp.is_a? Sexp and LITERALS.include? exp.node_type
+  end
+
+  DIR_CONST = s(:const, :Dir)
+
+  # Dir.glob(...).whatever
+  def dir_glob? exp
+    exp = exp.block_call if node_type? exp, :iter
+    return unless call? exp
+
+    (exp.target == DIR_CONST and exp.method == :glob) or dir_glob? exp.target
+  end
+
   #Returns true if the given _exp_ contains a :class node.
   #
   #Useful for checking if a module is just a module or if it is a namespace.

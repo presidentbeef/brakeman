@@ -198,8 +198,10 @@ class Brakeman::Tracker
     @constants.add name, value, context unless @options[:disable_constant_tracking]
   end
 
+  # This method does not return all constants at this time,
+  # just ones with "simple" values.
   def constant_lookup name
-    @constants.get_literal name unless @options[:disable_constant_tracking]
+    @constants.get_simple_value name unless @options[:disable_constant_tracking]
   end
 
   def find_class name

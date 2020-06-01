@@ -69,23 +69,23 @@ class ConstantTests < Minitest::Test
   def test_constants_basic_lookup
     @constants.add :A, s(:lit, 1)
 
-    assert_equal s(:lit, 1), @constants.get_literal(s(:const, :A))
+    assert_equal s(:lit, 1), @constants.get_simple_value(s(:const, :A))
   end
 
-  def test_constants_get_literal
+  def test_constants_get_simple_value
     a_b_c = s(:colon2, s(:colon2, s(:const, :A), :B), :C)
     @constants.add :A, s(:lit, 1) # Simple X = 1 uses just symbol for const
     @constants.add a_b_c, s(:lit, 2)
     @constants.add :D, s(:const, :D)
 
-    assert_equal s(:lit, 1), @constants.get_literal(s(:const, :A))
-    assert_equal s(:lit, 2), @constants.get_literal(a_b_c)
-    assert_equal s(:lit, 2), @constants.get_literal(s(:colon2, s(:const, :B), :C))
-    assert_equal s(:lit, 2), @constants.get_literal(s(:colon2, s(:colon2, s(:colon3, :A), :B), :C) )
-    assert_nil @constants.get_literal(s(:colon2, s(:colon3, :B), :C)) # top-level B
-    assert_nil @constants.get_literal(s(:colon2, s(:const, :A), :C))
-    assert_nil @constants.get_literal(s(:colon2, s(:const, :C), :B)) # backwards
-    assert_nil @constants.get_literal(s(:const, :D)) # not a literal
+    assert_equal s(:lit, 1), @constants.get_simple_value(s(:const, :A))
+    assert_equal s(:lit, 2), @constants.get_simple_value(a_b_c)
+    assert_equal s(:lit, 2), @constants.get_simple_value(s(:colon2, s(:const, :B), :C))
+    assert_equal s(:lit, 2), @constants.get_simple_value(s(:colon2, s(:colon2, s(:colon3, :A), :B), :C) )
+    assert_nil @constants.get_simple_value(s(:colon2, s(:colon3, :B), :C)) # top-level B
+    assert_nil @constants.get_simple_value(s(:colon2, s(:const, :A), :C))
+    assert_nil @constants.get_simple_value(s(:colon2, s(:const, :C), :B)) # backwards
+    assert_nil @constants.get_simple_value(s(:const, :D)) # not a literal
   end
 
   def test_constants_lookup

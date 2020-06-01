@@ -1,7 +1,10 @@
 require 'brakeman/processors/output_processor'
+require 'brakeman/util'
 
 module Brakeman
   class Constant
+    include Brakeman::Util
+
     attr_reader :name, :name_array, :file, :value, :context
 
     def initialize name, value, context = {}
@@ -107,13 +110,11 @@ module Brakeman
       @constants[base_name] << Constant.new(name, value, context)
     end
 
-    LITERALS = [:lit, :false, :str, :true, :array, :hash]
-    def literal? exp
-      exp.is_a? Sexp and LITERALS.include? exp.node_type
-    end
-
-    def get_literal name
-      if x = self[name] and literal? x
+    # Returns constant values that are not too complicated.
+    # Right now that means literal values (string, array, etc.)
+    # or calls on Dir.glob(..).whatever.
+    def get_simple_value name
+      if x = self[name] and (literal? x or dir_glob? x)
         x
       else
         nil

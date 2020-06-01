@@ -263,6 +263,19 @@ class Rails6Tests < Minitest::Test
       :user_input => s(:call, s(:params), :require, s(:str, "name"))
   end
 
+  def test_dynamic_render_path_dir_glob_filter
+    assert_no_warning :type => :warning,
+      :warning_code => 15,
+      :fingerprint => "3ca5600705cf1e73b6213275bb2206480867176a80f0f1135a100019a29cb850",
+      :warning_type => "Dynamic Render Path",
+      :line => 25,
+      :message => /^Render\ path\ contains\ parameter\ value/,
+      :confidence => 1,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:render, :action, s(:dstr, "groups/", s(:evstr, s(:call, s(:params), :[], s(:lit, :template)))), s(:hash)),
+      :user_input => s(:call, s(:params), :[], s(:lit, :template))
+  end
+
   def test_mass_assignment_permit_bang_1
     assert_warning :type => :warning,
       :warning_code => 70,
