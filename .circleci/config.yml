@@ -39,19 +39,19 @@ jobs:
   test-2-4:
     <<: *default
     docker:
-      - image: circleci/ruby:2.4
+      - image: cimg/ruby:2.4
   test-2-5:
     <<: *default
     docker:
-      - image: circleci/ruby:2.5
+      - image: cimg/ruby:2.5
   test-2-6:
     <<: *default
     docker:
-      - image: circleci/ruby:2.6
+      - image: cimg/ruby:2.6
   test-latest:
     <<: *default
     docker:
-      - image: circleci/ruby:latest
+      - image: cimg/ruby:latest
   upload-coverage:
     <<: *default
     working_directory: ~/repo
