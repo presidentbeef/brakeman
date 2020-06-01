@@ -15,4 +15,13 @@ class GroupsController < ApplicationController
     ActiveRecord::Base.connection.execute "SELECT * FROM #{user_input}".squish
     ActiveRecord::Base.connection.execute "SELECT * FROM #{user_input}".strip
   end
+
+  def show
+    template = params[:template]
+
+    # Test file allowlist
+    return redirect_to '/groups' unless FILE_LIST.include? template
+
+    render "groups/#{template}"
+  end
 end
