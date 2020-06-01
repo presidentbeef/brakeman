@@ -94,11 +94,14 @@ class Brakeman::Scanner
   #
   #Stores parsed information in tracker.config
   def process_config
+    # Sometimes folks like to put constants in environment.rb
+    # so let's always process it even for newer Rails versions
+    process_config_file "environment.rb"
+
     if options[:rails3] or options[:rails4] or options[:rails5] or options[:rails6]
       process_config_file "application.rb"
       process_config_file "environments/production.rb"
     else
-      process_config_file "environment.rb"
       process_config_file "gems.rb"
     end
 
