@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   default: &default
     docker:
-      - image: cimg/ruby:latest
+      - image: circleci/ruby:latest
     steps:
       - checkout
       - run: bundle check || bundle install
