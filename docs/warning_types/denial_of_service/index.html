@@ -105,7 +105,7 @@
 
 <p>Prior to Ruby 2.2, Symbols were not garbage collected. Creation of large numbers of Symbols could lead to a server running out of memory.</p>
 
-<p>Brakeman checks for code where user input which is converted to a Symbol. When this is not restricted, an attacker could create an unlimited number of Symbols.</p>
+<p>If the application appears to be using an older version of Ruby, Brakeman checks for code where user input which is converted to a Symbol. When this is not restricted, an attacker could create an unlimited number of Symbols.</p>
 
 <hr />
 
