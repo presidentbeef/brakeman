@@ -24,4 +24,8 @@ class GroupsController < ApplicationController
 
     render "groups/#{template}"
   end
+
+  def permit_bang_path
+    redirect_to groups_path(params.permit!)
+  end
 end
