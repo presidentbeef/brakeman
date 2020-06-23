@@ -302,6 +302,19 @@ class Rails6Tests < Minitest::Test
       :user_input => nil
   end
 
+  def test_mass_assignment_in_path_helper_false_positive
+    assert_no_warning :type => :warning,
+      :warning_code => 70,
+      :fingerprint => "7802220237ed1e4c030fdc71d59bffd33fa8800adeb699e9d2105b00bc048d38",
+      :warning_type => "Mass Assignment",
+      :line => 29,
+      :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
+      :confidence => 1,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:params), :permit!),
+      :user_input => nil
+  end
+
   def test_mass_assignment_global_allow_all_parameters
     assert_warning :type => :warning,
       :warning_code => 112,
