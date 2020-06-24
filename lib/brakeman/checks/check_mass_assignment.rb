@@ -160,8 +160,8 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
   # Look for and warn about uses of Parameters#permit! for mass assignment
   def check_permit!
     tracker.find_call(:method => :permit!, :nested => true).each do |result|
-      if params? result[:call].target and not result[:chain].include? :slice
-        unless inside_safe_method? result
+      if params? result[:call].target
+        unless inside_safe_method? result or calls_slice? result
           warn_on_permit! result
         end
       end
@@ -174,6 +174,11 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
 
     call? parent_call and
       parent_call.method.match(/_path$/)
+  end
+
+  def calls_slice? result
+    result[:chain].include? :slice or
+      (result[:full_call] and result[:full_call][:chain].include? :slice)
   end
 
   # Look for actual use of params in mass assignment to avoid

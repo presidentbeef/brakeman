@@ -328,6 +328,19 @@ class Rails6Tests < Minitest::Test
       :user_input => nil
   end
 
+  def test_mass_assignment_permit_bang_slice_false_positive
+    assert_no_warning :type => :warning,
+      :warning_code => 70,
+      :fingerprint => "5c1aa277503e9c28dda97731136240ab07800348c4ac296c25789d65bd158373",
+      :warning_type => "Mass Assignment",
+      :line => 33,
+      :message => /^Parameters\ should\ be\ whitelisted\ for\ mas/,
+      :confidence => 1,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:params), :permit!),
+      :user_input => nil
+  end
+
   def test_secrets_file_1
     assert_warning :type => :warning,
       :warning_code => 101,
