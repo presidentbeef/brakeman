@@ -4,8 +4,8 @@ require 'brakeman/checks/base_check'
 #
 #  skip_before_filter :verify_authenticity_token, :except => [...]
 #
-#which is essentially a blacklist approach (no actions are checked EXCEPT the
-#ones listed) versus a whitelist approach (ONLY the actions listed will skip
+#which is essentially a skip-by-default approach (no actions are checked EXCEPT the
+#ones listed) versus a enforce-by-default approach (ONLY the actions listed will skip
 #the check)
 class Brakeman::CheckSkipBeforeFilter < Brakeman::BaseCheck
   Brakeman::Checks.add self
@@ -26,7 +26,7 @@ class Brakeman::CheckSkipBeforeFilter < Brakeman::BaseCheck
       warn :class => controller.name, #ugh this should be a controller warning, too
         :warning_type => "Cross-Site Request Forgery",
         :warning_code => :csrf_blacklist,
-        :message => msg("Use whitelist (", msg_code(":only => [..]"), ") when skipping CSRF check"),
+        :message => msg("List specific actions (", msg_code(":only => [..]"), ") when skipping CSRF check"),
         :code => filter,
         :confidence => :medium,
         :file => controller.file
@@ -35,7 +35,7 @@ class Brakeman::CheckSkipBeforeFilter < Brakeman::BaseCheck
       warn :controller => controller.name,
         :warning_code => :auth_blacklist,
         :warning_type => "Authentication",
-        :message => msg("Use whitelist (", msg_code(":only => [..]"), ") when skipping authentication"),
+        :message => msg("List specific actions (", msg_code(":only => [..]"), ") when skipping authentication"),
         :code => filter,
         :confidence => :medium,
         :link_path => "authentication_whitelist",

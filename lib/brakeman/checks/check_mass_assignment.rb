@@ -206,7 +206,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
     warn :result => result,
       :warning_type => "Mass Assignment",
       :warning_code => :mass_assign_permit!,
-      :message => "Parameters should be whitelisted for mass assignment",
+      :message => msg('Specify exact keys allowed for mass assignment instead of using ', msg_code('permit!'), ' which allows any keys'),
       :confidence => confidence
   end
 
@@ -218,7 +218,7 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
         warn :result => result,
           :warning_type => "Mass Assignment",
           :warning_code => :mass_assign_permit_all,
-          :message => "Parameters should be whitelisted for mass assignment",
+          :message => msg('Mass assignment is globally enabled. Disable and specify exact keys using ', msg_code('params.permit'), ' instead'),
           :confidence => :high
       end
     end

@@ -3,7 +3,7 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckPermitAttributes < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
-  @description = "Warn on potentially dangerous attributes whitelisted via permit"
+  @description = "Warn on potentially dangerous attributes allowed via permit"
 
   SUSPICIOUS_KEYS = {
     admin: :high,

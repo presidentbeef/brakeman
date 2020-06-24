@@ -8,7 +8,7 @@ require 'brakeman/checks/base_check'
 class Brakeman::CheckModelAttrAccessible < Brakeman::BaseCheck
   Brakeman::Checks.add self
 
-  @description = "Reports models which have dangerous attributes defined under the attr_accessible whitelist."
+  @description = "Reports models which have dangerous attributes defined via attr_accessible"
 
   SUSP_ATTRS = [
     [:admin, :high], # Very dangerous unless some Rails authorization used
