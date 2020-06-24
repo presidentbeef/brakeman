@@ -28,4 +28,8 @@ class GroupsController < ApplicationController
   def permit_bang_path
     redirect_to groups_path(params.permit!)
   end
+
+  def permit_bang_slice
+    params.permit!.slice(:whatever)
+  end
 end

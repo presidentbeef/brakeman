@@ -20,6 +20,7 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
     @current_template = opts[:template]
     @current_file = opts[:file]
     @current_call = nil
+    @full_call = nil
     process exp
   end
 
@@ -137,7 +138,8 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
                 :call => exp,
                 :nested => false,
                 :location => make_location,
-                :parent => @current_call }.freeze
+                :parent => @current_call,
+                :full_call => @full_call }.freeze
   end
 
   #Gets the target of a call as a Symbol
@@ -214,34 +216,47 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
   #Return info hash for a call Sexp
   def create_call_hash exp
     target = get_target exp.target
-
-    if call? target or node_type? target, :dxstr # need to index `` even if target of a call
-      already_in_target = @in_target
-      @in_target = true
-      process target
-      @in_target = already_in_target
-
-      target = get_target(target, :include_calls)
-    end
+    target_symbol = get_target(target, :include_calls)
 
     method = exp.method
 
     call_hash = {
-      :target => target,
+      :target => target_symbol,
       :method => method,
       :call => exp,
       :nested => @in_target,
       :chain => get_chain(exp),
       :location => make_location,
-      :parent => @current_call
+      :parent => @current_call,
+      :full_call => @full_call
     }
 
+    unless @in_target
+      @full_call = call_hash
+    end
+
+    # Process up the call chain
+    if call? target or node_type? target, :dxstr # need to index `` even if target of a call
+      already_in_target = @in_target
+      @in_target = true
+      process target
+      @in_target = already_in_target
+    end
+
+    # Process call arguments
+    # but add the current call as the 'parent'
+    # to any calls in the arguments
     old_parent = @current_call
     @current_call = call_hash
+
+    # Do not set @full_call when processing arguments
+    old_full_call = @full_call
+    @full_call = nil
 
     process_call_args exp
 
     @current_call = old_parent
+    @full_call = old_full_call
 
     call_hash
   end
