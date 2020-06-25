@@ -95,7 +95,7 @@ module Brakeman
     end
 
     def already_ignored_entries_without_notes
-      @already_ignored.filter_map { |i| i if !i[:note] || i[:note] == '' }
+      @already_ignored.map { |i| i if !i[:note] || i[:note] == '' }.compact
     end
 
     # Read configuration to file
