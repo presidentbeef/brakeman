@@ -372,6 +372,22 @@ class ConfigTests < Minitest::Test
     end
   end
 
+  def test_all_ignore_file_entries_have_notes?
+    assert Brakeman.all_ignore_file_entries_have_notes?(nil)
+
+    ignore_file_missing_notes = Tempfile.new('brakeman.ignore')
+    ignore_file_missing_notes.write IGNORE_WITH_MISSING_NOTES_JSON
+    ignore_file_missing_notes.close
+    refute Brakeman.all_ignore_file_entries_have_notes?(ignore_file_missing_notes.path)
+    ignore_file_missing_notes.unlink
+
+    ignore_file_with_notes = Tempfile.new('brakeman.ignore')
+    ignore_file_with_notes.write IGNORE_WITH_NOTES_JSON
+    ignore_file_with_notes.close
+    assert Brakeman.all_ignore_file_entries_have_notes?(ignore_file_with_notes.path)
+    ignore_file_with_notes.unlink
+  end
+
   def test_dump_config_with_file
     test_file = "test.cfg"
     options = {:create_config => test_file, :test_option => "test"}
@@ -385,6 +401,84 @@ class ConfigTests < Minitest::Test
   ensure
     assert File.delete test_file
   end
+
+  IGNORE_WITH_MISSING_NOTES_JSON = <<~JSON.freeze
+    {
+      "ignored_warnings": [
+        {
+          "warning_type": "Remote Code Execution",
+          "warning_code": 25,
+          "fingerprint": "006ac5fe3834bf2e73ee51b67eb111066f618be46e391d493c541ea2a906a82f",
+          "check_name": "Deserialize",
+          "message": "`Oj.load` called with parameter value",
+          "file": "app/controllers/users_controller.rb",
+          "line": 52,
+          "link": "https://brakemanscanner.org/docs/warning_types/unsafe_deserialization",
+          "code": "Oj.load(params[:json], :mode => :object)",
+          "render_path": null,
+          "location": {
+            "type": "method",
+            "class": "UsersController",
+            "method": "some_api"
+          },
+          "user_input": "params[:json]",
+          "confidence": "High",
+          "note": ""
+        },
+        {
+          "warning_type": "Remote Code Execution",
+          "warning_code": 25,
+          "fingerprint": "97ecaa5677c8eadaed09217a704e59092921fab24cc751e05dfb7b167beda2cf",
+          "check_name": "Deserialize",
+          "message": "`Oj.load` called with parameter value",
+          "file": "app/controllers/users_controller.rb",
+          "line": 51,
+          "link": "https://brakemanscanner.org/docs/warning_types/unsafe_deserialization",
+          "code": "Oj.load(params[:json])",
+          "render_path": null,
+          "location": {
+            "type": "method",
+            "class": "UsersController",
+            "method": "some_api"
+          },
+          "user_input": "params[:json]",
+          "confidence": "High",
+          "note": "Here's a note!"
+        }
+      ],
+      "updated": "2019-04-02 12:15:05 -0700",
+      "brakeman_version": "4.5.0"
+    }
+  JSON
+
+  IGNORE_WITH_NOTES_JSON = <<~JSON.freeze
+    {
+      "ignored_warnings": [
+        {
+          "warning_type": "Remote Code Execution",
+          "warning_code": 25,
+          "fingerprint": "006ac5fe3834bf2e73ee51b67eb111066f618be46e391d493c541ea2a906a82f",
+          "check_name": "Deserialize",
+          "message": "`Oj.load` called with parameter value",
+          "file": "app/controllers/users_controller.rb",
+          "line": 52,
+          "link": "https://brakemanscanner.org/docs/warning_types/unsafe_deserialization",
+          "code": "Oj.load(params[:json], :mode => :object)",
+          "render_path": null,
+          "location": {
+            "type": "method",
+            "class": "UsersController",
+            "method": "some_api"
+          },
+          "user_input": "params[:json]",
+          "confidence": "High",
+          "note": "Note here."
+        }
+      ],
+      "updated": "2019-04-02 12:15:05 -0700",
+      "brakeman_version": "4.5.0"
+    }
+  JSON
 end
 
 class GemProcessorTests < Minitest::Test

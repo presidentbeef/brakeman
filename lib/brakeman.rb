@@ -508,6 +508,8 @@ module Brakeman
   def self.all_ignore_file_entries_have_notes? file
     return true unless file
 
+    require 'brakeman/report/ignore/config'
+
     config = IgnoreConfig.new(file, nil)
     config.read_from_file
     config.already_ignored_entries_without_notes.empty?
