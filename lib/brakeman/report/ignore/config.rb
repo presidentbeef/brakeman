@@ -94,6 +94,10 @@ module Brakeman
       end
     end
 
+    def already_ignored_entries_without_notes
+      @already_ignored.filter_map { |i| i if !i[:note] || i[:note] == '' }
+    end
+
     # Read configuration to file
     def read_from_file file = @file
       if File.exist? file

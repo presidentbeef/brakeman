@@ -67,6 +67,10 @@ module Brakeman::Options
           options[:ensure_latest] = true
         end
 
+        opts.on "--ensure-ignore-notes", "Fail when an ignored warnings does not include a note. No effect if used with --compare" do
+          options[:ensure_ignore_notes] = true
+        end
+
         opts.on "-3", "--rails3", "Force Rails 3 mode" do
           options[:rails3] = true
         end
@@ -325,7 +329,7 @@ module Brakeman::Options
           options[:min_confidence] =  3 - level.to_i
         end
 
-        opts.on "--compare FILE", "Compare the results of a previous Brakeman scan (only JSON is supported)" do |file|
+        opts.on "--compare FILE", "Compare the results of a previous Brakeman scan (only JSON is supported). Deactivates --ensure-ignore-notes" do |file|
           options[:previous_results_json] = File.expand_path(file)
         end
 
