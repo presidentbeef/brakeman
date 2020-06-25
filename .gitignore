@@ -3,3 +3,4 @@ coverage/
 test/coverage/
 .bundle
 bundle
+*.gem
