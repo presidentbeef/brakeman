@@ -540,7 +540,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Cross-Site Request Forgery",
       :line => 91,
-      :message => /^Use\ whitelist\ \(`:only\ =>\ \[\.\.\]`\)\ when\ skipp/,
+      :message => /^List specific actions \(`:only\ =>\ \[\.\.\]`\)\ when\ skipp/,
       :confidence => 1,
       :file => /users_controller\.rb/
   end
@@ -549,7 +549,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :controller,
       :warning_type => "Authentication",
       :line => 3,
-      :message => /^Use\ whitelist\ \(`:only\ =>\ \[\.\.\]`\)\ when\ skipp/,
+      :message => /^List specific actions \(`:only\ =>\ \[\.\.\]`\)\ when\ skipp/,
       :confidence => 1,
       :file => /admin_controller\.rb/
   end
@@ -558,7 +558,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :controller,
       :warning_type => "Authentication",
       :line => 5,
-      :message => /^Use\ whitelist\ \(`:only\ =>\ \[\.\.\]`\)\ when\ skipp/,
+      :message => /^List specific actions \(`:only\ =>\ \[\.\.\]`\)\ when\ skipp/,
       :confidence => 1,
       :file => /admin_controller\.rb/
   end
@@ -567,7 +567,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :controller,
       :warning_type => "Authentication",
       :line => 4,
-      :message => /^Use\ whitelist\ \(`:only\ =>\ \[\.\.\]`\)\ when\ skipp/,
+      :message => /^List specific actions \(`:only\ =>\ \[\.\.\]`\)\ when\ skipp/,
       :confidence => 1,
       :file => /admin_controller\.rb/
   end
