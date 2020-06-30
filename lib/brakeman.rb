@@ -512,7 +512,7 @@ module Brakeman
 
     config = IgnoreConfig.new(file, nil)
     config.read_from_file
-    config.already_ignored_entries_without_notes.empty?
+    config.already_ignored_entries_with_empty_notes.empty?
   end
 
   def self.filter_warnings tracker, options
