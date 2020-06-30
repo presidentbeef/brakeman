@@ -502,17 +502,16 @@ module Brakeman
     end
   end
 
-  # Returns false if the specified ignore file exists and contains an ignored
-  # warning without a note.
-  # Returns true otherwise.
-  def self.all_ignore_file_entries_have_notes? file
-    return true unless file
+  # Returns an array of alert fingerprints for any ignored warnings without
+  # notes found in the specified ignore file (if it exists).
+  def self.ignore_file_entries_with_empty_notes file
+    return [] unless file
 
     require 'brakeman/report/ignore/config'
 
     config = IgnoreConfig.new(file, nil)
     config.read_from_file
-    config.already_ignored_entries_with_empty_notes.empty?
+    config.already_ignored_entries_with_empty_notes.map { |i| i[:fingerprint] }
   end
 
   def self.filter_warnings tracker, options

@@ -372,19 +372,24 @@ class ConfigTests < Minitest::Test
     end
   end
 
-  def test_all_ignore_file_entries_have_notes?
-    assert Brakeman.all_ignore_file_entries_have_notes?(nil)
+  def test_ignore_file_entries_with_empty_notes
+    assert Brakeman.ignore_file_entries_with_empty_notes(nil).empty?
 
     ignore_file_missing_notes = Tempfile.new('brakeman.ignore')
     ignore_file_missing_notes.write IGNORE_WITH_MISSING_NOTES_JSON
     ignore_file_missing_notes.close
-    refute Brakeman.all_ignore_file_entries_have_notes?(ignore_file_missing_notes.path)
+    assert_equal(
+      Brakeman.ignore_file_entries_with_empty_notes(ignore_file_missing_notes.path).to_set,
+      [
+        '006ac5fe3834bf2e73ee51b67eb111066f618be46e391d493c541ea2a906a82f',
+      ].to_set
+    )
     ignore_file_missing_notes.unlink
 
     ignore_file_with_notes = Tempfile.new('brakeman.ignore')
     ignore_file_with_notes.write IGNORE_WITH_NOTES_JSON
     ignore_file_with_notes.close
-    assert Brakeman.all_ignore_file_entries_have_notes?(ignore_file_with_notes.path)
+    assert Brakeman.ignore_file_entries_with_empty_notes(ignore_file_with_notes.path).empty?
     ignore_file_with_notes.unlink
   end
 

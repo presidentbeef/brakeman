@@ -125,11 +125,16 @@ module Brakeman
           quit Brakeman::Errors_Found_Exit_Code
         end
 
-        if tracker.options[:ensure_ignore_notes] and
-           not Brakeman::all_ignore_file_entries_have_notes? tracker.ignored_filter&.file
+        if tracker.options[:ensure_ignore_notes]
+          fingerprints = Brakeman::ignore_file_entries_with_empty_notes tracker.ignored_filter&.file
 
-          quit Brakeman::Empty_Ignore_Note_Exit_Code,
-               'error: notes required for all ignored warnings when --ensure-ignore-notes is set'
+          unless fingerprints.empty?
+            quit Brakeman::Empty_Ignore_Note_Exit_Code,
+                 'Error: notes required for all ignored warnings when ' \
+                 '--ensure-ignore-notes is set. No notes provided for these ' \
+                 'alerts: ' \
+                 "#{fingerprints}"
+          end
         end
       end
 
