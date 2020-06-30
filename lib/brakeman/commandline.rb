@@ -127,6 +127,7 @@ module Brakeman
 
         if tracker.options[:ensure_ignore_notes] and
            not Brakeman::all_ignore_file_entries_have_notes? tracker.ignored_filter&.file
+
           quit Brakeman::Empty_Ignore_Note_Exit_Code,
                'error: notes required for all ignored warnings when --ensure-ignore-notes is set'
         end
