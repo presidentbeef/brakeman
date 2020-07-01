@@ -102,6 +102,13 @@ module Brakeman
           app_path = "."
         end
 
+        if options[:ensure_ignore_notes] and options[:previous_results_json]
+          warn '[Notice] --ensure-ignore-notes may not be used at the same ' \
+               'time as --compare. Deactivating --ensure-ignore-notes. ' \
+               'Please see `brakeman --help` for valid options'
+          options[:ensure_ignore_notes] = false
+        end
+
         return options, app_path
       end
 

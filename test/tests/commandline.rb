@@ -135,6 +135,14 @@ class CommandlineTests < Minitest::Test
     end
   end
 
+  def test_compare_deactivates_ensure_ignore_notes
+    opts, = Brakeman::Commandline.parse_options [
+      '--ensure-ignore-notes',
+      '--compare', 'foo.json',
+    ]
+    assert_equal false, opts[:ensure_ignore_notes]
+  end
+
   def test_ensure_ignore_notes
     ignore_file_missing_notes = Tempfile.new('brakeman.ignore')
     ignore_file_missing_notes.write IGNORE_WITH_MISSING_NOTES_JSON
