@@ -20,6 +20,10 @@ module Brakeman
   #option is set
   Errors_Found_Exit_Code = 7
 
+  #Exit code returned when an ignored warning has no note and
+  #--ensure-ignore-notes is set
+  Empty_Ignore_Note_Exit_Code = 8
+
   @debug = false
   @quiet = false
   @loaded_dependencies = []
@@ -496,6 +500,18 @@ module Brakeman
         exit!(-1)
       end
     end
+  end
+
+  # Returns an array of alert fingerprints for any ignored warnings without
+  # notes found in the specified ignore file (if it exists).
+  def self.ignore_file_entries_with_empty_notes file
+    return [] unless file
+
+    require 'brakeman/report/ignore/config'
+
+    config = IgnoreConfig.new(file, nil)
+    config.read_from_file
+    config.already_ignored_entries_with_empty_notes.map { |i| i[:fingerprint] }
   end
 
   def self.filter_warnings tracker, options

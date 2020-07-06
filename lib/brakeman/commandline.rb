@@ -102,6 +102,13 @@ module Brakeman
           app_path = "."
         end
 
+        if options[:ensure_ignore_notes] and options[:previous_results_json]
+          warn '[Notice] --ensure-ignore-notes may not be used at the same ' \
+               'time as --compare. Deactivating --ensure-ignore-notes. ' \
+               'Please see `brakeman --help` for valid options'
+          options[:ensure_ignore_notes] = false
+        end
+
         return options, app_path
       end
 
@@ -115,7 +122,20 @@ module Brakeman
 
       # Runs a regular report based on the options provided.
       def regular_report options
-        tracker = run_brakeman options 
+        tracker = run_brakeman options
+
+        ensure_ignore_notes_failed = false
+        if tracker.options[:ensure_ignore_notes]
+          fingerprints = Brakeman::ignore_file_entries_with_empty_notes tracker.ignored_filter&.file
+
+          unless fingerprints.empty?
+            ensure_ignore_notes_failed = true
+            warn '[Error] Notes required for all ignored warnings when ' \
+              '--ensure-ignore-notes is set. No notes provided for these ' \
+              'warnings: '
+            fingerprints.each { |f| warn f }
+          end
+        end
 
         if tracker.options[:exit_on_warn] and not tracker.filtered_warnings.empty?
           quit Brakeman::Warnings_Found_Exit_Code
@@ -123,6 +143,10 @@ module Brakeman
 
         if tracker.options[:exit_on_error] and tracker.errors.any?
           quit Brakeman::Errors_Found_Exit_Code
+        end
+
+        if ensure_ignore_notes_failed
+          quit Brakeman::Empty_Ignore_Note_Exit_Code
         end
       end
 

@@ -94,6 +94,10 @@ module Brakeman
       end
     end
 
+    def already_ignored_entries_with_empty_notes
+      @already_ignored.select { |i| i if i[:note].strip.empty? }
+    end
+
     # Read configuration to file
     def read_from_file file = @file
       if File.exist? file

@@ -216,6 +216,17 @@ class IgnoreConfigTests < Minitest::Test
     end
   end
 
+  def test_already_ignored_entries_with_empty_notes
+    require 'set'
+    assert_equal(
+      config.already_ignored_entries_with_empty_notes.map { |i| i[:fingerprint] }.to_set,
+      [
+        '3bc375c9cb79d8bcd9e7f1c09a574fa3deeab17f924cf20455cbd4c15e9c66eb',
+        '006ac5fe3834bf2e73ee51b67eb111066f618be46e391d493c541ea2a906a82f',
+      ].to_set
+    )
+  end
+
   private
 
   def assert_relative path
