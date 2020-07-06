@@ -124,6 +124,19 @@ module Brakeman
       def regular_report options
         tracker = run_brakeman options
 
+        ensure_ignore_notes_failed = false
+        if tracker.options[:ensure_ignore_notes]
+          fingerprints = Brakeman::ignore_file_entries_with_empty_notes tracker.ignored_filter&.file
+
+          unless fingerprints.empty?
+            ensure_ignore_notes_failed = true
+            warn '[Error] Notes required for all ignored warnings when ' \
+              '--ensure-ignore-notes is set. No notes provided for these ' \
+              'warnings: '
+            fingerprints.each { |f| warn f }
+          end
+        end
+
         if tracker.options[:exit_on_warn] and not tracker.filtered_warnings.empty?
           quit Brakeman::Warnings_Found_Exit_Code
         end
@@ -132,16 +145,8 @@ module Brakeman
           quit Brakeman::Errors_Found_Exit_Code
         end
 
-        if tracker.options[:ensure_ignore_notes]
-          fingerprints = Brakeman::ignore_file_entries_with_empty_notes tracker.ignored_filter&.file
-
-          unless fingerprints.empty?
-            quit Brakeman::Empty_Ignore_Note_Exit_Code,
-                 'Error: notes required for all ignored warnings when ' \
-                 '--ensure-ignore-notes is set. No notes provided for these ' \
-                 'alerts: ' \
-                 "#{fingerprints}"
-          end
+        if ensure_ignore_notes_failed
+          quit Brakeman::Empty_Ignore_Note_Exit_Code
         end
       end
 
