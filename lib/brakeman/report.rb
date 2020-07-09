@@ -43,6 +43,8 @@ class Brakeman::Report
     when :to_junit
       require_report 'junit'
       Brakeman::Report::JUnit
+    when :to_sarif
+      return self.to_sarif
     else
       raise "Invalid format: #{format}. Should be one of #{VALID_FORMATS.inspect}"
     end
@@ -84,6 +86,11 @@ class Brakeman::Report
 
   alias to_plain to_text
   alias to_s to_text
+
+  def to_sarif
+    require_report 'sarif'
+    generate Brakeman::Report::SARIF
+  end
 
   def generate reporter
     reporter.new(@tracker).generate_report
