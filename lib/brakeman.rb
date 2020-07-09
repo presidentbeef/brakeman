@@ -237,6 +237,8 @@ module Brakeman
       [:to_table]
     when :junit, :to_junit
       [:to_junit]
+    when :sarif, :to_sarif
+      [:to_sarif]
     else
       [:to_text]
     end
@@ -266,6 +268,8 @@ module Brakeman
         :to_table
       when /\.junit$/i
         :to_junit
+      when /\.sarif$/i
+        :to_sarif
       else
         :to_text
       end
