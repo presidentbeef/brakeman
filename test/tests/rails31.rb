@@ -13,7 +13,7 @@ class Rails31Tests < Minitest::Test
       :model => 3,
       :template => 23,
       :controller => 4,
-      :generic => 87 }
+      :generic => 88 }
   end
 
   def test_without_protection

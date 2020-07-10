@@ -9,7 +9,7 @@ class Rails4WithEnginesTests < Minitest::Test
       :controller => 2,
       :model => 5,
       :template => 12,
-      :generic => 13 }
+      :generic => 14 }
   end
 
   def report

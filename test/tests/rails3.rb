@@ -14,7 +14,7 @@ class Rails3Tests < Minitest::Test
       :controller => 1,
       :model => 9,
       :template => 41,
-      :generic => 74
+      :generic => 75
     }
 
     if RUBY_PLATFORM == 'java'
