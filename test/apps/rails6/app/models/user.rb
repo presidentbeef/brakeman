@@ -10,4 +10,8 @@ class User < ApplicationRecord
 
     where(conditions)
   end
+
+  def self.render_user_input
+    ERB.new(params)
+  end
 end

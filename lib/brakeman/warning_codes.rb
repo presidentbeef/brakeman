@@ -117,6 +117,7 @@ module Brakeman::WarningCodes
     :json_html_escape_config => 113,
     :json_html_escape_module => 114,
     :CVE_2020_8159 => 115,
+    :erb_template_injection => 117,
 
     :custom_check => 9090,
   }
