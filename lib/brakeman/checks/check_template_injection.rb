@@ -8,7 +8,7 @@ class Brakeman::CheckTemplateInjection < Brakeman::BaseCheck
   #Process calls
   def run_check
     Brakeman.debug "Finding ERB.new calls"
-    erb_calls = tracker.find_call :target => :ERB, :method => :new, :chained => true
+    erb_calls = tracker.find_call :target => :ERB, :method => :new, :nested => true
 
     Brakeman.debug "Processing ERB.new calls"
     erb_calls.each do |call|

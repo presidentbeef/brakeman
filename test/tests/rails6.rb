@@ -354,13 +354,13 @@ class Rails6Tests < Minitest::Test
       :user_input => nil
   end
 
-  def test_template_injection
+  def test_template_injection_1
     assert_warning :type => :warning,
-      :warning_code => 112,
-      :fingerprint => "fcb73faa61714b6a6469ceb53ec1d2aff596ea38affec7fac3dd18ba92f54938",
+      :warning_code => 117,
+      :fingerprint => "fba898ebe85a030856f8553a3329c184ad6f9e16b1ecc8eb862d75f8b48d8189",
       :warning_type => "Template Injection",
-      :line => 3,
-      :message => /^User\ input\ in\ ruby\ template/,
+      :line => 15,
+      :message => /^Parameter\ value\ used\ directly\ in\ `ERB`\ t/,
       :confidence => 0,
       :relative_path => "app/models/user.rb",
       :code => s(:call, s(:const, :ERB), :new, s(:params)),
