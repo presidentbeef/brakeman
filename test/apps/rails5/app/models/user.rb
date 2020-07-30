@@ -1,4 +1,8 @@
 class User < ApplicationRecord
+  def self.render_user_input
+    ERB.new(params).result
+  end
+
   def self.evaluate_user_input
     eval(params)
   end

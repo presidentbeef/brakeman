@@ -13,7 +13,7 @@ class Rails5Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 19,
-      :generic => 22
+      :generic => 23
     }
   end
 
@@ -189,7 +189,7 @@ class Rails5Tests < Minitest::Test
       :warning_code => 0,
       :fingerprint => "46cda22e00dca87a8715682bd7d8d52cc4a8e705257b27c5e36595ebd1f654f8",
       :warning_type => "SQL Injection",
-      :line => 4,
+      :line => 7,
       :message => /^Possible\ SQL\ injection/,
       :confidence => 0,
       :relative_path => "app/models/user.rb",
@@ -434,7 +434,7 @@ class Rails5Tests < Minitest::Test
       :warning_code => 0,
       :fingerprint => "2a77f56c4c09590a4cac1fe68dd00c0fa0a7820ea6f0d4bad20451ecc07dc68e",
       :warning_type => "SQL Injection",
-      :line => 17,
+      :line => 21,
       :message => /^Possible\ SQL\ injection/,
       :confidence => 0,
       :relative_path => "app/models/user.rb",
@@ -447,7 +447,7 @@ class Rails5Tests < Minitest::Test
       :warning_code => 0,
       :fingerprint => "dcfa0c30b2d303c58bde5b376f423cff6282bbc71ed460077478ca97e1f4d0f7",
       :warning_type => "SQL Injection",
-      :line => 20,
+      :line => 2,
       :message => /^Possible\ SQL\ injection/,
       :confidence => 0,
       :relative_path => "app/models/user.rb",
@@ -708,11 +708,24 @@ class Rails5Tests < Minitest::Test
       :warning_code => 13,
       :fingerprint => "7fe3142d1d11b7118463e45a82b4b7a2b5b5bac95cf8904050c101fae16b8168",
       :warning_type => "Dangerous Eval",
-      :line => 3,
-      :message => /User input in eval near line 3/,
+      :line => 7,
+      :message => /User input in eval near line 7/,
       :method => :"User.evaluate_user_input",
       :confidence => 0,
       :relative_path => "app/models/user.rb",
+      :user_input => s(:params)
+  end
+
+  def test_template_injection_1
+    assert_warning :type => :warning,
+      :warning_code => 117,
+      :fingerprint => "fba898ebe85a030856f8553a3329c184ad6f9e16b1ecc8eb862d75f8b48d8189",
+      :warning_type => "Template Injection",
+      :line => 3,
+      :message => /^Parameter\ value\ used\ directly\ in\ `ERB`\ t/,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb",
+      :code => s(:call, s(:const, :ERB), :new, s(:params)),
       :user_input => s(:params)
   end
 
