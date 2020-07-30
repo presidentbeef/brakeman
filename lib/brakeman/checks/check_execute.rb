@@ -265,4 +265,8 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       false
     end
   end
+
+  def per_check_safe_call? exp
+    shell_escape? exp
+  end
 end
