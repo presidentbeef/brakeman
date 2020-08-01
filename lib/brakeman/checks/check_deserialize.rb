@@ -27,6 +27,8 @@ class Brakeman::CheckDeserialize < Brakeman::BaseCheck
           check_deserialize result, :YAML
         end
       end
+    else
+      check_methods :YAML, :load
     end
   end
 
