@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 18
+      :generic => 20
     }
   end
 
@@ -171,6 +171,45 @@ class Rails6Tests < Minitest::Test
       :relative_path => "config/initializers/cookies_serializer.rb",
       :code => s(:attrasgn, s(:call, s(:call, s(:call, s(:const, :Rails), :application), :config), :action_dispatch), :cookies_serializer=, s(:lit, :marshal)),
       :user_input => nil
+  end
+
+  def test_safe_yaml_load_option
+    assert_no_warning :type => :warning,
+      :warning_code => 25,
+      :fingerprint => "bf38405dcc489a459957bf515cb9f078686bb9316cc3d1f421c61c330a9005ec",
+      :warning_type => "Remote Code Execution",
+      :line => 37,
+      :message => /^`YAML\.load`\ called\ with\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:const, :YAML), :load, s(:call, s(:params), :[], s(:lit, :yaml_stuff)), s(:hash, s(:lit, :safe), s(:true))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :yaml_stuff))
+  end
+
+  def test_safe_yaml_load_option_false
+    assert_warning :type => :warning,
+      :warning_code => 25,
+      :fingerprint => "2798cec372112fdecfadf2cb30b41635742d93c5b0bfc0ba71a3f69eb21b7f48",
+      :warning_type => "Remote Code Execution",
+      :line => 38,
+      :message => /^`YAML\.load`\ called\ with\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:const, :YAML), :load, s(:call, s(:params), :[], s(:lit, :yaml_stuff)), s(:hash, s(:lit, :safe), s(:false))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :yaml_stuff))
+  end
+
+  def test_safe_yaml_load_option_missing
+    assert_warning :type => :warning,
+      :warning_code => 25,
+      :fingerprint => "baffe1ec42a14c076b7c7bf676f833a397b879ee8c8ae4bc697b2bcef0355399",
+      :warning_type => "Remote Code Execution",
+      :line => 39,
+      :message => /^`YAML\.load`\ called\ with\ parameter\ value/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:const, :YAML), :load, s(:call, s(:params), :[], s(:lit, :yaml_stuff))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :yaml_stuff))
   end
 
   def test_dup_call

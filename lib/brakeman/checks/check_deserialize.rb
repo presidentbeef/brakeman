@@ -13,7 +13,21 @@ class Brakeman::CheckDeserialize < Brakeman::BaseCheck
   end
 
   def check_yaml
-    check_methods :YAML, :load, :load_documents, :load_stream, :parse_documents, :parse_stream
+    check_methods :YAML, :load_documents, :load_stream, :parse_documents, :parse_stream
+
+    # Check for safe_yaml gem use with YAML.load(..., safe: true)
+    if uses_safe_yaml?
+      tracker.find_call(target: :YAML, method: :load).each do |result|
+        call = result[:call]
+        options = call.second_arg
+
+        if hash? options and true? hash_access(options, :safe)
+          next
+        else
+          check_deserialize result, :YAML
+        end
+      end
+    end
   end
 
   def check_csv
@@ -101,5 +115,9 @@ class Brakeman::CheckDeserialize < Brakeman::BaseCheck
     end
 
     false
+  end
+
+  def uses_safe_yaml?
+    tracker.config.has_gem? :safe_yaml
   end
 end

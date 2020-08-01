@@ -32,4 +32,10 @@ class GroupsController < ApplicationController
   def permit_bang_slice
     params.permit!.slice(:whatever)
   end
+
+  def safeish_yaml_load
+    YAML.load(params[:yaml_stuff], safe: true)
+    YAML.load(params[:yaml_stuff], safe: false) # not safe
+    YAML.load(params[:yaml_stuff]) # not safe
+  end
 end
