@@ -1,3 +1,15 @@
+# Unreleased
+
+* Avoid warning when `safe_yaml` is used via `YAML.load(..., safe: true)`
+* Add check for user input in `ERB.new` (Matt Hickman)
+* Add `--ensure-ignore-notes` (Eli Block)
+* Remove whitelist/blacklist language, add clarifications
+* Do not warn about mass assignment with `params.permit!.slice`
+* Add "full call" information to call index results
+* Ignore `params.permit!` in path helpers
+* Treat `Dir.glob` as safe source of values in guards
+* Always scan `environment.rb`
+
 # 4.8.2 - 2020-05-12
 
 * Add check for CVE-2020-8159
