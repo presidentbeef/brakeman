@@ -328,4 +328,24 @@ class CVETests < Minitest::Test
     assert_fixed 1
     assert_new 1
   end
+
+  def test_CVE_2020_8166
+    before_rescan_of "Gemfile.lock", "rails5.2" do
+      replace "Gemfile.lock", " rails (5.2.0.beta2)", " rails (5.2.4.3)"
+    end
+
+    assert_new 0
+    assert_version "5.2.4.3"
+    assert_no_warning type: :generic, :warning_code => 116
+  end
+
+  def test_CVE_2020_8166_rails6
+    before_rescan_of "Gemfile", "rails6" do
+      replace "Gemfile", "gem 'rails', '~> 6.0.0.beta2'", "gem 'rails', '~> 6.0.0'"
+    end
+
+    assert_new 1
+    assert_version "6.0.0"
+    assert_warning type: :generic, :warning_code => 116
+  end
 end

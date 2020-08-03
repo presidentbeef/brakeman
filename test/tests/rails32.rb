@@ -14,7 +14,7 @@ class Rails32Tests < Minitest::Test
       :controller => 8,
       :model => 5,
       :template => 11,
-      :generic => 21 }
+      :generic => 22 }
 
     if RUBY_PLATFORM == 'java'
       @expected[:generic] += 1
