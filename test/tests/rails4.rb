@@ -15,7 +15,7 @@ class Rails4Tests < Minitest::Test
       :controller => 0,
       :model => 3,
       :template => 8,
-      :generic => 86
+      :generic => 87
     }
   end
 
