@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Brakeman 1.7.1 Released</title>
+  <title>Brakeman</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,7 +15,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="https://brakemanscanner.org/blog/2012/08/13/brakeman-1-dot-7-1-released"/>
+  <link rel="canonical" href="https://brakemanscanner.org/blog/page/21/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -34,7 +34,7 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Brakeman 1.7.1 Released" />
+<meta name="twitter:title" content="Brakeman Security Scanner" />
 <meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
 <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 
@@ -71,13 +71,16 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article class="hentry">
-  
+      <div class="blog-index">
+
+
+
+  <article>
+    
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 1.7.1 Released</h1>
+    <h1 class="entry-title"><a href="/blog/2011/08/27/one-year-anniversary-and-a-website">One Year Anniversary</a></h1>
     
     
       <p class="meta">
@@ -85,7 +88,7 @@
 
 
 
-<time datetime="2012-08-13 11:04:00 -0700" pubdate  updated >2012-08-13 11:04:00 -0700</time>
+<time datetime="2011-08-27 01:00:00 -0700" pubdate  updated >2011-08-27 01:00:00 -0700</time>
 
 
 </p>
@@ -93,84 +96,29 @@
   </header>
 
 
-<div class="entry-content"><p>This is a small release to add checks for the <a href="http://weblog.rubyonrails.org/2012/8/9/ann-rails-3-2-8-has-been-released/">Rails vulnerabilities reported last week</a>.</p>
+  <div class="entry-content"><p>One year ago, Brakeman 0.0.1 was released as a gem. Then it was promptly yanked and replaced with <a href="http://rubygems.org/gems/brakeman/versions/0.0.2">Brakeman 0.0.2</a>.</p>
 
-<p><em>Changes since 1.7.0</em>:</p>
+<p>In celebration of this grand anniversary, there have been several new releases today.</p>
 
-<ul>
-  <li>Add check for <a href="https://groups.google.com/d/topic/rubyonrails-security/fV3QUToSMSw/discussion">CVE-2012-3463</a></li>
-  <li>Add check for <a href="https://groups.google.com/d/topic/rubyonrails-security/kKGNeMrnmiY/discussion">CVE-2012-3464</a></li>
-  <li>Add check for <a href="https://groups.google.com/d/topic/rubyonrails-security/FgVEtBajcTY/discussion">CVE-2012-3465</a></li>
-  <li>Add charset to HTML report (<a href="https://github.com/hooopo">hooopo</a>)</li>
-  <li>Report XSS in select() for Rails 2</li>
-</ul>
+<p>The first is <a href="http://rubygems.org/gems/brakeman/versions/0.7.2">Brakeman 0.7.2</a>, a minor release adding CVE numbers for the <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/f878a33159ac9967">latest vulnerabilities</a> and fixing how nested params/cookie accesses are handled (e.g., <code class="highlighter-rouge">params[:user][:name]</code> is now considered a direct use of a parameter).</p>
 
-<h3 id="cve-2012-3463---xss-in-select_tag-prompt">CVE-2012-3463 - XSS in select_tag Prompt</h3>
+<p>Next up, Brakeman has its own Twitter feed <a href="https://twitter.com/brakemanscanner">@BrakemanScanner</a>.</p>
 
-<p>In Rails 3.x, values supplied to the <code class="highlighter-rouge">:prompt</code> option in the <code class="highlighter-rouge">select_tag</code> helper are not escaped, leading to a cross-site scripting vulnerability.</p>
-
-<p>Brakeman will warn on all uses of <code class="highlighter-rouge">select_tag</code> with unescaped user input in the <code class="highlighter-rouge">:prompt</code> option.</p>
-
-<h3 id="cve-2012-3464---single-quotes-are-unescaped">CVE-2012-3464 - Single Quotes are Unescaped</h3>
-
-<p>This is pretty much a known issue (<a href="http://www.ruby-forum.com/topic/166894">example from 2008</a>), but Rails 3.2.8 fixes it.</p>
-
-<p>Single quotes are most dangerous when interpolating values into HTML attributes that use single quotes, which is why it is often recommended to always use double quotes in HTML.</p>
-
-<p>There is a <a href="https://groups.google.com/d/topic/rubyonrails-security/kKGNeMrnmiY/discussion">provided workaround</a> for earlier versions of Rails which replaces <code class="highlighter-rouge">ERB::Util.html_escape</code> with <code class="highlighter-rouge">Rack::Utils.escape_html</code>. This method adds escaping for both single quotes (<code class="highlighter-rouge">'</code>) and forward slashes (<code class="highlighter-rouge">/</code>).</p>
-
-<p>If the provided workaround is used in an initializer, as suggested, then Brakeman will not generate a warning for this vulnerability. Otherwise, Brakeman will generate a warning for affected versions.</p>
-
-<h3 id="cve-2012-3465---xss-in-strip_tags">CVE-2012-3465 - XSS in strip_tags</h3>
-
-<p>Another vulnerability has been reported for <code class="highlighter-rouge">strip_tags</code> (earlier report was <a href="https://groups.google.com/d/topic/rubyonrails-security/K5EwdJt06hI/discussion">CVE-2011-2931</a>).</p>
-
-<p>Brakeman will warn on affected versions if uses of <code class="highlighter-rouge">strip_tags</code> are detected.</p>
-
-<h3 id="xss-in-select-helper">XSS in select Helper</h3>
-
-<p>This vulnerability was <a href="https://groups.google.com/d/topic/rubyonrails-security/CdoMUVpsRmQ/discussion">reported a while ago</a>, but it was unclear if it applied to Rails 2.x or just Rails 3. Thanks to Neil Matatall, it has been confirmed to be an issue in Rails 2.x as well.</p>
-
-<p>Therefore, Brakeman will be reporting the vulnerability (<code class="highlighter-rouge">select</code> does not escape options list if supplied as a straight string) for Rails 2.x as well.</p>
-
-<h3 id="report-issues">Report Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+<p>Lastly, there is this new website. Look forward to tutorials and more in-depth information about how to use Brakeman effectively.</p>
 </div>
-
-
-  <footer>
-    <p class="meta">
-      
-
-
-      
-
-
-
-
-<time datetime="2012-08-13 11:04:00 -0700" pubdate  updated >2012-08-13 11:04:00 -0700</time>
-
-
-
-      
-
-
-    </p>
-    
-      <div class="sharing">
   
   
+
+
+  </article>
+
+<nav role="pagination">
+  <div>
+    <a href="/blog/archives">Blog Archives</a>
+  </div>
+</nav>
+
 </div>
-
-    
-  </footer>
-</article>
-
-</div>
-
 <aside role=sidebar>
   <section>
   <p></p>
@@ -233,7 +181,6 @@
 </section>
 
 </aside>
-
 
     </div>
   </div>
