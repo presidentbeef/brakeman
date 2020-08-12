@@ -10,7 +10,7 @@ class OnlyFilesOptionTests < Minitest::Test
       :controller => 8,
       :model => 0,
       :template => 1,
-      :generic => 16 }
+      :generic => 17 }
 
     if RUBY_PLATFORM == 'java'
       @expected[:generic] += 1

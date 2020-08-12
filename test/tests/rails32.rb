@@ -1,7 +1,7 @@
 # NOTE: Please do not add any further tests to the Rails 3.2 application unless
 # the issue being tested specifically applies to Rails 3.2 and not the other
 # versions.
-# If possible, please use the rails5 app. 
+# If possible, please use the rails5 app.
 
 require_relative '../test'
 
@@ -14,7 +14,7 @@ class Rails32Tests < Minitest::Test
       :controller => 8,
       :model => 5,
       :template => 11,
-      :generic => 22 }
+      :generic => 23 }
 
     if RUBY_PLATFORM == 'java'
       @expected[:generic] += 1

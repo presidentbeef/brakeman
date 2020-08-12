@@ -9,7 +9,7 @@ class RailsWithXssPluginTests < Minitest::Test
       :controller => 1,
       :model => 4,
       :template => 4,
-      :generic => 31 }
+      :generic => 32 }
   end
 
   def report

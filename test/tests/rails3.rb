@@ -14,7 +14,7 @@ class Rails3Tests < Minitest::Test
       :controller => 1,
       :model => 9,
       :template => 41,
-      :generic => 75
+      :generic => 76
     }
 
     if RUBY_PLATFORM == 'java'
@@ -933,7 +933,7 @@ class Rails3Tests < Minitest::Test
   def test_translate_bug
     assert_warning :type => :warning,
       :warning_type => "Cross-Site Scripting",
-      :message => /^Rails\ 3\.0\.3\ has\ a\ vulnerability\ in\ the\ t/, 
+      :message => /^Rails\ 3\.0\.3\ has\ a\ vulnerability\ in\ the\ t/,
       :confidence => 1,
       :file => /Gemfile/
   end
@@ -1068,7 +1068,7 @@ class Rails3Tests < Minitest::Test
       :relative_path => "app/views/home/test_content_tag.html.erb",
       :code => s(:call, nil, :content_tag, s(:lit, :div), s(:str, "Blah!"), s(:hash, s(:lit, :class), s(:call, s(:params), :[], s(:lit, :class))), s(:true)),
       :user_input => s(:call, s(:params), :[], s(:lit, :class))
-  end 
+  end
 
   def test_cross_site_scripting_model_in_tag_name
     assert_warning :type => :template,

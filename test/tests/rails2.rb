@@ -14,7 +14,7 @@ class Rails2Tests < Minitest::Test
       :controller => 1,
       :model => 4,
       :template => 47,
-      :generic => 59 }
+      :generic => 60 }
   end
 
   def report
@@ -1506,7 +1506,7 @@ class Rails2WithOptionsTests < Minitest::Test
       :controller => 1,
       :model => 4,
       :template => 47,
-      :generic => 59 }
+      :generic => 60 }
   end
 
   def report
