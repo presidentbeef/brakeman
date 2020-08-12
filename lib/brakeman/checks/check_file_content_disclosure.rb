@@ -9,11 +9,11 @@ class Brakeman::CheckFileContentDisclosure < Brakeman::BaseCheck
     fix_version = case
       when version_between?('0.0.0', '4.2.11')
         '4.2.11.1 '
-      when version_between?('5.0.0', '5.0.7.2')
+      when version_between?('5.0.0.beta1', '5.0.7.2')
         '5.0.7.2'
-      when version_between?('5.1.0', '5.1.6.1')
+      when version_between?('5.1.0.beta1', '5.1.6.1')
         '5.1.6.2'
-      when version_between?('5.2.0', '5.2.2')
+      when version_between?('5.2.0.beta1', '5.2.2')
         '5.2.2.1'
       when version_between?('6.0.0.beta1', '6.0.0.beta2')
         '6.0.0.beta3'
