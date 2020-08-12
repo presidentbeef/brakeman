@@ -13,7 +13,7 @@ class Rails52Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 5,
-      :generic => 23
+      :generic => 24
     }
   end
 
