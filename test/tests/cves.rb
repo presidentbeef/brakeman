@@ -293,6 +293,32 @@ class CVETests < Minitest::Test
     refute_nil warning
   end
 
+  def test_CVE_2019_5418
+    before_rescan_of "app/controllers/home_controller.rb", "rails3", run_checks: ["CheckFileContentDisclosure"] do
+    end
+
+    assert_warning :type => :warning,
+      :warning_code => Brakeman::WarningCodes.code(:CVE_2019_5418),
+      :warning_type => "File Access",
+      :message => /has\ a\ file\ content\ disclosure\ vulnerability/,
+      :confidence => 0
+  end
+
+  def test_CVE_2019_5418_workaround
+    before_rescan_of "app/controllers/cve_home_controller.rb", "rails3", run_checks: ["CheckFileContentDisclosure"] do
+      write_file "app/controllers/cve_home_controller.rb", <<-RUBY
+      class HomeController < ApplicationController
+        def test_dynamic_render
+          render :file => '/some/path/', formats: [:html]
+        end
+      end
+      RUBY
+    end
+
+    assert_existing
+    assert_new 0
+  end
+
   def test_CVE_2020_8159_rails5_upgrade
     before_rescan_of "Gemfile", "rails5", run_checks: ["CheckPageCachingCVE"] do
       replace "Gemfile",
