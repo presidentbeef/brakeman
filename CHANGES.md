@@ -1,5 +1,6 @@
-# Unreleased
+# 4.9.0 - 2020-08-04
 
+* Add check for CVE-2020-8166 (Jamie Finnigan)
 * Avoid warning when `safe_yaml` is used via `YAML.load(..., safe: true)`
 * Add check for user input in `ERB.new` (Matt Hickman)
 * Add `--ensure-ignore-notes` (Eli Block)

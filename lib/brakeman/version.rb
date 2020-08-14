@@ -1,3 +1,3 @@
 module Brakeman
-  Version = "4.8.2"
+  Version = "4.9.0"
 end
