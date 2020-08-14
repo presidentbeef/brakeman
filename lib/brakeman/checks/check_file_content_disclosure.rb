@@ -44,19 +44,19 @@ class Brakeman::CheckFileContentDisclosure < Brakeman::BaseCheck
 
     case result[:call].render_type
     when :file
-      !check_for_formats_option(result)
+      check_for_absence_of_formats_option(result)
     end
   end
 
   # vulnerability can be mitigated with a specific format:
   # render file: "#{Rails.root}/some/file", formats: [:html]
-  def check_for_formats_option result
+  def check_for_absence_of_formats_option result
     exp = result[:call].last
 
     if sexp? exp and exp.node_type == :hash
       exp.each_sexp do |e|
         Match.new(:formats, e)
       end
-    end
+    end.empty?
   end
 end
