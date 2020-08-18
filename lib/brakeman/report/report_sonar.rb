@@ -1,0 +1,45 @@
+class Brakeman::Report::Sonar < Brakeman::Report::Base
+  def generate_report
+    return {
+      issues: all_warnings.map { |warning| issue_json(warning) }
+    }.to_json
+  end
+  
+  private
+  
+  def issue_json(warning)
+    {
+      engineId: "Brakeman",
+      ruleId: warning.warning_code,
+      type: "VULNERABILITY",
+      severity: severity_level_for(warning.confidence),
+      primaryLocation: {
+        message: warning.message,
+        filePath: file_path(warning),
+        textRange: {
+          "startLine": warning.line || 1,
+          "endLine": warning.line || 1,
+        }
+      },
+      effortMinutes: (4 - warning.confidence) * 15
+    }
+  end
+
+  def severity_level_for(confidence)
+    if confidence == 0
+      "CRITICAL"
+    elsif confidence == 1
+      "MAJOR"
+    else
+      "MINOR"
+    end
+  end
+
+  def file_path(warning)
+    if tracker.options[:path_prefix]
+      (Pathname.new(tracker.options[:path_prefix]) + Pathname.new(warning.file.relative)).to_s
+    else
+      warning.file
+    end
+  end
+end

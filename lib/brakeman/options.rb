@@ -229,7 +229,7 @@ module Brakeman::Options
 
         opts.on "-f",
           "--format TYPE",
-          [:pdf, :text, :html, :csv, :tabs, :json, :markdown, :codeclimate, :cc, :plain, :table, :junit, :sarif],
+          [:pdf, :text, :html, :csv, :tabs, :json, :markdown, :codeclimate, :cc, :plain, :table, :junit, :sarif, :sonar],
           "Specify output formats. Default is text" do |type|
 
           type = "s" if type == :text
