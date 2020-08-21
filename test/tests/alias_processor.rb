@@ -171,12 +171,23 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
-  def test_array_plu
+  def test_array_plus
     assert_alias '[1, 2, 3]', <<-RUBY
     x = [1]
     y = x + [2, 3]
     y
     RUBY
+  end
+
+  def test_array_plus_no_lines
+    a1 = s(:array, s(:lit, 1))
+    a2 = s(:array, s(:lit, 2))
+    joined = Brakeman::AliasProcessor.new.join_arrays(a1, a2)
+    expected = s(:array,
+                 s(:lit, 1),
+                 s(:lit, 2))
+
+    assert_equal expected, joined
   end
 
   def test_hash_index
