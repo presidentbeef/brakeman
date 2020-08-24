@@ -79,7 +79,9 @@ module Brakeman
                   # Only used by Rails2ConfigProcessor right now
                   extract_version(version)
                 else
-                  gem_version(:rails) || gem_version(:railties)
+                  gem_version(:rails) ||
+                    gem_version(:railties) ||
+                    gem_version(:activerecord)
                 end
 
       if version
