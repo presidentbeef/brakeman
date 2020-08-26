@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 20
+      :generic => 21
     }
   end
 
@@ -80,6 +80,19 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/controllers/groups_controller.rb",
       :code => s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :execute, s(:call, s(:dstr, "SELECT * FROM ", s(:evstr, s(:call, nil, :user_input))), :strip)),
       :user_input => s(:call, nil, :user_input)
+  end
+
+  def test_sql_injection_chomp_string
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "e5f6e40868c9046e5c1433e4975e49b65967de1dcf3add7ba35248b897eeea1c",
+      :warning_type => "SQL Injection",
+      :line => 19,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :code => s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :delete, s(:call, s(:dstr, "DELETE FROM ", s(:evstr, s(:call, nil, :table)), s(:str, " WHERE updated_at < now() - interval '"), s(:evstr, s(:call, nil, :period)), s(:str, "'\n")), :chomp)),
+      :user_input => s(:call, nil, :table)
   end
 
   def test_cross_site_scripting_sanity
