@@ -82,6 +82,19 @@ class Rails6Tests < Minitest::Test
       :user_input => s(:call, nil, :user_input)
   end
 
+  def test_sql_injection_chomp_string
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "e5f6e40868c9046e5c1433e4975e49b65967de1dcf3add7ba35248b897eeea1c",
+      :warning_type => "SQL Injection",
+      :line => 19,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :code => s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :delete, s(:call, s(:dstr, "DELETE FROM ", s(:evstr, s(:call, nil, :table)), s(:str, " WHERE updated_at < now() - interval '"), s(:evstr, s(:call, nil, :period)), s(:str, "'\n")), :chomp)),
+      :user_input => s(:call, nil, :table)
+  end
+
   def test_cross_site_scripting_sanity
     assert_warning :type => :template,
       :warning_code => 2,
