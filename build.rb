@@ -16,7 +16,8 @@ File.open "bundle/load.rb", "w" do |f|
     f.puts %Q[$:.unshift "\#{path}/#{dir}"]
   end
 end
-puts "?"
-gets
+
+# Fix permissions
+system 'chmod 664 bundle/ruby/*/gems/ruby_parser-legacy-1.0.0/lib/ruby_parser/legacy/*'
 
 system "BM_PACKAGE=true gem build brakeman.gemspec"
