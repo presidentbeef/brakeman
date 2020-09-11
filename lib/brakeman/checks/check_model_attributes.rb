@@ -8,7 +8,7 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
   @description = "Reports models which do not use attr_restricted and warns on models that use attr_protected"
 
   def run_check
-    return if mass_assign_disabled?
+    return if mass_assign_disabled? or tracker.config.has_gem?(:protected_attributes)
 
     #Roll warnings into one warning for all models
     if tracker.options[:collapse_mass_assignment]

@@ -1,3 +1,10 @@
+# 4.9.1 - 2020-09-04
+
+* Check `chomp`ed strings for SQL injection
+* Use version from `active_record` for non-Rails apps (Ulysse Buonomo)
+* Always set line number for joined arrays
+* Avoid warning about missing `attr_accessible` if `protected_attributes` gem is used
+
 # 4.9.0 - 2020-08-04
 
 * Add check for CVE-2020-8166 (Jamie Finnigan)

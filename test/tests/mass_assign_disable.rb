@@ -71,10 +71,12 @@ class MassAssignDisableTest < Minitest::Test
       append "gems.rb", "gem 'protected_attributes'"
     end
 
+    # I misunderstood this previously - the protected_attributes gem
+    # does not require use of attr_accessible, just allows it.
     assert_reindex :none
     assert_changes
     assert_fixed 0
-    assert_new 1
+    assert_new 0
   end
 
   def test_protected_attributes_gem_with_whitelist_attributes
