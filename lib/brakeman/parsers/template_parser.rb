@@ -9,7 +9,6 @@ module Brakeman
     def initialize tracker, file_parser
       @tracker = tracker
       @file_parser = file_parser
-      @file_parser.file_list[:templates] ||= []
     end
 
     def parse_template path, text
@@ -33,7 +32,7 @@ module Brakeman
               end
 
         if src and ast = @file_parser.parse_ruby(src, path)
-          @file_parser.file_list[:templates] << TemplateFile.new(path, ast, name, type)
+          @file_parser.file_list << TemplateFile.new(path, ast, name, type)
         end
       rescue Racc::ParseError => e
         tracker.error e, "Could not parse #{path}"

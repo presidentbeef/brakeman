@@ -7,6 +7,7 @@ begin
   require 'brakeman/app_tree'
   require 'brakeman/file_parser'
   require 'brakeman/parsers/template_parser'
+  require 'brakeman/processors/lib/file_type_detector'
 rescue LoadError => e
   $stderr.puts e.message
   $stderr.puts "Please install the appropriate dependency."
@@ -43,6 +44,8 @@ class Brakeman::Scanner
     process_config
     Brakeman.notify "Parsing files..."
     parse_files
+    Brakeman.notify "Detecting file types..."
+    detect_file_types
     Brakeman.notify "Processing initializers..."
     process_initializers
     Brakeman.notify "Processing libs..."
@@ -67,30 +70,53 @@ class Brakeman::Scanner
   def parse_files
     fp = Brakeman::FileParser.new(tracker.app_tree, tracker.options[:parser_timeout])
 
-    files = {
-      :initializers => @app_tree.initializer_paths,
-      :controllers => @app_tree.controller_paths,
-      :models => @app_tree.model_paths
-    }
+    paths = @app_tree.initializer_paths +
+            @app_tree.controller_paths +
+            @app_tree.model_paths
 
     unless options[:skip_libs]
-      files[:libs] = @app_tree.lib_paths
+      paths.concat @app_tree.lib_paths
     end
 
-    files.each do |name, paths|
-      fp.parse_files paths, name
-    end
+    fp.parse_files paths
 
     template_parser = Brakeman::TemplateParser.new(tracker, fp)
 
-    fp.read_files(@app_tree.template_paths, :templates) do |path, contents|
+    fp.read_files(@app_tree.template_paths) do |path, contents|
       template_parser.parse_template path, contents
     end
 
     # Collect errors raised during parsing
     tracker.add_errors(fp.errors)
 
-    @file_list = fp.file_list
+    @parsed_files = fp.file_list
+  end
+
+  def detect_file_types
+    @file_list = {
+      controllers: [],
+      initializers: [],
+      libs: [],
+      models: [],
+      templates: [],
+    }
+
+    detector = Brakeman::FileTypeDetector.new
+
+    @parsed_files.each do |file|
+      if file.is_a? Brakeman::TemplateParser::TemplateFile
+        @file_list[:templates] << file
+      else
+        type = detector.detect_type(file)
+        unless type == :skip
+          if @file_list[type].nil?
+            raise type.to_s
+          else
+            @file_list[type] << file
+          end
+        end
+      end
+    end
   end
 
   #Process config/environment.rb and config/gems.rb
