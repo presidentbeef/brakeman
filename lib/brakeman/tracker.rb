@@ -68,6 +68,12 @@ class Brakeman::Tracker
     }
   end
 
+  def add_errors exceptions
+    exceptions.each do |e|
+      error(e)
+    end
+  end
+
   #Run a set of checks on the current information. Results will be stored
   #in Tracker#checks.
   def run_checks

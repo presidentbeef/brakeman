@@ -97,7 +97,7 @@ module Brakeman
     end
 
     def self.parse_inline_erb tracker, text
-      fp = Brakeman::FileParser.new(tracker)
+      fp = Brakeman::FileParser.new(tracker.app_tree, tracker.options[:parser_timeout])
       tp = self.new(tracker, fp)
       src = tp.parse_erb '_inline_', text
       type = tp.erubis? ? :erubis : :erb

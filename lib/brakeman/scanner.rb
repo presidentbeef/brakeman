@@ -65,7 +65,7 @@ class Brakeman::Scanner
   end
 
   def parse_files
-    fp = Brakeman::FileParser.new tracker
+    fp = Brakeman::FileParser.new(tracker.app_tree, tracker.options[:parser_timeout])
 
     files = {
       :initializers => @app_tree.initializer_paths,
@@ -86,6 +86,9 @@ class Brakeman::Scanner
     fp.read_files(@app_tree.template_paths, :templates) do |path, contents|
       template_parser.parse_template path, contents
     end
+
+    # Collect errors raised during parsing
+    tracker.add_errors(fp.errors)
 
     @file_list = fp.file_list
   end
@@ -325,7 +328,7 @@ class Brakeman::Scanner
   end
 
   def parse_ruby_file file
-    fp = Brakeman::FileParser.new(self.tracker)
+    fp = Brakeman::FileParser.new(tracker.app_tree, tracker.options[:parser_timeout])
     fp.parse_ruby(file.read, file)
   end
 end

@@ -3,13 +3,13 @@ module Brakeman
 
   # This class handles reading and parsing files.
   class FileParser
-    attr_reader :file_list
+    attr_reader :file_list, :errors
 
-    def initialize tracker
-      @tracker = tracker
-      @timeout = @tracker.options[:parser_timeout]
-      @app_tree = @tracker.app_tree
+    def initialize app_tree, timeout
+      @app_tree = app_tree
+      @timeout = timeout
       @file_list = {}
+      @errors = []
     end
 
     def parse_files list, type
@@ -38,15 +38,17 @@ module Brakeman
         Brakeman.debug "Parsing #{path}"
         RubyParser.new.parse input, path, @timeout
       rescue Racc::ParseError => e
-        @tracker.error e, "Could not parse #{path}"
-        nil
+        error e.exception(e.message + "\nCould not parse #{path}")
       rescue Timeout::Error => e
-        @tracker.error Exception.new("Parsing #{path} took too long (> #{@timeout} seconds). Try increasing the limit with --parser-timeout"), caller
-        nil
+        error Exception.new("Parsing #{path} took too long (> #{@timeout} seconds). Try increasing the limit with --parser-timeout")
       rescue => e
-        @tracker.error e.exception(e.message + "\nWhile processing #{path}"), e.backtrace
-        nil
+        error e.exception(e.message + "\nWhile processing #{path}")
       end
+    end
+
+    def error exception
+      @errors << exception
+      nil
     end
   end
 end
