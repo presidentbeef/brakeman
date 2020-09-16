@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   default: &default
     docker:
-      - image: circleci/ruby:latest
+      - image: cimg/ruby:2.7
     steps:
       - checkout
       - run: bundle check || bundle install
@@ -10,10 +10,10 @@ jobs:
           command: bundle exec rake
       - store_test_results:
           path: test-results
-  test-2-3:
+  test-2-4:
     <<: *default
     docker:
-      - image: circleci/ruby:2.3
+      - image: cimg/ruby:2.4
     steps:
       - checkout
       - attach_workspace:
@@ -36,10 +36,6 @@ jobs:
           paths:
             - codeclimate.json
             - cc-test-reporter
-  test-2-4:
-    <<: *default
-    docker:
-      - image: cimg/ruby:2.4
   test-2-5:
     <<: *default
     docker:
@@ -51,7 +47,7 @@ jobs:
   test-latest:
     <<: *default
     docker:
-      - image: cimg/ruby:latest
+      - image: circleci/ruby:latest
   upload-coverage:
     <<: *default
     working_directory: ~/repo
@@ -66,10 +62,10 @@ workflows:
   tests:
     jobs:
       - default
-      - test-2-3
       - test-2-4
       - test-2-5
       - test-2-6
+      - test-latest
       - upload-coverage:
           requires:
-            - test-2-3
+            - test-2-4
