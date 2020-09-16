@@ -47,7 +47,7 @@ jobs:
   test-latest:
     <<: *default
     docker:
-      - image: cimg/ruby:latest
+      - image: circleci/ruby:latest
   upload-coverage:
     <<: *default
     working_directory: ~/repo
