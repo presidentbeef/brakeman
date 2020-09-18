@@ -3,13 +3,16 @@ require_relative '../test'
 class FileParserTests < Minitest::Test
   def setup
     @tracker = BrakemanTester.new_tracker
-    @file_parser = Brakeman::FileParser.new(@tracker)
+    timeout = 10
+    @file_parser = Brakeman::FileParser.new(@tracker.app_tree, timeout)
   end
 
   def test_parse_error
     @file_parser.parse_ruby <<-RUBY, "/tmp/BRAKEMAN_FAKE_PATH/test.rb"
         x =
     RUBY
+
+    @tracker.add_errors(@file_parser.errors)
 
     assert_equal 1, @tracker.errors.length
   end
@@ -19,6 +22,8 @@ class FileParserTests < Minitest::Test
     blah(x: 1)
     thing do
     RUBY
+
+    @tracker.add_errors(@file_parser.errors)
 
     assert_equal 1, @tracker.errors.length
 
