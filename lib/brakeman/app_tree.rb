@@ -96,6 +96,28 @@ module Brakeman
       end
     end
 
+    EXCLUDED_PATHS = %w[
+    /generators/
+    lib/tasks/
+    lib/templates/
+    db/
+    spec/
+    test/
+    tmp/
+    public/
+    log/
+    ]
+
+    def ruby_file_paths
+      find_paths(".").reject do |path|
+        relative_path = path.relative
+
+        EXCLUDED_PATHS.any? do |excluded|
+          relative_path.include? excluded
+        end
+      end.uniq
+    end
+
     def initializer_paths
       @initializer_paths ||= prioritize_concerns(find_paths("config/initializers"))
     end
@@ -109,8 +131,8 @@ module Brakeman
     end
 
     def template_paths
-      @template_paths ||= find_paths("app/**/views", "*.{#{VIEW_EXTENSIONS}}") +
-                          find_paths("app/**/views", "*.{erb,haml,slim}").reject { |path| File.basename(path).count(".") > 1 }
+      @template_paths ||= find_paths(".", "*.{#{VIEW_EXTENSIONS}}") +
+        find_paths("**", "*.{erb,haml,slim}").reject { |path| File.basename(path).count(".") > 1 }
     end
 
     def layout_exists?(name)
