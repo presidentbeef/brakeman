@@ -167,8 +167,8 @@ module Brakeman
     def select_files(paths)
       paths = select_only_files(paths)
       paths = reject_skipped_files(paths)
-      paths = reject_global_excludes(paths)
-      convert_to_file_paths(paths)
+      paths = convert_to_file_paths(paths)
+      reject_global_excludes(paths)
     end
 
     def select_only_files(paths)
@@ -201,8 +201,10 @@ module Brakeman
 
     def reject_global_excludes(paths)
       paths.reject do |path|
+        relative_path = path.relative
+
         EXCLUDED_PATHS.any? do |excluded|
-          path.include? excluded
+          relative_path.include? excluded
         end
       end
     end
