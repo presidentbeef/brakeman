@@ -1,3 +1,7 @@
+# 4.10.0 - 2020-09-28
+
+* Add SARIF report format (Steve Winton)
+
 # 4.9.1 - 2020-09-04
 
 * Check `chomp`ed strings for SQL injection
