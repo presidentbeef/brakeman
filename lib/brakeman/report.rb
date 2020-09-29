@@ -46,7 +46,8 @@ class Brakeman::Report
     when :to_sarif
       return self.to_sarif
     when :to_sonar
-      return self.to_sonar
+      require_report 'sonar'
+      Brakeman::Report::Sonar
     else
       raise "Invalid format: #{format}. Should be one of #{VALID_FORMATS.inspect}"
     end

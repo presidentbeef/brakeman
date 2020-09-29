@@ -15,7 +15,7 @@ class Brakeman::Report::Sonar < Brakeman::Report::Base
       severity: severity_level_for(warning.confidence),
       primaryLocation: {
         message: warning.message,
-        filePath: file_path(warning),
+        filePath: warning.file.relative,
         textRange: {
           "startLine": warning.line || 1,
           "endLine": warning.line || 1,
@@ -32,14 +32,6 @@ class Brakeman::Report::Sonar < Brakeman::Report::Base
       "MAJOR"
     else
       "MINOR"
-    end
-  end
-
-  def file_path(warning)
-    if tracker.options[:path_prefix]
-      (Pathname.new(tracker.options[:path_prefix]) + Pathname.new(warning.file.relative)).to_s
-    else
-      warning.file
     end
   end
 end
