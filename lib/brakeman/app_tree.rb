@@ -21,6 +21,7 @@ module Brakeman
       end
       init_options[:additional_libs_path] = options[:additional_libs_path]
       init_options[:engine_paths] = options[:engine_paths]
+      init_options[:skip_vendor] = options[:skip_vendor]
       new(root, init_options)
     end
 
@@ -62,6 +63,7 @@ module Brakeman
       @engine_paths = init_options[:engine_paths] || []
       @absolute_engine_paths = @engine_paths.select { |path| path.start_with?(File::SEPARATOR) }
       @relative_engine_paths = @engine_paths - @absolute_engine_paths
+      @skip_vendor = init_options[:skip_vendor]
       @gemspec = nil
       @root_search_pattern = nil
     end
@@ -203,8 +205,12 @@ module Brakeman
       paths.reject do |path|
         relative_path = path.relative
 
-        EXCLUDED_PATHS.any? do |excluded|
-          relative_path.include? excluded
+        if @skip_vendor and relative_path.include? 'vendor/'
+          true
+        else
+          EXCLUDED_PATHS.any? do |excluded|
+            relative_path.include? excluded
+          end
         end
       end
     end

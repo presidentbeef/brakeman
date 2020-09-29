@@ -92,6 +92,14 @@ class BrakemanOptionsTest < Minitest::Test
     assert !options[:index_libs]
   end
 
+  def test_skip_vendor_option
+    options = setup_options_from_input("--skip-vendor")
+    assert options[:skip_vendor]
+
+    options = setup_options_from_input("--no-skip-vendor")
+    assert !options[:skip_vendor]
+  end
+
   def test_limit_options
     options = setup_options_from_input("--branch-limit", "17")
     assert_equal 17, options[:branch_limit]
