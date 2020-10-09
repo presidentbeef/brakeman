@@ -12,15 +12,12 @@ class Brakeman::CheckPageCachingCVE < Brakeman::BaseCheck
     cve = 'CVE-2020-8159'
 
     return unless gem_version and version_between?('0.0.0', '1.2.1', gem_version)
-
     message = msg("Directory traversal vulnerability in ", msg_version(gem_version, gem_name), " ", msg_cve(cve), ". Upgrade to ", msg_version(upgrade_version, gem_name))
-
     if uses_caches_page?
       confidence = :high
     else
       confidence = :weak
     end
-
     warn :warning_type => 'Directory Traversal',
       :warning_code => :CVE_2020_8159,
       :message => message,
@@ -30,8 +27,10 @@ class Brakeman::CheckPageCachingCVE < Brakeman::BaseCheck
   end
 
   def uses_caches_page?
-    tracker.controllers.any? do |name, controller|
-      controller.options.has_key? :caches_page
+    if tracker.controllers.any?
+      tracker.controllers.each_class do |controller|
+        controller.options.has_key? :caches_page
+      end
     end
   end
 end
