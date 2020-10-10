@@ -368,8 +368,13 @@ module Brakeman::Util
   #
   # views/test/something.html.erb -> test/something
   def template_path_to_name path
-    names = path.relative.split("/")
+    names = path.relative.split('/')
     names.last.gsub!(/(\.(html|js)\..*|\.(rhtml|haml|erb|slim))$/, '')
-    names[(names.index("views") + 1)..-1].join("/").to_sym
+
+    if names.include? 'views'
+      names[(names.index('views') + 1)..-1]
+    else
+      names
+    end.join('/').to_sym
   end
 end

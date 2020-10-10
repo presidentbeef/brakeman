@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 21
+      :generic => 23
     }
   end
 
@@ -93,6 +93,19 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/models/user.rb",
       :code => s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :delete, s(:call, s(:dstr, "DELETE FROM ", s(:evstr, s(:call, nil, :table)), s(:str, " WHERE updated_at < now() - interval '"), s(:evstr, s(:call, nil, :period)), s(:str, "'\n")), :chomp)),
       :user_input => s(:call, nil, :table)
+  end
+
+  def test_sql_injection_nonstandard_directory
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "633da061d9412e2a270133526a45933e29553846c677254abfd0d0955e69f064",
+      :warning_type => "SQL Injection",
+      :line => 3,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/widgets/widget.rb",
+      :code => s(:call, nil, :where, s(:dstr, "direction = ", s(:evstr, s(:lvar, :direction)), s(:str, ")"))),
+      :user_input => s(:lvar, :direction)
   end
 
   def test_cross_site_scripting_sanity
@@ -313,6 +326,19 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/controllers/groups_controller.rb",
       :code => s(:dxstr, "", s(:evstr, s(:call, s(:params), :require, s(:str, "name"))), s(:str, " some optional text")),
       :user_input => s(:call, s(:params), :require, s(:str, "name"))
+  end
+
+  def test_command_injection_nonstandard_directory
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "374fcec0e44933e90ee710b9a3975e29134d8a3725e3d7d7ab5e0e8f0c09f5a4",
+      :warning_type => "Command Injection",
+      :line => 3,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "another_lib_dir/some_lib.rb",
+      :code => s(:dxstr, "rm -rf ", s(:evstr, s(:lvar, :thing))),
+      :user_input => s(:lvar, :thing)
   end
 
   def test_dynamic_render_path_dir_glob_filter

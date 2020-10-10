@@ -66,6 +66,7 @@ module Brakeman
   #  * :run_checks - array of checks to run (run all if not specified)
   #  * :safe_methods - array of methods to consider safe
   #  * :skip_libs - do not process lib/ directory (default: false)
+  #  * :skip_vendor - do not process vendor/ directory (default: true)
   #  * :skip_checks - checks not to run (run all if not specified)
   #  * :absolute_paths - show absolute path of each file (default: false)
   #  * :summary_only - only output summary section of report for plain/table (:summary_only, :no_summary, true)
@@ -191,6 +192,7 @@ module Brakeman
       :report_progress => true,
       :safe_methods => Set.new,
       :skip_checks => Set.new,
+      :skip_vendor => true,
     }
   end
 
