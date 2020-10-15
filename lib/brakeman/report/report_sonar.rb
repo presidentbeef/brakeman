@@ -1,8 +1,9 @@
 class Brakeman::Report::Sonar < Brakeman::Report::Base
   def generate_report
-    return {
+    report_object = {
       issues: all_warnings.map { |warning| issue_json(warning) }
-    }.to_json
+    }
+    return JSON.pretty_generate report_object
   end
   
   private

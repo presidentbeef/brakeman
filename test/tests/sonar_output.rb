@@ -12,8 +12,10 @@ class SonarOutputTests < Minitest::Test
 
   def test_for_issues_keys
     issues_keys = ["engineId", "ruleId", "severity", "type", "primaryLocation", "effortMinutes"]
-    puts @@sonar["issues"][0].keys
-    assert (@@sonar["issues"][0].keys - issues_keys).empty?
+    @@sonar["issues"].each do |warning|
+      assert (warning.keys - issues_keys).empty?
+    end
+    
   end
 
 end
