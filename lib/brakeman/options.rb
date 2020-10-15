@@ -166,6 +166,10 @@ module Brakeman::Options
           options[:only_files].merge files
         end
 
+        opts.on "--[no-]skip-vendor", "Skip processing vendor directory (Default)" do |skip|
+          options[:skip_vendor] = skip
+        end
+
         opts.on "--skip-libs", "Skip processing lib directory" do
           options[:skip_libs] = true
         end

@@ -21,6 +21,7 @@ module Brakeman
       end
       init_options[:additional_libs_path] = options[:additional_libs_path]
       init_options[:engine_paths] = options[:engine_paths]
+      init_options[:skip_vendor] = options[:skip_vendor]
       new(root, init_options)
     end
 
@@ -62,6 +63,7 @@ module Brakeman
       @engine_paths = init_options[:engine_paths] || []
       @absolute_engine_paths = @engine_paths.select { |path| path.start_with?(File::SEPARATOR) }
       @relative_engine_paths = @engine_paths - @absolute_engine_paths
+      @skip_vendor = init_options[:skip_vendor]
       @gemspec = nil
       @root_search_pattern = nil
     end
@@ -96,6 +98,10 @@ module Brakeman
       end
     end
 
+    def ruby_file_paths
+      find_paths(".").uniq
+    end
+
     def initializer_paths
       @initializer_paths ||= prioritize_concerns(find_paths("config/initializers"))
     end
@@ -109,8 +115,8 @@ module Brakeman
     end
 
     def template_paths
-      @template_paths ||= find_paths("app/**/views", "*.{#{VIEW_EXTENSIONS}}") +
-                          find_paths("app/**/views", "*.{erb,haml,slim}").reject { |path| File.basename(path).count(".") > 1 }
+      @template_paths ||= find_paths(".", "*.{#{VIEW_EXTENSIONS}}") +
+        find_paths("**", "*.{erb,haml,slim}").reject { |path| File.basename(path).count(".") > 1 }
     end
 
     def layout_exists?(name)
@@ -163,7 +169,8 @@ module Brakeman
     def select_files(paths)
       paths = select_only_files(paths)
       paths = reject_skipped_files(paths)
-      convert_to_file_paths(paths)
+      paths = convert_to_file_paths(paths)
+      reject_global_excludes(paths)
     end
 
     def select_only_files(paths)
@@ -179,6 +186,32 @@ module Brakeman
 
       paths.reject do |path|
         match_path @skip_files, path
+      end
+    end
+
+    EXCLUDED_PATHS = %w[
+      /generators/
+      lib/tasks/
+      lib/templates/
+      db/
+      spec/
+      test/
+      tmp/
+      public/
+      log/
+    ]
+
+    def reject_global_excludes(paths)
+      paths.reject do |path|
+        relative_path = path.relative
+
+        if @skip_vendor and relative_path.include? 'vendor/'
+          true
+        else
+          EXCLUDED_PATHS.any? do |excluded|
+            relative_path.include? excluded
+          end
+        end
       end
     end
 

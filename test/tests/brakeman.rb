@@ -93,6 +93,18 @@ class UtilTests < Minitest::Test
   def test_params?
     assert util.params?(@ruby_parser.new.parse 'params[:x][:y][:z]')
   end
+
+  def test_template_path_to_name_with_views
+    path = Brakeman::FilePath.new('app/views/a/b/c/d.html.haml', 'app/views/a/b/c/d.html.haml')
+    name = util.template_path_to_name(path)
+    assert_equal :'a/b/c/d', name
+  end
+
+  def test_template_path_to_name_without_views
+    path = Brakeman::FilePath.new('lib/templates/a/b/c/d.js.erb', 'lib/templates/a/b/c/d.js.erb')
+    name = util.template_path_to_name(path)
+    assert_equal :'lib/templates/a/b/c/d', name
+  end
 end
 
 class BaseCheckTests < Minitest::Test

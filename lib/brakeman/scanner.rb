@@ -70,15 +70,7 @@ class Brakeman::Scanner
   def parse_files
     fp = Brakeman::FileParser.new(tracker.app_tree, tracker.options[:parser_timeout])
 
-    paths = @app_tree.initializer_paths +
-            @app_tree.controller_paths +
-            @app_tree.model_paths
-
-    unless options[:skip_libs]
-      paths.concat @app_tree.lib_paths
-    end
-
-    fp.parse_files paths
+    fp.parse_files tracker.app_tree.ruby_file_paths
 
     template_parser = Brakeman::TemplateParser.new(tracker, fp)
 

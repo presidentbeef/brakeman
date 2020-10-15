@@ -434,6 +434,18 @@ class Rails52Tests < Minitest::Test
       :user_input => s(:call, nil, :foo)
   end
 
+  def test_command_injection_ignored_in_vendor_dir
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :warning_type => "Command Injection",
+      :line => 3,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "vendor/vendored_thing.rb",
+      :code => s(:dxstr, "rm -rf ", s(:evstr, s(:call, nil, :stuff))),
+      :user_input => s(:call, nil, :stuff)
+  end
+
   def test_cross_site_scripting_haml_sass
     assert_warning :type => :template,
       :warning_code => 2,
@@ -597,5 +609,25 @@ class Rails52Tests < Minitest::Test
       :confidence => 1,
       :relative_path => "Gemfile.lock",
       :user_input => nil
+  end
+end
+
+class Rails52WithVendorTests < Minitest::Test
+  include BrakemanTester::FindWarning
+
+  def report
+    @@report ||= BrakemanTester.run_scan "rails5.2", "Rails 5.2", skip_vendor: false 
+  end
+
+  def test_command_injection_ignored_vendor_dir
+    assert_warning :type => :warning,
+      :warning_code => 14,
+      :warning_type => "Command Injection",
+      :line => 3,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "vendor/vendored_thing.rb",
+      :code => s(:dxstr, "rm -rf ", s(:evstr, s(:call, nil, :stuff))),
+      :user_input => s(:call, nil, :stuff)
   end
 end
