@@ -241,6 +241,8 @@ module Brakeman
       [:to_junit]
     when :sarif, :to_sarif
       [:to_sarif]
+    when :sonar, :to_sonar
+      [:to_sonar]
     else
       [:to_text]
     end
@@ -272,6 +274,8 @@ module Brakeman
         :to_junit
       when /\.sarif$/i
         :to_sarif
+      when /\.sonar$/i
+        :to_sonar
       else
         :to_text
       end

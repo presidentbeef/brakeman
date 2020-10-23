@@ -45,6 +45,9 @@ class Brakeman::Report
       Brakeman::Report::JUnit
     when :to_sarif
       return self.to_sarif
+    when :to_sonar
+      require_report 'sonar'
+      Brakeman::Report::Sonar
     else
       raise "Invalid format: #{format}. Should be one of #{VALID_FORMATS.inspect}"
     end
@@ -67,6 +70,11 @@ class Brakeman::Report
   def to_json
     require_report 'json'
     generate Brakeman::Report::JSON
+  end
+
+  def to_sonar
+    require_report 'sonar'
+    generate Brakeman::Report::Sonar
   end
 
   def to_table
