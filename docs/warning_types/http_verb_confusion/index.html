@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Brakeman: HTTP Verb Confusion</title>
+  <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
+
+  <link rel="canonical" href="https://brakemanscanner.org/docs/warning_types/http_verb_confusion/"/>
+  <link href="/favicon.png" rel="shortcut icon" />
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="feed.xml" rel="alternate" title="Brakeman" type="application/atom+xml"/>
+  
+
+  
+
+  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
+<link href='https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<script language="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
+<script src="/javascripts/jquery.github_badge.js"></script>
+<meta property="twitter:account_id" content="23978537" />
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@brakeman" />
+<meta name="twitter:title" content="Brakeman - HTTP Verb Confusion" />
+<meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
+<meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
+
+</head>
+
+<body  >
+  <header><hgroup>
+  <h1><a href="/">Brakeman</a></h1>
+  
+    <h2>Ruby on Rails Static Analysis Security Tool</h2>
+  
+</hgroup>
+
+</header>
+  <nav role=navigation><ul role=subscription data-subscription="rss">
+  <li><a href="feed.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+<form action="" method="get">
+  <fieldset role="site-search">
+    <input type="hidden" name="q" value="site:https://brakemanscanner.org" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+<ul role=main-navigation>
+  <li><a href="/">Home</a></li>
+  <li><a href="/docs">Documentation</a></li>
+  <li><a href="https://github.com/presidentbeef/brakeman">Source</a></li>
+  <li><a href="/docs/contributing">Contributing</a></li>
+  <li><a href="/brakeman_users">Users</a></li>
+  <li><a href="/contact">Contact</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article>
+  
+  <header>
+    <h1 class="entry-title">HTTP Verb Confusion</h1>
+  </header>
+  
+  <p>Ruby on Rails treats <code class="highlighter-rouge">HEAD</code> requests just like <code class="highlighter-rouge">GET</code> requests, except it drops the
+response body and does not return it to the client <em>and</em> <code class="highlighter-rouge">request.get?</code> returns <code class="highlighter-rouge">false</code>.</p>
+
+<p>If code is assuming a request is either a <code class="highlighter-rouge">GET</code> or a <code class="highlighter-rouge">POST</code> and uses <code class="highlighter-rouge">request.get?</code> to check,
+then a <code class="highlighter-rouge">HEAD</code> request will be treated like a <code class="highlighter-rouge">POST</code> instead of a <code class="highlighter-rouge">GET</code>.
+This may trigger the wrong logic or allow a request to bypass CSRF protection
+(since <code class="highlighter-rouge">GET</code>/<code class="highlighter-rouge">HEAD</code> requests are not protected).</p>
+
+<p><a href="https://blog.teddykatz.com/2019/11/05/github-oauth-bypass.html">This post explains a vulnerability in GitHub</a>
+arising from this confusion.</p>
+
+<p>To avoid introducing a vulnerabilty with <code class="highlighter-rouge">request.get?</code>,
+either use completely separate routes and actions for <code class="highlighter-rouge">GET</code> vs <code class="highlighter-rouge">POST</code> (preferred!):</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get</span> <span class="s1">'/some/path'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'my_controller#some_action`
+post '</span><span class="o">/</span><span class="n">some</span><span class="o">/</span><span class="n">path</span><span class="s1">', to: '</span><span class="n">my_controller</span><span class="c1">#a_different_action'</span>
+</code></pre></div></div>
+
+<p>or else check <code class="highlighter-rouge">request.post?</code> explicitly:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">request</span><span class="p">.</span><span class="nf">get?</span>
+  <span class="c1"># do something</span>
+<span class="k">elsif</span> <span class="n">request</span><span class="p">.</span><span class="nf">post?</span>
+  <span class="c1"># do something else</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<hr />
+<p>Back to <a href="/docs/warning_types">Warning Types</a></p>
+
+  
+    <footer>
+      <p class="meta">
+        
+        
+      </p>
+    </footer>
+  
+</article>
+
+</div>
+
+<aside role=sidebar>
+  <section>
+  <p></p>
+  <p>Brakeman is a free vulnerability scanner specifically designed for Ruby on Rails applications. It statically analyzes Rails application code to find security issues at any stage of development.</p>
+  <p><a href="/docs/quickstart">Get started!</a></p>
+</section>
+
+  <section>
+<script type='text/javascript'>
+    $(document).ready(function(){
+        $("#github").GitHubBadge({
+          login: "presidentbeef",
+          kind: "project",
+          repo_name: "brakeman",
+          include_github_logo: false,
+          image_path: "",
+          commit_count: "1",
+          issue_count: "0",
+          repo_count: "0"
+      });
+    });
+</script>
+<div id="github"></div>
+<a href="https://travis-ci.org/#!/presidentbeef/brakeman"><img src="https://secure.travis-ci.org/presidentbeef/brakeman.png" /></a>
+</section>
+
+  <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2020/09/28/brakeman-4-dot-10-dot-0-released">Brakeman 4.10.0 Released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2020/09/04/brakeman-4-dot-9-dot-1-released">Brakeman 4.9.1 Released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2020/08/27/brakeman-turns-10">Brakeman Turns Ten!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2020/08/04/brakeman-4-dot-9-dot-0-released">Brakeman 4.9.0 Released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2020/05/12/brakeman-4-dot-8-dot-2-released">Brakeman 4.8.2 Released</a>
+      </li>
+    
+  </ul>
+</section>
+
+  <section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <a class="twitter-timeline" data-dnt=true href="https://twitter.com/brakeman" data-widget-id="258654953097273345">Tweets by @brakeman</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </ul>
+</section>
+
+</aside>
+
+
+    </div>
+  </div>
+  <footer><p>
+<span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | <a href="/content_license">Content license</a></span>
+</p>
+
+</footer>
+</body>
+</html>
