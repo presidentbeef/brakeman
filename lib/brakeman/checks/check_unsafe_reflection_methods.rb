@@ -8,6 +8,7 @@ class Brakeman::CheckUnsafeReflectionMethods < Brakeman::BaseCheck
   def run_check
     check_method
     check_tap
+    check_to_proc
   end
 
   def check_method
@@ -30,6 +31,16 @@ class Brakeman::CheckUnsafeReflectionMethods < Brakeman::BaseCheck
       end
 
       if user_input = include_user_input?(argument)
+        warn_unsafe_reflection(result, user_input)
+      end
+    end
+  end
+
+  def check_to_proc
+    tracker.find_call(method: :to_proc, nested: true).each do |result|
+      target = result[:call].target
+
+      if user_input = include_user_input?(target)
         warn_unsafe_reflection(result, user_input)
       end
     end
