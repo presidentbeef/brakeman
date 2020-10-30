@@ -7,14 +7,30 @@ class Brakeman::CheckUnsafeReflectionMethods < Brakeman::BaseCheck
 
   def run_check
     check_method
+    check_tap
   end
 
   def check_method
     tracker.find_call(method: :method, nested: true).each do |result|
       argument = result[:call].first_arg
 
-      if include_user_input? argument
-        warn_unsafe_reflection(result, argument)
+      if user_input = include_user_input?(argument)
+        warn_unsafe_reflection(result, user_input)
+      end
+    end
+  end
+
+  def check_tap
+    tracker.find_call(method: :tap, nested: true).each do |result|
+      argument = result[:call].first_arg
+
+      # Argument is passed like a.tap(&argument)
+      if node_type? argument, :block_pass
+        argument = argument.value
+      end
+
+      if user_input = include_user_input?(argument)
+        warn_unsafe_reflection(result, user_input)
       end
     end
   end
