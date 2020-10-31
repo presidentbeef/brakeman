@@ -465,7 +465,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     when :if
       unsafe_sql? exp.then_clause or unsafe_sql? exp.else_clause
     when :call
-      unless IGNORE_METHODS_IN_SQL.include? exp.method
+      unless IGNORE_METHODS_IN_SQL.include? exp.method or ignore_sanitize_call? exp
         if has_immediate_user_input? exp
           exp
         elsif TO_STRING_METHODS.include? exp.method
@@ -572,7 +572,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   end
 
   IGNORE_METHODS_IN_SQL = Set[:id, :merge_conditions, :table_name, :quoted_table_name,
-    :quoted_primary_key, :to_i, :to_f, :sanitize_sql, :sanitize_sql_array,
+    :quoted_primary_key, :to_i, :to_f, :sanitize_sql_array,
     :sanitize_sql_for_assignment, :sanitize_sql_for_conditions, :sanitize_sql_hash,
     :sanitize_sql_hash_for_assignment, :sanitize_sql_hash_for_conditions,
     :to_sql, :sanitize, :primary_key, :table_name_prefix, :table_name_suffix,
@@ -590,9 +590,10 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         safe_value? exp.target
       else
         IGNORE_METHODS_IN_SQL.include? exp.method or
-        quote_call? exp or
-        arel? exp or
-        exp.method.to_s.end_with? "_id"
+          ignore_sanitize_call? exp or
+          quote_call? exp or
+          arel? exp or
+          exp.method.to_s.end_with? "_id"
       end
     when :if
       safe_value? exp.then_clause and safe_value? exp.else_clause
@@ -694,5 +695,11 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       klass == :"ActiveRecord::Base" or
       active_record_models.include? klass
     end
+  end
+
+  def ignore_sanitize_call? exp
+    call? exp and
+      exp.method == :sanitize_sql
+      array? exp.first_arg
   end
 end
