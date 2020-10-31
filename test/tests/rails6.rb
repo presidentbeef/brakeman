@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 27
+      :generic => 28
     }
   end
 
@@ -236,6 +236,19 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/controllers/groups_controller.rb",
       :code => s(:call, s(:call, s(:call, s(:params), :[], s(:lit, :method)), :to_sym), :to_proc),
       :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :method)), :to_sym)
+  end
+
+  def test_remote_code_execution_not_query_parameters
+    assert_warning :type => :warning,
+      :warning_code => 119,
+      :fingerprint => "78e2d9010374d26ef8fe31ed22f10a6de7dfc428e0387dd8502cd5833ffe4aa6",
+      :warning_type => "Remote Code Execution",
+      :line => 46,
+      :message => /^Unsafe\ reflection\ method\ `method`\ called/,
+      :confidence => 1,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:const, :User), :method, s(:dstr, "", s(:evstr, s(:call, s(:call, s(:const, :User), :first), :some_method_thing)), s(:str, "_stuff"))),
+      :user_input => s(:call, s(:call, s(:const, :User), :first), :some_method_thing)
   end
 
   def test_safe_yaml_load_option

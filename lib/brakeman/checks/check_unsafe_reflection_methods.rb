@@ -50,17 +50,19 @@ class Brakeman::CheckUnsafeReflectionMethods < Brakeman::BaseCheck
     return unless original? result
     method = result[:call].method
 
-    confidence = :high
-
-    if confidence
-      message = msg("Unsafe reflection method ", msg_code(method), " called with ", msg_input(input))
-
-      warn :result => result,
-        :warning_type => "Remote Code Execution",
-        :warning_code => :unsafe_method_reflection,
-        :message => message,
-        :user_input => input,
-        :confidence => confidence
+    confidence = if input.type == :params
+      :high
+    else
+      :medium
     end
+
+    message = msg("Unsafe reflection method ", msg_code(method), " called with ", msg_input(input))
+
+    warn :result => result,
+      :warning_type => "Remote Code Execution",
+      :warning_code => :unsafe_method_reflection,
+      :message => message,
+      :user_input => input,
+      :confidence => confidence
   end
 end

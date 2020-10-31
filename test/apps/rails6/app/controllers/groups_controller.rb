@@ -43,5 +43,6 @@ class GroupsController < ApplicationController
     params[:method].to_sym.to_proc.call(Kernel)
     (params[:klass].to_s).method(params[:method]).(params[:argument])
     Kernel.tap(&params[:method].to_sym)
+    User.method("#{User.first.some_method_thing}_stuff")
   end
 end
