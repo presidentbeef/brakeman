@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 24
+      :generic => 28
     }
   end
 
@@ -197,6 +197,58 @@ class Rails6Tests < Minitest::Test
       :relative_path => "config/initializers/cookies_serializer.rb",
       :code => s(:attrasgn, s(:call, s(:call, s(:call, s(:const, :Rails), :application), :config), :action_dispatch), :cookies_serializer=, s(:lit, :marshal)),
       :user_input => nil
+  end
+
+  def test_remote_code_execution_method
+    assert_warning :type => :warning,
+      :warning_code => 119,
+      :fingerprint => "f4c435cdf78761be48879a05c84db905558d192cb6693640174ff3c0f18b61cd",
+      :warning_type => "Remote Code Execution",
+      :line => 44,
+      :message => /^Unsafe\ reflection\ method\ `method`\ called/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:call, s(:call, s(:params), :[], s(:lit, :klass)), :to_s), :method, s(:call, s(:params), :[], s(:lit, :method))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :method))
+  end
+
+  def test_remote_code_execution_tap
+    assert_warning :type => :warning,
+      :warning_code => 119,
+      :fingerprint => "988c82365b897a118c1c2b49059dc2b7202333ecc8bdd3a182ae0c126db2fca4",
+      :warning_type => "Remote Code Execution",
+      :line => 45,
+      :message => /^Unsafe\ reflection\ method\ `tap`\ called\ wi/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:const, :Kernel), :tap, s(:block_pass, s(:call, s(:call, s(:params), :[], s(:lit, :method)), :to_sym))),
+      :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :method)), :to_sym)
+  end
+
+  def test_remote_code_execution_to_proc
+    assert_warning :type => :warning,
+      :warning_code => 119,
+      :fingerprint => "0eceb89cbf8d71f0aa8ada268bb0042f6efefee746e015adaa656d33e87c2f6e",
+      :warning_type => "Remote Code Execution",
+      :line => 43,
+      :message => /^Unsafe\ reflection\ method\ `to_proc`\ calle/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:call, s(:call, s(:params), :[], s(:lit, :method)), :to_sym), :to_proc),
+      :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :method)), :to_sym)
+  end
+
+  def test_remote_code_execution_not_query_parameters
+    assert_warning :type => :warning,
+      :warning_code => 119,
+      :fingerprint => "78e2d9010374d26ef8fe31ed22f10a6de7dfc428e0387dd8502cd5833ffe4aa6",
+      :warning_type => "Remote Code Execution",
+      :line => 46,
+      :message => /^Unsafe\ reflection\ method\ `method`\ called/,
+      :confidence => 1,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:const, :User), :method, s(:dstr, "", s(:evstr, s(:call, s(:call, s(:const, :User), :first), :some_method_thing)), s(:str, "_stuff"))),
+      :user_input => s(:call, s(:call, s(:const, :User), :first), :some_method_thing)
   end
 
   def test_safe_yaml_load_option

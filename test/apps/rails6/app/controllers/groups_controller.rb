@@ -38,4 +38,11 @@ class GroupsController < ApplicationController
     YAML.load(params[:yaml_stuff], safe: false) # not safe
     YAML.load(params[:yaml_stuff]) # not safe
   end
+
+  def dynamic_method_invocations
+    params[:method].to_sym.to_proc.call(Kernel)
+    (params[:klass].to_s).method(params[:method]).(params[:argument])
+    Kernel.tap(&params[:method].to_sym)
+    User.method("#{User.first.some_method_thing}_stuff")
+  end
 end
