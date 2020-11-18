@@ -1,3 +1,13 @@
+# 5.0.0.pre1 - 2020-11-17
+
+* Add check for (more) unsafe method reflection
+* Suggest using `--force` if no Rails application is detected
+* Add Sonarqube report format (Adam England)
+* Add check for potential HTTP verb confusion
+* Add `--[no-]skip-vendor` option
+* Scan (almost) all Ruby files in project
+* Add support for Haml 5.2.0
+
 # 4.10.0 - 2020-09-28
 
 * Add SARIF report format (Steve Winton)
