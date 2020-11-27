@@ -57,6 +57,20 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BasicProcessor
     exp
   end
 
+  #Look for configuration settings that
+  #are just a call like
+  #
+  #  config.load_defaults 5.2
+  def process_call exp
+    return exp unless @inside_config
+
+    if exp.target == RAILS_CONFIG and exp.first_arg
+      @tracker.config.rails[exp.method] = exp.first_arg
+    end
+
+    exp
+  end
+
   #Look for configuration settings
   def process_attrasgn exp
     return exp unless @inside_config
