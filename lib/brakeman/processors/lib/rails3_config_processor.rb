@@ -85,22 +85,8 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BasicProcessor
         @tracker.config.rails[attribute] = exp.first_arg
       end
     elsif include_rails_config? exp
-      options = get_rails_config exp
-      level = @tracker.config.rails
-      options[0..-2].each do |o|
-        level[o] ||= {}
-
-        option = level[o]
-
-        if not option.is_a? Hash
-          Brakeman.debug "[Notice] Skipping config setting: #{options.map(&:to_s).join(".")}"
-          return exp
-        end
-
-        level = level[o]
-      end
-
-      level[options.last] = exp.first_arg
+      options_path = get_rails_config exp
+      @tracker.config.set_rails_config(exp.first_arg, *options_path)
     end
 
     exp

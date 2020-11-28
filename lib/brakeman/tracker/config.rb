@@ -149,5 +149,78 @@ module Brakeman
     def session_settings
       @rails.dig(:action_controller, :session)
     end
+
+
+    # Set Rails config option value
+    # where path is an array of attributes, e.g.
+    #
+    #   :action_controller, :perform_caching
+    #
+    # then this will set
+    #
+    #   rails[:action_controller][:perform_caching] = value
+    def set_rails_config value, *path
+      config = self.rails
+
+      path[0..-2].each do |o|
+        config[o] ||= {}
+
+        option = config[o]
+
+        if not option.is_a? Hash
+          Brakeman.debug "[Notice] Skipping config setting: #{path.map(&:to_s).join(".")}"
+          return
+        end
+
+        config = option
+      end
+
+      config[path.last] = value
+    end
+
+    # Load defaults based on config.load_defaults value
+    # as documented here: https://guides.rubyonrails.org/configuring.html#results-of-config-load-defaults
+    def load_rails_defaults
+      return unless number? tracker.config.rails[:load_defaults]
+
+      version = tracker.config.rails[:load_defaults].value
+      true_value = Sexp.new(:true)
+      false_value = Sexp.new(:false)
+
+      if version >= 5.0
+        set_rails_config(true_value, :action_controller, :per_form_csrf_tokens)
+        set_rails_config(true_value, :action_controller, :forgery_protection_origin_check)
+        set_rails_config(true_value, :active_record, :belongs_to_required_by_default)
+        # Note: this may need to be changed, because ssl_options is a Hash
+        set_rails_config(true_value, :ssl_options, :hsts, :subdomains)
+      end
+
+      if version >= 5.1
+        set_rails_config(false_value, :assets, :unknown_asset_fallback)
+        set_rails_config(true_value, :action_view, :form_with_generates_remote_forms)
+      end
+
+      if version >= 5.2
+        set_rails_config(true_value, :active_record, :cache_versioning)
+        set_rails_config(true_value, :action_dispatch, :use_authenticated_cookie_encryption)
+        set_rails_config(true_value, :active_support, :use_authenticated_message_encryption)
+        set_rails_config(true_value, :active_support, :use_sha1_digests)
+        set_rails_config(true_value, :action_controller, :default_protect_from_forgery)
+        set_rails_config(true_value, :action_view, :form_with_generates_ids)
+      end
+
+      if version >= 6.0
+        set_rails_config(Sexp.new(:lit, :zeitwerk), :autoloader)
+        set_rails_config(false_value, :action_view, :default_enforce_utf8)
+        set_rails_config(true_value, :action_dispatch, :use_cookies_with_metadata)
+        set_rails_config(false_value, :action_dispatch, :return_only_media_type_on_content_type)
+        set_rails_config(Sexp.new(:str, 'ActionMailer::MailDeliveryJob'), :action_mailer, :delivery_job)
+        set_rails_config(true_value, :active_job, :return_false_on_aborted_enqueue)
+        set_rails_config(Sexp.new(:lit, :active_storage_analysis), :active_storage, :queues, :analysis)
+        set_rails_config(Sexp.new(:lit, :active_storage_purge), :active_storage, :queues, :purge)
+        set_rails_config(true_value, :active_storage, :replace_on_assign_to_many)
+        set_rails_config(true_value, :active_record, :collection_cache_versioning)
+      end
+    end
   end
 end
