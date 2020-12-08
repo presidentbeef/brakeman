@@ -28,4 +28,14 @@ class FileParserTests < Minitest::Test
       assert_match(/parse error on value \"\$end\" \(\$end\)/, @tracker.errors.first[:error])
     end
   end
+
+  def test_parse_ruby_accepts_file_path
+    file_path = Brakeman::FilePath.from_app_tree @tracker.app_tree, "config/test.rb"
+
+    parsed = @file_parser.parse_ruby <<-'RUBY', file_path
+      "#{__FILE__}"
+    RUBY
+
+    assert_equal s(:str, "config/test.rb"), parsed
+  end
 end
