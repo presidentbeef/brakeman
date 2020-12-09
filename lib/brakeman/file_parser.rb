@@ -32,7 +32,12 @@ module Brakeman
       end
     end
 
+    # _path_ can be a string or a Brakeman::FilePath
     def parse_ruby input, path
+      if path.is_a? Brakeman::FilePath
+        path = path.relative
+      end
+
       begin
         Brakeman.debug "Parsing #{path}"
         RubyParser.new.parse input, path, @timeout
