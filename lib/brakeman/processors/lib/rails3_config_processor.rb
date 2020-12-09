@@ -57,6 +57,20 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BasicProcessor
     exp
   end
 
+  #Look for configuration settings that
+  #are just a call like
+  #
+  #  config.load_defaults 5.2
+  def process_call exp
+    return exp unless @inside_config
+
+    if exp.target == RAILS_CONFIG and exp.first_arg
+      @tracker.config.rails[exp.method] = exp.first_arg
+    end
+
+    exp
+  end
+
   #Look for configuration settings
   def process_attrasgn exp
     return exp unless @inside_config
@@ -71,22 +85,8 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BasicProcessor
         @tracker.config.rails[attribute] = exp.first_arg
       end
     elsif include_rails_config? exp
-      options = get_rails_config exp
-      level = @tracker.config.rails
-      options[0..-2].each do |o|
-        level[o] ||= {}
-
-        option = level[o]
-
-        if not option.is_a? Hash
-          Brakeman.debug "[Notice] Skipping config setting: #{options.map(&:to_s).join(".")}"
-          return exp
-        end
-
-        level = level[o]
-      end
-
-      level[options.last] = exp.first_arg
+      options_path = get_rails_config exp
+      @tracker.config.set_rails_config(exp.first_arg, *options_path)
     end
 
     exp

@@ -139,6 +139,8 @@ class Brakeman::Scanner
     if @app_tree.exists? ".ruby-version"
       tracker.config.set_ruby_version @app_tree.file_path(".ruby-version").read
     end
+
+    tracker.config.load_rails_defaults
   end
 
   def process_config_file file
