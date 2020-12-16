@@ -20,6 +20,11 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
 
   #Process template
   def process_template name, args, _, line = nil
+    # Strip forward slash from beginning of template path.
+    # This also happens in RenderHelper#process_template but
+    # we need it here too to accurately avoid circular renders below.
+    name = name.to_s.gsub(/^\//, "")
+
     if @called_from
       if @called_from.include_template? name
         Brakeman.debug "Skipping circular render from #{@template.name} to #{name}"
