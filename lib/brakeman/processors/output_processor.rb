@@ -88,7 +88,7 @@ class Brakeman::OutputProcessor < Ruby2Ruby
 
   def process_iter exp
     call = process exp[1]
-    block = process_rlist exp[3..-1]
+    block = process_rlist exp.sexp_body(3)
     out = "#{call} do\n #{block}\n end"
 
     out

@@ -236,7 +236,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         env[target_var] = target
         return target
       elsif string? target and string_interp? first_arg
-        exp = Sexp.new(:dstr, target.value + first_arg[1]).concat(first_arg[2..-1])
+        exp = Sexp.new(:dstr, target.value + first_arg[1]).concat(first_arg.sexp_body(2))
         env[target_var] = exp
       elsif string? first_arg and string_interp? target
         if string? target.last
@@ -941,7 +941,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     args = exp.args
     exp.pop # remove last arg
     if args.length > 1
-      exp.arglist = args[1..-1]
+      exp.arglist = args.sexp_body
     end
   end
 

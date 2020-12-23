@@ -208,7 +208,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       if node_type? e, :if
         # If we're in a conditional, evaluate the `then` and `else` clauses to
         # see if they're dangerous.
-        if res = dangerous?(e.values[1..-1])
+        if res = dangerous?(e.sexp_body.sexp_body)
           return res
         end
       elsif node_type? e, :or, :evstr, :dstr
