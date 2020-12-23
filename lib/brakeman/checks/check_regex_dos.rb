@@ -29,7 +29,7 @@ class Brakeman::CheckRegexDoS < Brakeman::BaseCheck
     return unless original? result
 
     call = result[:call]
-    components = call[1..-1]
+    components = call.sexp_body
 
     components.any? do |component|
       next unless sexp? component
