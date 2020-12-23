@@ -125,7 +125,7 @@ module Brakeman
         value = args[-1][2]
         case value.node_type
         when :array
-          filter[option] = value[1..-1].map {|v| v[1] }
+          filter[option] = value.sexp_body.map {|v| v[1] }
         when :lit, :str
           filter[option] = value[1]
         else
