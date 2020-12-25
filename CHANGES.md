@@ -1,3 +1,11 @@
+# 4.10.1 - 2020-12-24
+
+* Declare REXML as a dependency (Ruby 3.0 compatibility)
+* Use `Sexp#sexp_body` instead of `Sexp#[..]` (Ruby 3.0 compatibility)
+* Prevent render loops when template names are absolute paths
+* Ensure RubyParser is passed file path as a String
+* Support new Haml 5.2.0 escaping method
+
 # 5.0.0.pre1 - 2020-11-17
 
 * Add check for (more) unsafe method reflection
