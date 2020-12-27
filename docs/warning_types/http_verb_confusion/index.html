@@ -92,8 +92,8 @@ arising from this confusion.</p>
 <p>To avoid introducing a vulnerabilty with <code class="highlighter-rouge">request.get?</code>,
 either use completely separate routes and actions for <code class="highlighter-rouge">GET</code> vs <code class="highlighter-rouge">POST</code> (preferred!):</p>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get</span> <span class="s1">'/some/path'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'my_controller#some_action`
-post '</span><span class="o">/</span><span class="n">some</span><span class="o">/</span><span class="n">path</span><span class="s1">', to: '</span><span class="n">my_controller</span><span class="c1">#a_different_action'</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get</span> <span class="s1">'/some/path'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'my_controller#some_action'</span>
+<span class="n">post</span> <span class="s1">'/some/path'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'my_controller#a_different_action'</span>
 </code></pre></div></div>
 
 <p>or else check <code class="highlighter-rouge">request.post?</code> explicitly:</p>
@@ -151,6 +151,10 @@ post '</span><span class="o">/</span><span class="n">some</span><span class="o">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2020/12/24/brakeman-4-dot-10-dot-1-released">Brakeman 4.10.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2020/09/28/brakeman-4-dot-10-dot-0-released">Brakeman 4.10.0 Released</a>
       </li>
     
@@ -164,10 +168,6 @@ post '</span><span class="o">/</span><span class="n">some</span><span class="o">
     
       <li class="post">
         <a href="/blog/2020/08/04/brakeman-4-dot-9-dot-0-released">Brakeman 4.9.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2020/05/12/brakeman-4-dot-8-dot-2-released">Brakeman 4.8.2 Released</a>
       </li>
     
   </ul>

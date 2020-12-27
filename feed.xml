@@ -1,4 +1,73 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2020-10-23T14:45:56-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 4.10.0 Released</title><link href="https://brakemanscanner.org/blog/2020/09/28/brakeman-4-dot-10-dot-0-released" rel="alternate" type="text/html" title="Brakeman 4.10.0 Released" /><published>2020-09-28T12:30:00-07:00</published><updated>2020-09-28T12:30:00-07:00</updated><id>https://brakemanscanner.org/blog/2020/09/28/brakeman-4-dot-10-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2020/09/28/brakeman-4-dot-10-dot-0-released">&lt;p&gt;This release introduces a new report format!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2020-12-26T19:15:19-08:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 4.10.1 Released</title><link href="https://brakemanscanner.org/blog/2020/12/24/brakeman-4-dot-10-dot-1-released" rel="alternate" type="text/html" title="Brakeman 4.10.1 Released" /><published>2020-12-24T12:30:00-08:00</published><updated>2020-12-24T12:30:00-08:00</updated><id>https://brakemanscanner.org/blog/2020/12/24/brakeman-4-dot-10-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2020/12/24/brakeman-4-dot-10-dot-1-released">&lt;p&gt;This releases fixes Ruby 3.0 compatibility (meaning running under 3.0, new syntax is not supported yet).&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 4.10.1:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Declare REXML as a dependency (Ruby 3.0 compatibility)&lt;/li&gt;
+  &lt;li&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;Sexp#sexp_body&lt;/code&gt; instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;Sexp#[..]&lt;/code&gt; (Ruby 3.0 compatibility)&lt;/li&gt;
+  &lt;li&gt;Prevent render loops when template names are absolute paths ((#1536)[https://github.com/presidentbeef/brakeman/issues/1536])&lt;/li&gt;
+  &lt;li&gt;Ensure RubyParser is passed file path as a String ((#1534)[https://github.com/presidentbeef/brakeman/issues/1534])&lt;/li&gt;
+  &lt;li&gt;Support new Haml 5.2.0 escaping method ((#1517)[https://github.com/presidentbeef/brakeman/issues/1517])&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;rexml-as-an-explicit-dependency&quot;&gt;REXML as an Explicit Dependency&lt;/h3&gt;
+
+&lt;p&gt;In Ruby 3.0, REXML has become a ‘bundled’ gem. It is distributed with Ruby, but if Bundler is involved then it needs to be declared as an explicit dependency.&lt;/p&gt;
+
+&lt;p&gt;If you like minimal dependencies, you can always use the &lt;code class=&quot;highlighter-rouge&quot;&gt;brakeman-min&lt;/code&gt; gem which declares only strict dependencies.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1538&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;avoid-slicing-with-sexp&quot;&gt;Avoid Slicing with Sexp#[]&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Sexp&lt;/code&gt; subclasses from &lt;code class=&quot;highlighter-rouge&quot;&gt;Array&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;Array&lt;/code&gt; no longer returns subclasses from methods that create new arrays.&lt;/p&gt;
+
+&lt;p&gt;Brakeman was unfortunately using &lt;code class=&quot;highlighter-rouge&quot;&gt;Sexp#[]&lt;/code&gt; with ranges (e.g. &lt;code class=&quot;highlighter-rouge&quot;&gt;s(:a, :b, :c)[1..-1]&lt;/code&gt;), which runs into this behavior.
+Happily, the &lt;code class=&quot;highlighter-rouge&quot;&gt;Sexp#sexp_body&lt;/code&gt; method already exists to properly slice and return a &lt;code class=&quot;highlighter-rouge&quot;&gt;Sexp&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1538&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;recursive-renders-with-absolute-paths&quot;&gt;Recursive Renders with Absolute Paths&lt;/h3&gt;
+
+&lt;p&gt;Brakeman has long been able to detect recursive render loops, but that detection did not work if the partial name was an ‘absolute’ path.&lt;/p&gt;
+
+&lt;p&gt;This is now fixed!&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1537&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;ensure-rubyparser-path-is-a-string&quot;&gt;Ensure RubyParser Path is a String&lt;/h3&gt;
+
+&lt;p&gt;In some cases, the parser was given a &lt;code class=&quot;highlighter-rouge&quot;&gt;Brakeman::FilePath&lt;/code&gt; for the file name.
+This only caused an issue in some weird corner cases, but it was wrong nonetheless.&lt;/p&gt;
+
+&lt;p&gt;Now &lt;code class=&quot;highlighter-rouge&quot;&gt;Brakeman::FileParser&lt;/code&gt; will ensure the file name is passed as a string.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1535&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;support-haml-52&quot;&gt;Support Haml 5.2&lt;/h3&gt;
+
+&lt;p&gt;Haml 5.2.0 introduced a new method for escaping output, which caused some false positives.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;(Note this was avoided in Brakeman 4.10.0 by bundling an earlier version of Haml.)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1518&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;e40451080554884a63d73a2933c36518a3cf7a2bb471e6d864ce39a9d3455c98  brakeman-4.10.1.gem
+ec69e04e087b74862629e952d7817dd7b73e30810166e01d69d24d7164101455  brakeman-lib-4.10.1.gem
+3deee68eadd8eb6850254a8e753d6bbe933194c883f12a2455bdf5fd97b1eba2  brakeman-min-4.10.1.gem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">This releases fixes Ruby 3.0 compatibility (meaning running under 3.0, new syntax is not supported yet).</summary></entry><entry><title type="html">Brakeman 4.10.0 Released</title><link href="https://brakemanscanner.org/blog/2020/09/28/brakeman-4-dot-10-dot-0-released" rel="alternate" type="text/html" title="Brakeman 4.10.0 Released" /><published>2020-09-28T12:30:00-07:00</published><updated>2020-09-28T12:30:00-07:00</updated><id>https://brakemanscanner.org/blog/2020/09/28/brakeman-4-dot-10-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2020/09/28/brakeman-4-dot-10-dot-0-released">&lt;p&gt;This release introduces a new report format!&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 4.9.1:&lt;/em&gt;&lt;/p&gt;
 
@@ -657,89 +726,4 @@ c02dbaa4ad0c7402ef99697c7b1916b7d9558dd5aa45e1a36efed117628498cc  brakeman-lib-4
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">This release updates Haml support to Haml 5.x!</summary></entry><entry><title type="html">Brakeman 4.7.1 Released</title><link href="https://brakemanscanner.org/blog/2019/10/14/brakeman-4-dot-7-dot-1-released" rel="alternate" type="text/html" title="Brakeman 4.7.1 Released" /><published>2019-10-14T16:00:00-07:00</published><updated>2019-10-14T16:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2019/10/14/brakeman-4-dot-7-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2019/10/14/brakeman-4-dot-7-dot-1-released">&lt;p&gt;This release includes a security fix in a dependency; please see below.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 4.7.0:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Address file permission issues in bundled &lt;code class=&quot;highlighter-rouge&quot;&gt;ruby_parser-legacy&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Sort text report by file and line (&lt;a href=&quot;https://github.com/JacobEvelyn&quot;&gt;Jacob Evelyn&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Catch reverse tabnabbing with &lt;code class=&quot;highlighter-rouge&quot;&gt;:_blank&lt;/code&gt; symbol (&lt;a href=&quot;https://github.com/JacobEvelyn&quot;&gt;Jacob Evelyn&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Convert &lt;code class=&quot;highlighter-rouge&quot;&gt;s(:lambda)&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;s(:call)&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;Sexp#block_call&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1410&quot;&gt;#1410&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Check string length against limit before joining&lt;/li&gt;
-  &lt;li&gt;Fix flaky rails4 test (&lt;a href=&quot;https://github.com/adamkiczula&quot;&gt;Adam Kiczula&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Fix errors from frozen &lt;code class=&quot;highlighter-rouge&quot;&gt;Symbol#to_s&lt;/code&gt; in Ruby 2.7&lt;/li&gt;
-  &lt;li&gt;Add release dates to each version in CHANGES (&lt;a href=&quot;https://github.com/TheSpartan1980&quot;&gt;TheSpartan1980&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;file-permissions&quot;&gt;File Permissions&lt;/h3&gt;
-
-&lt;p&gt;A security issue &lt;a href=&quot;https://github.com/zenspider/ruby_parser-legacy/issues/1&quot;&gt;was reported for the &lt;code class=&quot;highlighter-rouge&quot;&gt;ruby_parser-legacy&lt;/code&gt; gem&lt;/a&gt;, where some files are installed with world-writable permissions.
-This would allow any user on the system to edit code which would then be executed by Brakeman (or other dependent libraries) when loading the &lt;code class=&quot;highlighter-rouge&quot;&gt;ruby_parser-legacy&lt;/code&gt; gem.&lt;/p&gt;
-
-&lt;p&gt;In this release of the &lt;code class=&quot;highlighter-rouge&quot;&gt;brakeman&lt;/code&gt; gem, the permissions on these files have been corrected.
-However, there has not been a fixed release of &lt;code class=&quot;highlighter-rouge&quot;&gt;ruby_parser-legacy&lt;/code&gt; yet, so the &lt;code class=&quot;highlighter-rouge&quot;&gt;brakeman-lib&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;brakeman-min&lt;/code&gt; gems are still affected.&lt;/p&gt;
-
-&lt;h3 id=&quot;default-report-format-sorting&quot;&gt;Default Report Format Sorting&lt;/h3&gt;
-
-&lt;p&gt;Warnings in the default text report are now sorted by file and line number as well as confidence and category, thanks to &lt;a href=&quot;https://github.com/JacobEvelyn&quot;&gt;Jacob Evelyn&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1412&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;reverse-tabnabbing&quot;&gt;Reverse Tabnabbing&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/JacobEvelyn&quot;&gt;Jacob Evelyn&lt;/a&gt; also updated the reverse tabnabbing check to match links created with &lt;code class=&quot;highlighter-rouge&quot;&gt;target: :_blank&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1411&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;stabby-lambdas&quot;&gt;Stabby Lambdas&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ruby_parser&lt;/code&gt; 3.14.0 changed the AST representation of &lt;code class=&quot;highlighter-rouge&quot;&gt;-&amp;gt;{}&lt;/code&gt; lambdas, and Brakeman needed to adjust.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1415&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;string-length-limit&quot;&gt;String Length Limit&lt;/h3&gt;
-
-&lt;p&gt;Brakeman now checks the resulting length of joining two strings (e.g., &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;blah&quot; + &quot;blah blah&quot;&lt;/code&gt;) &lt;em&gt;before&lt;/em&gt; joining them.
-If the joined string would be longer than 50 characters, the strings are not joined.&lt;/p&gt;
-
-&lt;p&gt;Note the only change is when the length is checked, the limit was already in place.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1421&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;flaky-test-fixed&quot;&gt;Flaky Test Fixed&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/adamkiczula&quot;&gt;Adam Kiczula&lt;/a&gt; fixed an intermittently-failing test in the Brakeman test suite that had been
-plaguing CI builds for a long time. Thanks!&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1419&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;ruby-27-frozen-strings&quot;&gt;Ruby 2.7 Frozen Strings&lt;/h3&gt;
-
-&lt;p&gt;In Ruby 2.7, symbols and some other constant values (&lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;/&lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;, etc.) will return frozen strings.
-This affected Brakeman in only minor ways, but it is fixed now in preparation for Ruby 2.7.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1420&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;release-dates-in-changelog&quot;&gt;Release Dates in Changelog&lt;/h3&gt;
-
-&lt;p&gt;Brakeman’s &lt;a href=&quot;https://github.com/presidentbeef/brakeman/blob/master/CHANGES.md&quot;&gt;changelog&lt;/a&gt; now includes release dates thanks to &lt;a href=&quot;https://github.com/TheSpartan1980&quot;&gt;TheSpartan1980&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1418&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
-
-&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cdc6f4c86b5b35b5e94798cf443909385aa1b79235da8e1ee1fd4381acf03691  brakeman-4.7.1.gem
-2f7a7a6d79b1e5b8c6a390e04642e987c56cced2c8be3d63a1250f7bbc9e504d  brakeman-lib-4.7.1.gem
-598431f6bfc90b119fc6883ead7896c1718ba5d9a0e0450893c3e628a6c8e7b0  brakeman-min-4.7.1.gem
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">This release includes a security fix in a dependency; please see below.</summary></entry></feed>
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">This release updates Haml support to Haml 5.x!</summary></entry></feed>
