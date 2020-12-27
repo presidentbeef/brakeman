@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2020-12-26T19:15:19-08:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 4.10.1 Released</title><link href="https://brakemanscanner.org/blog/2020/12/24/brakeman-4-dot-10-dot-1-released" rel="alternate" type="text/html" title="Brakeman 4.10.1 Released" /><published>2020-12-24T12:30:00-08:00</published><updated>2020-12-24T12:30:00-08:00</updated><id>https://brakemanscanner.org/blog/2020/12/24/brakeman-4-dot-10-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2020/12/24/brakeman-4-dot-10-dot-1-released">&lt;p&gt;This releases fixes Ruby 3.0 compatibility (meaning running under 3.0, new syntax is not supported yet).&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2020-12-26T19:22:13-08:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 4.10.1 Released</title><link href="https://brakemanscanner.org/blog/2020/12/24/brakeman-4-dot-10-dot-1-released" rel="alternate" type="text/html" title="Brakeman 4.10.1 Released" /><published>2020-12-24T12:30:00-08:00</published><updated>2020-12-24T12:30:00-08:00</updated><id>https://brakemanscanner.org/blog/2020/12/24/brakeman-4-dot-10-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2020/12/24/brakeman-4-dot-10-dot-1-released">&lt;p&gt;This releases fixes Ruby 3.0 compatibility (meaning running under 3.0, new syntax is not supported yet).&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 4.10.1:&lt;/em&gt;&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Declare REXML as a dependency (Ruby 3.0 compatibility)&lt;/li&gt;
   &lt;li&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;Sexp#sexp_body&lt;/code&gt; instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;Sexp#[..]&lt;/code&gt; (Ruby 3.0 compatibility)&lt;/li&gt;
-  &lt;li&gt;Prevent render loops when template names are absolute paths ((#1536)[https://github.com/presidentbeef/brakeman/issues/1536])&lt;/li&gt;
-  &lt;li&gt;Ensure RubyParser is passed file path as a String ((#1534)[https://github.com/presidentbeef/brakeman/issues/1534])&lt;/li&gt;
-  &lt;li&gt;Support new Haml 5.2.0 escaping method ((#1517)[https://github.com/presidentbeef/brakeman/issues/1517])&lt;/li&gt;
+  &lt;li&gt;Prevent render loops when template names are absolute paths (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1536&quot;&gt;#1536&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Ensure RubyParser is passed file path as a String (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1534&quot;&gt;#1534&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Support new Haml 5.2.0 escaping method (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1517&quot;&gt;#1517&lt;/a&gt;)&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;rexml-as-an-explicit-dependency&quot;&gt;REXML as an Explicit Dependency&lt;/h3&gt;
