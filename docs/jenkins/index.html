@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Jenkins/Hudson Plugin</title>
+  <title>Brakeman: Running Brakeman with Jenkins</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -34,7 +34,7 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Jenkins/Hudson Plugin" />
+<meta name="twitter:title" content="Brakeman - Running Brakeman with Jenkins" />
 <meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
 <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 
@@ -75,18 +75,95 @@
 <article>
   
   <header>
-    <h1 class="entry-title">Jenkins/Hudson Plugin</h1>
+    <h1 class="entry-title">Running Brakeman with Jenkins</h1>
   </header>
   
-  <p><a href="http://jenkins-ci.org/">Jenkins</a> (or <a href="http://hudson-ci.org">Hudson</a>) is a continuous integration tool.</p>
+  <p>Collecting and managing Brakeman results in <a href="https://www.jenkins.io/">Jenkins</a> is supported by the <a href="https://plugins.jenkins.io/warnings-ng/">Warnings Next Generation Plugin</a>.</p>
 
-<p>A <a href="http://wiki.jenkins-ci.org/display/JENKINS/Brakeman+Plugin">Brakeman plugin for Jenkins</a> is available which will allow you to run Brakeman automatically when code changes and report the results.</p>
+<p><img src="/images/jenkins/Jenkins-0-overview.png" alt="Brakeman results in Jenkins" title="Brakeman results in Jenkins" /></p>
 
-<p>It will also produce trend graphs like this:</p>
+<h3 id="installing-the-plugin">Installing the Plugin</h3>
 
-<p><img src="/images/brakeman_trend_graph.png" alt="Example Plugin Graph" title="Example Plugin Graph" /></p>
+<p>In the Jenkins Plugin Manager, install the “Warnings Next Generation Plugin”.</p>
 
-<p>Check <a href="/docs/jenkins/installation">here</a> for instructions on how to install the plugin.</p>
+<p><img src="/images/jenkins/Jenkins-0-install-plugin.png" alt="Warnings Next Generation Plugin" title="Warnings Next Generation Plugin" /></p>
+
+<h3 id="running-brakeman-in-jenkins">Running Brakeman in Jenkins</h3>
+
+<p>The plugin itself does not run any tools, it just collects the results.</p>
+
+<p>There are many ways to run Brakeman in Jenkins, depending on the setup on your application and the Jenkins workers.</p>
+
+<p>One method is to invoke Brakeman as part of an “Execute shell” build step:</p>
+
+<p><img src="/images/jenkins/Jenkins-1-build-step.png" alt="Add build step" title="Add build step" /></p>
+
+<p><img src="/images/jenkins/Jenkins-2-execute-shell.png" alt="Execute shell" title="Execute shell command to run Brakeman" /></p>
+
+<p>Here is a sample build command if <a href="https://rvm.io/">RVM</a> is available on the worker:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash -l -c '
+rvm install 3.0.0 &amp;&amp; \
+rvm use 3.0.0@brakeman --create &amp;&amp; \
+gem install brakeman &amp;&amp; \
+brakeman --no-progress --no-pager --no-exit-on-warn -o brakeman-output.json
+'
+</code></pre></div></div>
+
+<p>Explanation of Brakeman options:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">--no-progress</code> avoids ugly <code class="highlighter-rouge">Processing...</code> output in Jenkins logs</li>
+  <li><code class="highlighter-rouge">--no-pager</code> avoids invoking <code class="highlighter-rouge">less</code> to display report</li>
+  <li><code class="highlighter-rouge">--no-exit-on-warn</code> tells Brakeman to return a 0 exit code even if warnings are found</li>
+  <li><code class="highlighter-rouge">-o brakeman-output.json</code> sets the report file and format</li>
+</ul>
+
+<h3 id="collecting-results">Collecting Results</h3>
+
+<p>To configure the plugin, click “Add post-build action” and select “Record compiler warnings and static analysis results”.</p>
+
+<p><img src="/images/jenkins/Jenkins-3-post-build-step.png" alt="Post-build action" title="Post-build action" /></p>
+
+<p>Then select “Brakeman” as the tool.</p>
+
+<p><img src="/images/jenkins/Jenkins-4-select-brakeman.png" alt="Select Brakeman" title="Select Brakeman as a tool" /></p>
+
+<p>The default options will check for files named <code class="highlighter-rouge">brakeman-output.json</code> and collect the results.</p>
+
+<p>There is no need to set any other configuration options right now.
+By default, the plugin will collect and display results but will not affect the status of the build.</p>
+
+<p>Click the “Advanced…” button to check out the <em>many</em> options for configuring how Brakeman results affect build status.</p>
+
+<h3 id="viewing-results">Viewing Results</h3>
+
+<p>After the next build, Brakeman results should appear in the build status.</p>
+
+<p><img src="/images/jenkins/Jenkins-5-status-result.png" alt="Brakeman Warnings Status" title="Brakeman Warnings Status" /></p>
+
+<p>On subsequent builds, the plugin will show if there are new and/or fixed warnings in that build.</p>
+
+<p><img src="/images/jenkins/Jenkins-6-status-change.png" alt="Brakeman New Warnings" title="New Warnings" /></p>
+
+<p>The plugin can show warnings broken down by folder, file, category, type, or just a list of issues.</p>
+
+<p><img src="/images/jenkins/Jenkins-7-warnings-overview.png" alt="Warnings Overview" title="Brakeman Warnings Overview" /></p>
+
+<p>The overview will show a breakdown of warnings by severity or status (fixed/new/existing).
+Note that the plugin maps “medium” findings to “normal” and “weak” findings to “low”.</p>
+
+<p>Warnings can also be viewed inline with code:</p>
+
+<p><img src="/images/jenkins/Jenkins-8-warnings-inline.png" alt="Inline Warnings" title="Inline Brakeman Warnings" /></p>
+
+<h3 id="more-information">More Information</h3>
+
+<p>See the <a href="https://plugins.jenkins.io/warnings-ng/">documentation for the Warnings Next Generation Plugin</a>.</p>
+
+<hr />
+
+<p><a href="/docs">Back to More documentation</a></p>
 
   
     <footer>
