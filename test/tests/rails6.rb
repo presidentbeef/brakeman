@@ -393,6 +393,19 @@ class Rails6Tests < Minitest::Test
       :user_input => s(:lvar, :thing)
   end
 
+  def test_command_injection_with_temp_file_path
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "0e28d1629630acaf62f873043ad128de709ac423f86256bed8fa73fdc8756f20",
+      :warning_type => "Command Injection",
+      :line => 4,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 1,
+      :relative_path => "lib/run_stuff.rb",
+      :code => s(:dxstr, "cat ", s(:evstr, s(:call, s(:lvar, :temp_file), :path))),
+      :user_input => s(:call, s(:lvar, :temp_file), :path)
+  end
+
   def test_dynamic_render_path_dir_glob_filter
     assert_no_warning :type => :warning,
       :warning_code => 15,
