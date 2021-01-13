@@ -45,4 +45,10 @@ class GroupsController < ApplicationController
     Kernel.tap(&params[:method].to_sym)
     User.method("#{User.first.some_method_thing}_stuff")
   end
+
+  def only_for_dev
+    if Rails.env.development?
+      eval(params[:x]) # should not warn
+    end
+  end
 end
