@@ -1151,6 +1151,15 @@ class AliasProcessorTests < Minitest::Test
     INPUT
   end
 
+  def test_array_join_with_symbol_interp
+    assert_alias '"blah:this:that:end"', <<-'INPUT'
+      this = :this
+      that = 'that'
+      x = ["blah", "#{this}", "#{that}", "end"].join(':')
+      x
+    INPUT
+  end
+
   def test_ignore_freeze
     assert_alias "blah", <<-INPUT
     x = blah.freeze
@@ -1182,6 +1191,13 @@ class AliasProcessorTests < Minitest::Test
     assert_alias "#{long_string.inspect}", <<-INPUT
     a = #{long_string.inspect} + '1'
     a
+    INPUT
+  end
+
+  def test_interpolation_of_strings
+    assert_alias "'hello'", <<-'INPUT'
+      hi = 'hello'
+      "#{hi}"
     INPUT
   end
 

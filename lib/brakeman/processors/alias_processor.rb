@@ -332,7 +332,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     result.unshift combined_first
 
     # Have to fix up strings that follow interpolation
-    result.reduce(s(:dstr)) do |memo, e|
+    joined_string = result.reduce(s(:dstr)) do |memo, e|
       if string? e and node_type? memo.last, :evstr
         e.value = "#{join_value}#{e.value}"
       elsif join_value and node_type? memo.last, :evstr and node_type? e, :evstr
@@ -341,6 +341,16 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
       memo << e
     end
+
+    # If it ends up like
+    # s(:dstr, "blasdhlashjdlaihjsd")
+    # convert to
+    # s(:str, "blasdhlashjdlaihjsd")
+    if joined_string.length == 2 and joined_string.value.is_a? String
+      joined_string.node_type = :str
+    end
+
+    joined_string
   end
 
   def join_item item, join_value
@@ -765,6 +775,33 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     [:detect, :find].include? exp.method and
     exp.first_arg.nil? and
     (all_literals? exp.target or dir_glob? exp.target)
+  end
+
+  def process_dstr exp
+    exp = process_default exp
+
+    # Convert "blah #{'blah'}" to "blah blah"
+    if all_literals? exp, :dstr
+      # first value in a :dstr is a String
+      joined_string = "#{exp[1]}#{exp.sexp_body(2).map(&:value).join}"
+      return s(:str, joined_string).line(exp.line)
+    end
+
+    exp
+  end
+
+  def process_evstr exp
+    exp = process_default exp
+
+    # Convert
+    # (:evstr, (:str, 'something'))
+    # to
+    #(:str, 'something')
+    if literal? exp.value
+      return exp.value
+    end
+
+    exp
   end
 
   #Sets @inside_if = true
