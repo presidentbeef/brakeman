@@ -47,7 +47,7 @@ class Brakeman::Report::JUnit < Brakeman::Report::Base
       warning.add_attribute 'brakeman:file', warning_file(w)
       warning.add_attribute 'brakeman:line', w.line
       warning.add_attribute 'brakeman:fingerprint', w.fingerprint
-      warning.add_attribute 'brakeman:confidence', TEXT_CONFIDENCE[w.confidence]
+      warning.add_attribute 'brakeman:confidence', w.confidence_name 
       warning.add_attribute 'brakeman:code', w.format_code
       warning.add_text w.to_s
     }
@@ -88,7 +88,7 @@ class Brakeman::Report::JUnit < Brakeman::Report::Base
           failure.add_attribute 'brakeman:fingerprint', warning.fingerprint
           failure.add_attribute 'brakeman:file', warning_file(warning)
           failure.add_attribute 'brakeman:line', warning.line
-          failure.add_attribute 'brakeman:confidence', TEXT_CONFIDENCE[warning.confidence]
+          failure.add_attribute 'brakeman:confidence', warning.confidence_name 
           failure.add_attribute 'brakeman:code', warning.format_code
           failure.add_text warning.to_s
         }

@@ -160,7 +160,7 @@ class Brakeman::Report::Text < Brakeman::Report::Base
     when :category
       label('Category', w.warning_type.to_s)
     when :check
-      label('Check', w.check.gsub(/^Brakeman::Check/, ''))
+      label('Check', w.check_name)
     when :message
       label('Message', w.message)
     when :code

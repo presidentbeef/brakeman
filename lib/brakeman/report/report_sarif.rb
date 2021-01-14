@@ -27,7 +27,7 @@ class Brakeman::Report::SARIF < Brakeman::Report::Base
   def rules
     @rules ||= unique_warnings_by_warning_code.map do |warning|
       rule_id = render_id warning
-      check_name = warning.check.gsub(/^Brakeman::Check/, '')
+      check_name = warning.check_name
       check_description = render_message check_descriptions[check_name]
       {
         :id => rule_id,

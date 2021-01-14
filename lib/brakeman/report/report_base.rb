@@ -11,8 +11,6 @@ class Brakeman::Report::Base
 
   attr_reader :tracker, :checks
 
-  TEXT_CONFIDENCE = Brakeman::Warning::TEXT_CONFIDENCE
-
   def initialize tracker
     @app_tree = tracker.app_tree
     @tracker = tracker

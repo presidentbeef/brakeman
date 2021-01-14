@@ -275,6 +275,14 @@ class Brakeman::Warning
     self.file.relative
   end
 
+  def check_name
+    @check_name ||= self.check.sub(/^Brakeman::Check/, '')
+  end
+
+  def confidence_name
+    TEXT_CONFIDENCE[self.confidence]
+  end
+
   def to_hash absolute_paths: true
     if self.called_from and not absolute_paths
       render_path = self.called_from.with_relative_paths
@@ -285,7 +293,7 @@ class Brakeman::Warning
     { :warning_type => self.warning_type,
       :warning_code => @warning_code,
       :fingerprint => self.fingerprint,
-      :check_name => self.check.gsub(/^Brakeman::Check/, ''),
+      :check_name => self.check_name,
       :message => self.message.to_s,
       :file => (absolute_paths ? self.file.absolute : self.file.relative),
       :line => self.line,
@@ -294,7 +302,7 @@ class Brakeman::Warning
       :render_path => render_path,
       :location => self.location(false),
       :user_input => (@user_input && self.format_user_input(false)),
-      :confidence => TEXT_CONFIDENCE[self.confidence]
+      :confidence => self.confidence_name
     }
   end
 
