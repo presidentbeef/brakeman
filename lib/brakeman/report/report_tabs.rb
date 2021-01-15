@@ -10,7 +10,7 @@ class Brakeman::Report::Tabs < Brakeman::Report::Table
       self.send(meth).map do |w|
         line = w.line || 0
         w.warning_type.gsub!(/[^\w\s]/, ' ')
-        "#{(w.file.absolute)}\t#{line}\t#{w.warning_type}\t#{category}\t#{w.format_message}\t#{TEXT_CONFIDENCE[w.confidence]}"
+        "#{(w.file.absolute)}\t#{line}\t#{w.warning_type}\t#{category}\t#{w.format_message}\t#{w.confidence_name}"
       end.join "\n"
 
     end.join "\n"

@@ -40,13 +40,13 @@ class TestReportGeneration < Minitest::Test
   end
 
   def test_csv_sanity
+    headers = ["Confidence", "Warning Type", "File", "Line", "Message", "Code", "User Input", "Check Name", "Warning Code", "Fingerprint", "Link"]
     report = @@report.to_csv
-    parsed = CSV.parse report
-    summary_header = ["Application Path", "Report Generation Time", "Checks Performed", "Rails Version"]
+    parsed = CSV.parse report, headers: true
+    row = parsed.first
 
-    assert report.is_a? String
-    assert_equal ["BRAKEMAN REPORT"], parsed[0]
-    assert_equal summary_header, parsed[2]
+    assert_equal row.headers, headers
+    assert_equal parsed.length, @@report.tracker.filtered_warnings.length
   end
 
   def test_csv_report_no_warnings
