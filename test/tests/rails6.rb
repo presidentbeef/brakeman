@@ -509,4 +509,17 @@ class Rails6Tests < Minitest::Test
       :code => s(:if, s(:call, s(:call, nil, :request), :get?), nil, nil),
       :user_input => s(:call, s(:call, nil, :request), :get?)
   end
+
+  def test_skip_dev_environment
+    assert_no_warning :type => :warning,
+      :warning_code => 13,
+      :fingerprint => "a7759c4ad34056fffc847aff31c9b40d90803cd5637a7189b0edfd7615132f37",
+      :warning_type => "Dangerous Eval",
+      :line => 51,
+      :message => /^User\ input\ in\ eval/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, nil, :eval, s(:call, s(:params), :[], s(:lit, :x))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
 end
