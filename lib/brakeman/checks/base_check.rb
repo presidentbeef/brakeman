@@ -151,6 +151,12 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     method[-1] == "?"
   end
 
+  TEMP_FILE_PATH = s(:call, s(:call, s(:const, :Tempfile), :new), :path).freeze
+
+  def temp_file_path? exp
+    exp == TEMP_FILE_PATH
+  end
+
   #Report a warning
   def warn options
     extra_opts = { :check => self.class.to_s }

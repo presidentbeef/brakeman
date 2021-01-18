@@ -347,6 +347,18 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
   end
 
+  TEMP_FILE_CLASS = s(:const, :Tempfile)
+
+  def temp_file_open? exp
+    call? exp and
+      exp.target == TEMP_FILE_CLASS and
+      exp.method == :open
+  end
+
+  def temp_file_new line
+    s(:call, TEMP_FILE_CLASS, :new).line(line)
+  end
+
   def process_iter exp
     @exp_context.push exp
     exp[1] = process exp.block_call
@@ -364,6 +376,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         # Iterating over an array of all literal values
         local = Sexp.new(:lvar, block_args.last)
         env.current[local] = safe_literal(exp.line)
+      elsif temp_file_open? call
+        local = Sexp.new(:lvar, block_args.last)
+        env.current[local] = temp_file_new(exp.line)
       else
         block_args.each do |e|
           #Force block arg(s) to be local
