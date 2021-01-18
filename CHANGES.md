@@ -1,3 +1,16 @@
+# Unreleased
+
+* Ignore `Tempfile#path` in shell commands
+* Ignore development environment
+* Revamp CSV report to a CSV list of warnings
+* Set Rails configuration defaults based on `load_defaults` version
+* Add check for (more) unsafe method reflection
+* Suggest using `--force` if no Rails application is detected
+* Add Sonarqube report format (Adam England)
+* Add check for potential HTTP verb confusion
+* Add `--[no-]skip-vendor` option
+* Scan (almost) all Ruby files in project
+
 # 4.10.1 - 2020-12-24
 
 * Declare REXML as a dependency (Ruby 3.0 compatibility)
