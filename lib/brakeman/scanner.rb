@@ -25,7 +25,7 @@ class Brakeman::Scanner
 
     if (!@app_tree.root || !@app_tree.exists?("app")) && !options[:force_scan]
       message = "Please supply the path to a Rails application (looking in #{@app_tree.root}).\n" <<
-                "  Use `--force` to run a scan anyway - for example if there are many applications in one directory."
+                "  Use `--force` to run a scan anyway."
 
       raise Brakeman::NoApplication, message
     end
