@@ -187,7 +187,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     method = exp.method
     first_arg = exp.first_arg
 
-    if method == :send or method == :try
+    if method == :send or method == :__send__ or method == :try
       collapse_send_call exp, first_arg
     end
 
