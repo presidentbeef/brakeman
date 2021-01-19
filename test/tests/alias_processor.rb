@@ -358,6 +358,13 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
+  def test_safe___send__
+    assert_alias 'X.y(:z)', <<-RUBY
+    a = X.__send__(:y, :z)
+    a
+    RUBY
+  end
+
   def test_try_collapse
     assert_alias 'x.y', <<-RUBY
       z = x.try(:y)
