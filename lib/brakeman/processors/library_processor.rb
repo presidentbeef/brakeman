@@ -30,15 +30,6 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
   end
 
   def process_defn exp
-    if exp.method_name == :initialize
-      @alias_processor.process_safely exp.body_list
-      @initializer_env = @alias_processor.only_ivars
-    elsif node_type? exp, :defn
-      exp = @alias_processor.process_safely exp, @initializer_env
-    else
-      exp = @alias_processor.process exp
-    end
-
     if @current_class
       exp.body = process_all! exp.body
       @current_class.add_method :public, exp.method_name, exp, @current_file
