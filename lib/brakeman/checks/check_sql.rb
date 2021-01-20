@@ -576,7 +576,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     :sanitize_sql_for_assignment, :sanitize_sql_for_conditions, :sanitize_sql_hash,
     :sanitize_sql_hash_for_assignment, :sanitize_sql_hash_for_conditions,
     :to_sql, :sanitize, :primary_key, :table_name_prefix, :table_name_suffix,
-    :where_values_hash, :foreign_key
+    :where_values_hash, :foreign_key, :uuid
   ]
 
   def safe_value? exp
