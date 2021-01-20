@@ -40,7 +40,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     @mass_assign_disabled = nil
     @has_user_input = nil
     @in_array = false
-    @safe_input_attributes = Set[:to_i, :to_f, :arel_table, :id]
+    @safe_input_attributes = Set[:to_i, :to_f, :arel_table, :id, :uuid]
     @comparison_ops  = Set[:==, :!=, :>, :<, :>=, :<=]
   end
 

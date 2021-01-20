@@ -108,6 +108,19 @@ class Rails6Tests < Minitest::Test
       :user_input => s(:lvar, :direction)
   end
 
+  def test_sql_injection_uuid_false_positive
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "8ebbafd2b7d6aa2d6ab639c6678ae1f5489dc3166747bbad8919e95156592321",
+      :warning_type => "SQL Injection",
+      :line => 3,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/models/group.rb",
+      :code => s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :exec_query, s(:dstr, "select * where x = ", s(:evstr, s(:call, s(:const, :User), :uuid)))),
+      :user_input => s(:call, s(:const, :User), :uuid)
+  end
+
   def test_cross_site_scripting_sanity
     assert_warning :type => :template,
       :warning_code => 2,
