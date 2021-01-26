@@ -1,5 +1,7 @@
 # Unreleased
 
+* Ignore `uuid` as a safe attribute
+* Collapse `__send__` calls
 * Ignore `Tempfile#path` in shell commands
 * Ignore development environment
 * Revamp CSV report to a CSV list of warnings
