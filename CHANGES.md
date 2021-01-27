@@ -1,4 +1,4 @@
-# Unreleased
+# 5.0.0 - 2021-01-26
 
 * Ignore `uuid` as a safe attribute
 * Collapse `__send__` calls
