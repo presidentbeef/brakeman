@@ -1,6 +1,167 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2021-01-05T14:02:07-08:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 4.10.1 Released</title><link href="https://brakemanscanner.org/blog/2020/12/24/brakeman-4-dot-10-dot-1-released" rel="alternate" type="text/html" title="Brakeman 4.10.1 Released" /><published>2020-12-24T12:30:00-08:00</published><updated>2020-12-24T12:30:00-08:00</updated><id>https://brakemanscanner.org/blog/2020/12/24/brakeman-4-dot-10-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2020/12/24/brakeman-4-dot-10-dot-1-released">&lt;p&gt;This releases fixes Ruby 3.0 compatibility (meaning running under 3.0, new syntax is not supported yet).&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2021-01-26T20:05:08-08:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 5.0.0 Released</title><link href="https://brakemanscanner.org/blog/2021/01/26/brakeman-5-dot-0-dot-0-released" rel="alternate" type="text/html" title="Brakeman 5.0.0 Released" /><published>2021-01-26T12:00:00-08:00</published><updated>2021-01-26T12:00:00-08:00</updated><id>https://brakemanscanner.org/blog/2021/01/26/brakeman-5-dot-0-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2021/01/26/brakeman-5-dot-0-dot-0-released">&lt;p&gt;It has been a long time coming, but it is finally here! Lots of changes in this one…&lt;/p&gt;
+
+&lt;p&gt;Brakeman now scans (almost) all Ruby (and ERB, Haml, Slim) files in an application.
+This may have a significant impact on reported warnings and scan times - see below for more information.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 4.10.1:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Scan (almost) all Ruby files in project&lt;/li&gt;
+  &lt;li&gt;Revamp CSV report to a CSV list of warnings&lt;/li&gt;
+  &lt;li&gt;Add Sonarqube report format (&lt;a href=&quot;https://github.com/adamnengland&quot;&gt;Adam England&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Add check for (more) unsafe method reflection (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1488&quot;&gt;#1488&lt;/a&gt;, &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1507&quot;&gt;#1507&lt;/a&gt;, and &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1508&quot;&gt;#1508&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Add check for potential HTTP verb confusion (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1432&quot;&gt;#1432&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Add &lt;code class=&quot;highlighter-rouge&quot;&gt;--[no-]skip-vendor&lt;/code&gt; option&lt;/li&gt;
+  &lt;li&gt;Ignore &lt;code class=&quot;highlighter-rouge&quot;&gt;uuid&lt;/code&gt; as a safe attribute&lt;/li&gt;
+  &lt;li&gt;Ignore &lt;code class=&quot;highlighter-rouge&quot;&gt;Tempfile#path&lt;/code&gt; in shell commands&lt;/li&gt;
+  &lt;li&gt;Ignore development environment&lt;/li&gt;
+  &lt;li&gt;Collapse &lt;code class=&quot;highlighter-rouge&quot;&gt;__send__&lt;/code&gt; calls&lt;/li&gt;
+  &lt;li&gt;Set Rails configuration defaults based on &lt;code class=&quot;highlighter-rouge&quot;&gt;load_defaults&lt;/code&gt; version&lt;/li&gt;
+  &lt;li&gt;Update Ruby requirement to version 2.4.0&lt;/li&gt;
+  &lt;li&gt;Suggest using &lt;code class=&quot;highlighter-rouge&quot;&gt;--force&lt;/code&gt; if no Rails application is detected&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;scan-almost-all-ruby-files&quot;&gt;Scan Almost All Ruby Files&lt;/h3&gt;
+
+&lt;p&gt;Since the beginning, Brakeman has been picky about what directories it searches for files.
+In general, Brakeman has looked in ‘normal’ Rails directores like &lt;code class=&quot;highlighter-rouge&quot;&gt;app/controllers/&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;app/models/&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;app/views/&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;lib/&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;config&lt;/code&gt;, etc.
+This is because Rails has some default logic based on file paths - like mapping a controller action to a given view.&lt;/p&gt;
+
+&lt;p&gt;But if an application varied from the norm, Brakeman would simply not scan those other directories.
+This behavior led to a lot of confusion with folks wondering why Brakeman was not finding certain vulnerabilities.&lt;/p&gt;
+
+&lt;p&gt;Brakeman now attempts to deduce the contents of a file first, then falls back to the path name if necessary.
+This has been surprisingly effective.&lt;/p&gt;
+
+&lt;p&gt;However, scanning more files means Brakeman runs slower and may report more false positives because the new files
+are harder to reason about and less likely to be exposed as part of the attack surface.&lt;/p&gt;
+
+&lt;p&gt;Brakeman does ignore &lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;spec&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;vendor&lt;/code&gt; directories. To scan the &lt;code class=&quot;highlighter-rouge&quot;&gt;vendor&lt;/code&gt; directory as well, use &lt;code class=&quot;highlighter-rouge&quot;&gt;--no-skip-vendor&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Please report any issues!&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1520&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;csv-report-update&quot;&gt;CSV Report Update&lt;/h3&gt;
+
+&lt;p&gt;The CSV report format has been completely changed! Previously, it was meant as an ‘Excel-lite’ format, only really useful for viewing in a spreadsheet program.&lt;/p&gt;
+
+&lt;p&gt;Now it is regular CSV with normalized columns to mostly match the JSON report (except for nested fields).&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1547&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;sonarqube-report-format&quot;&gt;Sonarqube Report Format&lt;/h3&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/adamnengland&quot;&gt;Adam England&lt;/a&gt;, Brakeman now supports the Sonarqube “&lt;a href=&quot;https://docs.sonarqube.org/latest/analysis/generic-issue/&quot;&gt;Generic Issue Import Format&lt;/a&gt;”.&lt;/p&gt;
+
+&lt;p&gt;(And thanks Adam for your patience.)&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1505&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;more-unsafe-method-reflection&quot;&gt;More Unsafe Method Reflection&lt;/h3&gt;
+
+&lt;p&gt;A new check was added for unsafe use of &lt;code class=&quot;highlighter-rouge&quot;&gt;method&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;to_proc&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;tap&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1527&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;http-verb-confusion-check&quot;&gt;HTTP Verb Confusion Check&lt;/h3&gt;
+
+&lt;p&gt;In Rails, &lt;code class=&quot;highlighter-rouge&quot;&gt;HEAD&lt;/code&gt; requests are routed like &lt;code class=&quot;highlighter-rouge&quot;&gt;GET&lt;/code&gt; requests, but &lt;code class=&quot;highlighter-rouge&quot;&gt;request.get?&lt;/code&gt; will be false.&lt;/p&gt;
+
+&lt;p&gt;Some code may assume if &lt;code class=&quot;highlighter-rouge&quot;&gt;request.get?&lt;/code&gt; is false, then &lt;code class=&quot;highlighter-rouge&quot;&gt;request.post?&lt;/code&gt; is true:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get?&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# Do something benign&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# Do something sensitive because it's a POST&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# but actually it could be a HEAD :(&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Brakeman will warn when an &lt;code class=&quot;highlighter-rouge&quot;&gt;if&lt;/code&gt; expression checks &lt;code class=&quot;highlighter-rouge&quot;&gt;request.get?&lt;/code&gt; but has an &lt;code class=&quot;highlighter-rouge&quot;&gt;else&lt;/code&gt; clause instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;elseif ...&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1524&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;uuids-as-safe-attributes&quot;&gt;UUIDs as Safe Attributes&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;#uuid&lt;/code&gt; will be treated as a safe value, particular in SQL.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1553&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;tempfile-paths-in-shell-commands&quot;&gt;Tempfile Paths in Shell Commands&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Tempfile#path&lt;/code&gt; will be considered as safe value for command injection.&lt;/p&gt;
+
+&lt;p&gt;Also adds support for Tempfiles like:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;Tempfile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'...'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# Brakeman knows `file` is a Tempfile&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1544&quot;&gt;changes&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;ignore-development-environment&quot;&gt;Ignore Development Environment&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will ignore code that is guarded like&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;development?&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# ...whatever code&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This was already true for &lt;code class=&quot;highlighter-rouge&quot;&gt;Rails.env.test?&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1549&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;collapse-__send__-calls&quot;&gt;Collapse &lt;code class=&quot;highlighter-rouge&quot;&gt;__send__&lt;/code&gt; Calls&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will treat&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;Blah&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;__send__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:something&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;as&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;Blah&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;something&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This was already true for &lt;code class=&quot;highlighter-rouge&quot;&gt;send&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;try&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1551&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;set-rails-defaults&quot;&gt;Set Rails Defaults&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will set default values for Rails configuration options based on the version argument to &lt;code class=&quot;highlighter-rouge&quot;&gt;config.load_defaults&lt;/code&gt; which is usually called in &lt;code class=&quot;highlighter-rouge&quot;&gt;application.rb&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1532&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;requires-ruby-240&quot;&gt;Requires Ruby 2.4.0&lt;/h3&gt;
+
+&lt;p&gt;The minimal Ruby version for running Brakeman is now 2.4.0 (which is already EOL!)&lt;/p&gt;
+
+&lt;p&gt;Note Brakeman can analyze Ruby syntax from 1.8 to 2.6 (some 2.7+ syntax is not supported yet).&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1515&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;21b91f67cde4cf487df0a4dbf6e54729064c665bb0b4b370b71bac9435b63e4c  brakeman-5.0.0.gem
+3641c52448ca1d12423595ca1a874c1362f438cd58196825be648bb797096cb5  brakeman-lib-5.0.0.gem
+50bab26fe8fcf8d962baaf5b08b7c178315b7c0e4be07d1b134e8ae00338c908  brakeman-min-5.0.0.gem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">It has been a long time coming, but it is finally here! Lots of changes in this one…</summary></entry><entry><title type="html">Brakeman 4.10.1 Released</title><link href="https://brakemanscanner.org/blog/2020/12/24/brakeman-4-dot-10-dot-1-released" rel="alternate" type="text/html" title="Brakeman 4.10.1 Released" /><published>2020-12-24T12:30:00-08:00</published><updated>2020-12-24T12:30:00-08:00</updated><id>https://brakemanscanner.org/blog/2020/12/24/brakeman-4-dot-10-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2020/12/24/brakeman-4-dot-10-dot-1-released">&lt;p&gt;This releases fixes Ruby 3.0 compatibility (meaning running under 3.0, new syntax is not supported yet).&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 4.10.0:&lt;/em&gt;&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Declare REXML as a dependency (Ruby 3.0 compatibility)&lt;/li&gt;
@@ -636,94 +797,4 @@ efa07aa8476ef5553c91734093349a3ed55e2ef05b469d3dcecfdaabede37296  brakeman-min-4
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Some minor fixes for a minor release.</summary></entry><entry><title type="html">Brakeman 4.7.0 Released</title><link href="https://brakemanscanner.org/blog/2019/10/14/brakeman-4-dot-7-released" rel="alternate" type="text/html" title="Brakeman 4.7.0 Released" /><published>2019-10-14T16:00:00-07:00</published><updated>2019-10-14T16:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2019/10/14/brakeman-4-dot-7-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2019/10/14/brakeman-4-dot-7-released">&lt;p&gt;This release updates Haml support to Haml 5.x!&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 4.6.1:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Update Haml support to Haml 5.x (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1044&quot;&gt;#1044&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Catch shell injection from &lt;code class=&quot;highlighter-rouge&quot;&gt;-c&lt;/code&gt; shell commands (&lt;a href=&quot;https://github.com/JacobEvelyn&quot;&gt;Jacob Evelyn&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Correctly handle non-symbols in &lt;code class=&quot;highlighter-rouge&quot;&gt;CheckCookieSerialization&lt;/code&gt; (&lt;a href=&quot;https://github.com/philipturnbull&quot;&gt;Phil Turnbull&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Refactor &lt;code class=&quot;highlighter-rouge&quot;&gt;Brakeman::Differ#second_pass&lt;/code&gt; (&lt;a href=&quot;https://github.com/Becojo&quot;&gt;Benoit Côté-Jodoin&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Fix &lt;code class=&quot;highlighter-rouge&quot;&gt;version_between?&lt;/code&gt; (&lt;a href=&quot;https://github.com/aglushkov&quot;&gt;Andrey Glushkov&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Ignore interpolation in &lt;code class=&quot;highlighter-rouge&quot;&gt;%W[]&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1399&quot;&gt;#1399&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Ignore &lt;code class=&quot;highlighter-rouge&quot;&gt;form_for&lt;/code&gt; for XSS check&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;haml-support-update&quot;&gt;Haml Support Update&lt;/h3&gt;
-
-&lt;p&gt;Haml 5 introduced a completely different “compiled” format, so adding support was a significant effort taking a few months to complete.
-Due to the large number of changes, you may expect some changes to warnings for Haml templates.&lt;/p&gt;
-
-&lt;p&gt;Please report any bugs or odd behavior with Haml templates!&lt;/p&gt;
-
-&lt;p&gt;Haml 3.x and 4.x are no longer supported, although in general Haml is mostly backwards-compatible.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1397&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;shell-commands&quot;&gt;Shell Commands&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/JacobEvelyn&quot;&gt;Jacob Evelyn&lt;/a&gt; added support for detecting command injection with &lt;code class=&quot;highlighter-rouge&quot;&gt;-c&lt;/code&gt; in known-dangerous commands (such as &lt;code class=&quot;highlighter-rouge&quot;&gt;bash&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;echo&lt;/code&gt;).&lt;/p&gt;
-
-&lt;p&gt;An example of dangerous code would be:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;system(&quot;echo&quot;, &quot;-c&quot;, params[:command])
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Of course not all dangerous shell commands are covered - so in general be careful passing any user-controlled input to a shell command.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1396/&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;cookieserialization-bug&quot;&gt;CookieSerialization Bug&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/philipturnbull&quot;&gt;Phil Turnbull&lt;/a&gt; fixed an issue in &lt;code class=&quot;highlighter-rouge&quot;&gt;CheckCookieSerialization&lt;/code&gt; where non-symbol cookie serialization options were handled poorly.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1391&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;brakemandiffer-refactor&quot;&gt;Brakeman::Differ Refactor&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/Becojo&quot;&gt;Benoit Côté-Jodoin&lt;/a&gt; refactored &lt;code class=&quot;highlighter-rouge&quot;&gt;Brakeman::Differ&lt;/code&gt; to compare warnings more efficiently and remove old fallback behavior.
-All warnings are compared by fingerprint now when using &lt;code class=&quot;highlighter-rouge&quot;&gt;--compare&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1406&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;version-comparisons&quot;&gt;Version Comparisons&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/aglushkov&quot;&gt;Andrey Glushkov&lt;/a&gt; updated the code for comparing library versions so it uses &lt;code class=&quot;highlighter-rouge&quot;&gt;Gem::Version&lt;/code&gt; and handles “beta”/pre-release versions better.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1405&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;w-interpolation&quot;&gt;%W Interpolation&lt;/h3&gt;
-
-&lt;p&gt;String interpolation when using &lt;code class=&quot;highlighter-rouge&quot;&gt;%W&lt;/code&gt; is no longer considered dangerous in shell commands where regular interpolation would be.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1408&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;form_for&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;form_for&lt;/code&gt;&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;form_for&lt;/code&gt; is considered a safe method in XSS checks.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1397/commits/a99cb25c6e76eb6240589f3a399e1245c0514257&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;stringnew&quot;&gt;String.new&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;String.new &amp;lt;&amp;lt; 'some string'&lt;/code&gt; is now treated like &lt;code class=&quot;highlighter-rouge&quot;&gt;'' &amp;lt;&amp;lt; 'some string'&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1397/commits/931bed18481679086a7102bc063ecf9b1d727d40&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
-
-&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;f43d949f1de9c0bb67b7bc7d41000ac70a1fb6c2250c5e7332015f0cc5ce36c5  brakeman-4.7.0.gem
-c02dbaa4ad0c7402ef99697c7b1916b7d9558dd5aa45e1a36efed117628498cc  brakeman-lib-4.7.0.gem
-3ab80a47bbfbb0f869bb1289292ed62b9643b5e0884a4a79e2c7e44218ce3b07  brakeman-min-4.7.0.gem
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">This release updates Haml support to Haml 5.x!</summary></entry></feed>
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Some minor fixes for a minor release.</summary></entry></feed>
