@@ -183,6 +183,12 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       return exp
     end
 
+    # If x(*[1,2,3]) change to x(1,2,3)
+    # if that's the only argument
+    if splat_array? exp.first_arg and exp.second_arg.nil?
+      exp.arglist = exp.first_arg[1].sexp_body
+    end
+
     target = exp.target
     method = exp.method
     first_arg = exp.first_arg
@@ -357,6 +363,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   def temp_file_new line
     s(:call, TEMP_FILE_CLASS, :new).line(line)
+  end
+
+  def splat_array? exp
+    node_type? exp, :splat and
+      node_type? exp[1], :array
   end
 
   def process_iter exp
