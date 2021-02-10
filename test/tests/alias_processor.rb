@@ -229,6 +229,14 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
+  def test_splat_array_args
+    assert_alias 'x(1, b, :c)', <<-RUBY
+      a = b
+      args = [1, a, :c]
+      x(*args)
+    RUBY
+  end
+
   def test_obvious_if
     assert_alias "'Yes!'", <<-RUBY
       condition = true
