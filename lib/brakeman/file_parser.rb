@@ -1,3 +1,5 @@
+require 'parallel'
+
 module Brakeman
   ASTFile = Struct.new(:path, :ast)
 
@@ -13,11 +15,16 @@ module Brakeman
     end
 
     def parse_files list
-      read_files list do |path, contents|
-        if ast = parse_ruby(contents, path.relative)
-          ASTFile.new(path, ast)
+      @file_list = Parallel.map(list) do |file_name|
+        file_path = @app_tree.file_path(file_name)
+        contents = file_path.read
+
+        if ast = parse_ruby(contents, file_path.relative)
+          ASTFile.new(file_name, ast)
+        else
+          nil
         end
-      end
+      end.compact
     end
 
     def read_files list
