@@ -69,17 +69,15 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
     if check and original? res
 
       model = tracker.models[res[:chain].first]
-
       attr_protected = (model and model.attr_protected)
+      first_arg = call.first_arg
 
       if attr_protected and tracker.options[:ignore_attr_protected]
         return
+      elsif call? first_arg and (first_arg.method == :slice or first_arg.method == :only)
+        return
       elsif input = include_user_input?(call.arglist)
-        first_arg = call.first_arg
-
-        if call? first_arg and (first_arg.method == :slice or first_arg.method == :only)
-          return
-        elsif not node_type? first_arg, :hash
+        if not node_type? first_arg, :hash
           if attr_protected
             confidence = :medium
           else
