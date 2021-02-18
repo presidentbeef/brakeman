@@ -13,6 +13,7 @@ module Brakeman
       @src = {}
       @includes = []
       @methods = { :public => {}, :private => {}, :protected => {} }
+      @class_methods = {}
       @options = {}
       @tracker = tracker
 
@@ -47,10 +48,21 @@ module Brakeman
 
     def add_method visibility, name, src, file_name
       if src.node_type == :defs
+        @class_methods[name] = {
+          name: name,
+          src: src,
+          file: file_name,
+        }
+
+        # TODO: fix this weirdness
         name = :"#{src[1]}.#{name}"
       end
 
-      @methods[visibility][name] = { :src => src, :file => file_name }
+      @methods[visibility][name] = {
+        name: name,
+        src: src,
+        file: file_name,
+      }
     end
 
     def each_method
@@ -62,13 +74,19 @@ module Brakeman
     end
 
     def get_method name
-      each_method do |n, info|
-        if n == name
-          return info
+      @methods.each do |_vis, meths|
+        if meths[name]
+          return meths[name]
         end
       end
 
       nil
+    end
+
+    alias get_instance_method get_method
+
+    def get_class_method name
+      @class_methods[name]
     end
 
     def file
