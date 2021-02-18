@@ -1,11 +1,5 @@
 module Brakeman
   module CallConversionHelper
-    def all_literals? exp, expected_type = :array
-      node_type? exp, expected_type and
-        exp.length > 1 and
-        exp.all? { |e| e.is_a? Symbol or node_type? e, :lit, :str }
-    end
-
     # Join two array literals into one.
     def join_arrays lhs, rhs, original_exp = nil
       if array? lhs and array? rhs

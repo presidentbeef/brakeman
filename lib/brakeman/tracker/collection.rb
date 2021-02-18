@@ -14,6 +14,7 @@ module Brakeman
       @includes = []
       @methods = { :public => {}, :private => {}, :protected => {} }
       @class_methods = {}
+      @simple_methods = { :class => {}, instance: {} }
       @options = {}
       @tracker = tracker
 
@@ -47,6 +48,8 @@ module Brakeman
     end
 
     def add_method visibility, name, src, file_name
+      add_simple_method_maybe name, src
+
       if src.node_type == :defs
         @class_methods[name] = {
           name: name,
@@ -107,6 +110,42 @@ module Brakeman
 
     def methods_public
       @methods[:public]
+    end
+
+    def get_simple_method_return_value type, name
+      @simple_methods[type][name]
+    end
+
+    private
+
+    def add_simple_method_maybe name, src
+      # Simple methods have one (simple) expression in the body and
+      # no arguments
+      if src.formal_args.length == 1 # no args
+        body = src.body
+        if body.length == 1 # single expression in body
+          value = body.first
+
+          if simple_literal? value or
+              (array? value and all_literals? value)
+
+            add_simple_method src, value
+          end
+        end
+      end
+    end
+
+    def add_simple_method src, value
+      name = src.method_name
+
+      case src.node_type
+      when :defn
+        @simple_methods[:instance][name] = value
+      when :defs
+        @simple_methods[:class][name] = value
+      else
+        raise "Expected sexp type: #{src.node_type}"
+      end
     end
   end
 end

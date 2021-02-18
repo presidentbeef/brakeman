@@ -293,7 +293,13 @@ module Brakeman::Util
     exp.is_a? Sexp and types.include? exp.node_type
   end
 
-  LITERALS = [:lit, :false, :str, :true, :array, :hash]
+  SIMPLE_LITERALS = [:lit, :false, :str, :true]
+
+  def simple_literal? exp
+    exp.is_a? Sexp and SIMPLE_LITERALS.include? exp.node_type
+  end
+
+  LITERALS = [*SIMPLE_LITERALS, :array, :hash]
 
   def literal? exp
     exp.is_a? Sexp and LITERALS.include? exp.node_type

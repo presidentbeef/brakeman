@@ -18,4 +18,12 @@ class Group < ApplicationRecord
     role = roles.fetch(role_name)
     Arel.sql("role = '#{role}'")
   end
+
+  def use_simple_method
+    self.where("thing = #{Group.simple_method}")
+  end
+
+  def self.simple_method
+    "Hello"
+  end
 end
