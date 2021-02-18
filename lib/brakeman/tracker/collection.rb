@@ -1,4 +1,5 @@
 require 'brakeman/util'
+require 'brakeman/tracker/method_info'
 
 module Brakeman
   class Collection
@@ -48,24 +49,18 @@ module Brakeman
     end
 
     def add_method visibility, name, src, file_name
-      add_simple_method_maybe name, src
+      meth_info = Brakeman::MethodInfo.new(name, src, file_name)
 
       if src.node_type == :defs
-        @class_methods[name] = {
-          name: name,
-          src: src,
-          file: file_name,
-        }
+        @class_methods[name] = meth_info
 
-        # TODO: fix this weirdness
+        # TODO fix this weirdness
         name = :"#{src[1]}.#{name}"
       end
 
-      @methods[visibility][name] = {
-        name: name,
-        src: src,
-        file: file_name,
-      }
+      @methods[visibility][name] = meth_info
+
+      add_simple_method_maybe meth_info
     end
 
     def each_method
@@ -113,38 +108,14 @@ module Brakeman
     end
 
     def get_simple_method_return_value type, name
-      @simple_methods[type][name]
+      @simple_methods[type][name]&.return_value
     end
 
     private
 
-    def add_simple_method_maybe name, src
-      # Simple methods have one (simple) expression in the body and
-      # no arguments
-      if src.formal_args.length == 1 # no args
-        body = src.body
-        if body.length == 1 # single expression in body
-          value = body.first
-
-          if simple_literal? value or
-              (array? value and all_literals? value)
-
-            add_simple_method src, value
-          end
-        end
-      end
-    end
-
-    def add_simple_method src, value
-      name = src.method_name
-
-      case src.node_type
-      when :defn
-        @simple_methods[:instance][name] = value
-      when :defs
-        @simple_methods[:class][name] = value
-      else
-        raise "Expected sexp type: #{src.node_type}"
+    def add_simple_method_maybe meth_info
+      if meth_info.very_simple_method?
+        @simple_methods[meth_info.type][meth_info.name] = meth_info
       end
     end
   end

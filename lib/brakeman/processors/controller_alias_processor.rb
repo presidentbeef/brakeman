@@ -51,7 +51,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
         #Need to process the method like it was in a controller in order
         #to get the renders set
         processor = Brakeman::ControllerProcessor.new(@tracker, mixin.file)
-        method = mixin.get_method(name)[:src].deep_clone
+        method = mixin.get_method(name).src.deep_clone
 
         if node_type? method, :defn
           method = processor.process_defn method
@@ -182,7 +182,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     # method as the line number
     if line.nil? and controller = @tracker.controllers[@current_class]
       if meth = controller.get_method(@current_method)
-        if line = meth[:src] && meth[:src].last && meth[:src].last.line
+        if line = meth.src && meth.src.last && meth.src.last.line
           line += 1
         else
           line = 1
@@ -272,7 +272,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
 
         @method_cache[method_name] = find_method method_name, controller.parent
       else
-        @method_cache[method_name] = { :controller => controller.name, :method => method[:src] }
+        @method_cache[method_name] = { :controller => controller.name, :method => method.src }
       end
     else
       nil

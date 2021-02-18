@@ -99,8 +99,8 @@ class Brakeman::Tracker
     classes.each do |set|
       set.each do |set_name, collection|
         collection.each_method do |method_name, definition|
-          src = definition[:src]
-          yield src, set_name, method_name, definition[:file]
+          src = definition.src
+          yield src, set_name, method_name, definition.file
         end
       end
     end
@@ -285,8 +285,8 @@ class Brakeman::Tracker
     method_sets.each do |set|
       set.each do |set_name, info|
         info.each_method do |method_name, definition|
-          src = definition[:src]
-          finder.process_source src, :class => set_name, :method => method_name, :file => definition[:file]
+          src = definition.src
+          finder.process_source src, :class => set_name, :method => method_name, :file => definition.file
         end
       end
     end
