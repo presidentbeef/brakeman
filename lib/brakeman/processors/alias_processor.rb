@@ -208,6 +208,15 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       return Sexp.new(:false).line(exp.line)
     end
 
+    # For the simplest case of `Foo.thing`
+    if node_type? target, :const and first_arg.nil?
+      if tracker and (klass = tracker.find_class(class_name(target.value)))
+        if return_value = klass.get_simple_method_return_value(:class, method)
+          return return_value.deep_clone(exp.line)
+        end
+      end
+    end
+
     #See if it is possible to simplify some basic cases
     #of addition/concatenation.
     case method
