@@ -299,6 +299,12 @@ module Brakeman::Util
     exp.is_a? Sexp and LITERALS.include? exp.node_type
   end
 
+  def all_literals? exp, expected_type = :array
+    node_type? exp, expected_type and
+      exp.length > 1 and
+      exp.all? { |e| e.is_a? Symbol or node_type? e, :lit, :str }
+  end
+
   DIR_CONST = s(:const, :Dir)
 
   # Dir.glob(...).whatever
