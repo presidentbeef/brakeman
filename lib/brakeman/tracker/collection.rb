@@ -1,4 +1,5 @@
 require 'brakeman/util'
+require 'brakeman/tracker/method_info'
 
 module Brakeman
   class Collection
@@ -13,6 +14,7 @@ module Brakeman
       @src = {}
       @includes = []
       @methods = { :public => {}, :private => {}, :protected => {} }
+      @class_methods = {}
       @options = {}
       @tracker = tracker
 
@@ -46,11 +48,16 @@ module Brakeman
     end
 
     def add_method visibility, name, src, file_name
+      meth_info = Brakeman::MethodInfo.new(name, src, self, file_name)
+
       if src.node_type == :defs
+        @class_methods[name] = meth_info
+
+        # TODO fix this weirdness
         name = :"#{src[1]}.#{name}"
       end
 
-      @methods[visibility][name] = { :src => src, :file => file_name }
+      @methods[visibility][name] = meth_info
     end
 
     def each_method
@@ -61,14 +68,29 @@ module Brakeman
       end
     end
 
-    def get_method name
-      each_method do |n, info|
-        if n == name
-          return info
+    def get_method name, type = :instance
+      case type
+      when :class
+        get_class_method name
+      when :instance
+        get_instance_method name
+      else
+        raise "Unexpected method type: #{type.inspect}"
+      end
+    end
+
+    def get_instance_method name
+      @methods.each do |_vis, meths|
+        if meths[name]
+          return meths[name]
         end
       end
 
       nil
+    end
+
+    def get_class_method name
+      @class_methods[name]
     end
 
     def file

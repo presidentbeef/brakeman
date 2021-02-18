@@ -35,6 +35,7 @@ class Brakeman::Tracker
     #class they are.
     @models = {}
     @models[UNKNOWN_MODEL] = Brakeman::Model.new(UNKNOWN_MODEL, nil, @app_tree.file_path("NOT_REAL.rb"), nil, self)
+    @method_cache = {}
     @routes = {}
     @initializers = {}
     @errors = []
@@ -99,8 +100,8 @@ class Brakeman::Tracker
     classes.each do |set|
       set.each do |set_name, collection|
         collection.each_method do |method_name, definition|
-          src = definition[:src]
-          yield src, set_name, method_name, definition[:file]
+          src = definition.src
+          yield src, set_name, method_name, definition.file
         end
       end
     end
@@ -220,6 +221,34 @@ class Brakeman::Tracker
     nil
   end
 
+  def find_method method_name, class_name, method_type = :instance
+    return nil unless method_name.is_a? Symbol
+
+    klass = find_class(class_name)
+    return nil unless klass
+
+    cache_key = [klass, method_name, method_type]
+
+    if method = @method_cache[cache_key]
+      return method
+    end
+
+    if method = klass.get_method(method_name, method_type)
+      return method
+    else
+      # Check modules included for method definition
+      # TODO: only for instance methods, otherwise check extends!
+      klass.includes.each do |included_name|
+        if method = find_method(method_name, included_name, method_type)
+          return (@method_cache[cache_key] = method)
+        end
+      end
+
+      # Not in any included modules, check the parent
+      @method_cache[cache_key] = find_method(method_name, klass.parent)
+    end
+  end
+
   def index_call_sites
     finder = Brakeman::FindAllCalls.new self
 
@@ -285,8 +314,8 @@ class Brakeman::Tracker
     method_sets.each do |set|
       set.each do |set_name, info|
         info.each_method do |method_name, definition|
-          src = definition[:src]
-          finder.process_source src, :class => set_name, :method => method_name, :file => definition[:file]
+          src = definition.src
+          finder.process_source src, :class => set_name, :method => method_name, :file => definition.file
         end
       end
     end
