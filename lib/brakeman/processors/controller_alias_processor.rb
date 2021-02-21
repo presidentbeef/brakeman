@@ -143,16 +143,16 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #Basically, adds any instance variable assignments to the environment.
   #TODO: method arguments?
   def process_before_filter name
-    filter = find_method name, @current_class
+    filter = tracker.find_method name, @current_class
 
     if filter.nil?
       Brakeman.debug "[Notice] Could not find filter #{name}"
       return
     end
 
-    method = filter[:method]
+    method = filter.src
 
-    if ivars = @tracker.filter_cache[[filter[:controller], name]]
+    if ivars = @tracker.filter_cache[[filter.owner, name]]
       ivars.each do |variable, value|
         env[variable] = value
       end
@@ -162,7 +162,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
 
       ivars = processor.only_ivars(:include_request_vars).all
 
-      @tracker.filter_cache[[filter[:controller], name]] = ivars
+      @tracker.filter_cache[[filter.owner, name]] = ivars
 
       ivars.each do |variable, value|
         env[variable] = value
@@ -239,43 +239,6 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       controller.before_filter_list self, method
     else
       []
-    end
-  end
-
-  #Finds a method in the given class or a parent class
-  #
-  #Returns nil if the method could not be found.
-  #
-  #If found, returns hash table with controller name and method sexp.
-  def find_method method_name, klass
-    return nil if sexp? method_name
-    method_name = method_name.to_sym
-
-    if method = @method_cache[method_name]
-      return method
-    end
-
-    controller = @tracker.controllers[klass]
-    controller ||= @tracker.libs[klass]
-
-    if klass and controller
-      method = controller.get_method method_name
-
-      if method.nil?
-        controller.includes.each do |included|
-          method = find_method method_name, included
-          if method
-            @method_cache[method_name] = method
-            return method
-          end
-       end
-
-        @method_cache[method_name] = find_method method_name, controller.parent
-      else
-        @method_cache[method_name] = { :controller => controller.name, :method => method.src }
-      end
-    else
-      nil
     end
   end
 end

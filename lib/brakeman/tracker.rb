@@ -220,6 +220,28 @@ class Brakeman::Tracker
     nil
   end
 
+  def find_method method_name, class_name, method_type = :instance
+    return nil unless method_name.is_a? Symbol
+
+    klass = find_class(class_name)
+    return nil unless klass
+
+    if method = klass.get_method(method_name, method_type)
+      return method
+    else
+      # Check modules included for method definition
+      # TODO: only for instance methods, otherwise check extends!
+      klass.includes.each do |included_name|
+        if method = find_method(method_name, included_name, method_type)
+          return method
+        end
+      end
+
+      # Not in any included modules, check the parent
+      find_method(method_name, klass.parent)
+    end
+  end
+
   def index_call_sites
     finder = Brakeman::FindAllCalls.new self
 

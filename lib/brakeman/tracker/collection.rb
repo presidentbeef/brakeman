@@ -49,7 +49,7 @@ module Brakeman
     end
 
     def add_method visibility, name, src, file_name
-      meth_info = Brakeman::MethodInfo.new(name, src, file_name)
+      meth_info = Brakeman::MethodInfo.new(name, src, self, file_name)
 
       if src.node_type == :defs
         @class_methods[name] = meth_info
@@ -71,7 +71,18 @@ module Brakeman
       end
     end
 
-    def get_method name
+    def get_method name, type = :instance
+      case type
+      when :class
+        get_class_method name
+      when :instance
+        get_instance_method name
+      else
+        raise "Unexpected method type: #{type.inspect}"
+      end
+    end
+
+    def get_instance_method name
       @methods.each do |_vis, meths|
         if meths[name]
           return meths[name]
@@ -80,8 +91,6 @@ module Brakeman
 
       nil
     end
-
-    alias get_instance_method get_method
 
     def get_class_method name
       @class_methods[name]

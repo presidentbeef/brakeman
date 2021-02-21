@@ -1031,8 +1031,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     method_name = call.method
 
     #Look for helper methods and see if we can get a return value
-    if found_method = find_method(method_name, @current_class)
-      helper = found_method[:method]
+    if found_method = tracker.find_method(method_name, @current_class)
+      helper = found_method.src
 
       if sexp? helper
         value = process_helper_method helper, call.args
