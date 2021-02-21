@@ -4,11 +4,12 @@ module Brakeman
   class MethodInfo
     include Brakeman::Util
 
-    attr_reader :name, :src, :file, :type
+    attr_reader :name, :src, :owner, :file, :type
 
-    def initialize name, src, file
+    def initialize name, src, owner, file
       @name = name
       @src = src
+      @owner = owner
       @file = file
       @simple_method = nil
       @return_value = nil
