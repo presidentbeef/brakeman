@@ -35,6 +35,7 @@ class Brakeman::Tracker
     #class they are.
     @models = {}
     @models[UNKNOWN_MODEL] = Brakeman::Model.new(UNKNOWN_MODEL, nil, @app_tree.file_path("NOT_REAL.rb"), nil, self)
+    @method_cache = {}
     @routes = {}
     @initializers = {}
     @errors = []
@@ -226,6 +227,12 @@ class Brakeman::Tracker
     klass = find_class(class_name)
     return nil unless klass
 
+    cache_key = [klass, method_name]
+
+    if method = @method_cache[cache_key]
+      return method
+    end
+
     if method = klass.get_method(method_name, method_type)
       return method
     else
@@ -233,12 +240,12 @@ class Brakeman::Tracker
       # TODO: only for instance methods, otherwise check extends!
       klass.includes.each do |included_name|
         if method = find_method(method_name, included_name, method_type)
-          return method
+          return (@method_cache[cache_key] = method)
         end
       end
 
       # Not in any included modules, check the parent
-      find_method(method_name, klass.parent)
+      @method_cache[cache_key] = find_method(method_name, klass.parent)
     end
   end
 
