@@ -50,7 +50,11 @@ module Brakeman::Util
 
   # stupid simple, used to delegate to ActiveSupport
   def pluralize word
-    word + "s"
+    if word.end_with? 's'
+      word + 'es'
+    else
+      word + 's'
+    end
   end
 
   #Returns a class name as a Symbol.
