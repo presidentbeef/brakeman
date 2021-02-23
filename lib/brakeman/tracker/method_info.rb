@@ -34,12 +34,12 @@ module Brakeman
       # Very simple methods have one (simple) expression in the body and
       # no arguments
       if src.formal_args.length == 1 # no args
-        body = src.body
-        if body.length == 1 # single expression in body
-          value = body.first
+        if src.method_length == 1 # Single expression in body
+          value = first_body # First expression in body
 
           if simple_literal? value or
-              (array? value and all_literals? value)
+              (array? value and all_literals? value) or
+              (hash? value and all_literals? value, :hash)
 
             @return_value = value
             @simple_method = :very
@@ -55,6 +55,15 @@ module Brakeman
         return @return_value
       else
         nil
+      end
+    end
+
+    def first_body
+      case @type
+      when :class
+        src[4]
+      when :instance
+        src[3]
       end
     end
   end
