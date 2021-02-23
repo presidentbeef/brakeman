@@ -147,7 +147,7 @@ module Brakeman::Util
       value
     end
 
-    s(:array).concat(values)
+    Sexp.new(:array).concat(values).line(hash.line)
   end
 
   #These are never modified

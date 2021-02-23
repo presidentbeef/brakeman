@@ -301,6 +301,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       if node_type? target, :hash
         exp = hash_values(target)
       end
+    when :values_at
+      if hash? target
+        exp = hash_values_at target, exp.args
+      end
     end
 
     exp
