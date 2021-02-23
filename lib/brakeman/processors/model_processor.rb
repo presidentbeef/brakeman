@@ -73,6 +73,8 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
           @current_class.set_attr_accessible exp
         when :attr_protected
           @current_class.set_attr_protected exp
+        when :enum
+          add_enum_method exp
         else
           if @current_class
             @current_class.add_option method, exp
@@ -86,5 +88,32 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
       call.line(exp.line)
       call
     end
+  end
+
+  def add_enum_method call
+    arg = call.first_arg
+    return unless hash? arg
+
+    enum_name = arg[1].value # first key
+    enums = arg[2] # first value
+    enums_name = pluralize(enum_name.to_s).to_sym
+
+    if hash? enums
+      enum_values = enums
+    elsif array? enums
+      # Build hash for enum values like Rails does
+      enum_values = s(:hash).line(call.line)
+
+      enums.each_sexp.with_index do |v, index|
+        enum_values << v
+        enum_values << s(:lit, index)
+      end
+    end
+
+    enum_method = s(:defs, s(:self), enum_name, s(:args), safe_literal(call.line))
+    enums_method = s(:defs, s(:self), enums_name, s(:args), enum_values)
+
+    @current_class.add_method :public, enum_name, enum_method, @current_file
+    @current_class.add_method :public, enums_name, enums_method, @current_file
   end
 end
