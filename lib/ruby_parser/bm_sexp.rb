@@ -543,6 +543,20 @@ class Sexp
     self.body.unshift :rlist
   end
 
+  # Number of "statements" in a method.
+  # This is more effecient than `Sexp#body.length`
+  # because `Sexp#body` creates a new Sexp.
+  def method_length
+    expect :defn, :defs
+
+    case self.node_type
+    when :defn
+      self.length - 3
+    when :defs
+      self.length - 4
+    end
+  end
+
   def render_type
     expect :render
     self[1]
