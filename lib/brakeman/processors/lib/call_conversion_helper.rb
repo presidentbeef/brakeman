@@ -88,5 +88,13 @@ module Brakeman
         original_exp
       end
     end
+
+    def hash_values_at hash, keys
+      values = keys.map do |key|
+        process_hash_access hash, key
+      end
+
+      Sexp.new(:array).concat(values)
+    end
   end
 end
