@@ -249,6 +249,13 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
+  def test_hash_values
+    assert_alias '[1, 2, 3]', <<-RUBY
+      h = { a: 1, b: 2, c: 3 }
+      h.values
+    RUBY
+  end
+
   def test_hash_double_splat
     assert_alias "1", <<-RUBY
       a = { a: 1, b: "two", c: :three }

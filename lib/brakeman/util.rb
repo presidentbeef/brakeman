@@ -146,6 +146,14 @@ module Brakeman::Util
     nil
   end
 
+  def hash_values hash
+    values = hash.each_sexp.each_slice(2).map do |_, value|
+      value
+    end
+
+    s(:array).concat(values)
+  end
+
   #These are never modified
   PARAMS_SEXP = Sexp.new(:params)
   SESSION_SEXP = Sexp.new(:session)
