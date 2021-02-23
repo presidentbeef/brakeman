@@ -296,6 +296,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       if call? target and target.method == :!
         exp = s(:or, s(:true).line(exp.line), s(:false).line(exp.line)).line(exp.line)
       end
+    when :values
+      # Hash literal
+      if node_type? target, :hash
+        exp = hash_values(target)
+      end
     end
 
     exp
