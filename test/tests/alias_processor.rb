@@ -1160,6 +1160,20 @@ class AliasProcessorTests < Minitest::Test
     INPUT
   end
 
+  def test_array_join_one_value
+    assert_alias "'hi'", <<-INPUT
+    x = ['hi'].join(',')
+    x
+    INPUT
+  end
+
+  def test_array_join_empty
+    assert_alias "''", <<-INPUT
+    x = [].join
+    x
+    INPUT
+  end
+
   def test_ignore_freeze
     assert_alias "blah", <<-INPUT
     x = blah.freeze
