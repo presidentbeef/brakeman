@@ -787,6 +787,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       # first value in a :dstr is a String
       joined_string = "#{exp[1]}#{exp.sexp_body(2).map(&:value).join}"
       return s(:str, joined_string).line(exp.line)
+    elsif exp[1].empty? and exp.length == 3 and node_type? exp.last.value, :lvar, :ivar, :call
+      # Convert "#{a}" to a.to_s
+      return s(:call, exp.last.value, :to_s)
     end
 
     exp

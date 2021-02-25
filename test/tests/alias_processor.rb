@@ -803,9 +803,9 @@ class AliasProcessorTests < Minitest::Test
   #We could do better, but this prevents some Sexp explosions and retains
   #information about the values
   def test_no_branch_for_plus_equals_with_interpolated_string
-    assert_alias '"a" + "#{b}" + "c"', <<-'INPUT'
+    assert_alias '"a" + "#{b;d}" + "c"', <<-'INPUT'
       x = "a"
-      x += "#{b}" if something
+      x += "#{b;d}" if something
       x += "c" if something_else
       x
     INPUT
@@ -1212,6 +1212,13 @@ class AliasProcessorTests < Minitest::Test
     assert_alias "'hello'", <<-'INPUT'
       hi = 'hello'
       "#{hi}"
+    INPUT
+  end
+
+  def test_interpolation_of_single_value
+    assert_alias "['1', x.to_s, b.c.to_s]", <<-'INPUT'
+      a = ["#{1}", "#{x}", "#{b.c}"]
+      a
     INPUT
   end
 
