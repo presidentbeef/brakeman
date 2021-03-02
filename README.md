@@ -159,7 +159,16 @@ The `-w` switch takes a number from 1 to 3, with 1 being low (all warnings) and 
 
 # Configuration files
 
-Brakeman options can stored and read from YAML files. To simplify the process of writing a configuration file, the `-C` option will output the currently set options.
+Brakeman options can be stored and read from YAML files.
+
+To simplify the process of writing a configuration file, the `-C` option will output the currently set options:
+
+```sh
+$ brakeman -C --skip-files plugins/
+---
+:skip_files:
+- plugins/
+```
 
 Options passed in on the commandline have priority over configuration files.
 
