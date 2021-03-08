@@ -157,10 +157,17 @@ module Brakeman
     end
   end
 
-  CONFIG_FILES = [
-    File.expand_path("~/.brakeman/config.yml"),
-    File.expand_path("/etc/brakeman/config.yml")
-  ]
+  CONFIG_FILES = begin
+                   [
+                     File.expand_path("~/.brakeman/config.yml"),
+                     File.expand_path("/etc/brakeman/config.yml")
+                   ]
+                 rescue ArgumentError
+                   # In case $HOME or $USER aren't defined for use of `~`
+                   [
+                     File.expand_path("/etc/brakeman/config.yml")
+                   ]
+                 end
 
   def self.config_file custom_location, app_path
     app_config = File.expand_path(File.join(app_path, "config", "brakeman.yml"))
