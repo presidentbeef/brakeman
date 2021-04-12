@@ -6,7 +6,7 @@ require 'brakeman/report/report_base'
 class Brakeman::Report
   attr_reader :tracker
 
-  VALID_FORMATS = [:to_html, :to_pdf, :to_csv, :to_json, :to_tabs, :to_hash, :to_s, :to_markdown, :to_codeclimate, :to_plain, :to_text, :to_junit]
+  VALID_FORMATS = [:to_html, :to_pdf, :to_csv, :to_json, :to_tabs, :to_hash, :to_s, :to_markdown, :to_codeclimate, :to_plain, :to_text, :to_junit, :to_github]
 
   def initialize tracker
     @app_tree = tracker.app_tree
@@ -48,6 +48,9 @@ class Brakeman::Report
     when :to_sonar
       require_report 'sonar'
       Brakeman::Report::Sonar
+    when :to_github
+      require_report 'github'
+      Brakeman::Report::Github
     else
       raise "Invalid format: #{format}. Should be one of #{VALID_FORMATS.inspect}"
     end

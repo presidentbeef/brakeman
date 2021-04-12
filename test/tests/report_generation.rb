@@ -142,6 +142,13 @@ class TestReportGeneration < Minitest::Test
     @@tracker.options[:debug] = false
   end
 
+  def test_github_sanity
+    report = @@report.to_github
+
+    assert report.is_a? String
+    assert report.include? "::warning"
+  end
+
   def test_bad_format_type
     assert_raises RuntimeError do
       @@report.format(:to_something_else)

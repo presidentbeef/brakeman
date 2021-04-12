@@ -250,6 +250,8 @@ module Brakeman
       [:to_sarif]
     when :sonar, :to_sonar
       [:to_sonar]
+    when :github, :to_github
+      [:to_github]
     else
       [:to_text]
     end
@@ -283,6 +285,8 @@ module Brakeman
         :to_sarif
       when /\.sonar$/i
         :to_sonar
+      when /\.github$/i
+        :to_github
       else
         :to_text
       end

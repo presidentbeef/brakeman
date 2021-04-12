@@ -287,6 +287,8 @@ class ConfigTests < Minitest::Test
     output_format_tester({:output_format => :to_markdown}, [:to_markdown])
     output_format_tester({:output_format => :text}, [:to_text])
     output_format_tester({:output_format => :to_text}, [:to_text])
+    output_format_tester({:output_format => :github}, [:to_github])
+    output_format_tester({:output_format => :to_github}, [:to_github])
     output_format_tester({:output_format => :others}, [:to_text])
 
     output_format_tester({:output_files => ['xx.html', 'xx.pdf']}, [:to_html, :to_pdf])
@@ -298,7 +300,7 @@ class ConfigTests < Minitest::Test
     output_format_tester({:output_files => ['xx.xx', 'xx.xx']}, [:to_text, :to_text])
     output_format_tester({:output_files => ['xx.cc', 'xx.table']}, [:to_codeclimate, :to_table])
     output_format_tester({:output_files => ['xx.plain', 'xx.text']}, [:to_text, :to_text])
-    output_format_tester({:output_files => ['xx.html', 'xx.pdf', 'xx.csv', 'xx.tabs', 'xx.json', 'xx.md']}, [:to_html, :to_pdf, :to_csv, :to_tabs, :to_json, :to_markdown])
+    output_format_tester({:output_files => ['xx.html', 'xx.pdf', 'xx.csv', 'xx.tabs', 'xx.json', 'xx.md', 'xx.github']}, [:to_html, :to_pdf, :to_csv, :to_tabs, :to_json, :to_markdown, :to_github])
   end
 
   def test_output_format_errors_raised
