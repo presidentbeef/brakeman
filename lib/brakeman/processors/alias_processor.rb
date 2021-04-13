@@ -294,7 +294,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   # Painful conversion of Array#join into string interpolation
   def process_array_join array, join_str
-    result = s()
+    result = s().line(array.line)
 
     join_value = if string? join_str
                    join_str.value
@@ -332,11 +332,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     result.unshift combined_first
 
     # Have to fix up strings that follow interpolation
-    result.reduce(s(:dstr)) do |memo, e|
+    result.reduce(s(:dstr).line(array.line)) do |memo, e|
       if string? e and node_type? memo.last, :evstr
         e.value = "#{join_value}#{e.value}"
       elsif join_value and node_type? memo.last, :evstr and node_type? e, :evstr
-        memo << s(:str, join_value)
+        memo << s(:str, join_value).line(e.line)
       end
 
       memo << e
@@ -347,9 +347,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     if item.is_a? String
       "#{item}#{join_value}"
     elsif string? item or symbol? item or number? item
-      s(:str, "#{item.value}#{join_value}")
+      s(:str, "#{item.value}#{join_value}").line(item.line)
     else
-      s(:evstr, item)
+      s(:evstr, item).line(item.line)
     end
   end
 

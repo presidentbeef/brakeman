@@ -1151,6 +1151,18 @@ class AliasProcessorTests < Minitest::Test
     INPUT
   end
 
+  def test_array_join_line_numbers
+    # Test that line numbers are set for all parts of a joined string
+    original_sexp = RubyParser.new.parse "z = [x, 1].join(' ')"
+    processed_sexp = Brakeman::AliasProcessor.new.process_safely(original_sexp)
+    
+    assert_equal s(:lasgn, :z, s(:dstr, "", s(:evstr, s(:call, nil, :x)), s(:str, " 1"))), processed_sexp
+    assert_equal 1, processed_sexp[2].line
+    assert_equal 1, processed_sexp[2][2].line
+    assert_equal 1, processed_sexp[2][2][1].line
+    assert_equal 1, processed_sexp[2][3].line
+  end
+
   def test_ignore_freeze
     assert_alias "blah", <<-INPUT
     x = blah.freeze
