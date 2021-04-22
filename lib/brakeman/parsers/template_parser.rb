@@ -9,6 +9,7 @@ module Brakeman
     def initialize tracker, file_parser
       @tracker = tracker
       @file_parser = file_parser
+      @slim_smart = nil # Load slim/smart ?
     end
 
     def parse_template path, text
@@ -88,11 +89,34 @@ module Brakeman
 
     def parse_slim path, text
       Brakeman.load_brakeman_dependency 'slim'
+
+      if @slim_smart.nil? and load_slim_smart?
+        @slim_smart = true
+        Brakeman.load_brakeman_dependency 'slim/smart'
+      else
+        @slim_smart = false
+      end
+
       require_relative 'slim_embedded'
 
       Slim::Template.new(path,
                          :disable_capture => true,
                          :generator => Temple::Generators::RailsOutputBuffer) { text }.precompiled_template
+    end
+
+    def load_slim_smart?
+      return !@slim_smart unless @slim_smart.nil?
+
+      # Terrible hack to find
+      #   gem "slim", "~> 3.0.1", require: ["slim", "slim/smart"]
+      if tracker.app_tree.exists? 'Gemfile'
+        gemfile_contents = tracker.app_tree.file_path('Gemfile').read
+        if gemfile_contents.include? 'slim/smart'
+          return true
+        end
+      end
+
+      false
     end
 
     def self.parse_inline_erb tracker, text
