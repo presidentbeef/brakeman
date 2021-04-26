@@ -201,11 +201,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       res = process_or_simple_operation(exp)
       return res if res
     elsif target == ARRAY_CONST and method == :new
-      return Sexp.new(:array, *exp.args)
+      return Sexp.new(:array, *exp.args).line(exp.line)
     elsif target == HASH_CONST and method == :new and first_arg.nil? and !node_type?(@exp_context.last, :iter)
-      return Sexp.new(:hash)
+      return Sexp.new(:hash).line(exp.line)
     elsif exp == RAILS_TEST or exp == RAILS_DEV
-      return Sexp.new(:false)
+      return Sexp.new(:false).line(exp.line)
     end
 
     #See if it is possible to simplify some basic cases
@@ -243,7 +243,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         env[target_var] = target
         return target
       elsif string? target and string_interp? first_arg
-        exp = Sexp.new(:dstr, target.value + first_arg[1]).concat(first_arg.sexp_body(2))
+        exp = Sexp.new(:dstr, target.value + first_arg[1]).concat(first_arg.sexp_body(2)).line(exp.line)
         env[target_var] = exp
       elsif string? first_arg and string_interp? target
         if string? target.last
@@ -690,7 +690,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         end
       end
     else
-      new_value = process s(:call, s(:call, target_var, :[], index), exp[3], value)
+      new_value = process s(:call, s(:call, target_var, :[], index), exp[3], value).line(exp.line)
 
       env[match] = new_value
     end
