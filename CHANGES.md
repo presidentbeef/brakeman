@@ -1,3 +1,12 @@
+# 5.0.1 - 2021-04-27
+
+* Detect `::Rails.application.configure` too
+* Set more line numbers on Sexps
+* Support loading `slim/smart`
+* Don't fail if $HOME/$USER are not defined
+* Always ignore slice/only calls for mass assignment
+* Convert splat array arguments to arguments
+
 # 5.0.0 - 2021-01-26
 
 * Ignore `uuid` as a safe attribute
