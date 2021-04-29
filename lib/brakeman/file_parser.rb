@@ -29,15 +29,12 @@ module Brakeman
         file_path = @app_tree.file_path(file_name)
         contents = file_path.read
 
-        result = parse_ruby(contents, file_path.relative)
-
-        case result
-        when Exception
-          result
-        when Sexp
-          ASTFile.new(file_name, result)
-        else
-          nil
+        begin
+          if ast = parse_ruby(contents, file_path.relative)
+            ASTFile.new(file_name, ast)
+          end
+        rescue Exception => e
+          e
         end
       end.compact.partition do |result|
         result.is_a? ASTFile
@@ -50,13 +47,14 @@ module Brakeman
       list.each do |path|
         file = @app_tree.file_path(path)
 
-        result = yield file, file.read
+        begin
+          result = yield file, file.read
 
-        case result
-        when ASTFile
-          @file_list << result
-        when Exception
-          @errors << result
+          if result
+            @file_list << result
+          end
+        rescue Exception => e
+          @errors << e
         end
       end
     end
@@ -71,11 +69,11 @@ module Brakeman
         Brakeman.debug "Parsing #{path}"
         RubyParser.new.parse input, path, @timeout
       rescue Racc::ParseError => e
-        e.exception(e.message + "\nCould not parse #{path}")
+        raise e.exception(e.message + "\nCould not parse #{path}")
       rescue Timeout::Error => e
-        Exception.new("Parsing #{path} took too long (> #{@timeout} seconds). Try increasing the limit with --parser-timeout")
+        raise Exception.new("Parsing #{path} took too long (> #{@timeout} seconds). Try increasing the limit with --parser-timeout")
       rescue => e
-        e.exception(e.message + "\nWhile processing #{path}")
+        raise e.exception(e.message + "\nWhile processing #{path}")
       end
     end
   end
