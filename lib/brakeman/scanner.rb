@@ -353,6 +353,9 @@ class Brakeman::Scanner
   def parse_ruby_file file
     fp = Brakeman::FileParser.new(tracker.app_tree, tracker.options[:parser_timeout])
     fp.parse_ruby(file.read, file)
+  rescue Exception => e
+    tracker.error(e)
+    nil
   end
 end
 
