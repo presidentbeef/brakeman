@@ -1,4 +1,5 @@
 require_relative '../test'
+require 'tempfile'
 
 class FileParserTests < Minitest::Test
   def setup
@@ -8,21 +9,27 @@ class FileParserTests < Minitest::Test
   end
 
   def test_parse_error
-    @file_parser.parse_ruby <<-RUBY, "/tmp/BRAKEMAN_FAKE_PATH/test.rb"
-        x =
-    RUBY
+    tempfile = Tempfile.new
+    tempfile.write("x = ")
+    tempfile.close
 
+    @file_parser.parse_files([tempfile.path])
     @tracker.add_errors(@file_parser.errors)
 
     assert_equal 1, @tracker.errors.length
+  ensure
+    tempfile.unlink
   end
 
   def test_parse_error_shows_newer_failure
-    @file_parser.parse_ruby <<-RUBY, "/tmp/BRAKEMAN_FAKE_PATH/test.rb"
+    tempfile = Tempfile.new
+    tempfile.write <<-RUBY
     blah(x: 1)
     thing do
     RUBY
+    tempfile.close
 
+    @file_parser.parse_files([tempfile.path])
     @tracker.add_errors(@file_parser.errors)
 
     assert_equal 1, @tracker.errors.length
@@ -32,6 +39,20 @@ class FileParserTests < Minitest::Test
     else
       assert_match(/parse error on value \"\$end\" \(\$end\)/, @tracker.errors.first[:error])
     end
+  end
+
+  def test_read_files_reports_error
+    tempfile = Tempfile.new
+    tempfile.write("x = ")
+    tempfile.close
+
+    @file_parser.read_files([tempfile.path]) do |path, contents|
+      @file_parser.parse_ruby contents, path
+    end
+
+    @tracker.add_errors(@file_parser.errors)
+
+    assert_equal 1, @tracker.errors.length
   end
 
   def test_parse_ruby_accepts_file_path

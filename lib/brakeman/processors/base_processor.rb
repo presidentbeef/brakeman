@@ -8,7 +8,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   include Brakeman::SafeCallHelper
   include Brakeman::Util
 
-  IGNORE = Sexp.new :ignore
+  IGNORE = Sexp.new(:ignore).line(0)
 
   #Return a new Processor.
   def initialize tracker
@@ -216,7 +216,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
   #
   #And also :layout for inside templates
   def find_render_type call, in_view = false
-    rest = Sexp.new(:hash)
+    rest = Sexp.new(:hash).line(call.line)
     type = nil
     value = nil
     first_arg = call.first_arg
@@ -236,7 +236,7 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
       end
     elsif first_arg.is_a? Symbol or first_arg.is_a? String
       type = :action
-      value = Sexp.new(:lit, first_arg.to_sym)
+      value = Sexp.new(:lit, first_arg.to_sym).line(call.line)
     elsif first_arg.nil?
       type = :default
     elsif not hash? first_arg
@@ -293,6 +293,6 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     @tracker.processor.process_template(template_name, ast, type, nil, @current_file)
     @tracker.processor.process_template_alias(@tracker.templates[template_name])
 
-    return s(:lit, template_name), options
+    return s(:lit, template_name).line(value.line), options
   end
 end

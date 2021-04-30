@@ -1,3 +1,5 @@
+require 'parallel'
+
 module Brakeman
   ASTFile = Struct.new(:path, :ast)
 
@@ -13,21 +15,46 @@ module Brakeman
     end
 
     def parse_files list
-      read_files list do |path, contents|
-        if ast = parse_ruby(contents, path.relative)
-          ASTFile.new(path, ast)
+      # Parse the files in parallel.
+      # By default, the parsing will be in separate processes.
+      # So we map the result to ASTFiles and/or Exceptions
+      # then partition them into ASTFiles and Exceptions
+      # and add the Exceptions to @errors
+      #
+      # Basically just a funky way to deal with two possible
+      # return types that are returned from isolated processes.
+      #
+      # Note this method no longer uses read_files
+      @file_list, new_errors = Parallel.map(list) do |file_name|
+        file_path = @app_tree.file_path(file_name)
+        contents = file_path.read
+
+        begin
+          if ast = parse_ruby(contents, file_path.relative)
+            ASTFile.new(file_name, ast)
+          end
+        rescue Exception => e
+          e
         end
+      end.compact.partition do |result|
+        result.is_a? ASTFile
       end
+
+      errors.concat new_errors
     end
 
     def read_files list
       list.each do |path|
         file = @app_tree.file_path(path)
 
-        result = yield file, file.read
+        begin
+          result = yield file, file.read
 
-        if result
-          @file_list << result
+          if result
+            @file_list << result
+          end
+        rescue Exception => e
+          @errors << e
         end
       end
     end
@@ -42,17 +69,12 @@ module Brakeman
         Brakeman.debug "Parsing #{path}"
         RubyParser.new.parse input, path, @timeout
       rescue Racc::ParseError => e
-        error e.exception(e.message + "\nCould not parse #{path}")
+        raise e.exception(e.message + "\nCould not parse #{path}")
       rescue Timeout::Error => e
-        error Exception.new("Parsing #{path} took too long (> #{@timeout} seconds). Try increasing the limit with --parser-timeout")
+        raise Exception.new("Parsing #{path} took too long (> #{@timeout} seconds). Try increasing the limit with --parser-timeout")
       rescue => e
-        error e.exception(e.message + "\nWhile processing #{path}")
+        raise e.exception(e.message + "\nWhile processing #{path}")
       end
-    end
-
-    def error exception
-      @errors << exception
-      nil
     end
   end
 end
