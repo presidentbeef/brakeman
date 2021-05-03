@@ -12,4 +12,10 @@ class Group < ApplicationRecord
     query = ActiveRecord::Base.sanitize_sql_like(query) # escaped variable
     Arel.sql("name ILIKE '%#{query}%'")
   end
+
+  def fetch_constant_hash_value(role_name)
+    roles = { admin: 1, moderator: 2 }.freeze
+    role = roles.fetch(role_name)
+    Arel.sql("role = '#{role}'")
+  end
 end
