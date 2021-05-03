@@ -592,7 +592,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
         IGNORE_METHODS_IN_SQL.include? exp.method or
         quote_call? exp or
         arel? exp or
-        exp.method.to_s.end_with? "_id"
+        exp.method.to_s.end_with? "_id" or
+        number_target? exp
       end
     when :if
       safe_value? exp.then_clause and safe_value? exp.else_clause
@@ -693,6 +694,18 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       node_type? target, :self or
       klass == :"ActiveRecord::Base" or
       active_record_models.include? klass
+    end
+  end
+
+  def number_target? exp
+    return unless call? exp
+
+    if number? exp.target
+      true
+    elsif call? exp.target
+      number_target? exp.target
+    else
+      false
     end
   end
 end
