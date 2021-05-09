@@ -123,6 +123,20 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
+  def test_array_fetch
+    assert_alias '3', <<-RUBY
+    x = [1, 2, 3]
+    x.fetch(2)
+    RUBY
+  end
+
+  def test_array_fetch_unknown_literal
+    assert_alias ':BRAKEMAN_SAFE_LITERAL', <<-RUBY
+    x = [1, 2, 3]
+    y = x.fetch(z)
+    y
+    RUBY
+  end
 
   def test_array_append
     assert_alias '[1, 2, 3]', <<-RUBY
@@ -205,6 +219,20 @@ class AliasProcessorTests < Minitest::Test
       x[:hello] = "hello world"
       x.merge! :goodbye => "You say goodbye, I say :hello"
       x[:goodbye]
+    RUBY
+  end
+
+  def test_hash_fetch
+    assert_alias '1', <<-RUBY
+      x = { a: 0, b: 1, c: 3 }
+      x.fetch(:b)
+    RUBY
+  end
+
+  def test_hash_fetch_unknown_literal
+    assert_alias ':BRAKEMAN_SAFE_LITERAL', <<-RUBY
+      x = { a: 0, b: 1, c: 3 }
+      x.fetch(:z)
     RUBY
   end
 

@@ -227,6 +227,15 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       elsif hash? target
         exp = process_hash_access(target, first_arg, exp)
       end
+    when :fetch
+      if array? target
+        # Not dealing with default value
+        # so just pass in first argument, but process_array_access expects
+        # an array of arguments.
+        exp = process_array_access(target, [first_arg], exp)
+      elsif hash? target
+        exp = process_hash_access(target, first_arg, exp)
+      end
     when :merge!, :update
       if hash? target and hash? first_arg
          target = process_hash_merge! target, first_arg

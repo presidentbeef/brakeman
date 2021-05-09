@@ -134,7 +134,6 @@ class Rails6Tests < Minitest::Test
       :user_input => s(:call, s(:call, s(:lit, 30), :days), :ago)
   end
 
-
   def test_sql_injection_sanitize_sql_like
     assert_no_warning :type => :warning,
       :warning_code => 0,
@@ -146,6 +145,19 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/models/group.rb",
       :code => s(:call, s(:const, :Arel), :sql, s(:dstr, "name ILIKE '%", s(:evstr, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :sanitize_sql_like, s(:lvar, :query))), s(:str, "%'"))),
       :user_input => s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :sanitize_sql_like, s(:lvar, :query))
+  end
+
+  def test_sql_injection_hash_fetch_all_literals
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "1b9a04c9fdc4b8c7f215387fb726dc542c2d35dde2f29b48a76248443524a5fa",
+      :warning_type => "SQL Injection",
+      :line => 14,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/group.rb",
+      :code => s(:call, s(:const, :Arel), :sql, s(:dstr, "role = '", s(:evstr, s(:call, s(:hash, s(:lit, :admin), s(:lit, 1), s(:lit, :moderator), s(:lit, 2)), :fetch, s(:lvar, :role_name))), s(:str, "'"))),
+      :user_input => s(:call, s(:hash, s(:lit, :admin), s(:lit, 1), s(:lit, :moderator), s(:lit, 2)), :fetch, s(:lvar, :role_name))
   end
 
   def test_cross_site_scripting_sanity

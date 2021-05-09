@@ -76,6 +76,8 @@ module Brakeman
 
         #Have to do this because first element is :array and we have to skip it
         array[1..-1][index] or original_exp
+      elsif all_literals? array
+        safe_literal(array.line)
       else
         original_exp
       end
