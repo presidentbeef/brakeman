@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 28
+      :generic => 29
     }
   end
 
@@ -584,6 +584,19 @@ class Rails6Tests < Minitest::Test
       :message => /^User\ input\ in\ eval/,
       :confidence => 0,
       :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, nil, :eval, s(:call, s(:params), :[], s(:lit, :x))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_dangerous_eval_as_method_target
+    assert_warning :type => :warning,
+      :warning_code => 13,
+      :fingerprint => "3c4b94f3fc4ff4cfb005299349eb4f9a89832f35fc33ed9edc8481b98a047edb",
+      :warning_type => "Dangerous Eval",
+      :line => 27,
+      :message => /^User\ input\ in\ eval/,
+      :confidence => 0,
+      :relative_path => "app/controllers/accounts_controller.rb",
       :code => s(:call, nil, :eval, s(:call, s(:params), :[], s(:lit, :x))),
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
   end

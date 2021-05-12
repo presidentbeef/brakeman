@@ -22,4 +22,8 @@ class AccountsController < ApplicationController
       # Do something benign
     end
   end
+
+  def eval_something
+    eval(params[:x]).to_s
+  end
 end

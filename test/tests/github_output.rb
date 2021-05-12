@@ -6,7 +6,7 @@ class TestGithubOutput < Minitest::Test
   end
 
   def test_report_format
-    assert_equal 33, @@report.lines.count
+    assert_equal 34, @@report.lines.count
     @@report.lines.each do |line|
       assert line.start_with?('::'), 'Every line must start with `::`'
       assert_equal 2, line.scan('::').count, 'Every line must have exactly 2 `::`'
