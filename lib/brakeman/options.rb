@@ -151,6 +151,11 @@ module Brakeman::Options
           options[:safe_methods].merge methods.map {|e| e.to_sym }
         end
 
+        opts.on "--sql-safe-methods meth1,meth2,etc", Array, "Do not warn of SQL if the input is wrapped in a safe method" do |methods|
+          options[:sql_safe_methods] ||= Set.new
+          options[:sql_safe_methods].merge methods.map {|e| e.to_sym }
+        end
+
         opts.on "--url-safe-methods method1,method2,etc", Array, "Do not warn of XSS if the link_to href parameter is wrapped in a safe method" do |methods|
           options[:url_safe_methods] ||= Set.new
           options[:url_safe_methods].merge methods.map {|e| e.to_sym }

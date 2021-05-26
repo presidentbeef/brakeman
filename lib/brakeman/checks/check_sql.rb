@@ -577,7 +577,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     :sanitize_sql_hash_for_assignment, :sanitize_sql_hash_for_conditions,
     :to_sql, :sanitize, :primary_key, :table_name_prefix, :table_name_suffix,
     :where_values_hash, :foreign_key, :uuid
-  ]
+  ].merge(tracker.options[:sql_safe_methods] || [])
 
   def safe_value? exp
     return true unless sexp? exp
