@@ -51,4 +51,8 @@ class GroupsController < ApplicationController
       eval(params[:x]) # should not warn
     end
   end
+
+  def xss_in_flash
+    flash[:notice] = params[:flash_message]
+  end
 end

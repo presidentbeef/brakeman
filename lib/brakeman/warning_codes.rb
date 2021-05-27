@@ -121,6 +121,7 @@ module Brakeman::WarningCodes
     :erb_template_injection => 117,
     :http_verb_confusion => 118,
     :unsafe_method_reflection => 119,
+    :xss_in_flash => 120,
 
     :custom_check => 9090,
   }

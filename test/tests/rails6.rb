@@ -238,6 +238,19 @@ class Rails6Tests < Minitest::Test
       :user_input => nil
   end
 
+  def test_xss_in_flash_1
+    assert_warning :type => :warning,
+      :warning_code => 120,
+      :fingerprint => "22a5ce24ddaab66332592f0065fba9faf56d76648e96976321957a75804f89a4",
+      :warning_type => "XSS in flash",
+      :line => 56,
+      :message => /^Parameter\ value\ is\ being\ used\ in\ the\ fla/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:attrasgn, s(:call, nil, :flash), :[]=, s(:lit, :notice), s(:call, s(:params), :[], s(:lit, :flash_message))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :flash_message))
+  end
+
   def test_remote_code_execution_cookie_serialization
     assert_warning :type => :warning,
       :warning_code => 110,
