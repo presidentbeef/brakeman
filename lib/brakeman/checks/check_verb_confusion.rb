@@ -32,7 +32,7 @@ class Brakeman::CheckVerbConfusion < Brakeman::BaseCheck
       return
     end
 
-    process method[:src]
+    process method.src
   end
 
   def process_if exp

@@ -26,7 +26,7 @@ class Brakeman::CheckDetailedExceptions < Brakeman::BaseCheck
   def check_detailed_exceptions
     tracker.controllers.each do |_name, controller|
       controller.methods_public.each do |method_name, definition|
-        src = definition[:src]
+        src = definition.src
         body = src.body.last
         next unless body
 
