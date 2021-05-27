@@ -60,7 +60,7 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
       case exp.method
       when :include
         module_name = class_name(exp.first_arg)
-        @current_class.add_include module_name
+        (@current_class || @current_module).add_include module_name
       end
 
       exp
