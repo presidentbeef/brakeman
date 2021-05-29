@@ -1200,6 +1200,15 @@ class AliasProcessorTests < Minitest::Test
     INPUT
   end
 
+  def test_array_star_join
+    assert_alias '"a b 1"', <<-'INPUT'
+      a = :a
+      b = 'b'
+      c = 1
+      [a, b, c] * ' '
+    INPUT
+  end
+
   def test_array_join_line_numbers
     # Test that line numbers are set for all parts of a joined string
     original_sexp = RubyParser.new.parse "z = [x, 1].join(' ')"

@@ -220,7 +220,13 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         exp = math_op(:+, target, first_arg, exp)
       end
     when :-, :*, :/
-      exp = math_op(method, target, first_arg, exp)
+      if method == :* and array? target
+        if target.length > 2 and string? first_arg
+          exp = process_array_join(target, first_arg)
+        end
+      else
+        exp = math_op(method, target, first_arg, exp)
+      end
     when :[]
       if array? target
         exp = process_array_access(target, exp.args, exp)
