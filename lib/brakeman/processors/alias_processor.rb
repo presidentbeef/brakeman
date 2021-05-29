@@ -350,7 +350,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     result.unshift combined_first
 
     # Have to fix up strings that follow interpolation
-    result.reduce(s(:dstr).line(array.line)) do |memo, e|
+    string = result.reduce(s(:dstr).line(array.line)) do |memo, e|
       if string? e and node_type? memo.last, :evstr
         e.value = "#{join_value}#{e.value}"
       elsif join_value and node_type? memo.last, :evstr and node_type? e, :evstr
@@ -359,6 +359,14 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
       memo << e
     end
+
+    # Convert (:dstr, "hello world")
+    # to (:str, "hello world")
+    if string.length == 2 and string.last.is_a? String
+      string[0] = :str
+    end
+
+    string
   end
 
   def join_item item, join_value
