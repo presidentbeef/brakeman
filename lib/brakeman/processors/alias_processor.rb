@@ -318,6 +318,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   # Painful conversion of Array#join into string interpolation
   def process_array_join array, join_str
+    # Empty array
+    if array.length == 1
+      return s(:str, '').line(array.line)
+    end
+
     result = s().line(array.line)
 
     join_value = if string? join_str
