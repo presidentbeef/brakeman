@@ -1221,6 +1221,13 @@ class AliasProcessorTests < Minitest::Test
     assert_equal 1, processed_sexp[2][3].line
   end
 
+  def test_array_join_single_value
+    assert_alias "'hello'", <<-INPUT
+      x = ["hello"].join(' ')
+      x
+    INPUT
+  end
+
   def test_ignore_freeze
     assert_alias "blah", <<-INPUT
     x = blah.freeze

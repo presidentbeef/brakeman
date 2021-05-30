@@ -221,7 +221,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       end
     when :-, :*, :/
       if method == :* and array? target
-        if target.length > 2 and string? first_arg
+        if string? first_arg
           exp = process_array_join(target, first_arg)
         end
       else
@@ -294,7 +294,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         exp = target
       end
     when :join
-      if array? target and target.length > 2 and (string? first_arg or first_arg.nil?)
+      if array? target and (string? first_arg or first_arg.nil?)
         exp = process_array_join(target, first_arg)
       end
     when :!
@@ -326,8 +326,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
                    nil
                  end
 
-    array[1..-2].each do |e|
-      result << join_item(e, join_value)
+    if array.length > 2
+      array[1..-2].each do |e|
+        result << join_item(e, join_value)
+      end
     end
 
     result << join_item(array.last, nil)
