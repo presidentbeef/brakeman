@@ -62,7 +62,7 @@ module Brakeman
           process_warnings
         end
 
-        m.choice "Hide previously ignored warnings" do
+        m.choice "Inspect new warnings" do
           @skip_ignored = true
           pre_show_help
           process_warnings
