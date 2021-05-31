@@ -275,6 +275,12 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         target = find_push_target(target_var)
         env[target] = exp unless target.nil? # Happens in TemplateAliasProcessor
       end
+    when :push
+      if array? target
+        target << first_arg
+        env[target_var] = target
+        return target
+      end
     when :first
       if array? target and first_arg.nil? and sexp? target[1]
         exp = target[1]

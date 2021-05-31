@@ -162,6 +162,15 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
+  def test_array_push
+    assert_alias '[1, 2, 3]', <<-RUBY
+      x = [1]
+      x.push(2)
+      x.push(3)
+      x
+    RUBY
+  end
+
   def test_array_detect
     assert_alias ':BRAKEMAN_SAFE_LITERAL', <<-RUBY
       x = [1,2,3].detect { |x| x.odd? }
