@@ -296,6 +296,15 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       if call? target and target.method == :!
         exp = s(:or, s(:true).line(exp.line), s(:false).line(exp.line)).line(exp.line)
       end
+    when :values
+      # Hash literal
+      if node_type? target, :hash
+        exp = hash_values(target)
+      end
+    when :values_at
+      if hash? target
+        exp = hash_values_at target, exp.args
+      end
     end
 
     exp
@@ -1022,8 +1031,8 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     method_name = call.method
 
     #Look for helper methods and see if we can get a return value
-    if found_method = find_method(method_name, @current_class)
-      helper = found_method[:method]
+    if found_method = tracker.find_method(method_name, @current_class)
+      helper = found_method.src
 
       if sexp? helper
         value = process_helper_method helper, call.args

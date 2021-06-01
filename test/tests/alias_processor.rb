@@ -249,6 +249,27 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
+  def test_hash_values
+    assert_alias '[1, 2, 3]', <<-RUBY
+      h = { a: 1, b: 2, c: 3 }
+      h.values
+    RUBY
+  end
+
+  def test_hash_values_at
+    assert_alias '[1, 2]', <<-RUBY
+      h = { a: 1, b: 2, c: 3 }
+      h.values_at(:a, :b)
+    RUBY
+  end
+
+  def test_hash_values_at_missing
+    assert_alias '[1, 2, :BRAKEMAN_SAFE_LITERAL]', <<-RUBY
+      h = { a: 1, b: 2, c: 3 }
+      h.values_at(:a, :b, :z)
+    RUBY
+  end
+
   def test_hash_double_splat
     assert_alias "1", <<-RUBY
       a = { a: 1, b: "two", c: :three }

@@ -20,4 +20,85 @@ class TrackerTests < Minitest::Test
       assert e[:backtrace].is_a? Array
     end
   end
+
+  def test_method_lookup_default_type
+    parse_class
+    assert @tracker.find_method(:boo, :Example)
+  end
+
+  def test_method_lookup_instance
+    parse_class
+    assert @tracker.find_method(:boo, :Example, :instance)
+  end
+
+  def test_method_lookup_class
+    parse_class
+    assert @tracker.find_method(:far, :Example, :class)
+  end
+
+  def test_method_lookup_wrong_type
+    parse_class
+    assert_nil @tracker.find_method(:far, :Example, :instance)
+  end
+
+  def test_method_lookup_no_method
+    parse_class
+    assert_nil @tracker.find_method(:farther, :Example, :class)
+  end
+
+  def test_method_lookup_in_parent
+    parse_class
+    assert @tracker.find_method(:zoop, :Example, :instance)
+  end
+
+  def test_method_lookup_in_mixin
+    parse_class
+    assert @tracker.find_method(:mixed, :Example)
+  end
+
+  def test_method_lookup_in_module
+    parse_class
+    assert @tracker.find_method(:mixed, :Mixin)
+  end
+
+  def test_method_lookup_invalid_type
+    parse_class
+    assert_raises do
+      assert @tracker.find_method(:far, :Example, :invalid_type)
+    end
+  end
+
+  def test_invalid_method_info_src
+    assert_raises do
+      Brakeman::MethodInfo.new(:blah, s(:not_a_defn), nil, nil)
+    end
+  end
+
+  private
+
+  def parse_class
+    ast = RubyParser.new.parse <<-RUBY
+    module Mixin
+      def mixed
+      end
+    end
+
+    class Parent
+      def zoop
+      end
+    end
+
+    class Example < Parent
+      include Mixin
+
+      def boo
+      end
+
+      def self.far
+      end
+    end
+    RUBY
+
+    Brakeman::LibraryProcessor.new(@tracker).process_library(ast, 'fake_file_name.rb')
+  end
 end

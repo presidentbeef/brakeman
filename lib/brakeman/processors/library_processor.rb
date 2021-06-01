@@ -55,6 +55,15 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
   def process_call exp
     if process_call_defn? exp
       exp
+    elsif @current_method.nil? and exp.target.nil? and (@current_class or @current_module)
+      # Methods called inside class / module
+      case exp.method
+      when :include
+        module_name = class_name(exp.first_arg)
+        (@current_class || @current_module).add_include module_name
+      end
+
+      exp
     else
       process_default exp
     end
