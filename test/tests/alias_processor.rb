@@ -1200,6 +1200,15 @@ class AliasProcessorTests < Minitest::Test
     INPUT
   end
 
+  def test_array_star_join
+    assert_alias '"a b 1"', <<-'INPUT'
+      a = :a
+      b = 'b'
+      c = 1
+      [a, b, c] * ' '
+    INPUT
+  end
+
   def test_array_join_line_numbers
     # Test that line numbers are set for all parts of a joined string
     original_sexp = RubyParser.new.parse "z = [x, 1].join(' ')"
@@ -1210,6 +1219,20 @@ class AliasProcessorTests < Minitest::Test
     assert_equal 1, processed_sexp[2][2].line
     assert_equal 1, processed_sexp[2][2][1].line
     assert_equal 1, processed_sexp[2][3].line
+  end
+
+  def test_array_join_single_value
+    assert_alias "'hello'", <<-INPUT
+      x = ["hello"].join(' ')
+      x
+    INPUT
+  end
+
+  def test_array_join_empty_array
+    assert_alias "''", <<-INPUT
+      x = [].join(' ')
+      x
+    INPUT
   end
 
   def test_ignore_freeze
