@@ -261,6 +261,24 @@ class CVETests < Minitest::Test
     assert_new 1 # CVE-2018-3760
   end
 
+  def test_CVE_2018_8048_exact_fix_version
+    before_rescan_of "Gemfile.lock", "rails5.2" do
+      replace "Gemfile.lock", "loofah (2.1.1)", "loofah (2.2.1)"
+    end
+
+    assert_version "2.2.1", :loofah
+    assert_fixed 1
+  end
+
+  def test_CVE_2018_8048_newer_version
+    before_rescan_of "Gemfile.lock", "rails5.2" do
+      replace "Gemfile.lock", "loofah (2.1.1)", "loofah (2.10.1)"
+    end
+
+    assert_version "2.10.1", :loofah
+    assert_fixed 1
+  end
+
   def test_CVE_2013_0276
     before_rescan_of "app/models/protected.rb", "rails2", :collapse_mass_assignment => true do
       replace "app/models/protected.rb", "attr_accessible nil", "attr_protected :admin"
