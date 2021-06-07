@@ -238,30 +238,22 @@ module Brakeman::Util
 
   #Check if _exp_ is a params hash
   def params? exp
-    if exp.is_a? Sexp
-      return true if exp.node_type == :params or ALL_PARAMETERS.include? exp
-
-      if call? exp
-        if params? exp[1]
-          return true
-        elsif exp[2] == :[]
-          return params? exp[1]
-        end
-      end
-    end
-
-    false
+    recurse_check?(exp) { |child| child.node_type == :params or ALL_PARAMETERS.include? child }
   end
 
   def cookies? exp
+    recurse_check?(exp) { |child| child.node_type == :cookies or ALL_COOKIES.include? child }
+  end
+
+  def recurse_check? exp, &check
     if exp.is_a? Sexp
-      return true if exp.node_type == :cookies or ALL_COOKIES.include? exp
+      return true if yield(exp)
 
       if call? exp
-        if cookies? exp[1]
+        if recurse_check? exp[1], &check
           return true
         elsif exp[2] == :[]
-          return cookies? exp[1]
+          return recurse_check? exp[1], &check
         end
       end
     end
