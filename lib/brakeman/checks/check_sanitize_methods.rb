@@ -1,4 +1,5 @@
 require 'brakeman/checks/base_check'
+require 'rubygems/version'
 
 #sanitize and sanitize_css are vulnerable:
 #CVE-2013-1855 and CVE-2013-1857
@@ -90,7 +91,7 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
   def loofah_vulnerable_cve_2018_8048?
     loofah_version = tracker.config.gem_version(:loofah)
 
-    loofah_version and loofah_version < "2.2.1"
+    loofah_version and Gem::Version.new(loofah_version) < Gem::Version.new("2.2.1")
   end
 
   def warn_sanitizer_cve cve, link, upgrade_version
