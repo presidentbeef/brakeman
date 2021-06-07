@@ -1,3 +1,7 @@
+# 5.0.2 - 2021-06-07
+
+* Fix Loofah version check
+
 # 5.0.1 - 2021-04-27
 
 * Detect `::Rails.application.configure` too
