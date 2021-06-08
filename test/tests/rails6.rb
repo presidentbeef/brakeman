@@ -12,7 +12,7 @@ class Rails6Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 4,
+      :template => 5,
       :generic => 29
     }
   end

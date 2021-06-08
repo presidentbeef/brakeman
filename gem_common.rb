@@ -3,6 +3,9 @@ module Brakeman
     def self.dev_dependencies spec
       spec.add_development_dependency "minitest"
       spec.add_development_dependency "minitest-ci"
+      spec.add_development_dependency 'pry-byebug'
+      spec.add_development_dependency 'pry-rescue'
+      spec.add_development_dependency 'pry-stack_explorer'
       spec.add_development_dependency "simplecov"
       spec.add_development_dependency "simplecov-html", "=0.10.2"
     end
