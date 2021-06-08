@@ -1,4 +1,4 @@
-# 5.0.3 - 2021-06-08
+# 5.0.4 - 2021-06-08
 
 (brakeman gem release only)
 
