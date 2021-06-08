@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Attribute Restriction</title>
+  <title>Brakeman: Brakeman 5.0.4 Released</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,7 +15,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="https://brakemanscanner.org/docs/warning_types/attribute_restriction/"/>
+  <link rel="canonical" href="https://brakemanscanner.org/blog/2021/06/08/brakeman-5-dot-0-dot-4-released"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -34,7 +34,7 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Attribute Restriction" />
+<meta name="twitter:title" content="Brakeman - Brakeman 5.0.4 Released" />
 <meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
 <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 
@@ -72,44 +72,90 @@
   <div id="main">
     <div id="content">
       <div>
-<article>
+<article class="hentry">
   
   <header>
-    <h1 class="entry-title">Attribute Restriction</h1>
-  </header>
-  
-  <p>This warning type only applies to Ruby on Rails applications which are not using <a href="https://guides.rubyonrails.org/action_controller_overview.html#strong-parameters">strong parameters</a>.</p>
-
-<p>Note that disabling mass assignment globally will suppress these warnings.</p>
-
-<h4 id="missing-protection">Missing Protection</h4>
-
-<p>This warning comes up if a model does not limit what attributes can be set through <a href="https://guides.rubyonrails.org/v3.2.9/security.html#mass-assignment">mass assignment</a>.</p>
-
-<p>In particular, this check looks for <code class="highlighter-rouge">attr_accessible</code> inside model definitions. If it is not found, this warning will be issued.</p>
-
-<h4 id="use-of-blacklist">Use of Blacklist</h4>
-
-<p>Brakeman also warns on use of <code class="highlighter-rouge">attr_protected</code> - especially since it was found to be <a href="https://groups.google.com/d/topic/rubyonrails-security/AFBKNY7VSH8/discussion">vulnerable to bypass</a>. Warnings for mass assignment on models using <code class="highlighter-rouge">attr_protected</code> will be reported, but at a lower confidence level.</p>
-
-<h4 id="suggested-remediation">Suggested Remediation</h4>
-
-<p>For newer Ruby on Rails applications, query parameters should be whitelisted before use via strong parameters.</p>
-
-<p>For older Ruby on Rails applications, each model should use <code class="highlighter-rouge">attr_accessible</code> to carefully whitelist which attributes may be set via mass assignment, if any.</p>
-
-<hr />
-
-<p>Back to <a href="/docs/warning_types">Warning Types</a></p>
-
-  
-    <footer>
+    <div class="articlelogo">&nbsp;</div>
+    
+      <h1 class="entry-title">Brakeman 5.0.4 Released</h1>
+    
+    
       <p class="meta">
-        
-        
-      </p>
-    </footer>
+
+
+
+
+<time datetime="2021-06-08 10:50:00 -0700" pubdate  updated >2021-06-08 10:50:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This is a tiny bugfix release!</p>
+
+<p><em>What happened to 5.0.2 and 5.0.3??</em></p>
+
+<p>5.0.2 was released with this fix, but did not include a pre-release <code class="highlighter-rouge">ruby_parser</code> fix for argument forwarding (<code class="highlighter-rouge">...</code>).</p>
+
+<p>Then 5.0.3 was accidentally cut from the HEAD of the main branch, including a bunch of unrelated changes.</p>
+
+<p>So 5.0.4 is the latest for the <code class="highlighter-rouge">brakeman</code> gem, 5.0.2 is the latest for <code class="highlighter-rouge">brakeman-min</code> and <code class="highlighter-rouge">brakeman-lib</code> since they do not bundle <code class="highlighter-rouge">ruby_parser</code>.</p>
+
+<p>Clear as mud?</p>
+
+<p><em>Changes since 5.0.1:</em></p>
+
+<ul>
+  <li>Fix Loofah version check (<a href="https://github.com/presidentbeef/brakeman/issues/1603">#1603</a>)</li>
+</ul>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4d1af5c3e65a0c2319396a796bd9a587a13317faff92bd09b74c44ba70aef8b3  brakeman-5.0.4.gem
+01a49387dd347a47b6dcb0ec2de15f23f12257f22c27485e8380eed11be0b606  brakeman-lib-5.0.2.gem
+5f02c2c1de4faa288d8e035248a404ae21c49cdfd55dda01ce2cb579bba23bb9  brakeman-min-5.0.2.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+      
+
+
+
+
+<time datetime="2021-06-08 10:50:00 -0700" pubdate  updated >2021-06-08 10:50:00 -0700</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
   
+  
+</div>
+
+    
+  </footer>
 </article>
 
 </div>

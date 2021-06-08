@@ -1,4 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2021-04-28T10:59:35-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 5.0.1 Released</title><link href="https://brakemanscanner.org/blog/2021/04/27/brakeman-5-dot-0-dot-1-released" rel="alternate" type="text/html" title="Brakeman 5.0.1 Released" /><published>2021-04-27T12:00:00-07:00</published><updated>2021-04-27T12:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2021/04/27/brakeman-5-dot-0-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2021/04/27/brakeman-5-dot-0-dot-1-released">&lt;p&gt;Has it really been three months since Brakeman 5.0? Yikes!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2021-06-08T10:58:08-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 5.0.4 Released</title><link href="https://brakemanscanner.org/blog/2021/06/08/brakeman-5-dot-0-dot-4-released" rel="alternate" type="text/html" title="Brakeman 5.0.4 Released" /><published>2021-06-08T10:50:00-07:00</published><updated>2021-06-08T10:50:00-07:00</updated><id>https://brakemanscanner.org/blog/2021/06/08/brakeman-5-dot-0-dot-4-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2021/06/08/brakeman-5-dot-0-dot-4-released">&lt;p&gt;This is a tiny bugfix release!&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;What happened to 5.0.2 and 5.0.3??&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;5.0.2 was released with this fix, but did not include a pre-release &lt;code class=&quot;highlighter-rouge&quot;&gt;ruby_parser&lt;/code&gt; fix for argument forwarding (&lt;code class=&quot;highlighter-rouge&quot;&gt;...&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;Then 5.0.3 was accidentally cut from the HEAD of the main branch, including a bunch of unrelated changes.&lt;/p&gt;
+
+&lt;p&gt;So 5.0.4 is the latest for the &lt;code class=&quot;highlighter-rouge&quot;&gt;brakeman&lt;/code&gt; gem, 5.0.2 is the latest for &lt;code class=&quot;highlighter-rouge&quot;&gt;brakeman-min&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;brakeman-lib&lt;/code&gt; since they do not bundle &lt;code class=&quot;highlighter-rouge&quot;&gt;ruby_parser&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Clear as mud?&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 5.0.1:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Fix Loofah version check (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1603&quot;&gt;#1603&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;4d1af5c3e65a0c2319396a796bd9a587a13317faff92bd09b74c44ba70aef8b3  brakeman-5.0.4.gem
+01a49387dd347a47b6dcb0ec2de15f23f12257f22c27485e8380eed11be0b606  brakeman-lib-5.0.2.gem
+5f02c2c1de4faa288d8e035248a404ae21c49cdfd55dda01ce2cb579bba23bb9  brakeman-min-5.0.2.gem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">This is a tiny bugfix release!</summary></entry><entry><title type="html">Brakeman 5.0.1 Released</title><link href="https://brakemanscanner.org/blog/2021/04/27/brakeman-5-dot-0-dot-1-released" rel="alternate" type="text/html" title="Brakeman 5.0.1 Released" /><published>2021-04-27T12:00:00-07:00</published><updated>2021-04-27T12:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2021/04/27/brakeman-5-dot-0-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2021/04/27/brakeman-5-dot-0-dot-1-released">&lt;p&gt;Has it really been three months since Brakeman 5.0? Yikes!&lt;/p&gt;
 
 &lt;p&gt;Here’s a small update with some bugfixes before we move on to 5.1.&lt;/p&gt;
 
@@ -723,88 +756,4 @@ ada41dbfc3a436c062cd44161893249654caf43296801599303952f6261f2e5e  brakeman-min-4
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Just a little bug fix release.</summary></entry><entry><title type="html">Brakeman 4.8.0 Released</title><link href="https://brakemanscanner.org/blog/2020/02/18/brakeman-4-dot-8-dot-0-released" rel="alternate" type="text/html" title="Brakeman 4.8.0 Released" /><published>2020-02-18T10:00:00-08:00</published><updated>2020-02-18T10:00:00-08:00</updated><id>https://brakemanscanner.org/blog/2020/02/18/brakeman-4-dot-8-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2020/02/18/brakeman-4-dot-8-dot-0-released">&lt;p&gt;First release of 2020!
-This release comes with a brand new report format: JUnit XML.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 4.7.2:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Add JUnit XML report format (&lt;a href=&quot;https://github.com/naokikimura&quot;&gt;Naoki Kimurai&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Sort ignore files by fingerprint and line (&lt;a href=&quot;https://github.com/ngan&quot;&gt;Ngan Pham&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Catch dangerous concatenation in &lt;code class=&quot;highlighter-rouge&quot;&gt;CheckExecute&lt;/code&gt; (&lt;a href=&quot;https://github.com/JacobEvelyn&quot;&gt;Jacob Evelyn&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;User-friendly message when ignore config file has invalid JSON (&lt;a href=&quot;https://github.com/deevis&quot;&gt;D. Hicks&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Freeze call index results, fix thread-safety issue&lt;/li&gt;
-  &lt;li&gt;Properly render confidence in Markdown report (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1446&quot;&gt;#1446&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Report old warnings as fixed if zero warnings reported&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;junit-xml-report&quot;&gt;JUnit XML Report&lt;/h3&gt;
-
-&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/naokikimura&quot;&gt;Naoki Kimura&lt;/a&gt;, Brakeman can now generate a JUnit XML format.
-JUnit XML is produced and consumed by a number of different testing tools, including CircleCI.&lt;/p&gt;
-
-&lt;p&gt;Supporting this format makes it possible for Brakeman warnings to be consumed by general test infrastructure tools.&lt;/p&gt;
-
-&lt;p&gt;To use the new format, either use &lt;code class=&quot;highlighter-rouge&quot;&gt;-f junit&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;-o report.junit&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1453&quot;&gt;changes&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;sort-ignore-files&quot;&gt;Sort Ignore Files&lt;/h3&gt;
-
-&lt;p&gt;Warnings in “ignore files” were previously only sorted by fingerprint.
-Thanks to &lt;a href=&quot;https://github.com/ngan&quot;&gt;Ngan Pham&lt;/a&gt; they are now sorted by fingerprint then line number, to maintain stable ordering between warnings with the same fingerprint.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1457&quot;&gt;changes&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;dangerous-concatenation-in-commands&quot;&gt;Dangerous Concatenation in Commands&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/JacobEvelyn&quot;&gt;Jacob Evelyn&lt;/a&gt; has updated the command injection check (&lt;code class=&quot;highlighter-rouge&quot;&gt;CheckExecute&lt;/code&gt;) to also consider string concatenation with dangerous values.&lt;/p&gt;
-
-&lt;p&gt;For example:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;system(&quot;ls &quot; + maybe_dangerous)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1440&quot;&gt;changes&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;fix-thread-safety-issue&quot;&gt;Fix Thread-safety Issue&lt;/h3&gt;
-
-&lt;p&gt;Two checks were modifying shared data (call site results), which introduced a race condition.
-Sometimes a result would strangely become &lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt; and cause intermittent errors.
-Note this only popped up when using real threads on JRuby.&lt;/p&gt;
-
-&lt;p&gt;Now results from the &lt;code class=&quot;highlighter-rouge&quot;&gt;CallIndex&lt;/code&gt; are frozen to help prevent this kind of modification of shared data in the future.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1452&quot;&gt;changes&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;render-confidence-in-markdown&quot;&gt;Render Confidence in Markdown&lt;/h3&gt;
-
-&lt;p&gt;Due to a previous refactoring, confidence levels were not being rendered in Markdown reports.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1448&quot;&gt;changes&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;report-comparison-fix&quot;&gt;Report Comparison Fix&lt;/h3&gt;
-
-&lt;p&gt;Due to a &lt;em&gt;very&lt;/em&gt; old bug, when comparing an old report with some warnings to a new report with zero warnings, the old warnings were not reported as fixed.
-Now they will be.&lt;/p&gt;
-
-&lt;p&gt;Probably no one noticed because we generally only care about &lt;em&gt;new&lt;/em&gt; warnings.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1448&quot;&gt;changes&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
-
-&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;2febb3ce4111fe14f57a8ea447c5770eeb32ba43333955b4ed27864ef045c277  brakeman-4.8.0.gem
-c513373a37576d8107af724bf9f8a47e8d76253c85bdd6fdb4d3e93471a47ee6  brakeman-lib-4.8.0.gem
-d82206b9a60ef1eb4c96d32ba0157774db301e3ca10dcbdd7b4171044b28eccf  brakeman-min-4.8.0.gem
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">First release of 2020! This release comes with a brand new report format: JUnit XML.</summary></entry></feed>
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Just a little bug fix release.</summary></entry></feed>
