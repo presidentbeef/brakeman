@@ -1,9 +1,15 @@
-require 'brakeman/checks/base_check'
+require 'brakeman/checks/cross_site_scripting_base_check'
 
-class Brakeman::CheckXssInFlash < Brakeman::CheckCrossSiteScripting
+class Brakeman::CheckXssInFlash < Brakeman::CrossSiteScriptingBaseCheck
   Brakeman::Checks.add self
 
   @description = "Check XSS attacks via the flash object"
+
+  def initialize *args
+    super
+    @warning_type = "XSS in flash"
+    @default_warning_code = :xss_in_flash
+  end
 
   def run_check
     setup
@@ -30,29 +36,14 @@ class Brakeman::CheckXssInFlash < Brakeman::CheckCrossSiteScripting
     # end
   end
 
-  def check_for_immediate_xss exp
-    return :duplicate if duplicate? exp
-
-    if exp.node_type == :output
-      out = exp.value
-    end
-
-    if raw_call? exp
-      out = exp.value.first_arg
-    elsif html_safe_call? exp
-      out = exp.value.target
-    end
-
-    return if call? out and ignore_call? out.target, out.method
-
+  def warn_for_immediate_xss(_exp, out)
     if call?(out) && out.method == :flash
       warn :template => @current_template,
-        :warning_type => "XSS in flash",
-        :warning_code => :xss_in_flash,
+        :warning_type => @warning_type,
+        :warning_code => @default_warning_code,
         :message => "Unsafe output using flash object",
+        :code => out,
         :confidence => :high
-
-      return true
     end
   end
 
@@ -67,11 +58,11 @@ class Brakeman::CheckXssInFlash < Brakeman::CheckCrossSiteScripting
         add_result exp
 
         warn :template => @current_template,
-          :warning_type => "XSS in flash",
-          :warning_code => :xss_in_flash,
+          :warning_type => @warning_type,
+          :warning_code => @default_warning_code,
           :message => "Unsafe output using flash object",
+          :code => exp,
           :confidence => :high
-
       end
 
       @mark = @matched = false
@@ -80,22 +71,9 @@ class Brakeman::CheckXssInFlash < Brakeman::CheckCrossSiteScripting
     exp
   end
 
-  def actually_process_call exp
-    return if @matched
-    target = exp.target
-    if sexp? target
-      target = process target
-    end
-
-    method = exp.method
-
-    #Ignore safe items
-    if ignore_call? target, method
-      @matched = false
-    elsif method == :flash
+  def set_matched!(exp, _target)
+    if exp.method == :flash
       @matched = Match.new(:flash, exp)
-    elsif @inspect_arguments
-      process_call_args exp
     end
   end
 
