@@ -16,39 +16,8 @@ class Brakeman::CheckXssInFlash < Brakeman::CheckCrossSiteScripting
       process_result_for_assignments result
     end
 
-    tracker.each_template do |name, template|
-      @current_template = template
-
-
-      template.each_output do |out|
-        if template.name == "groups/xss_in_flash"
-          # require 'pry'
-          # binding.pry
-          # is_flash? out
-
-          @xss_in_flash = true
-        end
-
-        #   unless check_for_immediate_xss out
-        #     @matched = false
-        #     @mark = false
-        #     process out
-        #   end
-        if is_flash? out
-          unless check_for_immediate_xss out
-            @matched = false
-            @mark = false
-            process out
-          end
-          # warn :template => @current_template,
-          #   :warning_type => "XSS in flash",
-          #   :warning_code => :xss_in_flash,
-          #   :message => "Unsafe output using flash object",
-          #   :confidence => :high
-        end
-
-        break
-      end
+    tracker.each_template do |_name, template|
+      process_result_for_renderings template
     end
 
     # if @unsafe_flash_assignments && @unsafe_flash_renderings
@@ -88,12 +57,6 @@ class Brakeman::CheckXssInFlash < Brakeman::CheckCrossSiteScripting
   end
 
   def process_call exp
-    # if @current_template.name == "groups/xss_in_flash"
-    #   require 'pry'
-    #   binding.pry
-    #   is_flash? out
-    # end
-
     if @mark
       actually_process_call exp
     else
@@ -149,44 +112,11 @@ class Brakeman::CheckXssInFlash < Brakeman::CheckCrossSiteScripting
   end
 
   def process_result_for_assignments result
-    #     case result[:location][:type]
-    # when :template
-    #   @current_template = result[:location][:template]
-    #   p '******************'
-    #   p "template: #{@current_template}"
-    #   p '******************'
-    # when :class
-    #   @current_class = result[:location][:class]
-    #   @current_method = result[:location][:method]
-    #   p '******************'
-    #   p "current_class: #{@current_class}"
-    #   p "current_method: #{@current_method}"
-    #   p '******************'
-    # end
-
-    # @current_file = result[:location][:file]
-
-    # p '******************'
-    # p "current_file: #{@current_file}"
-    # p '******************'
-
-    # message = result[:call].second_arg
-
-    # if @current_method == :xss_in_flash
-    #   require 'pry'
-    #   binding.pry
-    # end
-
     return unless original? result
 
     message = result[:call].second_arg
 
     if input = has_immediate_user_input?(message)
-      # @unsafe_flash_assignments = {
-      #   result: result,
-      #   input: input,
-      # }
-
       @unsafe_flash_assignments = true
 
       warn :result => result,
@@ -198,7 +128,23 @@ class Brakeman::CheckXssInFlash < Brakeman::CheckCrossSiteScripting
     end
   end
 
-  def process_result_for_renderings
-    # TODO
+  def process_result_for_renderings template
+    @current_template = template
+
+    template.each_output do |out|
+      if template.name == "groups/xss_in_flash"
+        @xss_in_flash = true
+      end
+
+      if is_flash? out
+        unless check_for_immediate_xss out
+          @matched = false
+          @mark = false
+          process out
+        end
+      end
+
+      break
+    end
   end
 end
