@@ -74,6 +74,19 @@ class TrackerTests < Minitest::Test
     end
   end
 
+  def test_module_includes_in_same_class
+    ast = RubyParser.new.parse <<~RUBY
+      module Mixin
+        def self.builds_self
+          Class.new { include Mixin }
+        end
+      end
+    RUBY
+
+    Brakeman::LibraryProcessor.new(@tracker).process_library(ast, 'fake_file_name.rb')
+    assert_nil @tracker.find_method(:builds_self, :Mixin)
+  end
+
   private
 
   def parse_class
