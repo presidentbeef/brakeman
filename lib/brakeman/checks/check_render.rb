@@ -33,6 +33,7 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
     view = result[:call][2]
 
     if sexp? view and original? result
+      return if renderable?(view)
 
       if input = has_immediate_user_input?(view)
         if string_interp? view
@@ -94,4 +95,17 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
       end
     end
   end
-end 
+
+  def renderable? exp
+    return false unless call?(exp) and constant?(exp.target)
+
+    target_class_name = class_name(exp.target)
+    known_renderable_class?(target_class_name) or tracker.find_method(:render_in, target_class_name)
+  end
+
+  def known_renderable_class? class_name
+    klass = tracker.find_class(class_name)
+    return false if klass.nil?
+    klass.ancestor? :"ViewComponent::Base"
+  end
+end
