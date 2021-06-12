@@ -26,4 +26,8 @@ class AccountsController < ApplicationController
   def eval_something
     eval(params[:x]).to_s
   end
+
+  def index
+    params.values_at(:test).join("|")
+  end
 end
