@@ -132,7 +132,8 @@ module Brakeman
           value = body.first
 
           if simple_literal? value or
-              (array? value and all_literals? value)
+              all_literals? value, :array or
+              all_literals? value, :hash
 
             add_simple_method meth_info, value
           end

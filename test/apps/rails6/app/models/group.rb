@@ -22,6 +22,7 @@ class Group < ApplicationRecord
   end
 
   def use_simple_method
+    # No warning
     self.where("thing = #{Group.simple_method}")
   end
 
@@ -30,6 +31,7 @@ class Group < ApplicationRecord
   end
 
   def use_enum
+    # No warning
     self.where("thing IN #{Group.statuses.values_at(*[:start, :stop]).join(',')}")
   end
 end
