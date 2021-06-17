@@ -160,6 +160,19 @@ class Rails6Tests < Minitest::Test
       :user_input => s(:call, s(:hash, s(:lit, :admin), s(:lit, 1), s(:lit, :moderator), s(:lit, 2)), :fetch, s(:lvar, :role_name))
   end
 
+  def test_sql_injection_with_date
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "d8eec07773f66d6818a9dab2533bda5b295fbe261de5df9675dbf3213c1dcfa2",
+      :warning_type => "SQL Injection",
+      :line => 25,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :code => s(:call, nil, :where, s(:dstr, "date > ", s(:evstr, s(:call, s(:call, s(:const, :Date), :today), :-, s(:lit, 1))))),
+      :user_input => s(:call, s(:call, s(:const, :Date), :today), :-, s(:lit, 1))
+  end
+
   def test_cross_site_scripting_sanity
     assert_warning :type => :template,
       :warning_code => 2,
