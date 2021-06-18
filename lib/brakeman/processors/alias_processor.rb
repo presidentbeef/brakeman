@@ -803,6 +803,18 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     exp
   end
 
+  def hash_or_array_include_all_literals? exp
+    return unless call? exp and sexp? exp.target
+    target = exp.target
+
+    case target.node_type
+    when :hash
+      hash_include_all_literals? exp
+    else
+      array_include_all_literals? exp
+    end
+  end
+
   # Check if exp is a call to Array#include? on an array literal
   # that contains all literal values. For example:
   #
@@ -819,6 +831,16 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     [:detect, :find].include? exp.method and
     exp.first_arg.nil? and
     (all_literals? exp.target or dir_glob? exp.target)
+  end
+
+  # Check if exp is a call to Hash#include? on a hash literal
+  # that contains all literal values. For example:
+  #
+  #    {x: 1}.include? x
+  def hash_include_all_literals? exp
+    call? exp and
+    exp.method == :include? and
+    all_literals? exp.target, :hash
   end
 
   #Sets @inside_if = true
@@ -861,7 +883,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         scope do
           @branch_env = env.current
           branch_index = 2 + i # s(:if, condition, then_branch, else_branch)
-          if i == 0 and array_include_all_literals? condition
+          if i == 0 and hash_or_array_include_all_literals? condition
             # If the condition is ["a", "b"].include? x
             # set x to "a" inside the true branch
             var = condition.first_arg
@@ -869,7 +891,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
             env.current[var] = safe_literal(var.line)
             exp[branch_index] = process_if_branch branch
             env.current[var] = previous_value
-          elsif i == 1 and array_include_all_literals? condition and early_return? branch
+          elsif i == 1 and hash_or_array_include_all_literals? condition and early_return? branch
             var = condition.first_arg
             env.current[var] = safe_literal(var.line)
             exp[branch_index] = process_if_branch branch
