@@ -610,6 +610,35 @@ class Rails52Tests < Minitest::Test
       :relative_path => "Gemfile.lock",
       :user_input => nil
   end
+
+  def test_command_injection_ignored_in_stdin
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "98e72a863c59b1a9dd0024ef645ede1677e87123ac57b7b2d54ca704aba8f8e1",
+      :warning_type => "Command Injection",
+      :line => 135,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "lib/shell.rb"
+
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "a8ac4ba6f5c56040bb21bb8a2a69a003a1a37b17822209133accb92bbaf1a19b",
+      :warning_type => "Command Injection",
+      :line => 136,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "lib/shell.rb"
+
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :fingerprint => "775dbae94ae590e818d94bcef5d035b46cbc0f72c5c9cb568cfca20a746ed290",
+      :warning_type => "Command Injection",
+      :line => 137,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "lib/shell.rb"
+  end
 end
 
 class Rails52WithVendorTests < Minitest::Test

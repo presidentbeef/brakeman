@@ -128,4 +128,12 @@ class ShellStuff
       ls_io.read
     end
   end
+
+  def open3_capture_stdin_data
+    u = User.new
+    # None of these should warn
+    Open3.capture2("cat", stdin_data: "User.z = #{u.z}")
+    Open3.capture2e("cat", stdin_data: "User.z = #{u.z}")
+    Open3.capture3("cat", stdin_data: "User.z = #{u.z}")
+  end
 end
