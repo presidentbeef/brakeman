@@ -589,11 +589,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       if exp.method == :to_s or exp.method == :to_sym
         safe_value? exp.target
       else
-        IGNORE_METHODS_IN_SQL.include? exp.method or
-        quote_call? exp or
-        arel? exp or
-        exp.method.to_s.end_with? "_id" or
-        number_target? exp
+        ignore_call? exp
       end
     when :if
       safe_value? exp.then_clause and safe_value? exp.else_clause
@@ -606,6 +602,17 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     else
       false
     end
+  end
+
+  def ignore_call? exp
+    return unless call? exp
+
+    IGNORE_METHODS_IN_SQL.include? exp.method or
+      quote_call? exp or
+      arel? exp or
+      exp.method.to_s.end_with? "_id" or
+      number_target? exp or
+      date_target? exp
   end
 
   QUOTE_METHODS = [:quote, :quote_column_name, :quoted_date, :quote_string, :quote_table_name]
@@ -707,5 +714,19 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     else
       false
     end
+  end
+
+  DATE_CLASS = s(:const, :Date)
+
+  def date_target? exp
+    return unless call? exp
+
+    if exp.target == DATE_CLASS
+      true
+    elsif call? exp.target
+      date_target? exp.target
+    else
+     false
+    end 
   end
 end
