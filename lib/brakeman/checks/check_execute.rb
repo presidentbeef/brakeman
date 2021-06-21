@@ -87,6 +87,16 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
                   dangerous_interp?(first_arg) ||
                   dangerous_string_building?(first_arg)
       end
+    when :capture2, :capture2e, :capture3
+      # Open3 capture methods can take a :stdin_data argument which is used as the
+      # the input to the called command so it is not succeptable to command injection.
+      # As such if the last argument is a hash (and therefore execution options) it
+      # should be ignored
+
+      args.pop if hash?(args.last) && args.length > 2
+      failure = include_user_input?(args) ||
+                dangerous_interp?(args) ||
+                dangerous_string_building?(args)
     else
       failure = include_user_input?(args) ||
                 dangerous_interp?(args) ||
