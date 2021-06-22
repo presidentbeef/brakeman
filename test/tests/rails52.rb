@@ -12,7 +12,7 @@ class Rails52Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 5,
+      :template => 6,
       :generic => 23
     }
   end
@@ -616,7 +616,7 @@ class Rails52WithVendorTests < Minitest::Test
   include BrakemanTester::FindWarning
 
   def report
-    @@report ||= BrakemanTester.run_scan "rails5.2", "Rails 5.2", skip_vendor: false 
+    @@report ||= BrakemanTester.run_scan "rails5.2", "Rails 5.2", skip_vendor: false
   end
 
   def test_command_injection_ignored_vendor_dir

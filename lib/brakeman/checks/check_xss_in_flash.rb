@@ -8,15 +8,14 @@ class Brakeman::CheckXssInFlash < Brakeman::CrossSiteScriptingBaseCheck
   def initialize *args
     super
     @warning_type = "XSS in flash"
-    @default_warning_code = :xss_in_flash
   end
 
   def run_check
     setup
 
     # what should we store? Do we need to store all results or just one?
-    @unsafe_flash_assignments = nil
-    @unsafe_flash_renderings = nil
+    @unsafe_flash_assignments = []
+    @unsafe_flash_renderings = []
 
     tracker.find_call(:method => :[]=, :target => :flash).each do |result|
       process_result_for_assignments result
@@ -26,24 +25,33 @@ class Brakeman::CheckXssInFlash < Brakeman::CrossSiteScriptingBaseCheck
       process_result_for_renderings template
     end
 
-    # if @unsafe_flash_assignments && @unsafe_flash_renderings
-    #   warn :result => @unsafe_flash_assignments[:result],
-    #     :warning_type => "XSS in flash",
-    #     :warning_code => :xss_in_flash,
-    #     :message => msg(msg_input(@unsafe_flash_assignments[:input]), " is being used in the flash object"),
-    #     :user_input => input,
-    #     :confidence => :high
-    # end
+    # Give high confidence warnings on both assignment and rendering when both present
+    # Give warning with lower confidence when there is only risky rendering
+    # If assign but always escape, no warnings
+    if @unsafe_flash_assignments.any? && @unsafe_flash_renderings.any?
+      @unsafe_flash_assignments.each do |warning_args|
+        warn warning_args.merge(confidence: :high)
+      end
+
+      @unsafe_flash_renderings.each do |warning_args|
+        warn warning_args.merge(confidence: :high)
+      end
+    elsif @unsafe_flash_renderings.any?
+      @unsafe_flash_renderings.each do |warning_args|
+        warn warning_args.merge(confidence: :low)
+      end
+    end
   end
 
   def warn_for_immediate_xss(_exp, out)
     if call?(out) && out.method == :flash
-      warn :template => @current_template,
+      @unsafe_flash_renderings << {
+        :template => @current_template,
         :warning_type => @warning_type,
-        :warning_code => @default_warning_code,
+        :warning_code => :rendering_unescaped_flash_value,
         :message => "Unsafe output using flash object",
         :code => out,
-        :confidence => :high
+      }
     end
   end
 
@@ -57,12 +65,13 @@ class Brakeman::CheckXssInFlash < Brakeman::CrossSiteScriptingBaseCheck
       if @matched and not duplicate? exp
         add_result exp
 
-        warn :template => @current_template,
+        @unsafe_flash_renderings << {
+          :template => @current_template,
           :warning_type => @warning_type,
-          :warning_code => @default_warning_code,
+          :warning_code => :rendering_unescaped_flash_value,
           :message => "Unsafe output using flash object",
           :code => exp,
-          :confidence => :high
+        }
       end
 
       @mark = @matched = false
@@ -95,14 +104,13 @@ class Brakeman::CheckXssInFlash < Brakeman::CrossSiteScriptingBaseCheck
     message = result[:call].second_arg
 
     if input = has_immediate_user_input?(message)
-      @unsafe_flash_assignments = true
-
-      warn :result => result,
-        :warning_type => "XSS in flash",
-        :warning_code => :xss_in_flash,
+      @unsafe_flash_assignments << {
+        :result => result,
+        :warning_type => @warning_type,
+        :warning_code => :assigning_user_input_in_flash,
         :message => msg(msg_input(input), " is being used in the flash object"),
         :user_input => input,
-        :confidence => :high
+      }
     end
   end
 

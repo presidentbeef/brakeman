@@ -6,4 +6,8 @@ class FileController < ApplicationController
   def download_sanitized_with_params
     send_file ActiveStorage::Filename.new("#{params[:file_name]}.jpg").sanitized
   end
+
+  def xss_in_flash
+    flash[:notice] = params[:flash_message]
+  end
 end
