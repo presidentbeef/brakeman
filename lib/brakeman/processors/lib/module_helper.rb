@@ -32,7 +32,7 @@ module Brakeman::ModuleHelper
 
   def handle_class exp, collection, tracker_class
     name = class_name(exp.class_name)
-    parent = class_name exp.parent_name
+    parent = class_name(exp.parent_name)
 
     if @current_class
       outer_class = @current_class
@@ -43,12 +43,14 @@ module Brakeman::ModuleHelper
       name = (@current_module.name.to_s + "::" + name.to_s).to_sym
     end
 
-    if collection[name]
-      @current_class = collection[name]
+    bm_name = Brakeman::ClassName.new(name)
+
+    if collection[bm_name]
+      @current_class = collection[bm_name]
       @current_class.add_file @current_file, exp
     else
-      @current_class = tracker_class.new name, parent, @current_file, exp, @tracker
-      collection[name] = @current_class
+      @current_class = tracker_class.new bm_name, parent, @current_file, exp, @tracker
+      collection[bm_name] = @current_class
     end
 
     exp.body = process_all! exp.body
