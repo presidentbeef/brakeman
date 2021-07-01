@@ -220,7 +220,13 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         exp = math_op(:+, target, first_arg, exp)
       end
     when :-, :*, :/
-      exp = math_op(method, target, first_arg, exp)
+      if method == :* and array? target
+        if string? first_arg
+          exp = process_array_join(target, first_arg)
+        end
+      else
+        exp = math_op(method, target, first_arg, exp)
+      end
     when :[]
       if array? target
         exp = process_array_access(target, exp.args, exp)
@@ -275,6 +281,12 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         target = find_push_target(target_var)
         env[target] = exp unless target.nil? # Happens in TemplateAliasProcessor
       end
+    when :push
+      if array? target
+        target << first_arg
+        env[target_var] = target
+        return target
+      end
     when :first
       if array? target and first_arg.nil? and sexp? target[1]
         exp = target[1]
@@ -288,7 +300,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         exp = target
       end
     when :join
-      if array? target and target.length > 2 and (string? first_arg or first_arg.nil?)
+      if array? target and (string? first_arg or first_arg.nil?)
         exp = process_array_join(target, first_arg)
       end
     when :!
@@ -302,7 +314,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         exp = hash_values(target)
       end
     when :values_at
-      if hash? target
+      if node_type? target, :hash
         exp = hash_values_at target, exp.args
       end
     end
@@ -312,6 +324,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   # Painful conversion of Array#join into string interpolation
   def process_array_join array, join_str
+    # Empty array
+    if array.length == 1
+      return s(:str, '').line(array.line)
+    end
+
     result = s().line(array.line)
 
     join_value = if string? join_str
@@ -320,8 +337,10 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
                    nil
                  end
 
-    array[1..-2].each do |e|
-      result << join_item(e, join_value)
+    if array.length > 2
+      array[1..-2].each do |e|
+        result << join_item(e, join_value)
+      end
     end
 
     result << join_item(array.last, nil)
@@ -350,7 +369,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     result.unshift combined_first
 
     # Have to fix up strings that follow interpolation
-    result.reduce(s(:dstr).line(array.line)) do |memo, e|
+    string = result.reduce(s(:dstr).line(array.line)) do |memo, e|
       if string? e and node_type? memo.last, :evstr
         e.value = "#{join_value}#{e.value}"
       elsif join_value and node_type? memo.last, :evstr and node_type? e, :evstr
@@ -359,6 +378,14 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
       memo << e
     end
+
+    # Convert (:dstr, "hello world")
+    # to (:str, "hello world")
+    if string.length == 2 and string.last.is_a? String
+      string[0] = :str
+    end
+
+    string
   end
 
   def join_item item, join_value

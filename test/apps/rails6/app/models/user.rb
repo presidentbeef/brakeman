@@ -20,4 +20,8 @@ class User < ApplicationRecord
       DELETE FROM #{table} WHERE updated_at < now() - interval '#{period}'
     SQL
   end
+
+  def recent_stuff
+    where("date > #{Date.today - 1}")
+  end
 end

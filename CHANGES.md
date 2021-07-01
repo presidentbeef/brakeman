@@ -1,3 +1,13 @@
+# 5.0.4 - 2021-06-08
+
+(brakeman gem release only)
+
+* Update bundled `ruby_parser` to include argument forwarding support
+
+# 5.0.2 - 2021-06-07
+
+* Fix Loofah version check
+
 # 5.0.1 - 2021-04-27
 
 * Detect `::Rails.application.configure` too

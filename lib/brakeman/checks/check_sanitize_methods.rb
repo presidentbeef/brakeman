@@ -90,7 +90,8 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
   def loofah_vulnerable_cve_2018_8048?
     loofah_version = tracker.config.gem_version(:loofah)
 
-    loofah_version and loofah_version < "2.2.1"
+    # 2.2.1 is fix version
+    loofah_version and version_between?("0.0.0", "2.2.0", loofah_version)
   end
 
   def warn_sanitizer_cve cve, link, upgrade_version
