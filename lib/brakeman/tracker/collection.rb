@@ -24,7 +24,7 @@ module Brakeman
     def ancestor? parent, seen={}
       seen[self.name] = true
 
-      if self.parent == parent or seen[self.parent]
+      if self.parent == parent or self.name == parent or seen[self.parent]
         true
       elsif parent_model = collection[self.parent]
         parent_model.ancestor? parent, seen
@@ -39,7 +39,7 @@ module Brakeman
     end
 
     def add_include class_name
-      @includes << class_name
+      @includes << class_name unless ancestor?(class_name)
     end
 
     def add_option name, exp
