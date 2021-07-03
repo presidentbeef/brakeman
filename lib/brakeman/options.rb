@@ -39,7 +39,7 @@ module Brakeman::Options
       OptionParser.new do |opts|
         opts.banner = "Usage: brakeman [options] rails/root/path"
 
-        opts.on "-n", "--no-threads", "Run checks sequentially" do
+        opts.on "-n", "--no-threads", "Run checks and file parsing sequentially" do
           options[:parallel_checks] = false
         end
 

@@ -7,14 +7,22 @@ module Brakeman
   class FileParser
     attr_reader :file_list, :errors
 
-    def initialize app_tree, timeout
+    def initialize app_tree, timeout, parallel = true
       @app_tree = app_tree
       @timeout = timeout
       @file_list = []
       @errors = []
+      @parallel = parallel
     end
 
     def parse_files list
+      if @parallel
+        parallel_options = {}
+      else
+        # Disable parallelism
+        parallel_options = { in_threads: 0 }
+      end
+
       # Parse the files in parallel.
       # By default, the parsing will be in separate processes.
       # So we map the result to ASTFiles and/or Exceptions
@@ -25,7 +33,7 @@ module Brakeman
       # return types that are returned from isolated processes.
       #
       # Note this method no longer uses read_files
-      @file_list, new_errors = Parallel.map(list) do |file_name|
+      @file_list, new_errors = Parallel.map(list, parallel_options) do |file_name|
         file_path = @app_tree.file_path(file_name)
         contents = file_path.read
 

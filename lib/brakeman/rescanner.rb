@@ -391,7 +391,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
   def parse_ruby_files list
     paths = list.select(&:exists?)
-    file_parser = Brakeman::FileParser.new(tracker.app_tree, tracker.options[:parser_timeout])
+    file_parser = Brakeman::FileParser.new(tracker.app_tree, tracker.options[:parser_timeout], tracker.options[:parallel_checks])
     file_parser.parse_files paths
     tracker.add_errors(file_parser.errors)
     file_parser.file_list
