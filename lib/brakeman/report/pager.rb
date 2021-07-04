@@ -90,10 +90,10 @@ module Brakeman
       @less_options = []
 
       if system("which less > /dev/null")
-        less_help = `less -?`
+        less_help = `less -? 2>&1`
 
-        ["-R ", "-F ", "-X "].each do |opt|
-          if less_help.include? opt
+        ["-R", "-F", "-X"].each do |opt|
+          if less_help.match(opt + '\s')
             @less_options << opt
           end
         end
