@@ -34,7 +34,8 @@ module BrakemanTester
     #Run scan on app at the given path
     def run_scan path, name = nil, opts = {}
       opts.merge! :app_path => "#{TEST_PATH}/apps/#{path}",
-        :url_safe_methods => [:ensure_valid_proto!]
+        :url_safe_methods => [:ensure_valid_proto!],
+        :parallel_checks => false # Something broken with tests+parallel
 
       Brakeman.run(opts).report.to_hash
     end

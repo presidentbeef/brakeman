@@ -71,7 +71,7 @@ class Brakeman::Scanner
   end
 
   def parse_files
-    fp = Brakeman::FileParser.new(tracker.app_tree, tracker.options[:parser_timeout])
+    fp = Brakeman::FileParser.new(tracker.app_tree, tracker.options[:parser_timeout], tracker.options[:parallel_checks])
 
     fp.parse_files tracker.app_tree.ruby_file_paths
 
