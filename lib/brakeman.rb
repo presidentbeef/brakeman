@@ -198,6 +198,7 @@ module Brakeman
       :relative_path => false,
       :report_progress => true,
       :safe_methods => Set.new,
+      :sql_safe_methods => Set.new,
       :skip_checks => Set.new,
       :skip_vendor => true,
     }
