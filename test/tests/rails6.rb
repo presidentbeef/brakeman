@@ -5,7 +5,7 @@ class Rails6Tests < Minitest::Test
   include BrakemanTester::CheckExpected
 
   def report
-    @@report ||= BrakemanTester.run_scan "rails6", "Rails 6", run_all_checks: true, sql_safe_methods: [:sanitize_s]
+    @@report ||= BrakemanTester.run_scan "rails6", "Rails 6", :run_all_checks => true, :sql_safe_methods => [:sanitize_s]
   end
 
   def expected

@@ -580,6 +580,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   ]
 
   def ignore_methods_in_sql
+    puts tracker.options[:sql_safe_methods]
     @ignore_methods_in_sql ||= IGNORE_METHODS_IN_SQL.merge(tracker.options[:sql_safe_methods] || [])
   end
 
