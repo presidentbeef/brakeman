@@ -98,19 +98,21 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     enums = arg[2] # first value
     enums_name = pluralize(enum_name.to_s).to_sym
 
+    call_line = call.line
+
     if hash? enums
       enum_values = enums
     elsif array? enums
       # Build hash for enum values like Rails does
-      enum_values = s(:hash).line(call.line)
+      enum_values = s(:hash).line(call_line)
 
       enums.each_sexp.with_index do |v, index|
         enum_values << v
-        enum_values << s(:lit, index)
+        enum_values << s(:lit, index).line(call_line)
       end
     end
 
-    enum_method = s(:defs, s(:self), enum_name, s(:args), safe_literal(call.line))
+    enum_method = s(:defn, enum_name, s(:args), safe_literal(call_line))
     enums_method = s(:defs, s(:self), enums_name, s(:args), enum_values)
 
     @current_class.add_method :public, enum_name, enum_method, @current_file
