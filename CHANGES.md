@@ -1,3 +1,23 @@
+# Unreleased
+
+* Fix false positive in command injection with `Open3.capture` (Richard Fitzgerald)
+* Fix infinite loop on mixin self-includes (Andrew Szczepanski)
+* Ignore dates in SQL
+* Refactor `cookie?`/`param?` methods (Keenan Brock)
+* Ignore renderables in dynamic render path check (Brad Parker)
+* Support `Array#push`
+* Better `Array#join` support
+* Adjust copy of `--interactive` menu (Elia Schito)
+* Support `Array#*`
+* Better method definition tracking and lookup
+* Support `Hash#values` and `Hash#values_at`
+* Check for user-controlled evaluation even if it's a call target
+* Support `Array#fetch` and `Hash#fetch`
+* Ignore `sanitize_sql_like` in SQL
+* Ignore method calls on numbers in SQL
+* Add GitHub Actions format (Klaus Badelt)
+* Read and parse files in parallel
+
 # 5.0.4 - 2021-06-08
 
 (brakeman gem release only)
