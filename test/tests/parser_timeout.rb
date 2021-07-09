@@ -10,8 +10,7 @@ class ParserTimeoutTests < Minitest::Test
       write_file "lib/large_file.rb", random_ruby
     end
 
-    assert_equal 1, @rescanner.tracker.errors.length
-
+    assert_equal 1, @rescanner.tracker.errors.length, @rescanner.tracker.errors.inspect
     timeout_error = @rescanner.tracker.errors.first
     assert_match(/Parsing .* took too long \(> 1 seconds\)/, timeout_error[:error])
   end
