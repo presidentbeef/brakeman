@@ -5,7 +5,7 @@ class Rails6Tests < Minitest::Test
   include BrakemanTester::CheckExpected
 
   def report
-    @@report ||= BrakemanTester.run_scan "rails6", "Rails 6", run_all_checks: true
+    @@report ||= BrakemanTester.run_scan "rails6", "Rails 6", :run_all_checks => true, :sql_safe_methods => [:sanitize_s]
   end
 
   def expected
@@ -119,6 +119,19 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/models/group.rb",
       :code => s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :exec_query, s(:dstr, "select * where x = ", s(:evstr, s(:call, s(:const, :User), :uuid)))),
       :user_input => s(:call, s(:const, :User), :uuid)
+  end
+
+  def test_sql_injection_safe_sql_methods_false_postitive
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "205c9aaba1e719acc4f7026c0f65f172d4ac8dd8d036d31a94d7d446c7c874e7",
+      :warning_type => "SQL Injection",
+      :line => 58,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :execute, s(:dstr, "SELECT * FROM ", s(:evstr, s(:call, nil, :sanitize_s, s(:call, nil, :user_input))))),
+      :user_input => s(:call, nil, :sanitize_s, s(:call, nil, :user_input))
   end
 
   def test_sql_injection_date_integer_target_false_positive

@@ -53,4 +53,12 @@ class GroupsController < ApplicationController
       eval(params[:x]) # should not warn
     end
   end
+
+  def scope_with_custom_sanitization
+    ActiveRecord::Base.connection.execute "SELECT * FROM #{sanitize_s(user_input)}"
+  end
+
+  def sanitize_s(input)
+    input
+  end
 end

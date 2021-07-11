@@ -215,6 +215,10 @@ To indicate certain methods return properly escaped output and should not be war
 
     brakeman --safe-methods benign_method_escapes_output,totally_safe_from_xss
 
+To indicate certain methods return properly escaped output and should not be warned about in SQL checks:
+
+    brakeman --sql-safe-methods benign_method_escapes_output,totally_safe_from_sql
+
 Brakeman warns about use of user input in URLs generated with `link_to`. Since Rails does not provide anyway of making these URLs really safe (e.g. limiting protocols to HTTP(S)), safe methods can be ignored with
 
     brakeman --url-safe-methods ensure_safe_protocol_or_something

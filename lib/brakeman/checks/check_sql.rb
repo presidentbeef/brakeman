@@ -579,6 +579,10 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     :where_values_hash, :foreign_key, :uuid
   ]
 
+  def ignore_methods_in_sql
+    @ignore_methods_in_sql ||= IGNORE_METHODS_IN_SQL + (tracker.options[:sql_safe_methods] || [])
+  end
+
   def safe_value? exp
     return true unless sexp? exp
 
@@ -607,7 +611,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   def ignore_call? exp
     return unless call? exp
 
-    IGNORE_METHODS_IN_SQL.include? exp.method or
+    ignore_methods_in_sql.include? exp.method or
       quote_call? exp or
       arel? exp or
       exp.method.to_s.end_with? "_id" or
