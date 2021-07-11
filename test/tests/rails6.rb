@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 29
+      :generic => 31
     }
   end
 
@@ -184,6 +184,32 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/models/user.rb",
       :code => s(:call, nil, :where, s(:dstr, "date > ", s(:evstr, s(:call, s(:call, s(:const, :Date), :today), :-, s(:lit, 1))))),
       :user_input => s(:call, s(:call, s(:const, :Date), :today), :-, s(:lit, 1))
+  end
+
+  def test_sql_injection_rewhere
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "7f5154ba5124c5ae26ec23f364239311df959acb9b2e4d09f4867c2fbd954dd6",
+      :warning_type => "SQL Injection",
+      :line => 67,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:call, s(:const, :User), :where, s(:str, "x = 1")), :rewhere, s(:dstr, "x = ", s(:evstr, s(:call, s(:params), :[], s(:lit, :x))))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_sql_injection_reselect
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "e4fdd9614cff8e8f8a70cd983c55d36acd6da219048faf1530de9dc43d58aa71",
+      :warning_type => "SQL Injection",
+      :line => 66,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:call, s(:const, :User), :select, s(:str, "stuff")), :reselect, s(:call, s(:params), :[], s(:lit, :columns))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :columns))
   end
 
   def test_cross_site_scripting_sanity

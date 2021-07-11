@@ -61,4 +61,9 @@ class GroupsController < ApplicationController
   def sanitize_s(input)
     input
   end
+
+  def test_rails6_sqli
+    User.select("stuff").reselect(params[:columns])
+    User.where("x = 1").rewhere("x = #{params[:x]}")
+  end
 end
