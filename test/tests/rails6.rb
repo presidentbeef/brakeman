@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 31
+      :generic => 32
     }
   end
 
@@ -210,6 +210,19 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/controllers/groups_controller.rb",
       :code => s(:call, s(:call, s(:const, :User), :select, s(:str, "stuff")), :reselect, s(:call, s(:params), :[], s(:lit, :columns))),
       :user_input => s(:call, s(:params), :[], s(:lit, :columns))
+  end
+
+  def test_sql_injection_pluck
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "69a7e516b2b409dc8d74f6a26b44d62f4b842ce9c73e96c3910f9206c6fc50f5",
+      :warning_type => "SQL Injection",
+      :line => 68,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:const, :User), :pluck, s(:call, s(:params), :[], s(:lit, :column))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :column))
   end
 
   def test_cross_site_scripting_sanity
