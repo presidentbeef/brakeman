@@ -186,7 +186,6 @@ class Rails6Tests < Minitest::Test
       :user_input => s(:call, s(:call, s(:const, :Date), :today), :-, s(:lit, 1))
   end
 
-<<<<<<< HEAD
   def test_sql_injection_rewhere
     assert_warning :type => :warning,
       :warning_code => 0,
@@ -266,6 +265,19 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/models/user.rb",
       :code => s(:call, nil, :where, s(:dstr, "state = ", s(:evstr, s(:call, s(:call, s(:const, :User), :states), :[], s(:str, "pending"))))),
       :user_input => s(:call, s(:call, s(:const, :User), :states), :[], s(:str, "pending"))
+  end
+
+  def test_dangerous_send_enum
+    assert_no_warning :type => :warning,
+      :warning_code => 23,
+      :fingerprint => "483fa36e41f5791e86f345a19b517a61859886d685ce40ef852871bb7a935f2d",
+      :warning_type => "Dangerous Send",
+      :line => 78,
+      :message => /^User\ controlled\ method\ execution/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:const, :Group), :send, s(:call, s(:dstr, "", s(:evstr, s(:call, s(:params), :[], s(:lit, :status)))), :to_sym)),
+      :user_input => s(:call, s(:params), :[], s(:lit, :status))
   end
 
   def test_cross_site_scripting_sanity

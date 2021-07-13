@@ -1,6 +1,4 @@
 class Group < ApplicationRecord
-  enum status: { start: 0, stop: 2, in_process: 3 }
-
   def uuid_in_sql
     ActiveRecord::Base.connection.exec_query("select * where x = #{User.uuid}")
   end
@@ -29,6 +27,8 @@ class Group < ApplicationRecord
   def self.simple_method
     "Hello"
   end
+
+  enum status: { start: 0, stop: 2, in_process: 3 }
 
   def use_enum
     # No warning
