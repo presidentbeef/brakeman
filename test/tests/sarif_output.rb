@@ -3,7 +3,8 @@ require 'json'
 
 class SARIFOutputTests < Minitest::Test
   def setup
-    @@sarif ||= JSON.parse(Brakeman.run("#{TEST_PATH}/apps/rails3.2").report.to_sarif)
+    @@sarif ||= JSON.parse(Brakeman.run(File.join(TEST_PATH, 'apps', 'rails3.2')).report.to_sarif) # has no brakeman.ignore
+    @@sarif_with_ignore ||= JSON.parse(Brakeman.run(File.join(TEST_PATH, 'apps', 'rails4')).report.to_sarif) # has ignored warnings
   end
 
   def test_log_shape
@@ -94,6 +95,35 @@ class SARIFOutputTests < Minitest::Test
         # Each location has a region
         assert location['physicalLocation']['region']['startLine']
       end
+    end
+  end
+
+  def test_with_ignore_has_one_suppressed_finding
+    assert_equal(
+      1,
+      @@sarif_with_ignore.dig('runs', 0, 'results').
+        map { |f| 1 if f['suppressions'] }.compact.sum
+    )
+  end
+
+  def test_with_ignore_results_suppression_shape
+    @@sarif_with_ignore.dig('runs', 0, 'results').each do |finding|
+      suppressions = finding['suppressions']
+      next unless suppressions
+
+      # Each finding with suppressions has exactly one...
+      assert_equal 1, suppressions.count
+      assert suppression = suppressions[0]
+
+      # ...external suppression...
+      assert_equal 'external', suppression['kind']
+
+      # ...with a valid physical location...
+      assert suppression['location']['physicalLocation']['artifactLocation']['uri']
+      assert_equal '%SRCROOT%', suppression['location']['physicalLocation']['artifactLocation']['uriBaseId']
+
+      # ...and a justification (will be nil if no notes is set).
+      assert suppression['justification']
     end
   end
 end

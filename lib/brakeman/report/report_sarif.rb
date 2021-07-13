@@ -48,7 +48,7 @@ class Brakeman::Report::SARIF < Brakeman::Report::Base
   end
 
   def results
-    @results ||= all_warnings.map do |warning|
+    @results ||= tracker.checks.all_warnings.map do |warning|
       rule_id = render_id warning
       result_level = infer_level warning
       message_text = render_message warning.message.to_s
@@ -72,6 +72,23 @@ class Brakeman::Report::SARIF < Brakeman::Report::Base
         ],
       }
 
+      if @ignore_filter && @ignore_filter.ignored?(warning)
+        result[:suppressions] = [
+          {
+            :kind => 'external',
+            :justification => @ignore_filter.note_for(warning),
+            :location => {
+              :physicalLocation => {
+                :artifactLocation => {
+                  :uri => Brakeman::FilePath.from_app_tree(@app_tree, @ignore_filter.file).relative,
+                  :uriBaseId => '%SRCROOT%',
+                },
+              },
+            },
+          }
+        ]
+      end
+
       result
     end
   end
@@ -85,7 +102,7 @@ class Brakeman::Report::SARIF < Brakeman::Report::Base
 
   # Returns a de-duplicated set of warnings, used to generate rules
   def unique_warnings_by_warning_code
-    @unique_warnings_by_warning_code ||= all_warnings.uniq { |w| w.warning_code }
+    @unique_warnings_by_warning_code ||= tracker.checks.all_warnings.uniq { |w| w.warning_code }
   end
 
   def render_id warning
