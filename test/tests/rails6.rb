@@ -186,6 +186,7 @@ class Rails6Tests < Minitest::Test
       :user_input => s(:call, s(:call, s(:const, :Date), :today), :-, s(:lit, 1))
   end
 
+<<<<<<< HEAD
   def test_sql_injection_rewhere
     assert_warning :type => :warning,
       :warning_code => 0,
@@ -252,6 +253,19 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/controllers/groups_controller.rb",
       :code => s(:call, s(:call, s(:const, :User), :order, s(:lit, :name)), :reorder, s(:call, s(:params), :[], s(:lit, :column))),
       :user_input => s(:call, s(:params), :[], s(:lit, :column))
+  end
+
+  def test_sql_injection_enum
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "b2071137eba7ef6ecbcc1c6381a428e5c576a5fadf73dc04b2e155c41043e1d2",
+      :warning_type => "SQL Injection",
+      :line => 31,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/models/user.rb",
+      :code => s(:call, nil, :where, s(:dstr, "state = ", s(:evstr, s(:call, s(:call, s(:const, :User), :states), :[], s(:str, "pending"))))),
+      :user_input => s(:call, s(:call, s(:const, :User), :states), :[], s(:str, "pending"))
   end
 
   def test_cross_site_scripting_sanity
