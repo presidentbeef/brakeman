@@ -19,6 +19,8 @@ module Brakeman
               else
                 raise "Expected sexp type: #{src.node_type}"
               end
+
+      @simple_method = nil
     end
 
     # To support legacy code that expected a Hash

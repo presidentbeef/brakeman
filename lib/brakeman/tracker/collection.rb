@@ -50,7 +50,7 @@ module Brakeman
 
     def add_method visibility, name, src, file_name
       meth_info = Brakeman::MethodInfo.new(name, src, self, file_name)
-      add_simple_method_maybe meth_info 
+      add_simple_method_maybe meth_info
 
       if src.node_type == :defs
         @class_methods[name] = meth_info
@@ -121,28 +121,15 @@ module Brakeman
 
     private
 
-    def add_simple_method_maybe meth_info 
-      src = meth_info.src
-
-      # Simple methods have one (simple) expression in the body and
-      # no arguments
-      if src.formal_args.length == 1 # no args
-        body = src.body
-        if body.length == 1 # single expression in body
-          value = body.first
-
-          if simple_literal? value or
-              all_literals? value, :array or
-              all_literals? value, :hash
-
-            add_simple_method meth_info, value
-          end
-        end
+    def add_simple_method_maybe meth_info
+      if meth_info.very_simple_method?
+        add_simple_method meth_info
       end
     end
 
-    def add_simple_method meth_info, value
-      name = meth_info.name 
+    def add_simple_method meth_info
+      name = meth_info.name
+      value = meth_info.return_value
 
       case meth_info.src.node_type
       when :defn
