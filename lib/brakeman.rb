@@ -527,12 +527,14 @@ module Brakeman
 
   # Returns an array of alert fingerprints for any ignored warnings without
   # notes found in the specified ignore file (if it exists).
-  def self.ignore_file_entries_with_empty_notes file
+  def self.ignore_file_entries_with_empty_notes file, options
     return [] unless file
 
     require 'brakeman/report/ignore/config'
 
-    config = IgnoreConfig.new(file, nil)
+    app_tree = Brakeman::AppTree.from_options(options)
+
+    config = IgnoreConfig.new(Brakeman::FilePath.from_app_tree(app_tree, file), nil)
     config.read_from_file
     config.already_ignored_entries_with_empty_notes.map { |i| i[:fingerprint] }
   end
@@ -543,9 +545,9 @@ module Brakeman
     app_tree = Brakeman::AppTree.from_options(options)
 
     if options[:ignore_file]
-      file = options[:ignore_file]
+      file = Brakeman::FilePath.from_app_tree(app_tree, options[:ignore_file])
     elsif app_tree.exists? "config/brakeman.ignore"
-      file = app_tree.expand_path("config/brakeman.ignore")
+      file = Brakeman::FilePath.from_app_tree(app_tree, "config/brakeman.ignore")
     elsif not options[:interactive_ignore]
       return
     end
