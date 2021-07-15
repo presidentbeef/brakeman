@@ -102,7 +102,7 @@ class SARIFOutputTests < Minitest::Test
     assert_equal(
       1,
       @@sarif_with_ignore.dig('runs', 0, 'results').
-        map { |f| 1 if f['suppressions'] }.compact.sum
+        select { |f| f['suppressions'] }.count
     )
   end
 
