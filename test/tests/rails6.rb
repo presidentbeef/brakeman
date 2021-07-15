@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 32
+      :generic => 34
     }
   end
 
@@ -213,6 +213,7 @@ class Rails6Tests < Minitest::Test
   end
 
   def test_sql_injection_pluck
+    # Not in Rails 6.1 though
     assert_warning :type => :warning,
       :warning_code => 0,
       :fingerprint => "69a7e516b2b409dc8d74f6a26b44d62f4b842ce9c73e96c3910f9206c6fc50f5",
@@ -222,6 +223,34 @@ class Rails6Tests < Minitest::Test
       :confidence => 0,
       :relative_path => "app/controllers/groups_controller.rb",
       :code => s(:call, s(:const, :User), :pluck, s(:call, s(:params), :[], s(:lit, :column))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :column))
+  end
+
+  def test_sql_injection_order
+    # Not in Rails 6.1 though
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "47e9c6316ae9b2937121298ebc095bac4c4c8682779a0be95ce32c3fc4ba3118",
+      :warning_type => "SQL Injection",
+      :line => 69,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:const, :User), :order, s(:dstr, "name ", s(:evstr, s(:call, s(:params), :[], s(:lit, :direction))))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :direction))
+  end
+
+  def test_sql_injection_reorder
+    # Not in Rails 6.1 though
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "c6b303b67a5de261d9faaa84e02b29987b57fb443691d7ad77956bbecf41a1d0",
+      :warning_type => "SQL Injection",
+      :line => 70,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:call, s(:const, :User), :order, s(:lit, :name)), :reorder, s(:call, s(:params), :[], s(:lit, :column))),
       :user_input => s(:call, s(:params), :[], s(:lit, :column))
   end
 

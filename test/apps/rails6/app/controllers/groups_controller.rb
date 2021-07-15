@@ -66,5 +66,7 @@ class GroupsController < ApplicationController
     User.select("stuff").reselect(params[:columns])
     User.where("x = 1").rewhere("x = #{params[:x]}")
     User.pluck(params[:column]) # Warn in 6.0, not in 6.1
+    User.order("name #{params[:direction]}") # Warn in 6.0, not in 6.1
+    User.order(:name).reorder(params[:column]) # Warn in 6.0, not in 6.1
   end
 end

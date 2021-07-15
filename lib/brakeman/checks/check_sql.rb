@@ -28,11 +28,11 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
 
       @sql_targets.delete :delete_all
       @sql_targets.delete :destroy_all
-      @sql_targets.delete :order
-      @sql_targets.delete :reorder
     end
 
     if version_between?("6.1.0", "9.9.9")
+      @sql_targets.delete :order
+      @sql_targets.delete :reorder
       @sql_targets.delete :pluck
     end
 
