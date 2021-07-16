@@ -2,9 +2,21 @@ require_relative '../test'
 require 'json'
 
 class SARIFOutputTests < Minitest::Test
+
+  def tracker_3_2
+    @@tracker_3_2 ||= Brakeman.run("#{TEST_PATH}/apps/rails3.2") # has no brakeman.ignore
+  end
+
   def setup
-    @@sarif ||= JSON.parse(Brakeman.run(File.join(TEST_PATH, 'apps', 'rails3.2')).report.to_sarif) # has no brakeman.ignore
+    @@sarif ||= JSON.parse(tracker_3_2.report.to_sarif)
     @@sarif_with_ignore ||= JSON.parse(Brakeman.run(File.join(TEST_PATH, 'apps', 'rails4')).report.to_sarif) # has ignored warnings
+  end
+
+  def test_render_message
+    report = Brakeman::Report::SARIF.new tracker_3_2
+    assert_nil report.render_message(nil)
+    assert_equal 'Very serious sentence.', report.render_message('Very serious sentence')
+    assert_equal 'Nothing to see here.', report.render_message('Nothing to see here.')
   end
 
   def test_log_shape

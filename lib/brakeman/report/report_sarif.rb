@@ -111,6 +111,8 @@ class Brakeman::Report::SARIF < Brakeman::Report::Base
   end
 
   def render_message message
+    return message if message.nil?
+
     # Ensure message ends with a period
     if message.end_with? "."
       message
