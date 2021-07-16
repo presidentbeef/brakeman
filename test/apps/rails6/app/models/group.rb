@@ -18,4 +18,20 @@ class Group < ApplicationRecord
     role = roles.fetch(role_name)
     Arel.sql("role = '#{role}'")
   end
+
+  def use_simple_method
+    # No warning
+    self.where("thing = #{Group.simple_method}")
+  end
+
+  def self.simple_method
+    "Hello"
+  end
+
+  enum status: { start: 0, stop: 2, in_process: 3 }
+
+  def use_enum
+    # No warning
+    self.where("thing IN #{Group.statuses.values_at(*[:start, :stop]).join(',')}")
+  end
 end

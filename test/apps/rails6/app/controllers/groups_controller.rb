@@ -69,4 +69,15 @@ class GroupsController < ApplicationController
     User.order("name #{params[:direction]}") # Warn in 6.0, not in 6.1
     User.order(:name).reorder(params[:column]) # Warn in 6.0, not in 6.1
   end
+
+  # From https://github.com/presidentbeef/brakeman/issues/1492
+  def enum_include_check
+    status = "#{params[:status]}"
+    if Group.statuses.include? status
+      @status = status.to_sym
+      @countries = Group.send(@status) # Should not warn
+    else
+      redirect_to root_path, notice: 'Invalid status'
+    end
+  end
 end

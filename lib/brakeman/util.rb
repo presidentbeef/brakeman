@@ -50,7 +50,11 @@ module Brakeman::Util
 
   # stupid simple, used to delegate to ActiveSupport
   def pluralize word
-    word + "s"
+    if word.end_with? 's'
+      word + 'es'
+    else
+      word + 's'
+    end
   end
 
   #Returns a class name as a Symbol.
@@ -293,10 +297,22 @@ module Brakeman::Util
     exp.is_a? Sexp and types.include? exp.node_type
   end
 
-  LITERALS = [:lit, :false, :str, :true, :array, :hash]
+  SIMPLE_LITERALS = [:lit, :false, :str, :true]
+
+  def simple_literal? exp
+    exp.is_a? Sexp and SIMPLE_LITERALS.include? exp.node_type
+  end
+
+  LITERALS = [*SIMPLE_LITERALS, :array, :hash]
 
   def literal? exp
     exp.is_a? Sexp and LITERALS.include? exp.node_type
+  end
+
+  def all_literals? exp, expected_type = :array
+    node_type? exp, expected_type and
+      exp.length > 1 and
+      exp.all? { |e| e.is_a? Symbol or node_type? e, :lit, :str }
   end
 
   DIR_CONST = s(:const, :Dir)

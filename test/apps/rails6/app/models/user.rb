@@ -24,4 +24,10 @@ class User < ApplicationRecord
   def recent_stuff
     where("date > #{Date.today - 1}")
   end
+
+  enum state: ["pending", "active", "archived"]
+
+  def check_enum
+    where("state = #{User.states["pending"]}")
+  end
 end
