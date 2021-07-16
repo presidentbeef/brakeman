@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 29
+      :generic => 34
     }
   end
 
@@ -184,6 +184,74 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/models/user.rb",
       :code => s(:call, nil, :where, s(:dstr, "date > ", s(:evstr, s(:call, s(:call, s(:const, :Date), :today), :-, s(:lit, 1))))),
       :user_input => s(:call, s(:call, s(:const, :Date), :today), :-, s(:lit, 1))
+  end
+
+  def test_sql_injection_rewhere
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "7f5154ba5124c5ae26ec23f364239311df959acb9b2e4d09f4867c2fbd954dd6",
+      :warning_type => "SQL Injection",
+      :line => 67,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:call, s(:const, :User), :where, s(:str, "x = 1")), :rewhere, s(:dstr, "x = ", s(:evstr, s(:call, s(:params), :[], s(:lit, :x))))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_sql_injection_reselect
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "e4fdd9614cff8e8f8a70cd983c55d36acd6da219048faf1530de9dc43d58aa71",
+      :warning_type => "SQL Injection",
+      :line => 66,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:call, s(:const, :User), :select, s(:str, "stuff")), :reselect, s(:call, s(:params), :[], s(:lit, :columns))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :columns))
+  end
+
+  def test_sql_injection_pluck
+    # Not in Rails 6.1 though
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "69a7e516b2b409dc8d74f6a26b44d62f4b842ce9c73e96c3910f9206c6fc50f5",
+      :warning_type => "SQL Injection",
+      :line => 68,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:const, :User), :pluck, s(:call, s(:params), :[], s(:lit, :column))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :column))
+  end
+
+  def test_sql_injection_order
+    # Not in Rails 6.1 though
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "47e9c6316ae9b2937121298ebc095bac4c4c8682779a0be95ce32c3fc4ba3118",
+      :warning_type => "SQL Injection",
+      :line => 69,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:const, :User), :order, s(:dstr, "name ", s(:evstr, s(:call, s(:params), :[], s(:lit, :direction))))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :direction))
+  end
+
+  def test_sql_injection_reorder
+    # Not in Rails 6.1 though
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "c6b303b67a5de261d9faaa84e02b29987b57fb443691d7ad77956bbecf41a1d0",
+      :warning_type => "SQL Injection",
+      :line => 70,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:call, s(:call, s(:const, :User), :order, s(:lit, :name)), :reorder, s(:call, s(:params), :[], s(:lit, :column))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :column))
   end
 
   def test_cross_site_scripting_sanity

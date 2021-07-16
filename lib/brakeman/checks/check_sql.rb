@@ -22,7 +22,19 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                     :find_by_sql, :maximum, :minimum, :pluck, :sum, :update_all]
     @sql_targets.concat [:from, :group, :having, :joins, :lock, :order, :reorder, :where] if tracker.options[:rails3]
     @sql_targets.concat [:find_by, :find_by!, :find_or_create_by, :find_or_create_by!, :find_or_initialize_by, :not] if tracker.options[:rails4]
-    @sql_targets << :delete_by << :destroy_by if tracker.options[:rails6]
+
+    if tracker.options[:rails6]
+      @sql_targets.concat [:delete_by, :destroy_by, :rewhere, :reselect]
+
+      @sql_targets.delete :delete_all
+      @sql_targets.delete :destroy_all
+    end
+
+    if version_between?("6.1.0", "9.9.9")
+      @sql_targets.delete :order
+      @sql_targets.delete :reorder
+      @sql_targets.delete :pluck
+    end
 
     if version_between?("2.0.0", "3.9.9") or tracker.config.rails_version.nil?
       @sql_targets << :first << :last << :all
@@ -185,7 +197,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                         else
                           check_find_arguments call.last_arg
                         end
-                      when :where, :having, :find_by, :find_by!, :find_or_create_by, :find_or_create_by!, :find_or_initialize_by,:not, :delete_by, :destroy_by
+                      when :where, :rewhere, :having, :find_by, :find_by!, :find_or_create_by, :find_or_create_by!, :find_or_initialize_by,:not, :delete_by, :destroy_by
                         check_query_arguments call.arglist
                       when :order, :group, :reorder
                         check_order_arguments call.arglist
@@ -199,7 +211,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                         unsafe_sql? call.first_arg
                       when :sql
                         unsafe_sql? call.first_arg
-                      when :update_all, :select
+                      when :update_all, :select, :reselect
                         check_update_all_arguments call.args
                       when *@connection_calls
                         check_by_sql_arguments call.first_arg
