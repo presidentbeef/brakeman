@@ -1,5 +1,12 @@
 # Unreleased
 
+* Initial support for ActiveRecord enums
+* Support `Hash#include?`
+* Interprocedural dataflow from very simple class methods
+* Fix SARIF report when checks have no description (Eli Block)
+* Add ignored warnings to SARIF report (Eli Block)
+* Add `--sql-safe-methods` option (Esty Scheiner)
+* Update SQL injection check for Rails 6.0/6.1
 * Fix false positive in command injection with `Open3.capture` (Richard Fitzgerald)
 * Fix infinite loop on mixin self-includes (Andrew Szczepanski)
 * Ignore dates in SQL
