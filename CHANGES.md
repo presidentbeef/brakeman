@@ -1,4 +1,4 @@
-# Unreleased
+# 5.1.0 - 2021-07-19
 
 * Initial support for ActiveRecord enums
 * Support `Hash#include?`
