@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2021-07-19T15:10:58-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 5.1.0 Released</title><link href="https://brakemanscanner.org/blog/2021/07/19/brakeman-5-dot-1-dot-0-released" rel="alternate" type="text/html" title="Brakeman 5.1.0 Released" /><published>2021-07-19T15:00:00-07:00</published><updated>2021-07-19T15:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2021/07/19/brakeman-5-dot-1-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2021/07/19/brakeman-5-dot-1-dot-0-released">&lt;p&gt;This is a &lt;em&gt;huge&lt;/em&gt; release! (So many changes, I had to look up how to nest lists in Markdown…)&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2021-07-19T15:17:18-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 5.1.0 Released</title><link href="https://brakemanscanner.org/blog/2021/07/19/brakeman-5-dot-1-dot-0-released" rel="alternate" type="text/html" title="Brakeman 5.1.0 Released" /><published>2021-07-19T15:00:00-07:00</published><updated>2021-07-19T15:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2021/07/19/brakeman-5-dot-1-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2021/07/19/brakeman-5-dot-1-dot-0-released">&lt;p&gt;This is a &lt;em&gt;huge&lt;/em&gt; release! (So many changes, I had to look up how to nest lists in Markdown…)&lt;/p&gt;
 
 &lt;p&gt;Thank you to the many contributors!&lt;/p&gt;
 
@@ -126,26 +126,16 @@ To “understand” the code it analyzes, Brakeman essentially evaluates some me
 This release adds and improves support for evaluating a number of &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;Array&lt;/code&gt; methods.&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;Support &lt;code class=&quot;highlighter-rouge&quot;&gt;Array#fetch&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash#fetch&lt;/code&gt;
-(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1589&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Support &lt;code class=&quot;highlighter-rouge&quot;&gt;Array#push&lt;/code&gt;
-(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1600&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Support &lt;code class=&quot;highlighter-rouge&quot;&gt;Array#*&lt;/code&gt; and improve &lt;code class=&quot;highlighter-rouge&quot;&gt;Array#join&lt;/code&gt;
-(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1599&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Support &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash#values&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash#values_at&lt;/code&gt;
-(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1595&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Support &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash#include?&lt;/code&gt;
-(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1618/commits/3554a2c7f259b3a96dc69877c9596c81190eed8d&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-  &lt;/li&gt;
+  &lt;li&gt;Support &lt;code class=&quot;highlighter-rouge&quot;&gt;Array#fetch&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash#fetch&lt;/code&gt;
+(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1589&quot;&gt;changes&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Support &lt;code class=&quot;highlighter-rouge&quot;&gt;Array#push&lt;/code&gt;
+(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1600&quot;&gt;changes&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Support &lt;code class=&quot;highlighter-rouge&quot;&gt;Array#*&lt;/code&gt; and improve &lt;code class=&quot;highlighter-rouge&quot;&gt;Array#join&lt;/code&gt;
+(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1599&quot;&gt;changes&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Support &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash#values&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash#values_at&lt;/code&gt;
+(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1595&quot;&gt;changes&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Support &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash#include?&lt;/code&gt;
+(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1618/commits/3554a2c7f259b3a96dc69877c9596c81190eed8d&quot;&gt;changes&lt;/a&gt;)&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;sql-injection&quot;&gt;SQL Injection&lt;/h2&gt;
@@ -176,7 +166,7 @@ This release adds and improves support for evaluating a number of &lt;code class
   &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;reorder&lt;/code&gt; (in Rails 6.1)&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;(Also, https://rails-sqli.org/ has also been updated with Rails 6 information!)&lt;/p&gt;
+&lt;p&gt;(Also, [https://rails-sqli.org/] has also been updated with Rails 6 information!)&lt;/p&gt;
 
 &lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1619&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
@@ -191,18 +181,12 @@ This release adds and improves support for evaluating a number of &lt;code class
 &lt;p&gt;Brakeman no longer warns about SQL injection for:&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;Dates and methods called on dates
-(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1615&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Method calls on number literals
-(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1586&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sanitize_sql_like&lt;/code&gt;
-(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1587&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-  &lt;/li&gt;
+  &lt;li&gt;Dates and methods called on dates
+(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1615&quot;&gt;changes&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Method calls on number literals
+(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1586&quot;&gt;changes&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sanitize_sql_like&lt;/code&gt;
+(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1587&quot;&gt;changes&lt;/a&gt;)&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;misc-fixes&quot;&gt;Misc Fixes&lt;/h2&gt;

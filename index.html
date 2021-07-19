@@ -224,26 +224,16 @@ To “understand” the code it analyzes, Brakeman essentially evaluates some me
 This release adds and improves support for evaluating a number of <code class="highlighter-rouge">Hash</code> and <code class="highlighter-rouge">Array</code> methods.</p>
 
 <ul>
-  <li>
-    <p>Support <code class="highlighter-rouge">Array#fetch</code> and <code class="highlighter-rouge">Hash#fetch</code>
-(<a href="https://github.com/presidentbeef/brakeman/pull/1589">changes</a>)</p>
-  </li>
-  <li>
-    <p>Support <code class="highlighter-rouge">Array#push</code>
-(<a href="https://github.com/presidentbeef/brakeman/pull/1600">changes</a>)</p>
-  </li>
-  <li>
-    <p>Support <code class="highlighter-rouge">Array#*</code> and improve <code class="highlighter-rouge">Array#join</code>
-(<a href="https://github.com/presidentbeef/brakeman/pull/1599">changes</a>)</p>
-  </li>
-  <li>
-    <p>Support <code class="highlighter-rouge">Hash#values</code> and <code class="highlighter-rouge">Hash#values_at</code>
-(<a href="https://github.com/presidentbeef/brakeman/pull/1595">changes</a>)</p>
-  </li>
-  <li>
-    <p>Support <code class="highlighter-rouge">Hash#include?</code>
-(<a href="https://github.com/presidentbeef/brakeman/pull/1618/commits/3554a2c7f259b3a96dc69877c9596c81190eed8d">changes</a>)</p>
-  </li>
+  <li>Support <code class="highlighter-rouge">Array#fetch</code> and <code class="highlighter-rouge">Hash#fetch</code>
+(<a href="https://github.com/presidentbeef/brakeman/pull/1589">changes</a>)</li>
+  <li>Support <code class="highlighter-rouge">Array#push</code>
+(<a href="https://github.com/presidentbeef/brakeman/pull/1600">changes</a>)</li>
+  <li>Support <code class="highlighter-rouge">Array#*</code> and improve <code class="highlighter-rouge">Array#join</code>
+(<a href="https://github.com/presidentbeef/brakeman/pull/1599">changes</a>)</li>
+  <li>Support <code class="highlighter-rouge">Hash#values</code> and <code class="highlighter-rouge">Hash#values_at</code>
+(<a href="https://github.com/presidentbeef/brakeman/pull/1595">changes</a>)</li>
+  <li>Support <code class="highlighter-rouge">Hash#include?</code>
+(<a href="https://github.com/presidentbeef/brakeman/pull/1618/commits/3554a2c7f259b3a96dc69877c9596c81190eed8d">changes</a>)</li>
 </ul>
 
 <h2 id="sql-injection">SQL Injection</h2>
@@ -274,7 +264,7 @@ This release adds and improves support for evaluating a number of <code class="h
   <li><code class="highlighter-rouge">reorder</code> (in Rails 6.1)</li>
 </ul>
 
-<p>(Also, https://rails-sqli.org/ has also been updated with Rails 6 information!)</p>
+<p>(Also, [https://rails-sqli.org/] has also been updated with Rails 6 information!)</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1619">changes</a>)</p>
 
@@ -289,18 +279,12 @@ This release adds and improves support for evaluating a number of <code class="h
 <p>Brakeman no longer warns about SQL injection for:</p>
 
 <ul>
-  <li>
-    <p>Dates and methods called on dates
-(<a href="https://github.com/presidentbeef/brakeman/pull/1615">changes</a>)</p>
-  </li>
-  <li>
-    <p>Method calls on number literals
-(<a href="https://github.com/presidentbeef/brakeman/pull/1586">changes</a>)</p>
-  </li>
-  <li>
-    <p><code class="highlighter-rouge">sanitize_sql_like</code>
-(<a href="https://github.com/presidentbeef/brakeman/pull/1587">changes</a>)</p>
-  </li>
+  <li>Dates and methods called on dates
+(<a href="https://github.com/presidentbeef/brakeman/pull/1615">changes</a>)</li>
+  <li>Method calls on number literals
+(<a href="https://github.com/presidentbeef/brakeman/pull/1586">changes</a>)</li>
+  <li><code class="highlighter-rouge">sanitize_sql_like</code>
+(<a href="https://github.com/presidentbeef/brakeman/pull/1587">changes</a>)</li>
 </ul>
 
 <h2 id="misc-fixes">Misc Fixes</h2>
