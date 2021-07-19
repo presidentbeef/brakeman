@@ -126,7 +126,7 @@ module Brakeman
 
         ensure_ignore_notes_failed = false
         if tracker.options[:ensure_ignore_notes]
-          fingerprints = Brakeman::ignore_file_entries_with_empty_notes tracker.ignored_filter&.file, options
+          fingerprints = Brakeman::ignore_file_entries_with_empty_notes tracker.ignored_filter&.file
 
           unless fingerprints.empty?
             ensure_ignore_notes_failed = true

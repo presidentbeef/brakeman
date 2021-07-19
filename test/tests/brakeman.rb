@@ -387,13 +387,13 @@ class ConfigTests < Minitest::Test
   end
 
   def test_ignore_file_entries_with_empty_notes
-    assert Brakeman.ignore_file_entries_with_empty_notes(nil, {}).empty?
+    assert Brakeman.ignore_file_entries_with_empty_notes(nil).empty?
 
     ignore_file_missing_notes = Tempfile.new('brakeman.ignore')
     ignore_file_missing_notes.write IGNORE_WITH_MISSING_NOTES_JSON
     ignore_file_missing_notes.close
     assert_equal(
-      Brakeman.ignore_file_entries_with_empty_notes(ignore_file_missing_notes.path, {:app_path => "/tmp" }).to_set,
+      Brakeman.ignore_file_entries_with_empty_notes(ignore_file_missing_notes.path).to_set,
       [
         '006ac5fe3834bf2e73ee51b67eb111066f618be46e391d493c541ea2a906a82f',
       ].to_set
@@ -403,7 +403,7 @@ class ConfigTests < Minitest::Test
     ignore_file_with_notes = Tempfile.new('brakeman.ignore')
     ignore_file_with_notes.write IGNORE_WITH_NOTES_JSON
     ignore_file_with_notes.close
-    assert Brakeman.ignore_file_entries_with_empty_notes(ignore_file_with_notes.path, {:app_path => "/tmp" }).empty?
+    assert Brakeman.ignore_file_entries_with_empty_notes(ignore_file_with_notes.path).empty?
     ignore_file_with_notes.unlink
   end
 
