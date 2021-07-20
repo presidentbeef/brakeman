@@ -1,3 +1,7 @@
+# 5.1.1 - 2021-07-19
+
+* Unrefactor IgnoreConfig's use of `Brakeman::FilePath`
+
 # 5.1.0 - 2021-07-19
 
 * Initial support for ActiveRecord enums
