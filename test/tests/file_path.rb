@@ -43,6 +43,17 @@ class FilePathTests < Minitest::Test
     assert_equal "/tmp/blah/thing.rb", "#{fp}"
   end
 
+  def test_file_path_empty?
+    at = Brakeman::AppTree.new("/tmp/blah")
+    fp1 = Brakeman::FilePath.from_app_tree at, "/tmp/blah/thing.rb"
+    fp2 = Brakeman::FilePath.from_app_tree at, "/tmp/blah/thing/"
+    fp3 = Brakeman::FilePath.from_app_tree at, ""
+
+    refute fp1.empty?
+    refute fp2.empty?
+    assert fp3.empty?
+  end
+
   def test_file_path_equality
     at = Brakeman::AppTree.new("/tmp/blah")
     fp1 = Brakeman::FilePath.from_app_tree at, "/tmp/blah/thing.rb"
