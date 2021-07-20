@@ -2,7 +2,7 @@ Brakeman.load_brakeman_dependency 'highline'
 
 module Brakeman
   class InteractiveIgnorer
-    def initialize file, warnings
+    def initialize app_tree, file, warnings
       @ignore_config = Brakeman::IgnoreConfig.new(file, warnings)
       @new_warnings = warnings
       @skip_ignored = false
@@ -10,6 +10,7 @@ module Brakeman
       @ignore_rest = false
       @quit = false
       @restart = false
+      @app_tree = app_tree
     end
 
     def start
@@ -35,15 +36,17 @@ module Brakeman
 
     def file_menu
       loop do
-        @ignore_config.file = HighLine.new.ask "Input file: " do |q|
+        input_file = HighLine.new.ask "Input file: " do |q|
           if @ignore_config.file and not @ignore_config.file.empty?
-            q.default = @ignore_config.file
+            q.default = @ignore_config.file.relative
           else
             q.default = "config/brakeman.ignore"
           end
         end
 
-        if File.exist? @ignore_config.file
+        @ignore_config.file = Brakeman::FilePath.from_app_tree(@app_tree, input_file)
+
+        if @ignore_config.file && @ignore_config.file.exists?
           @ignore_config.read_from_file
           return
         else
@@ -168,13 +171,15 @@ q - Quit, do not update ignored warnings
     end
 
     def save
-      @ignore_config.file = HighLine.new.ask "Output file: " do |q|
+      output_file = HighLine.new.ask "Output file: " do |q|
         if @ignore_config.file and not @ignore_config.file.empty?
-          q.default = @ignore_config.file
+          q.default = @ignore_config.file.relative
         else
           q.default = "config/brakeman.ignore"
         end
       end
+
+      @ignore_config.file = Brakeman::FilePath.from_app_tree(@app_tree, output_file)
 
       @ignore_config.save_with_old
     end

@@ -556,7 +556,7 @@ module Brakeman
 
     if options[:interactive_ignore]
       require 'brakeman/report/ignore/interactive'
-      config = InteractiveIgnorer.new(file, tracker.warnings).start
+      config = InteractiveIgnorer.new(app_tree, file, tracker.warnings).start
     else
       notify "[Notice] Using '#{file}' to filter warnings"
       config = IgnoreConfig.new(file, tracker.warnings)
