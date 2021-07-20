@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2021-07-19T15:17:18-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 5.1.0 Released</title><link href="https://brakemanscanner.org/blog/2021/07/19/brakeman-5-dot-1-dot-0-released" rel="alternate" type="text/html" title="Brakeman 5.1.0 Released" /><published>2021-07-19T15:00:00-07:00</published><updated>2021-07-19T15:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2021/07/19/brakeman-5-dot-1-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2021/07/19/brakeman-5-dot-1-dot-0-released">&lt;p&gt;This is a &lt;em&gt;huge&lt;/em&gt; release! (So many changes, I had to look up how to nest lists in Markdown…)&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2021-07-19T19:39:40-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 5.1.0 Released</title><link href="https://brakemanscanner.org/blog/2021/07/19/brakeman-5-dot-1-dot-0-released" rel="alternate" type="text/html" title="Brakeman 5.1.0 Released" /><published>2021-07-19T15:00:00-07:00</published><updated>2021-07-19T15:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2021/07/19/brakeman-5-dot-1-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2021/07/19/brakeman-5-dot-1-dot-0-released">&lt;p&gt;This is a &lt;em&gt;huge&lt;/em&gt; release! (So many changes, I had to look up how to nest lists in Markdown…)&lt;/p&gt;
 
 &lt;p&gt;Thank you to the many contributors!&lt;/p&gt;
 
@@ -233,6 +233,11 @@ This release adds and improves support for evaluating a number of &lt;code class
 &lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
 
 &lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;2cc7a174bc9ebb90161f218ea35905de8d749210f69a0bfda9fba71429dc5047  brakeman-5.1.0.gem
+b8182c9fd7d6d116b2b531c5d8fe0bf9c8da14118b755ed00be8de8c4684ad10  brakeman-lib-5.1.0.gem
+e38ff386530bc5585e2efd183ba73c08abb740c3b26072662025a3d9395b707a  brakeman-min-5.1.0.gem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
 
