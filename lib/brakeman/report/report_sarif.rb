@@ -80,7 +80,7 @@ class Brakeman::Report::SARIF < Brakeman::Report::Base
             :location => {
               :physicalLocation => {
                 :artifactLocation => {
-                  :uri => @ignore_filter.file.relative,
+                  :uri => Brakeman::FilePath.from_app_tree(@app_tree, @ignore_filter.file).relative,
                   :uriBaseId => '%SRCROOT%',
                 },
               },

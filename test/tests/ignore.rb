@@ -16,8 +16,7 @@ class IgnoreConfigTests < Minitest::Test
   end
 
   def make_config file = @config_file.path
-    app_tree = Brakeman::AppTree.from_options({:app_path => app_path})
-    c = Brakeman::IgnoreConfig.new Brakeman::FilePath.from_app_tree(app_tree, file), report.warnings
+    c = Brakeman::IgnoreConfig.new file, report.warnings
     c.read_from_file
     c.filter_ignored
     c
@@ -28,11 +27,7 @@ class IgnoreConfigTests < Minitest::Test
   end
 
   def report
-    @@report ||= Brakeman.run(app_path)
-  end
-
-  def app_path
-    @@app_path ||= File.join(TEST_PATH, "apps", "rails5.2")
+    @@report ||= Brakeman.run(File.join(TEST_PATH, "apps", "rails5.2"))
   end
 
   def test_sanity
@@ -186,8 +181,7 @@ class IgnoreConfigTests < Minitest::Test
     file.write "{[ This is bad json cuz I don't have a closing square bracket, bwahahaha...}"
     file.close
     begin
-      app_tree = Brakeman::AppTree.from_options({:app_path => app_path})
-      c = Brakeman::IgnoreConfig.new Brakeman::FilePath.from_app_tree(app_tree, file.path), report.warnings
+      c = Brakeman::IgnoreConfig.new file.path, report.warnings
       c.read_from_file
     rescue => e
       # The message should clearly show that there was a problem parsing the json
