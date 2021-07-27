@@ -51,7 +51,7 @@ class Brakeman::Scanner
     detect_file_types
     Brakeman.notify "Processing initializers..."
     process_initializers
-    Brakeman.notify "Processing libs..."
+    Brakeman.notify "Processing libs...            "
     process_libs
     Brakeman.notify "Processing routes...          "
     process_routes
