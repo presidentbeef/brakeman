@@ -40,32 +40,32 @@ class Brakeman::Scanner
 
   #Process everything in the Rails application
   def process
-    Brakeman.notify "Processing gems..."
+    Brakeman.notify "Processing gems...                    "
     process_gems
     guess_rails_version
-    Brakeman.notify "Processing configuration..."
+    Brakeman.notify "Processing configuration...           "
     process_config
-    Brakeman.notify "Parsing files..."
+    Brakeman.notify "Parsing files...                      "
     parse_files
-    Brakeman.notify "Detecting file types..."
+    Brakeman.notify "Detecting file types...               "
     detect_file_types
-    Brakeman.notify "Processing initializers..."
+    Brakeman.notify "Processing initializers...            "
     process_initializers
-    Brakeman.notify "Processing libs..."
+    Brakeman.notify "Processing libs...                    "
     process_libs
-    Brakeman.notify "Processing routes...          "
+    Brakeman.notify "Processing routes...                  "
     process_routes
-    Brakeman.notify "Processing templates...       "
+    Brakeman.notify "Processing templates...               "
     process_templates
-    Brakeman.notify "Processing data flow in templates..."
+    Brakeman.notify "Processing data flow in templates...  "
     process_template_data_flows
-    Brakeman.notify "Processing models...          "
+    Brakeman.notify "Processing models...                  "
     process_models
-    Brakeman.notify "Processing controllers...     "
+    Brakeman.notify "Processing controllers...             "
     process_controllers
     Brakeman.notify "Processing data flow in controllers..."
     process_controller_data_flows
-    Brakeman.notify "Indexing call sites...        "
+    Brakeman.notify "Indexing call sites...                "
     index_call_sites
     tracker
   end
