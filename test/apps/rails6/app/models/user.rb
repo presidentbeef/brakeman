@@ -30,4 +30,6 @@ class User < ApplicationRecord
   def check_enum
     where("state = #{User.states["pending"]}")
   end
+
+  enum "stuff_#{stuff}": [:things]
 end
