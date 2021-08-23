@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 34
+      :generic => 35
     }
   end
 
@@ -329,6 +329,19 @@ class Rails6Tests < Minitest::Test
       :confidence => 0,
       :relative_path => "app/views/users/show.html.erb",
       :code => s(:call, s(:call, s(:const, :User), :new, s(:call, nil, :user_params)), :name),
+      :user_input => nil
+  end
+
+  def test_dns_rebinding_config
+    assert_warning :type => :warning,
+      :warning_code => 120,
+      :fingerprint => "34dfccb87369f7f659bb31070c4d33ccf06d5d1a45e0402a518ddfd25cfe7a9b",
+      :warning_type => "DNS rebinding",
+      :line => 1,
+      :message => /^The\ application\ does\ not\ guard\ against/,
+      :confidence => 0,
+      :relative_path => "config/environments/development.rb",
+      :code => nil,
       :user_input => nil
   end
 
