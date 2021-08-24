@@ -25,7 +25,7 @@ Please follow the typical GitHub flow:
 These are some code conventions to follow so your code fits into the rest of Brakeman.
 
 * Must use typical Ruby 2 space indentation
-* Must work with Ruby 2.3.0
+* Must work with Ruby 2.4.0
 * Prefer to wrap lines near 80 characters but it's not a hard rule
 
 ### Preparing Tests
