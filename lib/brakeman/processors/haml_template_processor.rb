@@ -8,6 +8,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
   HAML_HELPERS2 = s(:colon2, s(:colon3, :Haml), :Helpers)
   JAVASCRIPT_FILTER = s(:colon2, s(:colon2, s(:const, :Haml), :Filters), :Javascript)
   COFFEE_FILTER = s(:colon2, s(:colon2, s(:const, :Haml), :Filters), :Coffee)
+  ATTRIBUTE_BUILDER = s(:colon2, s(:colon3, :Haml), :AttributeBuilder)
 
   def initialize *args
     super
@@ -133,6 +134,8 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
 
         get_pushed_value(exp.first_arg, default)
         @javascript = false
+      elsif haml_attribute_builder? exp
+        ignore # probably safe... seems escaped by default?
       else
         add_output exp, default
       end
@@ -152,6 +155,12 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
     call? exp and
       exp.target == HAMLOUT and
       exp.method == :attributes
+  end
+
+  def haml_attribute_builder? exp
+    call? exp and
+      exp.target == ATTRIBUTE_BUILDER and
+      exp.method == :build
   end
 
   def fix_textareas? exp
