@@ -89,6 +89,8 @@ module Brakeman
       end
     end
 
+    # You must check the return value for `nil`s -
+    # which indicate a key could not be found.
     def hash_values_at hash, keys
       values = keys.map do |key|
         process_hash_access hash, key
