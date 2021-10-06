@@ -92,7 +92,7 @@ class Brakeman::Report::Text < Brakeman::Report::Base
       HighLine.color("No warnings found", :bold, :green)
     else
       warnings = tracker.filtered_warnings.sort_by do |w|
-        [w.confidence, w.warning_type, w.file, w.line, w.fingerprint]
+        [w.confidence, w.warning_type, w.file, w.line || 0, w.fingerprint]
       end.map do |w|
         output_warning w
       end

@@ -17,7 +17,7 @@ class Brakeman::Report::CSV < Brakeman::Report::Base
     ]
 
     rows = tracker.filtered_warnings.sort_by do |w|
-      [w.confidence, w.warning_type, w.file, w.line, w.fingerprint]
+      [w.confidence, w.warning_type, w.file, w.line || 0, w.fingerprint]
     end.map do |warning|
       generate_row(headers, warning)
     end
