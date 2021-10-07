@@ -126,7 +126,7 @@ module Brakeman
 
         w[:note] = @notes[w[:fingerprint]] || ""
         w
-      end.sort_by { |w| [w[:fingerprint], w[:line]] }
+      end.sort_by { |w| [w[:fingerprint], w[:line] || 0] }
 
       output = {
         :ignored_warnings => warnings,
