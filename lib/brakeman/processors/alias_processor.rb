@@ -324,7 +324,13 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       end
     when :values_at
       if node_type? target, :hash
-        exp = hash_values_at target, exp.args
+        res = hash_values_at target, exp.args
+
+        # Only convert to array of values if _all_ keys
+        # are present in the hash.
+        unless res.any?(&:nil?)
+          exp = res
+        end
       end
     end
 
