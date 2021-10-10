@@ -642,4 +642,14 @@ end
   RUBY
 end
 
+class String
+  ##
+  # This is a hack used by the lexer to sneak in line numbers at the
+  # identifier level. This should be MUCH smaller than making
+  # process_token return [value, lineno] and modifying EVERYTHING that
+  # reduces tIDENTIFIER.
+
+  attr_accessor :lineno
+end
+
 class WrongSexpError < RuntimeError; end

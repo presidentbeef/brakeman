@@ -281,7 +281,7 @@ class Rails4Tests < Minitest::Test
       :warning_code => 0,
       :fingerprint => "700c504a68786c6a8d7a7125b5a722ede615e0f998f3c385d65bd12189220a99",
       :warning_type => "SQL Injection",
-      :line => 46,
+      :line => 47,
       :message => /^Possible\ SQL\ injection/,
       :confidence => 1,
       :relative_path => "app/controllers/friendly_controller.rb",

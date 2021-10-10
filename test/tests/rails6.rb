@@ -87,7 +87,7 @@ class Rails6Tests < Minitest::Test
       :warning_code => 0,
       :fingerprint => "e5f6e40868c9046e5c1433e4975e49b65967de1dcf3add7ba35248b897eeea1c",
       :warning_type => "SQL Injection",
-      :line => 19,
+      :line => 20,
       :message => /^Possible\ SQL\ injection/,
       :confidence => 1,
       :relative_path => "app/models/user.rb",
