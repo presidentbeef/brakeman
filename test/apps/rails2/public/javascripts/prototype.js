@@ -4162,7 +4162,7 @@ var $continue = new Error('"throw $continue" is deprecated, use "return" instead
 // further below, that map to the newer Element methods.
 var Position = {
   // set to true if needed, warning: firefox performance problems
-  // NOT neeeded for page scrolling, only if draggable contained in
+  // NOT needed for page scrolling, only if draggable contained in
   // scrollable elements
   includeScrollOffsets: false,
 

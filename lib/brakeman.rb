@@ -394,7 +394,7 @@ module Brakeman
     if options[:parallel_checks]
       notify "Running checks in parallel..."
     else
-      notify "Runnning checks..."
+      notify "Running checks..."
     end
 
     tracker.run_checks
@@ -479,7 +479,7 @@ module Brakeman
     $stderr.puts message if @debug
   end
 
-  # Compare JSON ouptut from a previous scan and return the diff of the two scans
+  # Compare JSON output from a previous scan and return the diff of the two scans
   def self.compare options
     require 'json'
     require 'brakeman/differ'

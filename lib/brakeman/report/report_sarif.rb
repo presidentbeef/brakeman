@@ -93,7 +93,7 @@ class Brakeman::Report::SARIF < Brakeman::Report::Base
     end
   end
 
-  # Returns a hash of all check descriptions, keyed by check namne
+  # Returns a hash of all check descriptions, keyed by check name
   def check_descriptions
     @check_descriptions ||= Brakeman::Checks.checks.map do |check|
       [check.name.gsub(/^Check/, ''), check.description]

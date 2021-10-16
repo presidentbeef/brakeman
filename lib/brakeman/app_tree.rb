@@ -28,7 +28,7 @@ module Brakeman
     # Accepts an array of filenames and paths with the following format and
     # returns a Regexp to match them:
     #   * "path1/file1.rb" - Matches a specific filename in the project directory.
-    #   * "path1/" - Matches any path that conatains "path1" in the project directory.
+    #   * "path1/" - Matches any path that contains "path1" in the project directory.
     #   * "/path1/ - Matches any path that is rooted at "path1" in the project directory.
     #
     def self.regex_for_paths(paths)
