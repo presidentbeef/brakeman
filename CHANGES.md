@@ -449,7 +449,7 @@
 * Delay loading vendored gems and modifying load path
 * Avoid warning about SQL injection with `quoted_primary_key`
 * Support more safe `&.` operations
-* Allow multile line regex in `validates_format_of` (Dmitrij Fedorenko)
+* Allow multiple line regex in `validates_format_of` (Dmitrij Fedorenko)
 * Only consider `if` branches in templates
 * Avoid overwriting instance/class methods with same name (Tim Wade)
 * Add `--force-scan` option (Neil Matatall)

@@ -74,7 +74,7 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
     warning_type = "Denial of Service"
     confidence = :medium
     gem_name = "#{name} gem"
-    message = msg(msg_version(version, gem_name), " has a symbol creation vulnerablity. Upgrade to ")
+    message = msg(msg_version(version, gem_name), " has a symbol creation vulnerability. Upgrade to ")
 
     if version >= "1.7.0"
       confidence = :high

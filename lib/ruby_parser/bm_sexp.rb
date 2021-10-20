@@ -544,7 +544,7 @@ class Sexp
   end
 
   # Number of "statements" in a method.
-  # This is more effecient than `Sexp#body.length`
+  # This is more efficient than `Sexp#body.length`
   # because `Sexp#body` creates a new Sexp.
   def method_length
     expect :defn, :defs
