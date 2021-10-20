@@ -58,6 +58,14 @@ For an HTML report:
 
     docker run -v "$(pwd)":/code presidentbeef/brakeman -o brakeman_results.html
 
+*Note*: for exporting a file in a mounted volume like so, you need to consider that brakeman process is running with user app (uid: 9000), so you need to give that user (if it exist on your host) to the folder, OR mounted a second volume to a more easily writable path (ex. /tmp):
+
+    docker run \
+      -v "$(pwd)":/code \
+      -v /tmp:/tmp \
+      presidentbeef/brakeman \
+      -o /tmp/brakeman_results.html
+    
 Outside of Rails root (note that the output file is relative to path/to/rails/application):
 
     docker run -v 'path/to/rails/application':/code presidentbeef/brakeman -o brakeman_results.html
