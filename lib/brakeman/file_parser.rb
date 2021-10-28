@@ -7,16 +7,21 @@ module Brakeman
   class FileParser
     attr_reader :file_list, :errors
 
-    def initialize app_tree, timeout, parallel = true
+    def initialize app_tree, timeout, parallelism = true
       @app_tree = app_tree
       @timeout = timeout
       @file_list = []
       @errors = []
-      @parallel = parallel
+      @parallel = parallelism
     end
 
     def parse_files list
-      if @parallel
+      case @parallel
+      when Integer
+        # Force number of cpus/jobs
+        parallel_options = { in_processes: @parallel }
+      when true
+        # Use the default number of cpus/jobs
         parallel_options = {}
       else
         # Disable parallelism
@@ -34,6 +39,8 @@ module Brakeman
       #
       # Note this method no longer uses read_files
       @file_list, new_errors = Parallel.map(list, parallel_options) do |file_name|
+        puts Parallel.worker_number
+
         file_path = @app_tree.file_path(file_name)
         contents = file_path.read
 
