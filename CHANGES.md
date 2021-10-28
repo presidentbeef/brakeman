@@ -1,3 +1,11 @@
+# 5.1.2 - 2021-10-28
+
+* Handle cases where enums are not symbols
+* Support newer Haml with ::Haml::AttributeBuilder.build
+* Fix issue where the previous output is still visible (Jason Frey)
+* Fix warning sorting with nil line numbers
+* Update for latest RubyParser (Ryan Davis)
+
 # 5.1.1 - 2021-07-19
 
 * Unrefactor IgnoreConfig's use of `Brakeman::FilePath`
