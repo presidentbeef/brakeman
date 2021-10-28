@@ -34,11 +34,17 @@ class FileParserTests < Minitest::Test
 
     assert_equal 1, @tracker.errors.length
 
-    if RubyParser::Parser::VERSION.split(".").map(&:to_i).zip([3,14,0]).all? { |a, b| a >= b }
-      assert_match(/parse error on value false \(\$end\)/, @tracker.errors.first[:error])
-    else
-      assert_match(/parse error on value \"\$end\" \(\$end\)/, @tracker.errors.first[:error])
-    end
+    rp_version = Gem::Version.new(RubyParser::Parser::VERSION)
+    err_re = case
+             when rp_version >= Gem::Version.new("3.17.0")
+               /parse error on value "\$" \(\$end\)/
+             when rp_version >= Gem::Version.new("3.14.0")
+               /parse error on value false \(\$end\)/
+             else
+               /parse error on value \"\$end\" \(\$end\)/
+             end
+
+    assert_match(err_re, @tracker.errors.first[:error])
   end
 
   def test_read_files_reports_error
