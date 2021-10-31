@@ -12,7 +12,7 @@ class Rails5Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 19,
+      :template => 20,
       :generic => 24
     }
   end
