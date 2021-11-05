@@ -33,7 +33,7 @@ module Brakeman
 
       # Very simple methods have one (simple) expression in the body and
       # no arguments
-      if src.formal_args.length == 1 # no args
+      if src.formal_args.nil? || src.formal_args.length == 1 # no args
         if src.method_length == 1 # Single expression in body
           value = first_body # First expression in body
 

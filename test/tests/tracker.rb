@@ -87,6 +87,16 @@ class TrackerTests < Minitest::Test
     assert_nil @tracker.find_method(:builds_self, :Mixin)
   end
 
+  def test_endless_method
+    ast = RubyParser.new.parse <<-RUBY
+      class Example
+        def x = y
+      end
+    RUBY
+    Brakeman::LibraryProcessor.new(@tracker).process_library(ast, 'fake_file_name.rb')
+    assert @tracker.find_method(:x, :Example)
+  end
+
   private
 
   def parse_class
