@@ -39,8 +39,6 @@ module Brakeman
       #
       # Note this method no longer uses read_files
       @file_list, new_errors = Parallel.map(list, parallel_options) do |file_name|
-        puts Parallel.worker_number
-
         file_path = @app_tree.file_path(file_name)
         contents = file_path.read
 
