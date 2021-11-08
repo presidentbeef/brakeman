@@ -43,8 +43,8 @@ module Brakeman::Options
           options[:parallel_checks] = false
         end
 
-        opts.on "--threads NUM", Integer, "Use specified number of threads to parse files" do |threads|
-          options[:parallel_checks] = threads
+        opts.on "--jobs NUM", Integer, "Use specified number of jobs to parse files" do |jobs|
+          options[:parallel_jobs] = threads
         end
 
         opts.on "--[no-]progress", "Show progress reports" do |progress|
