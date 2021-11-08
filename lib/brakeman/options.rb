@@ -44,7 +44,7 @@ module Brakeman::Options
         end
 
         opts.on "--jobs NUM", Integer, "Use specified number of jobs to parse files" do |jobs|
-          options[:parallel_jobs] = threads
+          options[:parallel_checks] = jobs
         end
 
         opts.on "--[no-]progress", "Show progress reports" do |progress|
