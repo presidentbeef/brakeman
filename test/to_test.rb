@@ -50,16 +50,17 @@ class #{name}Tests < Test::Unit::TestCase
 
       <<-RUBY
   def test_#{w.warning_type.to_s.downcase.tr(" -", "__")}_#{counter}
-    assert_warning :type => #{w.warning_set.inspect},
-      :warning_code => #{w.warning_code},
-      :fingerprint => #{w.fingerprint.inspect},
-      :warning_type => #{w.warning_type.inspect},
-      :line => #{w.line.inspect},
-      :message => /^#{Regexp.escape w.message.to_s[0,40]}/,
-      :confidence => #{w.confidence},
-      :relative_path => #{w.file.relative.inspect},
-      :code => #{w.code.inspect},
-      :user_input => #{w.user_input.inspect}
+    assert_warning check_name: #{w.check_name.inspect},
+      type: #{w.warning_set.inspect},
+      warning_code: #{w.warning_code},
+      fingerprint: #{w.fingerprint.inspect},
+      warning_type: #{w.warning_type.inspect},
+      line: #{w.line.inspect},
+      message: /^#{Regexp.escape w.message.to_s[0,40]}/,
+      confidence: #{w.confidence},
+      relative_path: #{w.file.relative.inspect},
+      code: #{w.code.inspect},
+      user_input: #{w.user_input.inspect}
   end
       RUBY
     end.join("\n")

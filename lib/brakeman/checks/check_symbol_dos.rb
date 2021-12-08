@@ -9,7 +9,7 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
 
   def run_check
     return if rails_version and rails_version >= "5.0.0"
-    return if tracker.config.ruby_version >= "2.2"
+    return if tracker.config.ruby_version and tracker.config.ruby_version >= "2.2"
 
     tracker.find_call(:methods => UNSAFE_METHODS, :nested => true).each do |result|
       check_unsafe_symbol_creation(result)

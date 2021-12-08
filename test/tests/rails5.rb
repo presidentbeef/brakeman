@@ -13,7 +13,7 @@ class Rails5Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 19,
-      :generic => 24
+      :generic => 25
     }
   end
 
@@ -941,5 +941,19 @@ class Rails5Tests < Minitest::Test
       :relative_path => "app/views/widget/haml_test.html.haml",
       :code => s(:call, s(:params), :[], s(:lit, :y)),
       :user_input => nil
+  end
+
+  def test_unmaintained_dependency_rails
+    assert_warning check_name: "EOLRails",
+      type: :warning,
+      warning_code: 120,
+      fingerprint: "d84924377155b41e094acae7404ec2e521629d86f97b0ff628e3d1b263f8101c",
+      warning_type: "Unmaintained Dependency",
+      line: 115,
+      message: /^Support\ for\ Rails\ 5\.0\.0\ ended\ on\ 2018\-05/,
+      confidence: 0,
+      relative_path: "Gemfile.lock",
+      code: nil,
+      user_input: nil
   end
 end

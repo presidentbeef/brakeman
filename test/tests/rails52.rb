@@ -13,7 +13,7 @@ class Rails52Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 5,
-      :generic => 23
+      :generic => 24
     }
   end
 
@@ -638,6 +638,18 @@ class Rails52Tests < Minitest::Test
       :message => /^Possible\ command\ injection/,
       :confidence => 0,
       :relative_path => "lib/shell.rb"
+  end
+
+  def test_unmaintained_dependency_rails
+    assert_warning check_name: "EOLRuby",
+      type: :warning,
+      warning_code: 121,
+      fingerprint: "9a3951031616a07c8e02c86652f537e92c08685da97f5ec2b12d5d3602b55bb8",
+      warning_type: "Unmaintained Dependency",
+      line: 109,
+      message: /^Support\ for\ Ruby\ 2\.3\.1\ ended\ on\ 2019\-03\-/,
+      confidence: 0,
+      relative_path: "Gemfile.lock"
   end
 end
 
