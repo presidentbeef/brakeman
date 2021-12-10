@@ -93,6 +93,14 @@ module Brakeman::Options
           options[:rails6] = true
         end
 
+        opts.on "-7", "--rails7", "Force Rails 7 mode" do
+          options[:rails3] = true
+          options[:rails4] = true
+          options[:rails5] = true
+          options[:rails6] = true
+          options[:rails7] = true
+        end
+
         opts.separator ""
         opts.separator "Scanning options:"
 
