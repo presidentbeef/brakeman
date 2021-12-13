@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.files = ["bin/brakeman", "CHANGES.md", "FEATURES", "README.md"] + Dir["lib/**/*"]
   s.executables = ["brakeman"]
   s.license = "Brakeman Public Use License"
-  s.required_ruby_version = '>= 2.4.0'
+  s.required_ruby_version = '>= 2.5.0'
 
   s.metadata = {
     "bug_tracker_uri"   => "https://github.com/presidentbeef/brakeman/issues",
