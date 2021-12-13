@@ -10,10 +10,10 @@ jobs:
           command: bundle exec rake
       - store_test_results:
           path: test-results
-  test-2-4:
+  test-2-5:
     <<: *default
     docker:
-      - image: cimg/ruby:2.4
+      - image: cimg/ruby:2.5
     steps:
       - checkout
       - attach_workspace:
@@ -36,10 +36,6 @@ jobs:
           paths:
             - codeclimate.json
             - cc-test-reporter
-  test-2-5:
-    <<: *default
-    docker:
-      - image: cimg/ruby:2.5
   test-2-6:
     <<: *default
     docker:
@@ -47,7 +43,7 @@ jobs:
   test-3-0:
     <<: *default
     docker:
-      - image: circleci/ruby:3.0.0-rc1
+      - image: circleci/ruby:3.0
   test-latest:
     <<: *default
     docker:
@@ -66,11 +62,10 @@ workflows:
   tests:
     jobs:
       - default
-      - test-2-4
       - test-2-5
       - test-2-6
       - test-3-0
       - test-latest
       - upload-coverage:
           requires:
-            - test-2-4
+            - test-2-5
