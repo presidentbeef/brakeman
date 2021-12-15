@@ -78,6 +78,8 @@ class Brakeman::Rails3RoutesProcessor < Brakeman::BasicProcessor
 
   #TODO: Need test for this
   def process_root exp
+    return exp unless hash? exp.first_arg
+
     if value = hash_access(exp.first_arg, :to)
       if string? value
         add_route_from_string value

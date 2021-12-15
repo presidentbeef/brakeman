@@ -1,3 +1,5 @@
+something.root
+
 Rails4::Application.routes.draw do
   resources not_a_symbol, :controller => :whatever
 
