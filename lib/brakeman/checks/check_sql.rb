@@ -584,7 +584,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   end
 
   IGNORE_METHODS_IN_SQL = Set[:id, :merge_conditions, :table_name, :quoted_table_name,
-    :quoted_primary_key, :to_i, :to_f, :sanitize_sql, :sanitize_sql_array, :sanitize_sql_like,
+    :quoted_primary_key, :to_i, :to_f, :sanitize_sql, :sanitize_sql_array,
     :sanitize_sql_for_assignment, :sanitize_sql_for_conditions, :sanitize_sql_hash,
     :sanitize_sql_hash_for_assignment, :sanitize_sql_hash_for_conditions,
     :to_sql, :sanitize, :primary_key, :table_name_prefix, :table_name_suffix,

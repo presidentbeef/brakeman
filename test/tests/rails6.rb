@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 34
+      :generic => 35
     }
   end
 
@@ -148,7 +148,7 @@ class Rails6Tests < Minitest::Test
   end
 
   def test_sql_injection_sanitize_sql_like
-    assert_no_warning :type => :warning,
+    assert_warning :type => :warning,
       :warning_code => 0,
       :fingerprint => "8dde11c95a0f3acb4f982ff6554ac3ba821334ee04aee7f1fb0ea01c8919baad",
       :warning_type => "SQL Injection",
