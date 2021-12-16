@@ -267,6 +267,19 @@ class Rails6Tests < Minitest::Test
       :user_input => s(:call, s(:call, s(:const, :User), :states), :[], s(:str, "pending"))
   end
 
+  def test_sql_injection_locale
+    assert_no_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "843143d5a9dcfa097c66d80a6a72ba151c0332f1ea8c8bc852e418d4f0e2cb7b",
+      :warning_type => "SQL Injection",
+      :line => 37,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :code => s(:call, s(:const, :User), :where, s(:dstr, "lower(slug_", s(:evstr, s(:call, s(:call, s(:call, s(:call, s(:const, :I18n), :locale), :to_s), :split, s(:str, "-")), :first)), s(:str, ") = :country_id")), s(:hash, s(:lit, :country_id), s(:call, s(:params), :[], s(:lit, :new_country_id)))),
+      :user_input => s(:call, s(:call, s(:call, s(:call, s(:const, :I18n), :locale), :to_s), :split, s(:str, "-")), :first)
+  end
+
   def test_dangerous_send_enum
     assert_no_warning :type => :warning,
       :warning_code => 23,
