@@ -1,3 +1,12 @@
+# 5.2.0 - 2021-12-15
+
+* Initial Rails 7 support
+* Require Ruby 2.5.0+
+* Fix issue with calls to `foo.root` in routes
+* Ignore `I18n.locale` in SQL queries
+* Do not treat `sanitize_sql_like` as safe
+* Add new checks for unsupported Ruby and Rails versions
+
 # 5.1.2 - 2021-10-28
 
 * Handle cases where enums are not symbols
