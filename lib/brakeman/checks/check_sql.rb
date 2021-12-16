@@ -628,7 +628,8 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       arel? exp or
       exp.method.to_s.end_with? "_id" or
       number_target? exp or
-      date_target? exp
+      date_target? exp or
+      locale_call? exp
   end
 
   QUOTE_METHODS = [:quote, :quote_column_name, :quoted_date, :quote_string, :quote_table_name]

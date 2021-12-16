@@ -32,4 +32,8 @@ class User < ApplicationRecord
   end
 
   enum "stuff_#{stuff}": [:things]
+
+  def locale
+    User.where("lower(slug_#{I18n.locale.to_s.split("-").first}) = :country_id", country_id: params[:new_country_id]).first
+  end
 end

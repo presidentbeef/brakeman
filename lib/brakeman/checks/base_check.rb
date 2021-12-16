@@ -513,4 +513,14 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     string_building? exp.target or
     string_building? exp.first_arg
   end
+
+  I18N_CLASS = s(:const, :I18n)
+
+  def locale_call? exp
+    return unless call? exp
+
+    (exp.target == I18N_CLASS and
+     exp.method == :locale) or
+    locale_call? exp.target
+  end
 end
