@@ -14,7 +14,7 @@ module Brakeman
       @settings = {}
       @escape_html = nil
       @erubis = nil
-      @ruby_version = ""
+      @ruby_version = nil
       @rails_version = nil
     end
 

@@ -121,6 +121,8 @@ module Brakeman::WarningCodes
     :erb_template_injection => 117,
     :http_verb_confusion => 118,
     :unsafe_method_reflection => 119,
+    :eol_rails => 120,
+    :eol_ruby => 121,
 
     :custom_check => 9090,
   }

@@ -14,7 +14,7 @@ class Rails2Tests < Minitest::Test
       :controller => 1,
       :model => 4,
       :template => 47,
-      :generic => 59 }
+      :generic => 60 }
   end
 
   def report
@@ -1495,6 +1495,18 @@ class Rails2Tests < Minitest::Test
       :relative_path => "app/controllers/emails_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :email_id))
   end
+
+  def test_unmaintained_dependency_rails
+    assert_warning check_name: "EOLRails",
+      type: :warning,
+      warning_code: 120,
+      fingerprint: "b43ad7ea48b7d5f0da242e205924653198f70c50f9cfda7211fcbc1f0abec65a",
+      warning_type: "Unmaintained Dependency",
+      line: nil,
+      message: /^Support\ for\ Rails\ 2\.3\.11\ ended\ on\ 2013\-0/,
+      confidence: 0,
+      relative_path: "config/environment.rb"
+  end
 end
 
 class Rails2WithOptionsTests < Minitest::Test
@@ -1506,7 +1518,7 @@ class Rails2WithOptionsTests < Minitest::Test
       :controller => 1,
       :model => 4,
       :template => 47,
-      :generic => 59 }
+      :generic => 60 }
   end
 
   def report

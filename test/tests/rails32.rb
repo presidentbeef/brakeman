@@ -14,7 +14,7 @@ class Rails32Tests < Minitest::Test
       :controller => 8,
       :model => 5,
       :template => 11,
-      :generic => 22 }
+      :generic => 23 }
 
     if RUBY_PLATFORM == 'java'
       @expected[:generic] += 1
@@ -470,5 +470,17 @@ class Rails32Tests < Minitest::Test
       :file => /multi_model\.rb/,
       :relative_path => "app/models/multi_model.rb",
       :format_code => /params\[:user_input2\]/
+  end
+
+  def test_unmaintained_dependency_rails
+    assert_warning check_name: "EOLRails",
+      type: :warning,
+      warning_code: 120,
+      fingerprint: "d84924377155b41e094acae7404ec2e521629d86f97b0ff628e3d1b263f8101c",
+      warning_type: "Unmaintained Dependency",
+      line: 64,
+      message: /^Support\ for\ Rails\ 3\.2\.9\.rc2\ ended\ on\ 201/,
+      confidence: 0,
+      relative_path: "Gemfile.lock"
   end
 end

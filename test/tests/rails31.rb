@@ -13,7 +13,7 @@ class Rails31Tests < Minitest::Test
       :model => 3,
       :template => 23,
       :controller => 4,
-      :generic => 88 }
+      :generic => 89 }
   end
 
   def test_without_protection
@@ -1386,5 +1386,19 @@ class Rails31Tests < Minitest::Test
       :confidence => 1,
       :relative_path => "Gemfile.lock",
       :user_input => nil
+  end
+
+  def test_unmaintained_dependency_rails
+    assert_warning check_name: "EOLRails",
+      type: :warning,
+      warning_code: 120,
+      fingerprint: "d84924377155b41e094acae7404ec2e521629d86f97b0ff628e3d1b263f8101c",
+      warning_type: "Unmaintained Dependency",
+      line: 69,
+      message: /^Support\ for\ Rails\ 3\.1\.0\ ended\ on\ 2016\-06/,
+      confidence: 0,
+      relative_path: "Gemfile.lock",
+      code: nil,
+      user_input: nil
   end
 end

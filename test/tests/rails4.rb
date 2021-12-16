@@ -15,7 +15,7 @@ class Rails4Tests < Minitest::Test
       :controller => 0,
       :model => 3,
       :template => 8,
-      :generic => 87
+      :generic => 88
     }
   end
 
@@ -1650,6 +1650,18 @@ class Rails4Tests < Minitest::Test
       :confidence => 0,
       :relative_path => "app/controllers/application_controller.rb",
       :user_input => nil
+  end
+
+  def test_unmaintained_dependency_rails
+    assert_warning check_name: "EOLRails",
+      type: :warning,
+      warning_code: 120,
+      fingerprint: "e9d00416c23870f08d30cfda6ad07e2138e0ce51ab6b684814eb69e789cfa631",
+      warning_type: "Unmaintained Dependency",
+      line: 4,
+      message: /^Support\ for\ Rails\ 4\.0\.0\ ended\ on\ 2017\-04/,
+      confidence: 0,
+      relative_path: "Gemfile"
   end
 
   def test_external_check

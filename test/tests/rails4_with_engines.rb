@@ -9,7 +9,7 @@ class Rails4WithEnginesTests < Minitest::Test
       :controller => 2,
       :model => 5,
       :template => 12,
-      :generic => 14 }
+      :generic => 15 }
   end
 
   def report
@@ -381,5 +381,19 @@ class Rails4WithEnginesTests < Minitest::Test
       :confidence => 1,
       :relative_path => "gems.rb",
       :user_input => nil
+  end
+
+  def test_unmaintained_dependency_rails
+    assert_warning check_name: "EOLRails",
+      type: :warning,
+      warning_code: 120,
+      fingerprint: "918071d2713bdcc73e9cd9b5a1a3a59edf41d95fff50ab8c21f76f692fb5e0d7",
+      warning_type: "Unmaintained Dependency",
+      line: 4,
+      message: /^Support\ for\ Rails\ 4\.0\.0\ ended\ on\ 2017\-04/,
+      confidence: 0,
+      relative_path: "gems.rb",
+      code: nil,
+      user_input: nil
   end
 end

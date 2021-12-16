@@ -9,7 +9,7 @@ class RailsWithXssPluginTests < Minitest::Test
       :controller => 1,
       :model => 4,
       :template => 4,
-      :generic => 31 }
+      :generic => 32 }
   end
 
   def report
@@ -471,5 +471,17 @@ class RailsWithXssPluginTests < Minitest::Test
       :confidence => 1,
       :relative_path => "Gemfile",
       :user_input => nil
+  end
+
+  def test_unmaintained_dependency_rails
+    assert_warning check_name: "EOLRails",
+      type: :warning,
+      warning_code: 120,
+      fingerprint: "e9d00416c23870f08d30cfda6ad07e2138e0ce51ab6b684814eb69e789cfa631",
+      warning_type: "Unmaintained Dependency",
+      line: 3,
+      message: /^Support\ for\ Rails\ 2\.3\.14\ ended\ on\ 2013\-0/,
+      confidence: 0,
+      relative_path: "Gemfile"
   end
 end

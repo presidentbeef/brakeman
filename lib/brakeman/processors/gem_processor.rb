@@ -6,6 +6,7 @@ class Brakeman::GemProcessor < Brakeman::BasicProcessor
   def initialize *args
     super
     @gem_name_version = /^\s*([-_+.A-Za-z0-9]+) \((\w(\.\w+)*)\)/
+    @ruby_version = /^\s+ruby (\d\.\d.\d+)/
   end
 
   def process_gems gem_files
@@ -95,6 +96,8 @@ class Brakeman::GemProcessor < Brakeman::BasicProcessor
   def set_gem_version_and_file line, file, line_num
     if line =~ @gem_name_version
       @tracker.config.add_gem $1, $2, file, line_num
+    elsif line =~ @ruby_version
+      @tracker.config.set_ruby_version $1
     end
   end
 end

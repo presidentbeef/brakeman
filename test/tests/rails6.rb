@@ -759,4 +759,16 @@ class Rails6Tests < Minitest::Test
       :code => s(:call, nil, :eval, s(:call, s(:params), :[], s(:lit, :x))),
       :user_input => s(:call, s(:params), :[], s(:lit, :x))
   end
+
+  def test_unmaintained_dependency_ruby
+    assert_warning check_name: "EOLRuby",
+      type: :warning,
+      warning_code: 121,
+      fingerprint: "81776f151be34b9c42a5fc3bec249507a2acd9b64338e6f544a68559976bc5d5",
+      warning_type: "Unmaintained Dependency",
+      line: 7,
+      message: /^Support\ for\ Ruby\ 2\.5\.3\ ended\ on\ 2021\-03\-/,
+      confidence: 0,
+      relative_path: "Gemfile"
+  end
 end
