@@ -480,7 +480,7 @@ class RailsWithXssPluginTests < Minitest::Test
       fingerprint: "e9d00416c23870f08d30cfda6ad07e2138e0ce51ab6b684814eb69e789cfa631",
       warning_type: "Unmaintained Dependency",
       line: 3,
-      message: /^Support\ for\ Rails\ 2\.3\.14\ ended\ on\ 2017\-0/,
+      message: /^Support\ for\ Rails\ 2\.3\.14\ ended\ on\ 2013\-0/,
       confidence: 0,
       relative_path: "Gemfile"
   end

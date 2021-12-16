@@ -1457,7 +1457,7 @@ class Rails3Tests < Minitest::Test
       fingerprint: "d84924377155b41e094acae7404ec2e521629d86f97b0ff628e3d1b263f8101c",
       warning_type: "Unmaintained Dependency",
       line: 49,
-      message: /^Support\ for\ Rails\ 3\.0\.3\ ended\ on\ 2017\-04/,
+      message: /^Support\ for\ Rails\ 3\.0\.3\ ended\ on\ 2016\-06/,
       confidence: 0,
       relative_path: "Gemfile.lock",
       code: nil,

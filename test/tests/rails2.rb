@@ -1503,7 +1503,7 @@ class Rails2Tests < Minitest::Test
       fingerprint: "b43ad7ea48b7d5f0da242e205924653198f70c50f9cfda7211fcbc1f0abec65a",
       warning_type: "Unmaintained Dependency",
       line: nil,
-      message: /^Support\ for\ Rails\ 2\.3\.11\ ended\ on\ 2017\-0/,
+      message: /^Support\ for\ Rails\ 2\.3\.11\ ended\ on\ 2013\-0/,
       confidence: 0,
       relative_path: "config/environment.rb"
   end
