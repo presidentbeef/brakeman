@@ -1179,7 +1179,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 9,
-      :message => /^Unsafe\ reflection\ method\ `constantize`\ cal/,
+      :message => /^Unsafe\ reflection\ method\ `constantize`\ called\ on/,
       :confidence => 0,
       :file => /admin_controller\.rb/
   end
@@ -1189,7 +1189,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 12,
-      :message => /^Unsafe\ reflection\ method\ `safe_constantiz/,
+      :message => /^Unsafe\ reflection\ method\ `safe_constantize`\ called\ on/,
       :confidence => 0,
       :file => /admin_controller\.rb/
   end
@@ -1198,7 +1198,7 @@ class Rails31Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 14,
-      :message => /^Unsafe\ reflection\ method\ `qualified_const/,
+      :message => /^Unsafe\ reflection\ method\ `qualified_const_get`\ called\ with/,
       :confidence => 0,
       :file => /admin_controller\.rb/
   end
