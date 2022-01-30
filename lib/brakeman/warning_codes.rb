@@ -123,6 +123,8 @@ module Brakeman::WarningCodes
     :unsafe_method_reflection => 119,
     :eol_rails => 120,
     :eol_ruby => 121,
+    :pending_eol_rails => 122,
+    :pending_eol_ruby => 123,
 
     :custom_check => 9090,
   }
