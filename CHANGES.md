@@ -1,3 +1,7 @@
+# 5.2.1 - 2022-01-30
+
+* Add warning codes for EOL software warnings
+
 # 5.2.0 - 2021-12-15
 
 * Initial Rails 7 support
