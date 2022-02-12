@@ -1051,6 +1051,28 @@ class AliasProcessorTests < Minitest::Test
     OUTPUT
   end
 
+  def test_equality_condition_in_branch
+    # Expect `x` inside true branch to be `1`
+    # but elsewhere unknown
+    assert_output <<-INPUT, <<-OUTPUT
+      if x == 1
+        a(x)
+      else
+        b(x)
+      end
+
+      c(x)
+    INPUT
+      if x == 1
+        a(1)
+      else
+        b(x)
+      end
+
+      c(x)
+    OUTPUT
+  end
+
   def test_case_basic
     assert_output <<-INPUT, <<-OUTPUT
       z = 3
