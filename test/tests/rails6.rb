@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 36
+      :generic => 37
     }
   end
 
@@ -278,6 +278,20 @@ class Rails6Tests < Minitest::Test
       :relative_path => "app/models/user.rb",
       :code => s(:call, s(:const, :User), :where, s(:dstr, "lower(slug_", s(:evstr, s(:call, s(:call, s(:call, s(:call, s(:const, :I18n), :locale), :to_s), :split, s(:str, "-")), :first)), s(:str, ") = :country_id")), s(:hash, s(:lit, :country_id), s(:call, s(:params), :[], s(:lit, :new_country_id)))),
       :user_input => s(:call, s(:call, s(:call, s(:call, s(:const, :I18n), :locale), :to_s), :split, s(:str, "-")), :first)
+  end
+
+  def test_sql_injection_tr_method
+    assert_warning check_name: "SQL",
+      type: :warning,
+      warning_code: 0,
+      fingerprint: "5d5e33e109c52601027f20eb706d6f7688dffaaebc3b62e92a57bb74f7dab451",
+      warning_type: "SQL Injection",
+      line: 37,
+      message: /^Possible\ SQL\ injection/,
+      confidence: 1,
+      relative_path: "app/controllers/accounts_controller.rb",
+      code: s(:call, s(:const, :Arel), :sql, s(:call, s(:dstr, "CASE\nWHEN ", s(:evstr, s(:call, s(:call, nil, :user_params), :[], s(:lit, :field))), s(:str, " IS NULL\n  OR TRIM("), s(:evstr, s(:call, s(:call, nil, :user_params), :[], s(:lit, :field))), s(:str, ") = ''\nTHEN 'Untitled'\nELSE TRIM("), s(:evstr, s(:call, s(:call, nil, :user_params), :[], s(:lit, :field))), s(:str, ")\nEND\n")), :tr, s(:str, "\n"), s(:str, " "))),
+      user_input: s(:call, s(:call, nil, :user_params), :[], s(:lit, :field))
   end
 
   def test_dangerous_send_enum

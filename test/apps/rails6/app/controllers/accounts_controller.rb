@@ -30,4 +30,15 @@ class AccountsController < ApplicationController
   def index
     params.values_at(:test).join("|")
   end
+
+  def tr_sql 
+    Arel.sql(<<~SQL.tr("\n", " "))
+      CASE
+      WHEN #{user_params[:field]} IS NULL
+        OR TRIM(#{user_params[:field]}) = ''
+      THEN 'Untitled'
+      ELSE TRIM(#{user_params[:field]})
+      END
+    SQL
+  end
 end
