@@ -524,6 +524,21 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
+  def test_assignment_in_equality_forced_branch
+    assert_alias ':yes', <<-RUBY
+      x = 1
+      y = nil
+
+      if x == 1
+        y = :yes
+      else
+        y = :no
+      end
+
+      y
+    RUBY
+  end
+
   def test_simple_or_operation_compaction
     assert_alias "[0, 4, (4 || 8)]", <<-RUBY
     x = 1

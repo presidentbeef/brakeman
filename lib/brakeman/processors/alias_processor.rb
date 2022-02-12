@@ -864,6 +864,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     elsif false? condition
       no_branch = true
       exps = [nil, exp.else_clause]
+    elsif equality_check? condition and condition.target == condition.first_arg
+      no_branch = true
+      exps = [exp.then_clause, nil]
     else
       no_branch = false
       exps = [exp.then_clause, exp.else_clause]
