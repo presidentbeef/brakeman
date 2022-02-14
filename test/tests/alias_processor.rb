@@ -524,6 +524,21 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
+  def test_assignment_in_equality_forced_branch
+    assert_alias ':yes', <<-RUBY
+      x = 1
+      y = nil
+
+      if x == 1
+        y = :yes
+      else
+        y = :no
+      end
+
+      y
+    RUBY
+  end
+
   def test_simple_or_operation_compaction
     assert_alias "[0, 4, (4 || 8)]", <<-RUBY
     x = 1
@@ -1048,6 +1063,28 @@ class AliasProcessorTests < Minitest::Test
     INPUT
     raise Z unless ['a', 'b'].include? x
     :BRAKEMAN_SAFE_LITERAL
+    OUTPUT
+  end
+
+  def test_equality_condition_in_branch
+    # Expect `x` inside true branch to be `1`
+    # but elsewhere unknown
+    assert_output <<-INPUT, <<-OUTPUT
+      if x == 1
+        a(x)
+      else
+        b(x)
+      end
+
+      c(x)
+    INPUT
+      if x == 1
+        a(1)
+      else
+        b(x)
+      end
+
+      c(x)
     OUTPUT
   end
 

@@ -864,6 +864,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     elsif false? condition
       no_branch = true
       exps = [nil, exp.else_clause]
+    elsif equality_check? condition and condition.target == condition.first_arg
+      no_branch = true
+      exps = [exp.then_clause, nil]
     else
       no_branch = false
       exps = [exp.then_clause, exp.else_clause]
@@ -895,6 +898,14 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
             var = condition.first_arg
             previous_value = env.current[var]
             env.current[var] = safe_literal(var.line)
+            exp[branch_index] = process_if_branch branch
+            env.current[var] = previous_value
+          elsif i == 0 and equality_check? condition
+            # For conditions like a == b,
+            # set a to b inside the true branch
+            var = condition.target
+            previous_value = env.current[var]
+            env.current[var] = condition.first_arg
             exp[branch_index] = process_if_branch branch
             env.current[var] = previous_value
           elsif i == 1 and hash_or_array_include_all_literals? condition and early_return? branch
@@ -929,6 +940,11 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     else
       false
     end
+  end
+
+  def equality_check? exp
+    call? exp and
+      exp.method == :==
   end
 
   def simple_when? exp
