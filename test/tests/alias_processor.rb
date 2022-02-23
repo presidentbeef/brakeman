@@ -1329,6 +1329,12 @@ class AliasProcessorTests < Minitest::Test
     INPUT
   end
 
+  def test_join_item_works_with_nil_item
+    assert_nothing_raised do
+      Brakeman::AliasProcessor.new.join_item(nil, "something")
+    end
+  end
+
   def test_alias_processor_failure
     assert_raises do
       Brakeman::AliasProcessor.new.process s(:block, s(:attrasgn, s(:call, nil, :x), :"[]!", s(:lit, 1), s(:lit, 2)))
