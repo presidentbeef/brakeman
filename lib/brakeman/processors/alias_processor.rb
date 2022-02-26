@@ -404,7 +404,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   end
 
   def join_item item, join_value
-    if item.is_a? String
+    if item.nil? || item.is_a?(String)
       "#{item}#{join_value}"
     elsif string? item or symbol? item or number? item
       s(:str, "#{item.value}#{join_value}").line(item.line)
