@@ -1318,7 +1318,7 @@ class Rails2Tests < Minitest::Test
     assert_warning :type => :warning,
       :warning_type => "Remote Code Execution",
       :line => 89,
-      :message => /^Unsafe\ reflection\ method\ `constantize`\ cal/,
+      :message => /^Unsafe\ reflection\ method\ `constantize`\ called\ on/,
       :confidence => 0,
       :file => /home_controller\.rb/,
       :relative_path => "app/controllers/home_controller.rb"
@@ -1328,7 +1328,7 @@ class Rails2Tests < Minitest::Test
       :warning_code => 24,
       :warning_type => "Remote Code Execution",
       :line => 1,
-      :message => /^Unsafe\ reflection\ method\ `constantize`\ cal/,
+      :message => /^Unsafe\ reflection\ method\ `constantize`\ called\ on/,
       :confidence => 0,
       :relative_path => "app/views/home/test_send_target.html.erb"
   end
