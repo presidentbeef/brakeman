@@ -61,7 +61,8 @@ class Brakeman::CheckModelSerialize < Brakeman::BaseCheck
         :confidence => confidence,
         :link => "https://groups.google.com/d/topic/rubyonrails-security/KtmwSbEpzrU/discussion",
         :file => model.file,
-        :line => model.top_line
+        :line => model.top_line,
+        :cwe_id => [502]
     end
   end
 end

@@ -28,7 +28,8 @@ class Brakeman::CheckQuoteTableName < Brakeman::BaseCheck
         :message => message,
         :confidence => confidence,
         :gem_info => gemfile_or_environment,
-        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/ah5HN0S8OJs/discussion"
+        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/ah5HN0S8OJs/discussion",
+        :cwe_id => [89]
     end
   end
 

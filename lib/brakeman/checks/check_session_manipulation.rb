@@ -28,7 +28,8 @@ class Brakeman::CheckSessionManipulation < Brakeman::BaseCheck
         :warning_code => :session_key_manipulation,
         :message => msg(msg_input(input), " used as key in session hash"),
         :user_input => input,
-        :confidence => confidence
+        :confidence => confidence,
+        :cwe_id => [20] # TODO: what cwe should this be? it seems like it's looking for authz bypass
     end
   end
 end

@@ -20,7 +20,8 @@ class Brakeman::CheckHeaderDoS < Brakeman::BaseCheck
         :message => message,
         :confidence => :medium,
         :gem_info => gemfile_or_environment,
-        :link_path => "https://groups.google.com/d/msg/ruby-security-ann/A-ebV4WxzKg/KNPTbX8XAQUJ"
+        :link_path => "https://groups.google.com/d/msg/ruby-security-ann/A-ebV4WxzKg/KNPTbX8XAQUJ",
+        :cwe_id => [20]
     end
   end
 

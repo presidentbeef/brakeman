@@ -39,7 +39,8 @@ class Brakeman::CheckNestedAttributesBypass < Brakeman::BaseCheck
       :file => model.file,
       :line => args.line,
       :confidence => :medium,
-      :link_path => "https://groups.google.com/d/msg/rubyonrails-security/cawsWcQ6c8g/tegZtYdbFQAJ"
+      :link_path => "https://groups.google.com/d/msg/rubyonrails-security/cawsWcQ6c8g/tegZtYdbFQAJ",
+      :cwe_id => [284]
   end
 
   def allow_destroy? arg

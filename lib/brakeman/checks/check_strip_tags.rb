@@ -35,7 +35,8 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
         :message => message,
         :gem_info => gemfile_or_environment,
         :confidence => :high,
-        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/K5EwdJt06hI/discussion"
+        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/K5EwdJt06hI/discussion",
+        :cwe_id => [79]
     end
   end
 
@@ -60,7 +61,8 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
       :message => message,
       :confidence => :high,
       :gem_info => gemfile_or_environment,
-      :link_path => "https://groups.google.com/d/topic/rubyonrails-security/FgVEtBajcTY/discussion"
+      :link_path => "https://groups.google.com/d/topic/rubyonrails-security/FgVEtBajcTY/discussion",
+      :cwe_id => [79]
   end
 
   def cve_2015_7579
@@ -78,7 +80,8 @@ class Brakeman::CheckStripTags < Brakeman::BaseCheck
         :message => message,
         :confidence => confidence,
         :gem_info => gemfile_or_environment(:"rails-html-sanitizer"),
-        :link_path => "https://groups.google.com/d/msg/rubyonrails-security/OU9ugTZcbjc/PjEP46pbFQAJ"
+        :link_path => "https://groups.google.com/d/msg/rubyonrails-security/OU9ugTZcbjc/PjEP46pbFQAJ",
+        :cwe_id => [79]
 
     end
   end

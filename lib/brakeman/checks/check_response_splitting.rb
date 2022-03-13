@@ -15,7 +15,8 @@ class Brakeman::CheckResponseSplitting < Brakeman::BaseCheck
         :message => msg("Rails versions before 2.3.14 have a vulnerability content type handling allowing injection of headers ", msg_cve("CVE-2011-3186")),
         :confidence => :medium,
         :gem_info => gemfile_or_environment,
-        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/b_yTveAph2g/discussion"
+        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/b_yTveAph2g/discussion",
+        :cwe_id => [94]
     end
   end
 end

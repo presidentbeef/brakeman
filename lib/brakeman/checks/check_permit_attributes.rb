@@ -38,6 +38,7 @@ class Brakeman::CheckPermitAttributes < Brakeman::BaseCheck
       :warning_code => :dangerous_permit_key,
       :message => "Potentially dangerous key allowed for mass assignment",
       :confidence => (confidence || SUSPICIOUS_KEYS[key.value]),
-      :user_input => key
+      :user_input => key,
+      :cwe_id => [915]
   end
 end

@@ -70,6 +70,7 @@ class Brakeman::CheckVerbConfusion < Brakeman::BaseCheck
       :message => message,
       :code => code,
       :user_input => result[:call],
-      :confidence => confidence
+      :confidence => confidence,
+      :cwe_id => [352]
   end
 end

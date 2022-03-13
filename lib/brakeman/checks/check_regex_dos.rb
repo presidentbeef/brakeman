@@ -51,7 +51,8 @@ class Brakeman::CheckRegexDoS < Brakeman::BaseCheck
           :warning_code => :regex_dos,
           :message => message,
           :confidence => confidence,
-          :user_input => match
+          :user_input => match,
+          :cwe_id => [20, 185]
       end
     end
   end

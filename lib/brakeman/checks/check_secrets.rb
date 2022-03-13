@@ -27,7 +27,8 @@ class Brakeman::CheckSecrets < Brakeman::BaseCheck
             :message => msg("Hardcoded value for ", msg_code(name), " in source code"),
             :confidence => :medium,
             :file => constant.file,
-            :line => constant.line
+            :line => constant.line,
+            :cwe_id => [798]
         end
       end
     end

@@ -52,7 +52,8 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
     opts = {
       :controller => :ApplicationController,
       :warning_type => "Cross-Site Request Forgery",
-      :confidence => :high
+      :confidence => :high,
+      :cwe_id => [352]
     }.merge opts
 
     warn opts
@@ -76,6 +77,7 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
       :message => msg("CSRF protection is flawed in unpatched versions of ", msg_version(rails_version), " ", msg_cve("CVE-2011-0447"), ". Upgrade to ", msg_version(new_version), " or apply patches as needed"),
       :gem_info => gemfile_or_environment,
       :file => nil,
-      :link_path => "https://groups.google.com/d/topic/rubyonrails-security/LZWjzCPgNmU/discussion"
+      :link_path => "https://groups.google.com/d/topic/rubyonrails-security/LZWjzCPgNmU/discussion",
+      :cwe_id => [352]
   end
 end

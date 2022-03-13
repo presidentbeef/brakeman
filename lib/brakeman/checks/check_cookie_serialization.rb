@@ -15,7 +15,8 @@ class Brakeman::CheckCookieSerialization < Brakeman::BaseCheck
           :warning_code => :unsafe_cookie_serialization,
           :message => msg("Use of unsafe cookie serialization strategy ", msg_code(setting.value.inspect), " might lead to remote code execution"),
           :confidence => :medium,
-          :link_path => "unsafe_deserialization"
+          :link_path => "unsafe_deserialization",
+          :cwe_id => [565, 502]
       end
     end
   end

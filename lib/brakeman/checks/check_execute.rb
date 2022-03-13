@@ -117,7 +117,8 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
         :message => "Possible command injection",
         :code => call,
         :user_input => failure,
-        :confidence => confidence
+        :confidence => confidence,
+        :cwe_id => [77]
     end
   end
 
@@ -138,7 +139,8 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
           :warning_code => :command_injection,
           :message => msg("Possible command injection in ", msg_code("open")),
           :user_input => match,
-          :confidence => :high
+          :confidence => :high,
+          :cwe_id => [77]
       end
     end
   end
@@ -201,7 +203,8 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       :message => "Possible command injection",
       :code => exp,
       :user_input => input,
-      :confidence => confidence
+      :confidence => confidence,
+      :cwe_id => [77]
   end
 
   # This method expects a :dstr or :evstr node

@@ -63,6 +63,7 @@ class Brakeman::CheckUnsafeReflectionMethods < Brakeman::BaseCheck
       :warning_code => :unsafe_method_reflection,
       :message => message,
       :user_input => input,
-      :confidence => confidence
+      :confidence => confidence,
+      :cwe_id => [470]
   end
 end

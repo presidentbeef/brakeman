@@ -43,6 +43,7 @@ class Brakeman::CheckSSLVerify < Brakeman::BaseCheck
       :warning_type => "SSL Verification Bypass",
       :warning_code => :ssl_verification_bypass,
       :message => "SSL certificate verification was bypassed",
-      :confidence => :high
+      :confidence => :high,
+      :cwe_id => [295]
   end
 end

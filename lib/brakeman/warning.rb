@@ -5,7 +5,7 @@ require 'brakeman/messages'
 
 #The Warning class stores information about warnings
 class Brakeman::Warning
-  attr_reader :called_from, :check, :class, :confidence, :controller,
+  attr_reader :called_from, :check, :class, :confidence, :controller, :cwe_id,
     :line, :method, :model, :template, :user_input, :user_input_type,
     :warning_code, :warning_set, :warning_type
 
@@ -31,6 +31,7 @@ class Brakeman::Warning
     :class => :@class,
     :code => :@code,
     :controller => :@controller,
+    :cwe_id => :@cwe_id,
     :file => :@file,
     :gem_info => :@gem_info,
     :line => :@line,
@@ -219,6 +220,7 @@ class Brakeman::Warning
   def to_row type = :warning
     @row = { "Confidence" => TEXT_CONFIDENCE[self.confidence],
       "Warning Type" => self.warning_type.to_s,
+      "CWE ID" => self.cwe_id,
       "Message" => self.message }
 
     case type

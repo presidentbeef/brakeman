@@ -23,7 +23,8 @@ class Brakeman::CheckI18nXSS < Brakeman::BaseCheck
         :message => message,
         :confidence => :medium,
         :gem_info => gemfile_or_environment(:i18n),
-        :link_path => "https://groups.google.com/d/msg/ruby-security-ann/pLrh6DUw998/bLFEyIO4k_EJ"
+        :link_path => "https://groups.google.com/d/msg/ruby-security-ann/pLrh6DUw998/bLFEyIO4k_EJ",
+        :cwe_id => [79]
     end
   end
 

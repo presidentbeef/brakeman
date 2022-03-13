@@ -24,7 +24,8 @@ class Brakeman::CheckNestedAttributes < Brakeman::BaseCheck
         :message => message,
         :confidence => :high,
         :gem_info => gemfile_or_environment,
-        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/-fkT0yja_gw/discussion"
+        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/-fkT0yja_gw/discussion",
+        :cwe_id => [20]
     end
   end
 

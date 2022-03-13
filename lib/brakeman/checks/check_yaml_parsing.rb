@@ -29,7 +29,8 @@ class Brakeman::CheckYAMLParsing < Brakeman::BaseCheck
         :message => message,
         :confidence => :high,
         :gem_info => gemfile_or_environment,
-        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion"
+        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion",
+        :cwe_id => [20]
     end
 
     #Warn if app accepts YAML
@@ -41,7 +42,8 @@ class Brakeman::CheckYAMLParsing < Brakeman::BaseCheck
         :message => message,
         :confidence => :high,
         :gem_info => gemfile_or_environment,
-        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion"
+        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion",
+        :cwe_id => [20]
     end
   end
 

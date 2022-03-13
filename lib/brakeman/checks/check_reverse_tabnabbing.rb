@@ -53,6 +53,7 @@ class Brakeman::CheckReverseTabnabbing < Brakeman::BaseCheck
       :message => msg("When opening a link in a new tab without setting ", msg_code('rel: "noopener noreferrer"'),
                       ", the new tab can control the parent tab's location. For example, an attacker could redirect to a phishing page."),
       :confidence => confidence,
-      :user_input => rel
+      :user_input => rel,
+      :cwe_id => [1022]
   end
 end

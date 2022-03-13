@@ -55,7 +55,8 @@ class Brakeman::CheckWithoutProtection < Brakeman::BaseCheck
             :message => "Unprotected mass assignment",
             :code => call, 
             :user_input => input,
-            :confidence => confidence
+            :confidence => confidence,
+            :cwe_id => [915]
 
         end
       end

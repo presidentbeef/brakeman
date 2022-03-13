@@ -26,7 +26,8 @@ class Brakeman::CheckTemplateInjection < Brakeman::BaseCheck
         :warning_code => :erb_template_injection,
         :message => msg(msg_input(input), " used directly in ", msg_code("ERB"), " template, which might enable remote code execution"),
         :user_input => input,
-        :confidence => :high
+        :confidence => :high,
+        :cwe_id => [1336]
     end
   end
 end

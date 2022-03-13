@@ -33,7 +33,8 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
         :message => message,
         :confidence => :high,
         :gem_info => gem_info,
-        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/1h2DR63ViGo/discussion"
+        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/1h2DR63ViGo/discussion",
+        :cwe_id => [74] # TODO: is this the best CWE for this?
     end
   end
 
@@ -98,7 +99,8 @@ class Brakeman::CheckJSONParsing < Brakeman::BaseCheck
       :message => message,
       :confidence => confidence,
       :gem_info => gemfile_or_environment(name),
-      :link => "https://groups.google.com/d/topic/rubyonrails-security/4_YvCpLzL58/discussion"
+      :link => "https://groups.google.com/d/topic/rubyonrails-security/4_YvCpLzL58/discussion",
+      :cwe_id => [74] # TODO: is this the best CWE for this?
   end
 
   def uses_json_parse?

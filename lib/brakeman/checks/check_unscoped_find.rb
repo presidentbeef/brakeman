@@ -40,7 +40,8 @@ class Brakeman::CheckUnscopedFind < Brakeman::BaseCheck
       :message      => msg("Unscoped call to ", msg_code("#{result[:target]}##{result[:method]}")),
       :code         => result[:call],
       :confidence   => :weak,
-      :user_input   => input
+      :user_input   => input,
+      :cwe_id => [285]
   end
 
   def optional_belongs_to? exp

@@ -23,7 +23,8 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
           :warning_type => "Attribute Restriction",
           :warning_code => :no_attr_accessible,
           :message => msg("Mass assignment is not restricted using ", msg_code("attr_accessible")),
-          :confidence => :high
+          :confidence => :high,
+          :cwe_id => [915] # TODO: Should this be mass assignment?
       elsif not tracker.options[:ignore_attr_protected]
         message, confidence, link = check_for_attr_protected_bypass
 
@@ -39,7 +40,8 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
           :warning_type => "Attribute Restriction",
           :warning_code => warning_code,
           :message => message,
-          :confidence => confidence
+          :confidence => confidence,
+          :cwe_id => [915] # TODO: Should this be mass assignment?
       end
     end
   end

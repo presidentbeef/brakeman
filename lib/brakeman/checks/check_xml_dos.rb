@@ -30,7 +30,8 @@ class Brakeman::CheckXMLDoS < Brakeman::BaseCheck
       :message => message,
       :confidence => :medium,
       :gem_info => gemfile_or_environment,
-      :link_path => "https://groups.google.com/d/msg/rubyonrails-security/bahr2JLnxvk/x4EocXnHPp8J"
+      :link_path => "https://groups.google.com/d/msg/rubyonrails-security/bahr2JLnxvk/x4EocXnHPp8J",
+      :cwe_id => [125]
   end
 
   def has_workaround?

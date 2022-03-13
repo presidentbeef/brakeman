@@ -26,7 +26,8 @@ class Brakeman::CheckPageCachingCVE < Brakeman::BaseCheck
       :message => message,
       :confidence => confidence,
       :link_path => 'https://groups.google.com/d/msg/rubyonrails-security/CFRVkEytdP8/c5gmICECAgAJ',
-      :gem_info => gemfile_or_environment(gem_name)
+      :gem_info => gemfile_or_environment(gem_name),
+      :cwe_id => [22]
   end
 
   def uses_caches_page?

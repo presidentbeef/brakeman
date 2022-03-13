@@ -27,7 +27,8 @@ class Brakeman::CheckDynamicFinders < Brakeman::BaseCheck
             :warning_code => :sql_injection_dynamic_finder,
             :message => "MySQL integer conversion may cause 0 to match any string",
             :confidence => :medium,
-            :user_input => arg
+            :user_input => arg,
+            :cwe_id => [89]
 
           break
         end
