@@ -348,8 +348,10 @@ class CVETests < Minitest::Test
   end
 
   def test_CVE_2020_8166
-    before_rescan_of "Gemfile.lock", "rails5.2" do
-      replace "Gemfile.lock", " rails (5.2.0.beta2)", " rails (5.2.4.3)"
+    Date.stub :today, Date.parse('2021-04-05') do
+      before_rescan_of "Gemfile.lock", "rails5.2" do
+        replace "Gemfile.lock", " rails (5.2.0.beta2)", " rails (5.2.4.3)"
+      end
     end
 
     assert_new 0
