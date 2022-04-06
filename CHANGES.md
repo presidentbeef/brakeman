@@ -1,3 +1,11 @@
+# 5.2.2 - 2022-04-06
+
+* Update `ruby_parser` for Ruby 3.1 support (Merek Skubela)
+* Handle `nil` when joining values (Dan Buettner)
+* Update message for unsafe reflection (Pedro Baracho)
+* Add additional String methods for SQL injection check
+* Respect equality in `if` conditions
+
 # 5.2.1 - 2022-01-30
 
 * Add warning codes for EOL software warnings
