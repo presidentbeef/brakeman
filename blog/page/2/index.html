@@ -80,6 +80,63 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2021/06/08/brakeman-5-dot-0-dot-4-released">Brakeman 5.0.4 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2021-06-08 10:50:00 -0700" pubdate  updated >2021-06-08 10:50:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a tiny bugfix release!</p>
+
+<p><em>What happened to 5.0.2 and 5.0.3??</em></p>
+
+<p>They were messed up. Sorry. Don’t use them.</p>
+
+<p><em>Changes since 5.0.1:</em></p>
+
+<ul>
+  <li>Fix Loofah version check (<a href="https://github.com/presidentbeef/brakeman/issues/1603">#1603</a>)</li>
+</ul>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4d1af5c3e65a0c2319396a796bd9a587a13317faff92bd09b74c44ba70aef8b3  brakeman-5.0.4.gem
+6b529ae8f1e16aed711759c3b52fc01c60befeb896042de02aaa5aabf5c24cb5  brakeman-lib-5.0.4.gem
+5a402076af48fc526211212d70a751c80c27cae535077c1c7a63dadc314efe97  brakeman-min-5.0.4.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2021/04/27/brakeman-5-dot-0-dot-1-released">Brakeman 5.0.1 Released</a></h1>
     
     
@@ -543,96 +600,6 @@ This will dramatically increase the scope of Brakeman scans, which is better cov
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2020/09/04/brakeman-4-dot-9-dot-1-released">Brakeman 4.9.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2020-09-04 12:30:00 -0700" pubdate  updated >2020-09-04 12:30:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This release was prompted by the release of <a href="https://www.zenspider.com/releases/2020/08/ruby_parser-version-3-15-0-has-been-released.html">ruby_parser 3.15.0</a>, which includes a <em>lot</em> of fixes and improvements, including support for some Ruby 2.7 syntax.</p>
-
-<p><em>Changes since 4.9.0:</em></p>
-
-<ul>
-  <li>Use version from <code class="highlighter-rouge">active_record</code> for non-Rails apps (<a href="https://github.com/BuonOmo">Ulysse Buonomo</a>)</li>
-  <li>Check <code class="highlighter-rouge">chomp</code>ed strings for SQL injection (<a href="https://github.com/presidentbeef/brakeman/issues/1509">#1509</a>)</li>
-  <li>Always set line number for joined arrays (<a href="https://github.com/presidentbeef/brakeman/issues/1499">#1499</a>)</li>
-  <li>Avoid warning about missing <code class="highlighter-rouge">attr_accessible</code> if <code class="highlighter-rouge">protected_attributes</code> gem is used (<a href="https://github.com/presidentbeef/brakeman/issues/1512">#1512</a>)</li>
-</ul>
-
-<h3 id="check-activerecord-version">Check ActiveRecord Version</h3>
-
-<p>For non-Rails applications that are using ActiveRecord, use the version of <code class="highlighter-rouge">active_record</code> to set Brakeman’s guess at a Rails version. Thanks to <a href="https://github.com/BuonOmo">Ulysse Buonomo</a>.</p>
-
-<p><em>Note: It is not recommended to run Brakeman on non-Rails applications… but no one is going to stop you if you want really to.</em></p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1506">changes</a>)</p>
-
-<h3 id="sql-injection-with-chomp">SQL Injection with Chomp</h3>
-
-<p>Brakeman will now check for string interpolation inside strings that have <code class="highlighter-rouge">chomp</code> called on them.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1511">changes</a>)</p>
-
-<h3 id="joined-arrays-line-number">Joined Arrays Line Number</h3>
-
-<p>Fixed a small, unlikely bug where joining two arrays where Brakeman doesn’t have a line number for either of them would raise an exception.
-Not really sure how that happens, though.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1503">changes</a>)</p>
-
-<h3 id="protected-attributes">Protected Attributes</h3>
-
-<p>When using the <code class="highlighter-rouge">protected_attributes</code> gem, it is allowed but not required to set <code class="highlighter-rouge">attr_accessible</code> on models.</p>
-
-<p>Brakeman will no longer warn about missing <code class="highlighter-rouge">attr_accessible</code> when <code class="highlighter-rouge">protected_attributes</code> is used.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1513">changes</a>)</p>
-
-<h3 id="update-rubyparser">Update RubyParser</h3>
-
-<p>As noted above, this version of Brakeman ships with an updated version of ruby_parser.</p>
-
-<h3 id="checksums">Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5a17706b1da4886f1b6864c3ffff1ab40684f3f7b4d667138227c467ebccb0f7  brakeman-4.9.1.gem
-8bb3d88f9786e9f08c24d38e88c40adf02f4a47b17de8c1c816f7e174de476a4  brakeman-lib-4.9.1.gem
-8eae3eec1ebab0cf3b29ea50089f613b0d8e544ae4c332f1f5e64a240e8a0a94  brakeman-min-4.9.1.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -671,6 +638,10 @@ Not really sure how that happens, though.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2022/04/06/brakeman-5-dot-2-dot-2-released">Brakeman 5.2.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/01/30/5-dot-2-dot-1-released">Brakeman 5.2.1 Released</a>
       </li>
     
@@ -684,10 +655,6 @@ Not really sure how that happens, though.</p>
     
       <li class="post">
         <a href="/blog/2021/07/19/brakeman-5-dot-1-dot-0-released">Brakeman 5.1.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2021/06/08/brakeman-5-dot-0-dot-4-released">Brakeman 5.0.4 Released</a>
       </li>
     
   </ul>

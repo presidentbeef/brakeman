@@ -80,6 +80,160 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2016/05/05/brakeman-3-dot-3-0-released">Brakeman 3.3.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2016-05-05 09:49:00 -0700" pubdate  updated >2016-05-05 09:49:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Brakeman 3.3.0 introduces a new packaging method for Brakeman which vendors all dependencies and does not include any gem dependencies in the gemspec. Please test and provide feedback if it does not work as expected.</p>
+
+<p><em>Changes since 3.2.1</em>:</p>
+
+<ul>
+  <li>Bundle all dependencies in gem</li>
+  <li>Return exit code <code class="highlighter-rouge">4</code> if no Rails application is detected (<a href="https://github.com/presidentbeef/brakeman/issues/869">#869</a>)</li>
+  <li>Add optional check for secrets in source code (<a href="https://github.com/presidentbeef/brakeman/issues/201">#201</a>)</li>
+  <li>Track constants globally</li>
+  <li>Skip if branches with <code class="highlighter-rouge">Rails.env.test?</code> (<a href="https://github.com/presidentbeef/brakeman/issues/862">#862</a>)</li>
+  <li>Skip processing obviously false if branches (more broadly)</li>
+  <li>Handle HAML <code class="highlighter-rouge">find_and_preserve</code> with a block (<a href="https://github.com/presidentbeef/brakeman/issues/837">#837</a>)</li>
+  <li>Process <code class="highlighter-rouge">Array#first</code></li>
+  <li>Allow non-Hash arguments in <code class="highlighter-rouge">protect_from_forgery</code> (<a href="https://github.com/jsyeo">Jason Yeo</a>)</li>
+  <li>Avoid warning about <code class="highlighter-rouge">u</code> helper (<a href="https://github.com/cdollins">Chad Dollins</a>)</li>
+  <li>Avoid warning about mass assignment and SQL injection with <code class="highlighter-rouge">params.slice</code> (<a href="https://github.com/presidentbeef/brakeman/issues/866">#866</a>)</li>
+  <li>Avoid warning about <code class="highlighter-rouge">slice</code> in <code class="highlighter-rouge">redirect_to</code> and <code class="highlighter-rouge">link_to</code> (<a href="https://github.com/presidentbeef/brakeman/issues/832">#832</a>)</li>
+  <li>Avoid warning on <code class="highlighter-rouge">popen</code> with array (<a href="https://github.com/presidentbeef/brakeman/issues/851">#851</a>)</li>
+  <li>[Code Climate engine] When possible, output to /dev/stdout (<a href="https://github.com/GordonDiggs">Gordon Diggs</a>)</li>
+  <li>[Code Climate engine] Remove nil entries from <code class="highlighter-rouge">include_paths</code> (<a href="https://github.com/GordonDiggs">Gordon Diggs</a>)</li>
+  <li>[Code Climate engine] Report end lines for issues (<a href="https://github.com/GordonDiggs">Gordon Diggs</a>)</li>
+</ul>
+
+<h3 id="dependency-bundling">Dependency Bundling</h3>
+
+<p>In its gem form, Brakeman no longer declares any external dependencies. Its dependencies are bundled with the gem itself. This should prevent the conflicts which sometimes occur when Brakeman is declared as a dependency of a Rails application. The disadvantage is you will no longer be able to update Brakeman dependencies (like RubyParser) without updating Brakeman itself.</p>
+
+<p>As this is a new way of distributing Brakeman, please report any issues that may arise.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/845">changes</a>)</p>
+
+<h3 id="new-exit-code">New Exit Code</h3>
+
+<p>A new exit code has been added for the case when Brakeman does not detect a Rails application.</p>
+
+<p>For reference, these are Brakeman’s current exit codes:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">0</code> - Normal exit</li>
+  <li><code class="highlighter-rouge">3</code> - Warnings found (with <code class="highlighter-rouge">-z</code>)</li>
+  <li><code class="highlighter-rouge">4</code> - No Rails application detected</li>
+  <li><code class="highlighter-rouge">255</code> - Error</li>
+</ul>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/870">changes</a>)</p>
+
+<h3 id="secrets-check">Secrets Check</h3>
+
+<p>A new optional check has been added to look for hard-coded secrets in the source code. It will warn when constants like <code class="highlighter-rouge">PASSWORD</code> are assigned string literals. To run the new check, use <code class="highlighter-rouge">-t Secrets</code> or <code class="highlighter-rouge">-A</code> to run all checks including optional ones.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/861">changes</a>)</p>
+
+<h3 id="constant-values">Constant Values</h3>
+
+<p>This release includes initial support for tracking and matching constants across the application. For example, if a model contains a constant <code class="highlighter-rouge">Model::KEYS</code> which is used elsewhere, Brakeman should be able to track this value. This helps prevents false positives when safe values have been declared as constants.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/855">changes</a>)</p>
+
+<h3 id="skipping-test-code">Skipping Test Code</h3>
+
+<p>Brakeman will now ignore <code class="highlighter-rouge">if</code> branches that check <code class="highlighter-rouge">Rails.env.test?</code>. Additionally, branch skipping behavior (e.g. <code class="highlighter-rouge">if false...</code>) has been expanded to most of Brakeman’s processing instead of just in data flow analysis.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/868">changes</a>)</p>
+
+<h3 id="haml-find_and_preserve">HAML <code class="highlighter-rouge">find_and_preserve</code></h3>
+
+<p>Brakeman will now handle uses of <code class="highlighter-rouge">find_and_preserve</code> in HAML with a block.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/839">changes</a>)</p>
+
+<h3 id="arrayfirst">Array#first</h3>
+
+<p>Calls to <code class="highlighter-rouge">Array#first</code> will be replaced with the first value in the array when known.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/856">changes</a>)</p>
+
+<h3 id="forgery-option">Forgery Option</h3>
+
+<p><a href="https://github.com/jsyeo">Jason Yeo</a> provided a fix for when Brakeman encounters a non-Hash argument to <code class="highlighter-rouge">protect_from_forgery</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/849">changes</a>)</p>
+
+<h3 id="u-helper"><code class="highlighter-rouge">u</code> Helper</h3>
+
+<p><a href="https://github.com/cdollins">Chad Dollins</a> fixed XSS false positives when the <code class="highlighter-rouge">u</code> alias for <code class="highlighter-rouge">url_encode</code> is used.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/863">changes</a>)</p>
+
+<h3 id="fewer-slice-false-positives">Fewer <code class="highlighter-rouge">slice</code> False Positives</h3>
+
+<p>Brakeman should no longer warn when using <code class="highlighter-rouge">params.slice</code> in mass assignment, SQL injection, links, and open redirects.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/867">changes</a> and <a href="https://github.com/presidentbeef/brakeman/pull/871">other changes</a>)</p>
+
+<h3 id="safe-popen">Safe popen</h3>
+
+<p>Brakeman will no longer warn about uses of <code class="highlighter-rouge">popen</code> when the argument is an array, in which case the arguments are escaped.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/854">changes</a>)</p>
+
+<h3 id="code-climate-engine">Code Climate Engine</h3>
+
+<p><a href="https://github.com/GordonDiggs">Gordon Diggs</a> provided several improvements to the Code Climate Engine in this release:</p>
+
+<ul>
+  <li>Remove <code class="highlighter-rouge">nil</code> entries from the <code class="highlighter-rouge">include_paths</code> option</li>
+  <li>Force output to stdout when possible</li>
+  <li>Report end lines to conform with spec</li>
+</ul>
+
+<h3 id="shas">SHAs</h3>
+
+<p>The SHA256 sums for this release are</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c01ec64d35218887fc5ea2ae8babc88e9e0e7cc3c161b020725d2b17c4189858  brakeman-3.3.0.gem
+f1adce1a696799342dc9f50b51975024060360dc9018358c5d8e34c1c4681bd1  brakeman-min-3.3.0.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed improvements in this release.</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion. Please note the mailing list is no longer in use and has apparently not been delivering mail for some time.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2016/02/24/brakeman-3-dot-2-1-released">Brakeman 3.2.1 Released</a></h1>
     
     
@@ -477,131 +631,6 @@ a67d7c96090bc3b8193cf3b5db7af62ce719b9277d1b818ec6e9f96a52ad0caa  brakeman-min-3
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/2015/12/02/brakeman-3-dot-1-3-released.html">Brakeman 3.1.3 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2015-12-02 09:23:00 -0800" pubdate  updated >2015-12-02 09:23:00 -0800</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a small bug fix release, except for one major new feature: <a href="https://codeclimate.com/changelog/5653c9b67f7feb0048003051">Brakeman is now available as an engine on the new Code Climate platform</a>!</p>
-
-<p><em>Changes since 3.1.2</em>:</p>
-
-<ul>
-  <li>Add Code Climate output format (<a href="https://github.com/ABaldwinHunter">Ashley Baldwin-Hunter</a> / <a href="https://github.com/dblandin">Devon Blandin</a> / <a href="https://github.com/presidentbeef/brakeman/pull/759">John Pignata</a> / <a href="https://github.com/mrb">Michael Bernstein</a>)</li>
-  <li>Restore minimum Highline version (<a href="https://github.com/kjg">Kevin Glowacz</a>)</li>
-  <li>Depend on safe_yaml 1.0 or later (<a href="https://github.com/presidentbeef/brakeman/issues/752">#753</a>)</li>
-  <li>Check for session secret in secrets.yml (<a href="https://github.com/presidentbeef/brakeman/issues/760">#760</a>)</li>
-  <li>Avoid warning on <code class="highlighter-rouge">without_protection: true</code> with hash literal (<a href="https://github.com/presidentbeef/brakeman/issues/769">#769</a>)</li>
-  <li>Respect <code class="highlighter-rouge">exit_on_warn</code> in config file (<a href="https://github.com/presidentbeef/brakeman/pull/771">#771</a>)</li>
-  <li>Avoid outputting false for <code class="highlighter-rouge">user_input</code> in JSON</li>
-  <li>Iteratively replace variables</li>
-  <li>CallIndex improvements</li>
-  <li>Improved tests for the Brakeman module (<a href="https://github.com/bethanyr">Bethany Rentz</a>)</li>
-  <li>Make sure a <code class="highlighter-rouge">before_filter</code> with block is a call (<a href="https://github.com/presidentbeef/brakeman/issues/763">#763</a>)</li>
-</ul>
-
-<h3 id="code-climate-platform">Code Climate Platform</h3>
-
-<p>Thanks to the folks at <a href="https://codeclimate.com/">Code Climate</a>, this release adds the ability to run Brakeman as an analysis engine on <a href="https://codeclimate.com/changelog/5653c9b67f7feb0048003051">Code Climate’s platform</a>. You can now run Brakeman as part of Code Climate’s hosted analysis, or on your command line with their open source CLI. Brakeman can be integrated with results from your other favorite static analysis tools, giving you a unified view of issues in your code.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/758">main changes</a>)</p>
-
-<h3 id="dependencies">Dependencies</h3>
-
-<p>Brakeman 3.1.0 relaxed the <a href="https://github.com/JEG2/highline">Highline</a> dependency (to support Highline 1.7.x and up) and Brakeman 3.1.2 added a dependency on <a href="https://github.com/dtao/safe_yaml">safe_yaml</a> without specifying a minimum version. Both of these changes resulted in some issues if combined with an application that depends on older versions of these libraries.</p>
-
-<p>Highline and safe_yaml now have minimum versions specified.</p>
-
-<p>(changes <a href="https://github.com/presidentbeef/brakeman/pull/762">here</a> and <a href="https://github.com/presidentbeef/brakeman/pull/753">here</a>)</p>
-
-<h3 id="more-secrets">More Secrets</h3>
-
-<p>Production session secrets stored in <code class="highlighter-rouge">config/secrets.yml</code> will now raise a warning.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/776">changes</a></p>
-
-<h3 id="mass-assignment-false-positive">Mass Assignment False Positive</h3>
-
-<p>Previously, Brakeman would warn on any mass assignment using <code class="highlighter-rouge">without_protection: true</code>. <a href="https://carouselapps.com/2015/11/24/using-brakeman/">This blog post</a> noted Brakeman would even warn if the values for mass assignment were a hash literal. This has been fixed.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/773">changes</a>)</p>
-
-<h3 id="harcode-mode-in-config">Harcode Mode in Config</h3>
-
-<p>Brakeman now supports turning on “hardcore mode” (setting <code class="highlighter-rouge">:exit_on_warn: true</code>) in a config file. This causes Brakeman return a non-zero exit code if any warnings are found.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/774">changes</a>)</p>
-
-<h3 id="json-output">JSON Output</h3>
-
-<p>A refactoring caused some values of <code class="highlighter-rouge">user_input</code> in JSON reports to be <code class="highlighter-rouge">false</code> instead of <code class="highlighter-rouge">nil</code>. This has been corrected.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/756">changes</a>)</p>
-
-<h3 id="more-variable-replacement">More Variable Replacement</h3>
-
-<p>A long time ago, Brakeman used to do two passes for data flow analysis, just in case one substitution could be replaced with yet another value. The second pass was removed when it turned out not to be that helpful in reality. However, there are some cases where it is helpful. Now Brakeman will attempt substitutions if there are more matches, but with a hard limit of 5 replacements to avoid infinite loops. This will reduce false positives in some situations.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/757">changes</a>)</p>
-
-<h3 id="callindex-improvements">CallIndex Improvements</h3>
-
-<p>Fixed a small bug where <code class="highlighter-rouge">params</code> was not a valid target when searching chained methods, as well as making it possible to search for chains beginning with a method call. Additionally, all the tests for CallIndex were broken and not testing anything.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/766">changes</a>)</p>
-
-<h3 id="improved-test-coverage">Improved Test Coverage</h3>
-
-<p>Thanks to <a href="https://github.com/bethanyr">Bethany Rentz</a>, <a href="https://codeclimate.com/github/presidentbeef/brakeman/coverage">test coverage</a> was nudged up over 90%. Plenty of low-hanging fruit remains, <a href="https://github.com/presidentbeef/brakeman/issues/723">see this issue</a> for suggestions of how to contribute!</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/735">changes</a>)</p>
-
-<h3 id="brakeman-pro">Brakeman Pro</h3>
-
-<p>Another small announcement: the first public release of <a href="http://brakemanscanner.org/brakeman_pro/">Brakeman Pro</a> (the commercial version of Brakeman) is now available for purchase. If you are looking to financially support development of Brakeman, would like paid support, need a commercial license, or just want a slick GUI, consider checking out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
-
-<p>For some clarification regarding the future of Brakeman and Brakeman Pro, please see <a href="http://librelist.com/browser//brakeman/2015/2/24/future-of-brakeman/">this email from earlier in the year</a>.</p>
-
-<h3 id="shas">SHAs</h3>
-
-<p>The SHA256 sums for this release are</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>57b0edcc289eb74359d2042a38ea519f96f606c89dc879e5fb53971d3d656707  brakeman-3.1.3.gem
-85473af3a55c440959ea91f94fe14177ac58aa35b44fbb007c93cd742803eae6  brakeman-min-3.1.3.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed improvements in this release.</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter, joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>, or hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a>.</p>
-
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -640,6 +669,10 @@ a67d7c96090bc3b8193cf3b5db7af62ce719b9277d1b818ec6e9f96a52ad0caa  brakeman-min-3
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2022/04/06/brakeman-5-dot-2-dot-2-released">Brakeman 5.2.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/01/30/5-dot-2-dot-1-released">Brakeman 5.2.1 Released</a>
       </li>
     
@@ -653,10 +686,6 @@ a67d7c96090bc3b8193cf3b5db7af62ce719b9277d1b818ec6e9f96a52ad0caa  brakeman-min-3
     
       <li class="post">
         <a href="/blog/2021/07/19/brakeman-5-dot-1-dot-0-released">Brakeman 5.1.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2021/06/08/brakeman-5-dot-0-dot-4-released">Brakeman 5.0.4 Released</a>
       </li>
     
   </ul>

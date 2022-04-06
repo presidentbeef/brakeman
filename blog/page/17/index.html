@@ -80,6 +80,117 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2013/02/13/brakeman-1-dot-9-2-released">Brakeman 1.9.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2013-02-13 15:48:00 -0800" pubdate  updated >2013-02-13 15:48:00 -0800</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release is almost entirely enhancements to old checks or new checks for recent vulnerabilities. New features in the next release, I promise.</p>
+
+<p><em>Changes since 1.9.1</em>:</p>
+
+<ul>
+  <li>Add check for CVE-2013-0269</li>
+  <li>Add check for CVE-2013-0276</li>
+  <li>Add check for CVE-2013-0277</li>
+  <li>Add check for CVE-2013-0333</li>
+  <li>Check for more send-like methods (<a href="https://github.com/joernchen">joernchen</a>)</li>
+  <li>Check for more SQL injection locations</li>
+  <li>Check for more dangerous YAML methods (<a href="https://github.com/presidentbeef/brakeman/issues/246">#246</a>)</li>
+  <li>Support MultiJSON 1.2 for Rails 3.0 and 3.1 (<a href="https://github.com/presidentbeef/brakeman/issues/247">#247</a>)</li>
+</ul>
+
+<h3 id="cve-2013-0269---vulnerabilities-in-json-gems">CVE-2013-0269 - Vulnerabilities in JSON gems</h3>
+
+<p><a href="https://groups.google.com/d/topic/rubyonrails-security/4_YvCpLzL58/discussion">CVE-2013-0269</a> is not strictly a Rails issue, but since it was announced on the Rails security list and was relatively easy to check, Brakeman will warn on it.</p>
+
+<p>Versions of the json/json_pure gem on the 1.7.x branch will raise remote code execution warnings, while any other affected version will be reported as a denial of service vulnerability.</p>
+
+<p>Applications which do not parse user input are not affected by these issues, but it is a good idea to upgrade anyway, as it should be relatively painless.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/262">changes</a>)</p>
+
+<h3 id="cve-2013-0276---attr_protected-bypass">CVE-2013-0276 - attr_protected Bypass</h3>
+
+<p>Brakeman has been warning on uses of <code class="highlighter-rouge">attr_protected</code> since version 1.4.0, but it was reported with weak confidence, since it is really a best-practice issue.</p>
+
+<p>Now, however, uses of <code class="highlighter-rouge">attr_protected</code> will be reported as medium confidence unless used in a Rails version affected by <a href="https://groups.google.com/d/topic/rubyonrails-security/AFBKNY7VSH8/discussion">CVE-2013-0276</a>, in which case it will be high confidence.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/262">changes</a>)</p>
+
+<h3 id="cve-2013-0277---serialized-attributes">CVE-2013-0277 - Serialized Attributes</h3>
+
+<p><a href="https://groups.google.com/d/topic/rubyonrails-security/KtmwSbEpzrU/discussion">CVE-2013-0277</a> allows attackers to insert malicious YAML into serialized model attributes. Using <code class="highlighter-rouge">attr_accessible</code> or <code class="highlighter-rouge">attr_protected</code> somewhat mitigates this, but it is still possible for an application to manually assign user input to a serialized attribute.</p>
+
+<p>Brakeman will warn on affected models, with confidence level depending on whether or not the attribute can be mass assigned.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/262">changes</a>)</p>
+
+<h3 id="cve-2013-0333---json-parsing-vulnerability">CVE-2013-0333 - JSON Parsing Vulnerability</h3>
+
+<p><a href="https://groups.google.com/d/topic/rubyonrails-security/1h2DR63ViGo/discussion">CVE-2013-0333</a> is another side effect of the recent YAML vulnerabilities. Rails’ default JSON request parser converted requests to YAML then parsed them as YAML.</p>
+
+<p>Brakeman will warn on affected versions unless the provided workaround (setting the JSON backend to <code class="highlighter-rouge">JSONGem</code>) is present.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/254">changes</a>)</p>
+
+<h3 id="check-for-more-send-like-methods">Check for More Send-like Methods</h3>
+
+<p>Thanks to joernchen, Brakeman will now warn if user input is passed to <code class="highlighter-rouge">try</code>, <code class="highlighter-rouge">public_send</code>, or <code class="highlighter-rouge">__send__</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/256">changes</a>)</p>
+
+<h3 id="check-for-more-sql-injection-sites">Check for More SQL Injection Sites</h3>
+
+<p>While researching for <a href="http://rails-sqli.org/">rails-sqli.org</a>, a few more methods came up for Brakeman to check.</p>
+
+<p>Brakeman will now warn on SQL injection in <code class="highlighter-rouge">update_all</code> and <code class="highlighter-rouge">pluck</code> methods.</p>
+
+<h3 id="check-for-more-dangerous-yaml-methods">Check for More Dangerous YAML Methods</h3>
+
+<p>Brakeman will now warn on dangerous uses of <code class="highlighter-rouge">load_documents</code>, <code class="highlighter-rouge">load_stream</code>, <code class="highlighter-rouge">parse_documents</code>, and <code class="highlighter-rouge">parse_stream</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/249">changes</a>)</p>
+
+<h3 id="support-multijson-12">Support MultiJSON 1.2</h3>
+
+<p>The MultiJSON gem changed some APIs around version 1.3. For convenience, Brakeman supported 1.3 or higher. However, for the same reason, Rails 3.0 and 3.1 are locked at versions before 1.3.</p>
+
+<p>For those using Rails 3.0 or 3.1 and including Brakeman in the Gemfile, Brakeman now supports both the old and new interfaces for MultiJSON and the depedency has been pushed back to MultiJSON 1.2.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/248">changes</a>)</p>
+
+<h3 id="report-issues">Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+
+<p>Finally, please check out <a href="http://rails-sqli.org/">rails-sqli.org</a> and send in any feedback. Thanks!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2013/01/18/brakeman-1-dot-9-1-released">Brakeman 1.9.1 Released</a></h1>
     
     
@@ -575,94 +686,6 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/09/24/brakeman-1-dot-8-1-released">Brakeman 1.8.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-09-24 12:09:00 -0700" pubdate  updated >2012-09-24 12:09:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Bug fixes!</p>
-
-<p><em>Changes since 1.8.0</em>:</p>
-
-<ul>
-  <li>Recover from errors in output formatting (<a href="https://github.com/presidentbeef/brakeman/pull/148">#148</a>)</li>
-  <li>Fix false positive in <code class="highlighter-rouge">redirect_to</code> (Neil Matatall) (<a href="https://github.com/presidentbeef/brakeman/issues/143">#143</a>)</li>
-  <li>Fix problems with removal of <code class="highlighter-rouge">Sexp#method_missing</code> (<a href="https://github.com/presidentbeef/brakeman/pull/150">#150</a>)</li>
-  <li>Fix array indexing in alias processing (<a href="https://github.com/presidentbeef/brakeman/pull/145">#145</a>)</li>
-  <li>Fix old <code class="highlighter-rouge">mail_to</code> vulnerability check (<a href="https://github.com/presidentbeef/brakeman/pull/147">#147</a>)</li>
-  <li>Fix rescans when only controller action changes (<a href="https://github.com/presidentbeef/brakeman/pull/141">#141</a>)</li>
-  <li>Allow comparison of versions with unequal lengths (<a href="https://github.com/presidentbeef/brakeman/pull/144">#144</a>)</li>
-  <li>Handle super calls with blocks (<a href="https://github.com/presidentbeef/brakeman/pull/146">#146</a>)</li>
-  <li>Remove malformed Sexps from HAML processing  (<a href="https://github.com/presidentbeef/brakeman/pull/149">#149</a>)</li>
-  <li>Respect <code class="highlighter-rouge">-q</code> flag for “Rails 3 detected” message</li>
-</ul>
-
-<h3 id="fix-crashes-when-generating-report">Fix Crashes when Generating Report</h3>
-
-<p>Some scans were causing Brakeman to crash while generating reports with an error like:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lib/brakeman/warning.rb:78:in `format_code': undefined method `gsub' for nil:NilClass (NoMethodError)
-</code></pre></div></div>
-
-<p>This was due to a combination of the removal of <code class="highlighter-rouge">method_missing</code> behavior from <code class="highlighter-rouge">Sexp</code> and the <code class="highlighter-rouge">OutputProcessor</code> not handling errors well.</p>
-
-<p>The problem should be fixed now, but please report an issue if “[Format Error]” shows up in reports.</p>
-
-<h3 id="false-positive-in-redirect-check">False Positive in Redirect Check</h3>
-
-<p>Neil Matatall fixed <a href="https://github.com/presidentbeef/brakeman/issues/143">an issue</a> with a false positive when redirecting to an array.</p>
-
-<p>When <code class="highlighter-rouge">redirect_to</code> is given an array, Rails eventually falls through to <code class="highlighter-rouge">polymorphic_path</code>, which will only return a path, not a full URL. Brakeman only checks for redirects that can redirect to a different host, so this is considered safe.</p>
-
-<h3 id="sexp-and-method_missing">Sexp and <code class="highlighter-rouge">method_missing</code></h3>
-
-<p>The original <code class="highlighter-rouge">Sexp</code> code from RubyParser uses <code class="highlighter-rouge">method_missing</code> to find and optionally delete nodes. This functionality is not used very often (never in Brakeman) but has covered up bugs that would otherwise been found. Therefore, <code class="highlighter-rouge">Sexp#method_missing</code> has been removed in Brakeman. However, it turns out that <a href="https://github.com/seattlerb/ruby2ruby">Ruby2Ruby</a> uses it in a couple places. Brakeman uses Ruby2Ruby to covert s-expressions back to readable Ruby code, particularly when generating reports. This lead to some crashes.</p>
-
-<h3 id="fix-array-indexing">Fix Array Indexing</h3>
-
-<p>Brakeman can handle pulling values out of simple arrays. Or it should be able to, but it keeps breaking. Should be fixed now!</p>
-
-<h3 id="fix-mail_to-check">Fix <code class="highlighter-rouge">mail_to</code> Check</h3>
-
-<p>There is a Brakeman check for an <a href="https://groups.google.com/d/topic/rubyonrails-security/8CpI7egxX4E/discussion">old vulnerability</a> in <code class="highlighter-rouge">mail_to</code>. However, it turns out this check has been broken for a while. But now it is fixed! And there are regression tests.</p>
-
-<h3 id="fix-rescans-on-controller-changes">Fix Rescans on Controller Changes</h3>
-
-<p>There were some crashes when rescanning was triggered by a controller change.</p>
-
-<h3 id="haml-processing">HAML Processing</h3>
-
-<p>Some very old code for HAML processing was generating malformed s-expressions, which then had to be handled specially in the output formatter. It turns out these nodes were not even used, so they were removed. Please report any problems arising from this! We do not have a lot of HAML test cases.</p>
-
-<h3 id="report-issues">Report Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -701,6 +724,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2022/04/06/brakeman-5-dot-2-dot-2-released">Brakeman 5.2.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/01/30/5-dot-2-dot-1-released">Brakeman 5.2.1 Released</a>
       </li>
     
@@ -714,10 +741,6 @@ end
     
       <li class="post">
         <a href="/blog/2021/07/19/brakeman-5-dot-1-dot-0-released">Brakeman 5.1.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2021/06/08/brakeman-5-dot-0-dot-4-released">Brakeman 5.0.4 Released</a>
       </li>
     
   </ul>

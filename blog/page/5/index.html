@@ -80,6 +80,173 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2019/07/23/brakeman-4-dot-6-dot-0-released">Brakeman 4.6.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2019-07-23 13:14:00 -0700" pubdate  updated >2019-07-23 13:14:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release has two new checks!</p>
+
+<p><em>Changes since 4.5.1:</em></p>
+
+<ul>
+  <li>Add check for cookie serialization with Marshal (<a href="https://github.com/presidentbeef/brakeman/issues/1316">#1316</a>)</li>
+  <li>Add reverse tabnabbing check (<a href="https://github.com/linosgian">Linos Giannopoulos</a>)</li>
+  <li>Avoid warning about file access with <code class="highlighter-rouge">ActiveStorage::Filename#sanitized</code> (<a href="https://github.com/tejasbubane">Tejas Bubane</a>)</li>
+  <li>Update loofah version for fixing <a href="https://nvd.nist.gov/vuln/detail/CVE-2018-8048">CVE-2018-8048</a> (<a href="https://github.com/MartyBeGood">Markus Nölle</a>)</li>
+  <li>Warn people that Haml 5 is not fully supported (<a href="https://github.com/jaredbeck">Jared Beck</a>)</li>
+  <li>Index calls in initializers</li>
+  <li>Improve template output handling in conditional branches</li>
+  <li>Avoid assigning <code class="highlighter-rouge">nil</code> line numbers to <code class="highlighter-rouge">Sexp</code>s</li>
+  <li>Add special warning code for custom checks</li>
+  <li>Add call matching by regular expression</li>
+  <li>Skip calls to <code class="highlighter-rouge">dup</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1374">#1374</a>)</li>
+  <li>Restore <code class="highlighter-rouge">Warning#relative_path</code></li>
+  <li>Better handling of gems with no version declared</li>
+</ul>
+
+<h3 id="cookie-serialization-check">Cookie Serialization Check</h3>
+
+<p>Brakeman will now warn if <code class="highlighter-rouge">Rails.application.config.action_dispatch.cookies_serializer</code> is set to <code class="highlighter-rouge">:marshal</code> or <code class="highlighter-rouge">:json</code>.</p>
+
+<p>This options allow cookies to be deserialized via <code class="highlighter-rouge">Marshal</code>. If an attacker is able to construct a valid encrypted cookie, this could lead to arbitrary code execution.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1364">changes</a>)</p>
+
+<h3 id="reverse-tabnabbing-check">Reverse Tabnabbing Check</h3>
+
+<p><a href="https://github.com/linosgian">Linos Giannopoulos</a> has added an optional check for cases of “reverse tabnabbing”. This occurs when a link is opened in a new window/tab via a link (with <code class="highlighter-rouge">target: '_blank'</code>).
+The new window can control the location of the old window. If an attacker controls the new window, they can redirect the old window to a malicious site. This is especially useful for 
+phishing attacks. These kinds of attacks are most likely on applications that allow arbitrary links to external sites.</p>
+
+<p>To completely remove the ability of an attacker to control the old window, add <code class="highlighter-rouge">rel: "noreferrer noopener"</code> to the <code class="highlighter-rouge">link_to</code> call. Note: this will cause the new window to lose referrer information.</p>
+
+<p>To enable this new check, use <code class="highlighter-rouge">--enable ReverseTabnabbing</code> or <code class="highlighter-rouge">-A</code> to enable all optional checks.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1367">changes</a>)</p>
+
+<h3 id="file-access-false-positive">File Access False Positive</h3>
+
+<p><a href="https://github.com/tejasbubane">Tejas Bubane</a> provided a fix to ignore use of <code class="highlighter-rouge">ActiveStorage::Filename#sanitized</code> inside file access calls.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1375">changes</a>)</p>
+
+<h3 id="fixed-loofah-version">Fixed Loofah Version</h3>
+
+<p><a href="https://github.com/MartyBeGood">Markus Nölle</a> corrected the “fixed” version of Loofah for CVE-2018-8048 from <code class="highlighter-rouge">2.1.2</code> to <code class="highlighter-rouge">2.2.1</code>. Oops!</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1371">changes</a>)</p>
+
+<h3 id="haml-5-support">Haml 5 Support</h3>
+
+<p><a href="https://github.com/jaredbeck">Jared Beck</a> added a notification when Haml 5 is in use by an application. At the moment, Brakeman does not support Haml 5.x.
+There appear to be only a few syntax differences between Haml 4.x and 5.x, so most users are unaffected.</p>
+
+<p>Support is planned for a future release.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1379">changes</a>)</p>
+
+<h3 id="initializers-more-fully-supported">Initializers More Fully Supported</h3>
+
+<p>When Brakeman scans an application, <a href="https://blog.presidentbeef.com/blog/2012/11/28/faster-call-indexing-in-brakeman-1-dot-8-3/">it “indexes” all method calls of interest</a>. Most checks then operated on those indexed calls.</p>
+
+<p>However, for historical reasons, initializers (files in <code class="highlighter-rouge">config/initializers/</code>) were not included in that index.</p>
+
+<p>Now they are! Besides some modest speed gains and simpler/more consistent checks, now regular old checks can “see” initializers.
+This may result in previously-unreported warnings now popping up in initializers.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1363">changes</a>)</p>
+
+<h3 id="conditional-branches-in-templates">Conditional Branches in Templates</h3>
+
+<p>Very obvious code like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= blah ? x : params[:x].html_safe %&gt;
+</code></pre></div></div>
+
+<p>Was not being handled correctly and the cross-site scripting issue would not be reported. This is now fixed!</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1361">changes</a>)</p>
+
+<h3 id="empty-line-numbers">Empty Line Numbers</h3>
+
+<p><a href="https://github.com/seattlerb/sexp_processor/commit/ce284487f057203360c41b14d2b25f8c5453fbb9">A change in <code class="highlighter-rouge">sexp_processor</code></a> causes it to raise an exception if an <code class="highlighter-rouge">Sexp</code> is assigned a <code class="highlighter-rouge">nil</code> line.
+Brakeman was a bit cavalier when assigning line numbers, so this caused an issue for some users.</p>
+
+<p>As a result, line numbers should be assigned a bit more consistently now.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1360">changes</a>)</p>
+
+<h3 id="custom-check-warning-code">Custom Check Warning Code</h3>
+
+<p>Every warning reported by Brakeman refers to an integer “warning code”. This is so the “warning type” or category can be a bit more flexible if we want to change the name or formatting.
+However, this list of warning codes is hardcoded into Brakeman. The hardcoding makes it hard for users to add their own checks, because they need to either use an existing code or monkey-patch in a new one.</p>
+
+<p>To help with this situation, custom checks/rules can now use the <code class="highlighter-rouge">:custom_check</code> warning code.</p>
+
+<p><a href="https://github.com/presidentbeef/brakeman/wiki/Creating-Custom-Brakeman-Rules">A tutorial on writing custom checks is in progress</a>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1377">changes</a>)</p>
+
+<h3 id="call-matching-via-regex">Call Matching via Regex</h3>
+
+<p>It is now possible to search for call targets by regular expression, although it is discouraged for performance reasons.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1358">changes</a>)</p>
+
+<h3 id="dup-calls">Dup Calls</h3>
+
+<p>Brakeman now skips calls to <code class="highlighter-rouge">#dup</code> as if they aren’t there.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1386">changes</a>)</p>
+
+<h3 id="warningrelative_path"><code class="highlighter-rouge">Warning#relative_path</code></h3>
+
+<p><code class="highlighter-rouge">Warning#relative_path</code> has been added back for dependencies that might need it, such as <a href="https://github.com/guard/guard-brakeman/pull/36/">guard-brakeman</a>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1365">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>48be7f5a8d814ad42bbb9a2222a331e59a8ece9b50103d8e809a0bbc9d128ef9  brakeman-4.6.0.gem
+ff81f5d6fb258a1b83c78ba4144163d1183bd9f31536782722617e880ff85917  brakeman-lib-4.6.0.gem
+ef3ad0f59dc32630b1e39f289257cf33a882f2838f455e6009c0cb973ee1d378  brakeman-min-4.6.0.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2019/05/11/4-dot-5-1-released">Brakeman 4.5.1 Released</a></h1>
     
     
@@ -633,52 +800,6 @@ Please report any issues.</p>
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/index.html">Brakeman Has Been Acquired by Synopsys</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2018-06-28 13:37:00 -0700" pubdate  updated >2018-06-28 13:37:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>We are excited to announce <a href="https://brakemanpro.com">Brakeman Pro</a> has been acquired by Synopsys.</p>
-
-<p>Started in 2014, Brakeman Pro has been a partnership between <a href="https://twitter.com/presidentbeef">Justin Collins</a>, <a href="https://twitter.com/ndm">Neil Matatall</a>, <a href="https://twitter.com/manicode">Jim Manico</a>, and <a href="https://twitter.com/adamkorman">Adam Korman</a>. Although it’s been an unconventional journey, we are all grateful to have traveled it together. Sincere thanks to the many folks who supported, promoted, and encouraged us along the way.</p>
-
-<p>Justin Collins will be joining Synopsys to help integrate the Brakeman Pro Engine into their static application security testing (SAST) offerings, as well as continuing to develop and support the Brakeman OSS project. This is an exciting opportunity to focus on improving and expanding SAST for the Ruby community.</p>
-
-<h3 id="brakeman-oss">Brakeman OSS</h3>
-
-<p>This Brakeman OSS project is part of the acquisition, and Synopsys now owns the copyright previously held by Brakeman, Inc.</p>
-
-<p>The project going forward and any future contributions will be made available under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 Public License</a>. For most users who are using Brakeman for internal purposes or assessments, nothing will change. Brakeman OSS will continue to be maintained by the same folks, free, and open source. Code will remain available on <a href="https://github.com/presidentbeef/brakeman">GitHub</a>, and Ruby gems will be distributed from <a href="https://rubygems.org/gems/brakeman">RubyGems.org</a>.</p>
-
-<p>However, under the new license, it is no longer possible to use Brakeman OSS for the development of a commercial product or online service or to resell Brakeman OSS as a service. Companies wishing to do either will require a commercial agreement with Synopsys. Please see <a href="https://github.com/presidentbeef/brakeman/pull/1238#issuecomment-401448976">here</a> for more details.</p>
-
-<h3 id="thank-you">Thank You</h3>
-
-<p>Thank you again to our customers, friends, and family who supported us in making the web a little bit safer!</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -717,6 +838,10 @@ Please report any issues.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2022/04/06/brakeman-5-dot-2-dot-2-released">Brakeman 5.2.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/01/30/5-dot-2-dot-1-released">Brakeman 5.2.1 Released</a>
       </li>
     
@@ -730,10 +855,6 @@ Please report any issues.</p>
     
       <li class="post">
         <a href="/blog/2021/07/19/brakeman-5-dot-1-dot-0-released">Brakeman 5.1.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2021/06/08/brakeman-5-dot-0-dot-4-released">Brakeman 5.0.4 Released</a>
       </li>
     
   </ul>
