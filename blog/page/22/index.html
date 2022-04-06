@@ -80,6 +80,104 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2011/11/18/brakeman-0-dot-9-1-released">Brakeman 0.9.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2011-11-18 10:41:00 -0800" pubdate  updated >2011-11-18 10:41:00 -0800</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/2b61d70fb73c7cc5">A new vulnerability was disclosed</a> yesterday in the Rails <a href="http://api.rubyonrails.org/classes/ActionView/Helpers/TranslationHelper.html#method-i-translate">translate helper</a>.</p>
+
+<p>This vulnerability affects Rails 2.3.x when using the rails_xss plugin, Rails 3.0 - 3.0.10, and Rails 3.1 - 3.1.1.</p>
+
+<p>The only change in the 0.9.1 release is a check for this new vulnerability.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
+    <h1 class="entry-title"><a href="/blog/2011/11/16/brakeman-0-dot-9-0-released">Brakeman 0.9.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2011-11-16 16:23:00 -0800" pubdate  updated >2011-11-16 16:23:00 -0800</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Changes:</p>
+
+<ul>
+  <li>Process Rails 3 configuration files</li>
+  <li>Check for config.active_record.whitelist_attributes = true</li>
+  <li>Always produce a warning for without_protection =&gt; true</li>
+  <li>Fix CSV output</li>
+</ul>
+
+<p>This is just a small release on the way to 1.0.</p>
+
+<h3 id="rails-3-configs">Rails 3 Configs</h3>
+
+<p>Configurations in <code class="highlighter-rouge">config/application</code> and <code class="highlighter-rouge">config/environments/production.rb</code> will now be parsed.</p>
+
+<h3 id="check-for-disabled-mass-assignment">Check for Disabled Mass Assignment</h3>
+
+<p>A new option was added in Rails 3.1 to globally disable mass assignment using <code class="highlighter-rouge">config.active_record.whitelist_attributes = true</code>. Brakeman will now turn off mass assignment warnings if this configuration setting is detected.</p>
+
+<h3 id="always-warn-on-without_protection">Always Warn on without_protection</h3>
+
+<p>Rails 3.1 adds a way to bypass attribute protection when doing mass assignment.</p>
+
+<p>For example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.new(params, :without_protection =&gt; true)
+</code></pre></div></div>
+
+<p>Brakeman will now <em>always</em> warn when <code class="highlighter-rouge">without_protection</code> is used, even if mass assignment is disabled or attributes are protected on that model.</p>
+
+<h3 id="fix-csv-output">Fix CSV Output</h3>
+
+<p>Brakeman reports using the CSV format should work once again.</p>
+
+<p>There is a bug in Ruport when using Ruby 1.9.2 and CSV output. A temporary patch has been added until this is resolved.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2011/11/04/brakeman-0-dot-8-4-released">Brakeman 0.8.4 Released</a></h1>
     
     
@@ -252,137 +350,6 @@
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2011/09/15/brakeman-0-dot-8-0-released">Brakeman 0.8.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-09-15 10:06:00 -0700" pubdate  updated >2011-09-15 10:06:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Change list for Brakeman 0.8.0:</p>
-
-<ul>
-  <li>Add check for mass assignment using without_protection</li>
-  <li>Add check for password in http_basic_authenticate_with</li>
-  <li>Warn on user input in hash argument with mass assignment</li>
-  <li>auto_link is now considered safe for Rails &gt;= 3.0.6</li>
-  <li>Output detected Rails version in report</li>
-  <li>Keep track of methods called in class definition</li>
-  <li>Add ruby_parser hack for Ruby 1.9 hash syntax</li>
-  <li>Add a few Rails 3.1 tests</li>
-</ul>
-
-<p>As always, please <a href="https://github.com/presidentbeef/brakeman/issues">report any issues</a>.</p>
-
-<h2 id="new-checks">New Checks</h2>
-
-<p>This release adds two checks specific to Rails 3.1.</p>
-
-<p>The first looks for mass assignment which deliberately bypasses attribute protection. For example:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.new(params[:user], :without_protection) =&gt; true)
-</code></pre></div></div>
-
-<p>If user input is used for initializing the record, the warning will be set to high confidence. Otherwise, it will show up as medium confidence.</p>
-
-<p>The second new check looks for controllers using the new <code class="highlighter-rouge">http_basic_authenticate_with</code> method and including the password directly in the source.</p>
-
-<p>The example from the <a href="http://guides.rubyonrails.org/getting_started.html">Rails guide</a> looks like this:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class PostsController &lt; ApplicationController
- 
-  http_basic_authenticate_with :name =&gt; "dhh", :password =&gt; "secret", :except =&gt; :index
-
-  #...
-
-end
-</code></pre></div></div>
-
-<p>This would raise a warning, mostly because it is a bad idea to have passwords in plain text right in your source code.</p>
-
-<h2 id="changes-to-existing-warnings">Changes to Existing Warnings</h2>
-
-<p>Mass assignment has been changed to raise a warning if there is any user input when calling <code class="highlighter-rouge">Model.new</code>.</p>
-
-<p><code class="highlighter-rouge">auto_link</code> was previously set to be a “known dangerous” method because it did not escape its output. That was fixed in Rails 3.0.6, so it will be considered safe for versions 3.0.6 and up. But then <code class="highlighter-rouge">auto_link</code> was removed in Rails 3.1, so for 3.1 and up it will be treated as a regular method.</p>
-
-<h2 id="changes-to-output">Changes to Output</h2>
-
-<p>Warnings reports will now include the detected Rails version as part of the information reported.</p>
-
-<h2 id="support-for-ruby-19-hash-syntax">Support for Ruby 1.9 Hash Syntax</h2>
-
-<p><a href="https://github.com/seattlerb/ruby_parser">RubyParser</a>, used by Brakeman for all its Ruby parsing needs, <a href="http://blog.zenspider.com/2010/12/bounty-ruby-parser-needs-19-lo.html">does not support the new Ruby 1.9 syntax</a>. After coming across an application which uses the <a href="http://blog.peepcode.com/tutorials/2011/rip-ruby-hash-rocket-syntax">1.9 hash syntax</a> <em>extremely</em> liberally, a temporary hack has been added that should allow Brakeman to parse it correctly.</p>
-
-<p>This does mean that Brakeman is overriding RubyParser’s code to add in this functionality. That is why it is a <em>temporary hack</em>.</p>
-
-<h2 id="new-tests">New Tests</h2>
-
-<p>Work has begun on a test application using Rails 3.1. There do not seem to be any huge changes in 3.1 that would prevent Brakeman from working, though.</p>
-
-<h2 id="next-version">Next Version</h2>
-
-<p>The main area of focus for the next (major) release will be Rails 3.x routing. Brakeman is currently quite limited in what kinds of routes in understands.</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2011/08/27/one-year-anniversary-and-a-website">One Year Anniversary</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-08-27 01:00:00 -0700" pubdate  updated >2011-08-27 01:00:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>One year ago, Brakeman 0.0.1 was released as a gem. Then it was promptly yanked and replaced with <a href="http://rubygems.org/gems/brakeman/versions/0.0.2">Brakeman 0.0.2</a>.</p>
-
-<p>In celebration of this grand anniversary, there have been several new releases today.</p>
-
-<p>The first is <a href="http://rubygems.org/gems/brakeman/versions/0.7.2">Brakeman 0.7.2</a>, a minor release adding CVE numbers for the <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/f878a33159ac9967">latest vulnerabilities</a> and fixing how nested params/cookie accesses are handled (e.g., <code class="highlighter-rouge">params[:user][:name]</code> is now considered a direct use of a parameter).</p>
-
-<p>Next up, Brakeman has its own Twitter feed <a href="https://twitter.com/brakemanscanner">@BrakemanScanner</a>.</p>
-
-<p>Lastly, there is this new website. Look forward to tutorials and more in-depth information about how to use Brakeman effectively.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -421,6 +388,14 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2022/01/30/5-dot-2-dot-1-released">Brakeman 5.2.1 Released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2021/12/15/brakeman-5-dot-2-dot-0-released">Brakeman 5.2.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2021/10/28/brakeman-5-dot-1-dot-2-released">Brakeman 5.1.2 Released</a>
       </li>
     
@@ -430,14 +405,6 @@ end
     
       <li class="post">
         <a href="/blog/2021/06/08/brakeman-5-dot-0-dot-4-released">Brakeman 5.0.4 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2021/04/27/brakeman-5-dot-0-dot-1-released">Brakeman 5.0.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2021/01/26/brakeman-5-dot-0-dot-0-released">Brakeman 5.0.0 Released</a>
       </li>
     
   </ul>
