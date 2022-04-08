@@ -294,6 +294,30 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
+  def test_hash_shorthand_syntax
+    assert_alias '2', <<-RUBY
+      a = 1
+      b = 2
+      h = { a:, b: }
+      h[:b]
+    RUBY
+  end
+
+  def test_hash_shorthand_syntax_unknown_value
+    assert_alias 'b', <<-RUBY
+      h = { a:, b:, c: 1 }
+      h[:b]
+    RUBY
+  end
+
+  def test_hash_shorthand_syntax_mix
+    assert_alias '3', <<-RUBY
+      a = 1
+      h = { a:, b:, c: 3 }
+      h[:c]
+    RUBY
+  end
+
   def test_splat_array_args
     assert_alias 'x(1, b, :c)', <<-RUBY
       a = b
