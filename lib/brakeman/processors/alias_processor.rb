@@ -703,7 +703,30 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       end
     end
 
-    exp
+    # Return early unless there might be short-hand syntax,
+    # since handling it is kind of expensive.
+    return exp unless exp.any? { |e| e.nil? }
+
+    # Need to handle short-hand hash syntax
+    new_hash = [:hash]
+    hash_iterate(exp) do |key, value|
+      # e.g. { a: }
+      if value.nil? and symbol? key
+        # Only handling local variables for now, not calls
+        lvar = s(:lvar, key.value)
+        if var_value = env[lvar]
+          new_hash << key << var_value.deep_clone(key.line || 0)
+        else
+          # If the value is unknown, assume it was a call
+          # and set the value to a call
+          new_hash.concat << key << s(:call, nil, key.value).line(key.line || 0)
+        end
+      else
+        new_hash.concat << key << value
+      end
+    end
+
+    Sexp.from_array(new_hash).line(exp.line || 0)
   end
 
   #Merge values into hash when processing
