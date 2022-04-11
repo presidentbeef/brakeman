@@ -88,10 +88,10 @@ module Brakeman
 
         m.choice "i"
         m.choice "n"
-        m.choice "k"
+        m.choice "s"
         m.choice "u"
         m.choice "a"
-        m.choice "s"
+        m.choice "k"
         m.choice "q"
         m.choice "?" do
           show_help
