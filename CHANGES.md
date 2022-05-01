@@ -1,3 +1,8 @@
+# 5.2.3 - 2022-05-01
+
+* Fix error with hash shorthand syntax
+* Match order of interactive options with help message (Rory O'Kane)
+
 # 5.2.2 - 2022-04-06
 
 * Update `ruby_parser` for Ruby 3.1 support (Merek Skubela)
