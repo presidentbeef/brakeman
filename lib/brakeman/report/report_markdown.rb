@@ -104,7 +104,7 @@ class Brakeman::Report::Markdown < Brakeman::Report::Table
     end
 
     if warning.code
-      code = warning.format_code.gsub('`','``').gsub(/\A``|``\z/, '` `')
+      code = warning.format_code.gsub('`','``').gsub(/\A``|``\z/, '` `').gsub('|', '\|')
       message << ": `#{code}`"
     end
 
