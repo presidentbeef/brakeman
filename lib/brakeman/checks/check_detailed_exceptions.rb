@@ -19,7 +19,8 @@ class Brakeman::CheckDetailedExceptions < Brakeman::BaseCheck
            :warning_code => :local_request_config,
            :message => "Detailed exceptions are enabled in production",
            :confidence => :high,
-           :file => "config/environments/production.rb"
+           :file => "config/environments/production.rb",
+           :cwe_id => [200]
     end
   end
 
@@ -42,7 +43,8 @@ class Brakeman::CheckDetailedExceptions < Brakeman::BaseCheck
                :message => msg("Detailed exceptions may be enabled in ", msg_code("show_detailed_exceptions?")),
                :confidence => confidence,
                :code => src,
-               :file => definition[:file]
+               :file => definition[:file],
+               :cwe_id => [200]
         end
       end
     end

@@ -14,7 +14,8 @@ class Brakeman::CheckExternalCheckTest < Brakeman::BaseCheck
           warning_code: :custom_check,
           message: "Called something shady!",
           confidence: :high,
-          user_input: user_input
+          user_input: user_input,
+          :cwe_id => [-1]
       end
     end
   end

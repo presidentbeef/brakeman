@@ -81,7 +81,8 @@ class Brakeman::CheckSQLCVEs < Brakeman::BaseCheck
       :message => msg(msg_version(rails_version), " contains a SQL injection vulnerability ", msg_cve(cve), ". Upgrade to ", msg_version(upgrade_version)),
       :confidence => :high,
       :gem_info => gemfile_or_environment,
-      :link_path => link
+      :link_path => link,
+      :cwe_id => [89]
   end
 
   def upgrade_version? versions
@@ -101,6 +102,7 @@ class Brakeman::CheckSQLCVEs < Brakeman::BaseCheck
       :message => msg(msg_version(rails_version), " contains a SQL injection vulnerability ", msg_cve("CVE-2014-0080"), " with PostgreSQL. Upgrade to ", msg_version("4.0.3")),
       :confidence => :high,
       :gem_info => gemfile_or_environment(:pg),
-      :link_path => "https://groups.google.com/d/msg/rubyonrails-security/Wu96YkTUR6s/pPLBMZrlwvYJ"
+      :link_path => "https://groups.google.com/d/msg/rubyonrails-security/Wu96YkTUR6s/pPLBMZrlwvYJ",
+      :cwe_id => [89]
   end
 end

@@ -26,6 +26,7 @@ class Brakeman::CheckSafeBufferManipulation < Brakeman::BaseCheck
       :warning_code => :safe_buffer_vuln, 
       :message => message,
       :confidence => :medium,
-      :gem_info => gemfile_or_environment
+      :gem_info => gemfile_or_environment,
+      :cwe_id => [79]
   end
 end

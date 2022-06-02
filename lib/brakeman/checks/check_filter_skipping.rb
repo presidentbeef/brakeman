@@ -15,7 +15,8 @@ class Brakeman::CheckFilterSkipping < Brakeman::BaseCheck
         :message => msg("Rails versions before 3.0.10 have a vulnerability which allows filters to be bypassed", msg_cve("CVE-2011-2929")),
         :confidence => :high,
         :gem_info => gemfile_or_environment,
-        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/NCCsca7TEtY/discussion"
+        :link_path => "https://groups.google.com/d/topic/rubyonrails-security/NCCsca7TEtY/discussion",
+        :cwe_id => [20]
     end
   end
 

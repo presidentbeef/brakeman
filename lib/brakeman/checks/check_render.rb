@@ -57,7 +57,8 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
         :warning_code => :dynamic_render_path,
         :message => message,
         :user_input => input,
-        :confidence => confidence
+        :confidence => confidence,
+        :cwe_id => [22]
     end
   end
 
@@ -78,7 +79,8 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
           :warning_code => :dynamic_render_path_rce,
           :message => msg("Passing query parameters to ", msg_code("render"), " is vulnerable in ", msg_version(rails_version), " ", msg_cve("CVE-2016-0752")),
           :user_input => view,
-          :confidence => :high
+          :confidence => :high,
+          :cwe_id => [22]
       end
     end
   end

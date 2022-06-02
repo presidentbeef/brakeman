@@ -121,6 +121,18 @@ module BrakemanTester::CheckExpected
       end
     end
   end
+
+  def test_every_warning_has_cwe_id
+    [:generic_warnings, :template_warnings, :controller_warnings, :model_warnings].each do |type|
+      report[type].each do |w|
+        refute_nil w.cwe_id, lambda { "Warning did not have a CWE ID: #{w.message}" }
+        assert_kind_of Array, w.cwe_id, lambda { 'Warnings must have a CWE that is an Array'}
+        w.cwe_id.each do |cwe|
+          assert_kind_of Integer, cwe, lambda { 'Warnings must have a CWE IDs that are Integers'}
+        end
+      end
+    end
+  end
 end
 
 module BrakemanTester::RescanTestHelper

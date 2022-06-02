@@ -27,7 +27,8 @@ class Brakeman::CheckDefaultRoutes < Brakeman::BaseCheck
         :message => msg("All public methods in controllers are available as actions in ", msg_file("routes.rb")),
         :line => tracker.routes[:allow_all_actions].line,
         :confidence => :high,
-        :file => "#{tracker.app_path}/config/routes.rb"
+        :file => "#{tracker.app_path}/config/routes.rb",
+        :cwe_id => [22]
     end
   end
 
@@ -49,7 +50,8 @@ class Brakeman::CheckDefaultRoutes < Brakeman::BaseCheck
           :message => msg("Any public method in ", msg_code(name), " can be used as an action for ", msg_code(verb), " requests."),
           :line => actions[2],
           :confidence => :medium,
-          :file => "#{tracker.app_path}/config/routes.rb"
+          :file => "#{tracker.app_path}/config/routes.rb",
+          :cwe_id => [22]
       end
     end
   end
@@ -82,7 +84,8 @@ class Brakeman::CheckDefaultRoutes < Brakeman::BaseCheck
       :message => msg(msg_version(rails_version), " with globbing routes is vulnerable to directory traversal and remote code execution. Patch or upgrade to ", msg_version(upgrade)),
       :confidence => confidence,
       :file => "#{tracker.app_path}/config/routes.rb",
-      :link => "http://matasano.com/research/AnatomyOfRailsVuln-CVE-2014-0130.pdf"
+      :link => "http://matasano.com/research/AnatomyOfRailsVuln-CVE-2014-0130.pdf",
+      :cwe_id => [22]
   end
 
   def allow_all_actions?

@@ -25,7 +25,8 @@ class Brakeman::CheckFileDisclosure < Brakeman::BaseCheck
         :message => msg(msg_version(rails_version), " has a file existence disclosure vulnerability. Upgrade to ", msg_version(fix_version), " or disable serving static assets"),
         :confidence => :high,
         :gem_info => gemfile_or_environment,
-        :link_path => "https://groups.google.com/d/msg/rubyonrails-security/23fiuwb1NBA/MQVM1-5GkPMJ"
+        :link_path => "https://groups.google.com/d/msg/rubyonrails-security/23fiuwb1NBA/MQVM1-5GkPMJ",
+        :cwe_id => [22]
     end
   end
 

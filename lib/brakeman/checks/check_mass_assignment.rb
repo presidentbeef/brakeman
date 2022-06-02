@@ -99,7 +99,8 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
         :message => "Unprotected mass assignment",
         :code => call,
         :user_input => input,
-        :confidence => confidence
+        :confidence => confidence,
+        :cwe_id => [915]
     end
 
     res
@@ -205,7 +206,8 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
       :warning_type => "Mass Assignment",
       :warning_code => :mass_assign_permit!,
       :message => msg('Specify exact keys allowed for mass assignment instead of using ', msg_code('permit!'), ' which allows any keys'),
-      :confidence => confidence
+      :confidence => confidence,
+      :cwe_id => [915]
   end
 
   def check_permit_all_parameters
@@ -217,7 +219,8 @@ class Brakeman::CheckMassAssignment < Brakeman::BaseCheck
           :warning_type => "Mass Assignment",
           :warning_code => :mass_assign_permit_all,
           :message => msg('Mass assignment is globally enabled. Disable and specify exact keys using ', msg_code('params.permit'), ' instead'),
-          :confidence => :high
+          :confidence => :high,
+          :cwe_id => [915]
       end
     end
   end

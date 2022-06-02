@@ -45,7 +45,8 @@ class Brakeman::CheckSymbolDoS < Brakeman::BaseCheck
         :warning_code => :unsafe_symbol_creation,
         :message => message,
         :user_input => input,
-        :confidence => confidence
+        :confidence => confidence,
+        :cwe_id => [20]
     end
   end
 

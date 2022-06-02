@@ -26,7 +26,8 @@ class Brakeman::CheckJSONEncoding < Brakeman::BaseCheck
         :message => message,
         :confidence => confidence,
         :gem_info => gemfile_or_environment,
-        :link_path => "https://groups.google.com/d/msg/rubyonrails-security/7VlB_pck3hU/3QZrGIaQW6cJ"
+        :link_path => "https://groups.google.com/d/msg/rubyonrails-security/7VlB_pck3hU/3QZrGIaQW6cJ",
+        :cwe_id => [79]
     end
   end
 

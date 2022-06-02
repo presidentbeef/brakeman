@@ -17,7 +17,8 @@ class Brakeman::CheckJSONEntityEscape < Brakeman::BaseCheck
         :message => msg("HTML entities in JSON are not escaped by default"),
         :confidence => :medium,
         :file => "config/environments/production.rb",
-        :line => 1
+        :line => 1,
+        :cwe_id => [79]
     end
   end
 
@@ -31,7 +32,8 @@ class Brakeman::CheckJSONEntityEscape < Brakeman::BaseCheck
           :warning_code => :json_html_escape_module,
           :message => msg("HTML entities in JSON are not escaped by default"),
           :confidence => :medium,
-          :file => "config/environments/production.rb"
+          :file => "config/environments/production.rb",
+          :cwe_id => [79]
       end
     end
   end

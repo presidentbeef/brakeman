@@ -39,7 +39,8 @@ class Brakeman::CheckCreateWith < Brakeman::BaseCheck
         :result => result,
         :message => @message,
         :confidence => confidence,
-        :link_path => "https://groups.google.com/d/msg/rubyonrails-security/M4chq5Sb540/CC1Fh0Y_NWwJ"
+        :link_path => "https://groups.google.com/d/msg/rubyonrails-security/M4chq5Sb540/CC1Fh0Y_NWwJ",
+        :cwe_id => [915]
     end
   end
 
@@ -69,6 +70,7 @@ class Brakeman::CheckCreateWith < Brakeman::BaseCheck
         :message => @message,
         :gem_info => gemfile_or_environment,
         :confidence => :medium,
-        :link_path => "https://groups.google.com/d/msg/rubyonrails-security/M4chq5Sb540/CC1Fh0Y_NWwJ"
+        :link_path => "https://groups.google.com/d/msg/rubyonrails-security/M4chq5Sb540/CC1Fh0Y_NWwJ",
+        :cwe_id => [915]
   end
 end

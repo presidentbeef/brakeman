@@ -21,7 +21,8 @@ class Brakeman::CheckForceSSL < Brakeman::BaseCheck
         :message => msg("The application does not force use of HTTPS: ", msg_code("config.force_ssl"), " is not enabled"),
         :confidence => :high,
         :file => "config/environments/production.rb",
-        :line => line
+        :line => line,
+        :cwe_id => [311]
     end
   end
 end

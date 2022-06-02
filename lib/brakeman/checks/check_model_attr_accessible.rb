@@ -31,7 +31,8 @@ class Brakeman::CheckModelAttrAccessible < Brakeman::BaseCheck
               :warning_code => :dangerous_attr_accessible,
               :message => "Potentially dangerous attribute available for mass assignment",
               :confidence => confidence,
-              :code => Sexp.new(:lit, attribute)
+              :code => Sexp.new(:lit, attribute),
+              :cwe_id => [915]
             break # Prevent from matching single attr multiple times
           end
         end

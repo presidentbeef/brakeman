@@ -36,7 +36,8 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
       :message => message,
       :confidence => :medium,
       :gem_info => gemfile_or_environment,
-      :link_path => "https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ"
+      :link_path => "https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ",
+      :cwe_id => [79]
   end
 
   def check_number_helper_usage
@@ -69,6 +70,7 @@ class Brakeman::CheckNumberToCurrency < Brakeman::BaseCheck
       :message => msg("Format options in ", msg_code(result[:call].method), " are not safe in ", msg_version(rails_version)),
       :confidence => :high,
       :link_path => "https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ",
-      :user_input => match
+      :user_input => match,
+      :cwe_id => [79]
   end
 end

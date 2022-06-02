@@ -21,7 +21,8 @@ class Brakeman::CheckCSRFTokenForgeryCVE < Brakeman::BaseCheck
         :message => msg(msg_version(rails_version), " has a vulnerability that may allow CSRF token forgery. Upgrade to ", msg_version(fix_version), " or patch"),
         :confidence => :medium,
         :gem_info => gemfile_or_environment,
-        :link => "https://groups.google.com/g/rubyonrails-security/c/NOjKiGeXUgw"
+        :link => "https://groups.google.com/g/rubyonrails-security/c/NOjKiGeXUgw",
+        :cwe_id => [352]
     end
   end
 end

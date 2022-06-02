@@ -105,7 +105,8 @@ class Brakeman::CheckLinkTo < Brakeman::CheckCrossSiteScripting
       :message => message,
       :user_input => user_input,
       :confidence => confidence,
-      :link_path => "link_to"
+      :link_path => "link_to",
+      :cwe_id => [79]
 
     true
   end

@@ -23,7 +23,8 @@ class Brakeman::CheckRouteDoS < Brakeman::BaseCheck
         :message => message,
         :confidence => :medium,
         :gem_info => gemfile_or_environment,
-        :link_path => "https://groups.google.com/d/msg/rubyonrails-security/dthJ5wL69JE/YzPnFelbFQAJ"
+        :link_path => "https://groups.google.com/d/msg/rubyonrails-security/dthJ5wL69JE/YzPnFelbFQAJ",
+        :cwe_id => [399]
     end
   end
 

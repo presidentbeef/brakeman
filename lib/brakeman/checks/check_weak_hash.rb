@@ -53,7 +53,8 @@ class Brakeman::CheckWeakHash < Brakeman::BaseCheck
       :warning_code => :weak_hash_digest,
       :message => message,
       :confidence => confidence,
-      :user_input => input
+      :user_input => input,
+      :cwe_id => [328]
   end
 
   def process_hmac_result result
@@ -74,7 +75,8 @@ class Brakeman::CheckWeakHash < Brakeman::BaseCheck
       :warning_type => "Weak Hash",
       :warning_code => :weak_hash_hmac,
       :message => message,
-      :confidence => :medium
+      :confidence => :medium,
+      :cwe_id => [328]
   end
 
   def process_openssl_result result
@@ -90,7 +92,8 @@ class Brakeman::CheckWeakHash < Brakeman::BaseCheck
           :warning_type => "Weak Hash",
           :warning_code => :weak_hash_digest,
           :message => msg("Weak hashing algorithm used: ", msg_lit(alg)),
-          :confidence => :medium
+          :confidence => :medium,
+          :cwe_id => [328]
       end
     end
   end

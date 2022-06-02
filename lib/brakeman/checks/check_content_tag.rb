@@ -117,7 +117,8 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
         :message => message,
         :user_input => input,
         :confidence => :high,
-        :link_path => "content_tag"
+        :link_path => "content_tag",
+        :cwe_id => [79]
 
     elsif not tracker.options[:ignore_model_output] and match = has_immediate_model?(arg)
       unless IGNORE_MODEL_METHODS.include? match.method
@@ -135,7 +136,8 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
           :message => msg("Unescaped model attribute in ", msg_code("content_tag")),
           :user_input => match,
           :confidence => confidence,
-          :link_path => "content_tag"
+          :link_path => "content_tag",
+          :cwe_id => [79]
       end
 
     elsif @matched
@@ -151,7 +153,8 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
         :message => message,
         :user_input => @matched,
         :confidence => :medium,
-        :link_path => "content_tag"
+        :link_path => "content_tag",
+        :cwe_id => [79]
     end
   end
 
@@ -195,7 +198,8 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
         :message => msg(msg_version(rails_version), " ", msg_code("content_tag"), " does not escape double quotes in attribute values ", msg_cve("CVE-2016-6316"), ". Upgrade to ", msg_version(fix_version)),
         :confidence => confidence,
         :gem_info => gemfile_or_environment,
-        :link_path => "https://groups.google.com/d/msg/ruby-security-ann/8B2iV2tPRSE/JkjCJkSoCgAJ"
+        :link_path => "https://groups.google.com/d/msg/ruby-security-ann/8B2iV2tPRSE/JkjCJkSoCgAJ",
+        :cwe_id => [79]
     end
   end
 

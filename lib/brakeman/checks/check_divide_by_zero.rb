@@ -36,7 +36,8 @@ class Brakeman::CheckDivideByZero < Brakeman::BaseCheck
         :warning_code => :divide_by_zero,
         :message => "Potential division by zero",
         :confidence => confidence,
-        :user_input => denominator
+        :user_input => denominator,
+        :cwe_id => [369]
     end
   end
 end

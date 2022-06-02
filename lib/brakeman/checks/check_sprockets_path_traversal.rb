@@ -30,7 +30,8 @@ class Brakeman::CheckSprocketsPathTraversal < Brakeman::BaseCheck
       :message => message,
       :confidence => confidence,
       :gem_info => gemfile_or_environment(:sprockets),
-      :link_path => "https://groups.google.com/d/msg/rubyonrails-security/ft_J--l55fM/7roDfQ50BwAJ"
+      :link_path => "https://groups.google.com/d/msg/rubyonrails-security/ft_J--l55fM/7roDfQ50BwAJ",
+      :cwe_id => [22, 200]
   end
 
   def has_workaround?

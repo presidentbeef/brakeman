@@ -51,7 +51,8 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
         :warning_code => code,
         :message => message,
         :confidence => :high,
-        :link_path => link
+        :link_path => link,
+        :cwe_id => [79]
     end
   end
 
@@ -83,7 +84,8 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
         :message => message,
         :gem_info => gemfile_or_environment(:loofah),
         :confidence => confidence,
-        :link_path => "https://github.com/flavorjones/loofah/issues/144"
+        :link_path => "https://github.com/flavorjones/loofah/issues/144",
+        :cwe_id => [79]
     end
   end
 
@@ -108,6 +110,7 @@ class Brakeman::CheckSanitizeMethods < Brakeman::BaseCheck
       :message => message,
       :gem_info => gemfile_or_environment(:'rails-html-sanitizer'),
       :confidence => confidence,
-      :link_path => link
+      :link_path => link,
+      :cwe_id => [79]
   end
 end

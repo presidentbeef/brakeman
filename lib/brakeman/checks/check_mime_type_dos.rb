@@ -26,7 +26,8 @@ class Brakeman::CheckMimeTypeDoS < Brakeman::BaseCheck
       :message => message,
       :confidence => :medium,
       :gem_info => gemfile_or_environment,
-      :link_path => "https://groups.google.com/d/msg/rubyonrails-security/9oLY_FCzvoc/w9oI9XxbFQAJ"
+      :link_path => "https://groups.google.com/d/msg/rubyonrails-security/9oLY_FCzvoc/w9oI9XxbFQAJ",
+      :cwe_id => [399]
   end
 
   def has_workaround?
