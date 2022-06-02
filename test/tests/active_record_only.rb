@@ -13,7 +13,10 @@ class ActiveRecordOnlyTests < Minitest::Test
   end
 
   def report
-    @@report ||= BrakemanTester.run_scan "active_record_only", "ActiveRecordOnly"
+    @@report ||=
+      Date.stub :today, Date.parse('2022-04-05') do
+        BrakemanTester.run_scan "active_record_only", "ActiveRecordOnly"
+      end
   end
 
   def test_no_attribute_restriction
@@ -30,18 +33,16 @@ class ActiveRecordOnlyTests < Minitest::Test
   end
 
   def test_unmaintained_dependency_1
-    Date.stub :today, Date.parse('2022-04-05') do
-      assert_warning check_name: "EOLRails",
-        type: :warning,
-        warning_code: 122,
-        fingerprint: "ae8b91c42bce1bcab89b00b4d4f44479bd4376726f36207abc94d896eddd2320",
-        warning_type: "Unmaintained Dependency",
-        line: nil,
-        message: /^Support\ for\ Rails\ 5\.2\.4\.3\ ends\ on\ 2022\-0/,
-        confidence: 2,
-        relative_path: "Gemfile",
-        code: nil,
-        user_input: nil
-    end
+    assert_warning check_name: "EOLRails",
+      type: :warning,
+      warning_code: 122,
+      fingerprint: "ae8b91c42bce1bcab89b00b4d4f44479bd4376726f36207abc94d896eddd2320",
+      warning_type: "Unmaintained Dependency",
+      line: nil,
+      message: /^Support\ for\ Rails\ 5\.2\.4\.3\ ends\ on\ 2022\-0/,
+      confidence: 2,
+      relative_path: "Gemfile",
+      code: nil,
+      user_input: nil
   end
 end
