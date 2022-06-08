@@ -14,7 +14,7 @@ class Rails2Tests < Minitest::Test
       :controller => 1,
       :model => 4,
       :template => 47,
-      :generic => 60 }
+      :generic => 62 }
   end
 
   def report
@@ -1378,7 +1378,7 @@ class Rails2Tests < Minitest::Test
   def test_unsafe_symbol_creation_4
     assert_warning :type => :warning,
       :warning_type => "Denial of Service",
-      :line => 86,
+      :line => 94,
       :message => /^Symbol\ conversion\ from\ unsafe\ string\ in pa/,
       :confidence => 0,
       :file => /other_controller\.rb/,
@@ -1388,7 +1388,7 @@ class Rails2Tests < Minitest::Test
   def test_unsafe_symbol_creation_5
     assert_warning :type => :warning,
       :warning_type => "Denial of Service",
-      :line => 88,
+      :line => 96,
       :message => /^Symbol\ conversion\ from\ unsafe\ string\ in pa/,
       :confidence => 1,
       :file => /other_controller\.rb/,
@@ -1427,6 +1427,28 @@ class Rails2Tests < Minitest::Test
       :confidence => 2,
       :relative_path => "app/controllers/other_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :regex))
+  end
+
+  def test_regex_match_dos
+    assert_warning :type => :warning,
+                   :warning_code => 76,
+                   :warning_type => "Denial of Service",
+                   :line => 86,
+                   :message => /^Parameter value used in string to regular expression coercion/,
+                   :confidence => 0,
+                   :relative_path => "app/controllers/other_controller.rb",
+                   :user_input => s(:call, s(:params), :[], s(:lit, :regex))
+  end
+
+  def test_regex_matchq_dos
+    assert_warning :type => :warning,
+                   :warning_code => 76,
+                   :warning_type => "Denial of Service",
+                   :line => 90,
+                   :message => /^Parameter value used in string to regular expression coercion/,
+                   :confidence => 0,
+                   :relative_path => "app/controllers/other_controller.rb",
+                   :user_input => s(:call, s(:params), :[], s(:lit, :regex))
   end
 
   def test_unsafe_symbol_creation_from_param
@@ -1518,7 +1540,7 @@ class Rails2WithOptionsTests < Minitest::Test
       :controller => 1,
       :model => 4,
       :template => 47,
-      :generic => 60 }
+      :generic => 62 }
   end
 
   def report
