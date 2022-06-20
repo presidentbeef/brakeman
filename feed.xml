@@ -1,4 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2022-04-06T09:50:03-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 5.2.2 Released</title><link href="https://brakemanscanner.org/blog/2022/04/06/brakeman-5-dot-2-dot-2-released" rel="alternate" type="text/html" title="Brakeman 5.2.2 Released" /><published>2022-04-06T08:30:00-07:00</published><updated>2022-04-06T08:30:00-07:00</updated><id>https://brakemanscanner.org/blog/2022/04/06/brakeman-5-dot-2-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2022/04/06/brakeman-5-dot-2-dot-2-released">&lt;p&gt;&lt;em&gt;Changes since 5.2.1:&lt;/em&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2022-06-19T21:18:15-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 5.2.3 Released</title><link href="https://brakemanscanner.org/blog/2022/05/01/brakeman-5-dot-2-dot-3-released" rel="alternate" type="text/html" title="Brakeman 5.2.3 Released" /><published>2022-05-01T08:30:00-07:00</published><updated>2022-05-01T08:30:00-07:00</updated><id>https://brakemanscanner.org/blog/2022/05/01/brakeman-5-dot-2-dot-3-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">&lt;p&gt;&lt;em&gt;Changes since 5.2.2:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Fix error with hash shorthand syntax (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1700&quot;&gt;#1700&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Match order of interactive options with help message (&lt;a href=&quot;https://github.com/roryokane&quot;&gt;Rory O’kane&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;hash-shorthand-syntax&quot;&gt;Hash Shorthand Syntax&lt;/h3&gt;
+
+&lt;p&gt;Parsing shorthand hash syntax like this was added with RubyParser 3.19:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;blah&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;but Brakeman needed to handle it properly, too.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1701&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;interative-options&quot;&gt;Interative Options&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/roryokane&quot;&gt;Rory O’kane&lt;/a&gt; updated the ordering of options in the help message for interative ignore so
+the help message matches the order of the options in the prompt!&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1702&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;5b6efb6a1e5c2b79063553647638e17239d2d2f4d50561230c8b0acaae4728d4  brakeman-5.2.3.gem
+3104abc8ac2b6558d9610ede40f4cac2ebc7ae45569876b8e5907b7422c4e3af  brakeman-lib-5.2.3.gem
+10d743c930c03ed1d2bea021ade8fac10f1229d02b8f65bf2214f7f09ec7a0ff  brakeman-min-5.2.3.gem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Changes since 5.2.2:</summary></entry><entry><title type="html">Brakeman 5.2.2 Released</title><link href="https://brakemanscanner.org/blog/2022/04/06/brakeman-5-dot-2-dot-2-released" rel="alternate" type="text/html" title="Brakeman 5.2.2 Released" /><published>2022-04-06T08:30:00-07:00</published><updated>2022-04-06T08:30:00-07:00</updated><id>https://brakemanscanner.org/blog/2022/04/06/brakeman-5-dot-2-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2022/04/06/brakeman-5-dot-2-dot-2-released">&lt;p&gt;&lt;em&gt;Changes since 5.2.1:&lt;/em&gt;&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Respect equality in &lt;code class=&quot;highlighter-rouge&quot;&gt;if&lt;/code&gt; conditions (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1683&quot;&gt;#1683&lt;/a&gt;)&lt;/li&gt;
@@ -768,48 +810,4 @@ ec69e04e087b74862629e952d7817dd7b73e30810166e01d69d24d7164101455  brakeman-lib-4
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">This releases fixes Ruby 3.0 compatibility (meaning running under 3.0, new syntax is not supported yet).</summary></entry><entry><title type="html">Brakeman 4.10.0 Released</title><link href="https://brakemanscanner.org/blog/2020/09/28/brakeman-4-dot-10-dot-0-released" rel="alternate" type="text/html" title="Brakeman 4.10.0 Released" /><published>2020-09-28T12:30:00-07:00</published><updated>2020-09-28T12:30:00-07:00</updated><id>https://brakemanscanner.org/blog/2020/09/28/brakeman-4-dot-10-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2020/09/28/brakeman-4-dot-10-dot-0-released">&lt;p&gt;This release introduces a new report format!&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 4.9.1:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Add SARIF report format (&lt;a href=&quot;https://github.com/swinton&quot;&gt;Steve Winton&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;sarif-report-format&quot;&gt;SARIF Report Format&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/swinton&quot;&gt;Steve Winton&lt;/a&gt; from GitHub has contributed support for &lt;a href=&quot;https://sarifweb.azurewebsites.net/&quot;&gt;Static Analysis Results Interchange Format (SARIF)&lt;/a&gt;.
-This is a standard format for static analysis tools and can be consumed by some report viewers, such as &lt;a href=&quot;https://github.com/Microsoft/sarif-vscode-extension/&quot;&gt;this one for Visual Studio Code&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;To output a SARIF report, use &lt;code class=&quot;highlighter-rouge&quot;&gt;-f sarif&lt;/code&gt; or a file name like &lt;code class=&quot;highlighter-rouge&quot;&gt;-o report.sarif&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1500&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;previewing-brakeman-50&quot;&gt;Previewing Brakeman 5.0&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;What is planned for Brakeman 5.0?&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;The big change coming in 5.0 is scanning &lt;em&gt;way&lt;/em&gt; more files. Currently, Brakeman scans specific directories in &lt;code class=&quot;highlighter-rouge&quot;&gt;app/&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;config/&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;lib/&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;engines/&lt;/code&gt;.
-It also only looks for files in particular places - e.g. views will be somewhere in &lt;code class=&quot;highlighter-rouge&quot;&gt;app/**/views&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;In 5.0, Brakeman will scan (almost) all files in the project directory with &lt;code class=&quot;highlighter-rouge&quot;&gt;.rb&lt;/code&gt; or template-related extensions.
-This will dramatically increase the scope of Brakeman scans, which is better coverage but at the cost of more false positives and slower scans.&lt;/p&gt;
-
-&lt;p&gt;Also expected in Brakeman 5.0 is a bump of minimum Ruby version to 2.4.0 (which is already EOL).&lt;/p&gt;
-
-&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
-
-&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;7bef7df71137d06be5fc3325ead57f8ce35be7691bf6dd389228461d731b79dd  brakeman-4.10.0.gem
-698b8eb02cdea7a6e407192c261c61d8fc6cd24d590a1b388defc9de17966119  brakeman-lib-4.10.0.gem
-64bb565ee84b9a9646985e456db1125ff9fb884ca83de6ba6fbc2c63bdbc8de9  brakeman-min-4.10.0.gem
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">This release introduces a new report format!</summary></entry></feed>
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">This releases fixes Ruby 3.0 compatibility (meaning running under 3.0, new syntax is not supported yet).</summary></entry></feed>

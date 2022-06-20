@@ -80,6 +80,78 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">Brakeman 5.2.3 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2022-05-01 08:30:00 -0700" pubdate  updated >2022-05-01 08:30:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>Changes since 5.2.2:</em></p>
+
+<ul>
+  <li>Fix error with hash shorthand syntax (<a href="https://github.com/presidentbeef/brakeman/issues/1700">#1700</a>)</li>
+  <li>Match order of interactive options with help message (<a href="https://github.com/roryokane">Rory O’kane</a>)</li>
+</ul>
+
+<h3 id="hash-shorthand-syntax">Hash Shorthand Syntax</h3>
+
+<p>Parsing shorthand hash syntax like this was added with RubyParser 3.19:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">thing</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">blah</span><span class="p">(</span><span class="n">thing</span><span class="p">:)</span>
+</code></pre></div></div>
+
+<p>but Brakeman needed to handle it properly, too.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1701">changes</a>)</p>
+
+<h3 id="interative-options">Interative Options</h3>
+
+<p><a href="https://github.com/roryokane">Rory O’kane</a> updated the ordering of options in the help message for interative ignore so
+the help message matches the order of the options in the prompt!</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1702">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5b6efb6a1e5c2b79063553647638e17239d2d2f4d50561230c8b0acaae4728d4  brakeman-5.2.3.gem
+3104abc8ac2b6558d9610ede40f4cac2ebc7ae45569876b8e5907b7422c4e3af  brakeman-lib-5.2.3.gem
+10d743c930c03ed1d2bea021ade8fac10f1229d02b8f65bf2214f7f09ec7a0ff  brakeman-min-5.2.3.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2022/04/06/brakeman-5-dot-2-dot-2-released">Brakeman 5.2.2 Released</a></h1>
     
     
@@ -389,283 +461,6 @@ then it <em>could</em> (but doesn’t always) cause a sorting error.</p>
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2021/07/19/brakeman-5-dot-1-dot-0-released">Brakeman 5.1.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2021-07-19 15:00:00 -0700" pubdate  updated >2021-07-19 15:00:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a <em>huge</em> release! (So many changes, I had to look up how to nest lists in Markdown…)</p>
-
-<p>Thank you to the many contributors!</p>
-
-<p>There are several new features, take a look below.</p>
-
-<p><em>Changes since 5.0.4:</em></p>
-
-<ul>
-  <li>Report Formats
-    <ul>
-      <li>Add GitHub Actions format (<a href="https://github.com/klausbadelt">Klaus Badelt</a>)</li>
-      <li>Add ignored warnings to SARIF report (<a href="https://github.com/eliblock">Eli Block</a>)</li>
-      <li>Fix SARIF report when checks have no description (<a href="https://github.com/eliblock">Eli Block</a>)</li>
-      <li>Adjust copy of <code class="highlighter-rouge">--interactive</code> menu (<a href="https://github.com/elia">Elia Schito</a>)</li>
-    </ul>
-  </li>
-  <li>Performance
-    <ul>
-      <li>Read and parse files in parallel</li>
-    </ul>
-  </li>
-  <li>Ruby Interpretation
-    <ul>
-      <li>Initial support for ActiveRecord enums (<a href="https://github.com/presidentbeef/brakeman/issues/1492">#1492</a>)</li>
-      <li>Interprocedural dataflow from very simple class methods</li>
-      <li>Support <code class="highlighter-rouge">Array#fetch</code> and <code class="highlighter-rouge">Hash#fetch</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1571">#1571</a>)</li>
-      <li>Support <code class="highlighter-rouge">Array#push</code></li>
-      <li>Support <code class="highlighter-rouge">Array#*</code></li>
-      <li>Better <code class="highlighter-rouge">Array#join</code> support</li>
-      <li>Support <code class="highlighter-rouge">Hash#values</code> and <code class="highlighter-rouge">Hash#values_at</code></li>
-      <li>Support <code class="highlighter-rouge">Hash#include?</code></li>
-    </ul>
-  </li>
-  <li>SQL Injection
-    <ul>
-      <li>Update SQL injection check for Rails 6.0/6.1</li>
-      <li>Add <code class="highlighter-rouge">--sql-safe-methods</code> option (<a href="https://github.com/escheiner">Esty Scheiner</a>)</li>
-      <li>Ignore dates in SQL</li>
-      <li>Ignore <code class="highlighter-rouge">sanitize_sql_like</code> in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/1571">#1571</a>)</li>
-      <li>Ignore method calls on numbers in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/1571">#1571</a>)</li>
-    </ul>
-  </li>
-  <li>Other Fixes
-    <ul>
-      <li>Ignore renderables in dynamic render path check (<a href="https://github.com/bradparker">Brad Parker</a>)</li>
-      <li>Fix false positive in command injection with <code class="highlighter-rouge">Open3.capture</code> (<a href="https://github.com/xulaus">Richard Fitzgerald</a>)</li>
-      <li>Fix infinite loop on mixin self-includes (<a href="https://github.com/Skipants">Andrew Szczepanski</a>)</li>
-      <li>Check for user-controlled evaluation even if it’s a call target (<a href="https://github.com/presidentbeef/brakeman/issues/1590">#1590</a>)</li>
-    </ul>
-  </li>
-  <li>Refactoring
-    <ul>
-      <li>Refactor <code class="highlighter-rouge">cookie?</code>/<code class="highlighter-rouge">param?</code> methods (<a href="https://github.com/kbrock">Keenan Brock</a>)</li>
-      <li>Better method definition tracking and lookup</li>
-    </ul>
-  </li>
-</ul>
-
-<h2 id="report-formats">Report Formats</h2>
-
-<p><a href="https://github.com/klausbadelt">Klaus Badelt</a> added support for GitHub Actions annotation format with <code class="highlighter-rouge">-f github</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1580">changes</a>)</p>
-
-<p><a href="https://github.com/eliblock">Eli Block</a> added support for reporting ignored warnings in SARIF using the “suppressed” property and fixed a SARIF bug.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1620">changes</a>)</p>
-
-<p><a href="https://github.com/elia">Elia Schito</a> clarified some text in the <code class="highlighter-rouge">--interactive</code> menu for ignoring warnings.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1598">changes</a>)</p>
-
-<h2 id="parallel-file-parsing">Parallel File Parsing</h2>
-
-<p>Brakeman now uses the <a href="https://rubygems.org/gems/parallel"><code class="highlighter-rouge">parallel</code></a> gem to read and parse files in parallel.</p>
-
-<p>By default, <code class="highlighter-rouge">parallel</code> will split the reading/parsing into a number of separate processes based on
-number of CPUs.</p>
-
-<p>In testing, this has dramatically improved speed for large code bases - around 35% reduction in overall scan time.</p>
-
-<p>However, if you run into weird behavior (e.g. scanning just hangs during file parsing), this feature
-can be disabled using <code class="highlighter-rouge">--no-threads</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1617">changes</a>)</p>
-
-<h2 id="ruby-interpretation">Ruby Interpretation</h2>
-
-<h3 id="simple-class-methods">Simple Class Methods</h3>
-
-<p>Brakeman will now track and return <em>very simple</em> literal values (e.g. strings, hashes of literals, arrays of literals) from <em>very simple</em> class methods (e.g. single line).</p>
-
-<p>For example:</p>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">User</span>
-  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">path_prefix</span>
-    <span class="s1">'/user'</span>
-  <span class="k">end</span>
-<span class="k">end</span>
-
-<span class="no">User</span><span class="p">.</span><span class="nf">path_prefix</span> <span class="c1"># =&gt; '/user'</span>
-</code></pre></div></div>
-
-<p>This should help prevent some false positives.</p>
-
-<h3 id="enums">Enums</h3>
-
-<p>Since <a href="https://api.rubyonrails.org/v6.1.4/classes/ActiveRecord/Enum.html">ActiveRecord enums</a> essentially generate some class (and instance) methods that return fixed literal values, the above class method return values
-is also used to support <code class="highlighter-rouge">enum</code>.</p>
-
-<p>For example:</p>
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-  <span class="n">enum</span> <span class="ss">status: </span><span class="p">[</span><span class="ss">:pending</span><span class="p">,</span> <span class="ss">:active</span><span class="p">,</span> <span class="ss">:locked</span><span class="p">]</span>
-<span class="k">end</span>
-
-<span class="no">User</span><span class="p">.</span><span class="nf">statuses</span><span class="p">[</span><span class="ss">:pending</span><span class="p">]</span> <span class="c1"># =&gt; 0</span>
-</code></pre></div></div>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1572">changes</a>)</p>
-
-<h3 id="hash-and-array-methods">Hash and Array Methods</h3>
-
-<p>In some ways, Brakeman is a very poor Ruby interpreter.
-To “understand” the code it analyzes, Brakeman essentially evaluates some methods.
-This release adds and improves support for evaluating a number of <code class="highlighter-rouge">Hash</code> and <code class="highlighter-rouge">Array</code> methods.</p>
-
-<ul>
-  <li>Support <code class="highlighter-rouge">Array#fetch</code> and <code class="highlighter-rouge">Hash#fetch</code>
-(<a href="https://github.com/presidentbeef/brakeman/pull/1589">changes</a>)</li>
-  <li>Support <code class="highlighter-rouge">Array#push</code>
-(<a href="https://github.com/presidentbeef/brakeman/pull/1600">changes</a>)</li>
-  <li>Support <code class="highlighter-rouge">Array#*</code> and improve <code class="highlighter-rouge">Array#join</code>
-(<a href="https://github.com/presidentbeef/brakeman/pull/1599">changes</a>)</li>
-  <li>Support <code class="highlighter-rouge">Hash#values</code> and <code class="highlighter-rouge">Hash#values_at</code>
-(<a href="https://github.com/presidentbeef/brakeman/pull/1595">changes</a>)</li>
-  <li>Support <code class="highlighter-rouge">Hash#include?</code>
-(<a href="https://github.com/presidentbeef/brakeman/pull/1618/commits/3554a2c7f259b3a96dc69877c9596c81190eed8d">changes</a>)</li>
-</ul>
-
-<h2 id="sql-injection">SQL Injection</h2>
-
-<h3 id="updates-for-rails-6061">Updates for Rails 6.0/6.1</h3>
-
-<p>Some new Rails 6.0 methods were previously added for SQL injection (<code class="highlighter-rouge">destroy_by</code>/<code class="highlighter-rouge">delete_by</code>), but this release is more thorough.</p>
-
-<p>Newly vulnerable methods:</p>
-
-<ul>
-  <li><code class="highlighter-rouge">reselect</code></li>
-  <li><code class="highlighter-rouge">rewhere</code></li>
-</ul>
-
-<p>No longer vulnerable:</p>
-
-<ul>
-  <li><code class="highlighter-rouge">delete_all</code></li>
-  <li><code class="highlighter-rouge">destroy_all</code></li>
-  <li><code class="highlighter-rouge">pluck</code> (in Rails 6.1)</li>
-</ul>
-
-<p>Not <em>really</em> vulnerable:</p>
-
-<ul>
-  <li><code class="highlighter-rouge">order</code> (in Rails 6.1)</li>
-  <li><code class="highlighter-rouge">reorder</code> (in Rails 6.1)</li>
-</ul>
-
-<p>(Also, [https://rails-sqli.org/] has also been updated with Rails 6 information!)</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1619">changes</a>)</p>
-
-<h3 id="safe-methods">Safe Methods</h3>
-
-<p><a href="https://github.com/escheiner">Esty Scheiner</a> added the <code class="highlighter-rouge">--sql-safe-methods</code> option to ignore some methods when checking for SQL injection.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1601">changes</a>)</p>
-
-<h3 id="false-positives">False Positives</h3>
-
-<p>Brakeman no longer warns about SQL injection for:</p>
-
-<ul>
-  <li>Dates and methods called on dates
-(<a href="https://github.com/presidentbeef/brakeman/pull/1615">changes</a>)</li>
-  <li>Method calls on number literals
-(<a href="https://github.com/presidentbeef/brakeman/pull/1586">changes</a>)</li>
-  <li><code class="highlighter-rouge">sanitize_sql_like</code>
-(<a href="https://github.com/presidentbeef/brakeman/pull/1587">changes</a>)</li>
-</ul>
-
-<h2 id="misc-fixes">Misc Fixes</h2>
-
-<p><a href="https://github.com/bradparker">Brad Parker</a> updated the dynamic render path check to ignore “renderables”.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/issues/1529">changes</a>)</p>
-
-<p><a href="https://github.com/xulaus">Richard Fitzgerald</a> fixed a command injection false positive when using <code class="highlighter-rouge">Open3.capture</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1612">changes</a>)</p>
-
-<p><a href="https://github.com/Skipants">Andrew Szczepanski</a> fixed an infinite loop when a mixin appears to include itself.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1611">changes</a>)</p>
-
-<p>Brakeman will now warn about user-controlled evaluation even if the evaluation is a call target itself.</p>
-
-<p>For example:</p>
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">eval</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:debug</span><span class="p">]).</span><span class="nf">do_something_else</span>
-</code></pre></div></div>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1592">changes</a>)</p>
-
-<h2 id="refactoring">Refactoring</h2>
-
-<p><a href="https://github.com/kbrock">Keenan Brock</a> cleaned up the <code class="highlighter-rouge">cookie?</code>/<code class="highlighter-rouge">param?</code> utility methods.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1608">changes</a>)</p>
-
-<p>In support of <code class="highlighter-rouge">enum</code> and simple class methods, Brakeman now has a cleaner way of tracking and looking up method definitions.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1596">changes</a>)</p>
-
-<h2 id="new-and-updated-options">New and Updated Options</h2>
-
-<p><code class="highlighter-rouge">--sql-safe-methods</code> can be used to specify methods that should be ignored in the context of SQL injection.</p>
-
-<p><code class="highlighter-rouge">--format github</code>/<code class="highlighter-rouge">-f github</code> will output code the annotation format used by GitHub Actions.</p>
-
-<p><code class="highlighter-rouge">--no-threads</code>/<code class="highlighter-rouge">-n</code> will disable use of threads (actually forked processes) for reading and parsing files.
-(Previously, this method only disabled use of threads when running checks.)</p>
-
-<h3 id="checksums">Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2cc7a174bc9ebb90161f218ea35905de8d749210f69a0bfda9fba71429dc5047  brakeman-5.1.0.gem
-b8182c9fd7d6d116b2b531c5d8fe0bf9c8da14118b755ed00be8de8c4684ad10  brakeman-lib-5.1.0.gem
-e38ff386530bc5585e2efd183ba73c08abb740c3b26072662025a3d9395b707a  brakeman-min-5.1.0.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -704,6 +499,10 @@ e38ff386530bc5585e2efd183ba73c08abb740c3b26072662025a3d9395b707a  brakeman-min-5
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">Brakeman 5.2.3 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/04/06/brakeman-5-dot-2-dot-2-released">Brakeman 5.2.2 Released</a>
       </li>
     
@@ -717,10 +516,6 @@ e38ff386530bc5585e2efd183ba73c08abb740c3b26072662025a3d9395b707a  brakeman-min-5
     
       <li class="post">
         <a href="/blog/2021/10/28/brakeman-5-dot-1-dot-2-released">Brakeman 5.1.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2021/07/19/brakeman-5-dot-1-dot-0-released">Brakeman 5.1.0 Released</a>
       </li>
     
   </ul>

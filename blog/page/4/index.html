@@ -80,6 +80,97 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2020/04/06/brakeman-4-dot-8-dot-1-released">Brakeman 4.8.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2020-04-06 10:00:00 -0700" pubdate  updated >2020-04-06 10:00:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Just a little bug fix release.</p>
+
+<p><em>Changes since 4.8.0:</em></p>
+
+<ul>
+  <li>Warn about global(!) mass assignment</li>
+  <li>Check SQL query strings using <code class="highlighter-rouge">String#strip</code> or <code class="highlighter-rouge">String.squish</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1469">#1459</a>)</li>
+  <li>Handle non-symbol keys in <code class="highlighter-rouge">locals</code> hash for <code class="highlighter-rouge">render</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1465">#1465</a>)</li>
+  <li>Index calls in render arguments (<a href="https://github.com/presidentbeef/brakeman/issues/1459">#1459</a>)</li>
+</ul>
+
+<h3 id="global-mass-assignment">Global Mass Assignment</h3>
+
+<p>Strong parameters can be disabled with:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">ActionController</span><span class="o">::</span><span class="no">Parameters</span><span class="p">.</span><span class="nf">permit_all_parameters</span> <span class="o">=</span> <span class="kp">true</span>
+</code></pre></div></div>
+
+<p>Brakeman will now warn about this (very rare) configuration.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1464">changes</a>)</p>
+
+<h3 id="squished-and-stripped-sql">Squished and Stripped SQL</h3>
+
+<p>Brakeman will now check string targets of <code class="highlighter-rouge">squish</code> or <code class="highlighter-rouge">strip</code>.</p>
+
+<p>For example:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span><span class="p">.</span><span class="nf">connection</span><span class="p">.</span><span class="nf">execute</span> <span class="s2">"SELECT * FROM </span><span class="si">#{</span><span class="n">user_input</span><span class="si">}</span><span class="s2">"</span><span class="p">.</span><span class="nf">squish</span>
+</code></pre></div></div>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1470">changes</a>)</p>
+
+<h3 id="non-symbol-keys-in-locals-hash">Non-Symbol Keys in Locals Hash</h3>
+
+<p>Using a value other than symbol literals as keys in the <code class="highlighter-rouge">locals</code> hash for <code class="highlighter-rouge">render</code> will no longer cause an error.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1468">changes</a>)</p>
+
+<h3 id="render-arguments">Render Arguments</h3>
+
+<p>Calls made as arguments to <code class="highlighter-rouge">render</code> will be indexed and checked for all vulnerability types, like every other method call.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1460">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5f3cc763fce471434adc33aa251298fa24ea2a1c01ef2549aec55be4b5b14d46  brakeman-4.8.1.gem
+c4a95b450fb7ec2440e68640a0821e3a6b62ea34f665e78264ba0b332e98e5df  brakeman-lib-4.8.1.gem
+ada41dbfc3a436c062cd44161893249654caf43296801599303952f6261f2e5e  brakeman-min-4.8.1.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2020/02/18/brakeman-4-dot-8-dot-0-released">Brakeman 4.8.0 Released</a></h1>
     
     
@@ -518,60 +609,6 @@ c02dbaa4ad0c7402ef99697c7b1916b7d9558dd5aa45e1a36efed117628498cc  brakeman-lib-4
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2019/07/24/brakeman-4-dot-6-dot-1-released">Brakeman 4.6.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2019-07-24 09:14:00 -0700" pubdate  updated >2019-07-24 09:14:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This release corrects a typo in the reverse tabnabbing warning message.</p>
-
-<p><em>Changes since 4.6.0:</em></p>
-
-<ul>
-  <li>Fix Reverse Tabnabbing warning message (<a href="https://github.com/stsc3000">Steffen Schildknecht</a> / <a href="https://github.com/joergschiller">Jörg Schiller</a>)</li>
-</ul>
-
-<h3 id="checksums">Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>6e31f8c8dbdea7b198c591d44b73aee067cca5612db191fe04d8d8c2a8eb9011  brakeman-4.6.1.gem
-6879d5175e5f20bf5ac1bd20dad0ef9a1e4c72d9774114d752b19c7e7d7d69fc  brakeman-lib-4.6.1.gem
-72a0ef7b91b11bea925b365645096a186ec3929024066792957006c46355560e  brakeman-min-4.6.1.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -610,6 +647,10 @@ c02dbaa4ad0c7402ef99697c7b1916b7d9558dd5aa45e1a36efed117628498cc  brakeman-lib-4
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">Brakeman 5.2.3 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/04/06/brakeman-5-dot-2-dot-2-released">Brakeman 5.2.2 Released</a>
       </li>
     
@@ -623,10 +664,6 @@ c02dbaa4ad0c7402ef99697c7b1916b7d9558dd5aa45e1a36efed117628498cc  brakeman-lib-4
     
       <li class="post">
         <a href="/blog/2021/10/28/brakeman-5-dot-1-dot-2-released">Brakeman 5.1.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2021/07/19/brakeman-5-dot-1-dot-0-released">Brakeman 5.1.0 Released</a>
       </li>
     
   </ul>
