@@ -95,6 +95,7 @@ class TestReportGeneration < Minitest::Test
     assert_includes report, "Category ID:"
     assert_includes report, "Check:"
     assert_includes report, "Code:"
+    assert_includes report, "CWE:"
     assert_includes report, "File:"
     assert_includes report, "Fingerprint:"
     assert_includes report, "Line:"
