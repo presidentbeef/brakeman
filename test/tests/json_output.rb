@@ -52,7 +52,7 @@ class JSONOutputTests < Minitest::Test
 
   def test_for_expected_warning_keys
     expected = ["warning_type", "check_name", "message", "file", "link", "code", "location",
-      "render_path", "user_input", "confidence", "line", "warning_code", "fingerprint"]
+      "render_path", "user_input", "confidence", "line", "warning_code", "fingerprint", "cwe_id"]
 
     @@json["warnings"].each do |warning|
       assert (warning.keys - expected).empty?, "#{(warning.keys - expected).inspect} did not match expected keys"
@@ -74,5 +74,13 @@ class JSONOutputTests < Minitest::Test
 
   def test_template_names_dont_have_renderer
     assert @@json["warnings"].none? { |warning| warning["render_path"] and warning["location"]["template"].include? "(" }
+  end
+
+  def test_json_warnings_have_cwes
+    @@json["warnings"].each do |warning|
+      assert warning["cwe_id"]
+      assert_kind_of Array, warning["cwe_id"]
+      refute warning["cwe_id"].empty?
+    end
   end
 end

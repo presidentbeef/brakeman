@@ -304,7 +304,8 @@ class Brakeman::Warning
       :render_path => render_path,
       :location => self.location(false),
       :user_input => (@user_input && self.format_user_input(false)),
-      :confidence => self.confidence_name
+      :confidence => self.confidence_name,
+      :cwe_id => cwe_id
     }
   end
 
