@@ -40,7 +40,7 @@ class TestReportGeneration < Minitest::Test
   end
 
   def test_csv_sanity
-    headers = ["Confidence", "Warning Type", "File", "Line", "Message", "Code", "User Input", "Check Name", "Warning Code", "Fingerprint", "Link"]
+    headers = ["Confidence", "Warning Type", "CWE", "File", "Line", "Message", "Code", "User Input", "Check Name", "Warning Code", "Fingerprint", "Link"]
     report = @@report.to_csv
     parsed = CSV.parse report, headers: true
     row = parsed.first
