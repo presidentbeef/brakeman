@@ -13,7 +13,7 @@ class Rails5Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 19,
-      :generic => 25
+      :generic => 26
     }
   end
 
@@ -701,6 +701,20 @@ class Rails5Tests < Minitest::Test
       :relative_path => "Gemfile",
       :code => nil,
       :user_input => nil
+  end
+
+  def test_cross_site_scripting_CVE_2022_32209_rails_config
+    assert_warning check_name: "SanitizeConfigCve",
+      type: :warning,
+      warning_code: 124,
+      fingerprint: "b9ac1b40c4e59a1e97e2beb039fdfa75c6fb97cf530161bd3c29939e83a513f4",
+      warning_type: "Cross-Site Scripting",
+      line: 133,
+      message: /^rails\-html\-sanitizer\ 1\.0\.2\ has\ an\ XSS\ vu/,
+      confidence: 0,
+      relative_path: "Gemfile.lock",
+      code: nil,
+      user_input: nil
   end
 
   def test_dangerous_eval_in_prior_class_method_with_same_name

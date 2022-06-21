@@ -6,6 +6,8 @@
 %p#name
   %b Name:
   = @user.name
+  = sanitize @user.bio, tags: ['style', :select]
+  = Rails::Html::SafeListSanitizer.new.sanitize(@user.description, tags: ["select", "style"])
 
 :coffeescript
   $('h1').click ->

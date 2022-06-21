@@ -11,5 +11,7 @@ module Rails5
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+
+    config.action_view.sanitized_allowed_tags = ["select", "strong", "style", "b"]
   end
 end
