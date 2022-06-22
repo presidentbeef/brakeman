@@ -22,9 +22,9 @@ class Brakeman::CheckRegexDoS < Brakeman::BaseCheck
   def run_check
     Brakeman.debug "Finding dynamic regexes"
     calls = tracker.find_call :method => [:brakeman_regex_interp]
-    COERCES_STRING_TO_REGEX.each do |coercion_method|
-      calls.concat tracker.find_call(:method => [coercion_method]).select { |call| string?(call[:target]) }
-    end
+
+    calls.concat(tracker.find_call(:methods => COERCES_STRING_TO_REGEX)
+                        .select { |call| string_or_modified_string?(call[:target]) })
 
     Brakeman.debug "Processing dynamic regexes"
     calls.each do |call|
@@ -66,6 +66,14 @@ class Brakeman::CheckRegexDoS < Brakeman::BaseCheck
           :user_input => match,
           :cwe_id => [20, 185]
       end
+    end
+  end
+
+  def string_or_modified_string?(sexp)
+    if call? sexp
+      string_or_modified_string? sexp.target
+    else
+      string? sexp
     end
   end
 

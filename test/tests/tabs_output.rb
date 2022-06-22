@@ -10,6 +10,6 @@ class TestTabsOutput < Minitest::Test
   end
 
   def test_reported_warnings
-    assert_equal 114, @@report.lines.to_a.count, 'Did you add new vulnerabilities to the Rails 2 app?'
+    assert_equal 115, @@report.lines.to_a.count, 'Did you add new vulnerabilities to the Rails 2 app?'
   end
 end
