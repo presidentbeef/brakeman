@@ -5,6 +5,7 @@ class Brakeman::Report::CSV < Brakeman::Report::Base
     headers = [
       "Confidence",
       "Warning Type",
+      "CWE",
       "File",
       "Line",
       "Message",
@@ -35,6 +36,7 @@ class Brakeman::Report::CSV < Brakeman::Report::Base
     [
       warning.confidence_name,
       warning.warning_type,
+      warning.cwe_id.first,
       warning_file(warning),
       warning.line,
       warning.message,

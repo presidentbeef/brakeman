@@ -159,6 +159,8 @@ class Brakeman::Report::Text < Brakeman::Report::Base
       label('Confidence', confidence(w.confidence))
     when :category
       label('Category', w.warning_type.to_s)
+    when :cwe
+      label('CWE', w.cwe_id.join(', '))
     when :check
       label('Check', w.check_name)
     when :message

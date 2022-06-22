@@ -323,7 +323,7 @@ module Brakeman::Options
         end
 
         opts.on "--text-fields field1,field2,etc.", Array, "Specify fields for text report format" do |format|
-          valid_options = [:category, :category_id, :check, :code, :confidence, :file, :fingerprint, :line, :link, :message, :render_path]
+          valid_options = [:category, :category_id, :check, :code, :confidence, :cwe, :file, :fingerprint, :line, :link, :message, :render_path]
 
           options[:text_fields] = format.map(&:to_sym)
 
