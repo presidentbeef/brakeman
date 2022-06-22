@@ -25,7 +25,7 @@ class Brakeman::CheckSanitizeConfigCve < Brakeman::BaseCheck
     return if result and not original? result
 
     message = msg(msg_version(@gem_version, 'rails-html-sanitizer'),
-                  " has an XSS vulnerability when ",
+                  " is vulnerable to cross-site scripting when ",
                   msg_code('select'),
                   " and ",
                   msg_code("style"),
