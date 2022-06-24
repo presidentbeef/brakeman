@@ -368,4 +368,27 @@ class CVETests < Minitest::Test
     assert_version "6.0.0"
     assert_warning type: :generic, :warning_code => 116
   end
+
+  def test_old_sanitize_cves
+    before_rescan_of "app/views/users/one.html.haml", "rails5.2" do
+      replace "app/views/users/one.html.haml", "sanitize", "not_sanitize"
+      replace "app/views/users/one.html.haml", "sanitize", "not_sanitize"
+    end
+
+    # Confidence is high when uses of `sanitize` are found.
+    # This tests that the confidence is lowered to medium
+    # when uses of `sanitize` are removed.
+    assert_warning warning_code: 107, confidence: 1
+    assert_warning warning_code: 106, confidence: 1
+  end
+
+  def test_CVE_2022_32209_rails6
+    before_rescan_of "Gemfile", "rails6" do
+      append "Gemfile", "\ngem 'rails-html-sanitizer', '1.4.2'"
+    end
+
+    assert_new 1
+    assert_version '1.4.2', :'rails-html-sanitizer'
+    assert_warning type: :generic, :warning_code => 124
+  end
 end

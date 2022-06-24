@@ -12,7 +12,7 @@ class Rails52Tests < Minitest::Test
     @@expected ||= {
       :controller => 0,
       :model => 0,
-      :template => 5,
+      :template => 7,
       :generic => 24
     }
   end
@@ -588,27 +588,45 @@ class Rails52Tests < Minitest::Test
   end
 
   def test_cross_site_scripting_loofah_CVE_2018_8048
-    assert_warning :type => :warning,
-      :warning_code => 106,
-      :fingerprint => "c8adc1c0caf2c9251d1d8de588fb949070212d0eed5e1580aee88bab2287b772",
-      :warning_type => "Cross-Site Scripting",
-      :line => 90,
-      :message => /^loofah\ gem 2\.1\.1\ is\ vulnerable\ \(CVE\-2018\-804/,
-      :confidence => 1,
-      :relative_path => "Gemfile.lock",
-      :user_input => nil
+    assert_warning check_name: "SanitizeMethods",
+      type: :warning,
+      warning_code: 106,
+      fingerprint: "cdfb1541fdcc9cdcf0784ce5bd90013dc39316cb822eedea3f03b2521c06137f",
+      warning_type: "Cross-Site Scripting",
+      line: 90,
+      message: /^loofah\ gem\ 2\.1\.1\ is\ vulnerable\ \(CVE\-2018/,
+      confidence: 0,
+      relative_path: "Gemfile.lock",
+      code: nil,
+      user_input: nil
   end
 
   def test_cross_site_scripting_CVE_2018_3741
-    assert_warning :type => :warning,
-      :warning_code => 107,
-      :fingerprint => "e0636b950dd005468b5f9a0426ed50936e136f18477ca983cfc51b79e29f6463",
-      :warning_type => "Cross-Site Scripting",
-      :line => 125,
-      :message => /^rails\-html\-sanitizer\ 1\.0\.3\ is\ vulnerable/,
-      :confidence => 1,
-      :relative_path => "Gemfile.lock",
-      :user_input => nil
+    assert_warning check_name: "SanitizeMethods",
+      type: :warning,
+      warning_code: 107,
+      fingerprint: "3e35a6afcd1a8a14894cf26a7f00d4e895f0583bbc081d45e5bd28c4b541b7e6",
+      warning_type: "Cross-Site Scripting",
+      line: 125,
+      message: /^rails\-html\-sanitizer\ 1\.0\.3\ is\ vulnerable/,
+      confidence: 0,
+      relative_path: "Gemfile.lock",
+      code: nil,
+      user_input: nil
+  end
+
+  def test_cross_site_scripting_CVE_2022_32209_sanitize_call
+    assert_warning check_name: "SanitizeConfigCve",
+      type: :template,
+      warning_code: 124,
+      fingerprint: "381dbd3ff41d8e8a36bc13ea1943fbf8f8d70774724c9f1be7b0581b88d1d3f5",
+      warning_type: "Cross-Site Scripting",
+      line: 9,
+      message: /^rails\-html\-sanitizer\ 1\.0\.3\ is\ vulnerable/,
+      confidence: 0,
+      relative_path: "app/views/users/one.html.haml",
+      code: s(:call, nil, :sanitize, s(:call, s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))), :bio), s(:hash, s(:lit, :tags), s(:array, s(:str, "style"), s(:lit, :select)))),
+      user_input: nil
   end
 
   def test_command_injection_ignored_in_stdin

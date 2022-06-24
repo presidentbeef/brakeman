@@ -125,6 +125,7 @@ module Brakeman::WarningCodes
     :eol_ruby => 121,
     :pending_eol_rails => 122,
     :pending_eol_ruby => 123,
+    :CVE_2022_32209 => 124,
 
     :custom_check => 9090,
   }
