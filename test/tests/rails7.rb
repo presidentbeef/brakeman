@@ -37,7 +37,7 @@ class Rails7Tests < Minitest::Test
       fingerprint: "c2cc471a99036432e03d83e893fe748c2b1d5c40a39e776475faf088717af97d",
       warning_type: "Cross-Site Scripting",
       line: 1,
-      message: /^rails\-html\-sanitizer\ 1\.4\.2\ has\ an\ XSS\ vu/,
+      message: /^rails\-html\-sanitizer\ 1\.4\.2\ is\ vulnerable/,
       confidence: 0,
       relative_path: "config/initializers/sanitizers.rb",
       code: s(:attrasgn, s(:colon2, s(:colon2, s(:const, :Rails), :Html), :SafeListSanitizer), :allowed_tags=, s(:array, s(:str, "select"), s(:str, "a"), s(:str, "style"))),

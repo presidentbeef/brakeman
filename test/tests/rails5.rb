@@ -710,7 +710,7 @@ class Rails5Tests < Minitest::Test
       fingerprint: "b9ac1b40c4e59a1e97e2beb039fdfa75c6fb97cf530161bd3c29939e83a513f4",
       warning_type: "Cross-Site Scripting",
       line: 133,
-      message: /^rails\-html\-sanitizer\ 1\.0\.2\ has\ an\ XSS\ vu/,
+      message: /^rails\-html\-sanitizer\ 1\.0\.2\ is\ vulnerable/,
       confidence: 0,
       relative_path: "Gemfile.lock",
       code: nil,

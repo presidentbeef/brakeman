@@ -622,27 +622,12 @@ class Rails52Tests < Minitest::Test
       fingerprint: "381dbd3ff41d8e8a36bc13ea1943fbf8f8d70774724c9f1be7b0581b88d1d3f5",
       warning_type: "Cross-Site Scripting",
       line: 9,
-      message: /^rails\-html\-sanitizer\ 1\.0\.3\ has\ an\ XSS\ vu/,
+      message: /^rails\-html\-sanitizer\ 1\.0\.3\ is\ vulnerable/,
       confidence: 0,
       relative_path: "app/views/users/one.html.haml",
       code: s(:call, nil, :sanitize, s(:call, s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))), :bio), s(:hash, s(:lit, :tags), s(:array, s(:str, "style"), s(:lit, :select)))),
       user_input: nil
   end
-
-  def test_cross_site_scripting_CVE_2022_32209_sanitizer_new_call
-    assert_warning check_name: "SanitizeConfigCve",
-      type: :template,
-      warning_code: 124,
-      fingerprint: "9d6223653874a11b649ac92f5e9143ae4b3200fc171d42d193cc820ae850b8eb",
-      warning_type: "Cross-Site Scripting",
-      line: 10,
-      message: /^rails\-html\-sanitizer\ 1\.0\.3\ has\ an\ XSS\ vu/,
-      confidence: 0,
-      relative_path: "app/views/users/one.html.haml",
-      code: s(:call, s(:call, s(:colon2, s(:colon2, s(:const, :Rails), :Html), :SafeListSanitizer), :new), :sanitize, s(:call, s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))), :description), s(:hash, s(:lit, :tags), s(:array, s(:str, "select"), s(:str, "style")))),
-      user_input: nil
-  end
-
 
   def test_command_injection_ignored_in_stdin
     assert_no_warning :type => :warning,
