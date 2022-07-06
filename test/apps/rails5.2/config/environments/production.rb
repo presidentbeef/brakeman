@@ -91,4 +91,7 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # https://guides.rubyonrails.org/v7.0/configuring.html#config-action-controller-default-protect-from-forgery
+  # config.action_controller.default_protect_from_forgery = true
 end
