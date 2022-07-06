@@ -10,6 +10,14 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
   @description = "Verifies that protect_from_forgery is enabled in direct subclasses of ActionController::Base"
 
   def run_check
+    unless tracker.config.allow_forgery_protection?
+      csrf_warning :controller => nil,
+        :warning_code => :csrf_protection_disabled,
+        :file => "config/environments/production.rb",
+        :confidence => :high,
+        :message => msg("CSRF protection has been deactivated by ", msg_code("allow_forgery_protection"))
+    end
+
     return if tracker.config.default_protect_from_forgery?
 
     tracker.controllers
@@ -21,7 +29,7 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
           :message => msg(msg_code("protect_from_forgery"), " should be called in ", msg_code(name)),
           :file => controller.file,
           :line => controller.top_line
-      elsif version_between? "4.0.0", "100.0.0" and forgery_opts = controller.options[:protect_from_forgery]
+      elsif version_gte? "4.0.0" and forgery_opts = controller.options[:protect_from_forgery]
         unless forgery_opts.is_a?(Array) and sexp?(forgery_opts.first) and
           access_arg = hash_access(forgery_opts.first.first_arg, :with) and symbol? access_arg and
           access_arg.value == :exception

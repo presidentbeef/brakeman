@@ -27,6 +27,10 @@ module Brakeman
       false
     end
 
+    def allow_forgery_protection?
+      !(@rails.dig(:action_controller, :allow_forgery_protection) == Sexp.new(:false))
+    end
+
     def erubis?
       @erubis
     end
@@ -209,6 +213,8 @@ module Brakeman
       version = tracker.config.rails[:load_defaults].value
       true_value = Sexp.new(:true)
       false_value = Sexp.new(:false)
+
+      set_rails_config(value: true_value, path: [:action_controller, :allow_forgery_protection])
 
       if version >= 5.0
         set_rails_config(value: true_value, path: [:action_controller, :per_form_csrf_tokens])
