@@ -233,6 +233,7 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
 
     unless @in_target
       @full_call = call_hash
+      call_hash[:full_call] = call_hash
     end
 
     # Process up the call chain

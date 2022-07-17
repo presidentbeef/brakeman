@@ -143,6 +143,20 @@ class CallIndexTests < Minitest::Test
     assert_nil third[:parent]
   end
 
+  def test_full_call
+    xyz = @call_index.find_calls(target: :x, method: :z, chained: true).first
+    xy = @call_index.find_calls(target: :x, method: :y, nested: true).first
+    x = @call_index.find_calls(method: :x, nested: true).first
+    thing = @call_index.find_calls(method: :do_a_thing).first
+
+    # Full call for the call should be itself
+    assert_equal thing, thing[:full_call]
+    assert_equal xyz, xyz[:full_call]
+
+    assert_equal xyz, xy[:full_call]
+    assert_equal xyz, x[:full_call]
+  end
+
   def test_find_error
     assert_raises do
       @call_index.find_calls :target => nil, :methods => nil
