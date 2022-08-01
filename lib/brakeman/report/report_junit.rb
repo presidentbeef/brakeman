@@ -1,6 +1,6 @@
 require 'time'
-require "stringio"
-require 'rexml/document'
+require 'stringio'
+Brakeman.load_brakeman_dependency 'rexml/document'
 
 class Brakeman::Report::JUnit < Brakeman::Report::Base
   def generate_report
