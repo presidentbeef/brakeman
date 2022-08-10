@@ -1,37 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2022-08-09T17:45:38-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 5.2.3 Released</title><link href="https://brakemanscanner.org/blog/2022/05/01/brakeman-5-dot-2-dot-3-released" rel="alternate" type="text/html" title="Brakeman 5.2.3 Released" /><published>2022-05-01T08:30:00-07:00</published><updated>2022-05-01T08:30:00-07:00</updated><id>https://brakemanscanner.org/blog/2022/05/01/brakeman-5-dot-2-dot-3-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">&lt;p&gt;&lt;em&gt;Changes since 5.2.2:&lt;/em&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2022-08-09T17:48:11-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 5.3.0 Released</title><link href="https://brakemanscanner.org/blog/2022/08/09/brakeman-5-dot-3-dot-0-released" rel="alternate" type="text/html" title="Brakeman 5.3.0 Released" /><published>2022-08-09T08:30:00-07:00</published><updated>2022-08-09T08:30:00-07:00</updated><id>https://brakemanscanner.org/blog/2022/08/09/brakeman-5-dot-3-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">&lt;p&gt;&lt;em&gt;Changes since 5.2.3:&lt;/em&gt;&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;Fix error with hash shorthand syntax (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1700&quot;&gt;#1700&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Match order of interactive options with help message (&lt;a href=&quot;https://github.com/roryokane&quot;&gt;Rory O’kane&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Add CWE information to warnings (Stephen Aghaulor)&lt;/li&gt;
+  &lt;li&gt;Include explicit engine or lib paths in vendor/ (Joe Rafaniello)&lt;/li&gt;
+  &lt;li&gt;Add check for CVE-2022-32209&lt;/li&gt;
+  &lt;li&gt;Load rexml as a Brakeman dependency&lt;/li&gt;
+  &lt;li&gt;Fix “full call” information propagating unnecessarily&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;hash-shorthand-syntax&quot;&gt;Hash Shorthand Syntax&lt;/h3&gt;
+&lt;h3 id=&quot;cwe-information&quot;&gt;CWE Information&lt;/h3&gt;
 
-&lt;p&gt;Parsing shorthand hash syntax like this was added with RubyParser 3.19:&lt;/p&gt;
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/saghaulor&quot;&gt;Stephen Aghaulor&lt;/a&gt; for taking on the arduous task of adding CWE information
+to every Brakeman warning type!&lt;/p&gt;
 
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+&lt;p&gt;CWE information is now available in most report formats. In particular, it is a new field for the JSON report.&lt;/p&gt;
 
-&lt;span class=&quot;n&quot;&gt;blah&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1693&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
-&lt;p&gt;but Brakeman needed to handle it properly, too.&lt;/p&gt;
+&lt;h3 id=&quot;explicit-paths-in-vendor-directory&quot;&gt;Explicit Paths in Vendor Directory&lt;/h3&gt;
 
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1701&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;By default, Brakeman does not scan any code in the &lt;code class=&quot;highlighter-rouge&quot;&gt;vendor/&lt;/code&gt; directory.&lt;/p&gt;
 
-&lt;h3 id=&quot;interative-options&quot;&gt;Interative Options&lt;/h3&gt;
+&lt;p&gt;But it was also ignoring any paths in &lt;code class=&quot;highlighter-rouge&quot;&gt;vendor/&lt;/code&gt;, even if the user explicitly included them via &lt;code class=&quot;highlighter-rouge&quot;&gt;--add-libs-path&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;--add-engines-path&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;https://github.com/roryokane&quot;&gt;Rory O’kane&lt;/a&gt; updated the ordering of options in the help message for interative ignore so
-the help message matches the order of the options in the prompt!&lt;/p&gt;
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/jrafanie&quot;&gt;Joe Rafaniello&lt;/a&gt; this is now changed to respect the explicit additional paths, even if they reside in &lt;code class=&quot;highlighter-rouge&quot;&gt;vendor/&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1702&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1699&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;cve-2022-32209&quot;&gt;CVE-2022-32209&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;As a reminder, Brakeman does not keep up with every CVE for Rails or other libraries. Use a dependency analysis tool for that!&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;A check was added for &lt;a href=&quot;https://hackerone.com/reports/1530898&quot;&gt;CVE-2022-32209&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If the vulnerable configuration is detected, the warning will be &lt;code class=&quot;highlighter-rouge&quot;&gt;high&lt;/code&gt; confidence.&lt;/p&gt;
+
+&lt;p&gt;If only the vulnerable version of &lt;code class=&quot;highlighter-rouge&quot;&gt;rails-html-sanitizer&lt;/code&gt; is detected, the warning will be &lt;code class=&quot;highlighter-rouge&quot;&gt;weak&lt;/code&gt; confidence.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1718&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
 
 &lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
 
 &lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;5b6efb6a1e5c2b79063553647638e17239d2d2f4d50561230c8b0acaae4728d4  brakeman-5.2.3.gem
-3104abc8ac2b6558d9610ede40f4cac2ebc7ae45569876b8e5907b7422c4e3af  brakeman-lib-5.2.3.gem
-10d743c930c03ed1d2bea021ade8fac10f1229d02b8f65bf2214f7f09ec7a0ff  brakeman-min-5.2.3.gem
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;4fe584ef37c16e1011a0f2db36ebab540fef403ff8e26afed212e2d7ff5a3176  brakeman-5.3.0.gem
+1f5caa0bd05fd8ea5b4f5791371dd0911f96d804612c7be986bab3ed0163a8cf  brakeman-lib-5.3.0.gem
+4a4ccef090c4eb5857140c15fa69ff65167f3eb550f7a0ca555012642aafe7e9  brakeman-min-5.3.0.gem
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
@@ -40,7 +54,7 @@ the help message matches the order of the options in the prompt!&lt;/p&gt;
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Changes since 5.2.2:</summary></entry><entry><title type="html">Brakeman 5.2.3 Released</title><link href="https://brakemanscanner.org/blog/2022/05/01/brakeman-5-dot-3-dot-0-released" rel="alternate" type="text/html" title="Brakeman 5.2.3 Released" /><published>2022-05-01T08:30:00-07:00</published><updated>2022-05-01T08:30:00-07:00</updated><id>https://brakemanscanner.org/blog/2022/05/01/brakeman-5-dot-3-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2022/05/01/brakeman-5-dot-3-dot-0-released">&lt;p&gt;&lt;em&gt;Changes since 5.2.2:&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Changes since 5.2.3:</summary></entry><entry><title type="html">Brakeman 5.2.3 Released</title><link href="https://brakemanscanner.org/blog/2022/05/01/brakeman-5-dot-2-dot-3-released" rel="alternate" type="text/html" title="Brakeman 5.2.3 Released" /><published>2022-05-01T08:30:00-07:00</published><updated>2022-05-01T08:30:00-07:00</updated><id>https://brakemanscanner.org/blog/2022/05/01/brakeman-5-dot-2-dot-3-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">&lt;p&gt;&lt;em&gt;Changes since 5.2.2:&lt;/em&gt;&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Fix error with hash shorthand syntax (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1700&quot;&gt;#1700&lt;/a&gt;)&lt;/li&gt;

@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Brakeman 5.2.3 Released</title>
+  <title>Brakeman: Brakeman 5.3.0 Released</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,7 +15,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="https://brakemanscanner.org/blog/2022/05/01/brakeman-5-dot-3-dot-0-released"/>
+  <link rel="canonical" href="https://brakemanscanner.org/blog/2022/08/09/brakeman-5-dot-3-dot-0-released"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -34,7 +34,7 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Brakeman 5.2.3 Released" />
+<meta name="twitter:title" content="Brakeman - Brakeman 5.3.0 Released" />
 <meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
 <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 
@@ -77,7 +77,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 5.2.3 Released</h1>
+      <h1 class="entry-title">Brakeman 5.3.0 Released</h1>
     
     
       <p class="meta">
@@ -85,7 +85,7 @@
 
 
 
-<time datetime="2022-05-01 08:30:00 -0700" pubdate  updated >2022-05-01 08:30:00 -0700</time>
+<time datetime="2022-08-09 08:30:00 -0700" pubdate  updated >2022-08-09 08:30:00 -0700</time>
 
 
 </p>
@@ -93,40 +93,54 @@
   </header>
 
 
-<div class="entry-content"><p><em>Changes since 5.2.2:</em></p>
+<div class="entry-content"><p><em>Changes since 5.2.3:</em></p>
 
 <ul>
-  <li>Fix error with hash shorthand syntax (<a href="https://github.com/presidentbeef/brakeman/issues/1700">#1700</a>)</li>
-  <li>Match order of interactive options with help message (<a href="https://github.com/roryokane">Rory O’kane</a>)</li>
+  <li>Add CWE information to warnings (Stephen Aghaulor)</li>
+  <li>Include explicit engine or lib paths in vendor/ (Joe Rafaniello)</li>
+  <li>Add check for CVE-2022-32209</li>
+  <li>Load rexml as a Brakeman dependency</li>
+  <li>Fix “full call” information propagating unnecessarily</li>
 </ul>
 
-<h3 id="hash-shorthand-syntax">Hash Shorthand Syntax</h3>
+<h3 id="cwe-information">CWE Information</h3>
 
-<p>Parsing shorthand hash syntax like this was added with RubyParser 3.19:</p>
+<p>Thanks to <a href="https://github.com/saghaulor">Stephen Aghaulor</a> for taking on the arduous task of adding CWE information
+to every Brakeman warning type!</p>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">thing</span> <span class="o">=</span> <span class="mi">1</span>
+<p>CWE information is now available in most report formats. In particular, it is a new field for the JSON report.</p>
 
-<span class="n">blah</span><span class="p">(</span><span class="n">thing</span><span class="p">:)</span>
-</code></pre></div></div>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1693">changes</a>)</p>
 
-<p>but Brakeman needed to handle it properly, too.</p>
+<h3 id="explicit-paths-in-vendor-directory">Explicit Paths in Vendor Directory</h3>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1701">changes</a>)</p>
+<p>By default, Brakeman does not scan any code in the <code class="highlighter-rouge">vendor/</code> directory.</p>
 
-<h3 id="interative-options">Interative Options</h3>
+<p>But it was also ignoring any paths in <code class="highlighter-rouge">vendor/</code>, even if the user explicitly included them via <code class="highlighter-rouge">--add-libs-path</code> or <code class="highlighter-rouge">--add-engines-path</code>.</p>
 
-<p><a href="https://github.com/roryokane">Rory O’kane</a> updated the ordering of options in the help message for interative ignore so
-the help message matches the order of the options in the prompt!</p>
+<p>Thanks to <a href="https://github.com/jrafanie">Joe Rafaniello</a> this is now changed to respect the explicit additional paths, even if they reside in <code class="highlighter-rouge">vendor/</code>.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1702">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1699">changes</a>)</p>
+
+<h3 id="cve-2022-32209">CVE-2022-32209</h3>
+
+<p><em>As a reminder, Brakeman does not keep up with every CVE for Rails or other libraries. Use a dependency analysis tool for that!</em></p>
+
+<p>A check was added for <a href="https://hackerone.com/reports/1530898">CVE-2022-32209</a>.</p>
+
+<p>If the vulnerable configuration is detected, the warning will be <code class="highlighter-rouge">high</code> confidence.</p>
+
+<p>If only the vulnerable version of <code class="highlighter-rouge">rails-html-sanitizer</code> is detected, the warning will be <code class="highlighter-rouge">weak</code> confidence.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1718">changes</a>)</p>
 
 <h3 id="checksums">Checksums</h3>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5b6efb6a1e5c2b79063553647638e17239d2d2f4d50561230c8b0acaae4728d4  brakeman-5.2.3.gem
-3104abc8ac2b6558d9610ede40f4cac2ebc7ae45569876b8e5907b7422c4e3af  brakeman-lib-5.2.3.gem
-10d743c930c03ed1d2bea021ade8fac10f1229d02b8f65bf2214f7f09ec7a0ff  brakeman-min-5.2.3.gem
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4fe584ef37c16e1011a0f2db36ebab540fef403ff8e26afed212e2d7ff5a3176  brakeman-5.3.0.gem
+1f5caa0bd05fd8ea5b4f5791371dd0911f96d804612c7be986bab3ed0163a8cf  brakeman-lib-5.3.0.gem
+4a4ccef090c4eb5857140c15fa69ff65167f3eb550f7a0ca555012642aafe7e9  brakeman-min-5.3.0.gem
 </code></pre></div></div>
 
 <h3 id="reporting-issues">Reporting Issues</h3>
@@ -135,7 +149,7 @@ the help message matches the order of the options in the prompt!</p>
 
 <p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
 
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
 </div>
 
 
@@ -149,7 +163,7 @@ the help message matches the order of the options in the prompt!</p>
 
 
 
-<time datetime="2022-05-01 08:30:00 -0700" pubdate  updated >2022-05-01 08:30:00 -0700</time>
+<time datetime="2022-08-09 08:30:00 -0700" pubdate  updated >2022-08-09 08:30:00 -0700</time>
 
 
 
@@ -200,7 +214,7 @@ the help message matches the order of the options in the prompt!</p>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2022/05/01/brakeman-5-dot-3-dot-0-released">Brakeman 5.2.3 Released</a>
+        <a href="/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">Brakeman 5.3.0 Released</a>
       </li>
     
       <li class="post">
