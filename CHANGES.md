@@ -1,4 +1,4 @@
-# Unreleased
+# 5.3.0 - 2022-08-09
 
 * Include explicit engine or lib paths in vendor/ (Joe Rafaniello)
 * Load rexml as a Brakeman dependency
