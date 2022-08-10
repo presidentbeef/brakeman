@@ -1,3 +1,7 @@
+# 5.3.1 - 2022-08-09
+
+* Fix version range for CVE-2022-32209
+
 # 5.3.0 - 2022-08-09
 
 * Include explicit engine or lib paths in vendor/ (Joe Rafaniello)
