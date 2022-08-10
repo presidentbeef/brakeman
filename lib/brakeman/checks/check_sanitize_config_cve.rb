@@ -9,7 +9,7 @@ class Brakeman::CheckSanitizeConfigCve < Brakeman::BaseCheck
     @specific_warning = false
 
     @gem_version = tracker.config.gem_version :'rails-html-sanitizer'
-    if version_between? "0.0.0", "1.4.3", @gem_version
+    if version_between? "0.0.0", "1.4.2", @gem_version
       check_config
       check_sanitize_calls
       check_safe_list_allowed_tags

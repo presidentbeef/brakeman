@@ -391,4 +391,14 @@ class CVETests < Minitest::Test
     assert_version '1.4.2', :'rails-html-sanitizer'
     assert_warning type: :generic, :warning_code => 124
   end
+
+  def test_CVE_2022_32209_fix_version
+    before_rescan_of "Gemfile", "rails6" do
+      append "Gemfile", "\ngem 'rails-html-sanitizer', '1.4.3'"
+    end
+
+    assert_new 0
+    assert_version '1.4.3', :'rails-html-sanitizer'
+    assert_no_warning type: :generic, :warning_code => 124
+  end
 end
