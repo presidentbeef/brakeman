@@ -80,6 +80,75 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2011/11/04/brakeman-0-dot-8-4-released">Brakeman 0.8.4 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2011-11-04 14:58:00 -0700" pubdate  updated >2011-11-04 14:58:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Changes:</p>
+
+<ul>
+  <li>Option for separate attr_accessible warnings</li>
+  <li>Option to set CSS file for HTML output</li>
+  <li>Add file names for version-specific warnings</li>
+  <li>Add line number for default routes in a controller</li>
+  <li>Fix hash_insert()</li>
+  <li>Remove use of Queue from threaded checks</li>
+</ul>
+
+<h3 id="separate-attr_accessible-warnings">Separate attr_accessible Warnings</h3>
+
+<p>The current default is to roll all controllers lacking <code class="highlighter-rouge">attr_accessible</code> into a single warning. This is convenient when manually looking at HTML or text output, but for Jenkins/Hudson it is better to have each be a separate warning. That way it is easier to track new and fixed warnings.</p>
+
+<p>To turn on this behavior, use <code class="highlighter-rouge">--separate-models</code>.</p>
+
+<h3 id="custom-css-for-html-output">Custom CSS for HTML Output</h3>
+
+<p>Use the <code class="highlighter-rouge">--css-file</code> option to set a custom CSS file for styling HTML output. This file is copied directly into the report.</p>
+
+<h3 id="file-names-for-version-specific-warnings">File Names for Version-Specific Warnings</h3>
+
+<p>Previously, there would be no file name associated with warnings about certain versions of Rails. This caused the warnings to not show up in the Jenkins/Hudson plugin. Now either <code class="highlighter-rouge">Gemfile</code> or <code class="highlighter-rouge">config/environment.rb</code> will be used as the file name for warnings based on the detected Rails version.</p>
+
+<h3 id="line-number-for-default-routes">Line Number for Default Routes</h3>
+
+<p>When default routes were detected for specific controllers, there will now be a line number (from <code class="highlighter-rouge">routes.rb</code>) associated with the warning.</p>
+
+<h3 id="hash_insert-fixed">hash_insert() Fixed</h3>
+
+<p><code class="highlighter-rouge">hash_insert</code> was broken and would cause some spurious warnings. For example, sometimes <code class="highlighter-rouge">only_path =&gt; true</code> would be set in <code class="highlighter-rouge">params</code>, but Brakeman would mess up the <code class="highlighter-rouge">params</code> hash and a redirect warning would still be created.</p>
+
+<h3 id="threaded-checks-no-longer-use-queue">Threaded Checks No Longer Use Queue</h3>
+
+<p>When using threaded checks, the resulting warnings were stored in a thread-safe Queue. This has been removed, and the resulting value from each thread will be used instead. This should avoid some (small) locking overhead and is just simpler.</p>
+
+<h3 id="like-brakeman-on-ruby-toolbox">“Like” Brakeman on Ruby Toolbox</h3>
+
+<p>Please consider ‘liking’ Brakeman on the <a href="https://www.ruby-toolbox.com/projects/brakeman">Ruby Toolbox</a>!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2011/10/25/brakeman-0-dot-8-3-released">Brakeman 0.8.3 Released</a></h1>
     
     
@@ -352,6 +421,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2022/05/01/brakeman-5-dot-3-dot-0-released">Brakeman 5.2.3 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">Brakeman 5.2.3 Released</a>
       </li>
     
@@ -365,10 +438,6 @@ end
     
       <li class="post">
         <a href="/blog/2021/12/15/brakeman-5-dot-2-dot-0-released">Brakeman 5.2.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2021/10/28/brakeman-5-dot-1-dot-2-released">Brakeman 5.1.2 Released</a>
       </li>
     
   </ul>

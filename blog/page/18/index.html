@@ -80,6 +80,128 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/11/13/brakeman-1-dot-8-3-released">Brakeman 1.8.3 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-11-13 09:20:00 -0800" pubdate  updated >2012-11-13 09:20:00 -0800</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is primarily a false positive reduction release. One major change is the change in dependency from the <code class="highlighter-rouge">json_pure</code> gem to <code class="highlighter-rouge">multi_json</code>.</p>
+
+<p><em>Changes since 1.8.2</em>:</p>
+
+<ul>
+  <li>Use <code class="highlighter-rouge">multi_json</code> gem for better harmony (<a href="https://github.com/presidentbeef/brakeman/issues/164">#164</a>)</li>
+  <li>Performance improvement for call indexing</li>
+  <li>Fix issue with processing HAML files (<a href="https://github.com/presidentbeef/brakeman/issues/168">#168</a>)</li>
+  <li>Handle pre-release versions when processing <code class="highlighter-rouge">Gemfile.lock</code> (<a href="https://github.com/presidentbeef/brakeman/issues/174">#174</a>)</li>
+  <li>Only check first argument of <code class="highlighter-rouge">redirect_to</code> (<a href="https://github.com/presidentbeef/brakeman/issues/98">#98</a>)</li>
+  <li>Fix false positives from <code class="highlighter-rouge">Model.arel_table</code> accesses</li>
+  <li>Fix false positives on redirects to models decorated with Draper gem (<a href="https://github.com/presidentbeef/brakeman/issues/172">#172</a>)</li>
+  <li>Fix false positive on redirect to model association (<a href="https://github.com/presidentbeef/brakeman/issues/111">#111</a>)</li>
+  <li>Fix false positive on <code class="highlighter-rouge">YAML.load</code> (<a href="https://github.com/presidentbeef/brakeman/issues/142">#142</a>)</li>
+  <li>Fix false positive XSS on any <code class="highlighter-rouge">to_i</code> output</li>
+  <li>Fix error on Rails 2 named routes with no args</li>
+  <li>Fix error in rescan of mixins with symbols in method name</li>
+  <li>Do not rescan non-Ruby files in config/</li>
+</ul>
+
+<h3 id="change-to-multijson">Change to MultiJSON</h3>
+
+<p>Brakeman now depends on the <a href="http://rdoc.info/github/intridea/multi_json">multijson</a> gem instead of <code class="highlighter-rouge">json_pure</code>. This should make it easier for people who include Brakeman as a dependency.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/166">changes</a>)</p>
+
+<h3 id="faster-call-indexing">Faster Call Indexing</h3>
+
+<p>Dumb code in the <code class="highlighter-rouge">CallIndex</code> was causing call indexing to be slow on some large applications. This should now be faster and require less memory!</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/180">changes</a>)</p>
+
+<h3 id="fix-haml-processing">Fix HAML Processing</h3>
+
+<p>Some HAML files were causing Brakeman’s alias processing to slow to a crawl. This was due to the template code (sometimes) directly appending to the output variable via <code class="highlighter-rouge">&lt;&lt;</code>. Since Brakeman attempts to treat targets of <code class="highlighter-rouge">&lt;&lt;</code> as arrays, Brakeman was generating large data structures each time <code class="highlighter-rouge">&lt;&lt;</code> was encountered.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/170">changes</a>]</p>
+
+<h3 id="handle-pre-release-versions">Handle Pre-release Versions</h3>
+
+<p>When a <code class="highlighter-rouge">Gemfile.lock</code> file is present in a Rails application, Brakeman uses it to determine the version of Rails in use. Previous versions did not accept pre-release version numbers (like <code class="highlighter-rouge">3.1.2.rc1</code>), leading to version inappropriate warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/176">changes</a>)</p>
+
+<h3 id="redirect-false-positives">Redirect False Positives</h3>
+
+<p>Several false positives related to redirects have been fixed, and the scope of the redirect check is somewhat reduced.</p>
+
+<p>Calls beginning with <code class="highlighter-rouge">Model.arel_table</code> should no longer be treated as user input (in any context).</p>
+
+<p>Model instances returned by the <code class="highlighter-rouge">decorate</code> method in the <a href="https://github.com/drapergem/draper">Draper</a> gem are considered safe.</p>
+
+<p>Redirects to model associations (e.g, <code class="highlighter-rouge">belongs_to :account</code>) are considered safe.</p>
+
+<p>Redirects to method calls with safe values should no longer warn. For example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to blah(User.first) #No warning
+</code></pre></div></div>
+
+<p>Additionally, only the first argument of <code class="highlighter-rouge">redirect_to</code> will be checked for user input.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/177">changes</a>)</p>
+
+<h3 id="yaml-false-positive">YAML False Positive</h3>
+
+<p>File access warnings for YAML calls have been reduced to only those calls which actually access files.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/178">changes</a>)</p>
+
+<h3 id="integer-output-false-positives">Integer Output False Positives</h3>
+
+<p>Calls to <code class="highlighter-rouge">to_i</code> should not trigger XSS warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/179">changes</a>)</p>
+
+<h3 id="errors-on-named-routes">Errors on Named Routes</h3>
+
+<p>Rails 2 named routes with no arguments were causing errors, which have now been fixed.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/181">changes</a>)</p>
+
+<h3 id="future-work">Future Work</h3>
+
+<p>Now that RubyParser 3.x is officially released, work is underway to use the new version. This will increase Ruby 1.9 syntax compatibility and remove the need to parse applications with the same Ruby version as the application uses. Additionally, it will allow us to get rid of the vendored version of RubyParser that Brakeman uses for Ruby 1.9. Unfortunately, RubyParser 3.x introduces a lot of incompatibilities and upgrading requires a significant amount of effort.</p>
+
+<p>Another exciting feature in development is limited interprocedural analysis. Brakeman will be able to handle simple things like calls to helper methods in controllers which set instance variables or return user input. This should help with the “obvious” vulnerabilities that Brakeman often misses.</p>
+
+<h3 id="report-issues">Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/10/17/brakeman-1-dot-8-2-released">Brakeman 1.8.2 Released</a></h1>
     
     
@@ -442,123 +564,6 @@
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/07/31/brakeman-1-dot-7-0-released">Brakeman 1.7.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-07-31 17:44:00 -0700" pubdate  updated >2012-07-31 17:44:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This release includes improvements to Rails 3 route processing, better performance, several bug fixes, and more!</p>
-
-<p><em>Changes since 1.6.2</em>:</p>
-
-<ul>
-  <li>Add check for CVE-2012-3424</li>
-  <li>Link report types to descriptions on website</li>
-  <li>Report errors raised while running check</li>
-  <li>Improve processing of Rails 3 routes</li>
-  <li>Improve file access check</li>
-  <li>Avoid warning on non-ActiveModel models</li>
-  <li>Fix how <code class="highlighter-rouge">params[:x] ||=</code> is handled</li>
-  <li>Treat user input in <code class="highlighter-rouge">or</code> expressions as immediate values</li>
-  <li>Fix processing of negative array indexes</li>
-  <li>Fix “empty char-class” error</li>
-  <li>Speed improvements by stripping down SexpProcessor</li>
-  <li>Add line breaks to truncated table rows</li>
-</ul>
-
-<h3 id="check-for-http-auth-digest-dos">Check for HTTP Auth Digest DoS</h3>
-
-<p><a href="https://groups.google.com/d/topic/rubyonrails-security/vxJjrc15qYM/discussion">CVE-2012-3424</a>, a potential denial of service vulnerability in how Rails handles HTTP authentication digest parameters, was recently announced. It affects Rails 3.x, and is fixed in 3.0.16, 3.1.7, and 3.2.7.</p>
-
-<p>Brakeman will generate a warning for the Rails versions affected, but will only report a high confidence warning if <code class="highlighter-rouge">authenticate_or_request_with_http_digest</code> or <code class="highlighter-rouge">authenticate_with_http_digest</code> methods are called.</p>
-
-<h3 id="links-to-warning-information">Links to Warning Information</h3>
-
-<p>HTML reports now link warning types to descriptions on the Brakeman website. JSON reports will also include the link information. Due to this change, it is not possible to compare JSON reports from previous versions using the <code class="highlighter-rouge">--compare</code> option.</p>
-
-<p>Suggestions and <a href="https://github.com/presidentbeef/brakeman-site">pull requests</a> for improving the documention are welcome!</p>
-
-<h3 id="report-check-errors">Report Check Errors</h3>
-
-<p>Previously, errors encounted while running checks were not included in reports. This has been fixed.</p>
-
-<h3 id="better-rails-3-route-processing">Better Rails 3 Route Processing</h3>
-
-<p>Even the simple information Brakeman uses (which methods are routes) is difficult to extract from Rails 3 routes due to all the different options it offers. This release should decrease the number of “Error while processing routes” messages that come up.</p>
-
-<p>See <a href="https://github.com/presidentbeef/brakeman/pull/116">this pull request</a> for more information about specific fixes.</p>
-
-<h3 id="improved-file-access-check">Improved File Access Check</h3>
-
-<p>The check for user input in file access calls has been improved so the confidence of the warnings will vary according to how the user input is used, like most other checks.</p>
-
-<p>Additionally, the check will now respect the <code class="highlighter-rouge">--report-direct</code> option.</p>
-
-<h3 id="no-sqli-warnings-for-non-activemodel">No SQLi Warnings for Non-ActiveModel</h3>
-
-<p>Models which do not inherit from <code class="highlighter-rouge">ActiveRecord::Base</code> will no longer be reported in SQL injection warnings.</p>
-
-<h3 id="default-assignment-to-params">Default Assignment to <code class="highlighter-rouge">params</code></h3>
-
-<p>Normally, when Brakeman processes an assignment like <code class="highlighter-rouge">x ||= y</code>, it will assign <code class="highlighter-rouge">y</code> to <code class="highlighter-rouge">x</code> if no previous value is found for <code class="highlighter-rouge">x</code>.</p>
-
-<p>However, in this case:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>params[:x] ||= y
-</code></pre></div></div>
-
-<p>The information that the left hand side is a <code class="highlighter-rouge">params</code> hash is lost.</p>
-
-<p>This has been changed so default assignment to a <code class="highlighter-rouge">params</code> hash will not replace the entire value, but will handle it as <code class="highlighter-rouge">params[:x] || y</code>.</p>
-
-<h3 id="user-input-in-or-expressions">User Input in <code class="highlighter-rouge">or</code> Expressions</h3>
-
-<p>Previously, unescaped output like</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= params[:x] || z %&gt;
-</code></pre></div></div>
-
-<p>would have been reported as a weak confidence warning. This has been changed so that any user input in an <code class="highlighter-rouge">or</code> expression will be considered immediate (versus “indirect”) output and will likely result in high confidence warnings.</p>
-
-<h3 id="speed-improvements">Speed Improvements</h3>
-
-<p>Scan times should decrease by 15-25% with this release. This is mostly due to stripping unused bits out of SexpProcessor.</p>
-
-<h3 id="bug-fixes">Bug Fixes</h3>
-
-<p>Besides errors raised when processing Rails 3 routes, the <code class="highlighter-rouge">Result must be a Sexp, was Symbol::array</code> and <code class="highlighter-rouge">empty char-class</code> errors should be resolved now.</p>
-
-<p>Please report any errors raised when performing scans, as they are usually bugs.</p>
-
-<h3 id="report-issues">Report Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -597,6 +602,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2022/05/01/brakeman-5-dot-3-dot-0-released">Brakeman 5.2.3 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">Brakeman 5.2.3 Released</a>
       </li>
     
@@ -610,10 +619,6 @@
     
       <li class="post">
         <a href="/blog/2021/12/15/brakeman-5-dot-2-dot-0-released">Brakeman 5.2.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2021/10/28/brakeman-5-dot-1-dot-2-released">Brakeman 5.1.2 Released</a>
       </li>
     
   </ul>

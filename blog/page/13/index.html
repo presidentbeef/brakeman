@@ -80,6 +80,94 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2015/01/22/brakeman-3-dot-0-1-released">Brakeman 3.0.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2015-01-22 18:38:00 -0800" pubdate  updated >2015-01-22 18:38:00 -0800</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a small release, but may change some fingerprints of warnings in libraries. Also, the Slim dependency has been removed due to conflicts. See below for details.</p>
+
+<ul>
+  <li>Remove Slim dependency (<a href="https://github.com/cwest">Casey West</a>)</li>
+  <li>Properly process libraries (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
+  <li>Add <code class="highlighter-rouge">--add-libs-path</code> for additional libraries (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
+  <li>Allow for controllers/models/templates in directories under <code class="highlighter-rouge">app/</code> (<a href="https://github.com/nealharris">Neal Harris</a>)</li>
+  <li>Avoid <code class="highlighter-rouge">protect_from_forgery</code> warning unless <code class="highlighter-rouge">ApplicationController</code> inherits from <code class="highlighter-rouge">ActionController::Base</code> (<a href="https://github.com/presidentbeef/brakeman/issues/573">#573</a>)</li>
+  <li>Properly format command interpolation (again)</li>
+</ul>
+
+<h3 id="slim-gem-dependency-removed">Slim Gem Dependency Removed</h3>
+
+<p>Since <a href="https://github.com/slim-template/slim-rails/releases/tag/3.0.1">Rails 4.2 requires Slim 3.0.1</a> and <a href="https://github.com/slim-template/slim/blob/bb7ca78c1ea9629d8b57a06fcb99c938c9d7640e/CHANGES#L8">Slim 3.0 dropped support for Ruby 1.8.7</a>, there is no way to satisfy dependencies for Slim, Rails 4.2, and retain support for Ruby 1.8.7 when Brakeman is added as a dependency in a <code class="highlighter-rouge">Gemfile</code>.</p>
+
+<p>The only acceptable solution is to not include Slim as a dependency at all and let users sort it out for themselves. Sorry for the unfortunate situation, but there is no way to add Brakeman to a <code class="highlighter-rouge">Gemfile</code> and avoid Bundler attempting to resolve Brakeman’s dependencies against the application’s dependencies, despite there being no relation.</p>
+
+<p>Thanks to <a href="https://github.com/cwest">Casey West</a> for working through solutions for this issue.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/602">changes</a>)</p>
+
+<h3 id="library-processing">Library Processing</h3>
+
+<p>Libraries were added to the call index (which meant they were scanned during checks) in the 3.0.0 release, but there were still not being processed like most other code. This led to some checks not finding issues they should have. <a href="https://github.com/ptoomey3">Patrick Toomey</a> pointed this out and contributed a fix.</p>
+
+<p>This change may affect existing warning fingerprints for warnings in libraries. Apologies for the inconvenience.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/605">changes</a>)</p>
+
+<h3 id="allow-additional-library-paths">Allow Additional Library Paths</h3>
+
+<p><a href="https://github.com/ptoomey3">Patrick Toomey</a> also added a new option <code class="highlighter-rouge">--add-libs-path</code> to treat more paths as if they were in <code class="highlighter-rouge">lib/</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/606">changes</a>)</p>
+
+<h3 id="scan-application-subdirectories">Scan Application Subdirectories</h3>
+
+<p><a href="https://github.com/nealharris">Neal Harris</a> contributed a change to support applications with multiple applications under <code class="highlighter-rouge">app/</code>, such as <code class="highlighter-rouge">app/cool_team/controllers/</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/607">changes</a>)</p>
+
+<h3 id="avoid-csrf-warning-for-apis">Avoid CSRF Warning for APIs</h3>
+
+<p>Brakeman will no longer warn about missing <code class="highlighter-rouge">protect_from_forgery</code> if <code class="highlighter-rouge">ApplicationController</code> does not inherit from <code class="highlighter-rouge">ActionController::Base</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/issues/573">changes</a>)</p>
+
+<h3 id="command-interpolation-format-fix">Command Interpolation Format Fix</h3>
+
+<p>Previous release had an incomplete fix for this. There should be no impact to warning fingerprints.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/608">changes</a>)</p>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
+
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2015/01/02/brakeman-3-dot-0-0-released">Brakeman 3.0.0 Released</a></h1>
     
     
@@ -552,76 +640,6 @@ b5cefd6f14edb57f12d1fe9fcc0fb24e05a05aaf  brakeman-min-3.0.0.gem
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2014/07/02/brakeman-2-dot-6-1-released">Brakeman 2.6.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2014-07-02 12:30:00 -0700" pubdate  updated >2014-07-02 12:30:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a tiny release in response to today’s CVEs.</p>
-
-<p><em>Changes since 2.6.0</em>:</p>
-
-<ul>
-  <li>Add check for CVE-2014-3482 and CVE-2014-3483</li>
-  <li>Add support for keyword arguments in blocks (<a href="https://github.com/presidentbeef/brakeman/issues/511">#511</a>)</li>
-  <li>Remove unused warning codes (<a href="https://github.com/bfish510">Bill Fischer</a>)</li>
-</ul>
-
-<h3 id="check-for-postgressql-injection-cves">Check for PostgresSQL Injection CVEs</h3>
-
-<p><a href="https://groups.google.com/forum/#!msg/rubyonrails-security/wDxePLJGZdI/WP7EasCJTA4J">CVE-2014-3482 and CVE-2014-3483</a> are SQL injection issues when using the PostgresSQL backend with bitstring and range data types. Brakeman will warn about affected versions of Rails which include the “pg” gem in the Gemfile.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/515">changes</a>)</p>
-
-<h3 id="support-keyword-arguments-to-blocks">Support Keyword Arguments to Blocks</h3>
-
-<p>Brakeman now handles keyword arguments to blocks as local variables in the block scope instead of throwing an error.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/513">changes</a>)</p>
-
-<h3 id="removal-of-warning-codes">Removal of Warning Codes</h3>
-
-<p>Warnings codes for <code class="highlighter-rouge">CVE_2013_6415</code> and <code class="highlighter-rouge">CVE_2013_6415_call</code> have been removed, as they are unused. This should not affect anyone.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/514">changes</a>)</p>
-
-<h3 id="shas">SHAs</h3>
-
-<p>The SHA1 sums for this release are</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5b7b5572efe769cfa38178e94952be05670e6fd4  brakeman-2.6.1.gem
-fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -660,6 +678,10 @@ fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2022/05/01/brakeman-5-dot-3-dot-0-released">Brakeman 5.2.3 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">Brakeman 5.2.3 Released</a>
       </li>
     
@@ -673,10 +695,6 @@ fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
     
       <li class="post">
         <a href="/blog/2021/12/15/brakeman-5-dot-2-dot-0-released">Brakeman 5.2.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2021/10/28/brakeman-5-dot-1-dot-2-released">Brakeman 5.1.2 Released</a>
       </li>
     
   </ul>

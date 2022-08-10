@@ -80,6 +80,87 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/03/22/brakeman-1-dot-5-2-released-important-fixes">Brakeman 1.5.2 Released - Important Fixes</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-03-22 13:34:00 -0700" pubdate  updated >2012-03-22 13:34:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is update includes some important fixes. All users of the <code class="highlighter-rouge">rails_xss</code> plugin are particularly encouraged to upgrade.</p>
+
+<p><em>Changes since 1.5.1:</em></p>
+
+<ul>
+  <li>Fix handling of views when using <code class="highlighter-rouge">rails_xss</code></li>
+  <li>Fix rescanning of lib files (Neil Matatall)</li>
+  <li>Fix <code class="highlighter-rouge">link_to</code> checks for Rails 2.0 and 2.3</li>
+  <li>Revert to <code class="highlighter-rouge">ruby_parser</code> 2.3.1 for Ruby 1.8 parsing</li>
+  <li>Only warn on user input in render paths</li>
+  <li>Output stack trace on interrupt when debugging</li>
+  <li>Ignore user input in if statement conditions</li>
+  <li>Fix –skip-files option with Ruby 1.8</li>
+</ul>
+
+<h3 id="views-with-rails_xss">Views with rails_xss</h3>
+
+<p>Some previous changes to make sure Brakeman was processing ERB views the same way as the <code class="highlighter-rouge">rails_xss</code> plugin unfortunately broke the processing of those views.</p>
+
+<p>These changes caused Brakeman to not report <em>any</em> output from ERB views when the <code class="highlighter-rouge">rails_xss</code> plugin was in use, hiding any XSS vulnerabilities in those views.</p>
+
+<p>This now fixed, so if you are using the <code class="highlighter-rouge">rails_xss</code> plugin, it is highly recommended to upgrade.</p>
+
+<h3 id="rescanning-lib-files">Rescanning lib/ Files</h3>
+
+<p>Rescanning changed files in the <code class="highlighter-rouge">lib</code> directory was broken, but Neil fixed it!</p>
+
+<h3 id="link_to-checks">link_to Checks</h3>
+
+<p>In Rails 2.3, the URL is escaped, but not the body of the link. In Rails 2.0, neither argument is escaped.</p>
+
+<p>In this release, the check for XSS in <code class="highlighter-rouge">link_to</code> has been updated to handle <code class="highlighter-rouge">link_to</code> with blocks and to warn in Rails 2.0.x if any user input is used as an argument.</p>
+
+<h3 id="revert-to-ruby_parser-for-ruby-18">Revert to ruby_parser for Ruby 1.8</h3>
+
+<p>Brakeman has been using a vendored version of <a href="https://github.com/seattlerb/ruby_parser">ruby_parser</a> with some updates to Ruby 1.9 syntax parsing. Unfortunately, that version also introduced some regressions for parsing Ruby 1.8 syntax.</p>
+
+<p>To handle this, Brakeman will now only use the vendored version for 1.9 parsing, but the regular gem version for 1.8 syntax parsing. This should fix some parse errors people are seeing for Ruby 1.8 apps.</p>
+
+<h3 id="dynamic-render-path-updates">Dynamic Render Path Updates</h3>
+
+<p>The check for dynamic render paths was not very good, but it is better now. “Dynamic Render Path” warnings should only be raised when user input is actually used to determine what view, partial, or file to render.</p>
+
+<h3 id="stacktrace-output">Stacktrace Output</h3>
+
+<p>Brakeman will now output a stacktrace if interrupted while running with the <code class="highlighter-rouge">-d</code> option. This is mostly helpful when Brakeman appears to “hang”.</p>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a>!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/03/22/brakeman-jenkins-plugin-0-dot-7-released">Brakeman Jenkins Plugin 0.7 Released</a></h1>
     
     
@@ -374,120 +455,6 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/02/08/brakeman-1-dot-3-0-released">Brakeman 1.3.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-02-08 15:11:00 -0800" pubdate  updated >2012-02-08 15:11:00 -0800</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Thanks to everyone who reported problems and suggestions this time around!</p>
-
-<p>This release includes some new features, better performance on large projects, and more detection criteria. Warnings reported may change after upgrading.</p>
-
-<p><em>Changes since 1.2.2:</em></p>
-
-<ul>
-  <li>Add file paths to HTML report</li>
-  <li>Add caching of filters</li>
-  <li>Add <code class="highlighter-rouge">--skip-files</code> option</li>
-  <li>Add support for <code class="highlighter-rouge">attr_protected</code></li>
-  <li>Add detection of request.env as user input</li>
-  <li>Descriptions of checks in <code class="highlighter-rouge">-k</code> output</li>
-  <li>Improved processing of named scopes</li>
-  <li>Check for mass assignment in <code class="highlighter-rouge">ActiveRecord::Associations::AssociationCollection#build</code></li>
-  <li>Better variable substitution</li>
-  <li>Table output option for rescan reports</li>
-</ul>
-
-<h3 id="file-paths-in-html-report">File Paths in HTML Report</h3>
-
-<p>In the HTML output, any warning which has context associated with it (visible when clicking on the warning message) will now include the file name at the top of the code snippet.</p>
-
-<h3 id="filter-caching">Filter Caching</h3>
-
-<p>Filters (using <code class="highlighter-rouge">before_filter</code>) are now only parsed once, instead of for everytime they are used. This has greatly improved performance when scanning some large projects.</p>
-
-<h3 id="option-to-skip-files">Option to Skip Files</h3>
-
-<p>A list of files to skip can be provided with the <code class="highlighter-rouge">--skip-files</code> option. This will skip any initializers, libraries, controllers, models, or views that match the file names provided. The file names to skip are matched against the end of the absolute path. That is, <code class="highlighter-rouge">blah.rb</code> will skip <em>any</em> file with a name ending in <code class="highlighter-rouge">blah.rb</code>. This means it is not necessary to provide the full path to a file.</p>
-
-<h3 id="support-for-blacklisting-attributes">Support for Blacklisting Attributes</h3>
-
-<p>Previously, Brakeman ignored uses of <code class="highlighter-rouge">attr_protected</code>. Ideally, <code class="highlighter-rouge">attr_accessible</code> should always be used to whitelist attributes that can be set using mass assignment. This way, attributes can never be “accidentally” exposed. However, it can also be tedious for large models.</p>
-
-<p>With this release, Brakeman will downgrade mass assignment warnings to “weak” confidence if <code class="highlighter-rouge">attr_protected</code> is used, as well as suggesting that <code class="highlighter-rouge">attr_accessible</code> be used instead.</p>
-
-<p>The <code class="highlighter-rouge">--ignore-protected</code> option can be used to suppress any warnings for models that use <code class="highlighter-rouge">attr_protected</code>.</p>
-
-<h3 id="request-environment-is-user-input">Request Environment is User Input</h3>
-
-<p><code class="highlighter-rouge">request.env</code> will now be treated as user input.</p>
-
-<h3 id="check-descriptions">Check Descriptions</h3>
-
-<p>The <code class="highlighter-rouge">-k</code> option now includes descriptions of each check.</p>
-
-<h3 id="named-scope-improvements">Named Scope Improvements</h3>
-
-<p>The 1.2.0 release added checking for SQL injection in named scopes, but it was not very accurate. This has been improved.</p>
-
-<h3 id="better-variable-substitution">Better Variable Substitution</h3>
-
-<p>Variable substitution would sometimes “explode” if a set of code was processed for aliasing several times.</p>
-
-<p>For example,</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
-
-puts x
-</code></pre></div></div>
-
-<p>Might become</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
-
-puts clean(clean(clean(clean(x))))
-</code></pre></div></div>
-
-<p>This should now be prevented, so it would just become</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
-
-puts clean(x)
-</code></pre></div></div>
-
-<p>There may be subtle issues with this code (although I have not seen any yet), but it’s better than creating a bunch of useless substitutions.</p>
-
-<h3 id="table-output-for-rescan-reports">Table Output for Rescan Reports</h3>
-
-<p><code class="highlighter-rouge">RescanReport#to_s(true)</code> will now output formatted tables, thanks to <a href="https://github.com/presidentbeef/brakeman/pull/33">Dave Worth</a>.</p>
-
-<h3 id="issues">Issues?</h3>
-
-<p>As usual, please report any issues on <a href="https://github.com/presidentbeef/brakeman/issues">GitHub</a>, send a tweet to <a href="https://twitter.com/brakeman">@Brakeman</a>, or send an email to the <a href="http://librelist.com/browser/brakeman/">mailing list</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -526,6 +493,10 @@ puts clean(x)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2022/05/01/brakeman-5-dot-3-dot-0-released">Brakeman 5.2.3 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">Brakeman 5.2.3 Released</a>
       </li>
     
@@ -539,10 +510,6 @@ puts clean(x)
     
       <li class="post">
         <a href="/blog/2021/12/15/brakeman-5-dot-2-dot-0-released">Brakeman 5.2.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2021/10/28/brakeman-5-dot-1-dot-2-released">Brakeman 5.1.2 Released</a>
       </li>
     
   </ul>

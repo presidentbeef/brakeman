@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Cross Site Scripting: link to</title>
+  <title>Brakeman: Brakeman 5.2.3 Released</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,7 +15,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="https://brakemanscanner.org/docs/warning_types/link_to/"/>
+  <link rel="canonical" href="https://brakemanscanner.org/blog/2022/05/01/brakeman-5-dot-3-dot-0-released"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -34,7 +34,7 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Cross Site Scripting: link to" />
+<meta name="twitter:title" content="Brakeman - Brakeman 5.2.3 Released" />
 <meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
 <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 
@@ -72,32 +72,99 @@
   <div id="main">
     <div id="content">
       <div>
-<article>
+<article class="hentry">
   
   <header>
-    <h1 class="entry-title">Cross Site Scripting: link to</h1>
+    <div class="articlelogo">&nbsp;</div>
+    
+      <h1 class="entry-title">Brakeman 5.2.3 Released</h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2022-05-01 08:30:00 -0700" pubdate  updated >2022-05-01 08:30:00 -0700</time>
+
+
+</p>
+    
   </header>
-  
-  <p>In the 2.x versions of Rails, <code class="highlighter-rouge">link_to</code> would not escape the body of the HREF.</p>
 
-<p>For example, this will popup an alert box:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>link_to "&lt;script&gt;alert(1)&lt;/script&gt;", "http://google.com"
+<div class="entry-content"><p><em>Changes since 5.2.2:</em></p>
+
+<ul>
+  <li>Fix error with hash shorthand syntax (<a href="https://github.com/presidentbeef/brakeman/issues/1700">#1700</a>)</li>
+  <li>Match order of interactive options with help message (<a href="https://github.com/roryokane">Rory O’kane</a>)</li>
+</ul>
+
+<h3 id="hash-shorthand-syntax">Hash Shorthand Syntax</h3>
+
+<p>Parsing shorthand hash syntax like this was added with RubyParser 3.19:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">thing</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">blah</span><span class="p">(</span><span class="n">thing</span><span class="p">:)</span>
 </code></pre></div></div>
 
-<p>Brakeman warns on cases where the first parameter contains user input.</p>
+<p>but Brakeman needed to handle it properly, too.</p>
 
-<hr />
-<p>Back to <a href="/docs/warning_types">Warning Types</a></p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1701">changes</a>)</p>
 
+<h3 id="interative-options">Interative Options</h3>
+
+<p><a href="https://github.com/roryokane">Rory O’kane</a> updated the ordering of options in the help message for interative ignore so
+the help message matches the order of the options in the prompt!</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1702">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5b6efb6a1e5c2b79063553647638e17239d2d2f4d50561230c8b0acaae4728d4  brakeman-5.2.3.gem
+3104abc8ac2b6558d9610ede40f4cac2ebc7ae45569876b8e5907b7422c4e3af  brakeman-lib-5.2.3.gem
+10d743c930c03ed1d2bea021ade8fac10f1229d02b8f65bf2214f7f09ec7a0ff  brakeman-min-5.2.3.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+      
+
+
+
+
+<time datetime="2022-05-01 08:30:00 -0700" pubdate  updated >2022-05-01 08:30:00 -0700</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
   
-    <footer>
-      <p class="meta">
-        
-        
-      </p>
-    </footer>
   
+</div>
+
+    
+  </footer>
 </article>
 
 </div>

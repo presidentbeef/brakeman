@@ -80,6 +80,176 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2016/01/28/brakeman-3-dot-1-5-released">Brakeman 3.1.5 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2016-01-28 08:26:00 -0800" pubdate  updated >2016-01-28 08:26:00 -0800</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release adds warnings for the latest Rails CVEs.</p>
+
+<p><em>Changes since 3.1.4</em>:</p>
+
+<ul>
+  <li>Warn about RCE with <code class="highlighter-rouge">render params</code> (CVE-2016-0752)</li>
+  <li>Add check for <code class="highlighter-rouge">strip_tags</code> XSS (CVE-2015-7579)</li>
+  <li>Add check for <code class="highlighter-rouge">sanitize</code> XSS (CVE-2015-7578/80)</li>
+  <li>Add check for basic auth timing attack (CVE-2015-7576)</li>
+  <li>Add check for <code class="highlighter-rouge">reject_if</code> proc bypass (CVE-2015-7577)</li>
+  <li>Add check for denial of service via routes (CVE-2015-7581)</li>
+  <li>Add check for mime-type denial of service (CVE-2016-0751)</li>
+  <li>Check for implicit integer comparison in dynamic finders</li>
+  <li>Support directories better with <code class="highlighter-rouge">--only-files</code> and <code class="highlighter-rouge">--skip-files</code> (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
+  <li>Fix CodeClimate construction of <code class="highlighter-rouge">--only-files</code> (<a href="https://github.com/wfleming">Will Fleming</a>)</li>
+  <li>Avoid warning about <code class="highlighter-rouge">permit</code> in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/669">669</a>)</li>
+  <li>Avoid warning on user input in comparisons</li>
+  <li>Handle guards using <code class="highlighter-rouge">detect</code> (<a href="https://github.com/presidentbeef/brakeman/issues/376">376</a>)</li>
+  <li>Handle module names with self methods (<a href="https://github.com/presidentbeef/brakeman/issues/785">#785</a>)</li>
+  <li>Add session manipulation documentation (<a href="https://github.com/presidentbeef/brakeman/pull/791">#791</a>)</li>
+  <li>Add initial Rails 5 support</li>
+</ul>
+
+<h3 id="render-remote-code-execution">Render Remote Code Execution</h3>
+
+<p>First up, <a href="https://groups.google.com/d/msg/rubyonrails-security/335P1DcLG00/OfB9_LhbFQAJ">CVE-2016-0752</a> allows an attacker to render files outside of the application path as well as <a href="https://nvisium.com/blog/2016/01/26/rails-dynamic-render-to-rce-cve-2016-0752/">execute arbitrary code</a>. Passing in <code class="highlighter-rouge">params</code> values directly is <a href="https://twitter.com/joernchen/status/456822118500823040">especially dangerous</a>. Brakeman has warned about passing user input to <code class="highlighter-rouge">render</code> since it was first released as “dynamic render path” warnings. For calls to <code class="highlighter-rouge">render</code> that directly pass in <code class="highlighter-rouge">params</code>, it has been changed to a remote code execution warning in affected versions.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/807">changes</a>)</p>
+
+<h3 id="sanitization-xss">Sanitization XSS</h3>
+
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/OU9ugTZcbjc/PjEP46pbFQAJ">CVE-2015-7579</a>, <a href="https://github.com/presidentbeef/brakeman/pull/807">CVE-2015-7578</a>, and <a href="https://groups.google.com/d/msg/rubyonrails-security/uh--W4TDwmI/m_CVZtdbFQAJ">CVE-2015-7580</a> are vulnerabilities in <code class="highlighter-rouge">rails-html-sanitizer</code> affecting the <code class="highlighter-rouge">strip_tags</code> and <code class="highlighter-rouge">sanitize</code> methods. Brakeman will mark uses of <code class="highlighter-rouge">strip_tags</code> and <code class="highlighter-rouge">sanitize</code> with <code class="highlighter-rouge">raw</code> or <code class="highlighter-rouge">html_safe</code> as high confidence warnings. Since these methods might be used in support gems, Brakeman will also generate a generic warning for the CVEs in apps using vulnerable versions of <code class="highlighter-rouge">rails-html-sanitizer</code>..</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/805">changes</a> plus <a href="https://github.com/presidentbeef/brakeman/pull/806">these</a>)</p>
+
+<h3 id="basic-auth-timing-attack">Basic Auth Timing Attack</h3>
+
+<p>The implementation of <code class="highlighter-rouge">http_basic_authenticate_with</code> did not use constant-time comparison when checking passwords, allowing timing attacks as described in <a href="https://groups.google.com/d/msg/rubyonrails-security/ANv0HDHEC3k/mt7wNGxbFQAJ">CVE-2015-7576</a>. Brakeman will warn about affected applications using <code class="highlighter-rouge">http_basic_authenticate_with</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/800">changes</a>)</p>
+
+<h3 id="bypass-record-deletion-filtering">Bypass Record Deletion Filtering</h3>
+
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/cawsWcQ6c8g/tegZtYdbFQAJ">CVE-2015-7577</a> is a bug where the <code class="highlighter-rouge">reject_if</code> option to <code class="highlighter-rouge">accepts_nested_attributes_for</code> will not be called if <code class="highlighter-rouge">allow_destroy</code> is set to <code class="highlighter-rouge">false</code>. Brakeman will warn on applications which meet all of these criteria and do not include the workaround in an initializer.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/804">changes</a>)</p>
+
+<h3 id="wildcard-route-denial-of-service">Wildcard Route Denial of Service</h3>
+
+<p>Brakeman will warn about <a href="https://groups.google.com/d/msg/rubyonrails-security/dthJ5wL69JE/YzPnFelbFQAJ">CVE-2015-7581</a> when it detects routes containing <code class="highlighter-rouge">':controller'</code> wildcards on affected versions of Rails. These routes can be abused to cause a denial of service.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/808">changes</a>)</p>
+
+<h3 id="mime-type-denial-of-service">Mime-type Denial of Service</h3>
+
+<p>Sending many different mime-types via <code class="highlighter-rouge">Accept</code> headers can cause a denial of service. Brakeman will warn about <a href="https://groups.google.com/d/msg/rubyonrails-security/9oLY_FCzvoc/w9oI9XxbFQAJ">CVE-2016-0751</a> in affected versions of Rails unless the workaround is present.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/801">changes</a>)</p>
+
+<h3 id="mysql-implicit-integer-conversion">MySQL Implicit Integer Conversion</h3>
+
+<p>As <a href="http://www.phenoelit.org/blog/archives/2013/02/05/mysql_madness_and_rails/">described here</a>, MySQL will convert string values to match integer input - often leading to <code class="highlighter-rouge">0=0</code> comparisons in queries which will always return true. Brakeman will warn when an application uses MySQL and <code class="highlighter-rouge">find_by_*</code> dynamic finders on potentially sensitive fields like <code class="highlighter-rouge">password</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/798">changes</a>)</p>
+
+<h3 id="better-directory-support-when-skipping-files">Better Directory Support When Skipping Files</h3>
+
+<p><a href="https://github.com/ptoomey3">Patrick Toomey</a> provided a patch to better explicitly match directories with <code class="highlighter-rouge">--only-files</code> and <code class="highlighter-rouge">--skip-files</code>. See the <a href="https://github.com/presidentbeef/brakeman/blob/82de21d7c85acd8980ae7c4b86d77207f73b3444/OPTIONS.md#scanning-options">updated options</a> for details.</p>
+
+<p><em>Please note use of <code class="highlighter-rouge">--only-files</code> is strongly discouraged. Brakeman is designed to scan entire applications.</em></p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/764">changes</a>)</p>
+
+<h3 id="codeclimate-file-restriction">CodeClimate File Restriction</h3>
+
+<p>The <code class="highlighter-rouge">include_paths</code> configuration for the CodeClimate engine has been updated by <a href="https://github.com/wfleming">Will Fleming</a> to handle spaces and other special characters.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/803/">changes</a>)</p>
+
+<h3 id="permit-permit-in-sql">Permit <code class="highlighter-rouge">permit</code> in SQL</h3>
+
+<p>Surprisingly, it is safe and effective to use <code class="highlighter-rouge">params.permit</code> in SQL queries, as it will always return a hash of values which will be interpreted as parameterized values. Brakeman will no longer warn about uses of <code class="highlighter-rouge">permit</code> in SQL queries.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/795">changes</a>)</p>
+
+<h3 id="user-input-in-comparisons">User Input in Comparisons</h3>
+
+<p>Brakeman will no longer warn about user input in comparisons, such as <code class="highlighter-rouge">'x' == params[:x]</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/793">changes</a>)</p>
+
+<h3 id="detect-detect-guard-statements">Detect <code class="highlighter-rouge">detect</code> Guard Statements</h3>
+
+<p>Fixing a <a href="https://github.com/presidentbeef/brakeman/issues/376">bug</a> filed almost 2.5 years ago, Brakeman will now recognize <code class="highlighter-rouge">Array#detect</code>/<code class="highlighter-rouge">Array#find</code> being used to whitelist values.</p>
+
+<p>For example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if safe_name = [:A, :B, :C].detect { |v| v == params[:v] }
+  safe_name.constantize
+end
+</code></pre></div></div>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/794/">changes</a>)</p>
+
+<h3 id="self-methods-with-modules">Self Methods with Modules</h3>
+
+<p>Definitions of self methods inside nested modules was broken and is now fixed.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/792">changes</a>)</p>
+
+<h3 id="session-manipulation-documentation">Session Manipulation Documentation</h3>
+
+<p>Documentation for session manipulation warnings has now been added to <a href="http://brakemanscanner.org/docs/warning_types/session_manipulation/">the Brakeman site</a> and for the CodeClimate engine.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/791">changes</a>)</p>
+
+<h3 id="rails-5-support">Rails 5 Support</h3>
+
+<p>Initial support for Rails 5 has been added to Brakeman, including a <code class="highlighter-rouge">-5</code> option to force Rails 5 mode. However, no special analysis or warnings specific to Rails 5 have been implemented yet.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/799">changes</a>)</p>
+
+<h3 id="cve-2016-0753">CVE-2016-0753?</h3>
+
+<p>This release does not include a warning for <a href="https://groups.google.com/d/msg/rubyonrails-security/6jQVC1geukQ/8oYETcxbFQAJ">CVE-2016-0753</a>. The vulnerability appears to require using <code class="highlighter-rouge">permit!</code> which Brakeman already warns about, or else passing in hashes that are not query parameters which Brakeman would not be able to detect as dangerous or benign.</p>
+
+<h3 id="shas">SHAs</h3>
+
+<p>The SHA256 sums for this release are</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fa9528859d4baa8cd4fbe67f634cd3741ee85d553bf59c4b2315a5ccb2976835  brakeman-3.1.5.gem
+3248084efe71fcbb0c65b36e71ff0c06e65ac6bce1817a6f9d38ae0657a95bde  brakeman-min-3.1.5.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed improvements in this release.</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter or hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a>. Please note the mailing list is no longer in use and has apparently not been delivering mail for some time.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2015/12/22/brakeman-3-dot-1-4-released">Brakeman 3.1.4 Released</a></h1>
     
     
@@ -530,193 +700,6 @@ d820c872cbe7bc8452c9bd8bd46d990ff1c0d53ee621c09f1997270fc978f783  brakeman-min-3
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2015/08/30/brakeman-3-dot-1-0-released">Brakeman 3.1.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2015-08-30 21:46:00 -0700" pubdate  updated >2015-08-30 21:46:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>There are several changes in this release which may affect consumers of the JSON report as well as anyone relying on the ignore configuration file. Please try out <a href="https://gist.github.com/presidentbeef/52d5cce0fd26b901179e">this script</a> to migrate ignore configurations.</p>
-
-<p>Additionally, some dependencies have been updated to versions no longer supporting Ruby 1.8. As a consequence, Brakeman no longer runs “out of the box” on Ruby 1.8, although you may be able to use the <code class="highlighter-rouge">brakeman-min</code> gem. No more attempts will be made to support running on Ruby 1.8 in future releases. Please note that does not mean Ruby 1.8 code cannot be analyzed; that still works fine.</p>
-
-<p><em>Changes since 3.0.5</em>:</p>
-
-<ul>
-  <li>Update dependencies to Ruby 1.8 incompatible versions</li>
-  <li>Update render path information in JSON reports</li>
-  <li>Remove renaming of several <code class="highlighter-rouge">Sexp</code> nodes</li>
-  <li>Treat <code class="highlighter-rouge">html_safe</code> like <code class="highlighter-rouge">raw</code></li>
-  <li>Use railties version if rails gem is missing (<a href="https://github.com/lucasmazza">Lucas Mazza</a>)</li>
-  <li>Warn about unverified SSL mode in <code class="highlighter-rouge">Net::HTTP.start</code></li>
-  <li>Expand XSS safe methods</li>
-  <li>Avoid warning on path creation methods in <code class="highlighter-rouge">link_to</code></li>
-  <li>Add support for <code class="highlighter-rouge">gems.rb</code>/<code class="highlighter-rouge">gems.locked</code> (<a href="https://github.com/presidentbeef/brakeman/pull/705">#705</a>)</li>
-  <li>Fix low confidence XSS warning code</li>
-  <li>Avoid duplicate <code class="highlighter-rouge">eval</code> warnings</li>
-  <li>Convert YAML config keys to symbols (<a href="https://github.com/KarlGl">Karl Glaser</a>)</li>
-</ul>
-
-<h3 id="ruby-18-incompatibility">Ruby 1.8 Incompatibility</h3>
-
-<p>Ruby 1.8.7 has been unsupported by the Ruby core team for over a year now (and that was after it had a six month extension). Several libraries Brakeman depends on have stopped supporting Ruby 1.8. Unfortunately, there is no way to specify depending on different gem versions for different Ruby versions. This left Brakeman in a difficult place - use old libraries (and cause conflicts in Gemfiles…), use new libraries (and lose 1.8 support), or don’t declare dependencies (and force users to install dependencies themselves). In the end, it seems most people are okay with dropping Ruby 1.8 support.</p>
-
-<p>That being said, Brakeman 3.1.0 should run fine on Ruby 1.8 if dependencies are set up manually to be compatible.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/684">changes</a>)</p>
-
-<h3 id="render-path-improvements">Render Path Improvements</h3>
-
-<p>Previously, render paths were arrays of strings. The strings represented the locations of calls to <code class="highlighter-rouge">render</code> (implicit or explicit), either in the form <code class="highlighter-rouge">&lt;Controller&gt;#&lt;method&gt;</code> or <code class="highlighter-rouge">Template:&lt;template/path&gt;</code>. While the information was somewhat useful to humans, it was not easily manipulated by computers and it was difficult to link the strings back to application code.</p>
-
-<p>Now, render paths are arrays of hashes. The hash has a <code class="highlighter-rouge">type</code> key with a value of either <code class="highlighter-rouge">controller</code> or <code class="highlighter-rouge">template</code>. For controllers, the hash includes <code class="highlighter-rouge">class</code>, <code class="highlighter-rouge">method</code>, <code class="highlighter-rouge">line</code>, and <code class="highlighter-rouge">file</code>. For templates, the hash includes <code class="highlighter-rouge">name</code>, <code class="highlighter-rouge">line</code>, and <code class="highlighter-rouge">file</code>.</p>
-
-<p>Example:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[
-  {
-    "type": "controller",
-    "class": "ProductsController",
-    "method": "create",
-    "line": 50,
-    "file": "app/controllers/products_controller.rb"
-  },
-  {
-    "type": "template",
-    "name": "products/new",
-    "line": 2,
-    "file": "app/views/products/new.html.erb"
-  }
-]
-</code></pre></div></div>
-
-<p>Implicit renders from controller actions point to the line at the end of the method.</p>
-
-<p>Rendered templates in JSON reports used to include the render location as well. For example:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"location": {
-  "type": "template",
-  "template": "home/index (HomeController#index)"
-}
-</code></pre></div></div>
-
-<p>Since this information is redundant with the render path, it has been removed.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/702">changes</a>)</p>
-
-<h3 id="s-expression-names">S-Expression Names</h3>
-
-<p>Starting a long time ago, Brakeman rewrote several s-expression names for no reason other than clarity (for example, <code class="highlighter-rouge">dstr</code> becomes <code class="highlighter-rouge">string_interp</code>). However, not all nodes were changed, leading to code that must check for both the original name from RubyParser and Brakeman’s name. This leads to messy code and subtle bugs.</p>
-
-<p>The following node names were removed: <code class="highlighter-rouge">string_interp</code>, <code class="highlighter-rouge">string_eval</code>, <code class="highlighter-rouge">methdef</code>, <code class="highlighter-rouge">selfdef</code>, <code class="highlighter-rouge">call_with_block</code>.</p>
-
-<p>While this seems like a silly internal change, it will unfortunately change any fingerprints containing these node types. A <a href="https://gist.github.com/presidentbeef/52d5cce0fd26b901179e">quick script is available</a> to migrate ignore files without having to manually update the fingerprints.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/701">changes</a>)</p>
-
-<h3 id="html_safe">html_safe</h3>
-
-<p>As we hopefully all know now, <code class="highlighter-rouge">html_safe</code> is not safe, it marks a string so it is <em>not</em> escaped when output in a template. Since this is essentially the same as calling <code class="highlighter-rouge">raw</code> on a string, Brakeman will treat them both as unescaped output.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/675">changes</a>)</p>
-
-<h3 id="use-railties-version">Use railties Version</h3>
-
-<p>Thanks to <a href="https://github.com/lucasmazza">Lucas Mazza</a>, if an application depends on <code class="highlighter-rouge">railties</code> instead of <code class="highlighter-rouge">rails</code>, Brakeman will now use the gem version of <code class="highlighter-rouge">railties</code> as the Rails version.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/695/files">changes</a>)</p>
-
-<h3 id="ssl-verify-mode">SSL Verify Mode</h3>
-
-<p>As suggested by <a href="https://github.com/gmcnaughton">Gordon McNaughton</a>, Brakeman now warns when SSL certificate verification is turned off in calls to <code class="highlighter-rouge">Net::HTTP.start</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/694">changes</a>)</p>
-
-<h3 id="safe-methods">Safe Methods</h3>
-
-<p>The <code class="highlighter-rouge">--safe-methods</code> option (which only applies to XSS warnings) and <code class="highlighter-rouge">--url-safe-methods</code> (which applies to values pass to <code class="highlighter-rouge">link_to</code>) now work on methods that have a target. For example, <code class="highlighter-rouge">--url-safe-methods this_is_safe</code> will ignore <code class="highlighter-rouge">link_to util.this_is_safe(params[:x])</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/674">changes</a>)</p>
-
-<h3 id="more-safe-methods">More Safe Methods</h3>
-
-<p>Brakeman warns about user input in the href parameter of <code class="highlighter-rouge">link_to</code> because it is possible to pass in a string starting with <code class="highlighter-rouge">javascript:</code>, which will execute the XSS payload when the victim clicks on it. However, it will no longer warn about methods that look like path helpers or URL generation methods. It will still warn about URL methods on models, since those may be direct user input.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/674">changes</a>)</p>
-
-<h3 id="gemsrbgemslocked">gems.rb/gems.locked</h3>
-
-<p><code class="highlighter-rouge">gems.rb</code>/<code class="highlighter-rouge">gems.locked</code> are alternative names for <code class="highlighter-rouge">Gemfile</code>/<code class="highlighter-rouge">Gemfile.lock</code>. Brakeman now supports either pair.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/705">changes</a>)</p>
-
-<h3 id="weak-confidence-xss-warnings">Weak Confidence XSS Warnings</h3>
-
-<p>A small bug caused weak confidence XSS warnings to have a warning code of <code class="highlighter-rouge">5</code> (which is for unescaped JSON) instead of <code class="highlighter-rouge">2</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/commit/9fec336e7cbbbb74add9ef9c6c90c65efa0ebcc7">changes</a>)</p>
-
-<h3 id="duplicate-eval-warnings">Duplicate Eval Warnings</h3>
-
-<p>There should now be fewer duplicate warnings about dangerous calls to <code class="highlighter-rouge">eval</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/670/files">changes</a>)</p>
-
-<h3 id="configuration-keys">Configuration Keys</h3>
-
-<p><a href="https://github.com/KarlGl">Karl Glaser</a> added a change so Brakeman configuration files may use string or symbol keys in the YAML file. However, it is recommended to use <code class="highlighter-rouge">brakeman -C</code> to generate configurations automatically, because writing YAML by hand is annoying.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/696">changes</a>)</p>
-
-<h3 id="internal-changes">Internal Changes</h3>
-
-<p>Internally, most of the information Brakeman tracks is kept in hash tables. This is changing, starting with the addition of <code class="highlighter-rouge">Controller</code>, <code class="highlighter-rouge">Model</code>, <code class="highlighter-rouge">Template</code>, and <code class="highlighter-rouge">Config</code> classes.</p>
-
-<p>Unfortunately, this will probably break any code that relies on Brakeman’s internals (such as custom checks).</p>
-
-<p>Fortunately, in almost all cases it will simplify code and in many cases it just means changing a hash access (like <code class="highlighter-rouge">template[:name]</code>) to a method call (<code class="highlighter-rouge">template.name</code>).</p>
-
-<p>See <a href="https://github.com/presidentbeef/brakeman/pull/690">the pull request</a> for examples.</p>
-
-<p>Also note this is just the beginning of these internal changes…sorry! Hopefully this leads to improvements and makes it easier to write Brakeman code.</p>
-
-<h3 id="shas">SHAs</h3>
-
-<p>The SHA1 sums for this release are</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>236af597e5cbcc0e647c02c4087ceb5965510435  brakeman-3.1.0.gem
-fe06faf67e781c4c4dc5ee362918ef2dfd8e1ce2  brakeman-min-3.1.0.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
-
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -755,6 +738,10 @@ fe06faf67e781c4c4dc5ee362918ef2dfd8e1ce2  brakeman-min-3.1.0.gem
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2022/05/01/brakeman-5-dot-3-dot-0-released">Brakeman 5.2.3 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">Brakeman 5.2.3 Released</a>
       </li>
     
@@ -768,10 +755,6 @@ fe06faf67e781c4c4dc5ee362918ef2dfd8e1ce2  brakeman-min-3.1.0.gem
     
       <li class="post">
         <a href="/blog/2021/12/15/brakeman-5-dot-2-dot-0-released">Brakeman 5.2.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2021/10/28/brakeman-5-dot-1-dot-2-released">Brakeman 5.1.2 Released</a>
       </li>
     
   </ul>
