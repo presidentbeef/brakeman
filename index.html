@@ -96,11 +96,13 @@
   </header>
 
 
-  <div class="entry-content"><p><em>Changes since 5.2.3:</em></p>
+  <div class="entry-content"><p>This release adds CWE information to reports - the first JSON report change in a long time!</p>
+
+<p><em>Changes since 5.2.3:</em></p>
 
 <ul>
-  <li>Add CWE information to warnings (Stephen Aghaulor)</li>
-  <li>Include explicit engine or lib paths in vendor/ (Joe Rafaniello)</li>
+  <li>Add CWE information to warnings (<a href="https://github.com/saghaulor">Stephen Aghaulor</a>)</li>
+  <li>Include explicit engine or lib paths in <code class="highlighter-rouge">vendor/</code> (<a href="https://github.com/jrafanie">Joe Rafaniello</a>)</li>
   <li>Add check for CVE-2022-32209</li>
   <li>Load rexml as a Brakeman dependency</li>
   <li>Fix “full call” information propagating unnecessarily</li>
@@ -112,6 +114,28 @@
 to every Brakeman warning type!</p>
 
 <p>CWE information is now available in most report formats. In particular, it is a new field for the JSON report.</p>
+
+<p>Example:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"warning_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cross-Site Scripting"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"warning_code"</span><span class="p">:</span><span class="w"> </span><span class="mi">124</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"fingerprint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"c2cc471a99036432e03d83e893fe748c2b1d5c40a39e776475faf088717af97d"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"check_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SanitizeConfigCve"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rails-html-sanitizer 1.4.2 is vulnerable to cross-site scripting when `select` and `style` tags are allowed (CVE-2022-32209)"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"config/initializers/sanitizers.rb"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"line"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://groups.google.com/g/rubyonrails-security/c/ce9PhUANQ6s/m/S0fJfnkmBAAJ"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Rails::Html::SafeListSanitizer.allowed_tags = [</span><span class="se">\"</span><span class="s2">select</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">a</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">style</span><span class="se">\"</span><span class="s2">]"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"render_path"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"user_input"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="s2">"High"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"cwe_id"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="mi">79</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1693">changes</a>)</p>
 
