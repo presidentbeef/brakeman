@@ -1,3 +1,7 @@
+# Unreleased
+
+* Add GitHub Action to update docker hub image
+
 # 5.3.1 - 2022-08-09
 
 * Fix version range for CVE-2022-32209
