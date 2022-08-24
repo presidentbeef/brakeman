@@ -86,7 +86,7 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BasicProcessor
       end
     elsif include_rails_config? exp
       options_path = get_rails_config exp
-      @tracker.config.set_rails_config(exp.first_arg, *options_path)
+      @tracker.config.set_rails_config(value: exp.first_arg, path: options_path, overwrite: true)
     end
 
     exp
