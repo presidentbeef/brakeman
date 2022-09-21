@@ -118,6 +118,16 @@ class BaseCheckTests < Minitest::Test
     @check.send(:version_between?, low, high)
   end
 
+  def version_gte? version, low
+    @tracker.config.set_rails_version version
+    @check.send(:version_gte?, low)
+  end
+
+  def version_lte? version, high
+    @tracker.config.set_rails_version version
+    @check.send(:version_lte?, high)
+  end
+
   def lts_version? version, low
     if version
       @tracker.config.add_gem :"railslts-version", version, nil, nil
@@ -144,6 +154,46 @@ class BaseCheckTests < Minitest::Test
 
   def test_version_between_pre_release
     assert version_between?("3.2.9.rc2", "3.2.5", "4.0.0")
+  end
+
+  def test_version_gte
+    assert version_gte?("2.3.8", "2.3.0")
+    assert version_gte?("2.3.8", "2.3.8")
+    assert version_gte?("2.3.8", "1.0.0")
+  end
+
+  def test_version_not_gte
+    assert_equal false, version_gte?("3.2.1", "3.2.2")
+    assert_equal false, version_gte?("3.2.1", "4.0.0")
+    assert_equal false, version_gte?("3.2.1", "9.9.9")
+  end
+
+  def test_version_gte_longer
+    assert_equal false, version_gte?("1.0.1", "1.0.1.1")
+  end
+
+  def test_version_gte_pre_release
+    assert version_gte?("3.2.9.rc2", "3.2.8")
+  end
+
+  def test_version_lte
+    assert version_lte?("2.3.8", "2.3.9")
+    assert version_lte?("2.3.8", "2.4.0")
+    assert version_lte?("2.3.8", "3.0.0")
+  end
+
+  def test_version_not_lte
+    assert_equal false, version_lte?("3.2.1", "3.2.0")
+    assert_equal false, version_lte?("3.2.1", "3.0.0")
+    assert_equal false, version_lte?("3.2.1", "0.0.0")
+  end
+
+  def test_version_lte_longer
+    assert_equal false, version_lte?("1.0.1.1", "1.0.1")
+  end
+
+  def test_version_lte_pre_release
+    assert version_lte?("3.2.9.rc2", "3.2.9")
   end
 
   def test_lts_version
