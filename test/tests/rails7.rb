@@ -13,7 +13,7 @@ class Rails7Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 0,
-      :warning => 2
+      :warning => 4
     }
   end
 
@@ -28,6 +28,34 @@ class Rails7Tests < Minitest::Test
       :relative_path => "config/environments/production.rb",
       :code => nil,
       :user_input => nil
+  end
+
+  def test_path_traversal_1
+    assert_warning check_name: "Pathname",
+      type: :warning,
+      warning_code: 125,
+      fingerprint: "1797967f82af2ce9213b465cd77c98bd08b36b6ed748a50e2d72a5e1c5c83461",
+      warning_type: "Path Traversal",
+      line: 30,
+      message: /^Absolute\ paths\ in\ `Pathname\#join`\ cause\ /,
+      confidence: 0,
+      relative_path: "app/controllers/application_controller.rb",
+      code: s(:call, s(:call, s(:const, :Rails), :root), :join, s(:str, "a"), s(:str, "b"), s(:dstr, "", s(:evstr, s(:call, s(:params), :[], s(:lit, :c))))),
+      user_input: s(:call, s(:params), :[], s(:lit, :c))
+  end
+
+  def test_path_traversal_2
+    assert_warning check_name: "Pathname",
+      type: :warning,
+      warning_code: 125,
+      fingerprint: "b5ff15be27c93ea4b88c3affe638affb2a255d1b6ac6c8e90ee1536f6001e73d",
+      warning_type: "Path Traversal",
+      line: 27,
+      message: /^Absolute\ paths\ in\ `Pathname\#join`\ cause\ /,
+      confidence: 0,
+      relative_path: "app/controllers/application_controller.rb",
+      code: s(:call, s(:call, s(:const, :Pathname), :new, s(:str, "a")), :join, s(:call, s(:params), :[], s(:lit, :x)), s(:str, "z")),
+      user_input: s(:call, s(:params), :[], s(:lit, :x))
   end
 
   def test_cross_site_scripting_CVE_2022_32209_allowed_tags_initializer
