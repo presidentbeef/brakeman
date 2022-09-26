@@ -30,6 +30,20 @@ class Rails7Tests < Minitest::Test
       :user_input => nil
   end
 
+  def test_redirect_to_last
+    assert_no_warning check_name: "Redirect",
+      type: :warning,
+      warning_code: 18,
+      fingerprint: "86a37d9ade23cec9901c80ad7c6fa7581d6257783dd56f2cddfd6adda4efc95a",
+      warning_type: "Redirect",
+      line: 3,
+      message: /^Possible\ unprotected\ redirect/,
+      confidence: 0,
+      relative_path: "app/controllers/users_controller.rb",
+      code: s(:call, nil, :redirect_to, s(:call, s(:const, :User), :last!)),
+      user_input: s(:call, s(:const, :User), :last!)
+  end
+
   def test_cross_site_scripting_CVE_2022_32209_allowed_tags_initializer
     assert_warning check_name: "SanitizeConfigCve",
       type: :warning,
