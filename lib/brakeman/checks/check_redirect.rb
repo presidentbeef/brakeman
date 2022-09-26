@@ -13,7 +13,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   def run_check
     Brakeman.debug "Finding calls to redirect_to()"
 
-    @model_find_calls = Set[:all, :create, :create!, :find, :find_by_sql, :first, :last, :new]
+    @model_find_calls = Set[:all, :create, :create!, :find, :find_by_sql, :first, :first!, :last, :last!, :new, :sole]
 
     if tracker.options[:rails3]
       @model_find_calls.merge [:from, :group, :having, :joins, :lock, :order, :reorder, :select, :where]
@@ -21,6 +21,10 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
 
     if version_between? "4.0.0", "9.9.9"
       @model_find_calls.merge [:find_by, :find_by!, :take]
+    end
+
+    if version_between? "7.0.0", "9.9.9"
+      @model_find_calls << :find_sole_by
     end
 
     @tracker.find_call(:target => false, :method => :redirect_to).each do |res|
