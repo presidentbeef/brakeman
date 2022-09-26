@@ -56,6 +56,7 @@ class Rails7Tests < Minitest::Test
       relative_path: "app/controllers/application_controller.rb",
       code: s(:call, s(:call, s(:const, :Pathname), :new, s(:str, "a")), :join, s(:call, s(:params), :[], s(:lit, :x)), s(:str, "z")),
       user_input: s(:call, s(:params), :[], s(:lit, :x))
+  end
 
   def test_redirect_to_last
     assert_no_warning check_name: "Redirect",
