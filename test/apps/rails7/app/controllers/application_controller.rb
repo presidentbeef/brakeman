@@ -22,4 +22,11 @@ class ApplicationController < ActionController::Base
   def pattern_matching_non_local_variable_pin
     {timestamp: Time.now} in {timestamp: ^(Time.new(2021)..Time.new(2022))}
   end
+
+  def pathname_stuff
+    z = Pathname.new('a').join(params[:x], 'z').basename # should warn
+    something(z) # should not be a duplicate warning
+
+    Rails.root.join('a', 'b', "#{params[:c]}") # should warn
+  end
 end
