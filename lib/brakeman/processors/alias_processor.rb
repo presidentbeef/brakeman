@@ -970,11 +970,27 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       exp.method == :==
   end
 
+  # Not a list of values
+  #   when :example
   def simple_when? exp
     node_type? exp[1], :array and
-      not node_type? exp[1][1], :splat, :array and
-      (exp[1].length == 2 or
-       exp[1].all? { |e| e.is_a? Symbol or node_type? e, :lit, :str })
+      exp[1].length == 2 and # only one element in the array
+      not node_type? exp[1][1], :splat, :array
+  end
+
+  # A list of literal values
+  #
+  #   when 1,2,3
+  #
+  # or
+  #
+  #   when *[:a, :b]
+  def all_literals_when? exp
+    if array? exp[1] # pretty sure this is always true
+      all_literals? exp[1] or # simple list, not actually array
+        (splat_array? exp[1][1] and
+         all_literals? exp[1][1][1])
+    end
   end
 
   def process_case exp
@@ -1002,9 +1018,16 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         scope do
           @branch_env = env.current
 
+          # Process the when value for matching
+          process_default e[1]
+
           # set value of case var if possible
-          if case_value and simple_when? e
-            @branch_env[case_value] = e[1][1]
+          if case_value
+            if simple_when? e
+              @branch_env[case_value] = e[1][1]
+            elsif all_literals_when? e
+              @branch_env[case_value] = safe_literal(e.line + 1)
+            end
           end
 
           # when blocks aren't blocks, they are lists of expressions
