@@ -1,12 +1,7 @@
-FROM ruby:2.5-alpine
+FROM ruby:2.7-alpine
 LABEL maintainer="Justin Collins <gem@brakeman.org>"
 
 WORKDIR /usr/src/app
-
-# Create user named app with uid=9000, give it ownership of /usr/src/app
-RUN adduser -u 9000 -D app && \
-    chown -R app:app /usr/src/app
-USER app
 
 # Copy our Gemfile (and related files) *without* copying our actual source code yet
 COPY Gemfile* *.gemspec gem_common.rb ./

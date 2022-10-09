@@ -1,4 +1,4 @@
-FROM ruby:2.4-alpine
+FROM ruby:2.7-alpine
 LABEL maintainer="Justin Collins"
 
 WORKDIR /usr/src/app
