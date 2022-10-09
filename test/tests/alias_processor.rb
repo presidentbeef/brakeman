@@ -1214,6 +1214,38 @@ class AliasProcessorTests < Minitest::Test
     OUTPUT
   end
 
+  def test_case_list
+    assert_output <<-INPUT, <<-OUTPUT
+      case y
+      when :a, :b, :c
+        something(y)
+      end
+    INPUT
+      case y
+      when :a, :b, :c
+        something(:BRAKEMAN_SAFE_LITERAL)
+      end
+    OUTPUT
+  end
+
+  def test_case_splat
+    assert_output <<-INPUT, <<-OUTPUT
+      x = [1, 2, 3]
+
+      case y
+      when *x
+        something(y)
+      end
+    INPUT
+      x = [1, 2, 3]
+
+      case y
+      when *[1, 2, 3]
+        something(:BRAKEMAN_SAFE_LITERAL)
+      end
+    OUTPUT
+  end
+
   def test_less_copying_of_arrays_and_hashes
     assert_output <<-'INPUT', <<-'OUTPUT'
       x = {}
