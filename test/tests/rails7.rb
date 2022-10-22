@@ -13,7 +13,7 @@ class Rails7Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 0,
-      :warning => 4
+      :warning => 10
     }
   end
 
@@ -70,6 +70,90 @@ class Rails7Tests < Minitest::Test
       relative_path: "app/controllers/users_controller.rb",
       code: s(:call, nil, :redirect_to, s(:call, s(:const, :User), :last!)),
       user_input: s(:call, s(:const, :User), :last!)
+  end
+
+  def test_weak_cryptography_1
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 128,
+      fingerprint: "4c4db18f4142dac0b271136f6bcf8bee08f0585bd9640676a12cdb80b1d7f02d",
+      warning_type: "Weak Cryptography",
+      line: 16,
+      message: /^RSA\ key\ with\ size\ `512`\ is\ considered\ ve/,
+      confidence: 0,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :generate, s(:lit, 512)),
+      user_input: s(:lit, 512)
+  end
+
+  def test_weak_cryptography_2
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 128,
+      fingerprint: "0f23edef18a0d092581daff053a88b523a56f50c03367907c0167af50d01dec2",
+      warning_type: "Weak Cryptography",
+      line: 17,
+      message: /^RSA\ key\ with\ size\ `1024`\ is\ considered\ w/,
+      confidence: 1,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :new, s(:lit, 1024)),
+      user_input: s(:lit, 1024)
+  end
+
+  def test_weak_cryptography_3
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 126,
+      fingerprint: "cc38689724cb70423c57d575290423054f0c998a7b897b2985e96da96f51e77e",
+      warning_type: "Weak Cryptography",
+      line: 4,
+      message: /^Use\ of\ insecure\ padding\ mode\ PKCS1\ \(defa/,
+      confidence: 0,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :new, s(:str, "grab the public 4096 bit key")), :public_encrypt, s(:call, s(:call, nil, :payload), :to_json)),
+      user_input: nil
+  end
+
+  def test_weak_cryptography_4
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 126,
+      fingerprint: "53df5254e251a0ab8f6159df3dbdb1a77ff92c96589a213adb9847c2f255a479",
+      warning_type: "Weak Cryptography",
+      line: 5,
+      message: /^Use\ of\ insecure\ padding\ mode\ PKCS1\ \(defa/,
+      confidence: 0,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :new, s(:str, "grab the public 4096 bit key")), :private_decrypt, s(:call, s(:const, :Base64), :decode64, s(:call, s(:const, :Base64), :encode64, s(:call, s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :new, s(:str, "grab the public 4096 bit key")), :public_encrypt, s(:call, s(:call, nil, :payload), :to_json))))),
+      user_input: nil
+  end
+
+  def test_weak_cryptography_5
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 126,
+      fingerprint: "aa734fa685d04ea9e8519785123aa8a5342342b86aa77a363bcd2754b951433b",
+      warning_type: "Weak Cryptography",
+      line: 10,
+      message: /^Use\ of\ insecure\ padding\ mode\ PKCS1\ \(defa/,
+      confidence: 0,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :new, s(:str, "grab the public 4096 bit key")), :public_decrypt, s(:call, nil, :data), s(:const, :PKCS1_PADDING)),
+      user_input: s(:const, :PKCS1_PADDING)
+  end
+
+  def test_weak_cryptography_6
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 127,
+      fingerprint: "7a65fbcb29780f39bc03dfe6db0ed9959710180e705393e915bbee915c240751",
+      warning_type: "Weak Cryptography",
+      line: 11,
+      message: /^No\ padding\ mode\ used\ for\ RSA\ key\.\ A\ safe/,
+      confidence: 0,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :new, s(:str, "grab the public 4096 bit key")), :private_encrypt, s(:call, nil, :data), s(:const, :NO_PADDING)),
+      user_input: s(:const, :NO_PADDING)
   end
 
   def test_cross_site_scripting_CVE_2022_32209_allowed_tags_initializer

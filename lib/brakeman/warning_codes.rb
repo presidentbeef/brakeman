@@ -127,6 +127,9 @@ module Brakeman::WarningCodes
     :pending_eol_ruby => 123,
     :CVE_2022_32209 => 124,
     :pathname_traversal => 125,
+    :insecure_rsa_padding_mode => 126,
+    :missing_rsa_padding_mode => 127,
+    :small_rsa_key_size => 128,
 
     :custom_check => 9090,
   }
