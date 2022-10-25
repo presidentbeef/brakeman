@@ -132,28 +132,28 @@ class Rails7Tests < Minitest::Test
     assert_warning check_name: "WeakRSAKey",
       type: :warning,
       warning_code: 126,
-      fingerprint: "aa734fa685d04ea9e8519785123aa8a5342342b86aa77a363bcd2754b951433b",
+      fingerprint: "c8a3c3c409f64eae926ce9b60d85d243f86bc8448d1ba7b5880f192eb54089d7",
       warning_type: "Weak Cryptography",
       line: 10,
-      message: /^Use\ of\ padding\ mode\ PKCS1\ \(defa/,
+      message: /^Use\ of\ padding\ mode\ PKCS1\ \(default\ if\ no/,
       confidence: 0,
       relative_path: "lib/some_lib.rb",
-      code: s(:call, s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :new, s(:str, "grab the public 4096 bit key")), :public_decrypt, s(:call, nil, :data), s(:const, :PKCS1_PADDING)),
-      user_input: s(:const, :PKCS1_PADDING)
+      code: s(:call, s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :new, s(:str, "grab the public 4096 bit key")), :public_decrypt, s(:call, nil, :data), s(:colon2, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :PKCS1_PADDING)),
+      user_input: s(:colon2, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :PKCS1_PADDING)
   end
 
-  def test_weak_cryptography_6
+    def test_weak_cryptography_6
     assert_warning check_name: "WeakRSAKey",
       type: :warning,
       warning_code: 127,
-      fingerprint: "7a65fbcb29780f39bc03dfe6db0ed9959710180e705393e915bbee915c240751",
+      fingerprint: "47462db72333e2287d0b3670295f875700e85f516b4276ec5acf2f99f3809b04",
       warning_type: "Weak Cryptography",
       line: 11,
       message: /^No\ padding\ mode\ used\ for\ RSA\ key\.\ A\ safe/,
       confidence: 0,
       relative_path: "lib/some_lib.rb",
-      code: s(:call, s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :new, s(:str, "grab the public 4096 bit key")), :private_encrypt, s(:call, nil, :data), s(:const, :NO_PADDING)),
-      user_input: s(:const, :NO_PADDING)
+      code: s(:call, s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :new, s(:str, "grab the public 4096 bit key")), :private_encrypt, s(:call, nil, :data), s(:colon2, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :NO_PADDING)),
+      user_input: s(:colon2, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :NO_PADDING)
   end
 
   def test_cross_site_scripting_CVE_2022_32209_allowed_tags_initializer

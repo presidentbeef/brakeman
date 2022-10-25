@@ -7,9 +7,9 @@ class SomeLib
 
   def some_more_rsa_padding_modes
     public_key = OpenSSL::PKey::RSA.new("grab the public 4096 bit key")
-    public_key.public_decrypt(data, PKCS1_PADDING)
-    public_key.private_encrypt(data, NO_PADDING)
-    public_key.private_encrypt(data, SSLV23_PADDING)
+    public_key.public_decrypt(data, OpenSSL::PKey::RSA::PKCS1_PADDING)
+    public_key.private_encrypt(data, OpenSSL::PKey::RSA::NO_PADDING)
+    public_key.private_encrypt(data, OpenSSL::PKey::RSA::SSLV23_PADDING)
   end
 
   def small_rsa_keys 

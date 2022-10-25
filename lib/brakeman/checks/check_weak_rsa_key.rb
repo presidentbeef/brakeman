@@ -43,8 +43,8 @@ class Brakeman::CheckWeakRSAKey < Brakeman::BaseCheck
     end
   end
 
-  PKCS1_PADDING = s(:const, :PKCS1_PADDING).freeze
-  NO_PADDING = s(:const, :NO_PADDING).freeze
+  PKCS1_PADDING = s(:colon2, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :PKCS1_PADDING).freeze
+  NO_PADDING = s(:colon2, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :NO_PADDING).freeze
 
   def check_padding result
     return unless original? result
