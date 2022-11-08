@@ -17,4 +17,15 @@ class SomeLib
     OpenSSL::PKey::RSA.new(1024) # Weak
     OpenSSL::PKey::RSA.new(2048) # Okay
   end
+
+  def pky_api
+    weak_rsa = OpenSSL::PKey.generate_key("rsa", rsa_keygen_bits: 1024) # Medium warning about key size
+    weak_encrypted = weak_rsa.encrypt("data", "rsa_padding_mode" => "pkcs1")
+    weak_encrypted = weak_rsa.decrypt("data", "rsa_padding_mode" => "oaep")
+    weak_signature_digest = weak_rsa.sign("SHA256", "data", rsa_padding_mode: "PKCS1")
+    weak_rsa.verify("SHA256", "data", rsa_padding_mode: "none")
+    weak_rsa.sign_raw(nil, "data", rsa_padding_mode: "none")
+    weak_rsa.verify_raw(nil, "data", rsa_padding_mode: "none")
+    weak_rsa.encrypt("data") # default is also pkcs1
+  end
 end
