@@ -6,6 +6,11 @@ class Brakeman::CheckWeakRSAKey < Brakeman::BaseCheck
   @description = "Checks for weak uses RSA keys"
 
   def run_check
+    check_rsa_key_creation
+    check_rsa_operations
+  end
+
+  def check_rsa_key_creation
     tracker.find_call(targets: [:'OpenSSL::PKey::RSA'], method: [:new, :generate], nested: true).each do |result|
       key_size_arg = result[:call].first_arg
       check_key_size(result, key_size_arg)
@@ -23,7 +28,9 @@ class Brakeman::CheckWeakRSAKey < Brakeman::BaseCheck
         check_key_size(result, key_size_arg)
       end
     end
+  end
 
+  def check_rsa_operations
     tracker.find_call(targets: [:'OpenSSL::PKey::RSA.new'], methods: [:public_encrypt, :public_decrypt, :private_encrypt, :private_decrypt], nested: true).each do |result|
       padding_arg = result[:call].second_arg
       check_padding(result, padding_arg)
