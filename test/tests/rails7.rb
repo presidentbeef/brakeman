@@ -13,7 +13,7 @@ class Rails7Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 0,
-      :warning => 4
+      :warning => 18
     }
   end
 
@@ -70,6 +70,202 @@ class Rails7Tests < Minitest::Test
       relative_path: "app/controllers/users_controller.rb",
       code: s(:call, nil, :redirect_to, s(:call, s(:const, :User), :last!)),
       user_input: s(:call, s(:const, :User), :last!)
+  end
+
+  def test_weak_cryptography_1
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 128,
+      fingerprint: "4c4db18f4142dac0b271136f6bcf8bee08f0585bd9640676a12cdb80b1d7f02d",
+      warning_type: "Weak Cryptography",
+      line: 16,
+      message: /^RSA\ key\ with\ size\ `512`\ is\ considered\ ve/,
+      confidence: 0,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :generate, s(:lit, 512)),
+      user_input: s(:lit, 512)
+  end
+
+  def test_weak_cryptography_2
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 128,
+      fingerprint: "0f23edef18a0d092581daff053a88b523a56f50c03367907c0167af50d01dec2",
+      warning_type: "Weak Cryptography",
+      line: 17,
+      message: /^RSA\ key\ with\ size\ `1024`\ is\ considered\ w/,
+      confidence: 1,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :new, s(:lit, 1024)),
+      user_input: s(:lit, 1024)
+  end
+
+  def test_weak_cryptography_3
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 128,
+      fingerprint: "74dd38e229f0343ce80891b7530c4ecf3446c2f214917f70a1044006c885a6b0",
+      warning_type: "Weak Cryptography",
+      line: 22,
+      message: /^RSA\ key\ with\ size\ `1024`\ is\ considered\ w/,
+      confidence: 1,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:colon2, s(:const, :OpenSSL), :PKey), :generate_key, s(:str, "rsa"), s(:hash, s(:lit, :rsa_keygen_bits), s(:lit, 1024))),
+      user_input: s(:lit, 1024)
+  end
+
+  def test_weak_cryptography_4
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 126,
+      fingerprint: "cc38689724cb70423c57d575290423054f0c998a7b897b2985e96da96f51e77e",
+      warning_type: "Weak Cryptography",
+      line: 4,
+      message: /^Use\ of\ padding\ mode\ PKCS1\ \(default\ if\ no/,
+      confidence: 0,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :new, s(:str, "grab the public 4096 bit key")), :public_encrypt, s(:call, s(:call, nil, :payload), :to_json)),
+      user_input: nil
+  end
+
+  def test_weak_cryptography_5
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 126,
+      fingerprint: "53df5254e251a0ab8f6159df3dbdb1a77ff92c96589a213adb9847c2f255a479",
+      warning_type: "Weak Cryptography",
+      line: 5,
+      message: /^Use\ of\ padding\ mode\ PKCS1\ \(default\ if\ no/,
+      confidence: 0,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :new, s(:str, "grab the public 4096 bit key")), :private_decrypt, s(:call, s(:const, :Base64), :decode64, s(:call, s(:const, :Base64), :encode64, s(:call, s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :new, s(:str, "grab the public 4096 bit key")), :public_encrypt, s(:call, s(:call, nil, :payload), :to_json))))),
+      user_input: nil
+  end
+
+  def test_weak_cryptography_6
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 126,
+      fingerprint: "c8a3c3c409f64eae926ce9b60d85d243f86bc8448d1ba7b5880f192eb54089d7",
+      warning_type: "Weak Cryptography",
+      line: 10,
+      message: /^Use\ of\ padding\ mode\ PKCS1\ \(default\ if\ no/,
+      confidence: 0,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :new, s(:str, "grab the public 4096 bit key")), :public_decrypt, s(:call, nil, :data), s(:colon2, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :PKCS1_PADDING)),
+      user_input: s(:colon2, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :PKCS1_PADDING)
+  end
+
+  def test_weak_cryptography_7
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 126,
+      fingerprint: "bf3a313e24667f5839385b4ad0e90bc51a4f6bf8b489dab152c03242641ebad9",
+      warning_type: "Weak Cryptography",
+      line: 11,
+      message: /^No\ padding\ mode\ used\ for\ RSA\ key\.\ A\ safe/,
+      confidence: 0,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :new, s(:str, "grab the public 4096 bit key")), :private_encrypt, s(:call, nil, :data), s(:colon2, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :NO_PADDING)),
+      user_input: s(:colon2, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :NO_PADDING)
+  end
+
+  def test_weak_cryptography_8
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 126,
+      fingerprint: "7692aefd6fc53891734025f079ac062bf5b4ca69d1447f53de8f7e0cd389ae19",
+      warning_type: "Weak Cryptography",
+      line: 12,
+      message: /^Use\ of\ padding\ mode\ SSLV23\ for\ RSA\ key,\ /,
+      confidence: 0,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:call, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :new, s(:str, "grab the public 4096 bit key")), :private_encrypt, s(:call, nil, :data), s(:colon2, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :SSLV23_PADDING)),
+      user_input: s(:colon2, s(:colon2, s(:colon2, s(:const, :OpenSSL), :PKey), :RSA), :SSLV23_PADDING)
+  end
+
+  def test_weak_cryptography_9
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 126,
+      fingerprint: "386909718cfc8427e4509912c7c22b0f99ce2e052bb505ccfe6b400e3fd21632",
+      warning_type: "Weak Cryptography",
+      line: 23,
+      message: /^Use\ of\ padding\ mode\ PKCS1\ \(default\ if\ no/,
+      confidence: 0,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:call, s(:colon2, s(:const, :OpenSSL), :PKey), :generate_key, s(:str, "rsa"), s(:hash, s(:lit, :rsa_keygen_bits), s(:lit, 1024))), :encrypt, s(:str, "data"), s(:hash, s(:str, "rsa_padding_mode"), s(:str, "pkcs1"))),
+      user_input: s(:str, "pkcs1")
+  end
+
+  def test_weak_cryptography_10
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 126,
+      fingerprint: "3454ec09e3264042301160253d0846296f1334fcb33252edd5d5c41cc3712ab3",
+      warning_type: "Weak Cryptography",
+      line: 25,
+      message: /^Use\ of\ padding\ mode\ PKCS1\ \(default\ if\ no/,
+      confidence: 0,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:call, s(:colon2, s(:const, :OpenSSL), :PKey), :generate_key, s(:str, "rsa"), s(:hash, s(:lit, :rsa_keygen_bits), s(:lit, 1024))), :sign, s(:str, "SHA256"), s(:str, "data"), s(:hash, s(:lit, :rsa_padding_mode), s(:str, "pkcs1"))),
+      user_input: s(:str, "pkcs1")
+  end
+
+  def test_weak_cryptography_11
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 126,
+      fingerprint: "0b6b1f354c2380be841134447c315a24c2919d61fbb4de51af3dafc66e2144c3",
+      warning_type: "Weak Cryptography",
+      line: 26,
+      message: /^No\ padding\ mode\ used\ for\ RSA\ key\.\ A\ safe/,
+      confidence: 0,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:call, s(:colon2, s(:const, :OpenSSL), :PKey), :generate_key, s(:str, "rsa"), s(:hash, s(:lit, :rsa_keygen_bits), s(:lit, 1024))), :verify, s(:str, "SHA256"), s(:str, "data"), s(:hash, s(:lit, :rsa_padding_mode), s(:str, "none"))),
+      user_input: s(:str, "none")
+  end
+
+  def test_weak_cryptography_12
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 126,
+      fingerprint: "cf7d2b90d591ca7a442992caf39b858c4e599c9f2f4d82fa09e40b250f9c8e78",
+      warning_type: "Weak Cryptography",
+      line: 27,
+      message: /^No\ padding\ mode\ used\ for\ RSA\ key\.\ A\ safe/,
+      confidence: 0,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:call, s(:colon2, s(:const, :OpenSSL), :PKey), :generate_key, s(:str, "rsa"), s(:hash, s(:lit, :rsa_keygen_bits), s(:lit, 1024))), :sign_raw, s(:nil), s(:str, "data"), s(:hash, s(:lit, :rsa_padding_mode), s(:str, "none"))),
+      user_input: s(:str, "none")
+  end
+
+  def test_weak_cryptography_13
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 126,
+      fingerprint: "6a9835fa708e6f92797c4c1164b32446fe028672ba7ad652d3a474072658e271",
+      warning_type: "Weak Cryptography",
+      line: 28,
+      message: /^No\ padding\ mode\ used\ for\ RSA\ key\.\ A\ safe/,
+      confidence: 0,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:call, s(:colon2, s(:const, :OpenSSL), :PKey), :generate_key, s(:str, "rsa"), s(:hash, s(:lit, :rsa_keygen_bits), s(:lit, 1024))), :verify_raw, s(:nil), s(:str, "data"), s(:hash, s(:lit, :rsa_padding_mode), s(:str, "none"))),
+      user_input: s(:str, "none")
+  end
+
+  def test_weak_cryptography_14
+    assert_warning check_name: "WeakRSAKey",
+      type: :warning,
+      warning_code: 126,
+      fingerprint: "a7c85f295d9ea5356afbdf9165eb5bcfb892646f5f9a5a73b514a835456b419b",
+      warning_type: "Weak Cryptography",
+      line: 29,
+      message: /^Use\ of\ padding\ mode\ PKCS1\ \(default\ if\ no/,
+      confidence: 0,
+      relative_path: "lib/some_lib.rb",
+      code: s(:call, s(:call, s(:colon2, s(:const, :OpenSSL), :PKey), :generate_key, s(:str, "rsa"), s(:hash, s(:lit, :rsa_keygen_bits), s(:lit, 1024))), :encrypt, s(:str, "data")),
+      user_input: nil
   end
 
   def test_cross_site_scripting_CVE_2022_32209_allowed_tags_initializer
