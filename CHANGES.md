@@ -1,6 +1,10 @@
 # Unreleased
 
-* Add GitHub Action to update docker hub image
+* Add check for weak RSA key sizes and padding modes
+* Handle multiple values and splats in case/when
+* Ignore more model methods in redirects
+* Add check for absolute paths issue with Pathname
+* Fix `load_rails_defaults` overwriting settings in the Rails application (James Gregory-Monk)
 
 # 5.3.1 - 2022-08-09
 
