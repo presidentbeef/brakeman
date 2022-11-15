@@ -37,6 +37,7 @@ class TestReportGeneration < Minitest::Test
     report = @@report.to_codeclimate
 
     assert report.is_a? String
+    refute report.include? Dir.pwd # Ensure output does not include absolute paths
   end
 
   def test_csv_sanity
