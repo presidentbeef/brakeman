@@ -73,7 +73,7 @@ class Brakeman::Report::CodeClimate < Brakeman::Report::Base
     if tracker.options[:path_prefix]
       (Pathname.new(tracker.options[:path_prefix]) + Pathname.new(warning.file.relative)).to_s
     else
-      warning.file
+      warning.relative_path
     end
   end
 end
