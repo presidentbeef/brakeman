@@ -1,5 +1,6 @@
-# Unreleased
+# 5.4.0 - 2022-11-17
 
+* Use relative paths for CodeClimate report format (Mike Poage)
 * Add check for weak RSA key sizes and padding modes
 * Handle multiple values and splats in case/when
 * Ignore more model methods in redirects
