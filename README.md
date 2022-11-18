@@ -64,9 +64,9 @@ Outside of Rails root (note that the output file is relative to path/to/rails/ap
 
 # Compatibility
 
-Brakeman should work with any version of Rails from 2.3.x to 6.x.
+Brakeman should work with any version of Rails from 2.3.x to 7.x.
 
-Brakeman can analyze code written with Ruby 1.8 syntax and newer, but requires at least Ruby 2.4.0 to run.
+Brakeman can analyze code written with Ruby 1.8 syntax and newer, but requires at least Ruby 2.5.0 to run.
 
 # Basic Options
 
