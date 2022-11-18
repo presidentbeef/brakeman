@@ -80,6 +80,132 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2019/03/15/4-dot-5-0-released">Brakeman 4.5.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2019-03-15 13:14:00 -0700" pubdate  updated >2019-03-15 13:14:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release drops support for running Brakeman with versions of Ruby older than 2.3.0. As always, scanning code with older syntax continues to be supported.</p>
+
+<p>Also in this release: better supported for embedded “filters” in templates and (relatedly) the Sass dependency was removed!</p>
+
+<p><em>Changes since 4.4.0:</em></p>
+
+<ul>
+  <li>Officially drop support for running with older Ruby versions</li>
+  <li>More thoroughly handle <code class="highlighter-rouge">Shellwords</code> escaping (<a href="https://github.com/presidentbeef/brakeman/issues/1323">#1323</a>)</li>
+  <li>Handle non-integer version number comparisons (<a href="https://github.com/presidentbeef/brakeman/issues/1305">#1305</a>)</li>
+  <li>Better handling of splat/kwsplat arguments (<a href="https://github.com/presidentbeef/brakeman/issues/1204">#1204</a>)</li>
+  <li>Handle <code class="highlighter-rouge">**</code> inside Hash literals</li>
+  <li>Add support for CoffeeScript in Slim templates</li>
+  <li>Improve support for embedded template “filters”</li>
+  <li>Remove Sass dependency</li>
+  <li>Avoid joining strings with different encodings</li>
+  <li>Improve “user input” reported for SQL injection</li>
+  <li>Stop swallowing exceptions in <code class="highlighter-rouge">AliasProcessor</code></li>
+  <li>Add original exception to <code class="highlighter-rouge">Tracker#errors</code> list</li>
+  <li>Use <code class="highlighter-rouge">FileParser</code> in <code class="highlighter-rouge">Scanner</code> to parse files</li>
+  <li>Set location information in <code class="highlighter-rouge">CheckContentTag</code></li>
+  <li>Update RubyParser to 3.13.0</li>
+</ul>
+
+<h3 id="dropped-support-for-older-rubies">Dropped Support for Older Rubies</h3>
+
+<p>Brakeman code will no longer attempt to maintain compatibility with Ruby 1.9.3, instead setting the minimum version to Ruby 2.3.0.</p>
+
+<p>Note that Ruby 2.2.0 reached end of life almost a year ago and is no longer receiving security updates.</p>
+
+<p>This does <em>not</em> affect the versions of Ruby code Brakeman can analyze. Thanks to RubyParser, scanning syntax back to Ruby 1.8 is still supported.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1329">changes</a>)</p>
+
+<h3 id="more-shell-escaping">More Shell Escaping</h3>
+
+<p>Brakeman is now better at handling shell escaping with <code class="highlighter-rouge">Shellwords</code> when checking for command injection.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1327">changes</a>)</p>
+
+<h3 id="non-integer-version-numbers">Non-Integer Version Numbers</h3>
+
+<p>When comparing non-integer version numbers (e.g., <code class="highlighter-rouge">"beta1"</code>), Brakeman will compare integers to integers and strings to strings instead of
+incorrectly converting some strings to integers.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1326">changes</a>)</p>
+
+<h3 id="more-splats">More Splats</h3>
+
+<p>Splat args (<code class="highlighter-rouge">*arg</code>) and double splat/keyword splats (<code class="highlighter-rouge">**kwargs</code>) are better supported now (instead of being ignored).
+Keyward splats inside of hash literals will be merged into the hash literal.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1315">changes</a>)</p>
+
+<h3 id="embedded-template-filters">Embedded Template Filters</h3>
+
+<p>Support for embedded filters in templates (e.g. <code class="highlighter-rouge">markdown</code> inside of Haml or Slim) has been completely rewritten. As a result, it is simpler to support embedded filters <em>and</em> it was possible to drop the Sass dependency. (The Sass gem itself is deprecated and will be <a href="https://sass-lang.com/ruby-sass">end of life as of March 31st, 2019</a>.)</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1314">changes</a>)</p>
+
+<h3 id="string-encoding">String Encoding</h3>
+
+<p>Previously, it was possible to run into errors when Brakeman attempted to join or concatenate strings with different encodings. Now it will just fail and leave the strings apart.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1293">changes</a>)</p>
+
+<h3 id="better-reporting-of-sql-injection">Better Reporting of SQL Injection</h3>
+
+<p>SQL injection warnings now have better information about which value triggered the warning. Previously, sometimes the value highlighted as “dangerous” was misleading and confusing.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1297">changes</a>)</p>
+
+<h3 id="rubyparser-updated">RubyParser Updated</h3>
+
+<p>Thanks to <a href="http://www.zenspider.com/">Ryan Davis</a>, RubyParser now has better support for newer Ruby 2.5 and Ruby 2.6 syntax, along with many other fixes!</p>
+
+<p>This should address many of the parsing errors folks have been seeing.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1330">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c82c73e47668e1381829bcf50d09b952f7968bc36af9c5abd6ee20ee03882130  brakeman-4.5.0.gem
+0d372dac72e6bf7f9ff9c2558e3f5d92ef62cd4c6ab051fcea88016f3bfa7470  brakeman-lib-4.5.0.gem
+8565a780be3595ffc5a8d847f6eece8746a272138290fff115555d7aecaa1a38  brakeman-min-4.5.0.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2019/01/17/brakeman-4-dot-4-dot-0-released">Brakeman 4.4.0 Released</a></h1>
     
     
@@ -555,167 +681,6 @@ result = some_hash[some_var]
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2018/05/10/brakeman-4-dot-3-0-released">Brakeman 4.3.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2018-05-10 15:36:00 -0700" pubdate  updated >2018-05-10 15:36:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Did you know we recently broke <a href="http://bestgems.org/gems/brakeman">11 million gem downloads</a>? Wow!</p>
-
-<p><em>Changes since 4.2.1:</em></p>
-
-<ul>
-  <li>Add <code class="highlighter-rouge">--parser-timeout</code> option</li>
-  <li>Improve timeout error messages</li>
-  <li>Check exec-type calls even if they are targets (<a href="https://github.com/presidentbeef/brakeman/issues/1199">#1199</a>)</li>
-  <li>Index Kernel#` calls even if they are targets (<a href="https://github.com/presidentbeef/brakeman/issues/1183">#1183</a>)</li>
-  <li><code class="highlighter-rouge">BaseCheck#include_interp?</code> should return first string interpolation (<a href="https://github.com/presidentbeef/brakeman/issues/1189">#1189</a>)</li>
-  <li>Ignore <code class="highlighter-rouge">Process.pid</code> in system calls</li>
-  <li>Warn about dangerous <code class="highlighter-rouge">link_to</code> href with <code class="highlighter-rouge">sanitize()</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1187">#1187</a>)</li>
-  <li>Ignore <code class="highlighter-rouge">params#to_h</code> and <code class="highlighter-rouge">params#to_hash</code> in SQL checks (<a href="https://github.com/presidentbeef/brakeman/issues/1180">#1180</a>)</li>
-  <li>Convert <code class="highlighter-rouge">Array#join</code> to string interpolation (<a href="https://github.com/presidentbeef/brakeman/issues/1179">#1179</a>)</li>
-  <li>Change <code class="highlighter-rouge">"".freeze</code> to just <code class="highlighter-rouge">""</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1182">#1182</a>)</li>
-  <li><code class="highlighter-rouge">--color</code> can be used to force color output (<a href="https://github.com/presidentbeef/brakeman/issues/1175">#1175</a>)</li>
-  <li>Track parent calls in call index</li>
-  <li>Fix reported line numbers for CVE-2018-3741 and CVE-2018-8048</li>
-  <li>Code Climate: omit leading dot from <code class="highlighter-rouge">only_files</code> (<a href="https://github.com/toddmazierski">Todd Mazierski</a>)</li>
-</ul>
-
-<h3 id="--color-option"><code class="highlighter-rouge">--color</code> Option</h3>
-
-<p>Previously, <code class="highlighter-rouge">--no-color</code> could be used to turn off ANSI color in text reports. Now, <code class="highlighter-rouge">--color</code> can be used to force color output.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1176">changes</a>)</p>
-
-<h3 id="--parser-timeout-option"><code class="highlighter-rouge">--parser-timeout</code> Option</h3>
-
-<p>The default timeout for parsing a single file is 10 seconds. For some files, this may not be enough.</p>
-
-<p>The <code class="highlighter-rouge">--parser-timeout</code> option can be used to specify a per-file timeout (in seconds).</p>
-
-<p>Additionally, the error message for parsing timeouts has been improved considerably.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1194">changes</a>)</p>
-
-<h3 id="command-injection-fixes">Command Injection Fixes</h3>
-
-<p>Thanks to <a href="https://github.com/JacobEvelyn">Jacob Evelyn</a> reporting a number of issues around command injection, there are several improvements.</p>
-
-<p>Use of backticks as targets of a call will now be checked for command injection.</p>
-
-<p>For example:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>`blah #{something}` == "expected output"
-</code></pre></div></div>
-
-<p>Previously, use of backticks was not being indexed in this case.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1185">changes</a>)</p>
-
-<p>Somewhat similarly, other calls (such as <code class="highlighter-rouge">system</code>) would not warn if they were targets of a call.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1200">changes</a>)</p>
-
-<p>Brakeman will no longer warn about <code class="highlighter-rouge">Process.pid</code> in system calls.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/commit/f9195312931caa49e369730a0798dad750150f76">changes</a>)</p>
-
-<p>Also fixed an issue where searching for string interpolation would return the innermost instance instead of the first instance (typically you want the first one).</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1195">changes</a>)</p>
-
-<h3 id="freeze-calls">Freeze Calls</h3>
-
-<p>Calls to <code class="highlighter-rouge">String#freeze</code> will essentially be ignored.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"blah".freeze
-</code></pre></div></div>
-
-<p>will be treated like</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"blah"
-</code></pre></div></div>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1188">changes</a>)</p>
-
-<h3 id="more-strong-parameters-in-sql">More Strong Parameters in SQL</h3>
-
-<p>Calls to <code class="highlighter-rouge">to_h</code> and <code class="highlighter-rouge">to_hash</code> on <code class="highlighter-rouge">params</code> will be ignored in the context of SQL injection.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1191">changes</a>)</p>
-
-<h3 id="sanitize-in-link_to">Sanitize in <code class="highlighter-rouge">link_to</code></h3>
-
-<p>Brakeman will now warn on uses of <code class="highlighter-rouge">sanitize</code> in attempts to avoid XSS in <code class="highlighter-rouge">link_to</code>. Unfortunately, it does not work that way.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1192">changes</a>)</p>
-
-<h3 id="arrayjoin-to-string-interpolation"><code class="highlighter-rouge">Array#join</code> to String Interpolation</h3>
-
-<p>Uses of <code class="highlighter-rouge">Array#join</code> will now be converted to string interpolation.</p>
-
-<p>For example:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1, thing, "here"].join(' ')
-</code></pre></div></div>
-
-<p>will be changed to</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"1 #{thing} here"
-</code></pre></div></div>
-
-<p>This both fixes some false positives and helps detect more vulnerabilities in checks that are looking at string interpolation.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1198">changes</a>)</p>
-
-<h3 id="parent-calls">Parent Calls</h3>
-
-<p>Brakeman now tracks the parent method call (I’m sure there’s a better way to say that) of an argument. While this ended up not being needed for this release, it will help improve checks and messages in the future.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1193">changes</a>)</p>
-
-<h3 id="checksums">Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>9284a1a9413743b4c915eda40312395e0ee574c6286893a27074b6f9527648f4  brakeman-4.3.0.gem
-89ba3385fab967114c31da1462401c03caa8847d1115566a77039d0bda95181e  brakeman-lib-4.3.0.gem
-1834031c1e949242ea6d08b3b1036d3f7c12c28257cdfa94cf3d0459b6f851b6  brakeman-min-4.3.0.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-
-<p>If you find Brakeman valuable and want to support its development (and get more features!), check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -754,6 +719,10 @@ result = some_hash[some_var]
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">Brakeman 5.4.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">Brakeman 5.3.0 Released</a>
       </li>
     
@@ -767,10 +736,6 @@ result = some_hash[some_var]
     
       <li class="post">
         <a href="/blog/2022/01/30/5-dot-2-dot-1-released">Brakeman 5.2.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2021/12/15/brakeman-5-dot-2-dot-0-released">Brakeman 5.2.0 Released</a>
       </li>
     
   </ul>

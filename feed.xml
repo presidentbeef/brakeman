@@ -1,4 +1,88 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2022-08-09T17:51:12-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 5.3.0 Released</title><link href="https://brakemanscanner.org/blog/2022/08/09/brakeman-5-dot-3-dot-0-released" rel="alternate" type="text/html" title="Brakeman 5.3.0 Released" /><published>2022-08-09T08:30:00-07:00</published><updated>2022-08-09T08:30:00-07:00</updated><id>https://brakemanscanner.org/blog/2022/08/09/brakeman-5-dot-3-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">&lt;p&gt;This release adds CWE information to reports - the first JSON report change in a long time!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2022-11-17T22:20:03-08:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 5.4.0 Released</title><link href="https://brakemanscanner.org/blog/2022/11/17/brakeman-5-dot-4-dot-0-released" rel="alternate" type="text/html" title="Brakeman 5.4.0 Released" /><published>2022-11-17T21:30:00-08:00</published><updated>2022-11-17T21:30:00-08:00</updated><id>https://brakemanscanner.org/blog/2022/11/17/brakeman-5-dot-4-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">&lt;p&gt;Special thanks to &lt;a href=&quot;https://github.com/bdewater&quot;&gt;Bart de Water&lt;/a&gt; and &lt;a href=&quot;https://github.com/tehryanx&quot;&gt;Ryan Cartner&lt;/a&gt; for proposing new rules!&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 5.3.1:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Add check for weak RSA key sizes and padding modes (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1736&quot;&gt;#1736&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Add check for absolute paths issue with Pathname (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1721&quot;&gt;#1721&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Handle multiple values and splats in case/when (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1730&quot;&gt;#1730&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Ignore more model methods in redirects (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1723&quot;&gt;#1723&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Fix &lt;code class=&quot;highlighter-rouge&quot;&gt;load_rails_defaults&lt;/code&gt; overwriting settings in the Rails application (&lt;a href=&quot;https://github.com/jamgregory&quot;&gt;James Gregory-Monk&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Use relative paths for CodeClimate report format (&lt;a href=&quot;https://github.com/RubyBrewsday&quot;&gt;Mike Poage&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;check-rsa-key-sizes-and-padding-modes&quot;&gt;Check RSA Key Sizes and Padding Modes&lt;/h3&gt;
+
+&lt;p&gt;Brakeman now warns on:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;RSA key sizes less than 2048 bits&lt;/li&gt;
+  &lt;li&gt;Use of padding modes other than OAEP (including &lt;code class=&quot;highlighter-rouge&quot;&gt;none&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1737&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;unexpected-absolute-paths&quot;&gt;Unexpected Absolute Paths&lt;/h3&gt;
+
+&lt;p&gt;When joining paths using &lt;code class=&quot;highlighter-rouge&quot;&gt;Pathname#join&lt;/code&gt;, any arguments that start with a forward slash (&lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt;) will cause the rest of the path to be relative to that absolute path. This may cause unexpected behavior and deviates from how &lt;code class=&quot;highlighter-rouge&quot;&gt;File.join&lt;/code&gt; works.&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;Pathname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'a'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'b'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'/c'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'d'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#&amp;lt;Pathname:/c/d&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;(There are more &lt;code class=&quot;highlighter-rouge&quot;&gt;Pathname&lt;/code&gt; methods with this issue - to be added in a future release.)&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1733&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;multiple-values-in-whens&quot;&gt;Multiple Values in &lt;code class=&quot;highlighter-rouge&quot;&gt;when&lt;/code&gt;s&lt;/h3&gt;
+
+&lt;p&gt;If a &lt;code class=&quot;highlighter-rouge&quot;&gt;when&lt;/code&gt; clause contains only ‘safe’ values, Brakeman will treat the &lt;code class=&quot;highlighter-rouge&quot;&gt;case&lt;/code&gt; value as safe:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;maybe_dangerous&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# `x` must be an integer, so not dangerous&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1734&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;ignore-more-redirects&quot;&gt;Ignore More Redirects&lt;/h3&gt;
+
+&lt;p&gt;More model methods are ignored in redirects:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;first!&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;last!&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sole&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;find_by_sole&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1732&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;rails-defaults&quot;&gt;Rails Defaults&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/jamgregory&quot;&gt;James Gregory-Monk&lt;/a&gt; fixed how Rails default configuration values are set so overrides were properly handled.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1719&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bab990760949e999c5d52b297d8badda376754eb296c91abf829def733ed9d51  brakeman-5.4.0.gem
+2b5a0cd5845b8c0e1b83e00122654af48b025ac3e6625c9ecbc5535226068416  brakeman-lib-5.4.0.gem
+fcbd60456c5db62767d143696e1edf8e4eaee734f2a039903aeca7bb4e6b3dbf  brakeman-min-5.4.0.gem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Special thanks to Bart de Water and Ryan Cartner for proposing new rules!</summary></entry><entry><title type="html">Brakeman 5.3.0 Released</title><link href="https://brakemanscanner.org/blog/2022/08/09/brakeman-5-dot-3-dot-0-released" rel="alternate" type="text/html" title="Brakeman 5.3.0 Released" /><published>2022-08-09T08:30:00-07:00</published><updated>2022-08-09T08:30:00-07:00</updated><id>https://brakemanscanner.org/blog/2022/08/09/brakeman-5-dot-3-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">&lt;p&gt;This release adds CWE information to reports - the first JSON report change in a long time!&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 5.2.3:&lt;/em&gt;&lt;/p&gt;
 
@@ -660,165 +744,4 @@ Brakeman will not warn about mass assignment.&lt;/p&gt;
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Has it really been three months since Brakeman 5.0? Yikes!</summary></entry><entry><title type="html">Brakeman 5.0.0 Released</title><link href="https://brakemanscanner.org/blog/2021/01/26/brakeman-5-dot-0-dot-0-released" rel="alternate" type="text/html" title="Brakeman 5.0.0 Released" /><published>2021-01-26T12:00:00-08:00</published><updated>2021-01-26T12:00:00-08:00</updated><id>https://brakemanscanner.org/blog/2021/01/26/brakeman-5-dot-0-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2021/01/26/brakeman-5-dot-0-dot-0-released">&lt;p&gt;It has been a long time coming, but it is finally here! Lots of changes in this one…&lt;/p&gt;
-
-&lt;p&gt;Brakeman now scans (almost) all Ruby (and ERB, Haml, Slim) files in an application.
-This may have a significant impact on reported warnings and scan times - see below for more information.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 4.10.1:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Scan (almost) all Ruby files in project&lt;/li&gt;
-  &lt;li&gt;Revamp CSV report to a CSV list of warnings&lt;/li&gt;
-  &lt;li&gt;Add Sonarqube report format (&lt;a href=&quot;https://github.com/adamnengland&quot;&gt;Adam England&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Add check for (more) unsafe method reflection (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1488&quot;&gt;#1488&lt;/a&gt;, &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1507&quot;&gt;#1507&lt;/a&gt;, and &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1508&quot;&gt;#1508&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Add check for potential HTTP verb confusion (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1432&quot;&gt;#1432&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Add &lt;code class=&quot;highlighter-rouge&quot;&gt;--[no-]skip-vendor&lt;/code&gt; option&lt;/li&gt;
-  &lt;li&gt;Ignore &lt;code class=&quot;highlighter-rouge&quot;&gt;uuid&lt;/code&gt; as a safe attribute&lt;/li&gt;
-  &lt;li&gt;Ignore &lt;code class=&quot;highlighter-rouge&quot;&gt;Tempfile#path&lt;/code&gt; in shell commands&lt;/li&gt;
-  &lt;li&gt;Ignore development environment&lt;/li&gt;
-  &lt;li&gt;Collapse &lt;code class=&quot;highlighter-rouge&quot;&gt;__send__&lt;/code&gt; calls&lt;/li&gt;
-  &lt;li&gt;Set Rails configuration defaults based on &lt;code class=&quot;highlighter-rouge&quot;&gt;load_defaults&lt;/code&gt; version&lt;/li&gt;
-  &lt;li&gt;Update Ruby requirement to version 2.4.0&lt;/li&gt;
-  &lt;li&gt;Suggest using &lt;code class=&quot;highlighter-rouge&quot;&gt;--force&lt;/code&gt; if no Rails application is detected&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;scan-almost-all-ruby-files&quot;&gt;Scan Almost All Ruby Files&lt;/h3&gt;
-
-&lt;p&gt;Since the beginning, Brakeman has been picky about what directories it searches for files.
-In general, Brakeman has looked in ‘normal’ Rails directores like &lt;code class=&quot;highlighter-rouge&quot;&gt;app/controllers/&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;app/models/&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;app/views/&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;lib/&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;config&lt;/code&gt;, etc.
-This is because Rails has some default logic based on file paths - like mapping a controller action to a given view.&lt;/p&gt;
-
-&lt;p&gt;But if an application varied from the norm, Brakeman would simply not scan those other directories.
-This behavior led to a lot of confusion with folks wondering why Brakeman was not finding certain vulnerabilities.&lt;/p&gt;
-
-&lt;p&gt;Brakeman now attempts to deduce the contents of a file first, then falls back to the path name if necessary.
-This has been surprisingly effective.&lt;/p&gt;
-
-&lt;p&gt;However, scanning more files means Brakeman runs slower and may report more false positives because the new files
-are harder to reason about and less likely to be exposed as part of the attack surface.&lt;/p&gt;
-
-&lt;p&gt;Brakeman does ignore &lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;spec&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;vendor&lt;/code&gt; directories. To scan the &lt;code class=&quot;highlighter-rouge&quot;&gt;vendor&lt;/code&gt; directory as well, use &lt;code class=&quot;highlighter-rouge&quot;&gt;--no-skip-vendor&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Please report any issues!&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1520&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;csv-report-update&quot;&gt;CSV Report Update&lt;/h3&gt;
-
-&lt;p&gt;The CSV report format has been completely changed! Previously, it was meant as an ‘Excel-lite’ format, only really useful for viewing in a spreadsheet program.&lt;/p&gt;
-
-&lt;p&gt;Now it is regular CSV with normalized columns to mostly match the JSON report (except for nested fields).&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1547&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;sonarqube-report-format&quot;&gt;Sonarqube Report Format&lt;/h3&gt;
-
-&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/adamnengland&quot;&gt;Adam England&lt;/a&gt;, Brakeman now supports the Sonarqube “&lt;a href=&quot;https://docs.sonarqube.org/latest/analysis/generic-issue/&quot;&gt;Generic Issue Import Format&lt;/a&gt;”.&lt;/p&gt;
-
-&lt;p&gt;(And thanks Adam for your patience.)&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1505&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;more-unsafe-method-reflection&quot;&gt;More Unsafe Method Reflection&lt;/h3&gt;
-
-&lt;p&gt;A new check was added for unsafe use of &lt;code class=&quot;highlighter-rouge&quot;&gt;method&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;to_proc&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;tap&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1527&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;http-verb-confusion-check&quot;&gt;HTTP Verb Confusion Check&lt;/h3&gt;
-
-&lt;p&gt;In Rails, &lt;code class=&quot;highlighter-rouge&quot;&gt;HEAD&lt;/code&gt; requests are routed like &lt;code class=&quot;highlighter-rouge&quot;&gt;GET&lt;/code&gt; requests, but &lt;code class=&quot;highlighter-rouge&quot;&gt;request.get?&lt;/code&gt; will be false.&lt;/p&gt;
-
-&lt;p&gt;Some code may assume if &lt;code class=&quot;highlighter-rouge&quot;&gt;request.get?&lt;/code&gt; is false, then &lt;code class=&quot;highlighter-rouge&quot;&gt;request.post?&lt;/code&gt; is true:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get?&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# Do something benign&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# Do something sensitive because it's a POST&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# but actually it could be a HEAD :(&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Brakeman will warn when an &lt;code class=&quot;highlighter-rouge&quot;&gt;if&lt;/code&gt; expression checks &lt;code class=&quot;highlighter-rouge&quot;&gt;request.get?&lt;/code&gt; but has an &lt;code class=&quot;highlighter-rouge&quot;&gt;else&lt;/code&gt; clause instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;elseif ...&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1524&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;uuids-as-safe-attributes&quot;&gt;UUIDs as Safe Attributes&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;#uuid&lt;/code&gt; will be treated as a safe value, particular in SQL.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1553&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;tempfile-paths-in-shell-commands&quot;&gt;Tempfile Paths in Shell Commands&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Tempfile#path&lt;/code&gt; will be considered as safe value for command injection.&lt;/p&gt;
-
-&lt;p&gt;Also adds support for Tempfiles like:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;Tempfile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'...'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# Brakeman knows `file` is a Tempfile&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1544&quot;&gt;changes&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;ignore-development-environment&quot;&gt;Ignore Development Environment&lt;/h3&gt;
-
-&lt;p&gt;Brakeman will ignore code that is guarded like&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;development?&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# ...whatever code&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;This was already true for &lt;code class=&quot;highlighter-rouge&quot;&gt;Rails.env.test?&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1549&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;collapse-__send__-calls&quot;&gt;Collapse &lt;code class=&quot;highlighter-rouge&quot;&gt;__send__&lt;/code&gt; Calls&lt;/h3&gt;
-
-&lt;p&gt;Brakeman will treat&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;Blah&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;__send__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:something&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;as&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;Blah&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;something&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;This was already true for &lt;code class=&quot;highlighter-rouge&quot;&gt;send&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;try&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1551&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;set-rails-defaults&quot;&gt;Set Rails Defaults&lt;/h3&gt;
-
-&lt;p&gt;Brakeman will set default values for Rails configuration options based on the version argument to &lt;code class=&quot;highlighter-rouge&quot;&gt;config.load_defaults&lt;/code&gt; which is usually called in &lt;code class=&quot;highlighter-rouge&quot;&gt;application.rb&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1532&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;requires-ruby-240&quot;&gt;Requires Ruby 2.4.0&lt;/h3&gt;
-
-&lt;p&gt;The minimal Ruby version for running Brakeman is now 2.4.0 (which is already EOL!)&lt;/p&gt;
-
-&lt;p&gt;Note Brakeman can analyze Ruby syntax from 1.8 to 2.6 (some 2.7+ syntax is not supported yet).&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1515&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
-
-&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;21b91f67cde4cf487df0a4dbf6e54729064c665bb0b4b370b71bac9435b63e4c  brakeman-5.0.0.gem
-3641c52448ca1d12423595ca1a874c1362f438cd58196825be648bb797096cb5  brakeman-lib-5.0.0.gem
-50bab26fe8fcf8d962baaf5b08b7c178315b7c0e4be07d1b134e8ae00338c908  brakeman-min-5.0.0.gem
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">It has been a long time coming, but it is finally here! Lots of changes in this one…</summary></entry></feed>
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Has it really been three months since Brakeman 5.0? Yikes!</summary></entry></feed>

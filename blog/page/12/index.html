@@ -80,6 +80,131 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2015/09/23/brakeman-3-dot-1-1-released">Brakeman 3.1.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2015-09-23 08:11:00 -0700" pubdate  updated >2015-09-23 08:11:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release includes two new checks and a number of bug fixes.</p>
+
+<p><em>Changes since 3.1.0</em>:</p>
+
+<ul>
+  <li>Add check for user input in session keys</li>
+  <li>Add optional check for use of MD5 and SHA1</li>
+  <li>Fix absolute paths for Windows (<a href="https://github.com/spcoder">Cody Frederick</a>)</li>
+  <li>Allow searching call index methods by regex (<a href="https://github.com/aianus">Alex Ianus</a>)</li>
+  <li>Consider <code class="highlighter-rouge">j</code>/<code class="highlighter-rouge">escape_javascript</code> safe inside Haml JavaScript blocks (<a href="https://github.com/presidentbeef/brakeman/issues/708">#708</a>)</li>
+  <li>Better Haml processing of <code class="highlighter-rouge">find_and_preserve</code> calls</li>
+  <li>Fix chained assignment</li>
+  <li>Treat <code class="highlighter-rouge">a.try(&amp;:b)</code> like <code class="highlighter-rouge">a.b()</code></li>
+  <li>Add more Arel methods to be ignored in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/711">#711</a>)</li>
+  <li>Avoid warning when linking to decorated models (<a href="https://github.com/presidentbeef/brakeman/issues/683">#683</a>)</li>
+  <li>Support newer terminal-table releases (<a href="https://github.com/presidentbeef/brakeman/issues/709">#709</a>)</li>
+</ul>
+
+<h3 id="session-manipulation-check">Session Manipulation Check</h3>
+
+<p>As suggested by <a href="https://twitter.com/joernchen">Joernchen</a>, Brakeman will now look for user input in session keys which can lead to session manipulation.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/720">changes</a>)</p>
+
+<h3 id="optional-check-for-weak-hashes">Optional Check for Weak Hashes</h3>
+
+<p>An optional check to look for use of MD5 and SHA1 has been added to this release. Run with <code class="highlighter-rouge">-t WeakHash</code> to use just this optional check or <code class="highlighter-rouge">-A</code> to run all checks.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/722">changes</a>)</p>
+
+<h3 id="windows-paths">Windows Paths</h3>
+
+<p><a href="https://github.com/spcoder">Cody Frederick</a> fixed an issue with determining absolute paths on Windows.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/714">changes</a>)</p>
+
+<h3 id="search-for-methods-by-regex">Search for Methods by Regex</h3>
+
+<p><a href="https://github.com/aianus">Alex Ianus</a> re-introduced the ability to search the CallIndex with regular expressions for methods:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tracker.find_call(method: /_something$/)
+</code></pre></div></div>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/710">changes</a>)</p>
+
+<h3 id="haml-processing">Haml Processing</h3>
+
+<p>Haml users may have noticed warnings with <code class="highlighter-rouge">find_and_preserve(Haml::Filters::Javascript.render_with_options(...))</code> in them. This has been fixed so <code class="highlighter-rouge">find_and_preserve</code> is treated as though it just passes through its arguments. Calls to <code class="highlighter-rouge">render_with_options</code> will be treated as unescaped output.</p>
+
+<p>Along with this change, <code class="highlighter-rouge">j</code> and <code class="highlighter-rouge">escape_javascript</code> will be considered safe inside <code class="highlighter-rouge">:javascript</code> filters in Haml.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/716">changes</a>)</p>
+
+<h3 id="chained-assignment">Chained Assignment</h3>
+
+<p>Chained assignments like <code class="highlighter-rouge">a = b = c = 1</code> will now be handled correctly. This fixes <a href="https://stackoverflow.com/questions/11314450/how-to-secure-link-to-variable-cross-site-scripting-vulnerabilities">a very old issue from 2012</a>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/718">changes</a>)</p>
+
+<h3 id="trying-more">Trying More</h3>
+
+<p>While Brakeman already treated <code class="highlighter-rouge">a.try(:b)</code> like <code class="highlighter-rouge">a.b()</code>, there is a surprising amount of code which does <code class="highlighter-rouge">a.try(&amp;:b)</code>. This is totally unncessary, but Brakeman now handles it as well.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/717">changes</a>)</p>
+
+<h3 id="more-arel-whitelisting">More Arel Whitelisting</h3>
+
+<p>A number of Arel methods have been whitelisted to avoid warning about them inside SQL query building.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/719">changes</a>)</p>
+
+<h3 id="decorated-models-in-links">Decorated Models in Links</h3>
+
+<p>If the Draper gem is used, Brakeman will ignore calls to <code class="highlighter-rouge">decorate</code> in <code class="highlighter-rouge">link_to</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/721">changes</a>)</p>
+
+<h3 id="terminal-table">terminal-table</h3>
+
+<p>Newer <a href="https://github.com/tj/terminal-table">terminal-table</a> releases are supported now and the dependency has been relaxed.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/712">changes</a>)</p>
+
+<h3 id="shas">SHAs</h3>
+
+<p>The SHA1 sums for this release are</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cfd1840116c20b0b8932720fdaac09dd4e47091a  brakeman-3.1.1.gem
+603389da732d307a014af445a1f312415b65a682  brakeman-min-3.1.1.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter, joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>, or hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2015/08/30/brakeman-3-dot-1-0-released">Brakeman 3.1.0 Released</a></h1>
     
     
@@ -504,139 +629,6 @@ f126e305404a61e99f9ddb848996d87325d1485a  brakeman-min-3.0.3.gem
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2015/03/09/brakeman-3-dot-0-2-released">Brakeman 3.0.2 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2015-03-09 14:54:00 -0700" pubdate  updated >2015-03-09 14:54:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is entirely a bugfix release, no new features. However, the fixes may cause line numbers and warning fingerprints to change.</p>
-
-<p><em>Changes since 3.0.1</em>:</p>
-
-<ul>
-  <li>Fix HTML reports with GitHub repos (<a href="https://github.com/presidentbeef/brakeman/issues/624">#624</a>)</li>
-  <li>Handle processing of explictly shadowed block arguments (<a href="https://github.com/presidentbeef/brakeman/issues/612">#612</a>)</li>
-  <li>Fix CSV output when there are no warnings (<a href="https://github.com/presidentbeef/brakeman/issues/615">#615</a>)</li>
-  <li>Update <code class="highlighter-rouge">ruby_parser</code> to ~&gt; 3.6.2</li>
-  <li>Treat <code class="highlighter-rouge">primary_key</code>, <code class="highlighter-rouge">table_name_prefix</code>, <code class="highlighter-rouge">table_name_suffix</code> as safe in SQL</li>
-  <li>Fix using <code class="highlighter-rouge">--compare</code> and <code class="highlighter-rouge">--add-checks-path</code> together</li>
-  <li>Alias process methods called in class scope on models</li>
-  <li>Avoid warning about mass assignment with string literals</li>
-  <li>Only report original regex DoS locations</li>
-  <li>Report correct file for <code class="highlighter-rouge">simple_format</code> usage CVE warning</li>
-  <li>Ignore case value in XSS checks</li>
-</ul>
-
-<h3 id="html-reports-with-github-repo">HTML Reports with GitHub Repo</h3>
-
-<p>HTML reports were sometimes causing an error when linking to a GitHub repo.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/625">changes</a>)</p>
-
-<h3 id="shadowed-block-arguments">Shadowed Block Arguments</h3>
-
-<p>There was an error handling explicitly shadowed block arguments like this:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>some_array.each do |item; x, y|
-  # Stuff
-end
-</code></pre></div></div>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/613">changes</a>)</p>
-
-<h3 id="csv-output">CSV Output</h3>
-
-<p>Empty tables caused the CSV report to fail.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/616">changes</a>)</p>
-
-<h3 id="rubyparser-update">RubyParser Update</h3>
-
-<p>Brakeman has been very behind on RubyParser versions due to a line number issue which is nearly always present in HAML templates. As a workaround, Brakeman now strips newline literals from HAML templates. While this does cause some line numbers to be off, but typically newline literals are caused by HAML formatting. Removing them allows Brakeman to use the latest RubyParser.</p>
-
-<p>Brakeman now requires RubyParser 3.6.2 as a minimum.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/620">HAML changes</a>, <a href="https://github.com/presidentbeef/brakeman/pull/621">dependency change</a>)</p>
-
-<h3 id="more-sql-safe-methods">More SQL-safe Methods</h3>
-
-<p>Brakeman will no longer warn about <code class="highlighter-rouge">primary_key</code>, <code class="highlighter-rouge">table_name_prefix</code>, and <code class="highlighter-rouge">table_name_suffix</code> in SQL.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/635">changes</a>)</p>
-
-<h3 id="compare-with-external-checks">Compare with External Checks</h3>
-
-<p>Fix an issue when using <code class="highlighter-rouge">--compare</code> and <code class="highlighter-rouge">--add-checks-path</code> together.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/635">changes</a>)</p>
-
-<h3 id="process-class-scope-method-calls">Process Class-Scope Method Calls</h3>
-
-<p>Previously, Brakeman would process method calls at the class scope (e.g., <code class="highlighter-rouge">belongs_to</code>) in models and then throw away the call. This meant the call never received data flow analysis. This was particularly noticeable when those calls involved blocks. This has been fixed and has improved results, especially where constants are used.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/634">changes</a>)</p>
-
-<h3 id="mass-assignment-with-literals">Mass Assignment with Literals</h3>
-
-<p>Brakeman no longer warns about mass assignment if the arguments are a string or symbol. In those cases it probably isn’t an ActiveRecord subclass in any case.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/631">changes</a>)</p>
-
-<h3 id="reduce-regex-dos-duplicates">Reduce Regex DoS Duplicates</h3>
-
-<p>Duplicate regular expression denial of service warnings were being reported due to data flow analysis.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/627">changes</a>)</p>
-
-<h3 id="file-for-simple_format-cve">File for simple_format CVE</h3>
-
-<p>Warnings regarding the old <code class="highlighter-rouge">simple_format</code> CVE will now point to the file where <code class="highlighter-rouge">simple_format</code> was called, not the Gemfile.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/623/files">changes</a>)</p>
-
-<h3 id="ignore-case-value">Ignore Case Value</h3>
-
-<p>Do not report about XSS regarding the value used in <code class="highlighter-rouge">case</code> expressions.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/619">changes</a>)</p>
-
-<h3 id="shas">SHAs</h3>
-
-<p>The SHA1 sums for this release are</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>87413b544b5eae0cac9f037e2b62b1fe3f0fee5e  brakeman-3.0.2.gem
-cfcf3080a992ca173c64dd98fe239e8bd9bb0eaa  brakeman-min-3.0.2.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -675,6 +667,10 @@ cfcf3080a992ca173c64dd98fe239e8bd9bb0eaa  brakeman-min-3.0.2.gem
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">Brakeman 5.4.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">Brakeman 5.3.0 Released</a>
       </li>
     
@@ -688,10 +684,6 @@ cfcf3080a992ca173c64dd98fe239e8bd9bb0eaa  brakeman-min-3.0.2.gem
     
       <li class="post">
         <a href="/blog/2022/01/30/5-dot-2-dot-1-released">Brakeman 5.2.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2021/12/15/brakeman-5-dot-2-dot-0-released">Brakeman 5.2.0 Released</a>
       </li>
     
   </ul>

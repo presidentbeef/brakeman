@@ -80,6 +80,114 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2016/07/20/brakeman-3-dot-3-3-released">Brakeman 3.3.3 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2016-07-20 18:11:00 -0700" pubdate  updated >2016-07-20 18:11:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release is mostly bug fixes and internal improvements, although it may find more warnings due to indexing of view helpers.</p>
+
+<ul>
+  <li>Index calls in view helpers</li>
+  <li>Process inline template renders (<a href="https://github.com/presidentbeef/brakeman/issues/672">#672</a>)</li>
+  <li>Show path when no Rails app found (<a href="https://github.com/oreoshake">Neil Matatall</a>)</li>
+  <li>Avoid warning about hashes in <code class="highlighter-rouge">link_to</code> hrefs (<a href="https://github.com/presidentbeef/brakeman/issues/897">#897</a>)</li>
+  <li>Improve return value guesses</li>
+  <li>Ignore boolean methods in render paths</li>
+  <li>Reduce open redirect duplicates</li>
+  <li>Fix SymbolDoS error with unknown Rails version</li>
+</ul>
+
+<h3 id="view-helpers">View Helpers</h3>
+
+<p>Calls in view helpers are now indexed, which means Brakeman will search them for potential vulnerabilities.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/907">changes</a>)</p>
+
+<h3 id="inline-templates">Inline Templates</h3>
+
+<p>Brakeman will now process inline templates in controllers, if they are using ERB (the default):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>render :inline =&gt; "&lt;%= params[:x].html_safe %&gt;"
+</code></pre></div></div>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/905">changes</a>)</p>
+
+<h3 id="rails-app-path">Rails App Path</h3>
+
+<p>Thanks to <a href="https://github.com/oreoshake">Neil Matatall</a>, Brakeman will now display the path it tried to search for a Rails application if it cannot find it:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Please supply the path to a Rails application (looking in /some/path/).
+</code></pre></div></div>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/909">changes</a>)</p>
+
+<h3 id="hashes-as-urls">Hashes as URLs</h3>
+
+<p>Brakeman will no longer warn about obvious hash arguments in the HREF for <code class="highlighter-rouge">link_to</code> calls, as well as handling <code class="highlighter-rouge">url_for</code> better.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/904">changes</a>)</p>
+
+<h3 id="return-values">Return Values</h3>
+
+<p>In some cases, Brakeman attempts to determine the possible return value(s) of a method call.
+This release includes a number of improvements to those guesses which may make some warnings easier to understand
+and fix some false positives.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/896">changes</a>)</p>
+
+<h3 id="render-path-booleans">Render Path Booleans</h3>
+
+<p>The check for dynamic render paths will no longer warn about methods ending in <code class="highlighter-rouge">?</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/899">changes</a>)</p>
+
+<h3 id="redirect-duplicates">Redirect Duplicates</h3>
+
+<p>This release refactored much of the warning duplicate tracking, and as such there should be fewer duplicate warnings about open redirects.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/901">changes</a>)</p>
+
+<h3 id="shas">SHAs</h3>
+
+<p>The SHA256 sums for this release are</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>490bf7b47d4edbb29fd3f87c5dafa50aec2888d495b64275a635df324a8476e9  brakeman-3.3.3.gem
+793f1c69cca2681bdd0c98f11307ace4f1a43ed594dd45cbe5b67f0383e76e2f  brakeman-lib-3.3.3.gem
+dcc3a75b12f84cac582d383a375d3b85d033e25ba42af051bedcdc8b5377c2c5  brakeman-min-3.3.3.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed improvements in this release.</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2016/06/10/brakeman-3-dot-3-2-released">Brakeman 3.3.2 Released</a></h1>
     
     
@@ -474,109 +582,6 @@ f1adce1a696799342dc9f50b51975024060360dc9018358c5d8e34c1c4681bd1  brakeman-min-3
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2016/02/24/brakeman-3-dot-2-0-released">Brakeman 3.2.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2016-02-24 15:46:00 -0800" pubdate  updated >2016-02-24 15:46:00 -0800</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This release sheds a couple dependencies and adds support for new Ruby 2.3 syntax.</p>
-
-<p><em>Changes since 3.1.5</em>:</p>
-
-<ul>
-  <li>Support calls using <code class="highlighter-rouge">&amp;.</code> operator (<a href="https://github.com/presidentbeef/brakeman/issues/796">#796</a>)</li>
-  <li>Handle CoffeeScript in HAML (<a href="https://github.com/presidentbeef/brakeman/issues/813">#813</a>)</li>
-  <li>Avoid render warnings about <code class="highlighter-rouge">params[:action]</code>/<code class="highlighter-rouge">params[:controller]</code> (<a href="https://github.com/presidentbeef/brakeman/issues/812">#812</a>)</li>
-  <li>Only update ignore config file on changes (<a href="https://github.com/presidentbeef/brakeman/issues/824">#824</a>)</li>
-  <li>Sort ignore config file</li>
-  <li>Index calls in class bodies but outside methods (<a href="https://github.com/presidentbeef/brakeman/issues/814">#814</a>)</li>
-  <li>Skip Symbol DoS check on Rails 5</li>
-  <li>Fix finding calls with <code class="highlighter-rouge">targets: nil</code></li>
-  <li>Remove <code class="highlighter-rouge">fastercsv</code> dependency</li>
-  <li>Remove <code class="highlighter-rouge">multi-json</code> dependecy</li>
-</ul>
-
-<h3 id="ruby-23-lonely-operator">Ruby 2.3 Lonely Operator</h3>
-
-<p>With the update of RubyParser to 3.8.1 (and Ruby2Ruby to 2.3), Brakeman now supports the new <code class="highlighter-rouge">&amp;.</code> operator and should treat it like a regular method call.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/827">changes</a>)</p>
-
-<h3 id="coffeescript-in-haml">CoffeeScript in HAML</h3>
-
-<p>This release handles CoffeeScript embedded in HAML better and should reduce some false positives.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/817">changes</a>)</p>
-
-<h3 id="render-warnings-on-safe-parameters">Render Warnings on Safe Parameters</h3>
-
-<p>Brakeman will no longer warn on <code class="highlighter-rouge">render params[:action]</code> or <code class="highlighter-rouge">render params[:controller]</code>, as those values are not able to be controlled by an attacker.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/816">changes</a>)</p>
-
-<h3 id="ignore-configuration-changes">‘Ignore’ Configuration Changes</h3>
-
-<p>The “ignore config” files generated by Brakeman are now sorted and will only update on changes, instead of always writing a new file.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/828">changes</a>)</p>
-
-<h3 id="index-calls-outside-methods">Index Calls Outside Methods</h3>
-
-<p>Calls that are outside methods (but inside class bodies) can now be found in Brakeman checks.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/815">changes</a>)</p>
-
-<h3 id="skip-symbol-dos-with-rails-5">Skip Symbol DoS with Rails 5</h3>
-
-<p>Rails 5 requires Ruby &gt;= 2.2.2, which now garbage collects symbols. If the <code class="highlighter-rouge">SymbolDoS</code> check is run on a Rails 5 application (it’s already optional), it will no longer warn.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/829">changes</a>)</p>
-
-<h3 id="dependency-removal">Dependency Removal</h3>
-
-<p>Since Ruby 1.8 is no longer supported, this release removes the legacy <code class="highlighter-rouge">fastercsv</code> and <code class="highlighter-rouge">multi-json</code> dependencies.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/822">fastercsv</a>, <a href="https://github.com/presidentbeef/brakeman/pull/818">multi-json</a>)</p>
-
-<h3 id="shas">SHAs</h3>
-
-<p>The SHA256 sums for this release are</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d1d1468fcca0ec5dd99c53af2018b781a8efe06483190aef9d13b1abcbb7e2a0  brakeman-min-3.2.0.gem
-07023148564668cc39911eec0354ca03774be1f8a03d66162f53a5dde44bb502  brakeman-3.2.0.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed improvements in this release.</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion. Please note the mailing list is no longer in use and has apparently not been delivering mail for some time.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -615,6 +620,10 @@ f1adce1a696799342dc9f50b51975024060360dc9018358c5d8e34c1c4681bd1  brakeman-min-3
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">Brakeman 5.4.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">Brakeman 5.3.0 Released</a>
       </li>
     
@@ -628,10 +637,6 @@ f1adce1a696799342dc9f50b51975024060360dc9018358c5d8e34c1c4681bd1  brakeman-min-3
     
       <li class="post">
         <a href="/blog/2022/01/30/5-dot-2-dot-1-released">Brakeman 5.2.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2021/12/15/brakeman-5-dot-2-dot-0-released">Brakeman 5.2.0 Released</a>
       </li>
     
   </ul>

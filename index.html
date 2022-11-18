@@ -80,6 +80,120 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">Brakeman 5.4.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2022-11-17 21:30:00 -0800" pubdate  updated >2022-11-17 21:30:00 -0800</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Special thanks to <a href="https://github.com/bdewater">Bart de Water</a> and <a href="https://github.com/tehryanx">Ryan Cartner</a> for proposing new rules!</p>
+
+<p><em>Changes since 5.3.1:</em></p>
+
+<ul>
+  <li>Add check for weak RSA key sizes and padding modes (<a href="https://github.com/presidentbeef/brakeman/issues/1736">#1736</a>)</li>
+  <li>Add check for absolute paths issue with Pathname (<a href="https://github.com/presidentbeef/brakeman/issues/1721">#1721</a>)</li>
+  <li>Handle multiple values and splats in case/when (<a href="https://github.com/presidentbeef/brakeman/issues/1730">#1730</a>)</li>
+  <li>Ignore more model methods in redirects (<a href="https://github.com/presidentbeef/brakeman/issues/1723">#1723</a>)</li>
+  <li>Fix <code class="highlighter-rouge">load_rails_defaults</code> overwriting settings in the Rails application (<a href="https://github.com/jamgregory">James Gregory-Monk</a>)</li>
+  <li>Use relative paths for CodeClimate report format (<a href="https://github.com/RubyBrewsday">Mike Poage</a>)</li>
+</ul>
+
+<h3 id="check-rsa-key-sizes-and-padding-modes">Check RSA Key Sizes and Padding Modes</h3>
+
+<p>Brakeman now warns on:</p>
+
+<ul>
+  <li>RSA key sizes less than 2048 bits</li>
+  <li>Use of padding modes other than OAEP (including <code class="highlighter-rouge">none</code>)</li>
+</ul>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1737">changes</a>)</p>
+
+<h3 id="unexpected-absolute-paths">Unexpected Absolute Paths</h3>
+
+<p>When joining paths using <code class="highlighter-rouge">Pathname#join</code>, any arguments that start with a forward slash (<code class="highlighter-rouge">/</code>) will cause the rest of the path to be relative to that absolute path. This may cause unexpected behavior and deviates from how <code class="highlighter-rouge">File.join</code> works.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Pathname</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'a'</span><span class="p">).</span><span class="nf">join</span><span class="p">(</span><span class="s1">'b'</span><span class="p">,</span> <span class="s1">'/c'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">)</span>
+ <span class="o">=&gt;</span> <span class="c1">#&lt;Pathname:/c/d&gt;</span>
+</code></pre></div></div>
+
+<p>(There are more <code class="highlighter-rouge">Pathname</code> methods with this issue - to be added in a future release.)</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1733">changes</a>)</p>
+
+<h3 id="multiple-values-in-whens">Multiple Values in <code class="highlighter-rouge">when</code>s</h3>
+
+<p>If a <code class="highlighter-rouge">when</code> clause contains only ‘safe’ values, Brakeman will treat the <code class="highlighter-rouge">case</code> value as safe:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+
+<span class="k">case</span> <span class="n">x</span>
+<span class="k">when</span> <span class="o">*</span><span class="n">y</span>
+  <span class="n">maybe_dangerous</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># `x` must be an integer, so not dangerous</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1734">changes</a>)</p>
+
+<h3 id="ignore-more-redirects">Ignore More Redirects</h3>
+
+<p>More model methods are ignored in redirects:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">first!</code></li>
+  <li><code class="highlighter-rouge">last!</code></li>
+  <li><code class="highlighter-rouge">sole</code></li>
+  <li><code class="highlighter-rouge">find_by_sole</code></li>
+</ul>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1732">changes</a>)</p>
+
+<h3 id="rails-defaults">Rails Defaults</h3>
+
+<p><a href="https://github.com/jamgregory">James Gregory-Monk</a> fixed how Rails default configuration values are set so overrides were properly handled.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1719">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bab990760949e999c5d52b297d8badda376754eb296c91abf829def733ed9d51  brakeman-5.4.0.gem
+2b5a0cd5845b8c0e1b83e00122654af48b025ac3e6625c9ecbc5535226068416  brakeman-lib-5.4.0.gem
+fcbd60456c5db62767d143696e1edf8e4eaee734f2a039903aeca7bb4e6b3dbf  brakeman-min-5.4.0.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">Brakeman 5.3.0 Released</a></h1>
     
     
@@ -394,90 +508,6 @@ the help message matches the order of the options in the prompt!</p>
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2021/12/15/brakeman-5-dot-2-dot-0-released">Brakeman 5.2.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2021-12-15 11:30:00 -0800" pubdate  updated >2021-12-15 11:30:00 -0800</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Changes since 5.1.2:</em></p>
-
-<ul>
-  <li>Initial Rails 7 support (<a href="https://github.com/presidentbeef/brakeman/issues/1653">#1653</a>)</li>
-  <li>Add new checks for unsupported Ruby and Rails version</li>
-  <li>Fix issue with calls to <code class="highlighter-rouge">foo.root</code> in routes (<a href="https://github.com/presidentbeef/brakeman/issues/1640">#1640</a>)</li>
-  <li>Ignore <code class="highlighter-rouge">I18n.locale</code> in SQL queries (<a href="https://github.com/presidentbeef/brakeman/issues/1597">#1597</a>)</li>
-  <li>Do not treat <code class="highlighter-rouge">sanitize_sql_like</code> as safe</li>
-  <li>Bundled version of <code class="highlighter-rouge">ruby_parser</code> updated to 3.18.1</li>
-  <li>Require Ruby 2.5.0+ (<a href="https://github.com/presidentbeef/brakeman/issues/1649">#1649</a>)</li>
-</ul>
-
-<h3 id="initial-rails-7-support">Initial Rails 7 Support</h3>
-
-<p>Nothing special here, but the <code class="highlighter-rouge">-7</code> option is available and Brakeman won’t think a Rails 7 app is a Rails 2 app.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1654">changes</a>)</p>
-
-<h3 id="new-checks-for-unmaintained-software">New Checks for Unmaintained Software</h3>
-
-<p>Brakeman will now warn about use of Ruby or Rails versions which are no longer maintained.</p>
-
-<p>Unlike other warnings, these new checks have a time component and <em>will</em> change as the end-of-life dates approach:</p>
-
-<ul>
-  <li>60 days until EOL: Low warning</li>
-  <li>30 days until EOL: Medium warning</li>
-  <li>EOL+: High warning</li>
-</ul>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1660">changes</a>)</p>
-
-<h3 id="bug-fix-in-routes">Bug Fix in Routes</h3>
-
-<p>Calls to <code class="highlighter-rouge">something.root</code> will no longer cause Brakeman to freak out.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1655">changes</a>)</p>
-
-<h3 id="sql-injection-updates">SQL Injection Updates</h3>
-
-<p><code class="highlighter-rouge">I18n.locale</code> is ignored in SQL queries.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1658">changes</a>)</p>
-
-<p><code class="highlighter-rouge">sanitize_sql_like</code> is no longer treated as “safe”. It only escapes <code class="highlighter-rouge">LIKE</code>-specific characters such as <code class="highlighter-rouge">%</code> but does not prevent SQL injection.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1657">changes</a>)</p>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -516,6 +546,10 @@ the help message matches the order of the options in the prompt!</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">Brakeman 5.4.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">Brakeman 5.3.0 Released</a>
       </li>
     
@@ -529,10 +563,6 @@ the help message matches the order of the options in the prompt!</p>
     
       <li class="post">
         <a href="/blog/2022/01/30/5-dot-2-dot-1-released">Brakeman 5.2.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2021/12/15/brakeman-5-dot-2-dot-0-released">Brakeman 5.2.0 Released</a>
       </li>
     
   </ul>
