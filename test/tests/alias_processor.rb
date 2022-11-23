@@ -383,6 +383,18 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
+  def test_if_in_when
+    # Just testing that `if` inside a `when` doesn't cause an error
+    # https://github.com/presidentbeef/brakeman/issues/1743
+    assert_alias '1', <<-RUBY
+    case something
+    when (if a then b else c end) then 1
+    end
+
+    1
+    RUBY
+  end
+
   def test_or_equal
     assert_alias '10', <<-RUBY
       x.y = 10

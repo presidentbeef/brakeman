@@ -1016,10 +1016,13 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     exp.each_sexp do |e|
       if node_type? e, :when
         scope do
-          @branch_env = env.current
-
           # Process the when value for matching
           process_default e[1]
+
+          # Moved here to avoid @branch_env being cleared out
+          # in process_default
+          # Maybe in the future don't set it to nil?
+          @branch_env = env.current
 
           # set value of case var if possible
           if case_value
