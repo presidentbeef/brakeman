@@ -858,6 +858,17 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     (all_literals? exp.target or dir_glob? exp.target)
   end
 
+  # Check if exp is a call to Array#include? on an array literal
+  # that contains all literal values. For example:
+  #
+  #    x.in? [1, 2, "a"]
+  #
+  def in_array_all_literals? exp
+    call? exp and
+      exp.method == :in? and
+      all_literals? exp.first_arg
+  end
+
   # Check if exp is a call to Hash#include? on a hash literal
   # that contains all literal values. For example:
   #
@@ -911,28 +922,30 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         scope do
           @branch_env = env.current
           branch_index = 2 + i # s(:if, condition, then_branch, else_branch)
-          if i == 0 and hash_or_array_include_all_literals? condition
+         exp[branch_index] = if i == 0 and hash_or_array_include_all_literals? condition
             # If the condition is ["a", "b"].include? x
-            # set x to "a" inside the true branch
+            # set x to safe_literal inside the true branch
             var = condition.first_arg
-            previous_value = env.current[var]
-            env.current[var] = safe_literal(var.line)
-            exp[branch_index] = process_if_branch branch
-            env.current[var] = previous_value
+            value = safe_literal(var.line)
+            process_branch_with_value(var, value, branch, i)
+          elsif i == 0 and in_array_all_literals? condition
+            # If the condition is x.in? ["a", "b"]
+            # set x to safe_literal inside the true branch
+            var = condition.target
+            value = safe_literal(var.line)
+            process_branch_with_value(var, value, branch, i)
           elsif i == 0 and equality_check? condition
             # For conditions like a == b,
             # set a to b inside the true branch
             var = condition.target
-            previous_value = env.current[var]
-            env.current[var] = condition.first_arg
-            exp[branch_index] = process_if_branch branch
-            env.current[var] = previous_value
+            value = condition.first_arg
+            process_branch_with_value(var, value, branch, i)
           elsif i == 1 and hash_or_array_include_all_literals? condition and early_return? branch
             var = condition.first_arg
             env.current[var] = safe_literal(var.line)
-            exp[branch_index] = process_if_branch branch
+            process_if_branch branch
           else
-            exp[branch_index] = process_if_branch branch
+            process_if_branch branch
           end
           branch_scopes << env.current
           @branch_env = nil
@@ -947,6 +960,14 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
 
     exp
+  end
+
+  def process_branch_with_value var, value, branch, branch_index
+    previous_value = env.current[var]
+    env.current[var] = value
+    result = process_if_branch branch
+    env.current[var] = previous_value
+    result
   end
 
   def early_return? exp

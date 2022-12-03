@@ -1010,6 +1010,48 @@ class AliasProcessorTests < Minitest::Test
     INPUT
   end
 
+  def test_branch_in_array
+    assert_alias 'x', <<-INPUT
+    if x.in? [1,2,3]
+      stuff
+    end
+
+    x
+    INPUT
+
+    assert_output <<-INPUT, <<-OUTPUT
+    if x.in? [1,2,3]
+      y = x + 2
+      p y
+    end
+
+    x
+    INPUT
+    if x.in? [1,2,3]
+      y = :BRAKEMAN_SAFE_LITERAL
+      p :BRAKEMAN_SAFE_LITERAL
+    end
+
+    x
+    OUTPUT
+
+    assert_output <<-INPUT, <<-OUTPUT
+    x = params[:x]
+    if x.in? ['a','b']
+      User.send x
+    end
+
+    x
+    INPUT
+    x = params[:x]
+    if params[:x].in? ['a','b']
+      User.BRAKEMAN_SAFE_LITERAL
+    end
+
+    params[:x]
+    OUTPUT
+  end
+
   def test_branch_array_include
     assert_alias 'x', <<-INPUT
     if [1,2,3].include? x
