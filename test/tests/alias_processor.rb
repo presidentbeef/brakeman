@@ -1010,6 +1010,20 @@ class AliasProcessorTests < Minitest::Test
     INPUT
   end
 
+  def test_presence_in_all_literals
+    assert_alias "'1'", <<-INPUT
+    x = '1'.presence_in ['1', '2', '3']
+    x
+    INPUT
+  end
+
+  def test_presence_in_unknown
+    assert_alias ':BRAKEMAN_SAFE_LITERAL', <<-INPUT
+    x = y.presence_in ['1', '2', '3']
+    x
+    INPUT
+  end
+
   def test_branch_in_array
     assert_alias 'x', <<-INPUT
     if x.in? [1,2,3]

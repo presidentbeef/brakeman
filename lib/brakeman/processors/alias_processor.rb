@@ -328,6 +328,17 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
           exp = res
         end
       end
+    when :presence_in
+      arg = exp.first_arg
+
+      if node_type? arg, :array
+        # 1.presence_in [1,2,3]
+        if arg.include? target
+          exp = target
+        elsif all_literals? arg
+          exp = safe_literal(exp.line)
+        end
+      end
     end
 
     exp
