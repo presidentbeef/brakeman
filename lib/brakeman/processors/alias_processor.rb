@@ -300,11 +300,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       if array? target and first_arg.nil? and sexp? target[1]
         exp = target[1]
       end
-    when :freeze
-      unless target.nil?
-        exp = target
-      end
-    when :dup
+    when :freeze, :dup, :presence
       unless target.nil?
         exp = target
       end

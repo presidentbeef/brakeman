@@ -1043,12 +1043,12 @@ class AliasProcessorTests < Minitest::Test
 
     x
     INPUT
-    x = params[:x].presence
-    if ['a','b'].include? params[:x].presence
+    x = params[:x]
+    if ['a','b'].include? params[:x]
       User.BRAKEMAN_SAFE_LITERAL
     end
 
-    params[:x].presence
+    params[:x]
     OUTPUT
   end
 
@@ -1366,6 +1366,13 @@ class AliasProcessorTests < Minitest::Test
   def test_ignore_dup
     assert_alias "blah", <<-INPUT
     x = blah.dup
+    x
+    INPUT
+  end
+
+  def test_ignore_presence
+    assert_alias "blah", <<-INPUT
+    x = blah.presence
     x
     INPUT
   end
