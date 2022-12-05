@@ -1010,6 +1010,62 @@ class AliasProcessorTests < Minitest::Test
     INPUT
   end
 
+  def test_presence_in_all_literals
+    assert_alias "'1'", <<-INPUT
+    x = '1'.presence_in ['1', '2', '3']
+    x
+    INPUT
+  end
+
+  def test_presence_in_unknown
+    assert_alias ':BRAKEMAN_SAFE_LITERAL', <<-INPUT
+    x = y.presence_in ['1', '2', '3']
+    x
+    INPUT
+  end
+
+  def test_branch_in_array
+    assert_alias 'x', <<-INPUT
+    if x.in? [1,2,3]
+      stuff
+    end
+
+    x
+    INPUT
+
+    assert_output <<-INPUT, <<-OUTPUT
+    if x.in? [1,2,3]
+      y = x + 2
+      p y
+    end
+
+    x
+    INPUT
+    if x.in? [1,2,3]
+      y = :BRAKEMAN_SAFE_LITERAL
+      p :BRAKEMAN_SAFE_LITERAL
+    end
+
+    x
+    OUTPUT
+
+    assert_output <<-INPUT, <<-OUTPUT
+    x = params[:x]
+    if x.in? ['a','b']
+      User.send x
+    end
+
+    x
+    INPUT
+    x = params[:x]
+    if params[:x].in? ['a','b']
+      User.BRAKEMAN_SAFE_LITERAL
+    end
+
+    params[:x]
+    OUTPUT
+  end
+
   def test_branch_array_include
     assert_alias 'x', <<-INPUT
     if [1,2,3].include? x
@@ -1043,12 +1099,12 @@ class AliasProcessorTests < Minitest::Test
 
     x
     INPUT
-    x = params[:x].presence
-    if ['a','b'].include? params[:x].presence
+    x = params[:x]
+    if ['a','b'].include? params[:x]
       User.BRAKEMAN_SAFE_LITERAL
     end
 
-    params[:x].presence
+    params[:x]
     OUTPUT
   end
 
@@ -1366,6 +1422,13 @@ class AliasProcessorTests < Minitest::Test
   def test_ignore_dup
     assert_alias "blah", <<-INPUT
     x = blah.dup
+    x
+    INPUT
+  end
+
+  def test_ignore_presence
+    assert_alias "blah", <<-INPUT
+    x = blah.presence
     x
     INPUT
   end

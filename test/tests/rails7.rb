@@ -268,6 +268,20 @@ class Rails7Tests < Minitest::Test
       user_input: nil
   end
 
+  def test_presence_in_with_render_path_false_positive
+    assert_no_warning check_name: "Render",
+      type: :warning,
+      warning_code: 15,
+      fingerprint: "32762c066cbafafce28947fb91f24cd547c52f184084fb4dc05ac9ff81def638",
+      warning_type: "Dynamic Render Path",
+      line: 9,
+      message: /^Render\ path\ contains\ parameter\ value/,
+      confidence: 1,
+      relative_path: "app/controllers/users_controller.rb",
+      code: s(:render, :action, s(:dstr, "admin2/fields/", s(:evstr, s(:or, s(:call, s(:call, s(:params), :[], s(:lit, :field)), :presence_in, s(:array, s(:str, "foo"))), s(:call, nil, :raise, s(:colon2, s(:const, :ActionController), :BadRequest))))), s(:hash)),
+      user_input: s(:call, s(:call, s(:params), :[], s(:lit, :field)), :presence_in, s(:array, s(:str, "foo")))
+  end
+
   def test_cross_site_scripting_CVE_2022_32209_allowed_tags_initializer
     assert_warning check_name: "SanitizeConfigCve",
       type: :warning,
