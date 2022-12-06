@@ -45,7 +45,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
         not explicit_host?(opt) and
         not slice_call?(opt) and
         not safe_permit?(opt) and
-        res = include_user_input?(call)
+        res = include_user_input?(opt)
 
       if res.type == :immediate
         confidence = :high
@@ -68,42 +68,44 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   #is being output directly. This is necessary because of tracker.options[:check_arguments]
   #which can be used to enable/disable reporting output of method calls which use
   #user input as arguments.
-  def include_user_input? call, immediate = :immediate
+  def include_user_input? opt, immediate = :immediate
     Brakeman.debug "Checking if call includes user input"
-
-    arg = call.first_arg
 
     # if the first argument is an array, rails assumes you are building a
     # polymorphic route, which will never jump off-host
-    return false if array? arg
+    return false if array? opt
 
     if tracker.options[:ignore_redirect_to_model]
-      if model_instance?(arg) or decorated_model?(arg)
+      if model_instance?(opt) or decorated_model?(opt)
         return false
       end
     end
 
-    if res = has_immediate_model?(arg)
-      unless call? arg and arg.method.to_s =~ /_path/
+    if res = has_immediate_model?(opt)
+      unless call? opt and opt.method.to_s =~ /_path/
         return Match.new(immediate, res)
       end
-    elsif call? arg
-      if request_value? arg
-        return Match.new(immediate, arg)
-      elsif request_value? arg.target
-        return Match.new(immediate, arg.target)
-      elsif arg.method == :url_for and include_user_input? arg
-        return Match.new(immediate, arg)
+    elsif call? opt
+      if request_value? opt
+        return Match.new(immediate, opt)
+      elsif request_value? opt.target
+        return Match.new(immediate, opt.target)
+      elsif opt.method == :url_for and include_user_input? opt.first_arg
+        return Match.new(immediate, opt)
         #Ignore helpers like some_model_url?
-      elsif arg.method.to_s =~ /_(url|path)\z/
+      elsif opt.method.to_s =~ /_(url|path)\z/
+        return false
+      elsif opt.method == :url_from
         return false
       end
-    elsif request_value? arg
-      return Match.new(immediate, arg)
+    elsif request_value? opt
+      return Match.new(immediate, opt)
+    elsif node_type? opt, :or
+      return (include_user_input?(opt.lhs) or include_user_input?(opt.rhs))
     end
 
-    if tracker.options[:check_arguments] and call? arg
-      include_user_input? arg, false  #I'm doubting if this is really necessary...
+    if tracker.options[:check_arguments] and call? opt
+      include_user_input? opt.first_arg, false  #I'm doubting if this is really necessary...
     else
       false
     end
@@ -208,7 +210,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   def friendly_model? exp
     call? exp and model_name? exp.target and exp.method == :friendly
   end
-  
+
   #Returns true if exp is (probably) a decorated model instance
   #using the Draper gem
   def decorated_model? exp
@@ -249,7 +251,7 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     if call? exp and params? exp.target and exp.method == :permit
       exp.each_arg do |opt|
         if symbol? opt and DANGEROUS_KEYS.include? opt.value
-          return false 
+          return false
         end
       end
 
