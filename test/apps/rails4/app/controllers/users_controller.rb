@@ -131,4 +131,8 @@ class UsersController < ApplicationController
     User.find_or_create_by!(params[:user])
     User.find_or_initialize_by(params[:user])
   end
+
+  def email_find_by
+    Email.find_by id: params[:email][:id]
+  end
 end

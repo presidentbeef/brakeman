@@ -15,7 +15,7 @@ class Rails4Tests < Minitest::Test
       :controller => 0,
       :model => 3,
       :template => 8,
-      :generic => 88
+      :generic => 89
     }
   end
 
@@ -1590,6 +1590,20 @@ class Rails4Tests < Minitest::Test
       :confidence => 2,
       :relative_path => "app/controllers/users_controller.rb",
       :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :id))
+  end
+
+  def test_unscoped_find_by
+    assert_warning check_name: "UnscopedFind",
+      type: :warning,
+      warning_code: 82,
+      fingerprint: "c78bc503851a0f79fb64362eb65813be232c9441e1111e1145c5ca3f52bd9606",
+      warning_type: "Unscoped Find",
+      line: 136,
+      message: /^Unscoped\ call\ to\ `Email\#find_by`/,
+      confidence: 2,
+      relative_path: "app/controllers/users_controller.rb",
+      code: s(:call, s(:const, :Email), :find_by, s(:hash, s(:lit, :id), s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :id)))),
+      user_input: s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :id))
   end
 
   def test_before_filter_block
