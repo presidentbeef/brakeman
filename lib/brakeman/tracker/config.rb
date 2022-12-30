@@ -230,6 +230,18 @@ module Brakeman
         set_rails_config(value: true_value, path: [:active_storage, :replace_on_assign_to_many])
         set_rails_config(value: true_value, path: [:active_record, :collection_cache_versioning])
       end
+
+      if version >= 6.1
+        set_rails_config(value: true_value, path: [:action_controller, :urlsafe_csrf_tokens])
+        set_rails_config(value: Sexp.new(:lit, :lax), path: [:action_dispatch, :cookies_same_site_protection])
+        set_rails_config(value: Sexp.new(:lit, 308), path: [:action_dispatch, :ssl_default_redirect_status])
+        set_rails_config(value: false_value, path: [:action_view, :form_with_generates_remote_forms])
+        set_rails_config(value: true_value, path: [:action_view, :preload_links_header])
+        set_rails_config(value: Sexp.new(:lit, 0.15), path: [:active_job, :retry_jitter])
+        set_rails_config(value: true_value, path: [:active_record, :has_many_inversing])
+        set_rails_config(value: false_value, path: [:active_record, :legacy_connection_handling])
+        set_rails_config(value: true_value, path: [:active_storage, :track_variants])
+      end
     end
   end
 end
