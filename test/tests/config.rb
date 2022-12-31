@@ -43,4 +43,16 @@ class RailsConfiguration < Minitest::Test
     # Local Rails 5.2 overwrite should be used
     assert_equal Sexp.new(:false), tracker.config.rails[:action_controller][:default_protect_from_forgery]
   end
+
+  def test_rails7_configuration_load_defaults
+    tracker = Brakeman.run(File.join(TEST_PATH, "apps", "rails7"))
+
+    assert_equal Sexp.new(:lit, 7.0), tracker.config.rails[:load_defaults]
+
+    # Check a 6.1 config
+    assert_equal Sexp.new(:true), tracker.config.rails[:action_controller][:urlsafe_csrf_tokens]
+
+    # Check a 7.0 config
+    assert_equal Sexp.new(:true), tracker.config.rails[:action_controller][:raise_on_open_redirects]
+  end
 end

@@ -230,6 +230,46 @@ module Brakeman
         set_rails_config(value: true_value, path: [:active_storage, :replace_on_assign_to_many])
         set_rails_config(value: true_value, path: [:active_record, :collection_cache_versioning])
       end
+
+      if version >= 6.1
+        set_rails_config(value: true_value, path: [:action_controller, :urlsafe_csrf_tokens])
+        set_rails_config(value: Sexp.new(:lit, :lax), path: [:action_dispatch, :cookies_same_site_protection])
+        set_rails_config(value: Sexp.new(:lit, 308), path: [:action_dispatch, :ssl_default_redirect_status])
+        set_rails_config(value: false_value, path: [:action_view, :form_with_generates_remote_forms])
+        set_rails_config(value: true_value, path: [:action_view, :preload_links_header])
+        set_rails_config(value: Sexp.new(:lit, 0.15), path: [:active_job, :retry_jitter])
+        set_rails_config(value: true_value, path: [:active_record, :has_many_inversing])
+        set_rails_config(value: false_value, path: [:active_record, :legacy_connection_handling])
+        set_rails_config(value: true_value, path: [:active_storage, :track_variants])
+      end
+
+      if version >= 7.0
+        video_args =
+          Sexp.new(:str, "-vf 'select=eq(n\\,0)+eq(key\\,1)+gt(scene\\,0.015),loop=loop=-1:size=2,trim=start_frame=1' -frames:v 1 -f image2")
+        hash_class = s(:colon2, s(:colon2, s(:const, :OpenSSL), :Digest), :SHA256)
+
+        set_rails_config(value: true_value, path: [:action_controller, :raise_on_open_redirects])
+        set_rails_config(value: true_value, path: [:action_controller, :wrap_parameters_by_default])
+        set_rails_config(value: Sexp.new(:lit, :json), path: [:action_dispatch, :cookies_serializer])
+        set_rails_config(value: false_value, path: [:action_dispatch, :return_only_request_media_type_on_content_type])
+        set_rails_config(value: Sexp.new(:lit, 5), path: [:action_mailer, :smtp_timeout])
+        set_rails_config(value: false_value, path: [:action_view, :apply_stylesheet_media_default])
+        set_rails_config(value: true_value, path: [:ction_view, :button_to_generates_button_tag])
+        set_rails_config(value: true_value, path: [:active_record, :automatic_scope_inversing])
+        set_rails_config(value: false_value, path: [:active_record, :partial_inserts])
+        set_rails_config(value: true_value, path: [:active_record, :verify_foreign_keys_for_fixtures])
+        set_rails_config(value: true_value, path: [:active_storage, :multiple_file_field_include_hidden])
+        set_rails_config(value: Sexp.new(:lit, :vips), path: [:active_storage, :variant_processor])
+        set_rails_config(value: video_args, path: [:active_storage, :video_preview_arguments])
+        set_rails_config(value: Sexp.new(:lit, 7.0), path: [:active_support, :cache_format_version])
+        set_rails_config(value: true_value, path: [:active_support, :disable_to_s_conversion])
+        set_rails_config(value: true_value, path: [:active_support, :executor_around_test_case])
+        set_rails_config(value: hash_class, path: [:active_support, :hash_digest_class])
+        set_rails_config(value: Sexp.new(:lit, :thread), path: [:active_support, :isolation_level])
+        set_rails_config(value: hash_class, path: [:active_support, :key_generator_hash_digest_class])
+        set_rails_config(value: true_value, path: [:active_support, :remove_deprecated_time_with_zone_name])
+        set_rails_config(value: true_value, path: [:active_support, :use_rfc4122_namespaced_uuids])
+      end
     end
   end
 end
