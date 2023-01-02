@@ -138,6 +138,14 @@ end
 module BrakemanTester::RescanTestHelper
   attr_reader :original, :rescan, :rescanner
 
+  @@temp_dirs = {}
+
+  Minitest.after_run do
+    @@temp_dirs.each do |_, dir|
+      FileUtils.remove_dir(dir, true)
+    end
+  end
+
   def self.included _
     unless Brakeman::Rescanner.instance_methods.include? :reindex
       Brakeman::Rescanner.class_eval do
@@ -155,13 +163,17 @@ module BrakemanTester::RescanTestHelper
   def before_rescan_of changed, app = "rails3.2", options = {}
     changed = [changed] unless changed.is_a? Array
 
-    Dir.mktmpdir do |dir|
-      @dir = dir
-      options = {:app_path => dir, :debug => false}.merge(options)
+    if @@temp_dirs[app]
+      dir = @dir = @@temp_dirs[app]
+    else
+      dir = @dir = @@temp_dirs[app] = Dir.mktmpdir('brakeman-test')
+      FileUtils.cp_r(File.join(TEST_PATH, 'apps', app, '.'), dir)
+    end
 
-      FileUtils.cp_r "#{TEST_PATH}/apps/#{app}/.", dir
-      @original = Brakeman.run options
+    options = {:app_path => dir, :debug => false}.merge(options)
+    @original = Brakeman.run options
 
+    begin
       yield dir if block_given?
 
       # Not reqally sure why we do this..?
@@ -169,9 +181,18 @@ module BrakemanTester::RescanTestHelper
 
       @rescanner = Brakeman::Rescanner.new(t.options, t.processor, changed)
       @rescan = @rescanner.recheck
-
-      assert_existing
+    ensure
+      changed.each do |file|
+        original = File.join(TEST_PATH, 'apps', app, file)
+        if File.exist? original
+          FileUtils.cp original, full_path(file) 
+        else
+          FileUtils.rm full_path(file)
+        end
+      end
     end
+
+    assert_existing
   end
 
   def fixed

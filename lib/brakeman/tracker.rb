@@ -371,7 +371,7 @@ class Brakeman::Tracker
       end
     end
 
-    @models.delete model_name
+    @models.delete(model_name)
   end
 
   #Clear information related to model

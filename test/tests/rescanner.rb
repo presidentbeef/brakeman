@@ -152,6 +152,9 @@ class RescannerTests < Minitest::Test
     model = "app/models/user.rb"
 
     before_rescan_of model do
+      # So actually there is another definition of User in
+      # app/models/user/command_dependency.rb
+      # so this does not completely delete the model
       remove model
     end
 
@@ -165,7 +168,7 @@ class RescannerTests < Minitest::Test
     model = "app/models/user.rb"
     dependency = "app/models/user/command_dependency.rb"
 
-    before_rescan_of model do
+    before_rescan_of [model, dependency] do
       remove model
       remove dependency
     end
