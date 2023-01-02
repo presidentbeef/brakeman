@@ -18,5 +18,8 @@ module Rails7
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Test with this off
+    config.action_controller.raise_on_open_redirects = false
   end
 end

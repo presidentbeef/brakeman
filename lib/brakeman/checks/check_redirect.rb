@@ -11,7 +11,10 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   @description = "Looks for calls to redirect_to with user input as arguments"
 
   def run_check
-    Brakeman.debug "Finding calls to redirect_to()"
+    if true? tracker.config.rails.dig(:action_controller, :raise_on_open_redirects)
+      Brakeman.debug 'Skipping check for open redirects'
+      return
+    end
 
     @model_find_calls = Set[:all, :create, :create!, :find, :find_by_sql, :first, :first!, :last, :last!, :new, :sole]
 
