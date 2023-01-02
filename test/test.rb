@@ -164,11 +164,8 @@ module BrakemanTester::RescanTestHelper
 
       yield dir if block_given?
 
-      File.open(File.join(dir, '.brakeman.dump'), "w") do |f|
-        f.print(Marshal.dump(@original))
-      end
-
-      t = Marshal.load(File.read(File.join(dir, '.brakeman.dump')))
+      # Not reqally sure why we do this..?
+      t = Marshal.load(Marshal.dump(@original))
 
       @rescanner = Brakeman::Rescanner.new(t.options, t.processor, changed)
       @rescan = @rescanner.recheck
