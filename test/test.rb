@@ -74,26 +74,20 @@ module BrakemanTester::FindWarning
     end
   end
 
-  def find opts = {}, &block
+  def find opts = {}
     warnings = report[warning_table(opts[:type])]
 
     opts.delete :type
 
-    result = if block
-      warnings.select block
-    else
-      warnings.select do |w|
-        opts.all? do |k,v|
-          if k == :relative_path
-            v === w.file.relative
-          else
-            v === w.send(k)
-          end
+    warnings.select do |w|
+      opts.all? do |k,v|
+        if k == :relative_path
+          v === w.file.relative
+        else
+          v === w.send(k)
         end
       end
     end
-
-    result
   end
 end
 
