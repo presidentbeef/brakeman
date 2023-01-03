@@ -139,6 +139,7 @@ module BrakemanTester::RescanTestHelper
   attr_reader :original, :rescan, :rescanner
 
   @@temp_dirs = {}
+  @@scans = {}
 
   Minitest.after_run do
     @@temp_dirs.each do |_, dir|
@@ -171,7 +172,12 @@ module BrakemanTester::RescanTestHelper
     end
 
     options = {:app_path => dir, :debug => false}.merge(options)
-    @original = Brakeman.run options
+
+    if @@scans[[app, options]]
+      @original = @@scans[[app, options]]
+    else
+      @@scans[[app, options]] = @original = Brakeman.run(options)
+    end
 
     begin
       yield dir if block_given?
