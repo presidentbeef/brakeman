@@ -74,26 +74,20 @@ module BrakemanTester::FindWarning
     end
   end
 
-  def find opts = {}, &block
+  def find opts = {}
     warnings = report[warning_table(opts[:type])]
 
     opts.delete :type
 
-    result = if block
-      warnings.select block
-    else
-      warnings.select do |w|
-        opts.all? do |k,v|
-          if k == :relative_path
-            v === w.file.relative
-          else
-            v === w.send(k)
-          end
+    warnings.select do |w|
+      opts.all? do |k,v|
+        if k == :relative_path
+          v === w.file.relative
+        else
+          v === w.send(k)
         end
       end
     end
-
-    result
   end
 end
 
@@ -138,6 +132,15 @@ end
 module BrakemanTester::RescanTestHelper
   attr_reader :original, :rescan, :rescanner
 
+  @@temp_dirs = {}
+  @@scans = {}
+
+  Minitest.after_run do
+    @@temp_dirs.each do |_, dir|
+      FileUtils.remove_dir(dir, true)
+    end
+  end
+
   def self.included _
     unless Brakeman::Rescanner.instance_methods.include? :reindex
       Brakeman::Rescanner.class_eval do
@@ -155,26 +158,41 @@ module BrakemanTester::RescanTestHelper
   def before_rescan_of changed, app = "rails3.2", options = {}
     changed = [changed] unless changed.is_a? Array
 
-    Dir.mktmpdir do |dir|
-      @dir = dir
-      options = {:app_path => dir, :debug => false}.merge(options)
+    if @@temp_dirs[app]
+      dir = @dir = @@temp_dirs[app]
+    else
+      dir = @dir = @@temp_dirs[app] = Dir.mktmpdir('brakeman-test')
+      FileUtils.cp_r(File.join(TEST_PATH, 'apps', app, '.'), dir)
+    end
 
-      FileUtils.cp_r "#{TEST_PATH}/apps/#{app}/.", dir
-      @original = Brakeman.run options
+    options = {:app_path => dir, :debug => false}.merge(options)
 
+    if @@scans[[app, options]]
+      @original = @@scans[[app, options]]
+    else
+      @@scans[[app, options]] = @original = Brakeman.run(options)
+    end
+
+    begin
       yield dir if block_given?
 
-      File.open(File.join(dir, '.brakeman.dump'), "w") do |f|
-        f.print(Marshal.dump(@original))
-      end
-
-      t = Marshal.load(File.read(File.join(dir, '.brakeman.dump')))
+      # Not reqally sure why we do this..?
+      t = Marshal.load(Marshal.dump(@original))
 
       @rescanner = Brakeman::Rescanner.new(t.options, t.processor, changed)
       @rescan = @rescanner.recheck
-
-      assert_existing
+    ensure
+      changed.each do |file|
+        original = File.join(TEST_PATH, 'apps', app, file)
+        if File.exist? original
+          FileUtils.cp original, full_path(file) 
+        else
+          FileUtils.rm full_path(file)
+        end
+      end
     end
+
+    assert_existing
   end
 
   def fixed
