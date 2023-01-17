@@ -11,8 +11,6 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
   @description = "Looks for calls to redirect_to with user input as arguments"
 
   def run_check
-    Brakeman.debug "Finding calls to redirect_to()"
-
     @model_find_calls = Set[:all, :create, :create!, :find, :find_by_sql, :first, :first!, :last, :last!, :new, :sole]
 
     if tracker.options[:rails3]
@@ -41,13 +39,15 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     opt = call.first_arg
 
     if method == :redirect_to and
+        not protected_by_raise?(call) and
         not only_path?(call) and
         not explicit_host?(opt) and
         not slice_call?(opt) and
         not safe_permit?(opt) and
+        not disallow_other_host?(call) and
         res = include_user_input?(opt)
 
-      if res.type == :immediate
+      if res.type == :immediate and not allow_other_host?(call)
         confidence = :high
       else
         confidence = :weak
@@ -259,5 +259,26 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     end
 
     false
+  end
+
+  def protected_by_raise? call
+    raise_on_redirects? and
+      not allow_other_host? call
+  end
+
+  def raise_on_redirects?
+    @raise_on_redirects ||= true?(tracker.config.rails.dig(:action_controller, :raise_on_open_redirects))
+  end
+
+  def allow_other_host? call
+    opt = call.last_arg
+
+    hash? opt and true? hash_access(opt, :allow_other_host)
+  end
+
+  def disallow_other_host? call
+    opt = call.last_arg
+
+    hash? opt and false? hash_access(opt, :allow_other_host)
   end
 end

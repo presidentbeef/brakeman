@@ -16,4 +16,12 @@ class UsersController < ApplicationController
   def redirect_url_from_param_with_fallback
     redirect_to url_from(params[:redirect_url]) || "/"
   end
+
+  def redirect_with_allow_host
+    redirect_to params[:x], allow_other_host: true # low confidence warning
+  end
+
+  def redirect_with_explicit_not_allow
+    redirect_to params[:x], allow_other_host: false # no warning
+  end
 end

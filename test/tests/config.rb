@@ -53,6 +53,6 @@ class RailsConfiguration < Minitest::Test
     assert_equal Sexp.new(:true), tracker.config.rails[:action_controller][:urlsafe_csrf_tokens]
 
     # Check a 7.0 config
-    assert_equal Sexp.new(:true), tracker.config.rails[:action_controller][:raise_on_open_redirects]
+    assert_equal Sexp.new(:true), tracker.config.rails[:action_controller][:wrap_parameters_by_default]
   end
 end
