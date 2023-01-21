@@ -25,7 +25,9 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
       @model_find_calls << :find_sole_by
     end
 
-    @tracker.find_call(:target => false, :method => :redirect_to).each do |res|
+    methods = [:redirect_to, :redirect_back, :redirect_back_or_to]
+
+    @tracker.find_call(:target => false, :methods => methods).each do |res|
       process_result res
     end
   end
@@ -34,12 +36,15 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     return unless original? result
 
     call = result[:call]
-    method = call.method
-
     opt = call.first_arg
 
-    if method == :redirect_to and
-        not protected_by_raise?(call) and
+    # If redirect_back_or_to(fallback_location: '...')
+    # use that for the location opt instead
+    if hash? opt and location = hash_access(opt, :fallback_location)
+      opt = location
+    end
+
+    if not protected_by_raise?(call) and
         not only_path?(call) and
         not explicit_host?(opt) and
         not slice_call?(opt) and

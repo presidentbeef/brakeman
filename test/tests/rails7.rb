@@ -13,7 +13,7 @@ class Rails7Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 0,
-      :warning => 20
+      :warning => 22
     }
   end
 
@@ -349,6 +349,34 @@ class Rails7Tests < Minitest::Test
       confidence: 2,
       relative_path: "app/controllers/users_controller.rb",
       code: s(:call, nil, :redirect_to, s(:call, s(:params), :[], s(:lit, :x)), s(:hash, s(:lit, :allow_other_host), s(:true))),
+      user_input: s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_redirect_back
+    assert_warning check_name: "Redirect",
+      type: :warning,
+      warning_code: 18,
+      fingerprint: "81ee1b43b1a16a2e143669adb3259407bb462f1963d339717662d9271a154909",
+      warning_type: "Redirect",
+      line: 29,
+      message: /^Possible\ unprotected\ redirect/,
+      confidence: 0,
+      relative_path: "app/controllers/users_controller.rb",
+      code: s(:call, nil, :redirect_back, s(:hash, s(:lit, :fallback_location), s(:call, s(:params), :[], s(:lit, :x)))),
+      user_input: s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_redirect_back_or_to
+    assert_warning check_name: "Redirect",
+      type: :warning,
+      warning_code: 18,
+      fingerprint: "e5aed5eb26b588f3cb6f9f7d34c63ceffcb574348c4fd3c8464e11cab16ed3e3",
+      warning_type: "Redirect",
+      line: 33,
+      message: /^Possible\ unprotected\ redirect/,
+      confidence: 0,
+      relative_path: "app/controllers/users_controller.rb",
+      code: s(:call, nil, :redirect_back_or_to, s(:call, s(:params), :[], s(:lit, :x))),
       user_input: s(:call, s(:params), :[], s(:lit, :x))
   end
 end

@@ -24,4 +24,16 @@ class UsersController < ApplicationController
   def redirect_with_explicit_not_allow
     redirect_to params[:x], allow_other_host: false # no warning
   end
+
+  def redirect_back_with_fallback
+    redirect_back fallback_location: params[:x]
+  end
+
+  def redirect_back_or_to_with_fallback
+    redirect_back_or_to params[:x]
+  end
+
+  def redirect_back_or_to_with_fallback_disallow_host
+    redirect_back_or_to params[:x], allow_other_host: false # no warning
+  end
 end
