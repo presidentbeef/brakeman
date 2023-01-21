@@ -38,10 +38,15 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     call = result[:call]
     opt = call.first_arg
 
-    # If redirect_back_or_to(fallback_location: '...')
-    # use that for the location opt instead
-    if hash? opt and location = hash_access(opt, :fallback_location)
-      opt = location
+    # Location is specified with `fallback_location:`
+    # otherwise the arguments do not contain a location and
+    # the call can be ignored
+    if call.method == :redirect_back
+      if hash? opt and location = hash_access(opt, :fallback_location)
+        opt = location
+      else
+        return
+      end
     end
 
     if not protected_by_raise?(call) and
