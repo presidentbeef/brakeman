@@ -48,6 +48,10 @@ jobs:
     <<: *default
     docker:
       - image: cimg/ruby:3.1
+  test-3-2:
+    <<: *default
+    docker:
+      - image: cimg/ruby:3.2
   test-latest:
     <<: *default
     docker:
@@ -70,6 +74,7 @@ workflows:
       - test-2-6
       - test-3-0
       - test-3-1
+      - test-3-2
       - test-latest
       - upload-coverage:
           requires:
