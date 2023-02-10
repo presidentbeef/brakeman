@@ -43,7 +43,7 @@ jobs:
   test-3-0:
     <<: *default
     docker:
-      - image: circleci/ruby:3.0
+      - image: cimg/ruby:3.0
   test-3-1:
     <<: *default
     docker:
