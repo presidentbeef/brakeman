@@ -52,10 +52,6 @@ jobs:
     <<: *default
     docker:
       - image: cimg/ruby:3.2
-  test-latest:
-    <<: *default
-    docker:
-      - image: circleci/ruby:latest
   upload-coverage:
     <<: *default
     working_directory: ~/repo
@@ -75,7 +71,6 @@ workflows:
       - test-3-0
       - test-3-1
       - test-3-2
-      - test-latest
       - upload-coverage:
           requires:
             - test-2-5
