@@ -5,7 +5,7 @@ jobs:
       - image: cimg/ruby:2.7
     steps:
       - checkout
-      - run: bundle check || bundle install
+      - run: ruby --version && bundle check || bundle install
       - run:
           command: bundle exec rake
       - store_test_results:
