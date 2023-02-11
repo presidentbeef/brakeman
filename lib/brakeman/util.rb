@@ -266,7 +266,22 @@ module Brakeman::Util
   end
 
   def request_env? exp
-    call? exp and (exp == REQUEST_ENV or exp[1] == REQUEST_ENV)
+    return unless sexp? exp
+    return true if exp == REQUEST_ENV
+
+    if exp[1] == REQUEST_ENV
+      if exp.method == :[]
+        if string? exp.first_arg
+          exp.first_arg.value.start_with?('HTTP_'.freeze)
+        else
+          true
+        end
+      else
+        true
+      end
+    else
+      false
+    end
   end
 
   #Check if exp is params, cookies, or request_env
