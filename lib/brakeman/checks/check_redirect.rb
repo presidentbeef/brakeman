@@ -98,8 +98,6 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
     elsif call? opt
       if request_value? opt
         return Match.new(immediate, opt)
-      elsif request_value? opt.target
-        return Match.new(immediate, opt.target)
       elsif opt.method == :url_for and include_user_input? opt.first_arg
         return Match.new(immediate, opt)
         #Ignore helpers like some_model_url?
