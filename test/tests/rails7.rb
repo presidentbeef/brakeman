@@ -5,7 +5,10 @@ class Rails7Tests < Minitest::Test
   include BrakemanTester::CheckExpected
 
   def report
-    @@report ||= BrakemanTester.run_scan "rails7", "Rails 7", :run_all_checks => true
+    @@report ||=
+      Date.stub :today, Date.parse('2023-02-10') do
+        BrakemanTester.run_scan "rails7", "Rails 7", :run_all_checks => true
+      end
   end
 
   def expected
@@ -13,8 +16,14 @@ class Rails7Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 0,
-      :warning => 22
+      :warning => 23
     }
+  end
+
+  def test_ruby_2_7_eol
+    assert_warning check_name: "EOLRuby",
+      message: "Support for Ruby 2.7.0 ends on 2023-03-31 near line 140",
+      fingerprint: "425dcb3af9624f11f12d777d6f9fe05995719975a155c30012baa6b9dc3487df"
   end
 
   def test_missing_encryption_1

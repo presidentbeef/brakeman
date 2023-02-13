@@ -5,7 +5,7 @@ jobs:
       - image: cimg/ruby:2.7
     steps:
       - checkout
-      - run: bundle check || bundle install
+      - run: ruby --version && bundle check || bundle install
       - run:
           command: bundle exec rake
       - store_test_results:
@@ -43,15 +43,15 @@ jobs:
   test-3-0:
     <<: *default
     docker:
-      - image: circleci/ruby:3.0
+      - image: cimg/ruby:3.0
   test-3-1:
     <<: *default
     docker:
       - image: cimg/ruby:3.1
-  test-latest:
+  test-3-2:
     <<: *default
     docker:
-      - image: circleci/ruby:latest
+      - image: cimg/ruby:3.2
   upload-coverage:
     <<: *default
     working_directory: ~/repo
@@ -70,7 +70,7 @@ workflows:
       - test-2-6
       - test-3-0
       - test-3-1
-      - test-latest
+      - test-3-2
       - upload-coverage:
           requires:
             - test-2-5
