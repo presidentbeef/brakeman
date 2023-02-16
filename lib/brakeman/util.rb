@@ -265,9 +265,9 @@ module Brakeman::Util
     false
   end
 
-  def request_env? exp
+  # Only return true when accessing request headers via request.env[...]
+  def request_headers? exp
     return unless sexp? exp
-    return true if exp == REQUEST_ENV
 
     if exp[1] == REQUEST_ENV
       if exp.method == :[]
@@ -284,11 +284,11 @@ module Brakeman::Util
     end
   end
 
-  #Check if exp is params, cookies, or request_env
+  #Check if exp is params, cookies, or request_headers
   def request_value? exp
     params? exp or
     cookies? exp or
-    request_env? exp
+    request_headers? exp
   end
 
   def constant? exp
