@@ -76,7 +76,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
         @has_user_input = Match.new(:params, exp)
       elsif cookies? target
         @has_user_input = Match.new(:cookies, exp)
-      elsif request_env? target
+      elsif request_headers? target
         @has_user_input = Match.new(:request, exp)
       elsif sexp? target and model_name? target[1] #TODO: Can this be target.target?
         @has_user_input = Match.new(:model, exp)
@@ -313,7 +313,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
         return Match.new(:params, exp)
       elsif cookies? exp
         return Match.new(:cookies, exp)
-      elsif request_env? exp
+      elsif request_headers? exp
         return Match.new(:request, exp)
       else
         has_immediate_user_input? exp.target

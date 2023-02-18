@@ -83,7 +83,7 @@ class UtilTests < Minitest::Test
   end
 
   def util
-    Class.new.extend Brakeman::Util
+    @@util ||= Class.new.extend Brakeman::Util
   end
 
   def test_cookies?
@@ -92,6 +92,14 @@ class UtilTests < Minitest::Test
 
   def test_params?
     assert util.params?(@ruby_parser.new.parse 'params[:x][:y][:z]')
+  end
+
+  def test_request_headers?
+    assert util.request_headers?(@ruby_parser.new.parse 'request.env["HTTP_SOMETHING"]')
+    assert util.request_headers?(@ruby_parser.new.parse 'request.env[x]')
+    refute util.request_headers?(@ruby_parser.new.parse 'request.env["omniauth.something"]')
+    refute util.request_headers?(@ruby_parser.new.parse 'request.env')
+    refute util.request_headers?(@ruby_parser.new.parse 'request.env.x')
   end
 
   def test_template_path_to_name_with_views

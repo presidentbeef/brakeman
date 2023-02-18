@@ -265,15 +265,31 @@ module Brakeman::Util
     false
   end
 
-  def request_env? exp
-    call? exp and (exp == REQUEST_ENV or exp[1] == REQUEST_ENV)
+  # Only return true when accessing request headers via request.env[...]
+  def request_headers? exp
+    return unless sexp? exp
+
+    if exp[1] == REQUEST_ENV
+      if exp.method == :[]
+        if string? exp.first_arg
+          # Only care about HTTP headers, which are prefixed by 'HTTP_'
+          exp.first_arg.value.start_with?('HTTP_'.freeze)
+        else
+          true # request.env[something]
+        end
+      else
+        false # request.env.something
+      end
+    else
+      false
+    end
   end
 
-  #Check if exp is params, cookies, or request_env
+  #Check if exp is params, cookies, or request_headers
   def request_value? exp
     params? exp or
     cookies? exp or
-    request_env? exp
+    request_headers? exp
   end
 
   def constant? exp
