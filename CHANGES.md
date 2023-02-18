@@ -4,6 +4,7 @@
 * Add `redirect_back` and `redirect_back_or_to` to open redirect check
 * Support Rails 7 redirect options
 * Add Rails 6.1 and 7.0 default configuration values
+* Prevent redirects using `url_from` being marked as unsafe (Lachlan Sylvester)
 * Warn about unscoped find for `find_by(id: ...)`
 * Support `presence`, `presence_in` and `in?`
 * Fix issue with `if` expressions in `when` clauses
