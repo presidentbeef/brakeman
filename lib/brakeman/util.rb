@@ -272,12 +272,13 @@ module Brakeman::Util
     if exp[1] == REQUEST_ENV
       if exp.method == :[]
         if string? exp.first_arg
+          # Only care about HTTP headers, which are prefixed by 'HTTP_'
           exp.first_arg.value.start_with?('HTTP_'.freeze)
         else
-          true
+          true # request.env[something]
         end
       else
-        true
+        false # request.env.something
       end
     else
       false
