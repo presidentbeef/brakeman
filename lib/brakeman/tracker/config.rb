@@ -129,8 +129,9 @@ module Brakeman
       @rails_version
     end
 
-    def set_ruby_version version
+    def set_ruby_version version, file, line
       @ruby_version = extract_version(version)
+      add_gem :ruby, @ruby_version, file, line
     end
 
     def extract_version version

@@ -22,8 +22,16 @@ class Rails7Tests < Minitest::Test
 
   def test_ruby_2_7_eol
     assert_warning check_name: "EOLRuby",
-      message: "Support for Ruby 2.7.0 ends on 2023-03-31 near line 140",
-      fingerprint: "425dcb3af9624f11f12d777d6f9fe05995719975a155c30012baa6b9dc3487df"
+      type: :warning,
+      warning_code: 123,
+      fingerprint: "425dcb3af9624f11f12d777d6f9fe05995719975a155c30012baa6b9dc3487df",
+      warning_type: "Unmaintained Dependency",
+      line: 230,
+      message: /^Support\ for\ Ruby\ 2\.7\.0\ ends\ on\ 2023\-03\-3/,
+      confidence: 2,
+      relative_path: "Gemfile.lock",
+      code: nil,
+      user_input: nil
   end
 
   def test_missing_encryption_1

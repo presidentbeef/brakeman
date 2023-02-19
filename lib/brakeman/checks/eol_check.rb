@@ -34,7 +34,7 @@ class Brakeman::EOLCheck < Brakeman::BaseCheck
       warning_code: :"pending_eol_#{library}",
       message: msg("Support for ", msg_version(version, library.capitalize), " ends on #{eol_date}"),
       confidence: confidence,
-      gem_info: gemfile_or_environment,
+      gem_info: gemfile_or_environment(library),
       :cwe_id => [1104]
   end
 
@@ -43,7 +43,7 @@ class Brakeman::EOLCheck < Brakeman::BaseCheck
       warning_code: :"eol_#{library}",
       message: msg("Support for ", msg_version(version, library.capitalize), " ended on #{eol_date}"),
       confidence: :high,
-      gem_info: gemfile_or_environment,
+      gem_info: gemfile_or_environment(library),
       :cwe_id => [1104]
   end
 end

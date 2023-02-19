@@ -56,7 +56,7 @@ class Brakeman::GemProcessor < Brakeman::BasicProcessor
       elsif exp.method == :ruby
         version = exp.first_arg
         if string? version
-          @tracker.config.set_ruby_version version.value
+          @tracker.config.set_ruby_version version.value, @gemfile, exp.line
         end
       end
     elsif @inside_gemspec and exp.method == :add_dependency
@@ -97,7 +97,7 @@ class Brakeman::GemProcessor < Brakeman::BasicProcessor
     if line =~ @gem_name_version
       @tracker.config.add_gem $1, $2, file, line_num
     elsif line =~ @ruby_version
-      @tracker.config.set_ruby_version $1
+      @tracker.config.set_ruby_version $1, file, line_num
     end
   end
 end
