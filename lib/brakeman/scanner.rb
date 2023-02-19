@@ -138,7 +138,7 @@ class Brakeman::Scanner
 
     if @app_tree.exists? ".ruby-version"
       if version = @app_tree.file_path(".ruby-version").read[/(\d\.\d.\d+)/]
-        tracker.config.set_ruby_version version
+        tracker.config.set_ruby_version version, @app_tree.file_path(".ruby-version"), 1
       end
     end
 
