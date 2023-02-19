@@ -6,7 +6,7 @@ require 'brakeman/differ'
 class Brakeman::Rescanner < Brakeman::Scanner
  include Brakeman::Util
   KNOWN_TEMPLATE_EXTENSIONS = Brakeman::TemplateParser::KNOWN_TEMPLATE_EXTENSIONS
-  SCAN_ORDER = [:config, :gemfile, :initializer, :lib, :routes, :template,
+  SCAN_ORDER = [:gemfile, :config, :initializer, :lib, :routes, :template,
     :model, :controller]
 
   #Create new Rescanner to scan changed files
@@ -331,6 +331,8 @@ class Brakeman::Rescanner < Brakeman::Scanner
     when /config\/routes\.rb/
       :routes
     when /\/config\/.+\.(rb|yml)/
+      :config
+    when /\.ruby-version/
       :config
     when /Gemfile|gems\./
       :gemfile

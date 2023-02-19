@@ -214,7 +214,7 @@ module BrakemanTester::RescanTestHelper
 
   #Check how many new warnings were reported
   def assert_new expected
-    assert_equal expected, new.length, "Expected #{expected} new warnings, but found #{new.length}"
+    assert_equal expected, new.length, lambda { "Expected #{expected} new warnings, but found #{new.length}:\n#{new.map {|w| "\t#{w.message} #{w.file}" }.join("\n")}" }
   end
 
   #Check how many existing warnings were reported

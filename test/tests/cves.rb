@@ -252,7 +252,9 @@ class CVETests < Minitest::Test
   end
 
   def test_CVE_2018_3760_sprockets
-    before_rescan_of ["Gemfile.lock", "config/environments/production.rb"], "rails5.2" do
+    # Have to include `.ruby-version` otherwise it changes the EOL Ruby warning
+    # because the warning will point at Gemfile.lock instead of .ruby-version
+    before_rescan_of [".ruby-version", "Gemfile.lock", "config/environments/production.rb"], "rails5.2" do
       replace "Gemfile.lock", "sprockets (3.7.1)", "sprockets (4.0.0.beta2)"
       replace "config/environments/production.rb", "config.assets.compile = false", "config.assets.compile = true"
     end
@@ -262,7 +264,7 @@ class CVETests < Minitest::Test
   end
 
   def test_CVE_2018_8048_exact_fix_version
-    before_rescan_of "Gemfile.lock", "rails5.2" do
+    before_rescan_of [".ruby-version", "Gemfile.lock"], "rails5.2" do
       replace "Gemfile.lock", "loofah (2.1.1)", "loofah (2.2.1)"
     end
 
@@ -271,7 +273,7 @@ class CVETests < Minitest::Test
   end
 
   def test_CVE_2018_8048_newer_version
-    before_rescan_of "Gemfile.lock", "rails5.2" do
+    before_rescan_of [".ruby-version", "Gemfile.lock"], "rails5.2" do
       replace "Gemfile.lock", "loofah (2.1.1)", "loofah (2.10.1)"
     end
 
@@ -349,7 +351,7 @@ class CVETests < Minitest::Test
 
   def test_CVE_2020_8166
     Date.stub :today, Date.parse('2021-04-05') do
-      before_rescan_of "Gemfile.lock", "rails5.2" do
+      before_rescan_of [".ruby-version", "Gemfile.lock"], "rails5.2" do
         replace "Gemfile.lock", " rails (5.2.0.beta2)", " rails (5.2.4.3)"
       end
     end
