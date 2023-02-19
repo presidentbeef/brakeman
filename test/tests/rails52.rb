@@ -658,16 +658,18 @@ class Rails52Tests < Minitest::Test
       :relative_path => "lib/shell.rb"
   end
 
-  def test_unmaintained_dependency_rails
+  def test_unmaintained_dependency_ruby
     assert_warning check_name: "EOLRuby",
       type: :warning,
       warning_code: 121,
-      fingerprint: "9a3951031616a07c8e02c86652f537e92c08685da97f5ec2b12d5d3602b55bb8",
+      fingerprint: "edf687f759ec9765bd5db185dbc615c80af77d6e7e19386fc42934e7a80307af",
       warning_type: "Unmaintained Dependency",
-      line: 109,
+      line: 1,
       message: /^Support\ for\ Ruby\ 2\.3\.1\ ended\ on\ 2019\-03\-/,
       confidence: 0,
-      relative_path: "Gemfile.lock"
+      relative_path: ".ruby-version",
+      code: nil,
+      user_input: nil
   end
 end
 

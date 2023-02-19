@@ -780,7 +780,7 @@ class Rails6Tests < Minitest::Test
       warning_code: 121,
       fingerprint: "81776f151be34b9c42a5fc3bec249507a2acd9b64338e6f544a68559976bc5d5",
       warning_type: "Unmaintained Dependency",
-      line: 7,
+      line: 4,
       message: /^Support\ for\ Ruby\ 2\.5\.3\ ended\ on\ 2021\-03\-/,
       confidence: 0,
       relative_path: "Gemfile"
