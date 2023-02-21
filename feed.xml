@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2023-02-21T09:42:09-08:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 5.4.1 Released</title><link href="https://brakemanscanner.org/blog/2023/02/21/brakeman-5-dot-4-dot-1-released" rel="alternate" type="text/html" title="Brakeman 5.4.1 Released" /><published>2023-02-21T08:30:00-08:00</published><updated>2023-02-21T08:30:00-08:00</updated><id>https://brakemanscanner.org/blog/2023/02/21/brakeman-5-dot-4-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2023/02/21/brakeman-5-dot-4-dot-1-released">&lt;p&gt;Several changes in this release are updates to Brakeman’s open redirect check.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2023-02-21T09:47:06-08:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 5.4.1 Released</title><link href="https://brakemanscanner.org/blog/2023/02/21/brakeman-5-dot-4-dot-1-released" rel="alternate" type="text/html" title="Brakeman 5.4.1 Released" /><published>2023-02-21T08:30:00-08:00</published><updated>2023-02-21T08:30:00-08:00</updated><id>https://brakemanscanner.org/blog/2023/02/21/brakeman-5-dot-4-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2023/02/21/brakeman-5-dot-4-dot-1-released">&lt;p&gt;Several changes in this release are updates to Brakeman’s open redirect check.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 5.4.0:&lt;/em&gt;&lt;/p&gt;
 
@@ -62,6 +62,11 @@ This protection can be bypassed by passing in &lt;code class=&quot;highlighter-r
 &lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
 
 &lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dc664d4b5d01dd81608db02ec9b7c383beb65a3169049df2939c4bbbd4edfb73  brakeman-5.4.1.gem
+c1bf7e4cec5bde1d53122b41743343d3e38e4aa30145707b902278dd3b588fd4  brakeman-lib-5.4.1.gem
+94d24f3ea881bfc213ead8fbf3568aa37b301272ccbecf383394c9d7d7f43eeb  brakeman-min-5.4.1.gem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
 
