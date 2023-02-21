@@ -105,10 +105,33 @@ redirect_to params.merge(:host =&gt; 'myhost.com')
 
 <p>If the first argument is a string, then it is possible to parse the string and extract the path:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to URI.parse(some_url).path 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to URI.parse(some_url).path
 </code></pre></div></div>
 
-<p>If the URL does not contain a protocol (e.g., <code class="highlighter-rouge">http://</code>), then you will probably get unexpected results, as <code class="highlighter-rouge">redirect_to</code> will prepend the current host name and a protocol.</p>
+<p><strong>If the URL does not contain a protocol (e.g., <code class="highlighter-rouge">http://</code>), then you will probably get unexpected results, as <code class="highlighter-rouge">redirect_to</code> will prepend the current host name and a protocol.</strong></p>
+
+<h3 id="rails-7-updates">Rails 7 Updates</h3>
+
+<p>If <code class="highlighter-rouge">config.action_controller.raise_on_open_redirects</code> is <code class="highlighter-rouge">true</code> (default for <em>new</em> Rails 7.0 applications), then Rails will not allow redirecting to a domain that differs from the request.</p>
+
+<p>Even if the configuration setting is not <code class="highlighter-rouge">true</code>, the protection can be applied by setting <code class="highlighter-rouge">allow_other_host: false</code> explicitly:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to params[:url], allow_other_host: false
+</code></pre></div></div>
+
+<p>The code above will raise an exception if <code class="highlighter-rouge">params[:url]</code> does not match the current domain.</p>
+
+<p>Brakeman will warn about calls where <code class="highlighter-rouge">allow_other_host</code> is set to <code class="highlighter-rouge">true</code>.</p>
+
+<p>To coerce the URL to be “safe”, use <a href="https://api.rubyonrails.org/v7.0/classes/ActionController/Redirecting.html#method-i-url_from"><code class="highlighter-rouge">url_from</code></a>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to url_from(params[:url])
+</code></pre></div></div>
+
+<p>If the URL is does not match the current domain, then <code class="highlighter-rouge">url_from</code> returns <code class="highlighter-rouge">false</code>. The recommended pattern is to provide a fallback:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to url_from(params[:url]) || some_safe_default_url
+</code></pre></div></div>
 
 <hr />
 <p>Back to <a href="/docs/warning_types">Warning Types</a></p>
@@ -156,6 +179,10 @@ redirect_to params.merge(:host =&gt; 'myhost.com')
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2023/02/21/brakeman-5-dot-4-dot-1-released">Brakeman 5.4.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">Brakeman 5.4.0 Released</a>
       </li>
     
@@ -169,10 +196,6 @@ redirect_to params.merge(:host =&gt; 'myhost.com')
     
       <li class="post">
         <a href="/blog/2022/04/06/brakeman-5-dot-2-dot-2-released">Brakeman 5.2.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2022/01/30/5-dot-2-dot-1-released">Brakeman 5.2.1 Released</a>
       </li>
     
   </ul>

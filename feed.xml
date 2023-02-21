@@ -1,4 +1,75 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2023-01-09T16:02:38-08:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 5.4.0 Released</title><link href="https://brakemanscanner.org/blog/2022/11/17/brakeman-5-dot-4-dot-0-released" rel="alternate" type="text/html" title="Brakeman 5.4.0 Released" /><published>2022-11-17T21:30:00-08:00</published><updated>2022-11-17T21:30:00-08:00</updated><id>https://brakemanscanner.org/blog/2022/11/17/brakeman-5-dot-4-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">&lt;p&gt;Special thanks to &lt;a href=&quot;https://github.com/bdewater&quot;&gt;Bart de Water&lt;/a&gt; and &lt;a href=&quot;https://github.com/tehryanx&quot;&gt;Ryan Cartner&lt;/a&gt; for proposing new rules!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2023-02-21T09:42:09-08:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 5.4.1 Released</title><link href="https://brakemanscanner.org/blog/2023/02/21/brakeman-5-dot-4-dot-1-released" rel="alternate" type="text/html" title="Brakeman 5.4.1 Released" /><published>2023-02-21T08:30:00-08:00</published><updated>2023-02-21T08:30:00-08:00</updated><id>https://brakemanscanner.org/blog/2023/02/21/brakeman-5-dot-4-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2023/02/21/brakeman-5-dot-4-dot-1-released">&lt;p&gt;Several changes in this release are updates to Brakeman’s open redirect check.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 5.4.0:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Add Rails 6.1 and 7.0 default configuration values&lt;/li&gt;
+  &lt;li&gt;Support Rails 7 redirect options&lt;/li&gt;
+  &lt;li&gt;Add &lt;code class=&quot;highlighter-rouge&quot;&gt;redirect_back&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;redirect_back_or_to&lt;/code&gt; to open redirect check&lt;/li&gt;
+  &lt;li&gt;Revise checking for &lt;code class=&quot;highlighter-rouge&quot;&gt;request.env&lt;/code&gt; to only consider request headers&lt;/li&gt;
+  &lt;li&gt;Prevent redirects using &lt;code class=&quot;highlighter-rouge&quot;&gt;url_from&lt;/code&gt; being marked as unsafe (&lt;a href=&quot;https://github.com/lsylvester&quot;&gt;Lachlan Sylvester&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Warn about unscoped find for &lt;code class=&quot;highlighter-rouge&quot;&gt;find_by(id: ...)&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Support &lt;code class=&quot;highlighter-rouge&quot;&gt;presence&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;presence_in&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;in?&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1569&quot;&gt;#1569&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Fix issue with &lt;code class=&quot;highlighter-rouge&quot;&gt;if&lt;/code&gt; expressions in &lt;code class=&quot;highlighter-rouge&quot;&gt;when&lt;/code&gt; clauses (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1743&quot;&gt;#1743&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Fix file/line location for EOL software warnings&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;rails-61-and-rails-70-defaults&quot;&gt;Rails 6.1 and Rails 7.0 Defaults&lt;/h3&gt;
+
+&lt;p&gt;The default configuration values for Rails 6.1 and Rails 7.0 have been added to Brakeman.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1751&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;open-redirect-updates&quot;&gt;Open Redirect Updates&lt;/h3&gt;
+
+&lt;p&gt;Rails 7 introduced a new protection against open directs.&lt;/p&gt;
+
+&lt;p&gt;If &lt;code class=&quot;highlighter-rouge&quot;&gt;config.action_controller.raise_on_open_redirects&lt;/code&gt; is set to &lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;, then Rails prevents redirects that redirect to a different domain than &lt;code class=&quot;highlighter-rouge&quot;&gt;request.host&lt;/code&gt;.
+This protection can be bypassed by passing in &lt;code class=&quot;highlighter-rouge&quot;&gt;allow_other_host: true&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;redirect_to&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1755&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/lsylvester&quot;&gt;Lachlan Sylvester&lt;/a&gt; pointed out it’s also possible to use &lt;code class=&quot;highlighter-rouge&quot;&gt;url_from&lt;/code&gt; to ensure a URL is for the same host. So &lt;code class=&quot;highlighter-rouge&quot;&gt;redirect_to(url_from(params[:url]))&lt;/code&gt; is safe.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1749&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;This release also expands the open redirect check to &lt;code class=&quot;highlighter-rouge&quot;&gt;redirect_back&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;redirect_back_or_to&lt;/code&gt; which have options for a fallback URL.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1756&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;more-unscoped-finds&quot;&gt;More Unscoped Finds&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will now warn about use of &lt;code class=&quot;highlighter-rouge&quot;&gt;find_by(id: ...)&lt;/code&gt; the same way it would warn about &lt;code class=&quot;highlighter-rouge&quot;&gt;find_by_id&lt;/code&gt; for “unscoped finds” (i.e., possible insecure direct object references).&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1748&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;presence-method-support&quot;&gt;Presence Method Support&lt;/h3&gt;
+
+&lt;p&gt;Brakeman now handles &lt;code class=&quot;highlighter-rouge&quot;&gt;presence&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;presence_in&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;in?&lt;/code&gt; methods.&lt;/p&gt;
+
+&lt;p&gt;Since &lt;code class=&quot;highlighter-rouge&quot;&gt;presence_in&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;in?&lt;/code&gt; are often used for guard clauses, this fixes some false positives.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1747&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;fileline-for-end-of-life-warnings&quot;&gt;File/Line for End-Of-Life Warnings&lt;/h3&gt;
+
+&lt;p&gt;March is nearly here, which means support for Ruby 2.7 is ending!&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/jburns42891&quot;&gt;Jon Burns&lt;/a&gt; for pointing out Brakeman was reporting the wrong file and/or line number for EOL Ruby warnings.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1761&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Several changes in this release are updates to Brakeman’s open redirect check.</summary></entry><entry><title type="html">Brakeman 5.4.0 Released</title><link href="https://brakemanscanner.org/blog/2022/11/17/brakeman-5-dot-4-dot-0-released" rel="alternate" type="text/html" title="Brakeman 5.4.0 Released" /><published>2022-11-17T21:30:00-08:00</published><updated>2022-11-17T21:30:00-08:00</updated><id>https://brakemanscanner.org/blog/2022/11/17/brakeman-5-dot-4-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">&lt;p&gt;Special thanks to &lt;a href=&quot;https://github.com/bdewater&quot;&gt;Bart de Water&lt;/a&gt; and &lt;a href=&quot;https://github.com/tehryanx&quot;&gt;Ryan Cartner&lt;/a&gt; for proposing new rules!&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 5.3.1:&lt;/em&gt;&lt;/p&gt;
 
@@ -673,75 +744,4 @@ e38ff386530bc5585e2efd183ba73c08abb740c3b26072662025a3d9395b707a  brakeman-min-5
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">This is a tiny bugfix release!</summary></entry><entry><title type="html">Brakeman 5.0.1 Released</title><link href="https://brakemanscanner.org/blog/2021/04/27/brakeman-5-dot-0-dot-1-released" rel="alternate" type="text/html" title="Brakeman 5.0.1 Released" /><published>2021-04-27T12:00:00-07:00</published><updated>2021-04-27T12:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2021/04/27/brakeman-5-dot-0-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2021/04/27/brakeman-5-dot-0-dot-1-released">&lt;p&gt;Has it really been three months since Brakeman 5.0? Yikes!&lt;/p&gt;
-
-&lt;p&gt;Here’s a small update with some bugfixes before we move on to 5.1.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 5.0.0:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Support loading &lt;code class=&quot;highlighter-rouge&quot;&gt;slim/smart&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1570&quot;&gt;#1570&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Set more line numbers on Sexps (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1579&quot;&gt;#1579&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Detect &lt;code class=&quot;highlighter-rouge&quot;&gt;::Rails.application.configure&lt;/code&gt; too (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1584&quot;&gt;#1584&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Always ignore &lt;code class=&quot;highlighter-rouge&quot;&gt;slice&lt;/code&gt;/&lt;code class=&quot;highlighter-rouge&quot;&gt;only&lt;/code&gt; calls for mass assignment&lt;/li&gt;
-  &lt;li&gt;Don’t fail if $HOME/$USER are not defined&lt;/li&gt;
-  &lt;li&gt;Convert splat array arguments to arguments&lt;/li&gt;
-  &lt;li&gt;Bundle unreleased RubyParser changes&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;support-smart-text-in-slim-templates&quot;&gt;Support Smart Text in Slim Templates&lt;/h3&gt;
-
-&lt;p&gt;In order to support “&lt;a href=&quot;https://github.com/slim-template/slim/blob/master/doc/smart.md&quot;&gt;Smart Text&lt;/a&gt;” in Slim templates,
-Brakeman will load &lt;code class=&quot;highlighter-rouge&quot;&gt;slim/smart&lt;/code&gt; if &lt;code class=&quot;highlighter-rouge&quot;&gt;slim/smart&lt;/code&gt; is mentioned in the &lt;code class=&quot;highlighter-rouge&quot;&gt;Gemfile&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1582&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;more-line-numbers&quot;&gt;More Line Numbers&lt;/h3&gt;
-
-&lt;p&gt;Setting &lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt; value for the line number of a Sexp raises an exception.&lt;/p&gt;
-
-&lt;p&gt;This is usually from creating a Sexp without a line number in the first place.&lt;/p&gt;
-
-&lt;p&gt;More instances of this have been fixed in this release.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1581&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;always-ignore-sliceonly-for-mass-assignment&quot;&gt;Always Ignore slice/only for Mass Assignment&lt;/h3&gt;
-
-&lt;p&gt;If &lt;code class=&quot;highlighter-rouge&quot;&gt;slice&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;only&lt;/code&gt; are called for arguments to mass assignment (e.g. &lt;code class=&quot;highlighter-rouge&quot;&gt;User.new(some_hash.slice(:name, :email))&lt;/code&gt;),
-Brakeman will not warn about mass assignment.&lt;/p&gt;
-
-&lt;p&gt;These have been ignored for a while, but a logic error caused Brakeman to sometimes still warn about them.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1565&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;convert-splats-to-arguments&quot;&gt;Convert Splats to Arguments&lt;/h3&gt;
-
-&lt;p&gt;In really obvious cases like&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;some_call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Brakeman will convert the arguments to&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;some_call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1564&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
-
-&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;4c1b7c7747ecfca11a822a4bab5ad05f13515e195d7d34590d3add215573b431  brakeman-5.0.1.gem
-79129c2977936113fc87a9a2e9490b734f088286d0b33ed9ca61cb6587dc18c7  brakeman-lib-5.0.1.gem
-549034d7aeb2a5ca8fe299c41b91938d502a89e70a1afa68643ca3c9e5ccaf96  brakeman-min-5.0.1.gem
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Has it really been three months since Brakeman 5.0? Yikes!</summary></entry></feed>
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">This is a tiny bugfix release!</summary></entry></feed>

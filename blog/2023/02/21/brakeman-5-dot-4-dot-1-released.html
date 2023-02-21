@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Brakeman 4.6.1 Released</title>
+  <title>Brakeman: Brakeman 5.4.1 Released</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,7 +15,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="https://brakemanscanner.org/blog/2019/07/24/brakeman-4-dot-6-dot-1-released"/>
+  <link rel="canonical" href="https://brakemanscanner.org/blog/2023/02/21/brakeman-5-dot-4-dot-1-released"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -34,7 +34,7 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Brakeman 4.6.1 Released" />
+<meta name="twitter:title" content="Brakeman - Brakeman 5.4.1 Released" />
 <meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
 <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 
@@ -77,7 +77,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 4.6.1 Released</h1>
+      <h1 class="entry-title">Brakeman 5.4.1 Released</h1>
     
     
       <p class="meta">
@@ -85,7 +85,7 @@
 
 
 
-<time datetime="2019-07-24 09:14:00 -0700" pubdate  updated >2019-07-24 09:14:00 -0700</time>
+<time datetime="2023-02-21 08:30:00 -0800" pubdate  updated >2023-02-21 08:30:00 -0800</time>
 
 
 </p>
@@ -93,22 +93,70 @@
   </header>
 
 
-<div class="entry-content"><p>This release corrects a typo in the reverse tabnabbing warning message.</p>
+<div class="entry-content"><p>Several changes in this release are updates to Brakeman’s open redirect check.</p>
 
-<p><em>Changes since 4.6.0:</em></p>
+<p><em>Changes since 5.4.0:</em></p>
 
 <ul>
-  <li>Fix Reverse Tabnabbing warning message (<a href="https://github.com/stsc3000">Steffen Schildknecht</a> / <a href="https://github.com/joergschiller">Jörg Schiller</a>)</li>
+  <li>Add Rails 6.1 and 7.0 default configuration values</li>
+  <li>Support Rails 7 redirect options</li>
+  <li>Add <code class="highlighter-rouge">redirect_back</code> and <code class="highlighter-rouge">redirect_back_or_to</code> to open redirect check</li>
+  <li>Revise checking for <code class="highlighter-rouge">request.env</code> to only consider request headers</li>
+  <li>Prevent redirects using <code class="highlighter-rouge">url_from</code> being marked as unsafe (<a href="https://github.com/lsylvester">Lachlan Sylvester</a>)</li>
+  <li>Warn about unscoped find for <code class="highlighter-rouge">find_by(id: ...)</code></li>
+  <li>Support <code class="highlighter-rouge">presence</code>, <code class="highlighter-rouge">presence_in</code> and <code class="highlighter-rouge">in?</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1569">#1569</a>)</li>
+  <li>Fix issue with <code class="highlighter-rouge">if</code> expressions in <code class="highlighter-rouge">when</code> clauses (<a href="https://github.com/presidentbeef/brakeman/issues/1743">#1743</a>)</li>
+  <li>Fix file/line location for EOL software warnings</li>
 </ul>
+
+<h3 id="rails-61-and-rails-70-defaults">Rails 6.1 and Rails 7.0 Defaults</h3>
+
+<p>The default configuration values for Rails 6.1 and Rails 7.0 have been added to Brakeman.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1751">changes</a>)</p>
+
+<h3 id="open-redirect-updates">Open Redirect Updates</h3>
+
+<p>Rails 7 introduced a new protection against open directs.</p>
+
+<p>If <code class="highlighter-rouge">config.action_controller.raise_on_open_redirects</code> is set to <code class="highlighter-rouge">true</code>, then Rails prevents redirects that redirect to a different domain than <code class="highlighter-rouge">request.host</code>.
+This protection can be bypassed by passing in <code class="highlighter-rouge">allow_other_host: true</code> to <code class="highlighter-rouge">redirect_to</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1755">changes</a>)</p>
+
+<p><a href="https://github.com/lsylvester">Lachlan Sylvester</a> pointed out it’s also possible to use <code class="highlighter-rouge">url_from</code> to ensure a URL is for the same host. So <code class="highlighter-rouge">redirect_to(url_from(params[:url]))</code> is safe.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1749">changes</a>)</p>
+
+<p>This release also expands the open redirect check to <code class="highlighter-rouge">redirect_back</code> and <code class="highlighter-rouge">redirect_back_or_to</code> which have options for a fallback URL.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1756">changes</a>)</p>
+
+<h3 id="more-unscoped-finds">More Unscoped Finds</h3>
+
+<p>Brakeman will now warn about use of <code class="highlighter-rouge">find_by(id: ...)</code> the same way it would warn about <code class="highlighter-rouge">find_by_id</code> for “unscoped finds” (i.e., possible insecure direct object references).</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1748">changes</a>)</p>
+
+<h3 id="presence-method-support">Presence Method Support</h3>
+
+<p>Brakeman now handles <code class="highlighter-rouge">presence</code>, <code class="highlighter-rouge">presence_in</code>, and <code class="highlighter-rouge">in?</code> methods.</p>
+
+<p>Since <code class="highlighter-rouge">presence_in</code> and <code class="highlighter-rouge">in?</code> are often used for guard clauses, this fixes some false positives.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1747">changes</a>)</p>
+
+<h3 id="fileline-for-end-of-life-warnings">File/Line for End-Of-Life Warnings</h3>
+
+<p>March is nearly here, which means support for Ruby 2.7 is ending!</p>
+
+<p>Thanks to <a href="https://github.com/jburns42891">Jon Burns</a> for pointing out Brakeman was reporting the wrong file and/or line number for EOL Ruby warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1761">changes</a>)</p>
 
 <h3 id="checksums">Checksums</h3>
 
 <p>The SHA256 sums for this release are:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>6e31f8c8dbdea7b198c591d44b73aee067cca5612db191fe04d8d8c2a8eb9011  brakeman-4.6.1.gem
-6879d5175e5f20bf5ac1bd20dad0ef9a1e4c72d9774114d752b19c7e7d7d69fc  brakeman-lib-4.6.1.gem
-72a0ef7b91b11bea925b365645096a186ec3929024066792957006c46355560e  brakeman-min-4.6.1.gem
-</code></pre></div></div>
 
 <h3 id="reporting-issues">Reporting Issues</h3>
 
@@ -116,8 +164,7 @@
 
 <p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
 
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
 </div>
 
 
@@ -131,7 +178,7 @@
 
 
 
-<time datetime="2019-07-24 09:14:00 -0700" pubdate  updated >2019-07-24 09:14:00 -0700</time>
+<time datetime="2023-02-21 08:30:00 -0800" pubdate  updated >2023-02-21 08:30:00 -0800</time>
 
 
 

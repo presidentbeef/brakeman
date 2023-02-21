@@ -80,6 +80,90 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2016/08/12/brakeman-3-dot-3-4-released">Brakeman 3.3.4/3.3.5 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2016-08-12 08:26:00 -0700" pubdate  updated >2016-08-12 08:26:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a quick release to add warnings for <a href="https://groups.google.com/d/msg/ruby-security-ann/8B2iV2tPRSE/JkjCJkSoCgAJ">CVE-2016-6316</a> and <a href="https://groups.google.com/d/msg/ruby-security-ann/WccgKSKiPZA/9DrsDVSoCgAJ">CVE-2016-6317</a>. There was a bug in 3.3.4 that affected debug output which has been fixed in 3.3.5.</p>
+
+<p><em>Changes since 3.3.3</em>:</p>
+
+<ul>
+  <li>Add generic warning for CVE-2016-6316</li>
+  <li>Warn about dangerous use of <code class="highlighter-rouge">content_tag</code> with CVE-2016-6316</li>
+  <li>Add warning for CVE-2016-6317</li>
+  <li>Use Minitest</li>
+</ul>
+
+<p><em>Changes since 3.3.4</em>:</p>
+
+<ul>
+  <li>Fix bug in reports when using <code class="highlighter-rouge">--debug</code></li>
+</ul>
+
+<h3 id="cve-2016-6316">CVE-2016-6316</h3>
+
+<p>Typically Rails will escape attribute values passed to tag helpers like <code class="highlighter-rouge">content_tag</code>. If the attribute has already been marked as “safe” with <code class="highlighter-rouge">.html_safe</code> or (more likely) a different escaping helper like <code class="highlighter-rouge">sanitize</code>, the tag helper will not escape the value again (that is the purpose of <code class="highlighter-rouge">.html_safe</code>). However, not all sanitizers/escape methods escape double quotes, which are dangerous inside of tag attributes. In particular, double quotes allow an attacker to close the current attribute and insert new attributes (like <code class="highlighter-rouge">onmouseover</code>) that can execute JavaScript.</p>
+
+<p>Brakeman will issue a generic warning about CVE-2016-6316 for affected versions and may generate warnings for potentially dangerous calls to <code class="highlighter-rouge">content_tag</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/917">changes</a>)</p>
+
+<h3 id="cve-2016-6317">CVE-2016-6317</h3>
+
+<p>The <a href="https://groups.google.com/d/msg/rubyonrails-security/8SA-M3as7A8/Mr9fi9X4kNgJ">JSON bug</a> is back. Specially-crafted queries can cause parameters to be interpreted as empty hashes, which may cause unexpected behavior in SQL queries.</p>
+
+<p>Brakeman will generate a generic warning for affected versions (4.2 series).</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/918">changes</a>)</p>
+
+<h3 id="minitest">Minitest</h3>
+
+<p>Unrelated, Brakeman now uses Minitest instead of test-unit.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/912/">changes</a>)</p>
+
+<h3 id="shas">SHAs</h3>
+
+<p>The SHA256 sums for this release are</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7231e00bdb4353ee7e91e5f1e60e34cf29b5563e6f7e1e5478223e72568c493a  brakeman-3.3.5.gem
+c07e282c2e1733f8d7db4a4ffefe22e7e38a62ddfd750f0866c0b49070cb61c9  brakeman-lib-3.3.5.gem
+a7f8e6fa8eb4254b7ad17080180289794a02641b1f2ec362de57cfdb2f1535be  brakeman-min-3.3.5.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs.</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2016/07/20/brakeman-3-dot-3-3-released">Brakeman 3.3.3 Released</a></h1>
     
     
@@ -530,58 +614,6 @@ f1adce1a696799342dc9f50b51975024060360dc9018358c5d8e34c1c4681bd1  brakeman-min-3
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2016/02/24/brakeman-3-dot-2-1-released">Brakeman 3.2.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2016-02-24 21:36:00 -0800" pubdate  updated >2016-02-24 21:36:00 -0800</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Changes since 3.2.0</em>:</p>
-
-<ul>
-  <li>Remove <code class="highlighter-rouge">multi_json</code> dependency from <code class="highlighter-rouge">bin/brakeman</code></li>
-</ul>
-
-<p>As pointed out by <a href="https://github.com/bf4">Benjamin Fleischer</a>, there was a lingering use of <code class="highlighter-rouge">multi_json</code> in <code class="highlighter-rouge">bin/brakeman</code>. This only caused a problem when using the <code class="highlighter-rouge">--compare</code> option.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/831">changes</a>)</p>
-
-<h3 id="shas">SHAs</h3>
-
-<p>The SHA256 sums for this release are</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4a7e7a6e9ad9fed22f727fb8d471de145f55d97465b4dfb4935e3e8379667425  brakeman-min-3.2.1.gem
-901202b04b1cae0a781b5a6bae2db3eecd35e9f0a044fbfaa31cac63ab636449  brakeman-3.2.1.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion. Please note the mailing list is no longer in use and has apparently not been delivering mail for some time.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -620,6 +652,10 @@ f1adce1a696799342dc9f50b51975024060360dc9018358c5d8e34c1c4681bd1  brakeman-min-3
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2023/02/21/brakeman-5-dot-4-dot-1-released">Brakeman 5.4.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">Brakeman 5.4.0 Released</a>
       </li>
     
@@ -633,10 +669,6 @@ f1adce1a696799342dc9f50b51975024060360dc9018358c5d8e34c1c4681bd1  brakeman-min-3
     
       <li class="post">
         <a href="/blog/2022/04/06/brakeman-5-dot-2-dot-2-released">Brakeman 5.2.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2022/01/30/5-dot-2-dot-1-released">Brakeman 5.2.1 Released</a>
       </li>
     
   </ul>

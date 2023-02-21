@@ -80,6 +80,137 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2019/05/11/4-dot-5-1-released">Brakeman 4.5.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2019-05-11 13:14:00 -0700" pubdate  updated >2019-05-11 13:14:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release adds initial support for Rails 6!</p>
+
+<p><em>Changes since 4.5.0:</em></p>
+
+<ul>
+  <li>Add initial Rails 6 support</li>
+  <li>Add optional check for <code class="highlighter-rouge">config.force_ssl</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1181">#1181</a>)</li>
+  <li>Add deserialization warning for <code class="highlighter-rouge">Oj.load/object_load</code></li>
+  <li>Add SQL injection checks for <code class="highlighter-rouge">destroy_by</code>/<code class="highlighter-rouge">delete_by</code></li>
+  <li>Add SQL injection checks for <code class="highlighter-rouge">find_or_create_by</code> and friends</li>
+  <li>Check <code class="highlighter-rouge">link_to</code> with block for href XSS (<a href="https://github.com/presidentbeef/brakeman/issues/1339">#1339</a>)</li>
+  <li>Convert <code class="highlighter-rouge">!!</code> calls to boolean value (<a href="https://github.com/presidentbeef/brakeman/issues/1343">#1343</a>)</li>
+  <li>Use relative paths for <code class="highlighter-rouge">__FILE__</code></li>
+  <li>Represent file paths internally as <code class="highlighter-rouge">Brakeman::FilePath</code></li>
+  <li>Handle empty partial names</li>
+  <li>Handle trailing comma in block args</li>
+  <li>Remove code for Ruby versions prior to 1.9</li>
+</ul>
+
+<h3 id="initial-rails-6-support">Initial Rails 6 Support</h3>
+
+<p>Rails 6 is (almost?) here!</p>
+
+<p>This release adds basic support internally for Rails 6 as well as the <code class="highlighter-rouge">-6</code> option to force Rails 6 mode.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1335">changes</a>)</p>
+
+<h3 id="optional-check-for-force-ssl-option">Optional Check for Force SSL Option</h3>
+
+<p>In Rails, <code class="highlighter-rouge">config.force_ssl = true</code> turns on HSTS, redirects HTTP to HTTPS, and sets the <code class="highlighter-rouge">secure</code> flag on all cookies.</p>
+
+<p>A new optional check has been added to check if this option is enabled.</p>
+
+<p>To enable this new check, use <code class="highlighter-rouge">-A</code> or <code class="highlighter-rouge">--enable ForceSSL</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1344">changes</a>)</p>
+
+<h3 id="deserialization-with-oj">Deserialization with Oj</h3>
+
+<p>The deserialization check now looks for unsafe use of the <code class="highlighter-rouge">Oj</code> JSON library.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1334">changes</a>)</p>
+
+<h3 id="new-sql-injection-sinks">New SQL Injection Sinks</h3>
+
+<p>The SQL injection check has been expanded to check for unsafe use of <code class="highlighter-rouge">destroy_by</code>/<code class="highlighter-rouge">delete_by</code> (new in Rails 6) and <code class="highlighter-rouge">find_or_create_by</code> and related methods.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1337">changes</a>)</p>
+
+<h3 id="link_to-with-block"><code class="highlighter-rouge">link_to</code> with Block</h3>
+
+<p>Brakeman now checks <code class="highlighter-rouge">link_to</code> calls with blocks for <code class="highlighter-rouge">javascript:</code> links.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1340">changes</a>)</p>
+
+<h3 id="convert--to-boolean">Convert <code class="highlighter-rouge">!!</code> to Boolean</h3>
+
+<p>Use of <code class="highlighter-rouge">!!</code> to convert values to booleans will be treated as safe (turned into <code class="highlighter-rouge">true or false</code>).</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1345">changes</a>)</p>
+
+<h3 id="relative-path-for-__file__">Relative Path for <code class="highlighter-rouge">__FILE__</code></h3>
+
+<p>When ruby_parser parses <code class="highlighter-rouge">__FILE__</code>, it replaces it with the name of the current file. Unfortunately, Brakeman was passing in absolute paths for the current file.
+This meant that the fingerprints for warnings including <code class="highlighter-rouge">__FILE__</code> would vary based on the path where the code was scanned.</p>
+
+<p>Now a relative path is used instead, so fingerprints should stabilize.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1347">changes</a>)</p>
+
+<h3 id="brakemanfilepath"><code class="highlighter-rouge">Brakeman::FilePath</code></h3>
+
+<p>Internally, file paths are now represented with <code class="highlighter-rouge">Brakeman::FilePath</code> to make it easier to manage absolute/relative paths as needed. This was a pretty huge change, so please report any issues.</p>
+
+<p>As a result, the <code class="highlighter-rouge">--no-separate-models</code> option no longer works (it used to combine all model-level mass assignment warnings into one warning).
+That old option used to report a completely messed-up file name, which is incompatible with <code class="highlighter-rouge">Brakeman::FilePath</code>. Also, it was weird and wrong.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1354">changes</a>)</p>
+
+<h3 id="empty-partial-names">Empty Partial Names</h3>
+
+<p>If any empty string ends up as a partial name in a <code class="highlighter-rouge">render</code> call, Brakeman will ignore it.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1352">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c8c48a88e9cd837122a590837ff5dbb4bd8214ad72baaffb75e5e5cd3585166f  brakeman-4.5.1.gem
+48eaff4eb661f63d43c2f8b33da8efbabc6196ae5ff2ec58ad711e1649eff686  brakeman-lib-4.5.1.gem
+c6fcfc5c32ec79a50281b0b97be5b703385ffb20ef45f770e7888ca6ba0b1666  brakeman-min-4.5.1.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2019/03/15/4-dot-5-0-released">Brakeman 4.5.0 Released</a></h1>
     
     
@@ -548,139 +679,6 @@ Please report any issues.</p>
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2018/06/06/brakeman-4-dot-3-1-released">Brakeman 4.3.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2018-06-06 19:55:00 -0700" pubdate  updated >2018-06-06 19:55:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Mostly false positive reduction and bug fixes in this one!</p>
-
-<p><em>Changes since 4.3.0:</em></p>
-
-<ul>
-  <li>Add <code class="highlighter-rouge">:BRAKEMAN_SAFE_LITERAL</code> to represent known-safe literals</li>
-  <li>Handle <code class="highlighter-rouge">Array#map</code> and <code class="highlighter-rouge">Array#each</code> over literal arrays (<a href="https://github.com/presidentbeef/brakeman/issues/1208">#1208</a> / <a href="https://github.com/presidentbeef/brakeman/issues/1224">#1224</a>)</li>
-  <li>Use safe literal when accessing literal hash with unknown key (<a href="https://github.com/presidentbeef/brakeman/issues/1213">#1213</a>)</li>
-  <li>Allow <code class="highlighter-rouge">symbolize_keys</code> to be called on <code class="highlighter-rouge">params</code> in SQL (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
-  <li>Improve handling of conditionals in shell commands (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
-  <li>Avoid deprecated use of ERB in Ruby 2.6 (<a href="https://github.com/koic">Koichi ITO</a>)</li>
-  <li>Ignore <code class="highlighter-rouge">Object#freeze</code>, use the target instead (<a href="https://github.com/presidentbeef/brakeman/issues/1211">#1211</a>)</li>
-  <li>Ignore <code class="highlighter-rouge">foreign_key</code> calls in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/1202">#1202</a>)</li>
-  <li>Handle <code class="highlighter-rouge">included</code> calls outside of classes/modules (<a href="https://github.com/presidentbeef/brakeman/issues/1209">#1209</a>)</li>
-  <li>Fix error when setting line number in implicit renders (<a href="https://github.com/presidentbeef/brakeman/issues/1210">#1210</a>)</li>
-</ul>
-
-<h3 id="safe-literals">Safe Literals</h3>
-
-<p>This version of Brakeman introduces a new way of handling “known safe” values (integers, string literals, etc.) where the <em>exact</em> value is unknown. The uses of the values will be replaced with <code class="highlighter-rouge">:BRAKEMAN_SAFE_LITERAL</code> instead of actual values, as Brakeman had done previously. The new approach avoids some unhelpful side-effects and allows for more of this kind of thing in the future.</p>
-
-<p>These changes fix up a number of false positives.</p>
-
-<h4 id="array-safe-literals">Array Safe Literals</h4>
-
-<p>In situations like</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>["hello", "there"].each do |s|
-  something_with(s)
-end
-</code></pre></div></div>
-
-<p>Brakeman will replace <code class="highlighter-rouge">s</code> inside the block with <code class="highlighter-rouge">:BRAKEMAN_SAFE_LITERAL</code>, since the value must be a string (or <code class="highlighter-rouge">nil</code>, but Brakeman doesn’t worrry about that).</p>
-
-<p><code class="highlighter-rouge">Array#map</code> and <code class="highlighter-rouge">Array#each</code> are currently supported.</p>
-
-<h4 id="hash-access-with-unknown-key">Hash Access with Unknown Key</h4>
-
-<p>In code like</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>some_hash = { x: 1, y: 2}
-result = some_hash[some_var]
-</code></pre></div></div>
-
-<p>Brakeman will replace <code class="highlighter-rouge">result</code> with <code class="highlighter-rouge">:BRAKEMAN_SAFE_LITERAL</code> since the value must be an integer.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1227">changes</a>)</p>
-
-<h3 id="symbolized-keys-in-params">Symbolized Keys in Params</h3>
-
-<p>Calls to <code class="highlighter-rouge">params.symbolize_keys</code> in ActiveRecord methods will not be treated as dangerous.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1217">changes</a>)</p>
-
-<h3 id="conditionals-in-shell-commands">Conditionals in Shell Commands</h3>
-
-<p>Use of interpolated <code class="highlighter-rouge">if</code> expressions (or the ternary version) in shell commands is now handled better, thanks to <a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>. The values of the branches will be checked for dangerous values before warning.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1214">changes</a>)</p>
-
-<h3 id="update-erb-use-for-ruby-26">Update ERB Use for Ruby 2.6</h3>
-
-<p>The interface for ERB will be <a href="https://github.com/ruby/ruby/blob/2311087/NEWS#stdlib-updates-outstanding-ones-only">updated in Ruby 2.6</a>. <a href="https://github.com/koic">Koichi ITO</a> provided a fix in preparation for this change.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1220">changes</a>)</p>
-
-<h3 id="frozen-objects">Frozen Objects</h3>
-
-<p>Since the use of <code class="highlighter-rouge">freeze</code> is of little interest to Brakeman and obscures the object it is freezing, these calls are now ignored.</p>
-
-<p>This, especially combined with the safe literals above, cleans up some false positives.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1230">changes</a>)</p>
-
-<h3 id="foreign-keys-in-sql">Foreign Keys in SQL</h3>
-
-<p>Brakeman will now ignore calls to <code class="highlighter-rouge">foreign_key</code> in SQL strings.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1229">changes</a>)</p>
-
-<h3 id="not-moduleincluded-calls">Not <code class="highlighter-rouge">Module#included</code> Calls</h3>
-
-<p>Calls to <code class="highlighter-rouge">included</code> outside of modules/classes will be ignored instead of causing an error.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1228">changes</a>)</p>
-
-<h3 id="checksums">Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>70722056ed1b168e2a56baff048fa155948e1d214513f0debe9e2b78f82691f8  brakeman-4.3.1.gem
-01078dd352a273965aa207dbffd01b8fe511d2302137f1984ea8bbddc38da3ce  brakeman-lib-4.3.1.gem
-1497a934e0fe929d4b2685a3282e7976ebd75e901c56183601b5c528ff4021e0  brakeman-min-4.3.1.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-
-<p>If you find Brakeman valuable and want to support its development (and get more features!), check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -719,6 +717,10 @@ result = some_hash[some_var]
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2023/02/21/brakeman-5-dot-4-dot-1-released">Brakeman 5.4.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">Brakeman 5.4.0 Released</a>
       </li>
     
@@ -732,10 +734,6 @@ result = some_hash[some_var]
     
       <li class="post">
         <a href="/blog/2022/04/06/brakeman-5-dot-2-dot-2-released">Brakeman 5.2.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2022/01/30/5-dot-2-dot-1-released">Brakeman 5.2.1 Released</a>
       </li>
     
   </ul>
