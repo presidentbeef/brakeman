@@ -1,5 +1,6 @@
 # Unreleased
 
+* Fix file/line location for EOL software warnings
 * Revise checking for request.env to only consider request headers
 * Add `redirect_back` and `redirect_back_or_to` to open redirect check
 * Support Rails 7 redirect options
