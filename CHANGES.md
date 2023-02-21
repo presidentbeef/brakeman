@@ -1,4 +1,4 @@
-# Unreleased
+# 5.4.1 - 2023-02-21
 
 * Fix file/line location for EOL software warnings
 * Revise checking for request.env to only consider request headers
