@@ -104,13 +104,13 @@
 <ul>
   <li>Add support for ignoring warnings</li>
   <li>Add brakeman-min gem</li>
-  <li>Add check for dangerous model attributes defined in <code class="highlighter-rouge">attr_accessible</code> (<a href="https://github.com/themetric">Paul Deardorff</a>)</li>
-  <li>Add check for <code class="highlighter-rouge">authenticate_or_request_with_http_basic</code> (<a href="https://github.com/presidentbeef/brakeman/issues/301">#301</a>)</li>
-  <li>Add <code class="highlighter-rouge">--branch-limit</code> option, limit to 5 by default</li>
+  <li>Add check for dangerous model attributes defined in <code class="language-plaintext highlighter-rouge">attr_accessible</code> (<a href="https://github.com/themetric">Paul Deardorff</a>)</li>
+  <li>Add check for <code class="language-plaintext highlighter-rouge">authenticate_or_request_with_http_basic</code> (<a href="https://github.com/presidentbeef/brakeman/issues/301">#301</a>)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--branch-limit</code> option, limit to 5 by default</li>
   <li>Add more methods to check for command injection (<a href="https://github.com/presidentbeef/brakeman/issues/206">#206</a>)</li>
   <li>Allow use of Slim 2.x (<a href="https://github.com/iwz">Ian Zabel</a>)</li>
   <li>Load gem dependencies on-demand</li>
-  <li>Output JSON diff to file if <code class="highlighter-rouge">-o</code> option is used</li>
+  <li>Output JSON diff to file if <code class="language-plaintext highlighter-rouge">-o</code> option is used</li>
   <li>Refactor of SQL injection check code (<a href="https://github.com/barttenbrinke">Bart ten Brinke</a>)</li>
   <li>Return error exit code when application path is not found</li>
   <li>Fix detection of duplicate XSS warnings</li>
@@ -126,13 +126,13 @@
 
 <p>The ignore configuration is a JSON file containing a list of warnings and some metadata. Right now the metadata is not actually used, but it might be useful in the future. The only warning information which is actually used is the fingerprint.</p>
 
-<p>By default Brakeman will look for a <code class="highlighter-rouge">brakeman.ignore</code> file in the <code class="highlighter-rouge">config</code> directory of the application. This can be changed with the <code class="highlighter-rouge">-i</code> option.</p>
+<p>By default Brakeman will look for a <code class="language-plaintext highlighter-rouge">brakeman.ignore</code> file in the <code class="language-plaintext highlighter-rouge">config</code> directory of the application. This can be changed with the <code class="language-plaintext highlighter-rouge">-i</code> option.</p>
 
-<p>Since creating and managing the file by hand would be a pain, the <code class="highlighter-rouge">-I</code> provides interactive management of the ignore configuration.</p>
+<p>Since creating and managing the file by hand would be a pain, the <code class="language-plaintext highlighter-rouge">-I</code> provides interactive management of the ignore configuration.</p>
 
 <p><img src="/images/bm-I.png" alt="brakeman -I" /></p>
 
-<p>JSON reports now include an array of <code class="highlighter-rouge">ignored_warnings</code>, HTML reports have a table of ignored warnings which is hidden by default, and the basic text output will include the number of warnings ignored, if any.</p>
+<p>JSON reports now include an array of <code class="language-plaintext highlighter-rouge">ignored_warnings</code>, HTML reports have a table of ignored warnings which is hidden by default, and the basic text output will include the number of warnings ignored, if any.</p>
 
 <p>Again, please use this power responsibly.</p>
 
@@ -152,11 +152,11 @@
 
 <h3 id="mass-assignment-to-dangerous-attributes">Mass Assignment to Dangerous Attributes</h3>
 
-<p>Paul Deardorff has added a new check which warns on model attributes included in <code class="highlighter-rouge">attr_accessible</code> which perhaps should not have been.</p>
+<p>Paul Deardorff has added a new check which warns on model attributes included in <code class="language-plaintext highlighter-rouge">attr_accessible</code> which perhaps should not have been.</p>
 
 <h3 id="more-basic-auth-warnings">More Basic Auth Warnings</h3>
 
-<p>Brakeman will now warn on use of password strings used directly in <code class="highlighter-rouge">authenticate_or_request_with_http_basic</code>.</p>
+<p>Brakeman will now warn on use of password strings used directly in <code class="language-plaintext highlighter-rouge">authenticate_or_request_with_http_basic</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/362">changes</a>)</p>
 
@@ -166,13 +166,13 @@
 
 <p>In some situations (lots of assignments to the same variable inside different branches), however, these values can grow to be unreasonably large. In most <em>useful</em> cases, the values aren’t that large.</p>
 
-<p>This change introduces a limit on these union values. The default is <code class="highlighter-rouge">5</code>, which means a given variable should only have five alternative values. If a sixth alternative is encountered (i.e. assignment inside another branch), the old values get kicked out, the new value is saved and the process starts over. This seems like a decent compromise between being flow insensitive (like <code class="highlighter-rouge">--no-branching</code>) and the current state of affairs (track everything, causing massive slowdowns and memory usage).</p>
+<p>This change introduces a limit on these union values. The default is <code class="language-plaintext highlighter-rouge">5</code>, which means a given variable should only have five alternative values. If a sixth alternative is encountered (i.e. assignment inside another branch), the old values get kicked out, the new value is saved and the process starts over. This seems like a decent compromise between being flow insensitive (like <code class="language-plaintext highlighter-rouge">--no-branching</code>) and the current state of affairs (track everything, causing massive slowdowns and memory usage).</p>
 
-<p>To turn off the limiting, use <code class="highlighter-rouge">--branch-limit -1</code>.</p>
+<p>To turn off the limiting, use <code class="language-plaintext highlighter-rouge">--branch-limit -1</code>.</p>
 
-<p><code class="highlighter-rouge">--branch-limit 0</code> is almost like <code class="highlighter-rouge">--no-branching</code> except slower because it’s still trying to track stuff.</p>
+<p><code class="language-plaintext highlighter-rouge">--branch-limit 0</code> is almost like <code class="language-plaintext highlighter-rouge">--no-branching</code> except slower because it’s still trying to track stuff.</p>
 
-<p>In testing, a value of <code class="highlighter-rouge">5</code> did not show any difference in detected vulnerabilities, although it is entirely possible (though empirical evidence points towards unlikely) that some vulnerabilities would be hidden because of this.</p>
+<p>In testing, a value of <code class="language-plaintext highlighter-rouge">5</code> did not show any difference in detected vulnerabilities, although it is entirely possible (though empirical evidence points towards unlikely) that some vulnerabilities would be hidden because of this.</p>
 
 <p>(Description copied from the <a href="https://github.com/presidentbeef/brakeman/pull/345">pull request</a>.)</p>
 
@@ -196,15 +196,15 @@
 
 <h3 id="output-json-compare-to-file">Output JSON Compare to File</h3>
 
-<p>The <code class="highlighter-rouge">-o</code> option can now be used with <code class="highlighter-rouge">--compare</code> to output the JSON diff to a file.</p>
+<p>The <code class="language-plaintext highlighter-rouge">-o</code> option can now be used with <code class="language-plaintext highlighter-rouge">--compare</code> to output the JSON diff to a file.</p>
 
-<p>If multiple <code class="highlighter-rouge">-o</code> options are given, the first one will be used for the JSON diff, and the other <code class="highlighter-rouge">-o</code> files will be used to output a regular report.</p>
+<p>If multiple <code class="language-plaintext highlighter-rouge">-o</code> options are given, the first one will be used for the JSON diff, and the other <code class="language-plaintext highlighter-rouge">-o</code> files will be used to output a regular report.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/363">changes</a>)</p>
 
 <h3 id="error-exit-code-when-application-not-found">Error Exit Code When Application Not Found</h3>
 
-<p>The last version of Brakeman had a bug where the program would exit with return code <code class="highlighter-rouge">0</code> when no Rails application was found. It will now return <code class="highlighter-rouge">1</code> like it did before.</p>
+<p>The last version of Brakeman had a bug where the program would exit with return code <code class="language-plaintext highlighter-rouge">0</code> when no Rails application was found. It will now return <code class="language-plaintext highlighter-rouge">1</code> like it did before.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/350">changes</a>)</p>
 
@@ -216,7 +216,7 @@
 
 <h3 id="stricter-report-format-detection">Stricter Report Format Detection</h3>
 
-<p>For a while, Brakeman would match <code class="highlighter-rouge">-o</code> file names like <code class="highlighter-rouge">blah.jsonness</code> and assume you wanted JSON output. This is fixed.</p>
+<p>For a while, Brakeman would match <code class="language-plaintext highlighter-rouge">-o</code> file names like <code class="language-plaintext highlighter-rouge">blah.jsonness</code> and assume you wanted JSON output. This is fixed.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/346">changes</a>)</p>
 

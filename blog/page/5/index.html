@@ -101,35 +101,35 @@
 <p><em>Changes since 4.7.1:</em></p>
 
 <ul>
-  <li>Add <code class="highlighter-rouge">request.params</code> as query parameters (<a href="https://github.com/presidentbeef/brakeman/issues/1398">#1398</a>)</li>
-  <li>Handle more <code class="highlighter-rouge">permit!</code> cases (<a href="https://github.com/presidentbeef/brakeman/issues/1426">#1426</a>)</li>
-  <li>Remove version guard for <code class="highlighter-rouge">named_scope</code> vs. <code class="highlighter-rouge">scope</code></li>
-  <li>Find SQL injection in <code class="highlighter-rouge">String#strip_heredoc</code> target (<a href="https://github.com/presidentbeef/brakeman/issues/1433">#1433</a>)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">request.params</code> as query parameters (<a href="https://github.com/presidentbeef/brakeman/issues/1398">#1398</a>)</li>
+  <li>Handle more <code class="language-plaintext highlighter-rouge">permit!</code> cases (<a href="https://github.com/presidentbeef/brakeman/issues/1426">#1426</a>)</li>
+  <li>Remove version guard for <code class="language-plaintext highlighter-rouge">named_scope</code> vs. <code class="language-plaintext highlighter-rouge">scope</code></li>
+  <li>Find SQL injection in <code class="language-plaintext highlighter-rouge">String#strip_heredoc</code> target (<a href="https://github.com/presidentbeef/brakeman/issues/1433">#1433</a>)</li>
   <li>Ensure file name is set when processing models</li>
-  <li>Bundle <code class="highlighter-rouge">ruby_parser</code> version 3.14.1 (<a href="https://github.com/presidentbeef/brakeman/issues/1429">#1429</a>)</li>
+  <li>Bundle <code class="language-plaintext highlighter-rouge">ruby_parser</code> version 3.14.1 (<a href="https://github.com/presidentbeef/brakeman/issues/1429">#1429</a>)</li>
 </ul>
 
 <h3 id="more-query-parameters">More Query Parameters</h3>
 
-<p><code class="highlighter-rouge">request.params</code> has been added as a query parameters method.</p>
+<p><code class="language-plaintext highlighter-rouge">request.params</code> has been added as a query parameters method.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1423">changes</a>)</p>
 
-<h3 id="more-permit">More <code class="highlighter-rouge">permit!</code></h3>
+<h3 id="more-permit">More <code class="language-plaintext highlighter-rouge">permit!</code></h3>
 
-<p>More cases of <code class="highlighter-rouge">permit!</code> will be identified, particularly when it is the target of a method call.</p>
+<p>More cases of <code class="language-plaintext highlighter-rouge">permit!</code> will be identified, particularly when it is the target of a method call.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1427">changes</a>)</p>
 
 <h3 id="more-scopes">More Scopes</h3>
 
-<p>Both <code class="highlighter-rouge">named_scope</code> and <code class="highlighter-rouge">scope</code> will be handled regardless of detected Rails version.</p>
+<p>Both <code class="language-plaintext highlighter-rouge">named_scope</code> and <code class="language-plaintext highlighter-rouge">scope</code> will be handled regardless of detected Rails version.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1435">changes</a>)</p>
 
-<h3 id="sql-injection-with-strip_heredoc">SQL Injection with <code class="highlighter-rouge">strip_heredoc</code></h3>
+<h3 id="sql-injection-with-strip_heredoc">SQL Injection with <code class="language-plaintext highlighter-rouge">strip_heredoc</code></h3>
 
-<p><code class="highlighter-rouge">strip_heredoc</code> is now treated as returning a string.
+<p><code class="language-plaintext highlighter-rouge">strip_heredoc</code> is now treated as returning a string.
 This fixes false positives if the target is a plain string and fixes false negatives if the target has interpolation.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1434">changes</a>)</p>
@@ -146,7 +146,7 @@ This fixes false positives if the target is a plain string and fixes false negat
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>339d6f3707a2c0a32003536a231255b839a0b87bd6a7ebef3c82aedd1bdd3ac8  brakeman-4.7.2.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>339d6f3707a2c0a32003536a231255b839a0b87bd6a7ebef3c82aedd1bdd3ac8  brakeman-4.7.2.gem
 39ce3a5fe248dee8c78fe671441d2abbfec66cec923ee9f56c62018229d3c9b0  brakeman-lib-4.7.2.gem
 efa07aa8476ef5553c91734093349a3ed55e2ef05b469d3dcecfdaabede37296  brakeman-min-4.7.2.gem
 </code></pre></div></div>
@@ -193,23 +193,23 @@ efa07aa8476ef5553c91734093349a3ed55e2ef05b469d3dcecfdaabede37296  brakeman-min-4
 <p><em>Changes since 4.7.0:</em></p>
 
 <ul>
-  <li>Address file permission issues in bundled <code class="highlighter-rouge">ruby_parser-legacy</code></li>
+  <li>Address file permission issues in bundled <code class="language-plaintext highlighter-rouge">ruby_parser-legacy</code></li>
   <li>Sort text report by file and line (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
-  <li>Catch reverse tabnabbing with <code class="highlighter-rouge">:_blank</code> symbol (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
-  <li>Convert <code class="highlighter-rouge">s(:lambda)</code> to <code class="highlighter-rouge">s(:call)</code> in <code class="highlighter-rouge">Sexp#block_call</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1410">#1410</a>)</li>
+  <li>Catch reverse tabnabbing with <code class="language-plaintext highlighter-rouge">:_blank</code> symbol (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
+  <li>Convert <code class="language-plaintext highlighter-rouge">s(:lambda)</code> to <code class="language-plaintext highlighter-rouge">s(:call)</code> in <code class="language-plaintext highlighter-rouge">Sexp#block_call</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1410">#1410</a>)</li>
   <li>Check string length against limit before joining</li>
   <li>Fix flaky rails4 test (<a href="https://github.com/adamkiczula">Adam Kiczula</a>)</li>
-  <li>Fix errors from frozen <code class="highlighter-rouge">Symbol#to_s</code> in Ruby 2.7</li>
+  <li>Fix errors from frozen <code class="language-plaintext highlighter-rouge">Symbol#to_s</code> in Ruby 2.7</li>
   <li>Add release dates to each version in CHANGES (<a href="https://github.com/TheSpartan1980">TheSpartan1980</a>)</li>
 </ul>
 
 <h3 id="file-permissions">File Permissions</h3>
 
-<p>A security issue <a href="https://github.com/zenspider/ruby_parser-legacy/issues/1">was reported for the <code class="highlighter-rouge">ruby_parser-legacy</code> gem</a>, where some files are installed with world-writable permissions.
-This would allow any user on the system to edit code which would then be executed by Brakeman (or other dependent libraries) when loading the <code class="highlighter-rouge">ruby_parser-legacy</code> gem.</p>
+<p>A security issue <a href="https://github.com/zenspider/ruby_parser-legacy/issues/1">was reported for the <code class="language-plaintext highlighter-rouge">ruby_parser-legacy</code> gem</a>, where some files are installed with world-writable permissions.
+This would allow any user on the system to edit code which would then be executed by Brakeman (or other dependent libraries) when loading the <code class="language-plaintext highlighter-rouge">ruby_parser-legacy</code> gem.</p>
 
-<p>In this release of the <code class="highlighter-rouge">brakeman</code> gem, the permissions on these files have been corrected.
-However, there has not been a fixed release of <code class="highlighter-rouge">ruby_parser-legacy</code> yet, so the <code class="highlighter-rouge">brakeman-lib</code> and <code class="highlighter-rouge">brakeman-min</code> gems are still affected.</p>
+<p>In this release of the <code class="language-plaintext highlighter-rouge">brakeman</code> gem, the permissions on these files have been corrected.
+However, there has not been a fixed release of <code class="language-plaintext highlighter-rouge">ruby_parser-legacy</code> yet, so the <code class="language-plaintext highlighter-rouge">brakeman-lib</code> and <code class="language-plaintext highlighter-rouge">brakeman-min</code> gems are still affected.</p>
 
 <h3 id="default-report-format-sorting">Default Report Format Sorting</h3>
 
@@ -219,19 +219,19 @@ However, there has not been a fixed release of <code class="highlighter-rouge">r
 
 <h3 id="reverse-tabnabbing">Reverse Tabnabbing</h3>
 
-<p><a href="https://github.com/JacobEvelyn">Jacob Evelyn</a> also updated the reverse tabnabbing check to match links created with <code class="highlighter-rouge">target: :_blank</code>.</p>
+<p><a href="https://github.com/JacobEvelyn">Jacob Evelyn</a> also updated the reverse tabnabbing check to match links created with <code class="language-plaintext highlighter-rouge">target: :_blank</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1411">changes</a>)</p>
 
 <h3 id="stabby-lambdas">Stabby Lambdas</h3>
 
-<p><code class="highlighter-rouge">ruby_parser</code> 3.14.0 changed the AST representation of <code class="highlighter-rouge">-&gt;{}</code> lambdas, and Brakeman needed to adjust.</p>
+<p><code class="language-plaintext highlighter-rouge">ruby_parser</code> 3.14.0 changed the AST representation of <code class="language-plaintext highlighter-rouge">-&gt;{}</code> lambdas, and Brakeman needed to adjust.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1415">changes</a>)</p>
 
 <h3 id="string-length-limit">String Length Limit</h3>
 
-<p>Brakeman now checks the resulting length of joining two strings (e.g., <code class="highlighter-rouge">"blah" + "blah blah"</code>) <em>before</em> joining them.
+<p>Brakeman now checks the resulting length of joining two strings (e.g., <code class="language-plaintext highlighter-rouge">"blah" + "blah blah"</code>) <em>before</em> joining them.
 If the joined string would be longer than 50 characters, the strings are not joined.</p>
 
 <p>Note the only change is when the length is checked, the limit was already in place.</p>
@@ -247,7 +247,7 @@ plaguing CI builds for a long time. Thanks!</p>
 
 <h3 id="ruby-27-frozen-strings">Ruby 2.7 Frozen Strings</h3>
 
-<p>In Ruby 2.7, symbols and some other constant values (<code class="highlighter-rouge">true</code>/<code class="highlighter-rouge">false</code>, etc.) will return frozen strings.
+<p>In Ruby 2.7, symbols and some other constant values (<code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code>, etc.) will return frozen strings.
 This affected Brakeman in only minor ways, but it is fixed now in preparation for Ruby 2.7.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1420">changes</a>)</p>
@@ -262,7 +262,7 @@ This affected Brakeman in only minor ways, but it is fixed now in preparation fo
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cdc6f4c86b5b35b5e94798cf443909385aa1b79235da8e1ee1fd4381acf03691  brakeman-4.7.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cdc6f4c86b5b35b5e94798cf443909385aa1b79235da8e1ee1fd4381acf03691  brakeman-4.7.1.gem
 2f7a7a6d79b1e5b8c6a390e04642e987c56cced2c8be3d63a1250f7bbc9e504d  brakeman-lib-4.7.1.gem
 598431f6bfc90b119fc6883ead7896c1718ba5d9a0e0450893c3e628a6c8e7b0  brakeman-min-4.7.1.gem
 </code></pre></div></div>
@@ -310,12 +310,12 @@ This affected Brakeman in only minor ways, but it is fixed now in preparation fo
 
 <ul>
   <li>Update Haml support to Haml 5.x (<a href="https://github.com/presidentbeef/brakeman/issues/1044">#1044</a>)</li>
-  <li>Catch shell injection from <code class="highlighter-rouge">-c</code> shell commands (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
-  <li>Correctly handle non-symbols in <code class="highlighter-rouge">CheckCookieSerialization</code> (<a href="https://github.com/philipturnbull">Phil Turnbull</a>)</li>
-  <li>Refactor <code class="highlighter-rouge">Brakeman::Differ#second_pass</code> (<a href="https://github.com/Becojo">Benoit Côté-Jodoin</a>)</li>
-  <li>Fix <code class="highlighter-rouge">version_between?</code> (<a href="https://github.com/aglushkov">Andrey Glushkov</a>)</li>
-  <li>Ignore interpolation in <code class="highlighter-rouge">%W[]</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1399">#1399</a>)</li>
-  <li>Ignore <code class="highlighter-rouge">form_for</code> for XSS check</li>
+  <li>Catch shell injection from <code class="language-plaintext highlighter-rouge">-c</code> shell commands (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
+  <li>Correctly handle non-symbols in <code class="language-plaintext highlighter-rouge">CheckCookieSerialization</code> (<a href="https://github.com/philipturnbull">Phil Turnbull</a>)</li>
+  <li>Refactor <code class="language-plaintext highlighter-rouge">Brakeman::Differ#second_pass</code> (<a href="https://github.com/Becojo">Benoit Côté-Jodoin</a>)</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">version_between?</code> (<a href="https://github.com/aglushkov">Andrey Glushkov</a>)</li>
+  <li>Ignore interpolation in <code class="language-plaintext highlighter-rouge">%W[]</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1399">#1399</a>)</li>
+  <li>Ignore <code class="language-plaintext highlighter-rouge">form_for</code> for XSS check</li>
 </ul>
 
 <h3 id="haml-support-update">Haml Support Update</h3>
@@ -331,11 +331,11 @@ Due to the large number of changes, you may expect some changes to warnings for 
 
 <h3 id="shell-commands">Shell Commands</h3>
 
-<p><a href="https://github.com/JacobEvelyn">Jacob Evelyn</a> added support for detecting command injection with <code class="highlighter-rouge">-c</code> in known-dangerous commands (such as <code class="highlighter-rouge">bash</code> or <code class="highlighter-rouge">echo</code>).</p>
+<p><a href="https://github.com/JacobEvelyn">Jacob Evelyn</a> added support for detecting command injection with <code class="language-plaintext highlighter-rouge">-c</code> in known-dangerous commands (such as <code class="language-plaintext highlighter-rouge">bash</code> or <code class="language-plaintext highlighter-rouge">echo</code>).</p>
 
 <p>An example of dangerous code would be:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system("echo", "-c", params[:command])
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system("echo", "-c", params[:command])
 </code></pre></div></div>
 
 <p>Of course not all dangerous shell commands are covered - so in general be careful passing any user-controlled input to a shell command.</p>
@@ -344,38 +344,38 @@ Due to the large number of changes, you may expect some changes to warnings for 
 
 <h3 id="cookieserialization-bug">CookieSerialization Bug</h3>
 
-<p><a href="https://github.com/philipturnbull">Phil Turnbull</a> fixed an issue in <code class="highlighter-rouge">CheckCookieSerialization</code> where non-symbol cookie serialization options were handled poorly.</p>
+<p><a href="https://github.com/philipturnbull">Phil Turnbull</a> fixed an issue in <code class="language-plaintext highlighter-rouge">CheckCookieSerialization</code> where non-symbol cookie serialization options were handled poorly.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1391">changes</a>)</p>
 
 <h3 id="brakemandiffer-refactor">Brakeman::Differ Refactor</h3>
 
-<p><a href="https://github.com/Becojo">Benoit Côté-Jodoin</a> refactored <code class="highlighter-rouge">Brakeman::Differ</code> to compare warnings more efficiently and remove old fallback behavior.
-All warnings are compared by fingerprint now when using <code class="highlighter-rouge">--compare</code>.</p>
+<p><a href="https://github.com/Becojo">Benoit Côté-Jodoin</a> refactored <code class="language-plaintext highlighter-rouge">Brakeman::Differ</code> to compare warnings more efficiently and remove old fallback behavior.
+All warnings are compared by fingerprint now when using <code class="language-plaintext highlighter-rouge">--compare</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1406">changes</a>)</p>
 
 <h3 id="version-comparisons">Version Comparisons</h3>
 
-<p><a href="https://github.com/aglushkov">Andrey Glushkov</a> updated the code for comparing library versions so it uses <code class="highlighter-rouge">Gem::Version</code> and handles “beta”/pre-release versions better.</p>
+<p><a href="https://github.com/aglushkov">Andrey Glushkov</a> updated the code for comparing library versions so it uses <code class="language-plaintext highlighter-rouge">Gem::Version</code> and handles “beta”/pre-release versions better.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1405">changes</a>)</p>
 
 <h3 id="w-interpolation">%W Interpolation</h3>
 
-<p>String interpolation when using <code class="highlighter-rouge">%W</code> is no longer considered dangerous in shell commands where regular interpolation would be.</p>
+<p>String interpolation when using <code class="language-plaintext highlighter-rouge">%W</code> is no longer considered dangerous in shell commands where regular interpolation would be.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1408">changes</a>)</p>
 
-<h3 id="form_for"><code class="highlighter-rouge">form_for</code></h3>
+<h3 id="form_for"><code class="language-plaintext highlighter-rouge">form_for</code></h3>
 
-<p><code class="highlighter-rouge">form_for</code> is considered a safe method in XSS checks.</p>
+<p><code class="language-plaintext highlighter-rouge">form_for</code> is considered a safe method in XSS checks.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1397/commits/a99cb25c6e76eb6240589f3a399e1245c0514257">changes</a>)</p>
 
 <h3 id="stringnew">String.new</h3>
 
-<p><code class="highlighter-rouge">String.new &lt;&lt; 'some string'</code> is now treated like <code class="highlighter-rouge">'' &lt;&lt; 'some string'</code>.</p>
+<p><code class="language-plaintext highlighter-rouge">String.new &lt;&lt; 'some string'</code> is now treated like <code class="language-plaintext highlighter-rouge">'' &lt;&lt; 'some string'</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1397/commits/931bed18481679086a7102bc063ecf9b1d727d40">changes</a>)</p>
 
@@ -383,7 +383,7 @@ All warnings are compared by fingerprint now when using <code class="highlighter
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f43d949f1de9c0bb67b7bc7d41000ac70a1fb6c2250c5e7332015f0cc5ce36c5  brakeman-4.7.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f43d949f1de9c0bb67b7bc7d41000ac70a1fb6c2250c5e7332015f0cc5ce36c5  brakeman-4.7.0.gem
 c02dbaa4ad0c7402ef99697c7b1916b7d9558dd5aa45e1a36efed117628498cc  brakeman-lib-4.7.0.gem
 3ab80a47bbfbb0f869bb1289292ed62b9643b5e0884a4a79e2c7e44218ce3b07  brakeman-min-4.7.0.gem
 </code></pre></div></div>
@@ -437,7 +437,7 @@ c02dbaa4ad0c7402ef99697c7b1916b7d9558dd5aa45e1a36efed117628498cc  brakeman-lib-4
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>6e31f8c8dbdea7b198c591d44b73aee067cca5612db191fe04d8d8c2a8eb9011  brakeman-4.6.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>6e31f8c8dbdea7b198c591d44b73aee067cca5612db191fe04d8d8c2a8eb9011  brakeman-4.6.1.gem
 6879d5175e5f20bf5ac1bd20dad0ef9a1e4c72d9774114d752b19c7e7d7d69fc  brakeman-lib-4.6.1.gem
 72a0ef7b91b11bea925b365645096a186ec3929024066792957006c46355560e  brakeman-min-4.6.1.gem
 </code></pre></div></div>
@@ -486,48 +486,48 @@ c02dbaa4ad0c7402ef99697c7b1916b7d9558dd5aa45e1a36efed117628498cc  brakeman-lib-4
 <ul>
   <li>Add check for cookie serialization with Marshal (<a href="https://github.com/presidentbeef/brakeman/issues/1316">#1316</a>)</li>
   <li>Add reverse tabnabbing check (<a href="https://github.com/linosgian">Linos Giannopoulos</a>)</li>
-  <li>Avoid warning about file access with <code class="highlighter-rouge">ActiveStorage::Filename#sanitized</code> (<a href="https://github.com/tejasbubane">Tejas Bubane</a>)</li>
+  <li>Avoid warning about file access with <code class="language-plaintext highlighter-rouge">ActiveStorage::Filename#sanitized</code> (<a href="https://github.com/tejasbubane">Tejas Bubane</a>)</li>
   <li>Update loofah version for fixing <a href="https://nvd.nist.gov/vuln/detail/CVE-2018-8048">CVE-2018-8048</a> (<a href="https://github.com/MartyBeGood">Markus Nölle</a>)</li>
   <li>Warn people that Haml 5 is not fully supported (<a href="https://github.com/jaredbeck">Jared Beck</a>)</li>
   <li>Index calls in initializers</li>
   <li>Improve template output handling in conditional branches</li>
-  <li>Avoid assigning <code class="highlighter-rouge">nil</code> line numbers to <code class="highlighter-rouge">Sexp</code>s</li>
+  <li>Avoid assigning <code class="language-plaintext highlighter-rouge">nil</code> line numbers to <code class="language-plaintext highlighter-rouge">Sexp</code>s</li>
   <li>Add special warning code for custom checks</li>
   <li>Add call matching by regular expression</li>
-  <li>Skip calls to <code class="highlighter-rouge">dup</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1374">#1374</a>)</li>
-  <li>Restore <code class="highlighter-rouge">Warning#relative_path</code></li>
+  <li>Skip calls to <code class="language-plaintext highlighter-rouge">dup</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1374">#1374</a>)</li>
+  <li>Restore <code class="language-plaintext highlighter-rouge">Warning#relative_path</code></li>
   <li>Better handling of gems with no version declared</li>
 </ul>
 
 <h3 id="cookie-serialization-check">Cookie Serialization Check</h3>
 
-<p>Brakeman will now warn if <code class="highlighter-rouge">Rails.application.config.action_dispatch.cookies_serializer</code> is set to <code class="highlighter-rouge">:marshal</code> or <code class="highlighter-rouge">:json</code>.</p>
+<p>Brakeman will now warn if <code class="language-plaintext highlighter-rouge">Rails.application.config.action_dispatch.cookies_serializer</code> is set to <code class="language-plaintext highlighter-rouge">:marshal</code> or <code class="language-plaintext highlighter-rouge">:json</code>.</p>
 
-<p>This options allow cookies to be deserialized via <code class="highlighter-rouge">Marshal</code>. If an attacker is able to construct a valid encrypted cookie, this could lead to arbitrary code execution.</p>
+<p>This options allow cookies to be deserialized via <code class="language-plaintext highlighter-rouge">Marshal</code>. If an attacker is able to construct a valid encrypted cookie, this could lead to arbitrary code execution.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1364">changes</a>)</p>
 
 <h3 id="reverse-tabnabbing-check">Reverse Tabnabbing Check</h3>
 
-<p><a href="https://github.com/linosgian">Linos Giannopoulos</a> has added an optional check for cases of “reverse tabnabbing”. This occurs when a link is opened in a new window/tab via a link (with <code class="highlighter-rouge">target: '_blank'</code>).
+<p><a href="https://github.com/linosgian">Linos Giannopoulos</a> has added an optional check for cases of “reverse tabnabbing”. This occurs when a link is opened in a new window/tab via a link (with <code class="language-plaintext highlighter-rouge">target: '_blank'</code>).
 The new window can control the location of the old window. If an attacker controls the new window, they can redirect the old window to a malicious site. This is especially useful for 
 phishing attacks. These kinds of attacks are most likely on applications that allow arbitrary links to external sites.</p>
 
-<p>To completely remove the ability of an attacker to control the old window, add <code class="highlighter-rouge">rel: "noreferrer noopener"</code> to the <code class="highlighter-rouge">link_to</code> call. Note: this will cause the new window to lose referrer information.</p>
+<p>To completely remove the ability of an attacker to control the old window, add <code class="language-plaintext highlighter-rouge">rel: "noreferrer noopener"</code> to the <code class="language-plaintext highlighter-rouge">link_to</code> call. Note: this will cause the new window to lose referrer information.</p>
 
-<p>To enable this new check, use <code class="highlighter-rouge">--enable ReverseTabnabbing</code> or <code class="highlighter-rouge">-A</code> to enable all optional checks.</p>
+<p>To enable this new check, use <code class="language-plaintext highlighter-rouge">--enable ReverseTabnabbing</code> or <code class="language-plaintext highlighter-rouge">-A</code> to enable all optional checks.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1367">changes</a>)</p>
 
 <h3 id="file-access-false-positive">File Access False Positive</h3>
 
-<p><a href="https://github.com/tejasbubane">Tejas Bubane</a> provided a fix to ignore use of <code class="highlighter-rouge">ActiveStorage::Filename#sanitized</code> inside file access calls.</p>
+<p><a href="https://github.com/tejasbubane">Tejas Bubane</a> provided a fix to ignore use of <code class="language-plaintext highlighter-rouge">ActiveStorage::Filename#sanitized</code> inside file access calls.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1375">changes</a>)</p>
 
 <h3 id="fixed-loofah-version">Fixed Loofah Version</h3>
 
-<p><a href="https://github.com/MartyBeGood">Markus Nölle</a> corrected the “fixed” version of Loofah for CVE-2018-8048 from <code class="highlighter-rouge">2.1.2</code> to <code class="highlighter-rouge">2.2.1</code>. Oops!</p>
+<p><a href="https://github.com/MartyBeGood">Markus Nölle</a> corrected the “fixed” version of Loofah for CVE-2018-8048 from <code class="language-plaintext highlighter-rouge">2.1.2</code> to <code class="language-plaintext highlighter-rouge">2.2.1</code>. Oops!</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1371">changes</a>)</p>
 
@@ -544,7 +544,7 @@ There appear to be only a few syntax differences between Haml 4.x and 5.x, so mo
 
 <p>When Brakeman scans an application, <a href="https://blog.presidentbeef.com/blog/2012/11/28/faster-call-indexing-in-brakeman-1-dot-8-3/">it “indexes” all method calls of interest</a>. Most checks then operated on those indexed calls.</p>
 
-<p>However, for historical reasons, initializers (files in <code class="highlighter-rouge">config/initializers/</code>) were not included in that index.</p>
+<p>However, for historical reasons, initializers (files in <code class="language-plaintext highlighter-rouge">config/initializers/</code>) were not included in that index.</p>
 
 <p>Now they are! Besides some modest speed gains and simpler/more consistent checks, now regular old checks can “see” initializers.
 This may result in previously-unreported warnings now popping up in initializers.</p>
@@ -555,7 +555,7 @@ This may result in previously-unreported warnings now popping up in initializers
 
 <p>Very obvious code like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= blah ? x : params[:x].html_safe %&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= blah ? x : params[:x].html_safe %&gt;
 </code></pre></div></div>
 
 <p>Was not being handled correctly and the cross-site scripting issue would not be reported. This is now fixed!</p>
@@ -564,7 +564,7 @@ This may result in previously-unreported warnings now popping up in initializers
 
 <h3 id="empty-line-numbers">Empty Line Numbers</h3>
 
-<p><a href="https://github.com/seattlerb/sexp_processor/commit/ce284487f057203360c41b14d2b25f8c5453fbb9">A change in <code class="highlighter-rouge">sexp_processor</code></a> causes it to raise an exception if an <code class="highlighter-rouge">Sexp</code> is assigned a <code class="highlighter-rouge">nil</code> line.
+<p><a href="https://github.com/seattlerb/sexp_processor/commit/ce284487f057203360c41b14d2b25f8c5453fbb9">A change in <code class="language-plaintext highlighter-rouge">sexp_processor</code></a> causes it to raise an exception if an <code class="language-plaintext highlighter-rouge">Sexp</code> is assigned a <code class="language-plaintext highlighter-rouge">nil</code> line.
 Brakeman was a bit cavalier when assigning line numbers, so this caused an issue for some users.</p>
 
 <p>As a result, line numbers should be assigned a bit more consistently now.</p>
@@ -576,7 +576,7 @@ Brakeman was a bit cavalier when assigning line numbers, so this caused an issue
 <p>Every warning reported by Brakeman refers to an integer “warning code”. This is so the “warning type” or category can be a bit more flexible if we want to change the name or formatting.
 However, this list of warning codes is hardcoded into Brakeman. The hardcoding makes it hard for users to add their own checks, because they need to either use an existing code or monkey-patch in a new one.</p>
 
-<p>To help with this situation, custom checks/rules can now use the <code class="highlighter-rouge">:custom_check</code> warning code.</p>
+<p>To help with this situation, custom checks/rules can now use the <code class="language-plaintext highlighter-rouge">:custom_check</code> warning code.</p>
 
 <p><a href="https://github.com/presidentbeef/brakeman/wiki/Creating-Custom-Brakeman-Rules">A tutorial on writing custom checks is in progress</a>.</p>
 
@@ -590,13 +590,13 @@ However, this list of warning codes is hardcoded into Brakeman. The hardcoding m
 
 <h3 id="dup-calls">Dup Calls</h3>
 
-<p>Brakeman now skips calls to <code class="highlighter-rouge">#dup</code> as if they aren’t there.</p>
+<p>Brakeman now skips calls to <code class="language-plaintext highlighter-rouge">#dup</code> as if they aren’t there.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1386">changes</a>)</p>
 
-<h3 id="warningrelative_path"><code class="highlighter-rouge">Warning#relative_path</code></h3>
+<h3 id="warningrelative_path"><code class="language-plaintext highlighter-rouge">Warning#relative_path</code></h3>
 
-<p><code class="highlighter-rouge">Warning#relative_path</code> has been added back for dependencies that might need it, such as <a href="https://github.com/guard/guard-brakeman/pull/36/">guard-brakeman</a>.</p>
+<p><code class="language-plaintext highlighter-rouge">Warning#relative_path</code> has been added back for dependencies that might need it, such as <a href="https://github.com/guard/guard-brakeman/pull/36/">guard-brakeman</a>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1365">changes</a>)</p>
 
@@ -604,7 +604,7 @@ However, this list of warning codes is hardcoded into Brakeman. The hardcoding m
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>48be7f5a8d814ad42bbb9a2222a331e59a8ece9b50103d8e809a0bbc9d128ef9  brakeman-4.6.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>48be7f5a8d814ad42bbb9a2222a331e59a8ece9b50103d8e809a0bbc9d128ef9  brakeman-4.6.0.gem
 ff81f5d6fb258a1b83c78ba4144163d1183bd9f31536782722617e880ff85917  brakeman-lib-4.6.0.gem
 ef3ad0f59dc32630b1e39f289257cf33a882f2838f455e6009c0cb973ee1d378  brakeman-min-4.6.0.gem
 </code></pre></div></div>

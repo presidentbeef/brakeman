@@ -104,17 +104,17 @@
   <li>Add check for CVE-2012-5664 - SQL Injection</li>
   <li>Add check for CVE-2013-0155 - SQL Injection</li>
   <li>Add check for CVE-2013-0156 - Remote Code Execution</li>
-  <li>Add check for unsafe <code class="highlighter-rouge">YAML.load</code></li>
+  <li>Add check for unsafe <code class="language-plaintext highlighter-rouge">YAML.load</code></li>
   <li>Update to RubyParser 3.1.1 (neersighted)</li>
   <li>Remove ActiveSupport dependency (Neil Matatall)</li>
-  <li>Do not warn on arrays passed to <code class="highlighter-rouge">link_to</code> (Neil Matatall) (<a href="https://github.com/presidentbeef/brakeman/issues/232">#232</a>)</li>
+  <li>Do not warn on arrays passed to <code class="language-plaintext highlighter-rouge">link_to</code> (Neil Matatall) (<a href="https://github.com/presidentbeef/brakeman/issues/232">#232</a>)</li>
   <li>Warn on secret tokens (<a href="https://github.com/presidentbeef/brakeman/issues/200">#200</a>)</li>
   <li>Warn on more mass assignment methods (<a href="https://github.com/presidentbeef/brakeman/issues/223">#223</a>)</li>
 </ul>
 
 <h3 id="cve-2012-5664---sql-injection">CVE-2012-5664 - SQL Injection</h3>
 
-<p><a href="https://groups.google.com/d/topic/rubyonrails-security/DCNTNp_qjFM/discussion">CVE-2012-5664</a> is a vulnerability Rails’ dynamic finders. While dynamic finders (such as <code class="highlighter-rouge">User.find_by_name</code>) appear to take a single argument, they also accept a hash options which can be used to modify the SQL query. Normally the hash of options would be the second argument, but it can also be the first. If an application passes in user code as the first argument, it will be interpreted as the options hash, leading to SQL injection.</p>
+<p><a href="https://groups.google.com/d/topic/rubyonrails-security/DCNTNp_qjFM/discussion">CVE-2012-5664</a> is a vulnerability Rails’ dynamic finders. While dynamic finders (such as <code class="language-plaintext highlighter-rouge">User.find_by_name</code>) appear to take a single argument, they also accept a hash options which can be used to modify the SQL query. Normally the hash of options would be the second argument, but it can also be the first. If an application passes in user code as the first argument, it will be interpreted as the options hash, leading to SQL injection.</p>
 
 <p>The provided fix is to only accept the hash if the dynamic finder is called with the proper number of arguments. A workaround is to always cast input to dynamic finders.</p>
 
@@ -122,7 +122,7 @@
 
 <h3 id="cve-2013-0155---sql-injection">CVE-2013-0155 - SQL Injection</h3>
 
-<p><a href="https://groups.google.com/d/topic/rubyonrails-security/c7jT-EeN9eI/discussion">CVE-2013-0155</a> is a SQL vulnerability where certain JSON input can cause <code class="highlighter-rouge">find</code> methods to add <code class="highlighter-rouge">NULL</code> as a valid value.</p>
+<p><a href="https://groups.google.com/d/topic/rubyonrails-security/c7jT-EeN9eI/discussion">CVE-2013-0155</a> is a SQL vulnerability where certain JSON input can cause <code class="language-plaintext highlighter-rouge">find</code> methods to add <code class="language-plaintext highlighter-rouge">NULL</code> as a valid value.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/239">changes</a>)</p>
 
@@ -136,9 +136,9 @@
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/239">changes</a>)</p>
 
-<h3 id="check-for-yamlload">Check for <code class="highlighter-rouge">YAML.load</code></h3>
+<h3 id="check-for-yamlload">Check for <code class="language-plaintext highlighter-rouge">YAML.load</code></h3>
 
-<p>In light of <a href="https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion">CVE-2013-0156</a>, Brakeman will now warn on any uses of <code class="highlighter-rouge">YAML.load</code> with user input. Do not load arbitrary YAML in applications!</p>
+<p>In light of <a href="https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion">CVE-2013-0156</a>, Brakeman will now warn on any uses of <code class="language-plaintext highlighter-rouge">YAML.load</code> with user input. Do not load arbitrary YAML in applications!</p>
 
 <h3 id="dependency-changes">Dependency Changes</h3>
 
@@ -146,9 +146,9 @@
 
 <p>Thanks to Neil, Brakeman no longer depends on any version of ActiveSupport or i18n.</p>
 
-<h3 id="namespaced-urls-in-link_to">Namespaced URLs in <code class="highlighter-rouge">link_to</code></h3>
+<h3 id="namespaced-urls-in-link_to">Namespaced URLs in <code class="language-plaintext highlighter-rouge">link_to</code></h3>
 
-<p>Brakeman will no longer warn on array arguments to <code class="highlighter-rouge">link_to</code>.</p>
+<p>Brakeman will no longer warn on array arguments to <code class="language-plaintext highlighter-rouge">link_to</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/233">changes</a>)</p>
 
@@ -160,7 +160,7 @@
 
 <h3 id="more-mass-assignment">More Mass Assignment</h3>
 
-<p>Bryan Helmkamp pointed out more Rails methods which perform mass assignment. The following methods have been added: <code class="highlighter-rouge">first_or_create</code>, <code class="highlighter-rouge">first_or_create!</code>, <code class="highlighter-rouge">first_or_initialize!</code>, <code class="highlighter-rouge">assign_attributes</code>, and <code class="highlighter-rouge">update</code>.</p>
+<p>Bryan Helmkamp pointed out more Rails methods which perform mass assignment. The following methods have been added: <code class="language-plaintext highlighter-rouge">first_or_create</code>, <code class="language-plaintext highlighter-rouge">first_or_create!</code>, <code class="language-plaintext highlighter-rouge">first_or_initialize!</code>, <code class="language-plaintext highlighter-rouge">assign_attributes</code>, and <code class="language-plaintext highlighter-rouge">update</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/234">changes</a>)</p>
 
@@ -209,18 +209,18 @@
   <li>Ignore route information by default</li>
   <li>Add optional “interprocedural” analysis for controllers</li>
   <li>Properly pass instance variables between before_filters</li>
-  <li>Support <code class="highlighter-rouge">strong_parameters</code> (<a href="https://github.com/presidentbeef/brakeman/issues/88">#88</a>)</li>
-  <li>Support newer <code class="highlighter-rouge">validates :format</code> call (<a href="https://github.com/presidentbeef/brakeman/issues/198">#198</a>)</li>
+  <li>Support <code class="language-plaintext highlighter-rouge">strong_parameters</code> (<a href="https://github.com/presidentbeef/brakeman/issues/88">#88</a>)</li>
+  <li>Support newer <code class="language-plaintext highlighter-rouge">validates :format</code> call (<a href="https://github.com/presidentbeef/brakeman/issues/198">#198</a>)</li>
   <li>Add scan time to reports (<a href="https://github.com/presidentbeef/brakeman/issues/158">#158</a>)</li>
   <li>Add Brakeman version to reports</li>
   <li>Don’t mangle whitespace in JSON code formatting</li>
-  <li>Fix <code class="highlighter-rouge">CheckExecute</code> to warn on all string interpolation (<a href="https://github.com/presidentbeef/brakeman/issues/213">#213</a>)</li>
-  <li>Fix false positive on <code class="highlighter-rouge">to_sql</code> calls</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">CheckExecute</code> to warn on all string interpolation (<a href="https://github.com/presidentbeef/brakeman/issues/213">#213</a>)</li>
+  <li>Fix false positive on <code class="language-plaintext highlighter-rouge">to_sql</code> calls</li>
   <li>Add AppTree as facade for filesystem (<a href="https://github.com/brynary">Bryan Helmkamp</a>)</li>
   <li>Add link for translate vulnerability warning (<a href="https://github.com/grosser">Michael Grosser</a>)</li>
   <li>Add Rakefile to run tests (<a href="https://github.com/grosser">Michael Grosser</a>)</li>
   <li>Better default config file locations (<a href="https://github.com/grosser">Michael Grosser</a>)</li>
-  <li>Remove “find by regex” feature from <code class="highlighter-rouge">CallIndex</code></li>
+  <li>Remove “find by regex” feature from <code class="language-plaintext highlighter-rouge">CallIndex</code></li>
   <li>Reduce Sexp creation</li>
   <li>Handle empty model files</li>
 </ul>
@@ -235,7 +235,7 @@
 
 <h3 id="route-information-ignored-by-default">Route Information Ignored by Default</h3>
 
-<p>Route information is only used in Brakeman to determine whether a controller method should perform an implicit render. Since determining Rails routes statically is quite difficult to get right, it is better to assume a method is a routable action. Previous versions provided the <code class="highlighter-rouge">-a</code> option for this, which is now on by default. To turn off this behavior (and revert to the old), use <code class="highlighter-rouge">--no-assume-routes</code>.</p>
+<p>Route information is only used in Brakeman to determine whether a controller method should perform an implicit render. Since determining Rails routes statically is quite difficult to get right, it is better to assume a method is a routable action. Previous versions provided the <code class="language-plaintext highlighter-rouge">-a</code> option for this, which is now on by default. To turn off this behavior (and revert to the old), use <code class="language-plaintext highlighter-rouge">--no-assume-routes</code>.</p>
 
 <p>This does not affect default route warnings.</p>
 
@@ -249,7 +249,7 @@
 
 <p>For a simple example, instance variables set in helper methods will now be added to a rendered view. Also, values returned from called methods will be tracked:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def create
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def create
   get_user 
   #@user is now User.find(params[:id])
 
@@ -268,33 +268,33 @@ def find_account
 end
 </code></pre></div></div>
 
-<p>This is limited to methods available in the controller (via a parent class or mixins). It is also limited to a “depth of one”, meaning it will not try to analyze methods called by helper methods (<code class="highlighter-rouge">get_user</code> and <code class="highlighter-rouge">find_account</code> above).</p>
+<p>This is limited to methods available in the controller (via a parent class or mixins). It is also limited to a “depth of one”, meaning it will not try to analyze methods called by helper methods (<code class="language-plaintext highlighter-rouge">get_user</code> and <code class="language-plaintext highlighter-rouge">find_account</code> above).</p>
 
-<p>Since this feature is still experimental and will definitely increase scan times, it is turned off by default. Use <code class="highlighter-rouge">--interprocedural</code> to enable it. (Better name pending suggestions…)</p>
+<p>Since this feature is still experimental and will definitely increase scan times, it is turned off by default. Use <code class="language-plaintext highlighter-rouge">--interprocedural</code> to enable it. (Better name pending suggestions…)</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/218">changes</a>)</p>
 
 <h3 id="pass-instance-variables-between-filters">Pass Instance Variables between Filters</h3>
 
-<p>While instance variables set in <code class="highlighter-rouge">before_filters</code> were set properly, <code class="highlighter-rouge">before_filter</code> which used instance variables from an earlier filter could not see those variables. This has been fixed, which will likely lead to new or more accurate warnings.</p>
+<p>While instance variables set in <code class="language-plaintext highlighter-rouge">before_filters</code> were set properly, <code class="language-plaintext highlighter-rouge">before_filter</code> which used instance variables from an earlier filter could not see those variables. This has been fixed, which will likely lead to new or more accurate warnings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/224">changes</a>)</p>
 
-<h3 id="support-for-strong_parameters">Support for <code class="highlighter-rouge">strong_parameters</code></h3>
+<h3 id="support-for-strong_parameters">Support for <code class="language-plaintext highlighter-rouge">strong_parameters</code></h3>
 
-<p>In Rails 4, the responsibility for mass assignment protection will move from models to controllers where mass assignment is actually used. A preview of the new functionality is available in the <a href="https://github.com/rails/strong_parameters">strong_parameters</a> gem. Brakeman should no longer warn on mass assignment for models protected with <code class="highlighter-rouge">strong_parameters</code>.</p>
+<p>In Rails 4, the responsibility for mass assignment protection will move from models to controllers where mass assignment is actually used. A preview of the new functionality is available in the <a href="https://github.com/rails/strong_parameters">strong_parameters</a> gem. Brakeman should no longer warn on mass assignment for models protected with <code class="language-plaintext highlighter-rouge">strong_parameters</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/204">changes</a>)</p>
 
-<h3 id="support-validates-format">Support <code class="highlighter-rouge">validates :format</code></h3>
+<h3 id="support-validates-format">Support <code class="language-plaintext highlighter-rouge">validates :format</code></h3>
 
-<p>In Rails 3, format validation changed from <code class="highlighter-rouge">validates_format_of</code> to the more generic <code class="highlighter-rouge">validates</code> method. Brakeman will now check <code class="highlighter-rouge">validates</code> calls for proper anchors on regular expressions for <code class="highlighter-rouge">:format</code>.</p>
+<p>In Rails 3, format validation changed from <code class="language-plaintext highlighter-rouge">validates_format_of</code> to the more generic <code class="language-plaintext highlighter-rouge">validates</code> method. Brakeman will now check <code class="language-plaintext highlighter-rouge">validates</code> calls for proper anchors on regular expressions for <code class="language-plaintext highlighter-rouge">:format</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/205">changes</a>)</p>
 
 <h3 id="report-changes">Report Changes</h3>
 
-<p>Reports will now contain Brakeman version and scan duration. JSON reports contain <code class="highlighter-rouge">start_time</code> and <code class="highlighter-rouge">end_time</code> timestamps. For now, JSON reports will still have a <code class="highlighter-rouge">timestamp</code> key, but it will be identical to <code class="highlighter-rouge">end_time</code>. It will be removed in Brakeman 2.0.</p>
+<p>Reports will now contain Brakeman version and scan duration. JSON reports contain <code class="language-plaintext highlighter-rouge">start_time</code> and <code class="language-plaintext highlighter-rouge">end_time</code> timestamps. For now, JSON reports will still have a <code class="language-plaintext highlighter-rouge">timestamp</code> key, but it will be identical to <code class="language-plaintext highlighter-rouge">end_time</code>. It will be removed in Brakeman 2.0.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/193">changes</a>)</p>
 
@@ -308,9 +308,9 @@ end
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/216">changes</a>)</p>
 
-<h3 id="fix-to_sql-false-positives">Fix <code class="highlighter-rouge">to_sql</code> False Positives</h3>
+<h3 id="fix-to_sql-false-positives">Fix <code class="language-plaintext highlighter-rouge">to_sql</code> False Positives</h3>
 
-<p>SQL code generated from Arel’s <code class="highlighter-rouge">to_sql</code> method will be considered safe.</p>
+<p>SQL code generated from Arel’s <code class="language-plaintext highlighter-rouge">to_sql</code> method will be considered safe.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/194">changes</a>)</p>
 
@@ -322,13 +322,13 @@ end
 
 <h3 id="run-tests-via-rake">Run Tests via Rake</h3>
 
-<p>Thanks to Michael Grosser, running <code class="highlighter-rouge">rake</code> will now run Brakeman’s tests.</p>
+<p>Thanks to Michael Grosser, running <code class="language-plaintext highlighter-rouge">rake</code> will now run Brakeman’s tests.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/183">changes</a>)</p>
 
 <h3 id="improved-config-file-locations">Improved Config File Locations</h3>
 
-<p>Also thanks to Michael Grosser, Brakeman will check more sane locations for Brakeman configuration files. This version adds <code class="highlighter-rouge">./config/brakeman.yml</code>, <code class="highlighter-rouge">~/.brakeman/config.yml</code>, and <code class="highlighter-rouge">/etc/brakeman/config.yml</code> as default locations for configuration files. The old locations are deprecated now, and will be removed in Brakeman 2.0.</p>
+<p>Also thanks to Michael Grosser, Brakeman will check more sane locations for Brakeman configuration files. This version adds <code class="language-plaintext highlighter-rouge">./config/brakeman.yml</code>, <code class="language-plaintext highlighter-rouge">~/.brakeman/config.yml</code>, and <code class="language-plaintext highlighter-rouge">/etc/brakeman/config.yml</code> as default locations for configuration files. The old locations are deprecated now, and will be removed in Brakeman 2.0.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/182">changes</a></p>
 
@@ -383,21 +383,21 @@ end
   </header>
 
 
-  <div class="entry-content"><p>This is primarily a false positive reduction release. One major change is the change in dependency from the <code class="highlighter-rouge">json_pure</code> gem to <code class="highlighter-rouge">multi_json</code>.</p>
+  <div class="entry-content"><p>This is primarily a false positive reduction release. One major change is the change in dependency from the <code class="language-plaintext highlighter-rouge">json_pure</code> gem to <code class="language-plaintext highlighter-rouge">multi_json</code>.</p>
 
 <p><em>Changes since 1.8.2</em>:</p>
 
 <ul>
-  <li>Use <code class="highlighter-rouge">multi_json</code> gem for better harmony (<a href="https://github.com/presidentbeef/brakeman/issues/164">#164</a>)</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">multi_json</code> gem for better harmony (<a href="https://github.com/presidentbeef/brakeman/issues/164">#164</a>)</li>
   <li>Performance improvement for call indexing</li>
   <li>Fix issue with processing HAML files (<a href="https://github.com/presidentbeef/brakeman/issues/168">#168</a>)</li>
-  <li>Handle pre-release versions when processing <code class="highlighter-rouge">Gemfile.lock</code> (<a href="https://github.com/presidentbeef/brakeman/issues/174">#174</a>)</li>
-  <li>Only check first argument of <code class="highlighter-rouge">redirect_to</code> (<a href="https://github.com/presidentbeef/brakeman/issues/98">#98</a>)</li>
-  <li>Fix false positives from <code class="highlighter-rouge">Model.arel_table</code> accesses</li>
+  <li>Handle pre-release versions when processing <code class="language-plaintext highlighter-rouge">Gemfile.lock</code> (<a href="https://github.com/presidentbeef/brakeman/issues/174">#174</a>)</li>
+  <li>Only check first argument of <code class="language-plaintext highlighter-rouge">redirect_to</code> (<a href="https://github.com/presidentbeef/brakeman/issues/98">#98</a>)</li>
+  <li>Fix false positives from <code class="language-plaintext highlighter-rouge">Model.arel_table</code> accesses</li>
   <li>Fix false positives on redirects to models decorated with Draper gem (<a href="https://github.com/presidentbeef/brakeman/issues/172">#172</a>)</li>
   <li>Fix false positive on redirect to model association (<a href="https://github.com/presidentbeef/brakeman/issues/111">#111</a>)</li>
-  <li>Fix false positive on <code class="highlighter-rouge">YAML.load</code> (<a href="https://github.com/presidentbeef/brakeman/issues/142">#142</a>)</li>
-  <li>Fix false positive XSS on any <code class="highlighter-rouge">to_i</code> output</li>
+  <li>Fix false positive on <code class="language-plaintext highlighter-rouge">YAML.load</code> (<a href="https://github.com/presidentbeef/brakeman/issues/142">#142</a>)</li>
+  <li>Fix false positive XSS on any <code class="language-plaintext highlighter-rouge">to_i</code> output</li>
   <li>Fix error on Rails 2 named routes with no args</li>
   <li>Fix error in rescan of mixins with symbols in method name</li>
   <li>Do not rescan non-Ruby files in config/</li>
@@ -405,25 +405,25 @@ end
 
 <h3 id="change-to-multijson">Change to MultiJSON</h3>
 
-<p>Brakeman now depends on the <a href="http://rdoc.info/github/intridea/multi_json">multijson</a> gem instead of <code class="highlighter-rouge">json_pure</code>. This should make it easier for people who include Brakeman as a dependency.</p>
+<p>Brakeman now depends on the <a href="http://rdoc.info/github/intridea/multi_json">multijson</a> gem instead of <code class="language-plaintext highlighter-rouge">json_pure</code>. This should make it easier for people who include Brakeman as a dependency.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/166">changes</a>)</p>
 
 <h3 id="faster-call-indexing">Faster Call Indexing</h3>
 
-<p>Dumb code in the <code class="highlighter-rouge">CallIndex</code> was causing call indexing to be slow on some large applications. This should now be faster and require less memory!</p>
+<p>Dumb code in the <code class="language-plaintext highlighter-rouge">CallIndex</code> was causing call indexing to be slow on some large applications. This should now be faster and require less memory!</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/180">changes</a>)</p>
 
 <h3 id="fix-haml-processing">Fix HAML Processing</h3>
 
-<p>Some HAML files were causing Brakeman’s alias processing to slow to a crawl. This was due to the template code (sometimes) directly appending to the output variable via <code class="highlighter-rouge">&lt;&lt;</code>. Since Brakeman attempts to treat targets of <code class="highlighter-rouge">&lt;&lt;</code> as arrays, Brakeman was generating large data structures each time <code class="highlighter-rouge">&lt;&lt;</code> was encountered.</p>
+<p>Some HAML files were causing Brakeman’s alias processing to slow to a crawl. This was due to the template code (sometimes) directly appending to the output variable via <code class="language-plaintext highlighter-rouge">&lt;&lt;</code>. Since Brakeman attempts to treat targets of <code class="language-plaintext highlighter-rouge">&lt;&lt;</code> as arrays, Brakeman was generating large data structures each time <code class="language-plaintext highlighter-rouge">&lt;&lt;</code> was encountered.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/170">changes</a>]</p>
 
 <h3 id="handle-pre-release-versions">Handle Pre-release Versions</h3>
 
-<p>When a <code class="highlighter-rouge">Gemfile.lock</code> file is present in a Rails application, Brakeman uses it to determine the version of Rails in use. Previous versions did not accept pre-release version numbers (like <code class="highlighter-rouge">3.1.2.rc1</code>), leading to version inappropriate warnings.</p>
+<p>When a <code class="language-plaintext highlighter-rouge">Gemfile.lock</code> file is present in a Rails application, Brakeman uses it to determine the version of Rails in use. Previous versions did not accept pre-release version numbers (like <code class="language-plaintext highlighter-rouge">3.1.2.rc1</code>), leading to version inappropriate warnings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/176">changes</a>)</p>
 
@@ -431,18 +431,18 @@ end
 
 <p>Several false positives related to redirects have been fixed, and the scope of the redirect check is somewhat reduced.</p>
 
-<p>Calls beginning with <code class="highlighter-rouge">Model.arel_table</code> should no longer be treated as user input (in any context).</p>
+<p>Calls beginning with <code class="language-plaintext highlighter-rouge">Model.arel_table</code> should no longer be treated as user input (in any context).</p>
 
-<p>Model instances returned by the <code class="highlighter-rouge">decorate</code> method in the <a href="https://github.com/drapergem/draper">Draper</a> gem are considered safe.</p>
+<p>Model instances returned by the <code class="language-plaintext highlighter-rouge">decorate</code> method in the <a href="https://github.com/drapergem/draper">Draper</a> gem are considered safe.</p>
 
-<p>Redirects to model associations (e.g, <code class="highlighter-rouge">belongs_to :account</code>) are considered safe.</p>
+<p>Redirects to model associations (e.g, <code class="language-plaintext highlighter-rouge">belongs_to :account</code>) are considered safe.</p>
 
 <p>Redirects to method calls with safe values should no longer warn. For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to blah(User.first) #No warning
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to blah(User.first) #No warning
 </code></pre></div></div>
 
-<p>Additionally, only the first argument of <code class="highlighter-rouge">redirect_to</code> will be checked for user input.</p>
+<p>Additionally, only the first argument of <code class="language-plaintext highlighter-rouge">redirect_to</code> will be checked for user input.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/177">changes</a>)</p>
 
@@ -454,7 +454,7 @@ end
 
 <h3 id="integer-output-false-positives">Integer Output False Positives</h3>
 
-<p>Calls to <code class="highlighter-rouge">to_i</code> should not trigger XSS warnings.</p>
+<p>Calls to <code class="language-plaintext highlighter-rouge">to_i</code> should not trigger XSS warnings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/179">changes</a>)</p>
 
@@ -527,11 +527,11 @@ end
 
 <h3 id="scope-calls-with-one-argument">Scope Calls with One Argument</h3>
 
-<p>Calls to <code class="highlighter-rouge">scope</code> with a single argument were causing errors in Brakeman’s SQL injection check.</p>
+<p>Calls to <code class="language-plaintext highlighter-rouge">scope</code> with a single argument were causing errors in Brakeman’s SQL injection check.</p>
 
 <p>The fixed error looked like:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>undefined method `node_type' for nil:NilClass  /something/brakeman/lib/brakeman/checks/check_sql.rb:75:in `block (2 levels) in find_scope_calls'
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>undefined method `node_type' for nil:NilClass  /something/brakeman/lib/brakeman/checks/check_sql.rb:75:in `block (2 levels) in find_scope_calls'
 </code></pre></div></div>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/157">changes</a>)</p>
@@ -540,10 +540,10 @@ end
 
 <p>In cases like below, where a collection of models is being rendered and the model name could be known, any resulting warnings will now reference the actual model name.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= render 'user', :collection =&gt; User.all %&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= render 'user', :collection =&gt; User.all %&gt;
 </code></pre></div></div>
 
-<p>Previously, Brakeman would report warnings with <code class="highlighter-rouge">UnknownModel</code>, whether or not the model name was actually known.</p>
+<p>Previously, Brakeman would report warnings with <code class="language-plaintext highlighter-rouge">UnknownModel</code>, whether or not the model name was actually known.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/155">changes</a>)</p>
 
@@ -603,25 +603,25 @@ end
 
 <ul>
   <li>Recover from errors in output formatting (<a href="https://github.com/presidentbeef/brakeman/pull/148">#148</a>)</li>
-  <li>Fix false positive in <code class="highlighter-rouge">redirect_to</code> (Neil Matatall) (<a href="https://github.com/presidentbeef/brakeman/issues/143">#143</a>)</li>
-  <li>Fix problems with removal of <code class="highlighter-rouge">Sexp#method_missing</code> (<a href="https://github.com/presidentbeef/brakeman/pull/150">#150</a>)</li>
+  <li>Fix false positive in <code class="language-plaintext highlighter-rouge">redirect_to</code> (Neil Matatall) (<a href="https://github.com/presidentbeef/brakeman/issues/143">#143</a>)</li>
+  <li>Fix problems with removal of <code class="language-plaintext highlighter-rouge">Sexp#method_missing</code> (<a href="https://github.com/presidentbeef/brakeman/pull/150">#150</a>)</li>
   <li>Fix array indexing in alias processing (<a href="https://github.com/presidentbeef/brakeman/pull/145">#145</a>)</li>
-  <li>Fix old <code class="highlighter-rouge">mail_to</code> vulnerability check (<a href="https://github.com/presidentbeef/brakeman/pull/147">#147</a>)</li>
+  <li>Fix old <code class="language-plaintext highlighter-rouge">mail_to</code> vulnerability check (<a href="https://github.com/presidentbeef/brakeman/pull/147">#147</a>)</li>
   <li>Fix rescans when only controller action changes (<a href="https://github.com/presidentbeef/brakeman/pull/141">#141</a>)</li>
   <li>Allow comparison of versions with unequal lengths (<a href="https://github.com/presidentbeef/brakeman/pull/144">#144</a>)</li>
   <li>Handle super calls with blocks (<a href="https://github.com/presidentbeef/brakeman/pull/146">#146</a>)</li>
   <li>Remove malformed Sexps from HAML processing  (<a href="https://github.com/presidentbeef/brakeman/pull/149">#149</a>)</li>
-  <li>Respect <code class="highlighter-rouge">-q</code> flag for “Rails 3 detected” message</li>
+  <li>Respect <code class="language-plaintext highlighter-rouge">-q</code> flag for “Rails 3 detected” message</li>
 </ul>
 
 <h3 id="fix-crashes-when-generating-report">Fix Crashes when Generating Report</h3>
 
 <p>Some scans were causing Brakeman to crash while generating reports with an error like:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lib/brakeman/warning.rb:78:in `format_code': undefined method `gsub' for nil:NilClass (NoMethodError)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lib/brakeman/warning.rb:78:in `format_code': undefined method `gsub' for nil:NilClass (NoMethodError)
 </code></pre></div></div>
 
-<p>This was due to a combination of the removal of <code class="highlighter-rouge">method_missing</code> behavior from <code class="highlighter-rouge">Sexp</code> and the <code class="highlighter-rouge">OutputProcessor</code> not handling errors well.</p>
+<p>This was due to a combination of the removal of <code class="language-plaintext highlighter-rouge">method_missing</code> behavior from <code class="language-plaintext highlighter-rouge">Sexp</code> and the <code class="language-plaintext highlighter-rouge">OutputProcessor</code> not handling errors well.</p>
 
 <p>The problem should be fixed now, but please report an issue if “[Format Error]” shows up in reports.</p>
 
@@ -629,19 +629,19 @@ end
 
 <p>Neil Matatall fixed <a href="https://github.com/presidentbeef/brakeman/issues/143">an issue</a> with a false positive when redirecting to an array.</p>
 
-<p>When <code class="highlighter-rouge">redirect_to</code> is given an array, Rails eventually falls through to <code class="highlighter-rouge">polymorphic_path</code>, which will only return a path, not a full URL. Brakeman only checks for redirects that can redirect to a different host, so this is considered safe.</p>
+<p>When <code class="language-plaintext highlighter-rouge">redirect_to</code> is given an array, Rails eventually falls through to <code class="language-plaintext highlighter-rouge">polymorphic_path</code>, which will only return a path, not a full URL. Brakeman only checks for redirects that can redirect to a different host, so this is considered safe.</p>
 
-<h3 id="sexp-and-method_missing">Sexp and <code class="highlighter-rouge">method_missing</code></h3>
+<h3 id="sexp-and-method_missing">Sexp and <code class="language-plaintext highlighter-rouge">method_missing</code></h3>
 
-<p>The original <code class="highlighter-rouge">Sexp</code> code from RubyParser uses <code class="highlighter-rouge">method_missing</code> to find and optionally delete nodes. This functionality is not used very often (never in Brakeman) but has covered up bugs that would otherwise been found. Therefore, <code class="highlighter-rouge">Sexp#method_missing</code> has been removed in Brakeman. However, it turns out that <a href="https://github.com/seattlerb/ruby2ruby">Ruby2Ruby</a> uses it in a couple places. Brakeman uses Ruby2Ruby to covert s-expressions back to readable Ruby code, particularly when generating reports. This lead to some crashes.</p>
+<p>The original <code class="language-plaintext highlighter-rouge">Sexp</code> code from RubyParser uses <code class="language-plaintext highlighter-rouge">method_missing</code> to find and optionally delete nodes. This functionality is not used very often (never in Brakeman) but has covered up bugs that would otherwise been found. Therefore, <code class="language-plaintext highlighter-rouge">Sexp#method_missing</code> has been removed in Brakeman. However, it turns out that <a href="https://github.com/seattlerb/ruby2ruby">Ruby2Ruby</a> uses it in a couple places. Brakeman uses Ruby2Ruby to covert s-expressions back to readable Ruby code, particularly when generating reports. This lead to some crashes.</p>
 
 <h3 id="fix-array-indexing">Fix Array Indexing</h3>
 
 <p>Brakeman can handle pulling values out of simple arrays. Or it should be able to, but it keeps breaking. Should be fixed now!</p>
 
-<h3 id="fix-mail_to-check">Fix <code class="highlighter-rouge">mail_to</code> Check</h3>
+<h3 id="fix-mail_to-check">Fix <code class="language-plaintext highlighter-rouge">mail_to</code> Check</h3>
 
-<p>There is a Brakeman check for an <a href="https://groups.google.com/d/topic/rubyonrails-security/8CpI7egxX4E/discussion">old vulnerability</a> in <code class="highlighter-rouge">mail_to</code>. However, it turns out this check has been broken for a while. But now it is fixed! And there are regression tests.</p>
+<p>There is a Brakeman check for an <a href="https://groups.google.com/d/topic/rubyonrails-security/8CpI7egxX4E/discussion">old vulnerability</a> in <code class="language-plaintext highlighter-rouge">mail_to</code>. However, it turns out this check has been broken for a while. But now it is fixed! And there are regression tests.</p>
 
 <h3 id="fix-rescans-on-controller-changes">Fix Rescans on Controller Changes</h3>
 

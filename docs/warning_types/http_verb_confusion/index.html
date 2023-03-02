@@ -78,25 +78,25 @@
     <h1 class="entry-title">HTTP Verb Confusion</h1>
   </header>
   
-  <p>Ruby on Rails treats <code class="highlighter-rouge">HEAD</code> requests just like <code class="highlighter-rouge">GET</code> requests, except it drops the
-response body and does not return it to the client <em>and</em> <code class="highlighter-rouge">request.get?</code> returns <code class="highlighter-rouge">false</code>.</p>
+  <p>Ruby on Rails treats <code class="language-plaintext highlighter-rouge">HEAD</code> requests just like <code class="language-plaintext highlighter-rouge">GET</code> requests, except it drops the
+response body and does not return it to the client <em>and</em> <code class="language-plaintext highlighter-rouge">request.get?</code> returns <code class="language-plaintext highlighter-rouge">false</code>.</p>
 
-<p>If code is assuming a request is either a <code class="highlighter-rouge">GET</code> or a <code class="highlighter-rouge">POST</code> and uses <code class="highlighter-rouge">request.get?</code> to check,
-then a <code class="highlighter-rouge">HEAD</code> request will be treated like a <code class="highlighter-rouge">POST</code> instead of a <code class="highlighter-rouge">GET</code>.
+<p>If code is assuming a request is either a <code class="language-plaintext highlighter-rouge">GET</code> or a <code class="language-plaintext highlighter-rouge">POST</code> and uses <code class="language-plaintext highlighter-rouge">request.get?</code> to check,
+then a <code class="language-plaintext highlighter-rouge">HEAD</code> request will be treated like a <code class="language-plaintext highlighter-rouge">POST</code> instead of a <code class="language-plaintext highlighter-rouge">GET</code>.
 This may trigger the wrong logic or allow a request to bypass CSRF protection
-(since <code class="highlighter-rouge">GET</code>/<code class="highlighter-rouge">HEAD</code> requests are not protected).</p>
+(since <code class="language-plaintext highlighter-rouge">GET</code>/<code class="language-plaintext highlighter-rouge">HEAD</code> requests are not protected).</p>
 
 <p><a href="https://blog.teddykatz.com/2019/11/05/github-oauth-bypass.html">This post explains a vulnerability in GitHub</a>
 arising from this confusion.</p>
 
-<p>To avoid introducing a vulnerabilty with <code class="highlighter-rouge">request.get?</code>,
-either use completely separate routes and actions for <code class="highlighter-rouge">GET</code> vs <code class="highlighter-rouge">POST</code> (preferred!):</p>
+<p>To avoid introducing a vulnerabilty with <code class="language-plaintext highlighter-rouge">request.get?</code>,
+either use completely separate routes and actions for <code class="language-plaintext highlighter-rouge">GET</code> vs <code class="language-plaintext highlighter-rouge">POST</code> (preferred!):</p>
 
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get</span> <span class="s1">'/some/path'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'my_controller#some_action'</span>
 <span class="n">post</span> <span class="s1">'/some/path'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'my_controller#a_different_action'</span>
 </code></pre></div></div>
 
-<p>or else check <code class="highlighter-rouge">request.post?</code> explicitly:</p>
+<p>or else check <code class="language-plaintext highlighter-rouge">request.post?</code> explicitly:</p>
 
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">request</span><span class="p">.</span><span class="nf">get?</span>
   <span class="c1"># do something</span>

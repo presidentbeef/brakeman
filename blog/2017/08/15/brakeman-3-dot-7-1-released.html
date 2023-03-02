@@ -98,26 +98,26 @@
 <p><em>Changes since 3.7.1</em>:</p>
 
 <ul>
-  <li>Fix <code class="highlighter-rouge">--ensure-latest</code> (<a href="https://github.com/presidentbeef/brakeman/pull/1079">David Guyon</a>)</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">--ensure-latest</code> (<a href="https://github.com/presidentbeef/brakeman/pull/1079">David Guyon</a>)</li>
 </ul>
 
 <p><em>Changes since 3.7.0:</em></p>
 
 <ul>
-  <li>Handle simple guard with <code class="highlighter-rouge">return</code> at end of branch (<a href="https://github.com/presidentbeef/brakeman/issues/1073">#1073</a>)</li>
+  <li>Handle simple guard with <code class="language-plaintext highlighter-rouge">return</code> at end of branch (<a href="https://github.com/presidentbeef/brakeman/issues/1073">#1073</a>)</li>
   <li>Add more collection methods for iteration detection</li>
-  <li>Modularize <code class="highlighter-rouge">bin/brakeman</code></li>
-  <li>Improve multi-value <code class="highlighter-rouge">Sexp</code> error message</li>
-  <li>Update <code class="highlighter-rouge">ruby2ruby</code> and <code class="highlighter-rouge">ruby_parser</code> dependencies</li>
+  <li>Modularize <code class="language-plaintext highlighter-rouge">bin/brakeman</code></li>
+  <li>Improve multi-value <code class="language-plaintext highlighter-rouge">Sexp</code> error message</li>
+  <li>Update <code class="language-plaintext highlighter-rouge">ruby2ruby</code> and <code class="language-plaintext highlighter-rouge">ruby_parser</code> dependencies</li>
 </ul>
 
 <h3 id="another-simple-guard">Another Simple Guard</h3>
 
-<p>Brakeman will now handle when the branch in a simple guard condition ends in <code class="highlighter-rouge">return</code>.</p>
+<p>Brakeman will now handle when the branch in a simple guard condition ends in <code class="language-plaintext highlighter-rouge">return</code>.</p>
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unless [:valid, :value].include? params[:x]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unless [:valid, :value].include? params[:x]
   do_stuff
   more_stuff
   return
@@ -138,7 +138,7 @@ x.send(params[:x]) # Will no longer warn because `params[:x]` must be 'safe'
 
 <h3 id="modularize-commandline">Modularize Commandline</h3>
 
-<p>The logic in the <code class="highlighter-rouge">brakeman</code> executable has now entirely been moved to <a href="https://github.com/presidentbeef/brakeman/blob/49f675a88ba12ad4fa799770f5499c952650a56c/lib/brakeman/commandline.rb"><code class="highlighter-rouge">Brakeman::Commandline</code></a> for easier testing and custom behavior.</p>
+<p>The logic in the <code class="language-plaintext highlighter-rouge">brakeman</code> executable has now entirely been moved to <a href="https://github.com/presidentbeef/brakeman/blob/49f675a88ba12ad4fa799770f5499c952650a56c/lib/brakeman/commandline.rb"><code class="language-plaintext highlighter-rouge">Brakeman::Commandline</code></a> for easier testing and custom behavior.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1076">changes</a>)</p>
 
@@ -146,7 +146,7 @@ x.send(params[:x]) # Will no longer warn because `params[:x]` must be 'safe'
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>9ad563247cc6a57b965e59e5bbbaefa202ce34ceb6d10e97ce500406d60cdb6e  brakeman-3.7.2.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>9ad563247cc6a57b965e59e5bbbaefa202ce34ceb6d10e97ce500406d60cdb6e  brakeman-3.7.2.gem
 5b753206f8e5937c33494edd323a9e6573e07958d9f8f5bb662b0f6085eafe19  brakeman-lib-3.7.2.gem
 517a074cb92ece8a7e426ea221d63ddbcae6e3b851664083b7e73e6d7e0dd138  brakeman-min-3.7.2.gem
 </code></pre></div></div>
@@ -158,8 +158,8 @@ x.send(params[:x]) # Will no longer warn because `params[:x]` must be 'safe'
 <p>At least two major changes will be coming in Brakeman 4.0:</p>
 
 <ul>
-  <li>The <code class="highlighter-rouge">plain</code> report format will be the default instead of tables</li>
-  <li><code class="highlighter-rouge">-z</code> or <code class="highlighter-rouge">--exit-on-warn</code> (sets exit code if any warnings are found) will be on by default</li>
+  <li>The <code class="language-plaintext highlighter-rouge">plain</code> report format will be the default instead of tables</li>
+  <li><code class="language-plaintext highlighter-rouge">-z</code> or <code class="language-plaintext highlighter-rouge">--exit-on-warn</code> (sets exit code if any warnings are found) will be on by default</li>
 </ul>
 
 <p>There will likely be other changes, but these two will be the most obvious.</p>

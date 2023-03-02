@@ -97,7 +97,7 @@
 
 <p>This release includes a number of fixes and new features. In particular, please note there are large changes to how reports and warning messages are generated. Please report any issues!</p>
 
-<p>Also, the <code class="highlighter-rouge">brakeman</code> gem version of this release no longer supports use of Slim with Ruby 1.9.3. See below for details.</p>
+<p>Also, the <code class="language-plaintext highlighter-rouge">brakeman</code> gem version of this release no longer supports use of Slim with Ruby 1.9.3. See below for details.</p>
 
 <p>As noted previously, due to the <a href="https://brakemanscanner.org/blog/2018/06/28/brakeman-has-been-acquired-by-synopsys/index.html">Synopsys acquisition</a> Brakeman is now distributed under a non-OSS license. See below for details.</p>
 
@@ -105,20 +105,20 @@
 
 <ul>
   <li>Add check for CVE-2018-3760</li>
-  <li>Add <code class="highlighter-rouge">--enable</code> option to enable optional checks</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--enable</code> option to enable optional checks</li>
   <li>Add Dockerfile to run Brakeman inside Docker (<a href="https://github.com/ryankemper">Ryan Kemper</a>)</li>
-  <li>Handle empty <code class="highlighter-rouge">secrets.yml</code> files (<a href="https://github.com/naokikimura">Naoki Kimura</a>)</li>
+  <li>Handle empty <code class="language-plaintext highlighter-rouge">secrets.yml</code> files (<a href="https://github.com/naokikimura">Naoki Kimura</a>)</li>
   <li>Ignore Tempfiles in FileAccess warnings (<a href="https://github.com/cmkoller">Christina Koller</a>)</li>
-  <li>Avoid warning about command injection when <code class="highlighter-rouge">String#shellescape</code> and <code class="highlighter-rouge">Shellwords.shelljoin</code> are used (<a href="https://github.com/oggy">George Ogata</a>)</li>
-  <li>Treat <code class="highlighter-rouge">if not</code> like <code class="highlighter-rouge">unless</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1225">#1225</a>)</li>
+  <li>Avoid warning about command injection when <code class="language-plaintext highlighter-rouge">String#shellescape</code> and <code class="language-plaintext highlighter-rouge">Shellwords.shelljoin</code> are used (<a href="https://github.com/oggy">George Ogata</a>)</li>
+  <li>Treat <code class="language-plaintext highlighter-rouge">if not</code> like <code class="language-plaintext highlighter-rouge">unless</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1225">#1225</a>)</li>
   <li>Fix Rails 4 configuration handling</li>
   <li>Set default encoding to UTF-8</li>
   <li>Support reading gem versions from gemspecs</li>
   <li>Support gem versions which are just major.minor (e.g. 3.0)</li>
-  <li>Correctly set <code class="highlighter-rouge">rel="noreferrer"</code> in HTML reports</li>
+  <li>Correctly set <code class="language-plaintext highlighter-rouge">rel="noreferrer"</code> in HTML reports</li>
   <li>Fix thread-safety issue in CallIndex</li>
   <li>Fix trim mode for ERb templates in old Rails versions</li>
-  <li>Avoid <code class="highlighter-rouge">nil</code> errors when concatenating arrays</li>
+  <li>Avoid <code class="language-plaintext highlighter-rouge">nil</code> errors when concatenating arrays</li>
   <li>Add rendered template information to render paths</li>
   <li>Trim some unnecessary files from bundled gems</li>
   <li>Deadcode and typo fixes found via Coverity</li>
@@ -131,7 +131,7 @@
 <h3 id="cve-2018-3760">CVE-2018-3760</h3>
 
 <p>A new check was added for <a href="https://groups.google.com/d/msg/rubyonrails-security/ft_J--l55fM/7roDfQ50BwAJ">CVE-2018-3760</a> (Sprockets path traversal vulnerability).
-Brakeman will warn about use of the affected Sprockets version and <code class="highlighter-rouge">config.assets.compile = true</code>.</p>
+Brakeman will warn about use of the affected Sprockets version and <code class="language-plaintext highlighter-rouge">config.assets.compile = true</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1241">changes</a>)</p>
 
@@ -139,7 +139,7 @@ Brakeman will warn about use of the affected Sprockets version and <code class="
 
 <p>Brakeman has options to enable <em>all</em> checks, to disable <em>some</em> checks, and to enable a subset of checks, but not to enable <em>default</em>+<em>some optional</em> checks.</p>
 
-<p>The <code class="highlighter-rouge">--enable</code> option has been added to allow enabling individual optional checks.</p>
+<p>The <code class="language-plaintext highlighter-rouge">--enable</code> option has been added to allow enabling individual optional checks.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1263">changes</a>)</p>
 
@@ -149,7 +149,7 @@ Brakeman will warn about use of the affected Sprockets version and <code class="
 
 <p>Additionally, there is now a <a href="https://hub.docker.com/r/presidentbeef/brakeman">Docker image available for Brakeman</a>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull presidentbeef/brakeman
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull presidentbeef/brakeman
 docker run -v "$(pwd)":/code brakeman --color
 </code></pre></div></div>
 
@@ -161,7 +161,7 @@ docker run -v "$(pwd)":/code brakeman --color
 
 <h3 id="empty-secrets">Empty Secrets</h3>
 
-<p>Thanks to <a href="https://github.com/naokikimura">Naoki Kimura</a>, Brakeman will no longer show an error when the <code class="highlighter-rouge">secrets.yml</code> file is empty.</p>
+<p>Thanks to <a href="https://github.com/naokikimura">Naoki Kimura</a>, Brakeman will no longer show an error when the <code class="language-plaintext highlighter-rouge">secrets.yml</code> file is empty.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1254">changes</a>)</p>
 
@@ -173,7 +173,7 @@ docker run -v "$(pwd)":/code brakeman --color
 
 <h3 id="shellescape-and-command-injection">Shellescape and Command Injection</h3>
 
-<p>Thanks to <a href="https://github.com/oggy">George Ogata</a>, Brakeman will no longer warn about command injection when <code class="highlighter-rouge">shelljoin</code> or <code class="highlighter-rouge">shellescape</code> are used.</p>
+<p>Thanks to <a href="https://github.com/oggy">George Ogata</a>, Brakeman will no longer warn about command injection when <code class="language-plaintext highlighter-rouge">shelljoin</code> or <code class="language-plaintext highlighter-rouge">shellescape</code> are used.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1242">changes</a>)</p>
 
@@ -183,7 +183,7 @@ docker run -v "$(pwd)":/code brakeman --color
 
 <p>Brakeman was not picking up any configuration options if this format was used:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;AppName&gt;.application.configure do
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;AppName&gt;.application.configure do
   #...
 end
 </code></pre></div></div>
@@ -192,23 +192,23 @@ end
 
 <h3 id="default-encoding">Default Encoding</h3>
 
-<p>Brakeman now sets the default external encoding to <code class="highlighter-rouge">UTF-8</code> to avoid issues where the environment might set a different encoding.</p>
+<p>Brakeman now sets the default external encoding to <code class="language-plaintext highlighter-rouge">UTF-8</code> to avoid issues where the environment might set a different encoding.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1288">changes</a>)</p>
 
 <h3 id="gem-versions">Gem Versions</h3>
 
-<p>Brakeman can now read gem versions from <code class="highlighter-rouge">gemspec</code> files. This is common for Rails engines.</p>
+<p>Brakeman can now read gem versions from <code class="language-plaintext highlighter-rouge">gemspec</code> files. This is common for Rails engines.</p>
 
-<p>Additionally, Brakeman now understands versions which only specify major/minor versions (e.g. <code class="highlighter-rouge">~&gt;4.0</code>).</p>
+<p>Additionally, Brakeman now understands versions which only specify major/minor versions (e.g. <code class="language-plaintext highlighter-rouge">~&gt;4.0</code>).</p>
 
-<p>The order of precedence is <code class="highlighter-rouge">Gemfile.lock</code> &gt; <code class="highlighter-rouge">Gemfile</code> &gt; <code class="highlighter-rouge">*.gemspec</code>.</p>
+<p>The order of precedence is <code class="language-plaintext highlighter-rouge">Gemfile.lock</code> &gt; <code class="language-plaintext highlighter-rouge">Gemfile</code> &gt; <code class="language-plaintext highlighter-rouge">*.gemspec</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1257/">changes</a>)</p>
 
 <h3 id="no-referrer-in-html-reports">No Referrer in HTML Reports</h3>
 
-<p>Brakeman has unfortunately been setting <code class="highlighter-rouge">rel="no-referrer"</code> instead of <code class="highlighter-rouge">rel="noreferrer"</code> in HTML reports.</p>
+<p>Brakeman has unfortunately been setting <code class="language-plaintext highlighter-rouge">rel="no-referrer"</code> instead of <code class="language-plaintext highlighter-rouge">rel="noreferrer"</code> in HTML reports.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1259/commits/d3e487bfd1d080971af56f7658bf2c8888e4cdb2">changes</a>)</p>
 
@@ -228,7 +228,7 @@ end
 
 <h3 id="array-joins">Array Joins</h3>
 
-<p>This release fixes a <code class="highlighter-rouge">nil</code> error when attempting to concatenate arrays.</p>
+<p>This release fixes a <code class="language-plaintext highlighter-rouge">nil</code> error when attempting to concatenate arrays.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1251">changes</a>)</p>
 
@@ -238,7 +238,7 @@ end
 
 <p>This is reflected in the JSON report:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      "render_path": [
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      "render_path": [
         {
           "type": "controller",
           "class": "HomeController",
@@ -259,7 +259,7 @@ end
 
 <h3 id="reduced-gem-size">Reduced Gem Size</h3>
 
-<p>The <code class="highlighter-rouge">brakeman</code> gem <a href="https://blog.presidentbeef.com/blog/2016/08/09/bundling-gem-dependencies-inside-ruby-gems/">bundles all its dependencies</a>, which makes the gem a bit big.</p>
+<p>The <code class="language-plaintext highlighter-rouge">brakeman</code> gem <a href="https://blog.presidentbeef.com/blog/2016/08/09/bundling-gem-dependencies-inside-ruby-gems/">bundles all its dependencies</a>, which makes the gem a bit big.</p>
 
 <p>This change removes some of the unneeded files (such as tests) and reduces the file size by about a third.</p>
 
@@ -273,7 +273,7 @@ end
 
 <p>Brakeman warning messages were previously just strings.</p>
 
-<p>In order to introduce some formatting flexibility, Brakeman warning messages are now constructed as arrays of <code class="highlighter-rouge">Message</code> objects.
+<p>In order to introduce some formatting flexibility, Brakeman warning messages are now constructed as arrays of <code class="language-plaintext highlighter-rouge">Message</code> objects.
 These objects specify the type of the message string (e.g. “code” or “plain”). At report generation time, the messages can be converted to a particular format,
 such as HTML, plaintext, etc.</p>
 
@@ -290,7 +290,7 @@ Please report any issues.</p>
 
 <p>Thanks to <a href="https://github.com/Jakenberg">Jake Peterson</a>, the Slim dependency has been updated to 4.0.1 to support newer syntax.</p>
 
-<p>Note that Slim 4.x not longer supports Ruby 1.9.3. You may need to use the <code class="highlighter-rouge">brakeman-lib</code> gem or update your Ruby version.</p>
+<p>Note that Slim 4.x not longer supports Ruby 1.9.3. You may need to use the <code class="language-plaintext highlighter-rouge">brakeman-lib</code> gem or update your Ruby version.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1285">changes</a>)</p>
 
@@ -315,7 +315,7 @@ Please report any issues.</p>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d3204cfe9d26782954ee8805fd748d11e8f950d2c1aee7c806c1856f273ee3b9  brakeman-4.4.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d3204cfe9d26782954ee8805fd748d11e8f950d2c1aee7c806c1856f273ee3b9  brakeman-4.4.0.gem
 88849f05b1c85756fee8974b8061383493714676187af3b94b6a7978a7e1e58d  brakeman-lib-4.4.0.gem
 0417c20b0b6dab00c5cf5e9341868dc5d8139bca463bf45fefa925cac286127e  brakeman-min-4.4.0.gem
 </code></pre></div></div>

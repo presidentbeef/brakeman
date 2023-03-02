@@ -102,9 +102,9 @@
 
 <ul>
   <li>Speed improvements for CheckExecute and CheckRender</li>
-  <li>Check <code class="highlighter-rouge">named_scope</code> and <code class="highlighter-rouge">scope</code> for SQL injection</li>
-  <li>Add <code class="highlighter-rouge">--rake</code> option to create rake task to run Brakeman</li>
-  <li>Add <code class="highlighter-rouge">--summary</code> option to only output summary</li>
+  <li>Check <code class="language-plaintext highlighter-rouge">named_scope</code> and <code class="language-plaintext highlighter-rouge">scope</code> for SQL injection</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--rake</code> option to create rake task to run Brakeman</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--summary</code> option to only output summary</li>
   <li>Add experimental support for rescanning a subset of files</li>
   <li>Fix a problem with Rails 3 routes</li>
 </ul>
@@ -117,36 +117,36 @@
 
 <h3 id="more-sql-injection-checks">More SQL Injection Checks</h3>
 
-<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/30">a5sk4s</a> for pointing out that Brakeman was not checking <code class="highlighter-rouge">named_scope</code> for SQL injection. This has been rectified. For Rails 3.1 and up, <code class="highlighter-rouge">scope</code> will be checked.</p>
+<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/30">a5sk4s</a> for pointing out that Brakeman was not checking <code class="language-plaintext highlighter-rouge">named_scope</code> for SQL injection. This has been rectified. For Rails 3.1 and up, <code class="language-plaintext highlighter-rouge">scope</code> will be checked.</p>
 
-<p>Also, it seems common to use <code class="highlighter-rouge">Model.table_name</code> inside SQL statements. This will no longer raise a warning.</p>
+<p>Also, it seems common to use <code class="language-plaintext highlighter-rouge">Model.table_name</code> inside SQL statements. This will no longer raise a warning.</p>
 
 <h3 id="brakeman-rake-task">Brakeman Rake Task</h3>
 
-<p>The <code class="highlighter-rouge">--rake</code> option can now be used to install a Rake task for running Brakeman. The task will be copied to <code class="highlighter-rouge">lib/tasks/brakeman.rake</code>.</p>
+<p>The <code class="language-plaintext highlighter-rouge">--rake</code> option can now be used to install a Rake task for running Brakeman. The task will be copied to <code class="language-plaintext highlighter-rouge">lib/tasks/brakeman.rake</code>.</p>
 
 <p>To use, run this from the root of the Rails app:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --rake
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --rake
 </code></pre></div></div>
 
 <p>Then, to run Brakeman:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake brakeman:run
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake brakeman:run
 </code></pre></div></div>
 
 <p>Naturally, this requires Rake to be installed.</p>
 
 <p>To output to a specific file:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake brakeman:run["report.html"]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake brakeman:run["report.html"]
 </code></pre></div></div>
 
 <p>More actions may be added in the future.</p>
 
 <h3 id="summary-option">Summary Option</h3>
 
-<p>Sometimes the specifics of a scan are not needed. The <code class="highlighter-rouge">--summary</code> option will limit the report output to just the summary section.</p>
+<p>Sometimes the specifics of a scan are not needed. The <code class="language-plaintext highlighter-rouge">--summary</code> option will limit the report output to just the summary section.</p>
 
 <h3 id="rescan-for-subset-of-files">Rescan for Subset of Files</h3>
 
@@ -206,11 +206,11 @@
 
 <p>The 1.0 release reduced the time taken for running the vulnerability checks, but (unrelatedly) the time for processing the source code increased.</p>
 
-<p>This release makes some improvements that should improve scan times. If it takes an intolerable amount of time for scans (more than 5-10 minutes), try using the <code class="highlighter-rouge">--faster</code> option. This will possibly report fewer vulnerabilities, but should be much faster.</p>
+<p>This release makes some improvements that should improve scan times. If it takes an intolerable amount of time for scans (more than 5-10 minutes), try using the <code class="language-plaintext highlighter-rouge">--faster</code> option. This will possibly report fewer vulnerabilities, but should be much faster.</p>
 
 <h3 id="progress-reporting">Progress Reporting</h3>
 
-<p>Brakeman will now provide better feedback about its progress while processing applications. For even more output, use the <code class="highlighter-rouge">--debug</code> option.</p>
+<p>Brakeman will now provide better feedback about its progress while processing applications. For even more output, use the <code class="language-plaintext highlighter-rouge">--debug</code> option.</p>
 
 <h3 id="handle-more-operators">Handle More Operators</h3>
 
@@ -356,7 +356,7 @@ end
 
   <div class="entry-content"><p>Because there have been some major changes since 0.9.2, I have released a release candidate just in case there are problems. Please try it out and report any issues!</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install brakeman --pre
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install brakeman --pre
 </code></pre></div></div>
 
 <p><strong>Changes:</strong></p>
@@ -378,7 +378,7 @@ end
 
 <p>After some re-factoring, Brakeman can now be used as a library.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'brakeman'
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'brakeman'
 
 Brakeman.run :app_path =&gt; 'my_app'
 </code></pre></div></div>
@@ -389,7 +389,7 @@ Brakeman.run :app_path =&gt; 'my_app'
 
 <h3 id="option-to-return-error-code">Option to Return Error Code</h3>
 
-<p><code class="highlighter-rouge">--exit-on-warn</code> will cause Brakeman to exit with an error code if any warnings are found.</p>
+<p><code class="language-plaintext highlighter-rouge">--exit-on-warn</code> will cause Brakeman to exit with an error code if any warnings are found.</p>
 
 <h3 id="fix-context-in-html-report">Fix Context in HTML Report</h3>
 
@@ -454,7 +454,7 @@ Brakeman.run :app_path =&gt; 'my_app'
 
 <h3 id="look-for-t">Look for t()</h3>
 
-<p>Both the <code class="highlighter-rouge">translate</code> and its shorter alias <code class="highlighter-rouge">t</code> will cause the warning about the cross-site scripting bug in them to be set to high confidence. If neither of these functions are found in the application, the confidence is set to medium.</p>
+<p>Both the <code class="language-plaintext highlighter-rouge">translate</code> and its shorter alias <code class="language-plaintext highlighter-rouge">t</code> will cause the warning about the cross-site scripting bug in them to be set to high confidence. If neither of these functions are found in the application, the confidence is set to medium.</p>
 </div>
   
   

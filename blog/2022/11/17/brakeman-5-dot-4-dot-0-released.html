@@ -102,7 +102,7 @@
   <li>Add check for absolute paths issue with Pathname (<a href="https://github.com/presidentbeef/brakeman/issues/1721">#1721</a>)</li>
   <li>Handle multiple values and splats in case/when (<a href="https://github.com/presidentbeef/brakeman/issues/1730">#1730</a>)</li>
   <li>Ignore more model methods in redirects (<a href="https://github.com/presidentbeef/brakeman/issues/1723">#1723</a>)</li>
-  <li>Fix <code class="highlighter-rouge">load_rails_defaults</code> overwriting settings in the Rails application (<a href="https://github.com/jamgregory">James Gregory-Monk</a>)</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">load_rails_defaults</code> overwriting settings in the Rails application (<a href="https://github.com/jamgregory">James Gregory-Monk</a>)</li>
   <li>Use relative paths for CodeClimate report format (<a href="https://github.com/RubyBrewsday">Mike Poage</a>)</li>
 </ul>
 
@@ -112,26 +112,26 @@
 
 <ul>
   <li>RSA key sizes less than 2048 bits</li>
-  <li>Use of padding modes other than OAEP (including <code class="highlighter-rouge">none</code>)</li>
+  <li>Use of padding modes other than OAEP (including <code class="language-plaintext highlighter-rouge">none</code>)</li>
 </ul>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1737">changes</a>)</p>
 
 <h3 id="unexpected-absolute-paths">Unexpected Absolute Paths</h3>
 
-<p>When joining paths using <code class="highlighter-rouge">Pathname#join</code>, any arguments that start with a forward slash (<code class="highlighter-rouge">/</code>) will cause the rest of the path to be relative to that absolute path. This may cause unexpected behavior and deviates from how <code class="highlighter-rouge">File.join</code> works.</p>
+<p>When joining paths using <code class="language-plaintext highlighter-rouge">Pathname#join</code>, any arguments that start with a forward slash (<code class="language-plaintext highlighter-rouge">/</code>) will cause the rest of the path to be relative to that absolute path. This may cause unexpected behavior and deviates from how <code class="language-plaintext highlighter-rouge">File.join</code> works.</p>
 
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Pathname</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'a'</span><span class="p">).</span><span class="nf">join</span><span class="p">(</span><span class="s1">'b'</span><span class="p">,</span> <span class="s1">'/c'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">)</span>
  <span class="o">=&gt;</span> <span class="c1">#&lt;Pathname:/c/d&gt;</span>
 </code></pre></div></div>
 
-<p>(There are more <code class="highlighter-rouge">Pathname</code> methods with this issue - to be added in a future release.)</p>
+<p>(There are more <code class="language-plaintext highlighter-rouge">Pathname</code> methods with this issue - to be added in a future release.)</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1733">changes</a>)</p>
 
-<h3 id="multiple-values-in-whens">Multiple Values in <code class="highlighter-rouge">when</code>s</h3>
+<h3 id="multiple-values-in-whens">Multiple Values in <code class="language-plaintext highlighter-rouge">when</code>s</h3>
 
-<p>If a <code class="highlighter-rouge">when</code> clause contains only ‘safe’ values, Brakeman will treat the <code class="highlighter-rouge">case</code> value as safe:</p>
+<p>If a <code class="language-plaintext highlighter-rouge">when</code> clause contains only ‘safe’ values, Brakeman will treat the <code class="language-plaintext highlighter-rouge">case</code> value as safe:</p>
 
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
 
@@ -148,10 +148,10 @@
 <p>More model methods are ignored in redirects:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">first!</code></li>
-  <li><code class="highlighter-rouge">last!</code></li>
-  <li><code class="highlighter-rouge">sole</code></li>
-  <li><code class="highlighter-rouge">find_by_sole</code></li>
+  <li><code class="language-plaintext highlighter-rouge">first!</code></li>
+  <li><code class="language-plaintext highlighter-rouge">last!</code></li>
+  <li><code class="language-plaintext highlighter-rouge">sole</code></li>
+  <li><code class="language-plaintext highlighter-rouge">find_by_sole</code></li>
 </ul>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1732">changes</a>)</p>
@@ -166,7 +166,7 @@
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bab990760949e999c5d52b297d8badda376754eb296c91abf829def733ed9d51  brakeman-5.4.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bab990760949e999c5d52b297d8badda376754eb296c91abf829def733ed9d51  brakeman-5.4.0.gem
 2b5a0cd5845b8c0e1b83e00122654af48b025ac3e6625c9ecbc5535226068416  brakeman-lib-5.4.0.gem
 fcbd60456c5db62767d143696e1edf8e4eaee734f2a039903aeca7bb4e6b3dbf  brakeman-min-5.4.0.gem
 </code></pre></div></div>

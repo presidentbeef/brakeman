@@ -99,8 +99,8 @@
 
 <ul>
   <li>Emit Brakeman’s native fingerprints for Code Climate engine (<a href="https://github.com/noahd1">Noah Davis</a>)</li>
-  <li>Ignore <code class="highlighter-rouge">secrets.yml</code> if in .gitignore (<a href="https://github.com/presidentbeef/brakeman/issues/777">#777</a>)</li>
-  <li>Work around <code class="highlighter-rouge">safe_yaml</code> error (<a href="https://github.com/presidentbeef/brakeman/issues/778">#778</a>)</li>
+  <li>Ignore <code class="language-plaintext highlighter-rouge">secrets.yml</code> if in .gitignore (<a href="https://github.com/presidentbeef/brakeman/issues/777">#777</a>)</li>
+  <li>Work around <code class="language-plaintext highlighter-rouge">safe_yaml</code> error (<a href="https://github.com/presidentbeef/brakeman/issues/778">#778</a>)</li>
   <li>Increase test coverage for option parsing (<a href="https://github.com/Zanadar">Zander Mackie</a>)</li>
   <li>Clean up Ruby warnings (<a href="https://github.com/andyw8">Andy Waite</a>)</li>
 </ul>
@@ -111,13 +111,13 @@
 
 <h3 id="ignored-secretsyml">Ignored secrets.yml</h3>
 
-<p>If <code class="highlighter-rouge">secrets.yml</code> is ignored via <code class="highlighter-rouge">.gitignore</code>, Brakeman will ignore it, too.</p>
+<p>If <code class="language-plaintext highlighter-rouge">secrets.yml</code> is ignored via <code class="language-plaintext highlighter-rouge">.gitignore</code>, Brakeman will ignore it, too.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/781">changes</a>)</p>
 
 <h3 id="safe-yaml-error">Safe YAML Error</h3>
 
-<p>For some people, in some cases, <code class="highlighter-rouge">date</code> is not loaded prior to loading <code class="highlighter-rouge">safe_yaml</code>. This release ensures <code class="highlighter-rouge">date</code> is loaded before using SafeYAML and only loads <code class="highlighter-rouge">safe_yaml</code> on demand.</p>
+<p>For some people, in some cases, <code class="language-plaintext highlighter-rouge">date</code> is not loaded prior to loading <code class="language-plaintext highlighter-rouge">safe_yaml</code>. This release ensures <code class="language-plaintext highlighter-rouge">date</code> is loaded before using SafeYAML and only loads <code class="language-plaintext highlighter-rouge">safe_yaml</code> on demand.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/782">changes</a>)</p>
 
@@ -131,7 +131,7 @@
 
 <p>The SHA256 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d53103d40a7ddf6ee2737770ecd0353b945a757d0fab6c50cde1eefba31f6197  brakeman-3.1.4.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d53103d40a7ddf6ee2737770ecd0353b945a757d0fab6c50cde1eefba31f6197  brakeman-3.1.4.gem
 a67d7c96090bc3b8193cf3b5db7af62ce719b9277d1b818ec6e9f96a52ad0caa  brakeman-min-3.1.4.gem
 </code></pre></div></div>
 

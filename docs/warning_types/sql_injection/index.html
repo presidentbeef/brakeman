@@ -84,22 +84,22 @@
 
 <p>A basic (Rails 2.x) example looks like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.first(:conditions =&gt; "username = '#{params[:username]}'")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.first(:conditions =&gt; "username = '#{params[:username]}'")
 </code></pre></div></div>
 
 <p>Brakeman would produce a warning like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Possible SQL injection near line 30: User.first(:conditions =&gt; ("username = '#{params[:username]}'")) 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Possible SQL injection near line 30: User.first(:conditions =&gt; ("username = '#{params[:username]}'")) 
 </code></pre></div></div>
 
 <p>The safe way to do this query is to use a parameterized query:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.first(:conditions =&gt; ["username = ?", params[:username]])
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.first(:conditions =&gt; ["username = ?", params[:username]])
 </code></pre></div></div>
 
 <p>Brakeman also understands the new Rails 3.x way of doing things (and local variables and concatentation):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username = params[:user][:name].downcase
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username = params[:user][:name].downcase
 password = params[:user][:password]
 
 User.first.where("username = '" + username + "' AND password = '" + password + "'")
@@ -107,7 +107,7 @@ User.first.where("username = '" + username + "' AND password = '" + password + "
 
 <p>This results in this kind of warning:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Possible SQL injection near line 37:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Possible SQL injection near line 37:
 User.first.where((((("username = '" + params[:user][:name].downcase) + "' AND password = '") + params[:user][:password]) + "'"))
 </code></pre></div></div>
 

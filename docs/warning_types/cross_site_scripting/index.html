@@ -82,7 +82,7 @@
 
 <p>XSS occurs when a user-manipulatable value is displayed on a web page without escaping it, allowing someone to inject Javascript or HTML into the page.</p>
 
-<p>In Rails 2.x, values need to be explicitly escaped (e.g., by using the <code class="highlighter-rouge">h</code> method). In Rails 3.x, auto-escaping in views is enabled by default. However, one can still use the <code class="highlighter-rouge">raw</code> method to output a value directly.</p>
+<p>In Rails 2.x, values need to be explicitly escaped (e.g., by using the <code class="language-plaintext highlighter-rouge">h</code> method). In Rails 3.x, auto-escaping in views is enabled by default. However, one can still use the <code class="language-plaintext highlighter-rouge">raw</code> method to output a value directly.</p>
 
 <p>See <a href="http://guides.rubyonrails.org/security.html#cross-site-scripting-xss">the Ruby Security Guide</a> for more details.</p>
 
@@ -90,52 +90,52 @@
 
 <p>Rails 2.x example in ERB:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= params[:query] %&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= params[:query] %&gt;
 </code></pre></div></div>
 
-<p>Brakeman looks for several situations that can allow XSS. The simplest is like the example above: a value from the <code class="highlighter-rouge">params</code> or <code class="highlighter-rouge">cookies</code> is being directly output to a view. In such cases, it will issue a warning like:</p>
+<p>Brakeman looks for several situations that can allow XSS. The simplest is like the example above: a value from the <code class="language-plaintext highlighter-rouge">params</code> or <code class="language-plaintext highlighter-rouge">cookies</code> is being directly output to a view. In such cases, it will issue a warning like:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Unescaped parameter value near line 3: params[:query]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Unescaped parameter value near line 3: params[:query]
 </code></pre></div></div>
 
 <p>By default, Brakeman will also warn when a parameter or cookie value is used as an argument to a method, the result of which is output unescaped to a view.</p>
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= some_method(cookie[:name]) %&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= some_method(cookie[:name]) %&gt;
 </code></pre></div></div>
 
 <p>This raises a warning like:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Unescaped cookie value near line 5: some_method(cookies[:oreo])
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Unescaped cookie value near line 5: some_method(cookies[:oreo])
 </code></pre></div></div>
 
 <p>However, the confidence level for this warning will be weak, because it is not directly outputting the cookie value.</p>
 
-<p>Some methods are known to Brakeman to either be dangerous (<code class="highlighter-rouge">link_to</code> is one) or safe (<code class="highlighter-rouge">escape_once</code>). Users can specify safe methods using the <code class="highlighter-rouge">--safe-methods</code> option. Alternatively, Brakeman can be set to <em>only</em> warn when values are used directly with the <code class="highlighter-rouge">--report-direct</code> option.</p>
+<p>Some methods are known to Brakeman to either be dangerous (<code class="language-plaintext highlighter-rouge">link_to</code> is one) or safe (<code class="language-plaintext highlighter-rouge">escape_once</code>). Users can specify safe methods using the <code class="language-plaintext highlighter-rouge">--safe-methods</code> option. Alternatively, Brakeman can be set to <em>only</em> warn when values are used directly with the <code class="language-plaintext highlighter-rouge">--report-direct</code> option.</p>
 
 <h3 id="model-attributes">Model Attributes</h3>
 
 <p>Because (many) models come from database values, Brakeman mistrusts them by default.</p>
 
-<p>For example, if <code class="highlighter-rouge">@user</code> is an instance of a model set in an action like</p>
+<p>For example, if <code class="language-plaintext highlighter-rouge">@user</code> is an instance of a model set in an action like</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def set_user
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def set_user
   @user = User.first
 end
 </code></pre></div></div>
 
 <p>and there is a view with</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= @user.name %&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= @user.name %&gt;
 </code></pre></div></div>
 
 <p>Brakeman will raise a warning like</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Unescaped model attribute near line 3: User.first.name
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Unescaped model attribute near line 3: User.first.name
 </code></pre></div></div>
 
-<p>If you trust all your data (although you probably shouldn’t), this can be disabled with <code class="highlighter-rouge">--ignore-model-output</code>.</p>
+<p>If you trust all your data (although you probably shouldn’t), this can be disabled with <code class="language-plaintext highlighter-rouge">--ignore-model-output</code>.</p>
 
 <hr />
 <p>Back to <a href="/docs/warning_types">Warning Types</a></p>

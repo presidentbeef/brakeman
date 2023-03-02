@@ -104,11 +104,11 @@
   <li>Add more informational JSON output (Neil Matatall)</li>
   <li>Add comparison to previous JSON report (Neil Matatall)</li>
   <li>Add highlighting of dangerous values in HTML/text reports</li>
-  <li><code class="highlighter-rouge">Model#update_attribute</code> should not raise mass assignment warning (Dave Worth)</li>
-  <li>Don’t check <code class="highlighter-rouge">find_by_*</code> method for SQL injection</li>
+  <li><code class="language-plaintext highlighter-rouge">Model#update_attribute</code> should not raise mass assignment warning (Dave Worth)</li>
+  <li>Don’t check <code class="language-plaintext highlighter-rouge">find_by_*</code> method for SQL injection</li>
   <li>Fix duplicate reporting of mass assignment and SQL injection</li>
   <li>Fix rescanning of deleted files</li>
-  <li>Properly check for <code class="highlighter-rouge">rails_xss</code> in Gemfile</li>
+  <li>Properly check for <code class="language-plaintext highlighter-rouge">rails_xss</code> in Gemfile</li>
 </ul>
 
 <h3 id="no-more-ruport">No More Ruport</h3>
@@ -127,7 +127,7 @@
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.json
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.json
 brakeman --compare report.json
 </code></pre></div></div>
 
@@ -143,7 +143,7 @@ brakeman --compare report.json
 
 <p>Dave Worth pointed out that Brakeman was a little overzealous in which methods it considered susceptible to mass assignment and SQL injection attacks.</p>
 
-<p>Brakeman will no longer check <code class="highlighter-rouge">update_attribute</code> for mass assignment or the <code class="highlighter-rouge">find_by_*</code> dynamic methods for SQL injection.</p>
+<p>Brakeman will no longer check <code class="language-plaintext highlighter-rouge">update_attribute</code> for mass assignment or the <code class="language-plaintext highlighter-rouge">find_by_*</code> dynamic methods for SQL injection.</p>
 
 <h3 id="fewer-mass-assignment-and-sql-injection-duplicates">Fewer Mass Assignment and SQL Injection Duplicates</h3>
 

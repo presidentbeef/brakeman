@@ -101,17 +101,17 @@
   <li>Add check for CVE-2012-5664 - SQL Injection</li>
   <li>Add check for CVE-2013-0155 - SQL Injection</li>
   <li>Add check for CVE-2013-0156 - Remote Code Execution</li>
-  <li>Add check for unsafe <code class="highlighter-rouge">YAML.load</code></li>
+  <li>Add check for unsafe <code class="language-plaintext highlighter-rouge">YAML.load</code></li>
   <li>Update to RubyParser 3.1.1 (neersighted)</li>
   <li>Remove ActiveSupport dependency (Neil Matatall)</li>
-  <li>Do not warn on arrays passed to <code class="highlighter-rouge">link_to</code> (Neil Matatall) (<a href="https://github.com/presidentbeef/brakeman/issues/232">#232</a>)</li>
+  <li>Do not warn on arrays passed to <code class="language-plaintext highlighter-rouge">link_to</code> (Neil Matatall) (<a href="https://github.com/presidentbeef/brakeman/issues/232">#232</a>)</li>
   <li>Warn on secret tokens (<a href="https://github.com/presidentbeef/brakeman/issues/200">#200</a>)</li>
   <li>Warn on more mass assignment methods (<a href="https://github.com/presidentbeef/brakeman/issues/223">#223</a>)</li>
 </ul>
 
 <h3 id="cve-2012-5664---sql-injection">CVE-2012-5664 - SQL Injection</h3>
 
-<p><a href="https://groups.google.com/d/topic/rubyonrails-security/DCNTNp_qjFM/discussion">CVE-2012-5664</a> is a vulnerability Rails’ dynamic finders. While dynamic finders (such as <code class="highlighter-rouge">User.find_by_name</code>) appear to take a single argument, they also accept a hash options which can be used to modify the SQL query. Normally the hash of options would be the second argument, but it can also be the first. If an application passes in user code as the first argument, it will be interpreted as the options hash, leading to SQL injection.</p>
+<p><a href="https://groups.google.com/d/topic/rubyonrails-security/DCNTNp_qjFM/discussion">CVE-2012-5664</a> is a vulnerability Rails’ dynamic finders. While dynamic finders (such as <code class="language-plaintext highlighter-rouge">User.find_by_name</code>) appear to take a single argument, they also accept a hash options which can be used to modify the SQL query. Normally the hash of options would be the second argument, but it can also be the first. If an application passes in user code as the first argument, it will be interpreted as the options hash, leading to SQL injection.</p>
 
 <p>The provided fix is to only accept the hash if the dynamic finder is called with the proper number of arguments. A workaround is to always cast input to dynamic finders.</p>
 
@@ -119,7 +119,7 @@
 
 <h3 id="cve-2013-0155---sql-injection">CVE-2013-0155 - SQL Injection</h3>
 
-<p><a href="https://groups.google.com/d/topic/rubyonrails-security/c7jT-EeN9eI/discussion">CVE-2013-0155</a> is a SQL vulnerability where certain JSON input can cause <code class="highlighter-rouge">find</code> methods to add <code class="highlighter-rouge">NULL</code> as a valid value.</p>
+<p><a href="https://groups.google.com/d/topic/rubyonrails-security/c7jT-EeN9eI/discussion">CVE-2013-0155</a> is a SQL vulnerability where certain JSON input can cause <code class="language-plaintext highlighter-rouge">find</code> methods to add <code class="language-plaintext highlighter-rouge">NULL</code> as a valid value.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/239">changes</a>)</p>
 
@@ -133,9 +133,9 @@
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/239">changes</a>)</p>
 
-<h3 id="check-for-yamlload">Check for <code class="highlighter-rouge">YAML.load</code></h3>
+<h3 id="check-for-yamlload">Check for <code class="language-plaintext highlighter-rouge">YAML.load</code></h3>
 
-<p>In light of <a href="https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion">CVE-2013-0156</a>, Brakeman will now warn on any uses of <code class="highlighter-rouge">YAML.load</code> with user input. Do not load arbitrary YAML in applications!</p>
+<p>In light of <a href="https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion">CVE-2013-0156</a>, Brakeman will now warn on any uses of <code class="language-plaintext highlighter-rouge">YAML.load</code> with user input. Do not load arbitrary YAML in applications!</p>
 
 <h3 id="dependency-changes">Dependency Changes</h3>
 
@@ -143,9 +143,9 @@
 
 <p>Thanks to Neil, Brakeman no longer depends on any version of ActiveSupport or i18n.</p>
 
-<h3 id="namespaced-urls-in-link_to">Namespaced URLs in <code class="highlighter-rouge">link_to</code></h3>
+<h3 id="namespaced-urls-in-link_to">Namespaced URLs in <code class="language-plaintext highlighter-rouge">link_to</code></h3>
 
-<p>Brakeman will no longer warn on array arguments to <code class="highlighter-rouge">link_to</code>.</p>
+<p>Brakeman will no longer warn on array arguments to <code class="language-plaintext highlighter-rouge">link_to</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/233">changes</a>)</p>
 
@@ -157,7 +157,7 @@
 
 <h3 id="more-mass-assignment">More Mass Assignment</h3>
 
-<p>Bryan Helmkamp pointed out more Rails methods which perform mass assignment. The following methods have been added: <code class="highlighter-rouge">first_or_create</code>, <code class="highlighter-rouge">first_or_create!</code>, <code class="highlighter-rouge">first_or_initialize!</code>, <code class="highlighter-rouge">assign_attributes</code>, and <code class="highlighter-rouge">update</code>.</p>
+<p>Bryan Helmkamp pointed out more Rails methods which perform mass assignment. The following methods have been added: <code class="language-plaintext highlighter-rouge">first_or_create</code>, <code class="language-plaintext highlighter-rouge">first_or_create!</code>, <code class="language-plaintext highlighter-rouge">first_or_initialize!</code>, <code class="language-plaintext highlighter-rouge">assign_attributes</code>, and <code class="language-plaintext highlighter-rouge">update</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/234">changes</a>)</p>
 

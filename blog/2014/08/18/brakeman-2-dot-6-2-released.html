@@ -99,10 +99,10 @@
 
 <ul>
   <li>Add check for CVE-2014-3514</li>
-  <li>Add <code class="highlighter-rouge">--add-checks-path</code> option for external checks (Clint Gibler)</li>
-  <li>Add <code class="highlighter-rouge">-4</code> option to force Rails 4 mode</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--add-checks-path</code> option for external checks (Clint Gibler)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">-4</code> option to force Rails 4 mode</li>
   <li>Fix SQL injection detection in deep nested string building</li>
-  <li>Check entire call for <code class="highlighter-rouge">send</code> (<a href="https://github.com/presidentbeef/brakeman/issues/523">#523</a>)</li>
+  <li>Check entire call for <code class="language-plaintext highlighter-rouge">send</code> (<a href="https://github.com/presidentbeef/brakeman/issues/523">#523</a>)</li>
   <li>Check for .gitignore of secrets in subdirectories (<a href="https://github.com/presidentbeef/brakeman/issues/519">#519</a>)</li>
   <li>Avoid warning about symbolizing safe parameters (<a href="https://github.com/presidentbeef/brakeman/issues/536">#536</a>)</li>
   <li>Fix block statment endings in Erubis (<a href="https://github.com/presidentbeef/brakeman/issues/518">#518</a>)</li>
@@ -113,19 +113,19 @@
 
 <h3 id="mass-assignment-bypass-cve-2014-3514">Mass Assignment Bypass (CVE-2014-3514)</h3>
 
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/M4chq5Sb540/CC1Fh0Y_NWwJ">CVE-2014-3514</a> describes an issue where  <code class="highlighter-rouge">create_with</code> does not implement strong parameters, allowing mass assignment in Rails 4.x. For vulnerable versions, Brakeman warns about instances of <code class="highlighter-rouge">create_with</code> or a generic warning if no uses are found.</p>
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/M4chq5Sb540/CC1Fh0Y_NWwJ">CVE-2014-3514</a> describes an issue where  <code class="language-plaintext highlighter-rouge">create_with</code> does not implement strong parameters, allowing mass assignment in Rails 4.x. For vulnerable versions, Brakeman warns about instances of <code class="language-plaintext highlighter-rouge">create_with</code> or a generic warning if no uses are found.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/540">changes</a>)</p>
 
 <h3 id="external-check-option">External Check Option</h3>
 
-<p><a href="https://github.com/clintgibler">Clint Gibler</a> has added the <code class="highlighter-rouge">--add-checks-path</code> option to provide an path to search for additional checks. This is useful if you wish to write your own custom rules for Brakeman to run.</p>
+<p><a href="https://github.com/clintgibler">Clint Gibler</a> has added the <code class="language-plaintext highlighter-rouge">--add-checks-path</code> option to provide an path to search for additional checks. This is useful if you wish to write your own custom rules for Brakeman to run.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/532">changes</a>)</p>
 
 <h3 id="option-to-force-rails-4">Option to Force Rails 4</h3>
 
-<p>If the Rails version for an application cannot be determined automatically for some reason, the <code class="highlighter-rouge">-4</code> option will force Brakeman to treat it like a Rails 4 application.</p>
+<p>If the Rails version for an application cannot be determined automatically for some reason, the <code class="language-plaintext highlighter-rouge">-4</code> option will force Brakeman to treat it like a Rails 4 application.</p>
 
 <p>Included with this change are some fixes when a Rails 4 app is detected but the exact version number cannot be determined. This may change the output for some scans.</p>
 
@@ -139,19 +139,19 @@
 
 <h3 id="better-send-call-detection">Better Send Call Detection</h3>
 
-<p>Previously, Brakeman was ignored calls to <code class="highlighter-rouge">send</code> when they were nested inside a chain of calls. This has been fixed.</p>
+<p>Previously, Brakeman was ignored calls to <code class="language-plaintext highlighter-rouge">send</code> when they were nested inside a chain of calls. This has been fixed.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/524">changes</a>)</p>
 
 <h3 id="ignored-secrets">Ignored Secrets</h3>
 
-<p>Brakeman now checks subdirectories for <code class="highlighter-rouge">.gitignore</code> files which determing if the secrets configuration is being ignored.</p>
+<p>Brakeman now checks subdirectories for <code class="language-plaintext highlighter-rouge">.gitignore</code> files which determing if the secrets configuration is being ignored.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/521">changes</a>)</p>
 
 <h3 id="symbolizing-safe-paramaters">Symbolizing Safe Paramaters</h3>
 
-<p>Since <code class="highlighter-rouge">params[:controller]</code> and <code class="highlighter-rouge">params[:action]</code> are quite difficult (possibly impossible) to DoS, Brakeman will not warn about symbolizing them.</p>
+<p>Since <code class="language-plaintext highlighter-rouge">params[:controller]</code> and <code class="language-plaintext highlighter-rouge">params[:action]</code> are quite difficult (possibly impossible) to DoS, Brakeman will not warn about symbolizing them.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/538">changes</a>)</p>
 
@@ -183,7 +183,7 @@
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f225541559d2fbe5374d481b6105b66053f9710a  brakeman-2.6.2.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f225541559d2fbe5374d481b6105b66053f9710a  brakeman-2.6.2.gem
 67882d467b6a8fc6e504b6dcb9605f79a0c6a22c  brakeman-min-2.6.2.gem
 </code></pre></div></div>
 

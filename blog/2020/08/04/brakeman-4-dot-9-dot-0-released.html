@@ -98,14 +98,14 @@
 <p><em>Changes since 4.8.2:</em></p>
 
 <ul>
-  <li>Add <code class="highlighter-rouge">--ensure-ignore-notes</code> (<a href="https://github.com/eliblock">Eli Block</a>)</li>
-  <li>Add check for user input in <code class="highlighter-rouge">ERB.new</code> (<a href="https://github.com/mhickman">Matt Hickman</a>)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--ensure-ignore-notes</code> (<a href="https://github.com/eliblock">Eli Block</a>)</li>
+  <li>Add check for user input in <code class="language-plaintext highlighter-rouge">ERB.new</code> (<a href="https://github.com/mhickman">Matt Hickman</a>)</li>
   <li>Add check for CVE-2020-8166 (<a href="https://github.com/chair6">Jamie Finnigan</a>)</li>
-  <li>Always scan <code class="highlighter-rouge">environment.rb</code></li>
-  <li>Avoid warning when <code class="highlighter-rouge">safe_yaml</code> is used via <code class="highlighter-rouge">YAML.load(..., safe: true)</code></li>
-  <li>Do not warn about mass assignment with <code class="highlighter-rouge">params.permit!.slice</code></li>
-  <li>Ignore <code class="highlighter-rouge">params.permit!</code> in path helpers</li>
-  <li>Treat <code class="highlighter-rouge">Dir.glob</code> as safe source of values in guards</li>
+  <li>Always scan <code class="language-plaintext highlighter-rouge">environment.rb</code></li>
+  <li>Avoid warning when <code class="language-plaintext highlighter-rouge">safe_yaml</code> is used via <code class="language-plaintext highlighter-rouge">YAML.load(..., safe: true)</code></li>
+  <li>Do not warn about mass assignment with <code class="language-plaintext highlighter-rouge">params.permit!.slice</code></li>
+  <li>Ignore <code class="language-plaintext highlighter-rouge">params.permit!</code> in path helpers</li>
+  <li>Treat <code class="language-plaintext highlighter-rouge">Dir.glob</code> as safe source of values in guards</li>
   <li>Remove whitelist/blacklist language, add clarifications</li>
   <li>Add “full call” information to call index results</li>
   <li>Updated Slim dependency (<a href="https://github.com/JeremiahChurch">Jeremiah Church</a>)</li>
@@ -115,13 +115,13 @@
 
 <p><a href="https://github.com/eliblock">Eli Block</a> has added a new option to ensure all ignored warnings have notes.</p>
 
-<p>If <code class="highlighter-rouge">--ensure-ignore-notes</code> is set and the configured “ignore” file does not have notes for all warnings, a non-zero exit code will be set.</p>
+<p>If <code class="language-plaintext highlighter-rouge">--ensure-ignore-notes</code> is set and the configured “ignore” file does not have notes for all warnings, a non-zero exit code will be set.</p>
 
 <p>(<a href="">changes</a>)</p>
 
 <h3 id="check-for-template-injection">Check for Template Injection</h3>
 
-<p><a href="https://github.com/mhickman">Matt Hickman</a> added a new check for user input in calls to <code class="highlighter-rouge">ERB.new</code> which can lead to remote code execution.</p>
+<p><a href="https://github.com/mhickman">Matt Hickman</a> added a new check for user input in calls to <code class="language-plaintext highlighter-rouge">ERB.new</code> which can lead to remote code execution.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1395">changes</a>)</p>
 
@@ -135,27 +135,27 @@
 
 <h3 id="always-scan-environment">Always Scan Environment</h3>
 
-<p>Brakeman used to conditionally scan <code class="highlighter-rouge">config/environment.rb</code> based on the Rails version, since in newer versions there’s nothing of interest in that file.</p>
+<p>Brakeman used to conditionally scan <code class="language-plaintext highlighter-rouge">config/environment.rb</code> based on the Rails version, since in newer versions there’s nothing of interest in that file.</p>
 
-<p>However, some applications do use that file for important constant definitions. Since there is no harm in doing so, Brakeman will now always scan <code class="highlighter-rouge">config/environment.rb</code>.</p>
+<p>However, some applications do use that file for important constant definitions. Since there is no harm in doing so, Brakeman will now always scan <code class="language-plaintext highlighter-rouge">config/environment.rb</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1480">changes</a>)</p>
 
 <h3 id="more-safe-yaml">More Safe YAML</h3>
 
-<p>Brakeman will no longer warn about deserialization if the <a href="https://rubygems.org/gems/safe_yaml"><code class="highlighter-rouge">safe_yaml</code></a> gem is used with <code class="highlighter-rouge">YAML.load(..., safe: true)</code>.</p>
+<p>Brakeman will no longer warn about deserialization if the <a href="https://rubygems.org/gems/safe_yaml"><code class="language-plaintext highlighter-rouge">safe_yaml</code></a> gem is used with <code class="language-plaintext highlighter-rouge">YAML.load(..., safe: true)</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1496">changes</a>)</p>
 
 <h3 id="mass-assignment-false-positives">Mass Assignment False Positives</h3>
 
-<p>Brakeman will no longer warn about mass assignment with <code class="highlighter-rouge">params.permit!.slice</code> or when <code class="highlighter-rouge">params.permit!</code> is used as an argument to a path helper (e.g. <code class="highlighter-rouge">something_path(params.permit!)</code>).</p>
+<p>Brakeman will no longer warn about mass assignment with <code class="language-plaintext highlighter-rouge">params.permit!.slice</code> or when <code class="language-plaintext highlighter-rouge">params.permit!</code> is used as an argument to a path helper (e.g. <code class="language-plaintext highlighter-rouge">something_path(params.permit!)</code>).</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1485">changes</a> and <a href="https://github.com/presidentbeef/brakeman/pull/1484">changes</a>)</p>
 
 <h3 id="dirglob-in-guards">Dir.glob in Guards</h3>
 
-<p>Brakeman will now consider <code class="highlighter-rouge">Dir.glob</code> to be a safe source of values in guard statements.</p>
+<p>Brakeman will now consider <code class="language-plaintext highlighter-rouge">Dir.glob</code> to be a safe source of values in guard statements.</p>
 
 <p>In other words, code like this:</p>
 
@@ -183,7 +183,7 @@
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3afcfee962907361cbc5047b7089eaa7c31546cc4de201939faba6d3a1b07a18  brakeman-4.9.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3afcfee962907361cbc5047b7089eaa7c31546cc4de201939faba6d3a1b07a18  brakeman-4.9.0.gem
 dc6a50321170e83e61ae75d1bb2dade53392a44b614d4068553f1425539a3b8f  brakeman-lib-4.9.0.gem
 4c8ea640925bf33a775729b000b91312abe42ea7945dac1a6bfcc0347fb6323d  brakeman-min-4.9.0.gem
 </code></pre></div></div>

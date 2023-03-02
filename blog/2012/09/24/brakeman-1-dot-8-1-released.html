@@ -99,25 +99,25 @@
 
 <ul>
   <li>Recover from errors in output formatting (<a href="https://github.com/presidentbeef/brakeman/pull/148">#148</a>)</li>
-  <li>Fix false positive in <code class="highlighter-rouge">redirect_to</code> (Neil Matatall) (<a href="https://github.com/presidentbeef/brakeman/issues/143">#143</a>)</li>
-  <li>Fix problems with removal of <code class="highlighter-rouge">Sexp#method_missing</code> (<a href="https://github.com/presidentbeef/brakeman/pull/150">#150</a>)</li>
+  <li>Fix false positive in <code class="language-plaintext highlighter-rouge">redirect_to</code> (Neil Matatall) (<a href="https://github.com/presidentbeef/brakeman/issues/143">#143</a>)</li>
+  <li>Fix problems with removal of <code class="language-plaintext highlighter-rouge">Sexp#method_missing</code> (<a href="https://github.com/presidentbeef/brakeman/pull/150">#150</a>)</li>
   <li>Fix array indexing in alias processing (<a href="https://github.com/presidentbeef/brakeman/pull/145">#145</a>)</li>
-  <li>Fix old <code class="highlighter-rouge">mail_to</code> vulnerability check (<a href="https://github.com/presidentbeef/brakeman/pull/147">#147</a>)</li>
+  <li>Fix old <code class="language-plaintext highlighter-rouge">mail_to</code> vulnerability check (<a href="https://github.com/presidentbeef/brakeman/pull/147">#147</a>)</li>
   <li>Fix rescans when only controller action changes (<a href="https://github.com/presidentbeef/brakeman/pull/141">#141</a>)</li>
   <li>Allow comparison of versions with unequal lengths (<a href="https://github.com/presidentbeef/brakeman/pull/144">#144</a>)</li>
   <li>Handle super calls with blocks (<a href="https://github.com/presidentbeef/brakeman/pull/146">#146</a>)</li>
   <li>Remove malformed Sexps from HAML processing  (<a href="https://github.com/presidentbeef/brakeman/pull/149">#149</a>)</li>
-  <li>Respect <code class="highlighter-rouge">-q</code> flag for “Rails 3 detected” message</li>
+  <li>Respect <code class="language-plaintext highlighter-rouge">-q</code> flag for “Rails 3 detected” message</li>
 </ul>
 
 <h3 id="fix-crashes-when-generating-report">Fix Crashes when Generating Report</h3>
 
 <p>Some scans were causing Brakeman to crash while generating reports with an error like:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lib/brakeman/warning.rb:78:in `format_code': undefined method `gsub' for nil:NilClass (NoMethodError)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lib/brakeman/warning.rb:78:in `format_code': undefined method `gsub' for nil:NilClass (NoMethodError)
 </code></pre></div></div>
 
-<p>This was due to a combination of the removal of <code class="highlighter-rouge">method_missing</code> behavior from <code class="highlighter-rouge">Sexp</code> and the <code class="highlighter-rouge">OutputProcessor</code> not handling errors well.</p>
+<p>This was due to a combination of the removal of <code class="language-plaintext highlighter-rouge">method_missing</code> behavior from <code class="language-plaintext highlighter-rouge">Sexp</code> and the <code class="language-plaintext highlighter-rouge">OutputProcessor</code> not handling errors well.</p>
 
 <p>The problem should be fixed now, but please report an issue if “[Format Error]” shows up in reports.</p>
 
@@ -125,19 +125,19 @@
 
 <p>Neil Matatall fixed <a href="https://github.com/presidentbeef/brakeman/issues/143">an issue</a> with a false positive when redirecting to an array.</p>
 
-<p>When <code class="highlighter-rouge">redirect_to</code> is given an array, Rails eventually falls through to <code class="highlighter-rouge">polymorphic_path</code>, which will only return a path, not a full URL. Brakeman only checks for redirects that can redirect to a different host, so this is considered safe.</p>
+<p>When <code class="language-plaintext highlighter-rouge">redirect_to</code> is given an array, Rails eventually falls through to <code class="language-plaintext highlighter-rouge">polymorphic_path</code>, which will only return a path, not a full URL. Brakeman only checks for redirects that can redirect to a different host, so this is considered safe.</p>
 
-<h3 id="sexp-and-method_missing">Sexp and <code class="highlighter-rouge">method_missing</code></h3>
+<h3 id="sexp-and-method_missing">Sexp and <code class="language-plaintext highlighter-rouge">method_missing</code></h3>
 
-<p>The original <code class="highlighter-rouge">Sexp</code> code from RubyParser uses <code class="highlighter-rouge">method_missing</code> to find and optionally delete nodes. This functionality is not used very often (never in Brakeman) but has covered up bugs that would otherwise been found. Therefore, <code class="highlighter-rouge">Sexp#method_missing</code> has been removed in Brakeman. However, it turns out that <a href="https://github.com/seattlerb/ruby2ruby">Ruby2Ruby</a> uses it in a couple places. Brakeman uses Ruby2Ruby to covert s-expressions back to readable Ruby code, particularly when generating reports. This lead to some crashes.</p>
+<p>The original <code class="language-plaintext highlighter-rouge">Sexp</code> code from RubyParser uses <code class="language-plaintext highlighter-rouge">method_missing</code> to find and optionally delete nodes. This functionality is not used very often (never in Brakeman) but has covered up bugs that would otherwise been found. Therefore, <code class="language-plaintext highlighter-rouge">Sexp#method_missing</code> has been removed in Brakeman. However, it turns out that <a href="https://github.com/seattlerb/ruby2ruby">Ruby2Ruby</a> uses it in a couple places. Brakeman uses Ruby2Ruby to covert s-expressions back to readable Ruby code, particularly when generating reports. This lead to some crashes.</p>
 
 <h3 id="fix-array-indexing">Fix Array Indexing</h3>
 
 <p>Brakeman can handle pulling values out of simple arrays. Or it should be able to, but it keeps breaking. Should be fixed now!</p>
 
-<h3 id="fix-mail_to-check">Fix <code class="highlighter-rouge">mail_to</code> Check</h3>
+<h3 id="fix-mail_to-check">Fix <code class="language-plaintext highlighter-rouge">mail_to</code> Check</h3>
 
-<p>There is a Brakeman check for an <a href="https://groups.google.com/d/topic/rubyonrails-security/8CpI7egxX4E/discussion">old vulnerability</a> in <code class="highlighter-rouge">mail_to</code>. However, it turns out this check has been broken for a while. But now it is fixed! And there are regression tests.</p>
+<p>There is a Brakeman check for an <a href="https://groups.google.com/d/topic/rubyonrails-security/8CpI7egxX4E/discussion">old vulnerability</a> in <code class="language-plaintext highlighter-rouge">mail_to</code>. However, it turns out this check has been broken for a while. But now it is fixed! And there are regression tests.</p>
 
 <h3 id="fix-rescans-on-controller-changes">Fix Rescans on Controller Changes</h3>
 

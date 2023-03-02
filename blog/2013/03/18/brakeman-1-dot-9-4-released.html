@@ -102,11 +102,11 @@
   <li>Add check for CVE-2013-1855</li>
   <li>Add check for CVE-2013-1856</li>
   <li>Add check for CVE-2013-1857</li>
-  <li>Fix <code class="highlighter-rouge">--compare</code> to work with older versions</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">--compare</code> to work with older versions</li>
   <li>Add “no-referrer” to HTML report links</li>
-  <li>Don’t warn when invoking <code class="highlighter-rouge">send</code> on user input</li>
+  <li>Don’t warn when invoking <code class="language-plaintext highlighter-rouge">send</code> on user input</li>
   <li>Slightly faster cloning of Sexps</li>
-  <li>Detect another way to add <code class="highlighter-rouge">strong_parameters</code> (<a href="https://github.com/presidentbeef/brakeman/issues/288">#288</a>)</li>
+  <li>Detect another way to add <code class="language-plaintext highlighter-rouge">strong_parameters</code> (<a href="https://github.com/presidentbeef/brakeman/issues/288">#288</a>)</li>
 </ul>
 
 <h3 id="latest-reported-vulnerabilities">Latest Reported Vulnerabilities</h3>
@@ -121,9 +121,9 @@
 
 <h4 id="cve-2013-1855---sanitize_css">CVE-2013-1855 - sanitize_css</h4>
 
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/4_QHo4BqnN8/_RrdfKk12I4J">CVE-2013-1855</a> is a vulnerability in the <code class="highlighter-rouge">sanitize_css</code> method.</p>
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/4_QHo4BqnN8/_RrdfKk12I4J">CVE-2013-1855</a> is a vulnerability in the <code class="language-plaintext highlighter-rouge">sanitize_css</code> method.</p>
 
-<p>Brakeman will warn on this CVE for each use of <code class="highlighter-rouge">sanitize_css</code> if the Rails version is vulnerable. Calls obviously sanitizing user input will be high confidence, other calls will be medium confidence.</p>
+<p>Brakeman will warn on this CVE for each use of <code class="language-plaintext highlighter-rouge">sanitize_css</code> if the Rails version is vulnerable. Calls obviously sanitizing user input will be high confidence, other calls will be medium confidence.</p>
 
 <h4 id="cve-2013-1856---jruby-xml-parser">CVE-2013-1856 - JRuby XML Parser</h4>
 
@@ -133,44 +133,44 @@
 
 <h4 id="cve-2013-1857---sanitize">CVE-2013-1857 - sanitize</h4>
 
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/zAAU7vGTPvI/1vZDWXqBuXgJ">CVE-2013-1857</a> is a vulnerability in the <code class="highlighter-rouge">sanitize</code> method which allows URLs to include JavaScript.</p>
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/zAAU7vGTPvI/1vZDWXqBuXgJ">CVE-2013-1857</a> is a vulnerability in the <code class="language-plaintext highlighter-rouge">sanitize</code> method which allows URLs to include JavaScript.</p>
 
-<p>Brakeman will warn on this CVE for each use of <code class="highlighter-rouge">sanitize</code> if the Rails version is vulnerable. Calls obviously sanitizing user input will be high confidence, other calls will be medium confidence.</p>
+<p>Brakeman will warn on this CVE for each use of <code class="language-plaintext highlighter-rouge">sanitize</code> if the Rails version is vulnerable. Calls obviously sanitizing user input will be high confidence, other calls will be medium confidence.</p>
 
 <h3 id="fix-json-compare">Fix JSON Compare</h3>
 
-<p>The 1.9.3 release introduced several new keys for warnings in the JSON output, which then broke <code class="highlighter-rouge">--compare</code> when used with output from an older version. Despite <a href="https://twitter.com/brakeman/status/307586866721460225">declaring this would not be fixed</a>, it has been fixed. <code class="highlighter-rouge">--compare</code> reverts to old behavior if a report is from an older version.</p>
+<p>The 1.9.3 release introduced several new keys for warnings in the JSON output, which then broke <code class="language-plaintext highlighter-rouge">--compare</code> when used with output from an older version. Despite <a href="https://twitter.com/brakeman/status/307586866721460225">declaring this would not be fixed</a>, it has been fixed. <code class="language-plaintext highlighter-rouge">--compare</code> reverts to old behavior if a report is from an older version.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/284">changes</a>)</p>
 
 <h3 id="remove-referrer-from-html-report-links">Remove Referrer from HTML Report Links</h3>
 
-<p>All warning type links HTML reports now include the <code class="highlighter-rouge">rel="no-referrer"</code> option. This prevents referrer information from being passed along to the linked site (usually the <a href="http://brakemanscanner.org/">Brakeman site</a>), which means people won’t see that you are putting your Brakeman reports on the open internet…</p>
+<p>All warning type links HTML reports now include the <code class="language-plaintext highlighter-rouge">rel="no-referrer"</code> option. This prevents referrer information from being passed along to the linked site (usually the <a href="http://brakemanscanner.org/">Brakeman site</a>), which means people won’t see that you are putting your Brakeman reports on the open internet…</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/286">changes</a>)</p>
 
 <h3 id="fewer-dangerous-send-warnings">Fewer Dangerous Send Warnings</h3>
 
-<p>Now that Brakeman warns on dangerous uses of <code class="highlighter-rouge">constantize</code> and friends, there is no reason to warn on uses of <code class="highlighter-rouge">send</code>, <code class="highlighter-rouge">try</code>, etc. with user input as a target. User input for the method name will continue to warn.</p>
+<p>Now that Brakeman warns on dangerous uses of <code class="language-plaintext highlighter-rouge">constantize</code> and friends, there is no reason to warn on uses of <code class="language-plaintext highlighter-rouge">send</code>, <code class="language-plaintext highlighter-rouge">try</code>, etc. with user input as a target. User input for the method name will continue to warn.</p>
 
 <p>For example, this will no longer generate a warning:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>params[:name].try(:downcase)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>params[:name].try(:downcase)
 </code></pre></div></div>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/285">changes</a>)</p>
 
 <h3 id="faster-sexp-cloning">Faster Sexp Cloning</h3>
 
-<p>Brakeman spends a lot of time cloning <code class="highlighter-rouge">Sexp</code>s, so this version introduces a slightly faster custom method instead of <code class="highlighter-rouge">Marshal.load(Marshal.dump(...))</code>.</p>
+<p>Brakeman spends a lot of time cloning <code class="language-plaintext highlighter-rouge">Sexp</code>s, so this version introduces a slightly faster custom method instead of <code class="language-plaintext highlighter-rouge">Marshal.load(Marshal.dump(...))</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/287">changes</a>)</p>
 
 <h3 id="another-strong-paramter-initializer">Another Strong Paramter Initializer</h3>
 
-<p>Brakeman now detects this approach to adding the <code class="highlighter-rouge">strong_parameters</code> functionality:</p>
+<p>Brakeman now detects this approach to adding the <code class="language-plaintext highlighter-rouge">strong_parameters</code> functionality:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActiveRecord::Base.send(:include,  ActiveModel::ForbiddenAttributesProtection)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActiveRecord::Base.send(:include,  ActiveModel::ForbiddenAttributesProtection)
 </code></pre></div></div>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/289">changes</a>)</p>

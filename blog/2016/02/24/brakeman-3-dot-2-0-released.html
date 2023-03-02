@@ -98,21 +98,21 @@
 <p><em>Changes since 3.1.5</em>:</p>
 
 <ul>
-  <li>Support calls using <code class="highlighter-rouge">&amp;.</code> operator (<a href="https://github.com/presidentbeef/brakeman/issues/796">#796</a>)</li>
+  <li>Support calls using <code class="language-plaintext highlighter-rouge">&amp;.</code> operator (<a href="https://github.com/presidentbeef/brakeman/issues/796">#796</a>)</li>
   <li>Handle CoffeeScript in HAML (<a href="https://github.com/presidentbeef/brakeman/issues/813">#813</a>)</li>
-  <li>Avoid render warnings about <code class="highlighter-rouge">params[:action]</code>/<code class="highlighter-rouge">params[:controller]</code> (<a href="https://github.com/presidentbeef/brakeman/issues/812">#812</a>)</li>
+  <li>Avoid render warnings about <code class="language-plaintext highlighter-rouge">params[:action]</code>/<code class="language-plaintext highlighter-rouge">params[:controller]</code> (<a href="https://github.com/presidentbeef/brakeman/issues/812">#812</a>)</li>
   <li>Only update ignore config file on changes (<a href="https://github.com/presidentbeef/brakeman/issues/824">#824</a>)</li>
   <li>Sort ignore config file</li>
   <li>Index calls in class bodies but outside methods (<a href="https://github.com/presidentbeef/brakeman/issues/814">#814</a>)</li>
   <li>Skip Symbol DoS check on Rails 5</li>
-  <li>Fix finding calls with <code class="highlighter-rouge">targets: nil</code></li>
-  <li>Remove <code class="highlighter-rouge">fastercsv</code> dependency</li>
-  <li>Remove <code class="highlighter-rouge">multi-json</code> dependecy</li>
+  <li>Fix finding calls with <code class="language-plaintext highlighter-rouge">targets: nil</code></li>
+  <li>Remove <code class="language-plaintext highlighter-rouge">fastercsv</code> dependency</li>
+  <li>Remove <code class="language-plaintext highlighter-rouge">multi-json</code> dependecy</li>
 </ul>
 
 <h3 id="ruby-23-lonely-operator">Ruby 2.3 Lonely Operator</h3>
 
-<p>With the update of RubyParser to 3.8.1 (and Ruby2Ruby to 2.3), Brakeman now supports the new <code class="highlighter-rouge">&amp;.</code> operator and should treat it like a regular method call.</p>
+<p>With the update of RubyParser to 3.8.1 (and Ruby2Ruby to 2.3), Brakeman now supports the new <code class="language-plaintext highlighter-rouge">&amp;.</code> operator and should treat it like a regular method call.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/827">changes</a>)</p>
 
@@ -124,7 +124,7 @@
 
 <h3 id="render-warnings-on-safe-parameters">Render Warnings on Safe Parameters</h3>
 
-<p>Brakeman will no longer warn on <code class="highlighter-rouge">render params[:action]</code> or <code class="highlighter-rouge">render params[:controller]</code>, as those values are not able to be controlled by an attacker.</p>
+<p>Brakeman will no longer warn on <code class="language-plaintext highlighter-rouge">render params[:action]</code> or <code class="language-plaintext highlighter-rouge">render params[:controller]</code>, as those values are not able to be controlled by an attacker.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/816">changes</a>)</p>
 
@@ -142,13 +142,13 @@
 
 <h3 id="skip-symbol-dos-with-rails-5">Skip Symbol DoS with Rails 5</h3>
 
-<p>Rails 5 requires Ruby &gt;= 2.2.2, which now garbage collects symbols. If the <code class="highlighter-rouge">SymbolDoS</code> check is run on a Rails 5 application (it’s already optional), it will no longer warn.</p>
+<p>Rails 5 requires Ruby &gt;= 2.2.2, which now garbage collects symbols. If the <code class="language-plaintext highlighter-rouge">SymbolDoS</code> check is run on a Rails 5 application (it’s already optional), it will no longer warn.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/829">changes</a>)</p>
 
 <h3 id="dependency-removal">Dependency Removal</h3>
 
-<p>Since Ruby 1.8 is no longer supported, this release removes the legacy <code class="highlighter-rouge">fastercsv</code> and <code class="highlighter-rouge">multi-json</code> dependencies.</p>
+<p>Since Ruby 1.8 is no longer supported, this release removes the legacy <code class="language-plaintext highlighter-rouge">fastercsv</code> and <code class="language-plaintext highlighter-rouge">multi-json</code> dependencies.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/822">fastercsv</a>, <a href="https://github.com/presidentbeef/brakeman/pull/818">multi-json</a>)</p>
 
@@ -156,7 +156,7 @@
 
 <p>The SHA256 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d1d1468fcca0ec5dd99c53af2018b781a8efe06483190aef9d13b1abcbb7e2a0  brakeman-min-3.2.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d1d1468fcca0ec5dd99c53af2018b781a8efe06483190aef9d13b1abcbb7e2a0  brakeman-min-3.2.0.gem
 07023148564668cc39911eec0354ca03774be1f8a03d66162f53a5dde44bb502  brakeman-3.2.0.gem
 </code></pre></div></div>
 

@@ -120,32 +120,32 @@ To put that into historical context, Rails 3.0 was released a few days later!</p
 <p><em>Changes since 3.7.2</em>:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">--exit-on-warn</code> is now the default (<a href="https://github.com/presidentbeef/brakeman/issues/852">#852</a>)</li>
-  <li><code class="highlighter-rouge">--exit-on-error</code> is now the default (<a href="https://github.com/presidentbeef/brakeman/issues/1083">#1083</a>)</li>
+  <li><code class="language-plaintext highlighter-rouge">--exit-on-warn</code> is now the default (<a href="https://github.com/presidentbeef/brakeman/issues/852">#852</a>)</li>
+  <li><code class="language-plaintext highlighter-rouge">--exit-on-error</code> is now the default (<a href="https://github.com/presidentbeef/brakeman/issues/1083">#1083</a>)</li>
   <li>“Plain” report output is now the default</li>
   <li>Add simple pager for reports output to terminal</li>
   <li>Remove low confidence mass assignment warnings</li>
-  <li>Reduce warnings about XSS in <code class="highlighter-rouge">link_to</code></li>
-  <li>Treat <code class="highlighter-rouge">request.cookies</code> like <code class="highlighter-rouge">cookies</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1090">#1090</a>)</li>
-  <li>Treat <code class="highlighter-rouge">fail</code>/<code class="highlighter-rouge">raise</code> like early returns (<a href="https://github.com/presidentbeef/brakeman/issues/754">#754</a>)</li>
+  <li>Reduce warnings about XSS in <code class="language-plaintext highlighter-rouge">link_to</code></li>
+  <li>Treat <code class="language-plaintext highlighter-rouge">request.cookies</code> like <code class="language-plaintext highlighter-rouge">cookies</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1090">#1090</a>)</li>
+  <li>Treat <code class="language-plaintext highlighter-rouge">fail</code>/<code class="language-plaintext highlighter-rouge">raise</code> like early returns (<a href="https://github.com/presidentbeef/brakeman/issues/754">#754</a>)</li>
   <li>Rename “Cross Site Scripting” to “Cross-Site Scripting” (<a href="https://github.com/paultetreau">Paul Tetreau</a>)</li>
-  <li>Remove reliance on <code class="highlighter-rouge">CONFIDENCE</code> constant in checks</li>
-  <li>Fix <code class="highlighter-rouge">--exit-on-error</code> and <code class="highlighter-rouge">--exit-on-warn</code> in config files</li>
+  <li>Remove reliance on <code class="language-plaintext highlighter-rouge">CONFIDENCE</code> constant in checks</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">--exit-on-error</code> and <code class="language-plaintext highlighter-rouge">--exit-on-warn</code> in config files</li>
 </ul>
 
 <p><em>Changes since 4.0.0</em>:</p>
 
 <ul>
-  <li>Do not use pager when <code class="highlighter-rouge">CI</code> environment variable is set</li>
+  <li>Do not use pager when <code class="language-plaintext highlighter-rouge">CI</code> environment variable is set</li>
 </ul>
 
 <h3 id="new-default-exit-codes">New Default Exit Codes</h3>
 
-<p><code class="highlighter-rouge">--exit-on-warn</code> and <code class="highlighter-rouge">--exit-on-error</code> are now default behavior.</p>
+<p><code class="language-plaintext highlighter-rouge">--exit-on-warn</code> and <code class="language-plaintext highlighter-rouge">--exit-on-error</code> are now default behavior.</p>
 
 <p>If any warnings are found or errors are raised during the scan, Brakeman’s exit code will be non-zero. This may break things! In particular, CI jobs or scripts that assume Brakeman will exit normally.</p>
 
-<p>You may use <code class="highlighter-rouge">--no-exit-on-warn</code> and <code class="highlighter-rouge">--no-exit-on-error</code> to revert back to previous behavior and always exit with error code 0.</p>
+<p>You may use <code class="language-plaintext highlighter-rouge">--no-exit-on-warn</code> and <code class="language-plaintext highlighter-rouge">--no-exit-on-error</code> to revert back to previous behavior and always exit with error code 0.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1085">changes</a> and <a href="https://github.com/presidentbeef/brakeman/pull/1086">changes</a>)</p>
 
@@ -153,17 +153,17 @@ To put that into historical context, Rails 3.0 was released a few days later!</p
 
 <p>The “plain” report format is now the default.</p>
 
-<p>To revert back to the table format, use <code class="highlighter-rouge">-f tables</code> or <code class="highlighter-rouge">-o report.tables</code>.</p>
+<p>To revert back to the table format, use <code class="language-plaintext highlighter-rouge">-f tables</code> or <code class="language-plaintext highlighter-rouge">-o report.tables</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1084">changes</a>)</p>
 
 <h3 id="paged-output">Paged Output</h3>
 
-<p>By default, output to the terminal will be paged with <code class="highlighter-rouge">less</code> or Highline’s simple pager.</p>
+<p>By default, output to the terminal will be paged with <code class="language-plaintext highlighter-rouge">less</code> or Highline’s simple pager.</p>
 
-<p>To disable, use <code class="highlighter-rouge">--no-pager</code>.</p>
+<p>To disable, use <code class="language-plaintext highlighter-rouge">--no-pager</code>.</p>
 
-<p>In 4.0.1 Brakeman will automatically disable the pager when the <code class="highlighter-rouge">CI</code> environment variable is set to <code class="highlighter-rouge">true</code>. This should be compatible with Travis CI, Circle CI, Codeship, and Bitbucket Pipelines.</p>
+<p>In 4.0.1 Brakeman will automatically disable the pager when the <code class="language-plaintext highlighter-rouge">CI</code> environment variable is set to <code class="language-plaintext highlighter-rouge">true</code>. This should be compatible with Travis CI, Circle CI, Codeship, and Bitbucket Pipelines.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1098">changes</a>)</p>
 
@@ -173,9 +173,9 @@ To put that into historical context, Rails 3.0 was released a few days later!</p
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1087">changes</a>)</p>
 
-<h3 id="fewer-link_to-warnings">Fewer <code class="highlighter-rouge">link_to</code> Warnings</h3>
+<h3 id="fewer-link_to-warnings">Fewer <code class="language-plaintext highlighter-rouge">link_to</code> Warnings</h3>
 
-<p>Warnings about XSS in <code class="highlighter-rouge">link_to</code> have confused quite a few people over the years. The danger is that links may have <code class="highlighter-rouge">javascript:</code> or <code class="highlighter-rouge">data:</code> values with XSS payloads.</p>
+<p>Warnings about XSS in <code class="language-plaintext highlighter-rouge">link_to</code> have confused quite a few people over the years. The danger is that links may have <code class="language-plaintext highlighter-rouge">javascript:</code> or <code class="language-plaintext highlighter-rouge">data:</code> values with XSS payloads.</p>
 
 <p>Brakeman should now only warn when directly using user input or when using what looks like a URL from the database.</p>
 
@@ -183,13 +183,13 @@ To put that into historical context, Rails 3.0 was released a few days later!</p
 
 <h3 id="more-cookies">More Cookies</h3>
 
-<p><code class="highlighter-rouge">request.cookies</code> will now be treated like cookies in general.</p>
+<p><code class="language-plaintext highlighter-rouge">request.cookies</code> will now be treated like cookies in general.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1094">changes</a>)</p>
 
 <h3 id="more-early-returns">More Early Returns</h3>
 
-<p>Calls to <code class="highlighter-rouge">raise</code> or <code class="highlighter-rouge">fail</code> will be treated like early returns when considering simple guard expressions.</p>
+<p>Calls to <code class="language-plaintext highlighter-rouge">raise</code> or <code class="language-plaintext highlighter-rouge">fail</code> will be treated like early returns when considering simple guard expressions.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1089">changes</a>)</p>
 
@@ -201,9 +201,9 @@ To put that into historical context, Rails 3.0 was released a few days later!</p
 
 <h3 id="confidence">CONFIDENCE</h3>
 
-<p>Brakeman checks previously used the <code class="highlighter-rouge">CONFIDENCE</code> hash when creating warnings, e.g. <code class="highlighter-rouge">:confidence =&gt; CONFIDENCE[:high]</code>. Now it’s possible to use <code class="highlighter-rouge">:confidence =&gt; :high</code> instead.</p>
+<p>Brakeman checks previously used the <code class="language-plaintext highlighter-rouge">CONFIDENCE</code> hash when creating warnings, e.g. <code class="language-plaintext highlighter-rouge">:confidence =&gt; CONFIDENCE[:high]</code>. Now it’s possible to use <code class="language-plaintext highlighter-rouge">:confidence =&gt; :high</code> instead.</p>
 
-<p>For those with custom checks, the <code class="highlighter-rouge">CONFIDENCE</code> hash is still available and nothing should break.</p>
+<p>For those with custom checks, the <code class="language-plaintext highlighter-rouge">CONFIDENCE</code> hash is still available and nothing should break.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1088">changes</a>)</p>
 
@@ -211,7 +211,7 @@ To put that into historical context, Rails 3.0 was released a few days later!</p
 
 <p>The SHA256 sums for these releases are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0038932b43dcf2bf698ad6637500f69b5e4226b10c011a4a6bcce93a77a5e045  brakeman-4.0.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0038932b43dcf2bf698ad6637500f69b5e4226b10c011a4a6bcce93a77a5e045  brakeman-4.0.0.gem
 3688303859a7c9b452ddcef00f00f97789ce103774446d42851a763ecbf8df87  brakeman-lib-4.0.0.gem
 559196c6e41e5b180448564d9aca84fb775a39b77dd7d8d880a0ce0e77df8ae2  brakeman-min-4.0.0.gem
 

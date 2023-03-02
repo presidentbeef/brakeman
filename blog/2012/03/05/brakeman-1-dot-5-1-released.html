@@ -123,21 +123,21 @@
 
 <p>The first is probably the most widely-seen version. In an intializer, do</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActiveRecord::Base.send(:attr_accessible, nil)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActiveRecord::Base.send(:attr_accessible, nil)
 </code></pre></div></div>
 
 <p>The second is essentially equivalent, but 1.5.1 adds support for it as well:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module ActiveRecord
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module ActiveRecord
   class Base
     attr_accessible nil
   end
 end
 </code></pre></div></div>
 
-<p>The third option is only available for Rails 3.1.0 and newer. The following configuration setting can be added to <code class="highlighter-rouge">application.rb</code>:</p>
+<p>The third option is only available for Rails 3.1.0 and newer. The following configuration setting can be added to <code class="language-plaintext highlighter-rouge">application.rb</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config.active_record.whitelist_attributes = true
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config.active_record.whitelist_attributes = true
 </code></pre></div></div>
 
 <p>Brakeman should correctly detect all of these.</p>
@@ -146,15 +146,15 @@ end
 
 <h3 id="partials-in-rails-3">Partials in Rails 3</h3>
 
-<p>In Rails 3, <code class="highlighter-rouge">render 'blah'</code> is now equivalent to <code class="highlighter-rouge">render :partial =&gt; 'blah'</code> when used inside a template.</p>
+<p>In Rails 3, <code class="language-plaintext highlighter-rouge">render 'blah'</code> is now equivalent to <code class="language-plaintext highlighter-rouge">render :partial =&gt; 'blah'</code> when used inside a template.</p>
 
 <p>Brakeman now supports this correctly.</p>
 
 <h3 id="debug-output">Debug Output</h3>
 
-<p>More debugging output has been added for use with the <code class="highlighter-rouge">-d</code> option.</p>
+<p>More debugging output has been added for use with the <code class="language-plaintext highlighter-rouge">-d</code> option.</p>
 
-<p>Additionally, when interrupting the application (for example, with <code class="highlighter-rouge">^C</code>), a stack trace will be output. Please note, however, that this only works with Ruby 1.9.</p>
+<p>Additionally, when interrupting the application (for example, with <code class="language-plaintext highlighter-rouge">^C</code>), a stack trace will be output. Please note, however, that this only works with Ruby 1.9.</p>
 
 <h3 id="internal-changes">Internal Changes</h3>
 

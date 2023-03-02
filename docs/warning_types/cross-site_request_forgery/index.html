@@ -80,9 +80,9 @@
   
   <p>Cross-site request forgery is #5 on the <a href="https://www.owasp.org/index.php/Top_10_2010-A5">OWASP Top Ten</a>. CSRF allows an attacker to perform actions on a website as if they are an authenticated user.</p>
 
-<p>This warning is raised when no call to <code class="highlighter-rouge">protect_from_forgery</code> is found in <code class="highlighter-rouge">ApplicationController</code>. This method prevents CSRF.</p>
+<p>This warning is raised when no call to <code class="language-plaintext highlighter-rouge">protect_from_forgery</code> is found in <code class="language-plaintext highlighter-rouge">ApplicationController</code>. This method prevents CSRF.</p>
 
-<p>For Rails 4 applications, it is recommended that you use <code class="highlighter-rouge">protect_from_forgery :with =&gt; :exception</code>. This code is inserted into newly generated applications. The default is to <code class="highlighter-rouge">nil</code> out the session object, which has been a source of many CSRF bypasses due to session memoization.</p>
+<p>For Rails 4 applications, it is recommended that you use <code class="language-plaintext highlighter-rouge">protect_from_forgery :with =&gt; :exception</code>. This code is inserted into newly generated applications. The default is to <code class="language-plaintext highlighter-rouge">nil</code> out the session object, which has been a source of many CSRF bypasses due to session memoization.</p>
 
 <p>See <a href="http://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf">the Ruby Security Guide</a> for details.</p>
 

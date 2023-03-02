@@ -99,7 +99,7 @@
 
 <ul>
   <li>Add generic warning for CVE-2016-6316</li>
-  <li>Warn about dangerous use of <code class="highlighter-rouge">content_tag</code> with CVE-2016-6316</li>
+  <li>Warn about dangerous use of <code class="language-plaintext highlighter-rouge">content_tag</code> with CVE-2016-6316</li>
   <li>Add warning for CVE-2016-6317</li>
   <li>Use Minitest</li>
 </ul>
@@ -107,14 +107,14 @@
 <p><em>Changes since 3.3.4</em>:</p>
 
 <ul>
-  <li>Fix bug in reports when using <code class="highlighter-rouge">--debug</code></li>
+  <li>Fix bug in reports when using <code class="language-plaintext highlighter-rouge">--debug</code></li>
 </ul>
 
 <h3 id="cve-2016-6316">CVE-2016-6316</h3>
 
-<p>Typically Rails will escape attribute values passed to tag helpers like <code class="highlighter-rouge">content_tag</code>. If the attribute has already been marked as “safe” with <code class="highlighter-rouge">.html_safe</code> or (more likely) a different escaping helper like <code class="highlighter-rouge">sanitize</code>, the tag helper will not escape the value again (that is the purpose of <code class="highlighter-rouge">.html_safe</code>). However, not all sanitizers/escape methods escape double quotes, which are dangerous inside of tag attributes. In particular, double quotes allow an attacker to close the current attribute and insert new attributes (like <code class="highlighter-rouge">onmouseover</code>) that can execute JavaScript.</p>
+<p>Typically Rails will escape attribute values passed to tag helpers like <code class="language-plaintext highlighter-rouge">content_tag</code>. If the attribute has already been marked as “safe” with <code class="language-plaintext highlighter-rouge">.html_safe</code> or (more likely) a different escaping helper like <code class="language-plaintext highlighter-rouge">sanitize</code>, the tag helper will not escape the value again (that is the purpose of <code class="language-plaintext highlighter-rouge">.html_safe</code>). However, not all sanitizers/escape methods escape double quotes, which are dangerous inside of tag attributes. In particular, double quotes allow an attacker to close the current attribute and insert new attributes (like <code class="language-plaintext highlighter-rouge">onmouseover</code>) that can execute JavaScript.</p>
 
-<p>Brakeman will issue a generic warning about CVE-2016-6316 for affected versions and may generate warnings for potentially dangerous calls to <code class="highlighter-rouge">content_tag</code>.</p>
+<p>Brakeman will issue a generic warning about CVE-2016-6316 for affected versions and may generate warnings for potentially dangerous calls to <code class="language-plaintext highlighter-rouge">content_tag</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/917">changes</a>)</p>
 
@@ -136,7 +136,7 @@
 
 <p>The SHA256 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7231e00bdb4353ee7e91e5f1e60e34cf29b5563e6f7e1e5478223e72568c493a  brakeman-3.3.5.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7231e00bdb4353ee7e91e5f1e60e34cf29b5563e6f7e1e5478223e72568c493a  brakeman-3.3.5.gem
 c07e282c2e1733f8d7db4a4ffefe22e7e38a62ddfd750f0866c0b49070cb61c9  brakeman-lib-3.3.5.gem
 a7f8e6fa8eb4254b7ad17080180289794a02641b1f2ec362de57cfdb2f1535be  brakeman-min-3.3.5.gem
 </code></pre></div></div>

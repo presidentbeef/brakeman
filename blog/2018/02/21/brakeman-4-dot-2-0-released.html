@@ -98,35 +98,35 @@
 <p><em>Changes since 4.1.1:</em></p>
 
 <ul>
-  <li>Handle ERb use of <code class="highlighter-rouge">String#&lt;&lt;</code> method for Ruby 2.5 (<a href="https://github.com/pocke">Pocke</a>)</li>
-  <li>Exclude template folders in <code class="highlighter-rouge">lib/</code> (<a href="https://github.com/Kani999">kru0096</a>)</li>
-  <li>Warn about SQL injection with <code class="highlighter-rouge">not</code></li>
-  <li>Avoid warning about symbol DoS on <code class="highlighter-rouge">Model#attributes</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1096">#1096</a>)</li>
-  <li>Avoid warning about open redirects with model methods ending with <code class="highlighter-rouge">_path</code>(<a href="https://github.com/presidentbeef/brakeman/issues/1117">#1117</a>)</li>
-  <li>Avoid warning about command injection with <code class="highlighter-rouge">Shellwords.escape</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1159">#1159</a>)</li>
-  <li>Use ivars from <code class="highlighter-rouge">initialize</code> in libraries</li>
+  <li>Handle ERb use of <code class="language-plaintext highlighter-rouge">String#&lt;&lt;</code> method for Ruby 2.5 (<a href="https://github.com/pocke">Pocke</a>)</li>
+  <li>Exclude template folders in <code class="language-plaintext highlighter-rouge">lib/</code> (<a href="https://github.com/Kani999">kru0096</a>)</li>
+  <li>Warn about SQL injection with <code class="language-plaintext highlighter-rouge">not</code></li>
+  <li>Avoid warning about symbol DoS on <code class="language-plaintext highlighter-rouge">Model#attributes</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1096">#1096</a>)</li>
+  <li>Avoid warning about open redirects with model methods ending with <code class="language-plaintext highlighter-rouge">_path</code>(<a href="https://github.com/presidentbeef/brakeman/issues/1117">#1117</a>)</li>
+  <li>Avoid warning about command injection with <code class="language-plaintext highlighter-rouge">Shellwords.escape</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1159">#1159</a>)</li>
+  <li>Use ivars from <code class="language-plaintext highlighter-rouge">initialize</code> in libraries</li>
   <li>Fix multiple assignment of globals (<a href="https://github.com/presidentbeef/brakeman/issues/1155">#1155</a>)</li>
-  <li><code class="highlighter-rouge">Sexp#body=</code> can accept <code class="highlighter-rouge">:rlist</code> from <code class="highlighter-rouge">Sexp#body_list</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Sexp#body=</code> can accept <code class="language-plaintext highlighter-rouge">:rlist</code> from <code class="language-plaintext highlighter-rouge">Sexp#body_list</code></li>
   <li>Update RubyParser to 3.11.0</li>
 </ul>
 
 <h3 id="update-erb-handling-for-ruby-250">Update ERb Handling for Ruby 2.5.0</h3>
 
-<p>The way ERb templates are compiled changed in Ruby 2.5.0 to use <code class="highlighter-rouge">String#&lt;&lt;</code>, so Brakeman has been changed to accomodate.</p>
+<p>The way ERb templates are compiled changed in Ruby 2.5.0 to use <code class="language-plaintext highlighter-rouge">String#&lt;&lt;</code>, so Brakeman has been changed to accomodate.</p>
 
-<p>Please note ERb also changed such that <code class="highlighter-rouge">&lt;% #</code> is not supported in Ruby 2.5.0. It will be fixed in the next Ruby release, but the correct syntax is <code class="highlighter-rouge">&lt;%#</code>.</p>
+<p>Please note ERb also changed such that <code class="language-plaintext highlighter-rouge">&lt;% #</code> is not supported in Ruby 2.5.0. It will be fixed in the next Ruby release, but the correct syntax is <code class="language-plaintext highlighter-rouge">&lt;%#</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1149">changes</a>)</p>
 
 <h3 id="exclude-template-folders">Exclude Template Folders</h3>
 
-<p>Files in <code class="highlighter-rouge">lib/**/templates</code> will be ignored, since they are generally ERb files, not actually Ruby.</p>
+<p>Files in <code class="language-plaintext highlighter-rouge">lib/**/templates</code> will be ignored, since they are generally ERb files, not actually Ruby.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1143">changes</a>)</p>
 
-<h3 id="sql-injection-with-not">SQL Injection with <code class="highlighter-rouge">not</code></h3>
+<h3 id="sql-injection-with-not">SQL Injection with <code class="language-plaintext highlighter-rouge">not</code></h3>
 
-<p>In ActiveRecord, <code class="highlighter-rouge">not</code> takes the same arguments as <code class="highlighter-rouge">where</code>, making it just as vulnerable to SQL injection.</p>
+<p>In ActiveRecord, <code class="language-plaintext highlighter-rouge">not</code> takes the same arguments as <code class="language-plaintext highlighter-rouge">where</code>, making it just as vulnerable to SQL injection.</p>
 
 <p>Thank you to <a href="https://twitter.com/jobertabma">Jobert Abma</a> for reporting this.</p>
 
@@ -134,19 +134,19 @@
 
 <h3 id="symbol-dos-false-positive">Symbol DoS False Positive</h3>
 
-<p>Brakeman will no longer warn about <code class="highlighter-rouge">Model#attributes.symbolize_keys</code>.</p>
+<p>Brakeman will no longer warn about <code class="language-plaintext highlighter-rouge">Model#attributes.symbolize_keys</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1165">changes</a>)</p>
 
 <h3 id="open-redirect-false-positive">Open Redirect False Positive</h3>
 
-<p>Brakeman will no longer warn about open redirects with <code class="highlighter-rouge">Model#something_ending_in_path</code>.</p>
+<p>Brakeman will no longer warn about open redirects with <code class="language-plaintext highlighter-rouge">Model#something_ending_in_path</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1164">changes</a>)</p>
 
 <h3 id="shellwords-escaping">Shellwords Escaping</h3>
 
-<p>Brakeman will no longer warn about command injection when <code class="highlighter-rouge">Shellwords.escape</code> and friends are used.</p>
+<p>Brakeman will no longer warn about command injection when <code class="language-plaintext highlighter-rouge">Shellwords.escape</code> and friends are used.</p>
 
 <p>Please note that user input in shell commands is rarely a good idea, even if escaped, since they can change the behavior of the program in unexpected ways. Many Linux tools have options that allow arbitrary code execution.</p>
 
@@ -154,13 +154,13 @@
 
 <h3 id="use-initialized-environment-in-libraries">Use Initialized Environment in Libraries</h3>
 
-<p>When processing libraries, instance variables set in <code class="highlighter-rouge">initialize</code> will be used in subsequent methods.</p>
+<p>When processing libraries, instance variables set in <code class="language-plaintext highlighter-rouge">initialize</code> will be used in subsequent methods.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1161">changes</a>)</p>
 
 <h3 id="update-rubyparser">Update RubyParser</h3>
 
-<p>This release includes updated versions of RubyParser and friends. This may cause some warning fingerprints to change if they include a call to <code class="highlighter-rouge">self[...]</code>.</p>
+<p>This release includes updated versions of RubyParser and friends. This may cause some warning fingerprints to change if they include a call to <code class="language-plaintext highlighter-rouge">self[...]</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1160">changes</a>)</p>
 
@@ -168,7 +168,7 @@
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c6ad3861920075ccf553343815fcce07aa09d015bc8529c6e4d8a865674530f7  brakeman-4.2.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c6ad3861920075ccf553343815fcce07aa09d015bc8529c6e4d8a865674530f7  brakeman-4.2.0.gem
 94a97496761ddd27974867bde3235cab303761dadec4bd6a8d22260a72aaaa38  brakeman-lib-4.2.0.gem
 a071eb6d6e866df0338bcb9c8dd56f5b0d66c68212eb604f551ac8aa196d6923  brakeman-min-4.2.0.gem
 </code></pre></div></div>

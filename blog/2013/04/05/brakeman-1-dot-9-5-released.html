@@ -99,35 +99,35 @@
 
 <ul>
   <li>Add check for unsafe symbol creation (<a href="https://github.com/HonoreDB">Aaron Weiner</a>)</li>
-  <li>Do not warn on mass assignment with <code class="highlighter-rouge">slice</code>/<code class="highlighter-rouge">only</code> (<a href="https://github.com/presidentbeef/brakeman/issues/203">#203</a>)</li>
-  <li>Do not warn on session secret if in <code class="highlighter-rouge">.gitignore</code> (<a href="https://github.com/presidentbeef/brakeman/issues/241">#241</a>)</li>
+  <li>Do not warn on mass assignment with <code class="language-plaintext highlighter-rouge">slice</code>/<code class="language-plaintext highlighter-rouge">only</code> (<a href="https://github.com/presidentbeef/brakeman/issues/203">#203</a>)</li>
+  <li>Do not warn on session secret if in <code class="language-plaintext highlighter-rouge">.gitignore</code> (<a href="https://github.com/presidentbeef/brakeman/issues/241">#241</a>)</li>
   <li>Fix session secret check for Rails 4</li>
   <li>Fix scoping for blocks and block arguments</li>
   <li>Fix error when modifying blocks in templates</li>
-  <li>Fix crash on <code class="highlighter-rouge">before_filter</code> outside controller</li>
-  <li>Fix <code class="highlighter-rouge">Sexp</code> hash cache invalidation</li>
-  <li>Respect <code class="highlighter-rouge">quiet</code> option in configuration file (<a href="https://github.com/presidentbeef/brakeman/issues/300">#300</a>)</li>
-  <li>Convert assignment to simple <code class="highlighter-rouge">if</code> expressions to <code class="highlighter-rouge">or</code></li>
+  <li>Fix crash on <code class="language-plaintext highlighter-rouge">before_filter</code> outside controller</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">Sexp</code> hash cache invalidation</li>
+  <li>Respect <code class="language-plaintext highlighter-rouge">quiet</code> option in configuration file (<a href="https://github.com/presidentbeef/brakeman/issues/300">#300</a>)</li>
+  <li>Convert assignment to simple <code class="language-plaintext highlighter-rouge">if</code> expressions to <code class="language-plaintext highlighter-rouge">or</code></li>
   <li>More fixes for assignments inside branches</li>
-  <li>Refactoring of <code class="highlighter-rouge">CheckLinkTo</code> and <code class="highlighter-rouge">Report</code> (<a href="https://github.com/barttenbrinke">Bart ten Brinke</a>)</li>
+  <li>Refactoring of <code class="language-plaintext highlighter-rouge">CheckLinkTo</code> and <code class="language-plaintext highlighter-rouge">Report</code> (<a href="https://github.com/barttenbrinke">Bart ten Brinke</a>)</li>
   <li>Pin ruby2ruby dependency to version 2.0.3 (<a href="https://github.com/seattlerb/ruby2ruby/issues/15">see here</a>)</li>
 </ul>
 
 <h3 id="symbol-creation-check">Symbol Creation Check</h3>
 
-<p><a href="https://github.com/HonoreDB">Aaron Weiner</a> added a check for symbol creation from user input, such as <code class="highlighter-rouge">params[:x].to_i</code> which can lead to Denial of Service.</p>
+<p><a href="https://github.com/HonoreDB">Aaron Weiner</a> added a check for symbol creation from user input, such as <code class="language-plaintext highlighter-rouge">params[:x].to_i</code> which can lead to Denial of Service.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/296">changes</a>)</p>
 
 <h3 id="mass-assignment-with-select-keys">Mass Assignment with Select Keys</h3>
 
-<p>A common pattern to avoid mass assignment issues is to use <code class="highlighter-rouge">slice</code> or <code class="highlighter-rouge">only</code> when passing in values to mass assignment methods. Brakeman should no longer warn in these situations.</p>
+<p>A common pattern to avoid mass assignment issues is to use <code class="language-plaintext highlighter-rouge">slice</code> or <code class="language-plaintext highlighter-rouge">only</code> when passing in values to mass assignment methods. Brakeman should no longer warn in these situations.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/303">changes</a>)</p>
 
 <h3 id="ignoring-session-secrets">Ignoring Session Secrets</h3>
 
-<p>Brakeman no longer warns if the config file containing the session secret key is included in <code class="highlighter-rouge">.gitignore</code>. This only applies if the default file names are used.</p>
+<p>Brakeman no longer warns if the config file containing the session secret key is included in <code class="language-plaintext highlighter-rouge">.gitignore</code>. This only applies if the default file names are used.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/302">changes</a>)</p>
 
@@ -147,7 +147,7 @@
 
 <h3 id="sexp-hash-cache-invalidation">Sexp Hash Cache Invalidation</h3>
 
-<p>Since Brakeman does a ton of hash table lookups with s-expressions as keys, it caches <code class="highlighter-rouge">Sexp#hash</code> values. In some situations, these cached values were being invalidated when they did not need to be, and not being invalidated when they should have been.</p>
+<p>Since Brakeman does a ton of hash table lookups with s-expressions as keys, it caches <code class="language-plaintext highlighter-rouge">Sexp#hash</code> values. In some situations, these cached values were being invalidated when they did not need to be, and not being invalidated when they should have been.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/294">changes</a>)</p>
 
@@ -159,13 +159,13 @@
 
 <h3 id="assignments-of-if-expressions">Assignments of If Expressions</h3>
 
-<p>Simple if expression assigments such as <code class="highlighter-rouge">x = thing ? this : that</code> will now be converted to <code class="highlighter-rouge">x = this || that</code>. This should simplify some code reported with warnings as well as avoid warning on values in <code class="highlighter-rouge">if</code> conditions.</p>
+<p>Simple if expression assigments such as <code class="language-plaintext highlighter-rouge">x = thing ? this : that</code> will now be converted to <code class="language-plaintext highlighter-rouge">x = this || that</code>. This should simplify some code reported with warnings as well as avoid warning on values in <code class="language-plaintext highlighter-rouge">if</code> conditions.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/295">changes and examples</a>)</p>
 
 <h3 id="assignments-in-if-expressions">Assignments in If Expressions</h3>
 
-<p>Assignments inside <code class="highlighter-rouge">if</code> branches cause Brakeman to “branch” the values for a variable, since it could be two or more different values. However, this branching should only occur <em>after</em> both branches have been processed. Brakeman 1.9.3 made it so values were not branched inside of a single branch, but there was still an issue where values branched in the <code class="highlighter-rouge">then</code> clause would be used in the <code class="highlighter-rouge">else</code> clause. This release fixes that issue and simplifies branching overall.</p>
+<p>Assignments inside <code class="language-plaintext highlighter-rouge">if</code> branches cause Brakeman to “branch” the values for a variable, since it could be two or more different values. However, this branching should only occur <em>after</em> both branches have been processed. Brakeman 1.9.3 made it so values were not branched inside of a single branch, but there was still an issue where values branched in the <code class="language-plaintext highlighter-rouge">then</code> clause would be used in the <code class="language-plaintext highlighter-rouge">else</code> clause. This release fixes that issue and simplifies branching overall.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/297">changes and examples</a>)</p>
 

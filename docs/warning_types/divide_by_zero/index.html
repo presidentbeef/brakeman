@@ -78,11 +78,11 @@
     <h1 class="entry-title">Divide By Zero</h1>
   </header>
   
-  <p>Integer division by zero (<code class="highlighter-rouge">0</code>) in Ruby results in a <code class="highlighter-rouge">ZeroDivisionError</code> exception.</p>
+  <p>Integer division by zero (<code class="language-plaintext highlighter-rouge">0</code>) in Ruby results in a <code class="language-plaintext highlighter-rouge">ZeroDivisionError</code> exception.</p>
 
 <p>While not strictly a security issue, if an attacker can trigger a large number of exceptions it can harm site availability.</p>
 
-<p>Brakeman warns when it finds potential division by zero with integers. Dividing a float by zero or <code class="highlighter-rouge">0.0</code> in Ruby results in <code class="highlighter-rouge">Infinity</code>, not an exception.</p>
+<p>Brakeman warns when it finds potential division by zero with integers. Dividing a float by zero or <code class="language-plaintext highlighter-rouge">0.0</code> in Ruby results in <code class="language-plaintext highlighter-rouge">Infinity</code>, not an exception.</p>
 
 <hr />
 <p>Back to <a href="/docs/warning_types">Warning Types</a></p>

@@ -106,11 +106,11 @@
 
 <h3 id="rails-3-configs">Rails 3 Configs</h3>
 
-<p>Configurations in <code class="highlighter-rouge">config/application</code> and <code class="highlighter-rouge">config/environments/production.rb</code> will now be parsed.</p>
+<p>Configurations in <code class="language-plaintext highlighter-rouge">config/application</code> and <code class="language-plaintext highlighter-rouge">config/environments/production.rb</code> will now be parsed.</p>
 
 <h3 id="check-for-disabled-mass-assignment">Check for Disabled Mass Assignment</h3>
 
-<p>A new option was added in Rails 3.1 to globally disable mass assignment using <code class="highlighter-rouge">config.active_record.whitelist_attributes = true</code>. Brakeman will now turn off mass assignment warnings if this configuration setting is detected.</p>
+<p>A new option was added in Rails 3.1 to globally disable mass assignment using <code class="language-plaintext highlighter-rouge">config.active_record.whitelist_attributes = true</code>. Brakeman will now turn off mass assignment warnings if this configuration setting is detected.</p>
 
 <h3 id="always-warn-on-without_protection">Always Warn on without_protection</h3>
 
@@ -118,10 +118,10 @@
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.new(params, :without_protection =&gt; true)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.new(params, :without_protection =&gt; true)
 </code></pre></div></div>
 
-<p>Brakeman will now <em>always</em> warn when <code class="highlighter-rouge">without_protection</code> is used, even if mass assignment is disabled or attributes are protected on that model.</p>
+<p>Brakeman will now <em>always</em> warn when <code class="language-plaintext highlighter-rouge">without_protection</code> is used, even if mass assignment is disabled or attributes are protected on that model.</p>
 
 <h3 id="fix-csv-output">Fix CSV Output</h3>
 

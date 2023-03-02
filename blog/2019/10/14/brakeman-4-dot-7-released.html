@@ -99,12 +99,12 @@
 
 <ul>
   <li>Update Haml support to Haml 5.x (<a href="https://github.com/presidentbeef/brakeman/issues/1044">#1044</a>)</li>
-  <li>Catch shell injection from <code class="highlighter-rouge">-c</code> shell commands (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
-  <li>Correctly handle non-symbols in <code class="highlighter-rouge">CheckCookieSerialization</code> (<a href="https://github.com/philipturnbull">Phil Turnbull</a>)</li>
-  <li>Refactor <code class="highlighter-rouge">Brakeman::Differ#second_pass</code> (<a href="https://github.com/Becojo">Benoit Côté-Jodoin</a>)</li>
-  <li>Fix <code class="highlighter-rouge">version_between?</code> (<a href="https://github.com/aglushkov">Andrey Glushkov</a>)</li>
-  <li>Ignore interpolation in <code class="highlighter-rouge">%W[]</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1399">#1399</a>)</li>
-  <li>Ignore <code class="highlighter-rouge">form_for</code> for XSS check</li>
+  <li>Catch shell injection from <code class="language-plaintext highlighter-rouge">-c</code> shell commands (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
+  <li>Correctly handle non-symbols in <code class="language-plaintext highlighter-rouge">CheckCookieSerialization</code> (<a href="https://github.com/philipturnbull">Phil Turnbull</a>)</li>
+  <li>Refactor <code class="language-plaintext highlighter-rouge">Brakeman::Differ#second_pass</code> (<a href="https://github.com/Becojo">Benoit Côté-Jodoin</a>)</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">version_between?</code> (<a href="https://github.com/aglushkov">Andrey Glushkov</a>)</li>
+  <li>Ignore interpolation in <code class="language-plaintext highlighter-rouge">%W[]</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1399">#1399</a>)</li>
+  <li>Ignore <code class="language-plaintext highlighter-rouge">form_for</code> for XSS check</li>
 </ul>
 
 <h3 id="haml-support-update">Haml Support Update</h3>
@@ -120,11 +120,11 @@ Due to the large number of changes, you may expect some changes to warnings for 
 
 <h3 id="shell-commands">Shell Commands</h3>
 
-<p><a href="https://github.com/JacobEvelyn">Jacob Evelyn</a> added support for detecting command injection with <code class="highlighter-rouge">-c</code> in known-dangerous commands (such as <code class="highlighter-rouge">bash</code> or <code class="highlighter-rouge">echo</code>).</p>
+<p><a href="https://github.com/JacobEvelyn">Jacob Evelyn</a> added support for detecting command injection with <code class="language-plaintext highlighter-rouge">-c</code> in known-dangerous commands (such as <code class="language-plaintext highlighter-rouge">bash</code> or <code class="language-plaintext highlighter-rouge">echo</code>).</p>
 
 <p>An example of dangerous code would be:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system("echo", "-c", params[:command])
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system("echo", "-c", params[:command])
 </code></pre></div></div>
 
 <p>Of course not all dangerous shell commands are covered - so in general be careful passing any user-controlled input to a shell command.</p>
@@ -133,38 +133,38 @@ Due to the large number of changes, you may expect some changes to warnings for 
 
 <h3 id="cookieserialization-bug">CookieSerialization Bug</h3>
 
-<p><a href="https://github.com/philipturnbull">Phil Turnbull</a> fixed an issue in <code class="highlighter-rouge">CheckCookieSerialization</code> where non-symbol cookie serialization options were handled poorly.</p>
+<p><a href="https://github.com/philipturnbull">Phil Turnbull</a> fixed an issue in <code class="language-plaintext highlighter-rouge">CheckCookieSerialization</code> where non-symbol cookie serialization options were handled poorly.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1391">changes</a>)</p>
 
 <h3 id="brakemandiffer-refactor">Brakeman::Differ Refactor</h3>
 
-<p><a href="https://github.com/Becojo">Benoit Côté-Jodoin</a> refactored <code class="highlighter-rouge">Brakeman::Differ</code> to compare warnings more efficiently and remove old fallback behavior.
-All warnings are compared by fingerprint now when using <code class="highlighter-rouge">--compare</code>.</p>
+<p><a href="https://github.com/Becojo">Benoit Côté-Jodoin</a> refactored <code class="language-plaintext highlighter-rouge">Brakeman::Differ</code> to compare warnings more efficiently and remove old fallback behavior.
+All warnings are compared by fingerprint now when using <code class="language-plaintext highlighter-rouge">--compare</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1406">changes</a>)</p>
 
 <h3 id="version-comparisons">Version Comparisons</h3>
 
-<p><a href="https://github.com/aglushkov">Andrey Glushkov</a> updated the code for comparing library versions so it uses <code class="highlighter-rouge">Gem::Version</code> and handles “beta”/pre-release versions better.</p>
+<p><a href="https://github.com/aglushkov">Andrey Glushkov</a> updated the code for comparing library versions so it uses <code class="language-plaintext highlighter-rouge">Gem::Version</code> and handles “beta”/pre-release versions better.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1405">changes</a>)</p>
 
 <h3 id="w-interpolation">%W Interpolation</h3>
 
-<p>String interpolation when using <code class="highlighter-rouge">%W</code> is no longer considered dangerous in shell commands where regular interpolation would be.</p>
+<p>String interpolation when using <code class="language-plaintext highlighter-rouge">%W</code> is no longer considered dangerous in shell commands where regular interpolation would be.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1408">changes</a>)</p>
 
-<h3 id="form_for"><code class="highlighter-rouge">form_for</code></h3>
+<h3 id="form_for"><code class="language-plaintext highlighter-rouge">form_for</code></h3>
 
-<p><code class="highlighter-rouge">form_for</code> is considered a safe method in XSS checks.</p>
+<p><code class="language-plaintext highlighter-rouge">form_for</code> is considered a safe method in XSS checks.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1397/commits/a99cb25c6e76eb6240589f3a399e1245c0514257">changes</a>)</p>
 
 <h3 id="stringnew">String.new</h3>
 
-<p><code class="highlighter-rouge">String.new &lt;&lt; 'some string'</code> is now treated like <code class="highlighter-rouge">'' &lt;&lt; 'some string'</code>.</p>
+<p><code class="language-plaintext highlighter-rouge">String.new &lt;&lt; 'some string'</code> is now treated like <code class="language-plaintext highlighter-rouge">'' &lt;&lt; 'some string'</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1397/commits/931bed18481679086a7102bc063ecf9b1d727d40">changes</a>)</p>
 
@@ -172,7 +172,7 @@ All warnings are compared by fingerprint now when using <code class="highlighter
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f43d949f1de9c0bb67b7bc7d41000ac70a1fb6c2250c5e7332015f0cc5ce36c5  brakeman-4.7.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f43d949f1de9c0bb67b7bc7d41000ac70a1fb6c2250c5e7332015f0cc5ce36c5  brakeman-4.7.0.gem
 c02dbaa4ad0c7402ef99697c7b1916b7d9558dd5aa45e1a36efed117628498cc  brakeman-lib-4.7.0.gem
 3ab80a47bbfbb0f869bb1289292ed62b9643b5e0884a4a79e2c7e44218ce3b07  brakeman-min-4.7.0.gem
 </code></pre></div></div>

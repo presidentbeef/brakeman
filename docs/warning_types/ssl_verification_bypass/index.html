@@ -80,9 +80,9 @@
   
   <p>Simply using SSL isn’t enough to ensure the data you are sending is secure. Man in the middle (MITM) attacks are well known and widely used. In some cases, these attacks rely on the client to establish a connection that doesn’t check the validity of the SSL certificate presented by the server. In this case, the attacker can present their own certificate and act as a man in the middle.</p>
 
-<p>In Ruby, this happens when the OpenSSL verification mode is set to <code class="highlighter-rouge">VERIFY_NONE</code></p>
+<p>In Ruby, this happens when the OpenSSL verification mode is set to <code class="language-plaintext highlighter-rouge">VERIFY_NONE</code></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require "net/https"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require "net/https"
 require "uri"
 
 uri = URI.parse("https://ssl-site.com/")
@@ -99,12 +99,12 @@ response = http.request(request)
 
 <p>Brakeman would produce a warning like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SSL certificate verification was bypassed near line 24: http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SSL certificate verification was bypassed near line 24: http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 </code></pre></div></div>
 
 <p>To ensure that SSL verification happens use the following mode:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http.verify_mode = OpenSSL::SSL::VERIFY_PEER
 </code></pre></div></div>
 
 <p>If the server certificate is invalid or context.ca_file is not set when verifying peers an OpenSSL::SSL::SSLError will be raised.</p>

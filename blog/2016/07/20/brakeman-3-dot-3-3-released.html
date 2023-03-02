@@ -99,7 +99,7 @@
   <li>Index calls in view helpers</li>
   <li>Process inline template renders (<a href="https://github.com/presidentbeef/brakeman/issues/672">#672</a>)</li>
   <li>Show path when no Rails app found (<a href="https://github.com/oreoshake">Neil Matatall</a>)</li>
-  <li>Avoid warning about hashes in <code class="highlighter-rouge">link_to</code> hrefs (<a href="https://github.com/presidentbeef/brakeman/issues/897">#897</a>)</li>
+  <li>Avoid warning about hashes in <code class="language-plaintext highlighter-rouge">link_to</code> hrefs (<a href="https://github.com/presidentbeef/brakeman/issues/897">#897</a>)</li>
   <li>Improve return value guesses</li>
   <li>Ignore boolean methods in render paths</li>
   <li>Reduce open redirect duplicates</li>
@@ -116,7 +116,7 @@
 
 <p>Brakeman will now process inline templates in controllers, if they are using ERB (the default):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>render :inline =&gt; "&lt;%= params[:x].html_safe %&gt;"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>render :inline =&gt; "&lt;%= params[:x].html_safe %&gt;"
 </code></pre></div></div>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/905">changes</a>)</p>
@@ -125,14 +125,14 @@
 
 <p>Thanks to <a href="https://github.com/oreoshake">Neil Matatall</a>, Brakeman will now display the path it tried to search for a Rails application if it cannot find it:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Please supply the path to a Rails application (looking in /some/path/).
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Please supply the path to a Rails application (looking in /some/path/).
 </code></pre></div></div>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/909">changes</a>)</p>
 
 <h3 id="hashes-as-urls">Hashes as URLs</h3>
 
-<p>Brakeman will no longer warn about obvious hash arguments in the HREF for <code class="highlighter-rouge">link_to</code> calls, as well as handling <code class="highlighter-rouge">url_for</code> better.</p>
+<p>Brakeman will no longer warn about obvious hash arguments in the HREF for <code class="language-plaintext highlighter-rouge">link_to</code> calls, as well as handling <code class="language-plaintext highlighter-rouge">url_for</code> better.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/904">changes</a>)</p>
 
@@ -146,7 +146,7 @@ and fix some false positives.</p>
 
 <h3 id="render-path-booleans">Render Path Booleans</h3>
 
-<p>The check for dynamic render paths will no longer warn about methods ending in <code class="highlighter-rouge">?</code>.</p>
+<p>The check for dynamic render paths will no longer warn about methods ending in <code class="language-plaintext highlighter-rouge">?</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/899">changes</a>)</p>
 
@@ -160,7 +160,7 @@ and fix some false positives.</p>
 
 <p>The SHA256 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>490bf7b47d4edbb29fd3f87c5dafa50aec2888d495b64275a635df324a8476e9  brakeman-3.3.3.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>490bf7b47d4edbb29fd3f87c5dafa50aec2888d495b64275a635df324a8476e9  brakeman-3.3.3.gem
 793f1c69cca2681bdd0c98f11307ace4f1a43ed594dd45cbe5b67f0383e76e2f  brakeman-lib-3.3.3.gem
 dcc3a75b12f84cac582d383a375d3b85d033e25ba42af051bedcdc8b5377c2c5  brakeman-min-3.3.3.gem
 </code></pre></div></div>

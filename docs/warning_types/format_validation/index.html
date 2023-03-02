@@ -78,7 +78,7 @@
     <h1 class="entry-title">Format Validation</h1>
   </header>
   
-  <p>Calls to <code class="highlighter-rouge">validates_format_of ..., :with =&gt; //</code> which do not use <code class="highlighter-rouge">\A</code> and <code class="highlighter-rouge">\z</code> as anchors will cause this warning. Using <code class="highlighter-rouge">^</code> and <code class="highlighter-rouge">$</code> is not sufficient, as they will only match up to a new line. This allows an attacker to put whatever malicious input they would like before or after a new line character.</p>
+  <p>Calls to <code class="language-plaintext highlighter-rouge">validates_format_of ..., :with =&gt; //</code> which do not use <code class="language-plaintext highlighter-rouge">\A</code> and <code class="language-plaintext highlighter-rouge">\z</code> as anchors will cause this warning. Using <code class="language-plaintext highlighter-rouge">^</code> and <code class="language-plaintext highlighter-rouge">$</code> is not sufficient, as they will only match up to a new line. This allows an attacker to put whatever malicious input they would like before or after a new line character.</p>
 
 <p>See <a href="http://guides.rubyonrails.org/security.html#regular-expressions">the Ruby Security Guide</a> for details.</p>
 

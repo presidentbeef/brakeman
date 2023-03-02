@@ -93,7 +93,7 @@
   </header>
 
 
-<div class="entry-content"><p>This is essentially just a bugfix release, but due to the fixes for <code class="highlighter-rouge">link_to</code> warnings, there is a good possibility the number of reported warnings will decrease when upgrading to this version.</p>
+<div class="entry-content"><p>This is essentially just a bugfix release, but due to the fixes for <code class="language-plaintext highlighter-rouge">link_to</code> warnings, there is a good possibility the number of reported warnings will decrease when upgrading to this version.</p>
 
 <p>Changes since 1.2.0:</p>
 
@@ -111,27 +111,27 @@
 
 <h3 id="link_to-changes">link_to Changes</h3>
 
-<p>Prior to Rails 3.0, there <a href="https://rails.lighthouseapp.com/projects/8994/tickets/3518-link_to-doesnt-escape-its-input">was a bug</a> in <code class="highlighter-rouge">link_to</code> that caused the body of the link tag to be output without escaping. While this was fixed in Rails 3.0, Brakeman has still been warning on it. This was also fixed in the <a href="https://github.com/rails/rails_xss/commit/afc1610fe4b94150faee98c16f15a24290d20900">rails_xss</a>, so Brakeman should no longer warn on <code class="highlighter-rouge">link_to</code> for Rails 2.x when using the rails_xss plugin.</p>
+<p>Prior to Rails 3.0, there <a href="https://rails.lighthouseapp.com/projects/8994/tickets/3518-link_to-doesnt-escape-its-input">was a bug</a> in <code class="language-plaintext highlighter-rouge">link_to</code> that caused the body of the link tag to be output without escaping. While this was fixed in Rails 3.0, Brakeman has still been warning on it. This was also fixed in the <a href="https://github.com/rails/rails_xss/commit/afc1610fe4b94150faee98c16f15a24290d20900">rails_xss</a>, so Brakeman should no longer warn on <code class="language-plaintext highlighter-rouge">link_to</code> for Rails 2.x when using the rails_xss plugin.</p>
 
-<p>Brakeman was also warning on <code class="highlighter-rouge">link_to</code> even if the body argument was manually escaped. This should be resolved now.</p>
+<p>Brakeman was also warning on <code class="language-plaintext highlighter-rouge">link_to</code> even if the body argument was manually escaped. This should be resolved now.</p>
 
-<p>One other related issue was a silly bug causing Brakeman to sometimes ignore <code class="highlighter-rouge">--escape-html</code> or the rails_xss plugin, leading to some confusing output. This is fixed.</p>
+<p>One other related issue was a silly bug causing Brakeman to sometimes ignore <code class="language-plaintext highlighter-rouge">--escape-html</code> or the rails_xss plugin, leading to some confusing output. This is fixed.</p>
 
-<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/32">Neil Matatall</a> for reporting the <code class="highlighter-rouge">link_to</code> issue and <a href="https://github.com/a5sk4s">Andreas</a> for reporting the rails_xss problems.</p>
+<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/32">Neil Matatall</a> for reporting the <code class="language-plaintext highlighter-rouge">link_to</code> issue and <a href="https://github.com/a5sk4s">Andreas</a> for reporting the rails_xss problems.</p>
 
 <h3 id="attr_accessible-with-no-arguments">attr_accessible with No Arguments</h3>
 
-<p>Brakeman was not detecting the case where <code class="highlighter-rouge">attr_accessible</code> is called with zero arguments, causing spurious mass assignment warnings.</p>
+<p>Brakeman was not detecting the case where <code class="language-plaintext highlighter-rouge">attr_accessible</code> is called with zero arguments, causing spurious mass assignment warnings.</p>
 
 <p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/31">Justin Wiley</a> for reporting this.</p>
 
 <h3 id="brakeman-rake-task">Brakeman Rake Task</h3>
 
-<p>The Brakeman Rake task (installed via <code class="highlighter-rouge">--rake</code>) is even <a href="/docs/rake">simpler now</a>.</p>
+<p>The Brakeman Rake task (installed via <code class="language-plaintext highlighter-rouge">--rake</code>) is even <a href="/docs/rake">simpler now</a>.</p>
 
 <h3 id="verbose">$VERBOSE</h3>
 
-<p>Brakeman was using <code class="highlighter-rouge">$VERBOSE</code> and <code class="highlighter-rouge">Kernel.warn</code> for controlling debug output. This has changed and <code class="highlighter-rouge">$VERBOSE</code> will no longer be modified when using Brakeman.</p>
+<p>Brakeman was using <code class="language-plaintext highlighter-rouge">$VERBOSE</code> and <code class="language-plaintext highlighter-rouge">Kernel.warn</code> for controlling debug output. This has changed and <code class="language-plaintext highlighter-rouge">$VERBOSE</code> will no longer be modified when using Brakeman.</p>
 
 <h3 id="rails-32-support">Rails 3.2 Support</h3>
 

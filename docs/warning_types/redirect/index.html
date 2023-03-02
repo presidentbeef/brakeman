@@ -82,55 +82,55 @@
 
 <p>Redirects which rely on user-supplied values can be used to “spoof” websites or hide malicious links in otherwise harmless-looking URLs. They can also allow access to restricted areas of a site if the destination is not validated.</p>
 
-<p>Brakeman will raise warnings whenever <code class="highlighter-rouge">redirect_to</code> appears to be used with a user-supplied value that may allow them to change the <code class="highlighter-rouge">:host</code> option.</p>
+<p>Brakeman will raise warnings whenever <code class="language-plaintext highlighter-rouge">redirect_to</code> appears to be used with a user-supplied value that may allow them to change the <code class="language-plaintext highlighter-rouge">:host</code> option.</p>
 
 <p>For example,</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to params.merge(:action =&gt; :home)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to params.merge(:action =&gt; :home)
 </code></pre></div></div>
 
 <p>will create a warning like</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Possible unprotected redirect near line 46: redirect_to(params)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Possible unprotected redirect near line 46: redirect_to(params)
 </code></pre></div></div>
 
-<p>This is because <code class="highlighter-rouge">params</code> could contain <code class="highlighter-rouge">:host =&gt; 'evilsite.com'</code> which would redirect away from your site and to a malicious site.</p>
+<p>This is because <code class="language-plaintext highlighter-rouge">params</code> could contain <code class="language-plaintext highlighter-rouge">:host =&gt; 'evilsite.com'</code> which would redirect away from your site and to a malicious site.</p>
 
-<p>If the first argument to <code class="highlighter-rouge">redirect_to</code> is a hash, then adding <code class="highlighter-rouge">:only_path =&gt; true</code> will limit the redirect to the current host. Another option is to specify the host explicitly.</p>
+<p>If the first argument to <code class="language-plaintext highlighter-rouge">redirect_to</code> is a hash, then adding <code class="language-plaintext highlighter-rouge">:only_path =&gt; true</code> will limit the redirect to the current host. Another option is to specify the host explicitly.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to params.merge(:only_path =&gt; true)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to params.merge(:only_path =&gt; true)
 
 redirect_to params.merge(:host =&gt; 'myhost.com')
 </code></pre></div></div>
 
 <p>If the first argument is a string, then it is possible to parse the string and extract the path:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to URI.parse(some_url).path
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to URI.parse(some_url).path
 </code></pre></div></div>
 
-<p><strong>If the URL does not contain a protocol (e.g., <code class="highlighter-rouge">http://</code>), then you will probably get unexpected results, as <code class="highlighter-rouge">redirect_to</code> will prepend the current host name and a protocol.</strong></p>
+<p><strong>If the URL does not contain a protocol (e.g., <code class="language-plaintext highlighter-rouge">http://</code>), then you will probably get unexpected results, as <code class="language-plaintext highlighter-rouge">redirect_to</code> will prepend the current host name and a protocol.</strong></p>
 
 <h3 id="rails-7-updates">Rails 7 Updates</h3>
 
-<p>If <code class="highlighter-rouge">config.action_controller.raise_on_open_redirects</code> is <code class="highlighter-rouge">true</code> (default for <em>new</em> Rails 7.0 applications), then Rails will not allow redirecting to a domain that differs from the request.</p>
+<p>If <code class="language-plaintext highlighter-rouge">config.action_controller.raise_on_open_redirects</code> is <code class="language-plaintext highlighter-rouge">true</code> (default for <em>new</em> Rails 7.0 applications), then Rails will not allow redirecting to a domain that differs from the request.</p>
 
-<p>Even if the configuration setting is not <code class="highlighter-rouge">true</code>, the protection can be applied by setting <code class="highlighter-rouge">allow_other_host: false</code> explicitly:</p>
+<p>Even if the configuration setting is not <code class="language-plaintext highlighter-rouge">true</code>, the protection can be applied by setting <code class="language-plaintext highlighter-rouge">allow_other_host: false</code> explicitly:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to params[:url], allow_other_host: false
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to params[:url], allow_other_host: false
 </code></pre></div></div>
 
-<p>The code above will raise an exception if <code class="highlighter-rouge">params[:url]</code> does not match the current domain.</p>
+<p>The code above will raise an exception if <code class="language-plaintext highlighter-rouge">params[:url]</code> does not match the current domain.</p>
 
-<p>Brakeman will warn about calls where <code class="highlighter-rouge">allow_other_host</code> is set to <code class="highlighter-rouge">true</code>.</p>
+<p>Brakeman will warn about calls where <code class="language-plaintext highlighter-rouge">allow_other_host</code> is set to <code class="language-plaintext highlighter-rouge">true</code>.</p>
 
-<p>To coerce the URL to be “safe”, use <a href="https://api.rubyonrails.org/v7.0/classes/ActionController/Redirecting.html#method-i-url_from"><code class="highlighter-rouge">url_from</code></a>:</p>
+<p>To coerce the URL to be “safe”, use <a href="https://api.rubyonrails.org/v7.0/classes/ActionController/Redirecting.html#method-i-url_from"><code class="language-plaintext highlighter-rouge">url_from</code></a>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to url_from(params[:url])
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to url_from(params[:url])
 </code></pre></div></div>
 
-<p>If the URL is does not match the current domain, then <code class="highlighter-rouge">url_from</code> returns <code class="highlighter-rouge">false</code>. The recommended pattern is to provide a fallback:</p>
+<p>If the URL is does not match the current domain, then <code class="language-plaintext highlighter-rouge">url_from</code> returns <code class="language-plaintext highlighter-rouge">false</code>. The recommended pattern is to provide a fallback:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to url_from(params[:url]) || some_safe_default_url
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to url_from(params[:url]) || some_safe_default_url
 </code></pre></div></div>
 
 <hr />

@@ -102,8 +102,8 @@
 <ul>
   <li>Major rewrite of CheckSQL</li>
   <li>Process actions mixed into controllers</li>
-  <li>Check for inherited <code class="highlighter-rouge">attr_accessible</code> (Neil Matatall)</li>
-  <li>Handle <code class="highlighter-rouge">render :template =&gt; ...</code></li>
+  <li>Check for inherited <code class="language-plaintext highlighter-rouge">attr_accessible</code> (Neil Matatall)</li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">render :template =&gt; ...</code></li>
   <li>Report line number of highlighted value, if available</li>
   <li>Fix highlighting of HTML escaped values in HTML report</li>
   <li>Fix rescanning of deleted templates</li>
@@ -111,9 +111,9 @@
 
 <h3 id="updated-sql-injection-check">Updated SQL Injection Check</h3>
 
-<p><code class="highlighter-rouge">CheckSQL</code> has been completely revamped. Brakeman now has a much better understanding of the various ActiveRecord::FinderMethods and ActiveRecord::QueryMethods, as well as their options.</p>
+<p><code class="language-plaintext highlighter-rouge">CheckSQL</code> has been completely revamped. Brakeman now has a much better understanding of the various ActiveRecord::FinderMethods and ActiveRecord::QueryMethods, as well as their options.</p>
 
-<p>The check is also more conservative about what it warns on. Previously, since string interpolation is the main entry point for SQL injection in Rails, any interpolated value in a query would generate a warning. Now, “safe” sanitization methods, obviously safe methods like <code class="highlighter-rouge">to_i</code> and <code class="highlighter-rouge">id</code>, constants, strings, and other literal values should not cause warnings.</p>
+<p>The check is also more conservative about what it warns on. Previously, since string interpolation is the main entry point for SQL injection in Rails, any interpolated value in a query would generate a warning. Now, “safe” sanitization methods, obviously safe methods like <code class="language-plaintext highlighter-rouge">to_i</code> and <code class="language-plaintext highlighter-rouge">id</code>, constants, strings, and other literal values should not cause warnings.</p>
 
 <p>The “highlighted” value (or “user input”) reported for SQL warnings should be much more accurate now, making it easier to determine why a warning was reported.</p>
 
@@ -123,15 +123,15 @@
 
 <h3 id="check-for-inherited-mass-assignment-protection">Check for Inherited Mass Assignment Protection</h3>
 
-<p>Since mass assignment protection via <code class="highlighter-rouge">attr_accessible</code> is inheritable, Brakeman will no longer warn about models whose parent uses <code class="highlighter-rouge">attr_accessible</code>.</p>
+<p>Since mass assignment protection via <code class="language-plaintext highlighter-rouge">attr_accessible</code> is inheritable, Brakeman will no longer warn about models whose parent uses <code class="language-plaintext highlighter-rouge">attr_accessible</code>.</p>
 
 <h3 id="template-option-in-render">Template Option in Render</h3>
 
-<p>Somehow, the <code class="highlighter-rouge">:template</code> option for <code class="highlighter-rouge">render</code> has been ignored this whole time. Sorry!</p>
+<p>Somehow, the <code class="language-plaintext highlighter-rouge">:template</code> option for <code class="language-plaintext highlighter-rouge">render</code> has been ignored this whole time. Sorry!</p>
 
 <h3 id="better-line-numbers">Better Line Numbers</h3>
 
-<p>Warnings which have a <code class="highlighter-rouge">:user_input</code> field use that value to “highlight” part of the code in the reported warning. This value usually corresponds to the code which actually caused the warning to be generated.</p>
+<p>Warnings which have a <code class="language-plaintext highlighter-rouge">:user_input</code> field use that value to “highlight” part of the code in the reported warning. This value usually corresponds to the code which actually caused the warning to be generated.</p>
 
 <p>If a warning has this field, the line number of that code is used, instead of the starting line number of the entire piece of code. This often leads to more accurate and helpful line numbers.</p>
 

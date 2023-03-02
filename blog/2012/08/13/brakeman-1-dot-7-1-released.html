@@ -107,9 +107,9 @@
 
 <h3 id="cve-2012-3463---xss-in-select_tag-prompt">CVE-2012-3463 - XSS in select_tag Prompt</h3>
 
-<p>In Rails 3.x, values supplied to the <code class="highlighter-rouge">:prompt</code> option in the <code class="highlighter-rouge">select_tag</code> helper are not escaped, leading to a cross-site scripting vulnerability.</p>
+<p>In Rails 3.x, values supplied to the <code class="language-plaintext highlighter-rouge">:prompt</code> option in the <code class="language-plaintext highlighter-rouge">select_tag</code> helper are not escaped, leading to a cross-site scripting vulnerability.</p>
 
-<p>Brakeman will warn on all uses of <code class="highlighter-rouge">select_tag</code> with unescaped user input in the <code class="highlighter-rouge">:prompt</code> option.</p>
+<p>Brakeman will warn on all uses of <code class="language-plaintext highlighter-rouge">select_tag</code> with unescaped user input in the <code class="language-plaintext highlighter-rouge">:prompt</code> option.</p>
 
 <h3 id="cve-2012-3464---single-quotes-are-unescaped">CVE-2012-3464 - Single Quotes are Unescaped</h3>
 
@@ -117,21 +117,21 @@
 
 <p>Single quotes are most dangerous when interpolating values into HTML attributes that use single quotes, which is why it is often recommended to always use double quotes in HTML.</p>
 
-<p>There is a <a href="https://groups.google.com/d/topic/rubyonrails-security/kKGNeMrnmiY/discussion">provided workaround</a> for earlier versions of Rails which replaces <code class="highlighter-rouge">ERB::Util.html_escape</code> with <code class="highlighter-rouge">Rack::Utils.escape_html</code>. This method adds escaping for both single quotes (<code class="highlighter-rouge">'</code>) and forward slashes (<code class="highlighter-rouge">/</code>).</p>
+<p>There is a <a href="https://groups.google.com/d/topic/rubyonrails-security/kKGNeMrnmiY/discussion">provided workaround</a> for earlier versions of Rails which replaces <code class="language-plaintext highlighter-rouge">ERB::Util.html_escape</code> with <code class="language-plaintext highlighter-rouge">Rack::Utils.escape_html</code>. This method adds escaping for both single quotes (<code class="language-plaintext highlighter-rouge">'</code>) and forward slashes (<code class="language-plaintext highlighter-rouge">/</code>).</p>
 
 <p>If the provided workaround is used in an initializer, as suggested, then Brakeman will not generate a warning for this vulnerability. Otherwise, Brakeman will generate a warning for affected versions.</p>
 
 <h3 id="cve-2012-3465---xss-in-strip_tags">CVE-2012-3465 - XSS in strip_tags</h3>
 
-<p>Another vulnerability has been reported for <code class="highlighter-rouge">strip_tags</code> (earlier report was <a href="https://groups.google.com/d/topic/rubyonrails-security/K5EwdJt06hI/discussion">CVE-2011-2931</a>).</p>
+<p>Another vulnerability has been reported for <code class="language-plaintext highlighter-rouge">strip_tags</code> (earlier report was <a href="https://groups.google.com/d/topic/rubyonrails-security/K5EwdJt06hI/discussion">CVE-2011-2931</a>).</p>
 
-<p>Brakeman will warn on affected versions if uses of <code class="highlighter-rouge">strip_tags</code> are detected.</p>
+<p>Brakeman will warn on affected versions if uses of <code class="language-plaintext highlighter-rouge">strip_tags</code> are detected.</p>
 
 <h3 id="xss-in-select-helper">XSS in select Helper</h3>
 
 <p>This vulnerability was <a href="https://groups.google.com/d/topic/rubyonrails-security/CdoMUVpsRmQ/discussion">reported a while ago</a>, but it was unclear if it applied to Rails 2.x or just Rails 3. Thanks to Neil Matatall, it has been confirmed to be an issue in Rails 2.x as well.</p>
 
-<p>Therefore, Brakeman will be reporting the vulnerability (<code class="highlighter-rouge">select</code> does not escape options list if supplied as a straight string) for Rails 2.x as well.</p>
+<p>Therefore, Brakeman will be reporting the vulnerability (<code class="language-plaintext highlighter-rouge">select</code> does not escape options list if supplied as a straight string) for Rails 2.x as well.</p>
 
 <h3 id="report-issues">Report Issues</h3>
 

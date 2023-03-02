@@ -93,30 +93,30 @@
   </header>
 
 
-<div class="entry-content"><p>This is mostly a bug fix release, but does introduce a new warning code for when <code class="highlighter-rouge">protect_from_forgery</code> is not set to raise exceptions in Rails 4.</p>
+<div class="entry-content"><p>This is mostly a bug fix release, but does introduce a new warning code for when <code class="language-plaintext highlighter-rouge">protect_from_forgery</code> is not set to raise exceptions in Rails 4.</p>
 
 <p><em>Changes since 3.0.2</em>:</p>
 
 <ul>
-  <li>Warn about <code class="highlighter-rouge">protect_from_forgery</code> without exceptions (<a href="https://github.com/oreoshake">Neil Matatall</a>)</li>
+  <li>Warn about <code class="language-plaintext highlighter-rouge">protect_from_forgery</code> without exceptions (<a href="https://github.com/oreoshake">Neil Matatall</a>)</li>
   <li>Add Rake task to exit with error code on warnings (<a href="https://github.com/masarakki">masarakki</a>)</li>
-  <li>Ignore <code class="highlighter-rouge">quoted_table_name</code> in SQL (<a href="https://github.com/sobrinho">Gabriel Sobhrinho</a>)</li>
+  <li>Ignore <code class="language-plaintext highlighter-rouge">quoted_table_name</code> in SQL (<a href="https://github.com/sobrinho">Gabriel Sobhrinho</a>)</li>
   <li>Ignore more Arel methods in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/604">#604</a>)</li>
-  <li>Warn about RCE and file access with <code class="highlighter-rouge">open</code></li>
-  <li>Handle <code class="highlighter-rouge">Array#include?</code> guard conditionals (<a href="https://github.com/presidentbeef/brakeman/issues/604">#604</a>)</li>
+  <li>Warn about RCE and file access with <code class="language-plaintext highlighter-rouge">open</code></li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">Array#include?</code> guard conditionals (<a href="https://github.com/presidentbeef/brakeman/issues/604">#604</a>)</li>
   <li>Handle lambdas as filters</li>
-  <li>Do not ignore targets of <code class="highlighter-rouge">to_s</code> in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/638">#638</a>)</li>
+  <li>Do not ignore targets of <code class="language-plaintext highlighter-rouge">to_s</code> in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/638">#638</a>)</li>
 </ul>
 
 <h3 id="new-csrf-warning">New CSRF Warning</h3>
 
-<p><a href="https://github.com/oreoshake">Neil Matatall</a> has added a warning for Rails 4 applications that do not pass the <code class="highlighter-rouge">with: :exception</code> option to <code class="highlighter-rouge">protect_from_forgery</code>. The default behavior of clearing out the session (but still processing the request) has lead to vulnerabilities in some applications. GitHub <a href="https://bounty.github.com/researchers/LukasReschke.html">recently awarded a bug bounty</a> for a vulnerability caused by this behavior.</p>
+<p><a href="https://github.com/oreoshake">Neil Matatall</a> has added a warning for Rails 4 applications that do not pass the <code class="language-plaintext highlighter-rouge">with: :exception</code> option to <code class="language-plaintext highlighter-rouge">protect_from_forgery</code>. The default behavior of clearing out the session (but still processing the request) has lead to vulnerabilities in some applications. GitHub <a href="https://bounty.github.com/researchers/LukasReschke.html">recently awarded a bug bounty</a> for a vulnerability caused by this behavior.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/648">changes</a>)</p>
 
 <h3 id="additional-rake-task">Additional Rake Task</h3>
 
-<p><a href="https://github.com/masarakki">Masarakki</a> added a Rake task that will exit with an error code if any warnings are found (like <code class="highlighter-rouge">brakeman -z</code>). The task can be run with <code class="highlighter-rouge">rake brakeman:check</code>.</p>
+<p><a href="https://github.com/masarakki">Masarakki</a> added a Rake task that will exit with an error code if any warnings are found (like <code class="language-plaintext highlighter-rouge">brakeman -z</code>). The task can be run with <code class="language-plaintext highlighter-rouge">rake brakeman:check</code>.</p>
 
 <p>However, please note the use of Rake tasks to run Brakeman is discouraged, since it loads the entire Rails application which is unnecessary and may cause conflicts with Brakeman dependencies.</p>
 
@@ -124,7 +124,7 @@
 
 <h3 id="reduce-sql-injection-false-positives">Reduce SQL Injection False Positives</h3>
 
-<p>A patch from <a href="https://github.com/sobrinho">Gabriel Sobhrinho</a> removes warnings about <code class="highlighter-rouge">quoted_table_name</code> in SQL queries.</p>
+<p>A patch from <a href="https://github.com/sobrinho">Gabriel Sobhrinho</a> removes warnings about <code class="language-plaintext highlighter-rouge">quoted_table_name</code> in SQL queries.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/647">changes</a>)</p>
 
@@ -134,7 +134,7 @@
 
 <h3 id="remote-code-execution-in-open">Remote Code Execution in open()</h3>
 
-<p>As noted in <a href="http://sakurity.com/blog/2015/02/28/openuri.html">Egor Homakov’s blog post</a>, <code class="highlighter-rouge">open</code> can actually be used to spawn new processes by starting the argument with a pipe <code class="highlighter-rouge">|</code>. Brakeman will now warn about remote code execution via <code class="highlighter-rouge">open</code>.</p>
+<p>As noted in <a href="http://sakurity.com/blog/2015/02/28/openuri.html">Egor Homakov’s blog post</a>, <code class="language-plaintext highlighter-rouge">open</code> can actually be used to spawn new processes by starting the argument with a pipe <code class="language-plaintext highlighter-rouge">|</code>. Brakeman will now warn about remote code execution via <code class="language-plaintext highlighter-rouge">open</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/643">changes</a>)</p>
 
@@ -142,7 +142,7 @@
 
 <p>Brakeman should now recognize guard conditions that look exactly like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if [1, 2, "a", "b"].include? x
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if [1, 2, "a", "b"].include? x
   do_something_dangerous_with x
 end
 </code></pre></div></div>
@@ -159,7 +159,7 @@ end
 
 <h3 id="handle-to_s-in-sql">Handle to_s in SQL</h3>
 
-<p>Values with <code class="highlighter-rouge">to_s</code> called on them were being ignored when checking for SQL injection. This has been fixed.</p>
+<p>Values with <code class="language-plaintext highlighter-rouge">to_s</code> called on them were being ignored when checking for SQL injection. This has been fixed.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/639">changes</a>)</p>
 
@@ -167,7 +167,7 @@ end
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>170c3dd6925373b7da2e27fd1decf2957b35dc43  brakeman-3.0.3.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>170c3dd6925373b7da2e27fd1decf2957b35dc43  brakeman-3.0.3.gem
 f126e305404a61e99f9ddb848996d87325d1485a  brakeman-min-3.0.3.gem
 </code></pre></div></div>
 

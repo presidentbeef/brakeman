@@ -86,27 +86,27 @@
 
 <p>チェック項目のいくつかはデフォルトでは実行されません。すべてのチェックを実行したい場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -A
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -A
 </code></pre></div></div>
 
 <p>各チェックはデフォルトで別々のスレッドで実行されます。この振る舞いを無効にしたい場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -n
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -n
 </code></pre></div></div>
 
 <p>Brakemanはデフォルトでカレントディレクトリをスキャンします。次のようにして、特定のパスをそのまま引数として渡すこともできます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman some/path/to/app
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman some/path/to/app
 </code></pre></div></div>
 
-<p>しかし、もっと明示的にしたい場合は、<code class="highlighter-rouge">-p</code>または<code class="highlighter-rouge">--path</code>オプションが使えます。</p>
+<p>しかし、もっと明示的にしたい場合は、<code class="language-plaintext highlighter-rouge">-p</code>または<code class="language-plaintext highlighter-rouge">--path</code>オプションが使えます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -p path/to/app
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -p path/to/app
 </code></pre></div></div>
 
 <p>警告の出力を抑制し、レポートだけを出力したい場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -q
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -q
 </code></pre></div></div>
 
 <p>レポート以外のBrakemanの出力はすべて標準エラー出力に出力されます。ですので、標準出力をファイルにリダイレクトするだけで、レポートを作成することができます。</p>
@@ -114,90 +114,90 @@
 <p>Brakemanは大きな問題がない限り、セキュリティの脆弱性かスキャンのエラーが見つかったら、0でないエラーを返します。
 その動作を無効にするために次のオプションを使ってください：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-exit-on-warn --no-exit-on-error
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-exit-on-warn --no-exit-on-error
 </code></pre></div></div>
 
 <p>Rails 3モードで動かしたい場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -3
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -3
 </code></pre></div></div>
 
 <p>Rails 4モードであれば次のようになります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -4
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -4
 </code></pre></div></div>
 
-<p>Brakemanの振る舞いやチェック項目の中には、特定のバージョン名に依存したものがある点に注意してください。とはいえ、<code class="highlighter-rouge">Gemfile.lock</code>を使っている最近のRailsアプリケーションであれば問題にならないはずです。</p>
+<p>Brakemanの振る舞いやチェック項目の中には、特定のバージョン名に依存したものがある点に注意してください。とはいえ、<code class="language-plaintext highlighter-rouge">Gemfile.lock</code>を使っている最近のRailsアプリケーションであれば問題にならないはずです。</p>
 
-<p>Brakemanは以前、<code class="highlighter-rouge">routes.rb</code>をパースして、コントローラのどのメソッドがアクションとして使われているのかを推測しようとしていました。しかし、この方法は完璧ではありません（特にRails 3/4において）。そのため、現在はすべてのコントローラのメソッドがアクションと見なされます。この振る舞いを無効にしたい場合は次のオプションを使います。</p>
+<p>Brakemanは以前、<code class="language-plaintext highlighter-rouge">routes.rb</code>をパースして、コントローラのどのメソッドがアクションとして使われているのかを推測しようとしていました。しかし、この方法は完璧ではありません（特にRails 3/4において）。そのため、現在はすべてのコントローラのメソッドがアクションと見なされます。この振る舞いを無効にしたい場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-assume-routes
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-assume-routes
 </code></pre></div></div>
 
 <p>このオプションはあまり必要ではないかもしれませんが、次のようなオプションを使うと、Brakemanに対して、アプリケーションの出力がデフォルトですべてエスケープされていると伝えることができます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --escape-html
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --escape-html
 </code></pre></div></div>
 
 <p>もしBrakemanの実行が遅ければ、次のオプションを試してください。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --faster
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --faster
 </code></pre></div></div>
 
-<p>上のオプションを使うといくつかの機能が無効になります。そのかわり、ずっと速く実行できるかもしれません（現時点では<code class="highlighter-rouge">--skip-libs --no-branching</code>を指定したことと同じになります）。 <strong>警告:</strong> このオプションを使うと、Brakemanはいくつかの脆弱性を見逃すかもしれません。</p>
+<p>上のオプションを使うといくつかの機能が無効になります。そのかわり、ずっと速く実行できるかもしれません（現時点では<code class="language-plaintext highlighter-rouge">--skip-libs --no-branching</code>を指定したことと同じになります）。 <strong>警告:</strong> このオプションを使うと、Brakemanはいくつかの脆弱性を見逃すかもしれません。</p>
 
-<p><code class="highlighter-rouge">if</code>文におけるデータフロー感度（flow sensitivity、経路や順序の解析）を無効にする場合は次のオプションを使います。</p>
+<p><code class="language-plaintext highlighter-rouge">if</code>文におけるデータフロー感度（flow sensitivity、経路や順序の解析）を無効にする場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-branching
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-branching
 </code></pre></div></div>
 
 <p>すべて無効にするかわりに、解析する分岐の数を指定することもできます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --branch-limit LIMIT
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --branch-limit LIMIT
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">LIMIT</code>は整数値を指定してください。<code class="highlighter-rouge">0</code>は<code class="highlighter-rouge">--no-branching</code>とほぼ同じなので、<code class="highlighter-rouge">--no-branching</code>の方がいいでしょう。デフォルト値は<code class="highlighter-rouge">5</code>です。一般的に数字が小さくなるほどBrakemanの実行が速くなります。<code class="highlighter-rouge">-1</code>は無制限の意味になります。</p>
+<p><code class="language-plaintext highlighter-rouge">LIMIT</code>は整数値を指定してください。<code class="language-plaintext highlighter-rouge">0</code>は<code class="language-plaintext highlighter-rouge">--no-branching</code>とほぼ同じなので、<code class="language-plaintext highlighter-rouge">--no-branching</code>の方がいいでしょう。デフォルト値は<code class="language-plaintext highlighter-rouge">5</code>です。一般的に数字が小さくなるほどBrakemanの実行が速くなります。<code class="language-plaintext highlighter-rouge">-1</code>は無制限の意味になります。</p>
 
 <p>特定のファイル、またはディレクトリをスキップする場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --skip-files file1,/path1/,path2/
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --skip-files file1,/path1/,path2/
 </code></pre></div></div>
 
-<p>ディレクトリはアプリケーションのルートパスからの相対パスにマッチします。また、使用しているプラットフォームのパスセパレータ（たとえば<code class="highlighter-rouge">/</code>）で終わる必要があります。上の実行例は以下ルールでマッチ、スキップします。</p>
+<p>ディレクトリはアプリケーションのルートパスからの相対パスにマッチします。また、使用しているプラットフォームのパスセパレータ（たとえば<code class="language-plaintext highlighter-rouge">/</code>）で終わる必要があります。上の実行例は以下ルールでマッチ、スキップします。</p>
 
 <ul>
-  <li><code class="highlighter-rouge">file1</code>という名前のあらゆるファイル。<code class="highlighter-rouge">file1</code>がパスの一部に含まれるファイルはスキャン対象になります。</li>
-  <li><code class="highlighter-rouge">/path1</code>の中のあらゆるファイル。<code class="highlighter-rouge">/</code>で始まっているので、アプリケーションのルートディレクトリ以下のディレクトリにだけマッチします。たとえば、<code class="highlighter-rouge">/lib/path1/some_path1_file.rb</code>はスキャン対象になります。</li>
-  <li><code class="highlighter-rouge">path2</code>という名前のあらゆるディレクトリ。<code class="highlighter-rouge">/</code>で始まっていないので、パスの一部に<code class="highlighter-rouge">path2</code>という名前が含まれるディレクトリがスキップされます。たとえば、<code class="highlighter-rouge">/lib/path2/some_lib_for_testing.rb</code>はスキャンされません。</li>
+  <li><code class="language-plaintext highlighter-rouge">file1</code>という名前のあらゆるファイル。<code class="language-plaintext highlighter-rouge">file1</code>がパスの一部に含まれるファイルはスキャン対象になります。</li>
+  <li><code class="language-plaintext highlighter-rouge">/path1</code>の中のあらゆるファイル。<code class="language-plaintext highlighter-rouge">/</code>で始まっているので、アプリケーションのルートディレクトリ以下のディレクトリにだけマッチします。たとえば、<code class="language-plaintext highlighter-rouge">/lib/path1/some_path1_file.rb</code>はスキャン対象になります。</li>
+  <li><code class="language-plaintext highlighter-rouge">path2</code>という名前のあらゆるディレクトリ。<code class="language-plaintext highlighter-rouge">/</code>で始まっていないので、パスの一部に<code class="language-plaintext highlighter-rouge">path2</code>という名前が含まれるディレクトリがスキップされます。たとえば、<code class="language-plaintext highlighter-rouge">/lib/path2/some_lib_for_testing.rb</code>はスキャンされません。</li>
 </ul>
 
 <p>Brakemanは「全体プログラム（whole program）」解析を実行する点に注意してください。そのため、ファイルをスキップするとそれ以外のファイルからも警告が出力されるかもしれません。</p>
 
 <p>その反対で、特定のファイルだけを指定する、ちょっと危険なオプションもあります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --only-files file1,/path2/,path2/
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --only-files file1,/path2/,path2/
 </code></pre></div></div>
 
 <p>繰り返しになりますが、Brakemanはプログラム全体を解析します。そのため、ファイルの一部だけをスキャンすると、予期しない動きをするかもしれません。また、特定のファイルが除外されると、Brakemanは正常に機能しないかもしれません。</p>
 
-<p><code class="highlighter-rouge">lib/</code>ディレクトリに対する処理をスキップする場合は次のオプションを使います。</p>
+<p><code class="language-plaintext highlighter-rouge">lib/</code>ディレクトリに対する処理をスキップする場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --skip-libs
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --skip-libs
 </code></pre></div></div>
 
 <p>チェック項目の一部を実行する場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --test Check1,Check2,etc
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --test Check1,Check2,etc
 </code></pre></div></div>
 
 <p>特定のチェック項目を除外する場合はこうします。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --except Check1,Check2,etc
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --except Check1,Check2,etc
 </code></pre></div></div>
 
-<p>チェック項目名の<code class="highlighter-rouge">Check</code>の部分は省略可能です。たとえば、次の2つのオプションは同じ意味になります。</p>
+<p>チェック項目名の<code class="language-plaintext highlighter-rouge">Check</code>の部分は省略可能です。たとえば、次の2つのオプションは同じ意味になります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --test CheckSQL
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --test CheckSQL
 brakeman --test SQL
 </code></pre></div></div>
 
@@ -205,136 +205,136 @@ brakeman --test SQL
 
 <p>デバッグ情報をすべて見たい場合は次のオプションを実行します。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -d
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -d
 </code></pre></div></div>
 
 <p>実行結果の出力ファイルを指定する場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o output_file
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o output_file
 </code></pre></div></div>
 
-<p>出力フォーマットはファイル拡張子、もしくは<code class="highlighter-rouge">-f</code>オプションによって決まります。現在有効なオプションは、<code class="highlighter-rouge">text</code>、<code class="highlighter-rouge">html</code>、<code class="highlighter-rouge">tabs</code>、<code class="highlighter-rouge">json</code>、<code class="highlighter-rouge">junit</code>、<code class="highlighter-rouge">markdown</code>、<code class="highlighter-rouge">csv</code>です。</p>
+<p>出力フォーマットはファイル拡張子、もしくは<code class="language-plaintext highlighter-rouge">-f</code>オプションによって決まります。現在有効なオプションは、<code class="language-plaintext highlighter-rouge">text</code>、<code class="language-plaintext highlighter-rouge">html</code>、<code class="language-plaintext highlighter-rouge">tabs</code>、<code class="language-plaintext highlighter-rouge">json</code>、<code class="language-plaintext highlighter-rouge">junit</code>、<code class="language-plaintext highlighter-rouge">markdown</code>、<code class="language-plaintext highlighter-rouge">csv</code>です。</p>
 
 <p>複数の出力ファイルを指定することもできます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o output.html -o output.json
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o output.html -o output.json
 </code></pre></div></div>
 
 <p>HTMLレポートには特定のCSSスタイルシートが使えます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --css-file my_cool_styling
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --css-file my_cool_styling
 </code></pre></div></div>
 
 <p>デフォルトではBrakemanは同じ行にある同じタイプの警告を1個しか出力しません。これを無効にする場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-combine-locations
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-combine-locations
 </code></pre></div></div>
 
 <p>“dangerous”な値や、”user input”による値の警告ハイライトを無効にする場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-highlights
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-highlights
 </code></pre></div></div>
 
 <p>コントローラとルーティングの情報を報告する場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --routes
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --routes
 </code></pre></div></div>
 
-<p>ですが、アプリケーションにどんなルーティングが設定されているか確認したい場合は、次のコマンドを使ってください（訳注: Rails 5以降は<code class="highlighter-rouge">rails routes</code>になります）。</p>
+<p>ですが、アプリケーションにどんなルーティングが設定されているか確認したい場合は、次のコマンドを使ってください（訳注: Rails 5以降は<code class="language-plaintext highlighter-rouge">rails routes</code>になります）。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake routes
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake routes
 </code></pre></div></div>
 
 <p>HTMLレポートのメッセージの長さを制限する場合は、次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --message-limit LIMIT
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --message-limit LIMIT
 </code></pre></div></div>
 
 <p>デフォルトは無制限です。</p>
 
-<p>Brakemanは<code class="highlighter-rouge">attr_accessible</code>を持たないモデルに対して警告を発します。HTMLレポートでは次のオプションを使って、全モデルの警告を1つの警告にまとめた方が便利かもしれません（訳注: <code class="highlighter-rouge">attr_accessible</code>はRails 3以前のオプションだったので、最近のRailsアプリケーションでは無関係かもしれません）。</p>
+<p>Brakemanは<code class="language-plaintext highlighter-rouge">attr_accessible</code>を持たないモデルに対して警告を発します。HTMLレポートでは次のオプションを使って、全モデルの警告を1つの警告にまとめた方が便利かもしれません（訳注: <code class="language-plaintext highlighter-rouge">attr_accessible</code>はRails 3以前のオプションだったので、最近のRailsアプリケーションでは無関係かもしれません）。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-separate-models
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-separate-models
 </code></pre></div></div>
 
 <p>巨大なレポートではなく、サマリーだけを取得したい場合もあるかもしれません。そんな場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --summary
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --summary
 </code></pre></div></div>
 
 <p>デフォルトではレポートには相対パスが使われます。かわりに絶対パスを使いたい場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --absolute-paths
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --absolute-paths
 </code></pre></div></div>
 
 <p>上のオプションはHTMLとタブ区切りのレポートには影響しません。</p>
 
 <p>Markdown出力時にGitHub上のファイルへリンクを貼りたい場合は、次のオプションを使ってください。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --github-repo USER/REPO[/PATH][@REF]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --github-repo USER/REPO[/PATH][@REF]
 </code></pre></div></div>
 
 <p>次はその使用例です。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --github-repo presidentbeef/inject-some-sql
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --github-repo presidentbeef/inject-some-sql
 </code></pre></div></div>
 
 <p>前回実行したスキャン結果と今回の結果を比較したい場合は、JSON出力と次のオプションを使ってください。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --compare old_report.json
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --compare old_report.json
 </code></pre></div></div>
 
 <p>上のオプションを付けて実行すると、修正された警告と新しい警告の2種類のリストが出力されます。</p>
 
-<p>デフォルトではBrakemanは<code class="highlighter-rouge">less</code>ページャー（<code class="highlighter-rouge">less</code>コマンド）を使って結果を出力します。ターミナルに直接出力したい場合は、次のオプションを使ってください。</p>
+<p>デフォルトではBrakemanは<code class="language-plaintext highlighter-rouge">less</code>ページャー（<code class="language-plaintext highlighter-rouge">less</code>コマンド）を使って結果を出力します。ターミナルに直接出力したい場合は、次のオプションを使ってください。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-pager
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-pager
 </code></pre></div></div>
 
 <h2 id="無視に関するオプション">無視に関するオプション</h2>
 
-<p>Brakemanは設定次第で警告を無視することができます。デフォルトでは<code class="highlighter-rouge">config/brakeman.ignore</code>という設定ファイルが使われます。</p>
+<p>Brakemanは設定次第で警告を無視することができます。デフォルトでは<code class="language-plaintext highlighter-rouge">config/brakeman.ignore</code>という設定ファイルが使われます。</p>
 
 <p>設定ファイルを指定したいときは次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -i path/to/config.ignore
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -i path/to/config.ignore
 </code></pre></div></div>
 
 <p>このファイルの作成と管理を行う場合は次のオプションを使ってください。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -I
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -I
 </code></pre></div></div>
 
 <p>モデルの属性に関するXSSの疑いを無視する場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --ignore-model-output
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --ignore-model-output
 </code></pre></div></div>
 
-<p>Brakemanは<code class="highlighter-rouge">attr_protected</code>を使っているモデルに対して警告を発します。この警告を抑制する場合は次のオプションを使います（訳注: <code class="highlighter-rouge">attr_protected</code>もRails 3以前のオプションだったので、最近のRailsアプリケーションでは無関係かもしれません）。</p>
+<p>Brakemanは<code class="language-plaintext highlighter-rouge">attr_protected</code>を使っているモデルに対して警告を発します。この警告を抑制する場合は次のオプションを使います（訳注: <code class="language-plaintext highlighter-rouge">attr_protected</code>もRails 3以前のオプションだったので、最近のRailsアプリケーションでは無関係かもしれません）。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --ignore-protected
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --ignore-protected
 </code></pre></div></div>
 
 <p>信頼できないデータを扱う未知のメソッドがあった場合、Brakemanは危険な処理と見なします。たとえば、次のコードは警告の対象になります（Rails 2の場合）。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= some_method(:option =&gt; params[:input]) %&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= some_method(:option =&gt; params[:input]) %&gt;
 </code></pre></div></div>
 
 <p>信頼できないデータが直接使われている場合のみ警告を出したいときは、次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --report-direct
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --report-direct
 </code></pre></div></div>
 
 <p>とはいえ、各チェック項目における上記オプションのサポート状況にはあまり一貫性がありません。</p>
 
 <p>特定のメソッドが適切にエスケープされた値を出力し、そのメソッドがXSSチェックで警告されないようにするためには、次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --safe-methods benign_method_escapes_output,totally_safe_from_xss
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --safe-methods benign_method_escapes_output,totally_safe_from_xss
 </code></pre></div></div>
 
-<p>Brakemanは<code class="highlighter-rouge">link_to</code>メソッドを使って作成されたURLにユーザー入力が含まれていると警告を発します。Railsにはこの方法で作成されたURLを安全にする方法がないため（例：プロトコルをHTTP(S)に限定する、など）、安全なメソッドを無視したい場合は次のオプションを使ってください。</p>
+<p>Brakemanは<code class="language-plaintext highlighter-rouge">link_to</code>メソッドを使って作成されたURLにユーザー入力が含まれていると警告を発します。Railsにはこの方法で作成されたURLを安全にする方法がないため（例：プロトコルをHTTP(S)に限定する、など）、安全なメソッドを無視したい場合は次のオプションを使ってください。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --url-safe-methods ensure_safe_protocol_or_something
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --url-safe-methods ensure_safe_protocol_or_something
 </code></pre></div></div>
 
 <h2 id="confidenceレベル自信レベル">Confidenceレベル（自信レベル）</h2>
@@ -351,41 +351,41 @@ brakeman --test SQL
 
 <p>指定したconfidenceレベル以上の警告だけを受け取りたい場合は、次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -w3
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -w3
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">-w</code>スイッチには1から3までの数字を指定できます。1は低レベル（全警告を出力）で、3は高レベル（confidenceレベルが最高の警告のみ出力）です。</p>
+<p><code class="language-plaintext highlighter-rouge">-w</code>スイッチには1から3までの数字を指定できます。1は低レベル（全警告を出力）で、3は高レベル（confidenceレベルが最高の警告のみ出力）です。</p>
 
 <h2 id="設定ファイル">設定ファイル</h2>
 
-<p>BrakemanのオプションはYAMLファイルで読み書きできます。設定ファイルを作成する手間を省きたい場合は<code class="highlighter-rouge">-C</code>オプションを使うと、そこで指定されているオプションを出力することができます。</p>
+<p>BrakemanのオプションはYAMLファイルで読み書きできます。設定ファイルを作成する手間を省きたい場合は<code class="language-plaintext highlighter-rouge">-C</code>オプションを使うと、そこで指定されているオプションを出力することができます。</p>
 
 <p>コマンドラインで指定されたオプションは設定ファイルよりも優先されます。</p>
 
-<p>設定ファイルのデフォルトの場所は<code class="highlighter-rouge">./config/brakeman.yml</code>、<code class="highlighter-rouge">~/.brakeman/config.yml</code>、<code class="highlighter-rouge">/etc/brakeman/config.yml</code>です。</p>
+<p>設定ファイルのデフォルトの場所は<code class="language-plaintext highlighter-rouge">./config/brakeman.yml</code>、<code class="language-plaintext highlighter-rouge">~/.brakeman/config.yml</code>、<code class="language-plaintext highlighter-rouge">/etc/brakeman/config.yml</code>です。</p>
 
-<p><code class="highlighter-rouge">-c</code>オプションを使うと、使用する設定ファイルを指定できます。</p>
+<p><code class="language-plaintext highlighter-rouge">-c</code>オプションを使うと、使用する設定ファイルを指定できます。</p>
 
 <h2 id="その他">その他</h2>
 
 <p>利用可能なチェック項目を簡単な説明付きで一覧表示する場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --checks
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --checks
 </code></pre></div></div>
 
 <p>任意で実行される（デフォルトでは実行されない）チェック項目を表示する場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --optional-checks
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --optional-checks
 </code></pre></div></div>
 
 <p>Brakemanのバージョンを確認する場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --version
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --version
 </code></pre></div></div>
 
 <p>オプションの一覧を見たい場合は次のオプションを使います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --help
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --help
 </code></pre></div></div>
 
 <hr />

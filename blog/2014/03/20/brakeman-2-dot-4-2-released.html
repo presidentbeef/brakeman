@@ -103,7 +103,7 @@
   <li>Only track original template output locations</li>
   <li>Reuse duplicate call location information</li>
   <li>Fix duplicate warnings about sanitize CVE</li>
-  <li>Remove <code class="highlighter-rouge">rescue Exception</code></li>
+  <li>Remove <code class="language-plaintext highlighter-rouge">rescue Exception</code></li>
 </ul>
 
 <h3 id="drop-identical-templates">Drop Identical Templates</h3>
@@ -120,14 +120,14 @@
 
 <p>For example, a template like this</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#content
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#content
   .nav
     = @navigation_menu
 </code></pre></div></div>
 
 <p>used to produce output like</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+-------------------------------------------------------------------------------------------------+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+-------------------------------------------------------------------------------------------------+
 | Output                                                                                          |
 +-------------------------------------------------------------------------------------------------+
 | [Output] "&lt;div id='content'&gt;; &lt;div class='nav'&gt;; #{[Escaped] @navigation_menu}; &lt;/div&gt;;&lt;/div&gt;;" |
@@ -136,14 +136,14 @@
 
 <p>but now it will look like this instead</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+-----------------------------------+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+-----------------------------------+
 | Output                            |
 +-----------------------------------+
 | [Escaped Output] @navigation_menu |
 +-----------------------------------+
 </code></pre></div></div>
 
-<p>Besides looking much nicer, this improves warnings and reduces how much code Brakeman has to search. Additionally, these <code class="highlighter-rouge">push_text</code> methods can often interpolate multiple values into the output string, which were not being properly detected as output. This is fixed now.</p>
+<p>Besides looking much nicer, this improves warnings and reduces how much code Brakeman has to search. Additionally, these <code class="language-plaintext highlighter-rouge">push_text</code> methods can often interpolate multiple values into the output string, which were not being properly detected as output. This is fixed now.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/441">changes</a>)</p>
 
@@ -167,7 +167,7 @@
 
 <h3 id="narrower-exception-handling">Narrower Exception Handling</h3>
 
-<p>All instances of <code class="highlighter-rouge">rescue Exception</code> were removed from Brakeman and replaced with bare <code class="highlighter-rouge">rescue</code>s to catch <code class="highlighter-rouge">StandardError</code> and subclasses. <code class="highlighter-rouge">Exception</code> has some unfortunate subclasses, such as <code class="highlighter-rouge">NoMemoryError</code> and <code class="highlighter-rouge">Interrupt</code> which Brakeman should not be rescuing.</p>
+<p>All instances of <code class="language-plaintext highlighter-rouge">rescue Exception</code> were removed from Brakeman and replaced with bare <code class="language-plaintext highlighter-rouge">rescue</code>s to catch <code class="language-plaintext highlighter-rouge">StandardError</code> and subclasses. <code class="language-plaintext highlighter-rouge">Exception</code> has some unfortunate subclasses, such as <code class="language-plaintext highlighter-rouge">NoMemoryError</code> and <code class="language-plaintext highlighter-rouge">Interrupt</code> which Brakeman should not be rescuing.</p>
 
 <p>This does mean there may be some newly unhandled exceptions. Please report these so they can be rescued properly.</p>
 
@@ -177,7 +177,7 @@
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>02842dc497bf22b5b427cfd02635c005c4fc4fd4  brakeman-2.4.2.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>02842dc497bf22b5b427cfd02635c005c4fc4fd4  brakeman-2.4.2.gem
 4893cedbcb015e96c82f4777b00a49ca8d0ae22f  brakeman-min-2.4.2.gem
 </code></pre></div></div>
 

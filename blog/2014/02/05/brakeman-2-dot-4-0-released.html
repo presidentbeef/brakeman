@@ -99,15 +99,15 @@
 
 <ul>
   <li>Fingerprint attribute warnings individually (<a href="https://github.com/ctaintor">Case Taintor</a>)</li>
-  <li>Add check for uses of <code class="highlighter-rouge">OpenSSL::SSL::VERIFY_NONE</code> (<a href="https://github.com/abedra/">Aaron Bedra</a>)</li>
-  <li>Detect SQL injection raw SQL queries using <code class="highlighter-rouge">connection</code>(<a href="https://github.com/presidentbeef/brakeman/issues/434">#434</a>)</li>
+  <li>Add check for uses of <code class="language-plaintext highlighter-rouge">OpenSSL::SSL::VERIFY_NONE</code> (<a href="https://github.com/abedra/">Aaron Bedra</a>)</li>
+  <li>Detect SQL injection raw SQL queries using <code class="language-plaintext highlighter-rouge">connection</code>(<a href="https://github.com/presidentbeef/brakeman/issues/434">#434</a>)</li>
   <li>Fix false positives when SQL methods are not called on AR models (<a href="https://github.com/presidentbeef/brakeman/issues/423">#423</a>, <a href="https://github.com/abedra/">Aaron Bedra</a>)</li>
   <li>Reduce false positives for SQL injection in string building</li>
   <li>More accurate user input marking for SQL injection warnings</li>
-  <li>Detect SQL injection in <code class="highlighter-rouge">delete_all</code>/<code class="highlighter-rouge">destroy_all</code></li>
+  <li>Detect SQL injection in <code class="language-plaintext highlighter-rouge">delete_all</code>/<code class="language-plaintext highlighter-rouge">destroy_all</code></li>
   <li>Add support for Rails LTS versions (<a href="https://github.com/presidentbeef/brakeman/issues/422">#422</a>)</li>
   <li>Parse exact versions from Gemfile.lock for all gems (<a href="https://github.com/presidentbeef/brakeman/issues/431">#431</a>)</li>
-  <li>Ignore generators in <code class="highlighter-rouge">lib/</code> directory</li>
+  <li>Ignore generators in <code class="language-plaintext highlighter-rouge">lib/</code> directory</li>
   <li>No longer raise exceptions if a class name cannot be determined</li>
   <li>Update to RubyParser 3.4.0</li>
 </ul>
@@ -116,7 +116,7 @@
 
 <p><a href="https://github.com/ctaintor">Case Taintor</a> noted that ignoring one warning about dangerous mass assignable attributes ignored all such warnings for the same model. Then he fixed it, yay!</p>
 
-<p>Please note this means fingerprints for warnings about “dangerous attributes” in <code class="highlighter-rouge">attr_accessible</code> will change. If you are currently ignoring some of these warnings, you will need to re-ignore them.</p>
+<p>Please note this means fingerprints for warnings about “dangerous attributes” in <code class="language-plaintext highlighter-rouge">attr_accessible</code> will change. If you are currently ignoring some of these warnings, you will need to re-ignore them.</p>
 
 <p>Also, the messages for these warnings have changed and the attribute name will now be in the “code” value in JSON reports.</p>
 
@@ -124,7 +124,7 @@
 
 <h3 id="check-for-ssl-verification">Check for SSL Verification</h3>
 
-<p><a href="https://github.com/abedra/">Aaron Bedra</a> has contributed a new check for instances of <code class="highlighter-rouge">verify_mode</code> on HTTPS connections being set to <code class="highlighter-rouge">OpenSSL::SSL::VERIFY_NONE</code>. This bypasses any checks OpenSSL has for verifying the SSL certificate is legitimate, allowing easy man-in-the-middle attacks.</p>
+<p><a href="https://github.com/abedra/">Aaron Bedra</a> has contributed a new check for instances of <code class="language-plaintext highlighter-rouge">verify_mode</code> on HTTPS connections being set to <code class="language-plaintext highlighter-rouge">OpenSSL::SSL::VERIFY_NONE</code>. This bypasses any checks OpenSSL has for verifying the SSL certificate is legitimate, allowing easy man-in-the-middle attacks.</p>
 
 <p>This new check has a new warning type (“SSL Verification Bypass”) and warning code (71).</p>
 
@@ -132,7 +132,7 @@
 
 <h3 id="sql-injection-in-raw-queries">SQL Injection in Raw Queries</h3>
 
-<p><code class="highlighter-rouge">ActiveRecord::Core#connection</code> or <code class="highlighter-rouge">ActiveRecord::Base.connection</code> or <code class="highlighter-rouge">ActiveRecord::Base#connection</code> can be used to send queries directly to the database connection without any protection. There are several ways of doing this, most of which are hopefully now covered by Brakeman.</p>
+<p><code class="language-plaintext highlighter-rouge">ActiveRecord::Core#connection</code> or <code class="language-plaintext highlighter-rouge">ActiveRecord::Base.connection</code> or <code class="language-plaintext highlighter-rouge">ActiveRecord::Base#connection</code> can be used to send queries directly to the database connection without any protection. There are several ways of doing this, most of which are hopefully now covered by Brakeman.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/438">changes</a>)</p>
 
@@ -144,14 +144,14 @@
 
 <p>For example, this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find_by_sql("SELECT * FROM stuff WHERE thing = " + self.class.sanitize_sql(thing))
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find_by_sql("SELECT * FROM stuff WHERE thing = " + self.class.sanitize_sql(thing))
 </code></pre></div></div>
 
-<p>would have generated a warning which indicated <code class="highlighter-rouge">"SELECT * FROM stuff WHERE thing = " + self.class.sanitize_sql(thing)</code> was a dangerous value. Now it will not warn at all.</p>
+<p>would have generated a warning which indicated <code class="language-plaintext highlighter-rouge">"SELECT * FROM stuff WHERE thing = " + self.class.sanitize_sql(thing)</code> was a dangerous value. Now it will not warn at all.</p>
 
 <p>As another example, code like this</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>options = {}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>options = {}
 
 if params[:sort_order] == 'ascending'
   sort_order = 'ASC'
@@ -163,11 +163,11 @@ options[:order] = 'updated_at ' + sort_order
 Test.all(options)
 </code></pre></div></div>
 
-<p>would create a warning about <code class="highlighter-rouge">("updated_at " + ("ASC" or "DESC"))</code>. Now Brakeman will recognize that these are all just strings and not warn.</p>
+<p>would create a warning about <code class="language-plaintext highlighter-rouge">("updated_at " + ("ASC" or "DESC"))</code>. Now Brakeman will recognize that these are all just strings and not warn.</p>
 
 <p>Many warnings will also just be more accurate:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>query = "SELECT sum(stuff) " +
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>query = "SELECT sum(stuff) " +
       "FROM (SELECT other_stuff FROM #{table} WHERE id = #{id}) " +
       "AS item, bgs " +
       "WHERE ST_Contains(item.geometry, bgs.the_point);"
@@ -175,45 +175,45 @@ Test.all(options)
 Test.find_by_sql(query)
 </code></pre></div></div>
 
-<p>This used to warn on the entire query! Now it will just warn about <code class="highlighter-rouge">table</code>.</p>
+<p>This used to warn on the entire query! Now it will just warn about <code class="language-plaintext highlighter-rouge">table</code>.</p>
 
-<p><code class="highlighter-rouge">#to_s</code> calls are ignored now and their targets considered instead.</p>
+<p><code class="language-plaintext highlighter-rouge">#to_s</code> calls are ignored now and their targets considered instead.</p>
 
-<p>Additionally, Brakeman should no longer warn about method calls ending in <code class="highlighter-rouge">_id</code>, since those generally refer to foreign keys. Note, however, that local variables ending in <code class="highlighter-rouge">_id</code> will still produce warnings.</p>
+<p>Additionally, Brakeman should no longer warn about method calls ending in <code class="language-plaintext highlighter-rouge">_id</code>, since those generally refer to foreign keys. Note, however, that local variables ending in <code class="language-plaintext highlighter-rouge">_id</code> will still produce warnings.</p>
 
-<p>In general, fingerprints should not change for existing warnings, since the <code class="highlighter-rouge">user_input</code> value is not included in the fingerprint.</p>
+<p>In general, fingerprints should not change for existing warnings, since the <code class="language-plaintext highlighter-rouge">user_input</code> value is not included in the fingerprint.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/440">changes</a>)</p>
 
 <h3 id="sql-injection-in-deletions">SQL Injection in Deletions</h3>
 
-<p>Brakeman will now look for SQL injection in <code class="highlighter-rouge">delete_all</code> and <code class="highlighter-rouge">destroy_all</code> which allow raw SQL strings.</p>
+<p>Brakeman will now look for SQL injection in <code class="language-plaintext highlighter-rouge">delete_all</code> and <code class="language-plaintext highlighter-rouge">destroy_all</code> which allow raw SQL strings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/438">changes</a>)</p>
 
 <h3 id="support-for-rails-lts">Support for Rails LTS</h3>
 
-<p><a href="https://railslts.com/">RailsLTS</a> provides security patch backporting to Rails 2.3.18. They now <a href="http://makandracards.com/railslts/21809-how-to-find-out-your-current-rails-lts-version">include an internal version number</a> in <code class="highlighter-rouge">Gemfile.lock</code>, which allows Brakeman to avoid warning about fixed vulnerabilities in applications using RailsLTS.</p>
+<p><a href="https://railslts.com/">RailsLTS</a> provides security patch backporting to Rails 2.3.18. They now <a href="http://makandracards.com/railslts/21809-how-to-find-out-your-current-rails-lts-version">include an internal version number</a> in <code class="language-plaintext highlighter-rouge">Gemfile.lock</code>, which allows Brakeman to avoid warning about fixed vulnerabilities in applications using RailsLTS.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/437">changes</a>)</p>
 
 <h3 id="gemfile-parsing">Gemfile Parsing</h3>
 
-<p>Previously, Brakeman only checked <code class="highlighter-rouge">Gemfile.lock</code> for specific gems. Now it “parses” the entire file and can track all gem versions. (<a href="https://github.com/rubysec/bundler-audit">bundler-audit</a> is recommended for checking gems for vulnerable versions.) This helps when Brakeman is checking for gem usage but the gem is an indirect dependency.</p>
+<p>Previously, Brakeman only checked <code class="language-plaintext highlighter-rouge">Gemfile.lock</code> for specific gems. Now it “parses” the entire file and can track all gem versions. (<a href="https://github.com/rubysec/bundler-audit">bundler-audit</a> is recommended for checking gems for vulnerable versions.) This helps when Brakeman is checking for gem usage but the gem is an indirect dependency.</p>
 
-<p>Also, a minor issue was fixed for those <code class="highlighter-rouge">Gemfile</code>s that do weird things and call <code class="highlighter-rouge">gem</code> with non-string arguments.</p>
+<p>Also, a minor issue was fixed for those <code class="language-plaintext highlighter-rouge">Gemfile</code>s that do weird things and call <code class="language-plaintext highlighter-rouge">gem</code> with non-string arguments.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/432">changes</a>)</p>
 
 <h3 id="generators-are-ignored">Generators are Ignored</h3>
 
-<p>Any path in <code class="highlighter-rouge">lib/</code> containing <code class="highlighter-rouge">generators</code> will now be ignored. This is mainly because there are <code class="highlighter-rouge">.rb</code> files in there that are actually templates, but Brakeman tries to parse them and fails because they aren’t really Ruby.</p>
+<p>Any path in <code class="language-plaintext highlighter-rouge">lib/</code> containing <code class="language-plaintext highlighter-rouge">generators</code> will now be ignored. This is mainly because there are <code class="language-plaintext highlighter-rouge">.rb</code> files in there that are actually templates, but Brakeman tries to parse them and fails because they aren’t really Ruby.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/427">changes</a>)</p>
 
 <h3 id="exceptions-for-class-names">Exceptions for Class Names</h3>
 
-<p>Previously, Brakeman actually raised and caught exceptions if a class name could not be determined from a <code class="highlighter-rouge">Sexp</code>. Now it just returns <code class="highlighter-rouge">nil</code>. This should remove some errors and possibly make some scans faster.</p>
+<p>Previously, Brakeman actually raised and caught exceptions if a class name could not be determined from a <code class="language-plaintext highlighter-rouge">Sexp</code>. Now it just returns <code class="language-plaintext highlighter-rouge">nil</code>. This should remove some errors and possibly make some scans faster.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/417">changes</a>)</p>
 

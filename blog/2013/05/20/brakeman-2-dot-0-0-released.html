@@ -102,28 +102,28 @@
 <ul>
   <li>Remove “timestamp” key from JSON reports</li>
   <li>Relative paths are used by default in JSON reports</li>
-  <li><code class="highlighter-rouge">--absolute-paths</code> replaces <code class="highlighter-rouge">--relative-paths</code></li>
+  <li><code class="language-plaintext highlighter-rouge">--absolute-paths</code> replaces <code class="language-plaintext highlighter-rouge">--relative-paths</code></li>
   <li>Fix fingerprint generation to actually use the file path</li>
   <li>Clean up SQL CVE warning messages</li>
   <li>Remove deprecated config file locations</li>
-  <li>Add <code class="highlighter-rouge">--only-files</code> option to specify files/paths to scan (<a href="https://github.com/ehlertij">Ian Ehlert</a>)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--only-files</code> option to specify files/paths to scan (<a href="https://github.com/ehlertij">Ian Ehlert</a>)</li>
   <li>Add Marshal/CSV deserialization check</li>
   <li>Combine Marshal/YAML/CSV deserialization checks into single check</li>
   <li>Avoid duplicate “Dangerous Send” and “Unsafe Reflection” warnings</li>
   <li>Avoid duplicate results for Symbol DoS check</li>
-  <li>Medium confidence for mass assignment to <code class="highlighter-rouge">attr_protected</code> models</li>
-  <li>Only treat classes with names containing <code class="highlighter-rouge">Controller</code> like controllers</li>
+  <li>Medium confidence for mass assignment to <code class="language-plaintext highlighter-rouge">attr_protected</code> models</li>
+  <li>Only treat classes with names containing <code class="language-plaintext highlighter-rouge">Controller</code> like controllers</li>
   <li>Better handling of classes nested inside controllers</li>
   <li>Better handling of controller classes nested in classes/modules</li>
-  <li>Handle <code class="highlighter-rouge">-&gt;</code> lambdas with no arguments (<a href="https://github.com/presidentbeef/brakeman/issues/331">#331</a>)</li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">-&gt;</code> lambdas with no arguments (<a href="https://github.com/presidentbeef/brakeman/issues/331">#331</a>)</li>
   <li>Handle explicit block argument destructuring</li>
   <li>Skip Rails config options that are real objects (<a href="https://github.com/presidentbeef/brakeman/issues/324">#324</a>)</li>
   <li>Detect Rails 3 JSON escape config option</li>
   <li>Much better tracking of warning file names</li>
-  <li>Fix errors when using <code class="highlighter-rouge">--separate-models</code> (<a href="https://github.com/noahd1">Noah Davis</a>)</li>
+  <li>Fix errors when using <code class="language-plaintext highlighter-rouge">--separate-models</code> (<a href="https://github.com/noahd1">Noah Davis</a>)</li>
   <li>Fix text report console output in JRuby (<a href="https://github.com/presidentbeef/brakeman/issues/229">#229</a>)</li>
-  <li>Fix false positives on <code class="highlighter-rouge">Model#id</code></li>
-  <li>Fix false positives on <code class="highlighter-rouge">params.to_json</code></li>
+  <li>Fix false positives on <code class="language-plaintext highlighter-rouge">Model#id</code></li>
+  <li>Fix false positives on <code class="language-plaintext highlighter-rouge">params.to_json</code></li>
   <li>Fix model path guesses to use “models/” instead of “controllers/”</li>
   <li>Use exceptions instead of abort in brakeman lib (<a href="https://github.com/presidentbeef/brakeman/issues/230">#230</a>)</li>
   <li>Update to Ruby2Ruby 2.0.5</li>
@@ -131,9 +131,9 @@
 
 <h3 id="json-report-changes">JSON Report Changes</h3>
 
-<p>Several changes were made to JSON reports in this release. The <code class="highlighter-rouge">["scan_info"]["timestamp"]</code> key was removed, since it was just a duplicate of <code class="highlighter-rouge">["scan_info"]["end_time"]</code>.</p>
+<p>Several changes were made to JSON reports in this release. The <code class="language-plaintext highlighter-rouge">["scan_info"]["timestamp"]</code> key was removed, since it was just a duplicate of <code class="language-plaintext highlighter-rouge">["scan_info"]["end_time"]</code>.</p>
 
-<p>JSON reports now default to reporting relative paths for file names in warnings, which seems to be more useful for external tools. Because of this change, the <code class="highlighter-rouge">--relative-paths</code> option has been removed and replaced with <code class="highlighter-rouge">--absolute-paths</code>.</p>
+<p>JSON reports now default to reporting relative paths for file names in warnings, which seems to be more useful for external tools. Because of this change, the <code class="language-plaintext highlighter-rouge">--relative-paths</code> option has been removed and replaced with <code class="language-plaintext highlighter-rouge">--absolute-paths</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/333">timestamp change</a>, <a href="https://github.com/presidentbeef/brakeman/pull/330">relative paths change</a>)</p>
 
@@ -147,7 +147,7 @@
 
 <p>The warning messages for SQL CVEs were unnecessarily verbose, so they have been trimmed down. Of course, this shouldn’t affect anyone, because all apps have upgraded to Rails versions without reported vulnerabilities, right?</p>
 
-<p>Some small changes have been made to other warning messages. Please do not rely on warning messages remaining constant. To track warnings, use the <code class="highlighter-rouge">warning_code</code> attribute which will never change.</p>
+<p>Some small changes have been made to other warning messages. Please do not rely on warning messages remaining constant. To track warnings, use the <code class="language-plaintext highlighter-rouge">warning_code</code> attribute which will never change.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/334">changes</a>)</p>
 
@@ -155,7 +155,7 @@
 
 <p>The following locations will no longer be automatically searched for Brakeman configuration files:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* `./config.yaml`
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* `./config.yaml`
 * `.brakeman/config.yaml`
 * `/etc/brakeman/config.yaml`
 * The Brakeman `lib/` directory
@@ -163,24 +163,24 @@
 
 <p>The following locations are still used:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* `./config/brakeman.yml`
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* `./config/brakeman.yml`
 * `~/.brakeman/config.yml`
 * `/etc/brakeman/config.yml`
 </code></pre></div></div>
 
-<p>Yes, Brakeman can use configuration files. See <code class="highlighter-rouge">brakeman --help</code> for details.</p>
+<p>Yes, Brakeman can use configuration files. See <code class="language-plaintext highlighter-rouge">brakeman --help</code> for details.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/310">changes</a>)</p>
 
 <h3 id="limiting-scans">Limiting Scans</h3>
 
-<p>While individual files can be exempted from a scan using <code class="highlighter-rouge">--skip-files</code>, the new <code class="highlighter-rouge">--only-files</code> option can limit scans to a set of files and directories, thanks to <a href="https://github.com/ehlertij">Ian Ehlert</a>.</p>
+<p>While individual files can be exempted from a scan using <code class="language-plaintext highlighter-rouge">--skip-files</code>, the new <code class="language-plaintext highlighter-rouge">--only-files</code> option can limit scans to a set of files and directories, thanks to <a href="https://github.com/ehlertij">Ian Ehlert</a>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/316">changes</a>)</p>
 
 <h3 id="deserialization-checks">Deserialization Checks</h3>
 
-<p>Brakeman now checks for deserialization of user input using <code class="highlighter-rouge">Marshal</code>, <code class="highlighter-rouge">YAML</code>, and <code class="highlighter-rouge">CSV</code>. The former <code class="highlighter-rouge">YAMLLoad</code> check has been merged into the new <code class="highlighter-rouge">CheckDeserialize</code>.</p>
+<p>Brakeman now checks for deserialization of user input using <code class="language-plaintext highlighter-rouge">Marshal</code>, <code class="language-plaintext highlighter-rouge">YAML</code>, and <code class="language-plaintext highlighter-rouge">CSV</code>. The former <code class="language-plaintext highlighter-rouge">YAMLLoad</code> check has been merged into the new <code class="language-plaintext highlighter-rouge">CheckDeserialize</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/329">changes</a>)</p>
 
@@ -192,7 +192,7 @@
 
 <h3 id="nested-classes-and-controllers">Nested Classes and Controllers</h3>
 
-<p>Brakeman’s previous approach to nested classes was to ignore them. But it appears some people use classes as namespaces and place important classes (like controllers) inside them. This release changes how Brakeman deals with nested classes, as well as classes that inherit from <code class="highlighter-rouge">ApplicationController</code> but do not have <code class="highlighter-rouge">Controller</code> in their name. Please see the <a href="https://github.com/presidentbeef/brakeman/pull/325">pull request</a> for details.</p>
+<p>Brakeman’s previous approach to nested classes was to ignore them. But it appears some people use classes as namespaces and place important classes (like controllers) inside them. This release changes how Brakeman deals with nested classes, as well as classes that inherit from <code class="language-plaintext highlighter-rouge">ApplicationController</code> but do not have <code class="language-plaintext highlighter-rouge">Controller</code> in their name. Please see the <a href="https://github.com/presidentbeef/brakeman/pull/325">pull request</a> for details.</p>
 
 <p>Hopefully this means more accurate scans, but please report any correct warnings from earlier versions missing in 2.0.</p>
 
@@ -200,7 +200,7 @@
 
 <h3 id="stabby-lambdas-with-no-arguments">“Stabby” Lambdas with No Arguments</h3>
 
-<p>Errors like <code class="highlighter-rouge">undefined method 'each' for 0:Fixnum</code> caused by use of <code class="highlighter-rouge">-&gt;</code> lambdas with zero arguments should be fixed now.</p>
+<p>Errors like <code class="language-plaintext highlighter-rouge">undefined method 'each' for 0:Fixnum</code> caused by use of <code class="language-plaintext highlighter-rouge">-&gt;</code> lambdas with zero arguments should be fixed now.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/332">changes</a>)</p>
 
@@ -208,7 +208,7 @@
 
 <p>Explicit block argument destructuring like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>blah do |x, (y,z)|
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>blah do |x, (y,z)|
 end
 </code></pre></div></div>
 
@@ -218,13 +218,13 @@ end
 
 <h3 id="rails-3-config-processing">Rails 3 Config Processing</h3>
 
-<p>Brakeman only cares about Rails configuration processing to check for specific settings. It converts a setting like <code class="highlighter-rouge">config.a.b.z</code> to a hash entry like <code class="highlighter-rouge">[:config][:a][:b][:z]</code>. However, if real values are found for <code class="highlighter-rouge">config.a.b</code> this messes things up. So for now they are ignored.</p>
+<p>Brakeman only cares about Rails configuration processing to check for specific settings. It converts a setting like <code class="language-plaintext highlighter-rouge">config.a.b.z</code> to a hash entry like <code class="language-plaintext highlighter-rouge">[:config][:a][:b][:z]</code>. However, if real values are found for <code class="language-plaintext highlighter-rouge">config.a.b</code> this messes things up. So for now they are ignored.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/326">changes</a>)</p>
 
 <h3 id="errors-from-separating-models">Errors from Separating Models</h3>
 
-<p><a href="https://github.com/noahd1">Noah Davis</a> fixed an error where file names were not being properly set when using the <code class="highlighter-rouge">--separate-models</code> option.</p>
+<p><a href="https://github.com/noahd1">Noah Davis</a> fixed an error where file names were not being properly set when using the <code class="language-plaintext highlighter-rouge">--separate-models</code> option.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/313">changes</a>)</p>
 
@@ -242,13 +242,13 @@ end
 
 <h3 id="modelid-and-to_json-false-positives">Model#id and to_json False Positives</h3>
 
-<p>There should be fewer warnings generated by <code class="highlighter-rouge">Model#id</code> and <code class="highlighter-rouge">to_json</code> calls on <code class="highlighter-rouge">params</code>.</p>
+<p>There should be fewer warnings generated by <code class="language-plaintext highlighter-rouge">Model#id</code> and <code class="language-plaintext highlighter-rouge">to_json</code> calls on <code class="language-plaintext highlighter-rouge">params</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/309">changes</a>)</p>
 
 <h3 id="exceptions-instead-of-abort">Exceptions instead of Abort</h3>
 
-<p>A few instances of <code class="highlighter-rouge">abort</code> have been removed from Brakeman and replaced with exceptions. This should make it easier to use Brakeman as a library.</p>
+<p>A few instances of <code class="language-plaintext highlighter-rouge">abort</code> have been removed from Brakeman and replaced with exceptions. This should make it easier to use Brakeman as a library.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/335">changes</a>)</p>
 

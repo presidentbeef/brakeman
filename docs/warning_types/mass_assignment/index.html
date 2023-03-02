@@ -82,56 +82,56 @@
 
 <p>Example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.new(params[:user])
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.new(params[:user])
 </code></pre></div></div>
 
-<p>Unfortunately, if there is a user field called <code class="highlighter-rouge">admin</code> which controls administrator access, now any user can make themselves an administrator with a query like</p>
+<p>Unfortunately, if there is a user field called <code class="language-plaintext highlighter-rouge">admin</code> which controls administrator access, now any user can make themselves an administrator with a query like</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>?user[admin]=true
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>?user[admin]=true
 </code></pre></div></div>
 
 <h3 id="rails-with-strong-parameters">Rails With Strong Parameters</h3>
 
 <p>In Rails 4 and newer, protection for mass assignment is on by default.</p>
 
-<p>Query parameters must be explicitly whitelisted via <code class="highlighter-rouge">permit</code> in order to be used in mass assignment:</p>
+<p>Query parameters must be explicitly whitelisted via <code class="language-plaintext highlighter-rouge">permit</code> in order to be used in mass assignment:</p>
 
 <p>User.new(params.permit(:name, :password))</p>
 
-<p>Care should be taken to only whitelist values that are safe for a user (or attacker) to set. Foreign keys such as <code class="highlighter-rouge">account_id</code> are likely unsafe, allowing an attacker to manipulate records belonging to other accounts.</p>
+<p>Care should be taken to only whitelist values that are safe for a user (or attacker) to set. Foreign keys such as <code class="language-plaintext highlighter-rouge">account_id</code> are likely unsafe, allowing an attacker to manipulate records belonging to other accounts.</p>
 
 <p>Brakeman will warn on potentially dangerous attributes that are whitelisted.</p>
 
-<p>Brakeman will also warn about uses of <code class="highlighter-rouge">params.permit!</code>, since that allows everything.</p>
+<p>Brakeman will also warn about uses of <code class="language-plaintext highlighter-rouge">params.permit!</code>, since that allows everything.</p>
 
 <h3 id="rails-without-strong-parameters">Rails Without Strong Parameters</h3>
 
-<p>In older versions of Rails, <code class="highlighter-rouge">attr_accessible</code> and <code class="highlighter-rouge">attr_protected</code> can be used to limit mass assignment.
-However, Brakeman will warn unless <code class="highlighter-rouge">attr_accessible</code> is used, or mass assignment is completely disabled.</p>
+<p>In older versions of Rails, <code class="language-plaintext highlighter-rouge">attr_accessible</code> and <code class="language-plaintext highlighter-rouge">attr_protected</code> can be used to limit mass assignment.
+However, Brakeman will warn unless <code class="language-plaintext highlighter-rouge">attr_accessible</code> is used, or mass assignment is completely disabled.</p>
 
 <p>There are two different mass assignment warnings which can arise. The first is when mass assignment actually occurs, such as the example above. This results in a warning like</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Unprotected mass assignment near line 61: User.new(params[:user])
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Unprotected mass assignment near line 61: User.new(params[:user])
 </code></pre></div></div>
 
-<p>The other warning is raised whenever a model is found which does not use <code class="highlighter-rouge">attr_accessible</code>. This produces generic warnings like</p>
+<p>The other warning is raised whenever a model is found which does not use <code class="language-plaintext highlighter-rouge">attr_accessible</code>. This produces generic warnings like</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Mass assignment is not restricted using attr_accessible
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Mass assignment is not restricted using attr_accessible
 </code></pre></div></div>
 
 <p>with a list of affected models.</p>
 
 <p>In Rails 3.1 and newer, mass assignment can easily be disabled:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config.active_record.whitelist_attributes = true
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config.active_record.whitelist_attributes = true
 </code></pre></div></div>
 
 <p>Unfortunately, it can also easily be bypassed:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.new(params[:user], :without_protection =&gt; true)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.new(params[:user], :without_protection =&gt; true)
 </code></pre></div></div>
 
-<p>Brakeman will warn on uses of <code class="highlighter-rouge">without_protection</code>.</p>
+<p>Brakeman will warn on uses of <code class="language-plaintext highlighter-rouge">without_protection</code>.</p>
 
 <h3 id="more-information">More Information</h3>
 

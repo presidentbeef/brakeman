@@ -93,7 +93,7 @@
   </header>
 
 
-<div class="entry-content"><p>Besides checks for the latest CVEs, this release includes a slightly improved redirect check, noiser output with <code class="highlighter-rouge">--compare</code>, and better handling of <code class="highlighter-rouge">before_filter</code>.</p>
+<div class="entry-content"><p>Besides checks for the latest CVEs, this release includes a slightly improved redirect check, noiser output with <code class="language-plaintext highlighter-rouge">--compare</code>, and better handling of <code class="language-plaintext highlighter-rouge">before_filter</code>.</p>
 
 <p><em>Changes since 1.6.1</em>:</p>
 
@@ -101,21 +101,21 @@
   <li>Add checks for CVE-2012-2660, CVE-2012-2661, CVE-2012-2694, CVE-2012-2695 (Dave Worth)</li>
   <li>Avoid warning when redirecting to a model instance</li>
   <li>Raise confidence level for model attributes in redirects</li>
-  <li>Add <code class="highlighter-rouge">request.parameters</code> as a parameters hash</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">request.parameters</code> as a parameters hash</li>
   <li>Return non-zero exit code when missing dependencies</li>
-  <li>Fix <code class="highlighter-rouge">before_filter :except</code> logic</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">before_filter :except</code> logic</li>
   <li>Only accept symbol literals as before_filter names</li>
   <li>Cache before_filter lookups</li>
-  <li>Turn off quiet mode by default for <code class="highlighter-rouge">--compare</code></li>
+  <li>Turn off quiet mode by default for <code class="language-plaintext highlighter-rouge">--compare</code></li>
 </ul>
 
 <h3 id="latest-cves">Latest CVEs</h3>
 
 <p>A number of Rails vulnerabilities were announced recently, although there are really only two issues.</p>
 
-<p>One issue is that query parameters like <code class="highlighter-rouge">?name[]</code> and <code class="highlighter-rouge">?name[]=1&amp;name[]</code> get converted to <code class="highlighter-rouge">{"name" =&gt; [nil]}</code> and <code class="highlighter-rouge">{"name" =&gt; ["1", nil]}</code>. This, in turn, causes ActiveRecord to produce SQL queries with either <code class="highlighter-rouge">IS NULL</code> or <code class="highlighter-rouge">IN ('1', NULL)</code>. This is probably unexpected behavior.</p>
+<p>One issue is that query parameters like <code class="language-plaintext highlighter-rouge">?name[]</code> and <code class="language-plaintext highlighter-rouge">?name[]=1&amp;name[]</code> get converted to <code class="language-plaintext highlighter-rouge">{"name" =&gt; [nil]}</code> and <code class="language-plaintext highlighter-rouge">{"name" =&gt; ["1", nil]}</code>. This, in turn, causes ActiveRecord to produce SQL queries with either <code class="language-plaintext highlighter-rouge">IS NULL</code> or <code class="language-plaintext highlighter-rouge">IN ('1', NULL)</code>. This is probably unexpected behavior.</p>
 
-<p>The other issue is that query parameters like <code class="highlighter-rouge">?name[users.id]=1</code> or <code class="highlighter-rouge">?name[users][id]=1</code> get converted to <code class="highlighter-rouge">{"name" =&gt; { "users.id" =&gt; 1 }}</code> or <code class="highlighter-rouge">{"name" =&gt; { "users" =&gt; { "id" =&gt; 1 }}}</code>. ActiveRecord interprets <code class="highlighter-rouge">"users.id"</code> and <code class="highlighter-rouge">"users" =&gt; { "id" ...}</code> as <code class="highlighter-rouge">"users"."id"</code> in the WHERE clause, allowing an attacker to control the table/columns being queried.</p>
+<p>The other issue is that query parameters like <code class="language-plaintext highlighter-rouge">?name[users.id]=1</code> or <code class="language-plaintext highlighter-rouge">?name[users][id]=1</code> get converted to <code class="language-plaintext highlighter-rouge">{"name" =&gt; { "users.id" =&gt; 1 }}</code> or <code class="language-plaintext highlighter-rouge">{"name" =&gt; { "users" =&gt; { "id" =&gt; 1 }}}</code>. ActiveRecord interprets <code class="language-plaintext highlighter-rouge">"users.id"</code> and <code class="language-plaintext highlighter-rouge">"users" =&gt; { "id" ...}</code> as <code class="language-plaintext highlighter-rouge">"users"."id"</code> in the WHERE clause, allowing an attacker to control the table/columns being queried.</p>
 
 <p>Updated versions for Rails 3.x have been released.</p>
 
@@ -125,27 +125,27 @@
 
 <h3 id="unprotected-redirect-check">Unprotected Redirect Check</h3>
 
-<p>There have been some minor changes to <code class="highlighter-rouge">CheckRedirect</code>. In most cases, it should no longer warn when redirecting to a model instance. If there are still false positives with this scenario, please report them.</p>
+<p>There have been some minor changes to <code class="language-plaintext highlighter-rouge">CheckRedirect</code>. In most cases, it should no longer warn when redirecting to a model instance. If there are still false positives with this scenario, please report them.</p>
 
 <p>The other change is that redirects to model attributes will now be marked as high confidence, instead of weak.</p>
 
 <h3 id="exit-code-on-missing-dependencies">Exit Code on Missing Dependencies</h3>
 
-<p>Brakeman catches errors from missing dependencies in order to show a nicer error message. Unfortunately, it was also returning <code class="highlighter-rouge">0</code> on exit. This is undesirable behavior when chaining commands together.</p>
+<p>Brakeman catches errors from missing dependencies in order to show a nicer error message. Unfortunately, it was also returning <code class="language-plaintext highlighter-rouge">0</code> on exit. This is undesirable behavior when chaining commands together.</p>
 
 <p>This has been changed to return a non-zero exit code.</p>
 
 <h3 id="before-filter-changes">Before Filter Changes</h3>
 
-<p>There were some isues with how <code class="highlighter-rouge">before_filter</code> was being handled. The logic when using <code class="highlighter-rouge">:except</code> was broken, causing Brakeman to treat it like <code class="highlighter-rouge">:only</code>.</p>
+<p>There were some isues with how <code class="language-plaintext highlighter-rouge">before_filter</code> was being handled. The logic when using <code class="language-plaintext highlighter-rouge">:except</code> was broken, causing Brakeman to treat it like <code class="language-plaintext highlighter-rouge">:only</code>.</p>
 
-<p>The other issue caused Brakeman to interpret arguments such as method calls as method names. For example, <code class="highlighter-rouge">before_filter blah</code> would be treated like <code class="highlighter-rouge">before_filter :blah</code>.</p>
+<p>The other issue caused Brakeman to interpret arguments such as method calls as method names. For example, <code class="language-plaintext highlighter-rouge">before_filter blah</code> would be treated like <code class="language-plaintext highlighter-rouge">before_filter :blah</code>.</p>
 
 <p>While dealing with this, caching of filter lookups was also added for a minor performance improvement.</p>
 
-<h3 id="noisier---compare">Noisier <code class="highlighter-rouge">--compare</code></h3>
+<h3 id="noisier---compare">Noisier <code class="language-plaintext highlighter-rouge">--compare</code></h3>
 
-<p>Using the <code class="highlighter-rouge">--compare</code> option now shows the same output as a regular scan. If you are piping the output of <code class="highlighter-rouge">--compare</code> to a file or elsewhere, you may wish to use the <code class="highlighter-rouge">--quiet</code> option.</p>
+<p>Using the <code class="language-plaintext highlighter-rouge">--compare</code> option now shows the same output as a regular scan. If you are piping the output of <code class="language-plaintext highlighter-rouge">--compare</code> to a file or elsewhere, you may wish to use the <code class="language-plaintext highlighter-rouge">--quiet</code> option.</p>
 
 <h3 id="report-issues">Report Issues</h3>
 

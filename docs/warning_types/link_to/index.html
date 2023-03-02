@@ -78,11 +78,11 @@
     <h1 class="entry-title">Cross Site Scripting: link to</h1>
   </header>
   
-  <p>In the 2.x versions of Rails, <code class="highlighter-rouge">link_to</code> would not escape the body of the HREF.</p>
+  <p>In the 2.x versions of Rails, <code class="language-plaintext highlighter-rouge">link_to</code> would not escape the body of the HREF.</p>
 
 <p>For example, this will popup an alert box:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>link_to "&lt;script&gt;alert(1)&lt;/script&gt;", "http://google.com"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>link_to "&lt;script&gt;alert(1)&lt;/script&gt;", "http://google.com"
 </code></pre></div></div>
 
 <p>Brakeman warns on cases where the first parameter contains user input.</p>

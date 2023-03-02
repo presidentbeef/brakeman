@@ -98,22 +98,22 @@
 <ul>
   <li>Support relative paths in reports (fsword)</li>
   <li>Allow Brakeman to be run without tty (fsword)</li>
-  <li>Fix exit code with <code class="highlighter-rouge">--compare</code> (fsword)</li>
-  <li>Fix <code class="highlighter-rouge">--rake</code> option (Deepak Kumar)</li>
-  <li>Add high confidence warnings for <code class="highlighter-rouge">to_json</code> XSS (Neil Matatall)</li>
-  <li>Fix <code class="highlighter-rouge">redirect_to</code> false negative</li>
-  <li>Fix duplicate warnings with <code class="highlighter-rouge">raw</code> calls</li>
+  <li>Fix exit code with <code class="language-plaintext highlighter-rouge">--compare</code> (fsword)</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">--rake</code> option (Deepak Kumar)</li>
+  <li>Add high confidence warnings for <code class="language-plaintext highlighter-rouge">to_json</code> XSS (Neil Matatall)</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">redirect_to</code> false negative</li>
+  <li>Fix duplicate warnings with <code class="language-plaintext highlighter-rouge">raw</code> calls</li>
   <li>Fix shadowing of rendered partials</li>
   <li>Add “render chain” to HTML reports</li>
-  <li>Add check for XSS in <code class="highlighter-rouge">content_tag</code></li>
+  <li>Add check for XSS in <code class="language-plaintext highlighter-rouge">content_tag</code></li>
   <li>Add full backtrace for errors in debug mode</li>
-  <li>Treat model attributes in <code class="highlighter-rouge">or</code> expressions as immediate values</li>
+  <li>Treat model attributes in <code class="language-plaintext highlighter-rouge">or</code> expressions as immediate values</li>
   <li>Switch to method access for Sexp nodes</li>
 </ul>
 
 <h3 id="relative-paths-in-reports">Relative Paths in Reports</h3>
 
-<p>The <code class="highlighter-rouge">--relative-paths</code> option will now cause Brakeman to output relative paths for warnings in reports in either JSON or tabs format. This is useful when comparing reports run on different machines or just in different directories.</p>
+<p>The <code class="language-plaintext highlighter-rouge">--relative-paths</code> option will now cause Brakeman to output relative paths for warnings in reports in either JSON or tabs format. This is useful when comparing reports run on different machines or just in different directories.</p>
 
 <h3 id="brakeman-without-tty">Brakeman without TTY</h3>
 
@@ -121,29 +121,29 @@
 
 <h3 id="exit-code-for-compare">Exit Code for Compare</h3>
 
-<p>Also thanks to fsword, Brakeman will return a proper exit code when run with <code class="highlighter-rouge">-z --compare</code>. If any changes are found, the exit code will be nonzero.</p>
+<p>Also thanks to fsword, Brakeman will return a proper exit code when run with <code class="language-plaintext highlighter-rouge">-z --compare</code>. If any changes are found, the exit code will be nonzero.</p>
 
 <h3 id="rake-task-generation-fixed">Rake Task Generation Fixed</h3>
 
-<p>The <code class="highlighter-rouge">--rake</code> option was broken, but <a href="https://github.com/deepakinseattle">Deepak Kumar</a> noticed and fixed it!</p>
+<p>The <code class="language-plaintext highlighter-rouge">--rake</code> option was broken, but <a href="https://github.com/deepakinseattle">Deepak Kumar</a> noticed and fixed it!</p>
 
 <h3 id="high-confidence-warnings-for-json">High Confidence Warnings for JSON</h3>
 
-<p>Older versions of Rails default to not escaping <code class="highlighter-rouge">to_json</code> calls, leading to <a href="http://brakemanscanner.org/docs/warning_types/cross_site_scripting_to_json/">cross site scripting problems</a>. Since Rails 2.1.0, Rails has provided an option to escape JSON output by default. Brakeman will check this option, and warn on unescaped <code class="highlighter-rouge">to_json</code> calls.</p>
+<p>Older versions of Rails default to not escaping <code class="language-plaintext highlighter-rouge">to_json</code> calls, leading to <a href="http://brakemanscanner.org/docs/warning_types/cross_site_scripting_to_json/">cross site scripting problems</a>. Since Rails 2.1.0, Rails has provided an option to escape JSON output by default. Brakeman will check this option, and warn on unescaped <code class="language-plaintext highlighter-rouge">to_json</code> calls.</p>
 
 <h3 id="fix-redirect-false-negative">Fix Redirect False Negative</h3>
 
-<p>Brakeman was incorrectly checking for <code class="highlighter-rouge">:only_path =&gt; true</code> in <em>any</em> argument to <code class="highlighter-rouge">redirect_to</code>. However, it is only valid as part of the first argument.</p>
+<p>Brakeman was incorrectly checking for <code class="language-plaintext highlighter-rouge">:only_path =&gt; true</code> in <em>any</em> argument to <code class="language-plaintext highlighter-rouge">redirect_to</code>. However, it is only valid as part of the first argument.</p>
 
 <h3 id="fix-duplicate-warnings-on-raw-calls">Fix Duplicate Warnings on Raw Calls</h3>
 
-<p>A logic mistake sometimes caused a high and weak confidence warning to be reported for the same code using <code class="highlighter-rouge">raw</code>. This has been fixed.</p>
+<p>A logic mistake sometimes caused a high and weak confidence warning to be reported for the same code using <code class="language-plaintext highlighter-rouge">raw</code>. This has been fixed.</p>
 
 <h3 id="fix-shadowing-of-rendered-partials">Fix Shadowing of Rendered Partials</h3>
 
 <p>Due to the way Brakeman was storing rendered partials, a view that was rendered multiple times via different code paths would only store a single instance of the rendered view. This could result in some vulnerabilities not being reported.</p>
 
-<p>To fix this, Brakeman now stores the entire “render chain” (that is, each location of a <code class="highlighter-rouge">render</code>). This ensures a unique key for each rendered template.</p>
+<p>To fix this, Brakeman now stores the entire “render chain” (that is, each location of a <code class="language-plaintext highlighter-rouge">render</code>). This ensures a unique key for each rendered template.</p>
 
 <h3 id="report-render-chain-in-html">Report Render Chain in HTML</h3>
 
@@ -157,19 +157,19 @@
 
 <p><img src="/images/expanded_call_chain.png" alt="Expanded" /></p>
 
-<h3 id="check-for-xss-in-content_tag">Check for XSS in <code class="highlighter-rouge">content_tag</code></h3>
+<h3 id="check-for-xss-in-content_tag">Check for XSS in <code class="language-plaintext highlighter-rouge">content_tag</code></h3>
 
-<p><code class="highlighter-rouge">content_tag</code> is a view helper for generating HTML tags containing some content. In Rails 2.x, <code class="highlighter-rouge">content_tag</code> did not escape this content. In Rails 3.x, this changed so that now it is escaped. While <code class="highlighter-rouge">content_tag</code> does have an <code class="highlighter-rouge">escape</code> parameter (true by default), this only applies to the tag attribute <em>values</em>.</p>
+<p><code class="language-plaintext highlighter-rouge">content_tag</code> is a view helper for generating HTML tags containing some content. In Rails 2.x, <code class="language-plaintext highlighter-rouge">content_tag</code> did not escape this content. In Rails 3.x, this changed so that now it is escaped. While <code class="language-plaintext highlighter-rouge">content_tag</code> does have an <code class="language-plaintext highlighter-rouge">escape</code> parameter (true by default), this only applies to the tag attribute <em>values</em>.</p>
 
-<p>Brakeman now warns on possible cross site scripting via <code class="highlighter-rouge">content_tag</code> calls. <a href="/docs/warning_types/content_tag">See here</a> for more details.</p>
+<p>Brakeman now warns on possible cross site scripting via <code class="language-plaintext highlighter-rouge">content_tag</code> calls. <a href="/docs/warning_types/content_tag">See here</a> for more details.</p>
 
 <h3 id="backtraces-in-debug-mode">Backtraces in Debug Mode</h3>
 
-<p>By default, Brakeman tries its best to recover from errors and produce a report. However, this can sometimes make it difficult to track down the sources of errors. Now, with the <code class="highlighter-rouge">-d</code> option, Brakeman will report backtraces for errors encountered while running, as well as including backtraces in HTML reports.</p>
+<p>By default, Brakeman tries its best to recover from errors and produce a report. However, this can sometimes make it difficult to track down the sources of errors. Now, with the <code class="language-plaintext highlighter-rouge">-d</code> option, Brakeman will report backtraces for errors encountered while running, as well as including backtraces in HTML reports.</p>
 
 <h3 id="convenience-methods-for-sexp-access">Convenience Methods for Sexp Access</h3>
 
-<p>Previously, all code dealing with <a href="https://en.wikipedia.org/wiki/S-exp">s-expressions</a> in the <code class="highlighter-rouge">Sexp</code> class accessed nodes via array access, e.g. <code class="highlighter-rouge">exp[1]</code> or <code class="highlighter-rouge">exp[2]</code>. This led to hard-to-read code like <code class="highlighter-rouge">exp[2][3][1][1..-1]</code>. This release includes convenience methods to replace those types of calls. Available methods are <a href="http://rdoc.info/gems/brakeman/Sexp">documented here</a>.</p>
+<p>Previously, all code dealing with <a href="https://en.wikipedia.org/wiki/S-exp">s-expressions</a> in the <code class="language-plaintext highlighter-rouge">Sexp</code> class accessed nodes via array access, e.g. <code class="language-plaintext highlighter-rouge">exp[1]</code> or <code class="language-plaintext highlighter-rouge">exp[2]</code>. This led to hard-to-read code like <code class="language-plaintext highlighter-rouge">exp[2][3][1][1..-1]</code>. This release includes convenience methods to replace those types of calls. Available methods are <a href="http://rdoc.info/gems/brakeman/Sexp">documented here</a>.</p>
 
 <p>Hopefully this leads to code that is both easier to read and easier to write.</p>
 

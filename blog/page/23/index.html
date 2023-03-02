@@ -143,11 +143,11 @@
 
 <h3 id="rails-3-configs">Rails 3 Configs</h3>
 
-<p>Configurations in <code class="highlighter-rouge">config/application</code> and <code class="highlighter-rouge">config/environments/production.rb</code> will now be parsed.</p>
+<p>Configurations in <code class="language-plaintext highlighter-rouge">config/application</code> and <code class="language-plaintext highlighter-rouge">config/environments/production.rb</code> will now be parsed.</p>
 
 <h3 id="check-for-disabled-mass-assignment">Check for Disabled Mass Assignment</h3>
 
-<p>A new option was added in Rails 3.1 to globally disable mass assignment using <code class="highlighter-rouge">config.active_record.whitelist_attributes = true</code>. Brakeman will now turn off mass assignment warnings if this configuration setting is detected.</p>
+<p>A new option was added in Rails 3.1 to globally disable mass assignment using <code class="language-plaintext highlighter-rouge">config.active_record.whitelist_attributes = true</code>. Brakeman will now turn off mass assignment warnings if this configuration setting is detected.</p>
 
 <h3 id="always-warn-on-without_protection">Always Warn on without_protection</h3>
 
@@ -155,10 +155,10 @@
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.new(params, :without_protection =&gt; true)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.new(params, :without_protection =&gt; true)
 </code></pre></div></div>
 
-<p>Brakeman will now <em>always</em> warn when <code class="highlighter-rouge">without_protection</code> is used, even if mass assignment is disabled or attributes are protected on that model.</p>
+<p>Brakeman will now <em>always</em> warn when <code class="language-plaintext highlighter-rouge">without_protection</code> is used, even if mass assignment is disabled or attributes are protected on that model.</p>
 
 <h3 id="fix-csv-output">Fix CSV Output</h3>
 
@@ -207,25 +207,25 @@
 
 <h3 id="separate-attr_accessible-warnings">Separate attr_accessible Warnings</h3>
 
-<p>The current default is to roll all controllers lacking <code class="highlighter-rouge">attr_accessible</code> into a single warning. This is convenient when manually looking at HTML or text output, but for Jenkins/Hudson it is better to have each be a separate warning. That way it is easier to track new and fixed warnings.</p>
+<p>The current default is to roll all controllers lacking <code class="language-plaintext highlighter-rouge">attr_accessible</code> into a single warning. This is convenient when manually looking at HTML or text output, but for Jenkins/Hudson it is better to have each be a separate warning. That way it is easier to track new and fixed warnings.</p>
 
-<p>To turn on this behavior, use <code class="highlighter-rouge">--separate-models</code>.</p>
+<p>To turn on this behavior, use <code class="language-plaintext highlighter-rouge">--separate-models</code>.</p>
 
 <h3 id="custom-css-for-html-output">Custom CSS for HTML Output</h3>
 
-<p>Use the <code class="highlighter-rouge">--css-file</code> option to set a custom CSS file for styling HTML output. This file is copied directly into the report.</p>
+<p>Use the <code class="language-plaintext highlighter-rouge">--css-file</code> option to set a custom CSS file for styling HTML output. This file is copied directly into the report.</p>
 
 <h3 id="file-names-for-version-specific-warnings">File Names for Version-Specific Warnings</h3>
 
-<p>Previously, there would be no file name associated with warnings about certain versions of Rails. This caused the warnings to not show up in the Jenkins/Hudson plugin. Now either <code class="highlighter-rouge">Gemfile</code> or <code class="highlighter-rouge">config/environment.rb</code> will be used as the file name for warnings based on the detected Rails version.</p>
+<p>Previously, there would be no file name associated with warnings about certain versions of Rails. This caused the warnings to not show up in the Jenkins/Hudson plugin. Now either <code class="language-plaintext highlighter-rouge">Gemfile</code> or <code class="language-plaintext highlighter-rouge">config/environment.rb</code> will be used as the file name for warnings based on the detected Rails version.</p>
 
 <h3 id="line-number-for-default-routes">Line Number for Default Routes</h3>
 
-<p>When default routes were detected for specific controllers, there will now be a line number (from <code class="highlighter-rouge">routes.rb</code>) associated with the warning.</p>
+<p>When default routes were detected for specific controllers, there will now be a line number (from <code class="language-plaintext highlighter-rouge">routes.rb</code>) associated with the warning.</p>
 
 <h3 id="hash_insert-fixed">hash_insert() Fixed</h3>
 
-<p><code class="highlighter-rouge">hash_insert</code> was broken and would cause some spurious warnings. For example, sometimes <code class="highlighter-rouge">only_path =&gt; true</code> would be set in <code class="highlighter-rouge">params</code>, but Brakeman would mess up the <code class="highlighter-rouge">params</code> hash and a redirect warning would still be created.</p>
+<p><code class="language-plaintext highlighter-rouge">hash_insert</code> was broken and would cause some spurious warnings. For example, sometimes <code class="language-plaintext highlighter-rouge">only_path =&gt; true</code> would be set in <code class="language-plaintext highlighter-rouge">params</code>, but Brakeman would mess up the <code class="language-plaintext highlighter-rouge">params</code> hash and a redirect warning would still be created.</p>
 
 <h3 id="threaded-checks-no-longer-use-queue">Threaded Checks No Longer Use Queue</h3>
 
@@ -282,7 +282,7 @@
 
 <h3 id="fix-for-tabs-format">Fix for .tabs Format</h3>
 
-<p>Brakeman will now pay attention to the <code class="highlighter-rouge">-w</code> flag (setting minimum confidence levels) when using the <code class="highlighter-rouge">.tabs</code> format.</p>
+<p>Brakeman will now pay attention to the <code class="language-plaintext highlighter-rouge">-w</code> flag (setting minimum confidence levels) when using the <code class="language-plaintext highlighter-rouge">.tabs</code> format.</p>
 
 <h3 id="escape-error-messages-in-html">Escape Error Messages in HTML</h3>
 
@@ -290,11 +290,11 @@
 
 <h3 id="skip-libs-option">–skip-libs Option</h3>
 
-<p>The <code class="highlighter-rouge">--skip-libs</code> option will cause Brakeman to not process the files in the <code class="highlighter-rouge">lib</code> directory. At the moment, the results from this directory are only used in a couple places, so it is unlikely that skipping them will cause any problems.</p>
+<p>The <code class="language-plaintext highlighter-rouge">--skip-libs</code> option will cause Brakeman to not process the files in the <code class="language-plaintext highlighter-rouge">lib</code> directory. At the moment, the results from this directory are only used in a couple places, so it is unlikely that skipping them will cause any problems.</p>
 
 <h3 id="parallel-checks">Parallel Checks</h3>
 
-<p>Checks are now run in separate threads by default. Thus far, there does not seem to be a big difference between using threads and the sequential approach. To turn off threads, use the <code class="highlighter-rouge">-n</code> option.</p>
+<p>Checks are now run in separate threads by default. Thus far, there does not seem to be a big difference between using threads and the sequential approach. To turn off threads, use the <code class="language-plaintext highlighter-rouge">-n</code> option.</p>
 
 <h3 id="ruby_parser-compatibility">ruby_parser Compatibility</h3>
 
@@ -302,7 +302,7 @@
 
 <h3 id="route-processing">Route Processing</h3>
 
-<p>Brakeman will no longer crash if there are problems parsing <code class="highlighter-rouge">routes.rb</code>. Instead, it will assume all public methods on controllers are actions. The <code class="highlighter-rouge">-a</code> option will also turn this behavior on.</p>
+<p>Brakeman will no longer crash if there are problems parsing <code class="language-plaintext highlighter-rouge">routes.rb</code>. Instead, it will assume all public methods on controllers are actions. The <code class="language-plaintext highlighter-rouge">-a</code> option will also turn this behavior on.</p>
 
 <p>Rails 3.1 route parsing is still a work in progress, so this should at least allow analysis of 3.1 apps, even if it means slightly reduced accuracy.</p>
 </div>
@@ -338,7 +338,7 @@
 
 <p><img src="/images/brakeman_trend_graph.png" alt="Example Plugin Graph" title="Example Plugin Graph" /></p>
 
-<p>Installation of the plugin is no longer an arduous manual process. Just go to <code class="highlighter-rouge">Manage Jenkins -&gt; Manage Plugins -&gt; Available</code> and search for “Brakeman”. Check the box and then click the “Install” button down at the bottom of the page.</p>
+<p>Installation of the plugin is no longer an arduous manual process. Just go to <code class="language-plaintext highlighter-rouge">Manage Jenkins -&gt; Manage Plugins -&gt; Available</code> and search for “Brakeman”. Check the box and then click the “Install” button down at the bottom of the page.</p>
 
 <p>Some more information about the plugin can be found on the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Brakeman+Plugin">Jenkins wiki</a>.</p>
 

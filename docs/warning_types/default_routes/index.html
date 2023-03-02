@@ -80,19 +80,19 @@
   
   <p>The general default routes warning means there is a call to</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#Rails 2.x
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#Rails 2.x
 map.connect ":controller/:action/:id"
 </code></pre></div></div>
 
 <p>or</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Rails 3.x
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Rails 3.x
 match ':controller(/:action(/:id(.:format)))'
 </code></pre></div></div>
 
-<p>in <code class="highlighter-rouge">config/routes.rb</code>. This allows any public method on any controller to be called as an action.</p>
+<p>in <code class="language-plaintext highlighter-rouge">config/routes.rb</code>. This allows any public method on any controller to be called as an action.</p>
 
-<p>If this warning is reported for a particular controller, it means there is a route to that controller containing <code class="highlighter-rouge">:action</code>.</p>
+<p>If this warning is reported for a particular controller, it means there is a route to that controller containing <code class="language-plaintext highlighter-rouge">:action</code>.</p>
 
 <p>Default routes can be dangerous if methods are made public which are not intended to be used as URLs or actions.</p>
 

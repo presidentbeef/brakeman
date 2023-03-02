@@ -98,35 +98,35 @@
 <p><em>Changes since 4.7.1:</em></p>
 
 <ul>
-  <li>Add <code class="highlighter-rouge">request.params</code> as query parameters (<a href="https://github.com/presidentbeef/brakeman/issues/1398">#1398</a>)</li>
-  <li>Handle more <code class="highlighter-rouge">permit!</code> cases (<a href="https://github.com/presidentbeef/brakeman/issues/1426">#1426</a>)</li>
-  <li>Remove version guard for <code class="highlighter-rouge">named_scope</code> vs. <code class="highlighter-rouge">scope</code></li>
-  <li>Find SQL injection in <code class="highlighter-rouge">String#strip_heredoc</code> target (<a href="https://github.com/presidentbeef/brakeman/issues/1433">#1433</a>)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">request.params</code> as query parameters (<a href="https://github.com/presidentbeef/brakeman/issues/1398">#1398</a>)</li>
+  <li>Handle more <code class="language-plaintext highlighter-rouge">permit!</code> cases (<a href="https://github.com/presidentbeef/brakeman/issues/1426">#1426</a>)</li>
+  <li>Remove version guard for <code class="language-plaintext highlighter-rouge">named_scope</code> vs. <code class="language-plaintext highlighter-rouge">scope</code></li>
+  <li>Find SQL injection in <code class="language-plaintext highlighter-rouge">String#strip_heredoc</code> target (<a href="https://github.com/presidentbeef/brakeman/issues/1433">#1433</a>)</li>
   <li>Ensure file name is set when processing models</li>
-  <li>Bundle <code class="highlighter-rouge">ruby_parser</code> version 3.14.1 (<a href="https://github.com/presidentbeef/brakeman/issues/1429">#1429</a>)</li>
+  <li>Bundle <code class="language-plaintext highlighter-rouge">ruby_parser</code> version 3.14.1 (<a href="https://github.com/presidentbeef/brakeman/issues/1429">#1429</a>)</li>
 </ul>
 
 <h3 id="more-query-parameters">More Query Parameters</h3>
 
-<p><code class="highlighter-rouge">request.params</code> has been added as a query parameters method.</p>
+<p><code class="language-plaintext highlighter-rouge">request.params</code> has been added as a query parameters method.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1423">changes</a>)</p>
 
-<h3 id="more-permit">More <code class="highlighter-rouge">permit!</code></h3>
+<h3 id="more-permit">More <code class="language-plaintext highlighter-rouge">permit!</code></h3>
 
-<p>More cases of <code class="highlighter-rouge">permit!</code> will be identified, particularly when it is the target of a method call.</p>
+<p>More cases of <code class="language-plaintext highlighter-rouge">permit!</code> will be identified, particularly when it is the target of a method call.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1427">changes</a>)</p>
 
 <h3 id="more-scopes">More Scopes</h3>
 
-<p>Both <code class="highlighter-rouge">named_scope</code> and <code class="highlighter-rouge">scope</code> will be handled regardless of detected Rails version.</p>
+<p>Both <code class="language-plaintext highlighter-rouge">named_scope</code> and <code class="language-plaintext highlighter-rouge">scope</code> will be handled regardless of detected Rails version.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1435">changes</a>)</p>
 
-<h3 id="sql-injection-with-strip_heredoc">SQL Injection with <code class="highlighter-rouge">strip_heredoc</code></h3>
+<h3 id="sql-injection-with-strip_heredoc">SQL Injection with <code class="language-plaintext highlighter-rouge">strip_heredoc</code></h3>
 
-<p><code class="highlighter-rouge">strip_heredoc</code> is now treated as returning a string.
+<p><code class="language-plaintext highlighter-rouge">strip_heredoc</code> is now treated as returning a string.
 This fixes false positives if the target is a plain string and fixes false negatives if the target has interpolation.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1434">changes</a>)</p>
@@ -143,7 +143,7 @@ This fixes false positives if the target is a plain string and fixes false negat
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>339d6f3707a2c0a32003536a231255b839a0b87bd6a7ebef3c82aedd1bdd3ac8  brakeman-4.7.2.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>339d6f3707a2c0a32003536a231255b839a0b87bd6a7ebef3c82aedd1bdd3ac8  brakeman-4.7.2.gem
 39ce3a5fe248dee8c78fe671441d2abbfec66cec923ee9f56c62018229d3c9b0  brakeman-lib-4.7.2.gem
 efa07aa8476ef5553c91734093349a3ed55e2ef05b469d3dcecfdaabede37296  brakeman-min-4.7.2.gem
 </code></pre></div></div>

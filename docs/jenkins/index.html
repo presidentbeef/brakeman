@@ -102,7 +102,7 @@
 
 <p>Here is a sample build command if <a href="https://rvm.io/">RVM</a> is available on the worker:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash -l -c '
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash -l -c '
 rvm install 3.0.0 &amp;&amp; \
 rvm use 3.0.0@brakeman --create &amp;&amp; \
 gem install brakeman &amp;&amp; \
@@ -113,10 +113,10 @@ brakeman --no-progress --no-pager --no-exit-on-warn -o brakeman-output.json
 <p>Explanation of Brakeman options:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">--no-progress</code> avoids ugly <code class="highlighter-rouge">Processing...</code> output in Jenkins logs</li>
-  <li><code class="highlighter-rouge">--no-pager</code> avoids invoking <code class="highlighter-rouge">less</code> to display report</li>
-  <li><code class="highlighter-rouge">--no-exit-on-warn</code> tells Brakeman to return a 0 exit code even if warnings are found</li>
-  <li><code class="highlighter-rouge">-o brakeman-output.json</code> sets the report file and format</li>
+  <li><code class="language-plaintext highlighter-rouge">--no-progress</code> avoids ugly <code class="language-plaintext highlighter-rouge">Processing...</code> output in Jenkins logs</li>
+  <li><code class="language-plaintext highlighter-rouge">--no-pager</code> avoids invoking <code class="language-plaintext highlighter-rouge">less</code> to display report</li>
+  <li><code class="language-plaintext highlighter-rouge">--no-exit-on-warn</code> tells Brakeman to return a 0 exit code even if warnings are found</li>
+  <li><code class="language-plaintext highlighter-rouge">-o brakeman-output.json</code> sets the report file and format</li>
 </ul>
 
 <h3 id="collecting-results">Collecting Results</h3>
@@ -129,7 +129,7 @@ brakeman --no-progress --no-pager --no-exit-on-warn -o brakeman-output.json
 
 <p><img src="/images/jenkins/Jenkins-4-select-brakeman.png" alt="Select Brakeman" title="Select Brakeman as a tool" /></p>
 
-<p>The default options will check for files named <code class="highlighter-rouge">brakeman-output.json</code> and collect the results.</p>
+<p>The default options will check for files named <code class="language-plaintext highlighter-rouge">brakeman-output.json</code> and collect the results.</p>
 
 <p>There is no need to set any other configuration options right now.
 By default, the plugin will collect and display results but will not affect the status of the build.</p>

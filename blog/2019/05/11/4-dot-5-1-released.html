@@ -99,14 +99,14 @@
 
 <ul>
   <li>Add initial Rails 6 support</li>
-  <li>Add optional check for <code class="highlighter-rouge">config.force_ssl</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1181">#1181</a>)</li>
-  <li>Add deserialization warning for <code class="highlighter-rouge">Oj.load/object_load</code></li>
-  <li>Add SQL injection checks for <code class="highlighter-rouge">destroy_by</code>/<code class="highlighter-rouge">delete_by</code></li>
-  <li>Add SQL injection checks for <code class="highlighter-rouge">find_or_create_by</code> and friends</li>
-  <li>Check <code class="highlighter-rouge">link_to</code> with block for href XSS (<a href="https://github.com/presidentbeef/brakeman/issues/1339">#1339</a>)</li>
-  <li>Convert <code class="highlighter-rouge">!!</code> calls to boolean value (<a href="https://github.com/presidentbeef/brakeman/issues/1343">#1343</a>)</li>
-  <li>Use relative paths for <code class="highlighter-rouge">__FILE__</code></li>
-  <li>Represent file paths internally as <code class="highlighter-rouge">Brakeman::FilePath</code></li>
+  <li>Add optional check for <code class="language-plaintext highlighter-rouge">config.force_ssl</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1181">#1181</a>)</li>
+  <li>Add deserialization warning for <code class="language-plaintext highlighter-rouge">Oj.load/object_load</code></li>
+  <li>Add SQL injection checks for <code class="language-plaintext highlighter-rouge">destroy_by</code>/<code class="language-plaintext highlighter-rouge">delete_by</code></li>
+  <li>Add SQL injection checks for <code class="language-plaintext highlighter-rouge">find_or_create_by</code> and friends</li>
+  <li>Check <code class="language-plaintext highlighter-rouge">link_to</code> with block for href XSS (<a href="https://github.com/presidentbeef/brakeman/issues/1339">#1339</a>)</li>
+  <li>Convert <code class="language-plaintext highlighter-rouge">!!</code> calls to boolean value (<a href="https://github.com/presidentbeef/brakeman/issues/1343">#1343</a>)</li>
+  <li>Use relative paths for <code class="language-plaintext highlighter-rouge">__FILE__</code></li>
+  <li>Represent file paths internally as <code class="language-plaintext highlighter-rouge">Brakeman::FilePath</code></li>
   <li>Handle empty partial names</li>
   <li>Handle trailing comma in block args</li>
   <li>Remove code for Ruby versions prior to 1.9</li>
@@ -116,65 +116,65 @@
 
 <p>Rails 6 is (almost?) here!</p>
 
-<p>This release adds basic support internally for Rails 6 as well as the <code class="highlighter-rouge">-6</code> option to force Rails 6 mode.</p>
+<p>This release adds basic support internally for Rails 6 as well as the <code class="language-plaintext highlighter-rouge">-6</code> option to force Rails 6 mode.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1335">changes</a>)</p>
 
 <h3 id="optional-check-for-force-ssl-option">Optional Check for Force SSL Option</h3>
 
-<p>In Rails, <code class="highlighter-rouge">config.force_ssl = true</code> turns on HSTS, redirects HTTP to HTTPS, and sets the <code class="highlighter-rouge">secure</code> flag on all cookies.</p>
+<p>In Rails, <code class="language-plaintext highlighter-rouge">config.force_ssl = true</code> turns on HSTS, redirects HTTP to HTTPS, and sets the <code class="language-plaintext highlighter-rouge">secure</code> flag on all cookies.</p>
 
 <p>A new optional check has been added to check if this option is enabled.</p>
 
-<p>To enable this new check, use <code class="highlighter-rouge">-A</code> or <code class="highlighter-rouge">--enable ForceSSL</code>.</p>
+<p>To enable this new check, use <code class="language-plaintext highlighter-rouge">-A</code> or <code class="language-plaintext highlighter-rouge">--enable ForceSSL</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1344">changes</a>)</p>
 
 <h3 id="deserialization-with-oj">Deserialization with Oj</h3>
 
-<p>The deserialization check now looks for unsafe use of the <code class="highlighter-rouge">Oj</code> JSON library.</p>
+<p>The deserialization check now looks for unsafe use of the <code class="language-plaintext highlighter-rouge">Oj</code> JSON library.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1334">changes</a>)</p>
 
 <h3 id="new-sql-injection-sinks">New SQL Injection Sinks</h3>
 
-<p>The SQL injection check has been expanded to check for unsafe use of <code class="highlighter-rouge">destroy_by</code>/<code class="highlighter-rouge">delete_by</code> (new in Rails 6) and <code class="highlighter-rouge">find_or_create_by</code> and related methods.</p>
+<p>The SQL injection check has been expanded to check for unsafe use of <code class="language-plaintext highlighter-rouge">destroy_by</code>/<code class="language-plaintext highlighter-rouge">delete_by</code> (new in Rails 6) and <code class="language-plaintext highlighter-rouge">find_or_create_by</code> and related methods.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1337">changes</a>)</p>
 
-<h3 id="link_to-with-block"><code class="highlighter-rouge">link_to</code> with Block</h3>
+<h3 id="link_to-with-block"><code class="language-plaintext highlighter-rouge">link_to</code> with Block</h3>
 
-<p>Brakeman now checks <code class="highlighter-rouge">link_to</code> calls with blocks for <code class="highlighter-rouge">javascript:</code> links.</p>
+<p>Brakeman now checks <code class="language-plaintext highlighter-rouge">link_to</code> calls with blocks for <code class="language-plaintext highlighter-rouge">javascript:</code> links.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1340">changes</a>)</p>
 
-<h3 id="convert--to-boolean">Convert <code class="highlighter-rouge">!!</code> to Boolean</h3>
+<h3 id="convert--to-boolean">Convert <code class="language-plaintext highlighter-rouge">!!</code> to Boolean</h3>
 
-<p>Use of <code class="highlighter-rouge">!!</code> to convert values to booleans will be treated as safe (turned into <code class="highlighter-rouge">true or false</code>).</p>
+<p>Use of <code class="language-plaintext highlighter-rouge">!!</code> to convert values to booleans will be treated as safe (turned into <code class="language-plaintext highlighter-rouge">true or false</code>).</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1345">changes</a>)</p>
 
-<h3 id="relative-path-for-__file__">Relative Path for <code class="highlighter-rouge">__FILE__</code></h3>
+<h3 id="relative-path-for-__file__">Relative Path for <code class="language-plaintext highlighter-rouge">__FILE__</code></h3>
 
-<p>When ruby_parser parses <code class="highlighter-rouge">__FILE__</code>, it replaces it with the name of the current file. Unfortunately, Brakeman was passing in absolute paths for the current file.
-This meant that the fingerprints for warnings including <code class="highlighter-rouge">__FILE__</code> would vary based on the path where the code was scanned.</p>
+<p>When ruby_parser parses <code class="language-plaintext highlighter-rouge">__FILE__</code>, it replaces it with the name of the current file. Unfortunately, Brakeman was passing in absolute paths for the current file.
+This meant that the fingerprints for warnings including <code class="language-plaintext highlighter-rouge">__FILE__</code> would vary based on the path where the code was scanned.</p>
 
 <p>Now a relative path is used instead, so fingerprints should stabilize.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1347">changes</a>)</p>
 
-<h3 id="brakemanfilepath"><code class="highlighter-rouge">Brakeman::FilePath</code></h3>
+<h3 id="brakemanfilepath"><code class="language-plaintext highlighter-rouge">Brakeman::FilePath</code></h3>
 
-<p>Internally, file paths are now represented with <code class="highlighter-rouge">Brakeman::FilePath</code> to make it easier to manage absolute/relative paths as needed. This was a pretty huge change, so please report any issues.</p>
+<p>Internally, file paths are now represented with <code class="language-plaintext highlighter-rouge">Brakeman::FilePath</code> to make it easier to manage absolute/relative paths as needed. This was a pretty huge change, so please report any issues.</p>
 
-<p>As a result, the <code class="highlighter-rouge">--no-separate-models</code> option no longer works (it used to combine all model-level mass assignment warnings into one warning).
-That old option used to report a completely messed-up file name, which is incompatible with <code class="highlighter-rouge">Brakeman::FilePath</code>. Also, it was weird and wrong.</p>
+<p>As a result, the <code class="language-plaintext highlighter-rouge">--no-separate-models</code> option no longer works (it used to combine all model-level mass assignment warnings into one warning).
+That old option used to report a completely messed-up file name, which is incompatible with <code class="language-plaintext highlighter-rouge">Brakeman::FilePath</code>. Also, it was weird and wrong.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1354">changes</a>)</p>
 
 <h3 id="empty-partial-names">Empty Partial Names</h3>
 
-<p>If any empty string ends up as a partial name in a <code class="highlighter-rouge">render</code> call, Brakeman will ignore it.</p>
+<p>If any empty string ends up as a partial name in a <code class="language-plaintext highlighter-rouge">render</code> call, Brakeman will ignore it.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1352">changes</a>)</p>
 
@@ -182,7 +182,7 @@ That old option used to report a completely messed-up file name, which is incomp
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c8c48a88e9cd837122a590837ff5dbb4bd8214ad72baaffb75e5e5cd3585166f  brakeman-4.5.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c8c48a88e9cd837122a590837ff5dbb4bd8214ad72baaffb75e5e5cd3585166f  brakeman-4.5.1.gem
 48eaff4eb661f63d43c2f8b33da8efbabc6196ae5ff2ec58ad711e1649eff686  brakeman-lib-4.5.1.gem
 c6fcfc5c32ec79a50281b0b97be5b703385ffb20ef45f770e7888ca6ba0b1666  brakeman-min-4.5.1.gem
 </code></pre></div></div>

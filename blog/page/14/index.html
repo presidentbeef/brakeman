@@ -175,10 +175,10 @@
 
 <ul>
   <li>Add check for CVE-2014-3514</li>
-  <li>Add <code class="highlighter-rouge">--add-checks-path</code> option for external checks (Clint Gibler)</li>
-  <li>Add <code class="highlighter-rouge">-4</code> option to force Rails 4 mode</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--add-checks-path</code> option for external checks (Clint Gibler)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">-4</code> option to force Rails 4 mode</li>
   <li>Fix SQL injection detection in deep nested string building</li>
-  <li>Check entire call for <code class="highlighter-rouge">send</code> (<a href="https://github.com/presidentbeef/brakeman/issues/523">#523</a>)</li>
+  <li>Check entire call for <code class="language-plaintext highlighter-rouge">send</code> (<a href="https://github.com/presidentbeef/brakeman/issues/523">#523</a>)</li>
   <li>Check for .gitignore of secrets in subdirectories (<a href="https://github.com/presidentbeef/brakeman/issues/519">#519</a>)</li>
   <li>Avoid warning about symbolizing safe parameters (<a href="https://github.com/presidentbeef/brakeman/issues/536">#536</a>)</li>
   <li>Fix block statment endings in Erubis (<a href="https://github.com/presidentbeef/brakeman/issues/518">#518</a>)</li>
@@ -189,19 +189,19 @@
 
 <h3 id="mass-assignment-bypass-cve-2014-3514">Mass Assignment Bypass (CVE-2014-3514)</h3>
 
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/M4chq5Sb540/CC1Fh0Y_NWwJ">CVE-2014-3514</a> describes an issue where  <code class="highlighter-rouge">create_with</code> does not implement strong parameters, allowing mass assignment in Rails 4.x. For vulnerable versions, Brakeman warns about instances of <code class="highlighter-rouge">create_with</code> or a generic warning if no uses are found.</p>
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/M4chq5Sb540/CC1Fh0Y_NWwJ">CVE-2014-3514</a> describes an issue where  <code class="language-plaintext highlighter-rouge">create_with</code> does not implement strong parameters, allowing mass assignment in Rails 4.x. For vulnerable versions, Brakeman warns about instances of <code class="language-plaintext highlighter-rouge">create_with</code> or a generic warning if no uses are found.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/540">changes</a>)</p>
 
 <h3 id="external-check-option">External Check Option</h3>
 
-<p><a href="https://github.com/clintgibler">Clint Gibler</a> has added the <code class="highlighter-rouge">--add-checks-path</code> option to provide an path to search for additional checks. This is useful if you wish to write your own custom rules for Brakeman to run.</p>
+<p><a href="https://github.com/clintgibler">Clint Gibler</a> has added the <code class="language-plaintext highlighter-rouge">--add-checks-path</code> option to provide an path to search for additional checks. This is useful if you wish to write your own custom rules for Brakeman to run.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/532">changes</a>)</p>
 
 <h3 id="option-to-force-rails-4">Option to Force Rails 4</h3>
 
-<p>If the Rails version for an application cannot be determined automatically for some reason, the <code class="highlighter-rouge">-4</code> option will force Brakeman to treat it like a Rails 4 application.</p>
+<p>If the Rails version for an application cannot be determined automatically for some reason, the <code class="language-plaintext highlighter-rouge">-4</code> option will force Brakeman to treat it like a Rails 4 application.</p>
 
 <p>Included with this change are some fixes when a Rails 4 app is detected but the exact version number cannot be determined. This may change the output for some scans.</p>
 
@@ -215,19 +215,19 @@
 
 <h3 id="better-send-call-detection">Better Send Call Detection</h3>
 
-<p>Previously, Brakeman was ignored calls to <code class="highlighter-rouge">send</code> when they were nested inside a chain of calls. This has been fixed.</p>
+<p>Previously, Brakeman was ignored calls to <code class="language-plaintext highlighter-rouge">send</code> when they were nested inside a chain of calls. This has been fixed.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/524">changes</a>)</p>
 
 <h3 id="ignored-secrets">Ignored Secrets</h3>
 
-<p>Brakeman now checks subdirectories for <code class="highlighter-rouge">.gitignore</code> files which determing if the secrets configuration is being ignored.</p>
+<p>Brakeman now checks subdirectories for <code class="language-plaintext highlighter-rouge">.gitignore</code> files which determing if the secrets configuration is being ignored.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/521">changes</a>)</p>
 
 <h3 id="symbolizing-safe-paramaters">Symbolizing Safe Paramaters</h3>
 
-<p>Since <code class="highlighter-rouge">params[:controller]</code> and <code class="highlighter-rouge">params[:action]</code> are quite difficult (possibly impossible) to DoS, Brakeman will not warn about symbolizing them.</p>
+<p>Since <code class="language-plaintext highlighter-rouge">params[:controller]</code> and <code class="language-plaintext highlighter-rouge">params[:action]</code> are quite difficult (possibly impossible) to DoS, Brakeman will not warn about symbolizing them.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/538">changes</a>)</p>
 
@@ -259,7 +259,7 @@
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f225541559d2fbe5374d481b6105b66053f9710a  brakeman-2.6.2.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f225541559d2fbe5374d481b6105b66053f9710a  brakeman-2.6.2.gem
 67882d467b6a8fc6e504b6dcb9605f79a0c6a22c  brakeman-min-2.6.2.gem
 </code></pre></div></div>
 
@@ -321,7 +321,7 @@
 
 <h3 id="removal-of-warning-codes">Removal of Warning Codes</h3>
 
-<p>Warnings codes for <code class="highlighter-rouge">CVE_2013_6415</code> and <code class="highlighter-rouge">CVE_2013_6415_call</code> have been removed, as they are unused. This should not affect anyone.</p>
+<p>Warnings codes for <code class="language-plaintext highlighter-rouge">CVE_2013_6415</code> and <code class="language-plaintext highlighter-rouge">CVE_2013_6415_call</code> have been removed, as they are unused. This should not affect anyone.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/514">changes</a>)</p>
 
@@ -329,7 +329,7 @@
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5b7b5572efe769cfa38178e94952be05670e6fd4  brakeman-2.6.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5b7b5572efe769cfa38178e94952be05670e6fd4  brakeman-2.6.1.gem
 fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
 </code></pre></div></div>
 
@@ -374,20 +374,20 @@ fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
 <ul>
   <li>Improve default route detection in Rails 3/4 (<a href="https://github.com/jjarmoc">Jeff Jarmoc</a>)</li>
   <li>Handle controllers and models split across files (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
-  <li>Fix handling of <code class="highlighter-rouge">protected_attributes</code> gem in Rails 4 (<a href="https://github.com/phene">Geoffrey Hichborn</a>)</li>
+  <li>Fix handling of <code class="language-plaintext highlighter-rouge">protected_attributes</code> gem in Rails 4 (<a href="https://github.com/phene">Geoffrey Hichborn</a>)</li>
   <li>Add check for CVE-2014-0130</li>
-  <li>Add <code class="highlighter-rouge">find_by</code>/<code class="highlighter-rouge">find_by!</code> to SQLi check for Rails 4</li>
-  <li>Do not branch values for <code class="highlighter-rouge">+=</code></li>
+  <li>Add <code class="language-plaintext highlighter-rouge">find_by</code>/<code class="language-plaintext highlighter-rouge">find_by!</code> to SQLi check for Rails 4</li>
+  <li>Do not branch values for <code class="language-plaintext highlighter-rouge">+=</code></li>
   <li>Parse most files upfront instead of on demand</li>
   <li>Fix CheckRender with nested render calls (<a href="https://github.com/presidentbeef/brakeman/issues/484">#484</a>)</li>
-  <li>Fix detection of <code class="highlighter-rouge">:host</code> setting in redirects (<a href="https://github.com/presidentbeef/brakeman/issues/506">#506</a>)</li>
+  <li>Fix detection of <code class="language-plaintext highlighter-rouge">:host</code> setting in redirects (<a href="https://github.com/presidentbeef/brakeman/issues/506">#506</a>)</li>
   <li>Ignore more model methods in redirects</li>
   <li>Update to use RubyParser 3.5.0 (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
 </ul>
 
 <h3 id="improved-default-route-detection">Improved Default Route Detection</h3>
 
-<p>In addition to Jeff Jarmoc’s <a href="http://matasano.com/research/AnatomyOfRailsVuln-CVE-2014-0130.pdf">awesome research</a> on CVE-2014-0130, he contributed much-needed improvements to detecting use of <code class="highlighter-rouge">:action</code> and <code class="highlighter-rouge">*action</code> in routes for Rails 3/4. This may result in more default routes warnings.</p>
+<p>In addition to Jeff Jarmoc’s <a href="http://matasano.com/research/AnatomyOfRailsVuln-CVE-2014-0130.pdf">awesome research</a> on CVE-2014-0130, he contributed much-needed improvements to detecting use of <code class="language-plaintext highlighter-rouge">:action</code> and <code class="language-plaintext highlighter-rouge">*action</code> in routes for Rails 3/4. This may result in more default routes warnings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/493">changes</a>)</p>
 
@@ -411,13 +411,13 @@ fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
 
 <h3 id="sql-injection-in-find-by">SQL Injection in Find By</h3>
 
-<p>Rails 4 added the <code class="highlighter-rouge">find_by</code>/<code class="highlighter-rouge">find_by!</code> methods which just call <code class="highlighter-rouge">where(*args).take</code> and are therefore vulnerable to the same issues as <code class="highlighter-rouge">where</code>. This release will check these methods for SQL injection now.</p>
+<p>Rails 4 added the <code class="language-plaintext highlighter-rouge">find_by</code>/<code class="language-plaintext highlighter-rouge">find_by!</code> methods which just call <code class="language-plaintext highlighter-rouge">where(*args).take</code> and are therefore vulnerable to the same issues as <code class="language-plaintext highlighter-rouge">where</code>. This release will check these methods for SQL injection now.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/504">changes</a>)</p>
 
 <h3 id="no-branching-for-">No Branching for +=</h3>
 
-<p>Code which used <code class="highlighter-rouge">+=</code> heavily in combination with many branches lead to very poor performance. The resulting information from the branches was rarely useful. However, since <code class="highlighter-rouge">+=</code> is buidling up a value (as opposed to replacing it), simply ignoring branches does not lose any of the values involved. Thus, the same vulnerabilities should be able to be detected even when losing flow sensitivity for <code class="highlighter-rouge">+=</code> assignments. For details, <a href="https://github.com/presidentbeef/brakeman/pull/499">see the changes</a>.</p>
+<p>Code which used <code class="language-plaintext highlighter-rouge">+=</code> heavily in combination with many branches lead to very poor performance. The resulting information from the branches was rarely useful. However, since <code class="language-plaintext highlighter-rouge">+=</code> is buidling up a value (as opposed to replacing it), simply ignoring branches does not lose any of the values involved. Thus, the same vulnerabilities should be able to be detected even when losing flow sensitivity for <code class="language-plaintext highlighter-rouge">+=</code> assignments. For details, <a href="https://github.com/presidentbeef/brakeman/pull/499">see the changes</a>.</p>
 
 <p>This change has improved processing on some files from over 30 minutes to under 1 second. If some files were processing slowly or had to be ignored previously, consider trying again with this release.</p>
 
@@ -431,13 +431,13 @@ fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
 
 <h3 id="nested-renders">Nested Renders</h3>
 
-<p><code class="highlighter-rouge">CheckRender</code> had a bug when processing a <code class="highlighter-rouge">render</code> call which contained another call to <code class="highlighter-rouge">render</code>. This has been fixed.</p>
+<p><code class="language-plaintext highlighter-rouge">CheckRender</code> had a bug when processing a <code class="language-plaintext highlighter-rouge">render</code> call which contained another call to <code class="language-plaintext highlighter-rouge">render</code>. This has been fixed.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/485">changes</a>)</p>
 
 <h3 id="redirects-with-chained-calls">Redirects with Chained Calls</h3>
 
-<p>The last release added support for checking if a <code class="highlighter-rouge">redirect_to</code> argument was setting the <code class="highlighter-rouge">:host</code> option. However, it did not work with chained calls like the <a href="https://github.com/presidentbeef/brakeman/issues/506">one reported here</a>. Now it should.</p>
+<p>The last release added support for checking if a <code class="language-plaintext highlighter-rouge">redirect_to</code> argument was setting the <code class="language-plaintext highlighter-rouge">:host</code> option. However, it did not work with chained calls like the <a href="https://github.com/presidentbeef/brakeman/issues/506">one reported here</a>. Now it should.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/507">changes</a>)</p>
 
@@ -457,7 +457,7 @@ fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0aae141108d92040f3553557a31ad117ac1c2ea6  brakeman-2.6.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0aae141108d92040f3553557a31ad117ac1c2ea6  brakeman-2.6.0.gem
 70c2353f31d4d04ba8d95c871062db31d5c6e981  brakeman-min-2.6.0.gem
 </code></pre></div></div>
 
@@ -502,21 +502,21 @@ fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
 <ul>
   <li>Add GitHub-flavored Markdown output format (<a href="https://github.com/gregose">Greg Ose</a>)</li>
   <li>Add check for regex denial of service (<a href="https://github.com/mastahyeti">Ben Toews</a>)</li>
-  <li>Fix false positives when <code class="highlighter-rouge">sanitize</code> is used in SQL (<a href="https://github.com/jeffyip">Jeff Yip</a>)</li>
-  <li>Add <code class="highlighter-rouge">String#intern</code> and <code class="highlighter-rouge">Hash#symbolize_keys</code> DoS check (<a href="https://github.com/jrusnack">Jan Rusnacko</a>)</li>
-  <li>Add support for Rails 4 <code class="highlighter-rouge">before_actions</code> and friends</li>
+  <li>Fix false positives when <code class="language-plaintext highlighter-rouge">sanitize</code> is used in SQL (<a href="https://github.com/jeffyip">Jeff Yip</a>)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">String#intern</code> and <code class="language-plaintext highlighter-rouge">Hash#symbolize_keys</code> DoS check (<a href="https://github.com/jrusnack">Jan Rusnacko</a>)</li>
+  <li>Add support for Rails 4 <code class="language-plaintext highlighter-rouge">before_actions</code> and friends</li>
   <li>Add support for RailsLTS 2.3.18.7 and 2.3.18.8</li>
-  <li>Check for <code class="highlighter-rouge">protected_attributes</code> gem (<a href="https://github.com/presidentbeef/brakeman/issues/475">#475</a>)</li>
+  <li>Check for <code class="language-plaintext highlighter-rouge">protected_attributes</code> gem (<a href="https://github.com/presidentbeef/brakeman/issues/475">#475</a>)</li>
   <li>Fix SQLi detection in chain calls in scopes (<a href="https://github.com/presidentbeef/brakeman/issues/471">#471</a>)</li>
-  <li>Fix false positive when <code class="highlighter-rouge">:host</code> is specified in redirect (<a href="https://github.com/presidentbeef/brakeman/issues/464">#464</a>)</li>
-  <li>Check all arguments in <code class="highlighter-rouge">Model.select</code> for SQLi</li>
-  <li>Move SQLi CVE checks to <code class="highlighter-rouge">CheckSQLCVEs</code></li>
+  <li>Fix false positive when <code class="language-plaintext highlighter-rouge">:host</code> is specified in redirect (<a href="https://github.com/presidentbeef/brakeman/issues/464">#464</a>)</li>
+  <li>Check all arguments in <code class="language-plaintext highlighter-rouge">Model.select</code> for SQLi</li>
+  <li>Move SQLi CVE checks to <code class="language-plaintext highlighter-rouge">CheckSQLCVEs</code></li>
   <li>Handle more non-literals in routes (<a href="https://github.com/presidentbeef/brakeman/issues/461">#461</a>)</li>
 </ul>
 
 <h3 id="markdown-output-format">Markdown Output Format</h3>
 
-<p><a href="https://github.com/gregose">Greg Ose</a> added the option to output to GitHub-flavored markdown (<code class="highlighter-rouge">-f markdown</code> or <code class="highlighter-rouge">-o report.md</code>). Additionally, the <code class="highlighter-rouge">--github-repo</code> option can be used to link the files in the report to a specific GitHub repository. <a href="https://github.com/presidentbeef/brakeman/pull/463">See here for details</a>.</p>
+<p><a href="https://github.com/gregose">Greg Ose</a> added the option to output to GitHub-flavored markdown (<code class="language-plaintext highlighter-rouge">-f markdown</code> or <code class="language-plaintext highlighter-rouge">-o report.md</code>). Additionally, the <code class="language-plaintext highlighter-rouge">--github-repo</code> option can be used to link the files in the report to a specific GitHub repository. <a href="https://github.com/presidentbeef/brakeman/pull/463">See here for details</a>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/463">changes</a>)</p>
 
@@ -526,26 +526,26 @@ fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
 
 <p>For example, this will generate a warning:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/#{params[:name]}/
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/#{params[:name]}/
 </code></pre></div></div>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/454">changes</a>)</p>
 
 <h3 id="avoid-warning-on-sanitized-sql">Avoid Warning on Sanitized SQL</h3>
 
-<p>Brakeman should no longer warn about SQL values wrapped in <code class="highlighter-rouge">sanitize</code>.</p>
+<p>Brakeman should no longer warn about SQL values wrapped in <code class="language-plaintext highlighter-rouge">sanitize</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/commit/cd9093d890b7a16f117d11a0ae6af281ecbb648d">changes</a>)</p>
 
 <h3 id="more-symbol-denial-of-service-methods">More Symbol Denial of Service Methods</h3>
 
-<p><code class="highlighter-rouge">String#intern</code> and <code class="highlighter-rouge">Hash#symbolize_key</code> were added to the symbol denial of service check by <a href="https://github.com/jrusnack">Jan Rusnacko</a>.</p>
+<p><code class="language-plaintext highlighter-rouge">String#intern</code> and <code class="language-plaintext highlighter-rouge">Hash#symbolize_key</code> were added to the symbol denial of service check by <a href="https://github.com/jrusnack">Jan Rusnacko</a>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/470">changes</a>)</p>
 
 <h3 id="rails-4-before-actions">Rails 4 Before Actions</h3>
 
-<p>Rails 4 added a bunch of aliases for <code class="highlighter-rouge">before_filter</code> and related methods, and Brakeman now recognizes these methods for adding and skipping filters.</p>
+<p>Rails 4 added a bunch of aliases for <code class="language-plaintext highlighter-rouge">before_filter</code> and related methods, and Brakeman now recognizes these methods for adding and skipping filters.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/480">changes</a>)</p>
 
@@ -557,7 +557,7 @@ fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
 
 <h3 id="protected-attributes-gem">Protected Attributes Gem</h3>
 
-<p>Brakeman now treats applications using the <code class="highlighter-rouge">protected_attributes</code> gem as if mass assignment is enabled by default and <code class="highlighter-rouge">attr_accessible</code> is necessary to protect models.</p>
+<p>Brakeman now treats applications using the <code class="language-plaintext highlighter-rouge">protected_attributes</code> gem as if mass assignment is enabled by default and <code class="language-plaintext highlighter-rouge">attr_accessible</code> is necessary to protect models.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/477">changes</a>)</p>
 
@@ -569,25 +569,25 @@ fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
 
 <h3 id="hosts-in-redirects">Hosts in Redirects</h3>
 
-<p>Brakeman should no longer warn about instances of <code class="highlighter-rouge">redirect_to</code> when <code class="highlighter-rouge">:host</code> is explicitly specified.</p>
+<p>Brakeman should no longer warn about instances of <code class="language-plaintext highlighter-rouge">redirect_to</code> when <code class="language-plaintext highlighter-rouge">:host</code> is explicitly specified.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/465">changes</a>)</p>
 
 <h3 id="sql-injection-in-all-select-arguments">SQL Injection in All Select Arguments</h3>
 
-<p>Brakeman was only checking the first argument to <code class="highlighter-rouge">Model.select</code> for SQL injection, but the method can take multiple arguments. This release corrects this to check all of the arguments.</p>
+<p>Brakeman was only checking the first argument to <code class="language-plaintext highlighter-rouge">Model.select</code> for SQL injection, but the method can take multiple arguments. This release corrects this to check all of the arguments.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/468">changes</a>)</p>
 
 <h3 id="sql-injection-cves-moved-to-separate-check">SQL Injection CVEs Moved to Separate Check</h3>
 
-<p>All the checks for SQL injection CVEs have been moved from <code class="highlighter-rouge">CheckSQL</code> to <code class="highlighter-rouge">CheckSQLCVEs</code>. This should only have an effect for users explicitly specifying to run or skip <code class="highlighter-rouge">CheckSQL</code>.</p>
+<p>All the checks for SQL injection CVEs have been moved from <code class="language-plaintext highlighter-rouge">CheckSQL</code> to <code class="language-plaintext highlighter-rouge">CheckSQLCVEs</code>. This should only have an effect for users explicitly specifying to run or skip <code class="language-plaintext highlighter-rouge">CheckSQL</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/478">changes</a>)</p>
 
 <h3 id="more-routing-fixes">More Routing Fixes</h3>
 
-<p>More instances of non-literals in routes will be ignored instead of raising exceptions. In general, information from <code class="highlighter-rouge">routes.rb</code> is not used except to warn about default routes (unless <code class="highlighter-rouge">--no-assume-routes</code> is used).</p>
+<p>More instances of non-literals in routes will be ignored instead of raising exceptions. In general, information from <code class="language-plaintext highlighter-rouge">routes.rb</code> is not used except to warn about default routes (unless <code class="language-plaintext highlighter-rouge">--no-assume-routes</code> is used).</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/462">changes</a>)</p>
 
@@ -595,7 +595,7 @@ fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fc8a7991e9351f8d5e26a59acf54422a638f4866  brakeman-2.5.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fc8a7991e9351f8d5e26a59acf54422a638f4866  brakeman-2.5.0.gem
 48f974aaf40957a325ee778d3d700fd29aa526bf  brakeman-min-2.5.0.gem
 </code></pre></div></div>
 

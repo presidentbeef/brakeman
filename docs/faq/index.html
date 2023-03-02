@@ -112,9 +112,9 @@
 
 <p>Records from a model will be sometimes displayed this way.</p>
 
-<p>For example, if <code class="highlighter-rouge">User</code> is a model and there is an action like</p>
+<p>For example, if <code class="language-plaintext highlighter-rouge">User</code> is a model and there is an action like</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class UsersController
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class UsersController
 
   def list
     @users = User.all
@@ -125,14 +125,14 @@ end
 
 <p>and a corresponding view containing</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;% @users.each do |user| %&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;% @users.each do |user| %&gt;
   &lt;%= user.name.html_safe %&gt;
 &lt;% end %&gt;
 </code></pre></div></div>
 
 <p>This will produce a warning that looks like</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Unescaped model attribute near line 3: User.new.name
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Unescaped model attribute near line 3: User.new.name
 </code></pre></div></div>
 
 <h3 id="brakeman-reports-0-warnings-am-i-safe">Brakeman reports 0 warnings. Am I safe?</h3>

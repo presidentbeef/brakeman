@@ -104,8 +104,8 @@
   <li>Improve processing of Rails 3 routes</li>
   <li>Improve file access check</li>
   <li>Avoid warning on non-ActiveModel models</li>
-  <li>Fix how <code class="highlighter-rouge">params[:x] ||=</code> is handled</li>
-  <li>Treat user input in <code class="highlighter-rouge">or</code> expressions as immediate values</li>
+  <li>Fix how <code class="language-plaintext highlighter-rouge">params[:x] ||=</code> is handled</li>
+  <li>Treat user input in <code class="language-plaintext highlighter-rouge">or</code> expressions as immediate values</li>
   <li>Fix processing of negative array indexes</li>
   <li>Fix “empty char-class” error</li>
   <li>Speed improvements by stripping down SexpProcessor</li>
@@ -116,11 +116,11 @@
 
 <p><a href="https://groups.google.com/d/topic/rubyonrails-security/vxJjrc15qYM/discussion">CVE-2012-3424</a>, a potential denial of service vulnerability in how Rails handles HTTP authentication digest parameters, was recently announced. It affects Rails 3.x, and is fixed in 3.0.16, 3.1.7, and 3.2.7.</p>
 
-<p>Brakeman will generate a warning for the Rails versions affected, but will only report a high confidence warning if <code class="highlighter-rouge">authenticate_or_request_with_http_digest</code> or <code class="highlighter-rouge">authenticate_with_http_digest</code> methods are called.</p>
+<p>Brakeman will generate a warning for the Rails versions affected, but will only report a high confidence warning if <code class="language-plaintext highlighter-rouge">authenticate_or_request_with_http_digest</code> or <code class="language-plaintext highlighter-rouge">authenticate_with_http_digest</code> methods are called.</p>
 
 <h3 id="links-to-warning-information">Links to Warning Information</h3>
 
-<p>HTML reports now link warning types to descriptions on the Brakeman website. JSON reports will also include the link information. Due to this change, it is not possible to compare JSON reports from previous versions using the <code class="highlighter-rouge">--compare</code> option.</p>
+<p>HTML reports now link warning types to descriptions on the Brakeman website. JSON reports will also include the link information. Due to this change, it is not possible to compare JSON reports from previous versions using the <code class="language-plaintext highlighter-rouge">--compare</code> option.</p>
 
 <p>Suggestions and <a href="https://github.com/presidentbeef/brakeman-site">pull requests</a> for improving the documention are welcome!</p>
 
@@ -138,33 +138,33 @@
 
 <p>The check for user input in file access calls has been improved so the confidence of the warnings will vary according to how the user input is used, like most other checks.</p>
 
-<p>Additionally, the check will now respect the <code class="highlighter-rouge">--report-direct</code> option.</p>
+<p>Additionally, the check will now respect the <code class="language-plaintext highlighter-rouge">--report-direct</code> option.</p>
 
 <h3 id="no-sqli-warnings-for-non-activemodel">No SQLi Warnings for Non-ActiveModel</h3>
 
-<p>Models which do not inherit from <code class="highlighter-rouge">ActiveRecord::Base</code> will no longer be reported in SQL injection warnings.</p>
+<p>Models which do not inherit from <code class="language-plaintext highlighter-rouge">ActiveRecord::Base</code> will no longer be reported in SQL injection warnings.</p>
 
-<h3 id="default-assignment-to-params">Default Assignment to <code class="highlighter-rouge">params</code></h3>
+<h3 id="default-assignment-to-params">Default Assignment to <code class="language-plaintext highlighter-rouge">params</code></h3>
 
-<p>Normally, when Brakeman processes an assignment like <code class="highlighter-rouge">x ||= y</code>, it will assign <code class="highlighter-rouge">y</code> to <code class="highlighter-rouge">x</code> if no previous value is found for <code class="highlighter-rouge">x</code>.</p>
+<p>Normally, when Brakeman processes an assignment like <code class="language-plaintext highlighter-rouge">x ||= y</code>, it will assign <code class="language-plaintext highlighter-rouge">y</code> to <code class="language-plaintext highlighter-rouge">x</code> if no previous value is found for <code class="language-plaintext highlighter-rouge">x</code>.</p>
 
 <p>However, in this case:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>params[:x] ||= y
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>params[:x] ||= y
 </code></pre></div></div>
 
-<p>The information that the left hand side is a <code class="highlighter-rouge">params</code> hash is lost.</p>
+<p>The information that the left hand side is a <code class="language-plaintext highlighter-rouge">params</code> hash is lost.</p>
 
-<p>This has been changed so default assignment to a <code class="highlighter-rouge">params</code> hash will not replace the entire value, but will handle it as <code class="highlighter-rouge">params[:x] || y</code>.</p>
+<p>This has been changed so default assignment to a <code class="language-plaintext highlighter-rouge">params</code> hash will not replace the entire value, but will handle it as <code class="language-plaintext highlighter-rouge">params[:x] || y</code>.</p>
 
-<h3 id="user-input-in-or-expressions">User Input in <code class="highlighter-rouge">or</code> Expressions</h3>
+<h3 id="user-input-in-or-expressions">User Input in <code class="language-plaintext highlighter-rouge">or</code> Expressions</h3>
 
 <p>Previously, unescaped output like</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= params[:x] || z %&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= params[:x] || z %&gt;
 </code></pre></div></div>
 
-<p>would have been reported as a weak confidence warning. This has been changed so that any user input in an <code class="highlighter-rouge">or</code> expression will be considered immediate (versus “indirect”) output and will likely result in high confidence warnings.</p>
+<p>would have been reported as a weak confidence warning. This has been changed so that any user input in an <code class="language-plaintext highlighter-rouge">or</code> expression will be considered immediate (versus “indirect”) output and will likely result in high confidence warnings.</p>
 
 <h3 id="speed-improvements">Speed Improvements</h3>
 
@@ -172,7 +172,7 @@
 
 <h3 id="bug-fixes">Bug Fixes</h3>
 
-<p>Besides errors raised when processing Rails 3 routes, the <code class="highlighter-rouge">Result must be a Sexp, was Symbol::array</code> and <code class="highlighter-rouge">empty char-class</code> errors should be resolved now.</p>
+<p>Besides errors raised when processing Rails 3 routes, the <code class="language-plaintext highlighter-rouge">Result must be a Sexp, was Symbol::array</code> and <code class="language-plaintext highlighter-rouge">empty char-class</code> errors should be resolved now.</p>
 
 <p>Please report any errors raised when performing scans, as they are usually bugs.</p>
 

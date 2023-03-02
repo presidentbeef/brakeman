@@ -78,11 +78,11 @@
     <h1 class="entry-title">Unsafe Deserialization</h1>
   </header>
   
-  <p>Objects in Ruby may be serialized to strings. The main method for doing so is the built-in <code class="highlighter-rouge">Marshal</code> class. The <code class="highlighter-rouge">YAML</code>, <code class="highlighter-rouge">JSON</code>, and <code class="highlighter-rouge">CSV</code> libraries also have methods for dumping Ruby objects into strings, and then creating objects from those strings.</p>
+  <p>Objects in Ruby may be serialized to strings. The main method for doing so is the built-in <code class="language-plaintext highlighter-rouge">Marshal</code> class. The <code class="language-plaintext highlighter-rouge">YAML</code>, <code class="language-plaintext highlighter-rouge">JSON</code>, and <code class="language-plaintext highlighter-rouge">CSV</code> libraries also have methods for dumping Ruby objects into strings, and then creating objects from those strings.</p>
 
 <p>Deserialization of arbitrary objects can lead to <a href="/docs/warning_types/remote_code_execution">remote code execution</a>, as was demonstrated with <a href="https://groups.google.com/d/msg/rubyonrails-security/61bkgvnSGTQ/nehwjA8tQ8EJ">CVE-2013-0156</a>.</p>
 
-<p>Brakeman warns when loading user input with <code class="highlighter-rouge">Marshal</code>, <code class="highlighter-rouge">YAML</code>, or <code class="highlighter-rouge">CSV</code>. <code class="highlighter-rouge">JSON</code> is covered by the checks for <a href="https://groups.google.com/d/msg/rubyonrails-security/1h2DR63ViGo/GOUVafeaF1IJ">CVE-2013-0333</a></p>
+<p>Brakeman warns when loading user input with <code class="language-plaintext highlighter-rouge">Marshal</code>, <code class="language-plaintext highlighter-rouge">YAML</code>, or <code class="language-plaintext highlighter-rouge">CSV</code>. <code class="language-plaintext highlighter-rouge">JSON</code> is covered by the checks for <a href="https://groups.google.com/d/msg/rubyonrails-security/1h2DR63ViGo/GOUVafeaF1IJ">CVE-2013-0333</a></p>
 
 <hr />
 <p>Back to <a href="/docs/warning_types">Warning Types</a></p>

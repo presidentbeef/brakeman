@@ -100,29 +100,29 @@
 <p><em>Changes since 4.0.1:</em></p>
 
 <ul>
-  <li>Add check for dangerous keys in <code class="highlighter-rouge">permit</code></li>
+  <li>Add check for dangerous keys in <code class="language-plaintext highlighter-rouge">permit</code></li>
   <li>Add optional check for divide by zero</li>
   <li>Remove errors about divide by zero</li>
-  <li>Warn about dynamic values in <code class="highlighter-rouge">Arel.sql</code></li>
+  <li>Warn about dynamic values in <code class="language-plaintext highlighter-rouge">Arel.sql</code></li>
   <li>Show better location for Sass errors (<a href="https://github.com/abrom">Andrew Bromwich</a>)</li>
   <li>Avoid warning about file access for temp files (<a href="https://github.com/presidentbeef/brakeman/issues/1110">#1110</a>)</li>
   <li>Avoid CSRF warning in Rails 5.2 default config (<a href="https://github.com/presidentbeef/brakeman/issues/1132">#1132</a>)</li>
-  <li>Better processing of <code class="highlighter-rouge">op_asgn1</code> (e.g. <code class="highlighter-rouge">x[:y] += 1</code>) (<a href="https://github.com/presidentbeef/brakeman/issues/1103">#1103</a>)</li>
+  <li>Better processing of <code class="language-plaintext highlighter-rouge">op_asgn1</code> (e.g. <code class="language-plaintext highlighter-rouge">x[:y] += 1</code>) (<a href="https://github.com/presidentbeef/brakeman/issues/1103">#1103</a>)</li>
   <li>Handle nested destructuring/multiple assignment</li>
-  <li>Do not warn on <code class="highlighter-rouge">params.permit</code> with safe values (<a href="https://github.com/presidentbeef/brakeman/issues/1000">#1000</a>)</li>
+  <li>Do not warn on <code class="language-plaintext highlighter-rouge">params.permit</code> with safe values (<a href="https://github.com/presidentbeef/brakeman/issues/1000">#1000</a>)</li>
   <li>Use HTTPS for warning links</li>
-  <li>Try to guess options for <code class="highlighter-rouge">less</code> pager (<a href="https://github.com/presidentbeef/brakeman/issues/1118">#1118</a>)</li>
+  <li>Try to guess options for <code class="language-plaintext highlighter-rouge">less</code> pager (<a href="https://github.com/presidentbeef/brakeman/issues/1118">#1118</a>)</li>
   <li>Do not page if results fit on screen</li>
   <li>Leave results on screen after paging</li>
   <li>Fix upgrade version for CVE-2016-6316</li>
-  <li>Fix <code class="highlighter-rouge">include_paths</code> for Code Climate engine (<a href="https://github.com/wfleming">Will Fleming</a>)</li>
-  <li>Support <code class="highlighter-rouge">app_path</code> configuration for Code Climate engine (<a href="https://github.com/noahd1">Noah Davis</a>)</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">include_paths</code> for Code Climate engine (<a href="https://github.com/wfleming">Will Fleming</a>)</li>
+  <li>Support <code class="language-plaintext highlighter-rouge">app_path</code> configuration for Code Climate engine (<a href="https://github.com/noahd1">Noah Davis</a>)</li>
   <li>Refactor Code Climate engine options parsing (<a href="https://github.com/noahd1">Noah Davis</a>)</li>
 </ul>
 
 <h3 id="new-check-for-dangerous-permit-keys">New Check for Dangerous Permit Keys</h3>
 
-<p>Very similar to warning about potentially dangerous keys in <code class="highlighter-rouge">attr_accessible</code>, Brakeman now warns about potentially dangerous keys whitelisted for mass assignment via <code class="highlighter-rouge">params.permit</code>.</p>
+<p>Very similar to warning about potentially dangerous keys in <code class="language-plaintext highlighter-rouge">attr_accessible</code>, Brakeman now warns about potentially dangerous keys whitelisted for mass assignment via <code class="language-plaintext highlighter-rouge">params.permit</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1128">changes</a>)</p>
 
@@ -134,7 +134,7 @@
 
 <h3 id="arelsql">Arel.sql</h3>
 
-<p><code class="highlighter-rouge">Arel.sql</code> allows one to add raw SQL to queries. Brakeman now warns about potential SQL injection when using <code class="highlighter-rouge">Arel.sql</code> with dynamic values.</p>
+<p><code class="language-plaintext highlighter-rouge">Arel.sql</code> allows one to add raw SQL to queries. Brakeman now warns about potential SQL injection when using <code class="language-plaintext highlighter-rouge">Arel.sql</code> with dynamic values.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1129">changes</a>)</p>
 
@@ -146,7 +146,7 @@
 
 <h3 id="temp-files">Temp Files</h3>
 
-<p>Brakeman no longer warns about file access with <code class="highlighter-rouge">params[:blah].tempfile.path</code> or <code class="highlighter-rouge">params[:blah].path</code>.</p>
+<p>Brakeman no longer warns about file access with <code class="language-plaintext highlighter-rouge">params[:blah].tempfile.path</code> or <code class="language-plaintext highlighter-rouge">params[:blah].path</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1121">changes</a>)</p>
 
@@ -158,21 +158,21 @@
 
 <h3 id="attribute-combination-assignment">Attribute Combination Assignment</h3>
 
-<p>This release handles code like <code class="highlighter-rouge">x[:y] += 1</code> better. Previously, it would not update the value for <code class="highlighter-rouge">x[:y]</code>.</p>
+<p>This release handles code like <code class="language-plaintext highlighter-rouge">x[:y] += 1</code> better. Previously, it would not update the value for <code class="language-plaintext highlighter-rouge">x[:y]</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1123">changes</a>)</p>
 
 <h3 id="nested-destructuring">Nested Destructuring</h3>
 
-<p>Brakeman now can handle nested multiple assignment, like <code class="highlighter-rouge">x, (a, b), y = z</code>, assuming <code class="highlighter-rouge">z</code> is known to be an array.</p>
+<p>Brakeman now can handle nested multiple assignment, like <code class="language-plaintext highlighter-rouge">x, (a, b), y = z</code>, assuming <code class="language-plaintext highlighter-rouge">z</code> is known to be an array.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1113">changes</a>)</p>
 
 <h3 id="pager-updates">Pager Updates</h3>
 
-<p>The default pager (<code class="highlighter-rouge">less</code>) now leaves the output in the terminal after exiting and now exits immediately if the output fits on the screen.</p>
+<p>The default pager (<code class="language-plaintext highlighter-rouge">less</code>) now leaves the output in the terminal after exiting and now exits immediately if the output fits on the screen.</p>
 
-<p>Additionally, Brakeman attempts to detect if these options are actually supported by <code class="highlighter-rouge">less</code> before using them.</p>
+<p>Additionally, Brakeman attempts to detect if these options are actually supported by <code class="language-plaintext highlighter-rouge">less</code> before using them.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1112">changes</a> and <a href="https://github.com/presidentbeef/brakeman/pull/1120">here</a>)</p>
 
@@ -190,7 +190,7 @@
 
 <h3 id="code-climate-updates">Code Climate Updates</h3>
 
-<p>The Brakeman engine on <a href="https://docs.codeclimate.com/docs/brakeman">Code Climate</a> now supports <code class="highlighter-rouge">app_path</code> and <code class="highlighter-rouge">include_paths</code>, together.</p>
+<p>The Brakeman engine on <a href="https://docs.codeclimate.com/docs/brakeman">Code Climate</a> now supports <code class="language-plaintext highlighter-rouge">app_path</code> and <code class="language-plaintext highlighter-rouge">include_paths</code>, together.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1126">changes</a>)</p>
 
@@ -198,7 +198,7 @@
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1dd62ee8aa872acf5d0aace6dc0745b55c78da68640f04754bf11c12a58842bf  brakeman-4.1.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1dd62ee8aa872acf5d0aace6dc0745b55c78da68640f04754bf11c12a58842bf  brakeman-4.1.0.gem
 a16bd3082223655f132ff4c601f5d1930290082116fc256c5c1e652ff3ba933a  brakeman-lib-4.1.0.gem
 29d9be77b06195675e6b803141da979438983c0970c182fe8b8ccf3145ecda9f  brakeman-min-4.1.0.gem
 </code></pre></div></div>

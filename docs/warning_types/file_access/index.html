@@ -82,15 +82,15 @@
 
 <p>For example</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>File.open("/tmp/#{cookie[:file]}")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>File.open("/tmp/#{cookie[:file]}")
 </code></pre></div></div>
 
 <p>will raise an error like</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Cookie value used in file name near line 4: File.open("/tmp/#{cookie[:file]}")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Cookie value used in file name near line 4: File.open("/tmp/#{cookie[:file]}")
 </code></pre></div></div>
 
-<p>This type of vulnerability can be used to access arbitrary files on a server (including <code class="highlighter-rouge">/etc/passwd</code>.</p>
+<p>This type of vulnerability can be used to access arbitrary files on a server (including <code class="language-plaintext highlighter-rouge">/etc/passwd</code>.</p>
 
 <hr />
 <p>Back to <a href="/docs/warning_types">Warning Types</a></p>

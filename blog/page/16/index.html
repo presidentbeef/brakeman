@@ -96,19 +96,19 @@
   </header>
 
 
-  <div class="entry-content"><p>This is a small release, but adds several new warning codes for the latest Rails CVEs and a new check for uses of <code class="highlighter-rouge">permit!</code>. Also, this is the first signed gem release of Brakeman; see below for details.</p>
+  <div class="entry-content"><p>This is a small release, but adds several new warning codes for the latest Rails CVEs and a new check for uses of <code class="language-plaintext highlighter-rouge">permit!</code>. Also, this is the first signed gem release of Brakeman; see below for details.</p>
 
 <p><em>Changes since 2.2.0:</em></p>
 
 <ul>
   <li>Add check for CVE-2013-4491 (i18n XSS)</li>
   <li>Add check for CVE-2013-6414 (header DoS)</li>
-  <li>Add check for CVE-2013-6415 (<code class="highlighter-rouge">number_to_currency</code>)</li>
-  <li>Add check for CVE-2013-6416 (<code class="highlighter-rouge">simple_format</code> XSS)</li>
+  <li>Add check for CVE-2013-6415 (<code class="language-plaintext highlighter-rouge">number_to_currency</code>)</li>
+  <li>Add check for CVE-2013-6416 (<code class="language-plaintext highlighter-rouge">simple_format</code> XSS)</li>
   <li>Add check for CVE-2013-6417 (query generation)</li>
-  <li>Add check for <code class="highlighter-rouge">Parameters#permit!</code> (<a href="https://github.com/presidentbeef/brakeman/issues/281">#281</a>)</li>
+  <li>Add check for <code class="language-plaintext highlighter-rouge">Parameters#permit!</code> (<a href="https://github.com/presidentbeef/brakeman/issues/281">#281</a>)</li>
   <li>Fix Slim XSS false positives (<a href="https://github.com/noahd1">Noah Davis</a>)</li>
-  <li>Whitelist <code class="highlighter-rouge">Model#create</code> for redirects (<a href="https://github.com/presidentbeef/brakeman/issues/406">#406</a>)</li>
+  <li>Whitelist <code class="language-plaintext highlighter-rouge">Model#create</code> for redirects (<a href="https://github.com/presidentbeef/brakeman/issues/406">#406</a>)</li>
   <li>Collapse send/try calls</li>
   <li>Fix scoping issues with instance variables and blocks (<a href="https://github.com/presidentbeef/brakeman/issues/406">#406</a>)</li>
   <li>Fix typos in reflection and translate bug messages</li>
@@ -124,11 +124,11 @@
 
 <h3 id="currency-xss">Currency XSS</h3>
 
-<p><a href="https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ">CVE-2013-6415</a> is an XSS in the second argument of <code class="highlighter-rouge">number_to_currency</code>. Brakeman will warn on uses of <code class="highlighter-rouge">number_to_currency</code> with dangerous unescaped arguments. If no dangerous uses are found, Brakeman will provide a general warning about the CVE.</p>
+<p><a href="https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ">CVE-2013-6415</a> is an XSS in the second argument of <code class="language-plaintext highlighter-rouge">number_to_currency</code>. Brakeman will warn on uses of <code class="language-plaintext highlighter-rouge">number_to_currency</code> with dangerous unescaped arguments. If no dangerous uses are found, Brakeman will provide a general warning about the CVE.</p>
 
 <h3 id="simple-format-xss">Simple Format XSS</h3>
 
-<p><a href="https://groups.google.com/d/msg/ruby-security-ann/5ZI1-H5OoIM/ZNq4FoR2GnIJ">CVE-2013-6416</a> is an XSS in <code class="highlighter-rouge">simple_format</code>, which does not escape its output. Brakeman will warn on dangerous uses of <code class="highlighter-rouge">simple_format</code>. If no uses are found, it will report a general warning.</p>
+<p><a href="https://groups.google.com/d/msg/ruby-security-ann/5ZI1-H5OoIM/ZNq4FoR2GnIJ">CVE-2013-6416</a> is an XSS in <code class="language-plaintext highlighter-rouge">simple_format</code>, which does not escape its output. Brakeman will warn on dangerous uses of <code class="language-plaintext highlighter-rouge">simple_format</code>. If no uses are found, it will report a general warning.</p>
 
 <h3 id="query-generation-vulnerability">Query Generation Vulnerability</h3>
 
@@ -136,7 +136,7 @@
 
 <h3 id="check-for-permit">Check for Permit!</h3>
 
-<p>Brakeman now warns on uses of <code class="highlighter-rouge">Parameters#permit!</code>, which bypasses mass assignment protections. If a <code class="highlighter-rouge">permit!</code> is used without a subsequent mass assignment in the same method, the confidence will be medium.</p>
+<p>Brakeman now warns on uses of <code class="language-plaintext highlighter-rouge">Parameters#permit!</code>, which bypasses mass assignment protections. If a <code class="language-plaintext highlighter-rouge">permit!</code> is used without a subsequent mass assignment in the same method, the confidence will be medium.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/414">changes</a>)</p>
 
@@ -148,25 +148,25 @@
 
 <h3 id="whitelist-record-creation-in-redirects">Whitelist Record Creation in Redirects</h3>
 
-<p>Redirects to <code class="highlighter-rouge">Model#create</code> and <code class="highlighter-rouge">Model#create!</code> should no longer warn.</p>
+<p>Redirects to <code class="language-plaintext highlighter-rouge">Model#create</code> and <code class="language-plaintext highlighter-rouge">Model#create!</code> should no longer warn.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/408">changes</a>)</p>
 
-<h3 id="collapse-trysend">Collapse <code class="highlighter-rouge">try</code>/<code class="highlighter-rouge">send</code></h3>
+<h3 id="collapse-trysend">Collapse <code class="language-plaintext highlighter-rouge">try</code>/<code class="language-plaintext highlighter-rouge">send</code></h3>
 
-<p>The effect of using <code class="highlighter-rouge">try(:something)</code> or <code class="highlighter-rouge">send(:something)</code> are essentially the same as calling <code class="highlighter-rouge">something</code>, so Brakeman now converts calls to <code class="highlighter-rouge">try</code>/<code class="highlighter-rouge">send</code> directly to the method being called.</p>
+<p>The effect of using <code class="language-plaintext highlighter-rouge">try(:something)</code> or <code class="language-plaintext highlighter-rouge">send(:something)</code> are essentially the same as calling <code class="language-plaintext highlighter-rouge">something</code>, so Brakeman now converts calls to <code class="language-plaintext highlighter-rouge">try</code>/<code class="language-plaintext highlighter-rouge">send</code> directly to the method being called.</p>
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.find(1).try(:name)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.find(1).try(:name)
 </code></pre></div></div>
 
 <p>is changed to</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.find(1).name
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.find(1).name
 </code></pre></div></div>
 
-<p>This can help find more vulnerabilities as well as prevent some false positives if the method name is actually something safe like <code class="highlighter-rouge">id</code>.</p>
+<p>This can help find more vulnerabilities as well as prevent some false positives if the method name is actually something safe like <code class="language-plaintext highlighter-rouge">id</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/412">changes</a>)</p>
 
@@ -178,7 +178,7 @@
 
 <h3 id="warning-typos">Warning Typos</h3>
 
-<p>Two tiny changes have been made to warning messages. The “translate bug” from ages ago had an extra <code class="highlighter-rouge">}</code> in the message, and the message for unsafe reflection no longer capitalizes “Reflection”. But since everyone is using <a href="http://brakemanscanner.org/blog/2013/05/20/brakeman-2-dot-0-0-released/">warning fingerprints and not relying on matching messages</a>, you should be okay, right?</p>
+<p>Two tiny changes have been made to warning messages. The “translate bug” from ages ago had an extra <code class="language-plaintext highlighter-rouge">}</code> in the message, and the message for unsafe reflection no longer capitalizes “Reflection”. But since everyone is using <a href="http://brakemanscanner.org/blog/2013/05/20/brakeman-2-dot-0-0-released/">warning fingerprints and not relying on matching messages</a>, you should be okay, right?</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/411">changes</a>)</p>
 
@@ -188,7 +188,7 @@
 
 <p>To verify on installation:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem cert --add &lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem cert --add &lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
 gem install brakeman -P MediumSecurity
 </code></pre></div></div>
 
@@ -196,7 +196,7 @@ gem install brakeman -P MediumSecurity
 
 <p>Additionally, here are the SHA sums for this release:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2ae503781c51a69a1123d37d46b4813ea91f01e8  brakeman-2.3.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2ae503781c51a69a1123d37d46b4813ea91f01e8  brakeman-2.3.0.gem
 77d39eaf0e2663af526dcbf6e3b5bac16173fed1  brakeman-min-2.3.0.gem
 </code></pre></div></div>
 
@@ -253,7 +253,7 @@ gem install brakeman -P MediumSecurity
 
 <ul>
   <li>Support scanning Rails engines (<a href="https://github.com/phene">Geoffrey Hichborn</a>)</li>
-  <li>Ignore redirects to models using <code class="highlighter-rouge">friendly_id</code> (<a href="https://github.com/aj0strow">AJ Ostrow</a>)</li>
+  <li>Ignore redirects to models using <code class="language-plaintext highlighter-rouge">friendly_id</code> (<a href="https://github.com/aj0strow">AJ Ostrow</a>)</li>
   <li>Add check for detailed exceptions in production (<a href="https://github.com/presidentbeef/brakeman/issues/391">#391</a>)</li>
   <li>Use Rails version from Gemfile if it is available (<a href="https://github.com/presidentbeef/brakeman/issues/398">#398</a>)</li>
   <li>Only add routes with actual names (<a href="https://github.com/presidentbeef/brakeman/issues/395">#395</a>)</li>
@@ -268,7 +268,7 @@ gem install brakeman -P MediumSecurity
 
 <h3 id="redirects-with-friendly-id">Redirects with Friendly ID</h3>
 
-<p>Thanks to <a href="https://github.com/aj0strow">AJ Ostrow</a>, Brakeman should no longer warn on redirects to models using <code class="highlighter-rouge">friendly_id</code>.</p>
+<p>Thanks to <a href="https://github.com/aj0strow">AJ Ostrow</a>, Brakeman should no longer warn on redirects to models using <code class="language-plaintext highlighter-rouge">friendly_id</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/400">changes</a>)</p>
 
@@ -276,13 +276,13 @@ gem install brakeman -P MediumSecurity
 
 <p><a href="https://github.com/ntalbott">Nathaniel Talbott</a> suggested checking that detailed exceptions (treating requests as local) are not enabled in production.</p>
 
-<p>Brakeman now generates a warning in a new category called “<a href="http://brakemanscanner.org/docs/warning_types/information_disclosure/">Information Disclosure</a>” if <code class="highlighter-rouge">config.consider_all_requests_local</code> is set to <code class="highlighter-rouge">true</code> in production or a controller overrides <code class="highlighter-rouge">show_detailed_exceptions?</code> to return something other than <code class="highlighter-rouge">false</code>.</p>
+<p>Brakeman now generates a warning in a new category called “<a href="http://brakemanscanner.org/docs/warning_types/information_disclosure/">Information Disclosure</a>” if <code class="language-plaintext highlighter-rouge">config.consider_all_requests_local</code> is set to <code class="language-plaintext highlighter-rouge">true</code> in production or a controller overrides <code class="language-plaintext highlighter-rouge">show_detailed_exceptions?</code> to return something other than <code class="language-plaintext highlighter-rouge">false</code>.</p>
 
 <p>Please see the <a href="https://github.com/presidentbeef/brakeman/pull/396">changes</a> regarding the new category and two new warning codes associated with these warnings.</p>
 
 <h3 id="better-version-detection">Better Version Detection</h3>
 
-<p>Brakeman now uses the Rails version found in <code class="highlighter-rouge">Gemfile</code> or <code class="highlighter-rouge">Gemfile.lock</code> to determine when to enable Rails 3/4 mode, which seems obvious in retrospect. This required swapping when the <code class="highlighter-rouge">Gemfile</code> and the configuration files are processed.</p>
+<p>Brakeman now uses the Rails version found in <code class="language-plaintext highlighter-rouge">Gemfile</code> or <code class="language-plaintext highlighter-rouge">Gemfile.lock</code> to determine when to enable Rails 3/4 mode, which seems obvious in retrospect. This required swapping when the <code class="language-plaintext highlighter-rouge">Gemfile</code> and the configuration files are processed.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/402">changes</a>)</p>
 
@@ -294,14 +294,14 @@ gem install brakeman -P MediumSecurity
 
 <h3 id="command-injection-false-positives">Command Injection False Positives</h3>
 
-<p>There should be fewer false positives for command injection when interpolated values are literals. The check also now ignores commonly used values <code class="highlighter-rouge">RAILS_ROOT</code>, <code class="highlighter-rouge">Rails.env</code>, and <code class="highlighter-rouge">Rails.root</code>.</p>
+<p>There should be fewer false positives for command injection when interpolated values are literals. The check also now ignores commonly used values <code class="language-plaintext highlighter-rouge">RAILS_ROOT</code>, <code class="language-plaintext highlighter-rouge">Rails.env</code>, and <code class="language-plaintext highlighter-rouge">Rails.root</code>.</p>
 
-<p>Additionally, reported “dangerous” values (<code class="highlighter-rouge">user_input</code> in JSON reports) for command injection are more specific. For example:</p>
+<p>Additionally, reported “dangerous” values (<code class="language-plaintext highlighter-rouge">user_input</code> in JSON reports) for command injection are more specific. For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system "rm -rf #{some_var}"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system "rm -rf #{some_var}"
 </code></pre></div></div>
 
-<p>used to report the entire string <code class="highlighter-rouge">"rm -rf #{some_var}"</code> as dangerous, even though it’s really warning about the interpolation of <code class="highlighter-rouge">some_var</code>. Now Brakeman will report the first potentially dangerous interpolated value. Note that this does not change fingerprints for existing warnings.</p>
+<p>used to report the entire string <code class="language-plaintext highlighter-rouge">"rm -rf #{some_var}"</code> as dangerous, even though it’s really warning about the interpolation of <code class="language-plaintext highlighter-rouge">some_var</code>. Now Brakeman will report the first potentially dangerous interpolated value. Note that this does not change fingerprints for existing warnings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/404">changes</a>)</p>
 
@@ -315,7 +315,7 @@ gem install brakeman -P MediumSecurity
 
 <p>The SHA-1 for the Brakeman 2.2.0 gem is:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f3a2b369bda79c677a913cdb2350cbda8bce8a90  brakeman-2.2.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f3a2b369bda79c677a913cdb2350cbda8bce8a90  brakeman-2.2.0.gem
 </code></pre></div></div>
 </div>
   
@@ -346,14 +346,14 @@ gem install brakeman -P MediumSecurity
   </header>
 
 
-  <div class="entry-content"><p><em>Important</em>: Contrary to the “Brakeman Philosophy,” there is one situation in which Brakeman attempts to load files from an application. This is a security risk since the code in the files would be executed (typical <code class="highlighter-rouge">require</code> behavior). Note that this is only a real problem if running Brakeman against code outside one’s control. Since most users are scanning their own code, this should not be a concern for the majority of Brakeman users.</p>
+  <div class="entry-content"><p><em>Important</em>: Contrary to the “Brakeman Philosophy,” there is one situation in which Brakeman attempts to load files from an application. This is a security risk since the code in the files would be executed (typical <code class="language-plaintext highlighter-rouge">require</code> behavior). Note that this is only a real problem if running Brakeman against code outside one’s control. Since most users are scanning their own code, this should not be a concern for the majority of Brakeman users.</p>
 
 <p><em>Changes since 2.1.1:</em></p>
 
 <ul>
   <li>Do not attempt to load custom Haml filters</li>
-  <li>Do not warn about <code class="highlighter-rouge">to_json</code> XSS in Rails 4</li>
-  <li>Remove fuzzy matching on dangerous <code class="highlighter-rouge">attr_accessible</code> values</li>
+  <li>Do not warn about <code class="language-plaintext highlighter-rouge">to_json</code> XSS in Rails 4</li>
+  <li>Remove fuzzy matching on dangerous <code class="language-plaintext highlighter-rouge">attr_accessible</code> values</li>
   <li>Add –table-width option to set width of text reports (<a href="https://github.com/ssendev">ssendev</a>)</li>
 </ul>
 
@@ -367,19 +367,19 @@ gem install brakeman -P MediumSecurity
 
 <h3 id="json-output-in-rails-4">JSON Output in Rails 4</h3>
 
-<p>As of Rails 4, the output of <code class="highlighter-rouge">to_json</code> is now safe by default. Brakeman should no longer warn about cross-site scripting with <code class="highlighter-rouge">to_json</code> in Rails 4 applications.</p>
+<p>As of Rails 4, the output of <code class="language-plaintext highlighter-rouge">to_json</code> is now safe by default. Brakeman should no longer warn about cross-site scripting with <code class="language-plaintext highlighter-rouge">to_json</code> in Rails 4 applications.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/392">changes</a>)</p>
 
 <h3 id="less-fuzzy-mass-assignment">Less Fuzzy Mass Assignment</h3>
 
-<p>Brakeman no longer uses fuzzy matching for potentially dangerous model attributes allowed for mass assignment, such as any value containing <code class="highlighter-rouge">admin</code>.</p>
+<p>Brakeman no longer uses fuzzy matching for potentially dangerous model attributes allowed for mass assignment, such as any value containing <code class="language-plaintext highlighter-rouge">admin</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/390">changes</a>)</p>
 
 <h3 id="text-report-width-option">Text Report Width Option</h3>
 
-<p>The width of text reports can now be controlled with the <code class="highlighter-rouge">--table-width</code> option. For example, this can be useful when capturing text output to a file.</p>
+<p>The width of text reports can now be controlled with the <code class="language-plaintext highlighter-rouge">--table-width</code> option. For example, this can be useful when capturing text output to a file.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/387">changes</a>)</p>
 
@@ -417,17 +417,17 @@ gem install brakeman -P MediumSecurity
   </header>
 
 
-  <div class="entry-content"><p>This is a small bug fix release. The only expected changes in warnings are for dangerous attributes in <code class="highlighter-rouge">attr_accessible</code>
+  <div class="entry-content"><p>This is a small bug fix release. The only expected changes in warnings are for dangerous attributes in <code class="language-plaintext highlighter-rouge">attr_accessible</code>
 and cross site scripting involving model attributes. Some warning fingerprints may change as a result of this update.</p>
 
 <p><em>Changes since 2.1.0</em>:</p>
 
 <ul>
   <li>More accurate results for model attribute warnings (<a href="https://github.com/presidentbeef/brakeman/issues/385">#385</a>)</li>
-  <li>Do not warn on <code class="highlighter-rouge">attr_accessible</code> using roles (<a href="https://github.com/presidentbeef/brakeman/issues/372">#372</a>)</li>
-  <li>New warning code for dangerous attributes in <code class="highlighter-rouge">attr_accessible</code></li>
+  <li>Do not warn on <code class="language-plaintext highlighter-rouge">attr_accessible</code> using roles (<a href="https://github.com/presidentbeef/brakeman/issues/372">#372</a>)</li>
+  <li>New warning code for dangerous attributes in <code class="language-plaintext highlighter-rouge">attr_accessible</code></li>
   <li>Fix infinite loop when run as rake task (<a href="https://github.com/arkadyan">Matthew Shanley</a>)</li>
-  <li>Use exit code zero with <code class="highlighter-rouge">-z</code> if all warnings ignored (<a href="https://github.com/presidentbeef/brakeman/issues/381">#381</a>)</li>
+  <li>Use exit code zero with <code class="language-plaintext highlighter-rouge">-z</code> if all warnings ignored (<a href="https://github.com/presidentbeef/brakeman/issues/381">#381</a>)</li>
   <li>Respect ignored warnings in rescans (<a href="https://github.com/presidentbeef/brakeman/issues/382">#382</a>)</li>
   <li>Respect ignored warnings in tabs format reports</li>
   <li>Ignore dynamic controller names in routes</li>
@@ -435,21 +435,21 @@ and cross site scripting involving model attributes. Some warning fingerprints m
 
 <h3 id="more-accurate-model-matching">More Accurate Model Matching</h3>
 
-<p>Model attributes which are reported as user input should now be reported more accurately. For example, instead of reporting <code class="highlighter-rouge">Model.find(1)</code> as user input, the entire attribute will be reported. For example: <code class="highlighter-rouge">Model.find(1).name</code></p>
+<p>Model attributes which are reported as user input should now be reported more accurately. For example, instead of reporting <code class="language-plaintext highlighter-rouge">Model.find(1)</code> as user input, the entire attribute will be reported. For example: <code class="language-plaintext highlighter-rouge">Model.find(1).name</code></p>
 
-<p>As a side effect, several methods which were already intended to be ignored (such as <code class="highlighter-rouge">count</code>) will actually be ignored for XSS warnings.</p>
+<p>As a side effect, several methods which were already intended to be ignored (such as <code class="language-plaintext highlighter-rouge">count</code>) will actually be ignored for XSS warnings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/386">changes</a>)</p>
 
 <h3 id="attr_accessible-check-updates">attr_accessible Check Updates</h3>
 
-<p>The check for potentially dangerous attributes whitelisted in <code class="highlighter-rouge">attr_accessible</code> has been updated to ignore attributes protected by roles. Additionally, it now has its own warning code to separate it from regular mass assignment warnings.</p>
+<p>The check for potentially dangerous attributes whitelisted in <code class="language-plaintext highlighter-rouge">attr_accessible</code> has been updated to ignore attributes protected by roles. Additionally, it now has its own warning code to separate it from regular mass assignment warnings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/388">warning code change</a>, <a href="https://github.com/presidentbeef/brakeman/pull/384">role change</a>)</p>
 
 <h3 id="rake-task-fix">Rake Task Fix</h3>
 
-<p>The last release included a method named <code class="highlighter-rouge">load_dependency</code> which handles calling <code class="highlighter-rouge">require</code> for optional dependencies. Unfortunately, Rails overrides <code class="highlighter-rouge">require</code> to call its own method called <code class="highlighter-rouge">load_dependency</code>. Rails is loaded when any <code class="highlighter-rouge">rake</code> command is used, so when Brakeman is run with Rake it causes an infinite loop between <code class="highlighter-rouge">load_dependency</code> and <code class="highlighter-rouge">require</code>.</p>
+<p>The last release included a method named <code class="language-plaintext highlighter-rouge">load_dependency</code> which handles calling <code class="language-plaintext highlighter-rouge">require</code> for optional dependencies. Unfortunately, Rails overrides <code class="language-plaintext highlighter-rouge">require</code> to call its own method called <code class="language-plaintext highlighter-rouge">load_dependency</code>. Rails is loaded when any <code class="language-plaintext highlighter-rouge">rake</code> command is used, so when Brakeman is run with Rake it causes an infinite loop between <code class="language-plaintext highlighter-rouge">load_dependency</code> and <code class="language-plaintext highlighter-rouge">require</code>.</p>
 
 <p>Thanks to <a href="https://github.com/arkadyan">Matthew Shanley</a> for reporting the issue and providing a fix.</p>
 
@@ -457,7 +457,7 @@ and cross site scripting involving model attributes. Some warning fingerprints m
 
 <h3 id="exit-code-fixed-when-warnings-ignored">Exit Code Fixed When Warnings Ignored</h3>
 
-<p>Brakeman will now return <code class="highlighter-rouge">0</code> when using <code class="highlighter-rouge">-z</code> and all reported warnings are ignored.</p>
+<p>Brakeman will now return <code class="language-plaintext highlighter-rouge">0</code> when using <code class="language-plaintext highlighter-rouge">-z</code> and all reported warnings are ignored.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/375">changes</a>)</p>
 
@@ -524,13 +524,13 @@ and cross site scripting involving model attributes. Some warning fingerprints m
 <ul>
   <li>Add support for ignoring warnings</li>
   <li>Add brakeman-min gem</li>
-  <li>Add check for dangerous model attributes defined in <code class="highlighter-rouge">attr_accessible</code> (<a href="https://github.com/themetric">Paul Deardorff</a>)</li>
-  <li>Add check for <code class="highlighter-rouge">authenticate_or_request_with_http_basic</code> (<a href="https://github.com/presidentbeef/brakeman/issues/301">#301</a>)</li>
-  <li>Add <code class="highlighter-rouge">--branch-limit</code> option, limit to 5 by default</li>
+  <li>Add check for dangerous model attributes defined in <code class="language-plaintext highlighter-rouge">attr_accessible</code> (<a href="https://github.com/themetric">Paul Deardorff</a>)</li>
+  <li>Add check for <code class="language-plaintext highlighter-rouge">authenticate_or_request_with_http_basic</code> (<a href="https://github.com/presidentbeef/brakeman/issues/301">#301</a>)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--branch-limit</code> option, limit to 5 by default</li>
   <li>Add more methods to check for command injection (<a href="https://github.com/presidentbeef/brakeman/issues/206">#206</a>)</li>
   <li>Allow use of Slim 2.x (<a href="https://github.com/iwz">Ian Zabel</a>)</li>
   <li>Load gem dependencies on-demand</li>
-  <li>Output JSON diff to file if <code class="highlighter-rouge">-o</code> option is used</li>
+  <li>Output JSON diff to file if <code class="language-plaintext highlighter-rouge">-o</code> option is used</li>
   <li>Refactor of SQL injection check code (<a href="https://github.com/barttenbrinke">Bart ten Brinke</a>)</li>
   <li>Return error exit code when application path is not found</li>
   <li>Fix detection of duplicate XSS warnings</li>
@@ -546,13 +546,13 @@ and cross site scripting involving model attributes. Some warning fingerprints m
 
 <p>The ignore configuration is a JSON file containing a list of warnings and some metadata. Right now the metadata is not actually used, but it might be useful in the future. The only warning information which is actually used is the fingerprint.</p>
 
-<p>By default Brakeman will look for a <code class="highlighter-rouge">brakeman.ignore</code> file in the <code class="highlighter-rouge">config</code> directory of the application. This can be changed with the <code class="highlighter-rouge">-i</code> option.</p>
+<p>By default Brakeman will look for a <code class="language-plaintext highlighter-rouge">brakeman.ignore</code> file in the <code class="language-plaintext highlighter-rouge">config</code> directory of the application. This can be changed with the <code class="language-plaintext highlighter-rouge">-i</code> option.</p>
 
-<p>Since creating and managing the file by hand would be a pain, the <code class="highlighter-rouge">-I</code> provides interactive management of the ignore configuration.</p>
+<p>Since creating and managing the file by hand would be a pain, the <code class="language-plaintext highlighter-rouge">-I</code> provides interactive management of the ignore configuration.</p>
 
 <p><img src="/images/bm-I.png" alt="brakeman -I" /></p>
 
-<p>JSON reports now include an array of <code class="highlighter-rouge">ignored_warnings</code>, HTML reports have a table of ignored warnings which is hidden by default, and the basic text output will include the number of warnings ignored, if any.</p>
+<p>JSON reports now include an array of <code class="language-plaintext highlighter-rouge">ignored_warnings</code>, HTML reports have a table of ignored warnings which is hidden by default, and the basic text output will include the number of warnings ignored, if any.</p>
 
 <p>Again, please use this power responsibly.</p>
 
@@ -572,11 +572,11 @@ and cross site scripting involving model attributes. Some warning fingerprints m
 
 <h3 id="mass-assignment-to-dangerous-attributes">Mass Assignment to Dangerous Attributes</h3>
 
-<p>Paul Deardorff has added a new check which warns on model attributes included in <code class="highlighter-rouge">attr_accessible</code> which perhaps should not have been.</p>
+<p>Paul Deardorff has added a new check which warns on model attributes included in <code class="language-plaintext highlighter-rouge">attr_accessible</code> which perhaps should not have been.</p>
 
 <h3 id="more-basic-auth-warnings">More Basic Auth Warnings</h3>
 
-<p>Brakeman will now warn on use of password strings used directly in <code class="highlighter-rouge">authenticate_or_request_with_http_basic</code>.</p>
+<p>Brakeman will now warn on use of password strings used directly in <code class="language-plaintext highlighter-rouge">authenticate_or_request_with_http_basic</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/362">changes</a>)</p>
 
@@ -586,13 +586,13 @@ and cross site scripting involving model attributes. Some warning fingerprints m
 
 <p>In some situations (lots of assignments to the same variable inside different branches), however, these values can grow to be unreasonably large. In most <em>useful</em> cases, the values aren’t that large.</p>
 
-<p>This change introduces a limit on these union values. The default is <code class="highlighter-rouge">5</code>, which means a given variable should only have five alternative values. If a sixth alternative is encountered (i.e. assignment inside another branch), the old values get kicked out, the new value is saved and the process starts over. This seems like a decent compromise between being flow insensitive (like <code class="highlighter-rouge">--no-branching</code>) and the current state of affairs (track everything, causing massive slowdowns and memory usage).</p>
+<p>This change introduces a limit on these union values. The default is <code class="language-plaintext highlighter-rouge">5</code>, which means a given variable should only have five alternative values. If a sixth alternative is encountered (i.e. assignment inside another branch), the old values get kicked out, the new value is saved and the process starts over. This seems like a decent compromise between being flow insensitive (like <code class="language-plaintext highlighter-rouge">--no-branching</code>) and the current state of affairs (track everything, causing massive slowdowns and memory usage).</p>
 
-<p>To turn off the limiting, use <code class="highlighter-rouge">--branch-limit -1</code>.</p>
+<p>To turn off the limiting, use <code class="language-plaintext highlighter-rouge">--branch-limit -1</code>.</p>
 
-<p><code class="highlighter-rouge">--branch-limit 0</code> is almost like <code class="highlighter-rouge">--no-branching</code> except slower because it’s still trying to track stuff.</p>
+<p><code class="language-plaintext highlighter-rouge">--branch-limit 0</code> is almost like <code class="language-plaintext highlighter-rouge">--no-branching</code> except slower because it’s still trying to track stuff.</p>
 
-<p>In testing, a value of <code class="highlighter-rouge">5</code> did not show any difference in detected vulnerabilities, although it is entirely possible (though empirical evidence points towards unlikely) that some vulnerabilities would be hidden because of this.</p>
+<p>In testing, a value of <code class="language-plaintext highlighter-rouge">5</code> did not show any difference in detected vulnerabilities, although it is entirely possible (though empirical evidence points towards unlikely) that some vulnerabilities would be hidden because of this.</p>
 
 <p>(Description copied from the <a href="https://github.com/presidentbeef/brakeman/pull/345">pull request</a>.)</p>
 
@@ -616,15 +616,15 @@ and cross site scripting involving model attributes. Some warning fingerprints m
 
 <h3 id="output-json-compare-to-file">Output JSON Compare to File</h3>
 
-<p>The <code class="highlighter-rouge">-o</code> option can now be used with <code class="highlighter-rouge">--compare</code> to output the JSON diff to a file.</p>
+<p>The <code class="language-plaintext highlighter-rouge">-o</code> option can now be used with <code class="language-plaintext highlighter-rouge">--compare</code> to output the JSON diff to a file.</p>
 
-<p>If multiple <code class="highlighter-rouge">-o</code> options are given, the first one will be used for the JSON diff, and the other <code class="highlighter-rouge">-o</code> files will be used to output a regular report.</p>
+<p>If multiple <code class="language-plaintext highlighter-rouge">-o</code> options are given, the first one will be used for the JSON diff, and the other <code class="language-plaintext highlighter-rouge">-o</code> files will be used to output a regular report.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/363">changes</a>)</p>
 
 <h3 id="error-exit-code-when-application-not-found">Error Exit Code When Application Not Found</h3>
 
-<p>The last version of Brakeman had a bug where the program would exit with return code <code class="highlighter-rouge">0</code> when no Rails application was found. It will now return <code class="highlighter-rouge">1</code> like it did before.</p>
+<p>The last version of Brakeman had a bug where the program would exit with return code <code class="language-plaintext highlighter-rouge">0</code> when no Rails application was found. It will now return <code class="language-plaintext highlighter-rouge">1</code> like it did before.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/350">changes</a>)</p>
 
@@ -636,7 +636,7 @@ and cross site scripting involving model attributes. Some warning fingerprints m
 
 <h3 id="stricter-report-format-detection">Stricter Report Format Detection</h3>
 
-<p>For a while, Brakeman would match <code class="highlighter-rouge">-o</code> file names like <code class="highlighter-rouge">blah.jsonness</code> and assume you wanted JSON output. This is fixed.</p>
+<p>For a while, Brakeman would match <code class="language-plaintext highlighter-rouge">-o</code> file names like <code class="language-plaintext highlighter-rouge">blah.jsonness</code> and assume you wanted JSON output. This is fixed.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/346">changes</a>)</p>
 

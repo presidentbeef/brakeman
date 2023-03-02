@@ -84,26 +84,26 @@
 
 <p>Unsafe use of method:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>method = params[:method]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>method = params[:method]
 @result = User.send(method.to_sym)
 </code></pre></div></div>
 
 <p>Safe:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>method = params[:method] == 1 ? :method_a : :method_b
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>method = params[:method] == 1 ? :method_a : :method_b
 @result = User.send(method, *args)
 </code></pre></div></div>
 
 <p>Unsafe use of target:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">table</span> <span class="p">=</span> <span class="n">params</span><span class="p">[:</span><span class="n">table</span><span class="p">]</span>
-<span class="k">model</span> <span class="p">=</span> <span class="n">table</span><span class="p">.</span><span class="n">classify</span><span class="p">.</span><span class="n">constantize</span>
-<span class="p">@</span><span class="n">result</span> <span class="p">=</span> <span class="k">model</span><span class="p">.</span><span class="nf">send</span><span class="p">(:</span><span class="n">method</span><span class="p">)</span>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>table = params[:table]
+model = table.classify.constantize
+@result = model.send(:method)
 </code></pre></div></div>
 
 <p>Safe:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>target = params[:target] == 1 ? Account : User
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>target = params[:target] == 1 ? Account : User
 @result = target.send(:method, *args)
 </code></pre></div></div>
 
@@ -111,7 +111,7 @@
 
 <p>Safe:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>args = params["args"] || []
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>args = params["args"] || []
 @result = User.send(:method, *args)
 </code></pre></div></div>
 

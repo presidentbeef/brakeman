@@ -101,7 +101,7 @@ This release comes with a brand new report format: JUnit XML.</p>
 <ul>
   <li>Add JUnit XML report format (<a href="https://github.com/naokikimura">Naoki Kimurai</a>)</li>
   <li>Sort ignore files by fingerprint and line (<a href="https://github.com/ngan">Ngan Pham</a>)</li>
-  <li>Catch dangerous concatenation in <code class="highlighter-rouge">CheckExecute</code> (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
+  <li>Catch dangerous concatenation in <code class="language-plaintext highlighter-rouge">CheckExecute</code> (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
   <li>User-friendly message when ignore config file has invalid JSON (<a href="https://github.com/deevis">D. Hicks</a>)</li>
   <li>Freeze call index results, fix thread-safety issue</li>
   <li>Properly render confidence in Markdown report (<a href="https://github.com/presidentbeef/brakeman/issues/1446">#1446</a>)</li>
@@ -115,7 +115,7 @@ JUnit XML is produced and consumed by a number of different testing tools, inclu
 
 <p>Supporting this format makes it possible for Brakeman warnings to be consumed by general test infrastructure tools.</p>
 
-<p>To use the new format, either use <code class="highlighter-rouge">-f junit</code> or <code class="highlighter-rouge">-o report.junit</code>.</p>
+<p>To use the new format, either use <code class="language-plaintext highlighter-rouge">-f junit</code> or <code class="language-plaintext highlighter-rouge">-o report.junit</code>.</p>
 
 <p><a href="https://github.com/presidentbeef/brakeman/pull/1453">changes</a></p>
 
@@ -128,11 +128,11 @@ Thanks to <a href="https://github.com/ngan">Ngan Pham</a> they are now sorted by
 
 <h3 id="dangerous-concatenation-in-commands">Dangerous Concatenation in Commands</h3>
 
-<p><a href="https://github.com/JacobEvelyn">Jacob Evelyn</a> has updated the command injection check (<code class="highlighter-rouge">CheckExecute</code>) to also consider string concatenation with dangerous values.</p>
+<p><a href="https://github.com/JacobEvelyn">Jacob Evelyn</a> has updated the command injection check (<code class="language-plaintext highlighter-rouge">CheckExecute</code>) to also consider string concatenation with dangerous values.</p>
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system("ls " + maybe_dangerous)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system("ls " + maybe_dangerous)
 </code></pre></div></div>
 
 <p><a href="https://github.com/presidentbeef/brakeman/pull/1440">changes</a></p>
@@ -140,10 +140,10 @@ Thanks to <a href="https://github.com/ngan">Ngan Pham</a> they are now sorted by
 <h3 id="fix-thread-safety-issue">Fix Thread-safety Issue</h3>
 
 <p>Two checks were modifying shared data (call site results), which introduced a race condition.
-Sometimes a result would strangely become <code class="highlighter-rouge">nil</code> and cause intermittent errors.
+Sometimes a result would strangely become <code class="language-plaintext highlighter-rouge">nil</code> and cause intermittent errors.
 Note this only popped up when using real threads on JRuby.</p>
 
-<p>Now results from the <code class="highlighter-rouge">CallIndex</code> are frozen to help prevent this kind of modification of shared data in the future.</p>
+<p>Now results from the <code class="language-plaintext highlighter-rouge">CallIndex</code> are frozen to help prevent this kind of modification of shared data in the future.</p>
 
 <p><a href="https://github.com/presidentbeef/brakeman/pull/1452">changes</a></p>
 
@@ -166,7 +166,7 @@ Now they will be.</p>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2febb3ce4111fe14f57a8ea447c5770eeb32ba43333955b4ed27864ef045c277  brakeman-4.8.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2febb3ce4111fe14f57a8ea447c5770eeb32ba43333955b4ed27864ef045c277  brakeman-4.8.0.gem
 c513373a37576d8107af724bf9f8a47e8d76253c85bdd6fdb4d3e93471a47ee6  brakeman-lib-4.8.0.gem
 d82206b9a60ef1eb4c96d32ba0157774db301e3ca10dcbdd7b4171044b28eccf  brakeman-min-4.8.0.gem
 </code></pre></div></div>

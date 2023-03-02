@@ -97,10 +97,10 @@
 
 <ul>
   <li>Avoid interpolating hashes/arrays on failed access (<a href="https://github.com/presidentbeef/brakeman/issues/921">#921</a>)</li>
-  <li>Fix false positive for <code class="highlighter-rouge">redirect_to</code> in Rails 4 (<a href="https://github.com/mario-areias">Mário Areias</a>)</li>
+  <li>Fix false positive for <code class="language-plaintext highlighter-rouge">redirect_to</code> in Rails 4 (<a href="https://github.com/mario-areias">Mário Areias</a>)</li>
   <li>Show progress indicator in interactive mode (<a href="https://github.com/presidentbeef/brakeman/issues/1012">#1012</a>)</li>
-  <li>Handle simple conditional guards that use <code class="highlighter-rouge">return</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1057">#1057</a>)</li>
-  <li>Improve support for <code class="highlighter-rouge">rails4</code>/<code class="highlighter-rouge">rails5</code> options in config file (<a href="https://github.com/presidentbeef/brakeman/issues/1059">#1059</a>)</li>
+  <li>Handle simple conditional guards that use <code class="language-plaintext highlighter-rouge">return</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1057">#1057</a>)</li>
+  <li>Improve support for <code class="language-plaintext highlighter-rouge">rails4</code>/<code class="language-plaintext highlighter-rouge">rails5</code> options in config file (<a href="https://github.com/presidentbeef/brakeman/issues/1059">#1059</a>)</li>
   <li>Updated RubyParser to master</li>
 </ul>
 
@@ -116,13 +116,13 @@
 
 <h3 id="unsafe-hash-in-redirects">Unsafe Hash in Redirects</h3>
 
-<p>Thanks to <a href="https://github.com/mario-areias">Mário Areias</a>, Brakeman correctly handles <code class="highlighter-rouge">to_unsafe_hash</code> and <code class="highlighter-rouge">to_unsafe_h</code> in <code class="highlighter-rouge">redirect_to</code>.</p>
+<p>Thanks to <a href="https://github.com/mario-areias">Mário Areias</a>, Brakeman correctly handles <code class="language-plaintext highlighter-rouge">to_unsafe_hash</code> and <code class="language-plaintext highlighter-rouge">to_unsafe_h</code> in <code class="language-plaintext highlighter-rouge">redirect_to</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1029">changes</a>)</p>
 
 <h3 id="progress-indicator-in-interactive-mode">Progress Indicator in Interactive Mode</h3>
 
-<p>When using <code class="highlighter-rouge">-I</code> to manage false positives, Brakeman will now show how far you are through the warnings.</p>
+<p>When using <code class="language-plaintext highlighter-rouge">-I</code> to manage false positives, Brakeman will now show how far you are through the warnings.</p>
 
 <p><img src="https://user-images.githubusercontent.com/75613/27519704-f7c60006-59ad-11e7-82e8-ce0e096ad678.png" alt="image" /></p>
 
@@ -132,26 +132,26 @@
 
 <p>Brakeman can now recognize <em>simple</em> guard conditions such as:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>return unless [:safe, :values].include? params[:x]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>return unless [:safe, :values].include? params[:x]
 </code></pre></div></div>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1062">changes</a>)</p>
 
 <h3 id="rails-version-option-in-brakeman-configuration">Rails Version Option in Brakeman Configuration</h3>
 
-<p>It is now possible to specify just <code class="highlighter-rouge">:rails4: true</code> or <code class="highlighter-rouge">:rails5: true</code> in a Brakeman configuration file.</p>
+<p>It is now possible to specify just <code class="language-plaintext highlighter-rouge">:rails4: true</code> or <code class="language-plaintext highlighter-rouge">:rails5: true</code> in a Brakeman configuration file.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1066">changes</a>)</p>
 
 <h3 id="updated-rubyparser">Updated RubyParser</h3>
 
-<p>The main <code class="highlighter-rouge">brakeman</code> gem bundles as-of-yet unreleased changes in RubyParser. This includes “squiggly heredoc” support (<code class="highlighter-rouge">&lt;&lt;~</code>), improved line numbers, and a few other fixes.</p>
+<p>The main <code class="language-plaintext highlighter-rouge">brakeman</code> gem bundles as-of-yet unreleased changes in RubyParser. This includes “squiggly heredoc” support (<code class="language-plaintext highlighter-rouge">&lt;&lt;~</code>), improved line numbers, and a few other fixes.</p>
 
 <h3 id="checksums">Checksums</h3>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f46550d7c7827644a5663ccc10a6ca222e2534648f68630e3a777cb73df59824  brakeman-3.7.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f46550d7c7827644a5663ccc10a6ca222e2534648f68630e3a777cb73df59824  brakeman-3.7.0.gem
 0ea5359ae802284695500b92a03bf1d022574953a0da44607ff7f715f456c37e  brakeman-min-3.7.0.gem
 f6f17e9f1f71a68b486d68f2b3413607fb47154a0fb6a6da23d9d7be87f37967  brakeman-lib-3.7.0.gem
 </code></pre></div></div>

@@ -103,12 +103,12 @@
 <ul>
   <li>Add Rails 6.1 and 7.0 default configuration values</li>
   <li>Support Rails 7 redirect options</li>
-  <li>Add <code class="highlighter-rouge">redirect_back</code> and <code class="highlighter-rouge">redirect_back_or_to</code> to open redirect check</li>
-  <li>Revise checking for <code class="highlighter-rouge">request.env</code> to only consider request headers</li>
-  <li>Prevent redirects using <code class="highlighter-rouge">url_from</code> being marked as unsafe (<a href="https://github.com/lsylvester">Lachlan Sylvester</a>)</li>
-  <li>Warn about unscoped find for <code class="highlighter-rouge">find_by(id: ...)</code></li>
-  <li>Support <code class="highlighter-rouge">presence</code>, <code class="highlighter-rouge">presence_in</code> and <code class="highlighter-rouge">in?</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1569">#1569</a>)</li>
-  <li>Fix issue with <code class="highlighter-rouge">if</code> expressions in <code class="highlighter-rouge">when</code> clauses (<a href="https://github.com/presidentbeef/brakeman/issues/1743">#1743</a>)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">redirect_back</code> and <code class="language-plaintext highlighter-rouge">redirect_back_or_to</code> to open redirect check</li>
+  <li>Revise checking for <code class="language-plaintext highlighter-rouge">request.env</code> to only consider request headers</li>
+  <li>Prevent redirects using <code class="language-plaintext highlighter-rouge">url_from</code> being marked as unsafe (<a href="https://github.com/lsylvester">Lachlan Sylvester</a>)</li>
+  <li>Warn about unscoped find for <code class="language-plaintext highlighter-rouge">find_by(id: ...)</code></li>
+  <li>Support <code class="language-plaintext highlighter-rouge">presence</code>, <code class="language-plaintext highlighter-rouge">presence_in</code> and <code class="language-plaintext highlighter-rouge">in?</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1569">#1569</a>)</li>
+  <li>Fix issue with <code class="language-plaintext highlighter-rouge">if</code> expressions in <code class="language-plaintext highlighter-rouge">when</code> clauses (<a href="https://github.com/presidentbeef/brakeman/issues/1743">#1743</a>)</li>
   <li>Fix file/line location for EOL software warnings</li>
 </ul>
 
@@ -122,30 +122,30 @@
 
 <p>Rails 7 introduced a new protection against open directs.</p>
 
-<p>If <code class="highlighter-rouge">config.action_controller.raise_on_open_redirects</code> is set to <code class="highlighter-rouge">true</code>, then Rails prevents redirects that redirect to a different domain than <code class="highlighter-rouge">request.host</code>.
-This protection can be bypassed by passing in <code class="highlighter-rouge">allow_other_host: true</code> to <code class="highlighter-rouge">redirect_to</code>.</p>
+<p>If <code class="language-plaintext highlighter-rouge">config.action_controller.raise_on_open_redirects</code> is set to <code class="language-plaintext highlighter-rouge">true</code>, then Rails prevents redirects that redirect to a different domain than <code class="language-plaintext highlighter-rouge">request.host</code>.
+This protection can be bypassed by passing in <code class="language-plaintext highlighter-rouge">allow_other_host: true</code> to <code class="language-plaintext highlighter-rouge">redirect_to</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1755">changes</a>)</p>
 
-<p><a href="https://github.com/lsylvester">Lachlan Sylvester</a> pointed out it’s also possible to use <code class="highlighter-rouge">url_from</code> to ensure a URL is for the same host. So <code class="highlighter-rouge">redirect_to(url_from(params[:url]))</code> is safe.</p>
+<p><a href="https://github.com/lsylvester">Lachlan Sylvester</a> pointed out it’s also possible to use <code class="language-plaintext highlighter-rouge">url_from</code> to ensure a URL is for the same host. So <code class="language-plaintext highlighter-rouge">redirect_to(url_from(params[:url]))</code> is safe.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1749">changes</a>)</p>
 
-<p>This release also expands the open redirect check to <code class="highlighter-rouge">redirect_back</code> and <code class="highlighter-rouge">redirect_back_or_to</code> which have options for a fallback URL.</p>
+<p>This release also expands the open redirect check to <code class="language-plaintext highlighter-rouge">redirect_back</code> and <code class="language-plaintext highlighter-rouge">redirect_back_or_to</code> which have options for a fallback URL.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1756">changes</a>)</p>
 
 <h3 id="more-unscoped-finds">More Unscoped Finds</h3>
 
-<p>Brakeman will now warn about use of <code class="highlighter-rouge">find_by(id: ...)</code> the same way it would warn about <code class="highlighter-rouge">find_by_id</code> for “unscoped finds” (i.e., possible insecure direct object references).</p>
+<p>Brakeman will now warn about use of <code class="language-plaintext highlighter-rouge">find_by(id: ...)</code> the same way it would warn about <code class="language-plaintext highlighter-rouge">find_by_id</code> for “unscoped finds” (i.e., possible insecure direct object references).</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1748">changes</a>)</p>
 
 <h3 id="presence-method-support">Presence Method Support</h3>
 
-<p>Brakeman now handles <code class="highlighter-rouge">presence</code>, <code class="highlighter-rouge">presence_in</code>, and <code class="highlighter-rouge">in?</code> methods.</p>
+<p>Brakeman now handles <code class="language-plaintext highlighter-rouge">presence</code>, <code class="language-plaintext highlighter-rouge">presence_in</code>, and <code class="language-plaintext highlighter-rouge">in?</code> methods.</p>
 
-<p>Since <code class="highlighter-rouge">presence_in</code> and <code class="highlighter-rouge">in?</code> are often used for guard clauses, this fixes some false positives.</p>
+<p>Since <code class="language-plaintext highlighter-rouge">presence_in</code> and <code class="language-plaintext highlighter-rouge">in?</code> are often used for guard clauses, this fixes some false positives.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1747">changes</a>)</p>
 
@@ -161,7 +161,7 @@ This protection can be bypassed by passing in <code class="highlighter-rouge">al
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dc664d4b5d01dd81608db02ec9b7c383beb65a3169049df2939c4bbbd4edfb73  brakeman-5.4.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dc664d4b5d01dd81608db02ec9b7c383beb65a3169049df2939c4bbbd4edfb73  brakeman-5.4.1.gem
 c1bf7e4cec5bde1d53122b41743343d3e38e4aa30145707b902278dd3b588fd4  brakeman-lib-5.4.1.gem
 94d24f3ea881bfc213ead8fbf3568aa37b301272ccbecf383394c9d7d7f43eeb  brakeman-min-5.4.1.gem
 </code></pre></div></div>
@@ -211,7 +211,7 @@ c1bf7e4cec5bde1d53122b41743343d3e38e4aa30145707b902278dd3b588fd4  brakeman-lib-5
   <li>Add check for absolute paths issue with Pathname (<a href="https://github.com/presidentbeef/brakeman/issues/1721">#1721</a>)</li>
   <li>Handle multiple values and splats in case/when (<a href="https://github.com/presidentbeef/brakeman/issues/1730">#1730</a>)</li>
   <li>Ignore more model methods in redirects (<a href="https://github.com/presidentbeef/brakeman/issues/1723">#1723</a>)</li>
-  <li>Fix <code class="highlighter-rouge">load_rails_defaults</code> overwriting settings in the Rails application (<a href="https://github.com/jamgregory">James Gregory-Monk</a>)</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">load_rails_defaults</code> overwriting settings in the Rails application (<a href="https://github.com/jamgregory">James Gregory-Monk</a>)</li>
   <li>Use relative paths for CodeClimate report format (<a href="https://github.com/RubyBrewsday">Mike Poage</a>)</li>
 </ul>
 
@@ -221,26 +221,26 @@ c1bf7e4cec5bde1d53122b41743343d3e38e4aa30145707b902278dd3b588fd4  brakeman-lib-5
 
 <ul>
   <li>RSA key sizes less than 2048 bits</li>
-  <li>Use of padding modes other than OAEP (including <code class="highlighter-rouge">none</code>)</li>
+  <li>Use of padding modes other than OAEP (including <code class="language-plaintext highlighter-rouge">none</code>)</li>
 </ul>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1737">changes</a>)</p>
 
 <h3 id="unexpected-absolute-paths">Unexpected Absolute Paths</h3>
 
-<p>When joining paths using <code class="highlighter-rouge">Pathname#join</code>, any arguments that start with a forward slash (<code class="highlighter-rouge">/</code>) will cause the rest of the path to be relative to that absolute path. This may cause unexpected behavior and deviates from how <code class="highlighter-rouge">File.join</code> works.</p>
+<p>When joining paths using <code class="language-plaintext highlighter-rouge">Pathname#join</code>, any arguments that start with a forward slash (<code class="language-plaintext highlighter-rouge">/</code>) will cause the rest of the path to be relative to that absolute path. This may cause unexpected behavior and deviates from how <code class="language-plaintext highlighter-rouge">File.join</code> works.</p>
 
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Pathname</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'a'</span><span class="p">).</span><span class="nf">join</span><span class="p">(</span><span class="s1">'b'</span><span class="p">,</span> <span class="s1">'/c'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">)</span>
  <span class="o">=&gt;</span> <span class="c1">#&lt;Pathname:/c/d&gt;</span>
 </code></pre></div></div>
 
-<p>(There are more <code class="highlighter-rouge">Pathname</code> methods with this issue - to be added in a future release.)</p>
+<p>(There are more <code class="language-plaintext highlighter-rouge">Pathname</code> methods with this issue - to be added in a future release.)</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1733">changes</a>)</p>
 
-<h3 id="multiple-values-in-whens">Multiple Values in <code class="highlighter-rouge">when</code>s</h3>
+<h3 id="multiple-values-in-whens">Multiple Values in <code class="language-plaintext highlighter-rouge">when</code>s</h3>
 
-<p>If a <code class="highlighter-rouge">when</code> clause contains only ‘safe’ values, Brakeman will treat the <code class="highlighter-rouge">case</code> value as safe:</p>
+<p>If a <code class="language-plaintext highlighter-rouge">when</code> clause contains only ‘safe’ values, Brakeman will treat the <code class="language-plaintext highlighter-rouge">case</code> value as safe:</p>
 
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
 
@@ -257,10 +257,10 @@ c1bf7e4cec5bde1d53122b41743343d3e38e4aa30145707b902278dd3b588fd4  brakeman-lib-5
 <p>More model methods are ignored in redirects:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">first!</code></li>
-  <li><code class="highlighter-rouge">last!</code></li>
-  <li><code class="highlighter-rouge">sole</code></li>
-  <li><code class="highlighter-rouge">find_by_sole</code></li>
+  <li><code class="language-plaintext highlighter-rouge">first!</code></li>
+  <li><code class="language-plaintext highlighter-rouge">last!</code></li>
+  <li><code class="language-plaintext highlighter-rouge">sole</code></li>
+  <li><code class="language-plaintext highlighter-rouge">find_by_sole</code></li>
 </ul>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1732">changes</a>)</p>
@@ -275,7 +275,7 @@ c1bf7e4cec5bde1d53122b41743343d3e38e4aa30145707b902278dd3b588fd4  brakeman-lib-5
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bab990760949e999c5d52b297d8badda376754eb296c91abf829def733ed9d51  brakeman-5.4.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bab990760949e999c5d52b297d8badda376754eb296c91abf829def733ed9d51  brakeman-5.4.0.gem
 2b5a0cd5845b8c0e1b83e00122654af48b025ac3e6625c9ecbc5535226068416  brakeman-lib-5.4.0.gem
 fcbd60456c5db62767d143696e1edf8e4eaee734f2a039903aeca7bb4e6b3dbf  brakeman-min-5.4.0.gem
 </code></pre></div></div>
@@ -322,7 +322,7 @@ fcbd60456c5db62767d143696e1edf8e4eaee734f2a039903aeca7bb4e6b3dbf  brakeman-min-5
 
 <ul>
   <li>Add CWE information to warnings (<a href="https://github.com/saghaulor">Stephen Aghaulor</a>)</li>
-  <li>Include explicit engine or lib paths in <code class="highlighter-rouge">vendor/</code> (<a href="https://github.com/jrafanie">Joe Rafaniello</a>)</li>
+  <li>Include explicit engine or lib paths in <code class="language-plaintext highlighter-rouge">vendor/</code> (<a href="https://github.com/jrafanie">Joe Rafaniello</a>)</li>
   <li>Add check for CVE-2022-32209</li>
   <li>Load rexml as a Brakeman dependency</li>
   <li>Fix “full call” information propagating unnecessarily</li>
@@ -338,20 +338,20 @@ to every Brakeman warning type!</p>
 <p>Example:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"warning_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cross-Site Scripting"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"warning_code"</span><span class="p">:</span><span class="w"> </span><span class="mi">124</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"fingerprint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"c2cc471a99036432e03d83e893fe748c2b1d5c40a39e776475faf088717af97d"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"check_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SanitizeConfigCve"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rails-html-sanitizer 1.4.2 is vulnerable to cross-site scripting when `select` and `style` tags are allowed (CVE-2022-32209)"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"config/initializers/sanitizers.rb"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"line"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://groups.google.com/g/rubyonrails-security/c/ce9PhUANQ6s/m/S0fJfnkmBAAJ"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Rails::Html::SafeListSanitizer.allowed_tags = [</span><span class="se">\"</span><span class="s2">select</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">a</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">style</span><span class="se">\"</span><span class="s2">]"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"render_path"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"user_input"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="s2">"High"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"cwe_id"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="nl">"warning_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cross-Site Scripting"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"warning_code"</span><span class="p">:</span><span class="w"> </span><span class="mi">124</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"fingerprint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"c2cc471a99036432e03d83e893fe748c2b1d5c40a39e776475faf088717af97d"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"check_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SanitizeConfigCve"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rails-html-sanitizer 1.4.2 is vulnerable to cross-site scripting when `select` and `style` tags are allowed (CVE-2022-32209)"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"config/initializers/sanitizers.rb"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"line"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://groups.google.com/g/rubyonrails-security/c/ce9PhUANQ6s/m/S0fJfnkmBAAJ"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Rails::Html::SafeListSanitizer.allowed_tags = [</span><span class="se">\"</span><span class="s2">select</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">a</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">style</span><span class="se">\"</span><span class="s2">]"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"render_path"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"user_input"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="s2">"High"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"cwe_id"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="mi">79</span><span class="w">
       </span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
@@ -361,11 +361,11 @@ to every Brakeman warning type!</p>
 
 <h3 id="explicit-paths-in-vendor-directory">Explicit Paths in Vendor Directory</h3>
 
-<p>By default, Brakeman does not scan any code in the <code class="highlighter-rouge">vendor/</code> directory.</p>
+<p>By default, Brakeman does not scan any code in the <code class="language-plaintext highlighter-rouge">vendor/</code> directory.</p>
 
-<p>But it was also ignoring any paths in <code class="highlighter-rouge">vendor/</code>, even if the user explicitly included them via <code class="highlighter-rouge">--add-libs-path</code> or <code class="highlighter-rouge">--add-engines-path</code>.</p>
+<p>But it was also ignoring any paths in <code class="language-plaintext highlighter-rouge">vendor/</code>, even if the user explicitly included them via <code class="language-plaintext highlighter-rouge">--add-libs-path</code> or <code class="language-plaintext highlighter-rouge">--add-engines-path</code>.</p>
 
-<p>Thanks to <a href="https://github.com/jrafanie">Joe Rafaniello</a> this is now changed to respect the explicit additional paths, even if they reside in <code class="highlighter-rouge">vendor/</code>.</p>
+<p>Thanks to <a href="https://github.com/jrafanie">Joe Rafaniello</a> this is now changed to respect the explicit additional paths, even if they reside in <code class="language-plaintext highlighter-rouge">vendor/</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1699">changes</a>)</p>
 
@@ -375,9 +375,9 @@ to every Brakeman warning type!</p>
 
 <p>A check was added for <a href="https://hackerone.com/reports/1530898">CVE-2022-32209</a>.</p>
 
-<p>If the vulnerable configuration is detected, the warning will be <code class="highlighter-rouge">high</code> confidence.</p>
+<p>If the vulnerable configuration is detected, the warning will be <code class="language-plaintext highlighter-rouge">high</code> confidence.</p>
 
-<p>If only the vulnerable version of <code class="highlighter-rouge">rails-html-sanitizer</code> is detected, the warning will be <code class="highlighter-rouge">weak</code> confidence.</p>
+<p>If only the vulnerable version of <code class="language-plaintext highlighter-rouge">rails-html-sanitizer</code> is detected, the warning will be <code class="language-plaintext highlighter-rouge">weak</code> confidence.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1718">changes</a>)</p>
 
@@ -385,7 +385,7 @@ to every Brakeman warning type!</p>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4fe584ef37c16e1011a0f2db36ebab540fef403ff8e26afed212e2d7ff5a3176  brakeman-5.3.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4fe584ef37c16e1011a0f2db36ebab540fef403ff8e26afed212e2d7ff5a3176  brakeman-5.3.0.gem
 1f5caa0bd05fd8ea5b4f5791371dd0911f96d804612c7be986bab3ed0163a8cf  brakeman-lib-5.3.0.gem
 4a4ccef090c4eb5857140c15fa69ff65167f3eb550f7a0ca555012642aafe7e9  brakeman-min-5.3.0.gem
 </code></pre></div></div>
@@ -457,7 +457,7 @@ the help message matches the order of the options in the prompt!</p>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5b6efb6a1e5c2b79063553647638e17239d2d2f4d50561230c8b0acaae4728d4  brakeman-5.2.3.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5b6efb6a1e5c2b79063553647638e17239d2d2f4d50561230c8b0acaae4728d4  brakeman-5.2.3.gem
 3104abc8ac2b6558d9610ede40f4cac2ebc7ae45569876b8e5907b7422c4e3af  brakeman-lib-5.2.3.gem
 10d743c930c03ed1d2bea021ade8fac10f1229d02b8f65bf2214f7f09ec7a0ff  brakeman-min-5.2.3.gem
 </code></pre></div></div>
@@ -501,11 +501,11 @@ the help message matches the order of the options in the prompt!</p>
   <div class="entry-content"><p><em>Changes since 5.2.1:</em></p>
 
 <ul>
-  <li>Respect equality in <code class="highlighter-rouge">if</code> conditions (<a href="https://github.com/presidentbeef/brakeman/issues/1683">#1683</a>)</li>
+  <li>Respect equality in <code class="language-plaintext highlighter-rouge">if</code> conditions (<a href="https://github.com/presidentbeef/brakeman/issues/1683">#1683</a>)</li>
   <li>Update message for unsafe reflection (<a href="https://github.com/pedropb">Pedro Baracho</a>)</li>
-  <li>Handle <code class="highlighter-rouge">nil</code> when joining values (<a href="https://github.com/Capncavedan">Dan Buettner</a>)</li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">nil</code> when joining values (<a href="https://github.com/Capncavedan">Dan Buettner</a>)</li>
   <li>Add additional String methods for SQL injection check (<a href="https://github.com/presidentbeef/brakeman/issues/1669">#1669</a>)</li>
-  <li>Update <code class="highlighter-rouge">ruby_parser</code> for Ruby 3.1 support (<a href="https://github.com/sqbell">Merek Skubela</a>)</li>
+  <li>Update <code class="language-plaintext highlighter-rouge">ruby_parser</code> for Ruby 3.1 support (<a href="https://github.com/sqbell">Merek Skubela</a>)</li>
 </ul>
 
 <h3 id="equality-checks-in-conditions">Equality Checks in Conditions</h3>
@@ -517,7 +517,7 @@ the help message matches the order of the options in the prompt!</p>
 <span class="k">end</span>
 </code></pre></div></div>
 
-<p>It will now assume <code class="highlighter-rouge">x</code> is <code class="highlighter-rouge">1</code> inside of the <code class="highlighter-rouge">if</code> branch.</p>
+<p>It will now assume <code class="language-plaintext highlighter-rouge">x</code> is <code class="language-plaintext highlighter-rouge">1</code> inside of the <code class="language-plaintext highlighter-rouge">if</code> branch.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1681">changes</a>)</p>
 
@@ -529,15 +529,15 @@ the help message matches the order of the options in the prompt!</p>
 
 <h3 id="another-string-joining-fix">Another String Joining Fix</h3>
 
-<p><a href="https://github.com/Capncavedan">Dan Buettner</a> fixed an exception when a <code class="highlighter-rouge">nil</code> gets into a string joining operation.</p>
+<p><a href="https://github.com/Capncavedan">Dan Buettner</a> fixed an exception when a <code class="language-plaintext highlighter-rouge">nil</code> gets into a string joining operation.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1686">changes</a>)</p>
 
 <h3 id="more-sql-injection">More SQL Injection</h3>
 
-<p>When Brakeman checks for SQL injection, there are a number of methods (like <code class="highlighter-rouge">to_s</code> or <code class="highlighter-rouge">strip</code>) that essentially return the string itself.</p>
+<p>When Brakeman checks for SQL injection, there are a number of methods (like <code class="language-plaintext highlighter-rouge">to_s</code> or <code class="language-plaintext highlighter-rouge">strip</code>) that essentially return the string itself.</p>
 
-<p>This list of methods has been expanded to include <code class="highlighter-rouge">chop</code>, <code class="highlighter-rouge">lstrip</code>, <code class="highlighter-rouge">rstrip</code>, <code class="highlighter-rouge">scrub</code>, and <code class="highlighter-rouge">tr</code>.</p>
+<p>This list of methods has been expanded to include <code class="language-plaintext highlighter-rouge">chop</code>, <code class="language-plaintext highlighter-rouge">lstrip</code>, <code class="language-plaintext highlighter-rouge">rstrip</code>, <code class="language-plaintext highlighter-rouge">scrub</code>, and <code class="language-plaintext highlighter-rouge">tr</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1682">changes</a>)</p>
 
@@ -551,7 +551,7 @@ the help message matches the order of the options in the prompt!</p>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>246c9540f5d90fbde39c95999d319f9706bf79668f66bb35419825c1cbef61ae  brakeman-5.2.2.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>246c9540f5d90fbde39c95999d319f9706bf79668f66bb35419825c1cbef61ae  brakeman-5.2.2.gem
 1b559598d78919c0f6f3a8e8602b86ab35f825810b1d7daf872b7791b452e78b  brakeman-lib-5.2.2.gem
 4c34dcc1900bf872254eee2b313b1634ffacc9002fd7d26b8390259318cf6194  brakeman-min-5.2.2.gem
 </code></pre></div></div>

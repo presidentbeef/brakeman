@@ -102,9 +102,9 @@
   <li>Add check for skipping authentication methods with blacklist (<a href="https://github.com/presidentbeef/brakeman/issues/199">#199</a>)</li>
   <li>Add render path to JSON report</li>
   <li>Remove empty tables from reports (<a href="https://github.com/obduk">Owen Ben Davies</a>)</li>
-  <li>Handle <code class="highlighter-rouge">prepend/append_before_filter</code></li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">prepend/append_before_filter</code></li>
   <li>Performance improvements when handling branches</li>
-  <li>Fix processing of <code class="highlighter-rouge">production.rb</code> (<a href="https://github.com/presidentbeef/brakeman/issues/264">#264</a>)</li>
+  <li>Fix processing of <code class="language-plaintext highlighter-rouge">production.rb</code> (<a href="https://github.com/presidentbeef/brakeman/issues/264">#264</a>)</li>
   <li>Fix version check for Ruby 2.0</li>
   <li>Expand HAML dependency to include 4.0 (<a href="https://github.com/presidentbeef/brakeman/issues/263">#263</a>)</li>
   <li>Scroll errors into view when expanding in HTML report</li>
@@ -112,7 +112,7 @@
 
 <h3 id="warning-fingerprints-and-new-identifiers">Warning Fingerprints and New Identifiers</h3>
 
-<p><em>This is a breaking change: <code class="highlighter-rouge">brakeman --compare</code> will not work with reports generated from earlier versions.</em></p>
+<p><em>This is a breaking change: <code class="language-plaintext highlighter-rouge">brakeman --compare</code> will not work with reports generated from earlier versions.</em></p>
 
 <p>Tracking of new and fixed warnings is often required when integrating Brakeman with other tools. Current approaches rely on fragile values such as the warning messages or formatting of the code output.</p>
 
@@ -154,7 +154,7 @@
 
 <h3 id="check-for-skipping-of-authentication-methods">Check for Skipping of Authentication Methods</h3>
 
-<p>The check for <code class="highlighter-rouge">skip_before_filter</code>s using <code class="highlighter-rouge">except</code> instead of <code class="highlighter-rouge">only</code> has been expanded to include authentication filters from popular libraries.</p>
+<p>The check for <code class="language-plaintext highlighter-rouge">skip_before_filter</code>s using <code class="language-plaintext highlighter-rouge">except</code> instead of <code class="language-plaintext highlighter-rouge">only</code> has been expanded to include authentication filters from popular libraries.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/268">changes</a>)</p>
 
@@ -162,7 +162,7 @@
 
 <p>In HTML reports, templates which have a render path longer than one entry have been “expandable” to show the entire render path instead of just one level up. For example, a partial is usually rendered from a view, which is rendered from a controller action.</p>
 
-<p>JSON reports now also include this information in the <code class="highlighter-rouge">render_path</code> value.</p>
+<p>JSON reports now also include this information in the <code class="language-plaintext highlighter-rouge">render_path</code> value.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/279">changes</a>)</p>
 
@@ -174,23 +174,23 @@
 
 <h3 id="handle-preappended-filters">Handle (Pre|Ap)pended Filters</h3>
 
-<p>Brakeman will now recognize before filters added with <code class="highlighter-rouge">prepend_before_filter</code> and <code class="highlighter-rouge">append_before_filter</code>.</p>
+<p>Brakeman will now recognize before filters added with <code class="language-plaintext highlighter-rouge">prepend_before_filter</code> and <code class="language-plaintext highlighter-rouge">append_before_filter</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/266">changes</a>)</p>
 
 <h3 id="branching-performance-improvements">Branching Performance Improvements</h3>
 
-<p>It is entirely embarrassing, but Brakeman stopped working on Redmine some time ago due to how assignments in <code class="highlighter-rouge">if</code> expressions are handled.</p>
+<p>It is entirely embarrassing, but Brakeman stopped working on Redmine some time ago due to how assignments in <code class="language-plaintext highlighter-rouge">if</code> expressions are handled.</p>
 
-<p>In order to be somewhat flow sensitive, Brakeman combines variables assignments in <code class="highlighter-rouge">if</code> branches into <code class="highlighter-rouge">or</code> expressions. This captures the possible values a variable may have. However, Brakeman was doing that for <em>every</em> assignment in an <code class="highlighter-rouge">if</code> branch, even if there were multiple assignments to the same variable in the same branch (i.e., the value was not actually branching since the assignments were sequential). This release fixes that issue.</p>
+<p>In order to be somewhat flow sensitive, Brakeman combines variables assignments in <code class="language-plaintext highlighter-rouge">if</code> branches into <code class="language-plaintext highlighter-rouge">or</code> expressions. This captures the possible values a variable may have. However, Brakeman was doing that for <em>every</em> assignment in an <code class="language-plaintext highlighter-rouge">if</code> branch, even if there were multiple assignments to the same variable in the same branch (i.e., the value was not actually branching since the assignments were sequential). This release fixes that issue.</p>
 
-<p>Additionally, simple arithmetic operations are now distributed across <code class="highlighter-rouge">or</code> expressions containing simple values (strings or numbers at this point), providing some memory savings.</p>
+<p>Additionally, simple arithmetic operations are now distributed across <code class="language-plaintext highlighter-rouge">or</code> expressions containing simple values (strings or numbers at this point), providing some memory savings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/270">changes</a>)</p>
 
 <h3 id="fix-processing-of-production-environment-settings">Fix Processing of Production Environment Settings</h3>
 
-<p>Processing of <code class="highlighter-rouge">production.rb</code> has been broken for some time, but poor test coverage meant it went unnoticed. But it is fixed now, so settings in <code class="highlighter-rouge">production.rb</code> should override those found in <code class="highlighter-rouge">environment.rb</code>. This only applies to Rails 3 applications.</p>
+<p>Processing of <code class="language-plaintext highlighter-rouge">production.rb</code> has been broken for some time, but poor test coverage meant it went unnoticed. But it is fixed now, so settings in <code class="language-plaintext highlighter-rouge">production.rb</code> should override those found in <code class="language-plaintext highlighter-rouge">environment.rb</code>. This only applies to Rails 3 applications.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/265">changes</a>)</p>
 

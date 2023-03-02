@@ -86,23 +86,23 @@
 
 <p>If the file is a Ruby file, then the syntax can be checked directly.</p>
 
-<p>Run <code class="highlighter-rouge">ruby -c</code> against the file that caused the error to check the syntax of the file using the Ruby interpreter.</p>
+<p>Run <code class="language-plaintext highlighter-rouge">ruby -c</code> against the file that caused the error to check the syntax of the file using the Ruby interpreter.</p>
 
-<p>Run <code class="highlighter-rouge">ruby_parse</code> against the file that caused the error to check the syntax of the file using ruby_parser.</p>
+<p>Run <code class="language-plaintext highlighter-rouge">ruby_parse</code> against the file that caused the error to check the syntax of the file using ruby_parser.</p>
 
 <h3 id="check-erb-output">Check ERB Output</h3>
 
-<p>If the file is an ERB template, then the output of <code class="highlighter-rouge">erb</code> or <code class="highlighter-rouge">erubis</code> must be checked.</p>
+<p>If the file is an ERB template, then the output of <code class="language-plaintext highlighter-rouge">erb</code> or <code class="language-plaintext highlighter-rouge">erubis</code> must be checked.</p>
 
-<p>Run <code class="highlighter-rouge">erubis -x file_name.html.erb | ruby -c</code> to check using Erubis.</p>
+<p>Run <code class="language-plaintext highlighter-rouge">erubis -x file_name.html.erb | ruby -c</code> to check using Erubis.</p>
 
 <p><em>Important:</em> Rails uses a slightly modified version of ERB, so the output from these tools is not exactly the same as what Rails sees. Brakeman attempts to emulate the Rails version.</p>
 
 <h3 id="check-haml-output">Check Haml Output</h3>
 
-<p>If the file is a Haml template, then the output of <code class="highlighter-rouge">haml</code> needs to be checked.</p>
+<p>If the file is a Haml template, then the output of <code class="language-plaintext highlighter-rouge">haml</code> needs to be checked.</p>
 
-<p>Run <code class="highlighter-rouge">haml -e --debug file_name.html.haml</code> to check the output. Note that this will attempt to execute the code, which will likely fail. However, it will also indicate syntax problems.</p>
+<p>Run <code class="language-plaintext highlighter-rouge">haml -e --debug file_name.html.haml</code> to check the output. Note that this will attempt to execute the code, which will likely fail. However, it will also indicate syntax problems.</p>
 
 <h3 id="file-an-issue">File an Issue</h3>
 

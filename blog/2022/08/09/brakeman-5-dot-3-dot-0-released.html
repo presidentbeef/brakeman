@@ -99,7 +99,7 @@
 
 <ul>
   <li>Add CWE information to warnings (<a href="https://github.com/saghaulor">Stephen Aghaulor</a>)</li>
-  <li>Include explicit engine or lib paths in <code class="highlighter-rouge">vendor/</code> (<a href="https://github.com/jrafanie">Joe Rafaniello</a>)</li>
+  <li>Include explicit engine or lib paths in <code class="language-plaintext highlighter-rouge">vendor/</code> (<a href="https://github.com/jrafanie">Joe Rafaniello</a>)</li>
   <li>Add check for CVE-2022-32209</li>
   <li>Load rexml as a Brakeman dependency</li>
   <li>Fix “full call” information propagating unnecessarily</li>
@@ -115,20 +115,20 @@ to every Brakeman warning type!</p>
 <p>Example:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"warning_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cross-Site Scripting"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"warning_code"</span><span class="p">:</span><span class="w"> </span><span class="mi">124</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"fingerprint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"c2cc471a99036432e03d83e893fe748c2b1d5c40a39e776475faf088717af97d"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"check_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SanitizeConfigCve"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rails-html-sanitizer 1.4.2 is vulnerable to cross-site scripting when `select` and `style` tags are allowed (CVE-2022-32209)"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"config/initializers/sanitizers.rb"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"line"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://groups.google.com/g/rubyonrails-security/c/ce9PhUANQ6s/m/S0fJfnkmBAAJ"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Rails::Html::SafeListSanitizer.allowed_tags = [</span><span class="se">\"</span><span class="s2">select</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">a</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">style</span><span class="se">\"</span><span class="s2">]"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"render_path"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"user_input"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="s2">"High"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"cwe_id"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="nl">"warning_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cross-Site Scripting"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"warning_code"</span><span class="p">:</span><span class="w"> </span><span class="mi">124</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"fingerprint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"c2cc471a99036432e03d83e893fe748c2b1d5c40a39e776475faf088717af97d"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"check_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SanitizeConfigCve"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rails-html-sanitizer 1.4.2 is vulnerable to cross-site scripting when `select` and `style` tags are allowed (CVE-2022-32209)"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"config/initializers/sanitizers.rb"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"line"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://groups.google.com/g/rubyonrails-security/c/ce9PhUANQ6s/m/S0fJfnkmBAAJ"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Rails::Html::SafeListSanitizer.allowed_tags = [</span><span class="se">\"</span><span class="s2">select</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">a</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">style</span><span class="se">\"</span><span class="s2">]"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"render_path"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"user_input"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="s2">"High"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"cwe_id"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="mi">79</span><span class="w">
       </span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
@@ -138,11 +138,11 @@ to every Brakeman warning type!</p>
 
 <h3 id="explicit-paths-in-vendor-directory">Explicit Paths in Vendor Directory</h3>
 
-<p>By default, Brakeman does not scan any code in the <code class="highlighter-rouge">vendor/</code> directory.</p>
+<p>By default, Brakeman does not scan any code in the <code class="language-plaintext highlighter-rouge">vendor/</code> directory.</p>
 
-<p>But it was also ignoring any paths in <code class="highlighter-rouge">vendor/</code>, even if the user explicitly included them via <code class="highlighter-rouge">--add-libs-path</code> or <code class="highlighter-rouge">--add-engines-path</code>.</p>
+<p>But it was also ignoring any paths in <code class="language-plaintext highlighter-rouge">vendor/</code>, even if the user explicitly included them via <code class="language-plaintext highlighter-rouge">--add-libs-path</code> or <code class="language-plaintext highlighter-rouge">--add-engines-path</code>.</p>
 
-<p>Thanks to <a href="https://github.com/jrafanie">Joe Rafaniello</a> this is now changed to respect the explicit additional paths, even if they reside in <code class="highlighter-rouge">vendor/</code>.</p>
+<p>Thanks to <a href="https://github.com/jrafanie">Joe Rafaniello</a> this is now changed to respect the explicit additional paths, even if they reside in <code class="language-plaintext highlighter-rouge">vendor/</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1699">changes</a>)</p>
 
@@ -152,9 +152,9 @@ to every Brakeman warning type!</p>
 
 <p>A check was added for <a href="https://hackerone.com/reports/1530898">CVE-2022-32209</a>.</p>
 
-<p>If the vulnerable configuration is detected, the warning will be <code class="highlighter-rouge">high</code> confidence.</p>
+<p>If the vulnerable configuration is detected, the warning will be <code class="language-plaintext highlighter-rouge">high</code> confidence.</p>
 
-<p>If only the vulnerable version of <code class="highlighter-rouge">rails-html-sanitizer</code> is detected, the warning will be <code class="highlighter-rouge">weak</code> confidence.</p>
+<p>If only the vulnerable version of <code class="language-plaintext highlighter-rouge">rails-html-sanitizer</code> is detected, the warning will be <code class="language-plaintext highlighter-rouge">weak</code> confidence.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1718">changes</a>)</p>
 
@@ -162,7 +162,7 @@ to every Brakeman warning type!</p>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4fe584ef37c16e1011a0f2db36ebab540fef403ff8e26afed212e2d7ff5a3176  brakeman-5.3.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4fe584ef37c16e1011a0f2db36ebab540fef403ff8e26afed212e2d7ff5a3176  brakeman-5.3.0.gem
 1f5caa0bd05fd8ea5b4f5791371dd0911f96d804612c7be986bab3ed0163a8cf  brakeman-lib-5.3.0.gem
 4a4ccef090c4eb5857140c15fa69ff65167f3eb550f7a0ca555012642aafe7e9  brakeman-min-5.3.0.gem
 </code></pre></div></div>

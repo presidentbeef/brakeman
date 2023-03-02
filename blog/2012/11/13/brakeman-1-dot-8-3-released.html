@@ -93,21 +93,21 @@
   </header>
 
 
-<div class="entry-content"><p>This is primarily a false positive reduction release. One major change is the change in dependency from the <code class="highlighter-rouge">json_pure</code> gem to <code class="highlighter-rouge">multi_json</code>.</p>
+<div class="entry-content"><p>This is primarily a false positive reduction release. One major change is the change in dependency from the <code class="language-plaintext highlighter-rouge">json_pure</code> gem to <code class="language-plaintext highlighter-rouge">multi_json</code>.</p>
 
 <p><em>Changes since 1.8.2</em>:</p>
 
 <ul>
-  <li>Use <code class="highlighter-rouge">multi_json</code> gem for better harmony (<a href="https://github.com/presidentbeef/brakeman/issues/164">#164</a>)</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">multi_json</code> gem for better harmony (<a href="https://github.com/presidentbeef/brakeman/issues/164">#164</a>)</li>
   <li>Performance improvement for call indexing</li>
   <li>Fix issue with processing HAML files (<a href="https://github.com/presidentbeef/brakeman/issues/168">#168</a>)</li>
-  <li>Handle pre-release versions when processing <code class="highlighter-rouge">Gemfile.lock</code> (<a href="https://github.com/presidentbeef/brakeman/issues/174">#174</a>)</li>
-  <li>Only check first argument of <code class="highlighter-rouge">redirect_to</code> (<a href="https://github.com/presidentbeef/brakeman/issues/98">#98</a>)</li>
-  <li>Fix false positives from <code class="highlighter-rouge">Model.arel_table</code> accesses</li>
+  <li>Handle pre-release versions when processing <code class="language-plaintext highlighter-rouge">Gemfile.lock</code> (<a href="https://github.com/presidentbeef/brakeman/issues/174">#174</a>)</li>
+  <li>Only check first argument of <code class="language-plaintext highlighter-rouge">redirect_to</code> (<a href="https://github.com/presidentbeef/brakeman/issues/98">#98</a>)</li>
+  <li>Fix false positives from <code class="language-plaintext highlighter-rouge">Model.arel_table</code> accesses</li>
   <li>Fix false positives on redirects to models decorated with Draper gem (<a href="https://github.com/presidentbeef/brakeman/issues/172">#172</a>)</li>
   <li>Fix false positive on redirect to model association (<a href="https://github.com/presidentbeef/brakeman/issues/111">#111</a>)</li>
-  <li>Fix false positive on <code class="highlighter-rouge">YAML.load</code> (<a href="https://github.com/presidentbeef/brakeman/issues/142">#142</a>)</li>
-  <li>Fix false positive XSS on any <code class="highlighter-rouge">to_i</code> output</li>
+  <li>Fix false positive on <code class="language-plaintext highlighter-rouge">YAML.load</code> (<a href="https://github.com/presidentbeef/brakeman/issues/142">#142</a>)</li>
+  <li>Fix false positive XSS on any <code class="language-plaintext highlighter-rouge">to_i</code> output</li>
   <li>Fix error on Rails 2 named routes with no args</li>
   <li>Fix error in rescan of mixins with symbols in method name</li>
   <li>Do not rescan non-Ruby files in config/</li>
@@ -115,25 +115,25 @@
 
 <h3 id="change-to-multijson">Change to MultiJSON</h3>
 
-<p>Brakeman now depends on the <a href="http://rdoc.info/github/intridea/multi_json">multijson</a> gem instead of <code class="highlighter-rouge">json_pure</code>. This should make it easier for people who include Brakeman as a dependency.</p>
+<p>Brakeman now depends on the <a href="http://rdoc.info/github/intridea/multi_json">multijson</a> gem instead of <code class="language-plaintext highlighter-rouge">json_pure</code>. This should make it easier for people who include Brakeman as a dependency.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/166">changes</a>)</p>
 
 <h3 id="faster-call-indexing">Faster Call Indexing</h3>
 
-<p>Dumb code in the <code class="highlighter-rouge">CallIndex</code> was causing call indexing to be slow on some large applications. This should now be faster and require less memory!</p>
+<p>Dumb code in the <code class="language-plaintext highlighter-rouge">CallIndex</code> was causing call indexing to be slow on some large applications. This should now be faster and require less memory!</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/180">changes</a>)</p>
 
 <h3 id="fix-haml-processing">Fix HAML Processing</h3>
 
-<p>Some HAML files were causing Brakeman’s alias processing to slow to a crawl. This was due to the template code (sometimes) directly appending to the output variable via <code class="highlighter-rouge">&lt;&lt;</code>. Since Brakeman attempts to treat targets of <code class="highlighter-rouge">&lt;&lt;</code> as arrays, Brakeman was generating large data structures each time <code class="highlighter-rouge">&lt;&lt;</code> was encountered.</p>
+<p>Some HAML files were causing Brakeman’s alias processing to slow to a crawl. This was due to the template code (sometimes) directly appending to the output variable via <code class="language-plaintext highlighter-rouge">&lt;&lt;</code>. Since Brakeman attempts to treat targets of <code class="language-plaintext highlighter-rouge">&lt;&lt;</code> as arrays, Brakeman was generating large data structures each time <code class="language-plaintext highlighter-rouge">&lt;&lt;</code> was encountered.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/170">changes</a>]</p>
 
 <h3 id="handle-pre-release-versions">Handle Pre-release Versions</h3>
 
-<p>When a <code class="highlighter-rouge">Gemfile.lock</code> file is present in a Rails application, Brakeman uses it to determine the version of Rails in use. Previous versions did not accept pre-release version numbers (like <code class="highlighter-rouge">3.1.2.rc1</code>), leading to version inappropriate warnings.</p>
+<p>When a <code class="language-plaintext highlighter-rouge">Gemfile.lock</code> file is present in a Rails application, Brakeman uses it to determine the version of Rails in use. Previous versions did not accept pre-release version numbers (like <code class="language-plaintext highlighter-rouge">3.1.2.rc1</code>), leading to version inappropriate warnings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/176">changes</a>)</p>
 
@@ -141,18 +141,18 @@
 
 <p>Several false positives related to redirects have been fixed, and the scope of the redirect check is somewhat reduced.</p>
 
-<p>Calls beginning with <code class="highlighter-rouge">Model.arel_table</code> should no longer be treated as user input (in any context).</p>
+<p>Calls beginning with <code class="language-plaintext highlighter-rouge">Model.arel_table</code> should no longer be treated as user input (in any context).</p>
 
-<p>Model instances returned by the <code class="highlighter-rouge">decorate</code> method in the <a href="https://github.com/drapergem/draper">Draper</a> gem are considered safe.</p>
+<p>Model instances returned by the <code class="language-plaintext highlighter-rouge">decorate</code> method in the <a href="https://github.com/drapergem/draper">Draper</a> gem are considered safe.</p>
 
-<p>Redirects to model associations (e.g, <code class="highlighter-rouge">belongs_to :account</code>) are considered safe.</p>
+<p>Redirects to model associations (e.g, <code class="language-plaintext highlighter-rouge">belongs_to :account</code>) are considered safe.</p>
 
 <p>Redirects to method calls with safe values should no longer warn. For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to blah(User.first) #No warning
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to blah(User.first) #No warning
 </code></pre></div></div>
 
-<p>Additionally, only the first argument of <code class="highlighter-rouge">redirect_to</code> will be checked for user input.</p>
+<p>Additionally, only the first argument of <code class="language-plaintext highlighter-rouge">redirect_to</code> will be checked for user input.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/177">changes</a>)</p>
 
@@ -164,7 +164,7 @@
 
 <h3 id="integer-output-false-positives">Integer Output False Positives</h3>
 
-<p>Calls to <code class="highlighter-rouge">to_i</code> should not trigger XSS warnings.</p>
+<p>Calls to <code class="language-plaintext highlighter-rouge">to_i</code> should not trigger XSS warnings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/179">changes</a>)</p>
 

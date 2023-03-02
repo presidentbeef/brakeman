@@ -93,17 +93,17 @@
   </header>
 
 
-<div class="entry-content"><p>This is a small bug fix release. The only expected changes in warnings are for dangerous attributes in <code class="highlighter-rouge">attr_accessible</code>
+<div class="entry-content"><p>This is a small bug fix release. The only expected changes in warnings are for dangerous attributes in <code class="language-plaintext highlighter-rouge">attr_accessible</code>
 and cross site scripting involving model attributes. Some warning fingerprints may change as a result of this update.</p>
 
 <p><em>Changes since 2.1.0</em>:</p>
 
 <ul>
   <li>More accurate results for model attribute warnings (<a href="https://github.com/presidentbeef/brakeman/issues/385">#385</a>)</li>
-  <li>Do not warn on <code class="highlighter-rouge">attr_accessible</code> using roles (<a href="https://github.com/presidentbeef/brakeman/issues/372">#372</a>)</li>
-  <li>New warning code for dangerous attributes in <code class="highlighter-rouge">attr_accessible</code></li>
+  <li>Do not warn on <code class="language-plaintext highlighter-rouge">attr_accessible</code> using roles (<a href="https://github.com/presidentbeef/brakeman/issues/372">#372</a>)</li>
+  <li>New warning code for dangerous attributes in <code class="language-plaintext highlighter-rouge">attr_accessible</code></li>
   <li>Fix infinite loop when run as rake task (<a href="https://github.com/arkadyan">Matthew Shanley</a>)</li>
-  <li>Use exit code zero with <code class="highlighter-rouge">-z</code> if all warnings ignored (<a href="https://github.com/presidentbeef/brakeman/issues/381">#381</a>)</li>
+  <li>Use exit code zero with <code class="language-plaintext highlighter-rouge">-z</code> if all warnings ignored (<a href="https://github.com/presidentbeef/brakeman/issues/381">#381</a>)</li>
   <li>Respect ignored warnings in rescans (<a href="https://github.com/presidentbeef/brakeman/issues/382">#382</a>)</li>
   <li>Respect ignored warnings in tabs format reports</li>
   <li>Ignore dynamic controller names in routes</li>
@@ -111,21 +111,21 @@ and cross site scripting involving model attributes. Some warning fingerprints m
 
 <h3 id="more-accurate-model-matching">More Accurate Model Matching</h3>
 
-<p>Model attributes which are reported as user input should now be reported more accurately. For example, instead of reporting <code class="highlighter-rouge">Model.find(1)</code> as user input, the entire attribute will be reported. For example: <code class="highlighter-rouge">Model.find(1).name</code></p>
+<p>Model attributes which are reported as user input should now be reported more accurately. For example, instead of reporting <code class="language-plaintext highlighter-rouge">Model.find(1)</code> as user input, the entire attribute will be reported. For example: <code class="language-plaintext highlighter-rouge">Model.find(1).name</code></p>
 
-<p>As a side effect, several methods which were already intended to be ignored (such as <code class="highlighter-rouge">count</code>) will actually be ignored for XSS warnings.</p>
+<p>As a side effect, several methods which were already intended to be ignored (such as <code class="language-plaintext highlighter-rouge">count</code>) will actually be ignored for XSS warnings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/386">changes</a>)</p>
 
 <h3 id="attr_accessible-check-updates">attr_accessible Check Updates</h3>
 
-<p>The check for potentially dangerous attributes whitelisted in <code class="highlighter-rouge">attr_accessible</code> has been updated to ignore attributes protected by roles. Additionally, it now has its own warning code to separate it from regular mass assignment warnings.</p>
+<p>The check for potentially dangerous attributes whitelisted in <code class="language-plaintext highlighter-rouge">attr_accessible</code> has been updated to ignore attributes protected by roles. Additionally, it now has its own warning code to separate it from regular mass assignment warnings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/388">warning code change</a>, <a href="https://github.com/presidentbeef/brakeman/pull/384">role change</a>)</p>
 
 <h3 id="rake-task-fix">Rake Task Fix</h3>
 
-<p>The last release included a method named <code class="highlighter-rouge">load_dependency</code> which handles calling <code class="highlighter-rouge">require</code> for optional dependencies. Unfortunately, Rails overrides <code class="highlighter-rouge">require</code> to call its own method called <code class="highlighter-rouge">load_dependency</code>. Rails is loaded when any <code class="highlighter-rouge">rake</code> command is used, so when Brakeman is run with Rake it causes an infinite loop between <code class="highlighter-rouge">load_dependency</code> and <code class="highlighter-rouge">require</code>.</p>
+<p>The last release included a method named <code class="language-plaintext highlighter-rouge">load_dependency</code> which handles calling <code class="language-plaintext highlighter-rouge">require</code> for optional dependencies. Unfortunately, Rails overrides <code class="language-plaintext highlighter-rouge">require</code> to call its own method called <code class="language-plaintext highlighter-rouge">load_dependency</code>. Rails is loaded when any <code class="language-plaintext highlighter-rouge">rake</code> command is used, so when Brakeman is run with Rake it causes an infinite loop between <code class="language-plaintext highlighter-rouge">load_dependency</code> and <code class="language-plaintext highlighter-rouge">require</code>.</p>
 
 <p>Thanks to <a href="https://github.com/arkadyan">Matthew Shanley</a> for reporting the issue and providing a fix.</p>
 
@@ -133,7 +133,7 @@ and cross site scripting involving model attributes. Some warning fingerprints m
 
 <h3 id="exit-code-fixed-when-warnings-ignored">Exit Code Fixed When Warnings Ignored</h3>
 
-<p>Brakeman will now return <code class="highlighter-rouge">0</code> when using <code class="highlighter-rouge">-z</code> and all reported warnings are ignored.</p>
+<p>Brakeman will now return <code class="language-plaintext highlighter-rouge">0</code> when using <code class="language-plaintext highlighter-rouge">-z</code> and all reported warnings are ignored.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/375">changes</a>)</p>
 

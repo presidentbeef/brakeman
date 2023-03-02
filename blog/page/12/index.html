@@ -106,16 +106,16 @@
   <li>Warn on SQL query keys, not values in hashes (<a href="https://github.com/presidentbeef/brakeman/issues/738">#738</a>)</li>
   <li>Set user input value for inline renders</li>
   <li>Avoid warning on inline renders with safe content types</li>
-  <li>Treat <code class="highlighter-rouge">current_user</code> like a model (<a href="https://github.com/presidentbeef/brakeman/issues/744">#744</a>)</li>
-  <li>Avoid warning about model <code class="highlighter-rouge">find/find_by*</code> in hrefs</li>
-  <li>Handle <code class="highlighter-rouge">private def ...</code></li>
+  <li>Treat <code class="language-plaintext highlighter-rouge">current_user</code> like a model (<a href="https://github.com/presidentbeef/brakeman/issues/744">#744</a>)</li>
+  <li>Avoid warning about model <code class="language-plaintext highlighter-rouge">find/find_by*</code> in hrefs</li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">private def ...</code></li>
   <li>Handle empty interpolation in HAML filters (<a href="https://github.com/presidentbeef/brakeman/issues/732">#732</a>)</li>
   <li>Catch divide-by-zero in alias processing (<a href="https://github.com/presidentbeef/brakeman/issues/729">#729</a>)</li>
   <li>Ignore filters that are not method names</li>
   <li>Search for config file relative to application root</li>
   <li>Use SafeYAML to load configuration files</li>
   <li>Allow inspection of recursive Sexps</li>
-  <li>Reduce string allocations in <code class="highlighter-rouge">Warning#initialize</code></li>
+  <li>Reduce string allocations in <code class="language-plaintext highlighter-rouge">Warning#initialize</code></li>
 </ul>
 
 <h3 id="sortable-tables">Sortable Tables</h3>
@@ -126,33 +126,33 @@
 
 <h3 id="line-numbers-for-class-warnings">Line Numbers for Class Warnings</h3>
 
-<p>When warning about an entire class (like a model missing <code class="highlighter-rouge">attr_accessible</code>), the warning line number will point to the beginning of the class.</p>
+<p>When warning about an entire class (like a model missing <code class="language-plaintext highlighter-rouge">attr_accessible</code>), the warning line number will point to the beginning of the class.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/733">changes</a>)</p>
 
 <h3 id="sql-query-hashes">SQL Query Hashes</h3>
 
-<p>A long-standing bug in Brakeman caused it to warn about values in query hashes (e.g., <code class="highlighter-rouge">User.where(:x =&gt; params[:x])</code>) when it was intended to warn about user input in the <em>keys</em>.</p>
+<p>A long-standing bug in Brakeman caused it to warn about values in query hashes (e.g., <code class="language-plaintext highlighter-rouge">User.where(:x =&gt; params[:x])</code>) when it was intended to warn about user input in the <em>keys</em>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/740">changes</a>)</p>
 
 <h3 id="inline-renders">Inline Renders</h3>
 
-<p>Brakeman will now report the <code class="highlighter-rouge">render</code> call as the <code class="highlighter-rouge">code</code> value and the user input as <code class="highlighter-rouge">user_input</code>. Please note the code will look a little different from what Brakeman reports, as render calls are turned into a slightly different AST node internally. This will definitely change fingerprints for these warnings.</p>
+<p>Brakeman will now report the <code class="language-plaintext highlighter-rouge">render</code> call as the <code class="language-plaintext highlighter-rouge">code</code> value and the user input as <code class="language-plaintext highlighter-rouge">user_input</code>. Please note the code will look a little different from what Brakeman reports, as render calls are turned into a slightly different AST node internally. This will definitely change fingerprints for these warnings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/751">changes</a>)</p>
 
 <h3 id="current_user">current_user</h3>
 
-<p>In a couple places, Brakeman will treat <code class="highlighter-rouge">current_user</code> like a model instance, which it almost always is. This will probably be expanded in future releases.</p>
+<p>In a couple places, Brakeman will treat <code class="language-plaintext highlighter-rouge">current_user</code> like a model instance, which it almost always is. This will probably be expanded in future releases.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/749">changes</a>)</p>
 
 <h3 id="inline-privates">Inline Privates</h3>
 
-<p>Calls to <code class="highlighter-rouge">private</code> using the return value of <code class="highlighter-rouge">def</code> will now work properly:</p>
+<p>Calls to <code class="language-plaintext highlighter-rouge">private</code> using the return value of <code class="language-plaintext highlighter-rouge">def</code> will now work properly:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>private def secret_stuff
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>private def secret_stuff
 # ...
 end
 </code></pre></div></div>
@@ -173,9 +173,9 @@ end
 
 <h3 id="config-file-changes">Config File Changes</h3>
 
-<p>When looking for the <code class="highlighter-rouge">config/brakeman.yml</code> configuration file, Brakeman will now look relative to the application path instead of the working directory.</p>
+<p>When looking for the <code class="language-plaintext highlighter-rouge">config/brakeman.yml</code> configuration file, Brakeman will now look relative to the application path instead of the working directory.</p>
 
-<p>Additionally, the <code class="highlighter-rouge">SafeYAML</code> gem is used to prevent code execution for those running Brakeman against untrusted code.</p>
+<p>Additionally, the <code class="language-plaintext highlighter-rouge">SafeYAML</code> gem is used to prevent code execution for those running Brakeman against untrusted code.</p>
 
 <p>(changes <a href="https://github.com/presidentbeef/brakeman/pull/725">here</a> and <a href="https://github.com/presidentbeef/brakeman/pull/741">here</a>)</p>
 
@@ -183,7 +183,7 @@ end
 
 <p>The SHA256 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c01f07ccc2490d0421e5974499c57f519aa371bfab5d25ba3b224e7ae9e2c415  brakeman-3.1.2.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c01f07ccc2490d0421e5974499c57f519aa371bfab5d25ba3b224e7ae9e2c415  brakeman-3.1.2.gem
 d820c872cbe7bc8452c9bd8bd46d990ff1c0d53ee621c09f1997270fc978f783  brakeman-min-3.1.2.gem
 </code></pre></div></div>
 
@@ -233,10 +233,10 @@ d820c872cbe7bc8452c9bd8bd46d990ff1c0d53ee621c09f1997270fc978f783  brakeman-min-3
   <li>Add optional check for use of MD5 and SHA1</li>
   <li>Fix absolute paths for Windows (<a href="https://github.com/spcoder">Cody Frederick</a>)</li>
   <li>Allow searching call index methods by regex (<a href="https://github.com/aianus">Alex Ianus</a>)</li>
-  <li>Consider <code class="highlighter-rouge">j</code>/<code class="highlighter-rouge">escape_javascript</code> safe inside Haml JavaScript blocks (<a href="https://github.com/presidentbeef/brakeman/issues/708">#708</a>)</li>
-  <li>Better Haml processing of <code class="highlighter-rouge">find_and_preserve</code> calls</li>
+  <li>Consider <code class="language-plaintext highlighter-rouge">j</code>/<code class="language-plaintext highlighter-rouge">escape_javascript</code> safe inside Haml JavaScript blocks (<a href="https://github.com/presidentbeef/brakeman/issues/708">#708</a>)</li>
+  <li>Better Haml processing of <code class="language-plaintext highlighter-rouge">find_and_preserve</code> calls</li>
   <li>Fix chained assignment</li>
-  <li>Treat <code class="highlighter-rouge">a.try(&amp;:b)</code> like <code class="highlighter-rouge">a.b()</code></li>
+  <li>Treat <code class="language-plaintext highlighter-rouge">a.try(&amp;:b)</code> like <code class="language-plaintext highlighter-rouge">a.b()</code></li>
   <li>Add more Arel methods to be ignored in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/711">#711</a>)</li>
   <li>Avoid warning when linking to decorated models (<a href="https://github.com/presidentbeef/brakeman/issues/683">#683</a>)</li>
   <li>Support newer terminal-table releases (<a href="https://github.com/presidentbeef/brakeman/issues/709">#709</a>)</li>
@@ -250,7 +250,7 @@ d820c872cbe7bc8452c9bd8bd46d990ff1c0d53ee621c09f1997270fc978f783  brakeman-min-3
 
 <h3 id="optional-check-for-weak-hashes">Optional Check for Weak Hashes</h3>
 
-<p>An optional check to look for use of MD5 and SHA1 has been added to this release. Run with <code class="highlighter-rouge">-t WeakHash</code> to use just this optional check or <code class="highlighter-rouge">-A</code> to run all checks.</p>
+<p>An optional check to look for use of MD5 and SHA1 has been added to this release. Run with <code class="language-plaintext highlighter-rouge">-t WeakHash</code> to use just this optional check or <code class="language-plaintext highlighter-rouge">-A</code> to run all checks.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/722">changes</a>)</p>
 
@@ -264,28 +264,28 @@ d820c872cbe7bc8452c9bd8bd46d990ff1c0d53ee621c09f1997270fc978f783  brakeman-min-3
 
 <p><a href="https://github.com/aianus">Alex Ianus</a> re-introduced the ability to search the CallIndex with regular expressions for methods:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tracker.find_call(method: /_something$/)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tracker.find_call(method: /_something$/)
 </code></pre></div></div>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/710">changes</a>)</p>
 
 <h3 id="haml-processing">Haml Processing</h3>
 
-<p>Haml users may have noticed warnings with <code class="highlighter-rouge">find_and_preserve(Haml::Filters::Javascript.render_with_options(...))</code> in them. This has been fixed so <code class="highlighter-rouge">find_and_preserve</code> is treated as though it just passes through its arguments. Calls to <code class="highlighter-rouge">render_with_options</code> will be treated as unescaped output.</p>
+<p>Haml users may have noticed warnings with <code class="language-plaintext highlighter-rouge">find_and_preserve(Haml::Filters::Javascript.render_with_options(...))</code> in them. This has been fixed so <code class="language-plaintext highlighter-rouge">find_and_preserve</code> is treated as though it just passes through its arguments. Calls to <code class="language-plaintext highlighter-rouge">render_with_options</code> will be treated as unescaped output.</p>
 
-<p>Along with this change, <code class="highlighter-rouge">j</code> and <code class="highlighter-rouge">escape_javascript</code> will be considered safe inside <code class="highlighter-rouge">:javascript</code> filters in Haml.</p>
+<p>Along with this change, <code class="language-plaintext highlighter-rouge">j</code> and <code class="language-plaintext highlighter-rouge">escape_javascript</code> will be considered safe inside <code class="language-plaintext highlighter-rouge">:javascript</code> filters in Haml.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/716">changes</a>)</p>
 
 <h3 id="chained-assignment">Chained Assignment</h3>
 
-<p>Chained assignments like <code class="highlighter-rouge">a = b = c = 1</code> will now be handled correctly. This fixes <a href="https://stackoverflow.com/questions/11314450/how-to-secure-link-to-variable-cross-site-scripting-vulnerabilities">a very old issue from 2012</a>.</p>
+<p>Chained assignments like <code class="language-plaintext highlighter-rouge">a = b = c = 1</code> will now be handled correctly. This fixes <a href="https://stackoverflow.com/questions/11314450/how-to-secure-link-to-variable-cross-site-scripting-vulnerabilities">a very old issue from 2012</a>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/718">changes</a>)</p>
 
 <h3 id="trying-more">Trying More</h3>
 
-<p>While Brakeman already treated <code class="highlighter-rouge">a.try(:b)</code> like <code class="highlighter-rouge">a.b()</code>, there is a surprising amount of code which does <code class="highlighter-rouge">a.try(&amp;:b)</code>. This is totally unncessary, but Brakeman now handles it as well.</p>
+<p>While Brakeman already treated <code class="language-plaintext highlighter-rouge">a.try(:b)</code> like <code class="language-plaintext highlighter-rouge">a.b()</code>, there is a surprising amount of code which does <code class="language-plaintext highlighter-rouge">a.try(&amp;:b)</code>. This is totally unncessary, but Brakeman now handles it as well.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/717">changes</a>)</p>
 
@@ -297,7 +297,7 @@ d820c872cbe7bc8452c9bd8bd46d990ff1c0d53ee621c09f1997270fc978f783  brakeman-min-3
 
 <h3 id="decorated-models-in-links">Decorated Models in Links</h3>
 
-<p>If the Draper gem is used, Brakeman will ignore calls to <code class="highlighter-rouge">decorate</code> in <code class="highlighter-rouge">link_to</code>.</p>
+<p>If the Draper gem is used, Brakeman will ignore calls to <code class="language-plaintext highlighter-rouge">decorate</code> in <code class="language-plaintext highlighter-rouge">link_to</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/721">changes</a>)</p>
 
@@ -311,7 +311,7 @@ d820c872cbe7bc8452c9bd8bd46d990ff1c0d53ee621c09f1997270fc978f783  brakeman-min-3
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cfd1840116c20b0b8932720fdaac09dd4e47091a  brakeman-3.1.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cfd1840116c20b0b8932720fdaac09dd4e47091a  brakeman-3.1.1.gem
 603389da732d307a014af445a1f312415b65a682  brakeman-min-3.1.1.gem
 </code></pre></div></div>
 
@@ -351,22 +351,22 @@ d820c872cbe7bc8452c9bd8bd46d990ff1c0d53ee621c09f1997270fc978f783  brakeman-min-3
 
   <div class="entry-content"><p>There are several changes in this release which may affect consumers of the JSON report as well as anyone relying on the ignore configuration file. Please try out <a href="https://gist.github.com/presidentbeef/52d5cce0fd26b901179e">this script</a> to migrate ignore configurations.</p>
 
-<p>Additionally, some dependencies have been updated to versions no longer supporting Ruby 1.8. As a consequence, Brakeman no longer runs “out of the box” on Ruby 1.8, although you may be able to use the <code class="highlighter-rouge">brakeman-min</code> gem. No more attempts will be made to support running on Ruby 1.8 in future releases. Please note that does not mean Ruby 1.8 code cannot be analyzed; that still works fine.</p>
+<p>Additionally, some dependencies have been updated to versions no longer supporting Ruby 1.8. As a consequence, Brakeman no longer runs “out of the box” on Ruby 1.8, although you may be able to use the <code class="language-plaintext highlighter-rouge">brakeman-min</code> gem. No more attempts will be made to support running on Ruby 1.8 in future releases. Please note that does not mean Ruby 1.8 code cannot be analyzed; that still works fine.</p>
 
 <p><em>Changes since 3.0.5</em>:</p>
 
 <ul>
   <li>Update dependencies to Ruby 1.8 incompatible versions</li>
   <li>Update render path information in JSON reports</li>
-  <li>Remove renaming of several <code class="highlighter-rouge">Sexp</code> nodes</li>
-  <li>Treat <code class="highlighter-rouge">html_safe</code> like <code class="highlighter-rouge">raw</code></li>
+  <li>Remove renaming of several <code class="language-plaintext highlighter-rouge">Sexp</code> nodes</li>
+  <li>Treat <code class="language-plaintext highlighter-rouge">html_safe</code> like <code class="language-plaintext highlighter-rouge">raw</code></li>
   <li>Use railties version if rails gem is missing (<a href="https://github.com/lucasmazza">Lucas Mazza</a>)</li>
-  <li>Warn about unverified SSL mode in <code class="highlighter-rouge">Net::HTTP.start</code></li>
+  <li>Warn about unverified SSL mode in <code class="language-plaintext highlighter-rouge">Net::HTTP.start</code></li>
   <li>Expand XSS safe methods</li>
-  <li>Avoid warning on path creation methods in <code class="highlighter-rouge">link_to</code></li>
-  <li>Add support for <code class="highlighter-rouge">gems.rb</code>/<code class="highlighter-rouge">gems.locked</code> (<a href="https://github.com/presidentbeef/brakeman/pull/705">#705</a>)</li>
+  <li>Avoid warning on path creation methods in <code class="language-plaintext highlighter-rouge">link_to</code></li>
+  <li>Add support for <code class="language-plaintext highlighter-rouge">gems.rb</code>/<code class="language-plaintext highlighter-rouge">gems.locked</code> (<a href="https://github.com/presidentbeef/brakeman/pull/705">#705</a>)</li>
   <li>Fix low confidence XSS warning code</li>
-  <li>Avoid duplicate <code class="highlighter-rouge">eval</code> warnings</li>
+  <li>Avoid duplicate <code class="language-plaintext highlighter-rouge">eval</code> warnings</li>
   <li>Convert YAML config keys to symbols (<a href="https://github.com/KarlGl">Karl Glaser</a>)</li>
 </ul>
 
@@ -380,13 +380,13 @@ d820c872cbe7bc8452c9bd8bd46d990ff1c0d53ee621c09f1997270fc978f783  brakeman-min-3
 
 <h3 id="render-path-improvements">Render Path Improvements</h3>
 
-<p>Previously, render paths were arrays of strings. The strings represented the locations of calls to <code class="highlighter-rouge">render</code> (implicit or explicit), either in the form <code class="highlighter-rouge">&lt;Controller&gt;#&lt;method&gt;</code> or <code class="highlighter-rouge">Template:&lt;template/path&gt;</code>. While the information was somewhat useful to humans, it was not easily manipulated by computers and it was difficult to link the strings back to application code.</p>
+<p>Previously, render paths were arrays of strings. The strings represented the locations of calls to <code class="language-plaintext highlighter-rouge">render</code> (implicit or explicit), either in the form <code class="language-plaintext highlighter-rouge">&lt;Controller&gt;#&lt;method&gt;</code> or <code class="language-plaintext highlighter-rouge">Template:&lt;template/path&gt;</code>. While the information was somewhat useful to humans, it was not easily manipulated by computers and it was difficult to link the strings back to application code.</p>
 
-<p>Now, render paths are arrays of hashes. The hash has a <code class="highlighter-rouge">type</code> key with a value of either <code class="highlighter-rouge">controller</code> or <code class="highlighter-rouge">template</code>. For controllers, the hash includes <code class="highlighter-rouge">class</code>, <code class="highlighter-rouge">method</code>, <code class="highlighter-rouge">line</code>, and <code class="highlighter-rouge">file</code>. For templates, the hash includes <code class="highlighter-rouge">name</code>, <code class="highlighter-rouge">line</code>, and <code class="highlighter-rouge">file</code>.</p>
+<p>Now, render paths are arrays of hashes. The hash has a <code class="language-plaintext highlighter-rouge">type</code> key with a value of either <code class="language-plaintext highlighter-rouge">controller</code> or <code class="language-plaintext highlighter-rouge">template</code>. For controllers, the hash includes <code class="language-plaintext highlighter-rouge">class</code>, <code class="language-plaintext highlighter-rouge">method</code>, <code class="language-plaintext highlighter-rouge">line</code>, and <code class="language-plaintext highlighter-rouge">file</code>. For templates, the hash includes <code class="language-plaintext highlighter-rouge">name</code>, <code class="language-plaintext highlighter-rouge">line</code>, and <code class="language-plaintext highlighter-rouge">file</code>.</p>
 
 <p>Example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[
   {
     "type": "controller",
     "class": "ProductsController",
@@ -407,7 +407,7 @@ d820c872cbe7bc8452c9bd8bd46d990ff1c0d53ee621c09f1997270fc978f783  brakeman-min-3
 
 <p>Rendered templates in JSON reports used to include the render location as well. For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"location": {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"location": {
   "type": "template",
   "template": "home/index (HomeController#index)"
 }
@@ -419,9 +419,9 @@ d820c872cbe7bc8452c9bd8bd46d990ff1c0d53ee621c09f1997270fc978f783  brakeman-min-3
 
 <h3 id="s-expression-names">S-Expression Names</h3>
 
-<p>Starting a long time ago, Brakeman rewrote several s-expression names for no reason other than clarity (for example, <code class="highlighter-rouge">dstr</code> becomes <code class="highlighter-rouge">string_interp</code>). However, not all nodes were changed, leading to code that must check for both the original name from RubyParser and Brakeman’s name. This leads to messy code and subtle bugs.</p>
+<p>Starting a long time ago, Brakeman rewrote several s-expression names for no reason other than clarity (for example, <code class="language-plaintext highlighter-rouge">dstr</code> becomes <code class="language-plaintext highlighter-rouge">string_interp</code>). However, not all nodes were changed, leading to code that must check for both the original name from RubyParser and Brakeman’s name. This leads to messy code and subtle bugs.</p>
 
-<p>The following node names were removed: <code class="highlighter-rouge">string_interp</code>, <code class="highlighter-rouge">string_eval</code>, <code class="highlighter-rouge">methdef</code>, <code class="highlighter-rouge">selfdef</code>, <code class="highlighter-rouge">call_with_block</code>.</p>
+<p>The following node names were removed: <code class="language-plaintext highlighter-rouge">string_interp</code>, <code class="language-plaintext highlighter-rouge">string_eval</code>, <code class="language-plaintext highlighter-rouge">methdef</code>, <code class="language-plaintext highlighter-rouge">selfdef</code>, <code class="language-plaintext highlighter-rouge">call_with_block</code>.</p>
 
 <p>While this seems like a silly internal change, it will unfortunately change any fingerprints containing these node types. A <a href="https://gist.github.com/presidentbeef/52d5cce0fd26b901179e">quick script is available</a> to migrate ignore files without having to manually update the fingerprints.</p>
 
@@ -429,65 +429,65 @@ d820c872cbe7bc8452c9bd8bd46d990ff1c0d53ee621c09f1997270fc978f783  brakeman-min-3
 
 <h3 id="html_safe">html_safe</h3>
 
-<p>As we hopefully all know now, <code class="highlighter-rouge">html_safe</code> is not safe, it marks a string so it is <em>not</em> escaped when output in a template. Since this is essentially the same as calling <code class="highlighter-rouge">raw</code> on a string, Brakeman will treat them both as unescaped output.</p>
+<p>As we hopefully all know now, <code class="language-plaintext highlighter-rouge">html_safe</code> is not safe, it marks a string so it is <em>not</em> escaped when output in a template. Since this is essentially the same as calling <code class="language-plaintext highlighter-rouge">raw</code> on a string, Brakeman will treat them both as unescaped output.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/675">changes</a>)</p>
 
 <h3 id="use-railties-version">Use railties Version</h3>
 
-<p>Thanks to <a href="https://github.com/lucasmazza">Lucas Mazza</a>, if an application depends on <code class="highlighter-rouge">railties</code> instead of <code class="highlighter-rouge">rails</code>, Brakeman will now use the gem version of <code class="highlighter-rouge">railties</code> as the Rails version.</p>
+<p>Thanks to <a href="https://github.com/lucasmazza">Lucas Mazza</a>, if an application depends on <code class="language-plaintext highlighter-rouge">railties</code> instead of <code class="language-plaintext highlighter-rouge">rails</code>, Brakeman will now use the gem version of <code class="language-plaintext highlighter-rouge">railties</code> as the Rails version.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/695/files">changes</a>)</p>
 
 <h3 id="ssl-verify-mode">SSL Verify Mode</h3>
 
-<p>As suggested by <a href="https://github.com/gmcnaughton">Gordon McNaughton</a>, Brakeman now warns when SSL certificate verification is turned off in calls to <code class="highlighter-rouge">Net::HTTP.start</code>.</p>
+<p>As suggested by <a href="https://github.com/gmcnaughton">Gordon McNaughton</a>, Brakeman now warns when SSL certificate verification is turned off in calls to <code class="language-plaintext highlighter-rouge">Net::HTTP.start</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/694">changes</a>)</p>
 
 <h3 id="safe-methods">Safe Methods</h3>
 
-<p>The <code class="highlighter-rouge">--safe-methods</code> option (which only applies to XSS warnings) and <code class="highlighter-rouge">--url-safe-methods</code> (which applies to values pass to <code class="highlighter-rouge">link_to</code>) now work on methods that have a target. For example, <code class="highlighter-rouge">--url-safe-methods this_is_safe</code> will ignore <code class="highlighter-rouge">link_to util.this_is_safe(params[:x])</code>.</p>
+<p>The <code class="language-plaintext highlighter-rouge">--safe-methods</code> option (which only applies to XSS warnings) and <code class="language-plaintext highlighter-rouge">--url-safe-methods</code> (which applies to values pass to <code class="language-plaintext highlighter-rouge">link_to</code>) now work on methods that have a target. For example, <code class="language-plaintext highlighter-rouge">--url-safe-methods this_is_safe</code> will ignore <code class="language-plaintext highlighter-rouge">link_to util.this_is_safe(params[:x])</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/674">changes</a>)</p>
 
 <h3 id="more-safe-methods">More Safe Methods</h3>
 
-<p>Brakeman warns about user input in the href parameter of <code class="highlighter-rouge">link_to</code> because it is possible to pass in a string starting with <code class="highlighter-rouge">javascript:</code>, which will execute the XSS payload when the victim clicks on it. However, it will no longer warn about methods that look like path helpers or URL generation methods. It will still warn about URL methods on models, since those may be direct user input.</p>
+<p>Brakeman warns about user input in the href parameter of <code class="language-plaintext highlighter-rouge">link_to</code> because it is possible to pass in a string starting with <code class="language-plaintext highlighter-rouge">javascript:</code>, which will execute the XSS payload when the victim clicks on it. However, it will no longer warn about methods that look like path helpers or URL generation methods. It will still warn about URL methods on models, since those may be direct user input.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/674">changes</a>)</p>
 
 <h3 id="gemsrbgemslocked">gems.rb/gems.locked</h3>
 
-<p><code class="highlighter-rouge">gems.rb</code>/<code class="highlighter-rouge">gems.locked</code> are alternative names for <code class="highlighter-rouge">Gemfile</code>/<code class="highlighter-rouge">Gemfile.lock</code>. Brakeman now supports either pair.</p>
+<p><code class="language-plaintext highlighter-rouge">gems.rb</code>/<code class="language-plaintext highlighter-rouge">gems.locked</code> are alternative names for <code class="language-plaintext highlighter-rouge">Gemfile</code>/<code class="language-plaintext highlighter-rouge">Gemfile.lock</code>. Brakeman now supports either pair.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/705">changes</a>)</p>
 
 <h3 id="weak-confidence-xss-warnings">Weak Confidence XSS Warnings</h3>
 
-<p>A small bug caused weak confidence XSS warnings to have a warning code of <code class="highlighter-rouge">5</code> (which is for unescaped JSON) instead of <code class="highlighter-rouge">2</code>.</p>
+<p>A small bug caused weak confidence XSS warnings to have a warning code of <code class="language-plaintext highlighter-rouge">5</code> (which is for unescaped JSON) instead of <code class="language-plaintext highlighter-rouge">2</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/commit/9fec336e7cbbbb74add9ef9c6c90c65efa0ebcc7">changes</a>)</p>
 
 <h3 id="duplicate-eval-warnings">Duplicate Eval Warnings</h3>
 
-<p>There should now be fewer duplicate warnings about dangerous calls to <code class="highlighter-rouge">eval</code>.</p>
+<p>There should now be fewer duplicate warnings about dangerous calls to <code class="language-plaintext highlighter-rouge">eval</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/670/files">changes</a>)</p>
 
 <h3 id="configuration-keys">Configuration Keys</h3>
 
-<p><a href="https://github.com/KarlGl">Karl Glaser</a> added a change so Brakeman configuration files may use string or symbol keys in the YAML file. However, it is recommended to use <code class="highlighter-rouge">brakeman -C</code> to generate configurations automatically, because writing YAML by hand is annoying.</p>
+<p><a href="https://github.com/KarlGl">Karl Glaser</a> added a change so Brakeman configuration files may use string or symbol keys in the YAML file. However, it is recommended to use <code class="language-plaintext highlighter-rouge">brakeman -C</code> to generate configurations automatically, because writing YAML by hand is annoying.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/696">changes</a>)</p>
 
 <h3 id="internal-changes">Internal Changes</h3>
 
-<p>Internally, most of the information Brakeman tracks is kept in hash tables. This is changing, starting with the addition of <code class="highlighter-rouge">Controller</code>, <code class="highlighter-rouge">Model</code>, <code class="highlighter-rouge">Template</code>, and <code class="highlighter-rouge">Config</code> classes.</p>
+<p>Internally, most of the information Brakeman tracks is kept in hash tables. This is changing, starting with the addition of <code class="language-plaintext highlighter-rouge">Controller</code>, <code class="language-plaintext highlighter-rouge">Model</code>, <code class="language-plaintext highlighter-rouge">Template</code>, and <code class="language-plaintext highlighter-rouge">Config</code> classes.</p>
 
 <p>Unfortunately, this will probably break any code that relies on Brakeman’s internals (such as custom checks).</p>
 
-<p>Fortunately, in almost all cases it will simplify code and in many cases it just means changing a hash access (like <code class="highlighter-rouge">template[:name]</code>) to a method call (<code class="highlighter-rouge">template.name</code>).</p>
+<p>Fortunately, in almost all cases it will simplify code and in many cases it just means changing a hash access (like <code class="language-plaintext highlighter-rouge">template[:name]</code>) to a method call (<code class="language-plaintext highlighter-rouge">template.name</code>).</p>
 
 <p>See <a href="https://github.com/presidentbeef/brakeman/pull/690">the pull request</a> for examples.</p>
 
@@ -497,7 +497,7 @@ d820c872cbe7bc8452c9bd8bd46d990ff1c0d53ee621c09f1997270fc978f783  brakeman-min-3
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>236af597e5cbcc0e647c02c4087ceb5965510435  brakeman-3.1.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>236af597e5cbcc0e647c02c4087ceb5965510435  brakeman-3.1.0.gem
 fe06faf67e781c4c4dc5ee362918ef2dfd8e1ce2  brakeman-min-3.1.0.gem
 </code></pre></div></div>
 
@@ -554,7 +554,7 @@ fe06faf67e781c4c4dc5ee362918ef2dfd8e1ce2  brakeman-min-3.1.0.gem
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>b78e11b745128ed7f9acd5d0c4f5e0e3a81f4d07  brakeman-min-3.0.5.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>b78e11b745128ed7f9acd5d0c4f5e0e3a81f4d07  brakeman-min-3.0.5.gem
 c62cc782595d4995aa385b6bd96c2485ac932077  brakeman-3.0.5.gem
 </code></pre></div></div>
 
@@ -602,8 +602,8 @@ c62cc782595d4995aa385b6bd96c2485ac932077  brakeman-3.0.5.gem
 <ul>
   <li>Add check for CVE-2015-3226 (XSS via JSON keys)</li>
   <li>Add check for CVE-2015-3227 (XML DoS)</li>
-  <li>Treat <code class="highlighter-rouge">&lt;%==</code> as unescaped output (<a href="https://github.com/presidentbeef/brakeman/issues/661">#661</a>)</li>
-  <li>Update <code class="highlighter-rouge">ruby_parser</code> dependency to 3.7.0</li>
+  <li>Treat <code class="language-plaintext highlighter-rouge">&lt;%==</code> as unescaped output (<a href="https://github.com/presidentbeef/brakeman/issues/661">#661</a>)</li>
+  <li>Update <code class="language-plaintext highlighter-rouge">ruby_parser</code> dependency to 3.7.0</li>
 </ul>
 
 <h3 id="cross-site-scripting-in-json">Cross Site Scripting in JSON</h3>
@@ -614,13 +614,13 @@ c62cc782595d4995aa385b6bd96c2485ac932077  brakeman-3.0.5.gem
 
 <h3 id="xml-denial-of-service">XML Denial of Service</h3>
 
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/bahr2JLnxvk/x4EocXnHPp8J">CVE-2015-3227</a> is a potential denial of service when parsing deeply nested XML requests. Brakeman will warn about this unless there is an initializer changing the XML parser as described in the CVE. Currently it looks for either <code class="highlighter-rouge">LibXML</code> or <code class="highlighter-rouge">Nokogiri</code>.</p>
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/bahr2JLnxvk/x4EocXnHPp8J">CVE-2015-3227</a> is a potential denial of service when parsing deeply nested XML requests. Brakeman will warn about this unless there is an initializer changing the XML parser as described in the CVE. Currently it looks for either <code class="language-plaintext highlighter-rouge">LibXML</code> or <code class="language-plaintext highlighter-rouge">Nokogiri</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/666">changes</a>)</p>
 
 <h3 id="double-equals-is-unescaped-output">Double Equals is Unescaped Output</h3>
 
-<p>Brakeman will now treat <code class="highlighter-rouge">&lt;%== x %&gt;</code> in ERB templates as unescaped output.</p>
+<p>Brakeman will now treat <code class="language-plaintext highlighter-rouge">&lt;%== x %&gt;</code> in ERB templates as unescaped output.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/663">changes</a>)</p>
 
@@ -628,7 +628,7 @@ c62cc782595d4995aa385b6bd96c2485ac932077  brakeman-3.0.5.gem
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bf6ae72a0b516ecf65b9165d07e86259ef9fa5d3  brakeman-3.0.4.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bf6ae72a0b516ecf65b9165d07e86259ef9fa5d3  brakeman-3.0.4.gem
 c1c2ea5402d8a89fe4a645947ec324d0603d3976  brakeman-min-3.0.4.gem
 </code></pre></div></div>
 

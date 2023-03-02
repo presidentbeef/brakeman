@@ -82,9 +82,9 @@
 
 <h3 id="example">Example</h3>
 
-<p>Here is a simple Rake task to run Brakeman. It can be added to your <code class="highlighter-rouge">Rakefile</code> or in the <code class="highlighter-rouge">tasks/</code> directory.</p>
+<p>Here is a simple Rake task to run Brakeman. It can be added to your <code class="language-plaintext highlighter-rouge">Rakefile</code> or in the <code class="language-plaintext highlighter-rouge">tasks/</code> directory.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>namespace :brakeman do
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>namespace :brakeman do
 
   desc "Run Brakeman"
   task :run, :output_files do |t, args|
@@ -100,12 +100,12 @@ end
 
 <p>To use this task:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake brakeman:run
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake brakeman:run
 </code></pre></div></div>
 
 <p>or</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake brakeman:run[report.html]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake brakeman:run[report.html]
 </code></pre></div></div>
 
 <p>This task can easily be customized. See <a href="/docs/brakeman_as_a_library">Brakeman as a Library</a> for more information.</p>

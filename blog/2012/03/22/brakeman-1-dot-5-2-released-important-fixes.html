@@ -93,15 +93,15 @@
   </header>
 
 
-<div class="entry-content"><p>This is update includes some important fixes. All users of the <code class="highlighter-rouge">rails_xss</code> plugin are particularly encouraged to upgrade.</p>
+<div class="entry-content"><p>This is update includes some important fixes. All users of the <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin are particularly encouraged to upgrade.</p>
 
 <p><em>Changes since 1.5.1:</em></p>
 
 <ul>
-  <li>Fix handling of views when using <code class="highlighter-rouge">rails_xss</code></li>
+  <li>Fix handling of views when using <code class="language-plaintext highlighter-rouge">rails_xss</code></li>
   <li>Fix rescanning of lib files (Neil Matatall)</li>
-  <li>Fix <code class="highlighter-rouge">link_to</code> checks for Rails 2.0 and 2.3</li>
-  <li>Revert to <code class="highlighter-rouge">ruby_parser</code> 2.3.1 for Ruby 1.8 parsing</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">link_to</code> checks for Rails 2.0 and 2.3</li>
+  <li>Revert to <code class="language-plaintext highlighter-rouge">ruby_parser</code> 2.3.1 for Ruby 1.8 parsing</li>
   <li>Only warn on user input in render paths</li>
   <li>Output stack trace on interrupt when debugging</li>
   <li>Ignore user input in if statement conditions</li>
@@ -110,21 +110,21 @@
 
 <h3 id="views-with-rails_xss">Views with rails_xss</h3>
 
-<p>Some previous changes to make sure Brakeman was processing ERB views the same way as the <code class="highlighter-rouge">rails_xss</code> plugin unfortunately broke the processing of those views.</p>
+<p>Some previous changes to make sure Brakeman was processing ERB views the same way as the <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin unfortunately broke the processing of those views.</p>
 
-<p>These changes caused Brakeman to not report <em>any</em> output from ERB views when the <code class="highlighter-rouge">rails_xss</code> plugin was in use, hiding any XSS vulnerabilities in those views.</p>
+<p>These changes caused Brakeman to not report <em>any</em> output from ERB views when the <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin was in use, hiding any XSS vulnerabilities in those views.</p>
 
-<p>This now fixed, so if you are using the <code class="highlighter-rouge">rails_xss</code> plugin, it is highly recommended to upgrade.</p>
+<p>This now fixed, so if you are using the <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin, it is highly recommended to upgrade.</p>
 
 <h3 id="rescanning-lib-files">Rescanning lib/ Files</h3>
 
-<p>Rescanning changed files in the <code class="highlighter-rouge">lib</code> directory was broken, but Neil fixed it!</p>
+<p>Rescanning changed files in the <code class="language-plaintext highlighter-rouge">lib</code> directory was broken, but Neil fixed it!</p>
 
 <h3 id="link_to-checks">link_to Checks</h3>
 
 <p>In Rails 2.3, the URL is escaped, but not the body of the link. In Rails 2.0, neither argument is escaped.</p>
 
-<p>In this release, the check for XSS in <code class="highlighter-rouge">link_to</code> has been updated to handle <code class="highlighter-rouge">link_to</code> with blocks and to warn in Rails 2.0.x if any user input is used as an argument.</p>
+<p>In this release, the check for XSS in <code class="language-plaintext highlighter-rouge">link_to</code> has been updated to handle <code class="language-plaintext highlighter-rouge">link_to</code> with blocks and to warn in Rails 2.0.x if any user input is used as an argument.</p>
 
 <h3 id="revert-to-ruby_parser-for-ruby-18">Revert to ruby_parser for Ruby 1.8</h3>
 
@@ -138,7 +138,7 @@
 
 <h3 id="stacktrace-output">Stacktrace Output</h3>
 
-<p>Brakeman will now output a stacktrace if interrupted while running with the <code class="highlighter-rouge">-d</code> option. This is mostly helpful when Brakeman appears to “hang”.</p>
+<p>Brakeman will now output a stacktrace if interrupted while running with the <code class="language-plaintext highlighter-rouge">-d</code> option. This is mostly helpful when Brakeman appears to “hang”.</p>
 
 <h3 id="reporting-issues">Reporting Issues</h3>
 

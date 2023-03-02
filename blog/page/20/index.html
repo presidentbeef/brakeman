@@ -107,11 +107,11 @@
   <li>Add more informational JSON output (Neil Matatall)</li>
   <li>Add comparison to previous JSON report (Neil Matatall)</li>
   <li>Add highlighting of dangerous values in HTML/text reports</li>
-  <li><code class="highlighter-rouge">Model#update_attribute</code> should not raise mass assignment warning (Dave Worth)</li>
-  <li>Don’t check <code class="highlighter-rouge">find_by_*</code> method for SQL injection</li>
+  <li><code class="language-plaintext highlighter-rouge">Model#update_attribute</code> should not raise mass assignment warning (Dave Worth)</li>
+  <li>Don’t check <code class="language-plaintext highlighter-rouge">find_by_*</code> method for SQL injection</li>
   <li>Fix duplicate reporting of mass assignment and SQL injection</li>
   <li>Fix rescanning of deleted files</li>
-  <li>Properly check for <code class="highlighter-rouge">rails_xss</code> in Gemfile</li>
+  <li>Properly check for <code class="language-plaintext highlighter-rouge">rails_xss</code> in Gemfile</li>
 </ul>
 
 <h3 id="no-more-ruport">No More Ruport</h3>
@@ -130,7 +130,7 @@
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.json
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.json
 brakeman --compare report.json
 </code></pre></div></div>
 
@@ -146,7 +146,7 @@ brakeman --compare report.json
 
 <p>Dave Worth pointed out that Brakeman was a little overzealous in which methods it considered susceptible to mass assignment and SQL injection attacks.</p>
 
-<p>Brakeman will no longer check <code class="highlighter-rouge">update_attribute</code> for mass assignment or the <code class="highlighter-rouge">find_by_*</code> dynamic methods for SQL injection.</p>
+<p>Brakeman will no longer check <code class="language-plaintext highlighter-rouge">update_attribute</code> for mass assignment or the <code class="language-plaintext highlighter-rouge">find_by_*</code> dynamic methods for SQL injection.</p>
 
 <h3 id="fewer-mass-assignment-and-sql-injection-duplicates">Fewer Mass Assignment and SQL Injection Duplicates</h3>
 
@@ -207,11 +207,11 @@ brakeman --compare report.json
 <p><em>Changes since 1.5.2:</em></p>
 
 <ul>
-  <li>Add check for user input in <code class="highlighter-rouge">Object#send</code> (Neil Matatall)</li>
+  <li>Add check for user input in <code class="language-plaintext highlighter-rouge">Object#send</code> (Neil Matatall)</li>
   <li>Support output to multiple formats (Nick Green)</li>
   <li>Prevent infinite loops in mutually recursive templates</li>
-  <li>Only check <code class="highlighter-rouge">eval</code> arguments for user input, not the call target</li>
-  <li>Handle <code class="highlighter-rouge">render :layout</code> in views</li>
+  <li>Only check <code class="language-plaintext highlighter-rouge">eval</code> arguments for user input, not the call target</li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">render :layout</code> in views</li>
   <li>Search subdirectories for models</li>
   <li>Set values in request hashes and propagate to views</li>
   <li>Add rake task file to gemspec (Anton Ageev)</li>
@@ -222,20 +222,20 @@ brakeman --compare report.json
 
 <h3 id="new-check-for-user-input-in-objectsend">New Check for User Input in Object#send</h3>
 
-<p>This new check looks for instances where user input can be used to control the method called using <code class="highlighter-rouge">send</code>.</p>
+<p>This new check looks for instances where user input can be used to control the method called using <code class="language-plaintext highlighter-rouge">send</code>.</p>
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user = User.find(params[:user][:id])
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user = User.find(params[:user][:id])
 method = params[:user][:action].to_sym
 user.send(method)
 </code></pre></div></div>
 
 <h3 id="support-for-multiple-output-formats">Support for Multiple Output Formats</h3>
 
-<p>Brakeman can now accept multiple <code class="highlighter-rouge">-o</code> arguments in order to produce more than one report from the same scan:</p>
+<p>Brakeman can now accept multiple <code class="language-plaintext highlighter-rouge">-o</code> arguments in order to produce more than one report from the same scan:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.html -o report.json
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.html -o report.json
 </code></pre></div></div>
 
 <h3 id="handle-mutually-recursive-templates">Handle Mutually Recursive Templates</h3>
@@ -244,32 +244,32 @@ user.send(method)
 
 <p>_one.erb.html:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= render :partial =&gt; 'two' %&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= render :partial =&gt; 'two' %&gt;
 </code></pre></div></div>
 
 <p>_two.erb.html:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= render :partial =&gt; 'one' %&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= render :partial =&gt; 'one' %&gt;
 </code></pre></div></div>
 
-<h3 id="only-check-eval-arguments">Only Check <code class="highlighter-rouge">eval</code> Arguments</h3>
+<h3 id="only-check-eval-arguments">Only Check <code class="language-plaintext highlighter-rouge">eval</code> Arguments</h3>
 
-<p>Previously, Brakeman was checking the entire call to methods like <code class="highlighter-rouge">eval</code> or <code class="highlighter-rouge">class_eval</code> for user input. This led to false positives when <code class="highlighter-rouge">class_eval</code> was being called on a model.</p>
+<p>Previously, Brakeman was checking the entire call to methods like <code class="language-plaintext highlighter-rouge">eval</code> or <code class="language-plaintext highlighter-rouge">class_eval</code> for user input. This led to false positives when <code class="language-plaintext highlighter-rouge">class_eval</code> was being called on a model.</p>
 
-<p>Now Brakeman only checks the arguments or block provided to the <code class="highlighter-rouge">eval</code> call.</p>
+<p>Now Brakeman only checks the arguments or block provided to the <code class="language-plaintext highlighter-rouge">eval</code> call.</p>
 
 <h3 id="handle-render-layout-in-views">Handle render :layout in views</h3>
 
-<p>Brakeman was not handling <code class="highlighter-rouge">render :layout =&gt; "..."</code> in views properly. This led to errors like:</p>
+<p>Brakeman was not handling <code class="language-plaintext highlighter-rouge">render :layout =&gt; "..."</code> in views properly. This led to errors like:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wrong number of arguments (0 for 1): /Users/collins/work/brakeman/lib/brakeman/processors/lib/render_helper.rb:14:in `template_name
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wrong number of arguments (0 for 1): /Users/collins/work/brakeman/lib/brakeman/processors/lib/render_helper.rb:14:in `template_name
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">render :layout</code> is now handled just like rendering a partial.</p>
+<p><code class="language-plaintext highlighter-rouge">render :layout</code> is now handled just like rendering a partial.</p>
 
 <h3 id="search-for-models-in-subdirectories">Search for Models in Subdirectories</h3>
 
-<p>Brakeman was only searching <code class="highlighter-rouge">app/models/</code> for models, but not any subdirectories. Now it does!</p>
+<p>Brakeman was only searching <code class="language-plaintext highlighter-rouge">app/models/</code> for models, but not any subdirectories. Now it does!</p>
 
 <h3 id="propagate-request-values">Propagate Request Values</h3>
 
@@ -277,20 +277,20 @@ user.send(method)
 
 <p>For example, if an action in a controller did this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>params[:input] = some_random_value
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>params[:input] = some_random_value
 </code></pre></div></div>
 
-<p>That value would not be propagated to the view if the view used <code class="highlighter-rouge">params[:input]</code>.</p>
+<p>That value would not be propagated to the view if the view used <code class="language-plaintext highlighter-rouge">params[:input]</code>.</p>
 
 <h3 id="add-rake-task-to-gemspec">Add Rake Task to Gemspec</h3>
 
-<p>In 1.2.0, Brakeman added the <code class="highlighter-rouge">--rake</code> option to add a Rake task to a Rails application, but the actual task itself was not included in the gem!</p>
+<p>In 1.2.0, Brakeman added the <code class="language-plaintext highlighter-rouge">--rake</code> option to add a Rake task to a Rails application, but the actual task itself was not included in the gem!</p>
 
 <p>Thanks to Anton Ageev for pointing this out. Either no one else tried this option, or a lot of people were very disappointed.</p>
 
 <h3 id="filter-templates-when-rescanning">Filter Templates When Rescanning</h3>
 
-<p>When rescanning (for example, with <a href="https://github.com/guard/guard-brakeman">guard-brakeman</a>), Brakeman was assuming any files in <code class="highlighter-rouge">app/views</code> is a template, but this isn’t always true.</p>
+<p>When rescanning (for example, with <a href="https://github.com/guard/guard-brakeman">guard-brakeman</a>), Brakeman was assuming any files in <code class="language-plaintext highlighter-rouge">app/views</code> is a template, but this isn’t always true.</p>
 
 <h3 id="reporting-issues">Reporting Issues</h3>
 
@@ -328,15 +328,15 @@ user.send(method)
   </header>
 
 
-  <div class="entry-content"><p>This is update includes some important fixes. All users of the <code class="highlighter-rouge">rails_xss</code> plugin are particularly encouraged to upgrade.</p>
+  <div class="entry-content"><p>This is update includes some important fixes. All users of the <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin are particularly encouraged to upgrade.</p>
 
 <p><em>Changes since 1.5.1:</em></p>
 
 <ul>
-  <li>Fix handling of views when using <code class="highlighter-rouge">rails_xss</code></li>
+  <li>Fix handling of views when using <code class="language-plaintext highlighter-rouge">rails_xss</code></li>
   <li>Fix rescanning of lib files (Neil Matatall)</li>
-  <li>Fix <code class="highlighter-rouge">link_to</code> checks for Rails 2.0 and 2.3</li>
-  <li>Revert to <code class="highlighter-rouge">ruby_parser</code> 2.3.1 for Ruby 1.8 parsing</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">link_to</code> checks for Rails 2.0 and 2.3</li>
+  <li>Revert to <code class="language-plaintext highlighter-rouge">ruby_parser</code> 2.3.1 for Ruby 1.8 parsing</li>
   <li>Only warn on user input in render paths</li>
   <li>Output stack trace on interrupt when debugging</li>
   <li>Ignore user input in if statement conditions</li>
@@ -345,21 +345,21 @@ user.send(method)
 
 <h3 id="views-with-rails_xss">Views with rails_xss</h3>
 
-<p>Some previous changes to make sure Brakeman was processing ERB views the same way as the <code class="highlighter-rouge">rails_xss</code> plugin unfortunately broke the processing of those views.</p>
+<p>Some previous changes to make sure Brakeman was processing ERB views the same way as the <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin unfortunately broke the processing of those views.</p>
 
-<p>These changes caused Brakeman to not report <em>any</em> output from ERB views when the <code class="highlighter-rouge">rails_xss</code> plugin was in use, hiding any XSS vulnerabilities in those views.</p>
+<p>These changes caused Brakeman to not report <em>any</em> output from ERB views when the <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin was in use, hiding any XSS vulnerabilities in those views.</p>
 
-<p>This now fixed, so if you are using the <code class="highlighter-rouge">rails_xss</code> plugin, it is highly recommended to upgrade.</p>
+<p>This now fixed, so if you are using the <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin, it is highly recommended to upgrade.</p>
 
 <h3 id="rescanning-lib-files">Rescanning lib/ Files</h3>
 
-<p>Rescanning changed files in the <code class="highlighter-rouge">lib</code> directory was broken, but Neil fixed it!</p>
+<p>Rescanning changed files in the <code class="language-plaintext highlighter-rouge">lib</code> directory was broken, but Neil fixed it!</p>
 
 <h3 id="link_to-checks">link_to Checks</h3>
 
 <p>In Rails 2.3, the URL is escaped, but not the body of the link. In Rails 2.0, neither argument is escaped.</p>
 
-<p>In this release, the check for XSS in <code class="highlighter-rouge">link_to</code> has been updated to handle <code class="highlighter-rouge">link_to</code> with blocks and to warn in Rails 2.0.x if any user input is used as an argument.</p>
+<p>In this release, the check for XSS in <code class="language-plaintext highlighter-rouge">link_to</code> has been updated to handle <code class="language-plaintext highlighter-rouge">link_to</code> with blocks and to warn in Rails 2.0.x if any user input is used as an argument.</p>
 
 <h3 id="revert-to-ruby_parser-for-ruby-18">Revert to ruby_parser for Ruby 1.8</h3>
 
@@ -373,7 +373,7 @@ user.send(method)
 
 <h3 id="stacktrace-output">Stacktrace Output</h3>
 
-<p>Brakeman will now output a stacktrace if interrupted while running with the <code class="highlighter-rouge">-d</code> option. This is mostly helpful when Brakeman appears to “hang”.</p>
+<p>Brakeman will now output a stacktrace if interrupted while running with the <code class="language-plaintext highlighter-rouge">-d</code> option. This is mostly helpful when Brakeman appears to “hang”.</p>
 
 <h3 id="reporting-issues">Reporting Issues</h3>
 
@@ -473,21 +473,21 @@ user.send(method)
 
 <p>The first is probably the most widely-seen version. In an intializer, do</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActiveRecord::Base.send(:attr_accessible, nil)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActiveRecord::Base.send(:attr_accessible, nil)
 </code></pre></div></div>
 
 <p>The second is essentially equivalent, but 1.5.1 adds support for it as well:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module ActiveRecord
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module ActiveRecord
   class Base
     attr_accessible nil
   end
 end
 </code></pre></div></div>
 
-<p>The third option is only available for Rails 3.1.0 and newer. The following configuration setting can be added to <code class="highlighter-rouge">application.rb</code>:</p>
+<p>The third option is only available for Rails 3.1.0 and newer. The following configuration setting can be added to <code class="language-plaintext highlighter-rouge">application.rb</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config.active_record.whitelist_attributes = true
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config.active_record.whitelist_attributes = true
 </code></pre></div></div>
 
 <p>Brakeman should correctly detect all of these.</p>
@@ -496,15 +496,15 @@ end
 
 <h3 id="partials-in-rails-3">Partials in Rails 3</h3>
 
-<p>In Rails 3, <code class="highlighter-rouge">render 'blah'</code> is now equivalent to <code class="highlighter-rouge">render :partial =&gt; 'blah'</code> when used inside a template.</p>
+<p>In Rails 3, <code class="language-plaintext highlighter-rouge">render 'blah'</code> is now equivalent to <code class="language-plaintext highlighter-rouge">render :partial =&gt; 'blah'</code> when used inside a template.</p>
 
 <p>Brakeman now supports this correctly.</p>
 
 <h3 id="debug-output">Debug Output</h3>
 
-<p>More debugging output has been added for use with the <code class="highlighter-rouge">-d</code> option.</p>
+<p>More debugging output has been added for use with the <code class="language-plaintext highlighter-rouge">-d</code> option.</p>
 
-<p>Additionally, when interrupting the application (for example, with <code class="highlighter-rouge">^C</code>), a stack trace will be output. Please note, however, that this only works with Ruby 1.9.</p>
+<p>Additionally, when interrupting the application (for example, with <code class="language-plaintext highlighter-rouge">^C</code>), a stack trace will be output. Please note, however, that this only works with Ruby 1.9.</p>
 
 <h3 id="internal-changes">Internal Changes</h3>
 

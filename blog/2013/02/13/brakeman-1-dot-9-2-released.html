@@ -120,15 +120,15 @@
 
 <h3 id="cve-2013-0276---attr_protected-bypass">CVE-2013-0276 - attr_protected Bypass</h3>
 
-<p>Brakeman has been warning on uses of <code class="highlighter-rouge">attr_protected</code> since version 1.4.0, but it was reported with weak confidence, since it is really a best-practice issue.</p>
+<p>Brakeman has been warning on uses of <code class="language-plaintext highlighter-rouge">attr_protected</code> since version 1.4.0, but it was reported with weak confidence, since it is really a best-practice issue.</p>
 
-<p>Now, however, uses of <code class="highlighter-rouge">attr_protected</code> will be reported as medium confidence unless used in a Rails version affected by <a href="https://groups.google.com/d/topic/rubyonrails-security/AFBKNY7VSH8/discussion">CVE-2013-0276</a>, in which case it will be high confidence.</p>
+<p>Now, however, uses of <code class="language-plaintext highlighter-rouge">attr_protected</code> will be reported as medium confidence unless used in a Rails version affected by <a href="https://groups.google.com/d/topic/rubyonrails-security/AFBKNY7VSH8/discussion">CVE-2013-0276</a>, in which case it will be high confidence.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/262">changes</a>)</p>
 
 <h3 id="cve-2013-0277---serialized-attributes">CVE-2013-0277 - Serialized Attributes</h3>
 
-<p><a href="https://groups.google.com/d/topic/rubyonrails-security/KtmwSbEpzrU/discussion">CVE-2013-0277</a> allows attackers to insert malicious YAML into serialized model attributes. Using <code class="highlighter-rouge">attr_accessible</code> or <code class="highlighter-rouge">attr_protected</code> somewhat mitigates this, but it is still possible for an application to manually assign user input to a serialized attribute.</p>
+<p><a href="https://groups.google.com/d/topic/rubyonrails-security/KtmwSbEpzrU/discussion">CVE-2013-0277</a> allows attackers to insert malicious YAML into serialized model attributes. Using <code class="language-plaintext highlighter-rouge">attr_accessible</code> or <code class="language-plaintext highlighter-rouge">attr_protected</code> somewhat mitigates this, but it is still possible for an application to manually assign user input to a serialized attribute.</p>
 
 <p>Brakeman will warn on affected models, with confidence level depending on whether or not the attribute can be mass assigned.</p>
 
@@ -138,13 +138,13 @@
 
 <p><a href="https://groups.google.com/d/topic/rubyonrails-security/1h2DR63ViGo/discussion">CVE-2013-0333</a> is another side effect of the recent YAML vulnerabilities. Rails’ default JSON request parser converted requests to YAML then parsed them as YAML.</p>
 
-<p>Brakeman will warn on affected versions unless the provided workaround (setting the JSON backend to <code class="highlighter-rouge">JSONGem</code>) is present.</p>
+<p>Brakeman will warn on affected versions unless the provided workaround (setting the JSON backend to <code class="language-plaintext highlighter-rouge">JSONGem</code>) is present.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/254">changes</a>)</p>
 
 <h3 id="check-for-more-send-like-methods">Check for More Send-like Methods</h3>
 
-<p>Thanks to joernchen, Brakeman will now warn if user input is passed to <code class="highlighter-rouge">try</code>, <code class="highlighter-rouge">public_send</code>, or <code class="highlighter-rouge">__send__</code>.</p>
+<p>Thanks to joernchen, Brakeman will now warn if user input is passed to <code class="language-plaintext highlighter-rouge">try</code>, <code class="language-plaintext highlighter-rouge">public_send</code>, or <code class="language-plaintext highlighter-rouge">__send__</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/256">changes</a>)</p>
 
@@ -152,11 +152,11 @@
 
 <p>While researching for <a href="http://rails-sqli.org/">rails-sqli.org</a>, a few more methods came up for Brakeman to check.</p>
 
-<p>Brakeman will now warn on SQL injection in <code class="highlighter-rouge">update_all</code> and <code class="highlighter-rouge">pluck</code> methods.</p>
+<p>Brakeman will now warn on SQL injection in <code class="language-plaintext highlighter-rouge">update_all</code> and <code class="language-plaintext highlighter-rouge">pluck</code> methods.</p>
 
 <h3 id="check-for-more-dangerous-yaml-methods">Check for More Dangerous YAML Methods</h3>
 
-<p>Brakeman will now warn on dangerous uses of <code class="highlighter-rouge">load_documents</code>, <code class="highlighter-rouge">load_stream</code>, <code class="highlighter-rouge">parse_documents</code>, and <code class="highlighter-rouge">parse_stream</code>.</p>
+<p>Brakeman will now warn on dangerous uses of <code class="language-plaintext highlighter-rouge">load_documents</code>, <code class="language-plaintext highlighter-rouge">load_stream</code>, <code class="language-plaintext highlighter-rouge">parse_documents</code>, and <code class="language-plaintext highlighter-rouge">parse_stream</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/249">changes</a>)</p>
 

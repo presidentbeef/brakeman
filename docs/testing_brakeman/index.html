@@ -80,27 +80,27 @@
   
   <p>Tests for Brakeman are written using the standard library’s <a href="http://rubydoc.info/stdlib/test/1.8.7/Test/Unit">test/unit</a>.</p>
 
-<p>The main test file is in <code class="highlighter-rouge">test/test.rb</code>. It can be run using <code class="highlighter-rouge">ruby test/test.rb</code> (or from any directory).</p>
+<p>The main test file is in <code class="language-plaintext highlighter-rouge">test/test.rb</code>. It can be run using <code class="language-plaintext highlighter-rouge">ruby test/test.rb</code> (or from any directory).</p>
 
 <h3 id="structure">Structure</h3>
 
 <p>Brakeman is tested by running it against full Rails applications and then checking the reported warnings.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>test/test.rb #Main test runner
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>test/test.rb #Main test runner
 test/apps/   #Apps to check against
 test/tests/  #Actual tests
 </code></pre></div></div>
 
 <p>There are several Rails applications, including:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>test/apps/rails2    #Rails 2.3.11
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>test/apps/rails2    #Rails 2.3.11
 test/apps/rails3    #Rails 3.0.5
 test/apps/rails3.1  #Rails 3.1.0
 </code></pre></div></div>
 
 <p>There are corresponding sets of tests for each application:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>test/tests/rails2.rb
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>test/tests/rails2.rb
 test/tests/rails3.rb
 test/tests/rails31.rb
 </code></pre></div></div>
@@ -109,7 +109,7 @@ test/tests/rails31.rb
 
 <p>Each of the test files starts off like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Rails3Tests &lt; Test::Unit::TestCase
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Rails3Tests &lt; Test::Unit::TestCase
   include BrakemanTester::FindWarning
   include BrakemanTester::CheckExpected
 
@@ -127,17 +127,17 @@ test/tests/rails31.rb
   end
 </code></pre></div></div>
 
-<p>The <code class="highlighter-rouge">report</code> method runs the scan once. The first argument is the directory of the application, assumed to be under <code class="highlighter-rouge">test/apps/</code>. The second argument is just a name for the application. After that, any options that would normally be given to <code class="highlighter-rouge">Brakeman.run</code> can be provided.</p>
+<p>The <code class="language-plaintext highlighter-rouge">report</code> method runs the scan once. The first argument is the directory of the application, assumed to be under <code class="language-plaintext highlighter-rouge">test/apps/</code>. The second argument is just a name for the application. After that, any options that would normally be given to <code class="language-plaintext highlighter-rouge">Brakeman.run</code> can be provided.</p>
 
-<p>The result of <code class="highlighter-rouge">BrakemanTester.run_scan</code> is a big hash of the warnings found during the scan. This is generated using <code class="highlighter-rouge">Brakeman::Report#to_test</code>.</p>
+<p>The result of <code class="language-plaintext highlighter-rouge">BrakemanTester.run_scan</code> is a big hash of the warnings found during the scan. This is generated using <code class="language-plaintext highlighter-rouge">Brakeman::Report#to_test</code>.</p>
 
-<p>Two modules are included in the test suite. <code class="highlighter-rouge">FindWarning</code> provides a search capability for finding warnings in the report. <code class="highlighter-rouge">CheckExpected</code> calls <code class="highlighter-rouge">expected</code> and checks the numbers there against the actual report.</p>
+<p>Two modules are included in the test suite. <code class="language-plaintext highlighter-rouge">FindWarning</code> provides a search capability for finding warnings in the report. <code class="language-plaintext highlighter-rouge">CheckExpected</code> calls <code class="language-plaintext highlighter-rouge">expected</code> and checks the numbers there against the actual report.</p>
 
 <h3 id="testing-a-warning">Testing a Warning</h3>
 
-<p>To test for the presence of a warning, use the <code class="highlighter-rouge">assert_warning</code> method. This method takes a hash of options describing the warning:</p>
+<p>To test for the presence of a warning, use the <code class="language-plaintext highlighter-rouge">assert_warning</code> method. This method takes a hash of options describing the warning:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def test_eval_params
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def test_eval_params
   assert_warning :type =&gt; :warning,
     :warning_code =&gt; 13,
     :fingerprint =&gt; "4efdd73fb759135f5980b5da1d9804aa4eb5c7475eabfd0f0cf41299d1d7ec42",
@@ -149,21 +149,21 @@ test/tests/rails31.rb
 end
 </code></pre></div></div>
 
-<p>Each key in the hash is a method on <code class="highlighter-rouge">Brakeman::Warning</code>, except <code class="highlighter-rouge">:type</code>. The value will be tested using <code class="highlighter-rouge">===</code> against the result of calling the method. This means regular expressions can be used to match against strings.</p>
+<p>Each key in the hash is a method on <code class="language-plaintext highlighter-rouge">Brakeman::Warning</code>, except <code class="language-plaintext highlighter-rouge">:type</code>. The value will be tested using <code class="language-plaintext highlighter-rouge">===</code> against the result of calling the method. This means regular expressions can be used to match against strings.</p>
 
-<p>It is best to be as specific as possible, because <code class="highlighter-rouge">assert_warning</code> expects <em>exactly</em> one warning to match.</p>
+<p>It is best to be as specific as possible, because <code class="language-plaintext highlighter-rouge">assert_warning</code> expects <em>exactly</em> one warning to match.</p>
 
 <p>Options:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">:type</code> - This determines which category of warnings to search (controller, model, template, or just ‘warning’)</li>
-  <li><code class="highlighter-rouge">:fingerprint</code> - The warning fingerprint</li>
-  <li><code class="highlighter-rouge">:warning_code</code> - Integer representing the warning type</li>
-  <li><code class="highlighter-rouge">:warning_type</code> - This matches against the category of warning</li>
-  <li><code class="highlighter-rouge">:line</code> - The line number reported in the warning</li>
-  <li><code class="highlighter-rouge">:message</code> - The text of the warning message</li>
-  <li><code class="highlighter-rouge">:confidence</code> - Confidence level (0 - high, 1 - medium, 3 - weak)</li>
-  <li><code class="highlighter-rouge">:file</code> - File where warning was found</li>
+  <li><code class="language-plaintext highlighter-rouge">:type</code> - This determines which category of warnings to search (controller, model, template, or just ‘warning’)</li>
+  <li><code class="language-plaintext highlighter-rouge">:fingerprint</code> - The warning fingerprint</li>
+  <li><code class="language-plaintext highlighter-rouge">:warning_code</code> - Integer representing the warning type</li>
+  <li><code class="language-plaintext highlighter-rouge">:warning_type</code> - This matches against the category of warning</li>
+  <li><code class="language-plaintext highlighter-rouge">:line</code> - The line number reported in the warning</li>
+  <li><code class="language-plaintext highlighter-rouge">:message</code> - The text of the warning message</li>
+  <li><code class="language-plaintext highlighter-rouge">:confidence</code> - Confidence level (0 - high, 1 - medium, 3 - weak)</li>
+  <li><code class="language-plaintext highlighter-rouge">:file</code> - File where warning was found</li>
 </ul>
 
 <p>For the message matching, it is generally enough to just include the first part of the message, instead of trying for an exact match.</p>

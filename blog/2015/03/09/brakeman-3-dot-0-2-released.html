@@ -101,13 +101,13 @@
   <li>Fix HTML reports with GitHub repos (<a href="https://github.com/presidentbeef/brakeman/issues/624">#624</a>)</li>
   <li>Handle processing of explictly shadowed block arguments (<a href="https://github.com/presidentbeef/brakeman/issues/612">#612</a>)</li>
   <li>Fix CSV output when there are no warnings (<a href="https://github.com/presidentbeef/brakeman/issues/615">#615</a>)</li>
-  <li>Update <code class="highlighter-rouge">ruby_parser</code> to ~&gt; 3.6.2</li>
-  <li>Treat <code class="highlighter-rouge">primary_key</code>, <code class="highlighter-rouge">table_name_prefix</code>, <code class="highlighter-rouge">table_name_suffix</code> as safe in SQL</li>
-  <li>Fix using <code class="highlighter-rouge">--compare</code> and <code class="highlighter-rouge">--add-checks-path</code> together</li>
+  <li>Update <code class="language-plaintext highlighter-rouge">ruby_parser</code> to ~&gt; 3.6.2</li>
+  <li>Treat <code class="language-plaintext highlighter-rouge">primary_key</code>, <code class="language-plaintext highlighter-rouge">table_name_prefix</code>, <code class="language-plaintext highlighter-rouge">table_name_suffix</code> as safe in SQL</li>
+  <li>Fix using <code class="language-plaintext highlighter-rouge">--compare</code> and <code class="language-plaintext highlighter-rouge">--add-checks-path</code> together</li>
   <li>Alias process methods called in class scope on models</li>
   <li>Avoid warning about mass assignment with string literals</li>
   <li>Only report original regex DoS locations</li>
-  <li>Report correct file for <code class="highlighter-rouge">simple_format</code> usage CVE warning</li>
+  <li>Report correct file for <code class="language-plaintext highlighter-rouge">simple_format</code> usage CVE warning</li>
   <li>Ignore case value in XSS checks</li>
 </ul>
 
@@ -121,7 +121,7 @@
 
 <p>There was an error handling explicitly shadowed block arguments like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>some_array.each do |item; x, y|
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>some_array.each do |item; x, y|
   # Stuff
 end
 </code></pre></div></div>
@@ -144,19 +144,19 @@ end
 
 <h3 id="more-sql-safe-methods">More SQL-safe Methods</h3>
 
-<p>Brakeman will no longer warn about <code class="highlighter-rouge">primary_key</code>, <code class="highlighter-rouge">table_name_prefix</code>, and <code class="highlighter-rouge">table_name_suffix</code> in SQL.</p>
+<p>Brakeman will no longer warn about <code class="language-plaintext highlighter-rouge">primary_key</code>, <code class="language-plaintext highlighter-rouge">table_name_prefix</code>, and <code class="language-plaintext highlighter-rouge">table_name_suffix</code> in SQL.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/635">changes</a>)</p>
 
 <h3 id="compare-with-external-checks">Compare with External Checks</h3>
 
-<p>Fix an issue when using <code class="highlighter-rouge">--compare</code> and <code class="highlighter-rouge">--add-checks-path</code> together.</p>
+<p>Fix an issue when using <code class="language-plaintext highlighter-rouge">--compare</code> and <code class="language-plaintext highlighter-rouge">--add-checks-path</code> together.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/635">changes</a>)</p>
 
 <h3 id="process-class-scope-method-calls">Process Class-Scope Method Calls</h3>
 
-<p>Previously, Brakeman would process method calls at the class scope (e.g., <code class="highlighter-rouge">belongs_to</code>) in models and then throw away the call. This meant the call never received data flow analysis. This was particularly noticeable when those calls involved blocks. This has been fixed and has improved results, especially where constants are used.</p>
+<p>Previously, Brakeman would process method calls at the class scope (e.g., <code class="language-plaintext highlighter-rouge">belongs_to</code>) in models and then throw away the call. This meant the call never received data flow analysis. This was particularly noticeable when those calls involved blocks. This has been fixed and has improved results, especially where constants are used.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/634">changes</a>)</p>
 
@@ -174,13 +174,13 @@ end
 
 <h3 id="file-for-simple_format-cve">File for simple_format CVE</h3>
 
-<p>Warnings regarding the old <code class="highlighter-rouge">simple_format</code> CVE will now point to the file where <code class="highlighter-rouge">simple_format</code> was called, not the Gemfile.</p>
+<p>Warnings regarding the old <code class="language-plaintext highlighter-rouge">simple_format</code> CVE will now point to the file where <code class="language-plaintext highlighter-rouge">simple_format</code> was called, not the Gemfile.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/623/files">changes</a>)</p>
 
 <h3 id="ignore-case-value">Ignore Case Value</h3>
 
-<p>Do not report about XSS regarding the value used in <code class="highlighter-rouge">case</code> expressions.</p>
+<p>Do not report about XSS regarding the value used in <code class="language-plaintext highlighter-rouge">case</code> expressions.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/619">changes</a>)</p>
 
@@ -188,7 +188,7 @@ end
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>87413b544b5eae0cac9f037e2b62b1fe3f0fee5e  brakeman-3.0.2.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>87413b544b5eae0cac9f037e2b62b1fe3f0fee5e  brakeman-3.0.2.gem
 cfcf3080a992ca173c64dd98fe239e8bd9bb0eaa  brakeman-min-3.0.2.gem
 </code></pre></div></div>
 

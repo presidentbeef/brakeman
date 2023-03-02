@@ -97,19 +97,19 @@
 
 <ul>
   <li>Improved line number accuracy in ERB templates (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
-  <li>Allow multiple line regex in <code class="highlighter-rouge">validates_format_of</code> (<a href="https://github.com/c0va23">Dmitrij Fedorenko</a>)</li>
+  <li>Allow multiple line regex in <code class="language-plaintext highlighter-rouge">validates_format_of</code> (<a href="https://github.com/c0va23">Dmitrij Fedorenko</a>)</li>
   <li>Avoid overwriting instance/class methods with same name (<a href="https://github.com/imtayadeway">Tim Wade</a>)</li>
-  <li>Add <code class="highlighter-rouge">--force-scan</code> option (<a href="https://github.com/oreoshake">Neil Matatall</a>)</li>
-  <li>Only consider <code class="highlighter-rouge">if</code> branches in templates</li>
-  <li>Support more safe <code class="highlighter-rouge">&amp;.</code> operations</li>
-  <li>Avoid warning about SQL injection with <code class="highlighter-rouge">quoted_primary_key</code> (<a href="https://github.com/presidentbeef/brakeman/issues/884">#884</a>)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--force-scan</code> option (<a href="https://github.com/oreoshake">Neil Matatall</a>)</li>
+  <li>Only consider <code class="language-plaintext highlighter-rouge">if</code> branches in templates</li>
+  <li>Support more safe <code class="language-plaintext highlighter-rouge">&amp;.</code> operations</li>
+  <li>Avoid warning about SQL injection with <code class="language-plaintext highlighter-rouge">quoted_primary_key</code> (<a href="https://github.com/presidentbeef/brakeman/issues/884">#884</a>)</li>
   <li>Delay loading vendored gems and modifying load path</li>
-  <li>Added <code class="highlighter-rouge">brakeman-lib</code> gem</li>
+  <li>Added <code class="language-plaintext highlighter-rouge">brakeman-lib</code> gem</li>
 </ul>
 
 <h3 id="erb-template-line-numbers">ERB Template Line Numbers</h3>
 
-<p><a href="https://github.com/ptoomey3">Patrick Toomey</a> contributed a series of patches to bring Brakeman’s handling of ERB/Erubis templates in line with the Rails implementation. This has the effect of correcting some line numbers and fixed processing of <code class="highlighter-rouge">case</code> statements in templates.</p>
+<p><a href="https://github.com/ptoomey3">Patrick Toomey</a> contributed a series of patches to bring Brakeman’s handling of ERB/Erubis templates in line with the Rails implementation. This has the effect of correcting some line numbers and fixed processing of <code class="language-plaintext highlighter-rouge">case</code> statements in templates.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/878">changes</a>)</p>
 
@@ -127,7 +127,7 @@
 
 <h3 id="force-scan">Force Scan</h3>
 
-<p><a href="https://github.com/oreoshake">Neil Matatall</a> added the <code class="highlighter-rouge">--force-scan</code> option to force Brakeman to scan an application even if it doesn’t look like a Rails app.</p>
+<p><a href="https://github.com/oreoshake">Neil Matatall</a> added the <code class="language-plaintext highlighter-rouge">--force-scan</code> option to force Brakeman to scan an application even if it doesn’t look like a Rails app.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/879">changes</a>)</p>
 
@@ -137,30 +137,30 @@
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= params[:x].html_safe unless this_is_a_bad_idea? %&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= params[:x].html_safe unless this_is_a_bad_idea? %&gt;
 </code></pre></div></div>
 
-<p>Now Brakeman will just consider the <code class="highlighter-rouge">params[:x].html_safe</code> value which is clearly dangerous.</p>
+<p>Now Brakeman will just consider the <code class="language-plaintext highlighter-rouge">params[:x].html_safe</code> value which is clearly dangerous.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/883/">changes</a>)</p>
 
 <h3 id="more-safe-calls">More Safe Calls</h3>
 
-<p>Brakeman can now handle more instances of the “safe call” or “lonely” operator such as <code class="highlighter-rouge">a&amp;.b ||= 1</code> and <code class="highlighter-rouge">x&amp;.y += z 1</code>.</p>
+<p>Brakeman can now handle more instances of the “safe call” or “lonely” operator such as <code class="language-plaintext highlighter-rouge">a&amp;.b ||= 1</code> and <code class="language-plaintext highlighter-rouge">x&amp;.y += z 1</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/887">changes</a>)</p>
 
 <h3 id="quoted-primary-key">Quoted Primary Key</h3>
 
-<p>Brakeman will no longer warn about use of <code class="highlighter-rouge">quoted_primary_key</code> in SQL strings.</p>
+<p>Brakeman will no longer warn about use of <code class="language-plaintext highlighter-rouge">quoted_primary_key</code> in SQL strings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/888">changes</a>)</p>
 
 <h3 id="delayed-load-path-modification">Delayed Load Path Modification</h3>
 
-<p>Brakeman 3.3.0 started vendoring all its dependencies to avoid conflicts with application dependencies. However, if Brakeman is included in a Gemfile without <code class="highlighter-rouge">require: false</code>, it will still modify the load path and potentially cause conflicts.</p>
+<p>Brakeman 3.3.0 started vendoring all its dependencies to avoid conflicts with application dependencies. However, if Brakeman is included in a Gemfile without <code class="language-plaintext highlighter-rouge">require: false</code>, it will still modify the load path and potentially cause conflicts.</p>
 
-<p>This version delays loading any dependencies until Brakeman actually runs. This is almost like having <code class="highlighter-rouge">require: false</code> automatically.</p>
+<p>This version delays loading any dependencies until Brakeman actually runs. This is almost like having <code class="language-plaintext highlighter-rouge">require: false</code> automatically.</p>
 
 <p>Please keep in mind it is really not recommended to include Brakeman in Gemfiles unless it is actually being used as a library. Otherwise it’s like mixing your browser’s dependencies with your applications. It doesn’t make sense.</p>
 
@@ -168,7 +168,7 @@
 
 <h3 id="brakeman-lib">brakeman-lib</h3>
 
-<p>For those who don’t want Brakeman to bundle and vendor its own dependencies, the <a href="https://rubygems.org/gems/brakeman-lib">brakeman-lib</a> gem is identical to the <code class="highlighter-rouge">brakeman</code> gem but without the bundling. Consider using it if the bundling and modified load paths are causing issues.</p>
+<p>For those who don’t want Brakeman to bundle and vendor its own dependencies, the <a href="https://rubygems.org/gems/brakeman-lib">brakeman-lib</a> gem is identical to the <code class="language-plaintext highlighter-rouge">brakeman</code> gem but without the bundling. Consider using it if the bundling and modified load paths are causing issues.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/commit/fa310a9b736d858a929715802d98b1a3f0887569">changes</a>)</p>
 
@@ -184,7 +184,7 @@
 
 <p>The SHA256 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5c22721c8b486fa9d283cabf65c7e77b2f7428056d4d907b7f74a91dd112616a  brakeman-3.3.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5c22721c8b486fa9d283cabf65c7e77b2f7428056d4d907b7f74a91dd112616a  brakeman-3.3.1.gem
 7aa57ed8b42c0cadef09214f5544424659ab3972912137fad37da1a052d8a792  brakeman-lib-3.3.1.gem
 95e68202493d8c504ad72276c8bfa46abb1c78c309bc2b80b433a6220f3722eb  brakeman-min-3.3.1.gem
 </code></pre></div></div>

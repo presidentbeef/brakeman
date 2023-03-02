@@ -103,29 +103,29 @@
 <p><em>Changes since 4.0.1:</em></p>
 
 <ul>
-  <li>Add check for dangerous keys in <code class="highlighter-rouge">permit</code></li>
+  <li>Add check for dangerous keys in <code class="language-plaintext highlighter-rouge">permit</code></li>
   <li>Add optional check for divide by zero</li>
   <li>Remove errors about divide by zero</li>
-  <li>Warn about dynamic values in <code class="highlighter-rouge">Arel.sql</code></li>
+  <li>Warn about dynamic values in <code class="language-plaintext highlighter-rouge">Arel.sql</code></li>
   <li>Show better location for Sass errors (<a href="https://github.com/abrom">Andrew Bromwich</a>)</li>
   <li>Avoid warning about file access for temp files (<a href="https://github.com/presidentbeef/brakeman/issues/1110">#1110</a>)</li>
   <li>Avoid CSRF warning in Rails 5.2 default config (<a href="https://github.com/presidentbeef/brakeman/issues/1132">#1132</a>)</li>
-  <li>Better processing of <code class="highlighter-rouge">op_asgn1</code> (e.g. <code class="highlighter-rouge">x[:y] += 1</code>) (<a href="https://github.com/presidentbeef/brakeman/issues/1103">#1103</a>)</li>
+  <li>Better processing of <code class="language-plaintext highlighter-rouge">op_asgn1</code> (e.g. <code class="language-plaintext highlighter-rouge">x[:y] += 1</code>) (<a href="https://github.com/presidentbeef/brakeman/issues/1103">#1103</a>)</li>
   <li>Handle nested destructuring/multiple assignment</li>
-  <li>Do not warn on <code class="highlighter-rouge">params.permit</code> with safe values (<a href="https://github.com/presidentbeef/brakeman/issues/1000">#1000</a>)</li>
+  <li>Do not warn on <code class="language-plaintext highlighter-rouge">params.permit</code> with safe values (<a href="https://github.com/presidentbeef/brakeman/issues/1000">#1000</a>)</li>
   <li>Use HTTPS for warning links</li>
-  <li>Try to guess options for <code class="highlighter-rouge">less</code> pager (<a href="https://github.com/presidentbeef/brakeman/issues/1118">#1118</a>)</li>
+  <li>Try to guess options for <code class="language-plaintext highlighter-rouge">less</code> pager (<a href="https://github.com/presidentbeef/brakeman/issues/1118">#1118</a>)</li>
   <li>Do not page if results fit on screen</li>
   <li>Leave results on screen after paging</li>
   <li>Fix upgrade version for CVE-2016-6316</li>
-  <li>Fix <code class="highlighter-rouge">include_paths</code> for Code Climate engine (<a href="https://github.com/wfleming">Will Fleming</a>)</li>
-  <li>Support <code class="highlighter-rouge">app_path</code> configuration for Code Climate engine (<a href="https://github.com/noahd1">Noah Davis</a>)</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">include_paths</code> for Code Climate engine (<a href="https://github.com/wfleming">Will Fleming</a>)</li>
+  <li>Support <code class="language-plaintext highlighter-rouge">app_path</code> configuration for Code Climate engine (<a href="https://github.com/noahd1">Noah Davis</a>)</li>
   <li>Refactor Code Climate engine options parsing (<a href="https://github.com/noahd1">Noah Davis</a>)</li>
 </ul>
 
 <h3 id="new-check-for-dangerous-permit-keys">New Check for Dangerous Permit Keys</h3>
 
-<p>Very similar to warning about potentially dangerous keys in <code class="highlighter-rouge">attr_accessible</code>, Brakeman now warns about potentially dangerous keys whitelisted for mass assignment via <code class="highlighter-rouge">params.permit</code>.</p>
+<p>Very similar to warning about potentially dangerous keys in <code class="language-plaintext highlighter-rouge">attr_accessible</code>, Brakeman now warns about potentially dangerous keys whitelisted for mass assignment via <code class="language-plaintext highlighter-rouge">params.permit</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1128">changes</a>)</p>
 
@@ -137,7 +137,7 @@
 
 <h3 id="arelsql">Arel.sql</h3>
 
-<p><code class="highlighter-rouge">Arel.sql</code> allows one to add raw SQL to queries. Brakeman now warns about potential SQL injection when using <code class="highlighter-rouge">Arel.sql</code> with dynamic values.</p>
+<p><code class="language-plaintext highlighter-rouge">Arel.sql</code> allows one to add raw SQL to queries. Brakeman now warns about potential SQL injection when using <code class="language-plaintext highlighter-rouge">Arel.sql</code> with dynamic values.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1129">changes</a>)</p>
 
@@ -149,7 +149,7 @@
 
 <h3 id="temp-files">Temp Files</h3>
 
-<p>Brakeman no longer warns about file access with <code class="highlighter-rouge">params[:blah].tempfile.path</code> or <code class="highlighter-rouge">params[:blah].path</code>.</p>
+<p>Brakeman no longer warns about file access with <code class="language-plaintext highlighter-rouge">params[:blah].tempfile.path</code> or <code class="language-plaintext highlighter-rouge">params[:blah].path</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1121">changes</a>)</p>
 
@@ -161,21 +161,21 @@
 
 <h3 id="attribute-combination-assignment">Attribute Combination Assignment</h3>
 
-<p>This release handles code like <code class="highlighter-rouge">x[:y] += 1</code> better. Previously, it would not update the value for <code class="highlighter-rouge">x[:y]</code>.</p>
+<p>This release handles code like <code class="language-plaintext highlighter-rouge">x[:y] += 1</code> better. Previously, it would not update the value for <code class="language-plaintext highlighter-rouge">x[:y]</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1123">changes</a>)</p>
 
 <h3 id="nested-destructuring">Nested Destructuring</h3>
 
-<p>Brakeman now can handle nested multiple assignment, like <code class="highlighter-rouge">x, (a, b), y = z</code>, assuming <code class="highlighter-rouge">z</code> is known to be an array.</p>
+<p>Brakeman now can handle nested multiple assignment, like <code class="language-plaintext highlighter-rouge">x, (a, b), y = z</code>, assuming <code class="language-plaintext highlighter-rouge">z</code> is known to be an array.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1113">changes</a>)</p>
 
 <h3 id="pager-updates">Pager Updates</h3>
 
-<p>The default pager (<code class="highlighter-rouge">less</code>) now leaves the output in the terminal after exiting and now exits immediately if the output fits on the screen.</p>
+<p>The default pager (<code class="language-plaintext highlighter-rouge">less</code>) now leaves the output in the terminal after exiting and now exits immediately if the output fits on the screen.</p>
 
-<p>Additionally, Brakeman attempts to detect if these options are actually supported by <code class="highlighter-rouge">less</code> before using them.</p>
+<p>Additionally, Brakeman attempts to detect if these options are actually supported by <code class="language-plaintext highlighter-rouge">less</code> before using them.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1112">changes</a> and <a href="https://github.com/presidentbeef/brakeman/pull/1120">here</a>)</p>
 
@@ -193,7 +193,7 @@
 
 <h3 id="code-climate-updates">Code Climate Updates</h3>
 
-<p>The Brakeman engine on <a href="https://docs.codeclimate.com/docs/brakeman">Code Climate</a> now supports <code class="highlighter-rouge">app_path</code> and <code class="highlighter-rouge">include_paths</code>, together.</p>
+<p>The Brakeman engine on <a href="https://docs.codeclimate.com/docs/brakeman">Code Climate</a> now supports <code class="language-plaintext highlighter-rouge">app_path</code> and <code class="language-plaintext highlighter-rouge">include_paths</code>, together.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1126">changes</a>)</p>
 
@@ -201,7 +201,7 @@
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1dd62ee8aa872acf5d0aace6dc0745b55c78da68640f04754bf11c12a58842bf  brakeman-4.1.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1dd62ee8aa872acf5d0aace6dc0745b55c78da68640f04754bf11c12a58842bf  brakeman-4.1.0.gem
 a16bd3082223655f132ff4c601f5d1930290082116fc256c5c1e652ff3ba933a  brakeman-lib-4.1.0.gem
 29d9be77b06195675e6b803141da979438983c0970c182fe8b8ccf3145ecda9f  brakeman-min-4.1.0.gem
 </code></pre></div></div>
@@ -271,32 +271,32 @@ To put that into historical context, Rails 3.0 was released a few days later!</p
 <p><em>Changes since 3.7.2</em>:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">--exit-on-warn</code> is now the default (<a href="https://github.com/presidentbeef/brakeman/issues/852">#852</a>)</li>
-  <li><code class="highlighter-rouge">--exit-on-error</code> is now the default (<a href="https://github.com/presidentbeef/brakeman/issues/1083">#1083</a>)</li>
+  <li><code class="language-plaintext highlighter-rouge">--exit-on-warn</code> is now the default (<a href="https://github.com/presidentbeef/brakeman/issues/852">#852</a>)</li>
+  <li><code class="language-plaintext highlighter-rouge">--exit-on-error</code> is now the default (<a href="https://github.com/presidentbeef/brakeman/issues/1083">#1083</a>)</li>
   <li>“Plain” report output is now the default</li>
   <li>Add simple pager for reports output to terminal</li>
   <li>Remove low confidence mass assignment warnings</li>
-  <li>Reduce warnings about XSS in <code class="highlighter-rouge">link_to</code></li>
-  <li>Treat <code class="highlighter-rouge">request.cookies</code> like <code class="highlighter-rouge">cookies</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1090">#1090</a>)</li>
-  <li>Treat <code class="highlighter-rouge">fail</code>/<code class="highlighter-rouge">raise</code> like early returns (<a href="https://github.com/presidentbeef/brakeman/issues/754">#754</a>)</li>
+  <li>Reduce warnings about XSS in <code class="language-plaintext highlighter-rouge">link_to</code></li>
+  <li>Treat <code class="language-plaintext highlighter-rouge">request.cookies</code> like <code class="language-plaintext highlighter-rouge">cookies</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1090">#1090</a>)</li>
+  <li>Treat <code class="language-plaintext highlighter-rouge">fail</code>/<code class="language-plaintext highlighter-rouge">raise</code> like early returns (<a href="https://github.com/presidentbeef/brakeman/issues/754">#754</a>)</li>
   <li>Rename “Cross Site Scripting” to “Cross-Site Scripting” (<a href="https://github.com/paultetreau">Paul Tetreau</a>)</li>
-  <li>Remove reliance on <code class="highlighter-rouge">CONFIDENCE</code> constant in checks</li>
-  <li>Fix <code class="highlighter-rouge">--exit-on-error</code> and <code class="highlighter-rouge">--exit-on-warn</code> in config files</li>
+  <li>Remove reliance on <code class="language-plaintext highlighter-rouge">CONFIDENCE</code> constant in checks</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">--exit-on-error</code> and <code class="language-plaintext highlighter-rouge">--exit-on-warn</code> in config files</li>
 </ul>
 
 <p><em>Changes since 4.0.0</em>:</p>
 
 <ul>
-  <li>Do not use pager when <code class="highlighter-rouge">CI</code> environment variable is set</li>
+  <li>Do not use pager when <code class="language-plaintext highlighter-rouge">CI</code> environment variable is set</li>
 </ul>
 
 <h3 id="new-default-exit-codes">New Default Exit Codes</h3>
 
-<p><code class="highlighter-rouge">--exit-on-warn</code> and <code class="highlighter-rouge">--exit-on-error</code> are now default behavior.</p>
+<p><code class="language-plaintext highlighter-rouge">--exit-on-warn</code> and <code class="language-plaintext highlighter-rouge">--exit-on-error</code> are now default behavior.</p>
 
 <p>If any warnings are found or errors are raised during the scan, Brakeman’s exit code will be non-zero. This may break things! In particular, CI jobs or scripts that assume Brakeman will exit normally.</p>
 
-<p>You may use <code class="highlighter-rouge">--no-exit-on-warn</code> and <code class="highlighter-rouge">--no-exit-on-error</code> to revert back to previous behavior and always exit with error code 0.</p>
+<p>You may use <code class="language-plaintext highlighter-rouge">--no-exit-on-warn</code> and <code class="language-plaintext highlighter-rouge">--no-exit-on-error</code> to revert back to previous behavior and always exit with error code 0.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1085">changes</a> and <a href="https://github.com/presidentbeef/brakeman/pull/1086">changes</a>)</p>
 
@@ -304,17 +304,17 @@ To put that into historical context, Rails 3.0 was released a few days later!</p
 
 <p>The “plain” report format is now the default.</p>
 
-<p>To revert back to the table format, use <code class="highlighter-rouge">-f tables</code> or <code class="highlighter-rouge">-o report.tables</code>.</p>
+<p>To revert back to the table format, use <code class="language-plaintext highlighter-rouge">-f tables</code> or <code class="language-plaintext highlighter-rouge">-o report.tables</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1084">changes</a>)</p>
 
 <h3 id="paged-output">Paged Output</h3>
 
-<p>By default, output to the terminal will be paged with <code class="highlighter-rouge">less</code> or Highline’s simple pager.</p>
+<p>By default, output to the terminal will be paged with <code class="language-plaintext highlighter-rouge">less</code> or Highline’s simple pager.</p>
 
-<p>To disable, use <code class="highlighter-rouge">--no-pager</code>.</p>
+<p>To disable, use <code class="language-plaintext highlighter-rouge">--no-pager</code>.</p>
 
-<p>In 4.0.1 Brakeman will automatically disable the pager when the <code class="highlighter-rouge">CI</code> environment variable is set to <code class="highlighter-rouge">true</code>. This should be compatible with Travis CI, Circle CI, Codeship, and Bitbucket Pipelines.</p>
+<p>In 4.0.1 Brakeman will automatically disable the pager when the <code class="language-plaintext highlighter-rouge">CI</code> environment variable is set to <code class="language-plaintext highlighter-rouge">true</code>. This should be compatible with Travis CI, Circle CI, Codeship, and Bitbucket Pipelines.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1098">changes</a>)</p>
 
@@ -324,9 +324,9 @@ To put that into historical context, Rails 3.0 was released a few days later!</p
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1087">changes</a>)</p>
 
-<h3 id="fewer-link_to-warnings">Fewer <code class="highlighter-rouge">link_to</code> Warnings</h3>
+<h3 id="fewer-link_to-warnings">Fewer <code class="language-plaintext highlighter-rouge">link_to</code> Warnings</h3>
 
-<p>Warnings about XSS in <code class="highlighter-rouge">link_to</code> have confused quite a few people over the years. The danger is that links may have <code class="highlighter-rouge">javascript:</code> or <code class="highlighter-rouge">data:</code> values with XSS payloads.</p>
+<p>Warnings about XSS in <code class="language-plaintext highlighter-rouge">link_to</code> have confused quite a few people over the years. The danger is that links may have <code class="language-plaintext highlighter-rouge">javascript:</code> or <code class="language-plaintext highlighter-rouge">data:</code> values with XSS payloads.</p>
 
 <p>Brakeman should now only warn when directly using user input or when using what looks like a URL from the database.</p>
 
@@ -334,13 +334,13 @@ To put that into historical context, Rails 3.0 was released a few days later!</p
 
 <h3 id="more-cookies">More Cookies</h3>
 
-<p><code class="highlighter-rouge">request.cookies</code> will now be treated like cookies in general.</p>
+<p><code class="language-plaintext highlighter-rouge">request.cookies</code> will now be treated like cookies in general.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1094">changes</a>)</p>
 
 <h3 id="more-early-returns">More Early Returns</h3>
 
-<p>Calls to <code class="highlighter-rouge">raise</code> or <code class="highlighter-rouge">fail</code> will be treated like early returns when considering simple guard expressions.</p>
+<p>Calls to <code class="language-plaintext highlighter-rouge">raise</code> or <code class="language-plaintext highlighter-rouge">fail</code> will be treated like early returns when considering simple guard expressions.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1089">changes</a>)</p>
 
@@ -352,9 +352,9 @@ To put that into historical context, Rails 3.0 was released a few days later!</p
 
 <h3 id="confidence">CONFIDENCE</h3>
 
-<p>Brakeman checks previously used the <code class="highlighter-rouge">CONFIDENCE</code> hash when creating warnings, e.g. <code class="highlighter-rouge">:confidence =&gt; CONFIDENCE[:high]</code>. Now it’s possible to use <code class="highlighter-rouge">:confidence =&gt; :high</code> instead.</p>
+<p>Brakeman checks previously used the <code class="language-plaintext highlighter-rouge">CONFIDENCE</code> hash when creating warnings, e.g. <code class="language-plaintext highlighter-rouge">:confidence =&gt; CONFIDENCE[:high]</code>. Now it’s possible to use <code class="language-plaintext highlighter-rouge">:confidence =&gt; :high</code> instead.</p>
 
-<p>For those with custom checks, the <code class="highlighter-rouge">CONFIDENCE</code> hash is still available and nothing should break.</p>
+<p>For those with custom checks, the <code class="language-plaintext highlighter-rouge">CONFIDENCE</code> hash is still available and nothing should break.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1088">changes</a>)</p>
 
@@ -362,7 +362,7 @@ To put that into historical context, Rails 3.0 was released a few days later!</p
 
 <p>The SHA256 sums for these releases are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0038932b43dcf2bf698ad6637500f69b5e4226b10c011a4a6bcce93a77a5e045  brakeman-4.0.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0038932b43dcf2bf698ad6637500f69b5e4226b10c011a4a6bcce93a77a5e045  brakeman-4.0.0.gem
 3688303859a7c9b452ddcef00f00f97789ce103774446d42851a763ecbf8df87  brakeman-lib-4.0.0.gem
 559196c6e41e5b180448564d9aca84fb775a39b77dd7d8d880a0ce0e77df8ae2  brakeman-min-4.0.0.gem
 
@@ -414,26 +414,26 @@ d93d6f8e9c2655520153fe0512b338753cc36fac56b80947f652fd33e9f80dfb  brakeman-4.0.1
 <p><em>Changes since 3.7.1</em>:</p>
 
 <ul>
-  <li>Fix <code class="highlighter-rouge">--ensure-latest</code> (<a href="https://github.com/presidentbeef/brakeman/pull/1079">David Guyon</a>)</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">--ensure-latest</code> (<a href="https://github.com/presidentbeef/brakeman/pull/1079">David Guyon</a>)</li>
 </ul>
 
 <p><em>Changes since 3.7.0:</em></p>
 
 <ul>
-  <li>Handle simple guard with <code class="highlighter-rouge">return</code> at end of branch (<a href="https://github.com/presidentbeef/brakeman/issues/1073">#1073</a>)</li>
+  <li>Handle simple guard with <code class="language-plaintext highlighter-rouge">return</code> at end of branch (<a href="https://github.com/presidentbeef/brakeman/issues/1073">#1073</a>)</li>
   <li>Add more collection methods for iteration detection</li>
-  <li>Modularize <code class="highlighter-rouge">bin/brakeman</code></li>
-  <li>Improve multi-value <code class="highlighter-rouge">Sexp</code> error message</li>
-  <li>Update <code class="highlighter-rouge">ruby2ruby</code> and <code class="highlighter-rouge">ruby_parser</code> dependencies</li>
+  <li>Modularize <code class="language-plaintext highlighter-rouge">bin/brakeman</code></li>
+  <li>Improve multi-value <code class="language-plaintext highlighter-rouge">Sexp</code> error message</li>
+  <li>Update <code class="language-plaintext highlighter-rouge">ruby2ruby</code> and <code class="language-plaintext highlighter-rouge">ruby_parser</code> dependencies</li>
 </ul>
 
 <h3 id="another-simple-guard">Another Simple Guard</h3>
 
-<p>Brakeman will now handle when the branch in a simple guard condition ends in <code class="highlighter-rouge">return</code>.</p>
+<p>Brakeman will now handle when the branch in a simple guard condition ends in <code class="language-plaintext highlighter-rouge">return</code>.</p>
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unless [:valid, :value].include? params[:x]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unless [:valid, :value].include? params[:x]
   do_stuff
   more_stuff
   return
@@ -454,7 +454,7 @@ x.send(params[:x]) # Will no longer warn because `params[:x]` must be 'safe'
 
 <h3 id="modularize-commandline">Modularize Commandline</h3>
 
-<p>The logic in the <code class="highlighter-rouge">brakeman</code> executable has now entirely been moved to <a href="https://github.com/presidentbeef/brakeman/blob/49f675a88ba12ad4fa799770f5499c952650a56c/lib/brakeman/commandline.rb"><code class="highlighter-rouge">Brakeman::Commandline</code></a> for easier testing and custom behavior.</p>
+<p>The logic in the <code class="language-plaintext highlighter-rouge">brakeman</code> executable has now entirely been moved to <a href="https://github.com/presidentbeef/brakeman/blob/49f675a88ba12ad4fa799770f5499c952650a56c/lib/brakeman/commandline.rb"><code class="language-plaintext highlighter-rouge">Brakeman::Commandline</code></a> for easier testing and custom behavior.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1076">changes</a>)</p>
 
@@ -462,7 +462,7 @@ x.send(params[:x]) # Will no longer warn because `params[:x]` must be 'safe'
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>9ad563247cc6a57b965e59e5bbbaefa202ce34ceb6d10e97ce500406d60cdb6e  brakeman-3.7.2.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>9ad563247cc6a57b965e59e5bbbaefa202ce34ceb6d10e97ce500406d60cdb6e  brakeman-3.7.2.gem
 5b753206f8e5937c33494edd323a9e6573e07958d9f8f5bb662b0f6085eafe19  brakeman-lib-3.7.2.gem
 517a074cb92ece8a7e426ea221d63ddbcae6e3b851664083b7e73e6d7e0dd138  brakeman-min-3.7.2.gem
 </code></pre></div></div>
@@ -474,8 +474,8 @@ x.send(params[:x]) # Will no longer warn because `params[:x]` must be 'safe'
 <p>At least two major changes will be coming in Brakeman 4.0:</p>
 
 <ul>
-  <li>The <code class="highlighter-rouge">plain</code> report format will be the default instead of tables</li>
-  <li><code class="highlighter-rouge">-z</code> or <code class="highlighter-rouge">--exit-on-warn</code> (sets exit code if any warnings are found) will be on by default</li>
+  <li>The <code class="language-plaintext highlighter-rouge">plain</code> report format will be the default instead of tables</li>
+  <li><code class="language-plaintext highlighter-rouge">-z</code> or <code class="language-plaintext highlighter-rouge">--exit-on-warn</code> (sets exit code if any warnings are found) will be on by default</li>
 </ul>
 
 <p>There will likely be other changes, but these two will be the most obvious.</p>
@@ -522,10 +522,10 @@ x.send(params[:x]) # Will no longer warn because `params[:x]` must be 'safe'
 
 <ul>
   <li>Avoid interpolating hashes/arrays on failed access (<a href="https://github.com/presidentbeef/brakeman/issues/921">#921</a>)</li>
-  <li>Fix false positive for <code class="highlighter-rouge">redirect_to</code> in Rails 4 (<a href="https://github.com/mario-areias">Mário Areias</a>)</li>
+  <li>Fix false positive for <code class="language-plaintext highlighter-rouge">redirect_to</code> in Rails 4 (<a href="https://github.com/mario-areias">Mário Areias</a>)</li>
   <li>Show progress indicator in interactive mode (<a href="https://github.com/presidentbeef/brakeman/issues/1012">#1012</a>)</li>
-  <li>Handle simple conditional guards that use <code class="highlighter-rouge">return</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1057">#1057</a>)</li>
-  <li>Improve support for <code class="highlighter-rouge">rails4</code>/<code class="highlighter-rouge">rails5</code> options in config file (<a href="https://github.com/presidentbeef/brakeman/issues/1059">#1059</a>)</li>
+  <li>Handle simple conditional guards that use <code class="language-plaintext highlighter-rouge">return</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1057">#1057</a>)</li>
+  <li>Improve support for <code class="language-plaintext highlighter-rouge">rails4</code>/<code class="language-plaintext highlighter-rouge">rails5</code> options in config file (<a href="https://github.com/presidentbeef/brakeman/issues/1059">#1059</a>)</li>
   <li>Updated RubyParser to master</li>
 </ul>
 
@@ -541,13 +541,13 @@ x.send(params[:x]) # Will no longer warn because `params[:x]` must be 'safe'
 
 <h3 id="unsafe-hash-in-redirects">Unsafe Hash in Redirects</h3>
 
-<p>Thanks to <a href="https://github.com/mario-areias">Mário Areias</a>, Brakeman correctly handles <code class="highlighter-rouge">to_unsafe_hash</code> and <code class="highlighter-rouge">to_unsafe_h</code> in <code class="highlighter-rouge">redirect_to</code>.</p>
+<p>Thanks to <a href="https://github.com/mario-areias">Mário Areias</a>, Brakeman correctly handles <code class="language-plaintext highlighter-rouge">to_unsafe_hash</code> and <code class="language-plaintext highlighter-rouge">to_unsafe_h</code> in <code class="language-plaintext highlighter-rouge">redirect_to</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1029">changes</a>)</p>
 
 <h3 id="progress-indicator-in-interactive-mode">Progress Indicator in Interactive Mode</h3>
 
-<p>When using <code class="highlighter-rouge">-I</code> to manage false positives, Brakeman will now show how far you are through the warnings.</p>
+<p>When using <code class="language-plaintext highlighter-rouge">-I</code> to manage false positives, Brakeman will now show how far you are through the warnings.</p>
 
 <p><img src="https://user-images.githubusercontent.com/75613/27519704-f7c60006-59ad-11e7-82e8-ce0e096ad678.png" alt="image" /></p>
 
@@ -557,26 +557,26 @@ x.send(params[:x]) # Will no longer warn because `params[:x]` must be 'safe'
 
 <p>Brakeman can now recognize <em>simple</em> guard conditions such as:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>return unless [:safe, :values].include? params[:x]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>return unless [:safe, :values].include? params[:x]
 </code></pre></div></div>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1062">changes</a>)</p>
 
 <h3 id="rails-version-option-in-brakeman-configuration">Rails Version Option in Brakeman Configuration</h3>
 
-<p>It is now possible to specify just <code class="highlighter-rouge">:rails4: true</code> or <code class="highlighter-rouge">:rails5: true</code> in a Brakeman configuration file.</p>
+<p>It is now possible to specify just <code class="language-plaintext highlighter-rouge">:rails4: true</code> or <code class="language-plaintext highlighter-rouge">:rails5: true</code> in a Brakeman configuration file.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1066">changes</a>)</p>
 
 <h3 id="updated-rubyparser">Updated RubyParser</h3>
 
-<p>The main <code class="highlighter-rouge">brakeman</code> gem bundles as-of-yet unreleased changes in RubyParser. This includes “squiggly heredoc” support (<code class="highlighter-rouge">&lt;&lt;~</code>), improved line numbers, and a few other fixes.</p>
+<p>The main <code class="language-plaintext highlighter-rouge">brakeman</code> gem bundles as-of-yet unreleased changes in RubyParser. This includes “squiggly heredoc” support (<code class="language-plaintext highlighter-rouge">&lt;&lt;~</code>), improved line numbers, and a few other fixes.</p>
 
 <h3 id="checksums">Checksums</h3>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f46550d7c7827644a5663ccc10a6ca222e2534648f68630e3a777cb73df59824  brakeman-3.7.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f46550d7c7827644a5663ccc10a6ca222e2534648f68630e3a777cb73df59824  brakeman-3.7.0.gem
 0ea5359ae802284695500b92a03bf1d022574953a0da44607ff7f715f456c37e  brakeman-min-3.7.0.gem
 f6f17e9f1f71a68b486d68f2b3413607fb47154a0fb6a6da23d9d7be87f37967  brakeman-lib-3.7.0.gem
 </code></pre></div></div>
@@ -622,14 +622,14 @@ f6f17e9f1f71a68b486d68f2b3413607fb47154a0fb6a6da23d9d7be87f37967  brakeman-lib-3
   <div class="entry-content"><p><em>Changes since 3.6.1:</em></p>
 
 <ul>
-  <li>Remove <code class="highlighter-rouge">--rake</code> option</li>
+  <li>Remove <code class="language-plaintext highlighter-rouge">--rake</code> option</li>
   <li>By default, do not honor additional check paths in config</li>
-  <li>Properly handle template names without <code class="highlighter-rouge">.html</code> or <code class="highlighter-rouge">.js</code></li>
+  <li>Properly handle template names without <code class="language-plaintext highlighter-rouge">.html</code> or <code class="language-plaintext highlighter-rouge">.js</code></li>
   <li>Catch YAML parsing errors in session settings check (<a href="https://github.com/presidentbeef/brakeman/issues/1046">#1046</a>)</li>
-  <li>Better handling of <code class="highlighter-rouge">if</code> expressions in HAML rendering (<a href="https://github.com/presidentbeef/brakeman/issues/1032">#1032</a>)</li>
-  <li>Avoid warning about SQLi with <code class="highlighter-rouge">to_s</code> in <code class="highlighter-rouge">exists?</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1045">#1045</a>)</li>
+  <li>Better handling of <code class="language-plaintext highlighter-rouge">if</code> expressions in HAML rendering (<a href="https://github.com/presidentbeef/brakeman/issues/1032">#1032</a>)</li>
+  <li>Avoid warning about SQLi with <code class="language-plaintext highlighter-rouge">to_s</code> in <code class="language-plaintext highlighter-rouge">exists?</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1045">#1045</a>)</li>
   <li>Handle safe call operator in checks (<a href="https://github.com/presidentbeef/brakeman/issues/1031">#1031</a>)</li>
-  <li>Handle empty <code class="highlighter-rouge">if</code> expressions when finding return values</li>
+  <li>Handle empty <code class="language-plaintext highlighter-rouge">if</code> expressions when finding return values</li>
   <li>Set template file names during rendering for better errors</li>
   <li>Limit Slim dependency to before 3.0.8</li>
   <li>Update RubyParser to 3.9.0</li>
@@ -637,7 +637,7 @@ f6f17e9f1f71a68b486d68f2b3413607fb47154a0fb6a6da23d9d7be87f37967  brakeman-lib-3
 
 <h3 id="rake-option-removed">Rake Option Removed</h3>
 
-<p>The Rake task generated by <code class="highlighter-rouge">--rake</code> has caused quite a few problems. When Rake is run with a Rails application, it loads all of the app’s dependencies, which may conflict with Brakeman’s dependencies.</p>
+<p>The Rake task generated by <code class="language-plaintext highlighter-rouge">--rake</code> has caused quite a few problems. When Rake is run with a Rails application, it loads all of the app’s dependencies, which may conflict with Brakeman’s dependencies.</p>
 
 <p>It is recommended to either not use a Rake task to run Brakeman or just shell out to Brakeman instead of using it as a library.</p>
 
@@ -645,44 +645,44 @@ f6f17e9f1f71a68b486d68f2b3413607fb47154a0fb6a6da23d9d7be87f37967  brakeman-lib-3
 
 <h3 id="check-paths-in-config-files">Check Paths in Config Files</h3>
 
-<p>Brakeman allows loading custom checks with <code class="highlighter-rouge">--add-checks-path</code>.
-To avoid silently loading arbitary code, Brakeman will not support this option in configuration files unless explicitly enabled with <code class="highlighter-rouge">--allow-check-paths-in-config</code>.</p>
+<p>Brakeman allows loading custom checks with <code class="language-plaintext highlighter-rouge">--add-checks-path</code>.
+To avoid silently loading arbitary code, Brakeman will not support this option in configuration files unless explicitly enabled with <code class="language-plaintext highlighter-rouge">--allow-check-paths-in-config</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1052">changes</a>)</p>
 
 <h3 id="templates-without-format-extension">Templates without Format Extension</h3>
 
-<p>The <a href="http://brakemanscanner.org/blog/2017/01/31/brakeman-3-dot-5-0-released/">3.5.0 release</a> added support for templates with a bare extension (like <code class="highlighter-rouge">my_template.haml</code>) but template names derived internally did not handle these bare extensions properly. When rendering templates, Brakeman was not able to match render names to the correct files.</p>
+<p>The <a href="http://brakemanscanner.org/blog/2017/01/31/brakeman-3-dot-5-0-released/">3.5.0 release</a> added support for templates with a bare extension (like <code class="language-plaintext highlighter-rouge">my_template.haml</code>) but template names derived internally did not handle these bare extensions properly. When rendering templates, Brakeman was not able to match render names to the correct files.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1041">changes</a>)</p>
 
 <h3 id="yaml-errors">YAML Errors</h3>
 
-<p>When checking session settings, Brakeman parses <code class="highlighter-rouge">config/secrets.yml</code>. Sometimes this file has unsafe values or interpolated code which causes the parsing to fail. Brakeman will now only output a notice about this failure instead of an error.</p>
+<p>When checking session settings, Brakeman parses <code class="language-plaintext highlighter-rouge">config/secrets.yml</code>. Sometimes this file has unsafe values or interpolated code which causes the parsing to fail. Brakeman will now only output a notice about this failure instead of an error.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1047">changes</a>)</p>
 
 <h3 id="if-expressions-in-haml">If Expressions in HAML</h3>
 
-<p>Typically Brakeman assumes all <code class="highlighter-rouge">if</code> branches in templates are taken and ignores the condition. This was not happening in all cases in rendered HAML templates.</p>
+<p>Typically Brakeman assumes all <code class="language-plaintext highlighter-rouge">if</code> branches in templates are taken and ignores the condition. This was not happening in all cases in rendered HAML templates.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1035/files">changes</a>)</p>
 
-<h3 id="to_s-false-positive-with-exists"><code class="highlighter-rouge">to_s</code> False Positive with <code class="highlighter-rouge">exists?</code></h3>
+<h3 id="to_s-false-positive-with-exists"><code class="language-plaintext highlighter-rouge">to_s</code> False Positive with <code class="language-plaintext highlighter-rouge">exists?</code></h3>
 
-<p>Brakeman will no longer warn about arguments calling <code class="highlighter-rouge">to_s</code> in <code class="highlighter-rouge">exists?</code>, since that is the recommended way to avoid SQL injection with that particular method.</p>
+<p>Brakeman will no longer warn about arguments calling <code class="language-plaintext highlighter-rouge">to_s</code> in <code class="language-plaintext highlighter-rouge">exists?</code>, since that is the recommended way to avoid SQL injection with that particular method.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1049">changes</a>)</p>
 
 <h3 id="better-safe-call-handling">Better Safe Call Handling</h3>
 
-<p>The safe call operation <code class="highlighter-rouge">&amp;.</code> will be handled better in all checks instead of being ignored.</p>
+<p>The safe call operation <code class="language-plaintext highlighter-rouge">&amp;.</code> will be handled better in all checks instead of being ignored.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1033">changes</a>)</p>
 
 <h3 id="empty-ifs">Empty Ifs</h3>
 
-<p>This release fixes an issue when finding return values from methods ending in an empty <code class="highlighter-rouge">if</code> expression.</p>
+<p>This release fixes an issue when finding return values from methods ending in an empty <code class="language-plaintext highlighter-rouge">if</code> expression.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1053">changes</a>)</p>
 
@@ -694,11 +694,11 @@ To avoid silently loading arbitary code, Brakeman will not support this option i
 
 <h3 id="dependencies">Dependencies</h3>
 
-<p>RubyParser has been updated to <code class="highlighter-rouge">3.9.0</code> which resolves some issues.</p>
+<p>RubyParser has been updated to <code class="language-plaintext highlighter-rouge">3.9.0</code> which resolves some issues.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1048">changes</a>)</p>
 
-<p>Slim is limited to <code class="highlighter-rouge">&lt;3.0.8</code> since the <code class="highlighter-rouge">3.0.8</code> gem requires Ruby 2.0.</p>
+<p>Slim is limited to <code class="language-plaintext highlighter-rouge">&lt;3.0.8</code> since the <code class="language-plaintext highlighter-rouge">3.0.8</code> gem requires Ruby 2.0.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1050">changes</a>)</p>
 
@@ -706,7 +706,7 @@ To avoid silently loading arbitary code, Brakeman will not support this option i
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ba89440a5e94f463ad9b6f3602e83d16313857753a5cc9b754757bd3e58e2202  brakeman-3.6.2.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ba89440a5e94f463ad9b6f3602e83d16313857753a5cc9b754757bd3e58e2202  brakeman-3.6.2.gem
 adae09f9aa3a4d311fe2de41fee5d9b821eff600c1c05e314b3b930adb85b4d7  brakeman-min-3.6.2.gem
 d3da0a86dedcee84c35a14e00b7a9d22874aed89d7d031d1fe60b68ce4ae7c7a  brakeman-lib-3.6.2.gem
 </code></pre></div></div>

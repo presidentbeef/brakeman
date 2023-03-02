@@ -99,7 +99,7 @@
 
 <ul>
   <li>Support scanning Rails engines (<a href="https://github.com/phene">Geoffrey Hichborn</a>)</li>
-  <li>Ignore redirects to models using <code class="highlighter-rouge">friendly_id</code> (<a href="https://github.com/aj0strow">AJ Ostrow</a>)</li>
+  <li>Ignore redirects to models using <code class="language-plaintext highlighter-rouge">friendly_id</code> (<a href="https://github.com/aj0strow">AJ Ostrow</a>)</li>
   <li>Add check for detailed exceptions in production (<a href="https://github.com/presidentbeef/brakeman/issues/391">#391</a>)</li>
   <li>Use Rails version from Gemfile if it is available (<a href="https://github.com/presidentbeef/brakeman/issues/398">#398</a>)</li>
   <li>Only add routes with actual names (<a href="https://github.com/presidentbeef/brakeman/issues/395">#395</a>)</li>
@@ -114,7 +114,7 @@
 
 <h3 id="redirects-with-friendly-id">Redirects with Friendly ID</h3>
 
-<p>Thanks to <a href="https://github.com/aj0strow">AJ Ostrow</a>, Brakeman should no longer warn on redirects to models using <code class="highlighter-rouge">friendly_id</code>.</p>
+<p>Thanks to <a href="https://github.com/aj0strow">AJ Ostrow</a>, Brakeman should no longer warn on redirects to models using <code class="language-plaintext highlighter-rouge">friendly_id</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/400">changes</a>)</p>
 
@@ -122,13 +122,13 @@
 
 <p><a href="https://github.com/ntalbott">Nathaniel Talbott</a> suggested checking that detailed exceptions (treating requests as local) are not enabled in production.</p>
 
-<p>Brakeman now generates a warning in a new category called “<a href="http://brakemanscanner.org/docs/warning_types/information_disclosure/">Information Disclosure</a>” if <code class="highlighter-rouge">config.consider_all_requests_local</code> is set to <code class="highlighter-rouge">true</code> in production or a controller overrides <code class="highlighter-rouge">show_detailed_exceptions?</code> to return something other than <code class="highlighter-rouge">false</code>.</p>
+<p>Brakeman now generates a warning in a new category called “<a href="http://brakemanscanner.org/docs/warning_types/information_disclosure/">Information Disclosure</a>” if <code class="language-plaintext highlighter-rouge">config.consider_all_requests_local</code> is set to <code class="language-plaintext highlighter-rouge">true</code> in production or a controller overrides <code class="language-plaintext highlighter-rouge">show_detailed_exceptions?</code> to return something other than <code class="language-plaintext highlighter-rouge">false</code>.</p>
 
 <p>Please see the <a href="https://github.com/presidentbeef/brakeman/pull/396">changes</a> regarding the new category and two new warning codes associated with these warnings.</p>
 
 <h3 id="better-version-detection">Better Version Detection</h3>
 
-<p>Brakeman now uses the Rails version found in <code class="highlighter-rouge">Gemfile</code> or <code class="highlighter-rouge">Gemfile.lock</code> to determine when to enable Rails 3/4 mode, which seems obvious in retrospect. This required swapping when the <code class="highlighter-rouge">Gemfile</code> and the configuration files are processed.</p>
+<p>Brakeman now uses the Rails version found in <code class="language-plaintext highlighter-rouge">Gemfile</code> or <code class="language-plaintext highlighter-rouge">Gemfile.lock</code> to determine when to enable Rails 3/4 mode, which seems obvious in retrospect. This required swapping when the <code class="language-plaintext highlighter-rouge">Gemfile</code> and the configuration files are processed.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/402">changes</a>)</p>
 
@@ -140,14 +140,14 @@
 
 <h3 id="command-injection-false-positives">Command Injection False Positives</h3>
 
-<p>There should be fewer false positives for command injection when interpolated values are literals. The check also now ignores commonly used values <code class="highlighter-rouge">RAILS_ROOT</code>, <code class="highlighter-rouge">Rails.env</code>, and <code class="highlighter-rouge">Rails.root</code>.</p>
+<p>There should be fewer false positives for command injection when interpolated values are literals. The check also now ignores commonly used values <code class="language-plaintext highlighter-rouge">RAILS_ROOT</code>, <code class="language-plaintext highlighter-rouge">Rails.env</code>, and <code class="language-plaintext highlighter-rouge">Rails.root</code>.</p>
 
-<p>Additionally, reported “dangerous” values (<code class="highlighter-rouge">user_input</code> in JSON reports) for command injection are more specific. For example:</p>
+<p>Additionally, reported “dangerous” values (<code class="language-plaintext highlighter-rouge">user_input</code> in JSON reports) for command injection are more specific. For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system "rm -rf #{some_var}"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system "rm -rf #{some_var}"
 </code></pre></div></div>
 
-<p>used to report the entire string <code class="highlighter-rouge">"rm -rf #{some_var}"</code> as dangerous, even though it’s really warning about the interpolation of <code class="highlighter-rouge">some_var</code>. Now Brakeman will report the first potentially dangerous interpolated value. Note that this does not change fingerprints for existing warnings.</p>
+<p>used to report the entire string <code class="language-plaintext highlighter-rouge">"rm -rf #{some_var}"</code> as dangerous, even though it’s really warning about the interpolation of <code class="language-plaintext highlighter-rouge">some_var</code>. Now Brakeman will report the first potentially dangerous interpolated value. Note that this does not change fingerprints for existing warnings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/404">changes</a>)</p>
 
@@ -161,7 +161,7 @@
 
 <p>The SHA-1 for the Brakeman 2.2.0 gem is:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f3a2b369bda79c677a913cdb2350cbda8bce8a90  brakeman-2.2.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f3a2b369bda79c677a913cdb2350cbda8bce8a90  brakeman-2.2.0.gem
 </code></pre></div></div>
 </div>
 

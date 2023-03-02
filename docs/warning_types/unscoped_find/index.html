@@ -78,18 +78,18 @@
     <h1 class="entry-title">Unscoped Find</h1>
   </header>
   
-  <p>Unscoped <code class="highlighter-rouge">find</code> (and related methods) are a form of <a href="https://www.owasp.org/index.php/Top_10_2013-A4-Insecure_Direct_Object_References">Direct Object Reference</a>. Models which belong to another model should typically be accessed via a scoped query.</p>
+  <p>Unscoped <code class="language-plaintext highlighter-rouge">find</code> (and related methods) are a form of <a href="https://www.owasp.org/index.php/Top_10_2013-A4-Insecure_Direct_Object_References">Direct Object Reference</a>. Models which belong to another model should typically be accessed via a scoped query.</p>
 
-<p>For example, if an <code class="highlighter-rouge">Account</code> belongs to a <code class="highlighter-rouge">User</code>, then this may be an unsafe unscoped find:</p>
+<p>For example, if an <code class="language-plaintext highlighter-rouge">Account</code> belongs to a <code class="language-plaintext highlighter-rouge">User</code>, then this may be an unsafe unscoped find:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Account.find(params[:id])
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Account.find(params[:id])
 </code></pre></div></div>
 
 <p>Depending on the action, this could allow an attacker to access any account they wish.</p>
 
 <p>Instead, it should be scoped to the currently logged-in user:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>current_user = User.find(session[:user_id])
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>current_user = User.find(session[:user_id])
 current_user.accounts.find(params[:id])
 </code></pre></div></div>
 

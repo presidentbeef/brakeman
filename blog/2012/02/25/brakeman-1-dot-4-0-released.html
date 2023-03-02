@@ -93,7 +93,7 @@
   </header>
 
 
-<div class="entry-content"><p>This is not a big release, but it does add a new check. Also, processing for ERB templates with the <code class="highlighter-rouge">rails_xss</code> plugin has changed, so there is the possibility that line numbers for reported warnings will shift.</p>
+<div class="entry-content"><p>This is not a big release, but it does add a new check. Also, processing for ERB templates with the <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin has changed, so there is the possibility that line numbers for reported warnings will shift.</p>
 
 <p><em>Changes since 1.3.0:</em></p>
 
@@ -107,13 +107,13 @@
 
 <h3 id="new-check-for-link_to">New Check for link_to</h3>
 
-<p><a href="https://github.com/oreoshake">Neil Matatall</a> has contributed a new check for the href parameter in <code class="highlighter-rouge">link_to</code>. Even if HTML escaped, some values can be dangerous, so this check will warn for user input in that parameter. See <a href="https://github.com/presidentbeef/brakeman/pull/45">here</a> for more details.</p>
+<p><a href="https://github.com/oreoshake">Neil Matatall</a> has contributed a new check for the href parameter in <code class="language-plaintext highlighter-rouge">link_to</code>. Even if HTML escaped, some values can be dangerous, so this check will warn for user input in that parameter. See <a href="https://github.com/presidentbeef/brakeman/pull/45">here</a> for more details.</p>
 
-<p>The <code class="highlighter-rouge">--url-safe-methods</code> option can be used to specify escaping methods which are safe for urls.</p>
+<p>The <code class="language-plaintext highlighter-rouge">--url-safe-methods</code> option can be used to specify escaping methods which are safe for urls.</p>
 
 <h3 id="erb-and-rails_xss">ERB and rails_xss</h3>
 
-<p>The <code class="highlighter-rouge">rails_xss</code> plugin has some fixes for how Erbuis handles certain input. Brakeman now matches those changes, which fixes some parsing errors.</p>
+<p>The <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin has some fixes for how Erbuis handles certain input. Brakeman now matches those changes, which fixes some parsing errors.</p>
 
 <h3 id="internal-changes">Internal Changes</h3>
 
@@ -121,9 +121,9 @@
 
 <p>First, there is now json output for reports. This actually should be an output format option, but I did not realize it until writing this post. The next release will include this, though!</p>
 
-<p>The way Brakeman handles the <code class="highlighter-rouge">--confidence-level</code> option has also changed. In the past, warnings would be filtered when output in a report. This meant, for example, that <code class="highlighter-rouge">tracker.checks.all_warnings</code> would still return warnings below the specified confidence level. It also caused problems because there were many places in the code where the warnings needed to be filtered. With this release, warnings below the confidence level will be dropped as soon as they are found and will not need to be filtered at any later point.</p>
+<p>The way Brakeman handles the <code class="language-plaintext highlighter-rouge">--confidence-level</code> option has also changed. In the past, warnings would be filtered when output in a report. This meant, for example, that <code class="language-plaintext highlighter-rouge">tracker.checks.all_warnings</code> would still return warnings below the specified confidence level. It also caused problems because there were many places in the code where the warnings needed to be filtered. With this release, warnings below the confidence level will be dropped as soon as they are found and will not need to be filtered at any later point.</p>
 
-<p>Lastly, <code class="highlighter-rouge">Brakeman.run</code> would return <code class="highlighter-rouge">false</code> if <code class="highlighter-rouge">--exit-on-warn</code> was set, and a <code class="highlighter-rouge">Tracker</code> object otherwise. This has changed. <code class="highlighter-rouge">Brakeman.run</code> will now always return a <code class="highlighter-rouge">Tracker</code> object and the logic for <code class="highlighter-rouge">--exit-on-warn</code> was pushed out to the Brakeman executable.</p>
+<p>Lastly, <code class="language-plaintext highlighter-rouge">Brakeman.run</code> would return <code class="language-plaintext highlighter-rouge">false</code> if <code class="language-plaintext highlighter-rouge">--exit-on-warn</code> was set, and a <code class="language-plaintext highlighter-rouge">Tracker</code> object otherwise. This has changed. <code class="language-plaintext highlighter-rouge">Brakeman.run</code> will now always return a <code class="language-plaintext highlighter-rouge">Tracker</code> object and the logic for <code class="language-plaintext highlighter-rouge">--exit-on-warn</code> was pushed out to the Brakeman executable.</p>
 
 <h3 id="report-issues">Report Issues</h3>
 

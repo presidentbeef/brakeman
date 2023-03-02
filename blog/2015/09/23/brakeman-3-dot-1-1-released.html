@@ -102,10 +102,10 @@
   <li>Add optional check for use of MD5 and SHA1</li>
   <li>Fix absolute paths for Windows (<a href="https://github.com/spcoder">Cody Frederick</a>)</li>
   <li>Allow searching call index methods by regex (<a href="https://github.com/aianus">Alex Ianus</a>)</li>
-  <li>Consider <code class="highlighter-rouge">j</code>/<code class="highlighter-rouge">escape_javascript</code> safe inside Haml JavaScript blocks (<a href="https://github.com/presidentbeef/brakeman/issues/708">#708</a>)</li>
-  <li>Better Haml processing of <code class="highlighter-rouge">find_and_preserve</code> calls</li>
+  <li>Consider <code class="language-plaintext highlighter-rouge">j</code>/<code class="language-plaintext highlighter-rouge">escape_javascript</code> safe inside Haml JavaScript blocks (<a href="https://github.com/presidentbeef/brakeman/issues/708">#708</a>)</li>
+  <li>Better Haml processing of <code class="language-plaintext highlighter-rouge">find_and_preserve</code> calls</li>
   <li>Fix chained assignment</li>
-  <li>Treat <code class="highlighter-rouge">a.try(&amp;:b)</code> like <code class="highlighter-rouge">a.b()</code></li>
+  <li>Treat <code class="language-plaintext highlighter-rouge">a.try(&amp;:b)</code> like <code class="language-plaintext highlighter-rouge">a.b()</code></li>
   <li>Add more Arel methods to be ignored in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/711">#711</a>)</li>
   <li>Avoid warning when linking to decorated models (<a href="https://github.com/presidentbeef/brakeman/issues/683">#683</a>)</li>
   <li>Support newer terminal-table releases (<a href="https://github.com/presidentbeef/brakeman/issues/709">#709</a>)</li>
@@ -119,7 +119,7 @@
 
 <h3 id="optional-check-for-weak-hashes">Optional Check for Weak Hashes</h3>
 
-<p>An optional check to look for use of MD5 and SHA1 has been added to this release. Run with <code class="highlighter-rouge">-t WeakHash</code> to use just this optional check or <code class="highlighter-rouge">-A</code> to run all checks.</p>
+<p>An optional check to look for use of MD5 and SHA1 has been added to this release. Run with <code class="language-plaintext highlighter-rouge">-t WeakHash</code> to use just this optional check or <code class="language-plaintext highlighter-rouge">-A</code> to run all checks.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/722">changes</a>)</p>
 
@@ -133,28 +133,28 @@
 
 <p><a href="https://github.com/aianus">Alex Ianus</a> re-introduced the ability to search the CallIndex with regular expressions for methods:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tracker.find_call(method: /_something$/)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tracker.find_call(method: /_something$/)
 </code></pre></div></div>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/710">changes</a>)</p>
 
 <h3 id="haml-processing">Haml Processing</h3>
 
-<p>Haml users may have noticed warnings with <code class="highlighter-rouge">find_and_preserve(Haml::Filters::Javascript.render_with_options(...))</code> in them. This has been fixed so <code class="highlighter-rouge">find_and_preserve</code> is treated as though it just passes through its arguments. Calls to <code class="highlighter-rouge">render_with_options</code> will be treated as unescaped output.</p>
+<p>Haml users may have noticed warnings with <code class="language-plaintext highlighter-rouge">find_and_preserve(Haml::Filters::Javascript.render_with_options(...))</code> in them. This has been fixed so <code class="language-plaintext highlighter-rouge">find_and_preserve</code> is treated as though it just passes through its arguments. Calls to <code class="language-plaintext highlighter-rouge">render_with_options</code> will be treated as unescaped output.</p>
 
-<p>Along with this change, <code class="highlighter-rouge">j</code> and <code class="highlighter-rouge">escape_javascript</code> will be considered safe inside <code class="highlighter-rouge">:javascript</code> filters in Haml.</p>
+<p>Along with this change, <code class="language-plaintext highlighter-rouge">j</code> and <code class="language-plaintext highlighter-rouge">escape_javascript</code> will be considered safe inside <code class="language-plaintext highlighter-rouge">:javascript</code> filters in Haml.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/716">changes</a>)</p>
 
 <h3 id="chained-assignment">Chained Assignment</h3>
 
-<p>Chained assignments like <code class="highlighter-rouge">a = b = c = 1</code> will now be handled correctly. This fixes <a href="https://stackoverflow.com/questions/11314450/how-to-secure-link-to-variable-cross-site-scripting-vulnerabilities">a very old issue from 2012</a>.</p>
+<p>Chained assignments like <code class="language-plaintext highlighter-rouge">a = b = c = 1</code> will now be handled correctly. This fixes <a href="https://stackoverflow.com/questions/11314450/how-to-secure-link-to-variable-cross-site-scripting-vulnerabilities">a very old issue from 2012</a>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/718">changes</a>)</p>
 
 <h3 id="trying-more">Trying More</h3>
 
-<p>While Brakeman already treated <code class="highlighter-rouge">a.try(:b)</code> like <code class="highlighter-rouge">a.b()</code>, there is a surprising amount of code which does <code class="highlighter-rouge">a.try(&amp;:b)</code>. This is totally unncessary, but Brakeman now handles it as well.</p>
+<p>While Brakeman already treated <code class="language-plaintext highlighter-rouge">a.try(:b)</code> like <code class="language-plaintext highlighter-rouge">a.b()</code>, there is a surprising amount of code which does <code class="language-plaintext highlighter-rouge">a.try(&amp;:b)</code>. This is totally unncessary, but Brakeman now handles it as well.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/717">changes</a>)</p>
 
@@ -166,7 +166,7 @@
 
 <h3 id="decorated-models-in-links">Decorated Models in Links</h3>
 
-<p>If the Draper gem is used, Brakeman will ignore calls to <code class="highlighter-rouge">decorate</code> in <code class="highlighter-rouge">link_to</code>.</p>
+<p>If the Draper gem is used, Brakeman will ignore calls to <code class="language-plaintext highlighter-rouge">decorate</code> in <code class="language-plaintext highlighter-rouge">link_to</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/721">changes</a>)</p>
 
@@ -180,7 +180,7 @@
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cfd1840116c20b0b8932720fdaac09dd4e47091a  brakeman-3.1.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cfd1840116c20b0b8932720fdaac09dd4e47091a  brakeman-3.1.1.gem
 603389da732d307a014af445a1f312415b65a682  brakeman-min-3.1.1.gem
 </code></pre></div></div>
 

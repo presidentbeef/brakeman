@@ -100,10 +100,10 @@
 <p><em>Changes since 5.0.0:</em></p>
 
 <ul>
-  <li>Support loading <code class="highlighter-rouge">slim/smart</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1570">#1570</a>)</li>
+  <li>Support loading <code class="language-plaintext highlighter-rouge">slim/smart</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1570">#1570</a>)</li>
   <li>Set more line numbers on Sexps (<a href="https://github.com/presidentbeef/brakeman/issues/1579">#1579</a>)</li>
-  <li>Detect <code class="highlighter-rouge">::Rails.application.configure</code> too (<a href="https://github.com/presidentbeef/brakeman/issues/1584">#1584</a>)</li>
-  <li>Always ignore <code class="highlighter-rouge">slice</code>/<code class="highlighter-rouge">only</code> calls for mass assignment</li>
+  <li>Detect <code class="language-plaintext highlighter-rouge">::Rails.application.configure</code> too (<a href="https://github.com/presidentbeef/brakeman/issues/1584">#1584</a>)</li>
+  <li>Always ignore <code class="language-plaintext highlighter-rouge">slice</code>/<code class="language-plaintext highlighter-rouge">only</code> calls for mass assignment</li>
   <li>Don’t fail if $HOME/$USER are not defined</li>
   <li>Convert splat array arguments to arguments</li>
   <li>Bundle unreleased RubyParser changes</li>
@@ -112,13 +112,13 @@
 <h3 id="support-smart-text-in-slim-templates">Support Smart Text in Slim Templates</h3>
 
 <p>In order to support “<a href="https://github.com/slim-template/slim/blob/master/doc/smart.md">Smart Text</a>” in Slim templates,
-Brakeman will load <code class="highlighter-rouge">slim/smart</code> if <code class="highlighter-rouge">slim/smart</code> is mentioned in the <code class="highlighter-rouge">Gemfile</code>.</p>
+Brakeman will load <code class="language-plaintext highlighter-rouge">slim/smart</code> if <code class="language-plaintext highlighter-rouge">slim/smart</code> is mentioned in the <code class="language-plaintext highlighter-rouge">Gemfile</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1582">changes</a>)</p>
 
 <h3 id="more-line-numbers">More Line Numbers</h3>
 
-<p>Setting <code class="highlighter-rouge">nil</code> value for the line number of a Sexp raises an exception.</p>
+<p>Setting <code class="language-plaintext highlighter-rouge">nil</code> value for the line number of a Sexp raises an exception.</p>
 
 <p>This is usually from creating a Sexp without a line number in the first place.</p>
 
@@ -128,7 +128,7 @@ Brakeman will load <code class="highlighter-rouge">slim/smart</code> if <code cl
 
 <h3 id="always-ignore-sliceonly-for-mass-assignment">Always Ignore slice/only for Mass Assignment</h3>
 
-<p>If <code class="highlighter-rouge">slice</code> or <code class="highlighter-rouge">only</code> are called for arguments to mass assignment (e.g. <code class="highlighter-rouge">User.new(some_hash.slice(:name, :email))</code>),
+<p>If <code class="language-plaintext highlighter-rouge">slice</code> or <code class="language-plaintext highlighter-rouge">only</code> are called for arguments to mass assignment (e.g. <code class="language-plaintext highlighter-rouge">User.new(some_hash.slice(:name, :email))</code>),
 Brakeman will not warn about mass assignment.</p>
 
 <p>These have been ignored for a while, but a logic error caused Brakeman to sometimes still warn about them.</p>
@@ -153,7 +153,7 @@ Brakeman will not warn about mass assignment.</p>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4c1b7c7747ecfca11a822a4bab5ad05f13515e195d7d34590d3add215573b431  brakeman-5.0.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4c1b7c7747ecfca11a822a4bab5ad05f13515e195d7d34590d3add215573b431  brakeman-5.0.1.gem
 79129c2977936113fc87a9a2e9490b734f088286d0b33ed9ca61cb6587dc18c7  brakeman-lib-5.0.1.gem
 549034d7aeb2a5ca8fe299c41b91938d502a89e70a1afa68643ca3c9e5ccaf96  brakeman-min-5.0.1.gem
 </code></pre></div></div>

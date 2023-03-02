@@ -90,7 +90,7 @@
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>some.values.any? { |v| v.match /#{params[:query]}/ }
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>some.values.any? { |v| v.match /#{params[:query]}/ }
 </code></pre></div></div>
 
 <p>More information:</p>
@@ -107,7 +107,7 @@
 
 <p>If the application appears to be using an older version of Ruby, Brakeman checks for code where user input which is converted to a Symbol. When this is not restricted, an attacker could create an unlimited number of Symbols.</p>
 
-<p>Note: This is an optional check which can be enabled with <code class="highlighter-rouge">--enable SymbolDoS</code> or <code class="highlighter-rouge">--run-all-checks</code>.</p>
+<p>Note: This is an optional check which can be enabled with <code class="language-plaintext highlighter-rouge">--enable SymbolDoS</code> or <code class="language-plaintext highlighter-rouge">--run-all-checks</code>.</p>
 
 <hr />
 

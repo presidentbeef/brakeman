@@ -101,15 +101,15 @@
 
 <p>To verify on installation:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem cert --add &lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem cert --add &lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
 gem install brakeman -P MediumSecurity
 </code></pre></div></div>
 
 <p>“HighSecurity” requires all dependencies to be signed as well, which is unlikely.</p>
 
-<p>There is some weirdness around <code class="highlighter-rouge">-P MediumSecurity</code> currently. The simplest solution seems to be:</p>
+<p>There is some weirdness around <code class="language-plaintext highlighter-rouge">-P MediumSecurity</code> currently. The simplest solution seems to be:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install brakeman   # Install Brakeman and all dependencies
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install brakeman   # Install Brakeman and all dependencies
 gem uninstall brakeman # Remove the Brakeman gem
 gem install brakeman -P MediumSecurity  # Install Brakeman gem and check signature
 </code></pre></div></div>
@@ -118,7 +118,7 @@ gem install brakeman -P MediumSecurity  # Install Brakeman gem and check signatu
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>16b4890fa8ee6bad1d429a12bf3f0cb8e76cb2d8  brakeman-2.4.3.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>16b4890fa8ee6bad1d429a12bf3f0cb8e76cb2d8  brakeman-2.4.3.gem
 be5743d77140e64b75eefc53f8697f767ab370d9  brakeman-min-2.4.3.gem 
 </code></pre></div></div>
 

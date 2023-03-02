@@ -93,14 +93,14 @@
   </header>
 
 
-<div class="entry-content"><p><em>Important</em>: Contrary to the “Brakeman Philosophy,” there is one situation in which Brakeman attempts to load files from an application. This is a security risk since the code in the files would be executed (typical <code class="highlighter-rouge">require</code> behavior). Note that this is only a real problem if running Brakeman against code outside one’s control. Since most users are scanning their own code, this should not be a concern for the majority of Brakeman users.</p>
+<div class="entry-content"><p><em>Important</em>: Contrary to the “Brakeman Philosophy,” there is one situation in which Brakeman attempts to load files from an application. This is a security risk since the code in the files would be executed (typical <code class="language-plaintext highlighter-rouge">require</code> behavior). Note that this is only a real problem if running Brakeman against code outside one’s control. Since most users are scanning their own code, this should not be a concern for the majority of Brakeman users.</p>
 
 <p><em>Changes since 2.1.1:</em></p>
 
 <ul>
   <li>Do not attempt to load custom Haml filters</li>
-  <li>Do not warn about <code class="highlighter-rouge">to_json</code> XSS in Rails 4</li>
-  <li>Remove fuzzy matching on dangerous <code class="highlighter-rouge">attr_accessible</code> values</li>
+  <li>Do not warn about <code class="language-plaintext highlighter-rouge">to_json</code> XSS in Rails 4</li>
+  <li>Remove fuzzy matching on dangerous <code class="language-plaintext highlighter-rouge">attr_accessible</code> values</li>
   <li>Add –table-width option to set width of text reports (<a href="https://github.com/ssendev">ssendev</a>)</li>
 </ul>
 
@@ -114,19 +114,19 @@
 
 <h3 id="json-output-in-rails-4">JSON Output in Rails 4</h3>
 
-<p>As of Rails 4, the output of <code class="highlighter-rouge">to_json</code> is now safe by default. Brakeman should no longer warn about cross-site scripting with <code class="highlighter-rouge">to_json</code> in Rails 4 applications.</p>
+<p>As of Rails 4, the output of <code class="language-plaintext highlighter-rouge">to_json</code> is now safe by default. Brakeman should no longer warn about cross-site scripting with <code class="language-plaintext highlighter-rouge">to_json</code> in Rails 4 applications.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/392">changes</a>)</p>
 
 <h3 id="less-fuzzy-mass-assignment">Less Fuzzy Mass Assignment</h3>
 
-<p>Brakeman no longer uses fuzzy matching for potentially dangerous model attributes allowed for mass assignment, such as any value containing <code class="highlighter-rouge">admin</code>.</p>
+<p>Brakeman no longer uses fuzzy matching for potentially dangerous model attributes allowed for mass assignment, such as any value containing <code class="language-plaintext highlighter-rouge">admin</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/390">changes</a>)</p>
 
 <h3 id="text-report-width-option">Text Report Width Option</h3>
 
-<p>The width of text reports can now be controlled with the <code class="highlighter-rouge">--table-width</code> option. For example, this can be useful when capturing text output to a file.</p>
+<p>The width of text reports can now be controlled with the <code class="language-plaintext highlighter-rouge">--table-width</code> option. For example, this can be useful when capturing text output to a file.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/387">changes</a>)</p>
 

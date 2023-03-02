@@ -101,22 +101,22 @@
 <ul>
   <li>Support relative paths in reports (fsword)</li>
   <li>Allow Brakeman to be run without tty (fsword)</li>
-  <li>Fix exit code with <code class="highlighter-rouge">--compare</code> (fsword)</li>
-  <li>Fix <code class="highlighter-rouge">--rake</code> option (Deepak Kumar)</li>
-  <li>Add high confidence warnings for <code class="highlighter-rouge">to_json</code> XSS (Neil Matatall)</li>
-  <li>Fix <code class="highlighter-rouge">redirect_to</code> false negative</li>
-  <li>Fix duplicate warnings with <code class="highlighter-rouge">raw</code> calls</li>
+  <li>Fix exit code with <code class="language-plaintext highlighter-rouge">--compare</code> (fsword)</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">--rake</code> option (Deepak Kumar)</li>
+  <li>Add high confidence warnings for <code class="language-plaintext highlighter-rouge">to_json</code> XSS (Neil Matatall)</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">redirect_to</code> false negative</li>
+  <li>Fix duplicate warnings with <code class="language-plaintext highlighter-rouge">raw</code> calls</li>
   <li>Fix shadowing of rendered partials</li>
   <li>Add “render chain” to HTML reports</li>
-  <li>Add check for XSS in <code class="highlighter-rouge">content_tag</code></li>
+  <li>Add check for XSS in <code class="language-plaintext highlighter-rouge">content_tag</code></li>
   <li>Add full backtrace for errors in debug mode</li>
-  <li>Treat model attributes in <code class="highlighter-rouge">or</code> expressions as immediate values</li>
+  <li>Treat model attributes in <code class="language-plaintext highlighter-rouge">or</code> expressions as immediate values</li>
   <li>Switch to method access for Sexp nodes</li>
 </ul>
 
 <h3 id="relative-paths-in-reports">Relative Paths in Reports</h3>
 
-<p>The <code class="highlighter-rouge">--relative-paths</code> option will now cause Brakeman to output relative paths for warnings in reports in either JSON or tabs format. This is useful when comparing reports run on different machines or just in different directories.</p>
+<p>The <code class="language-plaintext highlighter-rouge">--relative-paths</code> option will now cause Brakeman to output relative paths for warnings in reports in either JSON or tabs format. This is useful when comparing reports run on different machines or just in different directories.</p>
 
 <h3 id="brakeman-without-tty">Brakeman without TTY</h3>
 
@@ -124,29 +124,29 @@
 
 <h3 id="exit-code-for-compare">Exit Code for Compare</h3>
 
-<p>Also thanks to fsword, Brakeman will return a proper exit code when run with <code class="highlighter-rouge">-z --compare</code>. If any changes are found, the exit code will be nonzero.</p>
+<p>Also thanks to fsword, Brakeman will return a proper exit code when run with <code class="language-plaintext highlighter-rouge">-z --compare</code>. If any changes are found, the exit code will be nonzero.</p>
 
 <h3 id="rake-task-generation-fixed">Rake Task Generation Fixed</h3>
 
-<p>The <code class="highlighter-rouge">--rake</code> option was broken, but <a href="https://github.com/deepakinseattle">Deepak Kumar</a> noticed and fixed it!</p>
+<p>The <code class="language-plaintext highlighter-rouge">--rake</code> option was broken, but <a href="https://github.com/deepakinseattle">Deepak Kumar</a> noticed and fixed it!</p>
 
 <h3 id="high-confidence-warnings-for-json">High Confidence Warnings for JSON</h3>
 
-<p>Older versions of Rails default to not escaping <code class="highlighter-rouge">to_json</code> calls, leading to <a href="http://brakemanscanner.org/docs/warning_types/cross_site_scripting_to_json/">cross site scripting problems</a>. Since Rails 2.1.0, Rails has provided an option to escape JSON output by default. Brakeman will check this option, and warn on unescaped <code class="highlighter-rouge">to_json</code> calls.</p>
+<p>Older versions of Rails default to not escaping <code class="language-plaintext highlighter-rouge">to_json</code> calls, leading to <a href="http://brakemanscanner.org/docs/warning_types/cross_site_scripting_to_json/">cross site scripting problems</a>. Since Rails 2.1.0, Rails has provided an option to escape JSON output by default. Brakeman will check this option, and warn on unescaped <code class="language-plaintext highlighter-rouge">to_json</code> calls.</p>
 
 <h3 id="fix-redirect-false-negative">Fix Redirect False Negative</h3>
 
-<p>Brakeman was incorrectly checking for <code class="highlighter-rouge">:only_path =&gt; true</code> in <em>any</em> argument to <code class="highlighter-rouge">redirect_to</code>. However, it is only valid as part of the first argument.</p>
+<p>Brakeman was incorrectly checking for <code class="language-plaintext highlighter-rouge">:only_path =&gt; true</code> in <em>any</em> argument to <code class="language-plaintext highlighter-rouge">redirect_to</code>. However, it is only valid as part of the first argument.</p>
 
 <h3 id="fix-duplicate-warnings-on-raw-calls">Fix Duplicate Warnings on Raw Calls</h3>
 
-<p>A logic mistake sometimes caused a high and weak confidence warning to be reported for the same code using <code class="highlighter-rouge">raw</code>. This has been fixed.</p>
+<p>A logic mistake sometimes caused a high and weak confidence warning to be reported for the same code using <code class="language-plaintext highlighter-rouge">raw</code>. This has been fixed.</p>
 
 <h3 id="fix-shadowing-of-rendered-partials">Fix Shadowing of Rendered Partials</h3>
 
 <p>Due to the way Brakeman was storing rendered partials, a view that was rendered multiple times via different code paths would only store a single instance of the rendered view. This could result in some vulnerabilities not being reported.</p>
 
-<p>To fix this, Brakeman now stores the entire “render chain” (that is, each location of a <code class="highlighter-rouge">render</code>). This ensures a unique key for each rendered template.</p>
+<p>To fix this, Brakeman now stores the entire “render chain” (that is, each location of a <code class="language-plaintext highlighter-rouge">render</code>). This ensures a unique key for each rendered template.</p>
 
 <h3 id="report-render-chain-in-html">Report Render Chain in HTML</h3>
 
@@ -160,19 +160,19 @@
 
 <p><img src="/images/expanded_call_chain.png" alt="Expanded" /></p>
 
-<h3 id="check-for-xss-in-content_tag">Check for XSS in <code class="highlighter-rouge">content_tag</code></h3>
+<h3 id="check-for-xss-in-content_tag">Check for XSS in <code class="language-plaintext highlighter-rouge">content_tag</code></h3>
 
-<p><code class="highlighter-rouge">content_tag</code> is a view helper for generating HTML tags containing some content. In Rails 2.x, <code class="highlighter-rouge">content_tag</code> did not escape this content. In Rails 3.x, this changed so that now it is escaped. While <code class="highlighter-rouge">content_tag</code> does have an <code class="highlighter-rouge">escape</code> parameter (true by default), this only applies to the tag attribute <em>values</em>.</p>
+<p><code class="language-plaintext highlighter-rouge">content_tag</code> is a view helper for generating HTML tags containing some content. In Rails 2.x, <code class="language-plaintext highlighter-rouge">content_tag</code> did not escape this content. In Rails 3.x, this changed so that now it is escaped. While <code class="language-plaintext highlighter-rouge">content_tag</code> does have an <code class="language-plaintext highlighter-rouge">escape</code> parameter (true by default), this only applies to the tag attribute <em>values</em>.</p>
 
-<p>Brakeman now warns on possible cross site scripting via <code class="highlighter-rouge">content_tag</code> calls. <a href="/docs/warning_types/content_tag">See here</a> for more details.</p>
+<p>Brakeman now warns on possible cross site scripting via <code class="language-plaintext highlighter-rouge">content_tag</code> calls. <a href="/docs/warning_types/content_tag">See here</a> for more details.</p>
 
 <h3 id="backtraces-in-debug-mode">Backtraces in Debug Mode</h3>
 
-<p>By default, Brakeman tries its best to recover from errors and produce a report. However, this can sometimes make it difficult to track down the sources of errors. Now, with the <code class="highlighter-rouge">-d</code> option, Brakeman will report backtraces for errors encountered while running, as well as including backtraces in HTML reports.</p>
+<p>By default, Brakeman tries its best to recover from errors and produce a report. However, this can sometimes make it difficult to track down the sources of errors. Now, with the <code class="language-plaintext highlighter-rouge">-d</code> option, Brakeman will report backtraces for errors encountered while running, as well as including backtraces in HTML reports.</p>
 
 <h3 id="convenience-methods-for-sexp-access">Convenience Methods for Sexp Access</h3>
 
-<p>Previously, all code dealing with <a href="https://en.wikipedia.org/wiki/S-exp">s-expressions</a> in the <code class="highlighter-rouge">Sexp</code> class accessed nodes via array access, e.g. <code class="highlighter-rouge">exp[1]</code> or <code class="highlighter-rouge">exp[2]</code>. This led to hard-to-read code like <code class="highlighter-rouge">exp[2][3][1][1..-1]</code>. This release includes convenience methods to replace those types of calls. Available methods are <a href="http://rdoc.info/gems/brakeman/Sexp">documented here</a>.</p>
+<p>Previously, all code dealing with <a href="https://en.wikipedia.org/wiki/S-exp">s-expressions</a> in the <code class="language-plaintext highlighter-rouge">Sexp</code> class accessed nodes via array access, e.g. <code class="language-plaintext highlighter-rouge">exp[1]</code> or <code class="language-plaintext highlighter-rouge">exp[2]</code>. This led to hard-to-read code like <code class="language-plaintext highlighter-rouge">exp[2][3][1][1..-1]</code>. This release includes convenience methods to replace those types of calls. Available methods are <a href="http://rdoc.info/gems/brakeman/Sexp">documented here</a>.</p>
 
 <p>Hopefully this leads to code that is both easier to read and easier to write.</p>
 
@@ -224,9 +224,9 @@
 
 <h3 id="cve-2012-3463---xss-in-select_tag-prompt">CVE-2012-3463 - XSS in select_tag Prompt</h3>
 
-<p>In Rails 3.x, values supplied to the <code class="highlighter-rouge">:prompt</code> option in the <code class="highlighter-rouge">select_tag</code> helper are not escaped, leading to a cross-site scripting vulnerability.</p>
+<p>In Rails 3.x, values supplied to the <code class="language-plaintext highlighter-rouge">:prompt</code> option in the <code class="language-plaintext highlighter-rouge">select_tag</code> helper are not escaped, leading to a cross-site scripting vulnerability.</p>
 
-<p>Brakeman will warn on all uses of <code class="highlighter-rouge">select_tag</code> with unescaped user input in the <code class="highlighter-rouge">:prompt</code> option.</p>
+<p>Brakeman will warn on all uses of <code class="language-plaintext highlighter-rouge">select_tag</code> with unescaped user input in the <code class="language-plaintext highlighter-rouge">:prompt</code> option.</p>
 
 <h3 id="cve-2012-3464---single-quotes-are-unescaped">CVE-2012-3464 - Single Quotes are Unescaped</h3>
 
@@ -234,21 +234,21 @@
 
 <p>Single quotes are most dangerous when interpolating values into HTML attributes that use single quotes, which is why it is often recommended to always use double quotes in HTML.</p>
 
-<p>There is a <a href="https://groups.google.com/d/topic/rubyonrails-security/kKGNeMrnmiY/discussion">provided workaround</a> for earlier versions of Rails which replaces <code class="highlighter-rouge">ERB::Util.html_escape</code> with <code class="highlighter-rouge">Rack::Utils.escape_html</code>. This method adds escaping for both single quotes (<code class="highlighter-rouge">'</code>) and forward slashes (<code class="highlighter-rouge">/</code>).</p>
+<p>There is a <a href="https://groups.google.com/d/topic/rubyonrails-security/kKGNeMrnmiY/discussion">provided workaround</a> for earlier versions of Rails which replaces <code class="language-plaintext highlighter-rouge">ERB::Util.html_escape</code> with <code class="language-plaintext highlighter-rouge">Rack::Utils.escape_html</code>. This method adds escaping for both single quotes (<code class="language-plaintext highlighter-rouge">'</code>) and forward slashes (<code class="language-plaintext highlighter-rouge">/</code>).</p>
 
 <p>If the provided workaround is used in an initializer, as suggested, then Brakeman will not generate a warning for this vulnerability. Otherwise, Brakeman will generate a warning for affected versions.</p>
 
 <h3 id="cve-2012-3465---xss-in-strip_tags">CVE-2012-3465 - XSS in strip_tags</h3>
 
-<p>Another vulnerability has been reported for <code class="highlighter-rouge">strip_tags</code> (earlier report was <a href="https://groups.google.com/d/topic/rubyonrails-security/K5EwdJt06hI/discussion">CVE-2011-2931</a>).</p>
+<p>Another vulnerability has been reported for <code class="language-plaintext highlighter-rouge">strip_tags</code> (earlier report was <a href="https://groups.google.com/d/topic/rubyonrails-security/K5EwdJt06hI/discussion">CVE-2011-2931</a>).</p>
 
-<p>Brakeman will warn on affected versions if uses of <code class="highlighter-rouge">strip_tags</code> are detected.</p>
+<p>Brakeman will warn on affected versions if uses of <code class="language-plaintext highlighter-rouge">strip_tags</code> are detected.</p>
 
 <h3 id="xss-in-select-helper">XSS in select Helper</h3>
 
 <p>This vulnerability was <a href="https://groups.google.com/d/topic/rubyonrails-security/CdoMUVpsRmQ/discussion">reported a while ago</a>, but it was unclear if it applied to Rails 2.x or just Rails 3. Thanks to Neil Matatall, it has been confirmed to be an issue in Rails 2.x as well.</p>
 
-<p>Therefore, Brakeman will be reporting the vulnerability (<code class="highlighter-rouge">select</code> does not escape options list if supplied as a straight string) for Rails 2.x as well.</p>
+<p>Therefore, Brakeman will be reporting the vulnerability (<code class="language-plaintext highlighter-rouge">select</code> does not escape options list if supplied as a straight string) for Rails 2.x as well.</p>
 
 <h3 id="report-issues">Report Issues</h3>
 
@@ -295,8 +295,8 @@
   <li>Improve processing of Rails 3 routes</li>
   <li>Improve file access check</li>
   <li>Avoid warning on non-ActiveModel models</li>
-  <li>Fix how <code class="highlighter-rouge">params[:x] ||=</code> is handled</li>
-  <li>Treat user input in <code class="highlighter-rouge">or</code> expressions as immediate values</li>
+  <li>Fix how <code class="language-plaintext highlighter-rouge">params[:x] ||=</code> is handled</li>
+  <li>Treat user input in <code class="language-plaintext highlighter-rouge">or</code> expressions as immediate values</li>
   <li>Fix processing of negative array indexes</li>
   <li>Fix “empty char-class” error</li>
   <li>Speed improvements by stripping down SexpProcessor</li>
@@ -307,11 +307,11 @@
 
 <p><a href="https://groups.google.com/d/topic/rubyonrails-security/vxJjrc15qYM/discussion">CVE-2012-3424</a>, a potential denial of service vulnerability in how Rails handles HTTP authentication digest parameters, was recently announced. It affects Rails 3.x, and is fixed in 3.0.16, 3.1.7, and 3.2.7.</p>
 
-<p>Brakeman will generate a warning for the Rails versions affected, but will only report a high confidence warning if <code class="highlighter-rouge">authenticate_or_request_with_http_digest</code> or <code class="highlighter-rouge">authenticate_with_http_digest</code> methods are called.</p>
+<p>Brakeman will generate a warning for the Rails versions affected, but will only report a high confidence warning if <code class="language-plaintext highlighter-rouge">authenticate_or_request_with_http_digest</code> or <code class="language-plaintext highlighter-rouge">authenticate_with_http_digest</code> methods are called.</p>
 
 <h3 id="links-to-warning-information">Links to Warning Information</h3>
 
-<p>HTML reports now link warning types to descriptions on the Brakeman website. JSON reports will also include the link information. Due to this change, it is not possible to compare JSON reports from previous versions using the <code class="highlighter-rouge">--compare</code> option.</p>
+<p>HTML reports now link warning types to descriptions on the Brakeman website. JSON reports will also include the link information. Due to this change, it is not possible to compare JSON reports from previous versions using the <code class="language-plaintext highlighter-rouge">--compare</code> option.</p>
 
 <p>Suggestions and <a href="https://github.com/presidentbeef/brakeman-site">pull requests</a> for improving the documention are welcome!</p>
 
@@ -329,33 +329,33 @@
 
 <p>The check for user input in file access calls has been improved so the confidence of the warnings will vary according to how the user input is used, like most other checks.</p>
 
-<p>Additionally, the check will now respect the <code class="highlighter-rouge">--report-direct</code> option.</p>
+<p>Additionally, the check will now respect the <code class="language-plaintext highlighter-rouge">--report-direct</code> option.</p>
 
 <h3 id="no-sqli-warnings-for-non-activemodel">No SQLi Warnings for Non-ActiveModel</h3>
 
-<p>Models which do not inherit from <code class="highlighter-rouge">ActiveRecord::Base</code> will no longer be reported in SQL injection warnings.</p>
+<p>Models which do not inherit from <code class="language-plaintext highlighter-rouge">ActiveRecord::Base</code> will no longer be reported in SQL injection warnings.</p>
 
-<h3 id="default-assignment-to-params">Default Assignment to <code class="highlighter-rouge">params</code></h3>
+<h3 id="default-assignment-to-params">Default Assignment to <code class="language-plaintext highlighter-rouge">params</code></h3>
 
-<p>Normally, when Brakeman processes an assignment like <code class="highlighter-rouge">x ||= y</code>, it will assign <code class="highlighter-rouge">y</code> to <code class="highlighter-rouge">x</code> if no previous value is found for <code class="highlighter-rouge">x</code>.</p>
+<p>Normally, when Brakeman processes an assignment like <code class="language-plaintext highlighter-rouge">x ||= y</code>, it will assign <code class="language-plaintext highlighter-rouge">y</code> to <code class="language-plaintext highlighter-rouge">x</code> if no previous value is found for <code class="language-plaintext highlighter-rouge">x</code>.</p>
 
 <p>However, in this case:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>params[:x] ||= y
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>params[:x] ||= y
 </code></pre></div></div>
 
-<p>The information that the left hand side is a <code class="highlighter-rouge">params</code> hash is lost.</p>
+<p>The information that the left hand side is a <code class="language-plaintext highlighter-rouge">params</code> hash is lost.</p>
 
-<p>This has been changed so default assignment to a <code class="highlighter-rouge">params</code> hash will not replace the entire value, but will handle it as <code class="highlighter-rouge">params[:x] || y</code>.</p>
+<p>This has been changed so default assignment to a <code class="language-plaintext highlighter-rouge">params</code> hash will not replace the entire value, but will handle it as <code class="language-plaintext highlighter-rouge">params[:x] || y</code>.</p>
 
-<h3 id="user-input-in-or-expressions">User Input in <code class="highlighter-rouge">or</code> Expressions</h3>
+<h3 id="user-input-in-or-expressions">User Input in <code class="language-plaintext highlighter-rouge">or</code> Expressions</h3>
 
 <p>Previously, unescaped output like</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= params[:x] || z %&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= params[:x] || z %&gt;
 </code></pre></div></div>
 
-<p>would have been reported as a weak confidence warning. This has been changed so that any user input in an <code class="highlighter-rouge">or</code> expression will be considered immediate (versus “indirect”) output and will likely result in high confidence warnings.</p>
+<p>would have been reported as a weak confidence warning. This has been changed so that any user input in an <code class="language-plaintext highlighter-rouge">or</code> expression will be considered immediate (versus “indirect”) output and will likely result in high confidence warnings.</p>
 
 <h3 id="speed-improvements">Speed Improvements</h3>
 
@@ -363,7 +363,7 @@
 
 <h3 id="bug-fixes">Bug Fixes</h3>
 
-<p>Besides errors raised when processing Rails 3 routes, the <code class="highlighter-rouge">Result must be a Sexp, was Symbol::array</code> and <code class="highlighter-rouge">empty char-class</code> errors should be resolved now.</p>
+<p>Besides errors raised when processing Rails 3 routes, the <code class="language-plaintext highlighter-rouge">Result must be a Sexp, was Symbol::array</code> and <code class="language-plaintext highlighter-rouge">empty char-class</code> errors should be resolved now.</p>
 
 <p>Please report any errors raised when performing scans, as they are usually bugs.</p>
 
@@ -401,7 +401,7 @@
   </header>
 
 
-  <div class="entry-content"><p>Besides checks for the latest CVEs, this release includes a slightly improved redirect check, noiser output with <code class="highlighter-rouge">--compare</code>, and better handling of <code class="highlighter-rouge">before_filter</code>.</p>
+  <div class="entry-content"><p>Besides checks for the latest CVEs, this release includes a slightly improved redirect check, noiser output with <code class="language-plaintext highlighter-rouge">--compare</code>, and better handling of <code class="language-plaintext highlighter-rouge">before_filter</code>.</p>
 
 <p><em>Changes since 1.6.1</em>:</p>
 
@@ -409,21 +409,21 @@
   <li>Add checks for CVE-2012-2660, CVE-2012-2661, CVE-2012-2694, CVE-2012-2695 (Dave Worth)</li>
   <li>Avoid warning when redirecting to a model instance</li>
   <li>Raise confidence level for model attributes in redirects</li>
-  <li>Add <code class="highlighter-rouge">request.parameters</code> as a parameters hash</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">request.parameters</code> as a parameters hash</li>
   <li>Return non-zero exit code when missing dependencies</li>
-  <li>Fix <code class="highlighter-rouge">before_filter :except</code> logic</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">before_filter :except</code> logic</li>
   <li>Only accept symbol literals as before_filter names</li>
   <li>Cache before_filter lookups</li>
-  <li>Turn off quiet mode by default for <code class="highlighter-rouge">--compare</code></li>
+  <li>Turn off quiet mode by default for <code class="language-plaintext highlighter-rouge">--compare</code></li>
 </ul>
 
 <h3 id="latest-cves">Latest CVEs</h3>
 
 <p>A number of Rails vulnerabilities were announced recently, although there are really only two issues.</p>
 
-<p>One issue is that query parameters like <code class="highlighter-rouge">?name[]</code> and <code class="highlighter-rouge">?name[]=1&amp;name[]</code> get converted to <code class="highlighter-rouge">{"name" =&gt; [nil]}</code> and <code class="highlighter-rouge">{"name" =&gt; ["1", nil]}</code>. This, in turn, causes ActiveRecord to produce SQL queries with either <code class="highlighter-rouge">IS NULL</code> or <code class="highlighter-rouge">IN ('1', NULL)</code>. This is probably unexpected behavior.</p>
+<p>One issue is that query parameters like <code class="language-plaintext highlighter-rouge">?name[]</code> and <code class="language-plaintext highlighter-rouge">?name[]=1&amp;name[]</code> get converted to <code class="language-plaintext highlighter-rouge">{"name" =&gt; [nil]}</code> and <code class="language-plaintext highlighter-rouge">{"name" =&gt; ["1", nil]}</code>. This, in turn, causes ActiveRecord to produce SQL queries with either <code class="language-plaintext highlighter-rouge">IS NULL</code> or <code class="language-plaintext highlighter-rouge">IN ('1', NULL)</code>. This is probably unexpected behavior.</p>
 
-<p>The other issue is that query parameters like <code class="highlighter-rouge">?name[users.id]=1</code> or <code class="highlighter-rouge">?name[users][id]=1</code> get converted to <code class="highlighter-rouge">{"name" =&gt; { "users.id" =&gt; 1 }}</code> or <code class="highlighter-rouge">{"name" =&gt; { "users" =&gt; { "id" =&gt; 1 }}}</code>. ActiveRecord interprets <code class="highlighter-rouge">"users.id"</code> and <code class="highlighter-rouge">"users" =&gt; { "id" ...}</code> as <code class="highlighter-rouge">"users"."id"</code> in the WHERE clause, allowing an attacker to control the table/columns being queried.</p>
+<p>The other issue is that query parameters like <code class="language-plaintext highlighter-rouge">?name[users.id]=1</code> or <code class="language-plaintext highlighter-rouge">?name[users][id]=1</code> get converted to <code class="language-plaintext highlighter-rouge">{"name" =&gt; { "users.id" =&gt; 1 }}</code> or <code class="language-plaintext highlighter-rouge">{"name" =&gt; { "users" =&gt; { "id" =&gt; 1 }}}</code>. ActiveRecord interprets <code class="language-plaintext highlighter-rouge">"users.id"</code> and <code class="language-plaintext highlighter-rouge">"users" =&gt; { "id" ...}</code> as <code class="language-plaintext highlighter-rouge">"users"."id"</code> in the WHERE clause, allowing an attacker to control the table/columns being queried.</p>
 
 <p>Updated versions for Rails 3.x have been released.</p>
 
@@ -433,27 +433,27 @@
 
 <h3 id="unprotected-redirect-check">Unprotected Redirect Check</h3>
 
-<p>There have been some minor changes to <code class="highlighter-rouge">CheckRedirect</code>. In most cases, it should no longer warn when redirecting to a model instance. If there are still false positives with this scenario, please report them.</p>
+<p>There have been some minor changes to <code class="language-plaintext highlighter-rouge">CheckRedirect</code>. In most cases, it should no longer warn when redirecting to a model instance. If there are still false positives with this scenario, please report them.</p>
 
 <p>The other change is that redirects to model attributes will now be marked as high confidence, instead of weak.</p>
 
 <h3 id="exit-code-on-missing-dependencies">Exit Code on Missing Dependencies</h3>
 
-<p>Brakeman catches errors from missing dependencies in order to show a nicer error message. Unfortunately, it was also returning <code class="highlighter-rouge">0</code> on exit. This is undesirable behavior when chaining commands together.</p>
+<p>Brakeman catches errors from missing dependencies in order to show a nicer error message. Unfortunately, it was also returning <code class="language-plaintext highlighter-rouge">0</code> on exit. This is undesirable behavior when chaining commands together.</p>
 
 <p>This has been changed to return a non-zero exit code.</p>
 
 <h3 id="before-filter-changes">Before Filter Changes</h3>
 
-<p>There were some isues with how <code class="highlighter-rouge">before_filter</code> was being handled. The logic when using <code class="highlighter-rouge">:except</code> was broken, causing Brakeman to treat it like <code class="highlighter-rouge">:only</code>.</p>
+<p>There were some isues with how <code class="language-plaintext highlighter-rouge">before_filter</code> was being handled. The logic when using <code class="language-plaintext highlighter-rouge">:except</code> was broken, causing Brakeman to treat it like <code class="language-plaintext highlighter-rouge">:only</code>.</p>
 
-<p>The other issue caused Brakeman to interpret arguments such as method calls as method names. For example, <code class="highlighter-rouge">before_filter blah</code> would be treated like <code class="highlighter-rouge">before_filter :blah</code>.</p>
+<p>The other issue caused Brakeman to interpret arguments such as method calls as method names. For example, <code class="language-plaintext highlighter-rouge">before_filter blah</code> would be treated like <code class="language-plaintext highlighter-rouge">before_filter :blah</code>.</p>
 
 <p>While dealing with this, caching of filter lookups was also added for a minor performance improvement.</p>
 
-<h3 id="noisier---compare">Noisier <code class="highlighter-rouge">--compare</code></h3>
+<h3 id="noisier---compare">Noisier <code class="language-plaintext highlighter-rouge">--compare</code></h3>
 
-<p>Using the <code class="highlighter-rouge">--compare</code> option now shows the same output as a regular scan. If you are piping the output of <code class="highlighter-rouge">--compare</code> to a file or elsewhere, you may wish to use the <code class="highlighter-rouge">--quiet</code> option.</p>
+<p>Using the <code class="language-plaintext highlighter-rouge">--compare</code> option now shows the same output as a regular scan. If you are piping the output of <code class="language-plaintext highlighter-rouge">--compare</code> to a file or elsewhere, you may wish to use the <code class="language-plaintext highlighter-rouge">--quiet</code> option.</p>
 
 <h3 id="report-issues">Report Issues</h3>
 
@@ -498,8 +498,8 @@
 <ul>
   <li>Major rewrite of CheckSQL</li>
   <li>Process actions mixed into controllers</li>
-  <li>Check for inherited <code class="highlighter-rouge">attr_accessible</code> (Neil Matatall)</li>
-  <li>Handle <code class="highlighter-rouge">render :template =&gt; ...</code></li>
+  <li>Check for inherited <code class="language-plaintext highlighter-rouge">attr_accessible</code> (Neil Matatall)</li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">render :template =&gt; ...</code></li>
   <li>Report line number of highlighted value, if available</li>
   <li>Fix highlighting of HTML escaped values in HTML report</li>
   <li>Fix rescanning of deleted templates</li>
@@ -507,9 +507,9 @@
 
 <h3 id="updated-sql-injection-check">Updated SQL Injection Check</h3>
 
-<p><code class="highlighter-rouge">CheckSQL</code> has been completely revamped. Brakeman now has a much better understanding of the various ActiveRecord::FinderMethods and ActiveRecord::QueryMethods, as well as their options.</p>
+<p><code class="language-plaintext highlighter-rouge">CheckSQL</code> has been completely revamped. Brakeman now has a much better understanding of the various ActiveRecord::FinderMethods and ActiveRecord::QueryMethods, as well as their options.</p>
 
-<p>The check is also more conservative about what it warns on. Previously, since string interpolation is the main entry point for SQL injection in Rails, any interpolated value in a query would generate a warning. Now, “safe” sanitization methods, obviously safe methods like <code class="highlighter-rouge">to_i</code> and <code class="highlighter-rouge">id</code>, constants, strings, and other literal values should not cause warnings.</p>
+<p>The check is also more conservative about what it warns on. Previously, since string interpolation is the main entry point for SQL injection in Rails, any interpolated value in a query would generate a warning. Now, “safe” sanitization methods, obviously safe methods like <code class="language-plaintext highlighter-rouge">to_i</code> and <code class="language-plaintext highlighter-rouge">id</code>, constants, strings, and other literal values should not cause warnings.</p>
 
 <p>The “highlighted” value (or “user input”) reported for SQL warnings should be much more accurate now, making it easier to determine why a warning was reported.</p>
 
@@ -519,15 +519,15 @@
 
 <h3 id="check-for-inherited-mass-assignment-protection">Check for Inherited Mass Assignment Protection</h3>
 
-<p>Since mass assignment protection via <code class="highlighter-rouge">attr_accessible</code> is inheritable, Brakeman will no longer warn about models whose parent uses <code class="highlighter-rouge">attr_accessible</code>.</p>
+<p>Since mass assignment protection via <code class="language-plaintext highlighter-rouge">attr_accessible</code> is inheritable, Brakeman will no longer warn about models whose parent uses <code class="language-plaintext highlighter-rouge">attr_accessible</code>.</p>
 
 <h3 id="template-option-in-render">Template Option in Render</h3>
 
-<p>Somehow, the <code class="highlighter-rouge">:template</code> option for <code class="highlighter-rouge">render</code> has been ignored this whole time. Sorry!</p>
+<p>Somehow, the <code class="language-plaintext highlighter-rouge">:template</code> option for <code class="language-plaintext highlighter-rouge">render</code> has been ignored this whole time. Sorry!</p>
 
 <h3 id="better-line-numbers">Better Line Numbers</h3>
 
-<p>Warnings which have a <code class="highlighter-rouge">:user_input</code> field use that value to “highlight” part of the code in the reported warning. This value usually corresponds to the code which actually caused the warning to be generated.</p>
+<p>Warnings which have a <code class="language-plaintext highlighter-rouge">:user_input</code> field use that value to “highlight” part of the code in the reported warning. This value usually corresponds to the code which actually caused the warning to be generated.</p>
 
 <p>If a warning has this field, the line number of that code is used, instead of the starting line number of the entire piece of code. This often leads to more accurate and helpful line numbers.</p>
 

@@ -88,33 +88,33 @@
 
 <h4 id="using-rubygems">Using Rubygems</h4>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install brakeman
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install brakeman
 </code></pre></div></div>
 
 <h4 id="using-bundler">Using Bundler</h4>
 
-<p>Add the following to your <code class="highlighter-rouge">Gemfile</code> or <code class="highlighter-rouge">gems.rb</code>:</p>
+<p>Add the following to your <code class="language-plaintext highlighter-rouge">Gemfile</code> or <code class="language-plaintext highlighter-rouge">gems.rb</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem "brakeman"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem "brakeman"
 </code></pre></div></div>
 
 <p>Then run</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle install
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle install
 </code></pre></div></div>
 
 <h4 id="using-docker">Using Docker</h4>
 
 <p>To fetch the latest build of Brakeman:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull presidentbeef/brakeman
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull presidentbeef/brakeman
 </code></pre></div></div>
 
 <h4 id="building-from-source">Building from Source</h4>
 
 <p>You will need Git, Ruby, and RubyGems installed.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/presidentbeef/brakeman.git
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/presidentbeef/brakeman.git
 cd brakeman
 gem build brakeman.gemspec
 gem install brakeman-*.gem
@@ -122,18 +122,18 @@ gem install brakeman-*.gem
 
 <h3 id="run-brakeman">Run Brakeman</h3>
 
-<p>Brakeman is run as a command-line tool. The only information it needs to get started is the <em>root</em> directory of the Ruby on Rails application (the directory containing <code class="highlighter-rouge">app/</code>, <code class="highlighter-rouge">config/</code>, <code class="highlighter-rouge">db</code>, etc.) to scan.</p>
+<p>Brakeman is run as a command-line tool. The only information it needs to get started is the <em>root</em> directory of the Ruby on Rails application (the directory containing <code class="language-plaintext highlighter-rouge">app/</code>, <code class="language-plaintext highlighter-rouge">config/</code>, <code class="language-plaintext highlighter-rouge">db</code>, etc.) to scan.</p>
 
 <h4 id="using-rubygems-1">Using Rubygems</h4>
 
 <p>Either specify the path to the root of your Ruby on Rails application:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman path/to/your/app
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman path/to/your/app
 </code></pre></div></div>
 
 <p>Or run it from the root of your Ruby on Rails application:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd path/to/your/app
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd path/to/your/app
 brakeman 
 </code></pre></div></div>
 
@@ -141,18 +141,18 @@ brakeman
 
 <p>Either specify the path to the root of your Ruby on Rails application:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -v "path/to/your/app":/code brakeman --color
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -v "path/to/your/app":/code brakeman --color
 </code></pre></div></div>
 
 <p>Or run it from the root of your Ruby on Rails application:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd path/to/your/app
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd path/to/your/app
 docker run -v "$(pwd)":/code brakeman --color
 </code></pre></div></div>
 
-<p>The <code class="highlighter-rouge">-v</code> option is necessary because the Ruby on Rails application needs to be mounted inside the Docker container.</p>
+<p>The <code class="language-plaintext highlighter-rouge">-v</code> option is necessary because the Ruby on Rails application needs to be mounted inside the Docker container.</p>
 
-<p>The <code class="highlighter-rouge">--color</code> option is not required, but it makes the default report a little prettier.</p>
+<p>The <code class="language-plaintext highlighter-rouge">--color</code> option is not required, but it makes the default report a little prettier.</p>
 
 <h3 id="reporting">Reporting</h3>
 
@@ -160,33 +160,33 @@ docker run -v "$(pwd)":/code brakeman --color
 
 <p><img src="/images/brakeman_text_report.png" alt="Brakeman Default Text Report" /></p>
 
-<p>To write the report out to a file, use <code class="highlighter-rouge">-o</code>:</p>
+<p>To write the report out to a file, use <code class="language-plaintext highlighter-rouge">-o</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.text
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.text
 </code></pre></div></div>
 
-<p>To specify a different format, use <code class="highlighter-rouge">-f</code>:</p>
+<p>To specify a different format, use <code class="language-plaintext highlighter-rouge">-f</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -f html -o report
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -f html -o report
 </code></pre></div></div>
 
 <p>Or just use the extension of the report file:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.html
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.html
 </code></pre></div></div>
 
 <p>The available report types are:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">text</code> (default)</li>
-  <li><code class="highlighter-rouge">html</code></li>
-  <li><code class="highlighter-rouge">json</code> (recommended for automation)</li>
-  <li><code class="highlighter-rouge">junit</code> (JUnit XML)</li>
-  <li><code class="highlighter-rouge">markdown</code> (with GitHub support)</li>
-  <li><code class="highlighter-rouge">table</code> (old default)</li>
-  <li><code class="highlighter-rouge">tabs</code> (tab-separated, originally for the Jenkins plugin, deprecated)</li>
-  <li><code class="highlighter-rouge">csv</code> (deprecated)</li>
-  <li><code class="highlighter-rouge">codeclimate</code> (for use with the Code Climate engine)</li>
+  <li><code class="language-plaintext highlighter-rouge">text</code> (default)</li>
+  <li><code class="language-plaintext highlighter-rouge">html</code></li>
+  <li><code class="language-plaintext highlighter-rouge">json</code> (recommended for automation)</li>
+  <li><code class="language-plaintext highlighter-rouge">junit</code> (JUnit XML)</li>
+  <li><code class="language-plaintext highlighter-rouge">markdown</code> (with GitHub support)</li>
+  <li><code class="language-plaintext highlighter-rouge">table</code> (old default)</li>
+  <li><code class="language-plaintext highlighter-rouge">tabs</code> (tab-separated, originally for the Jenkins plugin, deprecated)</li>
+  <li><code class="language-plaintext highlighter-rouge">csv</code> (deprecated)</li>
+  <li><code class="language-plaintext highlighter-rouge">codeclimate</code> (for use with the Code Climate engine)</li>
 </ul>
 
 <h3 id="next-steps">Next Steps</h3>
@@ -215,12 +215,12 @@ docker run -v "$(pwd)":/code brakeman --color
 
 <p>The best output format to use with automation is JSON. Great care is taken to make sure the JSON format is stable.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.json
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.json
 </code></pre></div></div>
 
 <p>Note you can output multiple formats at the same time:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.json -o report.html
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.json -o report.html
 </code></pre></div></div>
 
 <p>The exit codes for Brakeman can be helpful:</p>
@@ -230,7 +230,7 @@ docker run -v "$(pwd)":/code brakeman --color
   <li>1 -	Unhandled exception raised</li>
   <li>3 -	Warnings  were reported</li>
   <li>4 -	Path did not look like a Rails application, no scan run</li>
-  <li>5 -	A newer version of Brakeman is available (when <code class="highlighter-rouge">--ensure-latest</code> is used)</li>
+  <li>5 -	A newer version of Brakeman is available (when <code class="language-plaintext highlighter-rouge">--ensure-latest</code> is used)</li>
   <li>6 -	Non-existent checks were specified</li>
   <li>7 -	Recoverable errors encountered during scan</li>
   <li>255 - Failure, non-recoverable error</li>

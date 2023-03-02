@@ -84,11 +84,11 @@ allowing an attacker to manipulate the session may lead to unintended behavior.<
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user_id = session[params[:name]]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user_id = session[params[:name]]
 current_user = User.find(user_id)
 </code></pre></div></div>
 
-<p>In this scenario, the attacker can point the <code class="highlighter-rouge">name</code> parameter to some other session value (for example, <code class="highlighter-rouge">_csrf_token</code>) that will be interpreted
+<p>In this scenario, the attacker can point the <code class="language-plaintext highlighter-rouge">name</code> parameter to some other session value (for example, <code class="language-plaintext highlighter-rouge">_csrf_token</code>) that will be interpreted
 as a user ID. If the ID matches an existing account, the attacker will now have access to that account.</p>
 
 <p>To prevent this type of session manipulation, avoid using user-supplied input as session keys.</p>

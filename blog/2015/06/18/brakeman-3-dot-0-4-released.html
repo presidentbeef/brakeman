@@ -102,8 +102,8 @@
 <ul>
   <li>Add check for CVE-2015-3226 (XSS via JSON keys)</li>
   <li>Add check for CVE-2015-3227 (XML DoS)</li>
-  <li>Treat <code class="highlighter-rouge">&lt;%==</code> as unescaped output (<a href="https://github.com/presidentbeef/brakeman/issues/661">#661</a>)</li>
-  <li>Update <code class="highlighter-rouge">ruby_parser</code> dependency to 3.7.0</li>
+  <li>Treat <code class="language-plaintext highlighter-rouge">&lt;%==</code> as unescaped output (<a href="https://github.com/presidentbeef/brakeman/issues/661">#661</a>)</li>
+  <li>Update <code class="language-plaintext highlighter-rouge">ruby_parser</code> dependency to 3.7.0</li>
 </ul>
 
 <h3 id="cross-site-scripting-in-json">Cross Site Scripting in JSON</h3>
@@ -114,13 +114,13 @@
 
 <h3 id="xml-denial-of-service">XML Denial of Service</h3>
 
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/bahr2JLnxvk/x4EocXnHPp8J">CVE-2015-3227</a> is a potential denial of service when parsing deeply nested XML requests. Brakeman will warn about this unless there is an initializer changing the XML parser as described in the CVE. Currently it looks for either <code class="highlighter-rouge">LibXML</code> or <code class="highlighter-rouge">Nokogiri</code>.</p>
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/bahr2JLnxvk/x4EocXnHPp8J">CVE-2015-3227</a> is a potential denial of service when parsing deeply nested XML requests. Brakeman will warn about this unless there is an initializer changing the XML parser as described in the CVE. Currently it looks for either <code class="language-plaintext highlighter-rouge">LibXML</code> or <code class="language-plaintext highlighter-rouge">Nokogiri</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/666">changes</a>)</p>
 
 <h3 id="double-equals-is-unescaped-output">Double Equals is Unescaped Output</h3>
 
-<p>Brakeman will now treat <code class="highlighter-rouge">&lt;%== x %&gt;</code> in ERB templates as unescaped output.</p>
+<p>Brakeman will now treat <code class="language-plaintext highlighter-rouge">&lt;%== x %&gt;</code> in ERB templates as unescaped output.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/663">changes</a>)</p>
 
@@ -128,7 +128,7 @@
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bf6ae72a0b516ecf65b9165d07e86259ef9fa5d3  brakeman-3.0.4.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bf6ae72a0b516ecf65b9165d07e86259ef9fa5d3  brakeman-3.0.4.gem
 c1c2ea5402d8a89fe4a645947ec324d0603d3976  brakeman-min-3.0.4.gem
 </code></pre></div></div>
 

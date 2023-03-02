@@ -98,13 +98,13 @@
 <ul>
   <li>Warn about SQL injection even if target is not known ActiveRecord model</li>
   <li>Avoid warning about models as SQL injection (<a href="https://github.com/presidentbeef/brakeman/issues/655">#655</a>, <a href="https://github.com/presidentbeef/brakeman/issues/680">#680</a>, <a href="https://github.com/presidentbeef/brakeman/issues/833">#833</a>)</li>
-  <li>Avoid warning about SQLi in <code class="highlighter-rouge">all</code>, <code class="highlighter-rouge">first</code>, or <code class="highlighter-rouge">last</code> after Rails 4.0</li>
-  <li>Treat templates without <code class="highlighter-rouge">.html</code> as HTML anyway (<a href="https://github.com/presidentbeef/brakeman/issues/790">#790</a>)</li>
+  <li>Avoid warning about SQLi in <code class="language-plaintext highlighter-rouge">all</code>, <code class="language-plaintext highlighter-rouge">first</code>, or <code class="language-plaintext highlighter-rouge">last</code> after Rails 4.0</li>
+  <li>Treat templates without <code class="language-plaintext highlighter-rouge">.html</code> as HTML anyway (<a href="https://github.com/presidentbeef/brakeman/issues/790">#790</a>)</li>
   <li>Report check name in JSON and plain reports (<a href="https://github.com/presidentbeef/brakeman/issues/971">#971</a>)</li>
-  <li>Add <code class="highlighter-rouge">--ensure-latest</code> option (<a href="https://github.com/tamgrosser">tamgrosser</a> / <a href="https://github.com/grosser">Michael Grosser</a>)</li>
-  <li>Add <code class="highlighter-rouge">--no-summary</code> to hide summaries in HTML/text reports (<a href="https://github.com/presidentbeef/brakeman/issues/963">#963</a>)</li>
-  <li>Fail on invalid checks specified by <code class="highlighter-rouge">-x</code> or <code class="highlighter-rouge">-t</code> (<a href="https://github.com/presidentbeef/brakeman/issues/970">#970</a>)</li>
-  <li>Handle <code class="highlighter-rouge">included</code> block in concerns (<a href="https://github.com/presidentbeef/brakeman/pull/958">#958</a>)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--ensure-latest</code> option (<a href="https://github.com/tamgrosser">tamgrosser</a> / <a href="https://github.com/grosser">Michael Grosser</a>)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--no-summary</code> to hide summaries in HTML/text reports (<a href="https://github.com/presidentbeef/brakeman/issues/963">#963</a>)</li>
+  <li>Fail on invalid checks specified by <code class="language-plaintext highlighter-rouge">-x</code> or <code class="language-plaintext highlighter-rouge">-t</code> (<a href="https://github.com/presidentbeef/brakeman/issues/970">#970</a>)</li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">included</code> block in concerns (<a href="https://github.com/presidentbeef/brakeman/pull/958">#958</a>)</li>
   <li>Updated RubyParser/Ruby2Ruby dependencies</li>
 </ul>
 
@@ -116,13 +116,13 @@
 
 <p>Next, SQL that includes calls on model targets will no longer generate warnings. There were too many false positives and no known vulnerabilities flagged by this.</p>
 
-<p>Finally, Brakeman will no longer check calls to <code class="highlighter-rouge">all</code>, <code class="highlighter-rouge">first</code>, and <code class="highlighter-rouge">last</code> as they changed in Rails 4.1.</p>
+<p>Finally, Brakeman will no longer check calls to <code class="language-plaintext highlighter-rouge">all</code>, <code class="language-plaintext highlighter-rouge">first</code>, and <code class="language-plaintext highlighter-rouge">last</code> as they changed in Rails 4.1.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/985">changes</a>)</p>
 
 <h3 id="extensionless-templates">Extensionless Templates</h3>
 
-<p>Templates which do not specify any extension (e.g. just <code class="highlighter-rouge">.erb</code> instead of <code class="highlighter-rouge">.html.erb</code>) will still be treated as HTML instead of being ignored.</p>
+<p>Templates which do not specify any extension (e.g. just <code class="language-plaintext highlighter-rouge">.erb</code> instead of <code class="language-plaintext highlighter-rouge">.html.erb</code>) will still be treated as HTML instead of being ignored.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/980">changes</a>)</p>
 
@@ -134,25 +134,25 @@
 
 <h3 id="option-to-enforce-latest-brakeman">Option to Enforce Latest Brakeman</h3>
 
-<p>The <code class="highlighter-rouge">--ensure-latest</code> option has been added. If there is a newer version of Brakeman available, this option will cause Brakeman to exit with a non-zero exit code.</p>
+<p>The <code class="language-plaintext highlighter-rouge">--ensure-latest</code> option has been added. If there is a newer version of Brakeman available, this option will cause Brakeman to exit with a non-zero exit code.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/974">changes</a>)</p>
 
 <h3 id="option-to-hide-summary">Option to Hide Summary</h3>
 
-<p>When using <code class="highlighter-rouge">--no-summary</code> and either the plain or “table” output, Brakeman will only report warnings, no metadata. Probably most useful in combination with <code class="highlighter-rouge">--quiet</code>.</p>
+<p>When using <code class="language-plaintext highlighter-rouge">--no-summary</code> and either the plain or “table” output, Brakeman will only report warnings, no metadata. Probably most useful in combination with <code class="language-plaintext highlighter-rouge">--quiet</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/976">changes</a>)</p>
 
 <h3 id="fail-on-invalid-checks">Fail on Invalid Checks</h3>
 
-<p>When use <code class="highlighter-rouge">-t</code> or <code class="highlighter-rouge">-x</code> to control which checks are run, Brakeman will now fail if the options supplied do not match existing check names. <code class="highlighter-rouge">-t None</code> may be used to avoid running any checks.</p>
+<p>When use <code class="language-plaintext highlighter-rouge">-t</code> or <code class="language-plaintext highlighter-rouge">-x</code> to control which checks are run, Brakeman will now fail if the options supplied do not match existing check names. <code class="language-plaintext highlighter-rouge">-t None</code> may be used to avoid running any checks.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/986">changes</a>)</p>
 
 <h3 id="handle-included-concerns">Handle Included Concerns</h3>
 
-<p>Brakeman will now handle the <code class="highlighter-rouge">included</code> block in Concerns. Additionally, to support this, Concerns are processed prior to other classes.</p>
+<p>Brakeman will now handle the <code class="language-plaintext highlighter-rouge">included</code> block in Concerns. Additionally, to support this, Concerns are processed prior to other classes.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/966">changes</a>)</p>
 
@@ -160,7 +160,7 @@
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>49fd8b3e6c1f348304bdbfc3b5d4cfbd465a5b5d4feec8337bbe3df7836787be  brakeman-3.5.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>49fd8b3e6c1f348304bdbfc3b5d4cfbd465a5b5d4feec8337bbe3df7836787be  brakeman-3.5.0.gem
 2ef50a61ca4aa1cff1f28dfe6308ea53157d996975519f5ae5c9266bf5772fb0  brakeman-min-3.5.0.gem
 766c9da778e3be36ca709e637276f090514dbc0ddde5e261a1baff6da351480e  brakeman-lib-3.5.0.gem
 </code></pre></div></div>

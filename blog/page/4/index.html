@@ -215,14 +215,14 @@
 <p><em>Changes since 4.8.2:</em></p>
 
 <ul>
-  <li>Add <code class="highlighter-rouge">--ensure-ignore-notes</code> (<a href="https://github.com/eliblock">Eli Block</a>)</li>
-  <li>Add check for user input in <code class="highlighter-rouge">ERB.new</code> (<a href="https://github.com/mhickman">Matt Hickman</a>)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--ensure-ignore-notes</code> (<a href="https://github.com/eliblock">Eli Block</a>)</li>
+  <li>Add check for user input in <code class="language-plaintext highlighter-rouge">ERB.new</code> (<a href="https://github.com/mhickman">Matt Hickman</a>)</li>
   <li>Add check for CVE-2020-8166 (<a href="https://github.com/chair6">Jamie Finnigan</a>)</li>
-  <li>Always scan <code class="highlighter-rouge">environment.rb</code></li>
-  <li>Avoid warning when <code class="highlighter-rouge">safe_yaml</code> is used via <code class="highlighter-rouge">YAML.load(..., safe: true)</code></li>
-  <li>Do not warn about mass assignment with <code class="highlighter-rouge">params.permit!.slice</code></li>
-  <li>Ignore <code class="highlighter-rouge">params.permit!</code> in path helpers</li>
-  <li>Treat <code class="highlighter-rouge">Dir.glob</code> as safe source of values in guards</li>
+  <li>Always scan <code class="language-plaintext highlighter-rouge">environment.rb</code></li>
+  <li>Avoid warning when <code class="language-plaintext highlighter-rouge">safe_yaml</code> is used via <code class="language-plaintext highlighter-rouge">YAML.load(..., safe: true)</code></li>
+  <li>Do not warn about mass assignment with <code class="language-plaintext highlighter-rouge">params.permit!.slice</code></li>
+  <li>Ignore <code class="language-plaintext highlighter-rouge">params.permit!</code> in path helpers</li>
+  <li>Treat <code class="language-plaintext highlighter-rouge">Dir.glob</code> as safe source of values in guards</li>
   <li>Remove whitelist/blacklist language, add clarifications</li>
   <li>Add “full call” information to call index results</li>
   <li>Updated Slim dependency (<a href="https://github.com/JeremiahChurch">Jeremiah Church</a>)</li>
@@ -232,13 +232,13 @@
 
 <p><a href="https://github.com/eliblock">Eli Block</a> has added a new option to ensure all ignored warnings have notes.</p>
 
-<p>If <code class="highlighter-rouge">--ensure-ignore-notes</code> is set and the configured “ignore” file does not have notes for all warnings, a non-zero exit code will be set.</p>
+<p>If <code class="language-plaintext highlighter-rouge">--ensure-ignore-notes</code> is set and the configured “ignore” file does not have notes for all warnings, a non-zero exit code will be set.</p>
 
 <p>(<a href="">changes</a>)</p>
 
 <h3 id="check-for-template-injection">Check for Template Injection</h3>
 
-<p><a href="https://github.com/mhickman">Matt Hickman</a> added a new check for user input in calls to <code class="highlighter-rouge">ERB.new</code> which can lead to remote code execution.</p>
+<p><a href="https://github.com/mhickman">Matt Hickman</a> added a new check for user input in calls to <code class="language-plaintext highlighter-rouge">ERB.new</code> which can lead to remote code execution.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1395">changes</a>)</p>
 
@@ -252,27 +252,27 @@
 
 <h3 id="always-scan-environment">Always Scan Environment</h3>
 
-<p>Brakeman used to conditionally scan <code class="highlighter-rouge">config/environment.rb</code> based on the Rails version, since in newer versions there’s nothing of interest in that file.</p>
+<p>Brakeman used to conditionally scan <code class="language-plaintext highlighter-rouge">config/environment.rb</code> based on the Rails version, since in newer versions there’s nothing of interest in that file.</p>
 
-<p>However, some applications do use that file for important constant definitions. Since there is no harm in doing so, Brakeman will now always scan <code class="highlighter-rouge">config/environment.rb</code>.</p>
+<p>However, some applications do use that file for important constant definitions. Since there is no harm in doing so, Brakeman will now always scan <code class="language-plaintext highlighter-rouge">config/environment.rb</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1480">changes</a>)</p>
 
 <h3 id="more-safe-yaml">More Safe YAML</h3>
 
-<p>Brakeman will no longer warn about deserialization if the <a href="https://rubygems.org/gems/safe_yaml"><code class="highlighter-rouge">safe_yaml</code></a> gem is used with <code class="highlighter-rouge">YAML.load(..., safe: true)</code>.</p>
+<p>Brakeman will no longer warn about deserialization if the <a href="https://rubygems.org/gems/safe_yaml"><code class="language-plaintext highlighter-rouge">safe_yaml</code></a> gem is used with <code class="language-plaintext highlighter-rouge">YAML.load(..., safe: true)</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1496">changes</a>)</p>
 
 <h3 id="mass-assignment-false-positives">Mass Assignment False Positives</h3>
 
-<p>Brakeman will no longer warn about mass assignment with <code class="highlighter-rouge">params.permit!.slice</code> or when <code class="highlighter-rouge">params.permit!</code> is used as an argument to a path helper (e.g. <code class="highlighter-rouge">something_path(params.permit!)</code>).</p>
+<p>Brakeman will no longer warn about mass assignment with <code class="language-plaintext highlighter-rouge">params.permit!.slice</code> or when <code class="language-plaintext highlighter-rouge">params.permit!</code> is used as an argument to a path helper (e.g. <code class="language-plaintext highlighter-rouge">something_path(params.permit!)</code>).</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1485">changes</a> and <a href="https://github.com/presidentbeef/brakeman/pull/1484">changes</a>)</p>
 
 <h3 id="dirglob-in-guards">Dir.glob in Guards</h3>
 
-<p>Brakeman will now consider <code class="highlighter-rouge">Dir.glob</code> to be a safe source of values in guard statements.</p>
+<p>Brakeman will now consider <code class="language-plaintext highlighter-rouge">Dir.glob</code> to be a safe source of values in guard statements.</p>
 
 <p>In other words, code like this:</p>
 
@@ -300,7 +300,7 @@
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3afcfee962907361cbc5047b7089eaa7c31546cc4de201939faba6d3a1b07a18  brakeman-4.9.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3afcfee962907361cbc5047b7089eaa7c31546cc4de201939faba6d3a1b07a18  brakeman-4.9.0.gem
 dc6a50321170e83e61ae75d1bb2dade53392a44b614d4068553f1425539a3b8f  brakeman-lib-4.9.0.gem
 4c8ea640925bf33a775729b000b91312abe42ea7945dac1a6bfcc0347fb6323d  brakeman-min-4.9.0.gem
 </code></pre></div></div>
@@ -347,34 +347,34 @@ dc6a50321170e83e61ae75d1bb2dade53392a44b614d4068553f1425539a3b8f  brakeman-lib-4
 <p><em>Changes since 4.8.1:</em></p>
 
 <ul>
-  <li>Add <code class="highlighter-rouge">--text-fields</code> option</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--text-fields</code> option</li>
   <li>Add check for <a href="https://groups.google.com/d/msg/rubyonrails-security/CFRVkEytdP8/c5gmICECAgAJ">CVE-2020-8159</a></li>
   <li>Add check for escaping HTML entities in JSON configuration option</li>
-  <li>Fix <code class="highlighter-rouge">authenticate_or_request_with_http_basic</code> check for passed blocks (<a href="https://github.com/hugocorbucci">Hugo Corbucci</a>)</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">authenticate_or_request_with_http_basic</code> check for passed blocks (<a href="https://github.com/hugocorbucci">Hugo Corbucci</a>)</li>
 </ul>
 
 <h3 id="text-fields-option">Text Fields Option</h3>
 
-<p>It is now possible to specify which text fields are reported and their order for the default “text” report format using the <code class="highlighter-rouge">--text-fields</code> option.</p>
+<p>It is now possible to specify which text fields are reported and their order for the default “text” report format using the <code class="language-plaintext highlighter-rouge">--text-fields</code> option.</p>
 
 <p>Possible options are:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">all</code></li>
-  <li><code class="highlighter-rouge">category</code></li>
-  <li><code class="highlighter-rouge">category_id</code></li>
-  <li><code class="highlighter-rouge">check</code></li>
-  <li><code class="highlighter-rouge">code</code></li>
-  <li><code class="highlighter-rouge">confidence</code></li>
-  <li><code class="highlighter-rouge">file</code></li>
-  <li><code class="highlighter-rouge">fingerprint</code></li>
-  <li><code class="highlighter-rouge">line</code></li>
-  <li><code class="highlighter-rouge">link</code></li>
-  <li><code class="highlighter-rouge">message</code></li>
-  <li><code class="highlighter-rouge">render_path</code></li>
+  <li><code class="language-plaintext highlighter-rouge">all</code></li>
+  <li><code class="language-plaintext highlighter-rouge">category</code></li>
+  <li><code class="language-plaintext highlighter-rouge">category_id</code></li>
+  <li><code class="language-plaintext highlighter-rouge">check</code></li>
+  <li><code class="language-plaintext highlighter-rouge">code</code></li>
+  <li><code class="language-plaintext highlighter-rouge">confidence</code></li>
+  <li><code class="language-plaintext highlighter-rouge">file</code></li>
+  <li><code class="language-plaintext highlighter-rouge">fingerprint</code></li>
+  <li><code class="language-plaintext highlighter-rouge">line</code></li>
+  <li><code class="language-plaintext highlighter-rouge">link</code></li>
+  <li><code class="language-plaintext highlighter-rouge">message</code></li>
+  <li><code class="language-plaintext highlighter-rouge">render_path</code></li>
 </ul>
 
-<p><code class="highlighter-rouge">--text-fields</code> accepts a comma-separated list of these options.</p>
+<p><code class="language-plaintext highlighter-rouge">--text-fields</code> accepts a comma-separated list of these options.</p>
 
 <p><em>Please keep in mind the JSON report should be used for structured reports/parsing.</em></p>
 
@@ -382,10 +382,10 @@ dc6a50321170e83e61ae75d1bb2dade53392a44b614d4068553f1425539a3b8f  brakeman-lib-4
 
 <h3 id="cve-2020-8159">CVE-2020-8159</h3>
 
-<p>This release includes a check for <a href="ihttps://groups.google.com/d/msg/rubyonrails-security/CFRVkEytdP8/c5gmICECAgAJ">CVE-2020-8159</a> related to the <code class="highlighter-rouge">actionpack-page_caching</code> gem.
+<p>This release includes a check for <a href="ihttps://groups.google.com/d/msg/rubyonrails-security/CFRVkEytdP8/c5gmICECAgAJ">CVE-2020-8159</a> related to the <code class="language-plaintext highlighter-rouge">actionpack-page_caching</code> gem.
 The vulnerability allows arbitrary file writing and may be escalated to remote code execution.</p>
 
-<p>If <code class="highlighter-rouge">caches_page</code> is called in any controllers, this will be a High confidence warning. Otherwise, Weak.</p>
+<p>If <code class="language-plaintext highlighter-rouge">caches_page</code> is called in any controllers, this will be a High confidence warning. Otherwise, Weak.</p>
 
 <p><em>Reminder: Brakeman is not a ‘dependency’ scanner. It only includes checks for a small number of Rails-related CVEs. Use bundler-audit or related tools for dependency checking.</em></p>
 
@@ -393,13 +393,13 @@ The vulnerability allows arbitrary file writing and may be escalated to remote c
 
 <h3 id="json-escaping-configuration">JSON Escaping Configuration</h3>
 
-<p>Brakeman will now warn if HTML entity escaping in JSON is disabled globally with <code class="highlighter-rouge">ActiveSupport.escape_html_entities_in_json = false</code>. This is an unusual configuration.</p>
+<p>Brakeman will now warn if HTML entity escaping in JSON is disabled globally with <code class="language-plaintext highlighter-rouge">ActiveSupport.escape_html_entities_in_json = false</code>. This is an unusual configuration.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1472">changes</a>)</p>
 
 <h3 id="basic-auth-check-fix">Basic Auth Check Fix</h3>
 
-<p><a href="https://github.com/hugocorbucci">Hugo Corbucci</a> fixed an error when checking calls to <code class="highlighter-rouge">authenticate_or_request_with_http_basic</code> without a block literal.</p>
+<p><a href="https://github.com/hugocorbucci">Hugo Corbucci</a> fixed an error when checking calls to <code class="language-plaintext highlighter-rouge">authenticate_or_request_with_http_basic</code> without a block literal.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1478">changes</a>)</p>
 
@@ -407,7 +407,7 @@ The vulnerability allows arbitrary file writing and may be escalated to remote c
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d7bf369896b4a3c41778f39f10b1e1d0844a965bbb582fa0a0566b1df4f07dec  brakeman-4.8.2.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d7bf369896b4a3c41778f39f10b1e1d0844a965bbb582fa0a0566b1df4f07dec  brakeman-4.8.2.gem
 c13e9a9e5b213ba95a16803ddb50eb3c7119533ca71444ffec2bb6cea22b926a  brakeman-lib-4.8.2.gem
 a422a444b7db48682e1f112c83b1a7a7e3828ec02d52ed91c5b3eff235b801c1  brakeman-min-4.8.2.gem
 </code></pre></div></div>
@@ -455,8 +455,8 @@ a422a444b7db48682e1f112c83b1a7a7e3828ec02d52ed91c5b3eff235b801c1  brakeman-min-4
 
 <ul>
   <li>Warn about global(!) mass assignment</li>
-  <li>Check SQL query strings using <code class="highlighter-rouge">String#strip</code> or <code class="highlighter-rouge">String.squish</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1469">#1459</a>)</li>
-  <li>Handle non-symbol keys in <code class="highlighter-rouge">locals</code> hash for <code class="highlighter-rouge">render</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1465">#1465</a>)</li>
+  <li>Check SQL query strings using <code class="language-plaintext highlighter-rouge">String#strip</code> or <code class="language-plaintext highlighter-rouge">String.squish</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1469">#1459</a>)</li>
+  <li>Handle non-symbol keys in <code class="language-plaintext highlighter-rouge">locals</code> hash for <code class="language-plaintext highlighter-rouge">render</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1465">#1465</a>)</li>
   <li>Index calls in render arguments (<a href="https://github.com/presidentbeef/brakeman/issues/1459">#1459</a>)</li>
 </ul>
 
@@ -473,7 +473,7 @@ a422a444b7db48682e1f112c83b1a7a7e3828ec02d52ed91c5b3eff235b801c1  brakeman-min-4
 
 <h3 id="squished-and-stripped-sql">Squished and Stripped SQL</h3>
 
-<p>Brakeman will now check string targets of <code class="highlighter-rouge">squish</code> or <code class="highlighter-rouge">strip</code>.</p>
+<p>Brakeman will now check string targets of <code class="language-plaintext highlighter-rouge">squish</code> or <code class="language-plaintext highlighter-rouge">strip</code>.</p>
 
 <p>For example:</p>
 
@@ -484,13 +484,13 @@ a422a444b7db48682e1f112c83b1a7a7e3828ec02d52ed91c5b3eff235b801c1  brakeman-min-4
 
 <h3 id="non-symbol-keys-in-locals-hash">Non-Symbol Keys in Locals Hash</h3>
 
-<p>Using a value other than symbol literals as keys in the <code class="highlighter-rouge">locals</code> hash for <code class="highlighter-rouge">render</code> will no longer cause an error.</p>
+<p>Using a value other than symbol literals as keys in the <code class="language-plaintext highlighter-rouge">locals</code> hash for <code class="language-plaintext highlighter-rouge">render</code> will no longer cause an error.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1468">changes</a>)</p>
 
 <h3 id="render-arguments">Render Arguments</h3>
 
-<p>Calls made as arguments to <code class="highlighter-rouge">render</code> will be indexed and checked for all vulnerability types, like every other method call.</p>
+<p>Calls made as arguments to <code class="language-plaintext highlighter-rouge">render</code> will be indexed and checked for all vulnerability types, like every other method call.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1460">changes</a>)</p>
 
@@ -498,7 +498,7 @@ a422a444b7db48682e1f112c83b1a7a7e3828ec02d52ed91c5b3eff235b801c1  brakeman-min-4
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5f3cc763fce471434adc33aa251298fa24ea2a1c01ef2549aec55be4b5b14d46  brakeman-4.8.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5f3cc763fce471434adc33aa251298fa24ea2a1c01ef2549aec55be4b5b14d46  brakeman-4.8.1.gem
 c4a95b450fb7ec2440e68640a0821e3a6b62ea34f665e78264ba0b332e98e5df  brakeman-lib-4.8.1.gem
 ada41dbfc3a436c062cd44161893249654caf43296801599303952f6261f2e5e  brakeman-min-4.8.1.gem
 </code></pre></div></div>
@@ -548,7 +548,7 @@ This release comes with a brand new report format: JUnit XML.</p>
 <ul>
   <li>Add JUnit XML report format (<a href="https://github.com/naokikimura">Naoki Kimurai</a>)</li>
   <li>Sort ignore files by fingerprint and line (<a href="https://github.com/ngan">Ngan Pham</a>)</li>
-  <li>Catch dangerous concatenation in <code class="highlighter-rouge">CheckExecute</code> (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
+  <li>Catch dangerous concatenation in <code class="language-plaintext highlighter-rouge">CheckExecute</code> (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
   <li>User-friendly message when ignore config file has invalid JSON (<a href="https://github.com/deevis">D. Hicks</a>)</li>
   <li>Freeze call index results, fix thread-safety issue</li>
   <li>Properly render confidence in Markdown report (<a href="https://github.com/presidentbeef/brakeman/issues/1446">#1446</a>)</li>
@@ -562,7 +562,7 @@ JUnit XML is produced and consumed by a number of different testing tools, inclu
 
 <p>Supporting this format makes it possible for Brakeman warnings to be consumed by general test infrastructure tools.</p>
 
-<p>To use the new format, either use <code class="highlighter-rouge">-f junit</code> or <code class="highlighter-rouge">-o report.junit</code>.</p>
+<p>To use the new format, either use <code class="language-plaintext highlighter-rouge">-f junit</code> or <code class="language-plaintext highlighter-rouge">-o report.junit</code>.</p>
 
 <p><a href="https://github.com/presidentbeef/brakeman/pull/1453">changes</a></p>
 
@@ -575,11 +575,11 @@ Thanks to <a href="https://github.com/ngan">Ngan Pham</a> they are now sorted by
 
 <h3 id="dangerous-concatenation-in-commands">Dangerous Concatenation in Commands</h3>
 
-<p><a href="https://github.com/JacobEvelyn">Jacob Evelyn</a> has updated the command injection check (<code class="highlighter-rouge">CheckExecute</code>) to also consider string concatenation with dangerous values.</p>
+<p><a href="https://github.com/JacobEvelyn">Jacob Evelyn</a> has updated the command injection check (<code class="language-plaintext highlighter-rouge">CheckExecute</code>) to also consider string concatenation with dangerous values.</p>
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system("ls " + maybe_dangerous)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system("ls " + maybe_dangerous)
 </code></pre></div></div>
 
 <p><a href="https://github.com/presidentbeef/brakeman/pull/1440">changes</a></p>
@@ -587,10 +587,10 @@ Thanks to <a href="https://github.com/ngan">Ngan Pham</a> they are now sorted by
 <h3 id="fix-thread-safety-issue">Fix Thread-safety Issue</h3>
 
 <p>Two checks were modifying shared data (call site results), which introduced a race condition.
-Sometimes a result would strangely become <code class="highlighter-rouge">nil</code> and cause intermittent errors.
+Sometimes a result would strangely become <code class="language-plaintext highlighter-rouge">nil</code> and cause intermittent errors.
 Note this only popped up when using real threads on JRuby.</p>
 
-<p>Now results from the <code class="highlighter-rouge">CallIndex</code> are frozen to help prevent this kind of modification of shared data in the future.</p>
+<p>Now results from the <code class="language-plaintext highlighter-rouge">CallIndex</code> are frozen to help prevent this kind of modification of shared data in the future.</p>
 
 <p><a href="https://github.com/presidentbeef/brakeman/pull/1452">changes</a></p>
 
@@ -613,7 +613,7 @@ Now they will be.</p>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2febb3ce4111fe14f57a8ea447c5770eeb32ba43333955b4ed27864ef045c277  brakeman-4.8.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2febb3ce4111fe14f57a8ea447c5770eeb32ba43333955b4ed27864ef045c277  brakeman-4.8.0.gem
 c513373a37576d8107af724bf9f8a47e8d76253c85bdd6fdb4d3e93471a47ee6  brakeman-lib-4.8.0.gem
 d82206b9a60ef1eb4c96d32ba0157774db301e3ca10dcbdd7b4171044b28eccf  brakeman-min-4.8.0.gem
 </code></pre></div></div>

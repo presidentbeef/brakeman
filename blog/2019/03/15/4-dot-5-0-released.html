@@ -101,19 +101,19 @@
 
 <ul>
   <li>Officially drop support for running with older Ruby versions</li>
-  <li>More thoroughly handle <code class="highlighter-rouge">Shellwords</code> escaping (<a href="https://github.com/presidentbeef/brakeman/issues/1323">#1323</a>)</li>
+  <li>More thoroughly handle <code class="language-plaintext highlighter-rouge">Shellwords</code> escaping (<a href="https://github.com/presidentbeef/brakeman/issues/1323">#1323</a>)</li>
   <li>Handle non-integer version number comparisons (<a href="https://github.com/presidentbeef/brakeman/issues/1305">#1305</a>)</li>
   <li>Better handling of splat/kwsplat arguments (<a href="https://github.com/presidentbeef/brakeman/issues/1204">#1204</a>)</li>
-  <li>Handle <code class="highlighter-rouge">**</code> inside Hash literals</li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">**</code> inside Hash literals</li>
   <li>Add support for CoffeeScript in Slim templates</li>
   <li>Improve support for embedded template “filters”</li>
   <li>Remove Sass dependency</li>
   <li>Avoid joining strings with different encodings</li>
   <li>Improve “user input” reported for SQL injection</li>
-  <li>Stop swallowing exceptions in <code class="highlighter-rouge">AliasProcessor</code></li>
-  <li>Add original exception to <code class="highlighter-rouge">Tracker#errors</code> list</li>
-  <li>Use <code class="highlighter-rouge">FileParser</code> in <code class="highlighter-rouge">Scanner</code> to parse files</li>
-  <li>Set location information in <code class="highlighter-rouge">CheckContentTag</code></li>
+  <li>Stop swallowing exceptions in <code class="language-plaintext highlighter-rouge">AliasProcessor</code></li>
+  <li>Add original exception to <code class="language-plaintext highlighter-rouge">Tracker#errors</code> list</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">FileParser</code> in <code class="language-plaintext highlighter-rouge">Scanner</code> to parse files</li>
+  <li>Set location information in <code class="language-plaintext highlighter-rouge">CheckContentTag</code></li>
   <li>Update RubyParser to 3.13.0</li>
 </ul>
 
@@ -129,27 +129,27 @@
 
 <h3 id="more-shell-escaping">More Shell Escaping</h3>
 
-<p>Brakeman is now better at handling shell escaping with <code class="highlighter-rouge">Shellwords</code> when checking for command injection.</p>
+<p>Brakeman is now better at handling shell escaping with <code class="language-plaintext highlighter-rouge">Shellwords</code> when checking for command injection.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1327">changes</a>)</p>
 
 <h3 id="non-integer-version-numbers">Non-Integer Version Numbers</h3>
 
-<p>When comparing non-integer version numbers (e.g., <code class="highlighter-rouge">"beta1"</code>), Brakeman will compare integers to integers and strings to strings instead of
+<p>When comparing non-integer version numbers (e.g., <code class="language-plaintext highlighter-rouge">"beta1"</code>), Brakeman will compare integers to integers and strings to strings instead of
 incorrectly converting some strings to integers.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1326">changes</a>)</p>
 
 <h3 id="more-splats">More Splats</h3>
 
-<p>Splat args (<code class="highlighter-rouge">*arg</code>) and double splat/keyword splats (<code class="highlighter-rouge">**kwargs</code>) are better supported now (instead of being ignored).
+<p>Splat args (<code class="language-plaintext highlighter-rouge">*arg</code>) and double splat/keyword splats (<code class="language-plaintext highlighter-rouge">**kwargs</code>) are better supported now (instead of being ignored).
 Keyward splats inside of hash literals will be merged into the hash literal.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1315">changes</a>)</p>
 
 <h3 id="embedded-template-filters">Embedded Template Filters</h3>
 
-<p>Support for embedded filters in templates (e.g. <code class="highlighter-rouge">markdown</code> inside of Haml or Slim) has been completely rewritten. As a result, it is simpler to support embedded filters <em>and</em> it was possible to drop the Sass dependency. (The Sass gem itself is deprecated and will be <a href="https://sass-lang.com/ruby-sass">end of life as of March 31st, 2019</a>.)</p>
+<p>Support for embedded filters in templates (e.g. <code class="language-plaintext highlighter-rouge">markdown</code> inside of Haml or Slim) has been completely rewritten. As a result, it is simpler to support embedded filters <em>and</em> it was possible to drop the Sass dependency. (The Sass gem itself is deprecated and will be <a href="https://sass-lang.com/ruby-sass">end of life as of March 31st, 2019</a>.)</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1314">changes</a>)</p>
 
@@ -177,7 +177,7 @@ Keyward splats inside of hash literals will be merged into the hash literal.</p>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c82c73e47668e1381829bcf50d09b952f7968bc36af9c5abd6ee20ee03882130  brakeman-4.5.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c82c73e47668e1381829bcf50d09b952f7968bc36af9c5abd6ee20ee03882130  brakeman-4.5.0.gem
 0d372dac72e6bf7f9ff9c2558e3f5d92ef62cd4c6ab051fcea88016f3bfa7470  brakeman-lib-4.5.0.gem
 8565a780be3595ffc5a8d847f6eece8746a272138290fff115555d7aecaa1a38  brakeman-min-4.5.0.gem
 </code></pre></div></div>

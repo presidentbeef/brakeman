@@ -99,20 +99,20 @@
 
 <ul>
   <li>Bundle all dependencies in gem</li>
-  <li>Return exit code <code class="highlighter-rouge">4</code> if no Rails application is detected (<a href="https://github.com/presidentbeef/brakeman/issues/869">#869</a>)</li>
+  <li>Return exit code <code class="language-plaintext highlighter-rouge">4</code> if no Rails application is detected (<a href="https://github.com/presidentbeef/brakeman/issues/869">#869</a>)</li>
   <li>Add optional check for secrets in source code (<a href="https://github.com/presidentbeef/brakeman/issues/201">#201</a>)</li>
   <li>Track constants globally</li>
-  <li>Skip if branches with <code class="highlighter-rouge">Rails.env.test?</code> (<a href="https://github.com/presidentbeef/brakeman/issues/862">#862</a>)</li>
+  <li>Skip if branches with <code class="language-plaintext highlighter-rouge">Rails.env.test?</code> (<a href="https://github.com/presidentbeef/brakeman/issues/862">#862</a>)</li>
   <li>Skip processing obviously false if branches (more broadly)</li>
-  <li>Handle HAML <code class="highlighter-rouge">find_and_preserve</code> with a block (<a href="https://github.com/presidentbeef/brakeman/issues/837">#837</a>)</li>
-  <li>Process <code class="highlighter-rouge">Array#first</code></li>
-  <li>Allow non-Hash arguments in <code class="highlighter-rouge">protect_from_forgery</code> (<a href="https://github.com/jsyeo">Jason Yeo</a>)</li>
-  <li>Avoid warning about <code class="highlighter-rouge">u</code> helper (<a href="https://github.com/cdollins">Chad Dollins</a>)</li>
-  <li>Avoid warning about mass assignment and SQL injection with <code class="highlighter-rouge">params.slice</code> (<a href="https://github.com/presidentbeef/brakeman/issues/866">#866</a>)</li>
-  <li>Avoid warning about <code class="highlighter-rouge">slice</code> in <code class="highlighter-rouge">redirect_to</code> and <code class="highlighter-rouge">link_to</code> (<a href="https://github.com/presidentbeef/brakeman/issues/832">#832</a>)</li>
-  <li>Avoid warning on <code class="highlighter-rouge">popen</code> with array (<a href="https://github.com/presidentbeef/brakeman/issues/851">#851</a>)</li>
+  <li>Handle HAML <code class="language-plaintext highlighter-rouge">find_and_preserve</code> with a block (<a href="https://github.com/presidentbeef/brakeman/issues/837">#837</a>)</li>
+  <li>Process <code class="language-plaintext highlighter-rouge">Array#first</code></li>
+  <li>Allow non-Hash arguments in <code class="language-plaintext highlighter-rouge">protect_from_forgery</code> (<a href="https://github.com/jsyeo">Jason Yeo</a>)</li>
+  <li>Avoid warning about <code class="language-plaintext highlighter-rouge">u</code> helper (<a href="https://github.com/cdollins">Chad Dollins</a>)</li>
+  <li>Avoid warning about mass assignment and SQL injection with <code class="language-plaintext highlighter-rouge">params.slice</code> (<a href="https://github.com/presidentbeef/brakeman/issues/866">#866</a>)</li>
+  <li>Avoid warning about <code class="language-plaintext highlighter-rouge">slice</code> in <code class="language-plaintext highlighter-rouge">redirect_to</code> and <code class="language-plaintext highlighter-rouge">link_to</code> (<a href="https://github.com/presidentbeef/brakeman/issues/832">#832</a>)</li>
+  <li>Avoid warning on <code class="language-plaintext highlighter-rouge">popen</code> with array (<a href="https://github.com/presidentbeef/brakeman/issues/851">#851</a>)</li>
   <li>[Code Climate engine] When possible, output to /dev/stdout (<a href="https://github.com/GordonDiggs">Gordon Diggs</a>)</li>
-  <li>[Code Climate engine] Remove nil entries from <code class="highlighter-rouge">include_paths</code> (<a href="https://github.com/GordonDiggs">Gordon Diggs</a>)</li>
+  <li>[Code Climate engine] Remove nil entries from <code class="language-plaintext highlighter-rouge">include_paths</code> (<a href="https://github.com/GordonDiggs">Gordon Diggs</a>)</li>
   <li>[Code Climate engine] Report end lines for issues (<a href="https://github.com/GordonDiggs">Gordon Diggs</a>)</li>
 </ul>
 
@@ -131,65 +131,65 @@
 <p>For reference, these are Brakeman’s current exit codes:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">0</code> - Normal exit</li>
-  <li><code class="highlighter-rouge">3</code> - Warnings found (with <code class="highlighter-rouge">-z</code>)</li>
-  <li><code class="highlighter-rouge">4</code> - No Rails application detected</li>
-  <li><code class="highlighter-rouge">255</code> - Error</li>
+  <li><code class="language-plaintext highlighter-rouge">0</code> - Normal exit</li>
+  <li><code class="language-plaintext highlighter-rouge">3</code> - Warnings found (with <code class="language-plaintext highlighter-rouge">-z</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">4</code> - No Rails application detected</li>
+  <li><code class="language-plaintext highlighter-rouge">255</code> - Error</li>
 </ul>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/870">changes</a>)</p>
 
 <h3 id="secrets-check">Secrets Check</h3>
 
-<p>A new optional check has been added to look for hard-coded secrets in the source code. It will warn when constants like <code class="highlighter-rouge">PASSWORD</code> are assigned string literals. To run the new check, use <code class="highlighter-rouge">-t Secrets</code> or <code class="highlighter-rouge">-A</code> to run all checks including optional ones.</p>
+<p>A new optional check has been added to look for hard-coded secrets in the source code. It will warn when constants like <code class="language-plaintext highlighter-rouge">PASSWORD</code> are assigned string literals. To run the new check, use <code class="language-plaintext highlighter-rouge">-t Secrets</code> or <code class="language-plaintext highlighter-rouge">-A</code> to run all checks including optional ones.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/861">changes</a>)</p>
 
 <h3 id="constant-values">Constant Values</h3>
 
-<p>This release includes initial support for tracking and matching constants across the application. For example, if a model contains a constant <code class="highlighter-rouge">Model::KEYS</code> which is used elsewhere, Brakeman should be able to track this value. This helps prevents false positives when safe values have been declared as constants.</p>
+<p>This release includes initial support for tracking and matching constants across the application. For example, if a model contains a constant <code class="language-plaintext highlighter-rouge">Model::KEYS</code> which is used elsewhere, Brakeman should be able to track this value. This helps prevents false positives when safe values have been declared as constants.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/855">changes</a>)</p>
 
 <h3 id="skipping-test-code">Skipping Test Code</h3>
 
-<p>Brakeman will now ignore <code class="highlighter-rouge">if</code> branches that check <code class="highlighter-rouge">Rails.env.test?</code>. Additionally, branch skipping behavior (e.g. <code class="highlighter-rouge">if false...</code>) has been expanded to most of Brakeman’s processing instead of just in data flow analysis.</p>
+<p>Brakeman will now ignore <code class="language-plaintext highlighter-rouge">if</code> branches that check <code class="language-plaintext highlighter-rouge">Rails.env.test?</code>. Additionally, branch skipping behavior (e.g. <code class="language-plaintext highlighter-rouge">if false...</code>) has been expanded to most of Brakeman’s processing instead of just in data flow analysis.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/868">changes</a>)</p>
 
-<h3 id="haml-find_and_preserve">HAML <code class="highlighter-rouge">find_and_preserve</code></h3>
+<h3 id="haml-find_and_preserve">HAML <code class="language-plaintext highlighter-rouge">find_and_preserve</code></h3>
 
-<p>Brakeman will now handle uses of <code class="highlighter-rouge">find_and_preserve</code> in HAML with a block.</p>
+<p>Brakeman will now handle uses of <code class="language-plaintext highlighter-rouge">find_and_preserve</code> in HAML with a block.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/839">changes</a>)</p>
 
 <h3 id="arrayfirst">Array#first</h3>
 
-<p>Calls to <code class="highlighter-rouge">Array#first</code> will be replaced with the first value in the array when known.</p>
+<p>Calls to <code class="language-plaintext highlighter-rouge">Array#first</code> will be replaced with the first value in the array when known.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/856">changes</a>)</p>
 
 <h3 id="forgery-option">Forgery Option</h3>
 
-<p><a href="https://github.com/jsyeo">Jason Yeo</a> provided a fix for when Brakeman encounters a non-Hash argument to <code class="highlighter-rouge">protect_from_forgery</code>.</p>
+<p><a href="https://github.com/jsyeo">Jason Yeo</a> provided a fix for when Brakeman encounters a non-Hash argument to <code class="language-plaintext highlighter-rouge">protect_from_forgery</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/849">changes</a>)</p>
 
-<h3 id="u-helper"><code class="highlighter-rouge">u</code> Helper</h3>
+<h3 id="u-helper"><code class="language-plaintext highlighter-rouge">u</code> Helper</h3>
 
-<p><a href="https://github.com/cdollins">Chad Dollins</a> fixed XSS false positives when the <code class="highlighter-rouge">u</code> alias for <code class="highlighter-rouge">url_encode</code> is used.</p>
+<p><a href="https://github.com/cdollins">Chad Dollins</a> fixed XSS false positives when the <code class="language-plaintext highlighter-rouge">u</code> alias for <code class="language-plaintext highlighter-rouge">url_encode</code> is used.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/863">changes</a>)</p>
 
-<h3 id="fewer-slice-false-positives">Fewer <code class="highlighter-rouge">slice</code> False Positives</h3>
+<h3 id="fewer-slice-false-positives">Fewer <code class="language-plaintext highlighter-rouge">slice</code> False Positives</h3>
 
-<p>Brakeman should no longer warn when using <code class="highlighter-rouge">params.slice</code> in mass assignment, SQL injection, links, and open redirects.</p>
+<p>Brakeman should no longer warn when using <code class="language-plaintext highlighter-rouge">params.slice</code> in mass assignment, SQL injection, links, and open redirects.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/867">changes</a> and <a href="https://github.com/presidentbeef/brakeman/pull/871">other changes</a>)</p>
 
 <h3 id="safe-popen">Safe popen</h3>
 
-<p>Brakeman will no longer warn about uses of <code class="highlighter-rouge">popen</code> when the argument is an array, in which case the arguments are escaped.</p>
+<p>Brakeman will no longer warn about uses of <code class="language-plaintext highlighter-rouge">popen</code> when the argument is an array, in which case the arguments are escaped.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/854">changes</a>)</p>
 
@@ -198,7 +198,7 @@
 <p><a href="https://github.com/GordonDiggs">Gordon Diggs</a> provided several improvements to the Code Climate Engine in this release:</p>
 
 <ul>
-  <li>Remove <code class="highlighter-rouge">nil</code> entries from the <code class="highlighter-rouge">include_paths</code> option</li>
+  <li>Remove <code class="language-plaintext highlighter-rouge">nil</code> entries from the <code class="language-plaintext highlighter-rouge">include_paths</code> option</li>
   <li>Force output to stdout when possible</li>
   <li>Report end lines to conform with spec</li>
 </ul>
@@ -207,7 +207,7 @@
 
 <p>The SHA256 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c01ec64d35218887fc5ea2ae8babc88e9e0e7cc3c161b020725d2b17c4189858  brakeman-3.3.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c01ec64d35218887fc5ea2ae8babc88e9e0e7cc3c161b020725d2b17c4189858  brakeman-3.3.0.gem
 f1adce1a696799342dc9f50b51975024060360dc9018358c5d8e34c1c4681bd1  brakeman-min-3.3.0.gem
 </code></pre></div></div>
 

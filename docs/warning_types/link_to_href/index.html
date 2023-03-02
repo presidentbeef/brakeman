@@ -78,11 +78,11 @@
     <h1 class="entry-title">Cross Site Scripting: link to HREF</h1>
   </header>
   
-  <p>Even though Rails will escape the link provided to <code class="highlighter-rouge">link_to</code>, values starting with “javascript:” or “data:” are unescaped and dangerous.</p>
+  <p>Even though Rails will escape the link provided to <code class="language-plaintext highlighter-rouge">link_to</code>, values starting with “javascript:” or “data:” are unescaped and dangerous.</p>
 
-<p>Brakeman will warn on if user values are used to provide the HREF value in <code class="highlighter-rouge">link_to</code> or if they are interpolated at the beginning of a string.</p>
+<p>Brakeman will warn on if user values are used to provide the HREF value in <code class="language-plaintext highlighter-rouge">link_to</code> or if they are interpolated at the beginning of a string.</p>
 
-<p>The <code class="highlighter-rouge">--url-safe-methods</code> option can be used to specify methods which make URLs safe.</p>
+<p>The <code class="language-plaintext highlighter-rouge">--url-safe-methods</code> option can be used to specify methods which make URLs safe.</p>
 
 <p>See <a href="https://github.com/presidentbeef/brakeman/pull/45">here</a> for more details.</p>
 

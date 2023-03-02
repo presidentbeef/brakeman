@@ -95,31 +95,31 @@
 
 <div class="entry-content"><ul>
   <li>Configurable engines path (<a href="https://github.com/jsyeo">Jason Yeo</a>)</li>
-  <li>Check CSRF setting in direct subclasses of <code class="highlighter-rouge">ActionController::Base</code> (<a href="https://github.com/jsyeo">Jason Yeo</a>)</li>
-  <li>Pull Ruby version from <code class="highlighter-rouge">.ruby-version</code> or Gemfile</li>
+  <li>Check CSRF setting in direct subclasses of <code class="language-plaintext highlighter-rouge">ActionController::Base</code> (<a href="https://github.com/jsyeo">Jason Yeo</a>)</li>
+  <li>Pull Ruby version from <code class="language-plaintext highlighter-rouge">.ruby-version</code> or Gemfile</li>
   <li>Use Ruby version to turn off SymbolDoS check (<a href="https://github.com/presidentbeef/brakeman/issues/928">#928</a>)</li>
   <li>Fix ignoring link interpolation not at beginning of string (<a href="https://github.com/presidentbeef/brakeman/issues/939">#939</a>)</li>
   <li>Show action help at start of interactive ignore (<a href="https://github.com/presidentbeef/brakeman/issues/949">#949</a>)</li>
-  <li>Avoid warning about <code class="highlighter-rouge">where_values_hash</code> in SQLi (<a href="https://github.com/presidentbeef/brakeman/issues/942">#942</a>)</li>
+  <li>Avoid warning about <code class="language-plaintext highlighter-rouge">where_values_hash</code> in SQLi (<a href="https://github.com/presidentbeef/brakeman/issues/942">#942</a>)</li>
 </ul>
 
 <h3 id="engine-paths-option">Engine Paths Option</h3>
 
-<p>Thanks to the work of Jason Yeo, Brakeman now supports custom paths to Rails engines uses the <code class="highlighter-rouge">--add-engines-path</code> option.</p>
+<p>Thanks to the work of Jason Yeo, Brakeman now supports custom paths to Rails engines uses the <code class="language-plaintext highlighter-rouge">--add-engines-path</code> option.</p>
 
-<p>Multiple comma-separated paths may be configured. To include all subdirectories, use <code class="highlighter-rouge">*</code> (e.g. <code class="highlighter-rouge">my_engines/*</code>). Absolute paths may be used for engines outside the application.</p>
+<p>Multiple comma-separated paths may be configured. To include all subdirectories, use <code class="language-plaintext highlighter-rouge">*</code> (e.g. <code class="language-plaintext highlighter-rouge">my_engines/*</code>). Absolute paths may be used for engines outside the application.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/948">changes</a>)</p>
 
 <h3 id="expanded-csrf-check">Expanded CSRF Check</h3>
 
-<p>Also thanks to Jason Yeo, any controller with <code class="highlighter-rouge">ActionController::Base</code> as a direct parent will be checked for a <code class="highlighter-rouge">protect_from_forgery</code> call.</p>
+<p>Also thanks to Jason Yeo, any controller with <code class="language-plaintext highlighter-rouge">ActionController::Base</code> as a direct parent will be checked for a <code class="language-plaintext highlighter-rouge">protect_from_forgery</code> call.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/953">changes</a>)</p>
 
 <h3 id="ruby-version-info">Ruby Version Info</h3>
 
-<p>Brakeman will now pull information about the Ruby version used for an application either from the <code class="highlighter-rouge">Gemfile</code> or <code class="highlighter-rouge">.ruby-version</code>. Right now this is only used for disabling (the already optional) Symbol DoS check for versions of Ruby that have symbol garbage collection.</p>
+<p>Brakeman will now pull information about the Ruby version used for an application either from the <code class="language-plaintext highlighter-rouge">Gemfile</code> or <code class="language-plaintext highlighter-rouge">.ruby-version</code>. Right now this is only used for disabling (the already optional) Symbol DoS check for versions of Ruby that have symbol garbage collection.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/947">changes</a>)</p>
 

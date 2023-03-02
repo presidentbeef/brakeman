@@ -78,11 +78,11 @@
     <h1 class="entry-title">Remote Code Execution in YAML.Load</h1>
   </header>
   
-  <p>As seen in <a href="https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion">CVE-2013-0156</a>, calling <code class="highlighter-rouge">YAML.load</code> with user input can lead to remote execution of arbitrary code. (To see a real point-and-fire exploit, see the <a href="https://github.com/rapid7/metasploit-framework/blob/master/modules/exploits/multi/http/rails_xml_yaml_code_exec.rb">Metasploit payload</a>). While upgrading Rails, disabling XML parsing, or disabling YAML types in XML request parsing will fix the Rails vulnerability, manually passing user input to <code class="highlighter-rouge">YAML.load</code> remains unsafe.</p>
+  <p>As seen in <a href="https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion">CVE-2013-0156</a>, calling <code class="language-plaintext highlighter-rouge">YAML.load</code> with user input can lead to remote execution of arbitrary code. (To see a real point-and-fire exploit, see the <a href="https://github.com/rapid7/metasploit-framework/blob/master/modules/exploits/multi/http/rails_xml_yaml_code_exec.rb">Metasploit payload</a>). While upgrading Rails, disabling XML parsing, or disabling YAML types in XML request parsing will fix the Rails vulnerability, manually passing user input to <code class="language-plaintext highlighter-rouge">YAML.load</code> remains unsafe.</p>
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#Do not do this!
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#Do not do this!
 YAML.load(params[:file])
 </code></pre></div></div>
 

@@ -96,30 +96,30 @@
   </header>
 
 
-  <div class="entry-content"><p>This is mostly a bug fix release, but does introduce a new warning code for when <code class="highlighter-rouge">protect_from_forgery</code> is not set to raise exceptions in Rails 4.</p>
+  <div class="entry-content"><p>This is mostly a bug fix release, but does introduce a new warning code for when <code class="language-plaintext highlighter-rouge">protect_from_forgery</code> is not set to raise exceptions in Rails 4.</p>
 
 <p><em>Changes since 3.0.2</em>:</p>
 
 <ul>
-  <li>Warn about <code class="highlighter-rouge">protect_from_forgery</code> without exceptions (<a href="https://github.com/oreoshake">Neil Matatall</a>)</li>
+  <li>Warn about <code class="language-plaintext highlighter-rouge">protect_from_forgery</code> without exceptions (<a href="https://github.com/oreoshake">Neil Matatall</a>)</li>
   <li>Add Rake task to exit with error code on warnings (<a href="https://github.com/masarakki">masarakki</a>)</li>
-  <li>Ignore <code class="highlighter-rouge">quoted_table_name</code> in SQL (<a href="https://github.com/sobrinho">Gabriel Sobhrinho</a>)</li>
+  <li>Ignore <code class="language-plaintext highlighter-rouge">quoted_table_name</code> in SQL (<a href="https://github.com/sobrinho">Gabriel Sobhrinho</a>)</li>
   <li>Ignore more Arel methods in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/604">#604</a>)</li>
-  <li>Warn about RCE and file access with <code class="highlighter-rouge">open</code></li>
-  <li>Handle <code class="highlighter-rouge">Array#include?</code> guard conditionals (<a href="https://github.com/presidentbeef/brakeman/issues/604">#604</a>)</li>
+  <li>Warn about RCE and file access with <code class="language-plaintext highlighter-rouge">open</code></li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">Array#include?</code> guard conditionals (<a href="https://github.com/presidentbeef/brakeman/issues/604">#604</a>)</li>
   <li>Handle lambdas as filters</li>
-  <li>Do not ignore targets of <code class="highlighter-rouge">to_s</code> in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/638">#638</a>)</li>
+  <li>Do not ignore targets of <code class="language-plaintext highlighter-rouge">to_s</code> in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/638">#638</a>)</li>
 </ul>
 
 <h3 id="new-csrf-warning">New CSRF Warning</h3>
 
-<p><a href="https://github.com/oreoshake">Neil Matatall</a> has added a warning for Rails 4 applications that do not pass the <code class="highlighter-rouge">with: :exception</code> option to <code class="highlighter-rouge">protect_from_forgery</code>. The default behavior of clearing out the session (but still processing the request) has lead to vulnerabilities in some applications. GitHub <a href="https://bounty.github.com/researchers/LukasReschke.html">recently awarded a bug bounty</a> for a vulnerability caused by this behavior.</p>
+<p><a href="https://github.com/oreoshake">Neil Matatall</a> has added a warning for Rails 4 applications that do not pass the <code class="language-plaintext highlighter-rouge">with: :exception</code> option to <code class="language-plaintext highlighter-rouge">protect_from_forgery</code>. The default behavior of clearing out the session (but still processing the request) has lead to vulnerabilities in some applications. GitHub <a href="https://bounty.github.com/researchers/LukasReschke.html">recently awarded a bug bounty</a> for a vulnerability caused by this behavior.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/648">changes</a>)</p>
 
 <h3 id="additional-rake-task">Additional Rake Task</h3>
 
-<p><a href="https://github.com/masarakki">Masarakki</a> added a Rake task that will exit with an error code if any warnings are found (like <code class="highlighter-rouge">brakeman -z</code>). The task can be run with <code class="highlighter-rouge">rake brakeman:check</code>.</p>
+<p><a href="https://github.com/masarakki">Masarakki</a> added a Rake task that will exit with an error code if any warnings are found (like <code class="language-plaintext highlighter-rouge">brakeman -z</code>). The task can be run with <code class="language-plaintext highlighter-rouge">rake brakeman:check</code>.</p>
 
 <p>However, please note the use of Rake tasks to run Brakeman is discouraged, since it loads the entire Rails application which is unnecessary and may cause conflicts with Brakeman dependencies.</p>
 
@@ -127,7 +127,7 @@
 
 <h3 id="reduce-sql-injection-false-positives">Reduce SQL Injection False Positives</h3>
 
-<p>A patch from <a href="https://github.com/sobrinho">Gabriel Sobhrinho</a> removes warnings about <code class="highlighter-rouge">quoted_table_name</code> in SQL queries.</p>
+<p>A patch from <a href="https://github.com/sobrinho">Gabriel Sobhrinho</a> removes warnings about <code class="language-plaintext highlighter-rouge">quoted_table_name</code> in SQL queries.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/647">changes</a>)</p>
 
@@ -137,7 +137,7 @@
 
 <h3 id="remote-code-execution-in-open">Remote Code Execution in open()</h3>
 
-<p>As noted in <a href="http://sakurity.com/blog/2015/02/28/openuri.html">Egor Homakov’s blog post</a>, <code class="highlighter-rouge">open</code> can actually be used to spawn new processes by starting the argument with a pipe <code class="highlighter-rouge">|</code>. Brakeman will now warn about remote code execution via <code class="highlighter-rouge">open</code>.</p>
+<p>As noted in <a href="http://sakurity.com/blog/2015/02/28/openuri.html">Egor Homakov’s blog post</a>, <code class="language-plaintext highlighter-rouge">open</code> can actually be used to spawn new processes by starting the argument with a pipe <code class="language-plaintext highlighter-rouge">|</code>. Brakeman will now warn about remote code execution via <code class="language-plaintext highlighter-rouge">open</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/643">changes</a>)</p>
 
@@ -145,7 +145,7 @@
 
 <p>Brakeman should now recognize guard conditions that look exactly like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if [1, 2, "a", "b"].include? x
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if [1, 2, "a", "b"].include? x
   do_something_dangerous_with x
 end
 </code></pre></div></div>
@@ -162,7 +162,7 @@ end
 
 <h3 id="handle-to_s-in-sql">Handle to_s in SQL</h3>
 
-<p>Values with <code class="highlighter-rouge">to_s</code> called on them were being ignored when checking for SQL injection. This has been fixed.</p>
+<p>Values with <code class="language-plaintext highlighter-rouge">to_s</code> called on them were being ignored when checking for SQL injection. This has been fixed.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/639">changes</a>)</p>
 
@@ -170,7 +170,7 @@ end
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>170c3dd6925373b7da2e27fd1decf2957b35dc43  brakeman-3.0.3.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>170c3dd6925373b7da2e27fd1decf2957b35dc43  brakeman-3.0.3.gem
 f126e305404a61e99f9ddb848996d87325d1485a  brakeman-min-3.0.3.gem
 </code></pre></div></div>
 
@@ -216,13 +216,13 @@ f126e305404a61e99f9ddb848996d87325d1485a  brakeman-min-3.0.3.gem
   <li>Fix HTML reports with GitHub repos (<a href="https://github.com/presidentbeef/brakeman/issues/624">#624</a>)</li>
   <li>Handle processing of explictly shadowed block arguments (<a href="https://github.com/presidentbeef/brakeman/issues/612">#612</a>)</li>
   <li>Fix CSV output when there are no warnings (<a href="https://github.com/presidentbeef/brakeman/issues/615">#615</a>)</li>
-  <li>Update <code class="highlighter-rouge">ruby_parser</code> to ~&gt; 3.6.2</li>
-  <li>Treat <code class="highlighter-rouge">primary_key</code>, <code class="highlighter-rouge">table_name_prefix</code>, <code class="highlighter-rouge">table_name_suffix</code> as safe in SQL</li>
-  <li>Fix using <code class="highlighter-rouge">--compare</code> and <code class="highlighter-rouge">--add-checks-path</code> together</li>
+  <li>Update <code class="language-plaintext highlighter-rouge">ruby_parser</code> to ~&gt; 3.6.2</li>
+  <li>Treat <code class="language-plaintext highlighter-rouge">primary_key</code>, <code class="language-plaintext highlighter-rouge">table_name_prefix</code>, <code class="language-plaintext highlighter-rouge">table_name_suffix</code> as safe in SQL</li>
+  <li>Fix using <code class="language-plaintext highlighter-rouge">--compare</code> and <code class="language-plaintext highlighter-rouge">--add-checks-path</code> together</li>
   <li>Alias process methods called in class scope on models</li>
   <li>Avoid warning about mass assignment with string literals</li>
   <li>Only report original regex DoS locations</li>
-  <li>Report correct file for <code class="highlighter-rouge">simple_format</code> usage CVE warning</li>
+  <li>Report correct file for <code class="language-plaintext highlighter-rouge">simple_format</code> usage CVE warning</li>
   <li>Ignore case value in XSS checks</li>
 </ul>
 
@@ -236,7 +236,7 @@ f126e305404a61e99f9ddb848996d87325d1485a  brakeman-min-3.0.3.gem
 
 <p>There was an error handling explicitly shadowed block arguments like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>some_array.each do |item; x, y|
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>some_array.each do |item; x, y|
   # Stuff
 end
 </code></pre></div></div>
@@ -259,19 +259,19 @@ end
 
 <h3 id="more-sql-safe-methods">More SQL-safe Methods</h3>
 
-<p>Brakeman will no longer warn about <code class="highlighter-rouge">primary_key</code>, <code class="highlighter-rouge">table_name_prefix</code>, and <code class="highlighter-rouge">table_name_suffix</code> in SQL.</p>
+<p>Brakeman will no longer warn about <code class="language-plaintext highlighter-rouge">primary_key</code>, <code class="language-plaintext highlighter-rouge">table_name_prefix</code>, and <code class="language-plaintext highlighter-rouge">table_name_suffix</code> in SQL.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/635">changes</a>)</p>
 
 <h3 id="compare-with-external-checks">Compare with External Checks</h3>
 
-<p>Fix an issue when using <code class="highlighter-rouge">--compare</code> and <code class="highlighter-rouge">--add-checks-path</code> together.</p>
+<p>Fix an issue when using <code class="language-plaintext highlighter-rouge">--compare</code> and <code class="language-plaintext highlighter-rouge">--add-checks-path</code> together.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/635">changes</a>)</p>
 
 <h3 id="process-class-scope-method-calls">Process Class-Scope Method Calls</h3>
 
-<p>Previously, Brakeman would process method calls at the class scope (e.g., <code class="highlighter-rouge">belongs_to</code>) in models and then throw away the call. This meant the call never received data flow analysis. This was particularly noticeable when those calls involved blocks. This has been fixed and has improved results, especially where constants are used.</p>
+<p>Previously, Brakeman would process method calls at the class scope (e.g., <code class="language-plaintext highlighter-rouge">belongs_to</code>) in models and then throw away the call. This meant the call never received data flow analysis. This was particularly noticeable when those calls involved blocks. This has been fixed and has improved results, especially where constants are used.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/634">changes</a>)</p>
 
@@ -289,13 +289,13 @@ end
 
 <h3 id="file-for-simple_format-cve">File for simple_format CVE</h3>
 
-<p>Warnings regarding the old <code class="highlighter-rouge">simple_format</code> CVE will now point to the file where <code class="highlighter-rouge">simple_format</code> was called, not the Gemfile.</p>
+<p>Warnings regarding the old <code class="language-plaintext highlighter-rouge">simple_format</code> CVE will now point to the file where <code class="language-plaintext highlighter-rouge">simple_format</code> was called, not the Gemfile.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/623/files">changes</a>)</p>
 
 <h3 id="ignore-case-value">Ignore Case Value</h3>
 
-<p>Do not report about XSS regarding the value used in <code class="highlighter-rouge">case</code> expressions.</p>
+<p>Do not report about XSS regarding the value used in <code class="language-plaintext highlighter-rouge">case</code> expressions.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/619">changes</a>)</p>
 
@@ -303,7 +303,7 @@ end
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>87413b544b5eae0cac9f037e2b62b1fe3f0fee5e  brakeman-3.0.2.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>87413b544b5eae0cac9f037e2b62b1fe3f0fee5e  brakeman-3.0.2.gem
 cfcf3080a992ca173c64dd98fe239e8bd9bb0eaa  brakeman-min-3.0.2.gem
 </code></pre></div></div>
 
@@ -346,17 +346,17 @@ cfcf3080a992ca173c64dd98fe239e8bd9bb0eaa  brakeman-min-3.0.2.gem
 <ul>
   <li>Remove Slim dependency (<a href="https://github.com/cwest">Casey West</a>)</li>
   <li>Properly process libraries (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
-  <li>Add <code class="highlighter-rouge">--add-libs-path</code> for additional libraries (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
-  <li>Allow for controllers/models/templates in directories under <code class="highlighter-rouge">app/</code> (<a href="https://github.com/nealharris">Neal Harris</a>)</li>
-  <li>Avoid <code class="highlighter-rouge">protect_from_forgery</code> warning unless <code class="highlighter-rouge">ApplicationController</code> inherits from <code class="highlighter-rouge">ActionController::Base</code> (<a href="https://github.com/presidentbeef/brakeman/issues/573">#573</a>)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--add-libs-path</code> for additional libraries (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
+  <li>Allow for controllers/models/templates in directories under <code class="language-plaintext highlighter-rouge">app/</code> (<a href="https://github.com/nealharris">Neal Harris</a>)</li>
+  <li>Avoid <code class="language-plaintext highlighter-rouge">protect_from_forgery</code> warning unless <code class="language-plaintext highlighter-rouge">ApplicationController</code> inherits from <code class="language-plaintext highlighter-rouge">ActionController::Base</code> (<a href="https://github.com/presidentbeef/brakeman/issues/573">#573</a>)</li>
   <li>Properly format command interpolation (again)</li>
 </ul>
 
 <h3 id="slim-gem-dependency-removed">Slim Gem Dependency Removed</h3>
 
-<p>Since <a href="https://github.com/slim-template/slim-rails/releases/tag/3.0.1">Rails 4.2 requires Slim 3.0.1</a> and <a href="https://github.com/slim-template/slim/blob/bb7ca78c1ea9629d8b57a06fcb99c938c9d7640e/CHANGES#L8">Slim 3.0 dropped support for Ruby 1.8.7</a>, there is no way to satisfy dependencies for Slim, Rails 4.2, and retain support for Ruby 1.8.7 when Brakeman is added as a dependency in a <code class="highlighter-rouge">Gemfile</code>.</p>
+<p>Since <a href="https://github.com/slim-template/slim-rails/releases/tag/3.0.1">Rails 4.2 requires Slim 3.0.1</a> and <a href="https://github.com/slim-template/slim/blob/bb7ca78c1ea9629d8b57a06fcb99c938c9d7640e/CHANGES#L8">Slim 3.0 dropped support for Ruby 1.8.7</a>, there is no way to satisfy dependencies for Slim, Rails 4.2, and retain support for Ruby 1.8.7 when Brakeman is added as a dependency in a <code class="language-plaintext highlighter-rouge">Gemfile</code>.</p>
 
-<p>The only acceptable solution is to not include Slim as a dependency at all and let users sort it out for themselves. Sorry for the unfortunate situation, but there is no way to add Brakeman to a <code class="highlighter-rouge">Gemfile</code> and avoid Bundler attempting to resolve Brakeman’s dependencies against the application’s dependencies, despite there being no relation.</p>
+<p>The only acceptable solution is to not include Slim as a dependency at all and let users sort it out for themselves. Sorry for the unfortunate situation, but there is no way to add Brakeman to a <code class="language-plaintext highlighter-rouge">Gemfile</code> and avoid Bundler attempting to resolve Brakeman’s dependencies against the application’s dependencies, despite there being no relation.</p>
 
 <p>Thanks to <a href="https://github.com/cwest">Casey West</a> for working through solutions for this issue.</p>
 
@@ -372,19 +372,19 @@ cfcf3080a992ca173c64dd98fe239e8bd9bb0eaa  brakeman-min-3.0.2.gem
 
 <h3 id="allow-additional-library-paths">Allow Additional Library Paths</h3>
 
-<p><a href="https://github.com/ptoomey3">Patrick Toomey</a> also added a new option <code class="highlighter-rouge">--add-libs-path</code> to treat more paths as if they were in <code class="highlighter-rouge">lib/</code>.</p>
+<p><a href="https://github.com/ptoomey3">Patrick Toomey</a> also added a new option <code class="language-plaintext highlighter-rouge">--add-libs-path</code> to treat more paths as if they were in <code class="language-plaintext highlighter-rouge">lib/</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/606">changes</a>)</p>
 
 <h3 id="scan-application-subdirectories">Scan Application Subdirectories</h3>
 
-<p><a href="https://github.com/nealharris">Neal Harris</a> contributed a change to support applications with multiple applications under <code class="highlighter-rouge">app/</code>, such as <code class="highlighter-rouge">app/cool_team/controllers/</code>.</p>
+<p><a href="https://github.com/nealharris">Neal Harris</a> contributed a change to support applications with multiple applications under <code class="language-plaintext highlighter-rouge">app/</code>, such as <code class="language-plaintext highlighter-rouge">app/cool_team/controllers/</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/607">changes</a>)</p>
 
 <h3 id="avoid-csrf-warning-for-apis">Avoid CSRF Warning for APIs</h3>
 
-<p>Brakeman will no longer warn about missing <code class="highlighter-rouge">protect_from_forgery</code> if <code class="highlighter-rouge">ApplicationController</code> does not inherit from <code class="highlighter-rouge">ActionController::Base</code>.</p>
+<p>Brakeman will no longer warn about missing <code class="language-plaintext highlighter-rouge">protect_from_forgery</code> if <code class="language-plaintext highlighter-rouge">ApplicationController</code> does not inherit from <code class="language-plaintext highlighter-rouge">ActionController::Base</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/issues/573">changes</a>)</p>
 
@@ -434,27 +434,27 @@ cfcf3080a992ca173c64dd98fe239e8bd9bb0eaa  brakeman-min-3.0.2.gem
 <p><em>Changes since 2.6.3</em>:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">--exit-on-warn --compare</code> only returns error code on new warnings (<a href="https://github.com/jeffyip">Jeff Yip</a>)</li>
+  <li><code class="language-plaintext highlighter-rouge">--exit-on-warn --compare</code> only returns error code on new warnings (<a href="https://github.com/jeffyip">Jeff Yip</a>)</li>
   <li>Sort warnings by fingerprint in JSON report (<a href="https://github.com/jeffyip">Jeff Yip</a>)</li>
   <li>CVEs report correct line and file name (Gemfile/Gemfile.lock) (<a href="https://github.com/pwnetrationguru">Rob Fletcher</a>)</li>
-  <li>Change <code class="highlighter-rouge">--separate-models</code> to be the default</li>
-  <li>Local variables are no longer formatted as <code class="highlighter-rouge">(local var)</code></li>
+  <li>Change <code class="language-plaintext highlighter-rouge">--separate-models</code> to be the default</li>
+  <li>Local variables are no longer formatted as <code class="language-plaintext highlighter-rouge">(local var)</code></li>
   <li>Actually skip skipped before filters</li>
   <li>Remove “fake filters” from warning fingerpints</li>
-  <li>Index calls in <code class="highlighter-rouge">lib/</code> files</li>
+  <li>Index calls in <code class="language-plaintext highlighter-rouge">lib/</code> files</li>
   <li>Handle symmetric multiple assignment</li>
-  <li>Do not branch for self attribute assignment <code class="highlighter-rouge">x = x.y</code> (<a href="https://github.com/presidentbeef/brakeman/issues/552">#552</a>)</li>
+  <li>Do not branch for self attribute assignment <code class="language-plaintext highlighter-rouge">x = x.y</code> (<a href="https://github.com/presidentbeef/brakeman/issues/552">#552</a>)</li>
   <li>Move Symbol DoS to optional checks</li>
   <li>Add check for cross site scripting via inline renders</li>
   <li>Add check for CVE-2014-7829</li>
-  <li>Fix parsing of <code class="highlighter-rouge">&lt;%==</code> in ERB</li>
+  <li>Fix parsing of <code class="language-plaintext highlighter-rouge">&lt;%==</code> in ERB</li>
   <li>Fix output format of command interpolation</li>
   <li>Fix CVE for CVE-2011-2932</li>
 </ul>
 
 <h3 id="exit-code-when-comparing">Exit Code When Comparing</h3>
 
-<p>When using <code class="highlighter-rouge">--exit-on-warn --compare</code>, Brakeman will only return a non-zero exit code when there are new warnings. Previous behavior was to return non-zero exit code if there were any differences between reports (including fixed warnings).</p>
+<p>When using <code class="language-plaintext highlighter-rouge">--exit-on-warn --compare</code>, Brakeman will only return a non-zero exit code when there are new warnings. Previous behavior was to return non-zero exit code if there were any differences between reports (including fixed warnings).</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/588">changes</a>)</p>
 
@@ -466,19 +466,19 @@ cfcf3080a992ca173c64dd98fe239e8bd9bb0eaa  brakeman-min-3.0.2.gem
 
 <h3 id="report-line-numbers-for-cves">Report Line Numbers for CVEs</h3>
 
-<p>Previously, CVE warnings typically pointed to <code class="highlighter-rouge">Gemfile</code> with no line number information. Now CVEs should point to <code class="highlighter-rouge">Gemfile</code> or <code class="highlighter-rouge">Gemfile.lock</code> as appropriate and include the line number for the vulnerable gem dependency.</p>
+<p>Previously, CVE warnings typically pointed to <code class="language-plaintext highlighter-rouge">Gemfile</code> with no line number information. Now CVEs should point to <code class="language-plaintext highlighter-rouge">Gemfile</code> or <code class="language-plaintext highlighter-rouge">Gemfile.lock</code> as appropriate and include the line number for the vulnerable gem dependency.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/557">changes</a> and <a href="https://github.com/presidentbeef/brakeman/pull/569">more changes</a>)</p>
 
 <h3 id="mass-assignment-warnings-default-to-per-model">Mass Assignment Warnings Default to per Model</h3>
 
-<p>The <code class="highlighter-rouge">--separate-models</code> option is now on by default. This means warnings about missing <code class="highlighter-rouge">attr_accessible</code> will be reported for each model instead of rolling them into a single warning.</p>
+<p>The <code class="language-plaintext highlighter-rouge">--separate-models</code> option is now on by default. This means warnings about missing <code class="language-plaintext highlighter-rouge">attr_accessible</code> will be reported for each model instead of rolling them into a single warning.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/586">changes</a>)</p>
 
 <h3 id="local-variable-format">Local Variable Format</h3>
 
-<p>Local variables are no longer formatted as <code class="highlighter-rouge">(local var)</code> in warning output.</p>
+<p>Local variables are no longer formatted as <code class="language-plaintext highlighter-rouge">(local var)</code> in warning output.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/594">changes</a>)</p>
 
@@ -490,19 +490,19 @@ cfcf3080a992ca173c64dd98fe239e8bd9bb0eaa  brakeman-min-3.0.2.gem
 
 <h3 id="fake-filter-change">Fake Filter Change</h3>
 
-<p>Before filters defined as blocks (instead of methods) are internally represented as methods with random names prepended by <code class="highlighter-rouge">fake_filter</code>. Since the method names were not stable, any warnings inside the filters would have inconsistent fingerprints. Now warnings inside of before filters will always be reported with <code class="highlighter-rouge">before_filter</code> as the method name.</p>
+<p>Before filters defined as blocks (instead of methods) are internally represented as methods with random names prepended by <code class="language-plaintext highlighter-rouge">fake_filter</code>. Since the method names were not stable, any warnings inside the filters would have inconsistent fingerprints. Now warnings inside of before filters will always be reported with <code class="language-plaintext highlighter-rouge">before_filter</code> as the method name.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/572">changes</a>)</p>
 
 <h3 id="index-calls-in-libraries">Index Calls in Libraries</h3>
 
-<p>Classes defined in <code class="highlighter-rouge">lib/</code> files will now be included in the method call index and searched for vulnerabilities. As these files were already being processed, this has not added any significant overhead in testing.</p>
+<p>Classes defined in <code class="language-plaintext highlighter-rouge">lib/</code> files will now be included in the method call index and searched for vulnerabilities. As these files were already being processed, this has not added any significant overhead in testing.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/571">changes</a>)</p>
 
 <h3 id="handle-multiple-assignment">Handle Multiple Assignment</h3>
 
-<p>Simple symmetric multiple assignments (also called “parallel assignment”) like <code class="highlighter-rouge">x, y = 1, 2</code> are now handled like normal assignments.</p>
+<p>Simple symmetric multiple assignments (also called “parallel assignment”) like <code class="language-plaintext highlighter-rouge">x, y = 1, 2</code> are now handled like normal assignments.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/577">changes</a>)</p>
 
@@ -520,19 +520,19 @@ cfcf3080a992ca173c64dd98fe239e8bd9bb0eaa  brakeman-min-3.0.2.gem
 
 <h3 id="warn-on-inline-xss">Warn on Inline XSS</h3>
 
-<p>Unescaped user input in <code class="highlighter-rouge">render :text</code> or <code class="highlighter-rouge">render :inline</code> should now generate warnings.</p>
+<p>Unescaped user input in <code class="language-plaintext highlighter-rouge">render :text</code> or <code class="language-plaintext highlighter-rouge">render :inline</code> should now generate warnings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/598">changes</a>)</p>
 
 <h3 id="cve-2014-7829">CVE-2014-7829</h3>
 
-<p>Brakeman will warn about <a href="https://groups.google.com/d/msg/rubyonrails-security/23fiuwb1NBA/MQVM1-5GkPMJ">CVE-2014-7829</a> (file existence disclosure) for applications using affected versions of Rails and setting <code class="highlighter-rouge">config.serve_static_assets = true</code>.</p>
+<p>Brakeman will warn about <a href="https://groups.google.com/d/msg/rubyonrails-security/23fiuwb1NBA/MQVM1-5GkPMJ">CVE-2014-7829</a> (file existence disclosure) for applications using affected versions of Rails and setting <code class="language-plaintext highlighter-rouge">config.serve_static_assets = true</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/600">changes</a>)</p>
 
 <h3 id="erb-parsing-fix">ERB Parsing Fix</h3>
 
-<p>Parsing <code class="highlighter-rouge">&lt;%==</code> in ERB templates no longer causes errors.</p>
+<p>Parsing <code class="language-plaintext highlighter-rouge">&lt;%==</code> in ERB templates no longer causes errors.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/589">changes</a>)</p>
 
@@ -540,12 +540,12 @@ cfcf3080a992ca173c64dd98fe239e8bd9bb0eaa  brakeman-min-3.0.2.gem
 
 <p>Brakeman was formatting</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>`#{x}`
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>`#{x}`
 </code></pre></div></div>
 
 <p>as</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>`x`
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>`x`
 </code></pre></div></div>
 
 <p>This has been fixed.</p>
@@ -564,14 +564,14 @@ cfcf3080a992ca173c64dd98fe239e8bd9bb0eaa  brakeman-min-3.0.2.gem
 
 <p>This command can be used to add the new certificate:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem cert --add &lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem cert --add &lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
 </code></pre></div></div>
 
 <h3 id="shas">SHAs</h3>
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4180238f8de503e7ad0f2ca952ea38ccc1c6530b  brakeman-3.0.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4180238f8de503e7ad0f2ca952ea38ccc1c6530b  brakeman-3.0.0.gem
 b5cefd6f14edb57f12d1fe9fcc0fb24e05a05aaf  brakeman-min-3.0.0.gem
 </code></pre></div></div>
 
@@ -609,7 +609,7 @@ b5cefd6f14edb57f12d1fe9fcc0fb24e05a05aaf  brakeman-min-3.0.0.gem
   </header>
 
 
-  <div class="entry-content"><p>This is mostly a bug fix release, but does include new support for optional checks along with an optional check for unscoped calls to <code class="highlighter-rouge">find</code>.</p>
+  <div class="entry-content"><p>This is mostly a bug fix release, but does include new support for optional checks along with an optional check for unscoped calls to <code class="language-plaintext highlighter-rouge">find</code>.</p>
 
 <p><em>Changes since 2.6.2</em>:</p>
 
@@ -617,8 +617,8 @@ b5cefd6f14edb57f12d1fe9fcc0fb24e05a05aaf  brakeman-min-3.0.0.gem
   <li>Add framework for optional checks</li>
   <li>Add optional check for unscoped find queries (<a href="https://github.com/mastahyeti">Ben Toews</a>)</li>
   <li>Fix stack overflow for cycles in class ancestors (<a href="https://github.com/jeffrafter">Jeff Rafter</a>)</li>
-  <li>Fix stack overflow in <code class="highlighter-rouge">ProcessHelper#class_name</code> (<a href="https://github.com/presidentbeef/brakeman/issues/553">#553</a>)</li>
-  <li>Whitelist <code class="highlighter-rouge">exists</code> arel method from SQL injection check</li>
+  <li>Fix stack overflow in <code class="language-plaintext highlighter-rouge">ProcessHelper#class_name</code> (<a href="https://github.com/presidentbeef/brakeman/issues/553">#553</a>)</li>
+  <li>Whitelist <code class="language-plaintext highlighter-rouge">exists</code> arel method from SQL injection check</li>
   <li>Avoid warning about Symbol DoS on safe parameters as method targets</li>
 </ul>
 
@@ -626,17 +626,17 @@ b5cefd6f14edb57f12d1fe9fcc0fb24e05a05aaf  brakeman-min-3.0.0.gem
 
 <p>Brakeman now supports loading checks that are not run by default. These “nondefault” checks may have high false positive rates or introduce significant slowdowns. Optional checks should be treated as experimental and may experience more breaking changes than default checks.</p>
 
-<p>To run <em>all</em> checks, use <code class="highlighter-rouge">-A</code>. To list only the optional checks, try <code class="highlighter-rouge">--optional-checks</code>. Optional checks are also listed in <code class="highlighter-rouge">--checks</code>. As usual, checks may be specified using <code class="highlighter-rouge">-t</code> or <code class="highlighter-rouge">--test</code>. At this time there is no way to easily run the default checks plus some optional checks.</p>
+<p>To run <em>all</em> checks, use <code class="language-plaintext highlighter-rouge">-A</code>. To list only the optional checks, try <code class="language-plaintext highlighter-rouge">--optional-checks</code>. Optional checks are also listed in <code class="language-plaintext highlighter-rouge">--checks</code>. As usual, checks may be specified using <code class="language-plaintext highlighter-rouge">-t</code> or <code class="language-plaintext highlighter-rouge">--test</code>. At this time there is no way to easily run the default checks plus some optional checks.</p>
 
-<p>On the code side, optional checks are the same except <code class="highlighter-rouge">Brakeman::Checks.add self</code> becomes <code class="highlighter-rouge">Brakeman::Checks.add_optional self</code>.</p>
+<p>On the code side, optional checks are the same except <code class="language-plaintext highlighter-rouge">Brakeman::Checks.add self</code> becomes <code class="language-plaintext highlighter-rouge">Brakeman::Checks.add_optional self</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/555">changes</a>)</p>
 
 <h3 id="unscoped-queries">Unscoped Queries</h3>
 
-<p>The first optional check to be added to Brakeman comes from <a href="https://github.com/mastahyeti">Ben Toews</a>. This check looks for calls to <code class="highlighter-rouge">find</code> (or similar methods) directly on models that have a <code class="highlighter-rouge">belongs_to</code> relationship.</p>
+<p>The first optional check to be added to Brakeman comes from <a href="https://github.com/mastahyeti">Ben Toews</a>. This check looks for calls to <code class="language-plaintext highlighter-rouge">find</code> (or similar methods) directly on models that have a <code class="language-plaintext highlighter-rouge">belongs_to</code> relationship.</p>
 
-<p>As this is an optional check, use <code class="highlighter-rouge">-A</code> to include it in a scan or <code class="highlighter-rouge">-t UnscopedFind</code> to run it by itself.</p>
+<p>As this is an optional check, use <code class="language-plaintext highlighter-rouge">-A</code> to include it in a scan or <code class="language-plaintext highlighter-rouge">-t UnscopedFind</code> to run it by itself.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/469">changes</a>)</p>
 
@@ -648,19 +648,19 @@ b5cefd6f14edb57f12d1fe9fcc0fb24e05a05aaf  brakeman-min-3.0.0.gem
 
 <h3 id="fix-stack-overflow">Fix Stack Overflow</h3>
 
-<p>This release fixes an issue with another infinite loop when looking up the class name in a self-referential variable name, which comes up in some situations. Fixing this bug also fixed some XSS false positives for safe model attribute methods (like <code class="highlighter-rouge">id</code>) but unfortunately also revealed some dynamic render false positives.</p>
+<p>This release fixes an issue with another infinite loop when looking up the class name in a self-referential variable name, which comes up in some situations. Fixing this bug also fixed some XSS false positives for safe model attribute methods (like <code class="language-plaintext highlighter-rouge">id</code>) but unfortunately also revealed some dynamic render false positives.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/560">changes</a>)</p>
 
 <h3 id="whitelist-arel-method">Whitelist Arel Method</h3>
 
-<p>Brakeman does not warn on most uses of Arel, but was warning about SQL injection from the <code class="highlighter-rouge">exists</code> method.</p>
+<p>Brakeman does not warn on most uses of Arel, but was warning about SQL injection from the <code class="language-plaintext highlighter-rouge">exists</code> method.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/566">changes</a>)</p>
 
 <h3 id="less-symbol-dos">Less Symbol DoS</h3>
 
-<p>Brakeman should no longer warn about Symbol DoS when symbolizing <code class="highlighter-rouge">params[:controller]</code> and <code class="highlighter-rouge">params[:action]</code> even when there are intermediate method calls, like <code class="highlighter-rouge">params[:action].to_s.to_sym</code>.</p>
+<p>Brakeman should no longer warn about Symbol DoS when symbolizing <code class="language-plaintext highlighter-rouge">params[:controller]</code> and <code class="language-plaintext highlighter-rouge">params[:action]</code> even when there are intermediate method calls, like <code class="language-plaintext highlighter-rouge">params[:action].to_s.to_sym</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/564">changes</a>)</p>
 
@@ -668,7 +668,7 @@ b5cefd6f14edb57f12d1fe9fcc0fb24e05a05aaf  brakeman-min-3.0.0.gem
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ceb689e3a6efd7e28483828de3441ec1fad501c1  brakeman-2.6.3.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ceb689e3a6efd7e28483828de3441ec1fad501c1  brakeman-2.6.3.gem
 334a7820c05bfeb31e0e9d8123f45daef64eb102  brakeman-min-2.6.3.gem
 </code></pre></div></div>
 

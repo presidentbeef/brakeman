@@ -101,21 +101,21 @@
 <p><em>Changes since 4.3.0:</em></p>
 
 <ul>
-  <li>Add <code class="highlighter-rouge">:BRAKEMAN_SAFE_LITERAL</code> to represent known-safe literals</li>
-  <li>Handle <code class="highlighter-rouge">Array#map</code> and <code class="highlighter-rouge">Array#each</code> over literal arrays (<a href="https://github.com/presidentbeef/brakeman/issues/1208">#1208</a> / <a href="https://github.com/presidentbeef/brakeman/issues/1224">#1224</a>)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">:BRAKEMAN_SAFE_LITERAL</code> to represent known-safe literals</li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">Array#map</code> and <code class="language-plaintext highlighter-rouge">Array#each</code> over literal arrays (<a href="https://github.com/presidentbeef/brakeman/issues/1208">#1208</a> / <a href="https://github.com/presidentbeef/brakeman/issues/1224">#1224</a>)</li>
   <li>Use safe literal when accessing literal hash with unknown key (<a href="https://github.com/presidentbeef/brakeman/issues/1213">#1213</a>)</li>
-  <li>Allow <code class="highlighter-rouge">symbolize_keys</code> to be called on <code class="highlighter-rouge">params</code> in SQL (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
+  <li>Allow <code class="language-plaintext highlighter-rouge">symbolize_keys</code> to be called on <code class="language-plaintext highlighter-rouge">params</code> in SQL (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
   <li>Improve handling of conditionals in shell commands (<a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>)</li>
   <li>Avoid deprecated use of ERB in Ruby 2.6 (<a href="https://github.com/koic">Koichi ITO</a>)</li>
-  <li>Ignore <code class="highlighter-rouge">Object#freeze</code>, use the target instead (<a href="https://github.com/presidentbeef/brakeman/issues/1211">#1211</a>)</li>
-  <li>Ignore <code class="highlighter-rouge">foreign_key</code> calls in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/1202">#1202</a>)</li>
-  <li>Handle <code class="highlighter-rouge">included</code> calls outside of classes/modules (<a href="https://github.com/presidentbeef/brakeman/issues/1209">#1209</a>)</li>
+  <li>Ignore <code class="language-plaintext highlighter-rouge">Object#freeze</code>, use the target instead (<a href="https://github.com/presidentbeef/brakeman/issues/1211">#1211</a>)</li>
+  <li>Ignore <code class="language-plaintext highlighter-rouge">foreign_key</code> calls in SQL (<a href="https://github.com/presidentbeef/brakeman/issues/1202">#1202</a>)</li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">included</code> calls outside of classes/modules (<a href="https://github.com/presidentbeef/brakeman/issues/1209">#1209</a>)</li>
   <li>Fix error when setting line number in implicit renders (<a href="https://github.com/presidentbeef/brakeman/issues/1210">#1210</a>)</li>
 </ul>
 
 <h3 id="safe-literals">Safe Literals</h3>
 
-<p>This version of Brakeman introduces a new way of handling “known safe” values (integers, string literals, etc.) where the <em>exact</em> value is unknown. The uses of the values will be replaced with <code class="highlighter-rouge">:BRAKEMAN_SAFE_LITERAL</code> instead of actual values, as Brakeman had done previously. The new approach avoids some unhelpful side-effects and allows for more of this kind of thing in the future.</p>
+<p>This version of Brakeman introduces a new way of handling “known safe” values (integers, string literals, etc.) where the <em>exact</em> value is unknown. The uses of the values will be replaced with <code class="language-plaintext highlighter-rouge">:BRAKEMAN_SAFE_LITERAL</code> instead of actual values, as Brakeman had done previously. The new approach avoids some unhelpful side-effects and allows for more of this kind of thing in the future.</p>
 
 <p>These changes fix up a number of false positives.</p>
 
@@ -123,36 +123,36 @@
 
 <p>In situations like</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>["hello", "there"].each do |s|
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>["hello", "there"].each do |s|
   something_with(s)
 end
 </code></pre></div></div>
 
-<p>Brakeman will replace <code class="highlighter-rouge">s</code> inside the block with <code class="highlighter-rouge">:BRAKEMAN_SAFE_LITERAL</code>, since the value must be a string (or <code class="highlighter-rouge">nil</code>, but Brakeman doesn’t worrry about that).</p>
+<p>Brakeman will replace <code class="language-plaintext highlighter-rouge">s</code> inside the block with <code class="language-plaintext highlighter-rouge">:BRAKEMAN_SAFE_LITERAL</code>, since the value must be a string (or <code class="language-plaintext highlighter-rouge">nil</code>, but Brakeman doesn’t worrry about that).</p>
 
-<p><code class="highlighter-rouge">Array#map</code> and <code class="highlighter-rouge">Array#each</code> are currently supported.</p>
+<p><code class="language-plaintext highlighter-rouge">Array#map</code> and <code class="language-plaintext highlighter-rouge">Array#each</code> are currently supported.</p>
 
 <h4 id="hash-access-with-unknown-key">Hash Access with Unknown Key</h4>
 
 <p>In code like</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>some_hash = { x: 1, y: 2}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>some_hash = { x: 1, y: 2}
 result = some_hash[some_var]
 </code></pre></div></div>
 
-<p>Brakeman will replace <code class="highlighter-rouge">result</code> with <code class="highlighter-rouge">:BRAKEMAN_SAFE_LITERAL</code> since the value must be an integer.</p>
+<p>Brakeman will replace <code class="language-plaintext highlighter-rouge">result</code> with <code class="language-plaintext highlighter-rouge">:BRAKEMAN_SAFE_LITERAL</code> since the value must be an integer.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1227">changes</a>)</p>
 
 <h3 id="symbolized-keys-in-params">Symbolized Keys in Params</h3>
 
-<p>Calls to <code class="highlighter-rouge">params.symbolize_keys</code> in ActiveRecord methods will not be treated as dangerous.</p>
+<p>Calls to <code class="language-plaintext highlighter-rouge">params.symbolize_keys</code> in ActiveRecord methods will not be treated as dangerous.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1217">changes</a>)</p>
 
 <h3 id="conditionals-in-shell-commands">Conditionals in Shell Commands</h3>
 
-<p>Use of interpolated <code class="highlighter-rouge">if</code> expressions (or the ternary version) in shell commands is now handled better, thanks to <a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>. The values of the branches will be checked for dangerous values before warning.</p>
+<p>Use of interpolated <code class="language-plaintext highlighter-rouge">if</code> expressions (or the ternary version) in shell commands is now handled better, thanks to <a href="https://github.com/JacobEvelyn">Jacob Evelyn</a>. The values of the branches will be checked for dangerous values before warning.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1214">changes</a>)</p>
 
@@ -164,7 +164,7 @@ result = some_hash[some_var]
 
 <h3 id="frozen-objects">Frozen Objects</h3>
 
-<p>Since the use of <code class="highlighter-rouge">freeze</code> is of little interest to Brakeman and obscures the object it is freezing, these calls are now ignored.</p>
+<p>Since the use of <code class="language-plaintext highlighter-rouge">freeze</code> is of little interest to Brakeman and obscures the object it is freezing, these calls are now ignored.</p>
 
 <p>This, especially combined with the safe literals above, cleans up some false positives.</p>
 
@@ -172,13 +172,13 @@ result = some_hash[some_var]
 
 <h3 id="foreign-keys-in-sql">Foreign Keys in SQL</h3>
 
-<p>Brakeman will now ignore calls to <code class="highlighter-rouge">foreign_key</code> in SQL strings.</p>
+<p>Brakeman will now ignore calls to <code class="language-plaintext highlighter-rouge">foreign_key</code> in SQL strings.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1229">changes</a>)</p>
 
-<h3 id="not-moduleincluded-calls">Not <code class="highlighter-rouge">Module#included</code> Calls</h3>
+<h3 id="not-moduleincluded-calls">Not <code class="language-plaintext highlighter-rouge">Module#included</code> Calls</h3>
 
-<p>Calls to <code class="highlighter-rouge">included</code> outside of modules/classes will be ignored instead of causing an error.</p>
+<p>Calls to <code class="language-plaintext highlighter-rouge">included</code> outside of modules/classes will be ignored instead of causing an error.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1228">changes</a>)</p>
 
@@ -186,7 +186,7 @@ result = some_hash[some_var]
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>70722056ed1b168e2a56baff048fa155948e1d214513f0debe9e2b78f82691f8  brakeman-4.3.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>70722056ed1b168e2a56baff048fa155948e1d214513f0debe9e2b78f82691f8  brakeman-4.3.1.gem
 01078dd352a273965aa207dbffd01b8fe511d2302137f1984ea8bbddc38da3ce  brakeman-lib-4.3.1.gem
 1497a934e0fe929d4b2685a3282e7976ebd75e901c56183601b5c528ff4021e0  brakeman-min-4.3.1.gem
 </code></pre></div></div>
@@ -234,33 +234,33 @@ result = some_hash[some_var]
 <p><em>Changes since 4.2.1:</em></p>
 
 <ul>
-  <li>Add <code class="highlighter-rouge">--parser-timeout</code> option</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--parser-timeout</code> option</li>
   <li>Improve timeout error messages</li>
   <li>Check exec-type calls even if they are targets (<a href="https://github.com/presidentbeef/brakeman/issues/1199">#1199</a>)</li>
   <li>Index Kernel#` calls even if they are targets (<a href="https://github.com/presidentbeef/brakeman/issues/1183">#1183</a>)</li>
-  <li><code class="highlighter-rouge">BaseCheck#include_interp?</code> should return first string interpolation (<a href="https://github.com/presidentbeef/brakeman/issues/1189">#1189</a>)</li>
-  <li>Ignore <code class="highlighter-rouge">Process.pid</code> in system calls</li>
-  <li>Warn about dangerous <code class="highlighter-rouge">link_to</code> href with <code class="highlighter-rouge">sanitize()</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1187">#1187</a>)</li>
-  <li>Ignore <code class="highlighter-rouge">params#to_h</code> and <code class="highlighter-rouge">params#to_hash</code> in SQL checks (<a href="https://github.com/presidentbeef/brakeman/issues/1180">#1180</a>)</li>
-  <li>Convert <code class="highlighter-rouge">Array#join</code> to string interpolation (<a href="https://github.com/presidentbeef/brakeman/issues/1179">#1179</a>)</li>
-  <li>Change <code class="highlighter-rouge">"".freeze</code> to just <code class="highlighter-rouge">""</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1182">#1182</a>)</li>
-  <li><code class="highlighter-rouge">--color</code> can be used to force color output (<a href="https://github.com/presidentbeef/brakeman/issues/1175">#1175</a>)</li>
+  <li><code class="language-plaintext highlighter-rouge">BaseCheck#include_interp?</code> should return first string interpolation (<a href="https://github.com/presidentbeef/brakeman/issues/1189">#1189</a>)</li>
+  <li>Ignore <code class="language-plaintext highlighter-rouge">Process.pid</code> in system calls</li>
+  <li>Warn about dangerous <code class="language-plaintext highlighter-rouge">link_to</code> href with <code class="language-plaintext highlighter-rouge">sanitize()</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1187">#1187</a>)</li>
+  <li>Ignore <code class="language-plaintext highlighter-rouge">params#to_h</code> and <code class="language-plaintext highlighter-rouge">params#to_hash</code> in SQL checks (<a href="https://github.com/presidentbeef/brakeman/issues/1180">#1180</a>)</li>
+  <li>Convert <code class="language-plaintext highlighter-rouge">Array#join</code> to string interpolation (<a href="https://github.com/presidentbeef/brakeman/issues/1179">#1179</a>)</li>
+  <li>Change <code class="language-plaintext highlighter-rouge">"".freeze</code> to just <code class="language-plaintext highlighter-rouge">""</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1182">#1182</a>)</li>
+  <li><code class="language-plaintext highlighter-rouge">--color</code> can be used to force color output (<a href="https://github.com/presidentbeef/brakeman/issues/1175">#1175</a>)</li>
   <li>Track parent calls in call index</li>
   <li>Fix reported line numbers for CVE-2018-3741 and CVE-2018-8048</li>
-  <li>Code Climate: omit leading dot from <code class="highlighter-rouge">only_files</code> (<a href="https://github.com/toddmazierski">Todd Mazierski</a>)</li>
+  <li>Code Climate: omit leading dot from <code class="language-plaintext highlighter-rouge">only_files</code> (<a href="https://github.com/toddmazierski">Todd Mazierski</a>)</li>
 </ul>
 
-<h3 id="--color-option"><code class="highlighter-rouge">--color</code> Option</h3>
+<h3 id="--color-option"><code class="language-plaintext highlighter-rouge">--color</code> Option</h3>
 
-<p>Previously, <code class="highlighter-rouge">--no-color</code> could be used to turn off ANSI color in text reports. Now, <code class="highlighter-rouge">--color</code> can be used to force color output.</p>
+<p>Previously, <code class="language-plaintext highlighter-rouge">--no-color</code> could be used to turn off ANSI color in text reports. Now, <code class="language-plaintext highlighter-rouge">--color</code> can be used to force color output.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1176">changes</a>)</p>
 
-<h3 id="--parser-timeout-option"><code class="highlighter-rouge">--parser-timeout</code> Option</h3>
+<h3 id="--parser-timeout-option"><code class="language-plaintext highlighter-rouge">--parser-timeout</code> Option</h3>
 
 <p>The default timeout for parsing a single file is 10 seconds. For some files, this may not be enough.</p>
 
-<p>The <code class="highlighter-rouge">--parser-timeout</code> option can be used to specify a per-file timeout (in seconds).</p>
+<p>The <code class="language-plaintext highlighter-rouge">--parser-timeout</code> option can be used to specify a per-file timeout (in seconds).</p>
 
 <p>Additionally, the error message for parsing timeouts has been improved considerably.</p>
 
@@ -274,18 +274,18 @@ result = some_hash[some_var]
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>`blah #{something}` == "expected output"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>`blah #{something}` == "expected output"
 </code></pre></div></div>
 
 <p>Previously, use of backticks was not being indexed in this case.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1185">changes</a>)</p>
 
-<p>Somewhat similarly, other calls (such as <code class="highlighter-rouge">system</code>) would not warn if they were targets of a call.</p>
+<p>Somewhat similarly, other calls (such as <code class="language-plaintext highlighter-rouge">system</code>) would not warn if they were targets of a call.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1200">changes</a>)</p>
 
-<p>Brakeman will no longer warn about <code class="highlighter-rouge">Process.pid</code> in system calls.</p>
+<p>Brakeman will no longer warn about <code class="language-plaintext highlighter-rouge">Process.pid</code> in system calls.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/commit/f9195312931caa49e369730a0798dad750150f76">changes</a>)</p>
 
@@ -295,42 +295,42 @@ result = some_hash[some_var]
 
 <h3 id="freeze-calls">Freeze Calls</h3>
 
-<p>Calls to <code class="highlighter-rouge">String#freeze</code> will essentially be ignored.</p>
+<p>Calls to <code class="language-plaintext highlighter-rouge">String#freeze</code> will essentially be ignored.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"blah".freeze
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"blah".freeze
 </code></pre></div></div>
 
 <p>will be treated like</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"blah"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"blah"
 </code></pre></div></div>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1188">changes</a>)</p>
 
 <h3 id="more-strong-parameters-in-sql">More Strong Parameters in SQL</h3>
 
-<p>Calls to <code class="highlighter-rouge">to_h</code> and <code class="highlighter-rouge">to_hash</code> on <code class="highlighter-rouge">params</code> will be ignored in the context of SQL injection.</p>
+<p>Calls to <code class="language-plaintext highlighter-rouge">to_h</code> and <code class="language-plaintext highlighter-rouge">to_hash</code> on <code class="language-plaintext highlighter-rouge">params</code> will be ignored in the context of SQL injection.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1191">changes</a>)</p>
 
-<h3 id="sanitize-in-link_to">Sanitize in <code class="highlighter-rouge">link_to</code></h3>
+<h3 id="sanitize-in-link_to">Sanitize in <code class="language-plaintext highlighter-rouge">link_to</code></h3>
 
-<p>Brakeman will now warn on uses of <code class="highlighter-rouge">sanitize</code> in attempts to avoid XSS in <code class="highlighter-rouge">link_to</code>. Unfortunately, it does not work that way.</p>
+<p>Brakeman will now warn on uses of <code class="language-plaintext highlighter-rouge">sanitize</code> in attempts to avoid XSS in <code class="language-plaintext highlighter-rouge">link_to</code>. Unfortunately, it does not work that way.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1192">changes</a>)</p>
 
-<h3 id="arrayjoin-to-string-interpolation"><code class="highlighter-rouge">Array#join</code> to String Interpolation</h3>
+<h3 id="arrayjoin-to-string-interpolation"><code class="language-plaintext highlighter-rouge">Array#join</code> to String Interpolation</h3>
 
-<p>Uses of <code class="highlighter-rouge">Array#join</code> will now be converted to string interpolation.</p>
+<p>Uses of <code class="language-plaintext highlighter-rouge">Array#join</code> will now be converted to string interpolation.</p>
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1, thing, "here"].join(' ')
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1, thing, "here"].join(' ')
 </code></pre></div></div>
 
 <p>will be changed to</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"1 #{thing} here"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"1 #{thing} here"
 </code></pre></div></div>
 
 <p>This both fixes some false positives and helps detect more vulnerabilities in checks that are looking at string interpolation.</p>
@@ -347,7 +347,7 @@ result = some_hash[some_var]
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>9284a1a9413743b4c915eda40312395e0ee574c6286893a27074b6f9527648f4  brakeman-4.3.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>9284a1a9413743b4c915eda40312395e0ee574c6286893a27074b6f9527648f4  brakeman-4.3.0.gem
 89ba3385fab967114c31da1462401c03caa8847d1115566a77039d0bda95181e  brakeman-lib-4.3.0.gem
 1834031c1e949242ea6d08b3b1036d3f7c12c28257cdfa94cf3d0459b6f851b6  brakeman-min-4.3.0.gem
 </code></pre></div></div>
@@ -399,31 +399,31 @@ result = some_hash[some_var]
 <ul>
   <li>Add warning for CVE-2018-3741</li>
   <li>Add warning for CVE-2018-8048</li>
-  <li>Scan <code class="highlighter-rouge">app/jobs/</code> directory</li>
-  <li>Handle <code class="highlighter-rouge">template_exists?</code> in controllers (<a href="https://github.com/presidentbeef/brakeman/issues/1124">#1124</a>)</li>
+  <li>Scan <code class="language-plaintext highlighter-rouge">app/jobs/</code> directory</li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">template_exists?</code> in controllers (<a href="https://github.com/presidentbeef/brakeman/issues/1124">#1124</a>)</li>
 </ul>
 
 <h3 id="cve-2018-3741">CVE-2018-3741</h3>
 
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/tP7W3kLc5u4/uDy2Br7xBgAJ">CVE-2018-3741</a> is a vulnerability in the <code class="highlighter-rouge">rails-html-sanitizer</code> gem which may allow bypassing attribute whitelists and therefore cross-site scripting.</p>
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/tP7W3kLc5u4/uDy2Br7xBgAJ">CVE-2018-3741</a> is a vulnerability in the <code class="language-plaintext highlighter-rouge">rails-html-sanitizer</code> gem which may allow bypassing attribute whitelists and therefore cross-site scripting.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1171">changes</a>)</p>
 
 <h3 id="cve-2018-8048">CVE-2018-8048</h3>
 
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/b__OeLG9bts/waZTvSM2AQAJ">CVE-2018-8048</a> is a similar vulnerability in the <code class="highlighter-rouge">loofah</code> gem.</p>
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/b__OeLG9bts/waZTvSM2AQAJ">CVE-2018-8048</a> is a similar vulnerability in the <code class="language-plaintext highlighter-rouge">loofah</code> gem.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1169">changes</a>)</p>
 
 <h3 id="scan-jobs">Scan Jobs</h3>
 
-<p>Brakeman will now scan files in the <code class="highlighter-rouge">app/jobs/</code> directory and treat them as additional libraries.</p>
+<p>Brakeman will now scan files in the <code class="language-plaintext highlighter-rouge">app/jobs/</code> directory and treat them as additional libraries.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1168">changes</a>)</p>
 
 <h3 id="template-guard-condition">Template Guard Condition</h3>
 
-<p>Brakeman will no longer warn about dynamic render paths if <code class="highlighter-rouge">template_exists?</code> is used as a guard condition.</p>
+<p>Brakeman will no longer warn about dynamic render paths if <code class="language-plaintext highlighter-rouge">template_exists?</code> is used as a guard condition.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1170">changes</a>)</p>
 
@@ -437,7 +437,7 @@ result = some_hash[some_var]
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3ba1cd39d98edcae7a0802ef0206de1438439cfdf4edb559c676877e2c253498  brakeman-4.2.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3ba1cd39d98edcae7a0802ef0206de1438439cfdf4edb559c676877e2c253498  brakeman-4.2.1.gem
 54a4aa336f3c21477a9bab12eeba6bb79ffa34a015e89a748621f7fd037d1943  brakeman-lib-4.2.1.gem
 d53f2275320dfe5609234e74ce3a73a7d8c44dfae824fb938a9bae2077a9aecf  brakeman-min-4.2.1.gem
 </code></pre></div></div>
@@ -485,35 +485,35 @@ d53f2275320dfe5609234e74ce3a73a7d8c44dfae824fb938a9bae2077a9aecf  brakeman-min-4
 <p><em>Changes since 4.1.1:</em></p>
 
 <ul>
-  <li>Handle ERb use of <code class="highlighter-rouge">String#&lt;&lt;</code> method for Ruby 2.5 (<a href="https://github.com/pocke">Pocke</a>)</li>
-  <li>Exclude template folders in <code class="highlighter-rouge">lib/</code> (<a href="https://github.com/Kani999">kru0096</a>)</li>
-  <li>Warn about SQL injection with <code class="highlighter-rouge">not</code></li>
-  <li>Avoid warning about symbol DoS on <code class="highlighter-rouge">Model#attributes</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1096">#1096</a>)</li>
-  <li>Avoid warning about open redirects with model methods ending with <code class="highlighter-rouge">_path</code>(<a href="https://github.com/presidentbeef/brakeman/issues/1117">#1117</a>)</li>
-  <li>Avoid warning about command injection with <code class="highlighter-rouge">Shellwords.escape</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1159">#1159</a>)</li>
-  <li>Use ivars from <code class="highlighter-rouge">initialize</code> in libraries</li>
+  <li>Handle ERb use of <code class="language-plaintext highlighter-rouge">String#&lt;&lt;</code> method for Ruby 2.5 (<a href="https://github.com/pocke">Pocke</a>)</li>
+  <li>Exclude template folders in <code class="language-plaintext highlighter-rouge">lib/</code> (<a href="https://github.com/Kani999">kru0096</a>)</li>
+  <li>Warn about SQL injection with <code class="language-plaintext highlighter-rouge">not</code></li>
+  <li>Avoid warning about symbol DoS on <code class="language-plaintext highlighter-rouge">Model#attributes</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1096">#1096</a>)</li>
+  <li>Avoid warning about open redirects with model methods ending with <code class="language-plaintext highlighter-rouge">_path</code>(<a href="https://github.com/presidentbeef/brakeman/issues/1117">#1117</a>)</li>
+  <li>Avoid warning about command injection with <code class="language-plaintext highlighter-rouge">Shellwords.escape</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1159">#1159</a>)</li>
+  <li>Use ivars from <code class="language-plaintext highlighter-rouge">initialize</code> in libraries</li>
   <li>Fix multiple assignment of globals (<a href="https://github.com/presidentbeef/brakeman/issues/1155">#1155</a>)</li>
-  <li><code class="highlighter-rouge">Sexp#body=</code> can accept <code class="highlighter-rouge">:rlist</code> from <code class="highlighter-rouge">Sexp#body_list</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Sexp#body=</code> can accept <code class="language-plaintext highlighter-rouge">:rlist</code> from <code class="language-plaintext highlighter-rouge">Sexp#body_list</code></li>
   <li>Update RubyParser to 3.11.0</li>
 </ul>
 
 <h3 id="update-erb-handling-for-ruby-250">Update ERb Handling for Ruby 2.5.0</h3>
 
-<p>The way ERb templates are compiled changed in Ruby 2.5.0 to use <code class="highlighter-rouge">String#&lt;&lt;</code>, so Brakeman has been changed to accomodate.</p>
+<p>The way ERb templates are compiled changed in Ruby 2.5.0 to use <code class="language-plaintext highlighter-rouge">String#&lt;&lt;</code>, so Brakeman has been changed to accomodate.</p>
 
-<p>Please note ERb also changed such that <code class="highlighter-rouge">&lt;% #</code> is not supported in Ruby 2.5.0. It will be fixed in the next Ruby release, but the correct syntax is <code class="highlighter-rouge">&lt;%#</code>.</p>
+<p>Please note ERb also changed such that <code class="language-plaintext highlighter-rouge">&lt;% #</code> is not supported in Ruby 2.5.0. It will be fixed in the next Ruby release, but the correct syntax is <code class="language-plaintext highlighter-rouge">&lt;%#</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1149">changes</a>)</p>
 
 <h3 id="exclude-template-folders">Exclude Template Folders</h3>
 
-<p>Files in <code class="highlighter-rouge">lib/**/templates</code> will be ignored, since they are generally ERb files, not actually Ruby.</p>
+<p>Files in <code class="language-plaintext highlighter-rouge">lib/**/templates</code> will be ignored, since they are generally ERb files, not actually Ruby.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1143">changes</a>)</p>
 
-<h3 id="sql-injection-with-not">SQL Injection with <code class="highlighter-rouge">not</code></h3>
+<h3 id="sql-injection-with-not">SQL Injection with <code class="language-plaintext highlighter-rouge">not</code></h3>
 
-<p>In ActiveRecord, <code class="highlighter-rouge">not</code> takes the same arguments as <code class="highlighter-rouge">where</code>, making it just as vulnerable to SQL injection.</p>
+<p>In ActiveRecord, <code class="language-plaintext highlighter-rouge">not</code> takes the same arguments as <code class="language-plaintext highlighter-rouge">where</code>, making it just as vulnerable to SQL injection.</p>
 
 <p>Thank you to <a href="https://twitter.com/jobertabma">Jobert Abma</a> for reporting this.</p>
 
@@ -521,19 +521,19 @@ d53f2275320dfe5609234e74ce3a73a7d8c44dfae824fb938a9bae2077a9aecf  brakeman-min-4
 
 <h3 id="symbol-dos-false-positive">Symbol DoS False Positive</h3>
 
-<p>Brakeman will no longer warn about <code class="highlighter-rouge">Model#attributes.symbolize_keys</code>.</p>
+<p>Brakeman will no longer warn about <code class="language-plaintext highlighter-rouge">Model#attributes.symbolize_keys</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1165">changes</a>)</p>
 
 <h3 id="open-redirect-false-positive">Open Redirect False Positive</h3>
 
-<p>Brakeman will no longer warn about open redirects with <code class="highlighter-rouge">Model#something_ending_in_path</code>.</p>
+<p>Brakeman will no longer warn about open redirects with <code class="language-plaintext highlighter-rouge">Model#something_ending_in_path</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1164">changes</a>)</p>
 
 <h3 id="shellwords-escaping">Shellwords Escaping</h3>
 
-<p>Brakeman will no longer warn about command injection when <code class="highlighter-rouge">Shellwords.escape</code> and friends are used.</p>
+<p>Brakeman will no longer warn about command injection when <code class="language-plaintext highlighter-rouge">Shellwords.escape</code> and friends are used.</p>
 
 <p>Please note that user input in shell commands is rarely a good idea, even if escaped, since they can change the behavior of the program in unexpected ways. Many Linux tools have options that allow arbitrary code execution.</p>
 
@@ -541,13 +541,13 @@ d53f2275320dfe5609234e74ce3a73a7d8c44dfae824fb938a9bae2077a9aecf  brakeman-min-4
 
 <h3 id="use-initialized-environment-in-libraries">Use Initialized Environment in Libraries</h3>
 
-<p>When processing libraries, instance variables set in <code class="highlighter-rouge">initialize</code> will be used in subsequent methods.</p>
+<p>When processing libraries, instance variables set in <code class="language-plaintext highlighter-rouge">initialize</code> will be used in subsequent methods.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1161">changes</a>)</p>
 
 <h3 id="update-rubyparser">Update RubyParser</h3>
 
-<p>This release includes updated versions of RubyParser and friends. This may cause some warning fingerprints to change if they include a call to <code class="highlighter-rouge">self[...]</code>.</p>
+<p>This release includes updated versions of RubyParser and friends. This may cause some warning fingerprints to change if they include a call to <code class="language-plaintext highlighter-rouge">self[...]</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1160">changes</a>)</p>
 
@@ -555,7 +555,7 @@ d53f2275320dfe5609234e74ce3a73a7d8c44dfae824fb938a9bae2077a9aecf  brakeman-min-4
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c6ad3861920075ccf553343815fcce07aa09d015bc8529c6e4d8a865674530f7  brakeman-4.2.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c6ad3861920075ccf553343815fcce07aa09d015bc8529c6e4d8a865674530f7  brakeman-4.2.0.gem
 94a97496761ddd27974867bde3235cab303761dadec4bd6a8d22260a72aaaa38  brakeman-lib-4.2.0.gem
 a071eb6d6e866df0338bcb9c8dd56f5b0d66c68212eb604f551ac8aa196d6923  brakeman-min-4.2.0.gem
 </code></pre></div></div>
@@ -603,7 +603,7 @@ a071eb6d6e866df0338bcb9c8dd56f5b0d66c68212eb604f551ac8aa196d6923  brakeman-min-4
 <p><em>Changes since 4.1.0</em>:</p>
 
 <ul>
-  <li>Remove check for use of <code class="highlighter-rouge">permit</code> with <code class="highlighter-rouge">*_id</code> keys</li>
+  <li>Remove check for use of <code class="language-plaintext highlighter-rouge">permit</code> with <code class="language-plaintext highlighter-rouge">*_id</code> keys</li>
   <li>Avoid duplicate warnings about permitted attributes</li>
   <li>Avoid duplicate warnings about division by zero</li>
 </ul>
@@ -612,7 +612,7 @@ a071eb6d6e866df0338bcb9c8dd56f5b0d66c68212eb604f551ac8aa196d6923  brakeman-min-4
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7b65d6694b488aaa09e147f5a39d7e544385a11ec52ae93058b04b17999925b6  brakeman-4.1.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7b65d6694b488aaa09e147f5a39d7e544385a11ec52ae93058b04b17999925b6  brakeman-4.1.1.gem
 ffb525462d391f9a7f85b9b1ebbf7b165d03cd2eaed7093c3f1b4fdb135947e2  brakeman-lib-4.1.1.gem
 b50a7b19d56a7606cd3a625611f8e720d47da8a57d126e7dcf443714cec98194  brakeman-min-4.1.1.gem
 </code></pre></div></div>

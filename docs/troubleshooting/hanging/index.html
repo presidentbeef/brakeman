@@ -84,21 +84,21 @@
 
 <h3 id="run-in-debug-mode">Run in Debug Mode</h3>
 
-<p>Run Brakeman with the <code class="highlighter-rouge">-d</code> option which will output the name of each file as it is processed.</p>
+<p>Run Brakeman with the <code class="language-plaintext highlighter-rouge">-d</code> option which will output the name of each file as it is processed.</p>
 
 <p>This usually pinpoints a single file which is causing the problem. In rare cases, Brakeman might be looping between two files.</p>
 
-<p>Additionally, the <code class="highlighter-rouge">-d</code> option will cause Brakeman to output a stack trace when the process is stopped with an interrupt (e.g., pressing Ctrl-c).</p>
+<p>Additionally, the <code class="language-plaintext highlighter-rouge">-d</code> option will cause Brakeman to output a stack trace when the process is stopped with an interrupt (e.g., pressing Ctrl-c).</p>
 
 <h3 id="run-in-fast-mode">Run in ‘Fast’ Mode</h3>
 
-<p>Run Brakeman with the <code class="highlighter-rouge">--fast</code> option to turn off some features which have historically had some problems.</p>
+<p>Run Brakeman with the <code class="language-plaintext highlighter-rouge">--fast</code> option to turn off some features which have historically had some problems.</p>
 
-<p>In particular, if Brakeman appears to hang while processing “data flow”, this may be an issue with how branching in <code class="highlighter-rouge">if</code> statements is handled.</p>
+<p>In particular, if Brakeman appears to hang while processing “data flow”, this may be an issue with how branching in <code class="language-plaintext highlighter-rouge">if</code> statements is handled.</p>
 
 <h3 id="skip-problem-files">Skip Problem Files</h3>
 
-<p>Run Brakeman with <code class="highlighter-rouge">--skip-files</code> and skip the file(s) which is suspected of causing the hang.</p>
+<p>Run Brakeman with <code class="language-plaintext highlighter-rouge">--skip-files</code> and skip the file(s) which is suspected of causing the hang.</p>
 
 <p>If this works, then the problem is definitely narrowed down to that file(s).</p>
 

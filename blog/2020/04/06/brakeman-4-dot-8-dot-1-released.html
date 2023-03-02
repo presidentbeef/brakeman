@@ -99,8 +99,8 @@
 
 <ul>
   <li>Warn about global(!) mass assignment</li>
-  <li>Check SQL query strings using <code class="highlighter-rouge">String#strip</code> or <code class="highlighter-rouge">String.squish</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1469">#1459</a>)</li>
-  <li>Handle non-symbol keys in <code class="highlighter-rouge">locals</code> hash for <code class="highlighter-rouge">render</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1465">#1465</a>)</li>
+  <li>Check SQL query strings using <code class="language-plaintext highlighter-rouge">String#strip</code> or <code class="language-plaintext highlighter-rouge">String.squish</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1469">#1459</a>)</li>
+  <li>Handle non-symbol keys in <code class="language-plaintext highlighter-rouge">locals</code> hash for <code class="language-plaintext highlighter-rouge">render</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1465">#1465</a>)</li>
   <li>Index calls in render arguments (<a href="https://github.com/presidentbeef/brakeman/issues/1459">#1459</a>)</li>
 </ul>
 
@@ -117,7 +117,7 @@
 
 <h3 id="squished-and-stripped-sql">Squished and Stripped SQL</h3>
 
-<p>Brakeman will now check string targets of <code class="highlighter-rouge">squish</code> or <code class="highlighter-rouge">strip</code>.</p>
+<p>Brakeman will now check string targets of <code class="language-plaintext highlighter-rouge">squish</code> or <code class="language-plaintext highlighter-rouge">strip</code>.</p>
 
 <p>For example:</p>
 
@@ -128,13 +128,13 @@
 
 <h3 id="non-symbol-keys-in-locals-hash">Non-Symbol Keys in Locals Hash</h3>
 
-<p>Using a value other than symbol literals as keys in the <code class="highlighter-rouge">locals</code> hash for <code class="highlighter-rouge">render</code> will no longer cause an error.</p>
+<p>Using a value other than symbol literals as keys in the <code class="language-plaintext highlighter-rouge">locals</code> hash for <code class="language-plaintext highlighter-rouge">render</code> will no longer cause an error.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1468">changes</a>)</p>
 
 <h3 id="render-arguments">Render Arguments</h3>
 
-<p>Calls made as arguments to <code class="highlighter-rouge">render</code> will be indexed and checked for all vulnerability types, like every other method call.</p>
+<p>Calls made as arguments to <code class="language-plaintext highlighter-rouge">render</code> will be indexed and checked for all vulnerability types, like every other method call.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1460">changes</a>)</p>
 
@@ -142,7 +142,7 @@
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5f3cc763fce471434adc33aa251298fa24ea2a1c01ef2549aec55be4b5b14d46  brakeman-4.8.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5f3cc763fce471434adc33aa251298fa24ea2a1c01ef2549aec55be4b5b14d46  brakeman-4.8.1.gem
 c4a95b450fb7ec2440e68640a0821e3a6b62ea34f665e78264ba0b332e98e5df  brakeman-lib-4.8.1.gem
 ada41dbfc3a436c062cd44161893249654caf43296801599303952f6261f2e5e  brakeman-min-4.8.1.gem
 </code></pre></div></div>

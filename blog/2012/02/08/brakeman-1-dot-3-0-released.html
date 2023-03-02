@@ -102,12 +102,12 @@
 <ul>
   <li>Add file paths to HTML report</li>
   <li>Add caching of filters</li>
-  <li>Add <code class="highlighter-rouge">--skip-files</code> option</li>
-  <li>Add support for <code class="highlighter-rouge">attr_protected</code></li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--skip-files</code> option</li>
+  <li>Add support for <code class="language-plaintext highlighter-rouge">attr_protected</code></li>
   <li>Add detection of request.env as user input</li>
-  <li>Descriptions of checks in <code class="highlighter-rouge">-k</code> output</li>
+  <li>Descriptions of checks in <code class="language-plaintext highlighter-rouge">-k</code> output</li>
   <li>Improved processing of named scopes</li>
-  <li>Check for mass assignment in <code class="highlighter-rouge">ActiveRecord::Associations::AssociationCollection#build</code></li>
+  <li>Check for mass assignment in <code class="language-plaintext highlighter-rouge">ActiveRecord::Associations::AssociationCollection#build</code></li>
   <li>Better variable substitution</li>
   <li>Table output option for rescan reports</li>
 </ul>
@@ -118,27 +118,27 @@
 
 <h3 id="filter-caching">Filter Caching</h3>
 
-<p>Filters (using <code class="highlighter-rouge">before_filter</code>) are now only parsed once, instead of for everytime they are used. This has greatly improved performance when scanning some large projects.</p>
+<p>Filters (using <code class="language-plaintext highlighter-rouge">before_filter</code>) are now only parsed once, instead of for everytime they are used. This has greatly improved performance when scanning some large projects.</p>
 
 <h3 id="option-to-skip-files">Option to Skip Files</h3>
 
-<p>A list of files to skip can be provided with the <code class="highlighter-rouge">--skip-files</code> option. This will skip any initializers, libraries, controllers, models, or views that match the file names provided. The file names to skip are matched against the end of the absolute path. That is, <code class="highlighter-rouge">blah.rb</code> will skip <em>any</em> file with a name ending in <code class="highlighter-rouge">blah.rb</code>. This means it is not necessary to provide the full path to a file.</p>
+<p>A list of files to skip can be provided with the <code class="language-plaintext highlighter-rouge">--skip-files</code> option. This will skip any initializers, libraries, controllers, models, or views that match the file names provided. The file names to skip are matched against the end of the absolute path. That is, <code class="language-plaintext highlighter-rouge">blah.rb</code> will skip <em>any</em> file with a name ending in <code class="language-plaintext highlighter-rouge">blah.rb</code>. This means it is not necessary to provide the full path to a file.</p>
 
 <h3 id="support-for-blacklisting-attributes">Support for Blacklisting Attributes</h3>
 
-<p>Previously, Brakeman ignored uses of <code class="highlighter-rouge">attr_protected</code>. Ideally, <code class="highlighter-rouge">attr_accessible</code> should always be used to whitelist attributes that can be set using mass assignment. This way, attributes can never be “accidentally” exposed. However, it can also be tedious for large models.</p>
+<p>Previously, Brakeman ignored uses of <code class="language-plaintext highlighter-rouge">attr_protected</code>. Ideally, <code class="language-plaintext highlighter-rouge">attr_accessible</code> should always be used to whitelist attributes that can be set using mass assignment. This way, attributes can never be “accidentally” exposed. However, it can also be tedious for large models.</p>
 
-<p>With this release, Brakeman will downgrade mass assignment warnings to “weak” confidence if <code class="highlighter-rouge">attr_protected</code> is used, as well as suggesting that <code class="highlighter-rouge">attr_accessible</code> be used instead.</p>
+<p>With this release, Brakeman will downgrade mass assignment warnings to “weak” confidence if <code class="language-plaintext highlighter-rouge">attr_protected</code> is used, as well as suggesting that <code class="language-plaintext highlighter-rouge">attr_accessible</code> be used instead.</p>
 
-<p>The <code class="highlighter-rouge">--ignore-protected</code> option can be used to suppress any warnings for models that use <code class="highlighter-rouge">attr_protected</code>.</p>
+<p>The <code class="language-plaintext highlighter-rouge">--ignore-protected</code> option can be used to suppress any warnings for models that use <code class="language-plaintext highlighter-rouge">attr_protected</code>.</p>
 
 <h3 id="request-environment-is-user-input">Request Environment is User Input</h3>
 
-<p><code class="highlighter-rouge">request.env</code> will now be treated as user input.</p>
+<p><code class="language-plaintext highlighter-rouge">request.env</code> will now be treated as user input.</p>
 
 <h3 id="check-descriptions">Check Descriptions</h3>
 
-<p>The <code class="highlighter-rouge">-k</code> option now includes descriptions of each check.</p>
+<p>The <code class="language-plaintext highlighter-rouge">-k</code> option now includes descriptions of each check.</p>
 
 <h3 id="named-scope-improvements">Named Scope Improvements</h3>
 
@@ -150,21 +150,21 @@
 
 <p>For example,</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
 
 puts x
 </code></pre></div></div>
 
 <p>Might become</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
 
 puts clean(clean(clean(clean(x))))
 </code></pre></div></div>
 
 <p>This should now be prevented, so it would just become</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
 
 puts clean(x)
 </code></pre></div></div>
@@ -173,7 +173,7 @@ puts clean(x)
 
 <h3 id="table-output-for-rescan-reports">Table Output for Rescan Reports</h3>
 
-<p><code class="highlighter-rouge">RescanReport#to_s(true)</code> will now output formatted tables, thanks to <a href="https://github.com/presidentbeef/brakeman/pull/33">Dave Worth</a>.</p>
+<p><code class="language-plaintext highlighter-rouge">RescanReport#to_s(true)</code> will now output formatted tables, thanks to <a href="https://github.com/presidentbeef/brakeman/pull/33">Dave Worth</a>.</p>
 
 <h3 id="issues">Issues?</h3>
 

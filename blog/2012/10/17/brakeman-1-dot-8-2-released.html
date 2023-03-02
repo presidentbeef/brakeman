@@ -115,11 +115,11 @@
 
 <h3 id="scope-calls-with-one-argument">Scope Calls with One Argument</h3>
 
-<p>Calls to <code class="highlighter-rouge">scope</code> with a single argument were causing errors in Brakeman’s SQL injection check.</p>
+<p>Calls to <code class="language-plaintext highlighter-rouge">scope</code> with a single argument were causing errors in Brakeman’s SQL injection check.</p>
 
 <p>The fixed error looked like:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>undefined method `node_type' for nil:NilClass  /something/brakeman/lib/brakeman/checks/check_sql.rb:75:in `block (2 levels) in find_scope_calls'
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>undefined method `node_type' for nil:NilClass  /something/brakeman/lib/brakeman/checks/check_sql.rb:75:in `block (2 levels) in find_scope_calls'
 </code></pre></div></div>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/157">changes</a>)</p>
@@ -128,10 +128,10 @@
 
 <p>In cases like below, where a collection of models is being rendered and the model name could be known, any resulting warnings will now reference the actual model name.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= render 'user', :collection =&gt; User.all %&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= render 'user', :collection =&gt; User.all %&gt;
 </code></pre></div></div>
 
-<p>Previously, Brakeman would report warnings with <code class="highlighter-rouge">UnknownModel</code>, whether or not the model name was actually known.</p>
+<p>Previously, Brakeman would report warnings with <code class="language-plaintext highlighter-rouge">UnknownModel</code>, whether or not the model name was actually known.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/155">changes</a>)</p>
 

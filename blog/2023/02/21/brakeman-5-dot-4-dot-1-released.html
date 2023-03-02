@@ -100,12 +100,12 @@
 <ul>
   <li>Add Rails 6.1 and 7.0 default configuration values</li>
   <li>Support Rails 7 redirect options</li>
-  <li>Add <code class="highlighter-rouge">redirect_back</code> and <code class="highlighter-rouge">redirect_back_or_to</code> to open redirect check</li>
-  <li>Revise checking for <code class="highlighter-rouge">request.env</code> to only consider request headers</li>
-  <li>Prevent redirects using <code class="highlighter-rouge">url_from</code> being marked as unsafe (<a href="https://github.com/lsylvester">Lachlan Sylvester</a>)</li>
-  <li>Warn about unscoped find for <code class="highlighter-rouge">find_by(id: ...)</code></li>
-  <li>Support <code class="highlighter-rouge">presence</code>, <code class="highlighter-rouge">presence_in</code> and <code class="highlighter-rouge">in?</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1569">#1569</a>)</li>
-  <li>Fix issue with <code class="highlighter-rouge">if</code> expressions in <code class="highlighter-rouge">when</code> clauses (<a href="https://github.com/presidentbeef/brakeman/issues/1743">#1743</a>)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">redirect_back</code> and <code class="language-plaintext highlighter-rouge">redirect_back_or_to</code> to open redirect check</li>
+  <li>Revise checking for <code class="language-plaintext highlighter-rouge">request.env</code> to only consider request headers</li>
+  <li>Prevent redirects using <code class="language-plaintext highlighter-rouge">url_from</code> being marked as unsafe (<a href="https://github.com/lsylvester">Lachlan Sylvester</a>)</li>
+  <li>Warn about unscoped find for <code class="language-plaintext highlighter-rouge">find_by(id: ...)</code></li>
+  <li>Support <code class="language-plaintext highlighter-rouge">presence</code>, <code class="language-plaintext highlighter-rouge">presence_in</code> and <code class="language-plaintext highlighter-rouge">in?</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1569">#1569</a>)</li>
+  <li>Fix issue with <code class="language-plaintext highlighter-rouge">if</code> expressions in <code class="language-plaintext highlighter-rouge">when</code> clauses (<a href="https://github.com/presidentbeef/brakeman/issues/1743">#1743</a>)</li>
   <li>Fix file/line location for EOL software warnings</li>
 </ul>
 
@@ -119,30 +119,30 @@
 
 <p>Rails 7 introduced a new protection against open directs.</p>
 
-<p>If <code class="highlighter-rouge">config.action_controller.raise_on_open_redirects</code> is set to <code class="highlighter-rouge">true</code>, then Rails prevents redirects that redirect to a different domain than <code class="highlighter-rouge">request.host</code>.
-This protection can be bypassed by passing in <code class="highlighter-rouge">allow_other_host: true</code> to <code class="highlighter-rouge">redirect_to</code>.</p>
+<p>If <code class="language-plaintext highlighter-rouge">config.action_controller.raise_on_open_redirects</code> is set to <code class="language-plaintext highlighter-rouge">true</code>, then Rails prevents redirects that redirect to a different domain than <code class="language-plaintext highlighter-rouge">request.host</code>.
+This protection can be bypassed by passing in <code class="language-plaintext highlighter-rouge">allow_other_host: true</code> to <code class="language-plaintext highlighter-rouge">redirect_to</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1755">changes</a>)</p>
 
-<p><a href="https://github.com/lsylvester">Lachlan Sylvester</a> pointed out it’s also possible to use <code class="highlighter-rouge">url_from</code> to ensure a URL is for the same host. So <code class="highlighter-rouge">redirect_to(url_from(params[:url]))</code> is safe.</p>
+<p><a href="https://github.com/lsylvester">Lachlan Sylvester</a> pointed out it’s also possible to use <code class="language-plaintext highlighter-rouge">url_from</code> to ensure a URL is for the same host. So <code class="language-plaintext highlighter-rouge">redirect_to(url_from(params[:url]))</code> is safe.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1749">changes</a>)</p>
 
-<p>This release also expands the open redirect check to <code class="highlighter-rouge">redirect_back</code> and <code class="highlighter-rouge">redirect_back_or_to</code> which have options for a fallback URL.</p>
+<p>This release also expands the open redirect check to <code class="language-plaintext highlighter-rouge">redirect_back</code> and <code class="language-plaintext highlighter-rouge">redirect_back_or_to</code> which have options for a fallback URL.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1756">changes</a>)</p>
 
 <h3 id="more-unscoped-finds">More Unscoped Finds</h3>
 
-<p>Brakeman will now warn about use of <code class="highlighter-rouge">find_by(id: ...)</code> the same way it would warn about <code class="highlighter-rouge">find_by_id</code> for “unscoped finds” (i.e., possible insecure direct object references).</p>
+<p>Brakeman will now warn about use of <code class="language-plaintext highlighter-rouge">find_by(id: ...)</code> the same way it would warn about <code class="language-plaintext highlighter-rouge">find_by_id</code> for “unscoped finds” (i.e., possible insecure direct object references).</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1748">changes</a>)</p>
 
 <h3 id="presence-method-support">Presence Method Support</h3>
 
-<p>Brakeman now handles <code class="highlighter-rouge">presence</code>, <code class="highlighter-rouge">presence_in</code>, and <code class="highlighter-rouge">in?</code> methods.</p>
+<p>Brakeman now handles <code class="language-plaintext highlighter-rouge">presence</code>, <code class="language-plaintext highlighter-rouge">presence_in</code>, and <code class="language-plaintext highlighter-rouge">in?</code> methods.</p>
 
-<p>Since <code class="highlighter-rouge">presence_in</code> and <code class="highlighter-rouge">in?</code> are often used for guard clauses, this fixes some false positives.</p>
+<p>Since <code class="language-plaintext highlighter-rouge">presence_in</code> and <code class="language-plaintext highlighter-rouge">in?</code> are often used for guard clauses, this fixes some false positives.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1747">changes</a>)</p>
 
@@ -158,7 +158,7 @@ This protection can be bypassed by passing in <code class="highlighter-rouge">al
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dc664d4b5d01dd81608db02ec9b7c383beb65a3169049df2939c4bbbd4edfb73  brakeman-5.4.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dc664d4b5d01dd81608db02ec9b7c383beb65a3169049df2939c4bbbd4edfb73  brakeman-5.4.1.gem
 c1bf7e4cec5bde1d53122b41743343d3e38e4aa30145707b902278dd3b588fd4  brakeman-lib-5.4.1.gem
 94d24f3ea881bfc213ead8fbf3568aa37b301272ccbecf383394c9d7d7f43eeb  brakeman-min-5.4.1.gem
 </code></pre></div></div>

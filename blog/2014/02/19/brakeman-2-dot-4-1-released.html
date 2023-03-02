@@ -105,25 +105,25 @@
 
 <h3 id="cve-2014-0080">CVE-2014-0080</h3>
 
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/Wu96YkTUR6s/pPLBMZrlwvYJ">CVE-2014-0080</a> is a SQL injection issue only affects applications using PostgreSQL with Rails 4.x. If Brakeman detects the <code class="highlighter-rouge">pg</code> gem and an affected version, it will warn about this CVE.</p>
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/Wu96YkTUR6s/pPLBMZrlwvYJ">CVE-2014-0080</a> is a SQL injection issue only affects applications using PostgreSQL with Rails 4.x. If Brakeman detects the <code class="language-plaintext highlighter-rouge">pg</code> gem and an affected version, it will warn about this CVE.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/447">changes</a>)</p>
 
 <h3 id="cve-2014-0081">CVE-2014-0081</h3>
 
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/tfp6gZCtzr4/j8LUHmu7fIEJ">CVE-2014-0081</a> is a vulnerability in <code class="highlighter-rouge">number_to_currency</code>, <code class="highlighter-rouge">number_to_percentage</code>, and <code class="highlighter-rouge">number_to_human</code>. Values passed in as options may not be properly escaped. It affects all previous versions of Rails.</p>
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/tfp6gZCtzr4/j8LUHmu7fIEJ">CVE-2014-0081</a> is a vulnerability in <code class="language-plaintext highlighter-rouge">number_to_currency</code>, <code class="language-plaintext highlighter-rouge">number_to_percentage</code>, and <code class="language-plaintext highlighter-rouge">number_to_human</code>. Values passed in as options may not be properly escaped. It affects all previous versions of Rails.</p>
 
 <p>Brakeman will warn on unsafe uses of these methods. If no unsafe calls are found, it will generate a generic medium confidence warning.</p>
 
-<p>Warnings for CVE-2014-0081 replace warnings for CVE-2013-6415, which was about just <code class="highlighter-rouge">number_to_currency</code>.</p>
+<p>Warnings for CVE-2014-0081 replace warnings for CVE-2013-6415, which was about just <code class="language-plaintext highlighter-rouge">number_to_currency</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/448">changes</a>)</p>
 
 <h3 id="cve-2014-0082">CVE-2014-0082</h3>
 
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/LMxO_3_eCuc/ozGBEhKaJbIJ">CVE-2014-0082</a> is a potential symbol denial of service problem when handling <code class="highlighter-rouge">render :text</code> in Rails 3.x.</p>
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/LMxO_3_eCuc/ozGBEhKaJbIJ">CVE-2014-0082</a> is a potential symbol denial of service problem when handling <code class="language-plaintext highlighter-rouge">render :text</code> in Rails 3.x.</p>
 
-<p>Brakeman will only warn about this CVE if it detects use of <code class="highlighter-rouge">render :text</code> in affected versions.</p>
+<p>Brakeman will only warn about this CVE if it detects use of <code class="language-plaintext highlighter-rouge">render :text</code> in affected versions.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/449">changes</a>)</p>
 
@@ -131,7 +131,7 @@
 
 <p>The SHA1 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>e9fb5439d5a322b4a9c9611d75d994e7df83d4d2  brakeman-2.4.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>e9fb5439d5a322b4a9c9611d75d994e7df83d4d2  brakeman-2.4.1.gem
 b84ad90a7ec9b6e6bbce8fc69c50d1d8b3214d0f  brakeman-min-2.4.1.gem
 </code></pre></div></div>
 

@@ -84,49 +84,49 @@
 
 <h3 id="specify-checks-to-run">Specify Checks to Run</h3>
 
-<p>When running Brakeman, one can specify a set of checks to run or a set to exclude using the <code class="highlighter-rouge">--test</code> or <code class="highlighter-rouge">--except</code>, respectively. These options take a comma-separated list of check names, which are case-sensitive. Use <code class="highlighter-rouge">brakeman --checks</code> to get a list of the exact check names.</p>
+<p>When running Brakeman, one can specify a set of checks to run or a set to exclude using the <code class="language-plaintext highlighter-rouge">--test</code> or <code class="language-plaintext highlighter-rouge">--except</code>, respectively. These options take a comma-separated list of check names, which are case-sensitive. Use <code class="language-plaintext highlighter-rouge">brakeman --checks</code> to get a list of the exact check names.</p>
 
 <p>For example, to only check for SQL injection and cross-site scripting:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --test CheckSQL,CheckCrossSiteScripting
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --test CheckSQL,CheckCrossSiteScripting
 </code></pre></div></div>
 
 <p><em>(‘Check’ can actually be omitted from the names.)</em></p>
 
 <p>To exclude checks for dynamic render paths:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --except CheckRender
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --except CheckRender
 </code></pre></div></div>
 
 <h3 id="set-confidence-threshold">Set Confidence Threshold</h3>
 
-<p>Getting a ton of weak confidence warnings? Use <code class="highlighter-rouge">-w3</code> to only report high confidence warnings or <code class="highlighter-rouge">-w2</code> to only report high and medium confidence warnings.</p>
+<p>Getting a ton of weak confidence warnings? Use <code class="language-plaintext highlighter-rouge">-w3</code> to only report high confidence warnings or <code class="language-plaintext highlighter-rouge">-w2</code> to only report high and medium confidence warnings.</p>
 
-<p>(Use of <code class="highlighter-rouge">-w3</code> is not recommended, however.)</p>
+<p>(Use of <code class="language-plaintext highlighter-rouge">-w3</code> is not recommended, however.)</p>
 
 <h3 id="mark-methods-as-safe">Mark Methods as Safe</h3>
 
-<p>If an applications has custome sanitizing methods or just methods which are known to be safe, then the <code class="highlighter-rouge">--safe-methods</code> option can be used to ignore those methods. Specify the methods as a comma-separated list.</p>
+<p>If an applications has custome sanitizing methods or just methods which are known to be safe, then the <code class="language-plaintext highlighter-rouge">--safe-methods</code> option can be used to ignore those methods. Specify the methods as a comma-separated list.</p>
 
 <p>For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --safe-methods this_one,that_one,totally_safe,my_sanitizer
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --safe-methods this_one,that_one,totally_safe,my_sanitizer
 </code></pre></div></div>
 
 <h3 id="only-reporting-direct-vulnerabilities">Only Reporting Direct Vulnerabilities</h3>
 
 <p>With the default settings, Brakeman will report cross-site scripting vulnerabilities if the return value of a method where user input is a <em>parameter</em> is output.</p>
 
-<p>For example, this will raise a warning unless <code class="highlighter-rouge">some_method</code> is marked as safe like above:</p>
+<p>For example, this will raise a warning unless <code class="language-plaintext highlighter-rouge">some_method</code> is marked as safe like above:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= some_method(params[:blah]) %&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= some_method(params[:blah]) %&gt;
 </code></pre></div></div>
 
-<p>To ignore this kind of output, use the <code class="highlighter-rouge">--report-direct</code> option. This also applies to some other situations, such as checking calls to <code class="highlighter-rouge">redirect_to</code>.</p>
+<p>To ignore this kind of output, use the <code class="language-plaintext highlighter-rouge">--report-direct</code> option. This also applies to some other situations, such as checking calls to <code class="language-plaintext highlighter-rouge">redirect_to</code>.</p>
 
 <h3 id="ignoring-model-attributes">Ignoring Model Attributes</h3>
 
-<p>Brakeman assumes database values are suspect (and so should you). But for some applications this does not make sense. Use the <code class="highlighter-rouge">--ignore-model-output</code> option to suppress reporting model attributes as cross-site scripting vulnerabilities.</p>
+<p>Brakeman assumes database values are suspect (and so should you). But for some applications this does not make sense. Use the <code class="language-plaintext highlighter-rouge">--ignore-model-output</code> option to suppress reporting model attributes as cross-site scripting vulnerabilities.</p>
 
 <hr />
 

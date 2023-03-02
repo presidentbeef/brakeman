@@ -82,21 +82,21 @@
 
 <p><a href="http://apidock.com/rails/ActionView/Helpers/TagHelper/content_tag">content_tag</a> is a view helper which generates an HTML tag with some content:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt; content_tag :p, "Hi!"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt; content_tag :p, "Hi!"
 =&gt; "&lt;p&gt;Hi!&lt;/p&gt;"
 </code></pre></div></div>
 
 <p>In Rails 2, this content is unescaped (although attribute values are escaped):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt; content_tag :p, "&lt;script&gt;alert(1)&lt;/script&gt;"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt; content_tag :p, "&lt;script&gt;alert(1)&lt;/script&gt;"
 =&gt; "&lt;p&gt;&lt;script&gt;alert(1)&lt;/script&gt;&lt;/p&gt;"
 </code></pre></div></div>
 
 <p>In Rails 3, the content is escaped. However, only the <em>content</em> and the tag attribute <em>values</em> are escaped. The tag and attribute names are never escaped in Rails 2 or 3.</p>
 
-<p>This is more dangerous than a typical method call because <code class="highlighter-rouge">content_tag</code> marks its output as “HTML safe”, meaning the <code class="highlighter-rouge">rails_xss</code> plugin and Rails 3 auto-escaping will not escape its output. Due to this, <code class="highlighter-rouge">content_tag</code> should be used carefully if user input is provided as an argument.</p>
+<p>This is more dangerous than a typical method call because <code class="language-plaintext highlighter-rouge">content_tag</code> marks its output as “HTML safe”, meaning the <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin and Rails 3 auto-escaping will not escape its output. Due to this, <code class="language-plaintext highlighter-rouge">content_tag</code> should be used carefully if user input is provided as an argument.</p>
 
-<p>Note that while <code class="highlighter-rouge">content_tag</code> does have an <code class="highlighter-rouge">escape</code> parameter, this only applies to tag attribute <em>values</em> and is true by default.</p>
+<p>Note that while <code class="language-plaintext highlighter-rouge">content_tag</code> does have an <code class="language-plaintext highlighter-rouge">escape</code> parameter, this only applies to tag attribute <em>values</em> and is true by default.</p>
 
 <hr />
 <p>Back to <a href="/docs/warning_types">Warning Types</a></p>

@@ -98,16 +98,16 @@
 <ul>
   <li>Initial Rails 7 support (<a href="https://github.com/presidentbeef/brakeman/issues/1653">#1653</a>)</li>
   <li>Add new checks for unsupported Ruby and Rails version</li>
-  <li>Fix issue with calls to <code class="highlighter-rouge">foo.root</code> in routes (<a href="https://github.com/presidentbeef/brakeman/issues/1640">#1640</a>)</li>
-  <li>Ignore <code class="highlighter-rouge">I18n.locale</code> in SQL queries (<a href="https://github.com/presidentbeef/brakeman/issues/1597">#1597</a>)</li>
-  <li>Do not treat <code class="highlighter-rouge">sanitize_sql_like</code> as safe</li>
-  <li>Bundled version of <code class="highlighter-rouge">ruby_parser</code> updated to 3.18.1</li>
+  <li>Fix issue with calls to <code class="language-plaintext highlighter-rouge">foo.root</code> in routes (<a href="https://github.com/presidentbeef/brakeman/issues/1640">#1640</a>)</li>
+  <li>Ignore <code class="language-plaintext highlighter-rouge">I18n.locale</code> in SQL queries (<a href="https://github.com/presidentbeef/brakeman/issues/1597">#1597</a>)</li>
+  <li>Do not treat <code class="language-plaintext highlighter-rouge">sanitize_sql_like</code> as safe</li>
+  <li>Bundled version of <code class="language-plaintext highlighter-rouge">ruby_parser</code> updated to 3.18.1</li>
   <li>Require Ruby 2.5.0+ (<a href="https://github.com/presidentbeef/brakeman/issues/1649">#1649</a>)</li>
 </ul>
 
 <h3 id="initial-rails-7-support">Initial Rails 7 Support</h3>
 
-<p>Nothing special here, but the <code class="highlighter-rouge">-7</code> option is available and Brakeman won’t think a Rails 7 app is a Rails 2 app.</p>
+<p>Nothing special here, but the <code class="language-plaintext highlighter-rouge">-7</code> option is available and Brakeman won’t think a Rails 7 app is a Rails 2 app.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1654">changes</a>)</p>
 
@@ -127,17 +127,17 @@
 
 <h3 id="bug-fix-in-routes">Bug Fix in Routes</h3>
 
-<p>Calls to <code class="highlighter-rouge">something.root</code> will no longer cause Brakeman to freak out.</p>
+<p>Calls to <code class="language-plaintext highlighter-rouge">something.root</code> will no longer cause Brakeman to freak out.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1655">changes</a>)</p>
 
 <h3 id="sql-injection-updates">SQL Injection Updates</h3>
 
-<p><code class="highlighter-rouge">I18n.locale</code> is ignored in SQL queries.</p>
+<p><code class="language-plaintext highlighter-rouge">I18n.locale</code> is ignored in SQL queries.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1658">changes</a>)</p>
 
-<p><code class="highlighter-rouge">sanitize_sql_like</code> is no longer treated as “safe”. It only escapes <code class="highlighter-rouge">LIKE</code>-specific characters such as <code class="highlighter-rouge">%</code> but does not prevent SQL injection.</p>
+<p><code class="language-plaintext highlighter-rouge">sanitize_sql_like</code> is no longer treated as “safe”. It only escapes <code class="language-plaintext highlighter-rouge">LIKE</code>-specific characters such as <code class="language-plaintext highlighter-rouge">%</code> but does not prevent SQL injection.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1657">changes</a>)</p>
 

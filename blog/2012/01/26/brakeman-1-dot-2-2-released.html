@@ -105,15 +105,15 @@
 
 <h3 id="no-progress-option">No Progress Option</h3>
 
-<p>The last release broke the <code class="highlighter-rouge">--no-progress</code> option for hiding the <code class="highlighter-rouge">1/100 files processed</code> type messages. Now it works again!</p>
+<p>The last release broke the <code class="language-plaintext highlighter-rouge">--no-progress</code> option for hiding the <code class="language-plaintext highlighter-rouge">1/100 files processed</code> type messages. Now it works again!</p>
 
 <h3 id="separate-check-for-link_to">Separate Check for link_to</h3>
 
-<p>For no great reason, <code class="highlighter-rouge">CheckLinkTo</code> was bundled with <code class="highlighter-rouge">CheckCrossSiteScripting</code>. It has now been moved out to a separate file, allowing it to be treated as a regular check. This means it can be explicitly skipped using <code class="highlighter-rouge">-x CheckLinkTo</code> (if desired).</p>
+<p>For no great reason, <code class="language-plaintext highlighter-rouge">CheckLinkTo</code> was bundled with <code class="language-plaintext highlighter-rouge">CheckCrossSiteScripting</code>. It has now been moved out to a separate file, allowing it to be treated as a regular check. This means it can be explicitly skipped using <code class="language-plaintext highlighter-rouge">-x CheckLinkTo</code> (if desired).</p>
 
 <h3 id="better-rails-2-route-handling">Better Rails 2 Route Handling</h3>
 
-<p>Brakeman was raising an exception if a hash option to <code class="highlighter-rouge">resource</code> or <code class="highlighter-rouge">resources</code> did not match a set of known options. Now it will only warn instead of aborting route processing.</p>
+<p>Brakeman was raising an exception if a hash option to <code class="language-plaintext highlighter-rouge">resource</code> or <code class="language-plaintext highlighter-rouge">resources</code> did not match a set of known options. Now it will only warn instead of aborting route processing.</p>
 </div>
 
 

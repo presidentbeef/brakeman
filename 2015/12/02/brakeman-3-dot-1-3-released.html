@@ -102,13 +102,13 @@
   <li>Restore minimum Highline version (<a href="https://github.com/kjg">Kevin Glowacz</a>)</li>
   <li>Depend on safe_yaml 1.0 or later (<a href="https://github.com/presidentbeef/brakeman/issues/752">#753</a>)</li>
   <li>Check for session secret in secrets.yml (<a href="https://github.com/presidentbeef/brakeman/issues/760">#760</a>)</li>
-  <li>Avoid warning on <code class="highlighter-rouge">without_protection: true</code> with hash literal (<a href="https://github.com/presidentbeef/brakeman/issues/769">#769</a>)</li>
-  <li>Respect <code class="highlighter-rouge">exit_on_warn</code> in config file (<a href="https://github.com/presidentbeef/brakeman/pull/771">#771</a>)</li>
-  <li>Avoid outputting false for <code class="highlighter-rouge">user_input</code> in JSON</li>
+  <li>Avoid warning on <code class="language-plaintext highlighter-rouge">without_protection: true</code> with hash literal (<a href="https://github.com/presidentbeef/brakeman/issues/769">#769</a>)</li>
+  <li>Respect <code class="language-plaintext highlighter-rouge">exit_on_warn</code> in config file (<a href="https://github.com/presidentbeef/brakeman/pull/771">#771</a>)</li>
+  <li>Avoid outputting false for <code class="language-plaintext highlighter-rouge">user_input</code> in JSON</li>
   <li>Iteratively replace variables</li>
   <li>CallIndex improvements</li>
   <li>Improved tests for the Brakeman module (<a href="https://github.com/bethanyr">Bethany Rentz</a>)</li>
-  <li>Make sure a <code class="highlighter-rouge">before_filter</code> with block is a call (<a href="https://github.com/presidentbeef/brakeman/issues/763">#763</a>)</li>
+  <li>Make sure a <code class="language-plaintext highlighter-rouge">before_filter</code> with block is a call (<a href="https://github.com/presidentbeef/brakeman/issues/763">#763</a>)</li>
 </ul>
 
 <h3 id="code-climate-platform">Code Climate Platform</h3>
@@ -127,25 +127,25 @@
 
 <h3 id="more-secrets">More Secrets</h3>
 
-<p>Production session secrets stored in <code class="highlighter-rouge">config/secrets.yml</code> will now raise a warning.</p>
+<p>Production session secrets stored in <code class="language-plaintext highlighter-rouge">config/secrets.yml</code> will now raise a warning.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/776">changes</a></p>
 
 <h3 id="mass-assignment-false-positive">Mass Assignment False Positive</h3>
 
-<p>Previously, Brakeman would warn on any mass assignment using <code class="highlighter-rouge">without_protection: true</code>. <a href="https://carouselapps.com/2015/11/24/using-brakeman/">This blog post</a> noted Brakeman would even warn if the values for mass assignment were a hash literal. This has been fixed.</p>
+<p>Previously, Brakeman would warn on any mass assignment using <code class="language-plaintext highlighter-rouge">without_protection: true</code>. <a href="https://carouselapps.com/2015/11/24/using-brakeman/">This blog post</a> noted Brakeman would even warn if the values for mass assignment were a hash literal. This has been fixed.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/773">changes</a>)</p>
 
 <h3 id="harcode-mode-in-config">Harcode Mode in Config</h3>
 
-<p>Brakeman now supports turning on “hardcore mode” (setting <code class="highlighter-rouge">:exit_on_warn: true</code>) in a config file. This causes Brakeman return a non-zero exit code if any warnings are found.</p>
+<p>Brakeman now supports turning on “hardcore mode” (setting <code class="language-plaintext highlighter-rouge">:exit_on_warn: true</code>) in a config file. This causes Brakeman return a non-zero exit code if any warnings are found.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/774">changes</a>)</p>
 
 <h3 id="json-output">JSON Output</h3>
 
-<p>A refactoring caused some values of <code class="highlighter-rouge">user_input</code> in JSON reports to be <code class="highlighter-rouge">false</code> instead of <code class="highlighter-rouge">nil</code>. This has been corrected.</p>
+<p>A refactoring caused some values of <code class="language-plaintext highlighter-rouge">user_input</code> in JSON reports to be <code class="language-plaintext highlighter-rouge">false</code> instead of <code class="language-plaintext highlighter-rouge">nil</code>. This has been corrected.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/756">changes</a>)</p>
 
@@ -157,7 +157,7 @@
 
 <h3 id="callindex-improvements">CallIndex Improvements</h3>
 
-<p>Fixed a small bug where <code class="highlighter-rouge">params</code> was not a valid target when searching chained methods, as well as making it possible to search for chains beginning with a method call. Additionally, all the tests for CallIndex were broken and not testing anything.</p>
+<p>Fixed a small bug where <code class="language-plaintext highlighter-rouge">params</code> was not a valid target when searching chained methods, as well as making it possible to search for chains beginning with a method call. Additionally, all the tests for CallIndex were broken and not testing anything.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/766">changes</a>)</p>
 
@@ -177,7 +177,7 @@
 
 <p>The SHA256 sums for this release are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>57b0edcc289eb74359d2042a38ea519f96f606c89dc879e5fb53971d3d656707  brakeman-3.1.3.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>57b0edcc289eb74359d2042a38ea519f96f606c89dc879e5fb53971d3d656707  brakeman-3.1.3.gem
 85473af3a55c440959ea91f94fe14177ac58aa35b44fbb007c93cd742803eae6  brakeman-min-3.1.3.gem
 </code></pre></div></div>
 

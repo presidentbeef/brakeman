@@ -99,7 +99,7 @@
 
 <ul>
   <li>Declare REXML as a dependency (Ruby 3.0 compatibility)</li>
-  <li>Use <code class="highlighter-rouge">Sexp#sexp_body</code> instead of <code class="highlighter-rouge">Sexp#[..]</code> (Ruby 3.0 compatibility)</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">Sexp#sexp_body</code> instead of <code class="language-plaintext highlighter-rouge">Sexp#[..]</code> (Ruby 3.0 compatibility)</li>
   <li>Prevent render loops when template names are absolute paths (<a href="https://github.com/presidentbeef/brakeman/issues/1536">#1536</a>)</li>
   <li>Ensure RubyParser is passed file path as a String (<a href="https://github.com/presidentbeef/brakeman/issues/1534">#1534</a>)</li>
   <li>Support new Haml 5.2.0 escaping method (<a href="https://github.com/presidentbeef/brakeman/issues/1517">#1517</a>)</li>
@@ -109,16 +109,16 @@
 
 <p>In Ruby 3.0, REXML has become a ‘bundled’ gem. It is distributed with Ruby, but if Bundler is involved then it needs to be declared as an explicit dependency.</p>
 
-<p>If you like minimal dependencies, you can always use the <code class="highlighter-rouge">brakeman-min</code> gem which declares only strict dependencies.</p>
+<p>If you like minimal dependencies, you can always use the <code class="language-plaintext highlighter-rouge">brakeman-min</code> gem which declares only strict dependencies.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1538">changes</a>)</p>
 
 <h3 id="avoid-slicing-with-sexp">Avoid Slicing with Sexp#[]</h3>
 
-<p><code class="highlighter-rouge">Sexp</code> subclasses from <code class="highlighter-rouge">Array</code>, and <code class="highlighter-rouge">Array</code> no longer returns subclasses from methods that create new arrays.</p>
+<p><code class="language-plaintext highlighter-rouge">Sexp</code> subclasses from <code class="language-plaintext highlighter-rouge">Array</code>, and <code class="language-plaintext highlighter-rouge">Array</code> no longer returns subclasses from methods that create new arrays.</p>
 
-<p>Brakeman was unfortunately using <code class="highlighter-rouge">Sexp#[]</code> with ranges (e.g. <code class="highlighter-rouge">s(:a, :b, :c)[1..-1]</code>), which runs into this behavior.
-Happily, the <code class="highlighter-rouge">Sexp#sexp_body</code> method already exists to properly slice and return a <code class="highlighter-rouge">Sexp</code>.</p>
+<p>Brakeman was unfortunately using <code class="language-plaintext highlighter-rouge">Sexp#[]</code> with ranges (e.g. <code class="language-plaintext highlighter-rouge">s(:a, :b, :c)[1..-1]</code>), which runs into this behavior.
+Happily, the <code class="language-plaintext highlighter-rouge">Sexp#sexp_body</code> method already exists to properly slice and return a <code class="language-plaintext highlighter-rouge">Sexp</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1538">changes</a>)</p>
 
@@ -132,10 +132,10 @@ Happily, the <code class="highlighter-rouge">Sexp#sexp_body</code> method alread
 
 <h3 id="ensure-rubyparser-path-is-a-string">Ensure RubyParser Path is a String</h3>
 
-<p>In some cases, the parser was given a <code class="highlighter-rouge">Brakeman::FilePath</code> for the file name.
+<p>In some cases, the parser was given a <code class="language-plaintext highlighter-rouge">Brakeman::FilePath</code> for the file name.
 This only caused an issue in some weird corner cases, but it was wrong nonetheless.</p>
 
-<p>Now <code class="highlighter-rouge">Brakeman::FileParser</code> will ensure the file name is passed as a string.</p>
+<p>Now <code class="language-plaintext highlighter-rouge">Brakeman::FileParser</code> will ensure the file name is passed as a string.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1535">changes</a>)</p>
 
@@ -151,7 +151,7 @@ This only caused an issue in some weird corner cases, but it was wrong nonethele
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>e40451080554884a63d73a2933c36518a3cf7a2bb471e6d864ce39a9d3455c98  brakeman-4.10.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>e40451080554884a63d73a2933c36518a3cf7a2bb471e6d864ce39a9d3455c98  brakeman-4.10.1.gem
 ec69e04e087b74862629e952d7817dd7b73e30810166e01d69d24d7164101455  brakeman-lib-4.10.1.gem
 3deee68eadd8eb6850254a8e753d6bbe933194c883f12a2455bdf5fd97b1eba2  brakeman-min-4.10.1.gem
 </code></pre></div></div>

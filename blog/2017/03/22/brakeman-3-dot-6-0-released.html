@@ -96,21 +96,21 @@
 <div class="entry-content"><p><em>Changes since 3.5.0:</em></p>
 
 <ul>
-  <li>Branch inside of <code class="highlighter-rouge">case</code> expressions (<a href="https://github.com/presidentbeef/brakeman/issues/944">#944</a>, <a href="https://github.com/presidentbeef/brakeman/issues/972">#972</a>, <a href="https://github.com/presidentbeef/brakeman/issues/1002">#1002</a>)</li>
+  <li>Branch inside of <code class="language-plaintext highlighter-rouge">case</code> expressions (<a href="https://github.com/presidentbeef/brakeman/issues/944">#944</a>, <a href="https://github.com/presidentbeef/brakeman/issues/972">#972</a>, <a href="https://github.com/presidentbeef/brakeman/issues/1002">#1002</a>)</li>
   <li>Check targetless SQL calls outside of known models</li>
   <li>Fix issue with nested interpolation inside SQL strings (<a href="https://github.com/presidentbeef/brakeman/issues/1008">#1008</a>)</li>
-  <li>Add <code class="highlighter-rouge">--exit-on-error</code> (<a href="https://github.com/grosser">Michael Grosser</a>)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--exit-on-error</code> (<a href="https://github.com/grosser">Michael Grosser</a>)</li>
   <li>Only report CVE-2015-3227 when exact version is known (<a href="https://github.com/presidentbeef/brakeman/issues/993">#933</a>, <a href="https://github.com/presidentbeef/brakeman/issues/995">#995</a>)</li>
   <li>Print command line option errors without modification (<a href="https://github.com/presidentbeef/brakeman/issues/1010">#1010</a>)</li>
   <li>Ignore GraphQL tags inside ERB templates</li>
-  <li>Avoid recursive <code class="highlighter-rouge">Concern</code>s</li>
+  <li>Avoid recursive <code class="language-plaintext highlighter-rouge">Concern</code>s</li>
 </ul>
 
 <h3 id="case-expressions">Case Expressions</h3>
 
-<p>At long last, Brakeman will now treat <code class="highlighter-rouge">case</code> expressions similarly to <code class="highlighter-rouge">if</code>s. This includes tracking variable assignments inside of <code class="highlighter-rouge">when</code> clauses and better handling <code class="highlighter-rouge">case</code> expressions as values.</p>
+<p>At long last, Brakeman will now treat <code class="language-plaintext highlighter-rouge">case</code> expressions similarly to <code class="language-plaintext highlighter-rouge">if</code>s. This includes tracking variable assignments inside of <code class="language-plaintext highlighter-rouge">when</code> clauses and better handling <code class="language-plaintext highlighter-rouge">case</code> expressions as values.</p>
 
-<p>Note that at this time Brakeman does not handle nested <code class="highlighter-rouge">case</code> expressions.</p>
+<p>Note that at this time Brakeman does not handle nested <code class="language-plaintext highlighter-rouge">case</code> expressions.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1018">changes</a>)</p>
 
@@ -128,7 +128,7 @@
 
 <h3 id="exit-on-errors">Exit on Errors</h3>
 
-<p><a href="https://github.com/grosser">Michael Grosser</a> added the <code class="highlighter-rouge">--exit-on-error</code> option to cause Brakeman to exit with a non-zero exit code if any errors are encountered. Normally Brakeman attempts to always generate a report regardless of any errors during the scan.</p>
+<p><a href="https://github.com/grosser">Michael Grosser</a> added the <code class="language-plaintext highlighter-rouge">--exit-on-error</code> option to cause Brakeman to exit with a non-zero exit code if any errors are encountered. Normally Brakeman attempts to always generate a report regardless of any errors during the scan.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/991">changes</a>)</p>
 
@@ -146,13 +146,13 @@
 
 <h3 id="graphql-in-erb">GraphQL in ERB</h3>
 
-<p>Brakeman will now ignore <code class="highlighter-rouge">&lt;%graphql</code> tags in ERB templates.</p>
+<p>Brakeman will now ignore <code class="language-plaintext highlighter-rouge">&lt;%graphql</code> tags in ERB templates.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/997">changes</a>)</p>
 
 <h3 id="recursive-concerns">Recursive Concerns</h3>
 
-<p>Concerns that <code class="highlighter-rouge">include</code> themselves will no longer cause infinite loops.</p>
+<p>Concerns that <code class="language-plaintext highlighter-rouge">include</code> themselves will no longer cause infinite loops.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1019">changes</a>)</p>
 
@@ -160,7 +160,7 @@
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c9bcc82a14359fe5f010551b1256eb1cea6848115f3429c7db74a386d6b0cf8c  brakeman-3.6.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c9bcc82a14359fe5f010551b1256eb1cea6848115f3429c7db74a386d6b0cf8c  brakeman-3.6.0.gem
 4793a407f79970a284474db3235d355f9927e987b71e33f1ce99fac3f3c249aa  brakeman-min-3.6.0.gem
 5c0a7aab7fc14d069d9dc208b653e10f71c355cb959fd144d6e8f7430c88a8e7  brakeman-lib-3.6.0.gem
 </code></pre></div></div>

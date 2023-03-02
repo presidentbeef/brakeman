@@ -98,15 +98,15 @@
 <p><em>Changes since 4.9.0:</em></p>
 
 <ul>
-  <li>Use version from <code class="highlighter-rouge">active_record</code> for non-Rails apps (<a href="https://github.com/BuonOmo">Ulysse Buonomo</a>)</li>
-  <li>Check <code class="highlighter-rouge">chomp</code>ed strings for SQL injection (<a href="https://github.com/presidentbeef/brakeman/issues/1509">#1509</a>)</li>
+  <li>Use version from <code class="language-plaintext highlighter-rouge">active_record</code> for non-Rails apps (<a href="https://github.com/BuonOmo">Ulysse Buonomo</a>)</li>
+  <li>Check <code class="language-plaintext highlighter-rouge">chomp</code>ed strings for SQL injection (<a href="https://github.com/presidentbeef/brakeman/issues/1509">#1509</a>)</li>
   <li>Always set line number for joined arrays (<a href="https://github.com/presidentbeef/brakeman/issues/1499">#1499</a>)</li>
-  <li>Avoid warning about missing <code class="highlighter-rouge">attr_accessible</code> if <code class="highlighter-rouge">protected_attributes</code> gem is used (<a href="https://github.com/presidentbeef/brakeman/issues/1512">#1512</a>)</li>
+  <li>Avoid warning about missing <code class="language-plaintext highlighter-rouge">attr_accessible</code> if <code class="language-plaintext highlighter-rouge">protected_attributes</code> gem is used (<a href="https://github.com/presidentbeef/brakeman/issues/1512">#1512</a>)</li>
 </ul>
 
 <h3 id="check-activerecord-version">Check ActiveRecord Version</h3>
 
-<p>For non-Rails applications that are using ActiveRecord, use the version of <code class="highlighter-rouge">active_record</code> to set Brakeman’s guess at a Rails version. Thanks to <a href="https://github.com/BuonOmo">Ulysse Buonomo</a>.</p>
+<p>For non-Rails applications that are using ActiveRecord, use the version of <code class="language-plaintext highlighter-rouge">active_record</code> to set Brakeman’s guess at a Rails version. Thanks to <a href="https://github.com/BuonOmo">Ulysse Buonomo</a>.</p>
 
 <p><em>Note: It is not recommended to run Brakeman on non-Rails applications… but no one is going to stop you if you want really to.</em></p>
 
@@ -114,7 +114,7 @@
 
 <h3 id="sql-injection-with-chomp">SQL Injection with Chomp</h3>
 
-<p>Brakeman will now check for string interpolation inside strings that have <code class="highlighter-rouge">chomp</code> called on them.</p>
+<p>Brakeman will now check for string interpolation inside strings that have <code class="language-plaintext highlighter-rouge">chomp</code> called on them.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1511">changes</a>)</p>
 
@@ -127,9 +127,9 @@ Not really sure how that happens, though.</p>
 
 <h3 id="protected-attributes">Protected Attributes</h3>
 
-<p>When using the <code class="highlighter-rouge">protected_attributes</code> gem, it is allowed but not required to set <code class="highlighter-rouge">attr_accessible</code> on models.</p>
+<p>When using the <code class="language-plaintext highlighter-rouge">protected_attributes</code> gem, it is allowed but not required to set <code class="language-plaintext highlighter-rouge">attr_accessible</code> on models.</p>
 
-<p>Brakeman will no longer warn about missing <code class="highlighter-rouge">attr_accessible</code> when <code class="highlighter-rouge">protected_attributes</code> is used.</p>
+<p>Brakeman will no longer warn about missing <code class="language-plaintext highlighter-rouge">attr_accessible</code> when <code class="language-plaintext highlighter-rouge">protected_attributes</code> is used.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1513">changes</a>)</p>
 
@@ -141,7 +141,7 @@ Not really sure how that happens, though.</p>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5a17706b1da4886f1b6864c3ffff1ab40684f3f7b4d667138227c467ebccb0f7  brakeman-4.9.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5a17706b1da4886f1b6864c3ffff1ab40684f3f7b4d667138227c467ebccb0f7  brakeman-4.9.1.gem
 8bb3d88f9786e9f08c24d38e88c40adf02f4a47b17de8c1c816f7e174de476a4  brakeman-lib-4.9.1.gem
 8eae3eec1ebab0cf3b29ea50089f613b0d8e544ae4c332f1f5e64a240e8a0a94  brakeman-min-4.9.1.gem
 </code></pre></div></div>

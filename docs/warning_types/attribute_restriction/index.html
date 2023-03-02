@@ -86,17 +86,17 @@
 
 <p>This warning comes up if a model does not limit what attributes can be set through <a href="https://guides.rubyonrails.org/v3.2.9/security.html#mass-assignment">mass assignment</a>.</p>
 
-<p>In particular, this check looks for <code class="highlighter-rouge">attr_accessible</code> inside model definitions. If it is not found, this warning will be issued.</p>
+<p>In particular, this check looks for <code class="language-plaintext highlighter-rouge">attr_accessible</code> inside model definitions. If it is not found, this warning will be issued.</p>
 
 <h4 id="use-of-blacklist">Use of Blacklist</h4>
 
-<p>Brakeman also warns on use of <code class="highlighter-rouge">attr_protected</code> - especially since it was found to be <a href="https://groups.google.com/d/topic/rubyonrails-security/AFBKNY7VSH8/discussion">vulnerable to bypass</a>. Warnings for mass assignment on models using <code class="highlighter-rouge">attr_protected</code> will be reported, but at a lower confidence level.</p>
+<p>Brakeman also warns on use of <code class="language-plaintext highlighter-rouge">attr_protected</code> - especially since it was found to be <a href="https://groups.google.com/d/topic/rubyonrails-security/AFBKNY7VSH8/discussion">vulnerable to bypass</a>. Warnings for mass assignment on models using <code class="language-plaintext highlighter-rouge">attr_protected</code> will be reported, but at a lower confidence level.</p>
 
 <h4 id="suggested-remediation">Suggested Remediation</h4>
 
 <p>For newer Ruby on Rails applications, query parameters should be whitelisted before use via strong parameters.</p>
 
-<p>For older Ruby on Rails applications, each model should use <code class="highlighter-rouge">attr_accessible</code> to carefully whitelist which attributes may be set via mass assignment, if any.</p>
+<p>For older Ruby on Rails applications, each model should use <code class="language-plaintext highlighter-rouge">attr_accessible</code> to carefully whitelist which attributes may be set via mass assignment, if any.</p>
 
 <hr />
 

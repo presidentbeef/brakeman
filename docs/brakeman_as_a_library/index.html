@@ -84,73 +84,73 @@
 
 <p>Here is a simple example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'brakeman'
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'brakeman'
 
 tracker = Brakeman.run "my/rails_app"
 
 puts tracker.report
 </code></pre></div></div>
 
-<p>This runs Brakeman against the Rails application in <code class="highlighter-rouge">my/rails_app</code> and prints out the report. This is essentially equivalent to running Brakeman with no options.</p>
+<p>This runs Brakeman against the Rails application in <code class="language-plaintext highlighter-rouge">my/rails_app</code> and prints out the report. This is essentially equivalent to running Brakeman with no options.</p>
 
-<p><code class="highlighter-rouge">Brakeman.run</code> returns a <code class="highlighter-rouge">Tracker</code> object (<a href="http://rubydoc.info/github/presidentbeef/brakeman/master/frames">doc</a>) which contains all the information from the scan. <code class="highlighter-rouge">Tracker#checks</code> (<a href="http://rubydoc.info/github/presidentbeef/brakeman/master/frames">doc</a>) holds the results from running the checks.</p>
+<p><code class="language-plaintext highlighter-rouge">Brakeman.run</code> returns a <code class="language-plaintext highlighter-rouge">Tracker</code> object (<a href="http://rubydoc.info/github/presidentbeef/brakeman/master/frames">doc</a>) which contains all the information from the scan. <code class="language-plaintext highlighter-rouge">Tracker#checks</code> (<a href="http://rubydoc.info/github/presidentbeef/brakeman/master/frames">doc</a>) holds the results from running the checks.</p>
 
 <h3 id="using-options">Using Options</h3>
 
-<p>Most of the command-line options for Brakeman can be used with <code class="highlighter-rouge">Brakeman.run</code>, but the names may be slightly different.</p>
+<p>Most of the command-line options for Brakeman can be used with <code class="language-plaintext highlighter-rouge">Brakeman.run</code>, but the names may be slightly different.</p>
 
-<p>If an options hash is used, then <code class="highlighter-rouge">:app_path</code> must be specified instead of just a string for the path:</p>
+<p>If an options hash is used, then <code class="language-plaintext highlighter-rouge">:app_path</code> must be specified instead of just a string for the path:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Brakeman.run app_path: "my/rails_app"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Brakeman.run app_path: "my/rails_app"
 </code></pre></div></div>
 
 <p>Below is a list of options, but always <a href="https://github.com/presidentbeef/brakeman/blob/master/lib/brakeman/options.rb">check the source</a> for the latest.</p>
 
 <ul>
-  <li><code class="highlighter-rouge">:app_path</code> - Path to root of Rails app (required)</li>
-  <li><code class="highlighter-rouge">:absolute_paths</code> - Show absolute path of each file (default: false)</li>
-  <li><code class="highlighter-rouge">:additional_checks_path</code> - Array of additional directories containing additional out-of-tree checks to run</li>
-  <li><code class="highlighter-rouge">:additional_libs_path</code> - Array of additional application relative lib directories (ex. app/mailers) to process</li>
-  <li><code class="highlighter-rouge">:allow_check_paths_in_config</code> - Allow loading checks from configuration file (unsafe, default: false)</li>
-  <li><code class="highlighter-rouge">:assume_all_routes</code> - Assume all methods are routes (default: true)</li>
-  <li><code class="highlighter-rouge">:branch_limit</code> - Limit branching during dataflow analysis</li>
-  <li><code class="highlighter-rouge">:check_arguments</code> - Check arguments of methods (default: true)</li>
-  <li><code class="highlighter-rouge">:collapse_mass_assignment</code> - Report unprotected models in single warning (default: false)</li>
-  <li><code class="highlighter-rouge">:combine_locations</code> - Combine warning locations (default: true)</li>
-  <li><code class="highlighter-rouge">:config_file</code> - Configuration file</li>
-  <li><code class="highlighter-rouge">:debug</code> - Verbose debug messages (default: false)</li>
-  <li><code class="highlighter-rouge">:engine_paths</code> - Array of paths to Rails engines</li>
-  <li><code class="highlighter-rouge">:escape_html</code> - Escape HTML by default (automatic)</li>
-  <li><code class="highlighter-rouge">:exit_on_error</code> - Only affects Commandline module (default: true)</li>
-  <li><code class="highlighter-rouge">:exit_on_warn</code> - Only affects Commandline module (default: true)</li>
-  <li><code class="highlighter-rouge">:force_scan</code> - Scan application even if Rails is not detected</li>
-  <li><code class="highlighter-rouge">:github_repo</code> - Github repo to use for file links (user/repo[/path][@ref])</li>
-  <li><code class="highlighter-rouge">:highlight_user_input</code> - Highlight user input in reported warnings (default: true)</li>
-  <li><code class="highlighter-rouge">:html_style</code> - Path to CSS file</li>
-  <li><code class="highlighter-rouge">:ignore_file</code> - File to configure ignoring false positives</li>
-  <li><code class="highlighter-rouge">:ignore_model_output</code> - Consider models safe in some checks (default: false)</li>
-  <li><code class="highlighter-rouge">:index_libs</code> - Add libraries to call index (default: true)</li>
-  <li><code class="highlighter-rouge">:min_confidence</code> - Minimum confidence (0-2, 0 is highest)</li>
-  <li><code class="highlighter-rouge">:output_color</code> - Colorize text output format (automatic)</li>
-  <li><code class="highlighter-rouge">:output_files</code> - Array of file names for output</li>
-  <li><code class="highlighter-rouge">:output_formats</code> - Formats for output (<code class="highlighter-rouge">:text</code>, <code class="highlighter-rouge">:json</code>, <code class="highlighter-rouge">:junit</code>, <code class="highlighter-rouge">:html</code>, <code class="highlighter-rouge">:table</code>, :<code class="highlighter-rouge">tabs</code>)</li>
-  <li><code class="highlighter-rouge">:pager</code> - Use pager for output (automatic)</li>
-  <li><code class="highlighter-rouge">:parallel_checks</code> - Run checks in parallel (default: true)</li>
-  <li><code class="highlighter-rouge">:parser_timeout</code> - Set timeout for parsing an individual file (default: 10 seconds)</li>
-  <li><code class="highlighter-rouge">:print_report</code> - If no output file specified, print to stdout (default: false)</li>
-  <li><code class="highlighter-rouge">:progress_report</code> - Report scan progress (default: true)</li>
-  <li><code class="highlighter-rouge">:quiet</code> - Suppress most messages (default: false)</li>
-  <li><code class="highlighter-rouge">:rails3</code> - Force Rails 3 mode (automatic)</li>
-  <li><code class="highlighter-rouge">:rails4</code> - Force Rails 4 mode (automatic)</li>
-  <li><code class="highlighter-rouge">:rails5</code> - Force Rails 5 mode (automatic)</li>
-  <li><code class="highlighter-rouge">:rails6</code> - Force Rails 6 mode (automatic)</li>
-  <li><code class="highlighter-rouge">:report_routes</code> - Show found routes on controllers (default: false)</li>
-  <li><code class="highlighter-rouge">:run_checks</code> - Array of checks to run (runs all default checks if not specified)</li>
-  <li><code class="highlighter-rouge">:safe_methods</code> - Array of methods to consider safe from XSS</li>
-  <li><code class="highlighter-rouge">:skip_libs</code> - Do not process lib/ directory (default: false)</li>
-  <li><code class="highlighter-rouge">:skip_files</code> - List of files/directories to skip</li>
-  <li><code class="highlighter-rouge">:skip_checks</code> - Checks not to run (run all if not specified)</li>
-  <li><code class="highlighter-rouge">:summary_only</code> - Only output summary section of report for plain/table (<code class="highlighter-rouge">:summary_only</code>, <code class="highlighter-rouge">:no_summary</code>, or <code class="highlighter-rouge">true</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">:app_path</code> - Path to root of Rails app (required)</li>
+  <li><code class="language-plaintext highlighter-rouge">:absolute_paths</code> - Show absolute path of each file (default: false)</li>
+  <li><code class="language-plaintext highlighter-rouge">:additional_checks_path</code> - Array of additional directories containing additional out-of-tree checks to run</li>
+  <li><code class="language-plaintext highlighter-rouge">:additional_libs_path</code> - Array of additional application relative lib directories (ex. app/mailers) to process</li>
+  <li><code class="language-plaintext highlighter-rouge">:allow_check_paths_in_config</code> - Allow loading checks from configuration file (unsafe, default: false)</li>
+  <li><code class="language-plaintext highlighter-rouge">:assume_all_routes</code> - Assume all methods are routes (default: true)</li>
+  <li><code class="language-plaintext highlighter-rouge">:branch_limit</code> - Limit branching during dataflow analysis</li>
+  <li><code class="language-plaintext highlighter-rouge">:check_arguments</code> - Check arguments of methods (default: true)</li>
+  <li><code class="language-plaintext highlighter-rouge">:collapse_mass_assignment</code> - Report unprotected models in single warning (default: false)</li>
+  <li><code class="language-plaintext highlighter-rouge">:combine_locations</code> - Combine warning locations (default: true)</li>
+  <li><code class="language-plaintext highlighter-rouge">:config_file</code> - Configuration file</li>
+  <li><code class="language-plaintext highlighter-rouge">:debug</code> - Verbose debug messages (default: false)</li>
+  <li><code class="language-plaintext highlighter-rouge">:engine_paths</code> - Array of paths to Rails engines</li>
+  <li><code class="language-plaintext highlighter-rouge">:escape_html</code> - Escape HTML by default (automatic)</li>
+  <li><code class="language-plaintext highlighter-rouge">:exit_on_error</code> - Only affects Commandline module (default: true)</li>
+  <li><code class="language-plaintext highlighter-rouge">:exit_on_warn</code> - Only affects Commandline module (default: true)</li>
+  <li><code class="language-plaintext highlighter-rouge">:force_scan</code> - Scan application even if Rails is not detected</li>
+  <li><code class="language-plaintext highlighter-rouge">:github_repo</code> - Github repo to use for file links (user/repo[/path][@ref])</li>
+  <li><code class="language-plaintext highlighter-rouge">:highlight_user_input</code> - Highlight user input in reported warnings (default: true)</li>
+  <li><code class="language-plaintext highlighter-rouge">:html_style</code> - Path to CSS file</li>
+  <li><code class="language-plaintext highlighter-rouge">:ignore_file</code> - File to configure ignoring false positives</li>
+  <li><code class="language-plaintext highlighter-rouge">:ignore_model_output</code> - Consider models safe in some checks (default: false)</li>
+  <li><code class="language-plaintext highlighter-rouge">:index_libs</code> - Add libraries to call index (default: true)</li>
+  <li><code class="language-plaintext highlighter-rouge">:min_confidence</code> - Minimum confidence (0-2, 0 is highest)</li>
+  <li><code class="language-plaintext highlighter-rouge">:output_color</code> - Colorize text output format (automatic)</li>
+  <li><code class="language-plaintext highlighter-rouge">:output_files</code> - Array of file names for output</li>
+  <li><code class="language-plaintext highlighter-rouge">:output_formats</code> - Formats for output (<code class="language-plaintext highlighter-rouge">:text</code>, <code class="language-plaintext highlighter-rouge">:json</code>, <code class="language-plaintext highlighter-rouge">:junit</code>, <code class="language-plaintext highlighter-rouge">:html</code>, <code class="language-plaintext highlighter-rouge">:table</code>, :<code class="language-plaintext highlighter-rouge">tabs</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">:pager</code> - Use pager for output (automatic)</li>
+  <li><code class="language-plaintext highlighter-rouge">:parallel_checks</code> - Run checks in parallel (default: true)</li>
+  <li><code class="language-plaintext highlighter-rouge">:parser_timeout</code> - Set timeout for parsing an individual file (default: 10 seconds)</li>
+  <li><code class="language-plaintext highlighter-rouge">:print_report</code> - If no output file specified, print to stdout (default: false)</li>
+  <li><code class="language-plaintext highlighter-rouge">:progress_report</code> - Report scan progress (default: true)</li>
+  <li><code class="language-plaintext highlighter-rouge">:quiet</code> - Suppress most messages (default: false)</li>
+  <li><code class="language-plaintext highlighter-rouge">:rails3</code> - Force Rails 3 mode (automatic)</li>
+  <li><code class="language-plaintext highlighter-rouge">:rails4</code> - Force Rails 4 mode (automatic)</li>
+  <li><code class="language-plaintext highlighter-rouge">:rails5</code> - Force Rails 5 mode (automatic)</li>
+  <li><code class="language-plaintext highlighter-rouge">:rails6</code> - Force Rails 6 mode (automatic)</li>
+  <li><code class="language-plaintext highlighter-rouge">:report_routes</code> - Show found routes on controllers (default: false)</li>
+  <li><code class="language-plaintext highlighter-rouge">:run_checks</code> - Array of checks to run (runs all default checks if not specified)</li>
+  <li><code class="language-plaintext highlighter-rouge">:safe_methods</code> - Array of methods to consider safe from XSS</li>
+  <li><code class="language-plaintext highlighter-rouge">:skip_libs</code> - Do not process lib/ directory (default: false)</li>
+  <li><code class="language-plaintext highlighter-rouge">:skip_files</code> - List of files/directories to skip</li>
+  <li><code class="language-plaintext highlighter-rouge">:skip_checks</code> - Checks not to run (run all if not specified)</li>
+  <li><code class="language-plaintext highlighter-rouge">:summary_only</code> - Only output summary section of report for plain/table (<code class="language-plaintext highlighter-rouge">:summary_only</code>, <code class="language-plaintext highlighter-rouge">:no_summary</code>, or <code class="language-plaintext highlighter-rouge">true</code>)</li>
 </ul>
 
 <hr />

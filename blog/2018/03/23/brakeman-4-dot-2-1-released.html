@@ -102,31 +102,31 @@
 <ul>
   <li>Add warning for CVE-2018-3741</li>
   <li>Add warning for CVE-2018-8048</li>
-  <li>Scan <code class="highlighter-rouge">app/jobs/</code> directory</li>
-  <li>Handle <code class="highlighter-rouge">template_exists?</code> in controllers (<a href="https://github.com/presidentbeef/brakeman/issues/1124">#1124</a>)</li>
+  <li>Scan <code class="language-plaintext highlighter-rouge">app/jobs/</code> directory</li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">template_exists?</code> in controllers (<a href="https://github.com/presidentbeef/brakeman/issues/1124">#1124</a>)</li>
 </ul>
 
 <h3 id="cve-2018-3741">CVE-2018-3741</h3>
 
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/tP7W3kLc5u4/uDy2Br7xBgAJ">CVE-2018-3741</a> is a vulnerability in the <code class="highlighter-rouge">rails-html-sanitizer</code> gem which may allow bypassing attribute whitelists and therefore cross-site scripting.</p>
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/tP7W3kLc5u4/uDy2Br7xBgAJ">CVE-2018-3741</a> is a vulnerability in the <code class="language-plaintext highlighter-rouge">rails-html-sanitizer</code> gem which may allow bypassing attribute whitelists and therefore cross-site scripting.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1171">changes</a>)</p>
 
 <h3 id="cve-2018-8048">CVE-2018-8048</h3>
 
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/b__OeLG9bts/waZTvSM2AQAJ">CVE-2018-8048</a> is a similar vulnerability in the <code class="highlighter-rouge">loofah</code> gem.</p>
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/b__OeLG9bts/waZTvSM2AQAJ">CVE-2018-8048</a> is a similar vulnerability in the <code class="language-plaintext highlighter-rouge">loofah</code> gem.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1169">changes</a>)</p>
 
 <h3 id="scan-jobs">Scan Jobs</h3>
 
-<p>Brakeman will now scan files in the <code class="highlighter-rouge">app/jobs/</code> directory and treat them as additional libraries.</p>
+<p>Brakeman will now scan files in the <code class="language-plaintext highlighter-rouge">app/jobs/</code> directory and treat them as additional libraries.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1168">changes</a>)</p>
 
 <h3 id="template-guard-condition">Template Guard Condition</h3>
 
-<p>Brakeman will no longer warn about dynamic render paths if <code class="highlighter-rouge">template_exists?</code> is used as a guard condition.</p>
+<p>Brakeman will no longer warn about dynamic render paths if <code class="language-plaintext highlighter-rouge">template_exists?</code> is used as a guard condition.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1170">changes</a>)</p>
 
@@ -140,7 +140,7 @@
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3ba1cd39d98edcae7a0802ef0206de1438439cfdf4edb559c676877e2c253498  brakeman-4.2.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3ba1cd39d98edcae7a0802ef0206de1438439cfdf4edb559c676877e2c253498  brakeman-4.2.1.gem
 54a4aa336f3c21477a9bab12eeba6bb79ffa34a015e89a748621f7fd037d1943  brakeman-lib-4.2.1.gem
 d53f2275320dfe5609234e74ce3a73a7d8c44dfae824fb938a9bae2077a9aecf  brakeman-min-4.2.1.gem
 </code></pre></div></div>

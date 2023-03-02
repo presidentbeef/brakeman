@@ -82,9 +82,9 @@
 
 <h3 id="file-locations">File Locations</h3>
 
-<p>The test applications are located in <code class="highlighter-rouge">test/apps/</code>.</p>
+<p>The test applications are located in <code class="language-plaintext highlighter-rouge">test/apps/</code>.</p>
 
-<p>Corresponding tests are located in <code class="highlighter-rouge">test/tests/</code>.</p>
+<p>Corresponding tests are located in <code class="language-plaintext highlighter-rouge">test/tests/</code>.</p>
 
 <h3 id="adding-an-undetected-vulnerability">Adding an Undetected Vulnerability</h3>
 
@@ -92,17 +92,17 @@
 
 <p>If possible, a real-life test case makes this much easier to implement.</p>
 
-<p>To add a new vulnerability and verify that Brakeman does not alert on it, choose one of the Rails applications in <code class="highlighter-rouge">test/apps</code> according to the version desired and add some vulnerable code to it.</p>
+<p>To add a new vulnerability and verify that Brakeman does not alert on it, choose one of the Rails applications in <code class="language-plaintext highlighter-rouge">test/apps</code> according to the version desired and add some vulnerable code to it.</p>
 
 <p>There is no real strict structure to the applications, so add the vulnerability wherever it makes sense. Adding new files as needed is fine.</p>
 
 <p><strong>IMPORTANT</strong>: If adding a vulnerability to an existing file, make sure it is <em>below</em> any existing code containing vulnerabilities. Shifting any existing lines will cause all those tests to fail!</p>
 
-<p>Once the new vulnerability has been added, run <code class="highlighter-rouge">test/test.rb</code>. If all the tests pass, the new vulnerability has not been detected. This can be verified by running Brakeman directly against the application.</p>
+<p>Once the new vulnerability has been added, run <code class="language-plaintext highlighter-rouge">test/test.rb</code>. If all the tests pass, the new vulnerability has not been detected. This can be verified by running Brakeman directly against the application.</p>
 
 <p>However, if a test fails like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1) Failure:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1) Failure:
  test_number_of_warnings(Rails2Tests) [test.rb:84]:
  Expected 22 warning warnings, but found 23.
  &lt;22&gt; expected but was
@@ -117,17 +117,17 @@
 
 <p>There may be categories of Brakeman that does detect, but is not covered by the current tests. OR, you are planning on submitting a new feature or check that will find more vulnerabilities.</p>
 
-<p>Again, this vulnerability should be added to one of the existing applications in <code class="highlighter-rouge">test/apps</code>. If the vulnerability differs according to version, it may make sense to add it to more than one application.</p>
+<p>Again, this vulnerability should be added to one of the existing applications in <code class="language-plaintext highlighter-rouge">test/apps</code>. If the vulnerability differs according to version, it may make sense to add it to more than one application.</p>
 
-<p>Once the vulnerability is introduced, run both <code class="highlighter-rouge">test/test.rb</code> and Brakeman directly against the code. Hopefully the tests show more warnings than expected, and the new vulnerability shows up in the Brakeman report.</p>
+<p>Once the vulnerability is introduced, run both <code class="language-plaintext highlighter-rouge">test/test.rb</code> and Brakeman directly against the code. Hopefully the tests show more warnings than expected, and the new vulnerability shows up in the Brakeman report.</p>
 
 <p>Now it is time to add a test for the warning.</p>
 
-<p>In the appropriate test suite under <code class="highlighter-rouge">test/tests</code>, add a new test for the warning. See <a href="/docs/testing_brakeman">this page</a> for information on how to do this.</p>
+<p>In the appropriate test suite under <code class="language-plaintext highlighter-rouge">test/tests</code>, add a new test for the warning. See <a href="/docs/testing_brakeman">this page</a> for information on how to do this.</p>
 
 <h3 id="adding-a-false-positive">Adding a False Positive</h3>
 
-<p>This should follow the same process as adding a known vulnerability. However, when it comes time to add the test for the warning, use <code class="highlighter-rouge">assert_no_warning</code> instead of <code class="highlighter-rouge">assert_warning</code>.</p>
+<p>This should follow the same process as adding a known vulnerability. However, when it comes time to add the test for the warning, use <code class="language-plaintext highlighter-rouge">assert_no_warning</code> instead of <code class="language-plaintext highlighter-rouge">assert_warning</code>.</p>
 
 <hr />
 

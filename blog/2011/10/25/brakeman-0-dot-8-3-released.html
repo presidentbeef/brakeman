@@ -112,7 +112,7 @@
 
 <h3 id="fix-for-tabs-format">Fix for .tabs Format</h3>
 
-<p>Brakeman will now pay attention to the <code class="highlighter-rouge">-w</code> flag (setting minimum confidence levels) when using the <code class="highlighter-rouge">.tabs</code> format.</p>
+<p>Brakeman will now pay attention to the <code class="language-plaintext highlighter-rouge">-w</code> flag (setting minimum confidence levels) when using the <code class="language-plaintext highlighter-rouge">.tabs</code> format.</p>
 
 <h3 id="escape-error-messages-in-html">Escape Error Messages in HTML</h3>
 
@@ -120,11 +120,11 @@
 
 <h3 id="skip-libs-option">–skip-libs Option</h3>
 
-<p>The <code class="highlighter-rouge">--skip-libs</code> option will cause Brakeman to not process the files in the <code class="highlighter-rouge">lib</code> directory. At the moment, the results from this directory are only used in a couple places, so it is unlikely that skipping them will cause any problems.</p>
+<p>The <code class="language-plaintext highlighter-rouge">--skip-libs</code> option will cause Brakeman to not process the files in the <code class="language-plaintext highlighter-rouge">lib</code> directory. At the moment, the results from this directory are only used in a couple places, so it is unlikely that skipping them will cause any problems.</p>
 
 <h3 id="parallel-checks">Parallel Checks</h3>
 
-<p>Checks are now run in separate threads by default. Thus far, there does not seem to be a big difference between using threads and the sequential approach. To turn off threads, use the <code class="highlighter-rouge">-n</code> option.</p>
+<p>Checks are now run in separate threads by default. Thus far, there does not seem to be a big difference between using threads and the sequential approach. To turn off threads, use the <code class="language-plaintext highlighter-rouge">-n</code> option.</p>
 
 <h3 id="ruby_parser-compatibility">ruby_parser Compatibility</h3>
 
@@ -132,7 +132,7 @@
 
 <h3 id="route-processing">Route Processing</h3>
 
-<p>Brakeman will no longer crash if there are problems parsing <code class="highlighter-rouge">routes.rb</code>. Instead, it will assume all public methods on controllers are actions. The <code class="highlighter-rouge">-a</code> option will also turn this behavior on.</p>
+<p>Brakeman will no longer crash if there are problems parsing <code class="language-plaintext highlighter-rouge">routes.rb</code>. Instead, it will assume all public methods on controllers are actions. The <code class="language-plaintext highlighter-rouge">-a</code> option will also turn this behavior on.</p>
 
 <p>Rails 3.1 route parsing is still a work in progress, so this should at least allow analysis of 3.1 apps, even if it means slightly reduced accuracy.</p>
 </div>

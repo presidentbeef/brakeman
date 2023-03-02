@@ -99,9 +99,9 @@
 
 <ul>
   <li>Speed improvements for CheckExecute and CheckRender</li>
-  <li>Check <code class="highlighter-rouge">named_scope</code> and <code class="highlighter-rouge">scope</code> for SQL injection</li>
-  <li>Add <code class="highlighter-rouge">--rake</code> option to create rake task to run Brakeman</li>
-  <li>Add <code class="highlighter-rouge">--summary</code> option to only output summary</li>
+  <li>Check <code class="language-plaintext highlighter-rouge">named_scope</code> and <code class="language-plaintext highlighter-rouge">scope</code> for SQL injection</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--rake</code> option to create rake task to run Brakeman</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--summary</code> option to only output summary</li>
   <li>Add experimental support for rescanning a subset of files</li>
   <li>Fix a problem with Rails 3 routes</li>
 </ul>
@@ -114,36 +114,36 @@
 
 <h3 id="more-sql-injection-checks">More SQL Injection Checks</h3>
 
-<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/30">a5sk4s</a> for pointing out that Brakeman was not checking <code class="highlighter-rouge">named_scope</code> for SQL injection. This has been rectified. For Rails 3.1 and up, <code class="highlighter-rouge">scope</code> will be checked.</p>
+<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/30">a5sk4s</a> for pointing out that Brakeman was not checking <code class="language-plaintext highlighter-rouge">named_scope</code> for SQL injection. This has been rectified. For Rails 3.1 and up, <code class="language-plaintext highlighter-rouge">scope</code> will be checked.</p>
 
-<p>Also, it seems common to use <code class="highlighter-rouge">Model.table_name</code> inside SQL statements. This will no longer raise a warning.</p>
+<p>Also, it seems common to use <code class="language-plaintext highlighter-rouge">Model.table_name</code> inside SQL statements. This will no longer raise a warning.</p>
 
 <h3 id="brakeman-rake-task">Brakeman Rake Task</h3>
 
-<p>The <code class="highlighter-rouge">--rake</code> option can now be used to install a Rake task for running Brakeman. The task will be copied to <code class="highlighter-rouge">lib/tasks/brakeman.rake</code>.</p>
+<p>The <code class="language-plaintext highlighter-rouge">--rake</code> option can now be used to install a Rake task for running Brakeman. The task will be copied to <code class="language-plaintext highlighter-rouge">lib/tasks/brakeman.rake</code>.</p>
 
 <p>To use, run this from the root of the Rails app:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --rake
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --rake
 </code></pre></div></div>
 
 <p>Then, to run Brakeman:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake brakeman:run
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake brakeman:run
 </code></pre></div></div>
 
 <p>Naturally, this requires Rake to be installed.</p>
 
 <p>To output to a specific file:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake brakeman:run["report.html"]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake brakeman:run["report.html"]
 </code></pre></div></div>
 
 <p>More actions may be added in the future.</p>
 
 <h3 id="summary-option">Summary Option</h3>
 
-<p>Sometimes the specifics of a scan are not needed. The <code class="highlighter-rouge">--summary</code> option will limit the report output to just the summary section.</p>
+<p>Sometimes the specifics of a scan are not needed. The <code class="language-plaintext highlighter-rouge">--summary</code> option will limit the report output to just the summary section.</p>
 
 <h3 id="rescan-for-subset-of-files">Rescan for Subset of Files</h3>
 

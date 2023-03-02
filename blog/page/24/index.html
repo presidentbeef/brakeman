@@ -117,16 +117,16 @@
 
 <p>The first looks for mass assignment which deliberately bypasses attribute protection. For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.new(params[:user], :without_protection) =&gt; true)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.new(params[:user], :without_protection) =&gt; true)
 </code></pre></div></div>
 
 <p>If user input is used for initializing the record, the warning will be set to high confidence. Otherwise, it will show up as medium confidence.</p>
 
-<p>The second new check looks for controllers using the new <code class="highlighter-rouge">http_basic_authenticate_with</code> method and including the password directly in the source.</p>
+<p>The second new check looks for controllers using the new <code class="language-plaintext highlighter-rouge">http_basic_authenticate_with</code> method and including the password directly in the source.</p>
 
 <p>The example from the <a href="http://guides.rubyonrails.org/getting_started.html">Rails guide</a> looks like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class PostsController &lt; ApplicationController
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class PostsController &lt; ApplicationController
  
   http_basic_authenticate_with :name =&gt; "dhh", :password =&gt; "secret", :except =&gt; :index
 
@@ -139,9 +139,9 @@ end
 
 <h2 id="changes-to-existing-warnings">Changes to Existing Warnings</h2>
 
-<p>Mass assignment has been changed to raise a warning if there is any user input when calling <code class="highlighter-rouge">Model.new</code>.</p>
+<p>Mass assignment has been changed to raise a warning if there is any user input when calling <code class="language-plaintext highlighter-rouge">Model.new</code>.</p>
 
-<p><code class="highlighter-rouge">auto_link</code> was previously set to be a “known dangerous” method because it did not escape its output. That was fixed in Rails 3.0.6, so it will be considered safe for versions 3.0.6 and up. But then <code class="highlighter-rouge">auto_link</code> was removed in Rails 3.1, so for 3.1 and up it will be treated as a regular method.</p>
+<p><code class="language-plaintext highlighter-rouge">auto_link</code> was previously set to be a “known dangerous” method because it did not escape its output. That was fixed in Rails 3.0.6, so it will be considered safe for versions 3.0.6 and up. But then <code class="language-plaintext highlighter-rouge">auto_link</code> was removed in Rails 3.1, so for 3.1 and up it will be treated as a regular method.</p>
 
 <h2 id="changes-to-output">Changes to Output</h2>
 
@@ -193,7 +193,7 @@ end
 
 <p>In celebration of this grand anniversary, there have been several new releases today.</p>
 
-<p>The first is <a href="http://rubygems.org/gems/brakeman/versions/0.7.2">Brakeman 0.7.2</a>, a minor release adding CVE numbers for the <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/f878a33159ac9967">latest vulnerabilities</a> and fixing how nested params/cookie accesses are handled (e.g., <code class="highlighter-rouge">params[:user][:name]</code> is now considered a direct use of a parameter).</p>
+<p>The first is <a href="http://rubygems.org/gems/brakeman/versions/0.7.2">Brakeman 0.7.2</a>, a minor release adding CVE numbers for the <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/f878a33159ac9967">latest vulnerabilities</a> and fixing how nested params/cookie accesses are handled (e.g., <code class="language-plaintext highlighter-rouge">params[:user][:name]</code> is now considered a direct use of a parameter).</p>
 
 <p>Next up, Brakeman has its own Twitter feed <a href="https://twitter.com/brakemanscanner">@BrakemanScanner</a>.</p>
 

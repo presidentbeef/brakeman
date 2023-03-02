@@ -103,10 +103,10 @@
 <p><em>Changes since 5.0.0:</em></p>
 
 <ul>
-  <li>Support loading <code class="highlighter-rouge">slim/smart</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1570">#1570</a>)</li>
+  <li>Support loading <code class="language-plaintext highlighter-rouge">slim/smart</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1570">#1570</a>)</li>
   <li>Set more line numbers on Sexps (<a href="https://github.com/presidentbeef/brakeman/issues/1579">#1579</a>)</li>
-  <li>Detect <code class="highlighter-rouge">::Rails.application.configure</code> too (<a href="https://github.com/presidentbeef/brakeman/issues/1584">#1584</a>)</li>
-  <li>Always ignore <code class="highlighter-rouge">slice</code>/<code class="highlighter-rouge">only</code> calls for mass assignment</li>
+  <li>Detect <code class="language-plaintext highlighter-rouge">::Rails.application.configure</code> too (<a href="https://github.com/presidentbeef/brakeman/issues/1584">#1584</a>)</li>
+  <li>Always ignore <code class="language-plaintext highlighter-rouge">slice</code>/<code class="language-plaintext highlighter-rouge">only</code> calls for mass assignment</li>
   <li>Don’t fail if $HOME/$USER are not defined</li>
   <li>Convert splat array arguments to arguments</li>
   <li>Bundle unreleased RubyParser changes</li>
@@ -115,13 +115,13 @@
 <h3 id="support-smart-text-in-slim-templates">Support Smart Text in Slim Templates</h3>
 
 <p>In order to support “<a href="https://github.com/slim-template/slim/blob/master/doc/smart.md">Smart Text</a>” in Slim templates,
-Brakeman will load <code class="highlighter-rouge">slim/smart</code> if <code class="highlighter-rouge">slim/smart</code> is mentioned in the <code class="highlighter-rouge">Gemfile</code>.</p>
+Brakeman will load <code class="language-plaintext highlighter-rouge">slim/smart</code> if <code class="language-plaintext highlighter-rouge">slim/smart</code> is mentioned in the <code class="language-plaintext highlighter-rouge">Gemfile</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1582">changes</a>)</p>
 
 <h3 id="more-line-numbers">More Line Numbers</h3>
 
-<p>Setting <code class="highlighter-rouge">nil</code> value for the line number of a Sexp raises an exception.</p>
+<p>Setting <code class="language-plaintext highlighter-rouge">nil</code> value for the line number of a Sexp raises an exception.</p>
 
 <p>This is usually from creating a Sexp without a line number in the first place.</p>
 
@@ -131,7 +131,7 @@ Brakeman will load <code class="highlighter-rouge">slim/smart</code> if <code cl
 
 <h3 id="always-ignore-sliceonly-for-mass-assignment">Always Ignore slice/only for Mass Assignment</h3>
 
-<p>If <code class="highlighter-rouge">slice</code> or <code class="highlighter-rouge">only</code> are called for arguments to mass assignment (e.g. <code class="highlighter-rouge">User.new(some_hash.slice(:name, :email))</code>),
+<p>If <code class="language-plaintext highlighter-rouge">slice</code> or <code class="language-plaintext highlighter-rouge">only</code> are called for arguments to mass assignment (e.g. <code class="language-plaintext highlighter-rouge">User.new(some_hash.slice(:name, :email))</code>),
 Brakeman will not warn about mass assignment.</p>
 
 <p>These have been ignored for a while, but a logic error caused Brakeman to sometimes still warn about them.</p>
@@ -156,7 +156,7 @@ Brakeman will not warn about mass assignment.</p>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4c1b7c7747ecfca11a822a4bab5ad05f13515e195d7d34590d3add215573b431  brakeman-5.0.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4c1b7c7747ecfca11a822a4bab5ad05f13515e195d7d34590d3add215573b431  brakeman-5.0.1.gem
 79129c2977936113fc87a9a2e9490b734f088286d0b33ed9ca61cb6587dc18c7  brakeman-lib-5.0.1.gem
 549034d7aeb2a5ca8fe299c41b91938d502a89e70a1afa68643ca3c9e5ccaf96  brakeman-min-5.0.1.gem
 </code></pre></div></div>
@@ -211,20 +211,20 @@ This may have a significant impact on reported warnings and scan times - see bel
   <li>Add Sonarqube report format (<a href="https://github.com/adamnengland">Adam England</a>)</li>
   <li>Add check for (more) unsafe method reflection (<a href="https://github.com/presidentbeef/brakeman/issues/1488">#1488</a>, <a href="https://github.com/presidentbeef/brakeman/issues/1507">#1507</a>, and <a href="https://github.com/presidentbeef/brakeman/issues/1508">#1508</a>)</li>
   <li>Add check for potential HTTP verb confusion (<a href="https://github.com/presidentbeef/brakeman/issues/1432">#1432</a>)</li>
-  <li>Add <code class="highlighter-rouge">--[no-]skip-vendor</code> option</li>
-  <li>Ignore <code class="highlighter-rouge">uuid</code> as a safe attribute</li>
-  <li>Ignore <code class="highlighter-rouge">Tempfile#path</code> in shell commands</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--[no-]skip-vendor</code> option</li>
+  <li>Ignore <code class="language-plaintext highlighter-rouge">uuid</code> as a safe attribute</li>
+  <li>Ignore <code class="language-plaintext highlighter-rouge">Tempfile#path</code> in shell commands</li>
   <li>Ignore development environment</li>
-  <li>Collapse <code class="highlighter-rouge">__send__</code> calls</li>
-  <li>Set Rails configuration defaults based on <code class="highlighter-rouge">load_defaults</code> version</li>
+  <li>Collapse <code class="language-plaintext highlighter-rouge">__send__</code> calls</li>
+  <li>Set Rails configuration defaults based on <code class="language-plaintext highlighter-rouge">load_defaults</code> version</li>
   <li>Update Ruby requirement to version 2.4.0</li>
-  <li>Suggest using <code class="highlighter-rouge">--force</code> if no Rails application is detected</li>
+  <li>Suggest using <code class="language-plaintext highlighter-rouge">--force</code> if no Rails application is detected</li>
 </ul>
 
 <h3 id="scan-almost-all-ruby-files">Scan Almost All Ruby Files</h3>
 
 <p>Since the beginning, Brakeman has been picky about what directories it searches for files.
-In general, Brakeman has looked in ‘normal’ Rails directores like <code class="highlighter-rouge">app/controllers/</code>, <code class="highlighter-rouge">app/models/</code>, <code class="highlighter-rouge">app/views/</code>, <code class="highlighter-rouge">lib/</code>, <code class="highlighter-rouge">config</code>, etc.
+In general, Brakeman has looked in ‘normal’ Rails directores like <code class="language-plaintext highlighter-rouge">app/controllers/</code>, <code class="language-plaintext highlighter-rouge">app/models/</code>, <code class="language-plaintext highlighter-rouge">app/views/</code>, <code class="language-plaintext highlighter-rouge">lib/</code>, <code class="language-plaintext highlighter-rouge">config</code>, etc.
 This is because Rails has some default logic based on file paths - like mapping a controller action to a given view.</p>
 
 <p>But if an application varied from the norm, Brakeman would simply not scan those other directories.
@@ -236,7 +236,7 @@ This has been surprisingly effective.</p>
 <p>However, scanning more files means Brakeman runs slower and may report more false positives because the new files
 are harder to reason about and less likely to be exposed as part of the attack surface.</p>
 
-<p>Brakeman does ignore <code class="highlighter-rouge">test</code>, <code class="highlighter-rouge">spec</code>, and <code class="highlighter-rouge">vendor</code> directories. To scan the <code class="highlighter-rouge">vendor</code> directory as well, use <code class="highlighter-rouge">--no-skip-vendor</code>.</p>
+<p>Brakeman does ignore <code class="language-plaintext highlighter-rouge">test</code>, <code class="language-plaintext highlighter-rouge">spec</code>, and <code class="language-plaintext highlighter-rouge">vendor</code> directories. To scan the <code class="language-plaintext highlighter-rouge">vendor</code> directory as well, use <code class="language-plaintext highlighter-rouge">--no-skip-vendor</code>.</p>
 
 <p>Please report any issues!</p>
 
@@ -260,15 +260,15 @@ are harder to reason about and less likely to be exposed as part of the attack s
 
 <h3 id="more-unsafe-method-reflection">More Unsafe Method Reflection</h3>
 
-<p>A new check was added for unsafe use of <code class="highlighter-rouge">method</code>, <code class="highlighter-rouge">to_proc</code>, and <code class="highlighter-rouge">tap</code>.</p>
+<p>A new check was added for unsafe use of <code class="language-plaintext highlighter-rouge">method</code>, <code class="language-plaintext highlighter-rouge">to_proc</code>, and <code class="language-plaintext highlighter-rouge">tap</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1527">changes</a>)</p>
 
 <h3 id="http-verb-confusion-check">HTTP Verb Confusion Check</h3>
 
-<p>In Rails, <code class="highlighter-rouge">HEAD</code> requests are routed like <code class="highlighter-rouge">GET</code> requests, but <code class="highlighter-rouge">request.get?</code> will be false.</p>
+<p>In Rails, <code class="language-plaintext highlighter-rouge">HEAD</code> requests are routed like <code class="language-plaintext highlighter-rouge">GET</code> requests, but <code class="language-plaintext highlighter-rouge">request.get?</code> will be false.</p>
 
-<p>Some code may assume if <code class="highlighter-rouge">request.get?</code> is false, then <code class="highlighter-rouge">request.post?</code> is true:</p>
+<p>Some code may assume if <code class="language-plaintext highlighter-rouge">request.get?</code> is false, then <code class="language-plaintext highlighter-rouge">request.post?</code> is true:</p>
 
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">request</span><span class="p">.</span><span class="nf">get?</span>
   <span class="c1"># Do something benign</span>
@@ -278,19 +278,19 @@ are harder to reason about and less likely to be exposed as part of the attack s
 <span class="k">end</span>
 </code></pre></div></div>
 
-<p>Brakeman will warn when an <code class="highlighter-rouge">if</code> expression checks <code class="highlighter-rouge">request.get?</code> but has an <code class="highlighter-rouge">else</code> clause instead of <code class="highlighter-rouge">elseif ...</code>.</p>
+<p>Brakeman will warn when an <code class="language-plaintext highlighter-rouge">if</code> expression checks <code class="language-plaintext highlighter-rouge">request.get?</code> but has an <code class="language-plaintext highlighter-rouge">else</code> clause instead of <code class="language-plaintext highlighter-rouge">elseif ...</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1524">changes</a>)</p>
 
 <h3 id="uuids-as-safe-attributes">UUIDs as Safe Attributes</h3>
 
-<p><code class="highlighter-rouge">#uuid</code> will be treated as a safe value, particular in SQL.</p>
+<p><code class="language-plaintext highlighter-rouge">#uuid</code> will be treated as a safe value, particular in SQL.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1553">changes</a>)</p>
 
 <h3 id="tempfile-paths-in-shell-commands">Tempfile Paths in Shell Commands</h3>
 
-<p><code class="highlighter-rouge">Tempfile#path</code> will be considered as safe value for command injection.</p>
+<p><code class="language-plaintext highlighter-rouge">Tempfile#path</code> will be considered as safe value for command injection.</p>
 
 <p>Also adds support for Tempfiles like:</p>
 
@@ -310,11 +310,11 @@ are harder to reason about and less likely to be exposed as part of the attack s
 <span class="k">end</span>
 </code></pre></div></div>
 
-<p>This was already true for <code class="highlighter-rouge">Rails.env.test?</code>.</p>
+<p>This was already true for <code class="language-plaintext highlighter-rouge">Rails.env.test?</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1549">changes</a>)</p>
 
-<h3 id="collapse-__send__-calls">Collapse <code class="highlighter-rouge">__send__</code> Calls</h3>
+<h3 id="collapse-__send__-calls">Collapse <code class="language-plaintext highlighter-rouge">__send__</code> Calls</h3>
 
 <p>Brakeman will treat</p>
 
@@ -326,13 +326,13 @@ are harder to reason about and less likely to be exposed as part of the attack s
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Blah</span><span class="p">.</span><span class="nf">something</span><span class="p">(</span><span class="mf">5.0</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>This was already true for <code class="highlighter-rouge">send</code> and <code class="highlighter-rouge">try</code>.</p>
+<p>This was already true for <code class="language-plaintext highlighter-rouge">send</code> and <code class="language-plaintext highlighter-rouge">try</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1551">changes</a>)</p>
 
 <h3 id="set-rails-defaults">Set Rails Defaults</h3>
 
-<p>Brakeman will set default values for Rails configuration options based on the version argument to <code class="highlighter-rouge">config.load_defaults</code> which is usually called in <code class="highlighter-rouge">application.rb</code>.</p>
+<p>Brakeman will set default values for Rails configuration options based on the version argument to <code class="language-plaintext highlighter-rouge">config.load_defaults</code> which is usually called in <code class="language-plaintext highlighter-rouge">application.rb</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1532">changes</a>)</p>
 
@@ -348,7 +348,7 @@ are harder to reason about and less likely to be exposed as part of the attack s
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>21b91f67cde4cf487df0a4dbf6e54729064c665bb0b4b370b71bac9435b63e4c  brakeman-5.0.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>21b91f67cde4cf487df0a4dbf6e54729064c665bb0b4b370b71bac9435b63e4c  brakeman-5.0.0.gem
 3641c52448ca1d12423595ca1a874c1362f438cd58196825be648bb797096cb5  brakeman-lib-5.0.0.gem
 50bab26fe8fcf8d962baaf5b08b7c178315b7c0e4be07d1b134e8ae00338c908  brakeman-min-5.0.0.gem
 </code></pre></div></div>
@@ -396,7 +396,7 @@ are harder to reason about and less likely to be exposed as part of the attack s
 
 <ul>
   <li>Declare REXML as a dependency (Ruby 3.0 compatibility)</li>
-  <li>Use <code class="highlighter-rouge">Sexp#sexp_body</code> instead of <code class="highlighter-rouge">Sexp#[..]</code> (Ruby 3.0 compatibility)</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">Sexp#sexp_body</code> instead of <code class="language-plaintext highlighter-rouge">Sexp#[..]</code> (Ruby 3.0 compatibility)</li>
   <li>Prevent render loops when template names are absolute paths (<a href="https://github.com/presidentbeef/brakeman/issues/1536">#1536</a>)</li>
   <li>Ensure RubyParser is passed file path as a String (<a href="https://github.com/presidentbeef/brakeman/issues/1534">#1534</a>)</li>
   <li>Support new Haml 5.2.0 escaping method (<a href="https://github.com/presidentbeef/brakeman/issues/1517">#1517</a>)</li>
@@ -406,16 +406,16 @@ are harder to reason about and less likely to be exposed as part of the attack s
 
 <p>In Ruby 3.0, REXML has become a ‘bundled’ gem. It is distributed with Ruby, but if Bundler is involved then it needs to be declared as an explicit dependency.</p>
 
-<p>If you like minimal dependencies, you can always use the <code class="highlighter-rouge">brakeman-min</code> gem which declares only strict dependencies.</p>
+<p>If you like minimal dependencies, you can always use the <code class="language-plaintext highlighter-rouge">brakeman-min</code> gem which declares only strict dependencies.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1538">changes</a>)</p>
 
 <h3 id="avoid-slicing-with-sexp">Avoid Slicing with Sexp#[]</h3>
 
-<p><code class="highlighter-rouge">Sexp</code> subclasses from <code class="highlighter-rouge">Array</code>, and <code class="highlighter-rouge">Array</code> no longer returns subclasses from methods that create new arrays.</p>
+<p><code class="language-plaintext highlighter-rouge">Sexp</code> subclasses from <code class="language-plaintext highlighter-rouge">Array</code>, and <code class="language-plaintext highlighter-rouge">Array</code> no longer returns subclasses from methods that create new arrays.</p>
 
-<p>Brakeman was unfortunately using <code class="highlighter-rouge">Sexp#[]</code> with ranges (e.g. <code class="highlighter-rouge">s(:a, :b, :c)[1..-1]</code>), which runs into this behavior.
-Happily, the <code class="highlighter-rouge">Sexp#sexp_body</code> method already exists to properly slice and return a <code class="highlighter-rouge">Sexp</code>.</p>
+<p>Brakeman was unfortunately using <code class="language-plaintext highlighter-rouge">Sexp#[]</code> with ranges (e.g. <code class="language-plaintext highlighter-rouge">s(:a, :b, :c)[1..-1]</code>), which runs into this behavior.
+Happily, the <code class="language-plaintext highlighter-rouge">Sexp#sexp_body</code> method already exists to properly slice and return a <code class="language-plaintext highlighter-rouge">Sexp</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1538">changes</a>)</p>
 
@@ -429,10 +429,10 @@ Happily, the <code class="highlighter-rouge">Sexp#sexp_body</code> method alread
 
 <h3 id="ensure-rubyparser-path-is-a-string">Ensure RubyParser Path is a String</h3>
 
-<p>In some cases, the parser was given a <code class="highlighter-rouge">Brakeman::FilePath</code> for the file name.
+<p>In some cases, the parser was given a <code class="language-plaintext highlighter-rouge">Brakeman::FilePath</code> for the file name.
 This only caused an issue in some weird corner cases, but it was wrong nonetheless.</p>
 
-<p>Now <code class="highlighter-rouge">Brakeman::FileParser</code> will ensure the file name is passed as a string.</p>
+<p>Now <code class="language-plaintext highlighter-rouge">Brakeman::FileParser</code> will ensure the file name is passed as a string.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1535">changes</a>)</p>
 
@@ -448,7 +448,7 @@ This only caused an issue in some weird corner cases, but it was wrong nonethele
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>e40451080554884a63d73a2933c36518a3cf7a2bb471e6d864ce39a9d3455c98  brakeman-4.10.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>e40451080554884a63d73a2933c36518a3cf7a2bb471e6d864ce39a9d3455c98  brakeman-4.10.1.gem
 ec69e04e087b74862629e952d7817dd7b73e30810166e01d69d24d7164101455  brakeman-lib-4.10.1.gem
 3deee68eadd8eb6850254a8e753d6bbe933194c883f12a2455bdf5fd97b1eba2  brakeman-min-4.10.1.gem
 </code></pre></div></div>
@@ -503,7 +503,7 @@ ec69e04e087b74862629e952d7817dd7b73e30810166e01d69d24d7164101455  brakeman-lib-4
 <p><a href="https://github.com/swinton">Steve Winton</a> from GitHub has contributed support for <a href="https://sarifweb.azurewebsites.net/">Static Analysis Results Interchange Format (SARIF)</a>.
 This is a standard format for static analysis tools and can be consumed by some report viewers, such as <a href="https://github.com/Microsoft/sarif-vscode-extension/">this one for Visual Studio Code</a>.</p>
 
-<p>To output a SARIF report, use <code class="highlighter-rouge">-f sarif</code> or a file name like <code class="highlighter-rouge">-o report.sarif</code>.</p>
+<p>To output a SARIF report, use <code class="language-plaintext highlighter-rouge">-f sarif</code> or a file name like <code class="language-plaintext highlighter-rouge">-o report.sarif</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1500">changes</a>)</p>
 
@@ -511,10 +511,10 @@ This is a standard format for static analysis tools and can be consumed by some 
 
 <p><em>What is planned for Brakeman 5.0?</em></p>
 
-<p>The big change coming in 5.0 is scanning <em>way</em> more files. Currently, Brakeman scans specific directories in <code class="highlighter-rouge">app/</code>, <code class="highlighter-rouge">config/</code>, <code class="highlighter-rouge">lib/</code>, and <code class="highlighter-rouge">engines/</code>.
-It also only looks for files in particular places - e.g. views will be somewhere in <code class="highlighter-rouge">app/**/views</code>.</p>
+<p>The big change coming in 5.0 is scanning <em>way</em> more files. Currently, Brakeman scans specific directories in <code class="language-plaintext highlighter-rouge">app/</code>, <code class="language-plaintext highlighter-rouge">config/</code>, <code class="language-plaintext highlighter-rouge">lib/</code>, and <code class="language-plaintext highlighter-rouge">engines/</code>.
+It also only looks for files in particular places - e.g. views will be somewhere in <code class="language-plaintext highlighter-rouge">app/**/views</code>.</p>
 
-<p>In 5.0, Brakeman will scan (almost) all files in the project directory with <code class="highlighter-rouge">.rb</code> or template-related extensions.
+<p>In 5.0, Brakeman will scan (almost) all files in the project directory with <code class="language-plaintext highlighter-rouge">.rb</code> or template-related extensions.
 This will dramatically increase the scope of Brakeman scans, which is better coverage but at the cost of more false positives and slower scans.</p>
 
 <p>Also expected in Brakeman 5.0 is a bump of minimum Ruby version to 2.4.0 (which is already EOL).</p>
@@ -523,7 +523,7 @@ This will dramatically increase the scope of Brakeman scans, which is better cov
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7bef7df71137d06be5fc3325ead57f8ce35be7691bf6dd389228461d731b79dd  brakeman-4.10.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7bef7df71137d06be5fc3325ead57f8ce35be7691bf6dd389228461d731b79dd  brakeman-4.10.0.gem
 698b8eb02cdea7a6e407192c261c61d8fc6cd24d590a1b388defc9de17966119  brakeman-lib-4.10.0.gem
 64bb565ee84b9a9646985e456db1125ff9fb884ca83de6ba6fbc2c63bdbc8de9  brakeman-min-4.10.0.gem
 </code></pre></div></div>
@@ -570,15 +570,15 @@ This will dramatically increase the scope of Brakeman scans, which is better cov
 <p><em>Changes since 4.9.0:</em></p>
 
 <ul>
-  <li>Use version from <code class="highlighter-rouge">active_record</code> for non-Rails apps (<a href="https://github.com/BuonOmo">Ulysse Buonomo</a>)</li>
-  <li>Check <code class="highlighter-rouge">chomp</code>ed strings for SQL injection (<a href="https://github.com/presidentbeef/brakeman/issues/1509">#1509</a>)</li>
+  <li>Use version from <code class="language-plaintext highlighter-rouge">active_record</code> for non-Rails apps (<a href="https://github.com/BuonOmo">Ulysse Buonomo</a>)</li>
+  <li>Check <code class="language-plaintext highlighter-rouge">chomp</code>ed strings for SQL injection (<a href="https://github.com/presidentbeef/brakeman/issues/1509">#1509</a>)</li>
   <li>Always set line number for joined arrays (<a href="https://github.com/presidentbeef/brakeman/issues/1499">#1499</a>)</li>
-  <li>Avoid warning about missing <code class="highlighter-rouge">attr_accessible</code> if <code class="highlighter-rouge">protected_attributes</code> gem is used (<a href="https://github.com/presidentbeef/brakeman/issues/1512">#1512</a>)</li>
+  <li>Avoid warning about missing <code class="language-plaintext highlighter-rouge">attr_accessible</code> if <code class="language-plaintext highlighter-rouge">protected_attributes</code> gem is used (<a href="https://github.com/presidentbeef/brakeman/issues/1512">#1512</a>)</li>
 </ul>
 
 <h3 id="check-activerecord-version">Check ActiveRecord Version</h3>
 
-<p>For non-Rails applications that are using ActiveRecord, use the version of <code class="highlighter-rouge">active_record</code> to set Brakeman’s guess at a Rails version. Thanks to <a href="https://github.com/BuonOmo">Ulysse Buonomo</a>.</p>
+<p>For non-Rails applications that are using ActiveRecord, use the version of <code class="language-plaintext highlighter-rouge">active_record</code> to set Brakeman’s guess at a Rails version. Thanks to <a href="https://github.com/BuonOmo">Ulysse Buonomo</a>.</p>
 
 <p><em>Note: It is not recommended to run Brakeman on non-Rails applications… but no one is going to stop you if you want really to.</em></p>
 
@@ -586,7 +586,7 @@ This will dramatically increase the scope of Brakeman scans, which is better cov
 
 <h3 id="sql-injection-with-chomp">SQL Injection with Chomp</h3>
 
-<p>Brakeman will now check for string interpolation inside strings that have <code class="highlighter-rouge">chomp</code> called on them.</p>
+<p>Brakeman will now check for string interpolation inside strings that have <code class="language-plaintext highlighter-rouge">chomp</code> called on them.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1511">changes</a>)</p>
 
@@ -599,9 +599,9 @@ Not really sure how that happens, though.</p>
 
 <h3 id="protected-attributes">Protected Attributes</h3>
 
-<p>When using the <code class="highlighter-rouge">protected_attributes</code> gem, it is allowed but not required to set <code class="highlighter-rouge">attr_accessible</code> on models.</p>
+<p>When using the <code class="language-plaintext highlighter-rouge">protected_attributes</code> gem, it is allowed but not required to set <code class="language-plaintext highlighter-rouge">attr_accessible</code> on models.</p>
 
-<p>Brakeman will no longer warn about missing <code class="highlighter-rouge">attr_accessible</code> when <code class="highlighter-rouge">protected_attributes</code> is used.</p>
+<p>Brakeman will no longer warn about missing <code class="language-plaintext highlighter-rouge">attr_accessible</code> when <code class="language-plaintext highlighter-rouge">protected_attributes</code> is used.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1513">changes</a>)</p>
 
@@ -613,7 +613,7 @@ Not really sure how that happens, though.</p>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5a17706b1da4886f1b6864c3ffff1ab40684f3f7b4d667138227c467ebccb0f7  brakeman-4.9.1.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5a17706b1da4886f1b6864c3ffff1ab40684f3f7b4d667138227c467ebccb0f7  brakeman-4.9.1.gem
 8bb3d88f9786e9f08c24d38e88c40adf02f4a47b17de8c1c816f7e174de476a4  brakeman-lib-4.9.1.gem
 8eae3eec1ebab0cf3b29ea50089f613b0d8e544ae4c332f1f5e64a240e8a0a94  brakeman-min-4.9.1.gem
 </code></pre></div></div>

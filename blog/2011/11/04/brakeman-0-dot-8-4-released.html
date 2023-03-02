@@ -106,25 +106,25 @@
 
 <h3 id="separate-attr_accessible-warnings">Separate attr_accessible Warnings</h3>
 
-<p>The current default is to roll all controllers lacking <code class="highlighter-rouge">attr_accessible</code> into a single warning. This is convenient when manually looking at HTML or text output, but for Jenkins/Hudson it is better to have each be a separate warning. That way it is easier to track new and fixed warnings.</p>
+<p>The current default is to roll all controllers lacking <code class="language-plaintext highlighter-rouge">attr_accessible</code> into a single warning. This is convenient when manually looking at HTML or text output, but for Jenkins/Hudson it is better to have each be a separate warning. That way it is easier to track new and fixed warnings.</p>
 
-<p>To turn on this behavior, use <code class="highlighter-rouge">--separate-models</code>.</p>
+<p>To turn on this behavior, use <code class="language-plaintext highlighter-rouge">--separate-models</code>.</p>
 
 <h3 id="custom-css-for-html-output">Custom CSS for HTML Output</h3>
 
-<p>Use the <code class="highlighter-rouge">--css-file</code> option to set a custom CSS file for styling HTML output. This file is copied directly into the report.</p>
+<p>Use the <code class="language-plaintext highlighter-rouge">--css-file</code> option to set a custom CSS file for styling HTML output. This file is copied directly into the report.</p>
 
 <h3 id="file-names-for-version-specific-warnings">File Names for Version-Specific Warnings</h3>
 
-<p>Previously, there would be no file name associated with warnings about certain versions of Rails. This caused the warnings to not show up in the Jenkins/Hudson plugin. Now either <code class="highlighter-rouge">Gemfile</code> or <code class="highlighter-rouge">config/environment.rb</code> will be used as the file name for warnings based on the detected Rails version.</p>
+<p>Previously, there would be no file name associated with warnings about certain versions of Rails. This caused the warnings to not show up in the Jenkins/Hudson plugin. Now either <code class="language-plaintext highlighter-rouge">Gemfile</code> or <code class="language-plaintext highlighter-rouge">config/environment.rb</code> will be used as the file name for warnings based on the detected Rails version.</p>
 
 <h3 id="line-number-for-default-routes">Line Number for Default Routes</h3>
 
-<p>When default routes were detected for specific controllers, there will now be a line number (from <code class="highlighter-rouge">routes.rb</code>) associated with the warning.</p>
+<p>When default routes were detected for specific controllers, there will now be a line number (from <code class="language-plaintext highlighter-rouge">routes.rb</code>) associated with the warning.</p>
 
 <h3 id="hash_insert-fixed">hash_insert() Fixed</h3>
 
-<p><code class="highlighter-rouge">hash_insert</code> was broken and would cause some spurious warnings. For example, sometimes <code class="highlighter-rouge">only_path =&gt; true</code> would be set in <code class="highlighter-rouge">params</code>, but Brakeman would mess up the <code class="highlighter-rouge">params</code> hash and a redirect warning would still be created.</p>
+<p><code class="language-plaintext highlighter-rouge">hash_insert</code> was broken and would cause some spurious warnings. For example, sometimes <code class="language-plaintext highlighter-rouge">only_path =&gt; true</code> would be set in <code class="language-plaintext highlighter-rouge">params</code>, but Brakeman would mess up the <code class="language-plaintext highlighter-rouge">params</code> hash and a redirect warning would still be created.</p>
 
 <h3 id="threaded-checks-no-longer-use-queue">Threaded Checks No Longer Use Queue</h3>
 

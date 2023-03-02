@@ -106,7 +106,7 @@
 <p><a href="https://github.com/swinton">Steve Winton</a> from GitHub has contributed support for <a href="https://sarifweb.azurewebsites.net/">Static Analysis Results Interchange Format (SARIF)</a>.
 This is a standard format for static analysis tools and can be consumed by some report viewers, such as <a href="https://github.com/Microsoft/sarif-vscode-extension/">this one for Visual Studio Code</a>.</p>
 
-<p>To output a SARIF report, use <code class="highlighter-rouge">-f sarif</code> or a file name like <code class="highlighter-rouge">-o report.sarif</code>.</p>
+<p>To output a SARIF report, use <code class="language-plaintext highlighter-rouge">-f sarif</code> or a file name like <code class="language-plaintext highlighter-rouge">-o report.sarif</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1500">changes</a>)</p>
 
@@ -114,10 +114,10 @@ This is a standard format for static analysis tools and can be consumed by some 
 
 <p><em>What is planned for Brakeman 5.0?</em></p>
 
-<p>The big change coming in 5.0 is scanning <em>way</em> more files. Currently, Brakeman scans specific directories in <code class="highlighter-rouge">app/</code>, <code class="highlighter-rouge">config/</code>, <code class="highlighter-rouge">lib/</code>, and <code class="highlighter-rouge">engines/</code>.
-It also only looks for files in particular places - e.g. views will be somewhere in <code class="highlighter-rouge">app/**/views</code>.</p>
+<p>The big change coming in 5.0 is scanning <em>way</em> more files. Currently, Brakeman scans specific directories in <code class="language-plaintext highlighter-rouge">app/</code>, <code class="language-plaintext highlighter-rouge">config/</code>, <code class="language-plaintext highlighter-rouge">lib/</code>, and <code class="language-plaintext highlighter-rouge">engines/</code>.
+It also only looks for files in particular places - e.g. views will be somewhere in <code class="language-plaintext highlighter-rouge">app/**/views</code>.</p>
 
-<p>In 5.0, Brakeman will scan (almost) all files in the project directory with <code class="highlighter-rouge">.rb</code> or template-related extensions.
+<p>In 5.0, Brakeman will scan (almost) all files in the project directory with <code class="language-plaintext highlighter-rouge">.rb</code> or template-related extensions.
 This will dramatically increase the scope of Brakeman scans, which is better coverage but at the cost of more false positives and slower scans.</p>
 
 <p>Also expected in Brakeman 5.0 is a bump of minimum Ruby version to 2.4.0 (which is already EOL).</p>
@@ -126,7 +126,7 @@ This will dramatically increase the scope of Brakeman scans, which is better cov
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7bef7df71137d06be5fc3325ead57f8ce35be7691bf6dd389228461d731b79dd  brakeman-4.10.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7bef7df71137d06be5fc3325ead57f8ce35be7691bf6dd389228461d731b79dd  brakeman-4.10.0.gem
 698b8eb02cdea7a6e407192c261c61d8fc6cd24d590a1b388defc9de17966119  brakeman-lib-4.10.0.gem
 64bb565ee84b9a9646985e456db1125ff9fb884ca83de6ba6fbc2c63bdbc8de9  brakeman-min-4.10.0.gem
 </code></pre></div></div>

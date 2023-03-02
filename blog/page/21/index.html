@@ -122,28 +122,28 @@
 
 <h3 id="check-for-safebuffer-vulnerability">Check for SafeBuffer Vulnerability</h3>
 
-<p>A new vulnerability was reported that affects strings which are marked as <code class="highlighter-rouge">html_safe</code> and then modified in some way. For some operations, the new, modified string will still be marked as <code class="highlighter-rouge">html_safe</code>. Full details <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/edd28f1e3d04e913">here</a>.</p>
+<p>A new vulnerability was reported that affects strings which are marked as <code class="language-plaintext highlighter-rouge">html_safe</code> and then modified in some way. For some operations, the new, modified string will still be marked as <code class="language-plaintext highlighter-rouge">html_safe</code>. Full details <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/edd28f1e3d04e913">here</a>.</p>
 
 <p>For this vulnerability, Brakeman only does a version check and reports if an application is used a vulnerable version of Rails. It only reports on Rails 3 applications, since Rails 3 introduced the concept of SafeBuffers.</p>
 
 <h3 id="check-for-select-helper-vulnerability">Check for select Helper Vulnerability</h3>
 
-<p>Another vulnerability was reported today in the <code class="highlighter-rouge">select</code> form helper. Option tags built by hand (interpolating values into <code class="highlighter-rouge">&lt;option&gt;&lt;/option&gt;</code>) will not be escaped by <code class="highlighter-rouge">select</code>. Full details <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/9da0c515a6c4664">here</a>.</p>
+<p>Another vulnerability was reported today in the <code class="language-plaintext highlighter-rouge">select</code> form helper. Option tags built by hand (interpolating values into <code class="language-plaintext highlighter-rouge">&lt;option&gt;&lt;/option&gt;</code>) will not be escaped by <code class="language-plaintext highlighter-rouge">select</code>. Full details <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/9da0c515a6c4664">here</a>.</p>
 
-<p>For Rails 3 applications, Brakeman checks for uses of <code class="highlighter-rouge">select</code> which have user input in the <code class="highlighter-rouge">options</code> argument. This check may be refined in the future.</p>
+<p>For Rails 3 applications, Brakeman checks for uses of <code class="language-plaintext highlighter-rouge">select</code> which have user input in the <code class="language-plaintext highlighter-rouge">options</code> argument. This check may be refined in the future.</p>
 
-<p>For Rails 2, Brakeman no longer considers <code class="highlighter-rouge">select</code> a safe method when checking for cross site scripting.</p>
+<p>For Rails 2, Brakeman no longer considers <code class="language-plaintext highlighter-rouge">select</code> a safe method when checking for cross site scripting.</p>
 
 <h3 id="check-for-csrf-filter-skipping">Check for CSRF Filter Skipping</h3>
 
-<p>When cross site request forgery protection is enabled, a <code class="highlighter-rouge">before_filter</code> is added called <code class="highlighter-rouge">verify_authenticity_token</code>. This filter checks that actions called responding to a <code class="highlighter-rouge">POST</code> have a correct authenticity token from the client. Since this is a regular <code class="highlighter-rouge">before_filter</code>, it can be skipped using <code class="highlighter-rouge">skip_before_filter</code>.</p>
+<p>When cross site request forgery protection is enabled, a <code class="language-plaintext highlighter-rouge">before_filter</code> is added called <code class="language-plaintext highlighter-rouge">verify_authenticity_token</code>. This filter checks that actions called responding to a <code class="language-plaintext highlighter-rouge">POST</code> have a correct authenticity token from the client. Since this is a regular <code class="language-plaintext highlighter-rouge">before_filter</code>, it can be skipped using <code class="language-plaintext highlighter-rouge">skip_before_filter</code>.</p>
 
-<p>If <code class="highlighter-rouge">skip_before_filter</code> is called using an <code class="highlighter-rouge">:except</code> option, then the default for the controller becomes NOT checking for an authenticity token:</p>
+<p>If <code class="language-plaintext highlighter-rouge">skip_before_filter</code> is called using an <code class="language-plaintext highlighter-rouge">:except</code> option, then the default for the controller becomes NOT checking for an authenticity token:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>skip_before_filter :verify_authenticity_token, :except =&gt; [:create, :delete]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>skip_before_filter :verify_authenticity_token, :except =&gt; [:create, :delete]
 </code></pre></div></div>
 
-<p>It is recommended to use <code class="highlighter-rouge">:only</code> if skipping this filter is actually necessary. This way, any new actions added later will automatically fall under the CSRF protection.</p>
+<p>It is recommended to use <code class="language-plaintext highlighter-rouge">:only</code> if skipping this filter is actually necessary. This way, any new actions added later will automatically fall under the CSRF protection.</p>
 
 <p>This check may be extended in the future to other important filters.</p>
 
@@ -151,7 +151,7 @@
 
 <p>While the code for outputting JSON was in the 1.4.0 release, it was not actually added as a proper output format! This has been rectified.</p>
 
-<p><code class="highlighter-rouge">-f json</code> or <code class="highlighter-rouge">-o report.json</code> will now produce JSON reports.</p>
+<p><code class="language-plaintext highlighter-rouge">-f json</code> or <code class="language-plaintext highlighter-rouge">-o report.json</code> will now produce JSON reports.</p>
 
 <p>The information contained in these reports may change in the future, although that should only be adding more information.</p>
 
@@ -163,7 +163,7 @@
 
 <h3 id="rails-2-route-parsing-fix">Rails 2 Route Parsing Fix</h3>
 
-<p>There was a bug in the code which determined if a method was being called on <code class="highlighter-rouge">map</code>, which caused Brakeman to think strange methods were route definitions (for example, <code class="highlighter-rouge">require</code>). This has been fixed.</p>
+<p>There was a bug in the code which determined if a method was being called on <code class="language-plaintext highlighter-rouge">map</code>, which caused Brakeman to think strange methods were route definitions (for example, <code class="language-plaintext highlighter-rouge">require</code>). This has been fixed.</p>
 
 <h3 id="report-problems">Report Problems!</h3>
 
@@ -199,7 +199,7 @@
   </header>
 
 
-  <div class="entry-content"><p>This is not a big release, but it does add a new check. Also, processing for ERB templates with the <code class="highlighter-rouge">rails_xss</code> plugin has changed, so there is the possibility that line numbers for reported warnings will shift.</p>
+  <div class="entry-content"><p>This is not a big release, but it does add a new check. Also, processing for ERB templates with the <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin has changed, so there is the possibility that line numbers for reported warnings will shift.</p>
 
 <p><em>Changes since 1.3.0:</em></p>
 
@@ -213,13 +213,13 @@
 
 <h3 id="new-check-for-link_to">New Check for link_to</h3>
 
-<p><a href="https://github.com/oreoshake">Neil Matatall</a> has contributed a new check for the href parameter in <code class="highlighter-rouge">link_to</code>. Even if HTML escaped, some values can be dangerous, so this check will warn for user input in that parameter. See <a href="https://github.com/presidentbeef/brakeman/pull/45">here</a> for more details.</p>
+<p><a href="https://github.com/oreoshake">Neil Matatall</a> has contributed a new check for the href parameter in <code class="language-plaintext highlighter-rouge">link_to</code>. Even if HTML escaped, some values can be dangerous, so this check will warn for user input in that parameter. See <a href="https://github.com/presidentbeef/brakeman/pull/45">here</a> for more details.</p>
 
-<p>The <code class="highlighter-rouge">--url-safe-methods</code> option can be used to specify escaping methods which are safe for urls.</p>
+<p>The <code class="language-plaintext highlighter-rouge">--url-safe-methods</code> option can be used to specify escaping methods which are safe for urls.</p>
 
 <h3 id="erb-and-rails_xss">ERB and rails_xss</h3>
 
-<p>The <code class="highlighter-rouge">rails_xss</code> plugin has some fixes for how Erbuis handles certain input. Brakeman now matches those changes, which fixes some parsing errors.</p>
+<p>The <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin has some fixes for how Erbuis handles certain input. Brakeman now matches those changes, which fixes some parsing errors.</p>
 
 <h3 id="internal-changes">Internal Changes</h3>
 
@@ -227,9 +227,9 @@
 
 <p>First, there is now json output for reports. This actually should be an output format option, but I did not realize it until writing this post. The next release will include this, though!</p>
 
-<p>The way Brakeman handles the <code class="highlighter-rouge">--confidence-level</code> option has also changed. In the past, warnings would be filtered when output in a report. This meant, for example, that <code class="highlighter-rouge">tracker.checks.all_warnings</code> would still return warnings below the specified confidence level. It also caused problems because there were many places in the code where the warnings needed to be filtered. With this release, warnings below the confidence level will be dropped as soon as they are found and will not need to be filtered at any later point.</p>
+<p>The way Brakeman handles the <code class="language-plaintext highlighter-rouge">--confidence-level</code> option has also changed. In the past, warnings would be filtered when output in a report. This meant, for example, that <code class="language-plaintext highlighter-rouge">tracker.checks.all_warnings</code> would still return warnings below the specified confidence level. It also caused problems because there were many places in the code where the warnings needed to be filtered. With this release, warnings below the confidence level will be dropped as soon as they are found and will not need to be filtered at any later point.</p>
 
-<p>Lastly, <code class="highlighter-rouge">Brakeman.run</code> would return <code class="highlighter-rouge">false</code> if <code class="highlighter-rouge">--exit-on-warn</code> was set, and a <code class="highlighter-rouge">Tracker</code> object otherwise. This has changed. <code class="highlighter-rouge">Brakeman.run</code> will now always return a <code class="highlighter-rouge">Tracker</code> object and the logic for <code class="highlighter-rouge">--exit-on-warn</code> was pushed out to the Brakeman executable.</p>
+<p>Lastly, <code class="language-plaintext highlighter-rouge">Brakeman.run</code> would return <code class="language-plaintext highlighter-rouge">false</code> if <code class="language-plaintext highlighter-rouge">--exit-on-warn</code> was set, and a <code class="language-plaintext highlighter-rouge">Tracker</code> object otherwise. This has changed. <code class="language-plaintext highlighter-rouge">Brakeman.run</code> will now always return a <code class="language-plaintext highlighter-rouge">Tracker</code> object and the logic for <code class="language-plaintext highlighter-rouge">--exit-on-warn</code> was pushed out to the Brakeman executable.</p>
 
 <h3 id="report-issues">Report Issues</h3>
 
@@ -272,12 +272,12 @@
 <ul>
   <li>Add file paths to HTML report</li>
   <li>Add caching of filters</li>
-  <li>Add <code class="highlighter-rouge">--skip-files</code> option</li>
-  <li>Add support for <code class="highlighter-rouge">attr_protected</code></li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--skip-files</code> option</li>
+  <li>Add support for <code class="language-plaintext highlighter-rouge">attr_protected</code></li>
   <li>Add detection of request.env as user input</li>
-  <li>Descriptions of checks in <code class="highlighter-rouge">-k</code> output</li>
+  <li>Descriptions of checks in <code class="language-plaintext highlighter-rouge">-k</code> output</li>
   <li>Improved processing of named scopes</li>
-  <li>Check for mass assignment in <code class="highlighter-rouge">ActiveRecord::Associations::AssociationCollection#build</code></li>
+  <li>Check for mass assignment in <code class="language-plaintext highlighter-rouge">ActiveRecord::Associations::AssociationCollection#build</code></li>
   <li>Better variable substitution</li>
   <li>Table output option for rescan reports</li>
 </ul>
@@ -288,27 +288,27 @@
 
 <h3 id="filter-caching">Filter Caching</h3>
 
-<p>Filters (using <code class="highlighter-rouge">before_filter</code>) are now only parsed once, instead of for everytime they are used. This has greatly improved performance when scanning some large projects.</p>
+<p>Filters (using <code class="language-plaintext highlighter-rouge">before_filter</code>) are now only parsed once, instead of for everytime they are used. This has greatly improved performance when scanning some large projects.</p>
 
 <h3 id="option-to-skip-files">Option to Skip Files</h3>
 
-<p>A list of files to skip can be provided with the <code class="highlighter-rouge">--skip-files</code> option. This will skip any initializers, libraries, controllers, models, or views that match the file names provided. The file names to skip are matched against the end of the absolute path. That is, <code class="highlighter-rouge">blah.rb</code> will skip <em>any</em> file with a name ending in <code class="highlighter-rouge">blah.rb</code>. This means it is not necessary to provide the full path to a file.</p>
+<p>A list of files to skip can be provided with the <code class="language-plaintext highlighter-rouge">--skip-files</code> option. This will skip any initializers, libraries, controllers, models, or views that match the file names provided. The file names to skip are matched against the end of the absolute path. That is, <code class="language-plaintext highlighter-rouge">blah.rb</code> will skip <em>any</em> file with a name ending in <code class="language-plaintext highlighter-rouge">blah.rb</code>. This means it is not necessary to provide the full path to a file.</p>
 
 <h3 id="support-for-blacklisting-attributes">Support for Blacklisting Attributes</h3>
 
-<p>Previously, Brakeman ignored uses of <code class="highlighter-rouge">attr_protected</code>. Ideally, <code class="highlighter-rouge">attr_accessible</code> should always be used to whitelist attributes that can be set using mass assignment. This way, attributes can never be “accidentally” exposed. However, it can also be tedious for large models.</p>
+<p>Previously, Brakeman ignored uses of <code class="language-plaintext highlighter-rouge">attr_protected</code>. Ideally, <code class="language-plaintext highlighter-rouge">attr_accessible</code> should always be used to whitelist attributes that can be set using mass assignment. This way, attributes can never be “accidentally” exposed. However, it can also be tedious for large models.</p>
 
-<p>With this release, Brakeman will downgrade mass assignment warnings to “weak” confidence if <code class="highlighter-rouge">attr_protected</code> is used, as well as suggesting that <code class="highlighter-rouge">attr_accessible</code> be used instead.</p>
+<p>With this release, Brakeman will downgrade mass assignment warnings to “weak” confidence if <code class="language-plaintext highlighter-rouge">attr_protected</code> is used, as well as suggesting that <code class="language-plaintext highlighter-rouge">attr_accessible</code> be used instead.</p>
 
-<p>The <code class="highlighter-rouge">--ignore-protected</code> option can be used to suppress any warnings for models that use <code class="highlighter-rouge">attr_protected</code>.</p>
+<p>The <code class="language-plaintext highlighter-rouge">--ignore-protected</code> option can be used to suppress any warnings for models that use <code class="language-plaintext highlighter-rouge">attr_protected</code>.</p>
 
 <h3 id="request-environment-is-user-input">Request Environment is User Input</h3>
 
-<p><code class="highlighter-rouge">request.env</code> will now be treated as user input.</p>
+<p><code class="language-plaintext highlighter-rouge">request.env</code> will now be treated as user input.</p>
 
 <h3 id="check-descriptions">Check Descriptions</h3>
 
-<p>The <code class="highlighter-rouge">-k</code> option now includes descriptions of each check.</p>
+<p>The <code class="language-plaintext highlighter-rouge">-k</code> option now includes descriptions of each check.</p>
 
 <h3 id="named-scope-improvements">Named Scope Improvements</h3>
 
@@ -320,21 +320,21 @@
 
 <p>For example,</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
 
 puts x
 </code></pre></div></div>
 
 <p>Might become</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
 
 puts clean(clean(clean(clean(x))))
 </code></pre></div></div>
 
 <p>This should now be prevented, so it would just become</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
 
 puts clean(x)
 </code></pre></div></div>
@@ -343,7 +343,7 @@ puts clean(x)
 
 <h3 id="table-output-for-rescan-reports">Table Output for Rescan Reports</h3>
 
-<p><code class="highlighter-rouge">RescanReport#to_s(true)</code> will now output formatted tables, thanks to <a href="https://github.com/presidentbeef/brakeman/pull/33">Dave Worth</a>.</p>
+<p><code class="language-plaintext highlighter-rouge">RescanReport#to_s(true)</code> will now output formatted tables, thanks to <a href="https://github.com/presidentbeef/brakeman/pull/33">Dave Worth</a>.</p>
 
 <h3 id="issues">Issues?</h3>
 
@@ -389,15 +389,15 @@ puts clean(x)
 
 <h3 id="no-progress-option">No Progress Option</h3>
 
-<p>The last release broke the <code class="highlighter-rouge">--no-progress</code> option for hiding the <code class="highlighter-rouge">1/100 files processed</code> type messages. Now it works again!</p>
+<p>The last release broke the <code class="language-plaintext highlighter-rouge">--no-progress</code> option for hiding the <code class="language-plaintext highlighter-rouge">1/100 files processed</code> type messages. Now it works again!</p>
 
 <h3 id="separate-check-for-link_to">Separate Check for link_to</h3>
 
-<p>For no great reason, <code class="highlighter-rouge">CheckLinkTo</code> was bundled with <code class="highlighter-rouge">CheckCrossSiteScripting</code>. It has now been moved out to a separate file, allowing it to be treated as a regular check. This means it can be explicitly skipped using <code class="highlighter-rouge">-x CheckLinkTo</code> (if desired).</p>
+<p>For no great reason, <code class="language-plaintext highlighter-rouge">CheckLinkTo</code> was bundled with <code class="language-plaintext highlighter-rouge">CheckCrossSiteScripting</code>. It has now been moved out to a separate file, allowing it to be treated as a regular check. This means it can be explicitly skipped using <code class="language-plaintext highlighter-rouge">-x CheckLinkTo</code> (if desired).</p>
 
 <h3 id="better-rails-2-route-handling">Better Rails 2 Route Handling</h3>
 
-<p>Brakeman was raising an exception if a hash option to <code class="highlighter-rouge">resource</code> or <code class="highlighter-rouge">resources</code> did not match a set of known options. Now it will only warn instead of aborting route processing.</p>
+<p>Brakeman was raising an exception if a hash option to <code class="language-plaintext highlighter-rouge">resource</code> or <code class="language-plaintext highlighter-rouge">resources</code> did not match a set of known options. Now it will only warn instead of aborting route processing.</p>
 </div>
   
   
@@ -427,7 +427,7 @@ puts clean(x)
   </header>
 
 
-  <div class="entry-content"><p>This is essentially just a bugfix release, but due to the fixes for <code class="highlighter-rouge">link_to</code> warnings, there is a good possibility the number of reported warnings will decrease when upgrading to this version.</p>
+  <div class="entry-content"><p>This is essentially just a bugfix release, but due to the fixes for <code class="language-plaintext highlighter-rouge">link_to</code> warnings, there is a good possibility the number of reported warnings will decrease when upgrading to this version.</p>
 
 <p>Changes since 1.2.0:</p>
 
@@ -445,27 +445,27 @@ puts clean(x)
 
 <h3 id="link_to-changes">link_to Changes</h3>
 
-<p>Prior to Rails 3.0, there <a href="https://rails.lighthouseapp.com/projects/8994/tickets/3518-link_to-doesnt-escape-its-input">was a bug</a> in <code class="highlighter-rouge">link_to</code> that caused the body of the link tag to be output without escaping. While this was fixed in Rails 3.0, Brakeman has still been warning on it. This was also fixed in the <a href="https://github.com/rails/rails_xss/commit/afc1610fe4b94150faee98c16f15a24290d20900">rails_xss</a>, so Brakeman should no longer warn on <code class="highlighter-rouge">link_to</code> for Rails 2.x when using the rails_xss plugin.</p>
+<p>Prior to Rails 3.0, there <a href="https://rails.lighthouseapp.com/projects/8994/tickets/3518-link_to-doesnt-escape-its-input">was a bug</a> in <code class="language-plaintext highlighter-rouge">link_to</code> that caused the body of the link tag to be output without escaping. While this was fixed in Rails 3.0, Brakeman has still been warning on it. This was also fixed in the <a href="https://github.com/rails/rails_xss/commit/afc1610fe4b94150faee98c16f15a24290d20900">rails_xss</a>, so Brakeman should no longer warn on <code class="language-plaintext highlighter-rouge">link_to</code> for Rails 2.x when using the rails_xss plugin.</p>
 
-<p>Brakeman was also warning on <code class="highlighter-rouge">link_to</code> even if the body argument was manually escaped. This should be resolved now.</p>
+<p>Brakeman was also warning on <code class="language-plaintext highlighter-rouge">link_to</code> even if the body argument was manually escaped. This should be resolved now.</p>
 
-<p>One other related issue was a silly bug causing Brakeman to sometimes ignore <code class="highlighter-rouge">--escape-html</code> or the rails_xss plugin, leading to some confusing output. This is fixed.</p>
+<p>One other related issue was a silly bug causing Brakeman to sometimes ignore <code class="language-plaintext highlighter-rouge">--escape-html</code> or the rails_xss plugin, leading to some confusing output. This is fixed.</p>
 
-<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/32">Neil Matatall</a> for reporting the <code class="highlighter-rouge">link_to</code> issue and <a href="https://github.com/a5sk4s">Andreas</a> for reporting the rails_xss problems.</p>
+<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/32">Neil Matatall</a> for reporting the <code class="language-plaintext highlighter-rouge">link_to</code> issue and <a href="https://github.com/a5sk4s">Andreas</a> for reporting the rails_xss problems.</p>
 
 <h3 id="attr_accessible-with-no-arguments">attr_accessible with No Arguments</h3>
 
-<p>Brakeman was not detecting the case where <code class="highlighter-rouge">attr_accessible</code> is called with zero arguments, causing spurious mass assignment warnings.</p>
+<p>Brakeman was not detecting the case where <code class="language-plaintext highlighter-rouge">attr_accessible</code> is called with zero arguments, causing spurious mass assignment warnings.</p>
 
 <p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/31">Justin Wiley</a> for reporting this.</p>
 
 <h3 id="brakeman-rake-task">Brakeman Rake Task</h3>
 
-<p>The Brakeman Rake task (installed via <code class="highlighter-rouge">--rake</code>) is even <a href="/docs/rake">simpler now</a>.</p>
+<p>The Brakeman Rake task (installed via <code class="language-plaintext highlighter-rouge">--rake</code>) is even <a href="/docs/rake">simpler now</a>.</p>
 
 <h3 id="verbose">$VERBOSE</h3>
 
-<p>Brakeman was using <code class="highlighter-rouge">$VERBOSE</code> and <code class="highlighter-rouge">Kernel.warn</code> for controlling debug output. This has changed and <code class="highlighter-rouge">$VERBOSE</code> will no longer be modified when using Brakeman.</p>
+<p>Brakeman was using <code class="language-plaintext highlighter-rouge">$VERBOSE</code> and <code class="language-plaintext highlighter-rouge">Kernel.warn</code> for controlling debug output. This has changed and <code class="language-plaintext highlighter-rouge">$VERBOSE</code> will no longer be modified when using Brakeman.</p>
 
 <h3 id="rails-32-support">Rails 3.2 Support</h3>
 

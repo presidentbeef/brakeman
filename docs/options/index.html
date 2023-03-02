@@ -78,117 +78,117 @@
     <h1 class="entry-title">Options</h1>
   </header>
   
-  <p>This page may or may not be entirely up-to-date. For best results but less information, run <code class="highlighter-rouge">brakeman --help</code>.</p>
+  <p>This page may or may not be entirely up-to-date. For best results but less information, run <code class="language-plaintext highlighter-rouge">brakeman --help</code>.</p>
 
-<p>Please note some options below are shown as the short (<code class="highlighter-rouge">-</code>) or long (<code class="highlighter-rouge">--</code>) forms, but all options have long forms.</p>
+<p>Please note some options below are shown as the short (<code class="language-plaintext highlighter-rouge">-</code>) or long (<code class="language-plaintext highlighter-rouge">--</code>) forms, but all options have long forms.</p>
 
 <h2 id="scanning-options">Scanning Options</h2>
 
 <p>There are some checks which are not run by default. To run all checks, use:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -A
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -A
 </code></pre></div></div>
 
 <p>Each check will be run in a separate thread by default. To disable this behavior:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -n
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -n
 </code></pre></div></div>
 
 <p>By default, Brakeman scans the current directory. A path can also be specified as a bare argument, like:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman some/path/to/app
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman some/path/to/app
 </code></pre></div></div>
 
-<p>But to be even more specific, the <code class="highlighter-rouge">-p</code> or <code class="highlighter-rouge">--path</code> option may be used:</p>
+<p>But to be even more specific, the <code class="language-plaintext highlighter-rouge">-p</code> or <code class="language-plaintext highlighter-rouge">--path</code> option may be used:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -p path/to/app
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -p path/to/app
 </code></pre></div></div>
 
 <p>To suppress informational warnings and just output the report:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -q
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -q
 </code></pre></div></div>
 
 <p>Note all Brakeman output except reports are sent to stderr, making it simple to redirect stdout to a file and just get the report.</p>
 
 <p>By default, Brakeman will return a non-zero exit code if any security warnings are found or scanning errors are encountered. To disable this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-exit-on-warn --no-exit-on-error
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-exit-on-warn --no-exit-on-error
 </code></pre></div></div>
 
 <p>To force Brakeman into Rails 3 mode:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -3
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -3
 </code></pre></div></div>
 
 <p>Or to force Brakeman into Rails 4 mode:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -4
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -4
 </code></pre></div></div>
 
-<p>Beware some behavior and checks rely on knowing the exact version name. This shouldn’t be a problem with any modern Rails app using a <code class="highlighter-rouge">Gemfile.lock</code> though.</p>
+<p>Beware some behavior and checks rely on knowing the exact version name. This shouldn’t be a problem with any modern Rails app using a <code class="language-plaintext highlighter-rouge">Gemfile.lock</code> though.</p>
 
-<p>Brakeman used to parse <code class="highlighter-rouge">routes.rb</code> and attempt to infer which controller methods are used as actions. However, this is not perfect (especially for Rails 3/4), so now it assumes all controller methods are actions. To disable this behavior:</p>
+<p>Brakeman used to parse <code class="language-plaintext highlighter-rouge">routes.rb</code> and attempt to infer which controller methods are used as actions. However, this is not perfect (especially for Rails 3/4), so now it assumes all controller methods are actions. To disable this behavior:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-assume-routes
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-assume-routes
 </code></pre></div></div>
 
 <p>While this shouldn’t be necessary, it is possible to force Brakeman to assume output is escaped by default:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --escape-html
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --escape-html
 </code></pre></div></div>
 
 <p>If Brakeman is running a bit slow, try</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --faster
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --faster
 </code></pre></div></div>
 
-<p>This will disable some features, but will probably be much faster (currently it is the same as <code class="highlighter-rouge">--skip-libs --no-branching</code>). <em>WARNING</em>: This may cause Brakeman to miss some vulnerabilities.</p>
+<p>This will disable some features, but will probably be much faster (currently it is the same as <code class="language-plaintext highlighter-rouge">--skip-libs --no-branching</code>). <em>WARNING</em>: This may cause Brakeman to miss some vulnerabilities.</p>
 
-<p>To disable flow sensitivity in <code class="highlighter-rouge">if</code> expressions:</p>
+<p>To disable flow sensitivity in <code class="language-plaintext highlighter-rouge">if</code> expressions:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-branching
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-branching
 </code></pre></div></div>
 
 <p>To instead limit the number of branches tracked for a given value:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --branch-limit LIMIT
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --branch-limit LIMIT
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">LIMIT</code> should be an integer value. <code class="highlighter-rouge">0</code> is almost the same as <code class="highlighter-rouge">--no-branching</code> but <code class="highlighter-rouge">--no-branching</code> is preferred. The default value is <code class="highlighter-rouge">5</code>. Lower values generally make Brakeman go faster. <code class="highlighter-rouge">-1</code> is the same as unlimited.</p>
+<p><code class="language-plaintext highlighter-rouge">LIMIT</code> should be an integer value. <code class="language-plaintext highlighter-rouge">0</code> is almost the same as <code class="language-plaintext highlighter-rouge">--no-branching</code> but <code class="language-plaintext highlighter-rouge">--no-branching</code> is preferred. The default value is <code class="language-plaintext highlighter-rouge">5</code>. Lower values generally make Brakeman go faster. <code class="language-plaintext highlighter-rouge">-1</code> is the same as unlimited.</p>
 
 <p>To skip certain files use:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --skip-files file1,file2,etc
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --skip-files file1,file2,etc
 </code></pre></div></div>
 
 <p>Note Brakeman does “whole program” analysis, therefore skipping a file may affect warning results from more than just that one file.</p>
 
 <p>The inverse but even more dangerous option is to specific which files to scan:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --only-files some_file,some_dir
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --only-files some_file,some_dir
 </code></pre></div></div>
 
 <p>Again, since Brakeman looks at the whole program, it is very likely not going to behave as expected when scanning a subset of files. Also, if certain files are excluded Brakeman may not function at all.</p>
 
-<p>To skip processing of the <code class="highlighter-rouge">lib/</code> directory:</p>
+<p>To skip processing of the <code class="language-plaintext highlighter-rouge">lib/</code> directory:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --skip-libs
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --skip-libs
 </code></pre></div></div>
 
 <p>To run a subset of checks:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --test Check1,Check2,etc
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --test Check1,Check2,etc
 </code></pre></div></div>
 
 <p>To exclude certain checks:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --except Check1,Check2,etc
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --except Check1,Check2,etc
 </code></pre></div></div>
 
-<p>Note it is not necessary to include the <code class="highlighter-rouge">Check</code> part of the check. For example, these are equivalent:</p>
+<p>Note it is not necessary to include the <code class="language-plaintext highlighter-rouge">Check</code> part of the check. For example, these are equivalent:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --test CheckSQL
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --test CheckSQL
 brakeman --test SQL
 </code></pre></div></div>
 
@@ -196,148 +196,148 @@ brakeman --test SQL
 
 <p>To see all kinds of debugging information:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -d
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -d
 </code></pre></div></div>
 
 <p>To specify an output file for the results:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o output_file
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o output_file
 </code></pre></div></div>
 
-<p>The output format is determined by the file extension or by using the <code class="highlighter-rouge">-f</code> option. Current options are: <code class="highlighter-rouge">text</code>, <code class="highlighter-rouge">html</code>, <code class="highlighter-rouge">tabs</code>, <code class="highlighter-rouge">json</code>, <code class="highlighter-rouge">junit</code>, <code class="highlighter-rouge">markdown</code> and <code class="highlighter-rouge">csv</code>.</p>
+<p>The output format is determined by the file extension or by using the <code class="language-plaintext highlighter-rouge">-f</code> option. Current options are: <code class="language-plaintext highlighter-rouge">text</code>, <code class="language-plaintext highlighter-rouge">html</code>, <code class="language-plaintext highlighter-rouge">tabs</code>, <code class="language-plaintext highlighter-rouge">json</code>, <code class="language-plaintext highlighter-rouge">junit</code>, <code class="language-plaintext highlighter-rouge">markdown</code> and <code class="language-plaintext highlighter-rouge">csv</code>.</p>
 
 <p>Multiple output files can be specified:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o output.html -o output.json
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o output.html -o output.json
 </code></pre></div></div>
 
 <p>To output to both a file and to the console, with color:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --color -o /dev/stdout -o output.json
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --color -o /dev/stdout -o output.json
 </code></pre></div></div>
 
 <p>To specify a CSS stylesheet to use with the HTML report:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --css-file my_cool_styling
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --css-file my_cool_styling
 </code></pre></div></div>
 
 <p>By default, Brakeman will only report a single warning of a given type for the same line of code. This can be disabled using</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-combine-locations
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-combine-locations
 </code></pre></div></div>
 
 <p>To disable highlighting of “dangerous” or “user input” values in warnings:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-highlights
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-highlights
 </code></pre></div></div>
 
 <p>To report controller and route information:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --routes
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --routes
 </code></pre></div></div>
 
 <p>However, if you really want to know what routes an app has, use</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake routes
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake routes
 </code></pre></div></div>
 
 <p>To set the limit on message length in HTML reports, use</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --message-limit LIMIT
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --message-limit LIMIT
 </code></pre></div></div>
 
 <p>The default LIMIT is 100.</p>
 
 <p>To limit width of the tables output in text reports, use</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --table-width LIMIT
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --table-width LIMIT
 </code></pre></div></div>
 
 <p>If no option is provided, Brakeman will attempt to guess the width of the terminal, otherwise it will limit the table width to 80 characters.</p>
 
-<p>Brakeman will bundle all warnings about models without <code class="highlighter-rouge">attr_accessible</code> into one warning. This was problem a mistake. It’s more useful to get one warning per model with</p>
+<p>Brakeman will bundle all warnings about models without <code class="language-plaintext highlighter-rouge">attr_accessible</code> into one warning. This was problem a mistake. It’s more useful to get one warning per model with</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --separate-models
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --separate-models
 </code></pre></div></div>
 
 <p>Sometimes you don’t need a big report, just the summary:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --summary
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --summary
 </code></pre></div></div>
 
 <p>Reports show relative paths by default. To use absolute paths instead:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --absolute-paths
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --absolute-paths
 </code></pre></div></div>
 
 <p>This does not affect HTML or tab-separated reports.</p>
 
 <p>To output Markdown with nice links to files on Github, use</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --github-repo USER/REPO[/PATH][@REF]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --github-repo USER/REPO[/PATH][@REF]
 </code></pre></div></div>
 
 <p>For example,</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --github-repo presidentbeef/inject-some-sql
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --github-repo presidentbeef/inject-some-sql
 </code></pre></div></div>
 
 <p>To compare results of a scan with a previous scan, use the JSON output option and then:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --compare old_report.json
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --compare old_report.json
 </code></pre></div></div>
 
 <p>This will output JSON with two lists: one of fixed warnings and one of new warnings.</p>
 
-<p>By default, Brakeman pages output to the terminal with the <code class="highlighter-rouge">less</code> pager. To have Brakeman output directly to terminal, use</p>
+<p>By default, Brakeman pages output to the terminal with the <code class="language-plaintext highlighter-rouge">less</code> pager. To have Brakeman output directly to terminal, use</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-pager
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --no-pager
 </code></pre></div></div>
 
 <h2 id="ignoring-stuff">Ignoring Stuff</h2>
 
-<p>Brakeman will ignore warnings if configured to do so. By default, it looks for a configuration file in <code class="highlighter-rouge">config/brakeman.ignore</code>.</p>
+<p>Brakeman will ignore warnings if configured to do so. By default, it looks for a configuration file in <code class="language-plaintext highlighter-rouge">config/brakeman.ignore</code>.</p>
 
 <p>To specify a file to use:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -i path/to/config.ignore
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -i path/to/config.ignore
 </code></pre></div></div>
 
 <p>To create and manage this file, use:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -I
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -I
 </code></pre></div></div>
 
 <p>To ignore possible XSS from model attributes:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --ignore-model-output
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --ignore-model-output
 </code></pre></div></div>
 
-<p>Brakeman will raise warnings on models that use <code class="highlighter-rouge">attr_protected</code>. To suppress these warnings:</p>
+<p>Brakeman will raise warnings on models that use <code class="language-plaintext highlighter-rouge">attr_protected</code>. To suppress these warnings:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --ignore-protected
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --ignore-protected
 </code></pre></div></div>
 
 <p>Brakeman will assume that unknown methods involving untrusted data are dangerous. For example, this would cause a warning (Rails 2):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= some_method(:option =&gt; params[:input]) %&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= some_method(:option =&gt; params[:input]) %&gt;
 </code></pre></div></div>
 
 <p>To only raise warnings only when untrusted data is being directly used:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --report-direct
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --report-direct
 </code></pre></div></div>
 
 <p>This option is not supported very consistently, though.</p>
 
 <p>To indicate certain methods return properly escaped output and should not be warned about in XSS checks:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --safe-methods benign_method_escapes_output,totally_safe_from_xss
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --safe-methods benign_method_escapes_output,totally_safe_from_xss
 </code></pre></div></div>
 
-<p>Brakeman warns about use of user input in URLs generated with <code class="highlighter-rouge">link_to</code>. Since Rails does not provide anyway of making these URLs really safe (e.g. limiting protocols to HTTP(S)), safe methods can be ignored with</p>
+<p>Brakeman warns about use of user input in URLs generated with <code class="language-plaintext highlighter-rouge">link_to</code>. Since Rails does not provide anyway of making these URLs really safe (e.g. limiting protocols to HTTP(S)), safe methods can be ignored with</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --url-safe-methods ensure_safe_protocol_or_something
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --url-safe-methods ensure_safe_protocol_or_something
 </code></pre></div></div>
 
 <h2 id="confidence-levels">Confidence Levels</h2>
@@ -354,41 +354,41 @@ brakeman --test SQL
 
 <p>To only get warnings above a given confidence level:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -w3
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -w3
 </code></pre></div></div>
 
-<p>The <code class="highlighter-rouge">-w</code> switch takes a number from 1 to 3, with 1 being low (all warnings) and 3 being high (only highest confidence warnings).</p>
+<p>The <code class="language-plaintext highlighter-rouge">-w</code> switch takes a number from 1 to 3, with 1 being low (all warnings) and 3 being high (only highest confidence warnings).</p>
 
 <h2 id="configuration-files">Configuration Files</h2>
 
-<p>Brakeman options can stored and read from YAML files. To simplify the process of writing a configuration file, the <code class="highlighter-rouge">-C</code> option will output the currently set options.</p>
+<p>Brakeman options can stored and read from YAML files. To simplify the process of writing a configuration file, the <code class="language-plaintext highlighter-rouge">-C</code> option will output the currently set options.</p>
 
 <p>Options passed in on the commandline have priority over configuration files.</p>
 
-<p>The default config locations are <code class="highlighter-rouge">./config/brakeman.yml</code>, <code class="highlighter-rouge">~/.brakeman/config.yml</code>, and <code class="highlighter-rouge">/etc/brakeman/config.yml</code></p>
+<p>The default config locations are <code class="language-plaintext highlighter-rouge">./config/brakeman.yml</code>, <code class="language-plaintext highlighter-rouge">~/.brakeman/config.yml</code>, and <code class="language-plaintext highlighter-rouge">/etc/brakeman/config.yml</code></p>
 
-<p>The <code class="highlighter-rouge">-c</code> option can be used to specify a configuration file to use.</p>
+<p>The <code class="language-plaintext highlighter-rouge">-c</code> option can be used to specify a configuration file to use.</p>
 
 <h2 id="miscellaneous">Miscellaneous</h2>
 
 <p>To list available checks with short descriptions:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --checks
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --checks
 </code></pre></div></div>
 
 <p>To show checks which are optional (not run by default):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --optional-checks
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --optional-checks
 </code></pre></div></div>
 
 <p>To see Brakeman’s version:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --version
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --version
 </code></pre></div></div>
 
 <p>To see the real list of options:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --help
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --help
 </code></pre></div></div>
 
 <hr />
