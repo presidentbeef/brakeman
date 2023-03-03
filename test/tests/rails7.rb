@@ -16,7 +16,7 @@ class Rails7Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 0,
-      :warning => 23
+      :warning => 24
     }
   end
 
@@ -395,5 +395,33 @@ class Rails7Tests < Minitest::Test
       relative_path: "app/controllers/users_controller.rb",
       code: s(:call, nil, :redirect_back_or_to, s(:call, s(:params), :[], s(:lit, :x))),
       user_input: s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_unscoped_find
+    assert_warning check_name: "UnscopedFind",
+      type: :warning,
+      warning_code: 82,
+      fingerprint: "e84705527089566771bd3ae5b04f9c82529a0f388a4864eb4a91f7ad468541da",
+      warning_type: "Unscoped Find",
+      line: 3,
+      message: /^Unscoped\ call\ to\ `Group\#find`/,
+      confidence: 2,
+      relative_path: "app/controllers/groups_controller.rb",
+      code: s(:call, s(:const, :Group), :find, s(:call, s(:params), :[], s(:lit, :id))),
+      user_input: s(:call, s(:params), :[], s(:lit, :id))
+  end
+
+  def test_unscoped_find_2
+    assert_no_warning check_name: "UnscopedFind",
+      type: :warning,
+      warning_code: 82,
+      fingerprint: "f2ba23dcceff3cefef2d9fd08a0fe9f87b5936226ec883a73e3a93629e172387",
+      warning_type: "Unscoped Find",
+      line: 4,
+      message: /^Unscoped\ call\ to\ `User\#find`/,
+      confidence: 2,
+      relative_path: "app/controllers/groups_controller.rb",
+      code: s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))),
+      user_input: s(:call, s(:params), :[], s(:lit, :id))
   end
 end
