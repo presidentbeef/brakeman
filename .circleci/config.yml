@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   default: &default
     docker:
-      - image: cimg/ruby:2.7
+      - image: cimg/ruby:3.0
     steps:
       - checkout
       - run: ruby --version && bundle check || bundle install
@@ -10,10 +10,10 @@ jobs:
           command: bundle exec rake
       - store_test_results:
           path: test-results
-  test-2-5:
+  test-3-1:
     <<: *default
     docker:
-      - image: cimg/ruby:2.5
+      - image: cimg/ruby:3.1
     steps:
       - checkout
       - attach_workspace:
@@ -36,18 +36,6 @@ jobs:
           paths:
             - codeclimate.json
             - cc-test-reporter
-  test-2-6:
-    <<: *default
-    docker:
-      - image: cimg/ruby:2.6
-  test-3-0:
-    <<: *default
-    docker:
-      - image: cimg/ruby:3.0
-  test-3-1:
-    <<: *default
-    docker:
-      - image: cimg/ruby:3.1
   test-3-2:
     <<: *default
     docker:
@@ -66,11 +54,8 @@ workflows:
   tests:
     jobs:
       - default
-      - test-2-5
-      - test-2-6
-      - test-3-0
       - test-3-1
       - test-3-2
       - upload-coverage:
           requires:
-            - test-2-5
+            - test-3-1
