@@ -1,4 +1,4 @@
-# Github Actions Formatter
+# GitHub Actions Formatter
 # Formats warnings as workflow commands to create annotations in GitHub UI
 class Brakeman::Report::Github < Brakeman::Report::Base
   def generate_report

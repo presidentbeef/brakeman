@@ -182,7 +182,7 @@ There is a [plugin available](http://brakemanscanner.org/docs/jenkins/) for Jenk
 
 For even more continuous testing, try the [Guard plugin](https://github.com/guard/guard-brakeman).
 
-There are a couple [Github Actions](https://github.com/marketplace?type=actions&query=brakeman) available.
+There are a couple [GitHub Actions](https://github.com/marketplace?type=actions&query=brakeman) available.
 
 # Building
 
