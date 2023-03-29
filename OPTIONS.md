@@ -163,7 +163,7 @@ Reports show relative paths by default. To use absolute paths instead:
 
 This does not affect HTML or tab-separated reports.
 
-To output Markdown with nice links to files on Github, use
+To output Markdown with nice links to files on GitHub, use
 
     brakeman --github-repo USER/REPO[/PATH][@REF]
 
