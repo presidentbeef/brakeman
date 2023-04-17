@@ -362,8 +362,10 @@ class CVETests < Minitest::Test
   end
 
   def test_CVE_2020_8166_rails6
-    before_rescan_of "Gemfile", "rails6" do
-      replace "Gemfile", "gem 'rails', '~> 6.0.0.beta2'", "gem 'rails', '~> 6.0.0'"
+    Date.stub :today, Date.parse('2022-04-06') do
+      before_rescan_of "Gemfile", "rails6" do
+        replace "Gemfile", "gem 'rails', '~> 6.0.0.beta2'", "gem 'rails', '~> 6.0.0'"
+      end
     end
 
     assert_new 1
