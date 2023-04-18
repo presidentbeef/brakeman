@@ -197,7 +197,6 @@ module Brakeman
       spec/
       test/
       tmp/
-      public/
       log/
     ]
 
