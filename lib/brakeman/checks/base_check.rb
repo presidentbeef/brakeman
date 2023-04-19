@@ -471,6 +471,14 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     tracker.config.version_between? low_version, high_version, current_version
   end
 
+  def version_gte? low_version, current_version = nil
+    tracker.config.version_gte? low_version, current_version
+  end
+
+  def version_lte? high_version, current_version = nil
+    tracker.config.version_lte? high_version, current_version
+  end
+
   def gemfile_or_environment gem_name = :rails
     if gem_name and info = tracker.config.get_gem(gem_name.to_sym)
       info

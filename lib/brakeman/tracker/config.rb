@@ -19,15 +19,16 @@ module Brakeman
     end
 
     def default_protect_from_forgery?
-      if version_between? "5.2.0.beta1", "9.9.9"
-        if @rails.dig(:action_controller, :default_protect_from_forgery) == Sexp.new(:false)
-          return false
-        else
-          return true
-        end
+      # This defaults to true in Rails >= 5.2
+      if version_gte?("5.2.0.beta1")
+        return !(@rails.dig(:action_controller, :default_protect_from_forgery) == Sexp.new(:false))
       end
 
       false
+    end
+
+    def allow_forgery_protection?
+      !(@rails.dig(:action_controller, :allow_forgery_protection) == Sexp.new(:false))
     end
 
     def erubis?
@@ -154,10 +155,27 @@ module Brakeman
       current.between?(low, high)
     end
 
+    # Returns true if RAILS_VERSION >= low_version
+    # Return false if the Rails version is unknown
+    def version_gte? low_version, current_version = nil
+      current_version ||= rails_version
+      return false unless current_version
+
+      Gem::Version.new(current_version) >= Gem::Version.new(low_version)
+    end
+
+    # Returns true if RAILS_VERSION <= high_version
+    # Return false if the Rails version is unknown
+    def version_lte? high_version, current_version = nil
+      current_version ||= rails_version
+      return false unless current_version
+
+      Gem::Version.new(current_version) <= Gem::Version.new(high_version)
+    end
+
     def session_settings
       @rails.dig(:action_controller, :session)
     end
-
 
     # Set Rails config option value
     # where path is an array of attributes, e.g.
@@ -196,6 +214,8 @@ module Brakeman
       version = tracker.config.rails[:load_defaults].value
       true_value = Sexp.new(:true)
       false_value = Sexp.new(:false)
+
+      set_rails_config(value: true_value, path: [:action_controller, :allow_forgery_protection])
 
       if version >= 5.0
         set_rails_config(value: true_value, path: [:action_controller, :per_form_csrf_tokens])
