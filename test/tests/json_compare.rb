@@ -1,36 +1,37 @@
 require_relative '../test'
+require 'brakeman/rescanner'
 require 'json'
 
 class JSONCompareTests < Minitest::Test
+  include BrakemanTester::RescanTestHelper
   include BrakemanTester::DiffHelper
 
-  def setup
-    @path = File.expand_path "#{TEST_PATH}/apps/rails3.2"
-    @json_path = File.join @path, "doesnt_exist", "report.json"
-    teardown # just to be sure
-    Brakeman.run :app_path => @path, :output_files => [@json_path]
-    @report = JSON.parse File.read(@json_path)
-  end
-
-  def teardown
-    File.delete @json_path if File.exist? @json_path
-    Dir.delete File.dirname(@json_path) if Dir.exist? File.dirname(@json_path)
-  end
-
-  def update_json
-    File.open @json_path, "w" do |f|
-      f.puts @report.to_json
-    end
-  end
-
-  def diff
-    @diff = Brakeman.compare :app_path => @path, :previous_results_json => @json_path
-  end
-
   def test_sanity
-    diff
+    json_report = 'test-report.json'
+    ignored_warnings = [
+      'cd83ecf615b17f849ba28050e7faf1d54f218dfa9435c3f65f47cb378c18cf98',
+      'abcdef01234567890ba28050e7faf1d54f218dfa9435c3f65f47cb378c18cf98'
+    ]
 
-    assert_fixed 0
+    # Here I go, abusing the rescan functionality again.
+    before_rescan_of ['app/models/account.rb', json_report], 'rails4' do |app_dir|
+      first = Brakeman.run(app_path: app_dir,
+                           parallel_checks: false,
+                           output_files: [json_report])
+
+      write_file json_report, first.report.to_json
+      remove 'app/models/account.rb'
+
+      @diff = Brakeman.compare(app_path: app_dir,
+                               parallel_checks: false,
+                               previous_results_json: json_report)
+    end
+
+    assert_fixed 7
     assert_new 0
+    assert_equal ignored_warnings, @diff[:obsolete]
+
+    # Man is obsolete!
+    # Our world, obsolete!
   end
 end
