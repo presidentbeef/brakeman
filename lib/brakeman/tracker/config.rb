@@ -20,9 +20,7 @@ module Brakeman
 
     def default_protect_from_forgery?
       if version_between? "5.2.0.beta1", "9.9.9"
-        if @rails.dig(:action_controller, :default_protect_from_forgery) == Sexp.new(:false)
-          return false
-        else
+        if @rails.dig(:action_controller, :default_protect_from_forgery) == Sexp.new(:true)
           return true
         end
       end
