@@ -493,10 +493,14 @@ module Brakeman
     end
 
     tracker = run(options)
+    new_report = JSON.parse(tracker.report.to_json, symbolize_names: true)
 
-    new_results = JSON.parse(tracker.report.to_json, :symbolize_names => true)[:warnings]
+    new_results = new_report[:warnings]
+    obsolete_ignored = tracker.unused_fingerprints
 
-    Brakeman::Differ.new(new_results, previous_results).diff
+    Brakeman::Differ.new(new_results, previous_results).diff.tap do |diff|
+      diff[:obsolete] = obsolete_ignored
+    end
   end
 
   def self.load_brakeman_dependency name, allow_fail = false

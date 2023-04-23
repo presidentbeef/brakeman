@@ -176,7 +176,7 @@ module BrakemanTester::RescanTestHelper
     begin
       yield dir if block_given?
 
-      # Not reqally sure why we do this..?
+      # Not really sure why we do this..?
       t = Marshal.load(Marshal.dump(@original))
 
       @rescanner = Brakeman::Rescanner.new(t.options, t.processor, changed)
