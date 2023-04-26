@@ -1,3 +1,12 @@
+# Unreleased
+
+* Add obsolete fingerprints to comparison report
+* Warn about missing CSRF protection when defaults are not loaded (Chris Kruger)
+* Scan directories that include the word `public`
+* Raise minimum Ruby version to 3.0
+* Drop support for Ruby 1.8/1.9 syntax
+* Fix end-of-life dates for Ruby
+
 # 5.4.1 - 2023-02-21
 
 * Fix file/line location for EOL software warnings
