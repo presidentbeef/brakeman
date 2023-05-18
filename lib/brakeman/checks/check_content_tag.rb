@@ -73,11 +73,14 @@ class Brakeman::CheckContentTag < Brakeman::CheckCrossSiteScripting
       check_argument result, content
     end
 
-    #Attribute keys are never escaped, so check them for user input
-    if not @matched and hash? attributes and not request_value? attributes
-      hash_iterate(attributes) do |k, _v|
-        check_argument result, k
-        return if @matched
+    # This changed in Rails 6.1.6
+    if version_between? '0.0.0', '6.1.5' 
+      #Attribute keys are never escaped, so check them for user input
+      if not @matched and hash? attributes and not request_value? attributes
+        hash_iterate(attributes) do |k, _v|
+          check_argument result, k
+          return if @matched
+        end
       end
     end
 
