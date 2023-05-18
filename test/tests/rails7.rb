@@ -313,6 +313,19 @@ class Rails7Tests < Minitest::Test
       user_input: nil
   end
 
+  def test_cross_site_scripting_content_tag
+    assert_no_warning check_name: "ContentTag",
+      type: :template,
+      warning_code: 53,
+      warning_type: "Cross-Site Scripting",
+      line: 2,
+      message: /^Unescaped\ parameter\ value\ in\ `content_ta/,
+      confidence: 0,
+      relative_path: "app/views/users/index.html.erb",
+      code: s(:call, nil, :content_tag, s(:lit, :b), s(:call, nil, :cool_content), s(:hash, s(:call, s(:call, nil, :params), :[], s(:lit, :stuff)), s(:call, s(:call, nil, :params), :[], s(:lit, :things)))),
+      user_input: s(:call, s(:call, nil, :params), :[], s(:lit, :stuff))
+  end
+
   def test_redirect_1
     assert_warning check_name: "Redirect",
       type: :warning,
