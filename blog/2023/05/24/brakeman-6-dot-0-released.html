@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Brakeman 5.4.0 Released</title>
+  <title>Brakeman: Brakeman 6.0.0 Released</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,7 +15,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="https://brakemanscanner.org/blog/2022/11/17/brakeman-5-dot-4-dot-0-released"/>
+  <link rel="canonical" href="https://brakemanscanner.org/blog/2023/05/24/brakeman-6-dot-0-released"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -34,7 +34,7 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Brakeman 5.4.0 Released" />
+<meta name="twitter:title" content="Brakeman - Brakeman 6.0.0 Released" />
 <meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
 <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 
@@ -77,7 +77,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 5.4.0 Released</h1>
+      <h1 class="entry-title">Brakeman 6.0.0 Released</h1>
     
     
       <p class="meta">
@@ -85,7 +85,7 @@
 
 
 
-<time datetime="2022-11-17 21:30:00 -0800" pubdate  updated >2022-11-17 21:30:00 -0800</time>
+<time datetime="2023-05-24 15:30:00 -0700" pubdate  updated >2023-05-24 15:30:00 -0700</time>
 
 
 </p>
@@ -93,82 +93,96 @@
   </header>
 
 
-<div class="entry-content"><p>Special thanks to <a href="https://github.com/bdewater">Bart de Water</a> and <a href="https://github.com/tehryanx">Ryan Cartner</a> for proposing new rules!</p>
+<div class="entry-content"><p>Brakeman 6.0 drops parsing support for Ruby 1.8/1.9, and raises the minimum Ruby version to run Brakeman to 3.0.</p>
 
-<p><em>Changes since 5.3.1:</em></p>
-
-<ul>
-  <li>Add check for weak RSA key sizes and padding modes (<a href="https://github.com/presidentbeef/brakeman/issues/1736">#1736</a>)</li>
-  <li>Add check for absolute paths issue with Pathname (<a href="https://github.com/presidentbeef/brakeman/issues/1721">#1721</a>)</li>
-  <li>Handle multiple values and splats in case/when (<a href="https://github.com/presidentbeef/brakeman/issues/1730">#1730</a>)</li>
-  <li>Ignore more model methods in redirects (<a href="https://github.com/presidentbeef/brakeman/issues/1723">#1723</a>)</li>
-  <li>Fix <code class="language-plaintext highlighter-rouge">load_rails_defaults</code> overwriting settings in the Rails application (<a href="https://github.com/jamgregory">James Gregory-Monk</a>)</li>
-  <li>Use relative paths for CodeClimate report format (<a href="https://github.com/RubyBrewsday">Mike Poage</a>)</li>
-</ul>
-
-<h3 id="check-rsa-key-sizes-and-padding-modes">Check RSA Key Sizes and Padding Modes</h3>
-
-<p>Brakeman now warns on:</p>
+<p><em>Changes since 5.4.1:</em></p>
 
 <ul>
-  <li>RSA key sizes less than 2048 bits</li>
-  <li>Use of padding modes other than OAEP (including <code class="language-plaintext highlighter-rouge">none</code>)</li>
+  <li>Drop support for Ruby 1.8/1.9 syntax</li>
+  <li>Raise minimum Ruby version to 3.0</li>
+  <li>Add obsolete fingerprints to comparison report (<a href="https://github.com/presidentbeef/brakeman/issues/1758">#1758</a>)</li>
+  <li>Warn about missing CSRF protection when defaults are not loaded (<a href="https://github.com/montdidier">Chris Kruger</a>)</li>
+  <li>Fix false positive with <code class="language-plaintext highlighter-rouge">content_tag</code> in newer Rails (<a href="https://github.com/presidentbeef/brakeman/issues/1778">#1778</a>)</li>
+  <li>Scan directories that include the word <code class="language-plaintext highlighter-rouge">public</code></li>
+  <li>Fix end-of-life dates for Ruby</li>
 </ul>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1737">changes</a>)</p>
+<h3 id="ruby-parsing-version-support">Ruby Parsing Version Support</h3>
 
-<h3 id="unexpected-absolute-paths">Unexpected Absolute Paths</h3>
+<p>This version of Brakeman no longer supports parsing Ruby 1.8/1.9 syntax.</p>
 
-<p>When joining paths using <code class="language-plaintext highlighter-rouge">Pathname#join</code>, any arguments that start with a forward slash (<code class="language-plaintext highlighter-rouge">/</code>) will cause the rest of the path to be relative to that absolute path. This may cause unexpected behavior and deviates from how <code class="language-plaintext highlighter-rouge">File.join</code> works.</p>
+<p><code class="language-plaintext highlighter-rouge">ruby_parser</code>, the gem Brakeman depends on for parsing Ruby, dropped support quite a while ago. Brakeman was depending on the <code class="language-plaintext highlighter-rouge">ruby_parser-legacy</code> gem for these older versions. But since it has been eight years since Ruby 1.9 has been unmaintained… it is time to let go.</p>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Pathname</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'a'</span><span class="p">).</span><span class="nf">join</span><span class="p">(</span><span class="s1">'b'</span><span class="p">,</span> <span class="s1">'/c'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">)</span>
- <span class="o">=&gt;</span> <span class="c1">#&lt;Pathname:/c/d&gt;</span>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1771">changes</a>)</p>
+
+<h3 id="minimum-ruby-version">Minimum Ruby Version</h3>
+
+<p>The minimum Ruby version to run Brakeman is now 3.0.0.</p>
+
+<p>Official support for the 2.x line of Ruby has ended, so it is a good time to bump up the minimum requirement and adopt more modern language features.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1771">changes</a>)</p>
+
+<h3 id="missing-csrf-protection-warning">Missing CSRF Protection Warning</h3>
+
+<p>Since Rails 5.2.0, new applications have had cross-site request forgery protection enabled. Brakeman assumed the protection was enabled based on the Rails version. However, this was incorrect.</p>
+
+<p>Now Brakeman correctly handles the default configuration values.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1776">changes</a>)</p>
+
+<h3 id="content-tag-attributes">Content Tag Attributes</h3>
+
+<p>Brakeman will no longer warn about user input in <code class="language-plaintext highlighter-rouge">content_tag</code> attribute names in Rails 6.1.6+</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1779">changes</a></p>
+
+<h3 id="obsolete-warnings-in-comparison-report">Obsolete Warnings in Comparison Report</h3>
+
+<p>When using the <code class="language-plaintext highlighter-rouge">--compare</code> option, the output JSON will now include an <code class="language-plaintext highlighter-rouge">obsolete</code> key with an array of fingerprints.</p>
+
+<p>These fingerprints are warnings that are configured to be ignored, but no longer exist.</p>
+
+<p>Note that the report will include <em>all</em> fingerprints in the ignore configuration that are not in the current report, even if they were already obsolete.</p>
+
+<p>This report format matches the <code class="language-plaintext highlighter-rouge">--json</code> output.</p>
+
+<p>The report will resemble:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "new": [ ... ],
+  "fixed": [ ... ],
+  "obsolete": [
+    "abcdef01234567890ba28050e7faf1d54f218dfa9435c3f65f47cb378c18cf98"
+  ]
+}
 </code></pre></div></div>
 
-<p>(There are more <code class="language-plaintext highlighter-rouge">Pathname</code> methods with this issue - to be added in a future release.)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1777">changes</a>)</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1733">changes</a>)</p>
+<h3 id="scan-public-directories">Scan ‘public’ Directories</h3>
 
-<h3 id="multiple-values-in-whens">Multiple Values in <code class="language-plaintext highlighter-rouge">when</code>s</h3>
+<p>In the old days, Brakeman tried to scan only the “standard” Rails directories, mostly within <code class="language-plaintext highlighter-rouge">/app/</code>. With the 5.0 release, Brakeman was revised to make very few assumptions about what kinds of files live where, instead making decisions based on the content of files rather than their location.</p>
 
-<p>If a <code class="language-plaintext highlighter-rouge">when</code> clause contains only ‘safe’ values, Brakeman will treat the <code class="language-plaintext highlighter-rouge">case</code> value as safe:</p>
+<p>However, there was a lingering exception. Brakeman would ignore any directories that included <code class="language-plaintext highlighter-rouge">/public/</code>.</p>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<p>This exception has been removed.</p>
 
-<span class="k">case</span> <span class="n">x</span>
-<span class="k">when</span> <span class="o">*</span><span class="n">y</span>
-  <span class="n">maybe_dangerous</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># `x` must be an integer, so not dangerous</span>
-<span class="k">end</span>
-</code></pre></div></div>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1774">changes</a>)</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1734">changes</a>)</p>
+<h3 id="eol-dates-for-ruby">EOL Dates for Ruby</h3>
 
-<h3 id="ignore-more-redirects">Ignore More Redirects</h3>
+<p>Fixed end-of-life date for Ruby 3.0 and added expected dates for 3.1 and 3.2.</p>
 
-<p>More model methods are ignored in redirects:</p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">first!</code></li>
-  <li><code class="language-plaintext highlighter-rouge">last!</code></li>
-  <li><code class="language-plaintext highlighter-rouge">sole</code></li>
-  <li><code class="language-plaintext highlighter-rouge">find_by_sole</code></li>
-</ul>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1732">changes</a>)</p>
-
-<h3 id="rails-defaults">Rails Defaults</h3>
-
-<p><a href="https://github.com/jamgregory">James Gregory-Monk</a> fixed how Rails default configuration values are set so overrides were properly handled.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1719">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1770">changes</a>)</p>
 
 <h3 id="checksums">Checksums</h3>
 
 <p>The SHA256 sums for this release are:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bab990760949e999c5d52b297d8badda376754eb296c91abf829def733ed9d51  brakeman-5.4.0.gem
-2b5a0cd5845b8c0e1b83e00122654af48b025ac3e6625c9ecbc5535226068416  brakeman-lib-5.4.0.gem
-fcbd60456c5db62767d143696e1edf8e4eaee734f2a039903aeca7bb4e6b3dbf  brakeman-min-5.4.0.gem
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>6ff908e5bfca4651d909a31f3d3ae5846e33732284860a23aff454761c4145d0  brakeman-6.0.0.gem
+9a5e68e34c1cffe73b51952937ed2b4f427afd5d11d4a1c10c61e971253ba505  brakeman-lib-6.0.0.gem
+db1d8e2118af4b4701fbe49bf1177ac5c89a6a956ca037fdc0e62eb062e2dbb9  brakeman-min-6.0.0.gem
 </code></pre></div></div>
 
 <h3 id="reporting-issues">Reporting Issues</h3>
@@ -191,7 +205,7 @@ fcbd60456c5db62767d143696e1edf8e4eaee734f2a039903aeca7bb4e6b3dbf  brakeman-min-5
 
 
 
-<time datetime="2022-11-17 21:30:00 -0800" pubdate  updated >2022-11-17 21:30:00 -0800</time>
+<time datetime="2023-05-24 15:30:00 -0700" pubdate  updated >2023-05-24 15:30:00 -0700</time>
 
 
 
