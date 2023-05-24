@@ -1,4 +1,4 @@
-# Unreleased
+# 6.0.0 - 2023-05-24
 
 * Add obsolete fingerprints to comparison report
 * Warn about missing CSRF protection when defaults are not loaded (Chris Kruger)
@@ -6,6 +6,7 @@
 * Raise minimum Ruby version to 3.0
 * Drop support for Ruby 1.8/1.9 syntax
 * Fix end-of-life dates for Ruby
+* Fix false positive with `content_tag` in newer Rails
 
 # 5.4.1 - 2023-02-21
 
