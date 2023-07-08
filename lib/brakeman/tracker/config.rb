@@ -189,13 +189,19 @@ module Brakeman
     # Load defaults based on config.load_defaults value
     # as documented here: https://guides.rubyonrails.org/configuring.html#results-of-config-load-defaults
     def load_rails_defaults
-      return unless number? tracker.config.rails[:load_defaults]
+      return unless node_type? tracker.config.rails[:load_defaults], :lit, :str
 
-      version = tracker.config.rails[:load_defaults].value
+      version = tracker.config.rails[:load_defaults].value.to_s
+
+      unless version.match? /^\d+\.\d+$/
+        Brakeman.debug "[Notice] Unknown version: #{tracker.config.rails[:load_defaults]}"
+        return
+      end
+
       true_value = Sexp.new(:true)
       false_value = Sexp.new(:false)
 
-      if version >= 5.0
+      if version >= '5.0'
         set_rails_config(value: true_value, path: [:action_controller, :per_form_csrf_tokens])
         set_rails_config(value: true_value, path: [:action_controller, :forgery_protection_origin_check])
         set_rails_config(value: true_value, path: [:active_record, :belongs_to_required_by_default])
@@ -203,12 +209,12 @@ module Brakeman
         set_rails_config(value: true_value, path: [:ssl_options, :hsts, :subdomains])
       end
 
-      if version >= 5.1
+      if version >= '5.1'
         set_rails_config(value: false_value, path: [:assets, :unknown_asset_fallback])
         set_rails_config(value: true_value, path: [:action_view, :form_with_generates_remote_forms])
       end
 
-      if version >= 5.2
+      if version >= '5.2'
         set_rails_config(value: true_value, path: [:active_record, :cache_versioning])
         set_rails_config(value: true_value, path: [:action_dispatch, :use_authenticated_cookie_encryption])
         set_rails_config(value: true_value, path: [:active_support, :use_authenticated_message_encryption])
@@ -217,7 +223,7 @@ module Brakeman
         set_rails_config(value: true_value, path: [:action_view, :form_with_generates_ids])
       end
 
-      if version >= 6.0
+      if version >= '6.0'
         set_rails_config(value: Sexp.new(:lit, :zeitwerk), path: [:autoloader])
         set_rails_config(value: false_value, path: [:action_view, :default_enforce_utf8])
         set_rails_config(value: true_value, path: [:action_dispatch, :use_cookies_with_metadata])
@@ -230,7 +236,7 @@ module Brakeman
         set_rails_config(value: true_value, path: [:active_record, :collection_cache_versioning])
       end
 
-      if version >= 6.1
+      if version >= '6.1'
         set_rails_config(value: true_value, path: [:action_controller, :urlsafe_csrf_tokens])
         set_rails_config(value: Sexp.new(:lit, :lax), path: [:action_dispatch, :cookies_same_site_protection])
         set_rails_config(value: Sexp.new(:lit, 308), path: [:action_dispatch, :ssl_default_redirect_status])
@@ -242,7 +248,7 @@ module Brakeman
         set_rails_config(value: true_value, path: [:active_storage, :track_variants])
       end
 
-      if version >= 7.0
+      if version >= '7.0'
         video_args =
           Sexp.new(:str, "-vf 'select=eq(n\\,0)+eq(key\\,1)+gt(scene\\,0.015),loop=loop=-1:size=2,trim=start_frame=1' -frames:v 1 -f image2")
         hash_class = s(:colon2, s(:colon2, s(:const, :OpenSSL), :Digest), :SHA256)
