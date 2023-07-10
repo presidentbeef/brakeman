@@ -47,12 +47,22 @@ class RailsConfiguration < Minitest::Test
   def test_rails7_configuration_load_defaults
     tracker = Brakeman.run(File.join(TEST_PATH, "apps", "rails7"))
 
-    assert_equal Sexp.new(:lit, 7.0), tracker.config.rails[:load_defaults]
+    assert_equal Sexp.new(:str, '7.0'), tracker.config.rails[:load_defaults]
 
     # Check a 6.1 config
     assert_equal Sexp.new(:true), tracker.config.rails[:action_controller][:urlsafe_csrf_tokens]
 
     # Check a 7.0 config
     assert_equal Sexp.new(:true), tracker.config.rails[:action_controller][:wrap_parameters_by_default]
+  end
+
+  def test_invalid_load_defaults
+    tracker = BrakemanTester.new_tracker
+    tracker.config.rails[:load_defaults] = Sexp.new(:str, 'asd2ojasdo.asodja1')
+    config = Brakeman::Config.new(tracker)
+    config.load_rails_defaults
+
+    # Defaults are not loaded
+    assert_nil config.rails.dig(:ssl_options, :hsts, :subdomains)
   end
 end
