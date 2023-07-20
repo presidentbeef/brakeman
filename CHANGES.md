@@ -1,3 +1,7 @@
+# 6.0.1 - 2023-07-20
+
+* Accept strings for `load_defaults` version
+
 # 6.0.0 - 2023-05-24
 
 * Add obsolete fingerprints to comparison report
