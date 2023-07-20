@@ -80,6 +80,77 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2011/10/25/brakeman-0-dot-8-3-released">Brakeman 0.8.3 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2011-10-25 10:00:00 -0700" pubdate  updated >2011-10-25 10:00:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Changes for 0.8.3:</p>
+
+<ul>
+  <li>Respect -w flag in .tabs format (<a href="https://github.com/tw-ngreen">tw-ngreen</a>)</li>
+  <li>Escape HTML output of error messages</li>
+  <li>Add –skip-libs option</li>
+</ul>
+
+<p>Changes since 0.8.0:</p>
+
+<ul>
+  <li>Run checks in parallel threads by default</li>
+  <li>Fix compatibility with ruby_parser 2.3.1</li>
+  <li>Add option to assume all controller methods are actions</li>
+  <li>Recover from errors when parsing routes</li>
+</ul>
+
+<h3 id="fix-for-tabs-format">Fix for .tabs Format</h3>
+
+<p>Brakeman will now pay attention to the <code class="language-plaintext highlighter-rouge">-w</code> flag (setting minimum confidence levels) when using the <code class="language-plaintext highlighter-rouge">.tabs</code> format.</p>
+
+<h3 id="escape-error-messages-in-html">Escape Error Messages in HTML</h3>
+
+<p>Error message will now be escaped in the HTML output so they do not mess up the formatting.</p>
+
+<h3 id="skip-libs-option">–skip-libs Option</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">--skip-libs</code> option will cause Brakeman to not process the files in the <code class="language-plaintext highlighter-rouge">lib</code> directory. At the moment, the results from this directory are only used in a couple places, so it is unlikely that skipping them will cause any problems.</p>
+
+<h3 id="parallel-checks">Parallel Checks</h3>
+
+<p>Checks are now run in separate threads by default. Thus far, there does not seem to be a big difference between using threads and the sequential approach. To turn off threads, use the <code class="language-plaintext highlighter-rouge">-n</code> option.</p>
+
+<h3 id="ruby_parser-compatibility">ruby_parser Compatibility</h3>
+
+<p>This is a stop-gap measure until <a href="https://github.com/seattlerb/ruby_parser">ruby_parser</a> supports Ruby 1.9, which is getting closer to reality.</p>
+
+<h3 id="route-processing">Route Processing</h3>
+
+<p>Brakeman will no longer crash if there are problems parsing <code class="language-plaintext highlighter-rouge">routes.rb</code>. Instead, it will assume all public methods on controllers are actions. The <code class="language-plaintext highlighter-rouge">-a</code> option will also turn this behavior on.</p>
+
+<p>Rails 3.1 route parsing is still a work in progress, so this should at least allow analysis of 3.1 apps, even if it means slightly reduced accuracy.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2011/10/21/brakeman-plugin-officially-available-for-jenkins">Brakeman Plugin 'Officially' Available for Jenkins</a></h1>
     
     
@@ -281,6 +352,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a>
       </li>
     
@@ -294,10 +369,6 @@ end
     
       <li class="post">
         <a href="/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">Brakeman 5.3.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">Brakeman 5.2.3 Released</a>
       </li>
     
   </ul>

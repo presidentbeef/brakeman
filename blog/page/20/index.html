@@ -80,6 +80,94 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/06/12/brakeman-1-dot-6-2-released">Brakeman 1.6.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-06-12 17:07:00 -0700" pubdate  updated >2012-06-12 17:07:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Besides checks for the latest CVEs, this release includes a slightly improved redirect check, noiser output with <code class="language-plaintext highlighter-rouge">--compare</code>, and better handling of <code class="language-plaintext highlighter-rouge">before_filter</code>.</p>
+
+<p><em>Changes since 1.6.1</em>:</p>
+
+<ul>
+  <li>Add checks for CVE-2012-2660, CVE-2012-2661, CVE-2012-2694, CVE-2012-2695 (Dave Worth)</li>
+  <li>Avoid warning when redirecting to a model instance</li>
+  <li>Raise confidence level for model attributes in redirects</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">request.parameters</code> as a parameters hash</li>
+  <li>Return non-zero exit code when missing dependencies</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">before_filter :except</code> logic</li>
+  <li>Only accept symbol literals as before_filter names</li>
+  <li>Cache before_filter lookups</li>
+  <li>Turn off quiet mode by default for <code class="language-plaintext highlighter-rouge">--compare</code></li>
+</ul>
+
+<h3 id="latest-cves">Latest CVEs</h3>
+
+<p>A number of Rails vulnerabilities were announced recently, although there are really only two issues.</p>
+
+<p>One issue is that query parameters like <code class="language-plaintext highlighter-rouge">?name[]</code> and <code class="language-plaintext highlighter-rouge">?name[]=1&amp;name[]</code> get converted to <code class="language-plaintext highlighter-rouge">{"name" =&gt; [nil]}</code> and <code class="language-plaintext highlighter-rouge">{"name" =&gt; ["1", nil]}</code>. This, in turn, causes ActiveRecord to produce SQL queries with either <code class="language-plaintext highlighter-rouge">IS NULL</code> or <code class="language-plaintext highlighter-rouge">IN ('1', NULL)</code>. This is probably unexpected behavior.</p>
+
+<p>The other issue is that query parameters like <code class="language-plaintext highlighter-rouge">?name[users.id]=1</code> or <code class="language-plaintext highlighter-rouge">?name[users][id]=1</code> get converted to <code class="language-plaintext highlighter-rouge">{"name" =&gt; { "users.id" =&gt; 1 }}</code> or <code class="language-plaintext highlighter-rouge">{"name" =&gt; { "users" =&gt; { "id" =&gt; 1 }}}</code>. ActiveRecord interprets <code class="language-plaintext highlighter-rouge">"users.id"</code> and <code class="language-plaintext highlighter-rouge">"users" =&gt; { "id" ...}</code> as <code class="language-plaintext highlighter-rouge">"users"."id"</code> in the WHERE clause, allowing an attacker to control the table/columns being queried.</p>
+
+<p>Updated versions for Rails 3.x have been released.</p>
+
+<p>For Rails 2.3, I believe <a href="https://github.com/presidentbeef/rails/pull/1/files">these changes</a> will fix the first issue, and there is another <a href="https://rubyonrails-security.googlegroups.com/attach/aee3413fb038bf56/2-3-sql-injection.patch?view=1&amp;part=3">patch available</a> for the second issue.</p>
+
+<p>Older versions of Rails 2.x may be vulnerable to the “NULL” issue, but not to the nested hashes problem.</p>
+
+<h3 id="unprotected-redirect-check">Unprotected Redirect Check</h3>
+
+<p>There have been some minor changes to <code class="language-plaintext highlighter-rouge">CheckRedirect</code>. In most cases, it should no longer warn when redirecting to a model instance. If there are still false positives with this scenario, please report them.</p>
+
+<p>The other change is that redirects to model attributes will now be marked as high confidence, instead of weak.</p>
+
+<h3 id="exit-code-on-missing-dependencies">Exit Code on Missing Dependencies</h3>
+
+<p>Brakeman catches errors from missing dependencies in order to show a nicer error message. Unfortunately, it was also returning <code class="language-plaintext highlighter-rouge">0</code> on exit. This is undesirable behavior when chaining commands together.</p>
+
+<p>This has been changed to return a non-zero exit code.</p>
+
+<h3 id="before-filter-changes">Before Filter Changes</h3>
+
+<p>There were some isues with how <code class="language-plaintext highlighter-rouge">before_filter</code> was being handled. The logic when using <code class="language-plaintext highlighter-rouge">:except</code> was broken, causing Brakeman to treat it like <code class="language-plaintext highlighter-rouge">:only</code>.</p>
+
+<p>The other issue caused Brakeman to interpret arguments such as method calls as method names. For example, <code class="language-plaintext highlighter-rouge">before_filter blah</code> would be treated like <code class="language-plaintext highlighter-rouge">before_filter :blah</code>.</p>
+
+<p>While dealing with this, caching of filter lookups was also added for a minor performance improvement.</p>
+
+<h3 id="noisier---compare">Noisier <code class="language-plaintext highlighter-rouge">--compare</code></h3>
+
+<p>Using the <code class="language-plaintext highlighter-rouge">--compare</code> option now shows the same output as a regular scan. If you are piping the output of <code class="language-plaintext highlighter-rouge">--compare</code> to a file or elsewhere, you may wish to use the <code class="language-plaintext highlighter-rouge">--quiet</code> option.</p>
+
+<h3 id="report-issues">Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/05/23/brakeman-1-dot-6-1-released">Brakeman 1.6.1 Released</a></h1>
     
     
@@ -473,40 +561,6 @@ user.send(method)
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/03/22/brakeman-jenkins-plugin-0-dot-7-released">Brakeman Jenkins Plugin 0.7 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-03-22 13:27:00 -0700" pubdate  updated >2012-03-22 13:27:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The <a href="http://jenkins-ci.org">Jenkins</a>/<a href="http://hudson-ci.org">Hudson</a> plugin which tracks, displays, and alerts on Brakeman warnings has been updated to work with the latest static analysis core plugin. In particular, this means warning thresholds for new warnings will no longer disappear.</p>
-
-<p>See <a href="https://wiki.jenkins-ci.org/display/JENKINS/Brakeman+Plugin">here</a> for more information about the plugin.</p>
-
-<p>Thanks to Nick Green for fixing this!</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -545,6 +599,10 @@ user.send(method)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a>
       </li>
     
@@ -558,10 +616,6 @@ user.send(method)
     
       <li class="post">
         <a href="/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">Brakeman 5.3.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">Brakeman 5.2.3 Released</a>
       </li>
     
   </ul>

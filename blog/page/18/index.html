@@ -80,6 +80,163 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2013/03/01/brakeman-1-dot-9-3-released">Brakeman 1.9.3 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2013-03-01 09:22:00 -0800" pubdate  updated >2013-03-01 09:22:00 -0800</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>Changes since 1.9.2</em>:</p>
+
+<ul>
+  <li>Add warning fingerprints</li>
+  <li>Add check for unsafe reflection (<a href="https://github.com/gquadros">Gabriel Quadros</a>)</li>
+  <li>Add support for Slim templates (<a href="https://github.com/presidentbeef/brakeman/issues/214">#214</a>)</li>
+  <li>Add check for skipping authentication methods with blacklist (<a href="https://github.com/presidentbeef/brakeman/issues/199">#199</a>)</li>
+  <li>Add render path to JSON report</li>
+  <li>Remove empty tables from reports (<a href="https://github.com/obduk">Owen Ben Davies</a>)</li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">prepend/append_before_filter</code></li>
+  <li>Performance improvements when handling branches</li>
+  <li>Fix processing of <code class="language-plaintext highlighter-rouge">production.rb</code> (<a href="https://github.com/presidentbeef/brakeman/issues/264">#264</a>)</li>
+  <li>Fix version check for Ruby 2.0</li>
+  <li>Expand HAML dependency to include 4.0 (<a href="https://github.com/presidentbeef/brakeman/issues/263">#263</a>)</li>
+  <li>Scroll errors into view when expanding in HTML report</li>
+</ul>
+
+<h3 id="warning-fingerprints-and-new-identifiers">Warning Fingerprints and New Identifiers</h3>
+
+<p><em>This is a breaking change: <code class="language-plaintext highlighter-rouge">brakeman --compare</code> will not work with reports generated from earlier versions.</em></p>
+
+<p>Tracking of new and fixed warnings is often required when integrating Brakeman with other tools. Current approaches rely on fragile values such as the warning messages or formatting of the code output.</p>
+
+<p>Additionally, warnings are grouped into large categories, such as “SQL Injection”. Sometimes more fine-grained categorization is required that does not rely on a value intended for display that may need to changed.</p>
+
+<p>With these two issues in mind, warnings now have a “warning code” and a “fingerprint”. Warning codes are integers which will never change and provide more specific categorization of warnings. For example, each CVE has a separate code. This should make tracking and sorting warnings easier, but also allow for fixes to warning category names in the future.</p>
+
+<p>The warning fingerprint is a SHA256 hash of five values:</p>
+
+<ul>
+  <li>Warning code</li>
+  <li>S-expression of code that caused the warning</li>
+  <li>Location (i.e., template name or class/method)</li>
+  <li>Relative file path</li>
+  <li>Confidence level</li>
+</ul>
+
+<p>Note that line numbers are <em>not</em> included. Identical warnings on different lines will have the same fingerprint. External tools can make the decision for how to handle this situation.</p>
+
+<p>Warning fingerprints allow quick comparison of warnings (either by fingerprint, or fingerprint + line number) but are also less fragile than existing approaches. The fingerprint will not change if the warning category (meant for display) changes, if the formatting of the code changes, or if the line number changes (e.g., some blank lines are added at the top of a file).</p>
+
+<p>If there are any issues with fingerprints, please report them before Brakeman 2.0!</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/280">changes</a>)</p>
+
+<h3 id="check-for-unsafe-constant-creation">Check for Unsafe Constant Creation</h3>
+
+<p>Gabriel Quadros has contributed a check for methods that create constants (usually classes) from user input. <a href="http://blog.conviso.com.br/2013/02/exploiting-unsafe-reflection-in.html">His blog post</a> on the subject provides a good explanation of why this should be considered very dangerous.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/274">changes</a>)</p>
+
+<h3 id="support-for-slim">Support for Slim</h3>
+
+<p>Support for templates using <a href="http://slim-lang.com/">Slim</a> is now here! This should be considered experimental, as it has not yet been tested on a wide set of applications. Also, thanks <a href="https://github.com/tubaxenor">tubaxenor</a> for reporting a require issue with this change.</p>
+
+<p>Please report any issues, especially false negatives!</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/271">changes</a>)</p>
+
+<h3 id="check-for-skipping-of-authentication-methods">Check for Skipping of Authentication Methods</h3>
+
+<p>The check for <code class="language-plaintext highlighter-rouge">skip_before_filter</code>s using <code class="language-plaintext highlighter-rouge">except</code> instead of <code class="language-plaintext highlighter-rouge">only</code> has been expanded to include authentication filters from popular libraries.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/268">changes</a>)</p>
+
+<h3 id="render-paths-in-json-reports">Render Paths in JSON Reports</h3>
+
+<p>In HTML reports, templates which have a render path longer than one entry have been “expandable” to show the entire render path instead of just one level up. For example, a partial is usually rendered from a view, which is rendered from a controller action.</p>
+
+<p>JSON reports now also include this information in the <code class="language-plaintext highlighter-rouge">render_path</code> value.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/279">changes</a>)</p>
+
+<h3 id="no-empty-report-tables">No Empty Report Tables</h3>
+
+<p>Owen Ben Davies contributed a patch to hide empty warning tables in the text and HTML reports. Looks much cleaner, thanks Owen!</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/282">changes</a>)</p>
+
+<h3 id="handle-preappended-filters">Handle (Pre|Ap)pended Filters</h3>
+
+<p>Brakeman will now recognize before filters added with <code class="language-plaintext highlighter-rouge">prepend_before_filter</code> and <code class="language-plaintext highlighter-rouge">append_before_filter</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/266">changes</a>)</p>
+
+<h3 id="branching-performance-improvements">Branching Performance Improvements</h3>
+
+<p>It is entirely embarrassing, but Brakeman stopped working on Redmine some time ago due to how assignments in <code class="language-plaintext highlighter-rouge">if</code> expressions are handled.</p>
+
+<p>In order to be somewhat flow sensitive, Brakeman combines variables assignments in <code class="language-plaintext highlighter-rouge">if</code> branches into <code class="language-plaintext highlighter-rouge">or</code> expressions. This captures the possible values a variable may have. However, Brakeman was doing that for <em>every</em> assignment in an <code class="language-plaintext highlighter-rouge">if</code> branch, even if there were multiple assignments to the same variable in the same branch (i.e., the value was not actually branching since the assignments were sequential). This release fixes that issue.</p>
+
+<p>Additionally, simple arithmetic operations are now distributed across <code class="language-plaintext highlighter-rouge">or</code> expressions containing simple values (strings or numbers at this point), providing some memory savings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/270">changes</a>)</p>
+
+<h3 id="fix-processing-of-production-environment-settings">Fix Processing of Production Environment Settings</h3>
+
+<p>Processing of <code class="language-plaintext highlighter-rouge">production.rb</code> has been broken for some time, but poor test coverage meant it went unnoticed. But it is fixed now, so settings in <code class="language-plaintext highlighter-rouge">production.rb</code> should override those found in <code class="language-plaintext highlighter-rouge">environment.rb</code>. This only applies to Rails 3 applications.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/265">changes</a>)</p>
+
+<h3 id="fix-version-check-for-ruby-20">Fix Version Check for Ruby 2.0</h3>
+
+<p>Brakeman appears to work fine with Ruby 2.0, but the version check for Ruby 1.9 (which affected some behavior and checks) needed to be modified to include 2.0. Definitely report any issues with Ruby 2.0!</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/277">changes</a>)</p>
+
+<h3 id="allow-haml-40">Allow HAML 4.0</h3>
+
+<p>There appear to be no changes in HAML 4.0 that affect Brakeman, so the gem dependency has been expanded to include the 4.x series.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/269">changes</a>)</p>
+
+<h3 id="fix-error-showhide-in-html-report">Fix Error Show/Hide in HTML Report</h3>
+
+<p>Now clicking on “Exceptions” to show or hide scan errors will keep the errors in view.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/267">changes</a>)</p>
+
+<h3 id="report-issues">Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+
+<h3 id="roadmap">Roadmap</h3>
+
+<p>The <a href="https://github.com/presidentbeef/brakeman/wiki/Roadmap">Brakeman roadmap</a> has one more release (1.9.4) planned before 2.0. The next release will likely only include bug and false positive fixes. Brakeman 2.0 will <em>definitely</em> include breaking changes, especially for JSON reports.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2013/02/13/brakeman-1-dot-9-2-released">Brakeman 1.9.2 Released</a></h1>
     
     
@@ -594,98 +751,6 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/10/17/brakeman-1-dot-8-2-released">Brakeman 1.8.2 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-10-17 10:44:00 -0700" pubdate  updated >2012-10-17 10:44:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a bugfix release, in particular fixing rescanning (used by <a href="https://github.com/guard/guard-brakeman">guard-brakeman</a>).</p>
-
-<p><em>Changes since 1.8.1</em>:</p>
-
-<ul>
-  <li>Fixed rescanning problems caused by 1.8.0 changes</li>
-  <li>Fix scope calls with single argument</li>
-  <li>Report specific model name in rendered collections</li>
-  <li>Handle overwritten JSON escape settings (Neil Matatall)</li>
-  <li>Add CHANGES to gemspec</li>
-</ul>
-
-<h3 id="rescan-fixes">Rescan Fixes</h3>
-
-<p>Brakeman supports rescanning a subset of files in an application, with the caveat that the previous scan must still be in memory. This functionality was broken in the the 1.8.0 release, due to the lack of tests.</p>
-
-<p>This release updates rescanning to be more robust and work with the 1.8.0 changes to how “render paths” are stored. Also, a number of tests were added to help prevent breakage in the future.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/165">changes</a>)</p>
-
-<h3 id="scope-calls-with-one-argument">Scope Calls with One Argument</h3>
-
-<p>Calls to <code class="language-plaintext highlighter-rouge">scope</code> with a single argument were causing errors in Brakeman’s SQL injection check.</p>
-
-<p>The fixed error looked like:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>undefined method `node_type' for nil:NilClass  /something/brakeman/lib/brakeman/checks/check_sql.rb:75:in `block (2 levels) in find_scope_calls'
-</code></pre></div></div>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/157">changes</a>)</p>
-
-<h3 id="model-names-for-rendered-collections">Model Names for Rendered Collections</h3>
-
-<p>In cases like below, where a collection of models is being rendered and the model name could be known, any resulting warnings will now reference the actual model name.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= render 'user', :collection =&gt; User.all %&gt;
-</code></pre></div></div>
-
-<p>Previously, Brakeman would report warnings with <code class="language-plaintext highlighter-rouge">UnknownModel</code>, whether or not the model name was actually known.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/155">changes</a>)</p>
-
-<h3 id="overwritten-json-escape-config">Overwritten JSON Escape Config</h3>
-
-<p>It is possible that a config setting in one initializer overrides a setting in a different initializer. This is now handled for the JSON escape settings.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/154">changes</a>)</p>
-
-<h3 id="changes-file-in-gem">CHANGES File in Gem</h3>
-
-<p>The <a href="https://github.com/presidentbeef/brakeman/blob/master/CHANGES">CHANGES</a> file is now included in the gem file as requested.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/issues/153">changes</a>)</p>
-
-<h3 id="report-issues">Report Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-
-<h3 id="brakeman-roadmap">Brakeman Roadmap</h3>
-
-<p>A rough guide to Brakeman 1.9 and 2.0 has been <a href="https://github.com/presidentbeef/brakeman/wiki/Roadmap">posted here</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -724,6 +789,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a>
       </li>
     
@@ -737,10 +806,6 @@ end
     
       <li class="post">
         <a href="/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">Brakeman 5.3.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">Brakeman 5.2.3 Released</a>
       </li>
     
   </ul>

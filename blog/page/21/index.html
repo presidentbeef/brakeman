@@ -80,6 +80,40 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/03/22/brakeman-jenkins-plugin-0-dot-7-released">Brakeman Jenkins Plugin 0.7 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-03-22 13:27:00 -0700" pubdate  updated >2012-03-22 13:27:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The <a href="http://jenkins-ci.org">Jenkins</a>/<a href="http://hudson-ci.org">Hudson</a> plugin which tracks, displays, and alerts on Brakeman warnings has been updated to work with the latest static analysis core plugin. In particular, this means warning thresholds for new warnings will no longer disappear.</p>
+
+<p>See <a href="https://wiki.jenkins-ci.org/display/JENKINS/Brakeman+Plugin">here</a> for more information about the plugin.</p>
+
+<p>Thanks to Nick Green for fixing this!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/03/05/brakeman-1-dot-5-1-released">Brakeman 1.5.1 Released</a></h1>
     
     
@@ -454,56 +488,6 @@ puts clean(x)
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/01/26/brakeman-1-dot-2-2-released">Brakeman 1.2.2 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-01-26 13:58:00 -0800" pubdate  updated >2012-01-26 13:58:00 -0800</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Changes since 1.2.1:</em></p>
-
-<ul>
-  <li>–no-progress works again</li>
-  <li>Make CheckLinkTo a separate check</li>
-  <li>Don’t fail on unknown options to resource(s)</li>
-  <li>Handle empty resource(s) blocks</li>
-  <li>Add RescanReport#existing_warnings</li>
-</ul>
-
-<h3 id="no-progress-option">No Progress Option</h3>
-
-<p>The last release broke the <code class="language-plaintext highlighter-rouge">--no-progress</code> option for hiding the <code class="language-plaintext highlighter-rouge">1/100 files processed</code> type messages. Now it works again!</p>
-
-<h3 id="separate-check-for-link_to">Separate Check for link_to</h3>
-
-<p>For no great reason, <code class="language-plaintext highlighter-rouge">CheckLinkTo</code> was bundled with <code class="language-plaintext highlighter-rouge">CheckCrossSiteScripting</code>. It has now been moved out to a separate file, allowing it to be treated as a regular check. This means it can be explicitly skipped using <code class="language-plaintext highlighter-rouge">-x CheckLinkTo</code> (if desired).</p>
-
-<h3 id="better-rails-2-route-handling">Better Rails 2 Route Handling</h3>
-
-<p>Brakeman was raising an exception if a hash option to <code class="language-plaintext highlighter-rouge">resource</code> or <code class="language-plaintext highlighter-rouge">resources</code> did not match a set of known options. Now it will only warn instead of aborting route processing.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -542,6 +526,10 @@ puts clean(x)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a>
       </li>
     
@@ -555,10 +543,6 @@ puts clean(x)
     
       <li class="post">
         <a href="/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">Brakeman 5.3.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">Brakeman 5.2.3 Released</a>
       </li>
     
   </ul>

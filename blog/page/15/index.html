@@ -80,6 +80,134 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2014/06/06/brakeman-2-dot-6-0-released">Brakeman 2.6.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2014-06-06 09:04:00 -0700" pubdate  updated >2014-06-06 09:04:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release introduces significant changes to how and when files are parsed, which may introduce changes in existing warnings and errors.</p>
+
+<p><em>Changes since 2.5.0</em>:</p>
+
+<ul>
+  <li>Improve default route detection in Rails 3/4 (<a href="https://github.com/jjarmoc">Jeff Jarmoc</a>)</li>
+  <li>Handle controllers and models split across files (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
+  <li>Fix handling of <code class="language-plaintext highlighter-rouge">protected_attributes</code> gem in Rails 4 (<a href="https://github.com/phene">Geoffrey Hichborn</a>)</li>
+  <li>Add check for CVE-2014-0130</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">find_by</code>/<code class="language-plaintext highlighter-rouge">find_by!</code> to SQLi check for Rails 4</li>
+  <li>Do not branch values for <code class="language-plaintext highlighter-rouge">+=</code></li>
+  <li>Parse most files upfront instead of on demand</li>
+  <li>Fix CheckRender with nested render calls (<a href="https://github.com/presidentbeef/brakeman/issues/484">#484</a>)</li>
+  <li>Fix detection of <code class="language-plaintext highlighter-rouge">:host</code> setting in redirects (<a href="https://github.com/presidentbeef/brakeman/issues/506">#506</a>)</li>
+  <li>Ignore more model methods in redirects</li>
+  <li>Update to use RubyParser 3.5.0 (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
+</ul>
+
+<h3 id="improved-default-route-detection">Improved Default Route Detection</h3>
+
+<p>In addition to Jeff Jarmoc’s <a href="http://matasano.com/research/AnatomyOfRailsVuln-CVE-2014-0130.pdf">awesome research</a> on CVE-2014-0130, he contributed much-needed improvements to detecting use of <code class="language-plaintext highlighter-rouge">:action</code> and <code class="language-plaintext highlighter-rouge">*action</code> in routes for Rails 3/4. This may result in more default routes warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/493">changes</a>)</p>
+
+<h3 id="multiple-files-for-controllers-and-models">Multiple Files for Controllers and Models</h3>
+
+<p>(<a href="https://github.com/ptoomey3">Patrick Toomey</a>) contributed improvements which allow Brakeman to process controllers and models which may be defined in multiple files. The changes also improve how Brakeman handles controllers and models inside modules. This may alter some warnings and how some files are processed. Also, controllers and models may be associated with multiple files instead of just one.</p>
+
+<p>(changes <a href="https://github.com/presidentbeef/brakeman/pull/492">here</a> and <a href="https://github.com/presidentbeef/brakeman/pull/482">here</a>)</p>
+
+<h3 id="protected-attributes-gem">Protected Attributes Gem</h3>
+
+<p>Thanks to (<a href="https://github.com/phene">Geoffrey Hichborn</a>), Brakeman will now treat Rails 4 apps which use the <a href="https://github.com/rails/protected_attributes">protected_attributes gem</a> like a Rails 3 app in regards to mass assignment.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/491">changes</a>)</p>
+
+<h3 id="check-for-cve-2014-0130">Check for CVE-2014-0130</h3>
+
+<p>Besides warning about more types of default routes in this release, Brakeman will also warn about <a href="https://groups.google.com/d/msg/rubyonrails-security/NkKc7vTW70o/NxW_PDBSG3AJ">CVE-2014-0130</a> explicitly. If the application uses default routes, the warning will be high confidence, otherwise medium. Note Brakeman will categorize this issue as “Remote Code Execution”, since [Jeff Jarmoc demonstrated]((http://matasano.com/research/AnatomyOfRailsVuln-CVE-2014-0130.pdf) rendering arbitrary files can lead to interpreting those files as ERB.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/502">changes</a>)</p>
+
+<h3 id="sql-injection-in-find-by">SQL Injection in Find By</h3>
+
+<p>Rails 4 added the <code class="language-plaintext highlighter-rouge">find_by</code>/<code class="language-plaintext highlighter-rouge">find_by!</code> methods which just call <code class="language-plaintext highlighter-rouge">where(*args).take</code> and are therefore vulnerable to the same issues as <code class="language-plaintext highlighter-rouge">where</code>. This release will check these methods for SQL injection now.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/504">changes</a>)</p>
+
+<h3 id="no-branching-for-">No Branching for +=</h3>
+
+<p>Code which used <code class="language-plaintext highlighter-rouge">+=</code> heavily in combination with many branches lead to very poor performance. The resulting information from the branches was rarely useful. However, since <code class="language-plaintext highlighter-rouge">+=</code> is buidling up a value (as opposed to replacing it), simply ignoring branches does not lose any of the values involved. Thus, the same vulnerabilities should be able to be detected even when losing flow sensitivity for <code class="language-plaintext highlighter-rouge">+=</code> assignments. For details, <a href="https://github.com/presidentbeef/brakeman/pull/499">see the changes</a>.</p>
+
+<p>This change has improved processing on some files from over 30 minutes to under 1 second. If some files were processing slowly or had to be ignored previously, consider trying again with this release.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/499">changes</a>)</p>
+
+<h3 id="parsing-files-upfront">Parsing Files Upfront</h3>
+
+<p>This release changes when files are parsed. Previously, files were read and parsed as they were processed. Now most files are read and parsed near the beginning of the scan instead. This has allowed for some internal cleanup and easier future changes. However, some bugs were fixed regarding sorting files which may cause warnings to change.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/501/">changes</a>)</p>
+
+<h3 id="nested-renders">Nested Renders</h3>
+
+<p><code class="language-plaintext highlighter-rouge">CheckRender</code> had a bug when processing a <code class="language-plaintext highlighter-rouge">render</code> call which contained another call to <code class="language-plaintext highlighter-rouge">render</code>. This has been fixed.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/485">changes</a>)</p>
+
+<h3 id="redirects-with-chained-calls">Redirects with Chained Calls</h3>
+
+<p>The last release added support for checking if a <code class="language-plaintext highlighter-rouge">redirect_to</code> argument was setting the <code class="language-plaintext highlighter-rouge">:host</code> option. However, it did not work with chained calls like the <a href="https://github.com/presidentbeef/brakeman/issues/506">one reported here</a>. Now it should.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/507">changes</a>)</p>
+
+<h3 id="redirects-to-models">Redirects to Models</h3>
+
+<p>More Rails 4 methods have been added and support for chained methods has been improved to prevent false positives when redirecting to a model instance.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/489">changes</a>)</p>
+
+<h3 id="rubyparser-upgrade">RubyParser Upgrade</h3>
+
+<p>The RubyParser dependency has been upgraded to 3.5.0 for Ruby 2.1 support. There are some issues with newlines and line number accuracy in newer versions (it is better for some code and worse for others) which has prevented further upgrades at the moment.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/497">changes</a>)</p>
+
+<h3 id="shas">SHAs</h3>
+
+<p>The SHA1 sums for this release are</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0aae141108d92040f3553557a31ad117ac1c2ea6  brakeman-2.6.0.gem
+70c2353f31d4d04ba8d95c871062db31d5c6e981  brakeman-min-2.6.0.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2014/04/30/brakeman-2-dot-5-0-released">Brakeman 2.5.0 Released</a></h1>
     
     
@@ -474,180 +602,6 @@ b84ad90a7ec9b6e6bbce8fc69c50d1d8b3214d0f  brakeman-min-2.4.1.gem
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2014/02/05/brakeman-2-dot-4-0-released">Brakeman 2.4.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2014-02-05 01:15:00 -0800" pubdate  updated >2014-02-05 01:15:00 -0800</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a fairly big release with some significant changes (especially for SQL injection warnings), so please test carefully. Existing warnings and fingerprints may change.</p>
-
-<p><em>Changes since 2.3.1:</em></p>
-
-<ul>
-  <li>Fingerprint attribute warnings individually (<a href="https://github.com/ctaintor">Case Taintor</a>)</li>
-  <li>Add check for uses of <code class="language-plaintext highlighter-rouge">OpenSSL::SSL::VERIFY_NONE</code> (<a href="https://github.com/abedra/">Aaron Bedra</a>)</li>
-  <li>Detect SQL injection raw SQL queries using <code class="language-plaintext highlighter-rouge">connection</code>(<a href="https://github.com/presidentbeef/brakeman/issues/434">#434</a>)</li>
-  <li>Fix false positives when SQL methods are not called on AR models (<a href="https://github.com/presidentbeef/brakeman/issues/423">#423</a>, <a href="https://github.com/abedra/">Aaron Bedra</a>)</li>
-  <li>Reduce false positives for SQL injection in string building</li>
-  <li>More accurate user input marking for SQL injection warnings</li>
-  <li>Detect SQL injection in <code class="language-plaintext highlighter-rouge">delete_all</code>/<code class="language-plaintext highlighter-rouge">destroy_all</code></li>
-  <li>Add support for Rails LTS versions (<a href="https://github.com/presidentbeef/brakeman/issues/422">#422</a>)</li>
-  <li>Parse exact versions from Gemfile.lock for all gems (<a href="https://github.com/presidentbeef/brakeman/issues/431">#431</a>)</li>
-  <li>Ignore generators in <code class="language-plaintext highlighter-rouge">lib/</code> directory</li>
-  <li>No longer raise exceptions if a class name cannot be determined</li>
-  <li>Update to RubyParser 3.4.0</li>
-</ul>
-
-<h3 id="attribute-warning-fingerprints">Attribute Warning Fingerprints</h3>
-
-<p><a href="https://github.com/ctaintor">Case Taintor</a> noted that ignoring one warning about dangerous mass assignable attributes ignored all such warnings for the same model. Then he fixed it, yay!</p>
-
-<p>Please note this means fingerprints for warnings about “dangerous attributes” in <code class="language-plaintext highlighter-rouge">attr_accessible</code> will change. If you are currently ignoring some of these warnings, you will need to re-ignore them.</p>
-
-<p>Also, the messages for these warnings have changed and the attribute name will now be in the “code” value in JSON reports.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/416">changes</a>)</p>
-
-<h3 id="check-for-ssl-verification">Check for SSL Verification</h3>
-
-<p><a href="https://github.com/abedra/">Aaron Bedra</a> has contributed a new check for instances of <code class="language-plaintext highlighter-rouge">verify_mode</code> on HTTPS connections being set to <code class="language-plaintext highlighter-rouge">OpenSSL::SSL::VERIFY_NONE</code>. This bypasses any checks OpenSSL has for verifying the SSL certificate is legitimate, allowing easy man-in-the-middle attacks.</p>
-
-<p>This new check has a new warning type (“SSL Verification Bypass”) and warning code (71).</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/419">changes</a>)</p>
-
-<h3 id="sql-injection-in-raw-queries">SQL Injection in Raw Queries</h3>
-
-<p><code class="language-plaintext highlighter-rouge">ActiveRecord::Core#connection</code> or <code class="language-plaintext highlighter-rouge">ActiveRecord::Base.connection</code> or <code class="language-plaintext highlighter-rouge">ActiveRecord::Base#connection</code> can be used to send queries directly to the database connection without any protection. There are several ways of doing this, most of which are hopefully now covered by Brakeman.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/438">changes</a>)</p>
-
-<h3 id="fewer-sql-injection-false-positives">Fewer SQL Injection False Positives</h3>
-
-<p>Many changes were made in this release to reduce false positives related to SQL injection warnings and to improve the accuracy of reported issues.</p>
-
-<p>First, <a href="https://github.com/abedra/">Aaron Bedra</a> fixed Brakeman to not warn about query-like methods that were innocently called on non-ActiveRecord objects. (<a href="https://github.com/presidentbeef/brakeman/pull/426">changes</a>)</p>
-
-<p>For example, this:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find_by_sql("SELECT * FROM stuff WHERE thing = " + self.class.sanitize_sql(thing))
-</code></pre></div></div>
-
-<p>would have generated a warning which indicated <code class="language-plaintext highlighter-rouge">"SELECT * FROM stuff WHERE thing = " + self.class.sanitize_sql(thing)</code> was a dangerous value. Now it will not warn at all.</p>
-
-<p>As another example, code like this</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>options = {}
-
-if params[:sort_order] == 'ascending'
-  sort_order = 'ASC'
-else
-  sort_order = 'DESC'
-end
-
-options[:order] = 'updated_at ' + sort_order
-Test.all(options)
-</code></pre></div></div>
-
-<p>would create a warning about <code class="language-plaintext highlighter-rouge">("updated_at " + ("ASC" or "DESC"))</code>. Now Brakeman will recognize that these are all just strings and not warn.</p>
-
-<p>Many warnings will also just be more accurate:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>query = "SELECT sum(stuff) " +
-      "FROM (SELECT other_stuff FROM #{table} WHERE id = #{id}) " +
-      "AS item, bgs " +
-      "WHERE ST_Contains(item.geometry, bgs.the_point);"
-
-Test.find_by_sql(query)
-</code></pre></div></div>
-
-<p>This used to warn on the entire query! Now it will just warn about <code class="language-plaintext highlighter-rouge">table</code>.</p>
-
-<p><code class="language-plaintext highlighter-rouge">#to_s</code> calls are ignored now and their targets considered instead.</p>
-
-<p>Additionally, Brakeman should no longer warn about method calls ending in <code class="language-plaintext highlighter-rouge">_id</code>, since those generally refer to foreign keys. Note, however, that local variables ending in <code class="language-plaintext highlighter-rouge">_id</code> will still produce warnings.</p>
-
-<p>In general, fingerprints should not change for existing warnings, since the <code class="language-plaintext highlighter-rouge">user_input</code> value is not included in the fingerprint.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/440">changes</a>)</p>
-
-<h3 id="sql-injection-in-deletions">SQL Injection in Deletions</h3>
-
-<p>Brakeman will now look for SQL injection in <code class="language-plaintext highlighter-rouge">delete_all</code> and <code class="language-plaintext highlighter-rouge">destroy_all</code> which allow raw SQL strings.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/438">changes</a>)</p>
-
-<h3 id="support-for-rails-lts">Support for Rails LTS</h3>
-
-<p><a href="https://railslts.com/">RailsLTS</a> provides security patch backporting to Rails 2.3.18. They now <a href="http://makandracards.com/railslts/21809-how-to-find-out-your-current-rails-lts-version">include an internal version number</a> in <code class="language-plaintext highlighter-rouge">Gemfile.lock</code>, which allows Brakeman to avoid warning about fixed vulnerabilities in applications using RailsLTS.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/437">changes</a>)</p>
-
-<h3 id="gemfile-parsing">Gemfile Parsing</h3>
-
-<p>Previously, Brakeman only checked <code class="language-plaintext highlighter-rouge">Gemfile.lock</code> for specific gems. Now it “parses” the entire file and can track all gem versions. (<a href="https://github.com/rubysec/bundler-audit">bundler-audit</a> is recommended for checking gems for vulnerable versions.) This helps when Brakeman is checking for gem usage but the gem is an indirect dependency.</p>
-
-<p>Also, a minor issue was fixed for those <code class="language-plaintext highlighter-rouge">Gemfile</code>s that do weird things and call <code class="language-plaintext highlighter-rouge">gem</code> with non-string arguments.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/432">changes</a>)</p>
-
-<h3 id="generators-are-ignored">Generators are Ignored</h3>
-
-<p>Any path in <code class="language-plaintext highlighter-rouge">lib/</code> containing <code class="language-plaintext highlighter-rouge">generators</code> will now be ignored. This is mainly because there are <code class="language-plaintext highlighter-rouge">.rb</code> files in there that are actually templates, but Brakeman tries to parse them and fails because they aren’t really Ruby.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/427">changes</a>)</p>
-
-<h3 id="exceptions-for-class-names">Exceptions for Class Names</h3>
-
-<p>Previously, Brakeman actually raised and caught exceptions if a class name could not be determined from a <code class="language-plaintext highlighter-rouge">Sexp</code>. Now it just returns <code class="language-plaintext highlighter-rouge">nil</code>. This should remove some errors and possibly make some scans faster.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/417">changes</a>)</p>
-
-<h3 id="rubyparser-update">RubyParser Update</h3>
-
-<p>The RubyParser dependency has been updated to 3.4.0. This release is <em>much</em> faster, along with <a href="http://blog.zenspider.com/releases/2014/02/ruby_parser-version-3-4-0-has-been-released.html">lots of other good changes</a>.</p>
-
-<p>However, please note that line numbers for warnings involving heredocs may change. They will be slightly closer, but not exactly accurate.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/commit/29239377a79bafbaddfa7664e1570d4c1f3982b5">changes</a>)</p>
-
-<h3 id="shas">SHAs</h3>
-
-<p>The SHA1 sums for this release are</p>
-
-<p>c9d840b6fca08f61b3abbd1fa109cf66be19fccc  brakeman-2.4.0.gem
-5bad89c43f7ab78bd40dfd6f71aac3d034ccaa0a  brakeman-min-2.4.0.gem</p>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter or joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
-
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -686,6 +640,10 @@ Test.find_by_sql(query)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a>
       </li>
     
@@ -699,10 +657,6 @@ Test.find_by_sql(query)
     
       <li class="post">
         <a href="/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">Brakeman 5.3.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">Brakeman 5.2.3 Released</a>
       </li>
     
   </ul>

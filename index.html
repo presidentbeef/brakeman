@@ -80,6 +80,72 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2023-07-20 13:30:00 -0700" pubdate  updated >2023-07-20 13:30:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Very tiny release this time!</p>
+
+<p><em>Changes since 6.0.0:</em></p>
+
+<ul>
+  <li>Accept strings for <code class="language-plaintext highlighter-rouge">load_defaults</code> version (<a href="https://github.com/presidentbeef/brakeman/issues/1784">#1784</a>)</li>
+  <li>Bundle latest <code class="language-plaintext highlighter-rouge">ruby_parser</code></li>
+</ul>
+
+<h3 id="strings-for-load_defaults">Strings for <code class="language-plaintext highlighter-rouge">load_defaults</code></h3>
+
+<p>While the default for Rails generators and documentation is to use floats for versions, e.g. <code class="language-plaintext highlighter-rouge">load_defaults 6.1</code>, internally it uses strings. It appears quite a few apps also use strings.</p>
+
+<p>Now Brakeman supports and uses strings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1785">changes</a>)</p>
+
+<h3 id="latest-rubyparser">Latest RubyParser</h3>
+
+<p>Bundled with <code class="language-plaintext highlighter-rouge">ruby_parser</code> 3.20.3, which includes additional support for Ruby 3.2 syntax.</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>39641c63bc247bbdf993a349de90a13e146c464c872191f2adc12555bde591be  brakeman-6.0.1.gem
+e029fbd43c97bbb9c084fa4f0e13ee259bf193b79d66ba7ef94fa9496bab62cd  brakeman-lib-6.0.1.gem
+ef2ff1234ba2a9e7216a0a047b9df0def8c3b8d162d29853c907238901353a54  brakeman-min-6.0.1.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a></h1>
     
     
@@ -532,78 +598,6 @@ to every Brakeman warning type!</p>
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">Brakeman 5.2.3 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2022-05-01 08:30:00 -0700" pubdate  updated >2022-05-01 08:30:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Changes since 5.2.2:</em></p>
-
-<ul>
-  <li>Fix error with hash shorthand syntax (<a href="https://github.com/presidentbeef/brakeman/issues/1700">#1700</a>)</li>
-  <li>Match order of interactive options with help message (<a href="https://github.com/roryokane">Rory O’kane</a>)</li>
-</ul>
-
-<h3 id="hash-shorthand-syntax">Hash Shorthand Syntax</h3>
-
-<p>Parsing shorthand hash syntax like this was added with RubyParser 3.19:</p>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">thing</span> <span class="o">=</span> <span class="mi">1</span>
-
-<span class="n">blah</span><span class="p">(</span><span class="n">thing</span><span class="p">:)</span>
-</code></pre></div></div>
-
-<p>but Brakeman needed to handle it properly, too.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1701">changes</a>)</p>
-
-<h3 id="interative-options">Interative Options</h3>
-
-<p><a href="https://github.com/roryokane">Rory O’kane</a> updated the ordering of options in the help message for interative ignore so
-the help message matches the order of the options in the prompt!</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1702">changes</a>)</p>
-
-<h3 id="checksums">Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5b6efb6a1e5c2b79063553647638e17239d2d2f4d50561230c8b0acaae4728d4  brakeman-5.2.3.gem
-3104abc8ac2b6558d9610ede40f4cac2ebc7ae45569876b8e5907b7422c4e3af  brakeman-lib-5.2.3.gem
-10d743c930c03ed1d2bea021ade8fac10f1229d02b8f65bf2214f7f09ec7a0ff  brakeman-min-5.2.3.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -642,6 +636,10 @@ the help message matches the order of the options in the prompt!</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a>
       </li>
     
@@ -655,10 +653,6 @@ the help message matches the order of the options in the prompt!</p>
     
       <li class="post">
         <a href="/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">Brakeman 5.3.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">Brakeman 5.2.3 Released</a>
       </li>
     
   </ul>

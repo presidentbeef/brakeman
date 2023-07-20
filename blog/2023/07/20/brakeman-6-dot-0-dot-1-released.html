@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Brakeman 2.4.3 Released</title>
+  <title>Brakeman: Brakeman 6.0.1 Released</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,7 +15,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="https://brakemanscanner.org/blog/2014/03/22/brakeman-2-dot-4-3-released"/>
+  <link rel="canonical" href="https://brakemanscanner.org/blog/2023/07/20/brakeman-6-dot-0-dot-1-released"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -34,7 +34,7 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Brakeman 2.4.3 Released" />
+<meta name="twitter:title" content="Brakeman - Brakeman 6.0.1 Released" />
 <meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
 <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 
@@ -77,7 +77,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 2.4.3 Released</h1>
+      <h1 class="entry-title">Brakeman 6.0.1 Released</h1>
     
     
       <p class="meta">
@@ -85,7 +85,7 @@
 
 
 
-<time datetime="2014-03-22 17:49:00 -0700" pubdate  updated >2014-03-22 17:49:00 -0700</time>
+<time datetime="2023-07-20 13:30:00 -0700" pubdate  updated >2023-07-20 13:30:00 -0700</time>
 
 
 </p>
@@ -93,40 +93,43 @@
   </header>
 
 
-<div class="entry-content"><p>A new gem version has been released because the 2.4.2 gem was not signed. No other changes were introduced.</p>
+<div class="entry-content"><p>Very tiny release this time!</p>
 
-<h3 id="signed-gems">Signed Gems</h3>
+<p><em>Changes since 6.0.0:</em></p>
 
-<p>As a reminder, the Brakeman gems are (supposed to be) signed and can be verified with <a href="https://github.com/presidentbeef/brakeman/blob/master/brakeman-public_cert.pem">this certificate</a>.</p>
+<ul>
+  <li>Accept strings for <code class="language-plaintext highlighter-rouge">load_defaults</code> version (<a href="https://github.com/presidentbeef/brakeman/issues/1784">#1784</a>)</li>
+  <li>Bundle latest <code class="language-plaintext highlighter-rouge">ruby_parser</code></li>
+</ul>
 
-<p>To verify on installation:</p>
+<h3 id="strings-for-load_defaults">Strings for <code class="language-plaintext highlighter-rouge">load_defaults</code></h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem cert --add &lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
-gem install brakeman -P MediumSecurity
-</code></pre></div></div>
+<p>While the default for Rails generators and documentation is to use floats for versions, e.g. <code class="language-plaintext highlighter-rouge">load_defaults 6.1</code>, internally it uses strings. It appears quite a few apps also use strings.</p>
 
-<p>“HighSecurity” requires all dependencies to be signed as well, which is unlikely.</p>
+<p>Now Brakeman supports and uses strings.</p>
 
-<p>There is some weirdness around <code class="language-plaintext highlighter-rouge">-P MediumSecurity</code> currently. The simplest solution seems to be:</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1785">changes</a>)</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install brakeman   # Install Brakeman and all dependencies
-gem uninstall brakeman # Remove the Brakeman gem
-gem install brakeman -P MediumSecurity  # Install Brakeman gem and check signature
-</code></pre></div></div>
+<h3 id="latest-rubyparser">Latest RubyParser</h3>
 
-<h3 id="shas">SHAs</h3>
+<p>Bundled with <code class="language-plaintext highlighter-rouge">ruby_parser</code> 3.20.3, which includes additional support for Ruby 3.2 syntax.</p>
 
-<p>The SHA1 sums for this release are</p>
+<h3 id="checksums">Checksums</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>16b4890fa8ee6bad1d429a12bf3f0cb8e76cb2d8  brakeman-2.4.3.gem
-be5743d77140e64b75eefc53f8697f767ab370d9  brakeman-min-2.4.3.gem 
+<p>The SHA256 sums for this release are:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>39641c63bc247bbdf993a349de90a13e146c464c872191f2adc12555bde591be  brakeman-6.0.1.gem
+e029fbd43c97bbb9c084fa4f0e13ee259bf193b79d66ba7ef94fa9496bab62cd  brakeman-lib-6.0.1.gem
+ef2ff1234ba2a9e7216a0a047b9df0def8c3b8d162d29853c907238901353a54  brakeman-min-6.0.1.gem
 </code></pre></div></div>
 
 <h3 id="reporting-issues">Reporting Issues</h3>
 
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
 
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
 </div>
 
 
@@ -140,7 +143,7 @@ be5743d77140e64b75eefc53f8697f767ab370d9  brakeman-min-2.4.3.gem
 
 
 
-<time datetime="2014-03-22 17:49:00 -0700" pubdate  updated >2014-03-22 17:49:00 -0700</time>
+<time datetime="2023-07-20 13:30:00 -0700" pubdate  updated >2023-07-20 13:30:00 -0700</time>
 
 
 
