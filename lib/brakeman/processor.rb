@@ -95,7 +95,8 @@ module Brakeman
 
     #Process source for a library file
     def process_lib src, file_name
-      LibraryProcessor.new(@tracker).process_library src, file_name
+      result = LibraryProcessor.new(@tracker).process_library src, file_name
+      AliasProcessor.new(@tracker, file_name).process result if result
     end
   end
 end

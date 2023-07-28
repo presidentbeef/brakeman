@@ -450,6 +450,19 @@ class Rails6Tests < Minitest::Test
       :user_input => s(:call, s(:call, s(:const, :User), :first), :some_method_thing)
   end
 
+  def test_constants_in_libraries
+    assert_no_warning :type => :warning,
+      :warning_code => 24,
+      :fingerprint => "bf29c627bcf090125caf10c73e33cd3f7b66f5f1a2d5ba03b418ed51e3e15b72",
+      :warning_type => "Remote Code Execution",
+      :line => 13,
+      :message => /^Unsafe\ reflection\ method\ `constantize`\ c/,
+      :confidence => 1,
+      :relative_path => "lib/run_stuff.rb",
+      :code => s(:call, s(:call, s(:const, :RUN_THINGS), :[], s(:call, s(:params), :[], s(:lit, :key))), :constantize),
+      :user_input => s(:call, s(:params), :[], s(:lit, :key))
+  end
+
   def test_safe_yaml_load_option
     assert_no_warning :type => :warning,
       :warning_code => 25,

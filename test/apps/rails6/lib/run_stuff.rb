@@ -4,4 +4,12 @@ class RunStuff
       `cat #{temp_file.path}`
     end
   end
+
+  RUN_THINGS = {
+    SOME_CONSTANT => "ASafeString"
+  }
+
+  def use_group_things
+    RUN_THINGS[params[:key]].constantize.new
+  end
 end

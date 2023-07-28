@@ -31,6 +31,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     @helper_method_info = Hash.new({})
     @or_depth_limit = (tracker && tracker.options[:branch_limit]) || 5 #arbitrary default
     @meth_env = nil
+    @initializer_envs = {}
     @current_file = current_file
     set_env_defaults
   end
@@ -510,7 +511,17 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   #Process a method definition.
   def process_defn exp
     meth_env do
+      unless exp.method_name == :initialize
+        env.current.merge! @initializer_envs.fetch(@current_class, {}).to_h
+      end
+
       exp.body = process_all! exp.body
+
+      if @current_class and exp.method_name == :initialize
+        # Call Env#current to get just a hash of
+        # instance variables and their values
+        @initializer_envs[@current_class] = only_ivars.current
+      end
     end
     exp
   end
