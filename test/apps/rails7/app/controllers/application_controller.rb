@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
-  def anonymouns_block_argument(&)
-    Time.use_zone('CET', &)
+  def anonymouns_arguments(*, **, &)
+    Time.use_zone(*, **, &)
   end
 
   def hash_value_omission
