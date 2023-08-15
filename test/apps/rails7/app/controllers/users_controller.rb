@@ -37,6 +37,10 @@ class UsersController < ApplicationController
     redirect_back_or_to params[:x], allow_other_host: false # no warning
   end
 
+  def search
+    User.ransack(params[:q])
+  end
+
   class << self
     def just_here_for_test_coverage_thanks
     end

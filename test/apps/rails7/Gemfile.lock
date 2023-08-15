@@ -164,6 +164,10 @@ GEM
       thor (~> 1.0)
       zeitwerk (~> 2.5)
     rake (13.0.6)
+    ransack (3.0.1)
+      activerecord (>= 6.0.4)
+      activesupport (>= 6.0.4)
+      i18n
     regexp_parser (2.2.0)
     reline (0.2.7)
       io-console (~> 0.5)
@@ -217,6 +221,7 @@ DEPENDENCIES
   jbuilder (~> 2.11)
   puma (~> 5.0)
   rails (~> 7.0.0)
+  ransack (~> 3.0.0)
   selenium-webdriver (>= 4.0.0)
   sprockets-rails (>= 3.4.1)
   sqlite3 (~> 1.4)
