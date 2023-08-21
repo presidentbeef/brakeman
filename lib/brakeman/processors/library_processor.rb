@@ -30,6 +30,12 @@ class Brakeman::LibraryProcessor < Brakeman::BaseProcessor
   end
 
   def process_defn exp
+    # TODO: Why is this different from ModuleHelper?
+
+    if @inside_sclass
+      exp = make_defs(exp)
+    end
+
     if exp.method_name == :initialize
       @alias_processor.process_safely exp.body_list
       @initializer_env = @alias_processor.only_ivars

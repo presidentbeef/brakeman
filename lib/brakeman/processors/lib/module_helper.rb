@@ -84,6 +84,9 @@ module Brakeman::ModuleHelper
     res.line(exp.line)
     @current_method = nil
 
+    # TODO: if target is not self/nil, then
+    # the method should be added to `target`, not current class
+
     if @current_class
       @current_class.add_method @visibility, name, res, @current_file
     elsif @current_module
@@ -96,7 +99,13 @@ module Brakeman::ModuleHelper
     name = exp.method_name
 
     @current_method = name
-    res = Sexp.new :defn, name, exp.formal_args, *process_all!(exp.body)
+
+    if @inside_sclass
+      res = Sexp.new :defs, s(:self), name, exp.formal_args, *process_all!(exp.body)
+    else
+      res = Sexp.new :defn, name, exp.formal_args, *process_all!(exp.body)
+    end
+
     res.line(exp.line)
     @current_method = nil
 
@@ -107,5 +116,22 @@ module Brakeman::ModuleHelper
     end
 
     res
+  end
+
+  # class << self
+  def process_sclass exp
+    @inside_sclass = true
+
+    process_all! exp
+
+    exp
+  ensure
+    @inside_sclass = false
+  end
+
+  def make_defs exp
+    raise unless node_type? exp, :defn
+
+    Sexp.new(:defs, s(:self), exp.method_name, exp.formal_args, *exp.body).line(exp.line)
   end
 end
