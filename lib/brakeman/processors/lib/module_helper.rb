@@ -130,7 +130,11 @@ module Brakeman::ModuleHelper
   end
 
   def make_defs exp
-    raise unless node_type? exp, :defn
+    # 'What if' there was some crazy code that had a
+    # defs inside a def inside an sclass? :|
+    return exp if node_type? exp, :defs
+
+    raise "Unexpected node type: #{exp.node_type}" unless node_type? exp, :defn
 
     Sexp.new(:defs, s(:self), exp.method_name, exp.formal_args, *exp.body).line(exp.line)
   end
