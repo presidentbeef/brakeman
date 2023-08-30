@@ -36,4 +36,9 @@ class UsersController < ApplicationController
   def redirect_back_or_to_with_fallback_disallow_host
     redirect_back_or_to params[:x], allow_other_host: false # no warning
   end
+
+  class << self
+    def just_here_for_test_coverage_thanks
+    end
+  end
 end

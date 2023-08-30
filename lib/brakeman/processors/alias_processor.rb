@@ -529,8 +529,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
 
   #Process a method definition on self.
   def process_defs exp
-    env.scope do
-      set_env_defaults
+    meth_env do
       exp.body = process_all! exp.body
     end
     exp

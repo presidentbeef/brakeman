@@ -68,6 +68,11 @@ class TrackerTests < Minitest::Test
     end
   end
 
+  def test_method_inside_sclass
+    parse_class
+    assert @tracker.find_method(:class_method, :Example, :class)
+  end
+
   def test_invalid_method_info_src
     assert_raises do
       Brakeman::MethodInfo.new(:blah, s(:not_a_defn), nil, nil)
@@ -108,6 +113,11 @@ class TrackerTests < Minitest::Test
       end
 
       def self.far
+      end
+
+      class << self
+        def class_method
+        end
       end
     end
     RUBY
