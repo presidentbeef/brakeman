@@ -28,4 +28,10 @@ class SomeLib
     weak_rsa.verify_raw(nil, "data", rsa_padding_mode: "none")
     weak_rsa.encrypt("data") # default is also pkcs1
   end
+
+  class << self
+    def self.x
+      # why
+    end
+  end
 end
