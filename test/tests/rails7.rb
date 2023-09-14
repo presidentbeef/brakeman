@@ -26,7 +26,7 @@ class Rails7Tests < Minitest::Test
       warning_code: 123,
       fingerprint: "425dcb3af9624f11f12d777d6f9fe05995719975a155c30012baa6b9dc3487df",
       warning_type: "Unmaintained Dependency",
-      line: 230,
+      line: 235,
       message: /^Support\ for\ Ruby\ 2\.7\.0\ ends\ on\ 2023\-03\-3/,
       confidence: 2,
       relative_path: "Gemfile.lock",
@@ -408,5 +408,33 @@ class Rails7Tests < Minitest::Test
       relative_path: "app/controllers/users_controller.rb",
       code: s(:call, nil, :redirect_back_or_to, s(:call, s(:params), :[], s(:lit, :x))),
       user_input: s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_missing_authorization_ransack
+    assert_warning check_name: "Ransack",
+      type: :warning,
+      warning_code: 129,
+      fingerprint: "ae28bfeb8423952ffae97149292175b2d10c36c4904ee198ab7b2eda4e05c3e0",
+      warning_type: "Missing Authorization",
+      line: 41,
+      message: /^Unrestricted\ search\ using\ `ransack`\ libr/,
+      confidence: 0,
+      relative_path: "app/controllers/users_controller.rb",
+      code: s(:call, s(:const, :User), :ransack, s(:call, s(:params), :[], s(:lit, :q))),
+      user_input: s(:call, s(:params), :[], s(:lit, :q))
+  end
+
+  def test_missing_authorization_ransack_2
+    assert_no_warning check_name: "Ransack",
+      type: :warning,
+      warning_code: 129,
+      fingerprint: "9786bef019c90a6364baffb97b857fbf9e559bab42bf1c06fc19e01c9c36f438",
+      warning_type: "Missing Authorization",
+      line: 46,
+      message: /^Unrestricted\ search\ using\ `ransack`\ libr/,
+      confidence: 0,
+      relative_path: "app/controllers/users_controller.rb",
+      code: s(:call, s(:const, :Book), :ransack, s(:call, s(:params), :[], s(:lit, :q))),
+      user_input: s(:call, s(:params), :[], s(:lit, :q))
   end
 end

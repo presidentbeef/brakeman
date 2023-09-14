@@ -41,6 +41,11 @@ class UsersController < ApplicationController
     User.ransack(params[:q])
   end
 
+  def search_books
+    # Should not warn - search limited appropriately
+    Book.ransack(params[:q])
+  end
+
   class << self
     def just_here_for_test_coverage_thanks
     end
