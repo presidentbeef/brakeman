@@ -245,7 +245,7 @@ class Brakeman::Tracker
       end
 
       # Not in any included modules, check the parent
-      @method_cache[cache_key] = find_method(method_name, klass.parent)
+      @method_cache[cache_key] = find_method(method_name, klass.parent, method_type)
     end
   end
 
