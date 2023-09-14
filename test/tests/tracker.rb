@@ -73,6 +73,11 @@ class TrackerTests < Minitest::Test
     assert @tracker.find_method(:class_method, :Example, :class)
   end
 
+  def test_class_method_in_parent
+    parse_class
+    assert @tracker.find_method(:parent_class_method, :Example, :class)
+  end
+
   def test_invalid_method_info_src
     assert_raises do
       Brakeman::MethodInfo.new(:blah, s(:not_a_defn), nil, nil)
@@ -103,6 +108,9 @@ class TrackerTests < Minitest::Test
 
     class Parent
       def zoop
+      end
+
+      def self.parent_class_method
       end
     end
 
