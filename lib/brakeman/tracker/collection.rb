@@ -5,7 +5,7 @@ module Brakeman
   class Collection
     include Brakeman::Util
 
-    attr_reader :collection, :files, :includes, :name, :options, :parent, :src, :tracker, :class_methods
+    attr_reader :collection, :files, :includes, :name, :options, :parent, :src, :tracker
 
     def initialize name, parent, file_name, src, tracker
       @name = name
