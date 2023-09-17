@@ -15,7 +15,7 @@ class Rails4Tests < Minitest::Test
       :controller => 0,
       :model => 3,
       :template => 8,
-      :generic => 89
+      :generic => 91
     }
   end
 
@@ -1592,7 +1592,7 @@ class Rails4Tests < Minitest::Test
       :user_input => s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :id))
   end
 
-  def test_unscoped_find_by
+  def test_unscoped_find_by_with_id
     assert_warning check_name: "UnscopedFind",
       type: :warning,
       warning_code: 82,
@@ -1604,6 +1604,34 @@ class Rails4Tests < Minitest::Test
       relative_path: "app/controllers/users_controller.rb",
       code: s(:call, s(:const, :Email), :find_by, s(:hash, s(:lit, :id), s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :id)))),
       user_input: s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :id))
+  end
+
+  def test_unscoped_find_by_with_id!
+    assert_warning check_name: "UnscopedFind",
+      type: :warning,
+      warning_code: 82,
+      fingerprint: "da4c77ce860d5567bfaf5e915b734e54712a276dfbee36694757754a49ed4e0c",
+      warning_type: "Unscoped Find",
+      line: 137,
+      message: /^Unscoped\ call\ to\ `Email\#find_by!`/,
+      confidence: 2,
+      relative_path: "app/controllers/users_controller.rb",
+      code: s(:call, s(:const, :Email), :find_by!, s(:hash, s(:lit, :id), s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :id)))),
+      user_input: s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :id))
+  end
+
+  def test_unscoped_find_by_with_other_attributes_not_id
+    assert_warning check_name: "UnscopedFind",
+      type: :warning,
+      warning_code: 82,
+      fingerprint: "575ee0a7f8bcb874b01cbfe99191dd6fd3404df8951159fa00d037ac55d3f55d",
+      warning_type: "Unscoped Find",
+      line: 138,
+      message: /^Unscoped\ call\ to\ `Email\#find_by`/,
+      confidence: 2,
+      relative_path: "app/controllers/users_controller.rb",
+      code: s(:call, s(:const, :Email), :find_by, s(:hash, s(:lit, :public_id), s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :public_id)))),
+      user_input: s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :public_id))
   end
 
   def test_before_filter_block

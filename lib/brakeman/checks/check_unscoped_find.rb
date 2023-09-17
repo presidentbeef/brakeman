@@ -24,12 +24,9 @@ class Brakeman::CheckUnscopedFind < Brakeman::BaseCheck
       process_result call
     end
 
-    tracker.find_call(:method => :find_by, :targets => associated_model_names).each do |result|
+    tracker.find_call(:method => [:find_by, :find_by!], :targets => associated_model_names).each do |result|
       arg = result[:call].first_arg
-
-      if hash? arg and hash_access(arg, :id)
-        process_result result
-      end
+      process_result(result) if hash?(arg)
     end
   end
 

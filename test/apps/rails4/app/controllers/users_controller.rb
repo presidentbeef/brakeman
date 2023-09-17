@@ -134,5 +134,7 @@ class UsersController < ApplicationController
 
   def email_find_by
     Email.find_by id: params[:email][:id]
+    Email.find_by! id: params[:email][:id]
+    Email.find_by public_id: params[:email][:public_id]
   end
 end
