@@ -15,7 +15,7 @@ class Rails4Tests < Minitest::Test
       :controller => 0,
       :model => 3,
       :template => 8,
-      :generic => 91
+      :generic => 92
     }
   end
 
@@ -1606,7 +1606,7 @@ class Rails4Tests < Minitest::Test
       user_input: s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :id))
   end
 
-  def test_unscoped_find_by_with_id!
+  def test_unscoped_find_by_bang_with_id
     assert_warning check_name: "UnscopedFind",
       type: :warning,
       warning_code: 82,
@@ -1631,6 +1631,20 @@ class Rails4Tests < Minitest::Test
       confidence: 2,
       relative_path: "app/controllers/users_controller.rb",
       code: s(:call, s(:const, :Email), :find_by, s(:hash, s(:lit, :public_id), s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :public_id)))),
+      user_input: s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :public_id))
+  end
+
+  def test_unscoped_find_by_bang_with_other_attributes_not_id
+    assert_warning check_name: "UnscopedFind",
+      type: :warning,
+      warning_code: 82,
+      fingerprint: "701d45000d5f2580ead29590dec523e2596ce4c8d8c8f95bc91c8c85c69b1177",
+      warning_type: "Unscoped Find",
+      line: 139,
+      message: /^Unscoped\ call\ to\ `Email\#find_by!`/,
+      confidence: 2,
+      relative_path: "app/controllers/users_controller.rb",
+      code: s(:call, s(:const, :Email), :find_by!, s(:hash, s(:lit, :public_id), s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :public_id)))),
       user_input: s(:call, s(:call, s(:params), :[], s(:lit, :email)), :[], s(:lit, :public_id))
   end
 
