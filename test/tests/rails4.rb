@@ -8,6 +8,12 @@ class Rails4Tests < Minitest::Test
     external_checks_path = File.expand_path(File.join(File.dirname(__FILE__), "..", "/apps/rails4/external_checks"))
     # There are additional options in config/brakeman.yml
     @@report ||= BrakemanTester.run_scan "rails4", "Rails 4", {:additional_checks_path => [external_checks_path]}
+
+  ensure
+    # Cleanup - scan is already run, so we can remove this test check
+    if Brakeman::Checks.optional_checks.include? Brakeman::CheckExternalCheckTest
+      assert Brakeman::Checks.optional_checks.delete Brakeman::CheckExternalCheckTest
+    end
   end
 
   def expected
