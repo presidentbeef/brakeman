@@ -44,6 +44,9 @@ class UsersController < ApplicationController
   def search_books
     # Should not warn - search limited appropriately
     Book.ransack(params[:q])
+
+    # Low confidence because no idea what `some_book` is
+    some_book.things.ransack(params[:q])
   end
 
   class << self

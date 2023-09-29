@@ -18,10 +18,13 @@ class Brakeman::CheckRansack < Brakeman::BaseCheck
       # If an allow list is defined anywhere in the
       # class or super classes, consider it safe
       class_name = result[:chain].first
+
       next if ransackable_allow_list?(class_name)
 
       if input = has_immediate_user_input?(arg)
-        confidence = if result[:location][:file].relative.include? 'admin'
+        confidence = if tracker.find_class(class_name).nil?
+                       confidence = :low
+                     elsif result[:location][:file].relative.include? 'admin'
                        confidence = :medium
                      else
                        confidence = :high

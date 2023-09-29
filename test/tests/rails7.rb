@@ -16,7 +16,7 @@ class Rails7Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 0,
-      :warning => 25
+      :warning => 26
     }
   end
 
@@ -447,5 +447,19 @@ class Rails7Tests < Minitest::Test
       message: /^Unrestricted\ search\ using\ `ransack`\ libr/,
       confidence: 0,
       relative_path: "app/controllers/users_controller.rb"
+  end
+
+  def test_missing_authorization_ransack_low
+    assert_warning check_name: "Ransack",
+      type: :warning,
+      warning_code: 129,
+      fingerprint: "50e236d8fbc9db0f67e0011941b92b08d0ece176ce4b8caea89d372f007a4873",
+      warning_type: "Missing Authorization",
+      line: 49,
+      message: /^Unrestricted\ search\ using\ `ransack`\ libr/,
+      confidence: 2,
+      relative_path: "app/controllers/users_controller.rb",
+      code: s(:call, s(:call, s(:call, nil, :some_book), :things), :ransack, s(:call, s(:params), :[], s(:lit, :q))),
+      user_input: s(:call, s(:params), :[], s(:lit, :q))
   end
 end
