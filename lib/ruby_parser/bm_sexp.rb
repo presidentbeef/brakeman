@@ -6,6 +6,11 @@ class Sexp
   ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cvasgn, :cdecl, :or, :and, :colon2, :op_asgn_or]
   CALLS = [:call, :attrasgn, :safe_call, :safe_attrasgn]
 
+  def initialize(*args)
+    @hash = nil
+    super(args)
+  end
+
   def method_missing name, *args
     #Brakeman does not use this functionality,
     #so overriding it to raise a NoMethodError.
@@ -57,7 +62,7 @@ class Sexp
 
   def value= exp
     raise WrongSexpError, "Sexp#value= called on multi-item Sexp: `#{self.inspect}`" if size > 2
-    @my_hash_value = nil
+    @hash = nil
     self[1] = exp
   end
 
@@ -70,7 +75,7 @@ class Sexp
   end
 
   def node_type= type
-    @my_hash_value = nil
+    @hash = nil
     self[0] = type
   end
 
@@ -94,7 +99,7 @@ class Sexp
   alias :old_find_node :find_node
 
   def << arg
-    @my_hash_value = nil
+    @hash = nil
     old_push arg
   end
 
@@ -103,21 +108,21 @@ class Sexp
     #Sexp changes, but I have not found what method call is doing it.
     #Of course, Sexp is subclasses from Array, so who knows what might
     #be going on.
-    @my_hash_value ||= super
+    @hash ||= super
   end
 
   def compact
-    @my_hash_value = nil
+    @hash = nil
     old_compact
   end
 
   def find_and_replace_all *args
-    @my_hash_value = nil
+    @hash = nil
     old_fara(*args)
   end
 
   def find_node *args
-    @my_hash_value = nil
+    @hash = nil
     old_find_node(*args)
   end
 
@@ -141,7 +146,7 @@ class Sexp
   #Sets the target of a method call:
   def target= exp
     expect :call, :attrasgn, :safe_call, :safe_attrasgn
-    @my_hash_value = nil
+    @hash = nil
     self[1] = exp
   end
 
@@ -171,7 +176,7 @@ class Sexp
   #Sets the arglist in a method call.
   def arglist= exp
     expect :call, :attrasgn, :safe_call, :safe_attrasgn
-    @my_hash_value = nil
+    @hash = nil
     start_index = 3
 
     if exp.is_a? Sexp and exp.node_type == :arglist
@@ -257,7 +262,7 @@ class Sexp
   end
 
   def each_arg! &block
-    @my_hash_value = nil
+    @hash = nil
     self.each_arg true, &block
   end
 
@@ -270,7 +275,7 @@ class Sexp
   #Sets first argument of a method call.
   def first_arg= exp
     expect :call, :attrasgn, :safe_call, :safe_attrasgn
-    @my_hash_value = nil
+    @hash = nil
     self[3] = exp
   end
 
@@ -283,7 +288,7 @@ class Sexp
   #Sets second argument of a method call.
   def second_arg= exp
     expect :call, :attrasgn, :safe_call, :safe_attrasgn
-    @my_hash_value = nil
+    @hash = nil
     self[4] = exp
   end
 
@@ -294,7 +299,7 @@ class Sexp
 
   def third_arg= exp
     expect :call, :attrasgn, :safe_call, :safe_attrasgn
-    @my_hash_value = nil
+    @hash = nil
     self[5] = exp
   end
 
@@ -437,7 +442,7 @@ class Sexp
   #Sets the left hand side of assignment or boolean.
   def lhs= exp
     expect(*ASSIGNMENT_BOOL)
-    @my_hash_value = nil
+    @hash = nil
     self[1] = exp
   end
 
@@ -462,7 +467,7 @@ class Sexp
   #Sets the right hand side of assignment or boolean.
   def rhs= exp
     expect :attrasgn, :safe_attrasgn, *ASSIGNMENT_BOOL
-    @my_hash_value = nil
+    @hash = nil
 
     if self.node_type == :attrasgn or self.node_type == :safe_attrasgn
       self[3] = exp
@@ -498,7 +503,7 @@ class Sexp
   #a separate Sexp, but just a list of Sexps.
   def body= exp
     expect :defn, :defs, :class, :module
-    @my_hash_value = nil
+    @hash = nil
 
     case self.node_type
     when :defn, :class
@@ -623,7 +628,7 @@ end
 
   Sexp.class_eval <<-RUBY
     def #{method} *args
-      @my_hash_value = nil
+      @hash = nil
       super
     end
     RUBY
@@ -635,7 +640,7 @@ end
   Sexp.class_eval <<-RUBY
     def #{method} delete = false
       if delete
-        @my_hash_value = false
+        @hash = false
       end
       find_node :#{method}, delete
     end

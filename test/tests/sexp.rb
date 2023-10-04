@@ -356,7 +356,7 @@ class SexpTests < Minitest::Test
     s_hash = s.hash
     s.line(10)
 
-    refute_nil s.instance_variable_get(:@my_hash_value)
+    refute_nil s.instance_variable_get(:@hash)
     assert_equal s_hash, s.hash
   end
 
