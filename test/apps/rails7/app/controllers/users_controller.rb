@@ -37,6 +37,18 @@ class UsersController < ApplicationController
     redirect_back_or_to params[:x], allow_other_host: false # no warning
   end
 
+  def search
+    User.ransack(params[:q])
+  end
+
+  def search_books
+    # Should not warn - search limited appropriately
+    Book.ransack(params[:q])
+
+    # Low confidence because no idea what `some_book` is
+    some_book.things.ransack(params[:q])
+  end
+
   class << self
     def just_here_for_test_coverage_thanks
     end
