@@ -80,6 +80,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     meth_name = exp.method_name
 
     Brakeman.debug "Processing #{@current_class}##{meth_name}"
+    t = Time.now
 
     #Skip if instructed to only process a specific method
     #(but don't skip if this method was called from elsewhere)
@@ -104,6 +105,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
       end
     end
 
+    Brakeman.notify "#{@current_class}#{@current_method} - #{Time.now - t}"
     @current_method = other_method
     exp
   end
