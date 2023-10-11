@@ -120,16 +120,20 @@ module Brakeman
         filter[:methods] << a[1] if a.node_type == :lit
       end
 
-      if args[-1].node_type == :hash
-        option = args[-1][1][1]
-        value = args[-1][2]
-        case value.node_type
-        when :array
-          filter[option] = value.sexp_body.map {|v| v[1] }
-        when :lit, :str
-          filter[option] = value[1]
-        else
-          Brakeman.debug "[Notice] Unknown before_filter value: #{option} => #{value}"
+      options = args.last
+
+      if hash? options
+        # Probably only one option,
+        # but this also avoids issues with kwsplats
+        hash_iterate(options) do |option, value|
+          case value.node_type
+          when :array
+            filter[option.value] = value.sexp_body.map {|v| v[1] }
+          when :lit, :str
+            filter[option.value] = value[1]
+          else
+            Brakeman.debug "[Notice] Unknown before_filter value: #{option} => #{value}"
+          end
         end
       else
         filter[:all] = true
