@@ -8,4 +8,7 @@ class AdminController < ApplicationController
   before_filter(**options) do |c|
     x
   end
+
+  # Test weird option doesn't cause an error
+  before_action :thing, if: -> { true }
 end
