@@ -150,6 +150,14 @@ module Brakeman::Options
           options[:parser_timeout] = timeout
         end
 
+        opts.on "--alt-params code1,code2", Array, "Treat specified code as query parameters" do |params|
+          require 'ruby_parser'
+
+          options[:params_alternatives] = params.map do |code|
+            RubyParser.new.parse(code)
+          end
+        end
+
         opts.on "-r", "--report-direct", "Only report direct use of untrusted data" do |option|
           options[:check_arguments] = !option
         end

@@ -363,6 +363,14 @@ class BrakemanOptionsTest < Minitest::Test
     end
   end
 
+  def test_alt_params
+    options = setup_options_from_input("--alt-params", "my_params,x_params")
+    expected = [s(:call, nil, :my_params),
+                s(:call, nil, :x_params)]
+
+    assert_equal expected, options[:params_alternatives]
+  end
+
   private
 
   def setup_options_from_input(*args)

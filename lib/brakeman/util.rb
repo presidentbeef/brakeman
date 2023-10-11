@@ -242,7 +242,11 @@ module Brakeman::Util
 
   #Check if _exp_ is a params hash
   def params? exp
-    recurse_check?(exp) { |child| child.node_type == :params or ALL_PARAMETERS.include? child }
+    recurse_check?(exp) do |child|
+      child.node_type == :params or
+        ALL_PARAMETERS.include? child or
+        (@tracker and @tracker.options[:params_alternatives]&.include? child)
+    end
   end
 
   def cookies? exp
