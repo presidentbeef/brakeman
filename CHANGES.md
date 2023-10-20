@@ -1,3 +1,12 @@
+# 6.1.0 - Unreleased
+
+* Add `--timing` to add timing duration for scan steps
+* Fix keyword splats in filter arguments
+* Add check for unfiltered search with Ransack
+* Fix class method lookup in parent classes
+* Handle `class << self`
+* Add `PG::Connection.escape_string` as a SQL sanitization method
+
 # 6.0.1 - 2023-07-20
 
 * Accept strings for `load_defaults` version
