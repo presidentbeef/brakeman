@@ -6,11 +6,6 @@ class Sexp
   ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cvasgn, :cdecl, :or, :and, :colon2, :op_asgn_or]
   CALLS = [:call, :attrasgn, :safe_call, :safe_attrasgn]
 
-  def initialize(*args)
-    @hash = nil
-    super(args)
-  end
-
   def method_missing name, *args
     #Brakeman does not use this functionality,
     #so overriding it to raise a NoMethodError.
