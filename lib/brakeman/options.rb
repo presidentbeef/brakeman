@@ -244,6 +244,10 @@ module Brakeman::Options
           options[:debug] = true
         end
 
+        opts.on "--timing", "Measure time for scan steps" do
+          options[:show_timing] = true
+        end
+
         opts.on "-f",
           "--format TYPE",
           [:pdf, :text, :html, :csv, :tabs, :json, :markdown, :codeclimate, :cc, :plain, :table, :junit, :sarif, :sonar, :github],

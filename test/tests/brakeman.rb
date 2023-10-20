@@ -267,6 +267,20 @@ class ConfigTests < Minitest::Test
     end
   end
 
+  def test_timing_output
+    options = {
+      :app_path => "#{TEST_PATH}/apps/rails4",
+      :show_timing => true,
+      :quiet => false,
+      :run_checks => []
+    }
+
+    assert_output nil, /Duration/ do
+      Brakeman.run options
+    end
+
+  end
+
   def output_format_tester options, expected_options
     output_formats = Brakeman.get_output_formats(options)
 

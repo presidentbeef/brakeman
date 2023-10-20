@@ -30,6 +30,7 @@ class Brakeman::Scanner
     end
 
     @processor = processor || Brakeman::Processor.new(@app_tree, options)
+    @show_timing = tracker.options[:debug] || tracker.options[:show_timing]
   end
 
   #Returns the Tracker generated from the scan
@@ -37,35 +38,89 @@ class Brakeman::Scanner
     @processor.tracked_events
   end
 
+  def process_step description
+    Brakeman.notify "#{description}...".ljust(40)
+
+    if @show_timing
+      start_t = Time.now
+      yield
+      duration = Time.now - start_t
+
+      Brakeman.notify "(#{description}) Duration: #{duration} seconds"
+    else
+      yield
+    end
+  end
+
+  def process_step_file description
+    if @show_timing
+      Brakeman.notify "Processing #{description}"
+
+      start_t = Time.now
+      yield
+      duration = Time.now - start_t
+
+      Brakeman.notify "(#{description}) Duration: #{duration} seconds"
+    else
+      yield
+    end
+  end
+
   #Process everything in the Rails application
   def process
-    Brakeman.notify "Processing gems...                    "
-    process_gems
-    guess_rails_version
-    Brakeman.notify "Processing configuration...           "
-    process_config
-    Brakeman.notify "Parsing files...                      "
-    parse_files
-    Brakeman.notify "Detecting file types...               "
-    detect_file_types
-    Brakeman.notify "Processing initializers...            "
-    process_initializers
-    Brakeman.notify "Processing libs...                    "
-    process_libs
-    Brakeman.notify "Processing routes...                  "
-    process_routes
-    Brakeman.notify "Processing templates...               "
-    process_templates
-    Brakeman.notify "Processing data flow in templates...  "
-    process_template_data_flows
-    Brakeman.notify "Processing models...                  "
-    process_models
-    Brakeman.notify "Processing controllers...             "
-    process_controllers
-    Brakeman.notify "Processing data flow in controllers..."
-    process_controller_data_flows
-    Brakeman.notify "Indexing call sites...                "
-    index_call_sites
+    process_step 'Processing gems' do
+      process_gems
+    end
+
+    process_step 'Processing configuration' do
+      guess_rails_version
+      process_config
+    end
+
+    process_step 'Parsing files' do
+      parse_files
+    end
+
+    process_step 'Detecting file types' do
+      detect_file_types
+    end
+
+    process_step 'Processing initializers' do
+      process_initializers
+    end
+
+    process_step 'Processing libs' do
+      process_libs
+    end
+
+    process_step 'Processing routes' do
+      process_routes
+    end
+
+    process_step 'Processing templates' do
+      process_templates
+    end
+
+    process_step 'Processing data flow in templates' do
+      process_template_data_flows
+    end
+
+    process_step 'Processing models' do
+      process_models
+    end
+
+    process_step 'Processing controllers' do
+      process_controllers
+    end
+
+    process_step 'Processing data flow in controllers' do
+      process_controller_data_flows
+    end
+
+    process_step 'Indexing call sites' do
+      index_call_sites
+    end
+
     tracker
   end
 
@@ -214,8 +269,9 @@ class Brakeman::Scanner
   #Adds parsed information to tracker.initializers
   def process_initializers
     track_progress @file_list[:initializers] do |init|
-      Brakeman.debug "Processing #{init[:path]}"
-      process_initializer init
+      process_step_file init[:path] do
+        process_initializer init
+      end
     end
   end
 
@@ -234,8 +290,9 @@ class Brakeman::Scanner
     end
 
     track_progress @file_list[:libs] do |lib|
-      Brakeman.debug "Processing #{lib.path}"
-      process_lib lib
+      process_step_file lib.path do
+        process_lib lib
+      end
     end
   end
 
@@ -266,8 +323,9 @@ class Brakeman::Scanner
   #Adds processed controllers to tracker.controllers
   def process_controllers
     track_progress @file_list[:controllers] do |controller|
-      Brakeman.debug "Processing #{controller.path}"
-      process_controller controller
+      process_step_file controller.path do
+        process_controller controller
+      end
     end
   end
 
@@ -275,9 +333,10 @@ class Brakeman::Scanner
     controllers = tracker.controllers.sort_by { |name, _| name.to_s }
 
     track_progress controllers, "controllers" do |name, controller|
-      Brakeman.debug "Processing #{name}"
-      controller.src.each do |file, src|
-        @processor.process_controller_alias name, src, nil, file
+      process_step_file name do
+        controller.src.each do |file, src|
+          @processor.process_controller_alias name, src, nil, file
+        end
       end
     end
 
@@ -300,8 +359,9 @@ class Brakeman::Scanner
     templates = @file_list[:templates].sort_by { |t| t[:path] }
 
     track_progress templates, "templates" do |template|
-      Brakeman.debug "Processing #{template[:path]}"
-      process_template template
+      process_step_file template[:path] do
+        process_template template
+      end
     end
   end
 
@@ -313,8 +373,9 @@ class Brakeman::Scanner
     templates = tracker.templates.sort_by { |name, _| name.to_s }
 
     track_progress templates, "templates" do |name, template|
-      Brakeman.debug "Processing #{name}"
-      @processor.process_template_alias template
+      process_step_file name do
+        @processor.process_template_alias template
+      end
     end
   end
 
@@ -323,8 +384,9 @@ class Brakeman::Scanner
   #Adds the processed models to tracker.models
   def process_models
     track_progress @file_list[:models] do |model|
-      Brakeman.debug "Processing #{model[:path]}"
-      process_model model[:path], model[:ast]
+      process_step_file model[:path] do
+        process_model model[:path], model[:ast]
+      end
     end
   end
 
