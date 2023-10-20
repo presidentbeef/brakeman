@@ -5,7 +5,7 @@
 * Add check for unfiltered search with Ransack
 * Fix class method lookup in parent classes
 * Handle `class << self`
-* Add `PG::Connection.escape_string` as a SQL sanitization method
+* Add `PG::Connection.escape_string` as a SQL sanitization method (Joévin Soulenq)
 
 # 6.0.1 - 2023-07-20
 
