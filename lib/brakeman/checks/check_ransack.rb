@@ -12,6 +12,8 @@ class Brakeman::CheckRansack < Brakeman::BaseCheck
 
   def check_ransack_calls
     tracker.find_call(method: :ransack, nested: true).each do |result|
+      next unless original? result
+
       call = result[:call]
       arg = call.first_arg
 
