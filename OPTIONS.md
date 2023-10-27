@@ -185,11 +185,11 @@ By default, brakeman opens output in `less` pager. To have brakeman output direc
 
 Brakeman will ignore warnings if configured to do so. By default, it looks for a configuration file in `config/brakeman.ignore`.
 
-To specify a file to use:
+To specify a file or a list of files to use:
 
-    brakeman -i path/to/config.ignore
+    brakeman -i path/to/config.ignore,path/to/config2.ignore,etc
 
-To create and manage this file, use:
+To create and manage this files, use:
 
     brakeman -I
 

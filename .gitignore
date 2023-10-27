@@ -4,3 +4,4 @@ test/coverage/
 .bundle
 bundle
 *.gem
+test-report.json

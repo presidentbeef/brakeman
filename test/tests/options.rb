@@ -242,12 +242,18 @@ class BrakemanOptionsTest < Minitest::Test
     assert_equal local_path, options[:html_style]
   end
 
-  def test_ignore_file_option
+  def test_ignore_files_option
     options = setup_options_from_input("-i", "dont_warn_for_these.rb")
-    assert_equal "dont_warn_for_these.rb", options[:ignore_file]
+    assert_equal Set["dont_warn_for_these.rb"], options[:ignore_files]
 
     options = setup_options_from_input("--ignore-config", "dont_warn_for_these.rb")
-    assert_equal "dont_warn_for_these.rb", options[:ignore_file]
+    assert_equal Set["dont_warn_for_these.rb"], options[:ignore_files]
+
+    options = setup_options_from_input("-i", "dont_warn_for_these.rb,dont_warn_for_these_2.rb")
+    assert_equal Set["dont_warn_for_these.rb", "dont_warn_for_these_2.rb"], options[:ignore_files]
+
+    options = setup_options_from_input("--ignore-config", "dont_warn_for_these.rb,dont_warn_for_these_2.rb")
+    assert_equal Set["dont_warn_for_these.rb", "dont_warn_for_these_2.rb"], options[:ignore_files]
   end
 
   def test_combine_warnings_option

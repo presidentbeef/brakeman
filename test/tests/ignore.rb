@@ -38,6 +38,20 @@ class IgnoreConfigTests < Minitest::Test
     assert_equal 3, config.ignored_warnings.length
   end
 
+  def test_ignored_warnings_with_multiple_files
+    another_config_json = JSON.parse(ANOTHER_IGNORE_JSON, symbolize_names: true)
+
+    another_config_file = Tempfile.new("brakeman-another.ignore")
+    another_config_file.write ANOTHER_IGNORE_JSON
+    another_config_file.close
+
+    config.read_from_file(another_config_file.path)
+
+    config.filter_ignored
+
+    assert_equal 4, config.ignored_warnings.length
+  end
+
   def test_shown_warnings
     expected = report.warnings.length - config.ignored_warnings.length
 
@@ -234,7 +248,7 @@ class IgnoreConfigTests < Minitest::Test
   end
 end
 
-IGNORE_JSON = <<JSON
+IGNORE_JSON = <<~JSON.freeze
 {
   "ignored_warnings": [
     {
@@ -296,6 +310,34 @@ IGNORE_JSON = <<JSON
       "user_input": "params[:json]",
       "confidence": "High",
       "note": "Here's a note!"
+    }
+  ],
+  "updated": "2019-04-02 12:15:05 -0700",
+  "brakeman_version": "4.5.0"
+}
+JSON
+
+ANOTHER_IGNORE_JSON = <<~JSON.freeze
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 110,
+      "fingerprint": "9ae68e59cfee3e5256c0540dadfeb74e6b72c91997fdb60411063a6e8518144a",
+      "check_name": "CookieSerialization",
+      "message": "Use of unsafe cookie serialization strategy `:hybrid` might lead to remote code execution",
+      "file": "/home/baldarn/Projects/brakeman/test/apps/rails5.2/config/initializers/cookies_serializer.rb",
+      "line": 5,
+      "link": "https://brakemanscanner.org/docs/warning_types/unsafe_deserialization",
+      "code": "Rails.application.config.action_dispatch.cookies_serializer = :hybrid",
+      "render_path": null,
+      "location": null,
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+          565,
+          502
+      ]
     }
   ],
   "updated": "2019-04-02 12:15:05 -0700",

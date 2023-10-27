@@ -546,10 +546,10 @@ module Brakeman
 
     app_tree = Brakeman::AppTree.from_options(options)
 
-    if options[:ignore_file]
-      file = options[:ignore_file]
+    if options[:ignore_files]
+      files = options[:ignore_files]
     elsif app_tree.exists? "config/brakeman.ignore"
-      file = app_tree.expand_path("config/brakeman.ignore")
+      files = [app_tree.expand_path("config/brakeman.ignore")]
     elsif not options[:interactive_ignore]
       return
     end
@@ -558,11 +558,14 @@ module Brakeman
 
     if options[:interactive_ignore]
       require 'brakeman/report/ignore/interactive'
-      config = InteractiveIgnorer.new(file, tracker.warnings).start
+      config = InteractiveIgnorer.new(files.first, tracker.warnings).start
     else
-      notify "[Notice] Using '#{file}' to filter warnings"
-      config = IgnoreConfig.new(file, tracker.warnings)
+      notify "[Notice] Using '#{files.join(', ')}' to filter warnings"
+      config = IgnoreConfig.new(files.first, tracker.warnings)
       config.read_from_file
+      files.to_a.slice(1..).each do |f|
+        config.read_from_file(f)
+      end
       config.filter_ignored
     end
 

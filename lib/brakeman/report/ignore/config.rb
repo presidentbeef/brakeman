@@ -102,7 +102,7 @@ module Brakeman
     def read_from_file file = @file
       if File.exist? file
         begin
-          @already_ignored = JSON.parse(File.read(file), :symbolize_names => true)[:ignored_warnings]
+          @already_ignored += JSON.parse(File.read(file), :symbolize_names => true)[:ignored_warnings]
         rescue => e
           raise e, "\nError[#{e.class}] while reading brakeman ignore file: #{file}\n"
         end

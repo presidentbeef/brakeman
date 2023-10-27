@@ -261,8 +261,9 @@ module Brakeman::Options
           options[:html_style] = File.expand_path file
         end
 
-        opts.on "-i IGNOREFILE", "--ignore-config IGNOREFILE", "Use configuration to ignore warnings" do |file|
-          options[:ignore_file] = file
+        opts.on "-i IGNOREFILE1,IGNOREFILE2,etc", "--ignore-config IGNOREFILE1,IGNOREFILE2,etc", Array, "Use configurations to ignore warnings" do |files|
+          options[:ignore_files] ||= Set.new
+          options[:ignore_files].merge files
         end
 
         opts.on "-I", "--interactive-ignore", "Interactively ignore warnings" do
