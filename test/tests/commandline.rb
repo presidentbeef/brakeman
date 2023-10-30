@@ -167,6 +167,25 @@ class CommandlineTests < Minitest::Test
     ignore_file_with_notes.unlink
   end
 
+  def test_ensure_ignore_whit_multiple_files
+    ignore_file_1 = Tempfile.new('brakeman1.ignore')
+    ignore_file_1.write IGNORE_WITH_MISSING_NOTES_JSON
+    ignore_file_1.close
+
+    ignore_file_2 = Tempfile.new('brakeman2.ignore')
+    ignore_file_2.write ANOTHER_IGNORE_JSON
+    ignore_file_2.close
+
+    ignore_files_paths = "#{ignore_file_1.path.to_s},#{ignore_file_2.path.to_s}"
+
+    assert_exit do
+      scan_app '--no-exit-on-warn', '-i', ignore_files_paths
+    end
+
+    ignore_file_1.unlink
+    ignore_file_2.unlink
+  end
+
   IGNORE_WITH_MISSING_NOTES_JSON = <<~JSON.freeze
     {
       "ignored_warnings": [
@@ -243,5 +262,33 @@ class CommandlineTests < Minitest::Test
       "updated": "2019-04-02 12:15:05 -0700",
       "brakeman_version": "4.5.0"
     }
+  JSON
+
+  ANOTHER_IGNORE_JSON = <<~JSON.freeze
+  {
+    "ignored_warnings": [
+      {
+        "warning_type": "Remote Code Execution",
+        "warning_code": 110,
+        "fingerprint": "9ae68e59cfee3e5256c0540dadfeb74e6b72c91997fdb60411063a6e8518144a",
+        "check_name": "CookieSerialization",
+        "message": "Use of unsafe cookie serialization strategy `:hybrid` might lead to remote code execution",
+        "file": "/home/baldarn/Projects/brakeman/test/apps/rails5.2/config/initializers/cookies_serializer.rb",
+        "line": 5,
+        "link": "https://brakemanscanner.org/docs/warning_types/unsafe_deserialization",
+        "code": "Rails.application.config.action_dispatch.cookies_serializer = :hybrid",
+        "render_path": null,
+        "location": null,
+        "user_input": null,
+        "confidence": "Medium",
+        "cwe_id": [
+            565,
+            502
+        ]
+      }
+    ],
+    "updated": "2019-04-02 12:15:05 -0700",
+    "brakeman_version": "4.5.0"
+  }
   JSON
 end
