@@ -32,7 +32,7 @@ Using Docker to build from source:
     cd brakeman
     docker build . -t brakeman
 
-Using Trunk ( extensible [superlinter](https://trunk.io/) ):
+Using Trunk Check ( extensible [superlinter](https://docs.trunk.io/check) ):
 
     # to enable the latest version
     trunk check enable brakeman
