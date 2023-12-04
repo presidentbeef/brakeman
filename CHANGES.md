@@ -1,4 +1,4 @@
-# 6.1.0 - Unreleased
+# 6.1.0 - 2023-12-04
 
 * Add `--timing` to add timing duration for scan steps
 * Fix keyword splats in filter arguments
