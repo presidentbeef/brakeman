@@ -80,4 +80,8 @@ class GroupsController < ApplicationController
       redirect_to root_path, notice: 'Invalid status'
     end
   end
+
+  def render_phlex_component
+    render(TestPhlexComponent.new(params.require('name')))
+  end
 end

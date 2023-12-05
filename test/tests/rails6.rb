@@ -631,6 +631,19 @@ class Rails6Tests < Minitest::Test
       :user_input => s(:call, s(:params), :require, s(:str, "name"))
   end
 
+  def test_dynamic_render_path_phlex_component
+    assert_no_warning :type => :warning,
+      :warning_code => 15,
+      :fingerprint => "7e8ad12b494ba3e8617fb6a8d27aa10a4f944498c6236d07c31e6063b3c83fc5",
+      :warning_type => "Dynamic Render Path",
+      :line => 85,
+      :message => /^Render\ path\ contains\ parameter\ value/,
+      :confidence => 2,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:render, :action, s(:call, s(:const, :TestPhlexComponent), :new, s(:call, s(:params), :require, s(:str, "name"))), s(:hash)),
+      :user_input => s(:call, s(:params), :require, s(:str, "name"))
+  end
+
   def test_dynamic_render_path_dir_glob_filter
     assert_no_warning :type => :warning,
       :warning_code => 15,
