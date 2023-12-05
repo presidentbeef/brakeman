@@ -80,6 +80,77 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update">Brakeman 2.1.2 Released - Important Security Update</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2013-09-18 01:38:00 -0700" pubdate  updated >2013-09-18 01:38:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>Important</em>: Contrary to the “Brakeman Philosophy,” there is one situation in which Brakeman attempts to load files from an application. This is a security risk since the code in the files would be executed (typical <code class="language-plaintext highlighter-rouge">require</code> behavior). Note that this is only a real problem if running Brakeman against code outside one’s control. Since most users are scanning their own code, this should not be a concern for the majority of Brakeman users.</p>
+
+<p><em>Changes since 2.1.1:</em></p>
+
+<ul>
+  <li>Do not attempt to load custom Haml filters</li>
+  <li>Do not warn about <code class="language-plaintext highlighter-rouge">to_json</code> XSS in Rails 4</li>
+  <li>Remove fuzzy matching on dangerous <code class="language-plaintext highlighter-rouge">attr_accessible</code> values</li>
+  <li>Add –table-width option to set width of text reports (<a href="https://github.com/ssendev">ssendev</a>)</li>
+</ul>
+
+<h3 id="custom-haml-filters">Custom Haml Filters</h3>
+
+<p>Brakeman no longer attempts to load custom Haml filters. This was a hack (from nearly three years ago) to help compile some Haml templates. It was recently noted that this introduces a security risk when scanning untrusted code.</p>
+
+<p>For now, custom Haml filters will cause a Brakeman error and the Haml templates using them will not be scanned.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/commit/8a6ae98df3039bf5f3d7cc0852efb1006362f143#L1L3">changes</a>)</p>
+
+<h3 id="json-output-in-rails-4">JSON Output in Rails 4</h3>
+
+<p>As of Rails 4, the output of <code class="language-plaintext highlighter-rouge">to_json</code> is now safe by default. Brakeman should no longer warn about cross-site scripting with <code class="language-plaintext highlighter-rouge">to_json</code> in Rails 4 applications.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/392">changes</a>)</p>
+
+<h3 id="less-fuzzy-mass-assignment">Less Fuzzy Mass Assignment</h3>
+
+<p>Brakeman no longer uses fuzzy matching for potentially dangerous model attributes allowed for mass assignment, such as any value containing <code class="language-plaintext highlighter-rouge">admin</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/390">changes</a>)</p>
+
+<h3 id="text-report-width-option">Text Report Width Option</h3>
+
+<p>The width of text reports can now be controlled with the <code class="language-plaintext highlighter-rouge">--table-width</code> option. For example, this can be useful when capturing text output to a file.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/387">changes</a>)</p>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2013/08/21/brakeman-2-dot-1-1-released">Brakeman 2.1.1 Released</a></h1>
     
     
@@ -662,126 +733,6 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2013/03/18/brakeman-1-dot-9-4-released">Brakeman 1.9.4 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2013-03-18 17:07:00 -0700" pubdate  updated >2013-03-18 17:07:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Another release forced out early due to Rails vulnerabilities reported today.</p>
-
-<p><em>Changes since 1.9.3</em>:</p>
-
-<ul>
-  <li>Add check for CVE-2013-1854</li>
-  <li>Add check for CVE-2013-1855</li>
-  <li>Add check for CVE-2013-1856</li>
-  <li>Add check for CVE-2013-1857</li>
-  <li>Fix <code class="language-plaintext highlighter-rouge">--compare</code> to work with older versions</li>
-  <li>Add “no-referrer” to HTML report links</li>
-  <li>Don’t warn when invoking <code class="language-plaintext highlighter-rouge">send</code> on user input</li>
-  <li>Slightly faster cloning of Sexps</li>
-  <li>Detect another way to add <code class="language-plaintext highlighter-rouge">strong_parameters</code> (<a href="https://github.com/presidentbeef/brakeman/issues/288">#288</a>)</li>
-</ul>
-
-<h3 id="latest-reported-vulnerabilities">Latest Reported Vulnerabilities</h3>
-
-<p>All CVE checks were included in <a href="https://github.com/presidentbeef/brakeman/pull/290">these changes</a>.</p>
-
-<h4 id="cve-2013-1854---symbol-denial-of-service">CVE-2013-1854 - Symbol Denial of Service</h4>
-
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/jgJ4cjjS8FE/BGbHRxnDRTIJ">CVE-2013-1854</a> is the creation of symbols when a hash is passed as the value to an ActiveRecord finder method.</p>
-
-<p>Brakeman will warn on this CVE if there are any models using ActiveRecord and the Rails version is vulnerable.</p>
-
-<h4 id="cve-2013-1855---sanitize_css">CVE-2013-1855 - sanitize_css</h4>
-
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/4_QHo4BqnN8/_RrdfKk12I4J">CVE-2013-1855</a> is a vulnerability in the <code class="language-plaintext highlighter-rouge">sanitize_css</code> method.</p>
-
-<p>Brakeman will warn on this CVE for each use of <code class="language-plaintext highlighter-rouge">sanitize_css</code> if the Rails version is vulnerable. Calls obviously sanitizing user input will be high confidence, other calls will be medium confidence.</p>
-
-<h4 id="cve-2013-1856---jruby-xml-parser">CVE-2013-1856 - JRuby XML Parser</h4>
-
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/KZwsQbYsOiI/5kUV7dSCJGwJ">CVE-2013-1856</a> is a vulnerability in the default XML parser used when running Rails on JRuby.</p>
-
-<p>Brakeman will warn on this CVE if run with JRuby and the Rails version is vulnerable. It will not warn if the provided workaround (not patch) is used in an initializers.</p>
-
-<h4 id="cve-2013-1857---sanitize">CVE-2013-1857 - sanitize</h4>
-
-<p><a href="https://groups.google.com/d/msg/rubyonrails-security/zAAU7vGTPvI/1vZDWXqBuXgJ">CVE-2013-1857</a> is a vulnerability in the <code class="language-plaintext highlighter-rouge">sanitize</code> method which allows URLs to include JavaScript.</p>
-
-<p>Brakeman will warn on this CVE for each use of <code class="language-plaintext highlighter-rouge">sanitize</code> if the Rails version is vulnerable. Calls obviously sanitizing user input will be high confidence, other calls will be medium confidence.</p>
-
-<h3 id="fix-json-compare">Fix JSON Compare</h3>
-
-<p>The 1.9.3 release introduced several new keys for warnings in the JSON output, which then broke <code class="language-plaintext highlighter-rouge">--compare</code> when used with output from an older version. Despite <a href="https://twitter.com/brakeman/status/307586866721460225">declaring this would not be fixed</a>, it has been fixed. <code class="language-plaintext highlighter-rouge">--compare</code> reverts to old behavior if a report is from an older version.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/284">changes</a>)</p>
-
-<h3 id="remove-referrer-from-html-report-links">Remove Referrer from HTML Report Links</h3>
-
-<p>All warning type links HTML reports now include the <code class="language-plaintext highlighter-rouge">rel="no-referrer"</code> option. This prevents referrer information from being passed along to the linked site (usually the <a href="http://brakemanscanner.org/">Brakeman site</a>), which means people won’t see that you are putting your Brakeman reports on the open internet…</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/286">changes</a>)</p>
-
-<h3 id="fewer-dangerous-send-warnings">Fewer Dangerous Send Warnings</h3>
-
-<p>Now that Brakeman warns on dangerous uses of <code class="language-plaintext highlighter-rouge">constantize</code> and friends, there is no reason to warn on uses of <code class="language-plaintext highlighter-rouge">send</code>, <code class="language-plaintext highlighter-rouge">try</code>, etc. with user input as a target. User input for the method name will continue to warn.</p>
-
-<p>For example, this will no longer generate a warning:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>params[:name].try(:downcase)
-</code></pre></div></div>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/285">changes</a>)</p>
-
-<h3 id="faster-sexp-cloning">Faster Sexp Cloning</h3>
-
-<p>Brakeman spends a lot of time cloning <code class="language-plaintext highlighter-rouge">Sexp</code>s, so this version introduces a slightly faster custom method instead of <code class="language-plaintext highlighter-rouge">Marshal.load(Marshal.dump(...))</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/287">changes</a>)</p>
-
-<h3 id="another-strong-paramter-initializer">Another Strong Paramter Initializer</h3>
-
-<p>Brakeman now detects this approach to adding the <code class="language-plaintext highlighter-rouge">strong_parameters</code> functionality:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActiveRecord::Base.send(:include,  ActiveModel::ForbiddenAttributesProtection)
-</code></pre></div></div>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/289">changes</a>)</p>
-
-<h3 id="report-issues">Report Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-
-<h3 id="roadmap">Roadmap</h3>
-
-<p>This unexpected release means the roadmap has shifted again. The <a href="https://github.com/presidentbeef/brakeman/wiki/Roadmap">roadmap</a> still has one more release (1.9.5) planned before 2.0. The next release will likely only include bug and false positive fixes. Again, Brakeman 2.0 will <em>definitely</em> include breaking changes, especially for JSON reports.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -820,6 +771,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
       </li>
     
@@ -833,10 +788,6 @@ end
     
       <li class="post">
         <a href="/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">Brakeman 5.4.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">Brakeman 5.3.0 Released</a>
       </li>
     
   </ul>

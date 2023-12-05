@@ -80,6 +80,96 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2018/03/23/brakeman-4-dot-2-1-released">Brakeman 4.2.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2018-03-23 17:19:00 -0700" pubdate  updated >2018-03-23 17:19:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a small release to add warnings for <a href="https://groups.google.com/d/msg/rubyonrails-security/tP7W3kLc5u4/uDy2Br7xBgAJ">CVE-2018-3741</a> and <a href="https://groups.google.com/d/msg/rubyonrails-security/b__OeLG9bts/waZTvSM2AQAJ">CVE-2018-8048</a>.</p>
+
+<p>Please note there have been a number of vulnerabilities in the Rails HTML sanitization methods over the years. Only use sanitization when an application <em>must</em> accept and render HTML from an untrusted source. Otherwise, escape outputs instead.</p>
+
+<p><em>Changes since 4.2.0</em>:</p>
+
+<ul>
+  <li>Add warning for CVE-2018-3741</li>
+  <li>Add warning for CVE-2018-8048</li>
+  <li>Scan <code class="language-plaintext highlighter-rouge">app/jobs/</code> directory</li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">template_exists?</code> in controllers (<a href="https://github.com/presidentbeef/brakeman/issues/1124">#1124</a>)</li>
+</ul>
+
+<h3 id="cve-2018-3741">CVE-2018-3741</h3>
+
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/tP7W3kLc5u4/uDy2Br7xBgAJ">CVE-2018-3741</a> is a vulnerability in the <code class="language-plaintext highlighter-rouge">rails-html-sanitizer</code> gem which may allow bypassing attribute whitelists and therefore cross-site scripting.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1171">changes</a>)</p>
+
+<h3 id="cve-2018-8048">CVE-2018-8048</h3>
+
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/b__OeLG9bts/waZTvSM2AQAJ">CVE-2018-8048</a> is a similar vulnerability in the <code class="language-plaintext highlighter-rouge">loofah</code> gem.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1169">changes</a>)</p>
+
+<h3 id="scan-jobs">Scan Jobs</h3>
+
+<p>Brakeman will now scan files in the <code class="language-plaintext highlighter-rouge">app/jobs/</code> directory and treat them as additional libraries.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1168">changes</a>)</p>
+
+<h3 id="template-guard-condition">Template Guard Condition</h3>
+
+<p>Brakeman will no longer warn about dynamic render paths if <code class="language-plaintext highlighter-rouge">template_exists?</code> is used as a guard condition.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1170">changes</a>)</p>
+
+<h3 id="a-note-on-vulnerabilities-in-depdendencies">A Note on Vulnerabilities in Depdendencies</h3>
+
+<p>Brakeman does not warn about <em>all</em> CVEs in application dependencies. There are many better tools that track and detect vulnerable dependencies.</p>
+
+<p>Brakeman only includes warnings about vulnerabilities announced on the <a href="https://groups.google.com/d/msg/rubyonrails-security/b__OeLG9bts/waZTvSM2AQAJ">Rails Security Mailing List</a>.</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3ba1cd39d98edcae7a0802ef0206de1438439cfdf4edb559c676877e2c253498  brakeman-4.2.1.gem
+54a4aa336f3c21477a9bab12eeba6bb79ffa34a015e89a748621f7fd037d1943  brakeman-lib-4.2.1.gem
+d53f2275320dfe5609234e74ce3a73a7d8c44dfae824fb938a9bae2077a9aecf  brakeman-min-4.2.1.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release.</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
+<p>If you find Brakeman valuable and want to support its development (and get more features!), check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2018/02/21/brakeman-4-dot-2-0-released">Brakeman 4.2.0 Released</a></h1>
     
     
@@ -562,115 +652,6 @@ d93d6f8e9c2655520153fe0512b338753cc36fac56b80947f652fd33e9f80dfb  brakeman-4.0.1
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2017/08/15/brakeman-3-dot-7-1-released">Brakeman 3.7.1/3.7.2 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2017-08-15 23:38:00 -0700" pubdate  updated >2017-08-15 23:38:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Just a little release. Next up: 4.0!</p>
-
-<p><em>Changes since 3.7.1</em>:</p>
-
-<ul>
-  <li>Fix <code class="language-plaintext highlighter-rouge">--ensure-latest</code> (<a href="https://github.com/presidentbeef/brakeman/pull/1079">David Guyon</a>)</li>
-</ul>
-
-<p><em>Changes since 3.7.0:</em></p>
-
-<ul>
-  <li>Handle simple guard with <code class="language-plaintext highlighter-rouge">return</code> at end of branch (<a href="https://github.com/presidentbeef/brakeman/issues/1073">#1073</a>)</li>
-  <li>Add more collection methods for iteration detection</li>
-  <li>Modularize <code class="language-plaintext highlighter-rouge">bin/brakeman</code></li>
-  <li>Improve multi-value <code class="language-plaintext highlighter-rouge">Sexp</code> error message</li>
-  <li>Update <code class="language-plaintext highlighter-rouge">ruby2ruby</code> and <code class="language-plaintext highlighter-rouge">ruby_parser</code> dependencies</li>
-</ul>
-
-<h3 id="another-simple-guard">Another Simple Guard</h3>
-
-<p>Brakeman will now handle when the branch in a simple guard condition ends in <code class="language-plaintext highlighter-rouge">return</code>.</p>
-
-<p>For example:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unless [:valid, :value].include? params[:x]
-  do_stuff
-  more_stuff
-  return
-end
-
-x.send(params[:x]) # Will no longer warn because `params[:x]` must be 'safe'
-</code></pre></div></div>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1077">changes</a>)</p>
-
-<h3 id="more-collection-methods">More Collection Methods</h3>
-
-<p>Brakeman attempts to detect when a template is iterating over records from a database query.</p>
-
-<p>This release adds a few more methods that might return a collection of records.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1074">changes</a>)</p>
-
-<h3 id="modularize-commandline">Modularize Commandline</h3>
-
-<p>The logic in the <code class="language-plaintext highlighter-rouge">brakeman</code> executable has now entirely been moved to <a href="https://github.com/presidentbeef/brakeman/blob/49f675a88ba12ad4fa799770f5499c952650a56c/lib/brakeman/commandline.rb"><code class="language-plaintext highlighter-rouge">Brakeman::Commandline</code></a> for easier testing and custom behavior.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1076">changes</a>)</p>
-
-<h3 id="checksums">Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>9ad563247cc6a57b965e59e5bbbaefa202ce34ceb6d10e97ce500406d60cdb6e  brakeman-3.7.2.gem
-5b753206f8e5937c33494edd323a9e6573e07958d9f8f5bb662b0f6085eafe19  brakeman-lib-3.7.2.gem
-517a074cb92ece8a7e426ea221d63ddbcae6e3b851664083b7e73e6d7e0dd138  brakeman-min-3.7.2.gem
-</code></pre></div></div>
-
-<h3 id="brakeman-40-plans">Brakeman 4.0 Plans</h3>
-
-<p>If all goes well, Brakeman 4.0 will be released on August 27th, which is also the 7th anniversary of Brakeman’s first release. It will also be the 101st release of Brakeman!</p>
-
-<p>At least two major changes will be coming in Brakeman 4.0:</p>
-
-<ul>
-  <li>The <code class="language-plaintext highlighter-rouge">plain</code> report format will be the default instead of tables</li>
-  <li><code class="language-plaintext highlighter-rouge">-z</code> or <code class="language-plaintext highlighter-rouge">--exit-on-warn</code> (sets exit code if any warnings are found) will be on by default</li>
-</ul>
-
-<p>There will likely be other changes, but these two will be the most obvious.</p>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release.</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-
-<p>If you find Brakeman valuable and want to support its development, check out <a href="https://brakemanpro.com/">Brakeman Pro</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -709,6 +690,10 @@ x.send(params[:x]) # Will no longer warn because `params[:x]` must be 'safe'
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
       </li>
     
@@ -722,10 +707,6 @@ x.send(params[:x]) # Will no longer warn because `params[:x]` must be 'safe'
     
       <li class="post">
         <a href="/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">Brakeman 5.4.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">Brakeman 5.3.0 Released</a>
       </li>
     
   </ul>
