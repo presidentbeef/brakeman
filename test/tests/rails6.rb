@@ -634,7 +634,6 @@ class Rails6Tests < Minitest::Test
   def test_dynamic_render_path_phlex_component
     assert_no_warning :type => :warning,
       :warning_code => 15,
-      :fingerprint => "7e8ad12b494ba3e8617fb6a8d27aa10a4f944498c6236d07c31e6063b3c83fc5",
       :warning_type => "Dynamic Render Path",
       :line => 85,
       :message => /^Render\ path\ contains\ parameter\ value/,
