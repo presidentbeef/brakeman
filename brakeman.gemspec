@@ -30,8 +30,13 @@ Gem::Specification.new do |s|
 
     s.files += Dir['bundle/ruby/*/gems/**/*'].reject do |path|
       # Skip unnecessary files in dependencies
-      path =~ /^bundle\/ruby\/\d\.\d\.\d\/gems\/[^\/]+\/(Rakefile|benchmark|bin|doc|example|man|site|spec|test)/
+      path =~ /^bundle\/ruby\/\d\.\d\.\d\/gems\/[^\/]+\/(Rakefile|benchmark|bin|doc|example|man|site|spec|test)/ or
+        path.include? '/gems/racc'
     end
+
+    # racc is not only a built-in gem, but also has native code which we cannot
+    # bundle with Brakeman, so leaving it as a regular dependency
+    s.add_dependency "racc"
   else
     Brakeman::GemDependencies.dev_dependencies(s) unless ENV['BM_PACKAGE']
     Brakeman::GemDependencies.base_dependencies(s)
