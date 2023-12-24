@@ -1,3 +1,7 @@
+# 6.1.1 - 2023-12-24
+
+* Handle racc as a default gem in Ruby 3.3.0
+
 # 6.1.0 - 2023-12-04
 
 * Add `--timing` to add timing duration for scan steps
