@@ -116,10 +116,9 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
 
     if secrets_file.exists? and not ignored? "secrets.yml" and not ignored? "config/*.yml"
       yaml = secrets_file.read
-      require 'date' # https://github.com/dtao/safe_yaml/issues/80
-      require 'safe_yaml/load'
+      require 'yaml'
       begin
-        secrets = SafeYAML.load yaml
+        secrets = YAML.safe_load yaml
       rescue Psych::SyntaxError, RuntimeError => e
         Brakeman.notify "[Notice] #{self.class}: Unable to parse `#{secrets_file}`"
         Brakeman.debug "Failed to parse #{secrets_file}: #{e.inspect}"
