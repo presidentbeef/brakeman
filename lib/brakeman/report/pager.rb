@@ -52,7 +52,7 @@ module Brakeman
     def page_via_less text
       # Adapted from https://github.com/piotrmurach/tty-pager/
 
-      write_io = open("|less #{less_options.join}", 'w')
+      write_io = IO.popen("less #{less_options.join}", 'w')
       pid = write_io.pid
 
       write_io.write(text)
