@@ -128,9 +128,8 @@ module Brakeman
 
     #Load configuration file
     if config = config_file(custom_location, app_path)
-      require 'date' # https://github.com/dtao/safe_yaml/issues/80
-      self.load_brakeman_dependency 'safe_yaml/load'
-      options = SafeYAML.load_file config, :deserialize_symbols => true
+      require 'yaml'
+      options = YAML.safe_load_file config, permitted_classes: [Symbol], symbolize_names: true
 
       if options
         options.each { |k, v| options[k] = Set.new v if v.is_a? Array }
