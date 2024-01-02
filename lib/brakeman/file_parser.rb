@@ -1,4 +1,6 @@
 require 'parallel'
+require 'prism'
+require '/home/justin/work/prism-to-ruby-parser/lib/prism_to_ruby_parser.rb'
 
 module Brakeman
   ASTFile = Struct.new(:path, :ast)
@@ -76,6 +78,9 @@ module Brakeman
       begin
         Brakeman.debug "Parsing #{path}"
         RubyParser.new.parse input, path, @timeout
+
+        pout = Prism.parse(input, filepath: path)
+        PrismToRubyParserVisitor.new.visit(pout.value)
       rescue Racc::ParseError => e
         raise e.exception(e.message + "\nCould not parse #{path}")
       rescue Timeout::Error => e
