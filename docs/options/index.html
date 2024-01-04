@@ -159,14 +159,17 @@
 
 <p>To skip certain files use:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --skip-files file1,file2,etc
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --skip-files file1,file2,dir1/
 </code></pre></div></div>
 
-<p>Note Brakeman does “whole program” analysis, therefore skipping a file may affect warning results from more than just that one file.</p>
+<p>Values ending in <code class="language-plaintext highlighter-rouge">/</code> will cause Brakeman to skip any file with a matching directory anywhere in the path.
+To be more specific, start the directory name with <code class="language-plaintext highlighter-rouge">/</code> (e.g., <code class="language-plaintext highlighter-rouge">/app/some_dir/</code>). The directory will be matched relative to the root of the project being scanned.</p>
+
+<p>(Note Brakeman does “whole program” analysis, therefore skipping a file may affect warning results from more than just that one file.)</p>
 
 <p>The inverse but even more dangerous option is to specific which files to scan:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --only-files some_file,some_dir
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --only-files some_file,some_dir/
 </code></pre></div></div>
 
 <p>Again, since Brakeman looks at the whole program, it is very likely not going to behave as expected when scanning a subset of files. Also, if certain files are excluded Brakeman may not function at all.</p>
