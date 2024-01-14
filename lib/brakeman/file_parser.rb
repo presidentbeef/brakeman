@@ -79,8 +79,7 @@ module Brakeman
         Brakeman.debug "Parsing #{path}"
         RubyParser.new.parse input, path, @timeout
 
-        pout = Prism.parse(input, filepath: path)
-        PrismToRubyParserVisitor.new.visit(pout.value)
+        PrismToRubyParser.parse(input, path)
       rescue Racc::ParseError => e
         raise e.exception(e.message + "\nCould not parse #{path}")
       rescue Timeout::Error => e
