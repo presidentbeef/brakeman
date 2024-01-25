@@ -643,6 +643,18 @@ class Rails6Tests < Minitest::Test
       :user_input => s(:call, s(:params), :require, s(:str, "name"))
   end
 
+  def test_dynamic_render_view_component_contrib
+    assert_no_warning :type => :warning,
+      :warning_code => 15,
+      :warning_type => "Dynamic Render Path",
+      :line => 88,
+      :message => /^Render\ path\ contains\ parameter\ value/,
+      :confidence => 2,
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:render, :action, s(:call, s(:const, :TestViewComponentContrib), :new, s(:call, s(:params), :require, s(:str, "name"))), s(:hash)),
+      :user_input => s(:call, s(:params), :require, s(:str, "name"))
+  end
+
   def test_dynamic_render_path_dir_glob_filter
     assert_no_warning :type => :warning,
       :warning_code => 15,

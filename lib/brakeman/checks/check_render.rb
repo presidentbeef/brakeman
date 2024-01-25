@@ -108,6 +108,11 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
   def known_renderable_class? class_name
     klass = tracker.find_class(class_name)
     return false if klass.nil?
-    klass.ancestor?(:"ViewComponent::Base") || klass.ancestor?(:"Phlex::HTML")
+    knowns = [
+      :"ViewComponent::Base",
+      :"ViewComponentContrib::Base",
+      :"Phlex::HTML"
+    ]
+    knowns.any? { |k| klass.ancestor? k }
   end
 end
