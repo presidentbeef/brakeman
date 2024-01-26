@@ -24,5 +24,6 @@ class Brakeman::CheckEOLRuby < Brakeman::EOLCheck
     ['3.0.0', '3.0.99'] => Date.new(2024, 3, 31),
     ['3.1.0', '3.1.99'] => Date.new(2025, 3, 31),
     ['3.2.0', '3.2.99'] => Date.new(2026, 3, 31),
+    ['3.3.0', '3.3.99'] => Date.new(2027, 3, 31),
   }
 end
