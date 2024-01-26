@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Warning Types</title>
+  <title>Brakeman: Path Traversal</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,7 +15,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="https://brakemanscanner.org/docs/warning_types/"/>
+  <link rel="canonical" href="https://brakemanscanner.org/docs/warning_types/path_traversal/"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -34,7 +34,7 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Warning Types" />
+<meta name="twitter:title" content="Brakeman - Path Traversal" />
 <meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
 <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 
@@ -75,46 +75,45 @@
 <article>
   
   <header>
-    <h1 class="entry-title">Warning Types</h1>
+    <h1 class="entry-title">Path Traversal</h1>
   </header>
   
-  <p>Read more about the different warnings Brakeman reports:</p>
+  <p>Path traversal vulnerabilities allow an attacker to access or manipulate files outside the intended
+directory by providing specially crafted paths as input to read or write sensitive data. This can occur when 
+improperly handling user-supplied input in filesystem-related operations such as image uploads, dynamic content loading, and user file downloads.</p>
+
+<p>An attacker could exploit a path traversal vulnerability to:</p>
 
 <ul>
-  <li><a href="/docs/warning_types/attribute_restriction">Attribute Restriction</a></li>
-  <li><a href="/docs/warning_types/authentication">Authentication</a></li>
-  <li><a href="/docs/warning_types/basic_authentication">Basic Authentication</a></li>
-  <li><a href="/docs/warning_types/command_injection">Command Injection</a></li>
-  <li><a href="/docs/warning_types/cross-site_request_forgery">Cross-Site Request Forgery</a></li>
-  <li><a href="/docs/warning_types/cross_site_scripting">Cross Site Scripting</a></li>
-  <li><a href="/docs/warning_types/content_tag">Cross Site Scripting (Content Tag)</a></li>
-  <li><a href="/docs/warning_types/cross_site_scripting_to_json">Cross Site Scripting (JSON)</a></li>
-  <li><a href="/docs/warning_types/dangerous_evaluation">Dangerous Evaluation</a></li>
-  <li><a href="/docs/warning_types/dangerous_send">Dangerous Send</a></li>
-  <li><a href="/docs/warning_types/default_routes">Default Routes</a></li>
-  <li><a href="/docs/warning_types/denial_of_service">Denial of Service</a></li>
-  <li><a href="/docs/warning_types/divide_by_zero">Divide By Zero</a></li>
-  <li><a href="/docs/warning_types/dynamic_render_paths">Dynamic Render Paths</a></li>
-  <li><a href="/docs/warning_types/file_access">File Access</a></li>
-  <li><a href="/docs/warning_types/format_validation">Format Validation</a></li>
-  <li><a href="/docs/warning_types/information_disclosure">Information Disclosure</a></li>
-  <li><a href="/docs/warning_types/CVE-2011-0446">Mail Link</a></li>
-  <li><a href="/docs/warning_types/mass_assignment">Mass Assignment</a></li>
-  <li><a href="/docs/warnings_types/path_traversal">Path Traversal</a></li>
-  <li><a href="/docs/warning_types/remote_code_execution">Remote Code Execution</a></li>
-  <li><a href="/docs/warning_types/remote_code_execution_yaml_load">Remote Execution in YAML.load</a></li>
-  <li><a href="/docs/warning_types/session_manipulation">Session Manipulation</a></li>
-  <li><a href="/docs/warning_types/session_setting">Session Settings</a></li>
-  <li><a href="/docs/warning_types/sql_injection">SQL Injection</a></li>
-  <li><a href="/docs/warning_types/ssl_verification_bypass">SSL Verification Bypass</a></li>
-  <li><a href="/docs/warning_types/unsafe_deserialization">Unsafe Deserialization</a></li>
-  <li><a href="/docs/warning_types/unscoped_find">Unscoped Find</a></li>
-  <li><a href="/docs/warning_types/redirect">Unsafe Redirects</a></li>
-  <li><a href="/docs/warning_types/weak_hash">Weak Hash</a></li>
+  <li>Read sensitive files, including configuration files or other data containing credentials or encryption keys.</li>
+  <li>Write files into restricted directories that enables code injection or privilege escalation.</li>
+  <li>Download or delete critical system files.</li>
+  <li>Gain access to user data and perform unauthorized actions.</li>
 </ul>
 
+<h2 id="example">Example</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># `params[:file][:path]` could contain "../../../../../etc/passwd", e.g.</span>
+
+<span class="n">send_file</span> <span class="no">File</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s1">'some'</span><span class="p">,</span> <span class="s1">'path'</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="ss">:file</span><span class="p">][</span><span class="ss">:path</span><span class="p">])</span>
+</code></pre></div></div>
+
+<h2 id="pathname-confusion">Pathname Confusion</h2>
+
+<p><code class="language-plaintext highlighter-rouge">Pathname#join</code> has some confusing behavior: <em>any</em> absolute path segment (e.g. starting with <code class="language-plaintext highlighter-rouge">/</code>) causes the path to be absolute from that point.</p>
+
+<p>Example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; Pathname.new('a').join("a", "b", "/c", "d")
+ =&gt; #&lt;Pathname:/c/d&gt; 
+</code></pre></div></div>
+
+<p>Note that <code class="language-plaintext highlighter-rouge">Rails.root</code> is a <code class="language-plaintext highlighter-rouge">Pathname</code>.</p>
+
+<p>Exercise extreme caution when passing user-provided input to this function.</p>
+
 <hr />
-<p><a href="/docs">More Documentation</a></p>
+<p>Back to <a href="/docs/warning_types">Warning Types</a></p>
 
   
     <footer>
