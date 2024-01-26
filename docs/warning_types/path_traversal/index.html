@@ -112,6 +112,20 @@ improperly handling user-supplied input in filesystem-related operations such as
 
 <p>Exercise extreme caution when passing user-provided input to this function.</p>
 
+<h3 id="additional-protections">Additional Protections</h3>
+
+<p>Besides coding defensively, there are additional options for protecting against path traversal:</p>
+
+<ul>
+  <li>Use the ActiveStorage module for handling uploaded files and store them in a service like S3, rather than storing user data on the same server or directory as the application.</li>
+  <li>Configure permissions on the application server to disallow writing files or reading files outside of the application directory.</li>
+  <li>Never include user-provided values in the file path or the file name.</li>
+</ul>
+
+<p>A common pattern is to store files using application-generated file names, but keep a record of the user-provided name. When the user downloads the file, the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attr-download"><code class="language-plaintext highlighter-rouge">download</code></a> attribute and/or the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition">Content Disposition</a> header can be used to tell the browser the preferred name of the file, which can be the original user-provided name. Note that libraries like ActiveStorage will handle this for you.</p>
+
+<p>However, be careful if users can download files named by <em>other</em> users. Overall, it is safer to generate file names from known-safe values.</p>
+
 <hr />
 <p>Back to <a href="/docs/warning_types">Warning Types</a></p>
 
