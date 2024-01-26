@@ -32,6 +32,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     @or_depth_limit = (tracker && tracker.options[:branch_limit]) || 5 #arbitrary default
     @meth_env = nil
     @current_file = current_file
+    @mass_limit = (tracker && tracker.options[:mass_limit]) || 1000 # arbitrary default
     set_env_defaults
   end
 
@@ -82,8 +83,12 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   def replace exp, int = 0
     return exp if int > 3
 
-    if replacement = env[exp] and not duplicate? replacement
-      replace(replacement.deep_clone(exp.line), int + 1)
+    if replacement = env[exp]
+      if not duplicate? replacement and replacement.mass < @mass_limit
+        replace(replacement.deep_clone(exp.line), int + 1)
+      else
+        exp
+      end
     elsif tracker and replacement = tracker.constant_lookup(exp) and not duplicate? replacement
       replace(replacement.deep_clone(exp.line), int + 1)
     else
