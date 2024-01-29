@@ -84,4 +84,8 @@ class GroupsController < ApplicationController
   def render_phlex_component
     render(TestPhlexComponent.new(params.require('name')))
   end
+
+  def render_view_component_contrib
+    render(TestViewComponentContrib.new(params.require('name')))
+  end
 end
