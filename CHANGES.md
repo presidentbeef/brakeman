@@ -1,3 +1,14 @@
+# Unreleased
+
+* Update Highline to 3.0
+* Add EOL date for Ruby 3.3.0
+* Avoid copying Sexps that are too large
+* Avoid detecting `ViewComponentContrib::Base` as dynamic render paths (vividmuimui)
+* Remove deprecated use of `Kernel#open("|...")`
+* Remove `safe_yaml` gem dependency
+* Avoid detecting Phlex components as dynamic render paths (Máximo Mussini)
+
+
 # 6.1.1 - 2023-12-24
 
 * Handle racc as a default gem in Ruby 3.3.0
