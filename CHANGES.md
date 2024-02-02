@@ -1,4 +1,4 @@
-# Unreleased
+# 6.1.2 - 2024-02-01
 
 * Update Highline to 3.0
 * Add EOL date for Ruby 3.3.0
@@ -7,7 +7,6 @@
 * Remove deprecated use of `Kernel#open("|...")`
 * Remove `safe_yaml` gem dependency
 * Avoid detecting Phlex components as dynamic render paths (Máximo Mussini)
-
 
 # 6.1.1 - 2023-12-24
 
