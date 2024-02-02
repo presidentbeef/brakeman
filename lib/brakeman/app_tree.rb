@@ -161,9 +161,18 @@ module Brakeman
     end
 
     def glob_files(directory, name, extensions = ".rb")
-      pattern = "#{root_search_pattern}#{directory}/**/#{name}#{extensions}"
+      root_directory = "#{root_search_pattern}#{directory}"
+      patterns = ["#{root_directory}/**/#{name}#{extensions}"]
 
-      Dir.glob(pattern)
+      Dir.glob("#{root_directory}/**/*", File::FNM_DOTMATCH).each do |path|
+        if File.symlink?(path) && File.directory?(path)
+          symlink_target = File.readlink(path)
+          patterns << "#{symlink_target}/**/#{name}#{extensions}"
+        end
+      end
+
+      files = patterns.flat_map { |pattern| Dir.glob(pattern) }
+      files.uniq
     end
 
     def select_files(paths)
