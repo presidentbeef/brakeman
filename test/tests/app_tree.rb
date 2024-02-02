@@ -12,6 +12,31 @@ class AppTreeTests < Minitest::Test
     end
   end
 
+  def temp_dir_symlink_and_file_from_path(relative_path)
+    Dir.mktmpdir do |dir|
+      sibling_dir = File.join(dir, "sibling")
+      FileUtils.mkdir_p(sibling_dir)
+
+      target_dir = File.join(dir, "target")
+      FileUtils.mkdir_p(target_dir)
+
+      file = File.join(sibling_dir, relative_path)
+      FileUtils.mkdir_p(file)
+      FileUtils.touch(file)
+
+      symlink = File.join(target_dir, "symlink")
+      FileUtils.ln_s(sibling_dir, symlink, force: true)
+      yield target_dir, file
+    end
+  end
+
+  def test_directory_symlink_support
+    temp_dir_symlink_and_file_from_path("test.rb") do |dir, file|
+      at = Brakeman::AppTree.new(dir)
+      assert_equal [file], at.ruby_file_paths.collect(&:absolute)
+    end
+  end
+
   def test_ruby_file_paths
     temp_dir_and_file_from_path("test.rb") do |dir, file|
       at = Brakeman::AppTree.new(dir)
