@@ -1,4 +1,83 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2024-01-26T15:26:56-08:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 6.1.0 Released</title><link href="https://brakemanscanner.org/blog/2023/12/04/brakeman-6-dot-1-dot-0-released" rel="alternate" type="text/html" title="Brakeman 6.1.0 Released" /><published>2023-12-04T22:30:00-08:00</published><updated>2023-12-04T22:30:00-08:00</updated><id>https://brakemanscanner.org/blog/2023/12/04/brakeman-6-dot-1-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">&lt;p&gt;It’s been a while!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2024-02-01T22:35:06-08:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 6.1.2 Released</title><link href="https://brakemanscanner.org/blog/2024/02/01/brakeman-6-dot-1-dot-2-released" rel="alternate" type="text/html" title="Brakeman 6.1.2 Released" /><published>2024-02-01T10:30:00-08:00</published><updated>2024-02-01T10:30:00-08:00</updated><id>https://brakemanscanner.org/blog/2024/02/01/brakeman-6-dot-1-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">&lt;p&gt;Finally, just a small release!&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 6.1.1:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Avoid detecting Phlex components as dynamic render paths (&lt;a href=&quot;https://github.com/ElMassimo&quot;&gt;Máximo Mussini&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Avoid detecting &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ViewComponentContrib::Base&lt;/code&gt; as dynamic render paths (&lt;a href=&quot;https://github.com/vividmuimui&quot;&gt;vividmuimui&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Avoid copying Sexps that are too large (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1818&quot;&gt;#1818&lt;/a&gt;, &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1546&quot;&gt;#1546&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Add EOL date for Ruby 3.3.0&lt;/li&gt;
+  &lt;li&gt;Remove deprecated use of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Kernel#open(&quot;|...&quot;)&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Remove &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;safe_yaml&lt;/code&gt; gem dependency&lt;/li&gt;
+  &lt;li&gt;Update Highline to 3.0 (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1812&quot;&gt;#1812&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;components-in-render-paths&quot;&gt;Components in Render Paths&lt;/h3&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/ElMassimo&quot;&gt;Máximo Mussini&lt;/a&gt; and &lt;a href=&quot;https://github.com/vividmuimui&quot;&gt;vividmuimui&lt;/a&gt;, there will be fewer false positives
+warning about dynamic render paths when using components.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1805&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1821&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;performance-improvement-with-complex-branching&quot;&gt;Performance Improvement with Complex Branching&lt;/h3&gt;
+
+&lt;p&gt;Brakemn has a very hard time with code like&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;baz&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;do_thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# etc.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Because to Brakeman it looks like&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;baz&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;do_thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;baz&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This can quickly snowball into gigantic chunks of code, causing Brakeman to use lots of memory and essentially freeze up.&lt;/p&gt;
+
+&lt;p&gt;In the past, limits on how many times a value is “branched” have helped with this (and is configurable with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--branch-limit&lt;/code&gt;).
+However, it is not sufficient.&lt;/p&gt;
+
+&lt;p&gt;Now Brakeman has a limit on how large these chunks of code can get. This has improved performance without any noticable impact on true positives.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1820&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;7716769c18f2c4a52d7a74d2cb5a614be0c46d8aad3fbe7ca089dbb7c98bd4d3  brakeman-6.1.2.gem
+38939998eb695b82932c207ef766356bc21e57199e18c4d8f000a005d294e587  brakeman-lib-6.1.2.gem
+dbc2f9a3b61760c03737cf701f5a1dfe634fb14e8388968e056a0f77effab018  brakeman-min-6.1.2.gem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Finally, just a small release!</summary></entry><entry><title type="html">Brakeman 6.1.0 Released</title><link href="https://brakemanscanner.org/blog/2023/12/04/brakeman-6-dot-1-dot-0-released" rel="alternate" type="text/html" title="Brakeman 6.1.0 Released" /><published>2023-12-04T22:30:00-08:00</published><updated>2023-12-04T22:30:00-08:00</updated><id>https://brakemanscanner.org/blog/2023/12/04/brakeman-6-dot-1-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">&lt;p&gt;It’s been a while!&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 6.0.1:&lt;/em&gt;&lt;/p&gt;
 
@@ -612,58 +691,4 @@ the help message matches the order of the options in the prompt!&lt;/p&gt;
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Oops! Minor emergency fix release.</summary></entry><entry><title type="html">Brakeman 5.2.0 Released</title><link href="https://brakemanscanner.org/blog/2021/12/15/brakeman-5-dot-2-dot-0-released" rel="alternate" type="text/html" title="Brakeman 5.2.0 Released" /><published>2021-12-15T11:30:00-08:00</published><updated>2021-12-15T11:30:00-08:00</updated><id>https://brakemanscanner.org/blog/2021/12/15/brakeman-5-dot-2-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2021/12/15/brakeman-5-dot-2-dot-0-released">&lt;p&gt;&lt;em&gt;Changes since 5.1.2:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Initial Rails 7 support (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1653&quot;&gt;#1653&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Add new checks for unsupported Ruby and Rails version&lt;/li&gt;
-  &lt;li&gt;Fix issue with calls to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;foo.root&lt;/code&gt; in routes (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1640&quot;&gt;#1640&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Ignore &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;I18n.locale&lt;/code&gt; in SQL queries (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1597&quot;&gt;#1597&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Do not treat &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sanitize_sql_like&lt;/code&gt; as safe&lt;/li&gt;
-  &lt;li&gt;Bundled version of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ruby_parser&lt;/code&gt; updated to 3.18.1&lt;/li&gt;
-  &lt;li&gt;Require Ruby 2.5.0+ (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1649&quot;&gt;#1649&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;initial-rails-7-support&quot;&gt;Initial Rails 7 Support&lt;/h3&gt;
-
-&lt;p&gt;Nothing special here, but the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-7&lt;/code&gt; option is available and Brakeman won’t think a Rails 7 app is a Rails 2 app.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1654&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;new-checks-for-unmaintained-software&quot;&gt;New Checks for Unmaintained Software&lt;/h3&gt;
-
-&lt;p&gt;Brakeman will now warn about use of Ruby or Rails versions which are no longer maintained.&lt;/p&gt;
-
-&lt;p&gt;Unlike other warnings, these new checks have a time component and &lt;em&gt;will&lt;/em&gt; change as the end-of-life dates approach:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;60 days until EOL: Low warning&lt;/li&gt;
-  &lt;li&gt;30 days until EOL: Medium warning&lt;/li&gt;
-  &lt;li&gt;EOL+: High warning&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1660&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;bug-fix-in-routes&quot;&gt;Bug Fix in Routes&lt;/h3&gt;
-
-&lt;p&gt;Calls to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;something.root&lt;/code&gt; will no longer cause Brakeman to freak out.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1655&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;sql-injection-updates&quot;&gt;SQL Injection Updates&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;I18n.locale&lt;/code&gt; is ignored in SQL queries.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1658&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sanitize_sql_like&lt;/code&gt; is no longer treated as “safe”. It only escapes &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LIKE&lt;/code&gt;-specific characters such as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;%&lt;/code&gt; but does not prevent SQL injection.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1657&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Changes since 5.1.2:</summary></entry></feed>
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Oops! Minor emergency fix release.</summary></entry></feed>

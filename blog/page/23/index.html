@@ -80,6 +80,74 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2011/12/21/brakeman-1-dot-1-released">Brakeman 1.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2011-12-21 19:12:00 -0800" pubdate  updated >2011-12-21 19:12:00 -0800</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This was supposed to be a 1.0.1 release, but quite a bit of code changed.</p>
+
+<p>Changes since 1.0:</p>
+
+<ul>
+  <li>Relax required versions for dependencies (this is for Bundler users)</li>
+  <li>Performance improvements for source processing</li>
+  <li>Better progress reporting</li>
+  <li>Handle basic operators like « + - * /</li>
+  <li>Rescue more errors to prevent Brakeman from completely bailing out</li>
+  <li>Compatibility with newer Haml versions</li>
+  <li>Fix some 1.9 warnings</li>
+</ul>
+
+<h3 id="relax-dependencies">Relax Dependencies</h3>
+
+<p>The version dependencies for Brakeman have been relaxed somewhat, so it should work fine if included in a Rails 3 Gemfile. Unfortunately, this makes it a little harder to be sure it will work with all setups. Please report any problems!</p>
+
+<h3 id="performance-improvements">Performance Improvements</h3>
+
+<p>The 1.0 release reduced the time taken for running the vulnerability checks, but (unrelatedly) the time for processing the source code increased.</p>
+
+<p>This release makes some improvements that should improve scan times. If it takes an intolerable amount of time for scans (more than 5-10 minutes), try using the <code class="language-plaintext highlighter-rouge">--faster</code> option. This will possibly report fewer vulnerabilities, but should be much faster.</p>
+
+<h3 id="progress-reporting">Progress Reporting</h3>
+
+<p>Brakeman will now provide better feedback about its progress while processing applications. For even more output, use the <code class="language-plaintext highlighter-rouge">--debug</code> option.</p>
+
+<h3 id="handle-more-operators">Handle More Operators</h3>
+
+<p>See <a href="https://github.com/presidentbeef/brakeman/wiki/Using-Brakeman::AliasProcessor">here</a> for the kinds of simple processing Brakeman can do.</p>
+
+<h3 id="rescue-more-errors">Rescue More Errors</h3>
+
+<p>Brakeman does its best to never completely abort execution and tries to always provide an analysis of whatever it can manage. This release rescues exceptions that may occur while processing configurations and Gemfiles.</p>
+
+<h3 id="problems">Problems</h3>
+
+<p>If you run into any problems, don’t hesitate to send a tweet to <a href="http://twitter.com/brakemanscanner">@Brakemanscanner</a> or <a href="https://github.com/presidentbeef/brakeman/issues">file an issue</a> on GitHub!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2011/12/08/brakeman-1-dot-0-released">Brakeman 1.0 Released!</a></h1>
     
     
@@ -340,70 +408,6 @@ Brakeman.run :app_path =&gt; 'my_app'
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2011/11/16/brakeman-0-dot-9-0-released">Brakeman 0.9.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-11-16 16:23:00 -0800" pubdate  updated >2011-11-16 16:23:00 -0800</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Changes:</p>
-
-<ul>
-  <li>Process Rails 3 configuration files</li>
-  <li>Check for config.active_record.whitelist_attributes = true</li>
-  <li>Always produce a warning for without_protection =&gt; true</li>
-  <li>Fix CSV output</li>
-</ul>
-
-<p>This is just a small release on the way to 1.0.</p>
-
-<h3 id="rails-3-configs">Rails 3 Configs</h3>
-
-<p>Configurations in <code class="language-plaintext highlighter-rouge">config/application</code> and <code class="language-plaintext highlighter-rouge">config/environments/production.rb</code> will now be parsed.</p>
-
-<h3 id="check-for-disabled-mass-assignment">Check for Disabled Mass Assignment</h3>
-
-<p>A new option was added in Rails 3.1 to globally disable mass assignment using <code class="language-plaintext highlighter-rouge">config.active_record.whitelist_attributes = true</code>. Brakeman will now turn off mass assignment warnings if this configuration setting is detected.</p>
-
-<h3 id="always-warn-on-without_protection">Always Warn on without_protection</h3>
-
-<p>Rails 3.1 adds a way to bypass attribute protection when doing mass assignment.</p>
-
-<p>For example:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.new(params, :without_protection =&gt; true)
-</code></pre></div></div>
-
-<p>Brakeman will now <em>always</em> warn when <code class="language-plaintext highlighter-rouge">without_protection</code> is used, even if mass assignment is disabled or attributes are protected on that model.</p>
-
-<h3 id="fix-csv-output">Fix CSV Output</h3>
-
-<p>Brakeman reports using the CSV format should work once again.</p>
-
-<p>There is a bug in Ruport when using Ruby 1.9.2 and CSV output. A temporary patch has been added until this is resolved.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -442,6 +446,10 @@ Brakeman.run :app_path =&gt; 'my_app'
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a>
       </li>
     
@@ -455,10 +463,6 @@ Brakeman.run :app_path =&gt; 'my_app'
     
       <li class="post">
         <a href="/blog/2023/02/21/brakeman-5-dot-4-dot-1-released">Brakeman 5.4.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">Brakeman 5.4.0 Released</a>
       </li>
     
   </ul>

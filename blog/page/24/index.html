@@ -80,6 +80,70 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2011/11/16/brakeman-0-dot-9-0-released">Brakeman 0.9.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2011-11-16 16:23:00 -0800" pubdate  updated >2011-11-16 16:23:00 -0800</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Changes:</p>
+
+<ul>
+  <li>Process Rails 3 configuration files</li>
+  <li>Check for config.active_record.whitelist_attributes = true</li>
+  <li>Always produce a warning for without_protection =&gt; true</li>
+  <li>Fix CSV output</li>
+</ul>
+
+<p>This is just a small release on the way to 1.0.</p>
+
+<h3 id="rails-3-configs">Rails 3 Configs</h3>
+
+<p>Configurations in <code class="language-plaintext highlighter-rouge">config/application</code> and <code class="language-plaintext highlighter-rouge">config/environments/production.rb</code> will now be parsed.</p>
+
+<h3 id="check-for-disabled-mass-assignment">Check for Disabled Mass Assignment</h3>
+
+<p>A new option was added in Rails 3.1 to globally disable mass assignment using <code class="language-plaintext highlighter-rouge">config.active_record.whitelist_attributes = true</code>. Brakeman will now turn off mass assignment warnings if this configuration setting is detected.</p>
+
+<h3 id="always-warn-on-without_protection">Always Warn on without_protection</h3>
+
+<p>Rails 3.1 adds a way to bypass attribute protection when doing mass assignment.</p>
+
+<p>For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.new(params, :without_protection =&gt; true)
+</code></pre></div></div>
+
+<p>Brakeman will now <em>always</em> warn when <code class="language-plaintext highlighter-rouge">without_protection</code> is used, even if mass assignment is disabled or attributes are protected on that model.</p>
+
+<h3 id="fix-csv-output">Fix CSV Output</h3>
+
+<p>Brakeman reports using the CSV format should work once again.</p>
+
+<p>There is a bug in Ruport when using Ruby 1.9.2 and CSV output. A temporary patch has been added until this is resolved.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2011/11/04/brakeman-0-dot-8-4-released">Brakeman 0.8.4 Released</a></h1>
     
     
@@ -345,44 +409,6 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2011/08/27/one-year-anniversary-and-a-website">One Year Anniversary</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-08-27 01:00:00 -0700" pubdate  updated >2011-08-27 01:00:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>One year ago, Brakeman 0.0.1 was released as a gem. Then it was promptly yanked and replaced with <a href="http://rubygems.org/gems/brakeman/versions/0.0.2">Brakeman 0.0.2</a>.</p>
-
-<p>In celebration of this grand anniversary, there have been several new releases today.</p>
-
-<p>The first is <a href="http://rubygems.org/gems/brakeman/versions/0.7.2">Brakeman 0.7.2</a>, a minor release adding CVE numbers for the <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/f878a33159ac9967">latest vulnerabilities</a> and fixing how nested params/cookie accesses are handled (e.g., <code class="language-plaintext highlighter-rouge">params[:user][:name]</code> is now considered a direct use of a parameter).</p>
-
-<p>Next up, Brakeman has its own Twitter feed <a href="https://twitter.com/brakemanscanner">@BrakemanScanner</a>.</p>
-
-<p>Lastly, there is this new website. Look forward to tutorials and more in-depth information about how to use Brakeman effectively.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -421,6 +447,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a>
       </li>
     
@@ -434,10 +464,6 @@ end
     
       <li class="post">
         <a href="/blog/2023/02/21/brakeman-5-dot-4-dot-1-released">Brakeman 5.4.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">Brakeman 5.4.0 Released</a>
       </li>
     
   </ul>

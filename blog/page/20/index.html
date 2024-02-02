@@ -80,6 +80,80 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/08/13/brakeman-1-dot-7-1-released">Brakeman 1.7.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-08-13 11:04:00 -0700" pubdate  updated >2012-08-13 11:04:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a small release to add checks for the <a href="http://weblog.rubyonrails.org/2012/8/9/ann-rails-3-2-8-has-been-released/">Rails vulnerabilities reported last week</a>.</p>
+
+<p><em>Changes since 1.7.0</em>:</p>
+
+<ul>
+  <li>Add check for <a href="https://groups.google.com/d/topic/rubyonrails-security/fV3QUToSMSw/discussion">CVE-2012-3463</a></li>
+  <li>Add check for <a href="https://groups.google.com/d/topic/rubyonrails-security/kKGNeMrnmiY/discussion">CVE-2012-3464</a></li>
+  <li>Add check for <a href="https://groups.google.com/d/topic/rubyonrails-security/FgVEtBajcTY/discussion">CVE-2012-3465</a></li>
+  <li>Add charset to HTML report (<a href="https://github.com/hooopo">hooopo</a>)</li>
+  <li>Report XSS in select() for Rails 2</li>
+</ul>
+
+<h3 id="cve-2012-3463---xss-in-select_tag-prompt">CVE-2012-3463 - XSS in select_tag Prompt</h3>
+
+<p>In Rails 3.x, values supplied to the <code class="language-plaintext highlighter-rouge">:prompt</code> option in the <code class="language-plaintext highlighter-rouge">select_tag</code> helper are not escaped, leading to a cross-site scripting vulnerability.</p>
+
+<p>Brakeman will warn on all uses of <code class="language-plaintext highlighter-rouge">select_tag</code> with unescaped user input in the <code class="language-plaintext highlighter-rouge">:prompt</code> option.</p>
+
+<h3 id="cve-2012-3464---single-quotes-are-unescaped">CVE-2012-3464 - Single Quotes are Unescaped</h3>
+
+<p>This is pretty much a known issue (<a href="http://www.ruby-forum.com/topic/166894">example from 2008</a>), but Rails 3.2.8 fixes it.</p>
+
+<p>Single quotes are most dangerous when interpolating values into HTML attributes that use single quotes, which is why it is often recommended to always use double quotes in HTML.</p>
+
+<p>There is a <a href="https://groups.google.com/d/topic/rubyonrails-security/kKGNeMrnmiY/discussion">provided workaround</a> for earlier versions of Rails which replaces <code class="language-plaintext highlighter-rouge">ERB::Util.html_escape</code> with <code class="language-plaintext highlighter-rouge">Rack::Utils.escape_html</code>. This method adds escaping for both single quotes (<code class="language-plaintext highlighter-rouge">'</code>) and forward slashes (<code class="language-plaintext highlighter-rouge">/</code>).</p>
+
+<p>If the provided workaround is used in an initializer, as suggested, then Brakeman will not generate a warning for this vulnerability. Otherwise, Brakeman will generate a warning for affected versions.</p>
+
+<h3 id="cve-2012-3465---xss-in-strip_tags">CVE-2012-3465 - XSS in strip_tags</h3>
+
+<p>Another vulnerability has been reported for <code class="language-plaintext highlighter-rouge">strip_tags</code> (earlier report was <a href="https://groups.google.com/d/topic/rubyonrails-security/K5EwdJt06hI/discussion">CVE-2011-2931</a>).</p>
+
+<p>Brakeman will warn on affected versions if uses of <code class="language-plaintext highlighter-rouge">strip_tags</code> are detected.</p>
+
+<h3 id="xss-in-select-helper">XSS in select Helper</h3>
+
+<p>This vulnerability was <a href="https://groups.google.com/d/topic/rubyonrails-security/CdoMUVpsRmQ/discussion">reported a while ago</a>, but it was unclear if it applied to Rails 2.x or just Rails 3. Thanks to Neil Matatall, it has been confirmed to be an issue in Rails 2.x as well.</p>
+
+<p>Therefore, Brakeman will be reporting the vulnerability (<code class="language-plaintext highlighter-rouge">select</code> does not escape options list if supplied as a straight string) for Rails 2.x as well.</p>
+
+<h3 id="report-issues">Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/07/31/brakeman-1-dot-7-0-released">Brakeman 1.7.0 Released</a></h1>
     
     
@@ -471,132 +545,6 @@ brakeman --compare report.json
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/04/10/brakeman-1-dot-5-3-released">Brakeman 1.5.3 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-04-10 13:18:00 -0700" pubdate  updated >2012-04-10 13:18:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>A considerable number of bugs and odd cases have been fixed with this release, and one new check has been added. Upgrading is <em>always</em> recommended!</p>
-
-<p><em>Changes since 1.5.2:</em></p>
-
-<ul>
-  <li>Add check for user input in <code class="language-plaintext highlighter-rouge">Object#send</code> (Neil Matatall)</li>
-  <li>Support output to multiple formats (Nick Green)</li>
-  <li>Prevent infinite loops in mutually recursive templates</li>
-  <li>Only check <code class="language-plaintext highlighter-rouge">eval</code> arguments for user input, not the call target</li>
-  <li>Handle <code class="language-plaintext highlighter-rouge">render :layout</code> in views</li>
-  <li>Search subdirectories for models</li>
-  <li>Set values in request hashes and propagate to views</li>
-  <li>Add rake task file to gemspec (Anton Ageev)</li>
-  <li>Filter rescanning of templates (Neil Matatall)</li>
-  <li>Improve handling of modules and nesting</li>
-  <li>Test for zero errors in test reports</li>
-</ul>
-
-<h3 id="new-check-for-user-input-in-objectsend">New Check for User Input in Object#send</h3>
-
-<p>This new check looks for instances where user input can be used to control the method called using <code class="language-plaintext highlighter-rouge">send</code>.</p>
-
-<p>For example:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user = User.find(params[:user][:id])
-method = params[:user][:action].to_sym
-user.send(method)
-</code></pre></div></div>
-
-<h3 id="support-for-multiple-output-formats">Support for Multiple Output Formats</h3>
-
-<p>Brakeman can now accept multiple <code class="language-plaintext highlighter-rouge">-o</code> arguments in order to produce more than one report from the same scan:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.html -o report.json
-</code></pre></div></div>
-
-<h3 id="handle-mutually-recursive-templates">Handle Mutually Recursive Templates</h3>
-
-<p>In some cases where two templates would render each other as partials, it would cause infinite loops in Brakeman. This is now fixed, at least for the simple common case:</p>
-
-<p>_one.erb.html:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= render :partial =&gt; 'two' %&gt;
-</code></pre></div></div>
-
-<p>_two.erb.html:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= render :partial =&gt; 'one' %&gt;
-</code></pre></div></div>
-
-<h3 id="only-check-eval-arguments">Only Check <code class="language-plaintext highlighter-rouge">eval</code> Arguments</h3>
-
-<p>Previously, Brakeman was checking the entire call to methods like <code class="language-plaintext highlighter-rouge">eval</code> or <code class="language-plaintext highlighter-rouge">class_eval</code> for user input. This led to false positives when <code class="language-plaintext highlighter-rouge">class_eval</code> was being called on a model.</p>
-
-<p>Now Brakeman only checks the arguments or block provided to the <code class="language-plaintext highlighter-rouge">eval</code> call.</p>
-
-<h3 id="handle-render-layout-in-views">Handle render :layout in views</h3>
-
-<p>Brakeman was not handling <code class="language-plaintext highlighter-rouge">render :layout =&gt; "..."</code> in views properly. This led to errors like:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wrong number of arguments (0 for 1): /Users/collins/work/brakeman/lib/brakeman/processors/lib/render_helper.rb:14:in `template_name
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">render :layout</code> is now handled just like rendering a partial.</p>
-
-<h3 id="search-for-models-in-subdirectories">Search for Models in Subdirectories</h3>
-
-<p>Brakeman was only searching <code class="language-plaintext highlighter-rouge">app/models/</code> for models, but not any subdirectories. Now it does!</p>
-
-<h3 id="propagate-request-values">Propagate Request Values</h3>
-
-<p>While Brakeman has always detected request values (e.g., query parameters) in views, it would not propagate values stored IN those request hashes.</p>
-
-<p>For example, if an action in a controller did this:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>params[:input] = some_random_value
-</code></pre></div></div>
-
-<p>That value would not be propagated to the view if the view used <code class="language-plaintext highlighter-rouge">params[:input]</code>.</p>
-
-<h3 id="add-rake-task-to-gemspec">Add Rake Task to Gemspec</h3>
-
-<p>In 1.2.0, Brakeman added the <code class="language-plaintext highlighter-rouge">--rake</code> option to add a Rake task to a Rails application, but the actual task itself was not included in the gem!</p>
-
-<p>Thanks to Anton Ageev for pointing this out. Either no one else tried this option, or a lot of people were very disappointed.</p>
-
-<h3 id="filter-templates-when-rescanning">Filter Templates When Rescanning</h3>
-
-<p>When rescanning (for example, with <a href="https://github.com/guard/guard-brakeman">guard-brakeman</a>), Brakeman was assuming any files in <code class="language-plaintext highlighter-rouge">app/views</code> is a template, but this isn’t always true.</p>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a>!</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-
-<p>And don’t forget to check out the Brakeman talk at <a href="http://railsconf2012.com/sessions/44">RailsConf</a> later this month.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -635,6 +583,10 @@ user.send(method)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a>
       </li>
     
@@ -648,10 +600,6 @@ user.send(method)
     
       <li class="post">
         <a href="/blog/2023/02/21/brakeman-5-dot-4-dot-1-released">Brakeman 5.4.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">Brakeman 5.4.0 Released</a>
       </li>
     
   </ul>

@@ -80,6 +80,128 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2014/03/20/brakeman-2-dot-4-2-released">Brakeman 2.4.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2014-03-20 22:37:00 -0700" pubdate  updated >2014-03-20 22:37:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release is only internal changes and bug fixes, but some scans may see significant time and memory improvements.</p>
+
+<p><em>Changes since 2.4.1</em>:</p>
+
+<ul>
+  <li>Skip identically rendered templates</li>
+  <li>Improve HAML template processing</li>
+  <li>Only track original template output locations</li>
+  <li>Reuse duplicate call location information</li>
+  <li>Fix duplicate warnings about sanitize CVE</li>
+  <li>Remove <code class="language-plaintext highlighter-rouge">rescue Exception</code></li>
+</ul>
+
+<h3 id="drop-identical-templates">Drop Identical Templates</h3>
+
+<p>For a long time now Brakeman has skipped processing templates if the template had already been processed with an identical environment. However, there are many times when a template is rendered with different environments but the actual output is the same. Brakeman now drops these templates (they are rendered, then discarded if they are duplicates). This reduces peak memory overhead, sometimes drastically. It can also speed up call indexing and vulnerability checks since fewer templates are searched.</p>
+
+<p>The location and render path of template warnings may change slightly due to this change. Also, the rendered template debug output will no longer include all rendered templates since duplicates will not be tracked.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/442">changes</a>)</p>
+
+<h3 id="better-haml-processing">Better HAML Processing</h3>
+
+<p>HAML templates will be processed more accurately with this release.</p>
+
+<p>For example, a template like this</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#content
+  .nav
+    = @navigation_menu
+</code></pre></div></div>
+
+<p>used to produce output like</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+-------------------------------------------------------------------------------------------------+
+| Output                                                                                          |
++-------------------------------------------------------------------------------------------------+
+| [Output] "&lt;div id='content'&gt;; &lt;div class='nav'&gt;; #{[Escaped] @navigation_menu}; &lt;/div&gt;;&lt;/div&gt;;" |
++-------------------------------------------------------------------------------------------------+
+</code></pre></div></div>
+
+<p>but now it will look like this instead</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+-----------------------------------+
+| Output                            |
++-----------------------------------+
+| [Escaped Output] @navigation_menu |
++-----------------------------------+
+</code></pre></div></div>
+
+<p>Besides looking much nicer, this improves warnings and reduces how much code Brakeman has to search. Additionally, these <code class="language-plaintext highlighter-rouge">push_text</code> methods can often interpolate multiple values into the output string, which were not being properly detected as output. This is fixed now.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/441">changes</a>)</p>
+
+<h3 id="duplicate-template-outputs">Duplicate Template Outputs</h3>
+
+<p>Aliased values in templates were being counted multiple times as output. This did not affect warnings generated, but it did create duplicate output values to check and extraneous debug output.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/443">changes</a>)</p>
+
+<h3 id="call-location-reuse">Call Location Reuse</h3>
+
+<p>For large applications, many calls in the call index actually have the same location (class+method or template). Instead of creating a new location hash for each call, the locations are cached and reused.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/444">changes</a>)</p>
+
+<h3 id="sanitize-cve-duplicates">Sanitize CVE Duplicates</h3>
+
+<p>Don’t worry - <a href="https://groups.google.com/d/msg/rubyonrails-security/zAAU7vGTPvI/1vZDWXqBuXgJ">CVE-2013-1857</a> is one year old this week. But Brakeman was not properly preventing duplicate warnings for it. Hopefully this was affecting exactly no one.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/445">changes</a>)</p>
+
+<h3 id="narrower-exception-handling">Narrower Exception Handling</h3>
+
+<p>All instances of <code class="language-plaintext highlighter-rouge">rescue Exception</code> were removed from Brakeman and replaced with bare <code class="language-plaintext highlighter-rouge">rescue</code>s to catch <code class="language-plaintext highlighter-rouge">StandardError</code> and subclasses. <code class="language-plaintext highlighter-rouge">Exception</code> has some unfortunate subclasses, such as <code class="language-plaintext highlighter-rouge">NoMemoryError</code> and <code class="language-plaintext highlighter-rouge">Interrupt</code> which Brakeman should not be rescuing.</p>
+
+<p>This does mean there may be some newly unhandled exceptions. Please report these so they can be rescued properly.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/446">changes</a>)</p>
+
+<h3 id="shas">SHAs</h3>
+
+<p>The SHA1 sums for this release are</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>02842dc497bf22b5b427cfd02635c005c4fc4fd4  brakeman-2.4.2.gem
+4893cedbcb015e96c82f4777b00a49ca8d0ae22f  brakeman-min-2.4.2.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2014/02/19/brakeman-2-dot-4-1-released">Brakeman 2.4.1 Released</a></h1>
     
     
@@ -537,105 +659,6 @@ gem install brakeman -P MediumSecurity
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2013/10/28/brakeman-2-dot-2-0-released">Brakeman 2.2.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2013-10-28 10:30:00 -0700" pubdate  updated >2013-10-28 10:30:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a small release, with some bug and false positive fixes alongside initial support for Rails engines and a new check for detailed exceptions.</p>
-
-<p><em>Changes since 2.2.0:</em></p>
-
-<ul>
-  <li>Support scanning Rails engines (<a href="https://github.com/phene">Geoffrey Hichborn</a>)</li>
-  <li>Ignore redirects to models using <code class="language-plaintext highlighter-rouge">friendly_id</code> (<a href="https://github.com/aj0strow">AJ Ostrow</a>)</li>
-  <li>Add check for detailed exceptions in production (<a href="https://github.com/presidentbeef/brakeman/issues/391">#391</a>)</li>
-  <li>Use Rails version from Gemfile if it is available (<a href="https://github.com/presidentbeef/brakeman/issues/398">#398</a>)</li>
-  <li>Only add routes with actual names (<a href="https://github.com/presidentbeef/brakeman/issues/395">#395</a>)</li>
-  <li>Reduce command injection false positives</li>
-</ul>
-
-<h3 id="rails-engines">Rails Engines</h3>
-
-<p><a href="https://github.com/phene">Geoffrey Hichborn</a> added support for checking Rails engines paths when searching for controllers, models, and views. Please let us know if there are any issues or files missed with this change.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/397">changes</a>)</p>
-
-<h3 id="redirects-with-friendly-id">Redirects with Friendly ID</h3>
-
-<p>Thanks to <a href="https://github.com/aj0strow">AJ Ostrow</a>, Brakeman should no longer warn on redirects to models using <code class="language-plaintext highlighter-rouge">friendly_id</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/400">changes</a>)</p>
-
-<h3 id="detailed-exceptions">Detailed Exceptions</h3>
-
-<p><a href="https://github.com/ntalbott">Nathaniel Talbott</a> suggested checking that detailed exceptions (treating requests as local) are not enabled in production.</p>
-
-<p>Brakeman now generates a warning in a new category called “<a href="http://brakemanscanner.org/docs/warning_types/information_disclosure/">Information Disclosure</a>” if <code class="language-plaintext highlighter-rouge">config.consider_all_requests_local</code> is set to <code class="language-plaintext highlighter-rouge">true</code> in production or a controller overrides <code class="language-plaintext highlighter-rouge">show_detailed_exceptions?</code> to return something other than <code class="language-plaintext highlighter-rouge">false</code>.</p>
-
-<p>Please see the <a href="https://github.com/presidentbeef/brakeman/pull/396">changes</a> regarding the new category and two new warning codes associated with these warnings.</p>
-
-<h3 id="better-version-detection">Better Version Detection</h3>
-
-<p>Brakeman now uses the Rails version found in <code class="language-plaintext highlighter-rouge">Gemfile</code> or <code class="language-plaintext highlighter-rouge">Gemfile.lock</code> to determine when to enable Rails 3/4 mode, which seems obvious in retrospect. This required swapping when the <code class="language-plaintext highlighter-rouge">Gemfile</code> and the configuration files are processed.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/402">changes</a>)</p>
-
-<h3 id="rails-3-routes">Rails 3 Routes</h3>
-
-<p>A small fix prevents Brakeman from raising an error when a route is a redirect or any value other than a string or symbol.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/403">changes</a>)</p>
-
-<h3 id="command-injection-false-positives">Command Injection False Positives</h3>
-
-<p>There should be fewer false positives for command injection when interpolated values are literals. The check also now ignores commonly used values <code class="language-plaintext highlighter-rouge">RAILS_ROOT</code>, <code class="language-plaintext highlighter-rouge">Rails.env</code>, and <code class="language-plaintext highlighter-rouge">Rails.root</code>.</p>
-
-<p>Additionally, reported “dangerous” values (<code class="language-plaintext highlighter-rouge">user_input</code> in JSON reports) for command injection are more specific. For example:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system "rm -rf #{some_var}"
-</code></pre></div></div>
-
-<p>used to report the entire string <code class="language-plaintext highlighter-rouge">"rm -rf #{some_var}"</code> as dangerous, even though it’s really warning about the interpolation of <code class="language-plaintext highlighter-rouge">some_var</code>. Now Brakeman will report the first potentially dangerous interpolated value. Note that this does not change fingerprints for existing warnings.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/404">changes</a>)</p>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-
-<h3 id="verification">Verification</h3>
-
-<p>The SHA-1 for the Brakeman 2.2.0 gem is:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f3a2b369bda79c677a913cdb2350cbda8bce8a90  brakeman-2.2.0.gem
-</code></pre></div></div>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -674,6 +697,10 @@ gem install brakeman -P MediumSecurity
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a>
       </li>
     
@@ -687,10 +714,6 @@ gem install brakeman -P MediumSecurity
     
       <li class="post">
         <a href="/blog/2023/02/21/brakeman-5-dot-4-dot-1-released">Brakeman 5.4.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">Brakeman 5.4.0 Released</a>
       </li>
     
   </ul>

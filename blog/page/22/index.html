@@ -80,6 +80,70 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/02/25/brakeman-1-dot-4-0-released">Brakeman 1.4.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-02-25 09:57:00 -0800" pubdate  updated >2012-02-25 09:57:00 -0800</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is not a big release, but it does add a new check. Also, processing for ERB templates with the <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin has changed, so there is the possibility that line numbers for reported warnings will shift.</p>
+
+<p><em>Changes since 1.3.0:</em></p>
+
+<ul>
+  <li>Add check for user input in link_to href parameter</li>
+  <li>Match ERB processing to rails_xss plugin when plugin used</li>
+  <li>Add Brakeman::Report#to_json, Brakeman::Warning#to_json</li>
+  <li>Warnings below minimum confidence are dropped completely</li>
+  <li>Brakeman.run will now always return a Tracker</li>
+</ul>
+
+<h3 id="new-check-for-link_to">New Check for link_to</h3>
+
+<p><a href="https://github.com/oreoshake">Neil Matatall</a> has contributed a new check for the href parameter in <code class="language-plaintext highlighter-rouge">link_to</code>. Even if HTML escaped, some values can be dangerous, so this check will warn for user input in that parameter. See <a href="https://github.com/presidentbeef/brakeman/pull/45">here</a> for more details.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">--url-safe-methods</code> option can be used to specify escaping methods which are safe for urls.</p>
+
+<h3 id="erb-and-rails_xss">ERB and rails_xss</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin has some fixes for how Erbuis handles certain input. Brakeman now matches those changes, which fixes some parsing errors.</p>
+
+<h3 id="internal-changes">Internal Changes</h3>
+
+<p>There have been some changes which only impact those working with Brakeman as a library.</p>
+
+<p>First, there is now json output for reports. This actually should be an output format option, but I did not realize it until writing this post. The next release will include this, though!</p>
+
+<p>The way Brakeman handles the <code class="language-plaintext highlighter-rouge">--confidence-level</code> option has also changed. In the past, warnings would be filtered when output in a report. This meant, for example, that <code class="language-plaintext highlighter-rouge">tracker.checks.all_warnings</code> would still return warnings below the specified confidence level. It also caused problems because there were many places in the code where the warnings needed to be filtered. With this release, warnings below the confidence level will be dropped as soon as they are found and will not need to be filtered at any later point.</p>
+
+<p>Lastly, <code class="language-plaintext highlighter-rouge">Brakeman.run</code> would return <code class="language-plaintext highlighter-rouge">false</code> if <code class="language-plaintext highlighter-rouge">--exit-on-warn</code> was set, and a <code class="language-plaintext highlighter-rouge">Tracker</code> object otherwise. This has changed. <code class="language-plaintext highlighter-rouge">Brakeman.run</code> will now always return a <code class="language-plaintext highlighter-rouge">Tracker</code> object and the logic for <code class="language-plaintext highlighter-rouge">--exit-on-warn</code> was pushed out to the Brakeman executable.</p>
+
+<h3 id="report-issues">Report Issues</h3>
+
+<p>As usual, please <a href="https://github.com/presidentbeef/brakeman/issues">report any issues</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/02/08/brakeman-1-dot-3-0-released">Brakeman 1.3.0 Released</a></h1>
     
     
@@ -410,74 +474,6 @@ puts clean(x)
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2011/12/21/brakeman-1-dot-1-released">Brakeman 1.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-12-21 19:12:00 -0800" pubdate  updated >2011-12-21 19:12:00 -0800</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This was supposed to be a 1.0.1 release, but quite a bit of code changed.</p>
-
-<p>Changes since 1.0:</p>
-
-<ul>
-  <li>Relax required versions for dependencies (this is for Bundler users)</li>
-  <li>Performance improvements for source processing</li>
-  <li>Better progress reporting</li>
-  <li>Handle basic operators like « + - * /</li>
-  <li>Rescue more errors to prevent Brakeman from completely bailing out</li>
-  <li>Compatibility with newer Haml versions</li>
-  <li>Fix some 1.9 warnings</li>
-</ul>
-
-<h3 id="relax-dependencies">Relax Dependencies</h3>
-
-<p>The version dependencies for Brakeman have been relaxed somewhat, so it should work fine if included in a Rails 3 Gemfile. Unfortunately, this makes it a little harder to be sure it will work with all setups. Please report any problems!</p>
-
-<h3 id="performance-improvements">Performance Improvements</h3>
-
-<p>The 1.0 release reduced the time taken for running the vulnerability checks, but (unrelatedly) the time for processing the source code increased.</p>
-
-<p>This release makes some improvements that should improve scan times. If it takes an intolerable amount of time for scans (more than 5-10 minutes), try using the <code class="language-plaintext highlighter-rouge">--faster</code> option. This will possibly report fewer vulnerabilities, but should be much faster.</p>
-
-<h3 id="progress-reporting">Progress Reporting</h3>
-
-<p>Brakeman will now provide better feedback about its progress while processing applications. For even more output, use the <code class="language-plaintext highlighter-rouge">--debug</code> option.</p>
-
-<h3 id="handle-more-operators">Handle More Operators</h3>
-
-<p>See <a href="https://github.com/presidentbeef/brakeman/wiki/Using-Brakeman::AliasProcessor">here</a> for the kinds of simple processing Brakeman can do.</p>
-
-<h3 id="rescue-more-errors">Rescue More Errors</h3>
-
-<p>Brakeman does its best to never completely abort execution and tries to always provide an analysis of whatever it can manage. This release rescues exceptions that may occur while processing configurations and Gemfiles.</p>
-
-<h3 id="problems">Problems</h3>
-
-<p>If you run into any problems, don’t hesitate to send a tweet to <a href="http://twitter.com/brakemanscanner">@Brakemanscanner</a> or <a href="https://github.com/presidentbeef/brakeman/issues">file an issue</a> on GitHub!</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -516,6 +512,10 @@ puts clean(x)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a>
       </li>
     
@@ -529,10 +529,6 @@ puts clean(x)
     
       <li class="post">
         <a href="/blog/2023/02/21/brakeman-5-dot-4-dot-1-released">Brakeman 5.4.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">Brakeman 5.4.0 Released</a>
       </li>
     
   </ul>
