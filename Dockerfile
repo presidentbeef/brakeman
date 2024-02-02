@@ -1,4 +1,4 @@
-FROM ruby:3.0-alpine
+FROM ruby:3.3-alpine
 LABEL maintainer="Justin Collins <gem@brakeman.org>"
 
 WORKDIR /usr/src/app
