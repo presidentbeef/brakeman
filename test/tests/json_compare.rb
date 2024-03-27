@@ -15,16 +15,17 @@ class JSONCompareTests < Minitest::Test
 
     # Here I go, abusing the rescan functionality again.
     before_rescan_of ['app/models/account.rb', json_report], 'rails4' do |app_dir|
-      first = Brakeman.run(app_path: app_dir,
-                           parallel_checks: false,
-                           output_files: [json_report])
+      report_file = File.join(app_dir, json_report)
 
-      write_file json_report, first.report.to_json
+      Brakeman.run(app_path: app_dir,
+                   parallel_checks: false,
+                   output_files: [report_file])
+
       remove 'app/models/account.rb'
 
       @diff = Brakeman.compare(app_path: app_dir,
                                parallel_checks: false,
-                               previous_results_json: json_report)
+                               previous_results_json: report_file)
     end
 
     assert_fixed 7
