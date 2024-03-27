@@ -1,7 +1,9 @@
 require 'parallel'
+require 'prism' rescue nil
 
 module Brakeman
   ASTFile = Struct.new(:path, :ast)
+  USE_PRISM = defined?(Prism)
 
   # This class handles reading and parsing files.
   class FileParser
@@ -73,8 +75,29 @@ module Brakeman
         path = path.relative
       end
 
+      Brakeman.debug "Parsing #{path}"
+
+      if USE_PRISM
+        begin
+          parse_with_prism input, path
+        rescue => e
+          Brakeman.debug "Prism failed to parse #{path}: #{e}"
+
+          parse_with_ruby_parser input, path
+        end
+      else
+        parse_with_ruby_parser input, path
+      end
+    end
+
+    private
+
+    def parse_with_prism input, path
+      Prism::Translation::RubyParser.parse(input, path)
+    end
+
+    def parse_with_ruby_parser input, path
       begin
-        Brakeman.debug "Parsing #{path}"
         RubyParser.new.parse input, path, @timeout
       rescue Racc::ParseError => e
         raise e.exception(e.message + "\nCould not parse #{path}")
