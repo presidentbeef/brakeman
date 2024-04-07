@@ -2,8 +2,9 @@ Brakeman.load_brakeman_dependency 'highline'
 
 module Brakeman
   class InteractiveIgnorer
-    def initialize file, warnings
-      @ignore_config = Brakeman::IgnoreConfig.new(file, warnings)
+    def initialize file, warnings, exclude_updated: false
+      @exclude_updated = exclude_updated
+      @ignore_config = Brakeman::IgnoreConfig.new(file, warnings, exclude_updated: @exclude_updated)
       @new_warnings = warnings
       @skip_ignored = false
       @skip_rest = false
@@ -185,7 +186,7 @@ q - Quit, do not update ignored warnings
     end
 
     def reset_config
-      @ignore_config = Brakeman::IgnoreConfig.new(@ignore_config.file, @new_warnings)
+      @ignore_config = Brakeman::IgnoreConfig.new(@ignore_config.file, @new_warnings, @exclude_updated)
     end
 
     def process_warnings

@@ -159,6 +159,13 @@ class IgnoreConfigTests < Minitest::Test
     refute_includes new_config.ignored_warnings, first_ignored
   end
 
+  def test_exclude_updated
+    config = Brakeman::IgnoreConfig.new(@config_file.path, report.warnings, exclude_updated: true)
+    config.save_to_file(report.warnings)
+    ignore_hash = JSON.parse(File.read(config.file), symbolize_names: true)
+    assert !ignore_hash.include?(:updated)
+  end
+
   def test_read_from_nonexistent_file
     make_config("/tmp/not_a_real_file_brakeman.ignore")
   end

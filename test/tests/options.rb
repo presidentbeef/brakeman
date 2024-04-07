@@ -250,6 +250,11 @@ class BrakemanOptionsTest < Minitest::Test
     assert_equal "dont_warn_for_these.rb", options[:ignore_file]
   end
 
+  def test_exclude_updated_in_ignore_file_option
+    options = setup_options_from_input("--exclude-updated-in-ignore-file")
+    assert options[:exclude_updated_in_ignore_file]
+  end
+
   def test_combine_warnings_option
     options = setup_options_from_input("--combine-locations")
     assert options[:combine_locations]

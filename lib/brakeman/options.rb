@@ -265,6 +265,10 @@ module Brakeman::Options
           options[:ignore_file] = file
         end
 
+        opts.on "--exclude-updated-in-ignore-file", "Exclude the 'updated' timestamp in brakeman.ignore" do
+          options[:exclude_updated_in_ignore_file] = true
+        end
+
         opts.on "-I", "--interactive-ignore", "Interactively ignore warnings" do
           options[:interactive_ignore] = true
         end

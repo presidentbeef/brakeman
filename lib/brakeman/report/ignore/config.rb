@@ -6,7 +6,7 @@ module Brakeman
     attr_reader :shown_warnings, :ignored_warnings
     attr_accessor :file
 
-    def initialize file, new_warnings
+    def initialize file, new_warnings, exclude_updated: false
       @file = file
       @new_warnings = new_warnings
       @already_ignored = []
@@ -15,6 +15,7 @@ module Brakeman
       @notes = {}
       @shown_warnings = @ignored_warnings = nil
       @changed = false
+      @exclude_updated = exclude_updated
     end
 
     # Populate ignored_warnings and shown_warnings based on ignore
@@ -133,6 +134,10 @@ module Brakeman
         :updated => Time.now.to_s,
         :brakeman_version => Brakeman::Version
       }
+
+      if @exclude_updated
+        output.delete(:updated)
+      end
 
       File.open file, "w" do |f|
         f.puts JSON.pretty_generate(output)
