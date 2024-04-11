@@ -161,9 +161,21 @@ module Brakeman
     end
 
     def glob_files(directory, name, extensions = ".rb")
-      pattern = "#{root_search_pattern}#{directory}/**/#{name}#{extensions}"
+      root_directory = "#{root_search_pattern}#{directory}"
+      patterns = ["#{root_directory}/**/#{name}#{extensions}"]
 
-      Dir.glob(pattern)
+      Dir.glob("#{root_directory}/**/*", File::FNM_DOTMATCH).each do |path|
+        if File.symlink?(path) && File.directory?(path)
+          symlink_target = File.readlink(path)
+          if Pathname.new(symlink_target).relative?
+            symlink_target = File.join(File.dirname(path), symlink_target)
+          end
+          patterns << "#{search_pattern(symlink_target)}/**/#{name}#{extensions}"
+        end
+      end
+
+      files = patterns.flat_map { |pattern| Dir.glob(pattern) }
+      files.uniq
     end
 
     def select_files(paths)
@@ -237,13 +249,16 @@ module Brakeman
 
     def root_search_pattern
       return @root_search_pattern if @root_search_pattern
+      @root_search_pattern = search_pattern(@root)
+    end
 
+    def search_pattern(root_dir)
       abs = @absolute_engine_paths.to_a.map { |path| path.gsub(/#{File::SEPARATOR}+$/, '') }
       rel = @relative_engine_paths.to_a.map { |path| path.gsub(/#{File::SEPARATOR}+$/, '') }
 
-      roots = ([@root] + abs).join(",")
+      roots = ([root_dir] + abs).join(",")
       rel_engines = (rel + [""]).join("/,")
-      @root_search_pattern = "{#{roots}}/{#{rel_engines}}"
+      "{#{roots}}/{#{rel_engines}}"
     end
 
     def prioritize_concerns paths
