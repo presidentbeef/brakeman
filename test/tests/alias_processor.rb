@@ -1010,6 +1010,38 @@ class AliasProcessorTests < Minitest::Test
     INPUT
   end
 
+  def test_splat_assign
+    assert_alias '[[3, 4]]', <<-INPUT
+    x, y, *z = [1, 2, [3, 4]]
+    z
+    INPUT
+
+    assert_alias '[3, 4]', <<-INPUT
+    x, y, *z = 1, 2, 3, 4
+    z
+    INPUT
+
+    assert_alias '[2, 3]', <<-INPUT
+    a, *b, c = 1, 2, 3, 4
+    b
+    INPUT
+
+    assert_alias '[2]', <<-INPUT
+    a, *b, c, d = 1, 2, 3, 4
+    b
+    INPUT
+
+    assert_alias '[]', <<-INPUT
+    a, *b, c, d = 1, 2, 3
+    b
+    INPUT
+
+    assert_alias '[[]]', <<-INPUT
+    *a = [[]]
+    a
+    INPUT
+  end
+
   def test_presence_in_all_literals
     assert_alias "'1'", <<-INPUT
     x = '1'.presence_in ['1', '2', '3']

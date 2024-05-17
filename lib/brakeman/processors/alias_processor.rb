@@ -665,7 +665,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       exp[2] = exp[2][1]
     end
 
-    unless array? exp[1] and array? exp[2] and exp[1].length == exp[2].length
+    unless array? exp[1] and array? exp[2]
       return process_default(exp)
     end
 
@@ -678,21 +678,42 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     # Call each assignment as if it is normal
     vars.each_with_index do |var, i|
       val = vals[i]
-      if val
+      next unless val # TODO: Break if there are no vals left?
 
-        # This happens with nested destructuring like
-        #   x, (a, b) = blah
-        if node_type? var, :masgn
-          # Need to add value to masgn exp
-          m = var.dup
-          m[2] = s(:to_ary, val)
+      # This happens with nested destructuring like
+      #   x, (a, b) = blah
+      if node_type? var, :masgn
+        # Need to add value to masgn exp
+        m = var.dup
+        m[2] = s(:to_ary, val)
 
-          process_masgn m
+        process_masgn m
+      elsif node_type? var, :splat
+        # Assign the rest of the values to the variable:
+        #
+        #   a, *b = 1, 2, 3
+        #
+        #   b == [2, 3]
+
+
+        assign = var[1].dup # var is s(:splat, s(:lasgn, :b))
+
+        if i == vars.length - 1 # Last variable being assigned, slurp up the rest
+          assign.rhs = s(:array, *vals[i..]) # val is the "rest" of the values
         else
-          assign = var.dup
-          assign.rhs = val
-          process assign
+          # Calculate how many values to assign based on how many variables
+          # there are.
+          #
+          # If there are more values than variables, the splat gets an empty array.
+
+          assign.rhs = s(:array, *vals[i, (vals.length - vars.length + 1)]).line(vals.line)
         end
+
+        process assign
+      else
+        assign = var.dup
+        assign.rhs = val
+        process assign
       end
     end
 
