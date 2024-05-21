@@ -6,6 +6,7 @@ class Brakeman::Rails3Erubis < ::Erubis::Eruby
 
   def add_preamble(src)
     @newline_pending = 0
+    src << "_this_is_to_make_yields_syntactally_correct {"
     src << "@output_buffer = output_buffer || ActionView::OutputBuffer.new;"
   end
 
@@ -62,7 +63,7 @@ class Brakeman::Rails3Erubis < ::Erubis::Eruby
 
   def add_postamble(src)
     flush_newline_if_pending(src)
-    src << '@output_buffer.to_s'
+    src << '@output_buffer.to_s; }'
   end
 
   def flush_newline_if_pending(src)
