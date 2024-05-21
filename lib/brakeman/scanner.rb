@@ -125,7 +125,7 @@ class Brakeman::Scanner
   end
 
   def parse_files
-    fp = Brakeman::FileParser.new(tracker.app_tree, tracker.options[:parser_timeout], tracker.options[:parallel_checks])
+    fp = Brakeman::FileParser.new(tracker.app_tree, tracker.options[:parser_timeout], tracker.options[:parallel_checks], tracker.options[:use_prism])
 
     fp.parse_files tracker.app_tree.ruby_file_paths
 
@@ -414,7 +414,7 @@ class Brakeman::Scanner
   end
 
   def parse_ruby_file file
-    fp = Brakeman::FileParser.new(tracker.app_tree, tracker.options[:parser_timeout])
+    fp = Brakeman::FileParser.new(tracker.app_tree, tracker.options[:parser_timeout], false, tracker.options[:use_prism])
     fp.parse_ruby(file.read, file)
   rescue Exception => e
     tracker.error(e)

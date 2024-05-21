@@ -150,6 +150,21 @@ module Brakeman::Options
           options[:parser_timeout] = timeout
         end
 
+        opts.on "--[no-]prism", "Use the Prism parser" do |use_prism|
+          if use_prism
+            begin
+            # Specifying minimum version here,
+            # since it can't be in the gem dependency list because it is optional
+            gem 'prism', '~>0.29'
+            rescue Gem::MissingSpecVersionError, Gem::MissingSpecError => e
+              $stderr.puts "Please install `prism` version 0.29 or newer:"
+              raise e
+            end
+          end
+
+          options[:use_prism] = use_prism
+        end
+
         opts.on "-r", "--report-direct", "Only report direct use of untrusted data" do |option|
           options[:check_arguments] = !option
         end

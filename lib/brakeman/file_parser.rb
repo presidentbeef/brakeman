@@ -1,15 +1,15 @@
 require 'parallel'
-require 'prism' rescue nil
 
 module Brakeman
   ASTFile = Struct.new(:path, :ast)
-  USE_PRISM = defined?(Prism)
 
   # This class handles reading and parsing files.
   class FileParser
     attr_reader :file_list, :errors
 
-    def initialize app_tree, timeout, parallel = true
+    def initialize app_tree, timeout, parallel = true, use_prism = false
+      @use_prism = use_prism
+
       @app_tree = app_tree
       @timeout = timeout
       @file_list = []
@@ -77,7 +77,7 @@ module Brakeman
 
       Brakeman.debug "Parsing #{path}"
 
-      if USE_PRISM
+      if @use_prism
         begin
           parse_with_prism input, path
         rescue => e
