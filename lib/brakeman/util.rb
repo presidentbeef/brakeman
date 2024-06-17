@@ -63,14 +63,12 @@ module Brakeman::Util
     case exp
     when Sexp
       case exp.node_type
-      when :const
+      when :const, :colon3
         exp.value
       when :lvar
         exp.value.to_sym
       when :colon2
         "#{class_name(exp.lhs)}::#{exp.rhs}".to_sym
-      when :colon3
-        "::#{exp.value}".to_sym
       when :self
         @current_class || @current_module || nil
       else

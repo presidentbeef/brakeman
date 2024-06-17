@@ -11,6 +11,8 @@ class GroupsController < ApplicationController
     render json: `#{params.require('name')} some optional text`
     render(TestComponent.new(params.require('name')))
     render(TestViewComponent.new(params.require('name')))
+    render(::TestViewComponent.new(params.require('name')))
+    render(TestViewComponentFullyQualifiedAncestor.new(params.require('name')))
   end
 
   def squish_sql
