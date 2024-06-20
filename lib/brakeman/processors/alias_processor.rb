@@ -373,7 +373,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     result << join_item(array.last, nil)
 
     # Combine the strings at the beginning because that's what RubyParser does
-    combined_first = ""
+    combined_first = +""
     result.each do |e|
       if string? e
         combined_first << e.value

@@ -8,7 +8,7 @@ class Brakeman::Report::Table < Brakeman::Report::Base
 
   def generate_report
     summary_option = tracker.options[:summary_only]
-    out = ""
+    out = +""
 
     unless summary_option == :no_summary
       out << text_header <<
@@ -166,7 +166,7 @@ class Brakeman::Report::Table < Brakeman::Report::Base
 
     template_rows = template_rows.sort_by{|name, value| name.to_s}
 
-    output = ''
+    output = +''
     template_rows.each do |template|
       output << template.first.to_s << "\n\n"
       table = @table.new(:headings => ['Output']) do |t|
