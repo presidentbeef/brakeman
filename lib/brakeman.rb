@@ -47,6 +47,7 @@ module Brakeman
   #  * :github_repo - github repo to use for file links (user/repo[/path][@ref])
   #  * :highlight_user_input - highlight user input in reported warnings (default: true)
   #  * :html_style - path to CSS file
+  #  * :exclude_updated_in_ignore_file - exclude the "updated" entry in brakeman.ignore (default: false)
   #  * :ignore_model_output - consider models safe (default: false)
   #  * :index_libs - add libraries to call index (default: true)
   #  * :interprocedural - limited interprocedural processing of method calls (default: false)
@@ -557,7 +558,11 @@ module Brakeman
 
     if options[:interactive_ignore]
       require 'brakeman/report/ignore/interactive'
-      config = InteractiveIgnorer.new(file, tracker.warnings).start
+      config = InteractiveIgnorer.new(
+        file,
+        tracker.warnings,
+        exclude_updated: options[:exclude_updated_in_ignore_file]
+      ).start
     else
       notify "[Notice] Using '#{file}' to filter warnings"
       config = IgnoreConfig.new(file, tracker.warnings)
