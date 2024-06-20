@@ -109,7 +109,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
   end
 
   def ar_scope_calls(symbol_name, &block)
-    active_record_models.each do |name, model|
+    active_record_models.each_class do |model|
       model_args = model.options[symbol_name]
       if model_args
         model_args.each do |args|

@@ -16,7 +16,7 @@ class Brakeman::CheckValidationRegex < Brakeman::BaseCheck
   FORMAT = Sexp.new(:lit, :format)
 
   def run_check
-    active_record_models.each do |name, model|
+    active_record_models.each_class do |model|
       @current_model = model
       format_validations = model.options[:validates_format_of]
 
