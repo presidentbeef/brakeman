@@ -53,6 +53,7 @@ class Brakeman::Warning
     OPTIONS.each do |key, var|
       self.instance_variable_set(var, options[key])
     end
+    @warning_type = @warning_type.dup
 
     self.confidence = options[:confidence]
 
@@ -175,7 +176,7 @@ class Brakeman::Warning
   def format_with_user_input strip = true, &block
     if self.user_input
       formatted = Brakeman::OutputProcessor.new.format(code, self.user_input, &block)
-      formatted.gsub!(/(\t|\r|\n)+/, " ") if strip
+      formatted = formatted.gsub(/(\t|\r|\n)+/, " ") if strip
       formatted
     else
       format_code
@@ -317,7 +318,7 @@ class Brakeman::Warning
 
   def format_ruby code, strip
     formatted = Brakeman::OutputProcessor.new.format(code)
-    formatted.gsub!(/(\t|\r|\n)+/, " ") if strip
+    formatted = formatted.gsub(/(\t|\r|\n)+/, " ") if strip
     formatted
   end
 end
