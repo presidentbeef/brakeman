@@ -19,7 +19,7 @@ class TestReportGeneration < Minitest::Test
 
   def test_table_sanity
     require 'highline/io_console_compatible' # For StringIO compatibility
-    report = @@report.to_table
+    @@report.to_table
   end
 
   def test_json_sanity

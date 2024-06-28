@@ -201,7 +201,7 @@ module Brakeman
 
       version = tracker.config.rails[:load_defaults].value.to_s
 
-      unless version.match? /^\d+\.\d+$/
+      unless version.match?(/^\d+\.\d+$/)
         Brakeman.debug "[Notice] Unknown version: #{tracker.config.rails[:load_defaults]}"
         return
       end

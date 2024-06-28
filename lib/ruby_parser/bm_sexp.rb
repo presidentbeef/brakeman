@@ -6,6 +6,7 @@ class Sexp
   ASSIGNMENT_BOOL = [:gasgn, :iasgn, :lasgn, :cvdecl, :cvasgn, :cdecl, :or, :and, :colon2, :op_asgn_or]
   CALLS = [:call, :attrasgn, :safe_call, :safe_attrasgn]
 
+  alias_method :method_missing, :method_missing # silence redefined method warning
   def method_missing name, *args
     #Brakeman does not use this functionality,
     #so overriding it to raise a NoMethodError.
@@ -46,10 +47,12 @@ class Sexp
     s
   end
 
+  alias_method :paren, :paren # silence redefined method warning
   def paren
     @paren ||= false
   end
 
+  alias_method :value, :value # silence redefined method warning
   def value
     raise WrongSexpError, "Sexp#value called on multi-item Sexp: `#{self.inspect}`" if size > 2
     self[1]
@@ -98,6 +101,7 @@ class Sexp
     old_push arg
   end
 
+  alias_method :hash, :hash # silence redefined method warning
   def hash
     #There still seems to be some instances in which the hash of the
     #Sexp changes, but I have not found what method call is doing it.
@@ -616,7 +620,7 @@ end
 
 #Invalidate hash cache if the Sexp changes
 [:[]=, :clear, :collect!, :compact!, :concat, :delete, :delete_at,
-  :delete_if, :drop, :drop_while, :fill, :flatten!, :replace, :insert,
+  :delete_if, :drop, :drop_while, :fill, :flatten!, :insert,
   :keep_if, :map!, :pop, :push, :reject!, :replace, :reverse!, :rotate!,
   :select!, :shift, :shuffle!, :slice!, :sort!, :sort_by!, :transpose,
   :uniq!, :unshift].each do |method|

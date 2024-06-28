@@ -2,6 +2,7 @@
 module Slim
   class Embedded
     class TiltEngine
+      alias_method :on_slim_embedded, :on_slim_embedded # silence redefined method warning
       def on_slim_embedded(engine, body, attrs)
         # Override this method to avoid Slim trying to load sass/scss and failing
         case engine
@@ -22,6 +23,7 @@ module Slim
     class SassEngine
       protected
 
+      alias_method :tilt_render, :tilt_render # silence redefined method warning
       def tilt_render(tilt_engine, tilt_options, text)
         [:dynamic,
          "BrakemanFilter.render(#{text.inspect}, #{self.class})"]
