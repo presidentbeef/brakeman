@@ -18,7 +18,7 @@ Using Bundler:
 
 ```ruby
 group :development do
-  gem 'brakeman'
+  gem 'brakeman', require: false
 end
 ```
 
