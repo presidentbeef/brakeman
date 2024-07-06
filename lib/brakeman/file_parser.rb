@@ -1,4 +1,5 @@
 require 'parallel'
+require 'prism'
 
 module Brakeman
   ASTFile = Struct.new(:path, :ast)
@@ -7,7 +8,7 @@ module Brakeman
   class FileParser
     attr_reader :file_list, :errors
 
-    def initialize app_tree, timeout, parallel = true, use_prism = false
+    def initialize app_tree, timeout, parallel = true, use_prism = true
       @use_prism = use_prism
 
       @app_tree = app_tree
@@ -82,11 +83,7 @@ module Brakeman
           parse_with_prism input, path
         rescue => e
           Brakeman.debug "Prism failed to parse #{path}: #{e}"
-
-          parse_with_ruby_parser input, path
         end
-      else
-        parse_with_ruby_parser input, path
       end
     end
 
