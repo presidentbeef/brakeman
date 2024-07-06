@@ -82,7 +82,7 @@ module Brakeman
         begin
           parse_with_prism input, path
         rescue => e
-          @errors << e
+          raise e.exception(e.message + "\nWhile parsing #{path}")
         end
       end
     end
