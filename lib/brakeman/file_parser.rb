@@ -82,7 +82,7 @@ module Brakeman
         begin
           parse_with_prism input, path
         rescue => e
-          Brakeman.debug "Prism failed to parse #{path}: #{e}"
+          @errors << e
         end
       end
     end
