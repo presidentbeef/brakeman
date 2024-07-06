@@ -111,6 +111,14 @@ module Brakeman
             tracker.options[:rails6] = true
             tracker.options[:rails7] = true
             Brakeman.notify "[Notice] Detected Rails 7 application"
+          elsif @rails_version.start_with? "8"
+            tracker.options[:rails3] = true
+            tracker.options[:rails4] = true
+            tracker.options[:rails5] = true
+            tracker.options[:rails6] = true
+            tracker.options[:rails7] = true
+            tracker.options[:rails8] = true
+            Brakeman.notify "[Notice] Detected Rails 8 application"
           end
         end
       end
@@ -193,7 +201,7 @@ module Brakeman
 
       version = tracker.config.rails[:load_defaults].value.to_s
 
-      unless version.match? /^\d+\.\d+$/
+      unless version.match?(/^\d+\.\d+$/)
         Brakeman.debug "[Notice] Unknown version: #{tracker.config.rails[:load_defaults]}"
         return
       end

@@ -1,6 +1,7 @@
 module Brakeman
   module GemDependencies
     def self.dev_dependencies spec
+      spec.add_development_dependency "csv"
       spec.add_development_dependency "minitest"
       spec.add_development_dependency "minitest-ci"
       spec.add_development_dependency "simplecov"
