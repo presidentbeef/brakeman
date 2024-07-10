@@ -406,7 +406,7 @@ class Brakeman::Scanner
 
   def report_progress(current, total, type = "files")
     return unless @options[:report_progress]
-    $stderr.print " #{current}/#{total} #{type} processed\r"
+    $stderr.puts " #{current}/#{total} #{type} processed\r"
   end
 
   def index_call_sites
