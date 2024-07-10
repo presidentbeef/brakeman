@@ -39,7 +39,7 @@ class Brakeman::Scanner
   end
 
   def process_step description
-    Brakeman.notify "#{description}...".ljust(40)
+    Brakeman.notify "#{description}..."
 
     if @show_timing
       start_t = Time.now
