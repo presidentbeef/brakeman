@@ -4,7 +4,7 @@ class Brakeman::Report::Text < Brakeman::Report::Base
   def generate_report
     HighLine.use_color = !!tracker.options[:output_color]
     summary_option = tracker.options[:summary_only]
-    @output_string = "\n"
+    @output_string = +"\n"
 
     unless summary_option == :no_summary
       add_chunk generate_header

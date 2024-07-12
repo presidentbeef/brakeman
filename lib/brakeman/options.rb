@@ -211,7 +211,7 @@ module Brakeman::Options
             if check.start_with? "Check"
               check
             else
-              "Check" << check
+              "Check#{check}"
             end
           end
 
@@ -222,7 +222,7 @@ module Brakeman::Options
         opts.on "-t", "--test Check1,Check2,etc", Array, "Only run the specified checks" do |checks|
           checks.each_with_index do |s, index|
             if s[0,5] != "Check"
-              checks[index] = "Check" << s
+              checks[index] = "Check#{s}"
             end
           end
 
@@ -233,7 +233,7 @@ module Brakeman::Options
         opts.on "-x", "--except Check1,Check2,etc", Array, "Skip the specified checks" do |skip|
           skip.each do |s|
             if s[0,5] != "Check"
-              s = "Check" << s
+              s = "Check#{s}"
             end
 
             options[:skip_checks] ||= Set.new
@@ -263,7 +263,7 @@ module Brakeman::Options
           "Specify output formats. Default is text" do |type|
 
           type = "s" if type == :text
-          options[:output_format] = ("to_" << type.to_s).to_sym
+          options[:output_format] = :"to_#{type}"
         end
 
         opts.on "--css-file CSSFile", "Specify CSS to use for HTML output" do |file|
