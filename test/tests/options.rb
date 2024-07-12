@@ -31,7 +31,7 @@ class BrakemanOptionsTest < Minitest::Test
     :ensure_latest          => "--ensure-latest",
     :allow_check_paths_in_config => "--allow-check-paths-in-config",
     :pager                  => "--pager",
-    :show_timing                 => "--timing",
+    :show_timing            => "--timing",
   }
 
   ALT_OPTION_INPUTS = {
@@ -363,6 +363,24 @@ class BrakemanOptionsTest < Minitest::Test
   def test_text_report_fields
     assert_raises OptionParser::ParseError do
       setup_options_from_input("--text-fields", "not_a_real_field")
+    end
+  end
+
+  def test_use_prism
+    begin
+      # If prism is installed, test that everything is fine
+
+      gem('prism', '~>0.30')
+      options = setup_options_from_input('--prism')
+      assert options[:use_prism]
+    rescue Gem::MissingSpecVersionError
+      # Otherwise, test the error message and exception
+
+      assert_output nil, /Please install `prism`/ do
+        assert_raises Gem::MissingSpecVersionError do
+          setup_options_from_input('--prism')
+        end
+      end
     end
   end
 
