@@ -8,8 +8,7 @@ module Brakeman
     attr_reader :file_list, :errors
 
     def initialize app_tree, timeout, parallel = true, use_prism = false
-      @use_prism = use_prism
-      require 'prism' if @use_prism
+      @use_prism = use_prism && require('prism')
 
       @app_tree = app_tree
       @timeout = timeout
