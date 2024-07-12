@@ -8,7 +8,16 @@ module Brakeman
     attr_reader :file_list, :errors
 
     def initialize app_tree, timeout, parallel = true, use_prism = false
-      @use_prism = use_prism && require('prism')
+      @use_prism = use_prism
+
+      if @use_prism
+        begin
+          require 'prism'
+        rescue LoadError => e
+          Brakeman.debug "Asked to use Prism, but failed to load: #{e}"
+          @use_prism = false
+        end
+      end
 
       @app_tree = app_tree
       @timeout = timeout
