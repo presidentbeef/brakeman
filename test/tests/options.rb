@@ -373,11 +373,11 @@ class BrakemanOptionsTest < Minitest::Test
       gem('prism', '~>0.30')
       options = setup_options_from_input('--prism')
       assert options[:use_prism]
-    rescue Gem::MissingSpecVersionError
+    rescue Gem::MissingSpecVersionError, Gem::MissingSpecError, Gem::LoadError
       # Otherwise, test the error message and exception
 
       assert_output nil, /Please install `prism`/ do
-        assert_raises Gem::MissingSpecVersionError do
+        assert_raises Gem::MissingSpecVersionError, Gem::MissingSpecError, Gem::LoadError do
           setup_options_from_input('--prism')
         end
       end
