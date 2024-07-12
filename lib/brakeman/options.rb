@@ -164,7 +164,7 @@ module Brakeman::Options
             begin
             # Specifying minimum version here,
             # since it can't be in the gem dependency list because it is optional
-            gem 'prism', '~>0.29'
+            gem 'prism', '~>0.30'
             rescue Gem::MissingSpecVersionError, Gem::MissingSpecError => e
               $stderr.puts "Please install `prism` version 0.29 or newer:"
               raise e
