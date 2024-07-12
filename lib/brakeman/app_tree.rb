@@ -50,7 +50,7 @@ module Brakeman
           "#{Regexp.escape f}\\z"
         end
       end
-      Regexp.new("(?:" << path_regexes.join("|") << ")")
+      Regexp.new("(?:#{path_regexes.join("|")})")
     end
     private_class_method(:regex_for_paths)
 

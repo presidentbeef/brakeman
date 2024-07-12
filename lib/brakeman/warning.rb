@@ -317,7 +317,7 @@ class Brakeman::Warning
 
   def format_ruby code, strip
     formatted = Brakeman::OutputProcessor.new.format(code)
-    formatted.gsub!(/(\t|\r|\n)+/, " ") if strip
+    formatted = formatted.gsub(/(\t|\r|\n)+/, " ") if strip
     formatted
   end
 end
