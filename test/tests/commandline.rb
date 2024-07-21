@@ -211,7 +211,6 @@ class CommandlineTests < Minitest::Test
           "note": "Here's a note!"
         }
       ],
-      "updated": "2019-04-02 12:15:05 -0700",
       "brakeman_version": "4.5.0"
     }
   JSON
@@ -240,7 +239,6 @@ class CommandlineTests < Minitest::Test
           "note": "Note here."
         }
       ],
-      "updated": "2019-04-02 12:15:05 -0700",
       "brakeman_version": "4.5.0"
     }
   JSON
