@@ -1,3 +1,15 @@
+# Unreleased
+
+* Warn about unscoped finds with `find_by!`
+* Treat `::X` and `X` the same, for now (Jill Klang)
+* Fix compatibility with default frozen string literals (Jean Boussier)
+* Remediation advice for command injection (Nicholas Barone)
+* Fix Ruby warnings in test suite (Jean Boussier)
+* Support YAML aliases in secret configs (Chedli Bourguiba)
+* Add initial Rails 8 support (Ron Shinall)
+* Handle mass assignment with splats
+* Add support for symbolic links (Lu Zhu)
+
 # 6.1.2 - 2024-02-01
 
 * Update Highline to 3.0
