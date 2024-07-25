@@ -295,6 +295,10 @@ module Brakeman::Options
           options[:interactive_ignore] = true
         end
 
+        opts.on "--show-ignored", "Show files that are usually ignored by the ignore configuration file" do
+          options[:show_ignored] = true
+        end
+
         opts.on "-l", "--[no-]combine-locations", "Combine warning locations (Default)" do |combine|
           options[:combine_locations] = combine
         end

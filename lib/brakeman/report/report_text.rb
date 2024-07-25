@@ -9,6 +9,7 @@ class Brakeman::Report::Text < Brakeman::Report::Base
     unless summary_option == :no_summary
       add_chunk generate_header
       add_chunk generate_overview
+      add_chunk generate_show_ignored_overview if tracker.options[:show_ignored] && ignored_warnings.any?
       add_chunk generate_warning_overview
     end
 
@@ -99,6 +100,10 @@ class Brakeman::Report::Text < Brakeman::Report::Base
 
       double_space "Warnings", warnings
     end
+  end
+
+  def generate_show_ignored_overview
+    double_space("Ignored File Overview", ignored_warnings.map {|w| output_warning w})
   end
 
   def generate_errors
