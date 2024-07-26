@@ -52,6 +52,8 @@ module Brakeman
         :skip
       when path.match?(%r{application\.rb$})
         :skip
+      when path.match?(%r{config/routes\.rb$})
+        :skip
       end
     end
 
