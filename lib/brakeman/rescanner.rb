@@ -213,6 +213,8 @@ class Brakeman::Rescanner < Brakeman::Scanner
     end
 
     rescan_mixin lib if lib
+
+    @reindex << :libs
   end
 
   def rescan_routes

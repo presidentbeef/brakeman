@@ -301,6 +301,11 @@ class Brakeman::Tracker
       method_sets << self.controllers
     end
 
+    if locations.include? :libs
+      classes_to_reindex.merge self.libs.keys
+      method_sets << self.libs
+    end
+
     if locations.include? :initializers
       self.initializers.each do |file_name, src|
         @call_index.remove_indexes_by_file file_name
