@@ -183,7 +183,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     model = tracker.reset_model path
     paths = model.nil? ? [path] : model.files
     parse_ruby_files(paths).each do |astfile|
-      process_model astfile.path, astfile.ast
+      process_model astfile
     end
 
     #Only need to rescan other things if a model is added or removed
