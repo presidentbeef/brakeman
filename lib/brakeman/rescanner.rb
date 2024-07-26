@@ -315,8 +315,34 @@ class Brakeman::Rescanner < Brakeman::Scanner
     deleted
   end
 
-  #Guess at what kind of file the path contains
   def file_type path
+    type = nil
+
+    if path.relative.match? /\.rb$/
+      astfile = parse_ruby_files([path]).first
+
+      if astfile
+        # This is silly
+        type = case Brakeman::FileTypeDetector.new.detect_type(astfile)
+               when :models
+                 :model
+               when :controllers
+                 :controller
+               when :initializers
+                 :initializer
+               when :libs
+                 :lib
+               else
+                 nil
+               end
+      end
+    end
+
+    type || guess_file_type(path)
+  end
+
+  #Guess at what kind of file the path contains
+  def guess_file_type path
     case path
     when /\/app\/controllers/
       :controller
