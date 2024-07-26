@@ -39,5 +39,17 @@ module Brakeman
     def valid_type?(type)
       @file_list.key? type
     end
+
+    def cached? path
+      @file_list.any? do |name, list|
+        list[path]
+      end
+    end
+
+    def delete path
+      @file_list.each do |name, list|
+        list.delete path
+      end
+    end
   end
 end
