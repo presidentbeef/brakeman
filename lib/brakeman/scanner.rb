@@ -16,7 +16,7 @@ end
 
 #Scans the Rails application.
 class Brakeman::Scanner
-  attr_reader :options, :file_list
+  attr_reader :options
 
   #Pass in path to the root of the Rails application
   def initialize options, processor = nil
@@ -32,12 +32,15 @@ class Brakeman::Scanner
 
     @processor = processor || Brakeman::Processor.new(@app_tree, options)
     @show_timing = tracker.options[:debug] || tracker.options[:show_timing]
-    @file_list = Brakeman::FileCache.new
   end
 
   #Returns the Tracker generated from the scan
   def tracker
     @processor.tracked_events
+  end
+
+  def file_cache
+    tracker.file_cache
   end
 
   def process_step description
@@ -148,12 +151,12 @@ class Brakeman::Scanner
 
     @parsed_files.each do |file|
       if file.is_a? Brakeman::TemplateParser::TemplateFile
-        @file_list.add_file file, :template
+        file_cache.add_file file, :template
       else
         type = detector.detect_type(file)
         unless type == :skip
-          if @file_list.valid_type? type
-            @file_list.add_file(file, type)
+          if file_cache.valid_type? type
+            file_cache.add_file(file, type)
           else
             raise "Unexpected file type: #{type.inspect}"
           end
@@ -262,7 +265,7 @@ class Brakeman::Scanner
   #
   #Adds parsed information to tracker.initializers
   def process_initializers
-    track_progress file_list.initializers do |path, init|
+    track_progress file_cache.initializers do |path, init|
       process_step_file path do
         process_initializer init
       end
@@ -283,7 +286,7 @@ class Brakeman::Scanner
       return
     end
 
-    track_progress file_list.libs do |path, lib|
+    track_progress file_cache.libs do |path, lib|
       process_step_file path do
         process_lib lib
       end
@@ -316,7 +319,7 @@ class Brakeman::Scanner
   #
   #Adds processed controllers to tracker.controllers
   def process_controllers
-    track_progress file_list.controllers do |path, controller|
+    track_progress file_cache.controllers do |path, controller|
       process_step_file path do
         process_controller controller
       end
@@ -350,7 +353,7 @@ class Brakeman::Scanner
   #
   #Adds processed views to tracker.views
   def process_templates
-    templates = file_list.templates.sort_by { |path, _| path }
+    templates = file_cache.templates.sort_by { |path, _| path }
 
     track_progress templates, "templates" do |path, template|
       process_step_file path do
@@ -377,7 +380,7 @@ class Brakeman::Scanner
   #
   #Adds the processed models to tracker.models
   def process_models
-    track_progress file_list.models do |path, model|
+    track_progress file_cache.models do |path, model|
       process_step_file path do
         process_model model
       end
