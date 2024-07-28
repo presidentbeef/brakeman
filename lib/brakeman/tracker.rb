@@ -12,7 +12,7 @@ class Brakeman::Tracker
   attr_accessor :controllers, :constants, :templates, :models, :errors,
     :checks, :initializers, :config, :routes, :processor, :libs,
     :template_cache, :options, :filter_cache, :start_time, :end_time,
-    :duration, :ignored_filter, :app_tree
+    :duration, :ignored_filter, :app_tree, :file_cache
 
   #Place holder when there should be a model, but it is not
   #clear what model it will be.
@@ -49,6 +49,7 @@ class Brakeman::Tracker
     @start_time = Time.now
     @end_time = nil
     @duration = nil
+    @file_cache = Brakeman::FileCache.new
   end
 
   #Add an error to the list. If no backtrace is given,

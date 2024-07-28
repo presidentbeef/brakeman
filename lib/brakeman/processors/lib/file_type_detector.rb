@@ -13,7 +13,7 @@ module Brakeman
         @file_type = guess_from_path(file.path.relative)
       end
 
-      @file_type || :libs
+      @file_type || :lib
     end
 
     MODEL_CLASSES = [
@@ -26,10 +26,10 @@ module Brakeman
       parent = class_name(exp.parent_name)
 
       if name.match(/Controller$/)
-        @file_type = :controllers
+        @file_type = :controller
         return exp
       elsif MODEL_CLASSES.include? parent
-        @file_type = :models
+        @file_type = :model
         return exp
       end
 
@@ -39,13 +39,13 @@ module Brakeman
     def guess_from_path path
       case
       when path.include?('app/models')
-        :models
+        :model
       when path.include?('app/controllers')
-        :controllers
+        :controller
       when path.include?('config/initializers')
-        :initializers
+        :initializer
       when path.include?('lib/')
-        :libs
+        :lib
       when path.match?(%r{config/environments/(?!production\.rb)$})
         :skip
       when path.match?(%r{environments/production\.rb$})
