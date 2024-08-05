@@ -1,5 +1,6 @@
 # Unreleased
 
+* Add optional support for Prism parser
 * Warn about unscoped finds with `find_by!`
 * Treat `::X` and `X` the same, for now (Jill Klang)
 * Fix compatibility with default frozen string literals (Jean Boussier)
