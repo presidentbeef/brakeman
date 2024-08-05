@@ -33,6 +33,7 @@ class Brakeman::CheckModelAttrAccessible < Brakeman::BaseCheck
               :confidence => confidence,
               :code => Sexp.new(:lit, attribute),
               :cwe_id => [915]
+
             break # Prevent from matching single attr multiple times
           end
         end

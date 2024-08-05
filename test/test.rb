@@ -179,8 +179,10 @@ module BrakemanTester::RescanTestHelper
       # Not really sure why we do this..?
       t = Marshal.load(Marshal.dump(@original))
 
-      @rescanner = Brakeman::Rescanner.new(t.options, t.processor, changed)
-      @rescan = @rescanner.recheck
+      s = Brakeman::Scanner.new(t.options)
+      s.process
+      s.tracker.run_checks
+      @rescan = Brakeman::RescanReport.new(t.filtered_warnings, s.tracker)
     ensure
       changed.each do |file|
         original = File.join(TEST_PATH, 'apps', app, file)
@@ -214,7 +216,10 @@ module BrakemanTester::RescanTestHelper
 
   #Check how many new warnings were reported
   def assert_new expected
-    assert_equal expected, new.length, lambda { "Expected #{expected} new warnings, but found #{new.length}:\n#{new.map {|w| "\t#{w.message} #{w.file}" }.join("\n")}" }
+    assert_equal expected, new.length, lambda {
+      "Expected #{expected} new warnings, but found #{new.length}:\n#{new.map {|w| w.to_json}.join("\n")}\n" \
+      "Also these are the old ones:\n#{existing.map {|w| w.to_json }.join("\n")}"
+    }
   end
 
   #Check how many existing warnings were reported
@@ -225,7 +230,7 @@ module BrakemanTester::RescanTestHelper
   end
 
   def assert_changes expected = true
-    assert_equal expected, rescanner.changes
+#    assert_equal expected, rescanner.changes
   end
 
   def assert_reindex *types

@@ -72,7 +72,7 @@ class Brakeman::Scanner
   end
 
   #Process everything in the Rails application
-  def process
+  def process(skip_parsing: false)
     process_step 'Processing gems' do
       process_gems
     end
@@ -82,12 +82,16 @@ class Brakeman::Scanner
       process_config
     end
 
-    process_step 'Parsing files' do
-      parse_files
-    end
+    unless skip_parsing
+      astfiles = nil
 
-    process_step 'Detecting file types' do
-      detect_file_types
+      process_step 'Parsing files' do
+        astfiles = parse_files(ruby_paths: tracker.app_tree.ruby_file_paths, template_paths: tracker.app_tree.template_paths)
+      end
+
+      process_step 'Detecting file types' do
+        detect_file_types(astfiles)
+      end
     end
 
     process_step 'Processing initializers' do
@@ -129,31 +133,32 @@ class Brakeman::Scanner
     tracker
   end
 
-  def parse_files
+  def parse_files(ruby_paths:, template_paths:)
     fp = Brakeman::FileParser.new(tracker.app_tree, tracker.options[:parser_timeout], tracker.options[:parallel_checks], tracker.options[:use_prism])
 
-    fp.parse_files tracker.app_tree.ruby_file_paths
+    fp.parse_files ruby_paths
 
     template_parser = Brakeman::TemplateParser.new(tracker, fp)
 
-    fp.read_files(@app_tree.template_paths) do |path, contents|
+    fp.read_files(template_paths) do |path, contents|
       template_parser.parse_template path, contents
     end
 
     # Collect errors raised during parsing
     tracker.add_errors(fp.errors)
 
-    @parsed_files = fp.file_list
+    fp.file_list
   end
 
-  def detect_file_types
+  def detect_file_types(astfiles)
     detector = Brakeman::FileTypeDetector.new
 
-    @parsed_files.each do |file|
+    astfiles.each do |file|
       if file.is_a? Brakeman::TemplateParser::TemplateFile
         file_cache.add_file file, :template
       else
         type = detector.detect_type(file)
+
         unless type == :skip
           if file_cache.valid_type? type
             file_cache.add_file(file, type)

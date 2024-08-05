@@ -26,15 +26,21 @@ class Brakeman::Tracker
     @app_tree = app_tree
     @processor = processor
     @options = options
+    @file_cache = Brakeman::FileCache.new
 
-    @config = Brakeman::Config.new(self)
+    reset_all
+  end
+
+  def reset_all
     @templates = {}
     @controllers = {}
+
     #Initialize models with the unknown model so
     #we can match models later without knowing precisely what
     #class they are.
     @models = {}
     @models[UNKNOWN_MODEL] = Brakeman::Model.new(UNKNOWN_MODEL, nil, @app_tree.file_path("NOT_REAL.rb"), nil, self)
+
     @method_cache = {}
     @routes = {}
     @initializers = {}
@@ -46,10 +52,10 @@ class Brakeman::Tracker
     @template_cache = Set.new
     @filter_cache = {}
     @call_index = nil
+    @config = Brakeman::Config.new(self)
     @start_time = Time.now
     @end_time = nil
     @duration = nil
-    @file_cache = Brakeman::FileCache.new
   end
 
   #Add an error to the list. If no backtrace is given,

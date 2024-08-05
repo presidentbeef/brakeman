@@ -6,15 +6,15 @@ require 'brakeman/differ'
 class Brakeman::Rescanner < Brakeman::Scanner
  include Brakeman::Util
   KNOWN_TEMPLATE_EXTENSIONS = Brakeman::TemplateParser::KNOWN_TEMPLATE_EXTENSIONS
-  SCAN_ORDER = [:gemfile, :config, :initializer, :lib, :routes, :template,
-    :model, :controller]
 
   #Create new Rescanner to scan changed files
   def initialize options, processor, changed_files
-    super(options, processor)
+    super(options)
+
+    old_tracker = processor.tracked_events
 
     @paths = changed_files.map {|f| tracker.app_tree.file_path(f) }
-    @old_results = tracker.filtered_warnings  #Old warnings from previous scan
+    @old_results = old_tracker.filtered_warnings.dup  #Old warnings from previous scan
     @changes = nil                 #True if files had to be rescanned
     @reindex = Set.new
   end
@@ -31,35 +31,25 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
   #Rescans changed files
   def rescan
-    tracker.template_cache.clear
+    @changes = true
 
-    paths_by_type = {}
-
-    SCAN_ORDER.each do |type|
-      paths_by_type[type] = []
-    end
+    templates = []
+    ruby_files = []
 
     @paths.each do |path|
-      type = file_type(path)
-      paths_by_type[type] << path unless type == :unknown
-    end
-
-    @changes = false
-
-    SCAN_ORDER.each do |type|
-      paths_by_type[type].each do |path|
-        Brakeman.debug "Rescanning #{path} as #{type}"
-
-        if rescan_file path, type
-          @changes = true
+      if path.exists?
+        if path.relative.match? KNOWN_TEMPLATE_EXTENSIONS
+          templates << path
+        elsif path.relative.end_with? '.rb'
+          ruby_files << path
         end
       end
     end
 
-    if @changes and not @reindex.empty?
-      tracker.reindex_call_sites @reindex
-    end
+#    astfiles = parse_files(ruby_paths: ruby_files, template_paths: templates)
+#    detect_file_types(astfiles)
 
+    process #(skip_parsing: true)
     self
   end
 
