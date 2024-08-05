@@ -25,6 +25,7 @@ class BrakemanOptionsTest < Minitest::Test
     :absolute_paths         => "--absolute-paths",
     :list_checks            => "-k",
     :list_optional_checks   => "--optional-checks",
+    :show_ignored           => "--show-ignored",
     :show_version           => "-v",
     :show_help              => "-h",
     :force_scan             => "--force-scan",
@@ -250,6 +251,11 @@ class BrakemanOptionsTest < Minitest::Test
 
     options = setup_options_from_input("--ignore-config", "dont_warn_for_these.rb")
     assert_equal "dont_warn_for_these.rb", options[:ignore_file]
+  end
+
+  def test_show_ignored_option
+    options = setup_options_from_input("--show-ignored")
+    assert options[:show_ignored]
   end
 
   def test_combine_warnings_option
