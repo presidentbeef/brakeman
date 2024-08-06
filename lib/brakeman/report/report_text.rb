@@ -103,7 +103,7 @@ class Brakeman::Report::Text < Brakeman::Report::Base
   end
 
   def generate_show_ignored_overview
-    double_space("Ignored File Overview", ignored_warnings.map {|w| output_warning w})
+    double_space("Ignored Warnings", ignored_warnings.map {|w| output_warning w})
   end
 
   def generate_errors
