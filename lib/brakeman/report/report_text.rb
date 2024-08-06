@@ -9,7 +9,6 @@ class Brakeman::Report::Text < Brakeman::Report::Base
     unless summary_option == :no_summary
       add_chunk generate_header
       add_chunk generate_overview
-      add_chunk generate_show_ignored_overview if tracker.options[:show_ignored] && ignored_warnings.any?
       add_chunk generate_warning_overview
     end
 
@@ -22,6 +21,9 @@ class Brakeman::Report::Text < Brakeman::Report::Base
     add_chunk generate_obsolete
     add_chunk generate_errors
     add_chunk generate_warnings
+    add_chunk generate_show_ignored_overview if tracker.options[:show_ignored] && ignored_warnings.any?
+
+    @output_string
   end
 
   def add_chunk chunk, out = @output_string
