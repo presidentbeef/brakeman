@@ -193,6 +193,10 @@ To create and manage this file, use:
 
     brakeman -I
 
+To exclude the "updated" entry in brakeman.ignore, use:
+
+    brakeman --exclude-updated-in-ignore-file
+
 To ignore possible XSS from model attributes:
 
     brakeman --ignore-model-output
