@@ -133,6 +133,10 @@ To create and manage this file, use:
 
     brakeman -I
 
+If you want to temporarily see the warnings you ignored without affecting the exit code, use:
+
+    brakeman --show-ignored
+
 # Warning information
 
 See [warning\_types](docs/warning_types) for more information on the warnings reported by this tool.

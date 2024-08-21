@@ -201,6 +201,10 @@ Brakeman will raise warnings on models that use `attr_protected`. To suppress th
 
     brakeman --ignore-protected
 
+To show all ignored warnings without affecting the exit code (i.e. - Will return `0` if the application shows no warnings when simply running `brakeman`):
+
+    brakeman --show-ignored
+
 Brakeman will assume that unknown methods involving untrusted data are dangerous. For example, this would cause a warning (Rails 2):
 
     <%= some_method(:option => params[:input]) %>
