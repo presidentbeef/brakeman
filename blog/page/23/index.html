@@ -80,6 +80,94 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/01/13/brakeman-1-dot-2-released">Brakeman 1.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-01-13 22:00:00 -0700" pubdate  updated >2012-01-13 22:00:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>First Brakeman release of 2012!</p>
+
+<p><em>Changes since 1.1:</em></p>
+
+<ul>
+  <li>Speed improvements for CheckExecute and CheckRender</li>
+  <li>Check <code class="language-plaintext highlighter-rouge">named_scope</code> and <code class="language-plaintext highlighter-rouge">scope</code> for SQL injection</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--rake</code> option to create rake task to run Brakeman</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--summary</code> option to only output summary</li>
+  <li>Add experimental support for rescanning a subset of files</li>
+  <li>Fix a problem with Rails 3 routes</li>
+</ul>
+
+<p>Besides those, there has also been quite a bit of code improvement internally.</p>
+
+<h3 id="speed-improvements">Speed Improvements</h3>
+
+<p>The checks for command injection and dynamic render paths should be considerably faster now.</p>
+
+<h3 id="more-sql-injection-checks">More SQL Injection Checks</h3>
+
+<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/30">a5sk4s</a> for pointing out that Brakeman was not checking <code class="language-plaintext highlighter-rouge">named_scope</code> for SQL injection. This has been rectified. For Rails 3.1 and up, <code class="language-plaintext highlighter-rouge">scope</code> will be checked.</p>
+
+<p>Also, it seems common to use <code class="language-plaintext highlighter-rouge">Model.table_name</code> inside SQL statements. This will no longer raise a warning.</p>
+
+<h3 id="brakeman-rake-task">Brakeman Rake Task</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">--rake</code> option can now be used to install a Rake task for running Brakeman. The task will be copied to <code class="language-plaintext highlighter-rouge">lib/tasks/brakeman.rake</code>.</p>
+
+<p>To use, run this from the root of the Rails app:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --rake
+</code></pre></div></div>
+
+<p>Then, to run Brakeman:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake brakeman:run
+</code></pre></div></div>
+
+<p>Naturally, this requires Rake to be installed.</p>
+
+<p>To output to a specific file:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake brakeman:run["report.html"]
+</code></pre></div></div>
+
+<p>More actions may be added in the future.</p>
+
+<h3 id="summary-option">Summary Option</h3>
+
+<p>Sometimes the specifics of a scan are not needed. The <code class="language-plaintext highlighter-rouge">--summary</code> option will limit the report output to just the summary section.</p>
+
+<h3 id="rescan-for-subset-of-files">Rescan for Subset of Files</h3>
+
+<p>This release adds experimental support for rescanning a subset of paths in a Rails application. Please see this <a href="https://gist.github.com/1563286">example</a>.</p>
+
+<h3 id="issues">Issues</h3>
+
+<p>Please report <em>any</em> problems or questions on <a href="https://github.com/presidentbeef/brakeman/issues">GitHub</a> or send a tweet to <a href="https://twitter.com/#!/brakemanscanner">@Brakeman</a>!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2011/12/21/brakeman-1-dot-1-released">Brakeman 1.1 Released</a></h1>
     
     
@@ -88,7 +176,7 @@
 
 
 
-<time datetime="2011-12-21 19:12:00 +0000" pubdate  updated >2011-12-21 19:12:00 +0000</time>
+<time datetime="2011-12-21 19:12:00 -0700" pubdate  updated >2011-12-21 19:12:00 -0700</time>
 
 
 </p>
@@ -156,7 +244,7 @@
 
 
 
-<time datetime="2011-12-08 01:35:00 +0000" pubdate  updated >2011-12-08 01:35:00 +0000</time>
+<time datetime="2011-12-08 01:35:00 -0700" pubdate  updated >2011-12-08 01:35:00 -0700</time>
 
 
 </p>
@@ -258,7 +346,7 @@ end
 
 
 
-<time datetime="2011-12-05 14:04:00 +0000" pubdate  updated >2011-12-05 14:04:00 +0000</time>
+<time datetime="2011-12-05 14:04:00 -0700" pubdate  updated >2011-12-05 14:04:00 -0700</time>
 
 
 </p>
@@ -343,7 +431,7 @@ Brakeman.run :app_path =&gt; 'my_app'
 
 
 
-<time datetime="2011-11-21 17:12:00 +0000" pubdate  updated >2011-11-21 17:12:00 +0000</time>
+<time datetime="2011-11-21 17:12:00 -0700" pubdate  updated >2011-11-21 17:12:00 -0700</time>
 
 
 </p>
@@ -367,40 +455,6 @@ Brakeman.run :app_path =&gt; 'my_app'
 <h3 id="look-for-t">Look for t()</h3>
 
 <p>Both the <code class="language-plaintext highlighter-rouge">translate</code> and its shorter alias <code class="language-plaintext highlighter-rouge">t</code> will cause the warning about the cross-site scripting bug in them to be set to high confidence. If neither of these functions are found in the application, the confidence is set to medium.</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2011/11/18/brakeman-0-dot-9-1-released">Brakeman 0.9.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-11-18 10:41:00 +0000" pubdate  updated >2011-11-18 10:41:00 +0000</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/2b61d70fb73c7cc5">A new vulnerability was disclosed</a> yesterday in the Rails <a href="http://api.rubyonrails.org/classes/ActionView/Helpers/TranslationHelper.html#method-i-translate">translate helper</a>.</p>
-
-<p>This vulnerability affects Rails 2.3.x when using the rails_xss plugin, Rails 3.0 - 3.0.10, and Rails 3.1 - 3.1.1.</p>
-
-<p>The only change in the 0.9.1 release is a check for this new vulnerability.</p>
 </div>
   
   
@@ -446,6 +500,10 @@ Brakeman.run :app_path =&gt; 'my_app'
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a>
       </li>
     
@@ -459,10 +517,6 @@ Brakeman.run :app_path =&gt; 'my_app'
     
       <li class="post">
         <a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/02/21/brakeman-5-dot-4-dot-1-released">Brakeman 5.4.1 Released</a>
       </li>
     
   </ul>

@@ -80,6 +80,50 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2022/01/30/5-dot-2-dot-1-released">Brakeman 5.2.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2022-01-30 11:30:00 -0700" pubdate  updated >2022-01-30 11:30:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Oops! Minor emergency fix release.</p>
+
+<p><em>Changes since 5.2.0:</em></p>
+
+<ul>
+  <li>Add warning codes for EOL Ruby and Rails check</li>
+</ul>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2021/12/15/brakeman-5-dot-2-dot-0-released">Brakeman 5.2.0 Released</a></h1>
     
     
@@ -88,7 +132,7 @@
 
 
 
-<time datetime="2021-12-15 11:30:00 +0000" pubdate  updated >2021-12-15 11:30:00 +0000</time>
+<time datetime="2021-12-15 11:30:00 -0700" pubdate  updated >2021-12-15 11:30:00 -0700</time>
 
 
 </p>
@@ -172,7 +216,7 @@
 
 
 
-<time datetime="2021-10-28 11:30:00 +0000" pubdate  updated >2021-10-28 11:30:00 +0000</time>
+<time datetime="2021-10-28 11:30:00 -0600" pubdate  updated >2021-10-28 11:30:00 -0600</time>
 
 
 </p>
@@ -265,7 +309,7 @@ then it <em>could</em> (but doesn’t always) cause a sorting error.</p>
 
 
 
-<time datetime="2021-07-19 15:00:00 +0000" pubdate  updated >2021-07-19 15:00:00 +0000</time>
+<time datetime="2021-07-19 15:00:00 -0600" pubdate  updated >2021-07-19 15:00:00 -0600</time>
 
 
 </p>
@@ -542,7 +586,7 @@ e38ff386530bc5585e2efd183ba73c08abb740c3b26072662025a3d9395b707a  brakeman-min-5
 
 
 
-<time datetime="2021-06-08 10:50:00 +0000" pubdate  updated >2021-06-08 10:50:00 +0000</time>
+<time datetime="2021-06-08 10:50:00 -0600" pubdate  updated >2021-06-08 10:50:00 -0600</time>
 
 
 </p>
@@ -578,108 +622,6 @@ e38ff386530bc5585e2efd183ba73c08abb740c3b26072662025a3d9395b707a  brakeman-min-5
 <p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
 
 <p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-</div>
-  
-  
-
-
-  </article>
-
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2021/04/27/brakeman-5-dot-0-dot-1-released">Brakeman 5.0.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2021-04-27 12:00:00 +0000" pubdate  updated >2021-04-27 12:00:00 +0000</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Has it really been three months since Brakeman 5.0? Yikes!</p>
-
-<p>Here’s a small update with some bugfixes before we move on to 5.1.</p>
-
-<p><em>Changes since 5.0.0:</em></p>
-
-<ul>
-  <li>Support loading <code class="language-plaintext highlighter-rouge">slim/smart</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1570">#1570</a>)</li>
-  <li>Set more line numbers on Sexps (<a href="https://github.com/presidentbeef/brakeman/issues/1579">#1579</a>)</li>
-  <li>Detect <code class="language-plaintext highlighter-rouge">::Rails.application.configure</code> too (<a href="https://github.com/presidentbeef/brakeman/issues/1584">#1584</a>)</li>
-  <li>Always ignore <code class="language-plaintext highlighter-rouge">slice</code>/<code class="language-plaintext highlighter-rouge">only</code> calls for mass assignment</li>
-  <li>Don’t fail if $HOME/$USER are not defined</li>
-  <li>Convert splat array arguments to arguments</li>
-  <li>Bundle unreleased RubyParser changes</li>
-</ul>
-
-<h3 id="support-smart-text-in-slim-templates">Support Smart Text in Slim Templates</h3>
-
-<p>In order to support “<a href="https://github.com/slim-template/slim/blob/master/doc/smart.md">Smart Text</a>” in Slim templates,
-Brakeman will load <code class="language-plaintext highlighter-rouge">slim/smart</code> if <code class="language-plaintext highlighter-rouge">slim/smart</code> is mentioned in the <code class="language-plaintext highlighter-rouge">Gemfile</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1582">changes</a>)</p>
-
-<h3 id="more-line-numbers">More Line Numbers</h3>
-
-<p>Setting <code class="language-plaintext highlighter-rouge">nil</code> value for the line number of a Sexp raises an exception.</p>
-
-<p>This is usually from creating a Sexp without a line number in the first place.</p>
-
-<p>More instances of this have been fixed in this release.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1581">changes</a>)</p>
-
-<h3 id="always-ignore-sliceonly-for-mass-assignment">Always Ignore slice/only for Mass Assignment</h3>
-
-<p>If <code class="language-plaintext highlighter-rouge">slice</code> or <code class="language-plaintext highlighter-rouge">only</code> are called for arguments to mass assignment (e.g. <code class="language-plaintext highlighter-rouge">User.new(some_hash.slice(:name, :email))</code>),
-Brakeman will not warn about mass assignment.</p>
-
-<p>These have been ignored for a while, but a logic error caused Brakeman to sometimes still warn about them.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1565">changes</a>)</p>
-
-<h3 id="convert-splats-to-arguments">Convert Splats to Arguments</h3>
-
-<p>In really obvious cases like</p>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">some_call</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span>
-</code></pre></div></div>
-
-<p>Brakeman will convert the arguments to</p>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">some_call</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1564">changes</a>)</p>
-
-<h3 id="checksums">Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4c1b7c7747ecfca11a822a4bab5ad05f13515e195d7d34590d3add215573b431  brakeman-5.0.1.gem
-79129c2977936113fc87a9a2e9490b734f088286d0b33ed9ca61cb6587dc18c7  brakeman-lib-5.0.1.gem
-549034d7aeb2a5ca8fe299c41b91938d502a89e70a1afa68643ca3c9e5ccaf96  brakeman-min-5.0.1.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-
 </div>
   
   
@@ -725,6 +667,10 @@ Brakeman will not warn about mass assignment.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a>
       </li>
     
@@ -738,10 +684,6 @@ Brakeman will not warn about mass assignment.</p>
     
       <li class="post">
         <a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/02/21/brakeman-5-dot-4-dot-1-released">Brakeman 5.4.1 Released</a>
       </li>
     
   </ul>

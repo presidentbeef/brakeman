@@ -80,6 +80,120 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/09/04/brakeman-1-dot-8-0-released">Brakeman 1.8.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-09-04 11:26:00 -0600" pubdate  updated >2012-09-04 11:26:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>Changes since 1.7.1</em>:</p>
+
+<ul>
+  <li>Support relative paths in reports (fsword)</li>
+  <li>Allow Brakeman to be run without tty (fsword)</li>
+  <li>Fix exit code with <code class="language-plaintext highlighter-rouge">--compare</code> (fsword)</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">--rake</code> option (Deepak Kumar)</li>
+  <li>Add high confidence warnings for <code class="language-plaintext highlighter-rouge">to_json</code> XSS (Neil Matatall)</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">redirect_to</code> false negative</li>
+  <li>Fix duplicate warnings with <code class="language-plaintext highlighter-rouge">raw</code> calls</li>
+  <li>Fix shadowing of rendered partials</li>
+  <li>Add “render chain” to HTML reports</li>
+  <li>Add check for XSS in <code class="language-plaintext highlighter-rouge">content_tag</code></li>
+  <li>Add full backtrace for errors in debug mode</li>
+  <li>Treat model attributes in <code class="language-plaintext highlighter-rouge">or</code> expressions as immediate values</li>
+  <li>Switch to method access for Sexp nodes</li>
+</ul>
+
+<h3 id="relative-paths-in-reports">Relative Paths in Reports</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">--relative-paths</code> option will now cause Brakeman to output relative paths for warnings in reports in either JSON or tabs format. This is useful when comparing reports run on different machines or just in different directories.</p>
+
+<h3 id="brakeman-without-tty">Brakeman without TTY</h3>
+
+<p>Thanks to <a href="http://fsword.github.com/">fsword</a>, Brakeman can now run without a TTY available.</p>
+
+<h3 id="exit-code-for-compare">Exit Code for Compare</h3>
+
+<p>Also thanks to fsword, Brakeman will return a proper exit code when run with <code class="language-plaintext highlighter-rouge">-z --compare</code>. If any changes are found, the exit code will be nonzero.</p>
+
+<h3 id="rake-task-generation-fixed">Rake Task Generation Fixed</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">--rake</code> option was broken, but <a href="https://github.com/deepakinseattle">Deepak Kumar</a> noticed and fixed it!</p>
+
+<h3 id="high-confidence-warnings-for-json">High Confidence Warnings for JSON</h3>
+
+<p>Older versions of Rails default to not escaping <code class="language-plaintext highlighter-rouge">to_json</code> calls, leading to <a href="http://brakemanscanner.org/docs/warning_types/cross_site_scripting_to_json/">cross site scripting problems</a>. Since Rails 2.1.0, Rails has provided an option to escape JSON output by default. Brakeman will check this option, and warn on unescaped <code class="language-plaintext highlighter-rouge">to_json</code> calls.</p>
+
+<h3 id="fix-redirect-false-negative">Fix Redirect False Negative</h3>
+
+<p>Brakeman was incorrectly checking for <code class="language-plaintext highlighter-rouge">:only_path =&gt; true</code> in <em>any</em> argument to <code class="language-plaintext highlighter-rouge">redirect_to</code>. However, it is only valid as part of the first argument.</p>
+
+<h3 id="fix-duplicate-warnings-on-raw-calls">Fix Duplicate Warnings on Raw Calls</h3>
+
+<p>A logic mistake sometimes caused a high and weak confidence warning to be reported for the same code using <code class="language-plaintext highlighter-rouge">raw</code>. This has been fixed.</p>
+
+<h3 id="fix-shadowing-of-rendered-partials">Fix Shadowing of Rendered Partials</h3>
+
+<p>Due to the way Brakeman was storing rendered partials, a view that was rendered multiple times via different code paths would only store a single instance of the rendered view. This could result in some vulnerabilities not being reported.</p>
+
+<p>To fix this, Brakeman now stores the entire “render chain” (that is, each location of a <code class="language-plaintext highlighter-rouge">render</code>). This ensures a unique key for each rendered template.</p>
+
+<h3 id="report-render-chain-in-html">Report Render Chain in HTML</h3>
+
+<p>HTML reports now have a new feature that reports the “render chain” for view warnings (if the chain is more than a single call deep).</p>
+
+<p>A warning like this:</p>
+
+<p><img src="/images/unexpanded_call_chain.png" alt="Unexpanded" /></p>
+
+<p>Might expand to show this chain:</p>
+
+<p><img src="/images/expanded_call_chain.png" alt="Expanded" /></p>
+
+<h3 id="check-for-xss-in-content_tag">Check for XSS in <code class="language-plaintext highlighter-rouge">content_tag</code></h3>
+
+<p><code class="language-plaintext highlighter-rouge">content_tag</code> is a view helper for generating HTML tags containing some content. In Rails 2.x, <code class="language-plaintext highlighter-rouge">content_tag</code> did not escape this content. In Rails 3.x, this changed so that now it is escaped. While <code class="language-plaintext highlighter-rouge">content_tag</code> does have an <code class="language-plaintext highlighter-rouge">escape</code> parameter (true by default), this only applies to the tag attribute <em>values</em>.</p>
+
+<p>Brakeman now warns on possible cross site scripting via <code class="language-plaintext highlighter-rouge">content_tag</code> calls. <a href="/docs/warning_types/content_tag">See here</a> for more details.</p>
+
+<h3 id="backtraces-in-debug-mode">Backtraces in Debug Mode</h3>
+
+<p>By default, Brakeman tries its best to recover from errors and produce a report. However, this can sometimes make it difficult to track down the sources of errors. Now, with the <code class="language-plaintext highlighter-rouge">-d</code> option, Brakeman will report backtraces for errors encountered while running, as well as including backtraces in HTML reports.</p>
+
+<h3 id="convenience-methods-for-sexp-access">Convenience Methods for Sexp Access</h3>
+
+<p>Previously, all code dealing with <a href="https://en.wikipedia.org/wiki/S-exp">s-expressions</a> in the <code class="language-plaintext highlighter-rouge">Sexp</code> class accessed nodes via array access, e.g. <code class="language-plaintext highlighter-rouge">exp[1]</code> or <code class="language-plaintext highlighter-rouge">exp[2]</code>. This led to hard-to-read code like <code class="language-plaintext highlighter-rouge">exp[2][3][1][1..-1]</code>. This release includes convenience methods to replace those types of calls. Available methods are <a href="http://rdoc.info/gems/brakeman/Sexp">documented here</a>.</p>
+
+<p>Hopefully this leads to code that is both easier to read and easier to write.</p>
+
+<h3 id="reporting-problems">Reporting Problems</h3>
+
+<p>This release touches a lot of code (76 changed files with 1,515 additions and 598 deletions), so there is ample opportunity for bugs to sneak in. Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a>!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> and following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/08/13/brakeman-1-dot-7-1-released">Brakeman 1.7.1 Released</a></h1>
     
     
@@ -88,7 +202,7 @@
 
 
 
-<time datetime="2012-08-13 11:04:00 +0000" pubdate  updated >2012-08-13 11:04:00 +0000</time>
+<time datetime="2012-08-13 11:04:00 -0600" pubdate  updated >2012-08-13 11:04:00 -0600</time>
 
 
 </p>
@@ -162,7 +276,7 @@
 
 
 
-<time datetime="2012-07-31 17:44:00 +0000" pubdate  updated >2012-07-31 17:44:00 +0000</time>
+<time datetime="2012-07-31 17:44:00 -0600" pubdate  updated >2012-07-31 17:44:00 -0600</time>
 
 
 </p>
@@ -279,7 +393,7 @@
 
 
 
-<time datetime="2012-06-12 17:07:00 +0000" pubdate  updated >2012-06-12 17:07:00 +0000</time>
+<time datetime="2012-06-12 17:07:00 -0600" pubdate  updated >2012-06-12 17:07:00 -0600</time>
 
 
 </p>
@@ -367,7 +481,7 @@
 
 
 
-<time datetime="2012-05-23 12:45:00 +0000" pubdate  updated >2012-05-23 12:45:00 +0000</time>
+<time datetime="2012-05-23 12:45:00 -0600" pubdate  updated >2012-05-23 12:45:00 -0600</time>
 
 
 </p>
@@ -439,112 +553,6 @@
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/04/20/brakeman-1-dot-6-released">Brakeman 1.6 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-04-20 10:22:00 +0000" pubdate  updated >2012-04-20 10:22:00 +0000</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>A lot of code has changed in this release, particularly with the removal of the Ruport library for reporting. While Ruport worked pretty well, it caused some issues just due to the large number of (out-dated) dependencies it brought with it.</p>
-
-<p>Also, this release changes the JSON report output. This is a backwards <em>incompatible</em> change. But, given how useless the previous JSON reports were, hopefully this will not affect too many people.</p>
-
-<p><em>Changes since 1.5.3:</em></p>
-
-<ul>
-  <li>Remove the Ruport dependency (Neil Matatall)</li>
-  <li>Add more informational JSON output (Neil Matatall)</li>
-  <li>Add comparison to previous JSON report (Neil Matatall)</li>
-  <li>Add highlighting of dangerous values in HTML/text reports</li>
-  <li><code class="language-plaintext highlighter-rouge">Model#update_attribute</code> should not raise mass assignment warning (Dave Worth)</li>
-  <li>Don’t check <code class="language-plaintext highlighter-rouge">find_by_*</code> method for SQL injection</li>
-  <li>Fix duplicate reporting of mass assignment and SQL injection</li>
-  <li>Fix rescanning of deleted files</li>
-  <li>Properly check for <code class="language-plaintext highlighter-rouge">rails_xss</code> in Gemfile</li>
-</ul>
-
-<h3 id="no-more-ruport">No More Ruport</h3>
-
-<p>Ruport is a nice library, but it also has not been updated in over two years and its dependency tree was ridiculous.</p>
-
-<p>Thanks to Neil Matatall, Brakeman no longer depends on Ruport, but the reports should look essentially the same. The HTML reports are now rendered through ERB templates, so it should not be too difficult to customize the reports if desired.</p>
-
-<h3 id="better-json-output">Better JSON Output</h3>
-
-<p>JSON output now includes meta-information about the scan, errors raised during the scan, and line numbers for each warning.</p>
-
-<h3 id="json-report-comparison">JSON Report Comparison</h3>
-
-<p>Being able to compare Brakeman reports is essential for tracking warnings over time. Prior to this release, the only decent way of doing that was via the <a href="http://brakemanscanner.org/docs/jenkins/">Jenkins plugin</a>. But now Brakeman can compare results to the JSON report from a previous scan.</p>
-
-<p>For example:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.json
-brakeman --compare report.json
-</code></pre></div></div>
-
-<p>This will run another scan, then output a comparison of the reports (in JSON). The report includes a list of fixed warnings and a list of new warnings that were found.</p>
-
-<h3 id="user-input-highlighted-in-reports">User Input Highlighted in Reports</h3>
-
-<p>Sometimes it is unclear exactly what value has caused Brakeman to issue a particular warning. This release adds highlighting the detected user input in most warnings. (Some warnings, the code that is reported <em>is</em> the detected user input). This information is also available in the JSON reports.</p>
-
-<p><img src="/images/user_input_highlight.png" alt="User Input Highlight" title="Example of User Input Highlighting" /></p>
-
-<h3 id="fewer-mass-assignment-and-sql-injection-methods">Fewer Mass Assignment and SQL Injection Methods</h3>
-
-<p>Dave Worth pointed out that Brakeman was a little overzealous in which methods it considered susceptible to mass assignment and SQL injection attacks.</p>
-
-<p>Brakeman will no longer check <code class="language-plaintext highlighter-rouge">update_attribute</code> for mass assignment or the <code class="language-plaintext highlighter-rouge">find_by_*</code> dynamic methods for SQL injection.</p>
-
-<h3 id="fewer-mass-assignment-and-sql-injection-duplicates">Fewer Mass Assignment and SQL Injection Duplicates</h3>
-
-<p>Pesky duplicate reports of mass assignment and SQL injection were turning up as template warnings. This occurred when the results of the mass assignment or SQL query were assigned to a variable which was then used in a template. This should now be fixed.</p>
-
-<p>More details than are probably desired are available <a href="https://github.com/presidentbeef/brakeman/pull/82">here</a>.</p>
-
-<h3 id="rescanning-fixes">Rescanning Fixes</h3>
-
-<p>Rescanning of deleted files is now supported, and there some other issues with rescanning that are now resolved as well.</p>
-
-<h3 id="new-logo">New Logo</h3>
-
-<p>Brakeman has a sweet new logo, thanks to <a href="http://janellelawless.com/">Janelle Lawless</a>!</p>
-
-<p><img src="/images/logo_medium.png" alt="Brakeman Logo" /></p>
-
-<p>Updates to the website to reflect this awesomeness are coming soon.</p>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-
-<p>And don’t forget to check out the Brakeman talk at <a href="http://railsconf2012.com/sessions/44">RailsConf</a> in a few days.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -583,6 +591,10 @@ brakeman --compare report.json
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a>
       </li>
     
@@ -596,10 +608,6 @@ brakeman --compare report.json
     
       <li class="post">
         <a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/02/21/brakeman-5-dot-4-dot-1-released">Brakeman 5.4.1 Released</a>
       </li>
     
   </ul>
