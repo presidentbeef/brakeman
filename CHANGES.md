@@ -1,3 +1,7 @@
+# 6.2.1 - 2024-08-22
+
+Just a packaging fix for brakeman.gem
+
 # 6.2.0 - 2024-08-22
 
 * Add `--show-ignored` option (Gabriel Zayas)
