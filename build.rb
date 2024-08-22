@@ -13,7 +13,7 @@ File.open "bundle/load.rb", "w" do |f|
   f.puts "path = File.expand_path('../..', __FILE__)"
 
   Dir["bundle/ruby/**/lib"].each do |dir|
-    f.puts %Q[$:.unshift "\#{path}/#{dir}"] unless dir.include? 'racc'
+    f.puts %Q[$:.unshift "\#{path}/#{dir}"] unless dir.include? 'racc' or dir.include? 'strscan'
   end
 end
 
