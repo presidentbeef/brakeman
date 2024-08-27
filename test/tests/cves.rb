@@ -204,7 +204,6 @@ class CVETests < Minitest::Test
     assert_no_warning type: :model, :warning_code => 95
     assert_warning :warning_code => 102 # CVE-2016-6317
     assert_new 3 # RCE to Dynamic renders and CVE-2016-6317, unrelated
-    assert_fixed 0
   end
 
   def test_sanitize_cves

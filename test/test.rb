@@ -179,10 +179,11 @@ module BrakemanTester::RescanTestHelper
       # Not really sure why we do this..?
       t = Marshal.load(Marshal.dump(@original))
 
-      s = Brakeman::Scanner.new(t.options)
-      s.process
-      s.tracker.run_checks
-      @rescan = Brakeman::RescanReport.new(t.filtered_warnings, s.tracker)
+      @rescanner = Brakeman::Scanner.new(t.options)
+      @rescanner.process
+      @rescanner.tracker.run_checks
+      @rescanner.tracker.ignored_filter ||= t.ignored_filter
+      @rescan = Brakeman::RescanReport.new(t.filtered_warnings, @rescanner.tracker)
     ensure
       changed.each do |file|
         original = File.join(TEST_PATH, 'apps', app, file)
