@@ -13,7 +13,7 @@ class Brakeman::CheckSkipBeforeFilter < Brakeman::BaseCheck
   @description = "Warn when skipping CSRF or authentication checks by default"
 
   def run_check
-    tracker.controllers.each do |_name, controller|
+    tracker.controllers.each_class do |controller|
       controller.skip_filters.each do |filter|
         process_skip_filter filter, controller
       end
