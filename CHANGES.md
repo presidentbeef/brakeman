@@ -1,5 +1,11 @@
-# Unreleased
+# 6.2.1 - 2024-08-22
 
+Just a packaging fix for brakeman.gem
+
+# 6.2.0 - 2024-08-22
+
+* Add `--show-ignored` option (Gabriel Zayas)
+* Add optional support for Prism parser
 * Warn about unscoped finds with `find_by!`
 * Treat `::X` and `X` the same, for now (Jill Klang)
 * Fix compatibility with default frozen string literals (Jean Boussier)

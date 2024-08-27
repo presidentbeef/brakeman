@@ -65,6 +65,7 @@ module Brakeman
   #  * :report_routes - show found routes on controllers (default: false)
   #  * :run_checks - array of checks to run (run all if not specified)
   #  * :safe_methods - array of methods to consider safe
+  #  * :show_ignored - Display warnings that are usually ignored
   #  * :sql_safe_methods - array of sql sanitization methods to consider safe
   #  * :skip_libs - do not process lib/ directory (default: false)
   #  * :skip_vendor - do not process vendor/ directory (default: true)
@@ -198,6 +199,7 @@ module Brakeman
       :relative_path => false,
       :report_progress => true,
       :safe_methods => Set.new,
+      :show_ignored => false,
       :sql_safe_methods => Set.new,
       :skip_checks => Set.new,
       :skip_vendor => true,

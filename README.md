@@ -2,7 +2,6 @@
 
 [![Build Status](https://circleci.com/gh/presidentbeef/brakeman.svg?style=svg)](https://circleci.com/gh/presidentbeef/brakeman)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/1b08a5c74695cb0d11ec/test_coverage)](https://codeclimate.com/github/presidentbeef/brakeman/test_coverage)
-[![Gitter](https://badges.gitter.im/presidentbeef/brakeman.svg)](https://gitter.im/presidentbeef/brakeman)
 
 # Brakeman
 
@@ -132,6 +131,10 @@ Brakeman will ignore warnings if configured to do so. By default, it looks for a
 To create and manage this file, use:
 
     brakeman -I
+
+If you want to temporarily see the warnings you ignored without affecting the exit code, use:
+
+    brakeman --show-ignored
 
 # Warning information
 
