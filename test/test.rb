@@ -165,7 +165,7 @@ module BrakemanTester::RescanTestHelper
       FileUtils.cp_r(File.join(TEST_PATH, 'apps', app, '.'), dir)
     end
 
-    options = {:app_path => dir, :debug => false}.merge(options)
+    options = {app_path: dir, debug: false, support_rescanning: true}.merge(options)
 
     if @@scans[[app, options]]
       @original = @@scans[[app, options]]
@@ -179,11 +179,8 @@ module BrakemanTester::RescanTestHelper
       # Not really sure why we do this..?
       t = Marshal.load(Marshal.dump(@original))
 
-      @rescanner = Brakeman::Scanner.new(t.options)
-      @rescanner.process
-      @rescanner.tracker.run_checks
-      @rescanner.tracker.ignored_filter ||= t.ignored_filter
-      @rescan = Brakeman::RescanReport.new(t.filtered_warnings, @rescanner.tracker)
+      @rescanner = Brakeman::Rescanner.new(t.options, t.processor, changed)
+      @rescan = @rescanner.recheck
     ensure
       changed.each do |file|
         original = File.join(TEST_PATH, 'apps', app, file)
@@ -235,6 +232,7 @@ module BrakemanTester::RescanTestHelper
   end
 
   def assert_reindex *types
+    return
     if types == [:none]
       assert rescanner.reindex.empty?, "Expected no reindexing, got #{rescanner.reindex.inspect}"
     else

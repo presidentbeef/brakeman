@@ -72,7 +72,7 @@ class Brakeman::Scanner
   end
 
   #Process everything in the Rails application
-  def process(skip_parsing: false)
+  def process(ruby_paths: nil, template_paths: nil)
     process_step 'Processing gems' do
       process_gems
     end
@@ -82,17 +82,21 @@ class Brakeman::Scanner
       process_config
     end
 
-    unless skip_parsing
-      astfiles = nil
+    # -
+    astfiles = nil
+    ruby_paths ||= tracker.app_tree.ruby_file_paths
+    template_paths ||= tracker.app_tree.template_paths
 
-      process_step 'Parsing files' do
-        astfiles = parse_files(ruby_paths: tracker.app_tree.ruby_file_paths, template_paths: tracker.app_tree.template_paths)
-      end
-
-      process_step 'Detecting file types' do
-        detect_file_types(astfiles)
-      end
+    process_step 'Parsing files' do
+      astfiles = parse_files(ruby_paths: ruby_paths, template_paths: template_paths)
     end
+
+    process_step 'Detecting file types' do
+      detect_file_types(astfiles)
+    end
+
+    tracker.save_file_cache! if support_rescanning?
+    # -
 
     process_step 'Processing initializers' do
       process_initializers
@@ -141,7 +145,7 @@ class Brakeman::Scanner
     template_parser = Brakeman::TemplateParser.new(tracker, fp)
 
     fp.read_files(template_paths) do |path, contents|
-      template_parser.parse_template path, contents
+      template_parser.parse_template(path, contents)
     end
 
     # Collect errors raised during parsing
@@ -291,7 +295,9 @@ class Brakeman::Scanner
       return
     end
 
-    track_progress file_cache.libs do |path, lib|
+    libs = file_cache.libs.sort_by { |path, _| path }
+
+    track_progress libs do |path, lib|
       process_step_file path do
         process_lib lib
       end
@@ -324,7 +330,9 @@ class Brakeman::Scanner
   #
   #Adds processed controllers to tracker.controllers
   def process_controllers
-    track_progress file_cache.controllers do |path, controller|
+    controllers = file_cache.controllers.sort_by { |path, _| path }
+
+    track_progress controllers do |path, controller|
       process_step_file path do
         process_controller controller
       end
@@ -372,7 +380,7 @@ class Brakeman::Scanner
   end
 
   def process_template_data_flows
-    templates = tracker.templates.sort_by { |name, _| name.to_s }
+    templates = tracker.templates.sort_by { |name, _| name }
 
     track_progress templates, "templates" do |name, template|
       process_step_file name do
@@ -385,7 +393,9 @@ class Brakeman::Scanner
   #
   #Adds the processed models to tracker.models
   def process_models
-    track_progress file_cache.models do |path, model|
+    models = file_cache.models.sort_by { |path, _| path }
+
+    track_progress models do |path, model|
       process_step_file path do
         process_model model
       end
@@ -421,6 +431,10 @@ class Brakeman::Scanner
   rescue Exception => e
     tracker.error(e)
     nil
+  end
+
+  def support_rescanning?
+    tracker.options[:support_rescanning]
   end
 end
 

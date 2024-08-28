@@ -11,10 +11,10 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def initialize options, processor, changed_files
     super(options)
 
-    old_tracker = processor.tracked_events
+    @old_tracker = processor.tracked_events
 
     @paths = changed_files.map {|f| tracker.app_tree.file_path(f) }
-    @old_results = old_tracker.filtered_warnings.dup  #Old warnings from previous scan
+    @old_results = @old_tracker.filtered_warnings.dup  #Old warnings from previous scan
     @changes = nil                 #True if files had to be rescanned
     @reindex = Set.new
   end
@@ -26,30 +26,35 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
     tracker.run_checks if @changes
 
+    Brakeman.filter_warnings(tracker, options) # Actually sets ignored_filter
+
     Brakeman::RescanReport.new @old_results, tracker
   end
 
   #Rescans changed files
   def rescan
-    @changes = true
+    raise "Cannot rescan: set `support_rescanning: true`" unless @old_tracker.options[:support_rescanning]
 
-    templates = []
-    ruby_files = []
+    @changes = true
+    tracker.file_cache = @old_tracker.pristine_file_cache
+
+    template_paths = []
+    ruby_paths = []
 
     @paths.each do |path|
+      file_cache.delete path
+
       if path.exists?
         if path.relative.match? KNOWN_TEMPLATE_EXTENSIONS
-          templates << path
+          template_paths << path
         elsif path.relative.end_with? '.rb'
-          ruby_files << path
+          ruby_paths << path
         end
       end
     end
 
-#    astfiles = parse_files(ruby_paths: ruby_files, template_paths: templates)
-#    detect_file_types(astfiles)
+    process(ruby_paths:, template_paths:)
 
-    process #(skip_parsing: true)
     self
   end
 
@@ -310,7 +315,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def file_type path
     type = nil
 
-    if path.relative.match? /\.rb$/
+    if path.relative.match?(/\.rb$/)
       astfile = parse_ruby_files([path]).first
 
       if astfile

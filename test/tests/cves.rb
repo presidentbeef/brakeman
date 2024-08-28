@@ -211,9 +211,10 @@ class CVETests < Minitest::Test
       replace "Gemfile.lock", "rails-html-sanitizer (1.0.2)", "rails-html-sanitizer (1.0.3)"
     end
 
-    assert_fixed 5
-    assert_new 2 # XSS goes from high to weak
     assert_version "1.0.3", :'rails-html-sanitizer'
+
+    assert_new 2 # XSS goes from high to weak
+    assert_fixed 5
     assert_no_warning :warning_code => 96
     assert_no_warning :warning_code => 97
     assert_no_warning :warning_code => 98
