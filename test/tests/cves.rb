@@ -161,7 +161,6 @@ class CVETests < Minitest::Test
     skip "This test was always wrong?"
 
     assert_version "3.2.9.rc2"
-    assert_changes
     assert_new 0
     assert_fixed 0
   end

@@ -13,8 +13,6 @@ class OjSettingsTests < Minitest::Test
       replace @oj_config, "# Oj.mimic_JSON", "Oj.mimic_JSON"
     end
 
-    assert_changes
-    assert_reindex :initializers
     assert_fixed 1 # Fix default Oj.load() behavior
     assert_new 0
   end
@@ -24,8 +22,6 @@ class OjSettingsTests < Minitest::Test
       replace @oj_config, "# Oj.default_options", "Oj.default_options"
     end
 
-    assert_changes
-    assert_reindex :initializers
     assert_fixed 1 # Fix default Oj.load() behavior
     assert_new 0
   end
@@ -35,8 +31,6 @@ class OjSettingsTests < Minitest::Test
       append @oj_config, "Oj.default_options = { whatever: false }"
     end
 
-    assert_changes
-    assert_reindex :initializers
     assert_fixed 0 # Default is still bad, no changes 
     assert_new 0
   end

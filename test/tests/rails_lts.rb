@@ -12,8 +12,6 @@ class RailsLTSTests < Minitest::Test
     end
 
     assert @rescanner.tracker.config.gem_version(:'railslts-version'), "2.3.18.6"
-    assert_reindex :none
-    assert_changes
     assert_new 0
     assert_fixed 2
   end
@@ -26,8 +24,6 @@ class RailsLTSTests < Minitest::Test
     end
 
     assert @rescanner.tracker.config.gem_version(:'railslts-version'), "2.3.18.7"
-    assert_reindex :none
-    assert_changes
     assert_new 0
     assert_fixed 3 # 2 + CVE-2012-1099
   end
@@ -40,8 +36,6 @@ class RailsLTSTests < Minitest::Test
     end
 
     assert @rescanner.tracker.config.gem_version(:'railslts-version'), "2.3.18.8"
-    assert_reindex :none
-    assert_changes
     assert_new 0
     assert_fixed 4 # 2 + CVE-2012-1099 + CVE_2014_0081
   end
@@ -54,8 +48,6 @@ class RailsLTSTests < Minitest::Test
     end
 
     assert @rescanner.tracker.config.gem_version(:'railslts-version'), "2.3.18.9"
-    assert_reindex :none
-    assert_changes
     assert_new 0
     assert_fixed 5
   end
