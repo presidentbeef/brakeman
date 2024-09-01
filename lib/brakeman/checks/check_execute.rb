@@ -53,6 +53,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     call = result[:call]
     args = call.arglist
     first_arg = call.first_arg
+    failure = nil
 
     case call.method
     when :popen
@@ -70,6 +71,33 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
         failure = include_user_input?(first_arg[3]) ||
                   dangerous_interp?(first_arg[3]) ||
                   dangerous_string_building?(first_arg[3])
+      end
+    when :pipeline, :pipline_r, :pipeline_rw, :pipeline_w, :pipeline_start
+      # Since these pipeline commands pipe together several commands,
+      # need to check each argument. If it's an array, check first argument
+      # (the command) and also check for `bash -c`. Otherwise check the argument
+      # as a unit.
+
+      args.each do |arg|
+        next unless sexp? arg
+
+        if array?(arg)
+          # Check first element of array
+          failure = include_user_input?(arg[1]) ||
+            dangerous_interp?(arg[1]) ||
+            dangerous_string_building?(arg[1])
+
+          # Check for ['bash', '-c', user_input]
+          if dash_c_shell_command?(arg[1], arg[2])
+            failure = include_user_input?(arg[3]) ||
+              dangerous_interp?(arg[3]) ||
+              dangerous_string_building?(arg[3])
+          end
+        else
+          failure = include_user_input?(arg)
+        end
+
+        break if failure
       end
     when :system, :exec
       # Normally, if we're in a `system` or `exec` call, we only are worried
