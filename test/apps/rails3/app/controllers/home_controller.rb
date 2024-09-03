@@ -146,7 +146,7 @@ class HomeController < ApplicationController
     Open3.capture2 "ls #{params[:dir]}"
     Open3.capture2e "ls #{params[:dir]}"
     Open3.capture3 "ls #{params[:dir]}"
-    Open3.pipeline "sort", "uniq", :in => params[:file] 
+    Open3.pipeline "sort", "uniq", :in => params[:file]
     Open3.pipeline_r "sort #{params[:file]}", "uniq"
     Open3.pipeline_rw params[:cmd], "sort -g"
     Open3.pipeline_start *params[:cmds]
@@ -156,6 +156,13 @@ class HomeController < ApplicationController
 
   def test_only_path_also_correct
     redirect_to(params.merge(:only_path => true, :display => nil))
+  end
+
+  def test_more_uses_of_pipelines
+    Open3.pipeline ['sort', params[:file]] # safe-ish
+    Open3.pipeline_r ['ls', '*'], "sort #{params[:order]}"
+    Open3.pipeline_rw ['ls'], [params[:cmd]]
+    Open3.pipeline_start ['bash', '-c', params[:cmd]]
   end
 
   private
