@@ -24,7 +24,7 @@ class Brakeman::GemProcessor < Brakeman::BasicProcessor
     end
 
     if gem_files[:gemlock]
-      Brakeman.notify "[!!] Processing Gemfile.lock"
+      Brakeman.notify "[!!] Processing #{gems_files[:gemlock][:file]}"
       process_gem_lock
     end
 
@@ -85,6 +85,8 @@ class Brakeman::GemProcessor < Brakeman::BasicProcessor
   end
 
   def process_gem_lock
+    Brakeman.notify @gem_files[:gemlock][:src]
+
     line_num = 1
     file = @gem_files[:gemlock][:file]
     @gem_files[:gemlock][:src].each_line do |line|
