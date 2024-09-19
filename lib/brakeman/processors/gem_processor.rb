@@ -24,6 +24,7 @@ class Brakeman::GemProcessor < Brakeman::BasicProcessor
     end
 
     if gem_files[:gemlock]
+      Brakeman.notify "[!!] Processing Gemfile.lock"
       process_gem_lock
     end
 

@@ -56,6 +56,8 @@ module Brakeman
     end
 
     def add_gem name, version, file, line
+      Brakeman.notify "Adding #{name} gem"
+
       name = name.to_sym
       @gems[name] = {
         :version => version,
@@ -120,6 +122,8 @@ module Brakeman
             tracker.options[:rails8] = true
             Brakeman.notify "[Notice] Detected Rails 8 application"
           end
+        else
+          Brakeman.notify "[!!] No Rails version found"
         end
       end
 

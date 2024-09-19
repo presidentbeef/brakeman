@@ -226,11 +226,14 @@ class Brakeman::Scanner
     end
 
     if @app_tree.exists? "Gemfile.lock"
+      Brakeman.notify "[!!] Found Gemfile.lock"
       file = @app_tree.file_path("Gemfile.lock")
       gem_files[:gemlock] = { :src => file.read, :file => file }
     elsif @app_tree.exists? "gems.locked"
       file = @app_tree.file_path("gems.locked")
       gem_files[:gemlock] = { :src => file.read, :file => file }
+    else
+      Brakeman.notify "[!!] No Gemfile.lock"
     end
 
     if @app_tree.gemspec
