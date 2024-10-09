@@ -83,6 +83,12 @@ class Brakeman::Scanner
     end
 
     # -
+    # If ruby_paths or template_paths are set,
+    # only parse those files. The rest will be fetched
+    # from the file cache.
+    #
+    # Otherwise, parse everything normally.
+    #
     astfiles = nil
     ruby_paths ||= tracker.app_tree.ruby_file_paths
     template_paths ||= tracker.app_tree.template_paths

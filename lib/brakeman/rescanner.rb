@@ -24,23 +24,27 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def recheck
     rescan if @changes.nil?
 
-    tracker.run_checks if @changes
-
-    Brakeman.filter_warnings(tracker, options) # Actually sets ignored_filter
-
-    Brakeman::RescanReport.new @old_results, tracker
+    if @changes
+      tracker.run_checks
+      Brakeman.filter_warnings(tracker, options) # Actually sets ignored_filter
+      Brakeman::RescanReport.new @old_results, tracker
+    else
+      # No changes, fake no new results
+      Brakeman::RescanReport.new @old_results, @old_tracker
+    end
   end
 
   #Rescans changed files
   def rescan
     raise "Cannot rescan: set `support_rescanning: true`" unless @old_tracker.options[:support_rescanning]
 
-    @changes = true
     tracker.file_cache = @old_tracker.pristine_file_cache
 
     template_paths = []
     ruby_paths = []
 
+    # Remove changed files from the cache.
+    # Collect files to re-parse.
     @paths.each do |path|
       file_cache.delete path
 
@@ -53,9 +57,22 @@ class Brakeman::Rescanner < Brakeman::Scanner
       end
     end
 
-    process(ruby_paths:, template_paths:)
+    # Try to skip rescanning files that do not impact
+    # Brakeman results
+    if @paths.all? { |path| ignorable? path }
+      @changes = false
+    else
+      @changes = true
+      process(ruby_paths:, template_paths:)
+    end
 
     self
+  end
+
+  IGNORE_PATTERN = /\.(md|txt|js|ts|tsx|json|scss|css|xml|ru|png|jpg|pdf|gif|svg|webm|ttf|sql)$/
+
+  def ignorable? path
+    path.relative.match? IGNORE_PATTERN
   end
 end
 
