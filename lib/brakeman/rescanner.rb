@@ -128,37 +128,11 @@ class Brakeman::RescanReport
   end
 
   #Output total, fixed, and new warnings
-  def to_s(verbose = false)
-    Brakeman.load_brakeman_dependency 'terminal-table'
-
-    if !verbose
-      <<-OUTPUT
-Total warnings: #{all_warnings.length}
-Fixed warnings: #{fixed_warnings.length}
-New warnings: #{new_warnings.length}
-      OUTPUT
-    else
-      #Eventually move this to different method, or make default to_s
-      out = ""
-
-      {:fixed => fixed_warnings, :new => new_warnings, :existing => existing_warnings}.each do |warning_type, warnings|
-        if warnings.length > 0
-          out << "#{warning_type.to_s.titleize} warnings: #{warnings.length}\n"
-
-          table = Terminal::Table.new(:headings => ["Confidence", "Class", "Method", "Warning Type", "Message"]) do |t|
-            warnings.sort_by { |w| w.confidence}.each do |warning|
-              w = warning.to_row
-
-              w["Confidence"] = Brakeman::Report::TEXT_CONFIDENCE[w["Confidence"]]
-
-              t << [w["Confidence"], w["Class"], w["Method"], w["Warning Type"], w["Message"]]
-            end
-          end
-          out << truncate_table(table.to_s)
-        end
-      end
-
-      out
-    end
+  def to_s
+    <<~OUTPUT
+      Total warnings: #{all_warnings.length}
+      Fixed warnings: #{fixed_warnings.length}
+      New warnings: #{new_warnings.length}
+    OUTPUT
   end
 end
