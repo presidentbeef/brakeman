@@ -469,10 +469,7 @@ module Brakeman
     @quiet = !!tracker.options[:quiet]
     @debug = !!tracker.options[:debug]
 
-    processor = Processor.new(tracker.app_tree, options)
-    processor.tracker.file_cache = tracker.file_cache
-
-    Rescanner.new(options, processor, files).recheck
+    Rescanner.new(options, tracker.processor, files).recheck
   end
 
   def self.notify message
