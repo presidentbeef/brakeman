@@ -1,4 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2024-08-22T14:51:35-06:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 6.2.1 Released</title><link href="https://brakemanscanner.org/blog/2024/08/22/brakeman-6-dot-2-released" rel="alternate" type="text/html" title="Brakeman 6.2.1 Released" /><published>2024-08-22T10:30:00-06:00</published><updated>2024-08-22T10:30:00-06:00</updated><id>https://brakemanscanner.org/blog/2024/08/22/brakeman-6-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2024/08/22/brakeman-6-dot-2-released">&lt;p&gt;Lots of great contributions in this release, thanks!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2024-10-18T09:45:22-06:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 6.2.2 Released</title><link href="https://brakemanscanner.org/blog/2024/10/18/brakeman-6-dot-2-dot-2-released" rel="alternate" type="text/html" title="Brakeman 6.2.2 Released" /><published>2024-10-18T05:00:00-06:00</published><updated>2024-10-18T05:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2024/10/18/brakeman-6-dot-2-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">&lt;p&gt;Small release!&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 6.2.1:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Revamp command injection detection in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pipeline*&lt;/code&gt; calls (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1862&quot;&gt;#1862&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;New end-of-support dates for Rails&lt;/li&gt;
+  &lt;li&gt;Exclude more native gems from vendored gems in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;brakeman&lt;/code&gt; gem (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1869&quot;&gt;#1869&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;command-injection-in-pipeline_-calls&quot;&gt;Command Injection in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pipeline_*&lt;/code&gt; calls&lt;/h3&gt;
+
+&lt;p&gt;More specific checks for arguments to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Open3&lt;/code&gt; methods &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pipeline&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pipline_r&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pipeline_rw&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pipeline_w&lt;/code&gt;, and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pipeline_start&lt;/code&gt; to improve
+both true and false positive rates.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1868&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;updated-end-of-support-dates-for-rails&quot;&gt;Updated End of Support Dates for Rails&lt;/h3&gt;
+
+&lt;p&gt;Updated based on the &lt;a href=&quot;https://rubyonrails.org/maintenance&quot;&gt;updated&lt;/a&gt; &lt;a href=&quot;https://rubyonrails.org/2024/10/15/new-maintenance-policy-and-eol-annouments&quot;&gt;policy&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, timing of this Brakeman release means Brakeman is already warning about Rails 6.1 end-of-support (ended October 1st).&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1843&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;f8892719490ed5f23e08fc14cb0020311a0af18fb47f7c7650345d0a35826413  brakeman-6.2.2.gem
+fb7ba15cd309f995c95d15d9e0e590f3aad6f95a5dfa030854e8806f3ba196d9  brakeman-lib-6.2.2.gem
+b3a5b59a14a527bfaca4d2637765e98c12ae800c8f044b1939da578d3ed31851  brakeman-min-6.2.2.gem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Small release!</summary></entry><entry><title type="html">Brakeman 6.2.1 Released</title><link href="https://brakemanscanner.org/blog/2024/08/22/brakeman-6-dot-2-released" rel="alternate" type="text/html" title="Brakeman 6.2.1 Released" /><published>2024-08-22T10:30:00-06:00</published><updated>2024-08-22T10:30:00-06:00</updated><id>https://brakemanscanner.org/blog/2024/08/22/brakeman-6-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2024/08/22/brakeman-6-dot-2-released">&lt;p&gt;Lots of great contributions in this release, thanks!&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 6.1.2:&lt;/em&gt;&lt;/p&gt;
 
@@ -725,68 +765,4 @@ the help message matches the order of the options in the prompt!&lt;/p&gt;
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Changes since 5.2.2:</summary></entry><entry><title type="html">Brakeman 5.2.2 Released</title><link href="https://brakemanscanner.org/blog/2022/04/06/brakeman-5-dot-2-dot-2-released" rel="alternate" type="text/html" title="Brakeman 5.2.2 Released" /><published>2022-04-06T08:30:00-06:00</published><updated>2022-04-06T08:30:00-06:00</updated><id>https://brakemanscanner.org/blog/2022/04/06/brakeman-5-dot-2-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2022/04/06/brakeman-5-dot-2-dot-2-released">&lt;p&gt;&lt;em&gt;Changes since 5.2.1:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Respect equality in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;if&lt;/code&gt; conditions (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1683&quot;&gt;#1683&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Update message for unsafe reflection (&lt;a href=&quot;https://github.com/pedropb&quot;&gt;Pedro Baracho&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Handle &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nil&lt;/code&gt; when joining values (&lt;a href=&quot;https://github.com/Capncavedan&quot;&gt;Dan Buettner&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Add additional String methods for SQL injection check (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1669&quot;&gt;#1669&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Update &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ruby_parser&lt;/code&gt; for Ruby 3.1 support (&lt;a href=&quot;https://github.com/sqbell&quot;&gt;Merek Skubela&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;equality-checks-in-conditions&quot;&gt;Equality Checks in Conditions&lt;/h3&gt;
-
-&lt;p&gt;When Brakeman comes across code like:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# do something with x&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;It will now assume &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;x&lt;/code&gt; is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt; inside of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;if&lt;/code&gt; branch.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1681&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;unsafe-reflection-messages&quot;&gt;Unsafe Reflection Messages&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/pedropb&quot;&gt;Pedro Baracho&lt;/a&gt; updated the messages for unsafe reflection to be clearer.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1670&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;another-string-joining-fix&quot;&gt;Another String Joining Fix&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/Capncavedan&quot;&gt;Dan Buettner&lt;/a&gt; fixed an exception when a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nil&lt;/code&gt; gets into a string joining operation.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1686&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;more-sql-injection&quot;&gt;More SQL Injection&lt;/h3&gt;
-
-&lt;p&gt;When Brakeman checks for SQL injection, there are a number of methods (like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;to_s&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;strip&lt;/code&gt;) that essentially return the string itself.&lt;/p&gt;
-
-&lt;p&gt;This list of methods has been expanded to include &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chop&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;lstrip&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rstrip&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;scrub&lt;/code&gt;, and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tr&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1682&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;update-rubyparser&quot;&gt;Update RubyParser&lt;/h3&gt;
-
-&lt;p&gt;This version of Brakeman includes &lt;a href=&quot;https://www.zenspider.com/releases/2022/03/ruby_parser-version-3-19-0-has-been-released.html&quot;&gt;RubyParser 3.19&lt;/a&gt; which adds support for Ruby 3.1 syntax. Thanks &lt;a href=&quot;https://github.com/sqbell&quot;&gt;Merek Skubela&lt;/a&gt;!&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1695&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
-
-&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;246c9540f5d90fbde39c95999d319f9706bf79668f66bb35419825c1cbef61ae  brakeman-5.2.2.gem
-1b559598d78919c0f6f3a8e8602b86ab35f825810b1d7daf872b7791b452e78b  brakeman-lib-5.2.2.gem
-4c34dcc1900bf872254eee2b313b1634ffacc9002fd7d26b8390259318cf6194  brakeman-min-5.2.2.gem
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Changes since 5.2.1:</summary></entry></feed>
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Changes since 5.2.2:</summary></entry></feed>

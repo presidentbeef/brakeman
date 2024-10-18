@@ -80,6 +80,92 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/05/23/brakeman-1-dot-6-1-released">Brakeman 1.6.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-05-23 12:45:00 -0600" pubdate  updated >2012-05-23 12:45:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Wow, it’s been over a month since the last release!</p>
+
+<p>The major change in this version is a rewrite of the SQL injection check. Many more methods are covered, and there should be a reduction of false positives as well.</p>
+
+<p><em>Changes since 1.6.0</em>:</p>
+
+<ul>
+  <li>Major rewrite of CheckSQL</li>
+  <li>Process actions mixed into controllers</li>
+  <li>Check for inherited <code class="language-plaintext highlighter-rouge">attr_accessible</code> (Neil Matatall)</li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">render :template =&gt; ...</code></li>
+  <li>Report line number of highlighted value, if available</li>
+  <li>Fix highlighting of HTML escaped values in HTML report</li>
+  <li>Fix rescanning of deleted templates</li>
+</ul>
+
+<h3 id="updated-sql-injection-check">Updated SQL Injection Check</h3>
+
+<p><code class="language-plaintext highlighter-rouge">CheckSQL</code> has been completely revamped. Brakeman now has a much better understanding of the various ActiveRecord::FinderMethods and ActiveRecord::QueryMethods, as well as their options.</p>
+
+<p>The check is also more conservative about what it warns on. Previously, since string interpolation is the main entry point for SQL injection in Rails, any interpolated value in a query would generate a warning. Now, “safe” sanitization methods, obviously safe methods like <code class="language-plaintext highlighter-rouge">to_i</code> and <code class="language-plaintext highlighter-rouge">id</code>, constants, strings, and other literal values should not cause warnings.</p>
+
+<p>The “highlighted” value (or “user input”) reported for SQL warnings should be much more accurate now, making it easier to determine why a warning was reported.</p>
+
+<h3 id="controller-mixins">Controller Mixins</h3>
+
+<p>Methods on controller mixins that are used as actions should now be processed as if they were defined in the controller itself.</p>
+
+<h3 id="check-for-inherited-mass-assignment-protection">Check for Inherited Mass Assignment Protection</h3>
+
+<p>Since mass assignment protection via <code class="language-plaintext highlighter-rouge">attr_accessible</code> is inheritable, Brakeman will no longer warn about models whose parent uses <code class="language-plaintext highlighter-rouge">attr_accessible</code>.</p>
+
+<h3 id="template-option-in-render">Template Option in Render</h3>
+
+<p>Somehow, the <code class="language-plaintext highlighter-rouge">:template</code> option for <code class="language-plaintext highlighter-rouge">render</code> has been ignored this whole time. Sorry!</p>
+
+<h3 id="better-line-numbers">Better Line Numbers</h3>
+
+<p>Warnings which have a <code class="language-plaintext highlighter-rouge">:user_input</code> field use that value to “highlight” part of the code in the reported warning. This value usually corresponds to the code which actually caused the warning to be generated.</p>
+
+<p>If a warning has this field, the line number of that code is used, instead of the starting line number of the entire piece of code. This often leads to more accurate and helpful line numbers.</p>
+
+<h3 id="highlighted-values-in-html-reports">Highlighted Values in HTML Reports</h3>
+
+<p>Since the warnings output in HTML reports are HTML-escaped, there was a sometimes mismatch between the value that needed to be highlighted and the HTML warning output, causing nothing to be highlighted. This is fixed now.</p>
+
+<h3 id="rescanning-of-deleted-templates">Rescanning of Deleted Templates</h3>
+
+<p>In the rescanning logic, templates which are related to a changed file (a view or partial that is rendered, usually) will be rescanned. However, there is the possibility that the template which needs to be rescanned as a related file has been deleted as part of the set of changes. This caused the rescanning to blow up, but that has been fixed now.</p>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+
+<p>Don’t forget to check out the <a href="https://speakerdeck.com/u/presidentbeef/p/keeping-rails-applications-on-track-with-brakeman">RailsConf Brakeman presentation slides</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/04/20/brakeman-1-dot-6-released">Brakeman 1.6 Released</a></h1>
     
     
@@ -421,105 +507,6 @@ user.send(method)
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/03/05/brakeman-1-dot-5-1-released">Brakeman 1.5.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-03-05 18:50:00 -0700" pubdate  updated >2012-03-05 18:50:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>After the excitment yesterday with a mass assignment vulnerability being exploited in a very public manner on <a href="https://gist.github.com/1978249">Github</a>, interest in Brakeman has skyrocketed.</p>
-
-<p>This lead to re-examination of Brakeman’s code for detecting that mass assignment has been globally disabled - and it turns out there was a bug or two. So here is a bug-fix release of Brakeman to correct that and some other minor issues.</p>
-
-<p>Upgrading to 1.5.1 may increase the number of warnings reported.</p>
-
-<p><em>Changes since 1.5.0</em>:</p>
-
-<ul>
-  <li>Fix detection of global mass assignment setting</li>
-  <li>Fix partial rendering in Rails 3</li>
-  <li>Show backtrace when interrupt received (Ruby 1.9 only)</li>
-  <li>More debug output</li>
-  <li>Internal fixes:
-    <ul>
-      <li>Remove duplicate method in Brakeman::Rails2XSSErubis</li>
-      <li>Add tracking of module and class to Brakeman::BaseProcessor</li>
-      <li>Report module when using Brakeman::FindCall</li>
-    </ul>
-  </li>
-</ul>
-
-<h3 id="mass-assignment">Mass Assignment</h3>
-
-<p>Mass assignment is not a particularly new issue, but the amount of attention suddenly focused on it this weekend was amazing.</p>
-
-<p>This release of Brakeman can detect three different methods for defaulting all models to a whitelist of allowed attributes that can be mass assigned.</p>
-
-<p>The first is probably the most widely-seen version. In an intializer, do</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActiveRecord::Base.send(:attr_accessible, nil)
-</code></pre></div></div>
-
-<p>The second is essentially equivalent, but 1.5.1 adds support for it as well:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module ActiveRecord
-  class Base
-    attr_accessible nil
-  end
-end
-</code></pre></div></div>
-
-<p>The third option is only available for Rails 3.1.0 and newer. The following configuration setting can be added to <code class="language-plaintext highlighter-rouge">application.rb</code>:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config.active_record.whitelist_attributes = true
-</code></pre></div></div>
-
-<p>Brakeman should correctly detect all of these.</p>
-
-<p><a href="http://pragtob.wordpress.com/2012/03/06/secure-your-rails-apps/">This is a very nice post</a> explaining the dangers of mass assignment (mentioning Brakeman is nice, too.)</p>
-
-<h3 id="partials-in-rails-3">Partials in Rails 3</h3>
-
-<p>In Rails 3, <code class="language-plaintext highlighter-rouge">render 'blah'</code> is now equivalent to <code class="language-plaintext highlighter-rouge">render :partial =&gt; 'blah'</code> when used inside a template.</p>
-
-<p>Brakeman now supports this correctly.</p>
-
-<h3 id="debug-output">Debug Output</h3>
-
-<p>More debugging output has been added for use with the <code class="language-plaintext highlighter-rouge">-d</code> option.</p>
-
-<p>Additionally, when interrupting the application (for example, with <code class="language-plaintext highlighter-rouge">^C</code>), a stack trace will be output. Please note, however, that this only works with Ruby 1.9.</p>
-
-<h3 id="internal-changes">Internal Changes</h3>
-
-<p>There have been a few internal changes. There is a possibility that these will affect some warnings. However, it should only result in accurate reporting of class names.</p>
-
-<h3 id="report-issues">Report Issues</h3>
-
-<p>Please report any problems on <a href="https://github.com/presidentbeef/brakeman/issues">Github</a>!</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -558,6 +545,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
       </li>
     
@@ -571,10 +562,6 @@ end
     
       <li class="post">
         <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a>
       </li>
     
   </ul>

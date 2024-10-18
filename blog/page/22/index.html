@@ -80,6 +80,105 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/03/05/brakeman-1-dot-5-1-released">Brakeman 1.5.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-03-05 18:50:00 -0700" pubdate  updated >2012-03-05 18:50:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>After the excitment yesterday with a mass assignment vulnerability being exploited in a very public manner on <a href="https://gist.github.com/1978249">Github</a>, interest in Brakeman has skyrocketed.</p>
+
+<p>This lead to re-examination of Brakeman’s code for detecting that mass assignment has been globally disabled - and it turns out there was a bug or two. So here is a bug-fix release of Brakeman to correct that and some other minor issues.</p>
+
+<p>Upgrading to 1.5.1 may increase the number of warnings reported.</p>
+
+<p><em>Changes since 1.5.0</em>:</p>
+
+<ul>
+  <li>Fix detection of global mass assignment setting</li>
+  <li>Fix partial rendering in Rails 3</li>
+  <li>Show backtrace when interrupt received (Ruby 1.9 only)</li>
+  <li>More debug output</li>
+  <li>Internal fixes:
+    <ul>
+      <li>Remove duplicate method in Brakeman::Rails2XSSErubis</li>
+      <li>Add tracking of module and class to Brakeman::BaseProcessor</li>
+      <li>Report module when using Brakeman::FindCall</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="mass-assignment">Mass Assignment</h3>
+
+<p>Mass assignment is not a particularly new issue, but the amount of attention suddenly focused on it this weekend was amazing.</p>
+
+<p>This release of Brakeman can detect three different methods for defaulting all models to a whitelist of allowed attributes that can be mass assigned.</p>
+
+<p>The first is probably the most widely-seen version. In an intializer, do</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActiveRecord::Base.send(:attr_accessible, nil)
+</code></pre></div></div>
+
+<p>The second is essentially equivalent, but 1.5.1 adds support for it as well:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module ActiveRecord
+  class Base
+    attr_accessible nil
+  end
+end
+</code></pre></div></div>
+
+<p>The third option is only available for Rails 3.1.0 and newer. The following configuration setting can be added to <code class="language-plaintext highlighter-rouge">application.rb</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config.active_record.whitelist_attributes = true
+</code></pre></div></div>
+
+<p>Brakeman should correctly detect all of these.</p>
+
+<p><a href="http://pragtob.wordpress.com/2012/03/06/secure-your-rails-apps/">This is a very nice post</a> explaining the dangers of mass assignment (mentioning Brakeman is nice, too.)</p>
+
+<h3 id="partials-in-rails-3">Partials in Rails 3</h3>
+
+<p>In Rails 3, <code class="language-plaintext highlighter-rouge">render 'blah'</code> is now equivalent to <code class="language-plaintext highlighter-rouge">render :partial =&gt; 'blah'</code> when used inside a template.</p>
+
+<p>Brakeman now supports this correctly.</p>
+
+<h3 id="debug-output">Debug Output</h3>
+
+<p>More debugging output has been added for use with the <code class="language-plaintext highlighter-rouge">-d</code> option.</p>
+
+<p>Additionally, when interrupting the application (for example, with <code class="language-plaintext highlighter-rouge">^C</code>), a stack trace will be output. Please note, however, that this only works with Ruby 1.9.</p>
+
+<h3 id="internal-changes">Internal Changes</h3>
+
+<p>There have been a few internal changes. There is a possibility that these will affect some warnings. However, it should only result in accurate reporting of class names.</p>
+
+<h3 id="report-issues">Report Issues</h3>
+
+<p>Please report any problems on <a href="https://github.com/presidentbeef/brakeman/issues">Github</a>!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/03/01/brakeman-1-dot-5-0-released">Brakeman 1.5.0 Released</a></h1>
     
     
@@ -405,90 +504,6 @@ puts clean(x)
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/01/20/brakeman-1-dot-2-1-released">Brakeman 1.2.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-01-20 12:16:00 -0700" pubdate  updated >2012-01-20 12:16:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is essentially just a bugfix release, but due to the fixes for <code class="language-plaintext highlighter-rouge">link_to</code> warnings, there is a good possibility the number of reported warnings will decrease when upgrading to this version.</p>
-
-<p>Changes since 1.2.0:</p>
-
-<ul>
-  <li>Remove link_to warning for Rails 3.x or when using rails_xss</li>
-  <li>Don’t warn if first argument to link_to is escaped</li>
-  <li>Detect usage of attr_accessible with no arguments</li>
-  <li>Fix error when rendering a partial from a view but not through a controller</li>
-  <li>Fix some issues with rails_xss, CheckCrossSiteScripting, and CheckTranslateBug</li>
-  <li>Simplify Brakeman Rake task</li>
-  <li>Avoid modifying $VERBOSE</li>
-  <li>Add Brakeman::RescanReport#to_s</li>
-  <li>Add Brakeman::Warning#to_s</li>
-</ul>
-
-<h3 id="link_to-changes">link_to Changes</h3>
-
-<p>Prior to Rails 3.0, there <a href="https://rails.lighthouseapp.com/projects/8994/tickets/3518-link_to-doesnt-escape-its-input">was a bug</a> in <code class="language-plaintext highlighter-rouge">link_to</code> that caused the body of the link tag to be output without escaping. While this was fixed in Rails 3.0, Brakeman has still been warning on it. This was also fixed in the <a href="https://github.com/rails/rails_xss/commit/afc1610fe4b94150faee98c16f15a24290d20900">rails_xss</a>, so Brakeman should no longer warn on <code class="language-plaintext highlighter-rouge">link_to</code> for Rails 2.x when using the rails_xss plugin.</p>
-
-<p>Brakeman was also warning on <code class="language-plaintext highlighter-rouge">link_to</code> even if the body argument was manually escaped. This should be resolved now.</p>
-
-<p>One other related issue was a silly bug causing Brakeman to sometimes ignore <code class="language-plaintext highlighter-rouge">--escape-html</code> or the rails_xss plugin, leading to some confusing output. This is fixed.</p>
-
-<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/32">Neil Matatall</a> for reporting the <code class="language-plaintext highlighter-rouge">link_to</code> issue and <a href="https://github.com/a5sk4s">Andreas</a> for reporting the rails_xss problems.</p>
-
-<h3 id="attr_accessible-with-no-arguments">attr_accessible with No Arguments</h3>
-
-<p>Brakeman was not detecting the case where <code class="language-plaintext highlighter-rouge">attr_accessible</code> is called with zero arguments, causing spurious mass assignment warnings.</p>
-
-<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/31">Justin Wiley</a> for reporting this.</p>
-
-<h3 id="brakeman-rake-task">Brakeman Rake Task</h3>
-
-<p>The Brakeman Rake task (installed via <code class="language-plaintext highlighter-rouge">--rake</code>) is even <a href="/docs/rake">simpler now</a>.</p>
-
-<h3 id="verbose">$VERBOSE</h3>
-
-<p>Brakeman was using <code class="language-plaintext highlighter-rouge">$VERBOSE</code> and <code class="language-plaintext highlighter-rouge">Kernel.warn</code> for controlling debug output. This has changed and <code class="language-plaintext highlighter-rouge">$VERBOSE</code> will no longer be modified when using Brakeman.</p>
-
-<h3 id="rails-32-support">Rails 3.2 Support</h3>
-
-<p>So far, there have not been any issues with Brakeman and Rails 3.2. Please <a href="https://github.com/presidentbeef/brakeman/issues">report</a> any that come up!</p>
-
-<h3 id="jruby-performance">JRuby Performance</h3>
-
-<p>Prior to Brakeman 1.2, <a href="http://jruby.org/">JRuby</a> was very slow when running Brakeman. This has changed, and now JRuby is probably the fastest option for scanning large applications. Give it a try, especially if you are using Ruby 1.8.7!</p>
-
-<h3 id="mailing-list">Mailing List</h3>
-
-<p>There is now a Brakeman mailing list on <a href="http://librelist.com/browser/brakeman/">librelist</a>.</p>
-
-<p>To subscribe, send any email to <a href="&#109;ailto&#58;b&#114;%&#54;1k&#37;65m&#37;&#54;1n&#64;&#37;6Ci&#98;%&#55;2&#101;l%&#54;&#57;st&#46;com">brakeman@librelist.com</a>. You will be asked to confirm your subscription.</p>
-
-<p>Archives are available for browsing on <a href="http://www.mail-archive.com/brakeman@librelist.com/maillist.html">The Mail Archive</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -527,6 +542,10 @@ puts clean(x)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
       </li>
     
@@ -540,10 +559,6 @@ puts clean(x)
     
       <li class="post">
         <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a>
       </li>
     
   </ul>

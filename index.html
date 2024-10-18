@@ -80,6 +80,76 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2024-10-18 05:00:00 -0600" pubdate  updated >2024-10-18 05:00:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Small release!</p>
+
+<p><em>Changes since 6.2.1:</em></p>
+
+<ul>
+  <li>Revamp command injection detection in <code class="language-plaintext highlighter-rouge">pipeline*</code> calls (<a href="https://github.com/presidentbeef/brakeman/issues/1862">#1862</a>)</li>
+  <li>New end-of-support dates for Rails</li>
+  <li>Exclude more native gems from vendored gems in <code class="language-plaintext highlighter-rouge">brakeman</code> gem (<a href="https://github.com/presidentbeef/brakeman/issues/1869">#1869</a>)</li>
+</ul>
+
+<h3 id="command-injection-in-pipeline_-calls">Command Injection in <code class="language-plaintext highlighter-rouge">pipeline_*</code> calls</h3>
+
+<p>More specific checks for arguments to <code class="language-plaintext highlighter-rouge">Open3</code> methods <code class="language-plaintext highlighter-rouge">pipeline</code>, <code class="language-plaintext highlighter-rouge">pipline_r</code>, <code class="language-plaintext highlighter-rouge">pipeline_rw</code>, <code class="language-plaintext highlighter-rouge">pipeline_w</code>, and <code class="language-plaintext highlighter-rouge">pipeline_start</code> to improve
+both true and false positive rates.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1868">changes</a>)</p>
+
+<h3 id="updated-end-of-support-dates-for-rails">Updated End of Support Dates for Rails</h3>
+
+<p>Updated based on the <a href="https://rubyonrails.org/maintenance">updated</a> <a href="https://rubyonrails.org/2024/10/15/new-maintenance-policy-and-eol-annouments">policy</a>.</p>
+
+<p>Unfortunately, timing of this Brakeman release means Brakeman is already warning about Rails 6.1 end-of-support (ended October 1st).</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1843">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f8892719490ed5f23e08fc14cb0020311a0af18fb47f7c7650345d0a35826413  brakeman-6.2.2.gem
+fb7ba15cd309f995c95d15d9e0e590f3aad6f95a5dfa030854e8806f3ba196d9  brakeman-lib-6.2.2.gem
+b3a5b59a14a527bfaca4d2637765e98c12ae800c8f044b1939da578d3ed31851  brakeman-min-6.2.2.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a></h1>
     
     
@@ -541,134 +611,6 @@ ef2ff1234ba2a9e7216a0a047b9df0def8c3b8d162d29853c907238901353a54  brakeman-min-6
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2023-05-24 15:30:00 -0600" pubdate  updated >2023-05-24 15:30:00 -0600</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Brakeman 6.0 drops parsing support for Ruby 1.8/1.9, and raises the minimum Ruby version to run Brakeman to 3.0.</p>
-
-<p><em>Changes since 5.4.1:</em></p>
-
-<ul>
-  <li>Drop support for Ruby 1.8/1.9 syntax</li>
-  <li>Raise minimum Ruby version to 3.0</li>
-  <li>Add obsolete fingerprints to comparison report (<a href="https://github.com/presidentbeef/brakeman/issues/1758">#1758</a>)</li>
-  <li>Warn about missing CSRF protection when defaults are not loaded (<a href="https://github.com/montdidier">Chris Kruger</a>)</li>
-  <li>Fix false positive with <code class="language-plaintext highlighter-rouge">content_tag</code> in newer Rails (<a href="https://github.com/presidentbeef/brakeman/issues/1778">#1778</a>)</li>
-  <li>Scan directories that include the word <code class="language-plaintext highlighter-rouge">public</code></li>
-  <li>Fix end-of-life dates for Ruby</li>
-</ul>
-
-<h3 id="ruby-parsing-version-support">Ruby Parsing Version Support</h3>
-
-<p>This version of Brakeman no longer supports parsing Ruby 1.8/1.9 syntax.</p>
-
-<p><code class="language-plaintext highlighter-rouge">ruby_parser</code>, the gem Brakeman depends on for parsing Ruby, dropped support quite a while ago. Brakeman was depending on the <code class="language-plaintext highlighter-rouge">ruby_parser-legacy</code> gem for these older versions. But since it has been eight years since Ruby 1.9 has been unmaintained… it is time to let go.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1771">changes</a>)</p>
-
-<h3 id="minimum-ruby-version">Minimum Ruby Version</h3>
-
-<p>The minimum Ruby version to run Brakeman is now 3.0.0.</p>
-
-<p>Official support for the 2.x line of Ruby has ended, so it is a good time to bump up the minimum requirement and adopt more modern language features.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1771">changes</a>)</p>
-
-<h3 id="missing-csrf-protection-warning">Missing CSRF Protection Warning</h3>
-
-<p>Since Rails 5.2.0, new applications have had cross-site request forgery protection enabled. Brakeman assumed the protection was enabled based on the Rails version. However, this was incorrect.</p>
-
-<p>Now Brakeman correctly handles the default configuration values.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1776">changes</a>)</p>
-
-<h3 id="content-tag-attributes">Content Tag Attributes</h3>
-
-<p>Brakeman will no longer warn about user input in <code class="language-plaintext highlighter-rouge">content_tag</code> attribute names in Rails 6.1.6+</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1779">changes</a></p>
-
-<h3 id="obsolete-warnings-in-comparison-report">Obsolete Warnings in Comparison Report</h3>
-
-<p>When using the <code class="language-plaintext highlighter-rouge">--compare</code> option, the output JSON will now include an <code class="language-plaintext highlighter-rouge">obsolete</code> key with an array of fingerprints.</p>
-
-<p>These fingerprints are warnings that are configured to be ignored, but no longer exist.</p>
-
-<p>Note that the report will include <em>all</em> fingerprints in the ignore configuration that are not in the current report, even if they were already obsolete.</p>
-
-<p>This report format matches the <code class="language-plaintext highlighter-rouge">--json</code> output.</p>
-
-<p>The report will resemble:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
-  "new": [ ... ],
-  "fixed": [ ... ],
-  "obsolete": [
-    "abcdef01234567890ba28050e7faf1d54f218dfa9435c3f65f47cb378c18cf98"
-  ]
-}
-</code></pre></div></div>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1777">changes</a>)</p>
-
-<h3 id="scan-public-directories">Scan ‘public’ Directories</h3>
-
-<p>In the old days, Brakeman tried to scan only the “standard” Rails directories, mostly within <code class="language-plaintext highlighter-rouge">/app/</code>. With the 5.0 release, Brakeman was revised to make very few assumptions about what kinds of files live where, instead making decisions based on the content of files rather than their location.</p>
-
-<p>However, there was a lingering exception. Brakeman would ignore any directories that included <code class="language-plaintext highlighter-rouge">/public/</code>.</p>
-
-<p>This exception has been removed.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1774">changes</a>)</p>
-
-<h3 id="eol-dates-for-ruby">EOL Dates for Ruby</h3>
-
-<p>Fixed end-of-life date for Ruby 3.0 and added expected dates for 3.1 and 3.2.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1770">changes</a>)</p>
-
-<h3 id="checksums">Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>6ff908e5bfca4651d909a31f3d3ae5846e33732284860a23aff454761c4145d0  brakeman-6.0.0.gem
-9a5e68e34c1cffe73b51952937ed2b4f427afd5d11d4a1c10c61e971253ba505  brakeman-lib-6.0.0.gem
-db1d8e2118af4b4701fbe49bf1177ac5c89a6a956ca037fdc0e62eb062e2dbb9  brakeman-min-6.0.0.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -707,6 +649,10 @@ db1d8e2118af4b4701fbe49bf1177ac5c89a6a956ca037fdc0e62eb062e2dbb9  brakeman-min-6
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
       </li>
     
@@ -720,10 +666,6 @@ db1d8e2118af4b4701fbe49bf1177ac5c89a6a956ca037fdc0e62eb062e2dbb9  brakeman-min-6
     
       <li class="post">
         <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a>
       </li>
     
   </ul>

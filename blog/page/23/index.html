@@ -80,6 +80,90 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/01/20/brakeman-1-dot-2-1-released">Brakeman 1.2.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-01-20 12:16:00 -0700" pubdate  updated >2012-01-20 12:16:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is essentially just a bugfix release, but due to the fixes for <code class="language-plaintext highlighter-rouge">link_to</code> warnings, there is a good possibility the number of reported warnings will decrease when upgrading to this version.</p>
+
+<p>Changes since 1.2.0:</p>
+
+<ul>
+  <li>Remove link_to warning for Rails 3.x or when using rails_xss</li>
+  <li>Don’t warn if first argument to link_to is escaped</li>
+  <li>Detect usage of attr_accessible with no arguments</li>
+  <li>Fix error when rendering a partial from a view but not through a controller</li>
+  <li>Fix some issues with rails_xss, CheckCrossSiteScripting, and CheckTranslateBug</li>
+  <li>Simplify Brakeman Rake task</li>
+  <li>Avoid modifying $VERBOSE</li>
+  <li>Add Brakeman::RescanReport#to_s</li>
+  <li>Add Brakeman::Warning#to_s</li>
+</ul>
+
+<h3 id="link_to-changes">link_to Changes</h3>
+
+<p>Prior to Rails 3.0, there <a href="https://rails.lighthouseapp.com/projects/8994/tickets/3518-link_to-doesnt-escape-its-input">was a bug</a> in <code class="language-plaintext highlighter-rouge">link_to</code> that caused the body of the link tag to be output without escaping. While this was fixed in Rails 3.0, Brakeman has still been warning on it. This was also fixed in the <a href="https://github.com/rails/rails_xss/commit/afc1610fe4b94150faee98c16f15a24290d20900">rails_xss</a>, so Brakeman should no longer warn on <code class="language-plaintext highlighter-rouge">link_to</code> for Rails 2.x when using the rails_xss plugin.</p>
+
+<p>Brakeman was also warning on <code class="language-plaintext highlighter-rouge">link_to</code> even if the body argument was manually escaped. This should be resolved now.</p>
+
+<p>One other related issue was a silly bug causing Brakeman to sometimes ignore <code class="language-plaintext highlighter-rouge">--escape-html</code> or the rails_xss plugin, leading to some confusing output. This is fixed.</p>
+
+<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/32">Neil Matatall</a> for reporting the <code class="language-plaintext highlighter-rouge">link_to</code> issue and <a href="https://github.com/a5sk4s">Andreas</a> for reporting the rails_xss problems.</p>
+
+<h3 id="attr_accessible-with-no-arguments">attr_accessible with No Arguments</h3>
+
+<p>Brakeman was not detecting the case where <code class="language-plaintext highlighter-rouge">attr_accessible</code> is called with zero arguments, causing spurious mass assignment warnings.</p>
+
+<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/31">Justin Wiley</a> for reporting this.</p>
+
+<h3 id="brakeman-rake-task">Brakeman Rake Task</h3>
+
+<p>The Brakeman Rake task (installed via <code class="language-plaintext highlighter-rouge">--rake</code>) is even <a href="/docs/rake">simpler now</a>.</p>
+
+<h3 id="verbose">$VERBOSE</h3>
+
+<p>Brakeman was using <code class="language-plaintext highlighter-rouge">$VERBOSE</code> and <code class="language-plaintext highlighter-rouge">Kernel.warn</code> for controlling debug output. This has changed and <code class="language-plaintext highlighter-rouge">$VERBOSE</code> will no longer be modified when using Brakeman.</p>
+
+<h3 id="rails-32-support">Rails 3.2 Support</h3>
+
+<p>So far, there have not been any issues with Brakeman and Rails 3.2. Please <a href="https://github.com/presidentbeef/brakeman/issues">report</a> any that come up!</p>
+
+<h3 id="jruby-performance">JRuby Performance</h3>
+
+<p>Prior to Brakeman 1.2, <a href="http://jruby.org/">JRuby</a> was very slow when running Brakeman. This has changed, and now JRuby is probably the fastest option for scanning large applications. Give it a try, especially if you are using Ruby 1.8.7!</p>
+
+<h3 id="mailing-list">Mailing List</h3>
+
+<p>There is now a Brakeman mailing list on <a href="http://librelist.com/browser/brakeman/">librelist</a>.</p>
+
+<p>To subscribe, send any email to <a href="&#109;ailto&#58;b&#114;%&#54;1k&#37;65m&#37;&#54;1n&#64;&#37;6Ci&#98;%&#55;2&#101;l%&#54;&#57;st&#46;com">brakeman@librelist.com</a>. You will be asked to confirm your subscription.</p>
+
+<p>Archives are available for browsing on <a href="http://www.mail-archive.com/brakeman@librelist.com/maillist.html">The Mail Archive</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/01/13/brakeman-1-dot-2-released">Brakeman 1.2 Released</a></h1>
     
     
@@ -417,51 +501,6 @@ Brakeman.run :app_path =&gt; 'my_app'
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2011/11/21/brakeman-0-dot-9-2-released">Brakeman 0.9.2 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-11-21 17:12:00 -0700" pubdate  updated >2011-11-21 17:12:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Changes:</p>
-
-<ul>
-  <li>Fix Rails 3 configuration parsing</li>
-  <li>Check both t() and translate() for cross-site scripting bug</li>
-</ul>
-
-<p>Just a small release to get the Rails 3 config fix out.</p>
-
-<h3 id="rails-3-configuration-parsing">Rails 3 Configuration Parsing</h3>
-
-<p>There was an issue that would cause Brakeman to crash on certain configurations. This has been fixed.</p>
-
-<h3 id="look-for-t">Look for t()</h3>
-
-<p>Both the <code class="language-plaintext highlighter-rouge">translate</code> and its shorter alias <code class="language-plaintext highlighter-rouge">t</code> will cause the warning about the cross-site scripting bug in them to be set to high confidence. If neither of these functions are found in the application, the confidence is set to medium.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -500,6 +539,10 @@ Brakeman.run :app_path =&gt; 'my_app'
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
       </li>
     
@@ -513,10 +556,6 @@ Brakeman.run :app_path =&gt; 'my_app'
     
       <li class="post">
         <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a>
       </li>
     
   </ul>

@@ -80,6 +80,80 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2015/06/18/brakeman-3-dot-0-4-released">Brakeman 3.0.4 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2015-06-18 10:50:00 -0600" pubdate  updated >2015-06-18 10:50:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a small release prompted by Tuesday’s CVE announcements. New checks for the CVEs directly in Rails have been added, and can also test for the suggested workarounds. Please consider using <a href="https://github.com/rubysec/bundler-audit">bundler-audit</a> for detecting known vulnerable versions of gems, as Brakeman has only limited coverage.</p>
+
+<p>Note this release also upgrades the RubyParser dependency. The latest RubyParser has several bug fixes and initial support for new Ruby 2.2 syntax.</p>
+
+<p><em>Changes since 3.0.3</em>:</p>
+
+<ul>
+  <li>Add check for CVE-2015-3226 (XSS via JSON keys)</li>
+  <li>Add check for CVE-2015-3227 (XML DoS)</li>
+  <li>Treat <code class="language-plaintext highlighter-rouge">&lt;%==</code> as unescaped output (<a href="https://github.com/presidentbeef/brakeman/issues/661">#661</a>)</li>
+  <li>Update <code class="language-plaintext highlighter-rouge">ruby_parser</code> dependency to 3.7.0</li>
+</ul>
+
+<h3 id="cross-site-scripting-in-json">Cross Site Scripting in JSON</h3>
+
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/7VlB_pck3hU/3QZrGIaQW6cJ">CVE-2015-3226</a> is an issue with converting hashes to JSON. The keys do not properly escape HTML entities, leading to potential cross site scripting vulnerabilities. Brakeman will warn unless the workaround is included in an initializer (essentially verbatim). The warning is high confidence if there is evidence of explicitly converting values to JSON, otherwise medium.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/665">changes</a>)</p>
+
+<h3 id="xml-denial-of-service">XML Denial of Service</h3>
+
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/bahr2JLnxvk/x4EocXnHPp8J">CVE-2015-3227</a> is a potential denial of service when parsing deeply nested XML requests. Brakeman will warn about this unless there is an initializer changing the XML parser as described in the CVE. Currently it looks for either <code class="language-plaintext highlighter-rouge">LibXML</code> or <code class="language-plaintext highlighter-rouge">Nokogiri</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/666">changes</a>)</p>
+
+<h3 id="double-equals-is-unescaped-output">Double Equals is Unescaped Output</h3>
+
+<p>Brakeman will now treat <code class="language-plaintext highlighter-rouge">&lt;%== x %&gt;</code> in ERB templates as unescaped output.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/663">changes</a>)</p>
+
+<h3 id="shas">SHAs</h3>
+
+<p>The SHA1 sums for this release are</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bf6ae72a0b516ecf65b9165d07e86259ef9fa5d3  brakeman-3.0.4.gem
+c1c2ea5402d8a89fe4a645947ec324d0603d3976  brakeman-min-3.0.4.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
+
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2015/04/30/brakeman-3-dot-0-3-released">Brakeman 3.0.3 Released</a></h1>
     
     
@@ -587,103 +661,6 @@ b5cefd6f14edb57f12d1fe9fcc0fb24e05a05aaf  brakeman-min-3.0.0.gem
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2014/10/13/brakeman-2-dot-6-3-released">Brakeman 2.6.3 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2014-10-13 16:03:00 -0600" pubdate  updated >2014-10-13 16:03:00 -0600</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is mostly a bug fix release, but does include new support for optional checks along with an optional check for unscoped calls to <code class="language-plaintext highlighter-rouge">find</code>.</p>
-
-<p><em>Changes since 2.6.2</em>:</p>
-
-<ul>
-  <li>Add framework for optional checks</li>
-  <li>Add optional check for unscoped find queries (<a href="https://github.com/mastahyeti">Ben Toews</a>)</li>
-  <li>Fix stack overflow for cycles in class ancestors (<a href="https://github.com/jeffrafter">Jeff Rafter</a>)</li>
-  <li>Fix stack overflow in <code class="language-plaintext highlighter-rouge">ProcessHelper#class_name</code> (<a href="https://github.com/presidentbeef/brakeman/issues/553">#553</a>)</li>
-  <li>Whitelist <code class="language-plaintext highlighter-rouge">exists</code> arel method from SQL injection check</li>
-  <li>Avoid warning about Symbol DoS on safe parameters as method targets</li>
-</ul>
-
-<h3 id="optional-checks">Optional Checks</h3>
-
-<p>Brakeman now supports loading checks that are not run by default. These “nondefault” checks may have high false positive rates or introduce significant slowdowns. Optional checks should be treated as experimental and may experience more breaking changes than default checks.</p>
-
-<p>To run <em>all</em> checks, use <code class="language-plaintext highlighter-rouge">-A</code>. To list only the optional checks, try <code class="language-plaintext highlighter-rouge">--optional-checks</code>. Optional checks are also listed in <code class="language-plaintext highlighter-rouge">--checks</code>. As usual, checks may be specified using <code class="language-plaintext highlighter-rouge">-t</code> or <code class="language-plaintext highlighter-rouge">--test</code>. At this time there is no way to easily run the default checks plus some optional checks.</p>
-
-<p>On the code side, optional checks are the same except <code class="language-plaintext highlighter-rouge">Brakeman::Checks.add self</code> becomes <code class="language-plaintext highlighter-rouge">Brakeman::Checks.add_optional self</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/555">changes</a>)</p>
-
-<h3 id="unscoped-queries">Unscoped Queries</h3>
-
-<p>The first optional check to be added to Brakeman comes from <a href="https://github.com/mastahyeti">Ben Toews</a>. This check looks for calls to <code class="language-plaintext highlighter-rouge">find</code> (or similar methods) directly on models that have a <code class="language-plaintext highlighter-rouge">belongs_to</code> relationship.</p>
-
-<p>As this is an optional check, use <code class="language-plaintext highlighter-rouge">-A</code> to include it in a scan or <code class="language-plaintext highlighter-rouge">-t UnscopedFind</code> to run it by itself.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/469">changes</a>)</p>
-
-<h3 id="fix-loops-in-class-ancestors">Fix Loops in Class Ancestors</h3>
-
-<p><a href="https://github.com/jeffrafter">Jeff Rafter</a> added a fix for stack overflows (infinite loops) when a class has (or appears to have) a cycle in its superclasses.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/543">changes</a>)</p>
-
-<h3 id="fix-stack-overflow">Fix Stack Overflow</h3>
-
-<p>This release fixes an issue with another infinite loop when looking up the class name in a self-referential variable name, which comes up in some situations. Fixing this bug also fixed some XSS false positives for safe model attribute methods (like <code class="language-plaintext highlighter-rouge">id</code>) but unfortunately also revealed some dynamic render false positives.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/560">changes</a>)</p>
-
-<h3 id="whitelist-arel-method">Whitelist Arel Method</h3>
-
-<p>Brakeman does not warn on most uses of Arel, but was warning about SQL injection from the <code class="language-plaintext highlighter-rouge">exists</code> method.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/566">changes</a>)</p>
-
-<h3 id="less-symbol-dos">Less Symbol DoS</h3>
-
-<p>Brakeman should no longer warn about Symbol DoS when symbolizing <code class="language-plaintext highlighter-rouge">params[:controller]</code> and <code class="language-plaintext highlighter-rouge">params[:action]</code> even when there are intermediate method calls, like <code class="language-plaintext highlighter-rouge">params[:action].to_s.to_sym</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/564">changes</a>)</p>
-
-<h3 id="shas">SHAs</h3>
-
-<p>The SHA1 sums for this release are</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ceb689e3a6efd7e28483828de3441ec1fad501c1  brakeman-2.6.3.gem
-334a7820c05bfeb31e0e9d8123f45daef64eb102  brakeman-min-2.6.3.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -722,6 +699,10 @@ b5cefd6f14edb57f12d1fe9fcc0fb24e05a05aaf  brakeman-min-3.0.0.gem
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
       </li>
     
@@ -735,10 +716,6 @@ b5cefd6f14edb57f12d1fe9fcc0fb24e05a05aaf  brakeman-min-3.0.0.gem
     
       <li class="post">
         <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a>
       </li>
     
   </ul>

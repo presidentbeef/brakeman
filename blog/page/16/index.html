@@ -80,6 +80,144 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2014/04/30/brakeman-2-dot-5-0-released">Brakeman 2.5.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2014-04-30 09:52:00 -0600" pubdate  updated >2014-04-30 09:52:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release includes a number of false positive fixes, more Rails 4 support, a new check for regular expression denial of service, and Markdown output formatting.</p>
+
+<p><em>Changes since 2.4.3</em>:</p>
+
+<ul>
+  <li>Add GitHub-flavored Markdown output format (<a href="https://github.com/gregose">Greg Ose</a>)</li>
+  <li>Add check for regex denial of service (<a href="https://github.com/mastahyeti">Ben Toews</a>)</li>
+  <li>Fix false positives when <code class="language-plaintext highlighter-rouge">sanitize</code> is used in SQL (<a href="https://github.com/jeffyip">Jeff Yip</a>)</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">String#intern</code> and <code class="language-plaintext highlighter-rouge">Hash#symbolize_keys</code> DoS check (<a href="https://github.com/jrusnack">Jan Rusnacko</a>)</li>
+  <li>Add support for Rails 4 <code class="language-plaintext highlighter-rouge">before_actions</code> and friends</li>
+  <li>Add support for RailsLTS 2.3.18.7 and 2.3.18.8</li>
+  <li>Check for <code class="language-plaintext highlighter-rouge">protected_attributes</code> gem (<a href="https://github.com/presidentbeef/brakeman/issues/475">#475</a>)</li>
+  <li>Fix SQLi detection in chain calls in scopes (<a href="https://github.com/presidentbeef/brakeman/issues/471">#471</a>)</li>
+  <li>Fix false positive when <code class="language-plaintext highlighter-rouge">:host</code> is specified in redirect (<a href="https://github.com/presidentbeef/brakeman/issues/464">#464</a>)</li>
+  <li>Check all arguments in <code class="language-plaintext highlighter-rouge">Model.select</code> for SQLi</li>
+  <li>Move SQLi CVE checks to <code class="language-plaintext highlighter-rouge">CheckSQLCVEs</code></li>
+  <li>Handle more non-literals in routes (<a href="https://github.com/presidentbeef/brakeman/issues/461">#461</a>)</li>
+</ul>
+
+<h3 id="markdown-output-format">Markdown Output Format</h3>
+
+<p><a href="https://github.com/gregose">Greg Ose</a> added the option to output to GitHub-flavored markdown (<code class="language-plaintext highlighter-rouge">-f markdown</code> or <code class="language-plaintext highlighter-rouge">-o report.md</code>). Additionally, the <code class="language-plaintext highlighter-rouge">--github-repo</code> option can be used to link the files in the report to a specific GitHub repository. <a href="https://github.com/presidentbeef/brakeman/pull/463">See here for details</a>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/463">changes</a>)</p>
+
+<h3 id="regex-denial-of-service">Regex Denial of Service</h3>
+
+<p>A new check for dangerous interpolation in regular expressions was contributed by <a href="https://github.com/mastahyeti">Ben Toews</a>. This will generate “Denial of Service” warnings if user input is interpolated into regular expressions.</p>
+
+<p>For example, this will generate a warning:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/#{params[:name]}/
+</code></pre></div></div>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/454">changes</a>)</p>
+
+<h3 id="avoid-warning-on-sanitized-sql">Avoid Warning on Sanitized SQL</h3>
+
+<p>Brakeman should no longer warn about SQL values wrapped in <code class="language-plaintext highlighter-rouge">sanitize</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/commit/cd9093d890b7a16f117d11a0ae6af281ecbb648d">changes</a>)</p>
+
+<h3 id="more-symbol-denial-of-service-methods">More Symbol Denial of Service Methods</h3>
+
+<p><code class="language-plaintext highlighter-rouge">String#intern</code> and <code class="language-plaintext highlighter-rouge">Hash#symbolize_key</code> were added to the symbol denial of service check by <a href="https://github.com/jrusnack">Jan Rusnacko</a>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/470">changes</a>)</p>
+
+<h3 id="rails-4-before-actions">Rails 4 Before Actions</h3>
+
+<p>Rails 4 added a bunch of aliases for <code class="language-plaintext highlighter-rouge">before_filter</code> and related methods, and Brakeman now recognizes these methods for adding and skipping filters.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/480">changes</a>)</p>
+
+<h3 id="latest-railslts-version">Latest RailsLTS Version</h3>
+
+<p>This release adds support for the latest RailsLTS 2.3.18.x versions and will not warn on <a href="https://groups.google.com/d/msg/rubyonrails-security/CdoMUVpsRmQ/iFRwR1xPym8J">CVE-2012-1099</a> and <a href="https://groups.google.com/d/msg/rubyonrails-security/tfp6gZCtzr4/j8LUHmu7fIEJ">CVE-2014-0081</a> for applications using the appropriate RailsLTS versions.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/481">changes</a>)</p>
+
+<h3 id="protected-attributes-gem">Protected Attributes Gem</h3>
+
+<p>Brakeman now treats applications using the <code class="language-plaintext highlighter-rouge">protected_attributes</code> gem as if mass assignment is enabled by default and <code class="language-plaintext highlighter-rouge">attr_accessible</code> is necessary to protect models.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/477">changes</a>)</p>
+
+<h3 id="sql-injection-in-scopes">SQL Injection in Scopes</h3>
+
+<p>There was a bug which caused Brakeman not warn about SQL injection in chained calls inside scope blocks (<a href="https://github.com/presidentbeef/brakeman/issues/471">example here</a>). Additionally, scope calls were not being handled for Rails 4.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/472">changes</a>)</p>
+
+<h3 id="hosts-in-redirects">Hosts in Redirects</h3>
+
+<p>Brakeman should no longer warn about instances of <code class="language-plaintext highlighter-rouge">redirect_to</code> when <code class="language-plaintext highlighter-rouge">:host</code> is explicitly specified.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/465">changes</a>)</p>
+
+<h3 id="sql-injection-in-all-select-arguments">SQL Injection in All Select Arguments</h3>
+
+<p>Brakeman was only checking the first argument to <code class="language-plaintext highlighter-rouge">Model.select</code> for SQL injection, but the method can take multiple arguments. This release corrects this to check all of the arguments.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/468">changes</a>)</p>
+
+<h3 id="sql-injection-cves-moved-to-separate-check">SQL Injection CVEs Moved to Separate Check</h3>
+
+<p>All the checks for SQL injection CVEs have been moved from <code class="language-plaintext highlighter-rouge">CheckSQL</code> to <code class="language-plaintext highlighter-rouge">CheckSQLCVEs</code>. This should only have an effect for users explicitly specifying to run or skip <code class="language-plaintext highlighter-rouge">CheckSQL</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/478">changes</a>)</p>
+
+<h3 id="more-routing-fixes">More Routing Fixes</h3>
+
+<p>More instances of non-literals in routes will be ignored instead of raising exceptions. In general, information from <code class="language-plaintext highlighter-rouge">routes.rb</code> is not used except to warn about default routes (unless <code class="language-plaintext highlighter-rouge">--no-assume-routes</code> is used).</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/462">changes</a>)</p>
+
+<h3 id="shas">SHAs</h3>
+
+<p>The SHA1 sums for this release are</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fc8a7991e9351f8d5e26a59acf54422a638f4866  brakeman-2.5.0.gem
+48f974aaf40957a325ee778d3d700fd29aa526bf  brakeman-min-2.5.0.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2014/03/22/brakeman-2-dot-4-3-released">Brakeman 2.4.3 Released</a></h1>
     
     
@@ -510,67 +648,6 @@ Test.find_by_sql(query)
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2013/12/12/brakeman-2-dot-3-1-released">Brakeman 2.3.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2013-12-12 23:24:00 -0700" pubdate  updated >2013-12-12 23:24:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Two minor bugs were fixed in this release. Please see the <a href="http://brakemanscanner.org/blog/2013/12/11/brakeman-2-dot-3-0-released/">2.3.0 release post</a> if you are upgrading from an earlier version.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/415">changes</a>)</p>
-
-<p><em>Changes since 2.3.0</em>:</p>
-
-<ul>
-  <li>Fix check for CVE-2013-4491 (i18n XSS) to detect workaround</li>
-  <li>Fix link for CVE-2013-6415 (number_to_currency)</li>
-</ul>
-
-<h3 id="i18n-xss-workaround">i18n XSS Workaround</h3>
-
-<p>Brakeman 2.3.0 included a check for the <a href="https://groups.google.com/d/msg/ruby-security-ann/pLrh6DUw998/bLFEyIO4k_EJ">official i18n XSS workaround</a>, but it was commented out during testing and unfortunately left that way.</p>
-
-<h3 id="cve-2013-6415-link">CVE-2013-6415 Link</h3>
-
-<p>The link provided for <a href="https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ">CVE-2013-6415</a> in Brakeman 2.3.0 was copy-pasted from an older check. This has been fixed.</p>
-
-<h3 id="shas">SHAs</h3>
-
-<p>The SHA sums for this release are</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>469b209a4c72f5a1133d696575caeee1675837e7  brakeman-2.3.1.gem
-827e1cdefba543f59ed5070aaa3f587d8c7d9513  brakeman-min-2.3.1.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -609,6 +686,10 @@ Test.find_by_sql(query)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
       </li>
     
@@ -622,10 +703,6 @@ Test.find_by_sql(query)
     
       <li class="post">
         <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a>
       </li>
     
   </ul>

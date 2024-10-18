@@ -80,6 +80,94 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/09/24/brakeman-1-dot-8-1-released">Brakeman 1.8.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-09-24 12:09:00 -0600" pubdate  updated >2012-09-24 12:09:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Bug fixes!</p>
+
+<p><em>Changes since 1.8.0</em>:</p>
+
+<ul>
+  <li>Recover from errors in output formatting (<a href="https://github.com/presidentbeef/brakeman/pull/148">#148</a>)</li>
+  <li>Fix false positive in <code class="language-plaintext highlighter-rouge">redirect_to</code> (Neil Matatall) (<a href="https://github.com/presidentbeef/brakeman/issues/143">#143</a>)</li>
+  <li>Fix problems with removal of <code class="language-plaintext highlighter-rouge">Sexp#method_missing</code> (<a href="https://github.com/presidentbeef/brakeman/pull/150">#150</a>)</li>
+  <li>Fix array indexing in alias processing (<a href="https://github.com/presidentbeef/brakeman/pull/145">#145</a>)</li>
+  <li>Fix old <code class="language-plaintext highlighter-rouge">mail_to</code> vulnerability check (<a href="https://github.com/presidentbeef/brakeman/pull/147">#147</a>)</li>
+  <li>Fix rescans when only controller action changes (<a href="https://github.com/presidentbeef/brakeman/pull/141">#141</a>)</li>
+  <li>Allow comparison of versions with unequal lengths (<a href="https://github.com/presidentbeef/brakeman/pull/144">#144</a>)</li>
+  <li>Handle super calls with blocks (<a href="https://github.com/presidentbeef/brakeman/pull/146">#146</a>)</li>
+  <li>Remove malformed Sexps from HAML processing  (<a href="https://github.com/presidentbeef/brakeman/pull/149">#149</a>)</li>
+  <li>Respect <code class="language-plaintext highlighter-rouge">-q</code> flag for “Rails 3 detected” message</li>
+</ul>
+
+<h3 id="fix-crashes-when-generating-report">Fix Crashes when Generating Report</h3>
+
+<p>Some scans were causing Brakeman to crash while generating reports with an error like:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lib/brakeman/warning.rb:78:in `format_code': undefined method `gsub' for nil:NilClass (NoMethodError)
+</code></pre></div></div>
+
+<p>This was due to a combination of the removal of <code class="language-plaintext highlighter-rouge">method_missing</code> behavior from <code class="language-plaintext highlighter-rouge">Sexp</code> and the <code class="language-plaintext highlighter-rouge">OutputProcessor</code> not handling errors well.</p>
+
+<p>The problem should be fixed now, but please report an issue if “[Format Error]” shows up in reports.</p>
+
+<h3 id="false-positive-in-redirect-check">False Positive in Redirect Check</h3>
+
+<p>Neil Matatall fixed <a href="https://github.com/presidentbeef/brakeman/issues/143">an issue</a> with a false positive when redirecting to an array.</p>
+
+<p>When <code class="language-plaintext highlighter-rouge">redirect_to</code> is given an array, Rails eventually falls through to <code class="language-plaintext highlighter-rouge">polymorphic_path</code>, which will only return a path, not a full URL. Brakeman only checks for redirects that can redirect to a different host, so this is considered safe.</p>
+
+<h3 id="sexp-and-method_missing">Sexp and <code class="language-plaintext highlighter-rouge">method_missing</code></h3>
+
+<p>The original <code class="language-plaintext highlighter-rouge">Sexp</code> code from RubyParser uses <code class="language-plaintext highlighter-rouge">method_missing</code> to find and optionally delete nodes. This functionality is not used very often (never in Brakeman) but has covered up bugs that would otherwise been found. Therefore, <code class="language-plaintext highlighter-rouge">Sexp#method_missing</code> has been removed in Brakeman. However, it turns out that <a href="https://github.com/seattlerb/ruby2ruby">Ruby2Ruby</a> uses it in a couple places. Brakeman uses Ruby2Ruby to covert s-expressions back to readable Ruby code, particularly when generating reports. This lead to some crashes.</p>
+
+<h3 id="fix-array-indexing">Fix Array Indexing</h3>
+
+<p>Brakeman can handle pulling values out of simple arrays. Or it should be able to, but it keeps breaking. Should be fixed now!</p>
+
+<h3 id="fix-mail_to-check">Fix <code class="language-plaintext highlighter-rouge">mail_to</code> Check</h3>
+
+<p>There is a Brakeman check for an <a href="https://groups.google.com/d/topic/rubyonrails-security/8CpI7egxX4E/discussion">old vulnerability</a> in <code class="language-plaintext highlighter-rouge">mail_to</code>. However, it turns out this check has been broken for a while. But now it is fixed! And there are regression tests.</p>
+
+<h3 id="fix-rescans-on-controller-changes">Fix Rescans on Controller Changes</h3>
+
+<p>There were some crashes when rescanning was triggered by a controller change.</p>
+
+<h3 id="haml-processing">HAML Processing</h3>
+
+<p>Some very old code for HAML processing was generating malformed s-expressions, which then had to be handled specially in the output formatter. It turns out these nodes were not even used, so they were removed. Please report any problems arising from this! We do not have a lot of HAML test cases.</p>
+
+<h3 id="report-issues">Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/09/04/brakeman-1-dot-8-0-released">Brakeman 1.8.0 Released</a></h1>
     
     
@@ -467,92 +555,6 @@
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/05/23/brakeman-1-dot-6-1-released">Brakeman 1.6.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-05-23 12:45:00 -0600" pubdate  updated >2012-05-23 12:45:00 -0600</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Wow, it’s been over a month since the last release!</p>
-
-<p>The major change in this version is a rewrite of the SQL injection check. Many more methods are covered, and there should be a reduction of false positives as well.</p>
-
-<p><em>Changes since 1.6.0</em>:</p>
-
-<ul>
-  <li>Major rewrite of CheckSQL</li>
-  <li>Process actions mixed into controllers</li>
-  <li>Check for inherited <code class="language-plaintext highlighter-rouge">attr_accessible</code> (Neil Matatall)</li>
-  <li>Handle <code class="language-plaintext highlighter-rouge">render :template =&gt; ...</code></li>
-  <li>Report line number of highlighted value, if available</li>
-  <li>Fix highlighting of HTML escaped values in HTML report</li>
-  <li>Fix rescanning of deleted templates</li>
-</ul>
-
-<h3 id="updated-sql-injection-check">Updated SQL Injection Check</h3>
-
-<p><code class="language-plaintext highlighter-rouge">CheckSQL</code> has been completely revamped. Brakeman now has a much better understanding of the various ActiveRecord::FinderMethods and ActiveRecord::QueryMethods, as well as their options.</p>
-
-<p>The check is also more conservative about what it warns on. Previously, since string interpolation is the main entry point for SQL injection in Rails, any interpolated value in a query would generate a warning. Now, “safe” sanitization methods, obviously safe methods like <code class="language-plaintext highlighter-rouge">to_i</code> and <code class="language-plaintext highlighter-rouge">id</code>, constants, strings, and other literal values should not cause warnings.</p>
-
-<p>The “highlighted” value (or “user input”) reported for SQL warnings should be much more accurate now, making it easier to determine why a warning was reported.</p>
-
-<h3 id="controller-mixins">Controller Mixins</h3>
-
-<p>Methods on controller mixins that are used as actions should now be processed as if they were defined in the controller itself.</p>
-
-<h3 id="check-for-inherited-mass-assignment-protection">Check for Inherited Mass Assignment Protection</h3>
-
-<p>Since mass assignment protection via <code class="language-plaintext highlighter-rouge">attr_accessible</code> is inheritable, Brakeman will no longer warn about models whose parent uses <code class="language-plaintext highlighter-rouge">attr_accessible</code>.</p>
-
-<h3 id="template-option-in-render">Template Option in Render</h3>
-
-<p>Somehow, the <code class="language-plaintext highlighter-rouge">:template</code> option for <code class="language-plaintext highlighter-rouge">render</code> has been ignored this whole time. Sorry!</p>
-
-<h3 id="better-line-numbers">Better Line Numbers</h3>
-
-<p>Warnings which have a <code class="language-plaintext highlighter-rouge">:user_input</code> field use that value to “highlight” part of the code in the reported warning. This value usually corresponds to the code which actually caused the warning to be generated.</p>
-
-<p>If a warning has this field, the line number of that code is used, instead of the starting line number of the entire piece of code. This often leads to more accurate and helpful line numbers.</p>
-
-<h3 id="highlighted-values-in-html-reports">Highlighted Values in HTML Reports</h3>
-
-<p>Since the warnings output in HTML reports are HTML-escaped, there was a sometimes mismatch between the value that needed to be highlighted and the HTML warning output, causing nothing to be highlighted. This is fixed now.</p>
-
-<h3 id="rescanning-of-deleted-templates">Rescanning of Deleted Templates</h3>
-
-<p>In the rescanning logic, templates which are related to a changed file (a view or partial that is rendered, usually) will be rescanned. However, there is the possibility that the template which needs to be rescanned as a related file has been deleted as part of the set of changes. This caused the rescanning to blow up, but that has been fixed now.</p>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-
-<p>Don’t forget to check out the <a href="https://speakerdeck.com/u/presidentbeef/p/keeping-rails-applications-on-track-with-brakeman">RailsConf Brakeman presentation slides</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -591,6 +593,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
       </li>
     
@@ -604,10 +610,6 @@
     
       <li class="post">
         <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/05/24/brakeman-6-dot-0-released">Brakeman 6.0.0 Released</a>
       </li>
     
   </ul>
