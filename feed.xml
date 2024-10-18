@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2024-10-18T09:45:22-06:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 6.2.2 Released</title><link href="https://brakemanscanner.org/blog/2024/10/18/brakeman-6-dot-2-dot-2-released" rel="alternate" type="text/html" title="Brakeman 6.2.2 Released" /><published>2024-10-18T05:00:00-06:00</published><updated>2024-10-18T05:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2024/10/18/brakeman-6-dot-2-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">&lt;p&gt;Small release!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2024-10-18T09:49:53-06:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 6.2.2 Released</title><link href="https://brakemanscanner.org/blog/2024/10/18/brakeman-6-dot-2-dot-2-released" rel="alternate" type="text/html" title="Brakeman 6.2.2 Released" /><published>2024-10-18T05:00:00-06:00</published><updated>2024-10-18T05:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2024/10/18/brakeman-6-dot-2-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">&lt;p&gt;Small release!&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 6.2.1:&lt;/em&gt;&lt;/p&gt;
 
@@ -27,7 +27,7 @@ both true and false positive rates.&lt;/p&gt;
 
 &lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;f8892719490ed5f23e08fc14cb0020311a0af18fb47f7c7650345d0a35826413  brakeman-6.2.2.gem
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;d502d653699f4d451b21225ff4d19a9ec9345d23eaab5576e246185ffd7bf618  brakeman-6.2.2.gem
 fb7ba15cd309f995c95d15d9e0e590f3aad6f95a5dfa030854e8806f3ba196d9  brakeman-lib-6.2.2.gem
 b3a5b59a14a527bfaca4d2637765e98c12ae800c8f044b1939da578d3ed31851  brakeman-min-6.2.2.gem
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
