@@ -16,7 +16,9 @@ File.open "bundle/load.rb", "w" do |f|
   f.puts "path = File.expand_path('../..', __FILE__)"
 
   Dir["bundle/ruby/**/lib"].each do |dir|
-    unless bundle_exclude.any? { |gem_name| dir.include? gem_name }
+    if bundle_exclude.any? { |gem_name| dir.include? gem_name }
+      FileUtils.rm_rf(File.expand_path('..', dir))
+    else
       f.puts %Q[$:.unshift "\#{path}/#{dir}"]
     end
   end
