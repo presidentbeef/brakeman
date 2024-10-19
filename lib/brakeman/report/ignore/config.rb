@@ -130,7 +130,6 @@ module Brakeman
 
       output = {
         :ignored_warnings => warnings,
-        :updated => Time.now.to_s,
         :brakeman_version => Brakeman::Version
       }
 
