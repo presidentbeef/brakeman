@@ -22,6 +22,11 @@ if ENV["CIRCLECI"]
   Minitest::Ci.report_dir = File.join("test-results", "minitest")
 end
 
+if ENV['TEST_PRISM']
+  gem 'prism'
+  require 'prism'
+end
+
 class Minitest::Test
   def assert_nothing_raised *args
     yield
@@ -36,6 +41,10 @@ module BrakemanTester
       opts.merge! :app_path => "#{TEST_PATH}/apps/#{path}",
         :url_safe_methods => [:ensure_valid_proto!],
         :parallel_checks => false # Something broken with tests+parallel
+
+      if ENV['TEST_PRISM']
+        opts[:use_prism] = true
+      end
 
       Brakeman.run(opts).report.to_hash
     end
