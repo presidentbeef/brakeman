@@ -224,7 +224,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
   #Returns true if the given method name is also a route
   def route? method
     if @tracker.routes[:allow_all_actions] or @tracker.options[:assume_all_routes]
-      true
+      not @tracker.controllers[@current_class].private? method
     else
       routes = @tracker.routes[@current_class]
       routes and (routes.include? :allow_all_actions or routes.include? method)
