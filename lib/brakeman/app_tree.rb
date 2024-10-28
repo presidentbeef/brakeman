@@ -203,13 +203,13 @@ module Brakeman
 
     EXCLUDED_PATHS = %w[
       /generators/
-      lib/tasks/
-      lib/templates/
-      db/
-      spec/
-      test/
-      tmp/
-      log/
+      /lib/tasks/
+      /lib/templates/
+      /db/
+      /spec/
+      /test/
+      /tmp/
+      /log/
     ]
 
     def reject_global_excludes(paths)
@@ -220,6 +220,7 @@ module Brakeman
           true
         else
           EXCLUDED_PATHS.any? do |excluded|
+            relative_path = "/#{relative_path}" unless relative_path.match(/^\//)
             relative_path.include? excluded
           end
         end
