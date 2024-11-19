@@ -438,14 +438,12 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   #the current tracker, or else @models should contain an array of the model
   #names, which is available via tracker.models.keys
   def model_name? exp
-    @models ||= @tracker.models.keys
-
     if exp.is_a? Symbol
-      @models.include? exp
+      tracker.models.include? exp
     elsif call? exp and exp.target.nil? and exp.method == :current_user
       true
     elsif sexp? exp
-      @models.include? class_name(exp)
+      tracker.models.include? class_name(exp)
     else
       false
     end
@@ -490,11 +488,11 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
   def active_record_models
     return @active_record_models if @active_record_models
 
-    @active_record_models = {}
+    @active_record_models = Brakeman::ClassCollection.new
 
-    tracker.models.each do |name, model|
+    tracker.models.each_class do |model|
       if model.ancestor? :"ActiveRecord::Base"
-        @active_record_models[name] = model
+        @active_record_models << model
       end
     end
 

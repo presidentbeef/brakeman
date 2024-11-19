@@ -205,7 +205,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
 
     lib = nil
 
-    tracker.libs.each do |_name, library|
+    tracker.libs.each_class do |library|
       if library.files.include?(path)
         lib = library
         break
@@ -277,7 +277,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
   def rescan_deleted_lib path
     deleted_lib = nil
 
-    tracker.libs.delete_if do |_name, lib|
+    tracker.libs.delete_if do |lib|
       if lib.files.include?(path)
         deleted_lib = lib
         true
@@ -297,7 +297,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     deleted = false
 
     [:controllers, :models, :libs].each do |collection|
-      tracker.send(collection).delete_if do |_name, data|
+      tracker.send(collection).delete_if do |data|
         if data.files.include?(path)
           deleted = true
           true
@@ -351,7 +351,7 @@ class Brakeman::Rescanner < Brakeman::Scanner
     to_rescan = []
 
     #Rescan controllers that mixed in library
-    tracker.controllers.each do |_name, controller|
+    tracker.controllers.each_class do |controller|
       if controller.includes.include? lib.name
         controller.files.each do |path|
           unless @paths.include? path

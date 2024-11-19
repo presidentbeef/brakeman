@@ -18,7 +18,7 @@ class Brakeman::CheckNestedAttributesBypass < Brakeman::BaseCheck
   end
 
   def check_nested_attributes
-    active_record_models.each do |name, model|
+    active_record_models.each_class do |model|
       if opts = model.options[:accepts_nested_attributes_for]
         opts.each do |args|
           if args.any? { |a| allow_destroy? a } and args.any? { |a| reject_if? a }

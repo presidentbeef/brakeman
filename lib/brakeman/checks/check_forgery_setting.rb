@@ -14,11 +14,11 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
 
     tracker.controllers
     .select { |_, controller| controller.parent == :"ActionController::Base" }
-    .each do |name, controller|
+    .each do |_, controller|
       if controller and not controller.protect_from_forgery?
-        csrf_warning :controller => name,
+        csrf_warning :controller => controller.name,
           :warning_code => :csrf_protection_missing,
-          :message => msg(msg_code("protect_from_forgery"), " should be called in ", msg_code(name)),
+          :message => msg(msg_code("protect_from_forgery"), " should be called in ", msg_code(controller.name)),
           :file => controller.file,
           :line => controller.top_line
       elsif version_between? "4.0.0", "100.0.0" and forgery_opts = controller.options[:protect_from_forgery]
@@ -27,7 +27,7 @@ class Brakeman::CheckForgerySetting < Brakeman::BaseCheck
           access_arg.value == :exception
 
           args = {
-            :controller => name,
+            :controller => controller.name,
             :warning_type => "Cross-Site Request Forgery",
             :warning_code => :csrf_not_protected_by_raising_exception,
             :message => msg(msg_code("protect_from_forgery"), " should be configured with ", msg_code("with: :exception")),

@@ -23,7 +23,7 @@ module Brakeman
     end
 
     def ancestor? parent, seen={}
-      seen[self.name] = true
+      seen[self.name.key] = true
 
       if self.parent == parent or self.name == parent or seen[self.parent]
         true

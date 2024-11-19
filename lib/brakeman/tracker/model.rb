@@ -28,7 +28,7 @@ module Brakeman
 
     # go up the chain of parent classes to see if any have attr_accessible
     def parent_classes_protected? seen={}
-      seen[self.name] = true
+      seen[self.name.key] = true
 
       if @attr_accessible or self.includes.include? :"ActiveModel::ForbiddenAttributesProtection"
         true
