@@ -101,6 +101,15 @@ module Brakeman::Options
           options[:rails7] = true
         end
 
+        opts.on "-8", "--rails8", "Force Rails 8 mode" do
+          options[:rails3] = true
+          options[:rails4] = true
+          options[:rails5] = true
+          options[:rails6] = true
+          options[:rails7] = true
+          options[:rails8] = true
+        end
+
         opts.separator ""
         opts.separator "Scanning options:"
 
@@ -148,6 +157,23 @@ module Brakeman::Options
 
         opts.on "--parser-timeout SECONDS", Integer, "Set parse timeout (Default: 10)" do |timeout|
           options[:parser_timeout] = timeout
+        end
+
+        opts.on "--[no-]prism", "Use the Prism parser" do |use_prism|
+          if use_prism
+            prism_version = '0.30'
+
+            begin
+              # Specifying minimum version here,
+              # since it can't be in the gem dependency list because it is optional
+              gem 'prism', ">=#{prism_version}"
+            rescue Gem::MissingSpecVersionError, Gem::MissingSpecError, Gem::LoadError => e
+              $stderr.puts "Please install `prism` version #{prism_version} or newer:"
+              raise e
+            end
+          end
+
+          options[:use_prism] = use_prism
         end
 
         opts.on "-r", "--report-direct", "Only report direct use of untrusted data" do |option|
@@ -202,7 +228,7 @@ module Brakeman::Options
             if check.start_with? "Check"
               check
             else
-              "Check" << check
+              "Check#{check}"
             end
           end
 
@@ -213,7 +239,7 @@ module Brakeman::Options
         opts.on "-t", "--test Check1,Check2,etc", Array, "Only run the specified checks" do |checks|
           checks.each_with_index do |s, index|
             if s[0,5] != "Check"
-              checks[index] = "Check" << s
+              checks[index] = "Check#{s}"
             end
           end
 
@@ -224,7 +250,7 @@ module Brakeman::Options
         opts.on "-x", "--except Check1,Check2,etc", Array, "Skip the specified checks" do |skip|
           skip.each do |s|
             if s[0,5] != "Check"
-              s = "Check" << s
+              s = "Check#{s}"
             end
 
             options[:skip_checks] ||= Set.new
@@ -254,7 +280,7 @@ module Brakeman::Options
           "Specify output formats. Default is text" do |type|
 
           type = "s" if type == :text
-          options[:output_format] = ("to_" << type.to_s).to_sym
+          options[:output_format] = :"to_#{type}"
         end
 
         opts.on "--css-file CSSFile", "Specify CSS to use for HTML output" do |file|
@@ -267,6 +293,10 @@ module Brakeman::Options
 
         opts.on "-I", "--interactive-ignore", "Interactively ignore warnings" do
           options[:interactive_ignore] = true
+        end
+
+        opts.on "--show-ignored", "Show files that are usually ignored by the ignore configuration file" do
+          options[:show_ignored] = true
         end
 
         opts.on "-l", "--[no-]combine-locations", "Combine warning locations (Default)" do |combine|

@@ -10,6 +10,7 @@ class BrakemanOptionsTest < Minitest::Test
     :rails5                 => "-5",
     :rails6                 => "-6",
     :rails7                 => "-7",
+    :rails8                 => "-8",
     :run_all_checks         => "-A",
     :assume_all_routes      => "-a",
     :escape_html            => "-e",
@@ -24,13 +25,14 @@ class BrakemanOptionsTest < Minitest::Test
     :absolute_paths         => "--absolute-paths",
     :list_checks            => "-k",
     :list_optional_checks   => "--optional-checks",
+    :show_ignored           => "--show-ignored",
     :show_version           => "-v",
     :show_help              => "-h",
     :force_scan             => "--force-scan",
     :ensure_latest          => "--ensure-latest",
     :allow_check_paths_in_config => "--allow-check-paths-in-config",
     :pager                  => "--pager",
-    :show_timing                 => "--timing",
+    :show_timing            => "--timing",
   }
 
   ALT_OPTION_INPUTS = {
@@ -40,6 +42,7 @@ class BrakemanOptionsTest < Minitest::Test
     :rails5                 => "--rails5",
     :rails6                 => "--rails6",
     :rails7                 => "--rails7",
+    :rails8                 => "--rails8",
     :run_all_checks         => "--run-all-checks",
     :escape_html            => "--escape-html",
     :debug                  => "--debug",
@@ -250,6 +253,11 @@ class BrakemanOptionsTest < Minitest::Test
     assert_equal "dont_warn_for_these.rb", options[:ignore_file]
   end
 
+  def test_show_ignored_option
+    options = setup_options_from_input("--show-ignored")
+    assert options[:show_ignored]
+  end
+
   def test_combine_warnings_option
     options = setup_options_from_input("--combine-locations")
     assert options[:combine_locations]
@@ -361,6 +369,24 @@ class BrakemanOptionsTest < Minitest::Test
   def test_text_report_fields
     assert_raises OptionParser::ParseError do
       setup_options_from_input("--text-fields", "not_a_real_field")
+    end
+  end
+
+  def test_use_prism
+    begin
+      # If prism is installed, test that everything is fine
+
+      gem('prism', '>=1.0')
+      options = setup_options_from_input('--prism')
+      assert options[:use_prism]
+    rescue Gem::MissingSpecVersionError, Gem::MissingSpecError, Gem::LoadError
+      # Otherwise, test the error message and exception
+
+      assert_output nil, /Please install `prism`/ do
+        assert_raises Gem::MissingSpecVersionError, Gem::MissingSpecError, Gem::LoadError do
+          setup_options_from_input('--prism')
+        end
+      end
     end
   end
 

@@ -3,6 +3,8 @@ LABEL maintainer="Justin Collins <gem@brakeman.org>"
 
 WORKDIR /usr/src/app
 
+RUN apk --update add build-base
+
 # Copy our Gemfile (and related files) *without* copying our actual source code yet
 COPY Gemfile* *.gemspec gem_common.rb ./
 # Copy lib/brakeman/version.rb so that bundle install works

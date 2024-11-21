@@ -4,7 +4,7 @@ class Brakeman::Report::Text < Brakeman::Report::Base
   def generate_report
     HighLine.use_color = !!tracker.options[:output_color]
     summary_option = tracker.options[:summary_only]
-    @output_string = "\n"
+    @output_string = +"\n"
 
     unless summary_option == :no_summary
       add_chunk generate_header
@@ -21,6 +21,9 @@ class Brakeman::Report::Text < Brakeman::Report::Base
     add_chunk generate_obsolete
     add_chunk generate_errors
     add_chunk generate_warnings
+    add_chunk generate_show_ignored_overview if tracker.options[:show_ignored] && ignored_warnings.any?
+
+    @output_string
   end
 
   def add_chunk chunk, out = @output_string
@@ -99,6 +102,10 @@ class Brakeman::Report::Text < Brakeman::Report::Base
 
       double_space "Warnings", warnings
     end
+  end
+
+  def generate_show_ignored_overview
+    double_space("Ignored Warnings", ignored_warnings.map {|w| output_warning w})
   end
 
   def generate_errors

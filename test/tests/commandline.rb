@@ -135,6 +135,13 @@ class CommandlineTests < Minitest::Test
     end
   end
 
+  # Assert default when using `--show-ignored` flag.
+  def test_show_ignored_warnings
+    assert_exit Brakeman::Warnings_Found_Exit_Code do
+      scan_app "--show-ignored"
+    end
+  end
+
   def test_compare_deactivates_ensure_ignore_notes
     opts, = Brakeman::Commandline.parse_options [
       '--ensure-ignore-notes',
@@ -211,7 +218,6 @@ class CommandlineTests < Minitest::Test
           "note": "Here's a note!"
         }
       ],
-      "updated": "2019-04-02 12:15:05 -0700",
       "brakeman_version": "4.5.0"
     }
   JSON
@@ -240,7 +246,6 @@ class CommandlineTests < Minitest::Test
           "note": "Note here."
         }
       ],
-      "updated": "2019-04-02 12:15:05 -0700",
       "brakeman_version": "4.5.0"
     }
   JSON

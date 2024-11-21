@@ -1,3 +1,27 @@
+# 6.2.2 - 2024-10-15
+
+* Ignore more native gems when building gem
+* Revamp command injection in `pipeline*` calls
+* New end-of-support dates for Rails
+
+# 6.2.1 - 2024-08-22
+
+Just a packaging fix for brakeman.gem
+
+# 6.2.0 - 2024-08-22
+
+* Add `--show-ignored` option (Gabriel Zayas)
+* Add optional support for Prism parser
+* Warn about unscoped finds with `find_by!`
+* Treat `::X` and `X` the same, for now (Jill Klang)
+* Fix compatibility with default frozen string literals (Jean Boussier)
+* Remediation advice for command injection (Nicholas Barone)
+* Fix Ruby warnings in test suite (Jean Boussier)
+* Support YAML aliases in secret configs (Chedli Bourguiba)
+* Add initial Rails 8 support (Ron Shinall)
+* Handle mass assignment with splats
+* Add support for symbolic links (Lu Zhu)
+
 # 6.1.2 - 2024-02-01
 
 * Update Highline to 3.0

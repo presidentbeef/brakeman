@@ -7,7 +7,18 @@ module Brakeman
   class FileParser
     attr_reader :file_list, :errors
 
-    def initialize app_tree, timeout, parallel = true
+    def initialize app_tree, timeout, parallel = true, use_prism = false
+      @use_prism = use_prism
+
+      if @use_prism
+        begin
+          require 'prism'
+        rescue LoadError => e
+          Brakeman.debug "Asked to use Prism, but failed to load: #{e}"
+          @use_prism = false
+        end
+      end
+
       @app_tree = app_tree
       @timeout = timeout
       @file_list = []
@@ -73,8 +84,29 @@ module Brakeman
         path = path.relative
       end
 
+      Brakeman.debug "Parsing #{path}"
+
+      if @use_prism
+        begin
+          parse_with_prism input, path
+        rescue => e
+          Brakeman.debug "Prism failed to parse #{path}: #{e}"
+
+          parse_with_ruby_parser input, path
+        end
+      else
+        parse_with_ruby_parser input, path
+      end
+    end
+
+    private
+
+    def parse_with_prism input, path
+      Prism::Translation::RubyParser.parse(input, path)
+    end
+
+    def parse_with_ruby_parser input, path
       begin
-        Brakeman.debug "Parsing #{path}"
         RubyParser.new.parse input, path, @timeout
       rescue Racc::ParseError => e
         raise e.exception(e.message + "\nCould not parse #{path}")

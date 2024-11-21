@@ -1,11 +1,15 @@
 Brakeman.load_brakeman_dependency 'erubis'
 
+require 'brakeman/parsers/erubis_patch'
+
 # This is from Rails 5 version of the Erubis handler
 # https://github.com/rails/rails/blob/ec608107801b1e505db03ba76bae4a326a5804ca/actionview/lib/action_view/template/handlers/erb.rb#L7-L73
 class Brakeman::Rails3Erubis < ::Erubis::Eruby
+  include Brakeman::ErubisPatch
 
   def add_preamble(src)
     @newline_pending = 0
+    src << "_this_is_to_make_yields_syntactally_correct {"
     src << "@output_buffer = output_buffer || ActionView::OutputBuffer.new;"
   end
 
@@ -62,7 +66,7 @@ class Brakeman::Rails3Erubis < ::Erubis::Eruby
 
   def add_postamble(src)
     flush_newline_if_pending(src)
-    src << '@output_buffer.to_s'
+    src << '@output_buffer.to_s; }'
   end
 
   def flush_newline_if_pending(src)

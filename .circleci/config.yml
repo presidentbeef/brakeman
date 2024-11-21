@@ -27,7 +27,7 @@ jobs:
       - run: bundle check || bundle install
       - run:
           command: |
-            bundle exec rake
+            bundle exec rake RUBYOPT='--enable-frozen-string-literal --debug-frozen-string-literal'
             ./tmp/cc-test-reporter format-coverage -t simplecov -o tmp/codeclimate.json coverage/.resultset.json
       - store_test_results:
           path: test-results

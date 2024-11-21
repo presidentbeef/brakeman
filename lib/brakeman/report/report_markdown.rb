@@ -27,7 +27,7 @@ class Brakeman::Report::Markdown < Brakeman::Report::Table
   end
 
   def generate_report
-    out = "# BRAKEMAN REPORT\n\n" <<
+    out = +"# BRAKEMAN REPORT\n\n" <<
     generate_metadata.to_s << "\n\n" <<
     generate_checks.to_s << "\n\n" <<
     "### SUMMARY\n\n" <<
