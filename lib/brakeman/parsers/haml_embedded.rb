@@ -25,20 +25,23 @@ RUBY
   end
 end
 
-# Fake CoffeeScript filter for Haml
-module Haml::Filters::Coffee
-  include Haml::Filters::Base
-  extend Brakeman::FakeHamlFilter
-end
+# Haml::Filters::Coffee used to be defined as a module - now it is a class and no longer needed
+if defined?(Haml::Filters::Coffee) && Haml::Filters::Coffee.class == Module
+  # Fake CoffeeScript filter for Haml
+  module Haml::Filters::Coffee
+    include Haml::Filters::Base
+    extend Brakeman::FakeHamlFilter
+  end
 
-# Fake Markdown filter for Haml
-module Haml::Filters::Markdown
-  include Haml::Filters::Base
-  extend Brakeman::FakeHamlFilter
-end
+  # Fake Markdown filter for Haml
+  module Haml::Filters::Markdown
+    include Haml::Filters::Base
+    extend Brakeman::FakeHamlFilter
+  end
 
-# Fake Sass filter for Haml
-module Haml::Filters::Sass
-  include Haml::Filters::Base
-  extend Brakeman::FakeHamlFilter
+  # Fake Sass filter for Haml
+  module Haml::Filters::Sass
+    include Haml::Filters::Base
+    extend Brakeman::FakeHamlFilter
+  end
 end
