@@ -464,12 +464,12 @@ module Brakeman
   def self.rescan tracker, files, options = {}
     require 'brakeman/rescanner'
 
-    tracker.options.merge! options
+    options = tracker.options.merge options
 
     @quiet = !!tracker.options[:quiet]
     @debug = !!tracker.options[:debug]
 
-    Rescanner.new(tracker.options, tracker.processor, files).recheck
+    Rescanner.new(options, tracker.processor, files).recheck
   end
 
   def self.notify message
