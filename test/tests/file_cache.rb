@@ -53,6 +53,6 @@ class FileCacheTests < Minitest::Test
     file_name = "file_#{SecureRandom.hex}"
     path = Brakeman::FilePath.new("/tmp/file/#{file_name}", file_name)
 
-    Brakeman::ASTFile.new(path: path, ast: s(:block))
+    Brakeman::ASTFile.new(path, s(:block))
   end
 end
