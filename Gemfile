@@ -3,5 +3,9 @@ source "https://rubygems.org"
 gemspec :name => "brakeman"
 
 unless ENV['BM_PACKAGE']
-  gem "rake"
+  group :test do
+    gem 'rake'
+    gem 'minitest'
+    gem 'prism'
+  end
 end
