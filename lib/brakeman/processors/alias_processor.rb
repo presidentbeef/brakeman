@@ -666,7 +666,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
     end
 
     unless array? exp[1] and array? exp[2]
-      return process_default(exp)
+      # Already processed RHS, don't do it again
+      # https://github.com/presidentbeef/brakeman/issues/1877
+      return exp
     end
 
     vars = exp[1].dup

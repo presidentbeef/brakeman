@@ -30,8 +30,8 @@ Gem::Specification.new do |s|
 
     s.files += Dir['bundle/ruby/*/gems/**/*'].reject do |path|
       # Skip unnecessary files in dependencies
-      path =~ /^bundle\/ruby\/\d\.\d\.\d\/gems\/[^\/]+\/(Rakefile|benchmark|bin|doc|example|man|site|spec|test)/ or
-        path.include? '/gems/racc'
+      path =~ %r{^bundle/ruby/\d\.\d\.\d/gems/[^\/]+/(Rakefile|benchmark|bin|doc|example|man|site|spec|test)} or
+        path =~ %r{/gems/(io-console|racc|strscan)/}
     end
 
     # racc is not only a built-in gem, but also has native code which we cannot

@@ -1,3 +1,9 @@
+# 6.2.2 - 2024-10-15
+
+* Ignore more native gems when building gem
+* Revamp command injection in `pipeline*` calls
+* New end-of-support dates for Rails
+
 # 6.2.1 - 2024-08-22
 
 Just a packaging fix for brakeman.gem

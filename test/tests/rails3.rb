@@ -14,7 +14,7 @@ class Rails3Tests < Minitest::Test
       :controller => 1,
       :model => 9,
       :template => 41,
-      :generic => 76
+      :generic => 79
     }
 
     if RUBY_PLATFORM == 'java'
@@ -165,6 +165,62 @@ class Rails3Tests < Minitest::Test
       :message => /^Possible\ command\ injection/,
       :confidence => 0,
       :relative_path => "app/controllers/home_controller.rb"
+  end
+
+  def test_command_injection_pipeline_safe_ish
+    assert_no_warning check_name: "Execute",
+      type: :warning,
+      warning_code: 14,
+      fingerprint: "69631817be6f91b3e9115935a0b5e23b6cd642bdb44ac5edb83ce9bf5c207528",
+      warning_type: "Command Injection",
+      line: 162,
+      message: /^Possible\ command\ injection/,
+      confidence: 0,
+      relative_path: "app/controllers/home_controller.rb",
+      code: s(:call, s(:const, :Open3), :pipeline, s(:array, s(:str, "sort"), s(:call, s(:params), :[], s(:lit, :file)))),
+      user_input: s(:call, s(:params), :[], s(:lit, :file))
+  end
+
+  def test_command_injection_pipeline_array_cmd
+    assert_warning check_name: "Execute",
+      type: :warning,
+      warning_code: 14,
+      fingerprint: "209d96d55ba1cdbce58da49efaea6c3da266411c9a4e3ba914b80969b0ebc4c8",
+      warning_type: "Command Injection",
+      line: 163,
+      message: /^Possible\ command\ injection/,
+      confidence: 0,
+      relative_path: "app/controllers/home_controller.rb",
+      code: s(:call, s(:const, :Open3), :pipeline_r, s(:array, s(:str, "ls"), s(:str, "*")), s(:dstr, "sort ", s(:evstr, s(:call, s(:params), :[], s(:lit, :order))))),
+      user_input: s(:call, s(:params), :[], s(:lit, :order))
+  end
+
+  def test_command_injection_pipeline_two_array_commands
+    assert_warning check_name: "Execute",
+      type: :warning,
+      warning_code: 14,
+      fingerprint: "a64f8ffded9992faa6291a1448ea49b9121b29d00cc09d01f3608c57131f778a",
+      warning_type: "Command Injection",
+      line: 164,
+      message: /^Possible\ command\ injection/,
+      confidence: 0,
+      relative_path: "app/controllers/home_controller.rb",
+      code: s(:call, s(:const, :Open3), :pipeline_rw, s(:array, s(:str, "ls")), s(:array, s(:call, s(:params), :[], s(:lit, :cmd)))),
+      user_input: s(:call, s(:params), :[], s(:lit, :cmd))
+  end
+
+  def test_command_injection_pipeline_bash_c
+    assert_warning check_name: "Execute",
+      type: :warning,
+      warning_code: 14,
+      fingerprint: "386d96b25b2ca16ff668be680ddf4669fe4f37e12f60506f67971d99ba2f4250",
+      warning_type: "Command Injection",
+      line: 165,
+      message: /^Possible\ command\ injection/,
+      confidence: 0,
+      relative_path: "app/controllers/home_controller.rb",
+      code: s(:call, s(:const, :Open3), :pipeline_start, s(:array, s(:str, "bash"), s(:str, "-c"), s(:call, s(:params), :[], s(:lit, :cmd)))),
+      user_input: s(:call, s(:params), :[], s(:lit, :cmd))
   end
 
   def test_command_injection_spawn
