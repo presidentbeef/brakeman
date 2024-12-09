@@ -7,6 +7,7 @@ begin
   require 'brakeman/file_parser'
   require 'brakeman/parsers/template_parser'
   require 'brakeman/processors/lib/file_type_detector'
+  require 'brakeman/tracker/file_cache'
 rescue LoadError => e
   $stderr.puts e.message
   $stderr.puts "Please install the appropriate dependency."
@@ -38,6 +39,10 @@ class Brakeman::Scanner
     @processor.tracked_events
   end
 
+  def file_cache
+    tracker.file_cache
+  end
+
   def process_step description
     Brakeman.notify "#{description}...".ljust(40)
 
@@ -67,7 +72,7 @@ class Brakeman::Scanner
   end
 
   #Process everything in the Rails application
-  def process
+  def process(ruby_paths: nil, template_paths: nil)
     process_step 'Processing gems' do
       process_gems
     end
@@ -77,13 +82,27 @@ class Brakeman::Scanner
       process_config
     end
 
+    # -
+    # If ruby_paths or template_paths are set,
+    # only parse those files. The rest will be fetched
+    # from the file cache.
+    #
+    # Otherwise, parse everything normally.
+    #
+    astfiles = nil
+    ruby_paths ||= tracker.app_tree.ruby_file_paths
+    template_paths ||= tracker.app_tree.template_paths
+
     process_step 'Parsing files' do
-      parse_files
+      astfiles = parse_files(ruby_paths: ruby_paths, template_paths: template_paths)
     end
 
     process_step 'Detecting file types' do
-      detect_file_types
+      detect_file_types(astfiles)
     end
+
+    tracker.save_file_cache! if support_rescanning?
+    # -
 
     process_step 'Processing initializers' do
       process_initializers
@@ -124,44 +143,37 @@ class Brakeman::Scanner
     tracker
   end
 
-  def parse_files
+  def parse_files(ruby_paths:, template_paths:)
     fp = Brakeman::FileParser.new(tracker.app_tree, tracker.options[:parser_timeout], tracker.options[:parallel_checks], tracker.options[:use_prism])
 
-    fp.parse_files tracker.app_tree.ruby_file_paths
+    fp.parse_files ruby_paths
 
     template_parser = Brakeman::TemplateParser.new(tracker, fp)
 
-    fp.read_files(@app_tree.template_paths) do |path, contents|
-      template_parser.parse_template path, contents
+    fp.read_files(template_paths) do |path, contents|
+      template_parser.parse_template(path, contents)
     end
 
     # Collect errors raised during parsing
     tracker.add_errors(fp.errors)
 
-    @parsed_files = fp.file_list
+    fp.file_list
   end
 
-  def detect_file_types
-    @file_list = {
-      controllers: [],
-      initializers: [],
-      libs: [],
-      models: [],
-      templates: [],
-    }
-
+  def detect_file_types(astfiles)
     detector = Brakeman::FileTypeDetector.new
 
-    @parsed_files.each do |file|
+    astfiles.each do |file|
       if file.is_a? Brakeman::TemplateParser::TemplateFile
-        @file_list[:templates] << file
+        file_cache.add_file file, :template
       else
         type = detector.detect_type(file)
+
         unless type == :skip
-          if @file_list[type].nil?
-            raise type.to_s
+          if file_cache.valid_type? type
+            file_cache.add_file(file, type)
           else
-            @file_list[type] << file
+            raise "Unexpected file type: #{type.inspect}"
           end
         end
       end
@@ -268,8 +280,8 @@ class Brakeman::Scanner
   #
   #Adds parsed information to tracker.initializers
   def process_initializers
-    track_progress @file_list[:initializers] do |init|
-      process_step_file init[:path] do
+    track_progress file_cache.initializers do |path, init|
+      process_step_file path do
         process_initializer init
       end
     end
@@ -289,8 +301,10 @@ class Brakeman::Scanner
       return
     end
 
-    track_progress @file_list[:libs] do |lib|
-      process_step_file lib.path do
+    libs = file_cache.libs.sort_by { |path, _| path }
+
+    track_progress libs do |path, lib|
+      process_step_file path do
         process_lib lib
       end
     end
@@ -322,15 +336,17 @@ class Brakeman::Scanner
   #
   #Adds processed controllers to tracker.controllers
   def process_controllers
-    track_progress @file_list[:controllers] do |controller|
-      process_step_file controller.path do
+    controllers = file_cache.controllers.sort_by { |path, _| path }
+
+    track_progress controllers do |path, controller|
+      process_step_file path do
         process_controller controller
       end
     end
   end
 
   def process_controller_data_flows
-    controllers = tracker.controllers.sort_by { |name, _| name.to_s }
+    controllers = tracker.controllers.sort_by { |name, _| name }
 
     track_progress controllers, "controllers" do |name, controller|
       process_step_file name do
@@ -356,10 +372,10 @@ class Brakeman::Scanner
   #
   #Adds processed views to tracker.views
   def process_templates
-    templates = @file_list[:templates].sort_by { |t| t[:path] }
+    templates = file_cache.templates.sort_by { |path, _| path }
 
-    track_progress templates, "templates" do |template|
-      process_step_file template[:path] do
+    track_progress templates, "templates" do |path, template|
+      process_step_file path do
         process_template template
       end
     end
@@ -370,7 +386,7 @@ class Brakeman::Scanner
   end
 
   def process_template_data_flows
-    templates = tracker.templates.sort_by { |name, _| name.to_s }
+    templates = tracker.templates.sort_by { |name, _| name }
 
     track_progress templates, "templates" do |name, template|
       process_step_file name do
@@ -383,15 +399,17 @@ class Brakeman::Scanner
   #
   #Adds the processed models to tracker.models
   def process_models
-    track_progress @file_list[:models] do |model|
-      process_step_file model[:path] do
-        process_model model[:path], model[:ast]
+    models = file_cache.models.sort_by { |path, _| path }
+
+    track_progress models do |path, model|
+      process_step_file path do
+        process_model model
       end
     end
   end
 
-  def process_model path, ast
-    @processor.process_model(ast, path)
+  def process_model astfile
+    @processor.process_model(astfile.ast, astfile.path)
   end
 
   def track_progress list, type = "files"
@@ -419,6 +437,10 @@ class Brakeman::Scanner
   rescue Exception => e
     tracker.error(e)
     nil
+  end
+
+  def support_rescanning?
+    tracker.options[:support_rescanning]
   end
 end
 

@@ -174,7 +174,7 @@ module BrakemanTester::RescanTestHelper
       FileUtils.cp_r(File.join(TEST_PATH, 'apps', app, '.'), dir)
     end
 
-    options = {:app_path => dir, :debug => false}.merge(options)
+    options = {app_path: dir, debug: false, support_rescanning: true}.merge(options)
 
     if @@scans[[app, options]]
       @original = @@scans[[app, options]]
@@ -223,7 +223,10 @@ module BrakemanTester::RescanTestHelper
 
   #Check how many new warnings were reported
   def assert_new expected
-    assert_equal expected, new.length, lambda { "Expected #{expected} new warnings, but found #{new.length}:\n#{new.map {|w| "\t#{w.message} #{w.file}" }.join("\n")}" }
+    assert_equal expected, new.length, lambda {
+      "Expected #{expected} new warnings, but found #{new.length}:\n#{new.map {|w| w.to_json}.join("\n")}\n" \
+      "Also these are the old ones:\n#{existing.map {|w| w.to_json }.join("\n")}"
+    }
   end
 
   #Check how many existing warnings were reported
@@ -231,18 +234,6 @@ module BrakemanTester::RescanTestHelper
     expected = (@rescan.old_results.length - fixed.length)
 
     assert_equal expected, existing.length, "Expected #{expected} existing warnings, but found #{existing.length}"
-  end
-
-  def assert_changes expected = true
-    assert_equal expected, rescanner.changes
-  end
-
-  def assert_reindex *types
-    if types == [:none]
-      assert rescanner.reindex.empty?, "Expected no reindexing, got #{rescanner.reindex.inspect}"
-    else
-      assert_equal Set.new(types), rescanner.reindex
-    end
   end
 
   def full_path file

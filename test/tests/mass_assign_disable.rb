@@ -11,7 +11,6 @@ class MassAssignDisableTest < Minitest::Test
       write_file init, content
     end
 
-    assert_changes
     assert_fixed 4
     assert_new 0
   end
@@ -60,8 +59,6 @@ class MassAssignDisableTest < Minitest::Test
 
     #We disable whitelist, but add strong_parameters globally, so
     #there should be no change.
-    assert_reindex :initializers
-    assert_changes
     assert_fixed 0
     assert_new 0
   end
@@ -73,8 +70,6 @@ class MassAssignDisableTest < Minitest::Test
 
     # I misunderstood this previously - the protected_attributes gem
     # does not require use of attr_accessible, just allows it.
-    assert_reindex :none
-    assert_changes
     assert_fixed 0
     assert_new 0
   end
@@ -89,8 +84,6 @@ class MassAssignDisableTest < Minitest::Test
         "config.active_record.whitelist_attributes = true"
     end
 
-    assert_reindex :none
-    assert_changes
     assert_fixed 0
     assert_new 0
   end
@@ -113,8 +106,6 @@ class MassAssignDisableTest < Minitest::Test
 
     #We disable whitelist, but add strong_parameters globally, so
     #there should be no change.
-    assert_reindex :initializers
-    assert_changes
     assert_fixed 0
     assert_new 0
   end

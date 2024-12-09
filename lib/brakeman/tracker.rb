@@ -12,7 +12,7 @@ class Brakeman::Tracker
   attr_accessor :controllers, :constants, :templates, :models, :errors,
     :checks, :initializers, :config, :routes, :processor, :libs,
     :template_cache, :options, :filter_cache, :start_time, :end_time,
-    :duration, :ignored_filter, :app_tree
+    :duration, :ignored_filter, :app_tree, :file_cache, :pristine_file_cache
 
   #Place holder when there should be a model, but it is not
   #clear what model it will be.
@@ -26,15 +26,22 @@ class Brakeman::Tracker
     @app_tree = app_tree
     @processor = processor
     @options = options
+    @file_cache = Brakeman::FileCache.new
+    @pristine_file_cache = nil
 
-    @config = Brakeman::Config.new(self)
+    reset_all
+  end
+
+  def reset_all
     @templates = {}
     @controllers = {}
+
     #Initialize models with the unknown model so
     #we can match models later without knowing precisely what
     #class they are.
     @models = {}
     @models[UNKNOWN_MODEL] = Brakeman::Model.new(UNKNOWN_MODEL, nil, @app_tree.file_path("NOT_REAL.rb"), nil, self)
+
     @method_cache = {}
     @routes = {}
     @initializers = {}
@@ -46,9 +53,14 @@ class Brakeman::Tracker
     @template_cache = Set.new
     @filter_cache = {}
     @call_index = nil
+    @config = Brakeman::Config.new(self)
     @start_time = Time.now
     @end_time = nil
     @duration = nil
+  end
+
+  def save_file_cache!
+    @pristine_file_cache = @file_cache.dup
   end
 
   #Add an error to the list. If no backtrace is given,
@@ -299,6 +311,11 @@ class Brakeman::Tracker
     if locations.include? :controllers
       classes_to_reindex.merge self.controllers.keys
       method_sets << self.controllers
+    end
+
+    if locations.include? :libs
+      classes_to_reindex.merge self.libs.keys
+      method_sets << self.libs
     end
 
     if locations.include? :initializers

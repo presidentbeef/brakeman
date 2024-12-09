@@ -17,8 +17,6 @@ class RescannerTests < Minitest::Test
     before_rescan_of []
 
     assert rescan.any_warnings?
-    assert_reindex :none
-    assert_changes false
     assert_fixed 0
     assert_new 0
   end
@@ -28,8 +26,6 @@ class RescannerTests < Minitest::Test
       write_file "IRRELEVANT", "Nothing special here"
     end
 
-    assert_reindex :none
-    assert_changes false #No files were rescanned
     assert_new 0
     assert_fixed 0
   end
@@ -39,8 +35,6 @@ class RescannerTests < Minitest::Test
       remove "README.rdoc"
     end
 
-    assert_reindex :none
-    assert_changes false #No files were rescanned
     assert_new 0
     assert_fixed 0
   end
@@ -52,8 +46,6 @@ class RescannerTests < Minitest::Test
       remove template
     end
 
-    assert_reindex :none #because deleted
-    assert_changes
     assert_new 0
     assert_fixed 1
   end
@@ -65,8 +57,6 @@ class RescannerTests < Minitest::Test
       remove_method controller, :remove_this
     end
 
-    assert_reindex :controllers, :templates
-    assert_changes
     assert_new 0
     assert_fixed 1
   end
@@ -78,8 +68,6 @@ class RescannerTests < Minitest::Test
       remove_method controller, :change_lines
     end
 
-    assert_reindex :controllers, :templates
-    assert_changes
     assert_new 0
     assert_fixed 0
   end
@@ -91,8 +79,6 @@ class RescannerTests < Minitest::Test
       remove controller
     end
 
-    assert_reindex :controllers, :templates
-    assert_changes
     assert_new 0
     assert_fixed 4
   end
@@ -104,7 +90,6 @@ class RescannerTests < Minitest::Test
       remove controller
     end
 
-    assert_changes
     assert_new 0
     assert_fixed 1
   end
@@ -116,8 +101,6 @@ class RescannerTests < Minitest::Test
       replace controller, "@user_data = raw params[:user_data]", "@user_data = params[:user_data]"
     end
 
-    assert_reindex :controllers, :templates
-    assert_changes
     assert_new 0
     assert_fixed 1
   end
@@ -129,8 +112,6 @@ class RescannerTests < Minitest::Test
       append template, "<%= raw params[:bad] %>"
     end
 
-    assert_reindex :templates
-    assert_changes
     assert_new 1
     assert_fixed 0
   end
@@ -142,8 +123,6 @@ class RescannerTests < Minitest::Test
       append template, "<%= raw @user.thing %>"
     end
 
-    assert_reindex :templates
-    assert_changes
     assert_new 1
     assert_fixed 0
   end
@@ -158,8 +137,6 @@ class RescannerTests < Minitest::Test
       remove model
     end
 
-    assert_reindex :models
-    assert_changes
     assert_new 0
     assert_fixed 3
   end
@@ -173,8 +150,6 @@ class RescannerTests < Minitest::Test
       remove dependency
     end
 
-    assert_reindex :controllers, :models, :templates
-    assert_changes
     assert_new 6 #User is no longer a model, causing MORE warnings
     assert_fixed 8
   end
@@ -190,8 +165,6 @@ class RescannerTests < Minitest::Test
       RUBY
     end
 
-    assert_reindex :models
-    assert_changes
     assert_new 1
     assert_fixed 0
   end
@@ -204,8 +177,6 @@ class RescannerTests < Minitest::Test
         "config.active_record.whitelist_attributes = false"
     end
 
-    assert_reindex :none
-    assert_changes
     assert_new 3
     assert_fixed 0
   end
@@ -217,8 +188,6 @@ class RescannerTests < Minitest::Test
       replace routes, "match 'implicit' => 'removal#implicit_render'", ""
     end
 
-    assert_reindex :controllers, :templates
-    assert_changes
     assert_new 0
     assert_fixed 1
   end
@@ -231,8 +200,6 @@ class RescannerTests < Minitest::Test
       remove initializer
     end
 
-    assert_reindex :none
-    assert_changes
     assert_new 0
     assert_fixed 0
   end
@@ -244,8 +211,6 @@ class RescannerTests < Minitest::Test
       remove lib
     end
 
-    assert_reindex :controllers, :templates
-    assert_changes
     assert_new 0
     assert_fixed 1
   end
@@ -257,8 +222,6 @@ class RescannerTests < Minitest::Test
       remove_method lib, :mixed_in
     end
 
-    assert_reindex :controllers, :templates
-    assert_changes
     assert_new 0
     assert_fixed 1
   end
@@ -272,8 +235,6 @@ class RescannerTests < Minitest::Test
 
     #@original is actually modified
     assert @original.config.rails_version, "3.2.6"
-    assert_reindex :none
-    assert_changes
     assert_new 1
     assert_fixed 0
   end
@@ -287,8 +248,6 @@ class RescannerTests < Minitest::Test
 
     #@original is actually modified
     assert @original.config.rails_version, "3.2.17"
-    assert_reindex :none
-    assert_changes
     assert_new 0
     if RUBY_PLATFORM == "java"
       assert_fixed 10
@@ -304,8 +263,6 @@ class RescannerTests < Minitest::Test
       append gitignore, "secret_token.rb"
     end
 
-    assert_changes
-    assert_reindex :initializers
     assert_fixed 1
     assert_new 0
   end
