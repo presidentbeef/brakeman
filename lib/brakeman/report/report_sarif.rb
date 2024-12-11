@@ -1,8 +1,10 @@
+require 'uri'
+
 class Brakeman::Report::SARIF < Brakeman::Report::Base
   def generate_report
     sarif_log = {
       :version => '2.1.0',
-      :$schema => 'https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json',
+      :$schema => 'https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0.json',
       :runs => runs,
     }
     JSON.pretty_generate sarif_log

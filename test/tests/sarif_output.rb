@@ -21,7 +21,7 @@ class SARIFOutputTests < Minitest::Test
 
   def test_log_shape
     assert_equal '2.1.0', @@sarif['version']
-    assert_equal 'https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json', @@sarif['$schema']
+    assert_equal 'https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0.json', @@sarif['$schema']
   end
 
   def test_runs_shape
