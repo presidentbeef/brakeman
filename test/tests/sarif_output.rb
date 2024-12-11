@@ -29,8 +29,8 @@ class SARIFOutputTests < Minitest::Test
     assert runs = @@sarif['runs']
     assert_equal 1, runs.length
 
-    # The single run contains tool, and results
-    assert_equal runs[0].keys, ['tool', 'results']
+    # The single run contains some data
+    assert_equal ['tool', 'results', 'originalUriBaseIds'], runs[0].keys
 
     # The single run contains a single tool
     assert_equal 1, runs[0]['tool'].length
@@ -104,6 +104,17 @@ class SARIFOutputTests < Minitest::Test
         # Each location has a physical location, ...
         assert location['physicalLocation']
 
+        # Each physical location has an artifact location, ...
+        assert location['physicalLocation']['artifactLocation']
+
+        # Each artifact location has a relative URI
+        assert location['physicalLocation']['artifactLocation']['uri']
+        refute location['physicalLocation']['artifactLocation']['uri'].start_with? 'file://'
+
+
+        # and a uriBaseId
+        assert_equal '%SRCROOT%', location['physicalLocation']['artifactLocation']['uriBaseId']
+
         # Each location has a region
         assert location['physicalLocation']['region']['startLine']
       end
@@ -137,5 +148,97 @@ class SARIFOutputTests < Minitest::Test
       # ...and a justification (will be nil if no notes is set).
       assert suppression['justification']
     end
+  end
+
+  def test_uri_base_ids_with_absolute_app_path
+    assert base_uris = @@sarif.dig('runs', 0, 'originalUriBaseIds')
+    assert_equal ['%SRCROOT%'], base_uris.keys
+
+    # Only %SRCROOT% with no URI
+    assert base_uris['%SRCROOT%']
+    assert_equal ['description'], base_uris['%SRCROOT%'].keys
+  end
+
+  def test_uri_base_ids_with_relative_app_path
+    original_app_path = tracker_3_2.options[:app_path] # Horrible hack
+    tracker_3_2.options[:app_path] = 'something/relative'
+    sarif = JSON.parse(tracker_3_2.report.to_sarif)
+
+    assert base_uris = sarif.dig('runs', 0, 'originalUriBaseIds')
+    assert_equal ['PROJECTROOT', '%SRCROOT%'], base_uris.keys
+
+    # %SRCROOT% should have the relative path and point to PROJECTROOT
+    # as its base
+    assert base_uris['%SRCROOT%']
+    assert_equal ['uri', 'uriBaseId', 'description'], base_uris['%SRCROOT%'].keys
+    assert_equal 'something/relative/', base_uris['%SRCROOT%']['uri']
+    assert_equal 'PROJECTROOT', base_uris['%SRCROOT%']['uriBaseId']
+
+    # PROJECTROOT should not have a URI
+    assert base_uris['PROJECTROOT']
+    assert_equal ['description'], base_uris['PROJECTROOT'].keys
+  ensure
+    tracker_3_2.options[:app_path] = original_app_path
+  end
+
+  def test_uri_base_ids_with_absolute_app_path_and_absolute_path_option
+    tracker_3_2.options[:absolute_paths] = true
+    sarif = JSON.parse(tracker_3_2.report.to_sarif)
+
+    assert base_uris = sarif.dig('runs', 0, 'originalUriBaseIds')
+    assert_equal ['%SRCROOT%'], base_uris.keys
+
+    # Only %SRCROOT% with absolute URI
+    assert base_uris['%SRCROOT%']
+    assert_equal ['uri','description'], base_uris['%SRCROOT%'].keys
+    assert base_uris['%SRCROOT%']['uri'].start_with? 'file://'
+    assert base_uris['%SRCROOT%']['uri'].end_with? '/'
+  ensure
+    tracker_3_2.options[:absolute_paths] = false
+  end
+
+  def test_uri_base_ids_with_relative_app_path_and_absolute_path_option
+    original_app_path = tracker_3_2.options[:app_path] # Horrible hack
+    tracker_3_2.options[:app_path] = 'something/relative'
+    tracker_3_2.options[:absolute_paths] = true
+    sarif = JSON.parse(tracker_3_2.report.to_sarif)
+
+    assert base_uris = sarif.dig('runs', 0, 'originalUriBaseIds')
+    assert_equal ['PROJECTROOT', '%SRCROOT%'], base_uris.keys
+
+    # %SRCROOT% should have the relative path and point to PROJECTROOT
+    # as its base
+    assert base_uris['%SRCROOT%']
+    assert_equal ['uri', 'uriBaseId', 'description'], base_uris['%SRCROOT%'].keys
+    assert_equal 'something/relative/', base_uris['%SRCROOT%']['uri']
+    assert_equal 'PROJECTROOT', base_uris['%SRCROOT%']['uriBaseId']
+
+    # PROJECTROOT should have an absolute URI
+    assert base_uris['PROJECTROOT']
+    assert_equal ['uri', 'description'], base_uris['PROJECTROOT'].keys
+    assert base_uris['PROJECTROOT']['uri'].start_with? 'file://'
+    assert base_uris['PROJECTROOT']['uri'].end_with? '/'
+  ensure
+    tracker_3_2.options[:app_path] = original_app_path
+    tracker_3_2.options[:absolute_paths] = false
+  end
+
+  def test_uri_base_ids_with_default_app_path_and_absolute_path_option
+    original_app_path = tracker_3_2.options[:app_path] # Horrible hack
+    tracker_3_2.options[:app_path] = '.'
+    tracker_3_2.options[:absolute_paths] = true
+    sarif = JSON.parse(tracker_3_2.report.to_sarif)
+
+    assert base_uris = sarif.dig('runs', 0, 'originalUriBaseIds')
+    assert_equal ['%SRCROOT%'], base_uris.keys
+
+    # Only %SRCROOT% with absolute URI
+    assert base_uris['%SRCROOT%']
+    assert_equal ['uri', 'description'], base_uris['%SRCROOT%'].keys
+    assert base_uris['%SRCROOT%']['uri'].start_with? 'file://'
+    assert base_uris['%SRCROOT%']['uri'].end_with? '/'
+  ensure
+    tracker_3_2.options[:app_path] = original_app_path
+    tracker_3_2.options[:absolute_paths] = false
   end
 end
