@@ -1,8 +1,10 @@
+require 'uri'
+
 class Brakeman::Report::SARIF < Brakeman::Report::Base
   def generate_report
     sarif_log = {
       :version => '2.1.0',
-      :$schema => 'https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json',
+      :$schema => 'https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0.json',
       :runs => runs,
     }
     JSON.pretty_generate sarif_log
@@ -20,8 +22,120 @@ class Brakeman::Report::SARIF < Brakeman::Report::Base
           },
         },
         :results => results,
-      },
+      }.merge(original_uri_base_ids)
     ]
+  end
+
+  # Output base URIs
+  # based on what the user specified for the application path
+  # and whether or not --absolute-paths was set.
+  def original_uri_base_ids
+    if tracker.options[:app_path] == '.'
+      # Probably no app_path was specified, as that's the default
+
+      if absolute_paths?
+        # Set %SRCROOT% to absolute path
+        {
+          originalUriBaseIds: {
+            '%SRCROOT%' => {
+              uri: file_uri(tracker.app_tree.root),
+              description: {
+                text: 'Base path for application'
+              }
+            }
+          }
+        }
+      else
+        # Empty %SRCROOT%
+        # This avoids any paths appearing in the report
+        # that are not part of the application directory.
+        # Seems fine!
+        {
+          originalUriBaseIds: {
+            '%SRCROOT%' => {
+              description: {
+                text: 'Base path for application'
+              }
+            },
+          }
+        }
+
+      end
+    elsif tracker.options[:app_path] != tracker.app_tree.root
+      # Path was specified and it was relative
+
+      if absolute_paths?
+        # Include absolute root and relative application path
+        {
+          originalUriBaseIds: {
+            PROJECTROOT: {
+              uri: file_uri(tracker.app_tree.root),
+              description: {
+                text: 'Base path for all project files'
+              }
+            },
+            '%SRCROOT%' => {
+              # Technically should ensure this doesn't have any '..'
+              # but... TODO
+              uri: File.join(tracker.options[:app_path], '/'),
+              uriBaseId: 'PROJECTROOT',
+              description: {
+                text: 'Base path for application'
+              }
+            }
+          }
+        }
+      else
+        # Just include relative application path.
+        # Not clear this is 100% valid, but there is one example in the spec like this
+        {
+          originalUriBaseIds: {
+            PROJECTROOT: {
+              description: {
+                text: 'Base path for all project files'
+              }
+            },
+            '%SRCROOT%' => {
+              # Technically should ensure this doesn't have any '..'
+              # but... TODO
+              uri: File.join(tracker.options[:app_path], '/'),
+              uriBaseId: 'PROJECTROOT',
+              description: {
+                text: 'Base path for application'
+              }
+            }
+          }
+        }
+      end
+    else
+      # app_path was absolute
+
+      if absolute_paths?
+        # Set %SRCROOT% to absolute path
+        {
+          originalUriBaseIds: {
+            '%SRCROOT%' => {
+              uri: file_uri(tracker.app_tree.root),
+              description: {
+                text: 'Base path for application'
+              }
+            }
+          }
+        }
+      else
+        # Empty %SRCROOT%
+        # Seems fine!
+        {
+          originalUriBaseIds: {
+            '%SRCROOT%' => {
+              description: {
+                text: 'Base path for application'
+              }
+            },
+          }
+        }
+      end
+    end
   end
 
   def rules
@@ -129,5 +243,11 @@ class Brakeman::Report::SARIF < Brakeman::Report::Base
       2 => 'note',     # 2 represents 'weak, or low, confidence', which we infer as 'note'
     })
     @@levels_from_confidence[warning.confidence]
+  end
+
+  # File URI as a string with trailing forward-slash
+  # as required by SARIF standard
+  def file_uri(path)
+    URI::File.build(path: File.join(path, '/')).to_s
   end
 end
