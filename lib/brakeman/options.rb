@@ -161,7 +161,7 @@ module Brakeman::Options
 
         opts.on "--[no-]prism", "Use the Prism parser" do |use_prism|
           if use_prism
-            prism_version = '0.30'
+            prism_version = '1.0'
 
             begin
               # Specifying minimum version here,
