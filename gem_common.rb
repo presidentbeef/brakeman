@@ -5,7 +5,6 @@ module Brakeman
       spec.add_development_dependency "minitest"
       spec.add_development_dependency "minitest-ci"
       spec.add_development_dependency "simplecov"
-      spec.add_development_dependency "simplecov-html", "=0.10.2"
     end
 
     def self.base_dependencies spec
