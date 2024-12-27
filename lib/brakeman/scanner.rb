@@ -90,8 +90,10 @@ class Brakeman::Scanner
     # Otherwise, parse everything normally.
     #
     astfiles = nil
-    ruby_paths ||= tracker.app_tree.ruby_file_paths
-    template_paths ||= tracker.app_tree.template_paths
+    process_step 'Finding files' do
+      ruby_paths ||= tracker.app_tree.ruby_file_paths
+      template_paths ||= tracker.app_tree.template_paths
+    end
 
     process_step 'Parsing files' do
       astfiles = parse_files(ruby_paths: ruby_paths, template_paths: template_paths)
