@@ -38,7 +38,7 @@ class Rails3Tests < Minitest::Test
       :fingerprint => "4efdd73fb759135f5980b5da1d9804aa4eb5c7475eabfd0f0cf41299d1d7ec42",
       :warning_type => "Dangerous Eval",
       :line => 40,
-      :message => /^User input in eval near line 40: eval\(pa/,
+      :message => /^Parameter\ value\ evaluated\ as\ code/,
       :confidence => 0,
       :file => /home_controller\.rb/
   end
