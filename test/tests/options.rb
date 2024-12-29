@@ -390,6 +390,14 @@ class BrakemanOptionsTest < Minitest::Test
     end
   end
 
+  def test_follow_symlinks
+    options = setup_options_from_input("--follow-symlinks")
+    assert options[:follow_symlinks]
+
+    options = setup_options_from_input("--no-follow-symlinks")
+    refute options[:follow_symlinks]
+  end
+
   private
 
   def setup_options_from_input(*args)

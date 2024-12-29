@@ -223,6 +223,10 @@ module Brakeman::Options
           options[:engine_paths].merge paths
         end
 
+        opts.on '--[no-]follow-symlinks', 'Follow symbolic links for directions' do |follow_symlinks|
+          options[:follow_symlinks] = follow_symlinks
+        end
+
         opts.on "-E", "--enable Check1,Check2,etc", Array, "Enable the specified checks" do |checks|
           checks.map! do |check|
             if check.start_with? "Check"
