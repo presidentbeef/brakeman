@@ -28,6 +28,8 @@ class Brakeman::CheckEvaluation < Brakeman::BaseCheck
     elsif string_evaluation? result[:call].first_arg
       confidence = :low
       message = "Dynamic string evaluated as code"
+    elsif safe_literal? result[:call].first_arg
+      # don't warn
     elsif result[:call].method == :eval
       confidence = :low
       message = "Dynamic code evaluation"
