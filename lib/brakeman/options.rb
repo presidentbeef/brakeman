@@ -161,10 +161,13 @@ module Brakeman::Options
 
         opts.on "--[no-]prism", "Use the Prism parser" do |use_prism|
           if use_prism
+            min_prism_version = '1.3.0'
+
             begin
+              gem 'prism', ">=#{min_prism_version}"
               require 'prism'
             rescue Gem::MissingSpecVersionError, Gem::MissingSpecError, Gem::LoadError => e
-              $stderr.puts "Please install `prism` version #{prism_version} or newer:"
+              $stderr.puts "Please install `prism` version #{min_prism_version} or newer:"
               raise e
             end
           end
