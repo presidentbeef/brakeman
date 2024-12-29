@@ -76,10 +76,13 @@ class Brakeman::CheckDeserialize < Brakeman::BaseCheck
       confidence = :high
     elsif input = include_user_input?(arg)
       confidence = :medium
+    elsif target == :Marshal
+      confidence = :low
+      message = msg("Use of ", msg_code("#{target}.#{method}"), " may be dangerous")
     end
 
     if confidence
-      message = msg(msg_code("#{target}.#{method}"), " called with ", msg_input(input))
+      message ||= msg(msg_code("#{target}.#{method}"), " called with ", msg_input(input))
 
       warn :result => result,
         :warning_type => "Remote Code Execution",
