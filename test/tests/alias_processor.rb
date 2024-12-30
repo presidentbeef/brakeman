@@ -138,6 +138,13 @@ class AliasProcessorTests < Minitest::Test
     RUBY
   end
 
+  def test_array_index_unknown_literal
+    assert_alias ':BRAKEMAN_SAFE_LITERAL', <<-RUBY
+    x = [1, 2, 3][y]
+    x
+    RUBY
+  end
+
   def test_array_append
     assert_alias '[1, 2, 3]', <<-RUBY
       x = [1]

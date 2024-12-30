@@ -97,6 +97,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
   end
 
   def process_bracket_call exp
+    # TODO: What is even happening in this method?
     r = replace(exp)
 
     if r != exp
@@ -127,7 +128,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         return r
       end
     else
-      t = nil
+      t = exp.target # put it back?
     end
 
     if hash? t
@@ -242,6 +243,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         exp = math_op(method, target, first_arg, exp)
       end
     when :[]
+      # TODO: This might never be used because of process_bracket_call above
       if array? target
         exp = process_array_access(target, exp.args, exp)
       elsif hash? target
