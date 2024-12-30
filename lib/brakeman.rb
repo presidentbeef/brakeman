@@ -84,6 +84,15 @@ module Brakeman
       options[:report_progress] = false
     end
 
+    if options[:use_prism]
+      begin
+        require 'prism'
+        notify '[Notice] Using Prism parser'
+      rescue LoadError => e
+        Brakeman.debug "[Notice] Asked to use Prism, but failed to load: #{e}"
+      end
+    end
+
     scan options
   end
 
@@ -196,6 +205,7 @@ module Brakeman
       :pager => true,
       :parallel_checks => true,
       :parser_timeout => 10,
+      :use_prism => true,
       :relative_path => false,
       :report_progress => true,
       :safe_methods => Set.new,

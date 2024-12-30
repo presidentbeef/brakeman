@@ -104,10 +104,6 @@ class Rails52Tests < Minitest::Test
   end
 
   def test_sql_injection_user_input
-    if ENV['TEST_PRISM']
-      skip 'Un-skip as soon as Prism >1.2.0 is released'
-    end
-
     assert_warning :type => :warning,
       :warning_code => 0,
       :fingerprint => "f7affe2dfe9e3a48f39f1fb86224e150e60555a73f2e78fb499eadd298233625",

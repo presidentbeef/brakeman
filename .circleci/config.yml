@@ -40,15 +40,6 @@ jobs:
     <<: *default
     docker:
       - image: cimg/ruby:3.2
-  test-with-prism:
-    <<: *default
-    steps:
-      - checkout
-      - run: bundle check || bundle install
-      - run:
-          command: |
-            gem install prism
-            TEST_PRISM=true bundle exec rake
   upload-coverage:
     <<: *default
     working_directory: ~/repo
@@ -65,7 +56,6 @@ workflows:
       - default
       - test-3-1
       - test-3-2
-      - test-with-prism
       - upload-coverage:
           requires:
             - test-3-1
