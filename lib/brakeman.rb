@@ -84,6 +84,15 @@ module Brakeman
       options[:report_progress] = false
     end
 
+    if options[:use_prism]
+      begin
+        require 'prism'
+        notify '[Notice] Using Prism parser'
+      rescue LoadError => e
+        Brakeman.debug "[Notice] Asked to use Prism, but failed to load: #{e}"
+      end
+    end
+
     scan options
   end
 
@@ -117,15 +126,6 @@ module Brakeman
 
     options[:output_formats] = get_output_formats options
     options[:github_url] = get_github_url options
-
-    if options[:use_prism]
-      begin
-        require 'prism'
-        notify '[Notice] Using Prism parser'
-      rescue LoadError => e
-        Brakeman.debug "[Notice] Asked to use Prism, but failed to load: #{e}"
-      end
-    end
 
     options
   end
