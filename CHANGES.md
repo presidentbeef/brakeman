@@ -1,3 +1,20 @@
+# 7.0.0 - ?
+
+* Always warn about deserializing from Marshal
+* Output `originalBaseUriIds` for SARIF format report
+* Default to using Prism parser if available (disable with `--no-prism`)
+* Update `terminal-table` version to use latest
+* Update `eval` check to be a little noisier
+* Fix array/hash unknown index handling
+* Disable following symbolic links by default, re-enable with --follow-symlinks
+* Add step (and timing) for finding files
+* Add CSV library as explicit dependency for Ruby 3.4 support
+* Major changes to how rescanning works
+* Raise minimum Ruby version to 3.1
+* Fix hardcoded globally excluded paths
+* Remove updated entry in Brakeman ignore files (Toby Hsieh)
+* Fix recursion when handling multiple assignment expressions
+
 # 6.2.2 - 2024-10-15
 
 * Ignore more native gems when building gem
