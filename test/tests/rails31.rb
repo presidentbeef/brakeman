@@ -1370,7 +1370,7 @@ class Rails31Tests < Minitest::Test
       :fingerprint => "58e5c4088dc57057a112ab5c472633752f787b8f6b0437bbd19d82fa06afbddb",
       :warning_type => "Dangerous Eval",
       :line => 53,
-      :message => /^User\ input\ in\ eval/,
+      :message => /^Parameter\ value\ evaluated\ as\ code/,
       :confidence => 0,
       :relative_path => "app/controllers/admin_controller.rb",
       :user_input => s(:call, s(:params), :[], s(:lit, :t))

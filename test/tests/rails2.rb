@@ -32,7 +32,7 @@ class Rails2Tests < Minitest::Test
   def test_eval
     assert_warning :warning_type => "Dangerous Eval",
       :line => 40,
-      :message => /^User input in eval/,
+      :message => /^Parameter\ value\ evaluated\ as\ code/,
       :format_code => /eval\(params\[:dangerous_input\]\)/,
       :file => /home_controller.rb/,
       :relative_path => "app/controllers/home_controller.rb"

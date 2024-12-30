@@ -23,13 +23,31 @@ class Brakeman::CheckEvaluation < Brakeman::BaseCheck
     return unless original? result
 
     if input = include_user_input?(result[:call].arglist)
+      confidence = :high
+      message = msg(msg_input(input), " evaluated as code")
+    elsif string_evaluation? result[:call].first_arg
+      confidence = :low
+      message = "Dynamic string evaluated as code"
+    elsif safe_literal? result[:call].first_arg
+      # don't warn
+    elsif result[:call].method == :eval
+      confidence = :low
+      message = "Dynamic code evaluation"
+    end
+
+    if confidence
       warn :result => result,
         :warning_type => "Dangerous Eval",
         :warning_code => :code_eval,
-        :message => "User input in eval",
+        :message => message,
         :user_input => input,
-        :confidence => :high,
+        :confidence => confidence,
         :cwe_id => [913, 95]
     end
+  end
+
+  def string_evaluation? exp
+    string_interp? exp or
+      (call? exp and string? exp.target)
   end
 end
