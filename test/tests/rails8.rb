@@ -16,7 +16,7 @@ class Rails8Tests < Minitest::Test
       controller: 0,
       model:      0,
       template:   0,
-      warning:    2
+      warning:    3
     }
   end
 
@@ -45,6 +45,20 @@ class Rails8Tests < Minitest::Test
       confidence: 2,
       relative_path: "lib/evals.rb",
       code: s(:call, nil, :instance_eval, s(:dstr, "interpolated ", s(:evstr, s(:call, nil, :string)), s(:str, " - warning"))),
+      user_input: nil
+  end
+
+  def test_plain_marshal_load_weak_warning
+    assert_warning check_name: "Deserialize",
+      type: :warning,
+      warning_code: 25,
+      fingerprint: "458ac9bba693eae0b1d311627d59101dceac803c578bd1da7d808cb333c75068",
+      warning_type: "Remote Code Execution",
+      line: 6,
+      message: /^Use\ of\ `Marshal\.load`\ may\ be\ dangerous/,
+      confidence: 2,
+      relative_path: "app/controllers/application_controller.rb",
+      code: s(:call, s(:const, :Marshal), :load, s(:call, nil, :something)),
       user_input: nil
   end
 end
