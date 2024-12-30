@@ -22,6 +22,8 @@ module Brakeman
       init_options[:additional_libs_path] = options[:additional_libs_path]
       init_options[:engine_paths] = options[:engine_paths]
       init_options[:skip_vendor] = options[:skip_vendor]
+      init_options[:follow_symlinks] = options[:follow_symlinks]
+
       new(root, init_options)
     end
 
@@ -64,6 +66,7 @@ module Brakeman
       @absolute_engine_paths = @engine_paths.select { |path| path.start_with?(File::SEPARATOR) }
       @relative_engine_paths = @engine_paths - @absolute_engine_paths
       @skip_vendor = init_options[:skip_vendor]
+      @follow_symlinks = init_options[:follow_symlinks]
       @gemspec = nil
       @root_search_pattern = nil
     end
@@ -161,21 +164,26 @@ module Brakeman
     end
 
     def glob_files(directory, name, extensions = ".rb")
-      root_directory = "#{root_search_pattern}#{directory}"
-      patterns = ["#{root_directory}/**/#{name}#{extensions}"]
+      if @follow_symlinks
+        root_directory = "#{root_search_pattern}#{directory}"
+        patterns = ["#{root_directory}/**/#{name}#{extensions}"]
 
-      Dir.glob("#{root_directory}/**/*", File::FNM_DOTMATCH).each do |path|
-        if File.symlink?(path) && File.directory?(path)
-          symlink_target = File.readlink(path)
-          if Pathname.new(symlink_target).relative?
-            symlink_target = File.join(File.dirname(path), symlink_target)
+        Dir.glob("#{root_directory}/**/*", File::FNM_DOTMATCH).each do |path|
+          if File.symlink?(path) && File.directory?(path)
+            symlink_target = File.readlink(path)
+            if Pathname.new(symlink_target).relative?
+              symlink_target = File.join(File.dirname(path), symlink_target)
+            end
+            patterns << "#{search_pattern(symlink_target)}/**/#{name}#{extensions}"
           end
-          patterns << "#{search_pattern(symlink_target)}/**/#{name}#{extensions}"
         end
-      end
 
-      files = patterns.flat_map { |pattern| Dir.glob(pattern) }
-      files.uniq
+        files = patterns.flat_map { |pattern| Dir.glob(pattern) }
+        files.uniq
+      else
+        pattern = "#{root_search_pattern}#{directory}/**/#{name}#{extensions}"
+        Dir.glob(pattern)
+      end
     end
 
     def select_files(paths)

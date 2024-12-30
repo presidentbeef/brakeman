@@ -50,15 +50,22 @@ class AppTreeTests < Minitest::Test
 
   def test_directory_absolute_symlink_support
     temp_dir_absolute_symlink_and_file_from_path("test.rb") do |dir, file|
-      at = Brakeman::AppTree.new(dir)
+      at = Brakeman::AppTree.new(dir, follow_symlinks: true)
       assert_equal [file], at.ruby_file_paths.collect(&:absolute)
     end
   end
 
   def test_directory_relative_symlink_support
     temp_dir_relative_symlink_and_file_from_path("test.rb") do |dir, file|
-      at = Brakeman::AppTree.new(dir)
+      at = Brakeman::AppTree.new(dir, follow_symlinks: true)
       assert_equal [file], at.ruby_file_paths.collect(&:absolute)
+    end
+  end
+
+  def test_directory_relative_disabled_symlink_support
+    temp_dir_relative_symlink_and_file_from_path("test.rb") do |dir, file|
+      at = Brakeman::AppTree.new(dir, follow_symlinks: false)
+      assert_empty at.ruby_file_paths.collect(&:absolute)
     end
   end
 
