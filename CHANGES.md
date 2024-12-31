@@ -1,4 +1,4 @@
-# 7.0.0 - ?
+# 7.0.0 - 2024-12-30
 
 * Always warn about deserializing from Marshal
 * Output `originalBaseUriIds` for SARIF format report
