@@ -1,4 +1,150 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2024-10-18T09:49:53-06:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 6.2.2 Released</title><link href="https://brakemanscanner.org/blog/2024/10/18/brakeman-6-dot-2-dot-2-released" rel="alternate" type="text/html" title="Brakeman 6.2.2 Released" /><published>2024-10-18T05:00:00-06:00</published><updated>2024-10-18T05:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2024/10/18/brakeman-6-dot-2-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">&lt;p&gt;Small release!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2024-12-30T23:04:02-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 7.0.0 Released</title><link href="https://brakemanscanner.org/blog/2024/12/30/brakeman-7-dot-0-dot-0-released" rel="alternate" type="text/html" title="Brakeman 7.0.0 Released" /><published>2024-12-30T21:00:00-07:00</published><updated>2024-12-30T21:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2024/12/30/brakeman-7-dot-0-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">&lt;p&gt;Happy new year!&lt;/p&gt;
+
+&lt;p&gt;This release of Brakeman contains several breaking changes and updates to default behavior.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Changes since 6.2.2:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Default to using Prism parser if available (disable with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--no-prism&lt;/code&gt;)&lt;/li&gt;
+  &lt;li&gt;Disable following symbolic links by default (re-enable with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--follow-symlinks&lt;/code&gt;)&lt;/li&gt;
+  &lt;li&gt;Remove updated entry in Brakeman ignore files (&lt;a href=&quot;https://github.com/tobyhs&quot;&gt;Toby Hsieh&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Major changes to how rescanning works&lt;/li&gt;
+  &lt;li&gt;Fix hardcoded globally excluded paths (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1830&quot;&gt;#1830&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Always warn about deserializing from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Marshal&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Update &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eval&lt;/code&gt; check to be a little noisier&lt;/li&gt;
+  &lt;li&gt;Output &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;originalBaseUriIds&lt;/code&gt; for SARIF format report (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1889&quot;&gt;#1889&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Add step (and timing) for finding files&lt;/li&gt;
+  &lt;li&gt;Fix recursion when handling multiple assignment expressions (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1877&quot;&gt;#1877&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Fix array/hash unknown index handling&lt;/li&gt;
+  &lt;li&gt;Update &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;terminal-table&lt;/code&gt; version&lt;/li&gt;
+  &lt;li&gt;Add CSV library as explicit dependency for Ruby 3.4 support&lt;/li&gt;
+  &lt;li&gt;Raise minimum Ruby version to 3.1&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;default-to-prism-parser&quot;&gt;Default to Prism Parser&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://ruby.github.io/prism/&quot;&gt;Prism&lt;/a&gt; is a new parser that has quickly been adopted across many Ruby implementations and code tools. In Ruby 3.4, it is now the default parser for Ruby itself.&lt;/p&gt;
+
+&lt;p&gt;Thankfully, Prism has also implemented translation layers for RubyParser and other existing parsers. This has allowed Brakeman (and other tools) to adopt Prism fairly easily. Even with the translation layer, Prism is typically a little faster than RubyParser. Line numbers may also shift slightly.&lt;/p&gt;
+
+&lt;p&gt;Brakeman now defaults to using Prism for parsing. The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--prism&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--no-prism&lt;/code&gt; options.&lt;/p&gt;
+
+&lt;p&gt;There are still some small incompatibilities - please report any instances where Brakeman outputs &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[Format Error]&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1897&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;revert-following-symbolic-links&quot;&gt;Revert Following Symbolic Links&lt;/h3&gt;
+
+&lt;p&gt;For better performance, Brakeman will no longer default to following symbolical links for directories. This behavior was added in Brakeman 6.2.1.&lt;/p&gt;
+
+&lt;p&gt;To re-enable the previous behavior, use the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--follow-symlinks&lt;/code&gt; option.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1898&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;drop-timestamp-from-ignore-files&quot;&gt;Drop Timestamp from Ignore Files&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will no longer add an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;updated&lt;/code&gt; entry when generating or updating an ignore file.&lt;/p&gt;
+
+&lt;p&gt;The entry was redundant with source control and could cause unnecessary merge conflicts.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1860&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;updates-to-rescanning&quot;&gt;Updates to Rescanning&lt;/h3&gt;
+
+&lt;p&gt;“Rescanning” in Brakeman (attempting to only scan changed files) has been broken and out of date for a long time. This release drops a lot of that old code.&lt;/p&gt;
+
+&lt;p&gt;To improve accuracy, rescanning will now only skip the file reading/parsing step for unchanged files. The rest of the scan will continue like a regular full scan.
+For many code bases, the read/parse step is the slowest part of the scan. However, it is very likely the current rescanning will be slower (but more accurate) than the old version.&lt;/p&gt;
+
+&lt;p&gt;Hopefully there will be additional improvements in this functionality over time.&lt;/p&gt;
+
+&lt;p&gt;For any tools wanting to use rescanning, the initial scan must set &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;support_rescanning: true&lt;/code&gt; to enable caching of the parsed files. After that, the API is the same.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1881&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;globally-excluded-paths&quot;&gt;Globally Excluded Paths&lt;/h3&gt;
+
+&lt;p&gt;Brakeman has a set of paths that it never scans:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  generators/
+  lib/tasks/
+  lib/templates/
+  db/
+  spec/
+  test/
+  tmp/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Previously, if any part of the path matched (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;db&lt;/code&gt; matching &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cool-db-adapter&lt;/code&gt;), it would get skipped.&lt;/p&gt;
+
+&lt;p&gt;Additionally, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;log&lt;/code&gt; used to be a skipped path which would match paths like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;catalog&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This has been fixed to only skip paths with an exact match.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1880&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;more-deserialization-warnings&quot;&gt;More Deserialization Warnings&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will now warn about all uses of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Marshal.load&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Marshal.restore&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This may be a little noisy, so please feel free to provide feedback on false positives.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1902&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;more-eval-warnings&quot;&gt;More Eval Warnings&lt;/h3&gt;
+
+&lt;p&gt;Brakeman will now warn about evaluation of dynamic strings, even if there is no obvious user-controllable input.&lt;/p&gt;
+
+&lt;p&gt;In addition, Brakeman will warn about most uses of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eval&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This may be a little noisy, so please feel free to provide feedback on false positives.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1899&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;sarif-reports&quot;&gt;SARIF Reports&lt;/h3&gt;
+
+&lt;p&gt;SARIF reports output from Brakeman will now include the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;originalBaseUriIds&lt;/code&gt; property to enable using of absolute file paths inside of the report. This should enhance compatibility with GitHub and other tools.&lt;/p&gt;
+
+&lt;p&gt;See the (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1890&quot;&gt;changes&lt;/a&gt;) for details of how this interacts with scan paths.&lt;/p&gt;
+
+&lt;h3 id=&quot;step-for-finding-files&quot;&gt;Step for Finding Files&lt;/h3&gt;
+
+&lt;p&gt;For large applications, just listing out relevant files for Brakeman to scan can take some time.&lt;/p&gt;
+
+&lt;p&gt;This step was previously “invisible” but now Brakeman will output &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Finding files...&lt;/code&gt; as a descrete step which also means it will work with the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--timing&lt;/code&gt; option to display how long that step takes.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1896&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;dependency-updates&quot;&gt;Dependency Updates&lt;/h3&gt;
+
+&lt;p&gt;Brakeman no longer restricts &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;terminal-table&lt;/code&gt; to an old version.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1901&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;csv&lt;/code&gt; is now an explicit dependency since it has moved to a bundled gem in Ruby 3.4.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1893&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;The minimum Ruby version to run Brakeman is now Ruby 3.1.0.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1888&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1a0122b0c70f17519a61548a53a332c0acc19e3aa10b445e15e025a4b13b8577  brakeman-7.0.0.gem
+ecb1a4241df4d3756d0f81b6973852d0390511275a513768aee9ddc398bbfe05  brakeman-lib-7.0.0.gem
+6cbe26b0cab0db59bf0a2dd77eb244386f8386d8f7081a8a843469fde6e55367  brakeman-min-7.0.0.gem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Happy new year!</summary></entry><entry><title type="html">Brakeman 6.2.2 Released</title><link href="https://brakemanscanner.org/blog/2024/10/18/brakeman-6-dot-2-dot-2-released" rel="alternate" type="text/html" title="Brakeman 6.2.2 Released" /><published>2024-10-18T05:00:00-06:00</published><updated>2024-10-18T05:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2024/10/18/brakeman-6-dot-2-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">&lt;p&gt;Small release!&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Changes since 6.2.1:&lt;/em&gt;&lt;/p&gt;
 
@@ -723,46 +869,4 @@ to every Brakeman warning type!&lt;/p&gt;
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">This release adds CWE information to reports - the first JSON report change in a long time!</summary></entry><entry><title type="html">Brakeman 5.2.3 Released</title><link href="https://brakemanscanner.org/blog/2022/05/01/brakeman-5-dot-2-dot-3-released" rel="alternate" type="text/html" title="Brakeman 5.2.3 Released" /><published>2022-05-01T08:30:00-06:00</published><updated>2022-05-01T08:30:00-06:00</updated><id>https://brakemanscanner.org/blog/2022/05/01/brakeman-5-dot-2-dot-3-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">&lt;p&gt;&lt;em&gt;Changes since 5.2.2:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Fix error with hash shorthand syntax (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1700&quot;&gt;#1700&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Match order of interactive options with help message (&lt;a href=&quot;https://github.com/roryokane&quot;&gt;Rory O’kane&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;hash-shorthand-syntax&quot;&gt;Hash Shorthand Syntax&lt;/h3&gt;
-
-&lt;p&gt;Parsing shorthand hash syntax like this was added with RubyParser 3.19:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;blah&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;but Brakeman needed to handle it properly, too.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1701&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;interative-options&quot;&gt;Interative Options&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/roryokane&quot;&gt;Rory O’kane&lt;/a&gt; updated the ordering of options in the help message for interative ignore so
-the help message matches the order of the options in the prompt!&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1702&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
-
-&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;5b6efb6a1e5c2b79063553647638e17239d2d2f4d50561230c8b0acaae4728d4  brakeman-5.2.3.gem
-3104abc8ac2b6558d9610ede40f4cac2ebc7ae45569876b8e5907b7422c4e3af  brakeman-lib-5.2.3.gem
-10d743c930c03ed1d2bea021ade8fac10f1229d02b8f65bf2214f7f09ec7a0ff  brakeman-min-5.2.3.gem
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://gitter.im/presidentbeef/brakeman&quot;&gt;on Gitter&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Changes since 5.2.2:</summary></entry></feed>
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">This release adds CWE information to reports - the first JSON report change in a long time!</summary></entry></feed>

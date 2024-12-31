@@ -80,6 +80,186 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2015/01/02/brakeman-3-dot-0-0-released">Brakeman 3.0.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2015-01-02 17:09:00 -0700" pubdate  updated >2015-01-02 17:09:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a major version release of Brakeman which introduces some backwards-incompatible changes. Very likely this release will cause many changes in reports, including fingerprints on existing warnings.</p>
+
+<p><em>Changes since 2.6.3</em>:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">--exit-on-warn --compare</code> only returns error code on new warnings (<a href="https://github.com/jeffyip">Jeff Yip</a>)</li>
+  <li>Sort warnings by fingerprint in JSON report (<a href="https://github.com/jeffyip">Jeff Yip</a>)</li>
+  <li>CVEs report correct line and file name (Gemfile/Gemfile.lock) (<a href="https://github.com/pwnetrationguru">Rob Fletcher</a>)</li>
+  <li>Change <code class="language-plaintext highlighter-rouge">--separate-models</code> to be the default</li>
+  <li>Local variables are no longer formatted as <code class="language-plaintext highlighter-rouge">(local var)</code></li>
+  <li>Actually skip skipped before filters</li>
+  <li>Remove “fake filters” from warning fingerpints</li>
+  <li>Index calls in <code class="language-plaintext highlighter-rouge">lib/</code> files</li>
+  <li>Handle symmetric multiple assignment</li>
+  <li>Do not branch for self attribute assignment <code class="language-plaintext highlighter-rouge">x = x.y</code> (<a href="https://github.com/presidentbeef/brakeman/issues/552">#552</a>)</li>
+  <li>Move Symbol DoS to optional checks</li>
+  <li>Add check for cross site scripting via inline renders</li>
+  <li>Add check for CVE-2014-7829</li>
+  <li>Fix parsing of <code class="language-plaintext highlighter-rouge">&lt;%==</code> in ERB</li>
+  <li>Fix output format of command interpolation</li>
+  <li>Fix CVE for CVE-2011-2932</li>
+</ul>
+
+<h3 id="exit-code-when-comparing">Exit Code When Comparing</h3>
+
+<p>When using <code class="language-plaintext highlighter-rouge">--exit-on-warn --compare</code>, Brakeman will only return a non-zero exit code when there are new warnings. Previous behavior was to return non-zero exit code if there were any differences between reports (including fixed warnings).</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/588">changes</a>)</p>
+
+<h3 id="sort-warnings-in-json-report">Sort Warnings in JSON Report</h3>
+
+<p>Warnings are now sorted by their fingerprint in the JSON report to provide more stable output.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/587">changes</a>)</p>
+
+<h3 id="report-line-numbers-for-cves">Report Line Numbers for CVEs</h3>
+
+<p>Previously, CVE warnings typically pointed to <code class="language-plaintext highlighter-rouge">Gemfile</code> with no line number information. Now CVEs should point to <code class="language-plaintext highlighter-rouge">Gemfile</code> or <code class="language-plaintext highlighter-rouge">Gemfile.lock</code> as appropriate and include the line number for the vulnerable gem dependency.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/557">changes</a> and <a href="https://github.com/presidentbeef/brakeman/pull/569">more changes</a>)</p>
+
+<h3 id="mass-assignment-warnings-default-to-per-model">Mass Assignment Warnings Default to per Model</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">--separate-models</code> option is now on by default. This means warnings about missing <code class="language-plaintext highlighter-rouge">attr_accessible</code> will be reported for each model instead of rolling them into a single warning.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/586">changes</a>)</p>
+
+<h3 id="local-variable-format">Local Variable Format</h3>
+
+<p>Local variables are no longer formatted as <code class="language-plaintext highlighter-rouge">(local var)</code> in warning output.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/594">changes</a>)</p>
+
+<h3 id="skip-skipped-filters">Skip Skipped Filters</h3>
+
+<p>Before filters which are skipped are now actually skipped during data flow analysis.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/592">changes</a>)</p>
+
+<h3 id="fake-filter-change">Fake Filter Change</h3>
+
+<p>Before filters defined as blocks (instead of methods) are internally represented as methods with random names prepended by <code class="language-plaintext highlighter-rouge">fake_filter</code>. Since the method names were not stable, any warnings inside the filters would have inconsistent fingerprints. Now warnings inside of before filters will always be reported with <code class="language-plaintext highlighter-rouge">before_filter</code> as the method name.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/572">changes</a>)</p>
+
+<h3 id="index-calls-in-libraries">Index Calls in Libraries</h3>
+
+<p>Classes defined in <code class="language-plaintext highlighter-rouge">lib/</code> files will now be included in the method call index and searched for vulnerabilities. As these files were already being processed, this has not added any significant overhead in testing.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/571">changes</a>)</p>
+
+<h3 id="handle-multiple-assignment">Handle Multiple Assignment</h3>
+
+<p>Simple symmetric multiple assignments (also called “parallel assignment”) like <code class="language-plaintext highlighter-rouge">x, y = 1, 2</code> are now handled like normal assignments.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/577">changes</a>)</p>
+
+<h3 id="avoid-branching-on-self-assignment">Avoid Branching on Self Assignment</h3>
+
+<p>Brakeman no longer creates new union values for self assignment of attributes.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/578">changes</a>)</p>
+
+<h3 id="symbol-dos-is-an-optional-check">Symbol DoS is an Optional Check</h3>
+
+<p>In this release the check for denial of service via symbol creation has been changed to an optional check. Memory exhaustion by creating lots of new symbols is an unlikely attack and easily mitigated by having at least two web servers. Additionally</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/570">changes</a>)</p>
+
+<h3 id="warn-on-inline-xss">Warn on Inline XSS</h3>
+
+<p>Unescaped user input in <code class="language-plaintext highlighter-rouge">render :text</code> or <code class="language-plaintext highlighter-rouge">render :inline</code> should now generate warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/598">changes</a>)</p>
+
+<h3 id="cve-2014-7829">CVE-2014-7829</h3>
+
+<p>Brakeman will warn about <a href="https://groups.google.com/d/msg/rubyonrails-security/23fiuwb1NBA/MQVM1-5GkPMJ">CVE-2014-7829</a> (file existence disclosure) for applications using affected versions of Rails and setting <code class="language-plaintext highlighter-rouge">config.serve_static_assets = true</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/600">changes</a>)</p>
+
+<h3 id="erb-parsing-fix">ERB Parsing Fix</h3>
+
+<p>Parsing <code class="language-plaintext highlighter-rouge">&lt;%==</code> in ERB templates no longer causes errors.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/589">changes</a>)</p>
+
+<h3 id="command-interpolation-format-fix">Command Interpolation Format Fix</h3>
+
+<p>Brakeman was formatting</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>`#{x}`
+</code></pre></div></div>
+
+<p>as</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>`x`
+</code></pre></div></div>
+
+<p>This has been fixed.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/596">changes</a>)</p>
+
+<h3 id="cve-2011-2932">CVE-2011-2932</h3>
+
+<p>The ancient CVE-2011-2932 was being mis-reported as CVE-2011-2931. Hopefully this affects no one.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/575">changes</a>)</p>
+
+<h3 id="certificate-update">Certificate Update</h3>
+
+<p>The certificate used to sign the Brakeman gem expired in December. A new certificate is available <a href="https://raw.githubusercontent.com/presidentbeef/brakeman/master/brakeman-public_cert.pem">here</a>.</p>
+
+<p>This command can be used to add the new certificate:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem cert --add &lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
+</code></pre></div></div>
+
+<h3 id="shas">SHAs</h3>
+
+<p>The SHA1 sums for this release are</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4180238f8de503e7ad0f2ca952ea38ccc1c6530b  brakeman-3.0.0.gem
+b5cefd6f14edb57f12d1fe9fcc0fb24e05a05aaf  brakeman-min-3.0.0.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2014/10/13/brakeman-2-dot-6-3-released">Brakeman 2.6.3 Released</a></h1>
     
     
@@ -442,134 +622,6 @@ fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2014/06/06/brakeman-2-dot-6-0-released">Brakeman 2.6.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2014-06-06 09:04:00 -0600" pubdate  updated >2014-06-06 09:04:00 -0600</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This release introduces significant changes to how and when files are parsed, which may introduce changes in existing warnings and errors.</p>
-
-<p><em>Changes since 2.5.0</em>:</p>
-
-<ul>
-  <li>Improve default route detection in Rails 3/4 (<a href="https://github.com/jjarmoc">Jeff Jarmoc</a>)</li>
-  <li>Handle controllers and models split across files (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
-  <li>Fix handling of <code class="language-plaintext highlighter-rouge">protected_attributes</code> gem in Rails 4 (<a href="https://github.com/phene">Geoffrey Hichborn</a>)</li>
-  <li>Add check for CVE-2014-0130</li>
-  <li>Add <code class="language-plaintext highlighter-rouge">find_by</code>/<code class="language-plaintext highlighter-rouge">find_by!</code> to SQLi check for Rails 4</li>
-  <li>Do not branch values for <code class="language-plaintext highlighter-rouge">+=</code></li>
-  <li>Parse most files upfront instead of on demand</li>
-  <li>Fix CheckRender with nested render calls (<a href="https://github.com/presidentbeef/brakeman/issues/484">#484</a>)</li>
-  <li>Fix detection of <code class="language-plaintext highlighter-rouge">:host</code> setting in redirects (<a href="https://github.com/presidentbeef/brakeman/issues/506">#506</a>)</li>
-  <li>Ignore more model methods in redirects</li>
-  <li>Update to use RubyParser 3.5.0 (<a href="https://github.com/ptoomey3">Patrick Toomey</a>)</li>
-</ul>
-
-<h3 id="improved-default-route-detection">Improved Default Route Detection</h3>
-
-<p>In addition to Jeff Jarmoc’s <a href="http://matasano.com/research/AnatomyOfRailsVuln-CVE-2014-0130.pdf">awesome research</a> on CVE-2014-0130, he contributed much-needed improvements to detecting use of <code class="language-plaintext highlighter-rouge">:action</code> and <code class="language-plaintext highlighter-rouge">*action</code> in routes for Rails 3/4. This may result in more default routes warnings.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/493">changes</a>)</p>
-
-<h3 id="multiple-files-for-controllers-and-models">Multiple Files for Controllers and Models</h3>
-
-<p>(<a href="https://github.com/ptoomey3">Patrick Toomey</a>) contributed improvements which allow Brakeman to process controllers and models which may be defined in multiple files. The changes also improve how Brakeman handles controllers and models inside modules. This may alter some warnings and how some files are processed. Also, controllers and models may be associated with multiple files instead of just one.</p>
-
-<p>(changes <a href="https://github.com/presidentbeef/brakeman/pull/492">here</a> and <a href="https://github.com/presidentbeef/brakeman/pull/482">here</a>)</p>
-
-<h3 id="protected-attributes-gem">Protected Attributes Gem</h3>
-
-<p>Thanks to (<a href="https://github.com/phene">Geoffrey Hichborn</a>), Brakeman will now treat Rails 4 apps which use the <a href="https://github.com/rails/protected_attributes">protected_attributes gem</a> like a Rails 3 app in regards to mass assignment.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/491">changes</a>)</p>
-
-<h3 id="check-for-cve-2014-0130">Check for CVE-2014-0130</h3>
-
-<p>Besides warning about more types of default routes in this release, Brakeman will also warn about <a href="https://groups.google.com/d/msg/rubyonrails-security/NkKc7vTW70o/NxW_PDBSG3AJ">CVE-2014-0130</a> explicitly. If the application uses default routes, the warning will be high confidence, otherwise medium. Note Brakeman will categorize this issue as “Remote Code Execution”, since [Jeff Jarmoc demonstrated]((http://matasano.com/research/AnatomyOfRailsVuln-CVE-2014-0130.pdf) rendering arbitrary files can lead to interpreting those files as ERB.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/502">changes</a>)</p>
-
-<h3 id="sql-injection-in-find-by">SQL Injection in Find By</h3>
-
-<p>Rails 4 added the <code class="language-plaintext highlighter-rouge">find_by</code>/<code class="language-plaintext highlighter-rouge">find_by!</code> methods which just call <code class="language-plaintext highlighter-rouge">where(*args).take</code> and are therefore vulnerable to the same issues as <code class="language-plaintext highlighter-rouge">where</code>. This release will check these methods for SQL injection now.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/504">changes</a>)</p>
-
-<h3 id="no-branching-for-">No Branching for +=</h3>
-
-<p>Code which used <code class="language-plaintext highlighter-rouge">+=</code> heavily in combination with many branches lead to very poor performance. The resulting information from the branches was rarely useful. However, since <code class="language-plaintext highlighter-rouge">+=</code> is buidling up a value (as opposed to replacing it), simply ignoring branches does not lose any of the values involved. Thus, the same vulnerabilities should be able to be detected even when losing flow sensitivity for <code class="language-plaintext highlighter-rouge">+=</code> assignments. For details, <a href="https://github.com/presidentbeef/brakeman/pull/499">see the changes</a>.</p>
-
-<p>This change has improved processing on some files from over 30 minutes to under 1 second. If some files were processing slowly or had to be ignored previously, consider trying again with this release.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/499">changes</a>)</p>
-
-<h3 id="parsing-files-upfront">Parsing Files Upfront</h3>
-
-<p>This release changes when files are parsed. Previously, files were read and parsed as they were processed. Now most files are read and parsed near the beginning of the scan instead. This has allowed for some internal cleanup and easier future changes. However, some bugs were fixed regarding sorting files which may cause warnings to change.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/501/">changes</a>)</p>
-
-<h3 id="nested-renders">Nested Renders</h3>
-
-<p><code class="language-plaintext highlighter-rouge">CheckRender</code> had a bug when processing a <code class="language-plaintext highlighter-rouge">render</code> call which contained another call to <code class="language-plaintext highlighter-rouge">render</code>. This has been fixed.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/485">changes</a>)</p>
-
-<h3 id="redirects-with-chained-calls">Redirects with Chained Calls</h3>
-
-<p>The last release added support for checking if a <code class="language-plaintext highlighter-rouge">redirect_to</code> argument was setting the <code class="language-plaintext highlighter-rouge">:host</code> option. However, it did not work with chained calls like the <a href="https://github.com/presidentbeef/brakeman/issues/506">one reported here</a>. Now it should.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/507">changes</a>)</p>
-
-<h3 id="redirects-to-models">Redirects to Models</h3>
-
-<p>More Rails 4 methods have been added and support for chained methods has been improved to prevent false positives when redirecting to a model instance.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/489">changes</a>)</p>
-
-<h3 id="rubyparser-upgrade">RubyParser Upgrade</h3>
-
-<p>The RubyParser dependency has been upgraded to 3.5.0 for Ruby 2.1 support. There are some issues with newlines and line number accuracy in newer versions (it is better for some code and worse for others) which has prevented further upgrades at the moment.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/497">changes</a>)</p>
-
-<h3 id="shas">SHAs</h3>
-
-<p>The SHA1 sums for this release are</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0aae141108d92040f3553557a31ad117ac1c2ea6  brakeman-2.6.0.gem
-70c2353f31d4d04ba8d95c871062db31d5c6e981  brakeman-min-2.6.0.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -608,6 +660,10 @@ fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
       </li>
     
@@ -621,10 +677,6 @@ fecdb07a5e1a83af02843fbd554472f980e04f91  brakeman-min-2.6.1.gem
     
       <li class="post">
         <a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
       </li>
     
   </ul>

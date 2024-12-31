@@ -80,6 +80,56 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/01/26/brakeman-1-dot-2-2-released">Brakeman 1.2.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-01-26 13:58:00 -0700" pubdate  updated >2012-01-26 13:58:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>Changes since 1.2.1:</em></p>
+
+<ul>
+  <li>–no-progress works again</li>
+  <li>Make CheckLinkTo a separate check</li>
+  <li>Don’t fail on unknown options to resource(s)</li>
+  <li>Handle empty resource(s) blocks</li>
+  <li>Add RescanReport#existing_warnings</li>
+</ul>
+
+<h3 id="no-progress-option">No Progress Option</h3>
+
+<p>The last release broke the <code class="language-plaintext highlighter-rouge">--no-progress</code> option for hiding the <code class="language-plaintext highlighter-rouge">1/100 files processed</code> type messages. Now it works again!</p>
+
+<h3 id="separate-check-for-link_to">Separate Check for link_to</h3>
+
+<p>For no great reason, <code class="language-plaintext highlighter-rouge">CheckLinkTo</code> was bundled with <code class="language-plaintext highlighter-rouge">CheckCrossSiteScripting</code>. It has now been moved out to a separate file, allowing it to be treated as a regular check. This means it can be explicitly skipped using <code class="language-plaintext highlighter-rouge">-x CheckLinkTo</code> (if desired).</p>
+
+<h3 id="better-rails-2-route-handling">Better Rails 2 Route Handling</h3>
+
+<p>Brakeman was raising an exception if a hash option to <code class="language-plaintext highlighter-rouge">resource</code> or <code class="language-plaintext highlighter-rouge">resources</code> did not match a set of known options. Now it will only warn instead of aborting route processing.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/01/20/brakeman-1-dot-2-1-released">Brakeman 1.2.1 Released</a></h1>
     
     
@@ -416,91 +466,6 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2011/12/05/brakeman-1-dot-0-release-candidate-available">Brakeman 1.0 Release Candidate Available</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-12-05 14:04:00 -0700" pubdate  updated >2011-12-05 14:04:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Because there have been some major changes since 0.9.2, I have released a release candidate just in case there are problems. Please try it out and report any issues!</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install brakeman --pre
-</code></pre></div></div>
-
-<p><strong>Changes:</strong></p>
-
-<ul>
-  <li>Brakeman can now be used as a library</li>
-  <li>Faster call search</li>
-  <li>Add option to return error code if warnings are found (tw-ngreen)</li>
-  <li>Allow truncated messages to be expanded in HTML</li>
-  <li>Keep expanded context in HTML output</li>
-  <li>Fix summary when using warning thresholds</li>
-  <li>Better support for Rails 3 routes</li>
-  <li>Reduce SQL injection duplicate warnings</li>
-  <li>Lower confidence on mass assignment with no user input</li>
-  <li>Ignore mass assignment using all literal arguments</li>
-</ul>
-
-<h3 id="brakeman-as-a-library">Brakeman as a Library</h3>
-
-<p>After some re-factoring, Brakeman can now be used as a library.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'brakeman'
-
-Brakeman.run :app_path =&gt; 'my_app'
-</code></pre></div></div>
-
-<h3 id="faster-call-search">Faster Call Search</h3>
-
-<p>Searching for calls, like many of the checks do, is significantly faster now. Any scans that spend the majority of the time running checks should be much quicker.</p>
-
-<h3 id="option-to-return-error-code">Option to Return Error Code</h3>
-
-<p><code class="language-plaintext highlighter-rouge">--exit-on-warn</code> will cause Brakeman to exit with an error code if any warnings are found.</p>
-
-<h3 id="fix-context-in-html-report">Fix Context in HTML Report</h3>
-
-<p>Truncated messages with no context are now able to be expanded when clicked.</p>
-
-<p>Expanded context should remain visible in the browser, instead of sometimes scrolling out of view.</p>
-
-<h3 id="fix-report-summary">Fix Report Summary</h3>
-
-<p>The summary in reports with warnings below the specified threshold will now only show the number of warnings in the actual report.</p>
-
-<h3 id="reduce-duplicate-sql-warnings">Reduce Duplicate SQL Warnings</h3>
-
-<p>There should be fewer duplicate SQL injection warnings now.</p>
-
-<h2 id="10-release">1.0 Release</h2>
-
-<p>Next up is fixing Rubinius support, making Brakeman more useful as a library, and improving Rails 3 route processing.</p>
-
-<p>If all is well, the 1.0 release will be ready in a couple days! Report bugs if you got ‘em!</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -539,6 +504,10 @@ Brakeman.run :app_path =&gt; 'my_app'
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
       </li>
     
@@ -552,10 +521,6 @@ Brakeman.run :app_path =&gt; 'my_app'
     
       <li class="post">
         <a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
       </li>
     
   </ul>

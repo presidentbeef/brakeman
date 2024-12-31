@@ -80,6 +80,81 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2020/09/28/brakeman-4-dot-10-dot-0-released">Brakeman 4.10.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2020-09-28 12:30:00 -0600" pubdate  updated >2020-09-28 12:30:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release introduces a new report format!</p>
+
+<p><em>Changes since 4.9.1:</em></p>
+
+<ul>
+  <li>Add SARIF report format (<a href="https://github.com/swinton">Steve Winton</a>)</li>
+</ul>
+
+<h3 id="sarif-report-format">SARIF Report Format</h3>
+
+<p><a href="https://github.com/swinton">Steve Winton</a> from GitHub has contributed support for <a href="https://sarifweb.azurewebsites.net/">Static Analysis Results Interchange Format (SARIF)</a>.
+This is a standard format for static analysis tools and can be consumed by some report viewers, such as <a href="https://github.com/Microsoft/sarif-vscode-extension/">this one for Visual Studio Code</a>.</p>
+
+<p>To output a SARIF report, use <code class="language-plaintext highlighter-rouge">-f sarif</code> or a file name like <code class="language-plaintext highlighter-rouge">-o report.sarif</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1500">changes</a>)</p>
+
+<h3 id="previewing-brakeman-50">Previewing Brakeman 5.0</h3>
+
+<p><em>What is planned for Brakeman 5.0?</em></p>
+
+<p>The big change coming in 5.0 is scanning <em>way</em> more files. Currently, Brakeman scans specific directories in <code class="language-plaintext highlighter-rouge">app/</code>, <code class="language-plaintext highlighter-rouge">config/</code>, <code class="language-plaintext highlighter-rouge">lib/</code>, and <code class="language-plaintext highlighter-rouge">engines/</code>.
+It also only looks for files in particular places - e.g. views will be somewhere in <code class="language-plaintext highlighter-rouge">app/**/views</code>.</p>
+
+<p>In 5.0, Brakeman will scan (almost) all files in the project directory with <code class="language-plaintext highlighter-rouge">.rb</code> or template-related extensions.
+This will dramatically increase the scope of Brakeman scans, which is better coverage but at the cost of more false positives and slower scans.</p>
+
+<p>Also expected in Brakeman 5.0 is a bump of minimum Ruby version to 2.4.0 (which is already EOL).</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7bef7df71137d06be5fc3325ead57f8ce35be7691bf6dd389228461d731b79dd  brakeman-4.10.0.gem
+698b8eb02cdea7a6e407192c261c61d8fc6cd24d590a1b388defc9de17966119  brakeman-lib-4.10.0.gem
+64bb565ee84b9a9646985e456db1125ff9fb884ca83de6ba6fbc2c63bdbc8de9  brakeman-min-4.10.0.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2020/09/04/brakeman-4-dot-9-dot-1-released">Brakeman 4.9.1 Released</a></h1>
     
     
@@ -517,97 +592,6 @@ a422a444b7db48682e1f112c83b1a7a7e3828ec02d52ed91c5b3eff235b801c1  brakeman-min-4
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2020/04/06/brakeman-4-dot-8-dot-1-released">Brakeman 4.8.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2020-04-06 10:00:00 -0600" pubdate  updated >2020-04-06 10:00:00 -0600</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Just a little bug fix release.</p>
-
-<p><em>Changes since 4.8.0:</em></p>
-
-<ul>
-  <li>Warn about global(!) mass assignment</li>
-  <li>Check SQL query strings using <code class="language-plaintext highlighter-rouge">String#strip</code> or <code class="language-plaintext highlighter-rouge">String.squish</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1469">#1459</a>)</li>
-  <li>Handle non-symbol keys in <code class="language-plaintext highlighter-rouge">locals</code> hash for <code class="language-plaintext highlighter-rouge">render</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1465">#1465</a>)</li>
-  <li>Index calls in render arguments (<a href="https://github.com/presidentbeef/brakeman/issues/1459">#1459</a>)</li>
-</ul>
-
-<h3 id="global-mass-assignment">Global Mass Assignment</h3>
-
-<p>Strong parameters can be disabled with:</p>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">ActionController</span><span class="o">::</span><span class="no">Parameters</span><span class="p">.</span><span class="nf">permit_all_parameters</span> <span class="o">=</span> <span class="kp">true</span>
-</code></pre></div></div>
-
-<p>Brakeman will now warn about this (very rare) configuration.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1464">changes</a>)</p>
-
-<h3 id="squished-and-stripped-sql">Squished and Stripped SQL</h3>
-
-<p>Brakeman will now check string targets of <code class="language-plaintext highlighter-rouge">squish</code> or <code class="language-plaintext highlighter-rouge">strip</code>.</p>
-
-<p>For example:</p>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span><span class="p">.</span><span class="nf">connection</span><span class="p">.</span><span class="nf">execute</span> <span class="s2">"SELECT * FROM </span><span class="si">#{</span><span class="n">user_input</span><span class="si">}</span><span class="s2">"</span><span class="p">.</span><span class="nf">squish</span>
-</code></pre></div></div>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1470">changes</a>)</p>
-
-<h3 id="non-symbol-keys-in-locals-hash">Non-Symbol Keys in Locals Hash</h3>
-
-<p>Using a value other than symbol literals as keys in the <code class="language-plaintext highlighter-rouge">locals</code> hash for <code class="language-plaintext highlighter-rouge">render</code> will no longer cause an error.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1468">changes</a>)</p>
-
-<h3 id="render-arguments">Render Arguments</h3>
-
-<p>Calls made as arguments to <code class="language-plaintext highlighter-rouge">render</code> will be indexed and checked for all vulnerability types, like every other method call.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1460">changes</a>)</p>
-
-<h3 id="checksums">Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5f3cc763fce471434adc33aa251298fa24ea2a1c01ef2549aec55be4b5b14d46  brakeman-4.8.1.gem
-c4a95b450fb7ec2440e68640a0821e3a6b62ea34f665e78264ba0b332e98e5df  brakeman-lib-4.8.1.gem
-ada41dbfc3a436c062cd44161893249654caf43296801599303952f6261f2e5e  brakeman-min-4.8.1.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -646,6 +630,10 @@ ada41dbfc3a436c062cd44161893249654caf43296801599303952f6261f2e5e  brakeman-min-4
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
       </li>
     
@@ -659,10 +647,6 @@ ada41dbfc3a436c062cd44161893249654caf43296801599303952f6261f2e5e  brakeman-min-4
     
       <li class="post">
         <a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
       </li>
     
   </ul>

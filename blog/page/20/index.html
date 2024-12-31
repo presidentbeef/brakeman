@@ -80,6 +80,98 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/10/17/brakeman-1-dot-8-2-released">Brakeman 1.8.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-10-17 10:44:00 -0600" pubdate  updated >2012-10-17 10:44:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a bugfix release, in particular fixing rescanning (used by <a href="https://github.com/guard/guard-brakeman">guard-brakeman</a>).</p>
+
+<p><em>Changes since 1.8.1</em>:</p>
+
+<ul>
+  <li>Fixed rescanning problems caused by 1.8.0 changes</li>
+  <li>Fix scope calls with single argument</li>
+  <li>Report specific model name in rendered collections</li>
+  <li>Handle overwritten JSON escape settings (Neil Matatall)</li>
+  <li>Add CHANGES to gemspec</li>
+</ul>
+
+<h3 id="rescan-fixes">Rescan Fixes</h3>
+
+<p>Brakeman supports rescanning a subset of files in an application, with the caveat that the previous scan must still be in memory. This functionality was broken in the the 1.8.0 release, due to the lack of tests.</p>
+
+<p>This release updates rescanning to be more robust and work with the 1.8.0 changes to how “render paths” are stored. Also, a number of tests were added to help prevent breakage in the future.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/165">changes</a>)</p>
+
+<h3 id="scope-calls-with-one-argument">Scope Calls with One Argument</h3>
+
+<p>Calls to <code class="language-plaintext highlighter-rouge">scope</code> with a single argument were causing errors in Brakeman’s SQL injection check.</p>
+
+<p>The fixed error looked like:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>undefined method `node_type' for nil:NilClass  /something/brakeman/lib/brakeman/checks/check_sql.rb:75:in `block (2 levels) in find_scope_calls'
+</code></pre></div></div>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/157">changes</a>)</p>
+
+<h3 id="model-names-for-rendered-collections">Model Names for Rendered Collections</h3>
+
+<p>In cases like below, where a collection of models is being rendered and the model name could be known, any resulting warnings will now reference the actual model name.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= render 'user', :collection =&gt; User.all %&gt;
+</code></pre></div></div>
+
+<p>Previously, Brakeman would report warnings with <code class="language-plaintext highlighter-rouge">UnknownModel</code>, whether or not the model name was actually known.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/155">changes</a>)</p>
+
+<h3 id="overwritten-json-escape-config">Overwritten JSON Escape Config</h3>
+
+<p>It is possible that a config setting in one initializer overrides a setting in a different initializer. This is now handled for the JSON escape settings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/154">changes</a>)</p>
+
+<h3 id="changes-file-in-gem">CHANGES File in Gem</h3>
+
+<p>The <a href="https://github.com/presidentbeef/brakeman/blob/master/CHANGES">CHANGES</a> file is now included in the gem file as requested.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/issues/153">changes</a>)</p>
+
+<h3 id="report-issues">Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+
+<h3 id="brakeman-roadmap">Brakeman Roadmap</h3>
+
+<p>A rough guide to Brakeman 1.9 and 2.0 has been <a href="https://github.com/presidentbeef/brakeman/wiki/Roadmap">posted here</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/09/24/brakeman-1-dot-8-1-released">Brakeman 1.8.1 Released</a></h1>
     
     
@@ -467,94 +559,6 @@
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/06/12/brakeman-1-dot-6-2-released">Brakeman 1.6.2 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-06-12 17:07:00 -0600" pubdate  updated >2012-06-12 17:07:00 -0600</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Besides checks for the latest CVEs, this release includes a slightly improved redirect check, noiser output with <code class="language-plaintext highlighter-rouge">--compare</code>, and better handling of <code class="language-plaintext highlighter-rouge">before_filter</code>.</p>
-
-<p><em>Changes since 1.6.1</em>:</p>
-
-<ul>
-  <li>Add checks for CVE-2012-2660, CVE-2012-2661, CVE-2012-2694, CVE-2012-2695 (Dave Worth)</li>
-  <li>Avoid warning when redirecting to a model instance</li>
-  <li>Raise confidence level for model attributes in redirects</li>
-  <li>Add <code class="language-plaintext highlighter-rouge">request.parameters</code> as a parameters hash</li>
-  <li>Return non-zero exit code when missing dependencies</li>
-  <li>Fix <code class="language-plaintext highlighter-rouge">before_filter :except</code> logic</li>
-  <li>Only accept symbol literals as before_filter names</li>
-  <li>Cache before_filter lookups</li>
-  <li>Turn off quiet mode by default for <code class="language-plaintext highlighter-rouge">--compare</code></li>
-</ul>
-
-<h3 id="latest-cves">Latest CVEs</h3>
-
-<p>A number of Rails vulnerabilities were announced recently, although there are really only two issues.</p>
-
-<p>One issue is that query parameters like <code class="language-plaintext highlighter-rouge">?name[]</code> and <code class="language-plaintext highlighter-rouge">?name[]=1&amp;name[]</code> get converted to <code class="language-plaintext highlighter-rouge">{"name" =&gt; [nil]}</code> and <code class="language-plaintext highlighter-rouge">{"name" =&gt; ["1", nil]}</code>. This, in turn, causes ActiveRecord to produce SQL queries with either <code class="language-plaintext highlighter-rouge">IS NULL</code> or <code class="language-plaintext highlighter-rouge">IN ('1', NULL)</code>. This is probably unexpected behavior.</p>
-
-<p>The other issue is that query parameters like <code class="language-plaintext highlighter-rouge">?name[users.id]=1</code> or <code class="language-plaintext highlighter-rouge">?name[users][id]=1</code> get converted to <code class="language-plaintext highlighter-rouge">{"name" =&gt; { "users.id" =&gt; 1 }}</code> or <code class="language-plaintext highlighter-rouge">{"name" =&gt; { "users" =&gt; { "id" =&gt; 1 }}}</code>. ActiveRecord interprets <code class="language-plaintext highlighter-rouge">"users.id"</code> and <code class="language-plaintext highlighter-rouge">"users" =&gt; { "id" ...}</code> as <code class="language-plaintext highlighter-rouge">"users"."id"</code> in the WHERE clause, allowing an attacker to control the table/columns being queried.</p>
-
-<p>Updated versions for Rails 3.x have been released.</p>
-
-<p>For Rails 2.3, I believe <a href="https://github.com/presidentbeef/rails/pull/1/files">these changes</a> will fix the first issue, and there is another <a href="https://rubyonrails-security.googlegroups.com/attach/aee3413fb038bf56/2-3-sql-injection.patch?view=1&amp;part=3">patch available</a> for the second issue.</p>
-
-<p>Older versions of Rails 2.x may be vulnerable to the “NULL” issue, but not to the nested hashes problem.</p>
-
-<h3 id="unprotected-redirect-check">Unprotected Redirect Check</h3>
-
-<p>There have been some minor changes to <code class="language-plaintext highlighter-rouge">CheckRedirect</code>. In most cases, it should no longer warn when redirecting to a model instance. If there are still false positives with this scenario, please report them.</p>
-
-<p>The other change is that redirects to model attributes will now be marked as high confidence, instead of weak.</p>
-
-<h3 id="exit-code-on-missing-dependencies">Exit Code on Missing Dependencies</h3>
-
-<p>Brakeman catches errors from missing dependencies in order to show a nicer error message. Unfortunately, it was also returning <code class="language-plaintext highlighter-rouge">0</code> on exit. This is undesirable behavior when chaining commands together.</p>
-
-<p>This has been changed to return a non-zero exit code.</p>
-
-<h3 id="before-filter-changes">Before Filter Changes</h3>
-
-<p>There were some isues with how <code class="language-plaintext highlighter-rouge">before_filter</code> was being handled. The logic when using <code class="language-plaintext highlighter-rouge">:except</code> was broken, causing Brakeman to treat it like <code class="language-plaintext highlighter-rouge">:only</code>.</p>
-
-<p>The other issue caused Brakeman to interpret arguments such as method calls as method names. For example, <code class="language-plaintext highlighter-rouge">before_filter blah</code> would be treated like <code class="language-plaintext highlighter-rouge">before_filter :blah</code>.</p>
-
-<p>While dealing with this, caching of filter lookups was also added for a minor performance improvement.</p>
-
-<h3 id="noisier---compare">Noisier <code class="language-plaintext highlighter-rouge">--compare</code></h3>
-
-<p>Using the <code class="language-plaintext highlighter-rouge">--compare</code> option now shows the same output as a regular scan. If you are piping the output of <code class="language-plaintext highlighter-rouge">--compare</code> to a file or elsewhere, you may wish to use the <code class="language-plaintext highlighter-rouge">--quiet</code> option.</p>
-
-<h3 id="report-issues">Report Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -593,6 +597,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
       </li>
     
@@ -606,10 +614,6 @@
     
       <li class="post">
         <a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/07/20/brakeman-6-dot-0-dot-1-released">Brakeman 6.0.1 Released</a>
       </li>
     
   </ul>
