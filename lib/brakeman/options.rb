@@ -161,7 +161,7 @@ module Brakeman::Options
 
         opts.on "--[no-]prism", "Use the Prism parser" do |use_prism|
           if use_prism
-            min_prism_version = '1.3.0'
+            min_prism_version = '1.0.0'
 
             begin
               gem 'prism', ">=#{min_prism_version}"
