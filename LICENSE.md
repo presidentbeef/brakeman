@@ -6,7 +6,7 @@ Synopsys, Inc. is willing to authorize use of the Software pursuant to the terms
 
 The Brakeman software (the "***Software***") is licensed for use by third parties according to the terms and conditions set forth in this license agreement (the "***Agreement***"). The copyright to the Software and this license agreement is owned by Synopsys, Inc. and its global affiliates ("***Synopsys***").
 
-**Copyright 2019 Synopsys, Inc. All rights not granted in this Agreement are expressly reserved.**
+**Copyright 2025 Synopsys, Inc. All rights not granted in this Agreement are expressly reserved.**
 
 Commercial Uses (as defined below) of the Software for commercial purposes require a commercial, non-free license. Otherwise, the Software may be used by the party that has downloaded the Software and accepted the terms of this Agreement without charge.
 
