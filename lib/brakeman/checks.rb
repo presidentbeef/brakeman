@@ -121,9 +121,15 @@ class Brakeman::Checks
     parallel = tracker.options[:parallel_checks]
     error_mutex = Mutex.new
 
+    if parallel
+      Brakeman.process_step "Running #{checks.length} checks in parallel..."
+    else
+      Brakeman.process_step "Running #{checks.length} checks..."
+    end
+
     checks.each do |c|
       check_name = get_check_name c
-      Brakeman.notify " - #{check_name}"
+      Brakeman.debug " - #{check_name}"
 
       if parallel
         threads << Thread.new do
@@ -140,7 +146,7 @@ class Brakeman::Checks
 
     threads.each { |t| t.join }
 
-    Brakeman.notify "Checks finished, collecting results..."
+    Brakeman.process_step "Checks finished, collecting results..."
 
     if parallel
       threads.each do |thread|

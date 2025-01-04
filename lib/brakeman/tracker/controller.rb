@@ -132,7 +132,7 @@ module Brakeman
           when :lit, :str
             filter[option.value] = value[1]
           else
-            Brakeman.debug "[Notice] Unknown before_filter value: #{option} => #{value}"
+            Brakeman.debug_error "Unknown before_filter value: #{option} => #{value}"
           end
         end
       else

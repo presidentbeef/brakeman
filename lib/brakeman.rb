@@ -1,4 +1,5 @@
 require 'set'
+require 'highline'
 require 'brakeman/version'
 
 module Brakeman
@@ -95,10 +96,16 @@ module Brakeman
     if options[:use_prism]
       begin
         require 'prism'
-        notify '[Notice] Using Prism parser'
+        notice 'Using Prism parser'
       rescue LoadError => e
-        Brakeman.debug "[Notice] Asked to use Prism, but failed to load: #{e}"
+        Brakeman.debug_error "Asked to use Prism, but failed to load: #{e}"
       end
+    end
+
+    if $stderr.tty? or options[:output_color] == :force
+      HighLine.use_color = !!options[:output_color]
+    else
+      HighLine.use_color = false
     end
 
     scan options
@@ -166,15 +173,15 @@ module Brakeman
           if options.include? :additional_checks_path
             options.delete :additional_checks_path
 
-            notify "[Notice] Ignoring additional check paths in config file. Use --allow-check-paths-in-config to allow" unless (options[:quiet] || quiet)
+            notice 'Ignoring additional check paths in config file. Use --allow-check-paths-in-config to allow' unless (options[:quiet] || quiet)
           end
         end
 
         # notify if options[:quiet] and quiet is nil||false
-        notify "[Notice] Using configuration in #{config}" unless (options[:quiet] || quiet)
+        notice "Using configuration in #{config}" unless (options[:quiet] || quiet)
         options
       else
-        notify "[Notice] Empty configuration file: #{config}" unless quiet
+        notice "Empty configuration file: #{config}" unless quiet
         {}
       end
     else
@@ -398,12 +405,12 @@ module Brakeman
   #Run a scan. Generally called from Brakeman.run instead of directly.
   def self.scan options
     #Load scanner
-    notify "Loading scanner..."
+    process_step 'Loading scanner...'
 
     begin
       require 'brakeman/scanner'
     rescue LoadError
-      raise NoBrakemanError, "Cannot find lib/ directory."
+      raise NoBrakemanError, 'Cannot find lib/ directory.'
     end
 
     add_external_checks options
@@ -414,25 +421,19 @@ module Brakeman
 
     check_for_missing_checks options[:run_checks], options[:skip_checks], options[:enable_checks]
 
-    notify "Processing application in #{tracker.app_path}"
+    process_step "Processing application in #{tracker.app_path}"
     scanner.process
-
-    if options[:parallel_checks]
-      notify "Running checks in parallel..."
-    else
-      notify "Running checks..."
-    end
 
     tracker.run_checks
 
     self.filter_warnings tracker, options
 
     if options[:output_files]
-      notify "Generating report..."
+      process_step 'Generating report...'
 
       write_report_to_files tracker, options[:output_files]
     elsif options[:print_report]
-      notify "Generating report..."
+      process_step 'Generating report...'
 
       write_report_to_formats tracker, options[:output_formats]
     end
@@ -497,12 +498,34 @@ module Brakeman
     Rescanner.new(options, tracker.processor, files).recheck
   end
 
-  def self.notify message
-    $stderr.puts message unless @quiet
+  def self.notify prefix, message = nil
+    unless @quiet
+      require 'highline'
+
+      if message
+        message = "#{HighLine.color(prefix, :gray)} #{message}"
+      else
+        message = prefix
+      end
+
+      $stderr.puts message
+    end
+  end
+
+  def self.notice message
+    self.notify HighLine.color("  #{message}", :gray)
   end
 
   def self.debug message
     $stderr.puts message if @debug
+  end
+
+  def self.debug_notice message
+    self.notice message if @debug
+  end
+
+  def self.debug_error message
+    $stderr.puts HighLine.color("  #{message}", :red) if @debug
   end
 
   # Compare JSON output from a previous scan and return the diff of the two scans
@@ -580,13 +603,13 @@ module Brakeman
       return
     end
 
-    notify "Filtering warnings..."
+    process_step "Filtering warnings..."
 
     if options[:interactive_ignore]
       require 'brakeman/report/ignore/interactive'
       config = InteractiveIgnorer.new(file, tracker.warnings).start
     else
-      notify "[Notice] Using '#{file}' to filter warnings"
+      notice "Using '#{file}' to filter warnings"
       config = IgnoreConfig.new(file, tracker.warnings)
       config.read_from_file
       config.filter_ignored
@@ -617,6 +640,10 @@ module Brakeman
 
   def self.quiet= val
     @quiet = val
+  end
+
+  def self.process_step description
+    Brakeman.notify HighLine.color("» #{description}", :green, :bold)
   end
 
   class DependencyError < RuntimeError; end

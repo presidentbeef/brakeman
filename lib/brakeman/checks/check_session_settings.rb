@@ -120,7 +120,7 @@ class Brakeman::CheckSessionSettings < Brakeman::BaseCheck
       begin
         secrets = YAML.safe_load yaml, aliases: true
       rescue Psych::SyntaxError, RuntimeError => e
-        Brakeman.notify "[Notice] #{self.class}: Unable to parse `#{secrets_file}`"
+        Brakeman.notice "#{self.class}: Unable to parse `#{secrets_file}`"
         Brakeman.debug "Failed to parse #{secrets_file}: #{e.inspect}"
         return
       end

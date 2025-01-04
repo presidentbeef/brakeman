@@ -45,14 +45,14 @@ class Brakeman::Scanner
   end
 
   def process_step description
-    Brakeman.notify "#{description}...".ljust(40)
+    Brakeman.notify HighLine.color("» #{description}...".ljust(40), :bold, :green)
 
     if @show_timing
       start_t = Time.now
       yield
       duration = Time.now - start_t
 
-      Brakeman.notify "(#{description}) Duration: #{duration} seconds"
+      Brakeman.notify "(#{description})", "Duration: #{duration} seconds"
     else
       yield
     end
@@ -60,13 +60,13 @@ class Brakeman::Scanner
 
   def process_step_file description
     if @per_file_timing
-      Brakeman.notify "Processing #{description}"
+      Brakeman.notify 'Processing', description
 
       start_t = Time.now
       yield
       duration = Time.now - start_t
 
-      Brakeman.notify "(#{description}) Duration: #{duration} seconds"
+      Brakeman.notify "(#{description})", "Duration: #{duration} seconds"
     else
       yield
     end
@@ -202,7 +202,7 @@ class Brakeman::Scanner
       options[:rails3] or options[:escape_html]
 
       tracker.config.escape_html = true
-      Brakeman.notify "[Notice] Escaping HTML by default"
+      Brakeman.notice 'Escaping HTML by default'
     end
 
     if @app_tree.exists? ".ruby-version"
@@ -222,7 +222,7 @@ class Brakeman::Scanner
     end
 
   rescue => e
-    Brakeman.notify "[Notice] Error while processing #{path}"
+    Brakeman.notice "Error while processing #{path}"
     tracker.error e.exception(e.message + "\nwhile processing #{path}"), e.backtrace
   end
 
@@ -264,7 +264,7 @@ class Brakeman::Scanner
       @processor.process_gems gem_files
     end
   rescue => e
-    Brakeman.notify "[Notice] Error while processing Gemfile."
+    Brakeman.notice 'Error while processing Gemfile'
     tracker.error e.exception(e.message + "\nWhile processing Gemfile"), e.backtrace
   end
 
@@ -273,16 +273,16 @@ class Brakeman::Scanner
     unless tracker.options[:rails3] or tracker.options[:rails4]
       if @app_tree.exists?("script/rails")
         tracker.options[:rails3] = true
-        Brakeman.notify "[Notice] Detected Rails 3 application"
+        Brakeman.notice 'Detected Rails 3 application'
       elsif @app_tree.exists?("app/channels")
         tracker.options[:rails3] = true
         tracker.options[:rails4] = true
         tracker.options[:rails5] = true
-        Brakeman.notify "[Notice] Detected Rails 5 application"
+        Brakeman.notice 'Detected Rails 5 application'
       elsif not @app_tree.exists?("script")
         tracker.options[:rails3] = true
         tracker.options[:rails4] = true
-        Brakeman.notify "[Notice] Detected Rails 4 application"
+        Brakeman.notice "Detected Rails 4 application"
       end
     end
   end
@@ -308,7 +308,7 @@ class Brakeman::Scanner
   #Adds parsed information to tracker.libs.
   def process_libs
     if options[:skip_libs]
-      Brakeman.notify '[Skipping]'
+      Brakeman.notice 'Skipping libraries'
       return
     end
 
@@ -335,11 +335,11 @@ class Brakeman::Scanner
       if routes_sexp = parse_ruby_file(file)
         @processor.process_routes routes_sexp
       else
-        Brakeman.notify "[Notice] Error while processing routes - assuming all public controller methods are actions."
+        Brakeman.notice 'Error while processing routes - assuming all public controller methods are actions.'
         options[:assume_all_routes] = true
       end
     else
-      Brakeman.notify "[Notice] No route information found"
+      Brakeman.notice 'No route information found'
     end
   end
 
@@ -435,7 +435,8 @@ class Brakeman::Scanner
 
   def report_progress(current, total, type = "files")
     return unless @options[:report_progress]
-    $stderr.print " #{current}/#{total} #{type} processed\r"
+    $stderr.print "  #{HighLine.color(current.to_s, :bold)}/#{total} #{type} processed"
+    $stderr.print "\r"
   end
 
   def index_call_sites

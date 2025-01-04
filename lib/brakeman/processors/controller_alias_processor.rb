@@ -146,7 +146,7 @@ class Brakeman::ControllerAliasProcessor < Brakeman::AliasProcessor
     filter = tracker.find_method name, @current_class
 
     if filter.nil?
-      Brakeman.debug "[Notice] Could not find filter #{name}"
+      Brakeman.debug_notice "Could not find filter #{name}"
       return
     end
 

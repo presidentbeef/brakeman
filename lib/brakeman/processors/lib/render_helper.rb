@@ -98,7 +98,7 @@ module Brakeman::RenderHelper
     name = name.to_s.gsub(/^\//, "")
     template = @tracker.templates[name.to_sym]
     unless template
-      Brakeman.debug "[Notice] No such template: #{name}"
+      Brakeman.debug_notice "No such template: #{name}"
       return
     end
 
