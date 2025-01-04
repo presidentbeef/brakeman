@@ -79,6 +79,10 @@ module Brakeman
   #
   #Alternatively, just supply a path as a string.
   def self.run options
+    if not $stderr.tty? and options[:report_progress].nil?
+      options[:report_progress] = false
+    end
+
     options = set_options options
 
     @quiet = !!options[:quiet]
