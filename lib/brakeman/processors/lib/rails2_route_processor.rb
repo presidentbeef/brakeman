@@ -131,7 +131,7 @@ class Brakeman::Rails2RoutesProcessor < Brakeman::BasicProcessor
       when :except
         process_option_except value
       else
-        Brakeman.notify "[Notice] Unhandled resource option, please report: #{option}"
+        Brakeman.alert "Unhandled resource option, please report: #{option}"
       end
     end
   end

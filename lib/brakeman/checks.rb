@@ -121,37 +121,43 @@ class Brakeman::Checks
     parallel = tracker.options[:parallel_checks]
     error_mutex = Mutex.new
 
-    checks.each do |c|
-      check_name = get_check_name c
-      Brakeman.notify " - #{check_name}"
-
-      if parallel
-        threads << Thread.new do
-          self.run_a_check(c, error_mutex, tracker)
-        end
-      else
-        results << self.run_a_check(c, error_mutex, tracker)
-      end
-
-      #Maintain list of which checks were run
-      #mainly for reporting purposes
-      check_runner.checks_run << check_name[5..-1]
+    message = if parallel
+      "Running #{checks.length} checks in parallel"
+    else
+      "Running #{checks.length} checks"
     end
 
-    threads.each { |t| t.join }
+    Brakeman.process_step(message) do
+      checks.each do |c|
+        check_name = get_check_name c
+        Brakeman.debug " - #{check_name}"
 
-    Brakeman.notify "Checks finished, collecting results..."
-
-    if parallel
-      threads.each do |thread|
-        thread.value.each do |warning|
-          check_runner.add_warning warning
+        if parallel
+          threads << Thread.new do
+            self.run_a_check(c, error_mutex, tracker)
+          end
+        else
+          results << self.run_a_check(c, error_mutex, tracker)
         end
+
+        #Maintain list of which checks were run
+        #mainly for reporting purposes
+        check_runner.checks_run << check_name[5..-1]
       end
-    else
-      results.each do |warnings|
-        warnings.each do |warning|
-          check_runner.add_warning warning
+
+      threads.each { |t| t.join }
+
+      if parallel
+        threads.each do |thread|
+          thread.value.each do |warning|
+            check_runner.add_warning warning
+          end
+        end
+      else
+        results.each do |warnings|
+          warnings.each do |warning|
+            check_runner.add_warning warning
+          end
         end
       end
     end
