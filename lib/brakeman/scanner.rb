@@ -32,6 +32,7 @@ class Brakeman::Scanner
 
     @processor = processor || Brakeman::Processor.new(@app_tree, options)
     @show_timing = tracker.options[:debug] || tracker.options[:show_timing]
+    @per_file_timing = tracker.options[:debug] && tracker.options[:show_timing]
   end
 
   #Returns the Tracker generated from the scan
@@ -58,7 +59,7 @@ class Brakeman::Scanner
   end
 
   def process_step_file description
-    if @show_timing
+    if @per_file_timing
       Brakeman.notify "Processing #{description}"
 
       start_t = Time.now
