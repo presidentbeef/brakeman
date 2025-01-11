@@ -6,7 +6,7 @@ class AppTreeTests < Minitest::Test
   def temp_dir_and_file_from_path(relative_path)
     Dir.mktmpdir do |dir|
       file = File.join(dir, relative_path)
-      FileUtils.mkdir_p(file)
+      FileUtils.mkdir_p(File.dirname(file))
       FileUtils.touch(file)
       yield dir, file
     end
@@ -21,7 +21,7 @@ class AppTreeTests < Minitest::Test
       FileUtils.mkdir_p(target_dir)
 
       file = File.join(sibling_dir, relative_path)
-      FileUtils.mkdir_p(file)
+      FileUtils.mkdir_p(File.dirname(file))
       FileUtils.touch(file)
 
       symlink = File.join(target_dir, "symlink")
@@ -39,7 +39,7 @@ class AppTreeTests < Minitest::Test
       FileUtils.mkdir_p(target_dir)
 
       file = File.join(sibling_dir, relative_path)
-      FileUtils.mkdir_p(file)
+      FileUtils.mkdir_p(File.dirname(file))
       FileUtils.touch(file)
 
       symlink = File.join(target_dir, "symlink")
@@ -122,6 +122,15 @@ class AppTreeTests < Minitest::Test
     temp_dir_and_file_from_path("gem123/lib/test.rb") do |dir, file|
       at = Brakeman::AppTree.new(dir, :additional_libs_path => ["gems/gem123/lib"])
       assert_equal [file], at.ruby_file_paths.collect(&:absolute)
+    end
+  end
+
+  def test_ruby_file_paths_directory_with_rb_extension
+    Dir.mktmpdir do |dir|
+      FileUtils.mkdir_p(File.join(dir, "test.rb"))
+
+      at = Brakeman::AppTree.new(dir)
+      assert_equal [], at.ruby_file_paths.collect(&:absolute)
     end
   end
 end
