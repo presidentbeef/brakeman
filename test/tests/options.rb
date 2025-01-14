@@ -398,6 +398,22 @@ class BrakemanOptionsTest < Minitest::Test
     refute options[:follow_symlinks]
   end
 
+  def test_set_gemfile
+    options = setup_options_from_input("--gemfile", "Gemfile.mine")
+    assert_equal "Gemfile.mine", options[:gemfile]
+  end
+
+  def test_gemfile_environment
+    ENV['BUNDLE_GEMFILE'] = 'test_file'
+
+    options = { app_path: '.' }
+    options = Brakeman.set_options(options)
+
+    assert_equal ENV['BUNDLE_GEMFILE'], options[:gemfile]
+  ensure
+    ENV.delete 'BUNDLE_GEMFILE'
+  end
+
   private
 
   def setup_options_from_input(*args)

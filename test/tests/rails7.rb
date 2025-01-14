@@ -7,7 +7,7 @@ class Rails7Tests < Minitest::Test
   def report
     @@report ||=
       Date.stub :today, Date.parse('2023-02-10') do
-        BrakemanTester.run_scan "rails7", "Rails 7", :run_all_checks => true
+        BrakemanTester.run_scan "rails7", "Rails 7", :run_all_checks => true, gemfile: "MyGemfile"
       end
   end
 
@@ -24,12 +24,12 @@ class Rails7Tests < Minitest::Test
     assert_warning check_name: "EOLRuby",
       type: :warning,
       warning_code: 123,
-      fingerprint: "425dcb3af9624f11f12d777d6f9fe05995719975a155c30012baa6b9dc3487df",
+      fingerprint: "92f8b4d79a8f4abeffed8ce6683ca85c4c42df26c7e5ec4378fafa7b728044ce",
       warning_type: "Unmaintained Dependency",
       line: 235,
       message: /^Support\ for\ Ruby\ 2\.7\.0\ ends\ on\ 2023\-03\-3/,
       confidence: 2,
-      relative_path: "Gemfile.lock",
+      relative_path: "MyGemfile.lock",
       code: nil,
       user_input: nil
   end
