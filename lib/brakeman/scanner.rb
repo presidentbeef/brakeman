@@ -231,21 +231,29 @@ class Brakeman::Scanner
   #Process Gemfile
   def process_gems
     gem_files = {}
+    gem_file_names = ['Gemfile', 'gems.rb']
+    lock_file_names = ['Gemfile.lock', 'gems.locked']
 
-    if @app_tree.exists? "Gemfile"
-      file = @app_tree.file_path("Gemfile")
-      gem_files[:gemfile] = { :src => parse_ruby_file(file), :file => file }
-    elsif @app_tree.exists? "gems.rb"
-      file = @app_tree.file_path("gems.rb")
-      gem_files[:gemfile] = { :src => parse_ruby_file(file), :file => file }
+    if tracker.options[:gemfile]
+      name = tracker.options[:gemfile]
+      gem_file_names.unshift name
+      lock_file_names.unshift "#{name}.lock"
     end
 
-    if @app_tree.exists? "Gemfile.lock"
-      file = @app_tree.file_path("Gemfile.lock")
-      gem_files[:gemlock] = { :src => file.read, :file => file }
-    elsif @app_tree.exists? "gems.locked"
-      file = @app_tree.file_path("gems.locked")
-      gem_files[:gemlock] = { :src => file.read, :file => file }
+    gem_file_names.each do |name|
+      if @app_tree.exists? name
+        file = @app_tree.file_path(name)
+        gem_files[:gemfile] = { :src => parse_ruby_file(file), :file => file }
+        break
+      end
+    end
+
+    lock_file_names.each do |name|
+      if @app_tree.exists? name
+        file = @app_tree.file_path(name)
+        gem_files[:gemlock] = { :src => file.read, :file => file }
+        break
+      end
     end
 
     if @app_tree.gemspec

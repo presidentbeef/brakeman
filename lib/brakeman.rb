@@ -127,6 +127,13 @@ module Brakeman
     options[:output_formats] = get_output_formats options
     options[:github_url] = get_github_url options
 
+
+    # Use ENV value only if option was not already explicitly set
+    # (i.e. prefer commandline option over environment variable).
+    if options[:gemfile].nil? and ENV['BUNDLE_GEMFILE']
+      options[:gemfile] = ENV['BUNDLE_GEMFILE']
+    end
+
     options
   end
 

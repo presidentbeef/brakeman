@@ -226,6 +226,10 @@ module Brakeman::Options
           options[:follow_symlinks] = follow_symlinks
         end
 
+        opts.on '--gemfile GEMFILE', 'Specify Gemfile to scan' do |gemfile|
+          options[:gemfile] = gemfile
+        end
+
         opts.on "-E", "--enable Check1,Check2,etc", Array, "Enable the specified checks" do |checks|
           checks.map! do |check|
             if check.start_with? "Check"
