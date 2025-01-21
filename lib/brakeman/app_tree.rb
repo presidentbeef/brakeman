@@ -145,6 +145,17 @@ module Brakeman
       end
     end
 
+
+    # Call this to be able to marshall the AppTree
+    def marshallable
+      @initializer_paths = @initializer_paths.to_a
+      @controller_paths = @controller_paths.to_a
+      @template_paths = @template_paths.to_a
+      @lib_files = @file_paths.to_a
+
+      self
+    end
+
   private
 
     def find_helper_paths
@@ -160,7 +171,7 @@ module Brakeman
     end
 
     def find_paths(directory, extensions = ".rb")
-      select_files(glob_files(directory, "*", extensions).sort)
+      select_files(glob_files(directory, "*", extensions))
     end
 
     def glob_files(directory, name, extensions = ".rb")
@@ -179,10 +190,10 @@ module Brakeman
         end
 
         files = patterns.flat_map { |pattern| Dir.glob(pattern) }
-        files.uniq
+        files.uniq.lazy
       else
         pattern = "#{root_search_pattern}#{directory}/**/#{name}#{extensions}"
-        Dir.glob(pattern)
+        Dir.glob(pattern).lazy
       end
     end
 
@@ -191,7 +202,8 @@ module Brakeman
       paths = reject_skipped_files(paths)
       paths = convert_to_file_paths(paths)
       paths = reject_global_excludes(paths)
-      reject_directories(paths)
+      paths = reject_directories(paths)
+      paths
     end
 
     def reject_directories(paths)
