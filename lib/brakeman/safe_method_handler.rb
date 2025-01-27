@@ -42,8 +42,6 @@ class SafeMethodHandler
     ignored_methods.any? { |ignored| matches?(target_method, ignored) }
   end
 
-  private
-
   def self.normalize_method_delimeter(identifier)
     identifier.gsub(/(::|#)/, '.')
   end
