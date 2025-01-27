@@ -26,7 +26,7 @@ class TestSafeMethodHandler < Minitest::Test
 
   def test_parse_method_identifier_with_invalid_type
     assert_raises ArgumentError do
-      SafeMethodHandler.parse_method_identifier(123) # Assuming this raises an ArgumentError
+      SafeMethodHandler.parse_method_identifier(123)
     end
   end
 end
