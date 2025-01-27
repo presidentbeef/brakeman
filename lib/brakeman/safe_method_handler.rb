@@ -5,6 +5,8 @@ class SafeMethodHandler
       method
     when String
       has_namespace?(method) ? normalize_method_delimeter(method) : method.to_sym
+    else
+      raise ArgumentError, "Method must be a String or Symbol"
     end
   end
 
