@@ -47,7 +47,30 @@ class Brakeman::CheckEvaluation < Brakeman::BaseCheck
   end
 
   def string_evaluation? exp
-    string_interp? exp or
+    (string_interp? exp and not all_safe_interp_values? exp) or
       (call? exp and string? exp.target)
+  end
+
+  def all_safe_interp_values? exp
+    exp.all? do |e|
+      if sexp? e
+        safe_interp_value? e
+      else
+        true # not an s-exp
+      end
+    end
+  end
+
+  def safe_interp_value? exp
+    case exp.sexp_type
+    when :evstr
+      safe_interp_value? exp.value
+    when :str, :lit
+      true
+    when :call
+      always_safe_method? exp.method
+    else
+      false
+    end
   end
 end
