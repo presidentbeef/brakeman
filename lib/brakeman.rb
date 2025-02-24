@@ -24,6 +24,10 @@ module Brakeman
   #--ensure-ignore-notes is set
   Empty_Ignore_Note_Exit_Code = 8
 
+  # Exit code returned when at least one obsolete ignore entry is present
+  # and `--ensure-no-obsolete-ignore-entries` is set.
+  Obsolete_Ignore_Entries_Exit_Code = 9
+
   @debug = false
   @quiet = false
   @loaded_dependencies = []
