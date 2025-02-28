@@ -71,6 +71,10 @@ module Brakeman::Options
           options[:ensure_ignore_notes] = true
         end
 
+        opts.on "--ensure-no-obsolete-ignore-entries", "Fail when an obsolete ignore entry is found" do
+          options[:ensure_no_obsolete_ignore_entries] = true
+        end
+
         opts.on "-3", "--rails3", "Force Rails 3 mode" do
           options[:rails3] = true
         end
