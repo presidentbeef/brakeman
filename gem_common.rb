@@ -16,7 +16,7 @@ module Brakeman
 
     def self.extended_dependencies spec
       spec.add_dependency "csv"
-      spec.add_dependency "terminal-table", "< 4.0"
+      spec.add_dependency "terminal-table", "< 5.0"
       spec.add_dependency "highline", "~>3.0"
       spec.add_dependency "erubis", "~>2.6"
       spec.add_dependency "haml", "~>5.1"
