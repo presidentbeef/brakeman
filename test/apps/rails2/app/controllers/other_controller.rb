@@ -82,6 +82,18 @@ class OtherController < ApplicationController
     /#{Rack::Utils.escape_html(params[:regex])}/
   end
 
+  def test_regex_match
+    "haystack".match(params[:regex])
+  end
+
+  def test_regex_match?
+    "haystack".match?(params[:regex])
+  end
+
+  def test_modified_string_match
+    "haystack".downcase.match(params[:regex].downcase)
+  end
+
   def test_intern
     x = params[:x].intern
 
