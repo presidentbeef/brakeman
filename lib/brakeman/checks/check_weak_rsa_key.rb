@@ -87,7 +87,7 @@ class Brakeman::CheckWeakRSAKey < Brakeman::BaseCheck
 
     if string? padding_arg
       padding_arg = padding_arg.deep_clone(padding_arg.line)
-      padding_arg.value.downcase!
+      padding_arg.value = padding_arg.value.downcase
     end
 
     case padding_arg

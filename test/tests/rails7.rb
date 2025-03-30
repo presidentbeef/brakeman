@@ -219,13 +219,13 @@ class Rails7Tests < Minitest::Test
     assert_warning check_name: "WeakRSAKey",
       type: :warning,
       warning_code: 126,
-      fingerprint: "3454ec09e3264042301160253d0846296f1334fcb33252edd5d5c41cc3712ab3",
+      fingerprint: "3a3f24bb81d480515081aee1ebdf76d34c79b6e0c3c1946513158164512f9130",
       warning_type: "Weak Cryptography",
       line: 25,
       message: /^Use\ of\ padding\ mode\ PKCS1\ \(default\ if\ no/,
       confidence: 0,
       relative_path: "lib/some_lib.rb",
-      code: s(:call, s(:call, s(:colon2, s(:const, :OpenSSL), :PKey), :generate_key, s(:str, "rsa"), s(:hash, s(:lit, :rsa_keygen_bits), s(:lit, 1024))), :sign, s(:str, "SHA256"), s(:str, "data"), s(:hash, s(:lit, :rsa_padding_mode), s(:str, "pkcs1"))),
+      code: s(:call, s(:call, s(:colon2, s(:const, :OpenSSL), :PKey), :generate_key, s(:str, "rsa"), s(:hash, s(:lit, :rsa_keygen_bits), s(:lit, 1024))), :sign, s(:str, "SHA256"), s(:str, "data"), s(:hash, s(:lit, :rsa_padding_mode), s(:str, "PKCS1"))),
       user_input: s(:str, "pkcs1")
   end
 

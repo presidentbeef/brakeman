@@ -270,7 +270,7 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       end
     when :<<
       if string? target and string? first_arg
-        target.value << first_arg.value
+        target.value += first_arg.value
         env[target_var] = target
         return target
       elsif string? target and string_interp? first_arg
@@ -278,8 +278,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         env[target_var] = exp
       elsif string? first_arg and string_interp? target
         if string? target.last
-          target.last.value << first_arg.value
+          target.last.value += first_arg.value
         elsif target.last.is_a? String
+          # TODO Use target.last += ?
           target.last << first_arg.value
         else
           target << first_arg
