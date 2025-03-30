@@ -16,7 +16,7 @@ class Rails8Tests < Minitest::Test
       controller: 0,
       model:      0,
       template:   0,
-      warning:    3
+      warning:    4
     }
   end
 
@@ -48,6 +48,20 @@ class Rails8Tests < Minitest::Test
       user_input: nil
   end
 
+  def test_dangerous_eval_2
+    assert_warning check_name: "Evaluation",
+      type: :warning,
+      warning_code: 13,
+      fingerprint: "6e08d62e8ad637151c2d28872e9e55fd872d4ae19ba511f72d80be7525f1509c",
+      warning_type: "Dangerous Eval",
+      line: 17,
+      message: /^Dynamic\ string\ evaluated\ as\ code/,
+      confidence: 2,
+      relative_path: "lib/evals.rb",
+      code: s(:call, nil, :eval, s(:dstr, "interpolate ", s(:evstr, s(:lvar, :something)))),
+      user_input: nil
+  end
+
   def test_plain_marshal_load_weak_warning
     assert_warning check_name: "Deserialize",
       type: :warning,
@@ -60,5 +74,17 @@ class Rails8Tests < Minitest::Test
       relative_path: "app/controllers/application_controller.rb",
       code: s(:call, s(:const, :Marshal), :load, s(:call, nil, :something)),
       user_input: nil
+  end
+
+  def test_dangerous_eval_plain_strings
+    assert_no_warning check_name: "Evaluation",
+      type: :warning,
+      warning_code: 13,
+      warning_type: "Dangerous Eval",
+      line: 22,
+      message: /^Dynamic\ string\ evaluated\ as\ code/,
+      confidence: 2,
+      relative_path: "lib/evals.rb"
+      # code: s(:call, nil, :class_eval, s(:dstr, "        def method_that_is_", s(:evstr, s(:lit, :BRAKEMAN_SAFE_LITERAL)), s(:str, "\n          puts suffix\n        end\n"))),
   end
 end

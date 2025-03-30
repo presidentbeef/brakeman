@@ -22,32 +22,51 @@ class Brakeman::CheckEvaluation < Brakeman::BaseCheck
   def process_result result
     return unless original? result
 
-    if input = include_user_input?(result[:call].arglist)
-      confidence = :high
-      message = msg(msg_input(input), " evaluated as code")
-    elsif string_evaluation? result[:call].first_arg
-      confidence = :low
-      message = "Dynamic string evaluated as code"
-    elsif safe_literal? result[:call].first_arg
-      # don't warn
-    elsif result[:call].method == :eval
-      confidence = :low
-      message = "Dynamic code evaluation"
-    end
+    first_arg = result[:call].first_arg
 
-    if confidence
-      warn :result => result,
-        :warning_type => "Dangerous Eval",
-        :warning_code => :code_eval,
-        :message => message,
-        :user_input => input,
-        :confidence => confidence,
-        :cwe_id => [913, 95]
+    unless safe_value? first_arg
+      if input = include_user_input?(first_arg)
+        confidence = :high
+        message = msg(msg_input(input), " evaluated as code")
+      elsif string_evaluation? first_arg
+        confidence = :low
+        message = "Dynamic string evaluated as code"
+      elsif result[:call].method == :eval
+        confidence = :low
+        message = "Dynamic code evaluation"
+      end
+
+      if confidence
+        warn :result => result,
+          :warning_type => "Dangerous Eval",
+          :warning_code => :code_eval,
+          :message => message,
+          :user_input => input,
+          :confidence => confidence,
+          :cwe_id => [913, 95]
+      end
     end
   end
 
   def string_evaluation? exp
     string_interp? exp or
       (call? exp and string? exp.target)
+  end
+
+  def safe_value? exp
+    return true unless sexp? exp
+
+    case exp.sexp_type
+    when :dstr
+      exp.all? { |e| safe_value? e}
+    when :evstr
+      safe_value? exp.value
+    when :str, :lit
+      true
+    when :call
+      always_safe_method? exp.method
+    else
+      false
+    end
   end
 end
