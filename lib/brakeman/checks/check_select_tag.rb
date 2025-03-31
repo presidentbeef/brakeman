@@ -1,4 +1,5 @@
 require 'brakeman/checks/base_check'
+require 'brakeman/safe_method_handler'
 
 #Checks for CVE-2012-3463, unescaped input in :prompt option of select_tag:
 #https://groups.google.com/d/topic/rubyonrails-security/fV3QUToSMSw/discussion
@@ -42,7 +43,7 @@ class Brakeman::CheckSelectTag < Brakeman::BaseCheck
     if hash? last_arg
       prompt_option = hash_access last_arg, :prompt
 
-      if call? prompt_option and @ignore_methods.include? prompt_option.method
+      if call? prompt_option and SafeMethodHandler.include?(prompt_option.method, @ignore_methods)
         return
       elsif sexp? prompt_option and input = include_user_input?(prompt_option)
 
