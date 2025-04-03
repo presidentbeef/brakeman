@@ -1,3 +1,12 @@
+# 7.0.1 - 2025-04-03
+
+* Avoid warning on evaluation of plain strings
+* Enable use of custom/alternative Gemfiles
+* Fix error on directory with `rb` extension (viralpraxis)
+* Support `terminal-table` 4.0 (Chedli Bourguiba)
+* Better support Prism 1.4.0
+* Only output timing for each file when using `--debug`
+
 # 7.0.0 - 2024-12-30
 
 * Always warn about deserializing from Marshal
