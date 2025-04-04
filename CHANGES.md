@@ -1,3 +1,7 @@
+# 7.0.2 - 2025-04-04
+
+* Fix error with empty `BUNDLE_GEMFILE` env variable
+
 # 7.0.1 - 2025-04-03
 
 * Avoid warning on evaluation of plain strings
