@@ -80,6 +80,116 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2022/08/09/brakeman-5-dot-3-dot-0-released">Brakeman 5.3.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2022-08-09 08:30:00 -0600" pubdate  updated >2022-08-09 08:30:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release adds CWE information to reports - the first JSON report change in a long time!</p>
+
+<p><em>Changes since 5.2.3:</em></p>
+
+<ul>
+  <li>Add CWE information to warnings (<a href="https://github.com/saghaulor">Stephen Aghaulor</a>)</li>
+  <li>Include explicit engine or lib paths in <code class="language-plaintext highlighter-rouge">vendor/</code> (<a href="https://github.com/jrafanie">Joe Rafaniello</a>)</li>
+  <li>Add check for CVE-2022-32209</li>
+  <li>Load rexml as a Brakeman dependency</li>
+  <li>Fix “full call” information propagating unnecessarily</li>
+</ul>
+
+<h3 id="cwe-information">CWE Information</h3>
+
+<p>Thanks to <a href="https://github.com/saghaulor">Stephen Aghaulor</a> for taking on the arduous task of adding CWE information
+to every Brakeman warning type!</p>
+
+<p>CWE information is now available in most report formats. In particular, it is a new field for the JSON report.</p>
+
+<p>Example:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"warning_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cross-Site Scripting"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"warning_code"</span><span class="p">:</span><span class="w"> </span><span class="mi">124</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"fingerprint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"c2cc471a99036432e03d83e893fe748c2b1d5c40a39e776475faf088717af97d"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"check_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SanitizeConfigCve"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rails-html-sanitizer 1.4.2 is vulnerable to cross-site scripting when `select` and `style` tags are allowed (CVE-2022-32209)"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"config/initializers/sanitizers.rb"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"line"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://groups.google.com/g/rubyonrails-security/c/ce9PhUANQ6s/m/S0fJfnkmBAAJ"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Rails::Html::SafeListSanitizer.allowed_tags = [</span><span class="se">\"</span><span class="s2">select</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">a</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">style</span><span class="se">\"</span><span class="s2">]"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"render_path"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"user_input"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="s2">"High"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"cwe_id"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="mi">79</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1693">changes</a>)</p>
+
+<h3 id="explicit-paths-in-vendor-directory">Explicit Paths in Vendor Directory</h3>
+
+<p>By default, Brakeman does not scan any code in the <code class="language-plaintext highlighter-rouge">vendor/</code> directory.</p>
+
+<p>But it was also ignoring any paths in <code class="language-plaintext highlighter-rouge">vendor/</code>, even if the user explicitly included them via <code class="language-plaintext highlighter-rouge">--add-libs-path</code> or <code class="language-plaintext highlighter-rouge">--add-engines-path</code>.</p>
+
+<p>Thanks to <a href="https://github.com/jrafanie">Joe Rafaniello</a> this is now changed to respect the explicit additional paths, even if they reside in <code class="language-plaintext highlighter-rouge">vendor/</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1699">changes</a>)</p>
+
+<h3 id="cve-2022-32209">CVE-2022-32209</h3>
+
+<p><em>As a reminder, Brakeman does not keep up with every CVE for Rails or other libraries. Use a dependency analysis tool for that!</em></p>
+
+<p>A check was added for <a href="https://hackerone.com/reports/1530898">CVE-2022-32209</a>.</p>
+
+<p>If the vulnerable configuration is detected, the warning will be <code class="language-plaintext highlighter-rouge">high</code> confidence.</p>
+
+<p>If only the vulnerable version of <code class="language-plaintext highlighter-rouge">rails-html-sanitizer</code> is detected, the warning will be <code class="language-plaintext highlighter-rouge">weak</code> confidence.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1718">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4fe584ef37c16e1011a0f2db36ebab540fef403ff8e26afed212e2d7ff5a3176  brakeman-5.3.0.gem
+1f5caa0bd05fd8ea5b4f5791371dd0911f96d804612c7be986bab3ed0163a8cf  brakeman-lib-5.3.0.gem
+4a4ccef090c4eb5857140c15fa69ff65167f3eb550f7a0ca555012642aafe7e9  brakeman-min-5.3.0.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2022/05/01/brakeman-5-dot-2-dot-3-released">Brakeman 5.2.3 Released</a></h1>
     
     
@@ -368,99 +478,6 @@ the help message matches the order of the options in the prompt!</p>
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2021/10/28/brakeman-5-dot-1-dot-2-released">Brakeman 5.1.2 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2021-10-28 11:30:00 -0600" pubdate  updated >2021-10-28 11:30:00 -0600</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Here’s a small bugfix release with a big parser update!</p>
-
-<p>Huge thanks as always to <a href="https://github.com/sponsors/zenspider?o=esb">Ryan Davis</a> for maintaining <code class="language-plaintext highlighter-rouge">ruby_parser</code>.</p>
-
-<p><em>Changes since 5.1.1:</em></p>
-
-<ul>
-  <li>Updated <code class="language-plaintext highlighter-rouge">ruby_parser</code> (<a href="https://www.zenspider.com/">Ryan Davis</a>)</li>
-  <li>Fix issue where the previous output is still visible (<a href="https://github.com/Fryguy">Jason Frey</a>)</li>
-  <li>Handle cases where enums are not symbols (<a href="https://github.com/presidentbeef/brakeman/issues/1627">#1627</a>)</li>
-  <li>Support newer Haml with <code class="language-plaintext highlighter-rouge">::Haml::AttributeBuilder.build</code></li>
-  <li>Fix sorting with <code class="language-plaintext highlighter-rouge">nil</code> line numbers</li>
-</ul>
-
-<h2 id="updated-rubyparser">Updated RubyParser</h2>
-
-<p>Once again, <a href="https://github.com/sponsors/zenspider?o=esb">Ryan Davis</a> comes through with a great update of <a href="https://github.com/seattlerb/ruby_parser">ruby_parser</a>
-including support for newer Ruby 2.7 and 3.0 syntaxes as well as many other fixes and improvements.</p>
-
-<p>(<a href="https://www.zenspider.com/releases/2021/10/ruby_parser-version-3-18-0-has-been-released.html">changes</a>)</p>
-
-<h2 id="output-cleanup">Output Cleanup</h2>
-
-<p><a href="https://github.com/Fryguy">Jason Frey</a> cleaned up the <code class="language-plaintext highlighter-rouge">Processing libs...</code> updates so it doesn’t look like <code class="language-plaintext highlighter-rouge">Processing libs...ssed</code> anymore.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1629">changes</a>)</p>
-
-<h2 id="enums-without-symbols">Enums Without Symbols</h2>
-
-<p>Calls to <code class="language-plaintext highlighter-rouge">enum</code> where the first argument is not a symbol will be ignored for now.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1631">changes</a>)</p>
-
-<h2 id="newer-haml">Newer Haml</h2>
-
-<p>In Haml 5.2.2 the <code class="language-plaintext highlighter-rouge">::Haml::AttributeBuilder.build</code> method started popping up and Brakeman was treating it as suspicious.</p>
-
-<p>For now, ignoring it because it seems pretty safe.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1637">changes</a>)</p>
-
-<h2 id="sorting-with-missing-line-numbers">Sorting with Missing Line Numbers</h2>
-
-<p>In some, apparently rare cases, if two warnings have the same confidence, warning type, and are in the same file, but have <code class="language-plaintext highlighter-rouge">nil</code> line numbers,
-then it <em>could</em> (but doesn’t always) cause a sorting error.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1641">changes</a>)</p>
-
-<h3 id="checksums">Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d95b1cee8d751db8300c9390d8c90cf3e54f725c4d448f7ccfbdb9a723b6377a  brakeman-5.1.2.gem
-8e6a25a4da113269e70a0e536325e8a18b02745f23dea25ecf640c675961961c  brakeman-lib-5.1.2.gem
-7b272fa7efc2f25208614bd801993e2b161b4edbf8c423c93b6b13aaee09ae84  brakeman-min-5.1.2.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -499,6 +516,10 @@ then it <em>could</em> (but doesn’t always) cause a sorting error.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
       </li>
     
@@ -512,10 +533,6 @@ then it <em>could</em> (but doesn’t always) cause a sorting error.</p>
     
       <li class="post">
         <a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a>
       </li>
     
   </ul>

@@ -80,6 +80,106 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2020/12/24/brakeman-4-dot-10-dot-1-released">Brakeman 4.10.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2020-12-24 12:30:00 -0700" pubdate  updated >2020-12-24 12:30:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This releases fixes Ruby 3.0 compatibility (meaning running under 3.0, new syntax is not supported yet).</p>
+
+<p><em>Changes since 4.10.0:</em></p>
+
+<ul>
+  <li>Declare REXML as a dependency (Ruby 3.0 compatibility)</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">Sexp#sexp_body</code> instead of <code class="language-plaintext highlighter-rouge">Sexp#[..]</code> (Ruby 3.0 compatibility)</li>
+  <li>Prevent render loops when template names are absolute paths (<a href="https://github.com/presidentbeef/brakeman/issues/1536">#1536</a>)</li>
+  <li>Ensure RubyParser is passed file path as a String (<a href="https://github.com/presidentbeef/brakeman/issues/1534">#1534</a>)</li>
+  <li>Support new Haml 5.2.0 escaping method (<a href="https://github.com/presidentbeef/brakeman/issues/1517">#1517</a>)</li>
+</ul>
+
+<h3 id="rexml-as-an-explicit-dependency">REXML as an Explicit Dependency</h3>
+
+<p>In Ruby 3.0, REXML has become a ‘bundled’ gem. It is distributed with Ruby, but if Bundler is involved then it needs to be declared as an explicit dependency.</p>
+
+<p>If you like minimal dependencies, you can always use the <code class="language-plaintext highlighter-rouge">brakeman-min</code> gem which declares only strict dependencies.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1538">changes</a>)</p>
+
+<h3 id="avoid-slicing-with-sexp">Avoid Slicing with Sexp#[]</h3>
+
+<p><code class="language-plaintext highlighter-rouge">Sexp</code> subclasses from <code class="language-plaintext highlighter-rouge">Array</code>, and <code class="language-plaintext highlighter-rouge">Array</code> no longer returns subclasses from methods that create new arrays.</p>
+
+<p>Brakeman was unfortunately using <code class="language-plaintext highlighter-rouge">Sexp#[]</code> with ranges (e.g. <code class="language-plaintext highlighter-rouge">s(:a, :b, :c)[1..-1]</code>), which runs into this behavior.
+Happily, the <code class="language-plaintext highlighter-rouge">Sexp#sexp_body</code> method already exists to properly slice and return a <code class="language-plaintext highlighter-rouge">Sexp</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1538">changes</a>)</p>
+
+<h3 id="recursive-renders-with-absolute-paths">Recursive Renders with Absolute Paths</h3>
+
+<p>Brakeman has long been able to detect recursive render loops, but that detection did not work if the partial name was an ‘absolute’ path.</p>
+
+<p>This is now fixed!</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1537">changes</a>)</p>
+
+<h3 id="ensure-rubyparser-path-is-a-string">Ensure RubyParser Path is a String</h3>
+
+<p>In some cases, the parser was given a <code class="language-plaintext highlighter-rouge">Brakeman::FilePath</code> for the file name.
+This only caused an issue in some weird corner cases, but it was wrong nonetheless.</p>
+
+<p>Now <code class="language-plaintext highlighter-rouge">Brakeman::FileParser</code> will ensure the file name is passed as a string.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1535">changes</a>)</p>
+
+<h3 id="support-haml-52">Support Haml 5.2</h3>
+
+<p>Haml 5.2.0 introduced a new method for escaping output, which caused some false positives.</p>
+
+<p><em>(Note this was avoided in Brakeman 4.10.0 by bundling an earlier version of Haml.)</em></p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1518">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>e40451080554884a63d73a2933c36518a3cf7a2bb471e6d864ce39a9d3455c98  brakeman-4.10.1.gem
+ec69e04e087b74862629e952d7817dd7b73e30810166e01d69d24d7164101455  brakeman-lib-4.10.1.gem
+3deee68eadd8eb6850254a8e753d6bbe933194c883f12a2455bdf5fd97b1eba2  brakeman-min-4.10.1.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
+
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2020/09/28/brakeman-4-dot-10-dot-0-released">Brakeman 4.10.0 Released</a></h1>
     
     
@@ -485,113 +585,6 @@ dc6a50321170e83e61ae75d1bb2dade53392a44b614d4068553f1425539a3b8f  brakeman-lib-4
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2020/05/12/brakeman-4-dot-8-dot-2-released">Brakeman 4.8.2 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2020-05-12 16:00:00 -0600" pubdate  updated >2020-05-12 16:00:00 -0600</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This release introduces a new option and two new checks!</p>
-
-<p><em>Changes since 4.8.1:</em></p>
-
-<ul>
-  <li>Add <code class="language-plaintext highlighter-rouge">--text-fields</code> option</li>
-  <li>Add check for <a href="https://groups.google.com/d/msg/rubyonrails-security/CFRVkEytdP8/c5gmICECAgAJ">CVE-2020-8159</a></li>
-  <li>Add check for escaping HTML entities in JSON configuration option</li>
-  <li>Fix <code class="language-plaintext highlighter-rouge">authenticate_or_request_with_http_basic</code> check for passed blocks (<a href="https://github.com/hugocorbucci">Hugo Corbucci</a>)</li>
-</ul>
-
-<h3 id="text-fields-option">Text Fields Option</h3>
-
-<p>It is now possible to specify which text fields are reported and their order for the default “text” report format using the <code class="language-plaintext highlighter-rouge">--text-fields</code> option.</p>
-
-<p>Possible options are:</p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">all</code></li>
-  <li><code class="language-plaintext highlighter-rouge">category</code></li>
-  <li><code class="language-plaintext highlighter-rouge">category_id</code></li>
-  <li><code class="language-plaintext highlighter-rouge">check</code></li>
-  <li><code class="language-plaintext highlighter-rouge">code</code></li>
-  <li><code class="language-plaintext highlighter-rouge">confidence</code></li>
-  <li><code class="language-plaintext highlighter-rouge">file</code></li>
-  <li><code class="language-plaintext highlighter-rouge">fingerprint</code></li>
-  <li><code class="language-plaintext highlighter-rouge">line</code></li>
-  <li><code class="language-plaintext highlighter-rouge">link</code></li>
-  <li><code class="language-plaintext highlighter-rouge">message</code></li>
-  <li><code class="language-plaintext highlighter-rouge">render_path</code></li>
-</ul>
-
-<p><code class="language-plaintext highlighter-rouge">--text-fields</code> accepts a comma-separated list of these options.</p>
-
-<p><em>Please keep in mind the JSON report should be used for structured reports/parsing.</em></p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1473">changes</a>)</p>
-
-<h3 id="cve-2020-8159">CVE-2020-8159</h3>
-
-<p>This release includes a check for <a href="ihttps://groups.google.com/d/msg/rubyonrails-security/CFRVkEytdP8/c5gmICECAgAJ">CVE-2020-8159</a> related to the <code class="language-plaintext highlighter-rouge">actionpack-page_caching</code> gem.
-The vulnerability allows arbitrary file writing and may be escalated to remote code execution.</p>
-
-<p>If <code class="language-plaintext highlighter-rouge">caches_page</code> is called in any controllers, this will be a High confidence warning. Otherwise, Weak.</p>
-
-<p><em>Reminder: Brakeman is not a ‘dependency’ scanner. It only includes checks for a small number of Rails-related CVEs. Use bundler-audit or related tools for dependency checking.</em></p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1477/">changes</a>)</p>
-
-<h3 id="json-escaping-configuration">JSON Escaping Configuration</h3>
-
-<p>Brakeman will now warn if HTML entity escaping in JSON is disabled globally with <code class="language-plaintext highlighter-rouge">ActiveSupport.escape_html_entities_in_json = false</code>. This is an unusual configuration.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1472">changes</a>)</p>
-
-<h3 id="basic-auth-check-fix">Basic Auth Check Fix</h3>
-
-<p><a href="https://github.com/hugocorbucci">Hugo Corbucci</a> fixed an error when checking calls to <code class="language-plaintext highlighter-rouge">authenticate_or_request_with_http_basic</code> without a block literal.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1478">changes</a>)</p>
-
-<h3 id="checksums">Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d7bf369896b4a3c41778f39f10b1e1d0844a965bbb582fa0a0566b1df4f07dec  brakeman-4.8.2.gem
-c13e9a9e5b213ba95a16803ddb50eb3c7119533ca71444ffec2bb6cea22b926a  brakeman-lib-4.8.2.gem
-a422a444b7db48682e1f112c83b1a7a7e3828ec02d52ed91c5b3eff235b801c1  brakeman-min-4.8.2.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -630,6 +623,10 @@ a422a444b7db48682e1f112c83b1a7a7e3828ec02d52ed91c5b3eff235b801c1  brakeman-min-4
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
       </li>
     
@@ -643,10 +640,6 @@ a422a444b7db48682e1f112c83b1a7a7e3828ec02d52ed91c5b3eff235b801c1  brakeman-min-4
     
       <li class="post">
         <a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a>
       </li>
     
   </ul>

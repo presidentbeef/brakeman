@@ -80,6 +80,126 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2013/03/18/brakeman-1-dot-9-4-released">Brakeman 1.9.4 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2013-03-18 17:07:00 -0600" pubdate  updated >2013-03-18 17:07:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Another release forced out early due to Rails vulnerabilities reported today.</p>
+
+<p><em>Changes since 1.9.3</em>:</p>
+
+<ul>
+  <li>Add check for CVE-2013-1854</li>
+  <li>Add check for CVE-2013-1855</li>
+  <li>Add check for CVE-2013-1856</li>
+  <li>Add check for CVE-2013-1857</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">--compare</code> to work with older versions</li>
+  <li>Add “no-referrer” to HTML report links</li>
+  <li>Don’t warn when invoking <code class="language-plaintext highlighter-rouge">send</code> on user input</li>
+  <li>Slightly faster cloning of Sexps</li>
+  <li>Detect another way to add <code class="language-plaintext highlighter-rouge">strong_parameters</code> (<a href="https://github.com/presidentbeef/brakeman/issues/288">#288</a>)</li>
+</ul>
+
+<h3 id="latest-reported-vulnerabilities">Latest Reported Vulnerabilities</h3>
+
+<p>All CVE checks were included in <a href="https://github.com/presidentbeef/brakeman/pull/290">these changes</a>.</p>
+
+<h4 id="cve-2013-1854---symbol-denial-of-service">CVE-2013-1854 - Symbol Denial of Service</h4>
+
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/jgJ4cjjS8FE/BGbHRxnDRTIJ">CVE-2013-1854</a> is the creation of symbols when a hash is passed as the value to an ActiveRecord finder method.</p>
+
+<p>Brakeman will warn on this CVE if there are any models using ActiveRecord and the Rails version is vulnerable.</p>
+
+<h4 id="cve-2013-1855---sanitize_css">CVE-2013-1855 - sanitize_css</h4>
+
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/4_QHo4BqnN8/_RrdfKk12I4J">CVE-2013-1855</a> is a vulnerability in the <code class="language-plaintext highlighter-rouge">sanitize_css</code> method.</p>
+
+<p>Brakeman will warn on this CVE for each use of <code class="language-plaintext highlighter-rouge">sanitize_css</code> if the Rails version is vulnerable. Calls obviously sanitizing user input will be high confidence, other calls will be medium confidence.</p>
+
+<h4 id="cve-2013-1856---jruby-xml-parser">CVE-2013-1856 - JRuby XML Parser</h4>
+
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/KZwsQbYsOiI/5kUV7dSCJGwJ">CVE-2013-1856</a> is a vulnerability in the default XML parser used when running Rails on JRuby.</p>
+
+<p>Brakeman will warn on this CVE if run with JRuby and the Rails version is vulnerable. It will not warn if the provided workaround (not patch) is used in an initializers.</p>
+
+<h4 id="cve-2013-1857---sanitize">CVE-2013-1857 - sanitize</h4>
+
+<p><a href="https://groups.google.com/d/msg/rubyonrails-security/zAAU7vGTPvI/1vZDWXqBuXgJ">CVE-2013-1857</a> is a vulnerability in the <code class="language-plaintext highlighter-rouge">sanitize</code> method which allows URLs to include JavaScript.</p>
+
+<p>Brakeman will warn on this CVE for each use of <code class="language-plaintext highlighter-rouge">sanitize</code> if the Rails version is vulnerable. Calls obviously sanitizing user input will be high confidence, other calls will be medium confidence.</p>
+
+<h3 id="fix-json-compare">Fix JSON Compare</h3>
+
+<p>The 1.9.3 release introduced several new keys for warnings in the JSON output, which then broke <code class="language-plaintext highlighter-rouge">--compare</code> when used with output from an older version. Despite <a href="https://twitter.com/brakeman/status/307586866721460225">declaring this would not be fixed</a>, it has been fixed. <code class="language-plaintext highlighter-rouge">--compare</code> reverts to old behavior if a report is from an older version.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/284">changes</a>)</p>
+
+<h3 id="remove-referrer-from-html-report-links">Remove Referrer from HTML Report Links</h3>
+
+<p>All warning type links HTML reports now include the <code class="language-plaintext highlighter-rouge">rel="no-referrer"</code> option. This prevents referrer information from being passed along to the linked site (usually the <a href="http://brakemanscanner.org/">Brakeman site</a>), which means people won’t see that you are putting your Brakeman reports on the open internet…</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/286">changes</a>)</p>
+
+<h3 id="fewer-dangerous-send-warnings">Fewer Dangerous Send Warnings</h3>
+
+<p>Now that Brakeman warns on dangerous uses of <code class="language-plaintext highlighter-rouge">constantize</code> and friends, there is no reason to warn on uses of <code class="language-plaintext highlighter-rouge">send</code>, <code class="language-plaintext highlighter-rouge">try</code>, etc. with user input as a target. User input for the method name will continue to warn.</p>
+
+<p>For example, this will no longer generate a warning:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>params[:name].try(:downcase)
+</code></pre></div></div>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/285">changes</a>)</p>
+
+<h3 id="faster-sexp-cloning">Faster Sexp Cloning</h3>
+
+<p>Brakeman spends a lot of time cloning <code class="language-plaintext highlighter-rouge">Sexp</code>s, so this version introduces a slightly faster custom method instead of <code class="language-plaintext highlighter-rouge">Marshal.load(Marshal.dump(...))</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/287">changes</a>)</p>
+
+<h3 id="another-strong-paramter-initializer">Another Strong Paramter Initializer</h3>
+
+<p>Brakeman now detects this approach to adding the <code class="language-plaintext highlighter-rouge">strong_parameters</code> functionality:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActiveRecord::Base.send(:include,  ActiveModel::ForbiddenAttributesProtection)
+</code></pre></div></div>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/289">changes</a>)</p>
+
+<h3 id="report-issues">Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+
+<h3 id="roadmap">Roadmap</h3>
+
+<p>This unexpected release means the roadmap has shifted again. The <a href="https://github.com/presidentbeef/brakeman/wiki/Roadmap">roadmap</a> still has one more release (1.9.5) planned before 2.0. The next release will likely only include bug and false positive fixes. Again, Brakeman 2.0 will <em>definitely</em> include breaking changes, especially for JSON reports.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2013/03/01/brakeman-1-dot-9-3-released">Brakeman 1.9.3 Released</a></h1>
     
     
@@ -629,128 +749,6 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/11/13/brakeman-1-dot-8-3-released">Brakeman 1.8.3 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-11-13 09:20:00 -0700" pubdate  updated >2012-11-13 09:20:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is primarily a false positive reduction release. One major change is the change in dependency from the <code class="language-plaintext highlighter-rouge">json_pure</code> gem to <code class="language-plaintext highlighter-rouge">multi_json</code>.</p>
-
-<p><em>Changes since 1.8.2</em>:</p>
-
-<ul>
-  <li>Use <code class="language-plaintext highlighter-rouge">multi_json</code> gem for better harmony (<a href="https://github.com/presidentbeef/brakeman/issues/164">#164</a>)</li>
-  <li>Performance improvement for call indexing</li>
-  <li>Fix issue with processing HAML files (<a href="https://github.com/presidentbeef/brakeman/issues/168">#168</a>)</li>
-  <li>Handle pre-release versions when processing <code class="language-plaintext highlighter-rouge">Gemfile.lock</code> (<a href="https://github.com/presidentbeef/brakeman/issues/174">#174</a>)</li>
-  <li>Only check first argument of <code class="language-plaintext highlighter-rouge">redirect_to</code> (<a href="https://github.com/presidentbeef/brakeman/issues/98">#98</a>)</li>
-  <li>Fix false positives from <code class="language-plaintext highlighter-rouge">Model.arel_table</code> accesses</li>
-  <li>Fix false positives on redirects to models decorated with Draper gem (<a href="https://github.com/presidentbeef/brakeman/issues/172">#172</a>)</li>
-  <li>Fix false positive on redirect to model association (<a href="https://github.com/presidentbeef/brakeman/issues/111">#111</a>)</li>
-  <li>Fix false positive on <code class="language-plaintext highlighter-rouge">YAML.load</code> (<a href="https://github.com/presidentbeef/brakeman/issues/142">#142</a>)</li>
-  <li>Fix false positive XSS on any <code class="language-plaintext highlighter-rouge">to_i</code> output</li>
-  <li>Fix error on Rails 2 named routes with no args</li>
-  <li>Fix error in rescan of mixins with symbols in method name</li>
-  <li>Do not rescan non-Ruby files in config/</li>
-</ul>
-
-<h3 id="change-to-multijson">Change to MultiJSON</h3>
-
-<p>Brakeman now depends on the <a href="http://rdoc.info/github/intridea/multi_json">multijson</a> gem instead of <code class="language-plaintext highlighter-rouge">json_pure</code>. This should make it easier for people who include Brakeman as a dependency.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/166">changes</a>)</p>
-
-<h3 id="faster-call-indexing">Faster Call Indexing</h3>
-
-<p>Dumb code in the <code class="language-plaintext highlighter-rouge">CallIndex</code> was causing call indexing to be slow on some large applications. This should now be faster and require less memory!</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/180">changes</a>)</p>
-
-<h3 id="fix-haml-processing">Fix HAML Processing</h3>
-
-<p>Some HAML files were causing Brakeman’s alias processing to slow to a crawl. This was due to the template code (sometimes) directly appending to the output variable via <code class="language-plaintext highlighter-rouge">&lt;&lt;</code>. Since Brakeman attempts to treat targets of <code class="language-plaintext highlighter-rouge">&lt;&lt;</code> as arrays, Brakeman was generating large data structures each time <code class="language-plaintext highlighter-rouge">&lt;&lt;</code> was encountered.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/170">changes</a>]</p>
-
-<h3 id="handle-pre-release-versions">Handle Pre-release Versions</h3>
-
-<p>When a <code class="language-plaintext highlighter-rouge">Gemfile.lock</code> file is present in a Rails application, Brakeman uses it to determine the version of Rails in use. Previous versions did not accept pre-release version numbers (like <code class="language-plaintext highlighter-rouge">3.1.2.rc1</code>), leading to version inappropriate warnings.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/176">changes</a>)</p>
-
-<h3 id="redirect-false-positives">Redirect False Positives</h3>
-
-<p>Several false positives related to redirects have been fixed, and the scope of the redirect check is somewhat reduced.</p>
-
-<p>Calls beginning with <code class="language-plaintext highlighter-rouge">Model.arel_table</code> should no longer be treated as user input (in any context).</p>
-
-<p>Model instances returned by the <code class="language-plaintext highlighter-rouge">decorate</code> method in the <a href="https://github.com/drapergem/draper">Draper</a> gem are considered safe.</p>
-
-<p>Redirects to model associations (e.g, <code class="language-plaintext highlighter-rouge">belongs_to :account</code>) are considered safe.</p>
-
-<p>Redirects to method calls with safe values should no longer warn. For example:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_to blah(User.first) #No warning
-</code></pre></div></div>
-
-<p>Additionally, only the first argument of <code class="language-plaintext highlighter-rouge">redirect_to</code> will be checked for user input.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/177">changes</a>)</p>
-
-<h3 id="yaml-false-positive">YAML False Positive</h3>
-
-<p>File access warnings for YAML calls have been reduced to only those calls which actually access files.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/178">changes</a>)</p>
-
-<h3 id="integer-output-false-positives">Integer Output False Positives</h3>
-
-<p>Calls to <code class="language-plaintext highlighter-rouge">to_i</code> should not trigger XSS warnings.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/179">changes</a>)</p>
-
-<h3 id="errors-on-named-routes">Errors on Named Routes</h3>
-
-<p>Rails 2 named routes with no arguments were causing errors, which have now been fixed.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/181">changes</a>)</p>
-
-<h3 id="future-work">Future Work</h3>
-
-<p>Now that RubyParser 3.x is officially released, work is underway to use the new version. This will increase Ruby 1.9 syntax compatibility and remove the need to parse applications with the same Ruby version as the application uses. Additionally, it will allow us to get rid of the vendored version of RubyParser that Brakeman uses for Ruby 1.9. Unfortunately, RubyParser 3.x introduces a lot of incompatibilities and upgrading requires a significant amount of effort.</p>
-
-<p>Another exciting feature in development is limited interprocedural analysis. Brakeman will be able to handle simple things like calls to helper methods in controllers which set instance variables or return user input. This should help with the “obvious” vulnerabilities that Brakeman often misses.</p>
-
-<h3 id="report-issues">Report Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -789,6 +787,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
       </li>
     
@@ -802,10 +804,6 @@ end
     
       <li class="post">
         <a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a>
       </li>
     
   </ul>

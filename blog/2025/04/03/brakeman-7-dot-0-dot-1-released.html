@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Brakeman 0.9.0 Released</title>
+  <title>Brakeman: Brakeman 7.0.1 Released</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,7 +15,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="https://brakemanscanner.org/blog/2011/11/16/brakeman-0-dot-9-0-released"/>
+  <link rel="canonical" href="https://brakemanscanner.org/blog/2025/04/03/brakeman-7-dot-0-dot-1-released"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -34,7 +34,7 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Brakeman 0.9.0 Released" />
+<meta name="twitter:title" content="Brakeman - Brakeman 7.0.1 Released" />
 <meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
 <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 
@@ -77,7 +77,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 0.9.0 Released</h1>
+      <h1 class="entry-title">Brakeman 7.0.1 Released</h1>
     
     
       <p class="meta">
@@ -85,7 +85,7 @@
 
 
 
-<time datetime="2011-11-16 16:23:00 -0700" pubdate  updated >2011-11-16 16:23:00 -0700</time>
+<time datetime="2025-04-03 17:00:00 -0600" pubdate  updated >2025-04-03 17:00:00 -0600</time>
 
 
 </p>
@@ -93,41 +93,73 @@
   </header>
 
 
-<div class="entry-content"><p>Changes:</p>
+<div class="entry-content"><p><em>Changes since 7.0.0:</em></p>
 
 <ul>
-  <li>Process Rails 3 configuration files</li>
-  <li>Check for config.active_record.whitelist_attributes = true</li>
-  <li>Always produce a warning for without_protection =&gt; true</li>
-  <li>Fix CSV output</li>
+  <li>Avoid warning on evaluation of plain strings (<a href="https://github.com/presidentbeef/brakeman/issues/1919">#1919</a>)</li>
+  <li>Enable use of custom/alternative Gemfiles (<a href="https://github.com/presidentbeef/brakeman/issues/1840">#1840</a>, <a href="https://github.com/presidentbeef/brakeman/issues/1907">#1907</a>)</li>
+  <li>Fix error on directory with <code class="language-plaintext highlighter-rouge">rb</code> extension (<a href="https://github.com/viralpraxis">viralpraxis</a>)</li>
+  <li>Support <code class="language-plaintext highlighter-rouge">terminal-table</code> 4.0 (<a href="https://github.com/viralpraxis">Chedli Bourguiba</a>)</li>
+  <li>Better support Prism 1.4.0 (<a href="https://github.com/presidentbeef/brakeman/issues/1927">#1927</a>)</li>
+  <li>Only output timing for each file when using <code class="language-plaintext highlighter-rouge">--debug</code></li>
 </ul>
 
-<p>This is just a small release on the way to 1.0.</p>
+<h3 id="fewer-code-evaluation-warnings">Fewer Code Evaluation Warnings</h3>
 
-<h3 id="rails-3-configs">Rails 3 Configs</h3>
+<p>Brakeman will warn on fewer cases of code evaluation of dynamic strings.</p>
 
-<p>Configurations in <code class="language-plaintext highlighter-rouge">config/application</code> and <code class="language-plaintext highlighter-rouge">config/environments/production.rb</code> will now be parsed.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1920">changes</a>)</p>
 
-<h3 id="check-for-disabled-mass-assignment">Check for Disabled Mass Assignment</h3>
+<h3 id="custom-gemfile">Custom Gemfile</h3>
 
-<p>A new option was added in Rails 3.1 to globally disable mass assignment using <code class="language-plaintext highlighter-rouge">config.active_record.whitelist_attributes = true</code>. Brakeman will now turn off mass assignment warnings if this configuration setting is detected.</p>
+<p>Which <code class="language-plaintext highlighter-rouge">Gemfile</code> to scan can now be configured with <code class="language-plaintext highlighter-rouge">--gemfile</code> or setting the <code class="language-plaintext highlighter-rouge">BUNDLE_GEMFILE</code> option.</p>
 
-<h3 id="always-warn-on-without_protection">Always Warn on without_protection</h3>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1912">changes</a>)</p>
 
-<p>Rails 3.1 adds a way to bypass attribute protection when doing mass assignment.</p>
+<h3 id="errors-matching-directory-names">Errors Matching Directory Names</h3>
 
-<p>For example:</p>
+<p>Thanks to <a href="https://github.com/viralpraxis">viralpraxis</a> for fixing an issue where directory names ending in <code class="language-plaintext highlighter-rouge">.rb</code> were treated like Ruby files.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.new(params, :without_protection =&gt; true)
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1911">changes</a>)</p>
+
+<h3 id="support-for-terminal-table-40">Support for Terminal Table 4.0</h3>
+
+<p>Thanks to <a href="https://github.com/chaadow">Chedli Bourguiba</a> for helping bump the <code class="language-plaintext highlighter-rouge">terminal-table</code> dependency to allow use of the latest version.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1917">changes</a>)</p>
+
+<h3 id="frozen-strings-in-prism">Frozen Strings in Prism</h3>
+
+<p>This release fixes some compatibility with frozen strings in Prism 1.4.0.</p>
+
+<p>These are a little hard to track down, so please report any errors that have not been fixed.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1928">changes</a>)</p>
+
+<h3 id="less-noisy-timing">Less Noisy Timing</h3>
+
+<p>Use of <code class="language-plaintext highlighter-rouge">--timing</code> is now a little less noisy unless <code class="language-plaintext highlighter-rouge">--debug</code> is also set.</p>
+
+<p>Previously, processing time for each individual file was shown. Now the default is to only show processing time for each step in the scan.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1908">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ec751d439820ed9d04d4ed00ff4fb21ac91689fcbb6cc564b786a4061c8f720d  brakeman-7.0.1.gem
+94c3b2801ce8c35db9354b778feb06dcfafc8273c3f09d398771912de793aa52  brakeman-lib-7.0.1.gem
+a3a9b3c2ecd5f34abbc689f14ad3abd7f4380a7ffcb21c2310f7a74efc543805  brakeman-min-7.0.1.gem
 </code></pre></div></div>
 
-<p>Brakeman will now <em>always</em> warn when <code class="language-plaintext highlighter-rouge">without_protection</code> is used, even if mass assignment is disabled or attributes are protected on that model.</p>
+<h3 id="reporting-issues">Reporting Issues</h3>
 
-<h3 id="fix-csv-output">Fix CSV Output</h3>
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
 
-<p>Brakeman reports using the CSV format should work once again.</p>
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
 
-<p>There is a bug in Ruport when using Ruby 1.9.2 and CSV output. A temporary patch has been added until this is resolved.</p>
+<p>Hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
 </div>
 
 
@@ -141,7 +173,7 @@
 
 
 
-<time datetime="2011-11-16 16:23:00 -0700" pubdate  updated >2011-11-16 16:23:00 -0700</time>
+<time datetime="2025-04-03 17:00:00 -0600" pubdate  updated >2025-04-03 17:00:00 -0600</time>
 
 
 

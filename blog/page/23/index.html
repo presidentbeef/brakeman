@@ -80,6 +80,120 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/02/08/brakeman-1-dot-3-0-released">Brakeman 1.3.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-02-08 15:11:00 -0700" pubdate  updated >2012-02-08 15:11:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Thanks to everyone who reported problems and suggestions this time around!</p>
+
+<p>This release includes some new features, better performance on large projects, and more detection criteria. Warnings reported may change after upgrading.</p>
+
+<p><em>Changes since 1.2.2:</em></p>
+
+<ul>
+  <li>Add file paths to HTML report</li>
+  <li>Add caching of filters</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">--skip-files</code> option</li>
+  <li>Add support for <code class="language-plaintext highlighter-rouge">attr_protected</code></li>
+  <li>Add detection of request.env as user input</li>
+  <li>Descriptions of checks in <code class="language-plaintext highlighter-rouge">-k</code> output</li>
+  <li>Improved processing of named scopes</li>
+  <li>Check for mass assignment in <code class="language-plaintext highlighter-rouge">ActiveRecord::Associations::AssociationCollection#build</code></li>
+  <li>Better variable substitution</li>
+  <li>Table output option for rescan reports</li>
+</ul>
+
+<h3 id="file-paths-in-html-report">File Paths in HTML Report</h3>
+
+<p>In the HTML output, any warning which has context associated with it (visible when clicking on the warning message) will now include the file name at the top of the code snippet.</p>
+
+<h3 id="filter-caching">Filter Caching</h3>
+
+<p>Filters (using <code class="language-plaintext highlighter-rouge">before_filter</code>) are now only parsed once, instead of for everytime they are used. This has greatly improved performance when scanning some large projects.</p>
+
+<h3 id="option-to-skip-files">Option to Skip Files</h3>
+
+<p>A list of files to skip can be provided with the <code class="language-plaintext highlighter-rouge">--skip-files</code> option. This will skip any initializers, libraries, controllers, models, or views that match the file names provided. The file names to skip are matched against the end of the absolute path. That is, <code class="language-plaintext highlighter-rouge">blah.rb</code> will skip <em>any</em> file with a name ending in <code class="language-plaintext highlighter-rouge">blah.rb</code>. This means it is not necessary to provide the full path to a file.</p>
+
+<h3 id="support-for-blacklisting-attributes">Support for Blacklisting Attributes</h3>
+
+<p>Previously, Brakeman ignored uses of <code class="language-plaintext highlighter-rouge">attr_protected</code>. Ideally, <code class="language-plaintext highlighter-rouge">attr_accessible</code> should always be used to whitelist attributes that can be set using mass assignment. This way, attributes can never be “accidentally” exposed. However, it can also be tedious for large models.</p>
+
+<p>With this release, Brakeman will downgrade mass assignment warnings to “weak” confidence if <code class="language-plaintext highlighter-rouge">attr_protected</code> is used, as well as suggesting that <code class="language-plaintext highlighter-rouge">attr_accessible</code> be used instead.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">--ignore-protected</code> option can be used to suppress any warnings for models that use <code class="language-plaintext highlighter-rouge">attr_protected</code>.</p>
+
+<h3 id="request-environment-is-user-input">Request Environment is User Input</h3>
+
+<p><code class="language-plaintext highlighter-rouge">request.env</code> will now be treated as user input.</p>
+
+<h3 id="check-descriptions">Check Descriptions</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">-k</code> option now includes descriptions of each check.</p>
+
+<h3 id="named-scope-improvements">Named Scope Improvements</h3>
+
+<p>The 1.2.0 release added checking for SQL injection in named scopes, but it was not very accurate. This has been improved.</p>
+
+<h3 id="better-variable-substitution">Better Variable Substitution</h3>
+
+<p>Variable substitution would sometimes “explode” if a set of code was processed for aliasing several times.</p>
+
+<p>For example,</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
+
+puts x
+</code></pre></div></div>
+
+<p>Might become</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
+
+puts clean(clean(clean(clean(x))))
+</code></pre></div></div>
+
+<p>This should now be prevented, so it would just become</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = clean(x)
+
+puts clean(x)
+</code></pre></div></div>
+
+<p>There may be subtle issues with this code (although I have not seen any yet), but it’s better than creating a bunch of useless substitutions.</p>
+
+<h3 id="table-output-for-rescan-reports">Table Output for Rescan Reports</h3>
+
+<p><code class="language-plaintext highlighter-rouge">RescanReport#to_s(true)</code> will now output formatted tables, thanks to <a href="https://github.com/presidentbeef/brakeman/pull/33">Dave Worth</a>.</p>
+
+<h3 id="issues">Issues?</h3>
+
+<p>As usual, please report any issues on <a href="https://github.com/presidentbeef/brakeman/issues">GitHub</a>, send a tweet to <a href="https://twitter.com/brakeman">@Brakeman</a>, or send an email to the <a href="http://librelist.com/browser/brakeman/">mailing list</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/01/26/brakeman-1-dot-2-2-released">Brakeman 1.2.2 Released</a></h1>
     
     
@@ -364,108 +478,6 @@
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2011/12/08/brakeman-1-dot-0-released">Brakeman 1.0 Released!</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-12-08 01:35:00 -0700" pubdate  updated >2011-12-08 01:35:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>While the step up to 1.0 was essentially forced by major changes since 0.9.2, this is still an important release for Brakeman. Internally, Brakeman is no longer reliant on a global options variable, allowing it to be used as a library inside other applications. Also, all Brakeman modules, classes, and constants have been placed inside the Brakeman namespace.</p>
-
-<p>Support for Rails 3 is continuing to improve, although it is probably a good idea to run Brakeman with the <code>-m</code> option to see what routes it is seeing. If you receive a message that says &#8220;Error while processing routes - assuming all public controller methods are actions,&#8221; please consider opening an issue and (if possible) providing your <code>routes.rb</code> file as evidence.</p>
-
-<p>The performance of vulnerability checks that search for calls to specific methods (CheckExecute, CheckFileAccess, CheckSQL, etc.) has been drastically improved with the introduction of a call site index. If your scans were spending a lot of time running checks, you should see significant decrease in run time (although memory use may be slightly higher).</p>
-
-<p>If you are looking for an introduction to Brakeman, there are some <a href="http://brakemanscanner.org/docs/presentations/">presentations available</a> to watch or read.</p>
-
-<p>As usual, please <a href="https://github.com/presidentbeef/brakeman/issues">report</a> any issues! You can also send a tweet to <a href="http://twitter.com/brakeman">@Brakeman</a> if you have any questions.</p>
-
-<p><em>Changes since 1.0rc1:</em></p>
-
-<ul>
-<li>Better handling of assignments inside ifs</li>
-<li>Check more expressions for SQL injection</li>
-<li>Use latest ruby_parser for better 1.9 syntax support</li>
-<li>Better behavior for Brakeman as a library</li>
-</ul>
-
-<h3>Assignments Inside &#8216;if&#8217; Branches</h3>
-
-<p>Brakeman is now a little smarter about handling assignments inside <code>if</code>.</p>
-
-<p>For example:</p>
-
-<pre><code>if some_condition
-  x = params[:blah]
-else
-  x = "no blah"
-end
-</code></pre>
-
-<p>Previously, <code>x</code> would end up with the last value encountered, with no regard for execution branches. In this release, Brakeman will now combine the branches (unfortunately, Brakeman still operates along a &#8216;no branching&#8217; policy) and <code>x</code> will be given the value of <code>params[:blah] or "no blah"</code>.</p>
-
-<p>While not strictly semantically sound (and, trust me, Brakeman does many things that are not), it will still catch problems like</p>
-
-<pre><code>User.all(conditions =&gt; "blah = '#{x}'")
-</code></pre>
-
-<p>Thanks to <a href="http://osdir.com/ml/RubyonRails:Core/2011-11/msg00098.html">this message</a> on Rails Core for mentioning this problem.</p>
-
-<h3>Use Latest ruby_parser</h3>
-
-<p>A few releases ago, Brakeman included a slightly modified version of <a href="https://github.com/seattlerb/ruby_parser">ruby_parser</a> to help with Ruby 1.9 syntax issues.</p>
-
-<p>The very latest ruby_parser source has much better 1.9 support, but there has been no official release yet. So Brakeman comes with the latest code. This is necessary because Rails 3 will generate 1.9 syntax if you happen to run it with Ruby 1.9 when generating code.</p>
-
-<h3>Brakeman as a Library</h3>
-
-<p>While it is now possible to use Brakeman as a library (essentially just <code>Brakeman.run</code>), it is not very well polished. This release improves it slightly from the release candidate.</p>
-
-<h3>More SQL Injection</h3>
-
-<p><code>CheckSQL</code> will now search most expressions inside a SQL call for user input and string interpolation.</p>
-
-<h3>Changes Since 0.9.2</h3>
-
-<p>As a summary, here are the changes since 0.9.2:</p>
-
-<ul>
-<li>Brakeman can now be used as a library</li>
-<li>Faster call search</li>
-<li>Add option to return error code if warnings are found (tw-ngreen)</li>
-<li>Allow truncated messages to be expanded in HTML</li>
-<li>Keep expanded context in view in HTML output</li>
-<li>Fix summary when using warning thresholds</li>
-<li>Better support for Rails 3 routes</li>
-<li>Reduce SQL injection duplicate warnings</li>
-<li>Lower confidence on mass assignment with no user input</li>
-<li>Ignore mass assignment using all literal arguments</li>
-</ul>
-
-<p>See the <a href="http://brakemanscanner.org/blog/2011/12/05/brakeman-1-dot-0-release-candidate-available/">earlier post</a> for more details.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -504,6 +516,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
       </li>
     
@@ -517,10 +533,6 @@ end
     
       <li class="post">
         <a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a>
       </li>
     
   </ul>

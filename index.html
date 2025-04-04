@@ -80,6 +80,102 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2025-04-03 17:00:00 -0600" pubdate  updated >2025-04-03 17:00:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>Changes since 7.0.0:</em></p>
+
+<ul>
+  <li>Avoid warning on evaluation of plain strings (<a href="https://github.com/presidentbeef/brakeman/issues/1919">#1919</a>)</li>
+  <li>Enable use of custom/alternative Gemfiles (<a href="https://github.com/presidentbeef/brakeman/issues/1840">#1840</a>, <a href="https://github.com/presidentbeef/brakeman/issues/1907">#1907</a>)</li>
+  <li>Fix error on directory with <code class="language-plaintext highlighter-rouge">rb</code> extension (<a href="https://github.com/viralpraxis">viralpraxis</a>)</li>
+  <li>Support <code class="language-plaintext highlighter-rouge">terminal-table</code> 4.0 (<a href="https://github.com/viralpraxis">Chedli Bourguiba</a>)</li>
+  <li>Better support Prism 1.4.0 (<a href="https://github.com/presidentbeef/brakeman/issues/1927">#1927</a>)</li>
+  <li>Only output timing for each file when using <code class="language-plaintext highlighter-rouge">--debug</code></li>
+</ul>
+
+<h3 id="fewer-code-evaluation-warnings">Fewer Code Evaluation Warnings</h3>
+
+<p>Brakeman will warn on fewer cases of code evaluation of dynamic strings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1920">changes</a>)</p>
+
+<h3 id="custom-gemfile">Custom Gemfile</h3>
+
+<p>Which <code class="language-plaintext highlighter-rouge">Gemfile</code> to scan can now be configured with <code class="language-plaintext highlighter-rouge">--gemfile</code> or setting the <code class="language-plaintext highlighter-rouge">BUNDLE_GEMFILE</code> option.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1912">changes</a>)</p>
+
+<h3 id="errors-matching-directory-names">Errors Matching Directory Names</h3>
+
+<p>Thanks to <a href="https://github.com/viralpraxis">viralpraxis</a> for fixing an issue where directory names ending in <code class="language-plaintext highlighter-rouge">.rb</code> were treated like Ruby files.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1911">changes</a>)</p>
+
+<h3 id="support-for-terminal-table-40">Support for Terminal Table 4.0</h3>
+
+<p>Thanks to <a href="https://github.com/chaadow">Chedli Bourguiba</a> for helping bump the <code class="language-plaintext highlighter-rouge">terminal-table</code> dependency to allow use of the latest version.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1917">changes</a>)</p>
+
+<h3 id="frozen-strings-in-prism">Frozen Strings in Prism</h3>
+
+<p>This release fixes some compatibility with frozen strings in Prism 1.4.0.</p>
+
+<p>These are a little hard to track down, so please report any errors that have not been fixed.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1928">changes</a>)</p>
+
+<h3 id="less-noisy-timing">Less Noisy Timing</h3>
+
+<p>Use of <code class="language-plaintext highlighter-rouge">--timing</code> is now a little less noisy unless <code class="language-plaintext highlighter-rouge">--debug</code> is also set.</p>
+
+<p>Previously, processing time for each individual file was shown. Now the default is to only show processing time for each step in the scan.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1908">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ec751d439820ed9d04d4ed00ff4fb21ac91689fcbb6cc564b786a4061c8f720d  brakeman-7.0.1.gem
+94c3b2801ce8c35db9354b778feb06dcfafc8273c3f09d398771912de793aa52  brakeman-lib-7.0.1.gem
+a3a9b3c2ecd5f34abbc689f14ad3abd7f4380a7ffcb21c2310f7a74efc543805  brakeman-min-7.0.1.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a></h1>
     
     
@@ -571,156 +667,6 @@ dbc2f9a3b61760c03737cf701f5a1dfe634fb14e8388968e056a0f77effab018  brakeman-min-6
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2023-12-04 22:30:00 -0700" pubdate  updated >2023-12-04 22:30:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It’s been a while!</p>
-
-<p><em>Changes since 6.0.1:</em></p>
-
-<ul>
-  <li>Add check for unfiltered search with Ransack</li>
-  <li>Add <code class="language-plaintext highlighter-rouge">--timing</code> to add timing duration for scan steps</li>
-  <li>Add <code class="language-plaintext highlighter-rouge">PG::Connection.escape_string</code> as a SQL sanitization method (<a href="https://github.com/joevin-slq-docto">Joévin Soulenq</a>)</li>
-  <li>Handle <code class="language-plaintext highlighter-rouge">class &lt;&lt; self</code></li>
-  <li>Fix class method lookup in parent classes</li>
-  <li>Fix keyword splats in filter arguments</li>
-</ul>
-
-<h3 id="ransack-searches">Ransack Searches</h3>
-
-<p><a href="https://activerecord-hackery.github.io/ransack/">Ransack</a> is a popular library for enabling search against ActiveRecord attributes.</p>
-
-<p>It was originally intended for administrative interfaces (like those provided by ActiveAdmin).</p>
-
-<p>Use usually looks like</p>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Car</span><span class="p">.</span><span class="nf">ransack</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:q</span><span class="p">])</span>
-</code></pre></div></div>
-
-<p>And a url might look like</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>example.com?q[make_start]=vol
-</code></pre></div></div>
-
-<p>This might generate a query like</p>
-
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">make</span> <span class="k">FROM</span> <span class="n">cars</span> <span class="k">WHERE</span> <span class="n">make</span> <span class="k">LIKE</span> <span class="s1">'vol%'</span><span class="p">;</span>
-</code></pre></div></div>
-
-<p>The library does clever things with the query parameter key.
-In this case, <code class="language-plaintext highlighter-rouge">make</code> is the column and <code class="language-plaintext highlighter-rouge">start</code> means match values that start with the search term
-passed in.</p>
-
-<p>However, it’s also possible to specify columns on related tables, such as</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>example.com?q[owner_name_start]=just
-</code></pre></div></div>
-
-<p>Which would search the <code class="language-plaintext highlighter-rouge">name</code> column on the <code class="language-plaintext highlighter-rouge">owners</code> table (assuming <code class="language-plaintext highlighter-rouge">Car</code> has an association to <code class="language-plaintext highlighter-rouge">Owner</code>).</p>
-
-<p>Prior to Ransack 4.0, the default configuration allowed searching <em>all</em> columns on a table as
-well as <em>all</em> columns on associated tables.</p>
-
-<p><a href="https://positive.security/blog/ransack-data-exfiltration">Some folks figured out this can be used to extract secret values</a> by brute-forcing the value one character at a time.</p>
-
-<p>To fix this issue, explicitly <a href="https://activerecord-hackery.github.io/ransack/going-further/other-notes/#authorization-allowlistingdenylisting">allow list the attributes and associations available</a> to search.</p>
-
-<p>In Ransack 4.0 and later, it is required to set up an allowlist.</p>
-
-<p>Brakeman will warn about unrestricted use of <code class="language-plaintext highlighter-rouge">ransack</code>:</p>
-
-<ul>
-  <li><strong>High</strong> if no allow-listing methods are found in the class hierarchy of the model on which <code class="language-plaintext highlighter-rouge">ransack</code> is called</li>
-  <li><strong>Medium</strong> if the use happens to be in a file with <code class="language-plaintext highlighter-rouge">admin</code> in the path</li>
-  <li><strong>Low</strong> if the call to <code class="language-plaintext highlighter-rouge">ransack</code> is not on a class</li>
-</ul>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1799">changes</a>)</p>
-
-<h3 id="timing-output">Timing Output</h3>
-
-<p>Use <code class="language-plaintext highlighter-rouge">--timing</code> to output duration of various steps during the scan.</p>
-
-<p>Useful for debugging slowness.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1801">changes</a>)</p>
-
-<h3 id="another-sql-escaping-method">Another SQL Escaping Method</h3>
-
-<p>Brakeman will not warn about use of <code class="language-plaintext highlighter-rouge">escape_string</code> in SQL queries.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1789">changes</a>)</p>
-
-<h3 id="class-methods">Class Methods</h3>
-
-<p>Brakeman will now treat methods defined inside of <code class="language-plaintext highlighter-rouge">class &lt;&lt; self</code> as class methods.</p>
-
-<p>This does mean fingerprints of warnings found inside those methods will change.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1792">changes</a>)</p>
-
-<h3 id="class-method-lookups">Class Method Lookups</h3>
-
-<p>Searching for class method definitions in parent classes will now actually look for class methods, not instance methods.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1796">changes</a>)</p>
-
-<h3 id="keyword-splats-in-filters">Keyword Splats in Filters</h3>
-
-<p>Code like</p>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">before_action</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">do</span>
-  <span class="c1"># ...</span>
-<span class="k">end</span>
-</code></pre></div></div>
-
-<p>Will no longer cause an error.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1800">changes</a>)</p>
-
-<h3 id="checksums">Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0d4066936dd58f0fe757d0ff1ec0744479be9ff06c771be4b581bdf0cb8d7403  brakeman-6.1.0.gem
-e7c9e739a43ec719d981e9b401b980c11cbe81a333ccb166965b9264ef413cc8  brakeman-lib-6.1.0.gem
-709813eff010c9605dc09b9fcbe60742dd3b9e757ec7131808988a14b83eee23  brakeman-min-6.1.0.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -759,6 +705,10 @@ e7c9e739a43ec719d981e9b401b980c11cbe81a333ccb166965b9264ef413cc8  brakeman-lib-6
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
       </li>
     
@@ -772,10 +722,6 @@ e7c9e739a43ec719d981e9b401b980c11cbe81a333ccb166965b9264ef413cc8  brakeman-lib-6
     
       <li class="post">
         <a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a>
       </li>
     
   </ul>

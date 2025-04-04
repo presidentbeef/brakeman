@@ -80,6 +80,123 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/07/31/brakeman-1-dot-7-0-released">Brakeman 1.7.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-07-31 17:44:00 -0600" pubdate  updated >2012-07-31 17:44:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release includes improvements to Rails 3 route processing, better performance, several bug fixes, and more!</p>
+
+<p><em>Changes since 1.6.2</em>:</p>
+
+<ul>
+  <li>Add check for CVE-2012-3424</li>
+  <li>Link report types to descriptions on website</li>
+  <li>Report errors raised while running check</li>
+  <li>Improve processing of Rails 3 routes</li>
+  <li>Improve file access check</li>
+  <li>Avoid warning on non-ActiveModel models</li>
+  <li>Fix how <code class="language-plaintext highlighter-rouge">params[:x] ||=</code> is handled</li>
+  <li>Treat user input in <code class="language-plaintext highlighter-rouge">or</code> expressions as immediate values</li>
+  <li>Fix processing of negative array indexes</li>
+  <li>Fix “empty char-class” error</li>
+  <li>Speed improvements by stripping down SexpProcessor</li>
+  <li>Add line breaks to truncated table rows</li>
+</ul>
+
+<h3 id="check-for-http-auth-digest-dos">Check for HTTP Auth Digest DoS</h3>
+
+<p><a href="https://groups.google.com/d/topic/rubyonrails-security/vxJjrc15qYM/discussion">CVE-2012-3424</a>, a potential denial of service vulnerability in how Rails handles HTTP authentication digest parameters, was recently announced. It affects Rails 3.x, and is fixed in 3.0.16, 3.1.7, and 3.2.7.</p>
+
+<p>Brakeman will generate a warning for the Rails versions affected, but will only report a high confidence warning if <code class="language-plaintext highlighter-rouge">authenticate_or_request_with_http_digest</code> or <code class="language-plaintext highlighter-rouge">authenticate_with_http_digest</code> methods are called.</p>
+
+<h3 id="links-to-warning-information">Links to Warning Information</h3>
+
+<p>HTML reports now link warning types to descriptions on the Brakeman website. JSON reports will also include the link information. Due to this change, it is not possible to compare JSON reports from previous versions using the <code class="language-plaintext highlighter-rouge">--compare</code> option.</p>
+
+<p>Suggestions and <a href="https://github.com/presidentbeef/brakeman-site">pull requests</a> for improving the documention are welcome!</p>
+
+<h3 id="report-check-errors">Report Check Errors</h3>
+
+<p>Previously, errors encounted while running checks were not included in reports. This has been fixed.</p>
+
+<h3 id="better-rails-3-route-processing">Better Rails 3 Route Processing</h3>
+
+<p>Even the simple information Brakeman uses (which methods are routes) is difficult to extract from Rails 3 routes due to all the different options it offers. This release should decrease the number of “Error while processing routes” messages that come up.</p>
+
+<p>See <a href="https://github.com/presidentbeef/brakeman/pull/116">this pull request</a> for more information about specific fixes.</p>
+
+<h3 id="improved-file-access-check">Improved File Access Check</h3>
+
+<p>The check for user input in file access calls has been improved so the confidence of the warnings will vary according to how the user input is used, like most other checks.</p>
+
+<p>Additionally, the check will now respect the <code class="language-plaintext highlighter-rouge">--report-direct</code> option.</p>
+
+<h3 id="no-sqli-warnings-for-non-activemodel">No SQLi Warnings for Non-ActiveModel</h3>
+
+<p>Models which do not inherit from <code class="language-plaintext highlighter-rouge">ActiveRecord::Base</code> will no longer be reported in SQL injection warnings.</p>
+
+<h3 id="default-assignment-to-params">Default Assignment to <code class="language-plaintext highlighter-rouge">params</code></h3>
+
+<p>Normally, when Brakeman processes an assignment like <code class="language-plaintext highlighter-rouge">x ||= y</code>, it will assign <code class="language-plaintext highlighter-rouge">y</code> to <code class="language-plaintext highlighter-rouge">x</code> if no previous value is found for <code class="language-plaintext highlighter-rouge">x</code>.</p>
+
+<p>However, in this case:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>params[:x] ||= y
+</code></pre></div></div>
+
+<p>The information that the left hand side is a <code class="language-plaintext highlighter-rouge">params</code> hash is lost.</p>
+
+<p>This has been changed so default assignment to a <code class="language-plaintext highlighter-rouge">params</code> hash will not replace the entire value, but will handle it as <code class="language-plaintext highlighter-rouge">params[:x] || y</code>.</p>
+
+<h3 id="user-input-in-or-expressions">User Input in <code class="language-plaintext highlighter-rouge">or</code> Expressions</h3>
+
+<p>Previously, unescaped output like</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= params[:x] || z %&gt;
+</code></pre></div></div>
+
+<p>would have been reported as a weak confidence warning. This has been changed so that any user input in an <code class="language-plaintext highlighter-rouge">or</code> expression will be considered immediate (versus “indirect”) output and will likely result in high confidence warnings.</p>
+
+<h3 id="speed-improvements">Speed Improvements</h3>
+
+<p>Scan times should decrease by 15-25% with this release. This is mostly due to stripping unused bits out of SexpProcessor.</p>
+
+<h3 id="bug-fixes">Bug Fixes</h3>
+
+<p>Besides errors raised when processing Rails 3 routes, the <code class="language-plaintext highlighter-rouge">Result must be a Sexp, was Symbol::array</code> and <code class="language-plaintext highlighter-rouge">empty char-class</code> errors should be resolved now.</p>
+
+<p>Please report any errors raised when performing scans, as they are usually bugs.</p>
+
+<h3 id="report-issues">Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/06/12/brakeman-1-dot-6-2-released">Brakeman 1.6.2 Released</a></h1>
     
     
@@ -480,87 +597,6 @@ user.send(method)
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/03/22/brakeman-1-dot-5-2-released-important-fixes">Brakeman 1.5.2 Released - Important Fixes</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-03-22 13:34:00 -0600" pubdate  updated >2012-03-22 13:34:00 -0600</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is update includes some important fixes. All users of the <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin are particularly encouraged to upgrade.</p>
-
-<p><em>Changes since 1.5.1:</em></p>
-
-<ul>
-  <li>Fix handling of views when using <code class="language-plaintext highlighter-rouge">rails_xss</code></li>
-  <li>Fix rescanning of lib files (Neil Matatall)</li>
-  <li>Fix <code class="language-plaintext highlighter-rouge">link_to</code> checks for Rails 2.0 and 2.3</li>
-  <li>Revert to <code class="language-plaintext highlighter-rouge">ruby_parser</code> 2.3.1 for Ruby 1.8 parsing</li>
-  <li>Only warn on user input in render paths</li>
-  <li>Output stack trace on interrupt when debugging</li>
-  <li>Ignore user input in if statement conditions</li>
-  <li>Fix –skip-files option with Ruby 1.8</li>
-</ul>
-
-<h3 id="views-with-rails_xss">Views with rails_xss</h3>
-
-<p>Some previous changes to make sure Brakeman was processing ERB views the same way as the <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin unfortunately broke the processing of those views.</p>
-
-<p>These changes caused Brakeman to not report <em>any</em> output from ERB views when the <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin was in use, hiding any XSS vulnerabilities in those views.</p>
-
-<p>This now fixed, so if you are using the <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin, it is highly recommended to upgrade.</p>
-
-<h3 id="rescanning-lib-files">Rescanning lib/ Files</h3>
-
-<p>Rescanning changed files in the <code class="language-plaintext highlighter-rouge">lib</code> directory was broken, but Neil fixed it!</p>
-
-<h3 id="link_to-checks">link_to Checks</h3>
-
-<p>In Rails 2.3, the URL is escaped, but not the body of the link. In Rails 2.0, neither argument is escaped.</p>
-
-<p>In this release, the check for XSS in <code class="language-plaintext highlighter-rouge">link_to</code> has been updated to handle <code class="language-plaintext highlighter-rouge">link_to</code> with blocks and to warn in Rails 2.0.x if any user input is used as an argument.</p>
-
-<h3 id="revert-to-ruby_parser-for-ruby-18">Revert to ruby_parser for Ruby 1.8</h3>
-
-<p>Brakeman has been using a vendored version of <a href="https://github.com/seattlerb/ruby_parser">ruby_parser</a> with some updates to Ruby 1.9 syntax parsing. Unfortunately, that version also introduced some regressions for parsing Ruby 1.8 syntax.</p>
-
-<p>To handle this, Brakeman will now only use the vendored version for 1.9 parsing, but the regular gem version for 1.8 syntax parsing. This should fix some parse errors people are seeing for Ruby 1.8 apps.</p>
-
-<h3 id="dynamic-render-path-updates">Dynamic Render Path Updates</h3>
-
-<p>The check for dynamic render paths was not very good, but it is better now. “Dynamic Render Path” warnings should only be raised when user input is actually used to determine what view, partial, or file to render.</p>
-
-<h3 id="stacktrace-output">Stacktrace Output</h3>
-
-<p>Brakeman will now output a stacktrace if interrupted while running with the <code class="language-plaintext highlighter-rouge">-d</code> option. This is mostly helpful when Brakeman appears to “hang”.</p>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a>!</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -599,6 +635,10 @@ user.send(method)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
       </li>
     
@@ -612,10 +652,6 @@ user.send(method)
     
       <li class="post">
         <a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a>
       </li>
     
   </ul>
