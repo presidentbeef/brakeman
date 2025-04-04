@@ -414,6 +414,17 @@ class BrakemanOptionsTest < Minitest::Test
     ENV.delete 'BUNDLE_GEMFILE'
   end
 
+  def test_empty_gemfile_environment
+    ENV['BUNDLE_GEMFILE'] = ''
+
+    options = { app_path: '.' }
+    options = Brakeman.set_options(options)
+
+    assert_nil options[:gemfile]
+  ensure
+    ENV.delete 'BUNDLE_GEMFILE'
+  end
+
   private
 
   def setup_options_from_input(*args)
