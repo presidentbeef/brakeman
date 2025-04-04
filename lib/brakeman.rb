@@ -130,7 +130,7 @@ module Brakeman
 
     # Use ENV value only if option was not already explicitly set
     # (i.e. prefer commandline option over environment variable).
-    if options[:gemfile].nil? and ENV['BUNDLE_GEMFILE']
+    if options[:gemfile].nil? and ENV['BUNDLE_GEMFILE'] and not ENV['BUNDLE_GEMFILE'].empty?
       options[:gemfile] = ENV['BUNDLE_GEMFILE']
     end
 
