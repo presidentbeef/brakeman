@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Brakeman: Brakeman 2.1.2 Released - Important Security Update</title>
+  <title>Brakeman: Brakeman 7.0.2 Released</title>
   <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,7 +15,7 @@
 
   <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
 
-  <link rel="canonical" href="https://brakemanscanner.org/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update"/>
+  <link rel="canonical" href="https://brakemanscanner.org/blog/2025/04/04/brakeman-7-dot-0-dot-2-released"/>
   <link href="/favicon.png" rel="shortcut icon" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -34,7 +34,7 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Brakeman 2.1.2 Released - Important Security Update" />
+<meta name="twitter:title" content="Brakeman - Brakeman 7.0.2 Released" />
 <meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
 <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 
@@ -77,7 +77,7 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
-      <h1 class="entry-title">Brakeman 2.1.2 Released - Important Security Update</h1>
+      <h1 class="entry-title">Brakeman 7.0.2 Released</h1>
     
     
       <p class="meta">
@@ -85,7 +85,7 @@
 
 
 
-<time datetime="2013-09-18 01:38:00 -0600" pubdate  updated >2013-09-18 01:38:00 -0600</time>
+<time datetime="2025-04-04 11:00:00 -0600" pubdate  updated >2025-04-04 11:00:00 -0600</time>
 
 
 </p>
@@ -93,48 +93,34 @@
   </header>
 
 
-<div class="entry-content"><p><em>Important</em>: Contrary to the “Brakeman Philosophy,” there is one situation in which Brakeman attempts to load files from an application. This is a security risk since the code in the files would be executed (typical <code class="language-plaintext highlighter-rouge">require</code> behavior). Note that this is only a real problem if running Brakeman against code outside one’s control. Since most users are scanning their own code, this should not be a concern for the majority of Brakeman users.</p>
-
-<p><em>Changes since 2.1.1:</em></p>
+<div class="entry-content"><p><em>Changes since 7.0.1:</em></p>
 
 <ul>
-  <li>Do not attempt to load custom Haml filters</li>
-  <li>Do not warn about <code class="language-plaintext highlighter-rouge">to_json</code> XSS in Rails 4</li>
-  <li>Remove fuzzy matching on dangerous <code class="language-plaintext highlighter-rouge">attr_accessible</code> values</li>
-  <li>Add –table-width option to set width of text reports (<a href="https://github.com/ssendev">ssendev</a>)</li>
+  <li>Fix error with empty <code class="language-plaintext highlighter-rouge">BUNDLE_GEMFILE</code> env variable</li>
 </ul>
 
-<h3 id="custom-haml-filters">Custom Haml Filters</h3>
+<h3 id="error-on-empty-environment-variable">Error on Empty Environment Variable</h3>
 
-<p>Brakeman no longer attempts to load custom Haml filters. This was a hack (from nearly three years ago) to help compile some Haml templates. It was recently noted that this introduces a security risk when scanning untrusted code.</p>
+<p>Fixed.</p>
 
-<p>For now, custom Haml filters will cause a Brakeman error and the Haml templates using them will not be scanned.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1932">changes</a>)</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/commit/8a6ae98df3039bf5f3d7cc0852efb1006362f143#L1L3">changes</a>)</p>
+<h3 id="checksums">Checksums</h3>
 
-<h3 id="json-output-in-rails-4">JSON Output in Rails 4</h3>
+<p>The SHA256 sums for this release are:</p>
 
-<p>As of Rails 4, the output of <code class="language-plaintext highlighter-rouge">to_json</code> is now safe by default. Brakeman should no longer warn about cross-site scripting with <code class="language-plaintext highlighter-rouge">to_json</code> in Rails 4 applications.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/392">changes</a>)</p>
-
-<h3 id="less-fuzzy-mass-assignment">Less Fuzzy Mass Assignment</h3>
-
-<p>Brakeman no longer uses fuzzy matching for potentially dangerous model attributes allowed for mass assignment, such as any value containing <code class="language-plaintext highlighter-rouge">admin</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/390">changes</a>)</p>
-
-<h3 id="text-report-width-option">Text Report Width Option</h3>
-
-<p>The width of text reports can now be controlled with the <code class="language-plaintext highlighter-rouge">--table-width</code> option. For example, this can be useful when capturing text output to a file.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/387">changes</a>)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>b602d91bcec6c5ce4d4bc9e081e01f621c304b7a69f227d1e58784135f333786  brakeman-7.0.2.gem
+2ca8d1a8bc248e969e64db33cc555cb82418402af9e04efeb74c7d6ffc85aaab  brakeman-lib-7.0.2.gem
+0efb841b7b5252dff97699f041e9e67d661d78f87c1874aaa789e91cb9c94b17  brakeman-min-7.0.2.gem
+</code></pre></div></div>
 
 <h3 id="reporting-issues">Reporting Issues</h3>
 
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
 
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
 </div>
 
 
@@ -148,7 +134,7 @@
 
 
 
-<time datetime="2013-09-18 01:38:00 -0600" pubdate  updated >2013-09-18 01:38:00 -0600</time>
+<time datetime="2025-04-04 11:00:00 -0600" pubdate  updated >2025-04-04 11:00:00 -0600</time>
 
 
 

@@ -80,6 +80,105 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2013/10/28/brakeman-2-dot-2-0-released">Brakeman 2.2.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2013-10-28 10:30:00 -0600" pubdate  updated >2013-10-28 10:30:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a small release, with some bug and false positive fixes alongside initial support for Rails engines and a new check for detailed exceptions.</p>
+
+<p><em>Changes since 2.2.0:</em></p>
+
+<ul>
+  <li>Support scanning Rails engines (<a href="https://github.com/phene">Geoffrey Hichborn</a>)</li>
+  <li>Ignore redirects to models using <code class="language-plaintext highlighter-rouge">friendly_id</code> (<a href="https://github.com/aj0strow">AJ Ostrow</a>)</li>
+  <li>Add check for detailed exceptions in production (<a href="https://github.com/presidentbeef/brakeman/issues/391">#391</a>)</li>
+  <li>Use Rails version from Gemfile if it is available (<a href="https://github.com/presidentbeef/brakeman/issues/398">#398</a>)</li>
+  <li>Only add routes with actual names (<a href="https://github.com/presidentbeef/brakeman/issues/395">#395</a>)</li>
+  <li>Reduce command injection false positives</li>
+</ul>
+
+<h3 id="rails-engines">Rails Engines</h3>
+
+<p><a href="https://github.com/phene">Geoffrey Hichborn</a> added support for checking Rails engines paths when searching for controllers, models, and views. Please let us know if there are any issues or files missed with this change.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/397">changes</a>)</p>
+
+<h3 id="redirects-with-friendly-id">Redirects with Friendly ID</h3>
+
+<p>Thanks to <a href="https://github.com/aj0strow">AJ Ostrow</a>, Brakeman should no longer warn on redirects to models using <code class="language-plaintext highlighter-rouge">friendly_id</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/400">changes</a>)</p>
+
+<h3 id="detailed-exceptions">Detailed Exceptions</h3>
+
+<p><a href="https://github.com/ntalbott">Nathaniel Talbott</a> suggested checking that detailed exceptions (treating requests as local) are not enabled in production.</p>
+
+<p>Brakeman now generates a warning in a new category called “<a href="http://brakemanscanner.org/docs/warning_types/information_disclosure/">Information Disclosure</a>” if <code class="language-plaintext highlighter-rouge">config.consider_all_requests_local</code> is set to <code class="language-plaintext highlighter-rouge">true</code> in production or a controller overrides <code class="language-plaintext highlighter-rouge">show_detailed_exceptions?</code> to return something other than <code class="language-plaintext highlighter-rouge">false</code>.</p>
+
+<p>Please see the <a href="https://github.com/presidentbeef/brakeman/pull/396">changes</a> regarding the new category and two new warning codes associated with these warnings.</p>
+
+<h3 id="better-version-detection">Better Version Detection</h3>
+
+<p>Brakeman now uses the Rails version found in <code class="language-plaintext highlighter-rouge">Gemfile</code> or <code class="language-plaintext highlighter-rouge">Gemfile.lock</code> to determine when to enable Rails 3/4 mode, which seems obvious in retrospect. This required swapping when the <code class="language-plaintext highlighter-rouge">Gemfile</code> and the configuration files are processed.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/402">changes</a>)</p>
+
+<h3 id="rails-3-routes">Rails 3 Routes</h3>
+
+<p>A small fix prevents Brakeman from raising an error when a route is a redirect or any value other than a string or symbol.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/403">changes</a>)</p>
+
+<h3 id="command-injection-false-positives">Command Injection False Positives</h3>
+
+<p>There should be fewer false positives for command injection when interpolated values are literals. The check also now ignores commonly used values <code class="language-plaintext highlighter-rouge">RAILS_ROOT</code>, <code class="language-plaintext highlighter-rouge">Rails.env</code>, and <code class="language-plaintext highlighter-rouge">Rails.root</code>.</p>
+
+<p>Additionally, reported “dangerous” values (<code class="language-plaintext highlighter-rouge">user_input</code> in JSON reports) for command injection are more specific. For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system "rm -rf #{some_var}"
+</code></pre></div></div>
+
+<p>used to report the entire string <code class="language-plaintext highlighter-rouge">"rm -rf #{some_var}"</code> as dangerous, even though it’s really warning about the interpolation of <code class="language-plaintext highlighter-rouge">some_var</code>. Now Brakeman will report the first potentially dangerous interpolated value. Note that this does not change fingerprints for existing warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/404">changes</a>)</p>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+
+<h3 id="verification">Verification</h3>
+
+<p>The SHA-1 for the Brakeman 2.2.0 gem is:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f3a2b369bda79c677a913cdb2350cbda8bce8a90  brakeman-2.2.0.gem
+</code></pre></div></div>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2013/09/18/brakeman-2-dot-1-2-released-important-security-update">Brakeman 2.1.2 Released - Important Security Update</a></h1>
     
     
@@ -613,126 +712,6 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2013/04/05/brakeman-1-dot-9-5-released">Brakeman 1.9.5 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2013-04-05 08:42:00 -0600" pubdate  updated >2013-04-05 08:42:00 -0600</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>As planned, Brakeman 1.9.5 is mostly internal bug fixes and improvements, with the one exception being a new check for symbol creation from user input. Barring any emergencies, the next release will be 2.0.</p>
-
-<p><em>Changes since 1.9.4</em>:</p>
-
-<ul>
-  <li>Add check for unsafe symbol creation (<a href="https://github.com/HonoreDB">Aaron Weiner</a>)</li>
-  <li>Do not warn on mass assignment with <code class="language-plaintext highlighter-rouge">slice</code>/<code class="language-plaintext highlighter-rouge">only</code> (<a href="https://github.com/presidentbeef/brakeman/issues/203">#203</a>)</li>
-  <li>Do not warn on session secret if in <code class="language-plaintext highlighter-rouge">.gitignore</code> (<a href="https://github.com/presidentbeef/brakeman/issues/241">#241</a>)</li>
-  <li>Fix session secret check for Rails 4</li>
-  <li>Fix scoping for blocks and block arguments</li>
-  <li>Fix error when modifying blocks in templates</li>
-  <li>Fix crash on <code class="language-plaintext highlighter-rouge">before_filter</code> outside controller</li>
-  <li>Fix <code class="language-plaintext highlighter-rouge">Sexp</code> hash cache invalidation</li>
-  <li>Respect <code class="language-plaintext highlighter-rouge">quiet</code> option in configuration file (<a href="https://github.com/presidentbeef/brakeman/issues/300">#300</a>)</li>
-  <li>Convert assignment to simple <code class="language-plaintext highlighter-rouge">if</code> expressions to <code class="language-plaintext highlighter-rouge">or</code></li>
-  <li>More fixes for assignments inside branches</li>
-  <li>Refactoring of <code class="language-plaintext highlighter-rouge">CheckLinkTo</code> and <code class="language-plaintext highlighter-rouge">Report</code> (<a href="https://github.com/barttenbrinke">Bart ten Brinke</a>)</li>
-  <li>Pin ruby2ruby dependency to version 2.0.3 (<a href="https://github.com/seattlerb/ruby2ruby/issues/15">see here</a>)</li>
-</ul>
-
-<h3 id="symbol-creation-check">Symbol Creation Check</h3>
-
-<p><a href="https://github.com/HonoreDB">Aaron Weiner</a> added a check for symbol creation from user input, such as <code class="language-plaintext highlighter-rouge">params[:x].to_i</code> which can lead to Denial of Service.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/296">changes</a>)</p>
-
-<h3 id="mass-assignment-with-select-keys">Mass Assignment with Select Keys</h3>
-
-<p>A common pattern to avoid mass assignment issues is to use <code class="language-plaintext highlighter-rouge">slice</code> or <code class="language-plaintext highlighter-rouge">only</code> when passing in values to mass assignment methods. Brakeman should no longer warn in these situations.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/303">changes</a>)</p>
-
-<h3 id="ignoring-session-secrets">Ignoring Session Secrets</h3>
-
-<p>Brakeman no longer warns if the config file containing the session secret key is included in <code class="language-plaintext highlighter-rouge">.gitignore</code>. This only applies if the default file names are used.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/302">changes</a>)</p>
-
-<h3 id="warn-on-rails-4-session-secrets">Warn on Rails 4 Session Secrets</h3>
-
-<p>Support for Rails 4 session secrets has been added, since the configuration for that changed again.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/302">changes</a>)</p>
-
-<h3 id="block-scoping">Block Scoping</h3>
-
-<p>Correct scope for blocks is tricky, and there are also some differences between Ruby 1.8 and 1.9 for block arguments. For the most part, Brakeman has ignored blocks, but this lead to some compounding issues with assignments in branches.</p>
-
-<p>This release now treats all block arguments as local assignments <em>inside</em> the block and shadows any variables outside the block (this is Ruby 1.9 behavior). This should lead to some performance improvements where block arguments do shadow outer variables.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/305">changes and examples</a>)</p>
-
-<h3 id="sexp-hash-cache-invalidation">Sexp Hash Cache Invalidation</h3>
-
-<p>Since Brakeman does a ton of hash table lookups with s-expressions as keys, it caches <code class="language-plaintext highlighter-rouge">Sexp#hash</code> values. In some situations, these cached values were being invalidated when they did not need to be, and not being invalidated when they should have been.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/294">changes</a>)</p>
-
-<h3 id="quiet-option">Quiet Option</h3>
-
-<p>Brakeman will now be quiet if the option is set in a configuration file.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/306">changes</a>)</p>
-
-<h3 id="assignments-of-if-expressions">Assignments of If Expressions</h3>
-
-<p>Simple if expression assigments such as <code class="language-plaintext highlighter-rouge">x = thing ? this : that</code> will now be converted to <code class="language-plaintext highlighter-rouge">x = this || that</code>. This should simplify some code reported with warnings as well as avoid warning on values in <code class="language-plaintext highlighter-rouge">if</code> conditions.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/295">changes and examples</a>)</p>
-
-<h3 id="assignments-in-if-expressions">Assignments in If Expressions</h3>
-
-<p>Assignments inside <code class="language-plaintext highlighter-rouge">if</code> branches cause Brakeman to “branch” the values for a variable, since it could be two or more different values. However, this branching should only occur <em>after</em> both branches have been processed. Brakeman 1.9.3 made it so values were not branched inside of a single branch, but there was still an issue where values branched in the <code class="language-plaintext highlighter-rouge">then</code> clause would be used in the <code class="language-plaintext highlighter-rouge">else</code> clause. This release fixes that issue and simplifies branching overall.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/297">changes and examples</a>)</p>
-
-<h3 id="refactoring-internals">Refactoring Internals</h3>
-
-<p><a href="https://github.com/barttenbrinke">Bart ten Brinke</a> has begun some work refactoring some of the many ugly parts of Brakeman. Thanks!</p>
-
-<h3 id="report-issues">Report Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-
-<h3 id="roadmap">Roadmap</h3>
-
-<p>Next up should be <a href="https://github.com/presidentbeef/brakeman/wiki/Roadmap">Brakeman 2.0</a> unless there needs to be another emergency release. Most of the changes for 2.0 are relatively minor, but break backwards compatibility in areas that may affect external tools. This includes cleaning up warning messages, removing duplicate information from JSON output, combining some checks, changing some defaults, and so on.</p>
-
-<p>If you have suggestions for other breaking changes, please file an issue ASAP to get it into the next release!</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -771,6 +750,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
       </li>
     
@@ -784,10 +767,6 @@ end
     
       <li class="post">
         <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a>
       </li>
     
   </ul>

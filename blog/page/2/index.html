@@ -80,6 +80,115 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2024-02-01 10:30:00 -0700" pubdate  updated >2024-02-01 10:30:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Finally, just a small release!</p>
+
+<p><em>Changes since 6.1.1:</em></p>
+
+<ul>
+  <li>Avoid detecting Phlex components as dynamic render paths (<a href="https://github.com/ElMassimo">Máximo Mussini</a>)</li>
+  <li>Avoid detecting <code class="language-plaintext highlighter-rouge">ViewComponentContrib::Base</code> as dynamic render paths (<a href="https://github.com/vividmuimui">vividmuimui</a>)</li>
+  <li>Avoid copying Sexps that are too large (<a href="https://github.com/presidentbeef/brakeman/issues/1818">#1818</a>, <a href="https://github.com/presidentbeef/brakeman/issues/1546">#1546</a>)</li>
+  <li>Add EOL date for Ruby 3.3.0</li>
+  <li>Remove deprecated use of <code class="language-plaintext highlighter-rouge">Kernel#open("|...")</code></li>
+  <li>Remove <code class="language-plaintext highlighter-rouge">safe_yaml</code> gem dependency</li>
+  <li>Update Highline to 3.0 (<a href="https://github.com/presidentbeef/brakeman/issues/1812">#1812</a>)</li>
+</ul>
+
+<h3 id="components-in-render-paths">Components in Render Paths</h3>
+
+<p>Thanks to <a href="https://github.com/ElMassimo">Máximo Mussini</a> and <a href="https://github.com/vividmuimui">vividmuimui</a>, there will be fewer false positives
+warning about dynamic render paths when using components.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1805">changes</a>)</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1821">changes</a>)</p>
+
+<h3 id="performance-improvement-with-complex-branching">Performance Improvement with Complex Branching</h3>
+
+<p>Brakeman has a very hard time with code like</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="n">thing</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">foo</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">x</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">else</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">baz</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">do_thing</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># etc.</span>
+</code></pre></div></div>
+
+<p>Because to Brakeman it looks like</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="n">thing</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">foo</span><span class="p">(</span><span class="n">thing</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">foo</span><span class="p">(</span><span class="n">thing</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">bar</span><span class="p">(</span><span class="n">foo</span><span class="p">(</span><span class="n">thing</span><span class="p">))</span>
+<span class="k">else</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">baz</span><span class="p">(</span><span class="n">foo</span><span class="p">(</span><span class="n">thing</span><span class="p">))</span>
+<span class="k">end</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">do_thing</span><span class="p">(</span><span class="n">bar</span><span class="p">(</span><span class="n">foo</span><span class="p">(</span><span class="n">thing</span><span class="p">))</span> <span class="o">||</span> <span class="n">baz</span><span class="p">(</span><span class="n">foo</span><span class="p">(</span><span class="n">thing</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<p>This can quickly snowball into gigantic chunks of code, causing Brakeman to use lots of memory and essentially freeze up.</p>
+
+<p>In the past, limits on how many times a value is “branched” have helped with this (and is configurable with <code class="language-plaintext highlighter-rouge">--branch-limit</code>).
+However, it is not sufficient.</p>
+
+<p>Now Brakeman has a limit on how large these chunks of code can get. This has improved performance without any noticable impact on true positives.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1820">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7716769c18f2c4a52d7a74d2cb5a614be0c46d8aad3fbe7ca089dbb7c98bd4d3  brakeman-6.1.2.gem
+38939998eb695b82932c207ef766356bc21e57199e18c4d8f000a005d294e587  brakeman-lib-6.1.2.gem
+dbc2f9a3b61760c03737cf701f5a1dfe634fb14e8388968e056a0f77effab018  brakeman-min-6.1.2.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">Brakeman 6.1.0 Released</a></h1>
     
     
@@ -524,120 +633,6 @@ c1bf7e4cec5bde1d53122b41743343d3e38e4aa30145707b902278dd3b588fd4  brakeman-lib-5
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">Brakeman 5.4.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2022-11-17 21:30:00 -0700" pubdate  updated >2022-11-17 21:30:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Special thanks to <a href="https://github.com/bdewater">Bart de Water</a> and <a href="https://github.com/tehryanx">Ryan Cartner</a> for proposing new rules!</p>
-
-<p><em>Changes since 5.3.1:</em></p>
-
-<ul>
-  <li>Add check for weak RSA key sizes and padding modes (<a href="https://github.com/presidentbeef/brakeman/issues/1736">#1736</a>)</li>
-  <li>Add check for absolute paths issue with Pathname (<a href="https://github.com/presidentbeef/brakeman/issues/1721">#1721</a>)</li>
-  <li>Handle multiple values and splats in case/when (<a href="https://github.com/presidentbeef/brakeman/issues/1730">#1730</a>)</li>
-  <li>Ignore more model methods in redirects (<a href="https://github.com/presidentbeef/brakeman/issues/1723">#1723</a>)</li>
-  <li>Fix <code class="language-plaintext highlighter-rouge">load_rails_defaults</code> overwriting settings in the Rails application (<a href="https://github.com/jamgregory">James Gregory-Monk</a>)</li>
-  <li>Use relative paths for CodeClimate report format (<a href="https://github.com/RubyBrewsday">Mike Poage</a>)</li>
-</ul>
-
-<h3 id="check-rsa-key-sizes-and-padding-modes">Check RSA Key Sizes and Padding Modes</h3>
-
-<p>Brakeman now warns on:</p>
-
-<ul>
-  <li>RSA key sizes less than 2048 bits</li>
-  <li>Use of padding modes other than OAEP (including <code class="language-plaintext highlighter-rouge">none</code>)</li>
-</ul>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1737">changes</a>)</p>
-
-<h3 id="unexpected-absolute-paths">Unexpected Absolute Paths</h3>
-
-<p>When joining paths using <code class="language-plaintext highlighter-rouge">Pathname#join</code>, any arguments that start with a forward slash (<code class="language-plaintext highlighter-rouge">/</code>) will cause the rest of the path to be relative to that absolute path. This may cause unexpected behavior and deviates from how <code class="language-plaintext highlighter-rouge">File.join</code> works.</p>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Pathname</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'a'</span><span class="p">).</span><span class="nf">join</span><span class="p">(</span><span class="s1">'b'</span><span class="p">,</span> <span class="s1">'/c'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">)</span>
- <span class="o">=&gt;</span> <span class="c1">#&lt;Pathname:/c/d&gt;</span>
-</code></pre></div></div>
-
-<p>(There are more <code class="language-plaintext highlighter-rouge">Pathname</code> methods with this issue - to be added in a future release.)</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1733">changes</a>)</p>
-
-<h3 id="multiple-values-in-whens">Multiple Values in <code class="language-plaintext highlighter-rouge">when</code>s</h3>
-
-<p>If a <code class="language-plaintext highlighter-rouge">when</code> clause contains only ‘safe’ values, Brakeman will treat the <code class="language-plaintext highlighter-rouge">case</code> value as safe:</p>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-
-<span class="k">case</span> <span class="n">x</span>
-<span class="k">when</span> <span class="o">*</span><span class="n">y</span>
-  <span class="n">maybe_dangerous</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># `x` must be an integer, so not dangerous</span>
-<span class="k">end</span>
-</code></pre></div></div>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1734">changes</a>)</p>
-
-<h3 id="ignore-more-redirects">Ignore More Redirects</h3>
-
-<p>More model methods are ignored in redirects:</p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">first!</code></li>
-  <li><code class="language-plaintext highlighter-rouge">last!</code></li>
-  <li><code class="language-plaintext highlighter-rouge">sole</code></li>
-  <li><code class="language-plaintext highlighter-rouge">find_by_sole</code></li>
-</ul>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1732">changes</a>)</p>
-
-<h3 id="rails-defaults">Rails Defaults</h3>
-
-<p><a href="https://github.com/jamgregory">James Gregory-Monk</a> fixed how Rails default configuration values are set so overrides were properly handled.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1719">changes</a>)</p>
-
-<h3 id="checksums">Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bab990760949e999c5d52b297d8badda376754eb296c91abf829def733ed9d51  brakeman-5.4.0.gem
-2b5a0cd5845b8c0e1b83e00122654af48b025ac3e6625c9ecbc5535226068416  brakeman-lib-5.4.0.gem
-fcbd60456c5db62767d143696e1edf8e4eaee734f2a039903aeca7bb4e6b3dbf  brakeman-min-5.4.0.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -676,6 +671,10 @@ fcbd60456c5db62767d143696e1edf8e4eaee734f2a039903aeca7bb4e6b3dbf  brakeman-min-5
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
       </li>
     
@@ -689,10 +688,6 @@ fcbd60456c5db62767d143696e1edf8e4eaee734f2a039903aeca7bb4e6b3dbf  brakeman-min-5
     
       <li class="post">
         <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a>
       </li>
     
   </ul>

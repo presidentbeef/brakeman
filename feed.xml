@@ -1,4 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2025-04-03T20:48:52-06:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 7.0.1 Released</title><link href="https://brakemanscanner.org/blog/2025/04/03/brakeman-7-dot-0-dot-1-released" rel="alternate" type="text/html" title="Brakeman 7.0.1 Released" /><published>2025-04-03T17:00:00-06:00</published><updated>2025-04-03T17:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2025/04/03/brakeman-7-dot-0-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">&lt;p&gt;&lt;em&gt;Changes since 7.0.0:&lt;/em&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2025-04-04T11:26:55-06:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 7.0.2 Released</title><link href="https://brakemanscanner.org/blog/2025/04/04/brakeman-7-dot-0-dot-2-released" rel="alternate" type="text/html" title="Brakeman 7.0.2 Released" /><published>2025-04-04T11:00:00-06:00</published><updated>2025-04-04T11:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2025/04/04/brakeman-7-dot-0-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">&lt;p&gt;&lt;em&gt;Changes since 7.0.1:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Fix error with empty &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BUNDLE_GEMFILE&lt;/code&gt; env variable&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;error-on-empty-environment-variable&quot;&gt;Error on Empty Environment Variable&lt;/h3&gt;
+
+&lt;p&gt;Fixed.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1932&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;b602d91bcec6c5ce4d4bc9e081e01f621c304b7a69f227d1e58784135f333786  brakeman-7.0.2.gem
+2ca8d1a8bc248e969e64db33cc555cb82418402af9e04efeb74c7d6ffc85aaab  brakeman-lib-7.0.2.gem
+0efb841b7b5252dff97699f041e9e67d661d78f87c1874aaa789e91cb9c94b17  brakeman-min-7.0.2.gem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Changes since 7.0.1:</summary></entry><entry><title type="html">Brakeman 7.0.1 Released</title><link href="https://brakemanscanner.org/blog/2025/04/03/brakeman-7-dot-0-dot-1-released" rel="alternate" type="text/html" title="Brakeman 7.0.1 Released" /><published>2025-04-03T17:00:00-06:00</published><updated>2025-04-03T17:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2025/04/03/brakeman-7-dot-0-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">&lt;p&gt;&lt;em&gt;Changes since 7.0.0:&lt;/em&gt;&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Avoid warning on evaluation of plain strings (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1919&quot;&gt;#1919&lt;/a&gt;)&lt;/li&gt;
@@ -771,88 +798,4 @@ c1bf7e4cec5bde1d53122b41743343d3e38e4aa30145707b902278dd3b588fd4  brakeman-lib-5
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Several changes in this release are updates to Brakeman’s open redirect check.</summary></entry><entry><title type="html">Brakeman 5.4.0 Released</title><link href="https://brakemanscanner.org/blog/2022/11/17/brakeman-5-dot-4-dot-0-released" rel="alternate" type="text/html" title="Brakeman 5.4.0 Released" /><published>2022-11-17T21:30:00-07:00</published><updated>2022-11-17T21:30:00-07:00</updated><id>https://brakemanscanner.org/blog/2022/11/17/brakeman-5-dot-4-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">&lt;p&gt;Special thanks to &lt;a href=&quot;https://github.com/bdewater&quot;&gt;Bart de Water&lt;/a&gt; and &lt;a href=&quot;https://github.com/tehryanx&quot;&gt;Ryan Cartner&lt;/a&gt; for proposing new rules!&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 5.3.1:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Add check for weak RSA key sizes and padding modes (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1736&quot;&gt;#1736&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Add check for absolute paths issue with Pathname (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1721&quot;&gt;#1721&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Handle multiple values and splats in case/when (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1730&quot;&gt;#1730&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Ignore more model methods in redirects (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1723&quot;&gt;#1723&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Fix &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;load_rails_defaults&lt;/code&gt; overwriting settings in the Rails application (&lt;a href=&quot;https://github.com/jamgregory&quot;&gt;James Gregory-Monk&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Use relative paths for CodeClimate report format (&lt;a href=&quot;https://github.com/RubyBrewsday&quot;&gt;Mike Poage&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;check-rsa-key-sizes-and-padding-modes&quot;&gt;Check RSA Key Sizes and Padding Modes&lt;/h3&gt;
-
-&lt;p&gt;Brakeman now warns on:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;RSA key sizes less than 2048 bits&lt;/li&gt;
-  &lt;li&gt;Use of padding modes other than OAEP (including &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;none&lt;/code&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1737&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;unexpected-absolute-paths&quot;&gt;Unexpected Absolute Paths&lt;/h3&gt;
-
-&lt;p&gt;When joining paths using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Pathname#join&lt;/code&gt;, any arguments that start with a forward slash (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/&lt;/code&gt;) will cause the rest of the path to be relative to that absolute path. This may cause unexpected behavior and deviates from how &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;File.join&lt;/code&gt; works.&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;Pathname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;a&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;b&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;/c&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;d&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#&amp;lt;Pathname:/c/d&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;(There are more &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Pathname&lt;/code&gt; methods with this issue - to be added in a future release.)&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1733&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;multiple-values-in-whens&quot;&gt;Multiple Values in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;when&lt;/code&gt;s&lt;/h3&gt;
-
-&lt;p&gt;If a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;when&lt;/code&gt; clause contains only ‘safe’ values, Brakeman will treat the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;case&lt;/code&gt; value as safe:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;maybe_dangerous&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# `x` must be an integer, so not dangerous&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1734&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;ignore-more-redirects&quot;&gt;Ignore More Redirects&lt;/h3&gt;
-
-&lt;p&gt;More model methods are ignored in redirects:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;first!&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;last!&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sole&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;find_by_sole&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1732&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;rails-defaults&quot;&gt;Rails Defaults&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/jamgregory&quot;&gt;James Gregory-Monk&lt;/a&gt; fixed how Rails default configuration values are set so overrides were properly handled.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1719&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
-
-&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bab990760949e999c5d52b297d8badda376754eb296c91abf829def733ed9d51  brakeman-5.4.0.gem
-2b5a0cd5845b8c0e1b83e00122654af48b025ac3e6625c9ecbc5535226068416  brakeman-lib-5.4.0.gem
-fcbd60456c5db62767d143696e1edf8e4eaee734f2a039903aeca7bb4e6b3dbf  brakeman-min-5.4.0.gem
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Special thanks to Bart de Water and Ryan Cartner for proposing new rules!</summary></entry></feed>
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Several changes in this release are updates to Brakeman’s open redirect check.</summary></entry></feed>

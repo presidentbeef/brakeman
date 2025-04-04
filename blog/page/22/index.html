@@ -80,6 +80,132 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/04/10/brakeman-1-dot-5-3-released">Brakeman 1.5.3 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-04-10 13:18:00 -0600" pubdate  updated >2012-04-10 13:18:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A considerable number of bugs and odd cases have been fixed with this release, and one new check has been added. Upgrading is <em>always</em> recommended!</p>
+
+<p><em>Changes since 1.5.2:</em></p>
+
+<ul>
+  <li>Add check for user input in <code class="language-plaintext highlighter-rouge">Object#send</code> (Neil Matatall)</li>
+  <li>Support output to multiple formats (Nick Green)</li>
+  <li>Prevent infinite loops in mutually recursive templates</li>
+  <li>Only check <code class="language-plaintext highlighter-rouge">eval</code> arguments for user input, not the call target</li>
+  <li>Handle <code class="language-plaintext highlighter-rouge">render :layout</code> in views</li>
+  <li>Search subdirectories for models</li>
+  <li>Set values in request hashes and propagate to views</li>
+  <li>Add rake task file to gemspec (Anton Ageev)</li>
+  <li>Filter rescanning of templates (Neil Matatall)</li>
+  <li>Improve handling of modules and nesting</li>
+  <li>Test for zero errors in test reports</li>
+</ul>
+
+<h3 id="new-check-for-user-input-in-objectsend">New Check for User Input in Object#send</h3>
+
+<p>This new check looks for instances where user input can be used to control the method called using <code class="language-plaintext highlighter-rouge">send</code>.</p>
+
+<p>For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user = User.find(params[:user][:id])
+method = params[:user][:action].to_sym
+user.send(method)
+</code></pre></div></div>
+
+<h3 id="support-for-multiple-output-formats">Support for Multiple Output Formats</h3>
+
+<p>Brakeman can now accept multiple <code class="language-plaintext highlighter-rouge">-o</code> arguments in order to produce more than one report from the same scan:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.html -o report.json
+</code></pre></div></div>
+
+<h3 id="handle-mutually-recursive-templates">Handle Mutually Recursive Templates</h3>
+
+<p>In some cases where two templates would render each other as partials, it would cause infinite loops in Brakeman. This is now fixed, at least for the simple common case:</p>
+
+<p>_one.erb.html:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= render :partial =&gt; 'two' %&gt;
+</code></pre></div></div>
+
+<p>_two.erb.html:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= render :partial =&gt; 'one' %&gt;
+</code></pre></div></div>
+
+<h3 id="only-check-eval-arguments">Only Check <code class="language-plaintext highlighter-rouge">eval</code> Arguments</h3>
+
+<p>Previously, Brakeman was checking the entire call to methods like <code class="language-plaintext highlighter-rouge">eval</code> or <code class="language-plaintext highlighter-rouge">class_eval</code> for user input. This led to false positives when <code class="language-plaintext highlighter-rouge">class_eval</code> was being called on a model.</p>
+
+<p>Now Brakeman only checks the arguments or block provided to the <code class="language-plaintext highlighter-rouge">eval</code> call.</p>
+
+<h3 id="handle-render-layout-in-views">Handle render :layout in views</h3>
+
+<p>Brakeman was not handling <code class="language-plaintext highlighter-rouge">render :layout =&gt; "..."</code> in views properly. This led to errors like:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wrong number of arguments (0 for 1): /Users/collins/work/brakeman/lib/brakeman/processors/lib/render_helper.rb:14:in `template_name
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">render :layout</code> is now handled just like rendering a partial.</p>
+
+<h3 id="search-for-models-in-subdirectories">Search for Models in Subdirectories</h3>
+
+<p>Brakeman was only searching <code class="language-plaintext highlighter-rouge">app/models/</code> for models, but not any subdirectories. Now it does!</p>
+
+<h3 id="propagate-request-values">Propagate Request Values</h3>
+
+<p>While Brakeman has always detected request values (e.g., query parameters) in views, it would not propagate values stored IN those request hashes.</p>
+
+<p>For example, if an action in a controller did this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>params[:input] = some_random_value
+</code></pre></div></div>
+
+<p>That value would not be propagated to the view if the view used <code class="language-plaintext highlighter-rouge">params[:input]</code>.</p>
+
+<h3 id="add-rake-task-to-gemspec">Add Rake Task to Gemspec</h3>
+
+<p>In 1.2.0, Brakeman added the <code class="language-plaintext highlighter-rouge">--rake</code> option to add a Rake task to a Rails application, but the actual task itself was not included in the gem!</p>
+
+<p>Thanks to Anton Ageev for pointing this out. Either no one else tried this option, or a lot of people were very disappointed.</p>
+
+<h3 id="filter-templates-when-rescanning">Filter Templates When Rescanning</h3>
+
+<p>When rescanning (for example, with <a href="https://github.com/guard/guard-brakeman">guard-brakeman</a>), Brakeman was assuming any files in <code class="language-plaintext highlighter-rouge">app/views</code> is a template, but this isn’t always true.</p>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a>!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+
+<p>And don’t forget to check out the Brakeman talk at <a href="http://railsconf2012.com/sessions/44">RailsConf</a> later this month.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/03/22/brakeman-1-dot-5-2-released-important-fixes">Brakeman 1.5.2 Released - Important Fixes</a></h1>
     
     
@@ -391,70 +517,6 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/02/25/brakeman-1-dot-4-0-released">Brakeman 1.4.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-02-25 09:57:00 -0700" pubdate  updated >2012-02-25 09:57:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is not a big release, but it does add a new check. Also, processing for ERB templates with the <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin has changed, so there is the possibility that line numbers for reported warnings will shift.</p>
-
-<p><em>Changes since 1.3.0:</em></p>
-
-<ul>
-  <li>Add check for user input in link_to href parameter</li>
-  <li>Match ERB processing to rails_xss plugin when plugin used</li>
-  <li>Add Brakeman::Report#to_json, Brakeman::Warning#to_json</li>
-  <li>Warnings below minimum confidence are dropped completely</li>
-  <li>Brakeman.run will now always return a Tracker</li>
-</ul>
-
-<h3 id="new-check-for-link_to">New Check for link_to</h3>
-
-<p><a href="https://github.com/oreoshake">Neil Matatall</a> has contributed a new check for the href parameter in <code class="language-plaintext highlighter-rouge">link_to</code>. Even if HTML escaped, some values can be dangerous, so this check will warn for user input in that parameter. See <a href="https://github.com/presidentbeef/brakeman/pull/45">here</a> for more details.</p>
-
-<p>The <code class="language-plaintext highlighter-rouge">--url-safe-methods</code> option can be used to specify escaping methods which are safe for urls.</p>
-
-<h3 id="erb-and-rails_xss">ERB and rails_xss</h3>
-
-<p>The <code class="language-plaintext highlighter-rouge">rails_xss</code> plugin has some fixes for how Erbuis handles certain input. Brakeman now matches those changes, which fixes some parsing errors.</p>
-
-<h3 id="internal-changes">Internal Changes</h3>
-
-<p>There have been some changes which only impact those working with Brakeman as a library.</p>
-
-<p>First, there is now json output for reports. This actually should be an output format option, but I did not realize it until writing this post. The next release will include this, though!</p>
-
-<p>The way Brakeman handles the <code class="language-plaintext highlighter-rouge">--confidence-level</code> option has also changed. In the past, warnings would be filtered when output in a report. This meant, for example, that <code class="language-plaintext highlighter-rouge">tracker.checks.all_warnings</code> would still return warnings below the specified confidence level. It also caused problems because there were many places in the code where the warnings needed to be filtered. With this release, warnings below the confidence level will be dropped as soon as they are found and will not need to be filtered at any later point.</p>
-
-<p>Lastly, <code class="language-plaintext highlighter-rouge">Brakeman.run</code> would return <code class="language-plaintext highlighter-rouge">false</code> if <code class="language-plaintext highlighter-rouge">--exit-on-warn</code> was set, and a <code class="language-plaintext highlighter-rouge">Tracker</code> object otherwise. This has changed. <code class="language-plaintext highlighter-rouge">Brakeman.run</code> will now always return a <code class="language-plaintext highlighter-rouge">Tracker</code> object and the logic for <code class="language-plaintext highlighter-rouge">--exit-on-warn</code> was pushed out to the Brakeman executable.</p>
-
-<h3 id="report-issues">Report Issues</h3>
-
-<p>As usual, please <a href="https://github.com/presidentbeef/brakeman/issues">report any issues</a>.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -493,6 +555,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
       </li>
     
@@ -506,10 +572,6 @@ end
     
       <li class="post">
         <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">Brakeman 6.1.2 Released</a>
       </li>
     
   </ul>
