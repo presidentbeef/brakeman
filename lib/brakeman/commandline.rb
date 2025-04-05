@@ -145,6 +145,11 @@ module Brakeman
           quit Brakeman::Errors_Found_Exit_Code
         end
 
+        if tracker.options[:ensure_no_obsolete_ignore_entries] && tracker.unused_fingerprints.any?
+          warn '[Error] Obsolete ignore entries were found, exiting with an error code.'
+          quit Brakeman::Obsolete_Ignore_Entries_Exit_Code
+        end
+
         if ensure_ignore_notes_failed
           quit Brakeman::Empty_Ignore_Note_Exit_Code
         end
