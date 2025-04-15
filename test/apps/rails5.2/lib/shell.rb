@@ -136,4 +136,10 @@ class ShellStuff
     Open3.capture2e("cat", stdin_data: "User.z = #{u.z}")
     Open3.capture3("cat", stdin_data: "User.z = #{u.z}")
   end
+
+  def tempfile_create
+    # should not warn
+    tempfile = Tempfile.create
+    `something -out #{tempfile.path}`
+  end
 end

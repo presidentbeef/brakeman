@@ -151,10 +151,13 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     method[-1] == "?"
   end
 
-  TEMP_FILE_PATH = s(:call, s(:call, s(:const, :Tempfile), :new), :path).freeze
+  TEMP_FILE_PATH = [
+    s(:call, s(:call, s(:const, :Tempfile), :new), :path).freeze,
+    s(:call, s(:call, s(:const, :Tempfile), :create), :path).freeze
+  ].freeze
 
   def temp_file_path? exp
-    exp == TEMP_FILE_PATH
+    TEMP_FILE_PATH.include? exp
   end
 
   #Report a warning
