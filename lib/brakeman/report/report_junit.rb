@@ -32,8 +32,6 @@ class Brakeman::Report::JUnit < Brakeman::Report::Base
         test_suite.add_attribute 'errors', '0'
         test_suite.add_attribute 'time', '0'
 
-        test_suite.add_element 'properties'
-
         warnings.each { |warning|
           test_case = test_suite.add_element 'testcase'
           test_case.add_attribute 'name', warning.check
@@ -46,9 +44,6 @@ class Brakeman::Report::JUnit < Brakeman::Report::Base
           failure.add_attribute 'type', warning.warning_type
           failure.add_text warning.to_s
         }
-
-        test_suite.add_element 'system-out'
-        test_suite.add_element 'system-err'
       }
 
     doc.add test_suites
