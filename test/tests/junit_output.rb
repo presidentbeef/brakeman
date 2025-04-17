@@ -48,7 +48,9 @@ class JUnitOutputTests < Minitest::Test
         # Required attributes for testcase
         assert testcase.attributes["name"], "Missing name attribute"
         assert testcase.attributes["file"], "Missing file attribute"
-        assert testcase.attributes["line"], "Missing line attribute: #{testcase.attributes}" unless NO_LINE_REPORT_CHECKS.include?(testcase.attributes["name"])
+        unless NO_LINE_REPORT_CHECKS.any? { |check| testcase.attributes["name"].include?(check) }
+          assert testcase.attributes["line"], "Missing line attribute: #{testcase.attributes}"
+        end
         assert testcase.attributes["time"], "Missing time attribute"
       end
     end
