@@ -10,7 +10,6 @@ class Brakeman::Report::JUnit < Brakeman::Report::Base
 
     test_suites = REXML::Element.new 'testsuites'
 
-    hostname = `hostname`.strip
     i = 0
     all_warnings
       .map { |warning| [warning.file, [warning]] }
@@ -26,7 +25,6 @@ class Brakeman::Report::JUnit < Brakeman::Report::Base
         test_suite.add_attribute 'package', 'brakeman'
         test_suite.add_attribute 'file', file.relative
         test_suite.add_attribute 'timestamp', tracker.start_time.strftime('%FT%T')
-        test_suite.add_attribute 'hostname', hostname == '' ? 'localhost' : hostname
         test_suite.add_attribute 'tests', checks.checks_run.length
         test_suite.add_attribute 'failures', warnings.length
         test_suite.add_attribute 'errors', '0'

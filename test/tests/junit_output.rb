@@ -34,7 +34,6 @@ class JUnitOutputTests < Minitest::Test
       assert_equal "brakeman", testsuite.attributes["package"]
       assert testsuite.attributes["file"], "Missing file attribute"
       assert testsuite.attributes["timestamp"], "Missing timestamp attribute"
-      assert testsuite.attributes["hostname"], "Missing hostname attribute"
       assert testsuite.attributes["tests"], "Missing tests attribute"
       assert testsuite.attributes["failures"], "Missing failures attribute"
       assert testsuite.attributes["errors"], "Missing errors attribute"
