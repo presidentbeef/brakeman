@@ -34,11 +34,7 @@ class Brakeman::Report::JUnit < Brakeman::Report::Base
 
         warnings.each { |warning|
           test_case = test_suite.add_element 'testcase'
-          test_name = "#{warning.check} - #{warning.file.relative}"
-          if warning.line
-            test_name += ":#{warning.line}"
-          end
-          test_case.add_attribute 'name', test_name
+          test_case.add_attribute 'name', warning.check
           test_case.add_attribute 'file', file.relative
           test_case.add_attribute 'line', warning.line if warning.line
           test_case.add_attribute 'time', '0'
