@@ -51,77 +51,77 @@ class AppTreeTests < Minitest::Test
   def test_directory_absolute_symlink_support
     temp_dir_absolute_symlink_and_file_from_path("test.rb") do |dir, file|
       at = Brakeman::AppTree.new(dir, follow_symlinks: true)
-      assert_equal [file], at.ruby_file_paths.collect(&:absolute)
+      assert_equal [file], at.ruby_file_paths.collect(&:absolute).to_a
     end
   end
 
   def test_directory_relative_symlink_support
     temp_dir_relative_symlink_and_file_from_path("test.rb") do |dir, file|
       at = Brakeman::AppTree.new(dir, follow_symlinks: true)
-      assert_equal [file], at.ruby_file_paths.collect(&:absolute)
+      assert_equal [file], at.ruby_file_paths.collect(&:absolute).to_a
     end
   end
 
   def test_directory_relative_disabled_symlink_support
     temp_dir_relative_symlink_and_file_from_path("test.rb") do |dir, file|
       at = Brakeman::AppTree.new(dir, follow_symlinks: false)
-      assert_empty at.ruby_file_paths.collect(&:absolute)
+      assert_empty at.ruby_file_paths.collect(&:absolute).to_a
     end
   end
 
   def test_ruby_file_paths
     temp_dir_and_file_from_path("test.rb") do |dir, file|
       at = Brakeman::AppTree.new(dir)
-      assert_equal [file], at.ruby_file_paths.collect(&:absolute)
+      assert_equal [file], at.ruby_file_paths.collect(&:absolute).to_a
     end
   end
 
   def test_ruby_file_paths_skip_vendor_false
     temp_dir_and_file_from_path("vendor/test.rb") do |dir, file|
       at = Brakeman::AppTree.new(dir, :skip_vendor => false)
-      assert_equal [file], at.ruby_file_paths.collect(&:absolute)
+      assert_equal [file], at.ruby_file_paths.collect(&:absolute).to_a
     end
   end
 
   def test_ruby_file_paths_skip_vendor_true
     temp_dir_and_file_from_path("vendor/test.rb") do |dir, file|
       at = Brakeman::AppTree.new(dir, :skip_vendor => true)
-      assert_equal [], at.ruby_file_paths.collect(&:absolute)
+      assert_equal [], at.ruby_file_paths.collect(&:absolute).to_a
     end
   end
 
   def test_ruby_file_paths_skip_vendor_true_add_libs_path
     temp_dir_and_file_from_path("vendor/bundle/gems/gem123/lib/test.rb") do |dir, file|
       at = Brakeman::AppTree.new(dir, :skip_vendor => true, :additional_libs_path => ["vendor/bundle/gems/gem123/lib"])
-      assert_equal [file], at.ruby_file_paths.collect(&:absolute)
+      assert_equal [file], at.ruby_file_paths.collect(&:absolute).to_a
     end
   end
 
   def test_ruby_file_paths_skip_vendor_true_add_engine_path
     temp_dir_and_file_from_path("vendor/bundle/gems/gem123/test.rb") do |dir, file|
       at = Brakeman::AppTree.new(dir, :skip_vendor => true, :engine_paths => ["vendor/bundle/gems"])
-      assert_equal [file], at.ruby_file_paths.collect(&:absolute)
+      assert_equal [file], at.ruby_file_paths.collect(&:absolute).to_a
     end
   end
 
   def test_ruby_file_paths_skip_vendor_true_tests_in_engine_path_still_excluded
     temp_dir_and_file_from_path("vendor/bundle/gems/gem123/test/test.rb") do |dir, file|
       at = Brakeman::AppTree.new(dir, :skip_vendor => true, :engine_paths => ["vendor/bundler/gems"])
-      assert_equal [], at.ruby_file_paths.collect(&:absolute)
+      assert_equal [], at.ruby_file_paths.collect(&:absolute).to_a
     end
   end
 
   def test_ruby_file_paths_add_engine_path
     temp_dir_and_file_from_path("lib/gems/gem123/test.rb") do |dir, file|
       at = Brakeman::AppTree.new(dir, :engine_paths => ["lib/gems"])
-      assert_equal [file], at.ruby_file_paths.collect(&:absolute)
+      assert_equal [file], at.ruby_file_paths.collect(&:absolute).to_a
     end
   end
 
   def test_ruby_file_paths_add_libs_path
     temp_dir_and_file_from_path("gem123/lib/test.rb") do |dir, file|
       at = Brakeman::AppTree.new(dir, :additional_libs_path => ["gems/gem123/lib"])
-      assert_equal [file], at.ruby_file_paths.collect(&:absolute)
+      assert_equal [file], at.ruby_file_paths.collect(&:absolute).to_a
     end
   end
 
@@ -130,7 +130,7 @@ class AppTreeTests < Minitest::Test
       FileUtils.mkdir_p(File.join(dir, "test.rb"))
 
       at = Brakeman::AppTree.new(dir)
-      assert_equal [], at.ruby_file_paths.collect(&:absolute)
+      assert_equal [], at.ruby_file_paths.collect(&:absolute).to_a
     end
   end
 end
