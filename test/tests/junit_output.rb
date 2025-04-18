@@ -3,8 +3,8 @@ require 'rexml/document'
 
 class JUnitOutputTests < Minitest::Test
   NO_LINE_REPORT_CHECKS = %w[
-    Brakeman::CheckDefaultRoutes
-    Brakeman::CheckModelAttrAccessible
+    CheckDefaultRoutes
+    CheckModelAttrAccessible
   ]
 
   def setup
