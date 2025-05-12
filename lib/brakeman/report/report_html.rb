@@ -1,4 +1,4 @@
-require 'cgi'
+require 'cgi/escape'
 require 'brakeman/report/report_table.rb'
 
 class Brakeman::Report::HTML < Brakeman::Report::Table
