@@ -48,7 +48,7 @@ class Rails8Tests < Minitest::Test
       user_input: nil
   end
 
-  def test_dangerous_eval_2
+  def test_dangerous_eval_3
     assert_warning check_name: "Evaluation",
       type: :warning,
       warning_code: 13,
