@@ -86,7 +86,7 @@ class Brakeman::Messages::Message
   end
 
   def to_html
-    require 'cgi'
+    require 'cgi/escape'
 
     output = @parts.map(&:to_html).join
 
