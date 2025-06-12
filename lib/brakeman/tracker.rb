@@ -441,4 +441,10 @@ class Brakeman::Tracker
 
     @call_index.remove_indexes_by_file path
   end
+
+  # Call this to be able to marshal the Tracker
+  def marshallable
+    @app_tree.marshallable
+    self
+  end
 end
