@@ -174,6 +174,20 @@ class CommandlineTests < Minitest::Test
     ignore_file_with_notes.unlink
   end
 
+  def test_ensure_no_obsolete_ignore_entries
+    ignore_file_obsolete_entries = Tempfile.new('brakeman.ignore')
+    ignore_file_obsolete_entries.write IGNORE_WITH_OBSOLETE_ENTRIES
+    ignore_file_obsolete_entries.close
+
+    assert_exit Brakeman::Obsolete_Ignore_Entries_Exit_Code do
+      scan_app '--ensure-no-obsolete-ignore-entries',
+               '-i', ignore_file_obsolete_entries.path.to_s,
+               '-t', 'None'
+    end
+
+    ignore_file_obsolete_entries.unlink
+  end
+
   IGNORE_WITH_MISSING_NOTES_JSON = <<~JSON.freeze
     {
       "ignored_warnings": [
@@ -249,4 +263,6 @@ class CommandlineTests < Minitest::Test
       "brakeman_version": "4.5.0"
     }
   JSON
+
+  IGNORE_WITH_OBSOLETE_ENTRIES = IGNORE_WITH_NOTES_JSON
 end
