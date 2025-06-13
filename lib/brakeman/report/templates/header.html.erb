@@ -9,10 +9,15 @@
     function toggle(context) {
       var elem = document.getElementById(context);
 
-      if (elem.style.display != "block")
+      if (elem.style.display != "block") {
         elem.style.display = "block";
-      else
+
+        elem.querySelectorAll("table").forEach(function(table) {
+          $(table).DataTable().columns.adjust();
+        });
+      } else {
         elem.style.display = "none";
+      }
 
       elem.parentNode.scrollIntoView();
     }
