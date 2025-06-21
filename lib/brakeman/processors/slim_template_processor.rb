@@ -14,8 +14,11 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
     target = exp.target
     method = exp.method
 
-    if method == :safe_concat and (target == SAFE_BUFFER or target == OUTPUT_BUFFER)
+    if method == :safe_concat and output_buffer? target
+      puts @current_template.name
+      p exp
       arg = normalize_output(exp.first_arg)
+      p arg
 
       if is_escaped? arg
         add_escaped_output arg.first_arg
@@ -35,6 +38,8 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
         add_output arg
       end
     elsif is_escaped? exp
+      # TODO: What is this supposed to do?
+      # `arg` isn't defined here
       add_escaped_output arg
     elsif target == nil and method == :render
       exp.arglist = process exp.arglist
@@ -43,6 +48,11 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
       exp.arglist = process exp.arglist
       exp
     end
+  end
+
+  def output_buffer? exp
+    exp == SAFE_BUFFER or
+      exp == OUTPUT_BUFFER
   end
 
   def normalize_output arg
@@ -80,14 +90,16 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
       if node_type? exp, :if
         process_interp_output exp.then_clause
         process_interp_output exp.else_clause
-      elsif exp == SAFE_BUFFER
+      elsif output_buffer? exp
         ignore
       elsif render? exp
         add_output make_render_in_view exp
       elsif node_type? :output, :escaped_output
         exp
       elsif is_escaped? exp
-        add_escaped_output exp
+        add_escaped_output exp.first_arg
+      elsif call? exp and exp.method == :to_s
+        process_interp_output exp.target
       else
         add_output exp
       end
@@ -96,6 +108,7 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
 
   def add_escaped_output exp
     exp = normalize_output(exp)
+    puts "Adding #{exp.inspect}"
 
     return exp if string? exp or internal_variable? exp
 
