@@ -7,9 +7,22 @@ class Brakeman::Haml6TemplateProcessor < Brakeman::SlimTemplateProcessor
   AV_SAFE_BUFFER = s(:or, s(:call, nil, :output_buffer), s(:call, s(:colon2, s(:const, :ActionView), :OutputBuffer), :new))
 
   def is_escaped? exp
-    call? exp and
-      (exp.target == HAML_UTILS or exp.target == HAML_UTILS2) and
-      (exp.method == :escape_html or exp.method == :escape_html_safe)
+    return unless call? exp
+
+    html_escaped? exp or
+      javascript_escaped? exp
+  end
+
+  def javascript_escaped? call
+    # TODO: Adding here to match existing behavior for HAML,
+    # but really this is not safe and needs to be revisited
+      call.method == :j or
+      call.method == :escape_javascript
+  end
+
+  def html_escaped? call
+    (call.target == HAML_UTILS or call.target == HAML_UTILS2) and
+      (call.method == :escape_html or call.method == :escape_html_safe)
   end
 
   def output_buffer? exp
