@@ -33,12 +33,6 @@ module Brakeman
                 nil
               end
 
-        if type == :slim
-          puts path
-          puts src
-          puts
-        end
-
         if src and ast = @file_parser.parse_ruby(src, path)
           @file_parser.file_list << TemplateFile.new(path, ast, name, type)
         end
@@ -81,7 +75,16 @@ module Brakeman
     end
 
     def parse_haml path, text
-      unless haml6?
+      if haml6?
+        require_relative 'haml6_embedded'
+
+        Haml::Template.new(filename: path.relative,
+                           generator: Temple::Generators::RailsOutputBuffer,
+                           use_html_safe: true,
+                           buffer_class: 'ActionView::OutputBuffer',
+                           disable_capture: true,
+                          ) { text }.precompiled_template
+      else
         require_relative 'haml_embedded'
 
         Haml::Engine.new(text,
@@ -89,14 +92,6 @@ module Brakeman
                          :escape_html => tracker.config.escape_html?,
                          :escape_filter_interpolations => tracker.config.escape_filter_interpolations?
                         ).precompiled.gsub(/([^\\])\\n/, '\1')
-      else
-        Haml::Template.new(path,
-                           generator:     Temple::Generators::RailsOutputBuffer,
-                           use_html_safe: true,
-                           streaming:     true,
-                           buffer_class:  'ActionView::OutputBuffer',
-                           disable_capture: true,
-                         ) { text }.precompiled_template
       end
     rescue Haml::Error => e
       tracker.error e, ["While compiling HAML in #{path}"] << e.backtrace
