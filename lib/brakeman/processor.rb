@@ -71,8 +71,9 @@ module Brakeman
         abort "Unknown template type: #{type} (#{name})"
       end
 
-      #Each template which is rendered is stored separately
-      #with a new name.
+      # Each template which is rendered is stored separately
+      # with a new name.
+      # But the name is calculated and stored already, so this is kind of silly.
       if called_from
         name = ("#{name}.#{called_from}").to_sym
       end
@@ -81,9 +82,18 @@ module Brakeman
       @tracker.templates[name].type = type
     end
 
-    #Process any calls to render() within a template
     def process_template_alias template
-      TemplateAliasProcessor.new(@tracker, template).process_safely template.src
+      # We want to do data flow on the template, even if Brakeman can't figure out
+      # where it's rendered from elsewhere.
+      # So do a "fake" render from a fake controller and store the result.
+      #
+      # Dummy value in name comes first to try to put this rendered version of the template
+      # last for processing.
+      src = TemplateAliasProcessor.new(@tracker, template).process_safely template.src
+      file = FilePath.from_app_tree(@tracker.app_tree, 'z_brakeman.rb')
+      line = 1
+      fake_render_path = RenderPath.new.add_controller_render(:zBrakemanController, :z_brakeman_action, line, file)
+      process_template(template.name, src, template.type, fake_render_path, template.file)
     end
 
     #Process source for initializing files

@@ -397,11 +397,14 @@ class Brakeman::Scanner
   end
 
   def process_template_data_flows
-    templates = tracker.templates.sort_by { |name, _| name }
+    # Do it by names to avoid modifying tracker.templates
+    # while iterating through it
+    template_names = tracker.templates.keys
+    template_names.sort!
 
-    track_progress templates, "templates" do |name, template|
+    track_progress template_names, "templates" do |name|
       process_step_file name do
-        @processor.process_template_alias template
+        @processor.process_template_alias tracker.templates[name]
       end
     end
   end
