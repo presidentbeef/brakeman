@@ -136,4 +136,6 @@ class UsersController < ApplicationController
     Email.find_by id: params[:email][:id]
     Email.find_by! id: params[:email][:id]
   end
+
+  def haml_test; end
 end

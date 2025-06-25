@@ -11,7 +11,8 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
   EMBEDDED_FILTER = s(:const, :BrakemanFilter)
 
   def process_call exp
-    target = exp.target
+    target = process(exp.target)
+    exp.arglist = process exp.arglist
     method = exp.method
 
     if method == :safe_concat and output_buffer? target
@@ -37,10 +38,6 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
       else
         add_output arg
       end
-    elsif is_escaped? exp
-      # TODO: What is this supposed to do?
-      # `arg` isn't defined here
-      add_escaped_output arg
     elsif target == nil and method == :render
       exp.arglist = process exp.arglist
       make_render_in_view exp
