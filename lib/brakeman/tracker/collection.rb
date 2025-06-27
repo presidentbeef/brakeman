@@ -115,6 +115,10 @@ module Brakeman
       @methods[:public]
     end
 
+    def private? name
+      @methods[:private].has_key? name
+    end
+
     def get_simple_method_return_value type, name
       @simple_methods[type][name]
     end
