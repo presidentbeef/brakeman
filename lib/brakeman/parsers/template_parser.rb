@@ -85,6 +85,7 @@ module Brakeman
         require_relative 'haml6_embedded'
 
         Haml::Template.new(filename: path.relative,
+                           :escape_html => tracker.config.escape_html?,
                            generator: Temple::Generators::RailsOutputBuffer,
                            use_html_safe: true,
                            buffer_class: 'ActionView::OutputBuffer',

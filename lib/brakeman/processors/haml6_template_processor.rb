@@ -1,10 +1,13 @@
-require 'brakeman/processors/slim_template_processor'
+require 'brakeman/processors/haml_template_processor'
 
-class Brakeman::Haml6TemplateProcessor < Brakeman::SlimTemplateProcessor
+class Brakeman::Haml6TemplateProcessor < Brakeman::HamlTemplateProcessor
+
+  OUTPUT_BUFFER = s(:ivar, :@output_buffer)
   HAML_UTILS = s(:colon2, s(:colon3, :Haml), :Util)
   HAML_UTILS2 = s(:colon2, s(:const, :Haml), :Util)
   # @output_buffer = output_buffer || ActionView::OutputBuffer.new
   AV_SAFE_BUFFER = s(:or, s(:call, nil, :output_buffer), s(:call, s(:colon2, s(:const, :ActionView), :OutputBuffer), :new))
+  EMBEDDED_FILTER = s(:const, :BrakemanFilter)
 
   def initialize(*)
     super
@@ -24,17 +27,25 @@ class Brakeman::Haml6TemplateProcessor < Brakeman::SlimTemplateProcessor
     @compiler_assigns = {}
   end
 
+  # @output_buffer.safe_concat
+  def buffer_append? exp
+    call? exp and
+      output_buffer? exp.target and
+      exp.method == :safe_concat
+  end
+
   def process_lasgn exp
     if exp.lhs.match? /_haml_compiler\d+/
-      @compiler_assigns[exp.lhs] = exp.line
+      @compiler_assigns[exp.lhs] = exp.rhs
+      ignore
+    else
+      exp
     end
-
-    exp
   end
 
   def process_lvar exp
     if exp.value.match? /_haml_compiler\d+/
-      exp.line = @compiler_assigns[exp.value]
+      exp = @compiler_assigns[exp.value] || exp
     end
 
     exp
@@ -62,5 +73,20 @@ class Brakeman::Haml6TemplateProcessor < Brakeman::SlimTemplateProcessor
   def output_buffer? exp
     exp == OUTPUT_BUFFER or
       exp == AV_SAFE_BUFFER
+  end
+
+  def normalize_output arg
+    arg = super(arg)
+
+    if embedded_filter? arg
+      super(arg.first_arg)
+    else
+      arg
+    end
+  end
+
+  # Handle our "fake" embedded filters
+  def embedded_filter? arg
+    call? arg and arg.method == :render and arg.target == EMBEDDED_FILTER
   end
 end
