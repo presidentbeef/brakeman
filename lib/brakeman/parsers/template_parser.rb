@@ -33,12 +33,6 @@ module Brakeman
                 nil
               end
 
-        if type == :haml6
-          puts path
-          puts src
-          puts
-        end
-
         if src and ast = @file_parser.parse_ruby(src, path)
           @file_parser.file_list << TemplateFile.new(path, ast, name, type)
         end

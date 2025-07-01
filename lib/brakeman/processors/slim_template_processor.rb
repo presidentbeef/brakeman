@@ -16,13 +16,10 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
     method = exp.method
 
     if method == :safe_concat and output_buffer? target
-      puts @current_template.name
-      p exp
       arg = normalize_output(exp.first_arg)
-      p arg
 
       if is_escaped? arg
-        add_escaped_output arg.first_arg
+        add_escaped_output process(arg.first_arg)
       elsif string? arg
         ignore
       elsif render? arg
@@ -39,7 +36,6 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
         add_output arg
       end
     elsif target == nil and method == :render
-      exp.arglist = process exp.arglist
       make_render_in_view exp
     else
       exp.arglist = process exp.arglist
@@ -105,7 +101,6 @@ class Brakeman::SlimTemplateProcessor < Brakeman::TemplateProcessor
 
   def add_escaped_output exp
     exp = normalize_output(exp)
-    puts "Adding #{exp.inspect}"
 
     return exp if string? exp or internal_variable? exp
 

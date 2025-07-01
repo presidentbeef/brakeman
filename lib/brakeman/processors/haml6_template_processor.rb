@@ -62,7 +62,7 @@ class Brakeman::Haml6TemplateProcessor < Brakeman::HamlTemplateProcessor
     # TODO: Adding here to match existing behavior for HAML,
     # but really this is not safe and needs to be revisited
       call.method == :j or
-      call.method == :escape_javascript
+        call.method == :escape_javascript
   end
 
   def html_escaped? call
