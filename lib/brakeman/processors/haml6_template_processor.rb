@@ -35,7 +35,7 @@ class Brakeman::Haml6TemplateProcessor < Brakeman::HamlTemplateProcessor
   end
 
   def process_lasgn exp
-    if exp.lhs.match? /_haml_compiler\d+/
+    if exp.lhs.match?(/_haml_compiler\d+/)
       @compiler_assigns[exp.lhs] = exp.rhs
       ignore
     else
@@ -44,7 +44,7 @@ class Brakeman::Haml6TemplateProcessor < Brakeman::HamlTemplateProcessor
   end
 
   def process_lvar exp
-    if exp.value.match? /_haml_compiler\d+/
+    if exp.value.match?(/_haml_compiler\d+/)
       exp = @compiler_assigns[exp.value] || exp
     end
 
