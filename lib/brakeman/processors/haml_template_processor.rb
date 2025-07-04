@@ -84,6 +84,12 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
     :escape_once_without_haml_xss
   ]
 
+  def is_escaped? exp
+    return unless call? exp
+
+    haml_helpers? exp.target and ESCAPE_METHODS.include? exp.method
+  end
+
   def get_pushed_value exp, default = :output
     return exp unless sexp? exp
 
@@ -113,7 +119,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
     when :call
       if exp.method == :to_s or exp.method == :strip
         get_pushed_value(exp.target, default)
-      elsif haml_helpers? exp.target and ESCAPE_METHODS.include? exp.method
+      elsif is_escaped? exp
         get_pushed_value(exp.first_arg, :escaped_output)
       elsif @javascript and (exp.method == :j or exp.method == :escape_javascript) # TODO: Remove - this is not safe
         get_pushed_value(exp.first_arg, :escaped_output)
