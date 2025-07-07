@@ -841,7 +841,7 @@ class Rails4Tests < Minitest::Test
   def test_xss_haml_line_number
     assert_warning :type => :template,
       :warning_code => 2,
-      :fingerprint => "f46cf9e2ae9df8f14d195c41589aa3f64a2347b93b899d8871bf4daffeb33c5f",
+      :fingerprint => "104956d65ed7dbf771419455017d79ff8d2f718c7d383c6a3b343a15d2511ff2",
       :warning_type => "Cross-Site Scripting",
       :line => 5,
       :message => /^Unescaped\ parameter\ value/,
@@ -913,7 +913,7 @@ class Rails4Tests < Minitest::Test
   def test_cross_site_scripting_haml_interpolation
     assert_warning :type => :template,
       :warning_code => 2,
-      :fingerprint => "9d4de763367e98fe87e2923d1426e474b3e41a4754e1bc06d3a672bc68b89b79",
+      :fingerprint => "466b2c1ea4aa43dc6465d2b7815d529f7cfad6f333cc17dd90e3aae9697a6042",
       :warning_type => "Cross-Site Scripting",
       :line => 6,
       :message => /^Unescaped\ model\ attribute/,

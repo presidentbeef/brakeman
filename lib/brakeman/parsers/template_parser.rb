@@ -24,6 +24,7 @@ module Brakeman
                 type = :erubis if erubis?
                 parse_erb path, text
               when :haml
+                type = :haml6 if haml6?
                 parse_haml path, text
               when :slim
                 parse_slim path, text
@@ -74,17 +75,41 @@ module Brakeman
     end
 
     def parse_haml path, text
-      Brakeman.load_brakeman_dependency 'haml'
-      require_relative 'haml_embedded'
+      if haml6?
+        require_relative 'haml6_embedded'
 
-      Haml::Engine.new(text,
-                       :filename => path,
-                       :escape_html => tracker.config.escape_html?,
-                       :escape_filter_interpolations => tracker.config.escape_filter_interpolations?
-                      ).precompiled.gsub(/([^\\])\\n/, '\1')
+        Haml::Template.new(filename: path.relative,
+                           :escape_html => tracker.config.escape_html?,
+                           generator: Temple::Generators::RailsOutputBuffer,
+                           use_html_safe: true,
+                           buffer_class: 'ActionView::OutputBuffer',
+                           disable_capture: true,
+                          ) { text }.precompiled_template
+      else
+        require_relative 'haml_embedded'
+
+        Haml::Engine.new(text,
+                         :filename => path,
+                         :escape_html => tracker.config.escape_html?,
+                         :escape_filter_interpolations => tracker.config.escape_filter_interpolations?
+                        ).precompiled.gsub(/([^\\])\\n/, '\1')
+      end
     rescue Haml::Error => e
       tracker.error e, ["While compiling HAML in #{path}"] << e.backtrace
       nil
+    end
+
+    def haml6?
+      return @haml6 unless @haml6.nil?
+
+      Brakeman.load_brakeman_dependency 'haml'
+      major_version = Haml::VERSION.split('.').first.to_i
+
+      if major_version >= 6
+        @haml6 = true
+      else
+        @haml6 = false
+      end
     end
 
     def parse_slim path, text

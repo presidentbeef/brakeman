@@ -56,7 +56,7 @@ class Brakeman::TemplateProcessor < Brakeman::BaseProcessor
   # Pull out actual output value from template
   def normalize_output arg
     if call? arg and [:to_s, :html_safe!, :freeze].include? arg.method
-      arg.target
+      normalize_output(arg.target) # sometimes it's foo.to_s.to_s
     elsif node_type? arg, :if
       branches = [arg.then_clause, arg.else_clause].compact
 
