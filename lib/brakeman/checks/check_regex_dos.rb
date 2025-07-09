@@ -11,12 +11,20 @@ class Brakeman::CheckRegexDoS < Brakeman::BaseCheck
     ]
   }
 
-  @description = "Searches regexes including user input"
+  COERCES_STRING_TO_REGEX = [
+    :match,
+    :match?
+  ]
+
+  @description = "Searches regexes and coerced regexes including user input"
 
   #Process calls
   def run_check
     Brakeman.debug "Finding dynamic regexes"
     calls = tracker.find_call :method => [:brakeman_regex_interp]
+
+    calls.concat(tracker.find_call(:methods => COERCES_STRING_TO_REGEX)
+                        .select { |call| string_or_modified_string?(call[:target]) })
 
     Brakeman.debug "Processing dynamic regexes"
     calls.each do |call|
@@ -44,7 +52,11 @@ class Brakeman::CheckRegexDoS < Brakeman::BaseCheck
       end
 
       if match
-        message = msg(msg_input(match), " used in regular expression")
+        if result[:method] == :brakeman_regex_interp
+          message = msg(msg_input(match), " used in regular expression")
+        else
+          message = msg(msg_input(match), " used in string to regular expression coercion by ", msg_code(call.method), " method")
+        end
 
         warn :result => result,
           :warning_type => "Denial of Service",
@@ -54,6 +66,14 @@ class Brakeman::CheckRegexDoS < Brakeman::BaseCheck
           :user_input => match,
           :cwe_id => [20, 185]
       end
+    end
+  end
+
+  def string_or_modified_string?(sexp)
+    if call? sexp
+      string_or_modified_string? sexp.target
+    else
+      string? sexp
     end
   end
 
