@@ -436,6 +436,12 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
       exp.method == :open
   end
 
+  def temp_file_create? exp
+    call? exp and
+      exp.target == TEMP_FILE_CLASS and
+      exp.method == :create
+  end
+
   def temp_file_new line
     s(:call, TEMP_FILE_CLASS, :new).line(line)
   end
@@ -463,6 +469,9 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
         local = Sexp.new(:lvar, block_args.last)
         env.current[local] = safe_literal(exp.line)
       elsif temp_file_open? call
+        local = Sexp.new(:lvar, block_args.last)
+        env.current[local] = temp_file_new(exp.line)
+      elsif temp_file_create? call
         local = Sexp.new(:lvar, block_args.last)
         env.current[local] = temp_file_new(exp.line)
       else

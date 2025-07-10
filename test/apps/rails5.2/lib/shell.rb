@@ -138,8 +138,12 @@ class ShellStuff
   end
 
   def tempfile_create
-    # should not warn
+    # these should not warn
     tempfile = Tempfile.create
     `something -out #{tempfile.path}`
+
+    Tempfile.create do |tempfile|
+      system("something -out #{tempfile.path}")
+    end
   end
 end
