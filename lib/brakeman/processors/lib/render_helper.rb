@@ -9,7 +9,14 @@ module Brakeman::RenderHelper
     @rendered = true
     case exp.render_type
     when :action, :template, :inline
-      process_action exp[2][1], exp[3], exp.line
+      action = exp[2]
+      args = exp[3]
+
+      if string? action or symbol? action
+        process_action action.value, args, exp.line
+      else
+        process_model_action action, args
+      end
     when :default
       begin
         process_template template_name, exp[3], nil, exp.line
@@ -49,6 +56,36 @@ module Brakeman::RenderHelper
   def process_action name, args, line
     if name.is_a? String or name.is_a? Symbol
       process_template template_name(name), args, nil, line
+    else
+      Brakeman.debug "Not processing render #{name.inspect}"
+    end
+  end
+
+  SINGLE_RECORD = [:first, :find, :last, :new]
+  COLLECTION = [:all, :where]
+
+  def process_model_action action, args
+    return unless call? action
+
+    method = action.method
+
+    klass = get_class_target(action) || Brakeman::Tracker::UNKNOWN_MODEL
+    name = Sexp.new(:lit, klass.downcase)
+
+    if SINGLE_RECORD.include? method
+      # Set a local variable with name based on class of model
+      # and value of the value passed to render
+      local_key = Sexp.new(:lit, :locals)
+      locals = hash_access(args, local_key) || Sexp.new(:hash)
+      hash_insert(locals, name, action)
+      hash_insert(args, local_key, locals)
+
+      process_partial name, args, action.line
+    elsif COLLECTION.include? method
+      collection_key = Sexp.new(:lit, :collection)
+      hash_insert(args, collection_key, action)
+
+      process_partial name, args, action.line
     end
   end
 

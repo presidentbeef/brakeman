@@ -15,7 +15,7 @@ class Rails8Tests < Minitest::Test
     @@expected ||= {
       controller: 0,
       model:      0,
-      template:   0,
+      template:   2,
       warning:    4
     }
   end
@@ -86,5 +86,33 @@ class Rails8Tests < Minitest::Test
       confidence: 2,
       relative_path: "lib/evals.rb"
       # code: s(:call, nil, :class_eval, s(:dstr, "        def method_that_is_", s(:evstr, s(:lit, :BRAKEMAN_SAFE_LITERAL)), s(:str, "\n          puts suffix\n        end\n"))),
+  end
+
+  def test_cross_site_scripting_render_model_partial
+    assert_warning check_name: "CrossSiteScripting",
+      type: :template,
+      warning_code: 2,
+      fingerprint: "08a968d826da16ddaffcf8393d6ed50d30a3caea4b625dabf888a5a8b699453d",
+      warning_type: "Cross-Site Scripting",
+      line: 4,
+      message: /^Unescaped\ model\ attribute/,
+      confidence: 0,
+      relative_path: "app/views/users/_user.html.erb",
+      code: s(:call, s(:call, s(:const, :User), :new, s(:call, nil, :user_params)), :name),
+      user_input: nil
+  end
+
+  def test_cross_site_scripting_render_model_as_collection
+    assert_warning check_name: "CrossSiteScripting",
+      type: :template,
+      warning_code: 2,
+      fingerprint: "27817dcbdd924e1772bd98bcdd6063486a633cf8c1b84353dcbf1dde23904a94",
+      warning_type: "Cross-Site Scripting",
+      line: 1,
+      message: /^Unescaped\ model\ attribute/,
+      confidence: 0,
+      relative_path: "app/views/things/_thing.html.erb",
+      code: s(:call, s(:call, s(:const, :Thing), :new), :name),
+      user_input: nil
   end
 end
