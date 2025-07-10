@@ -16,7 +16,7 @@ class Rails7Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 0,
-      :warning => 26
+      :warning => 27
     }
   end
 
@@ -461,5 +461,32 @@ class Rails7Tests < Minitest::Test
       relative_path: "app/controllers/users_controller.rb",
       code: s(:call, s(:call, s(:call, nil, :some_book), :things), :ransack, s(:call, s(:params), :[], s(:lit, :q))),
       user_input: s(:call, s(:params), :[], s(:lit, :q))
+  end
+
+  def test_sql_injection_sanitize_sql_like
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "8dde11c95a0f3acb4f982ff6554ac3ba821334ee04aee7f1fb0ea01c8919baad",
+      :warning_type => "SQL Injection",
+      :line => 13,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/group.rb",
+      :code => s(:call, s(:const, :Arel), :sql, s(:dstr, "name ILIKE '%", s(:evstr, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :sanitize_sql_like, s(:lvar, :query))), s(:str, "%'"))),
+      :user_input => s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :sanitize_sql_like, s(:lvar, :query))
+  end
+
+  def test_sql_injection_enum
+    assert_no_warning check_name: "SQL",
+      type: :warning,
+      warning_code: 0,
+      fingerprint: "6ce332de0056255cc786f7d381305a81dd03afabac97863fd678d342b7f9466c",
+      warning_type: "SQL Injection",
+      line: 35,
+      message: /^Possible\ SQL\ injection/,
+      confidence: 0,
+      relative_path: "app/models/group.rb",
+      code: s(:call, nil, :where, s(:dstr, "thing IN ", s(:evstr, s(:call, s(:call, s(:call, s(:const, :Group), :statuses), :values_at, s(:lit, :start), s(:lit, :stop)), :join, s(:str, ","))))),
+      user_input: s(:call, s(:call, s(:const, :Group), :statuses), :values_at, s(:lit, :start), s(:lit, :stop))
   end
 end

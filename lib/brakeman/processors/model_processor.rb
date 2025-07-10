@@ -90,13 +90,23 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
     end
   end
 
-  def add_enum_method call
-    arg = call.first_arg
-    return unless hash? arg
-    return unless symbol? arg[1]
+  def add_enum_method(call)
+    if call.second_arg.nil?
+      arg = call.first_arg
+      return unless hash? arg
+      return unless symbol? arg[1]
 
-    enum_name = arg[1].value # first key
-    enums = arg[2] # first value
+      enum_name = arg[1].value # first key
+      enums = arg[2] # first value
+    else
+      first_arg = call.first_arg
+      second_arg = call.second_arg
+      return unless symbol? first_arg
+      return unless (hash?(second_arg) || array?(second_arg))
+
+      enum_name = first_arg.value
+      enums = second_arg
+    end
     enums_name = pluralize(enum_name.to_s).to_sym
 
     call_line = call.line
