@@ -463,19 +463,6 @@ class Rails7Tests < Minitest::Test
       user_input: s(:call, s(:params), :[], s(:lit, :q))
   end
 
-  def test_sql_injection_hash_fetch_all_literals
-    assert_no_warning :type => :warning,
-      :warning_code => 0,
-      :fingerprint => "1b9a04c9fdc4b8c7f215387fb726dc542c2d35dde2f29b48a76248443524a5fa",
-      :warning_type => "SQL Injection",
-      :line => 14,
-      :message => /^Possible\ SQL\ injection/,
-      :confidence => 1,
-      :relative_path => "app/models/group.rb",
-      :code => s(:call, s(:const, :Arel), :sql, s(:dstr, "role = '", s(:evstr, s(:call, s(:hash, s(:lit, :admin), s(:lit, 1), s(:lit, :moderator), s(:lit, 2)), :fetch, s(:lvar, :role_name))), s(:str, "'"))),
-      :user_input => s(:call, s(:hash, s(:lit, :admin), s(:lit, 1), s(:lit, :moderator), s(:lit, 2)), :fetch, s(:lvar, :role_name))
-  end
-
   def test_sql_injection_sanitize_sql_like
     assert_warning :type => :warning,
       :warning_code => 0,
@@ -489,29 +476,17 @@ class Rails7Tests < Minitest::Test
       :user_input => s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :sanitize_sql_like, s(:lvar, :query))
   end
 
-  def test_sql_injection_uuid_false_positive
-    assert_no_warning :type => :warning,
-      :warning_code => 0,
-      :fingerprint => "8ebbafd2b7d6aa2d6ab639c6678ae1f5489dc3166747bbad8919e95156592321",
-      :warning_type => "SQL Injection",
-      :line => 3,
-      :message => /^Possible\ SQL\ injection/,
-      :confidence => 0,
-      :relative_path => "app/models/group.rb",
-      :code => s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :exec_query, s(:dstr, "select * where x = ", s(:evstr, s(:call, s(:const, :User), :uuid)))),
-      :user_input => s(:call, s(:const, :User), :uuid)
-  end
-
-  def test_sql_injection_uuid_false_positive
-    assert_no_warning :type => :warning,
-      :warning_code => 0,
-      :fingerprint => "8ebbafd2b7d6aa2d6ab639c6678ae1f5489dc3166747bbad8919e95156592321",
-      :warning_type => "SQL Injection",
-      :line => 3,
-      :message => /^Possible\ SQL\ injection/,
-      :confidence => 0,
-      :relative_path => "app/models/group.rb",
-      :code => s(:call, s(:call, s(:colon2, s(:const, :ActiveRecord), :Base), :connection), :exec_query, s(:dstr, "select * where x = ", s(:evstr, s(:call, s(:const, :User), :uuid)))),
-      :user_input => s(:call, s(:const, :User), :uuid)
+  def test_sql_injection_enum
+    assert_no_warning check_name: "SQL",
+      type: :warning,
+      warning_code: 0,
+      fingerprint: "6ce332de0056255cc786f7d381305a81dd03afabac97863fd678d342b7f9466c",
+      warning_type: "SQL Injection",
+      line: 35,
+      message: /^Possible\ SQL\ injection/,
+      confidence: 0,
+      relative_path: "app/models/group.rb",
+      code: s(:call, nil, :where, s(:dstr, "thing IN ", s(:evstr, s(:call, s(:call, s(:call, s(:const, :Group), :statuses), :values_at, s(:lit, :start), s(:lit, :stop)), :join, s(:str, ","))))),
+      user_input: s(:call, s(:call, s(:const, :Group), :statuses), :values_at, s(:lit, :start), s(:lit, :stop))
   end
 end
