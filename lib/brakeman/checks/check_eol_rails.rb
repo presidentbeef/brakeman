@@ -25,5 +25,6 @@ class Brakeman::CheckEOLRails < Brakeman::EOLCheck
     ['7.0.0', '7.0.99'] => Date.new(2025, 4, 1),
     ['7.1.0', '7.1.99'] => Date.new(2025, 10, 1),
     ['7.2.0', '7.2.99'] => Date.new(2026, 8, 9),
+    ['8.0.0', '8.0.99'] => Date.new(2026, 10, 7),
   }
 end
