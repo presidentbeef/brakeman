@@ -80,6 +80,120 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2020/08/27/brakeman-turns-10">Brakeman Turns Ten!</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2020-08-27 08:10:00 -0600" pubdate  updated >2020-08-27 08:10:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Hi! <a href="https://twitter.com/presidentbeef">Justin Collins</a> here with a rare non-release-related Brakeman post.</p>
+
+<p>On August 27, 2010 (<em>two days before Rails 3.0!</em>), I released the <a href="https://rubygems.org/gems/brakeman/versions/0.0.2">first public version</a> of my summer intern project at AT&amp;T Interactive: a static analysis security tool for Ruby on Rails called “Brakeman”.</p>
+
+<p>Brakeman was intended to be a stop-gap solution until commercial products started supporting Ruby. I had no idea it would take me on such a wild journey nor did I think I would still be maintaining it ten years later.</p>
+
+<p>In the past ten years, Brakeman has had:</p>
+
+<ul>
+  <li><a href="https://rubygems.org/gems/brakeman">33+ million gem downloads</a></li>
+  <li><a href="https://github.com/presidentbeef/brakeman/network/dependents?package_id=UGFja2FnZS0yMzgzMw%3D%3D">Over 9,000 dependent GitHub repos</a></li>
+  <li><a href="https://github.com/presidentbeef/brakeman/releases">120 releases</a></li>
+  <li><a href="https://github.com/presidentbeef/brakeman/graphs/contributors">100+ contributors</a></li>
+</ul>
+
+<p>I am extremely grateful to everyone who has contributed to this journey: those who took chances on me, those who supported and promoted Brakeman, those who have contributed time and code to Brakeman, those who reported bugs and suggested improvements, and everyone who has used Brakeman to make their applications safer!</p>
+
+<p>Very special thanks to:</p>
+
+<ul>
+  <li><a href="https://www.linkedin.com/in/tinzaw/">Tin Zaw</a></li>
+  <li><a href="https://www.zenspider.com/">Ryan Davis</a></li>
+  <li><a href="https://twitter.com/ndm">Neil Matatall</a></li>
+  <li><a href="https://manicode.com/">Jim Manico</a></li>
+  <li><a href="https://alexsmolen.com/">Alex Smolen</a></li>
+  <li><a href="https://twitter.com/cktricky">Ken Johnson</a></li>
+</ul>
+
+<p>Want some Brakeman FAQ nuggets? You got it!</p>
+
+<h3 id="where-did-the-idea-for-brakeman-come-from">Where did the idea for Brakeman come from?</h3>
+
+<p>I recall during my internship interview at AT&amp;T Interactive, we were talking about cross-site scripting. I distinctly recall saying, “What if we had a tool that looked at the inputs and outputs of an application and found cross-site scripting?” The response was an excited “Do you know of a tool like that for Ruby?” To which I replied, “No, but I’m sure it wouldn’t be that hard to build!” This idea was later pitched back to me as a possible internship project.</p>
+
+<p>By the way, that’s still not how Brakeman works, but it was originally designed to find cross-site scripting.</p>
+
+<h3 id="who-came-up-with-the-name-brakeman">Who came up with the name “Brakeman”?</h3>
+
+<p><a href="https://www.linkedin.com/in/carlivar/">Carl Johnson</a> and <a href="https://www.linkedin.com/in/tatsuya-murase-a8061/">Tatsuya Murase</a> on the security team at AT&amp;T Interactive were way more into trains than me, and they suggested the name. There were a couple other candidates, but I thought “Brakeman” had a snappy sound to it and was unique.</p>
+
+<h3 id="was-brakeman-your-phd-research">Was Brakeman your PhD research?</h3>
+
+<p>Nope, unrelated. However, Brakeman was released exactly at the midpoint of my PhD career.</p>
+
+<p><em><a href="https://escholarship.org/uc/item/8md1h50q">Here is my dissertation</a> for those interested few.</em></p>
+
+<h3 id="what-is-up-with-the-brakeman-logo">What is up with the Brakeman logo?</h3>
+
+<p>It’s a <a href="https://www.google.com/search?source=univ&amp;tbm=isch&amp;q=brakeman+lantern">brakeman lantern</a> and was designed by <a href="http://www.nell-ux.com/">Janelle Lawless</a>.</p>
+
+<h3 id="do-you-still-maintain-brakeman-who-owns-it">Do you still maintain Brakeman? Who owns it?</h3>
+
+<p>Yes, I am still the maintainer of the free version you see here.</p>
+
+<p>The bits of Brakeman owned by Brakeman, Inc. were <a href="https://brakemanpro.com/2018/06/28/brakeman-pro-acquired-by-synopsys">sold to Synopsys</a>.</p>
+
+<h3 id="will-brakeman-ever-support-other-languagesframeworks">Will Brakeman ever support other languages/frameworks?</h3>
+
+<p>Almost certainly not. It is very tailored to Ruby and Rails and I don’t have time or energy to build another static analysis engine from scratch!</p>
+
+<h3 id="can-i-see-a-picture-of-you-presenting-brakeman-in-public-for-the-very-first-time">Can I see a picture of you presenting Brakeman in public for the very first time?</h3>
+
+<p>Sure, here you go:</p>
+
+<p><img src="/images/Justin_LARuby_October_2010.jpeg" alt="Justin Collins presenting at LA Ruby Meetup October 2010" /></p>
+
+<h3 id="thats-nice-but-what-about-blurry-video-of-the-first-conference-talk-about-brakeman">That’s nice but what about blurry video of the first <em>conference</em> talk about Brakeman?</h3>
+
+<p><a href="https://vimeo.com/32696936">No problem!</a></p>
+
+<h3 id="okay-but-what-i-really-want-is-a-sweet-brakeman-sticker">Okay but what I really want is a sweet Brakeman sticker.</h3>
+
+<p>Oh, one of these special edition ones?</p>
+
+<p><img src="/images/brakeman_metal_sticker.jpg" alt="Metallic Brakeman Sticker" /></p>
+
+<p>Email your name and physical address to stickers@brakeman.org.</p>
+
+<h3 id="whats-next">What’s next?</h3>
+
+<p>Next is Brakeman 5.0! It would have been nice to have a release coincide with this anniversary, but alas that is way too hard to manage. No promises, but if all goes well 5.0 will be released in September.</p>
+
+<p>As long as Rails continues to hang on as a solid option for many companies and individuals, I expect to continue maintaining Brakeman. The project means a lot to me and it’s a privilege and responsibility I take very seriously.</p>
+
+<p>We’ll see what happens in the next ten years!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2020/08/04/brakeman-4-dot-9-dot-0-released">Brakeman 4.9.0 Released</a></h1>
     
     
@@ -519,98 +633,6 @@ d82206b9a60ef1eb4c96d32ba0157774db301e3ca10dcbdd7b4171044b28eccf  brakeman-min-4
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2019/11/25/brakeman-4-dot-7-dot-2-released">Brakeman 4.7.2 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2019-11-25 14:00:00 -0700" pubdate  updated >2019-11-25 14:00:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Some minor fixes for a minor release.</p>
-
-<p><em>Changes since 4.7.1:</em></p>
-
-<ul>
-  <li>Add <code class="language-plaintext highlighter-rouge">request.params</code> as query parameters (<a href="https://github.com/presidentbeef/brakeman/issues/1398">#1398</a>)</li>
-  <li>Handle more <code class="language-plaintext highlighter-rouge">permit!</code> cases (<a href="https://github.com/presidentbeef/brakeman/issues/1426">#1426</a>)</li>
-  <li>Remove version guard for <code class="language-plaintext highlighter-rouge">named_scope</code> vs. <code class="language-plaintext highlighter-rouge">scope</code></li>
-  <li>Find SQL injection in <code class="language-plaintext highlighter-rouge">String#strip_heredoc</code> target (<a href="https://github.com/presidentbeef/brakeman/issues/1433">#1433</a>)</li>
-  <li>Ensure file name is set when processing models</li>
-  <li>Bundle <code class="language-plaintext highlighter-rouge">ruby_parser</code> version 3.14.1 (<a href="https://github.com/presidentbeef/brakeman/issues/1429">#1429</a>)</li>
-</ul>
-
-<h3 id="more-query-parameters">More Query Parameters</h3>
-
-<p><code class="language-plaintext highlighter-rouge">request.params</code> has been added as a query parameters method.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1423">changes</a>)</p>
-
-<h3 id="more-permit">More <code class="language-plaintext highlighter-rouge">permit!</code></h3>
-
-<p>More cases of <code class="language-plaintext highlighter-rouge">permit!</code> will be identified, particularly when it is the target of a method call.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1427">changes</a>)</p>
-
-<h3 id="more-scopes">More Scopes</h3>
-
-<p>Both <code class="language-plaintext highlighter-rouge">named_scope</code> and <code class="language-plaintext highlighter-rouge">scope</code> will be handled regardless of detected Rails version.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1435">changes</a>)</p>
-
-<h3 id="sql-injection-with-strip_heredoc">SQL Injection with <code class="language-plaintext highlighter-rouge">strip_heredoc</code></h3>
-
-<p><code class="language-plaintext highlighter-rouge">strip_heredoc</code> is now treated as returning a string.
-This fixes false positives if the target is a plain string and fixes false negatives if the target has interpolation.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1434">changes</a>)</p>
-
-<h3 id="model-file-names">Model File Names</h3>
-
-<p>In some cases, warnings were missing file names because the file name was not being passed to the model processor.</p>
-
-<p>The file name will now be passed along, and there is a new test in the test suite for file names on warnings.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1431">changes</a>)</p>
-
-<h3 id="checksums">Checksums</h3>
-
-<p>The SHA256 sums for this release are:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>339d6f3707a2c0a32003536a231255b839a0b87bd6a7ebef3c82aedd1bdd3ac8  brakeman-4.7.2.gem
-39ce3a5fe248dee8c78fe671441d2abbfec66cec923ee9f56c62018229d3c9b0  brakeman-lib-4.7.2.gem
-efa07aa8476ef5553c91734093349a3ed55e2ef05b469d3dcecfdaabede37296  brakeman-min-4.7.2.gem
-</code></pre></div></div>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -649,6 +671,10 @@ efa07aa8476ef5553c91734093349a3ed55e2ef05b469d3dcecfdaabede37296  brakeman-min-4
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">Brakeman 7.1.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
       </li>
     
@@ -662,10 +688,6 @@ efa07aa8476ef5553c91734093349a3ed55e2ef05b469d3dcecfdaabede37296  brakeman-min-4
     
       <li class="post">
         <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
       </li>
     
   </ul>

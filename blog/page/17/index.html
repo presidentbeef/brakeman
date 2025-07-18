@@ -80,6 +80,69 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2014/03/22/brakeman-2-dot-4-3-released">Brakeman 2.4.3 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2014-03-22 17:49:00 -0600" pubdate  updated >2014-03-22 17:49:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A new gem version has been released because the 2.4.2 gem was not signed. No other changes were introduced.</p>
+
+<h3 id="signed-gems">Signed Gems</h3>
+
+<p>As a reminder, the Brakeman gems are (supposed to be) signed and can be verified with <a href="https://github.com/presidentbeef/brakeman/blob/master/brakeman-public_cert.pem">this certificate</a>.</p>
+
+<p>To verify on installation:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem cert --add &lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
+gem install brakeman -P MediumSecurity
+</code></pre></div></div>
+
+<p>“HighSecurity” requires all dependencies to be signed as well, which is unlikely.</p>
+
+<p>There is some weirdness around <code class="language-plaintext highlighter-rouge">-P MediumSecurity</code> currently. The simplest solution seems to be:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install brakeman   # Install Brakeman and all dependencies
+gem uninstall brakeman # Remove the Brakeman gem
+gem install brakeman -P MediumSecurity  # Install Brakeman gem and check signature
+</code></pre></div></div>
+
+<h3 id="shas">SHAs</h3>
+
+<p>The SHA1 sums for this release are</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>16b4890fa8ee6bad1d429a12bf3f0cb8e76cb2d8  brakeman-2.4.3.gem
+be5743d77140e64b75eefc53f8697f767ab370d9  brakeman-min-2.4.3.gem 
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and joining the <a href="http://brakemanscanner.org/contact/">mailing list</a>.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2014/03/20/brakeman-2-dot-4-2-released">Brakeman 2.4.2 Released</a></h1>
     
     
@@ -508,157 +571,6 @@ Test.find_by_sql(query)
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2013/12/11/brakeman-2-dot-3-0-released">Brakeman 2.3.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2013-12-11 12:20:00 -0700" pubdate  updated >2013-12-11 12:20:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a small release, but adds several new warning codes for the latest Rails CVEs and a new check for uses of <code class="language-plaintext highlighter-rouge">permit!</code>. Also, this is the first signed gem release of Brakeman; see below for details.</p>
-
-<p><em>Changes since 2.2.0:</em></p>
-
-<ul>
-  <li>Add check for CVE-2013-4491 (i18n XSS)</li>
-  <li>Add check for CVE-2013-6414 (header DoS)</li>
-  <li>Add check for CVE-2013-6415 (<code class="language-plaintext highlighter-rouge">number_to_currency</code>)</li>
-  <li>Add check for CVE-2013-6416 (<code class="language-plaintext highlighter-rouge">simple_format</code> XSS)</li>
-  <li>Add check for CVE-2013-6417 (query generation)</li>
-  <li>Add check for <code class="language-plaintext highlighter-rouge">Parameters#permit!</code> (<a href="https://github.com/presidentbeef/brakeman/issues/281">#281</a>)</li>
-  <li>Fix Slim XSS false positives (<a href="https://github.com/noahd1">Noah Davis</a>)</li>
-  <li>Whitelist <code class="language-plaintext highlighter-rouge">Model#create</code> for redirects (<a href="https://github.com/presidentbeef/brakeman/issues/406">#406</a>)</li>
-  <li>Collapse send/try calls</li>
-  <li>Fix scoping issues with instance variables and blocks (<a href="https://github.com/presidentbeef/brakeman/issues/406">#406</a>)</li>
-  <li>Fix typos in reflection and translate bug messages</li>
-</ul>
-
-<h3 id="i18n-xss">I18n XSS</h3>
-
-<p><a href="https://groups.google.com/d/msg/ruby-security-ann/pLrh6DUw998/2i61N5c3heUJ">CVE-2013-4491</a> is a possible XSS in the i18n gem. Brakeman will warn unless the i18n gem is updated to the proper version or the workaround is used.</p>
-
-<h3 id="header-dos">Header DoS</h3>
-
-<p><a href="https://groups.google.com/d/msg/ruby-security-ann/A-ebV4WxzKg/KNPTbX8XAQUJ">CVE-2013-6414</a> is a possible denial of service from special headers. Brakeman will warn unless the workaround is used.</p>
-
-<h3 id="currency-xss">Currency XSS</h3>
-
-<p><a href="https://groups.google.com/d/msg/ruby-security-ann/9WiRn2nhfq0/2K2KRB4LwCMJ">CVE-2013-6415</a> is an XSS in the second argument of <code class="language-plaintext highlighter-rouge">number_to_currency</code>. Brakeman will warn on uses of <code class="language-plaintext highlighter-rouge">number_to_currency</code> with dangerous unescaped arguments. If no dangerous uses are found, Brakeman will provide a general warning about the CVE.</p>
-
-<h3 id="simple-format-xss">Simple Format XSS</h3>
-
-<p><a href="https://groups.google.com/d/msg/ruby-security-ann/5ZI1-H5OoIM/ZNq4FoR2GnIJ">CVE-2013-6416</a> is an XSS in <code class="language-plaintext highlighter-rouge">simple_format</code>, which does not escape its output. Brakeman will warn on dangerous uses of <code class="language-plaintext highlighter-rouge">simple_format</code>. If no uses are found, it will report a general warning.</p>
-
-<h3 id="query-generation-vulnerability">Query Generation Vulnerability</h3>
-
-<p><a href="https://groups.google.com/d/msg/ruby-security-ann/niK4drpSHT4/g8JW8ZsayRkJ">CVE-2013-6417</a> is the continuation of an old problem with SQL queries. The newest issue is caused by Rack middleware freezing the parameters before they can be cleaned up. Brakeman reports a general warning about this.</p>
-
-<h3 id="check-for-permit">Check for Permit!</h3>
-
-<p>Brakeman now warns on uses of <code class="language-plaintext highlighter-rouge">Parameters#permit!</code>, which bypasses mass assignment protections. If a <code class="language-plaintext highlighter-rouge">permit!</code> is used without a subsequent mass assignment in the same method, the confidence will be medium.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/414">changes</a>)</p>
-
-<h3 id="slim-xss-false-positives">Slim XSS False Positives</h3>
-
-<p>(<a href="https://github.com/noahd1">Noah Davis</a>) provided a fix for XSS false positives in Slim templates when ActiveSupport is loaded. While Brakeman itself does not depend on ActiveSupport, it might be loaded if Brakeman is run with Bundler or as part of a Rake task.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/410">changes</a>)</p>
-
-<h3 id="whitelist-record-creation-in-redirects">Whitelist Record Creation in Redirects</h3>
-
-<p>Redirects to <code class="language-plaintext highlighter-rouge">Model#create</code> and <code class="language-plaintext highlighter-rouge">Model#create!</code> should no longer warn.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/408">changes</a>)</p>
-
-<h3 id="collapse-trysend">Collapse <code class="language-plaintext highlighter-rouge">try</code>/<code class="language-plaintext highlighter-rouge">send</code></h3>
-
-<p>The effect of using <code class="language-plaintext highlighter-rouge">try(:something)</code> or <code class="language-plaintext highlighter-rouge">send(:something)</code> are essentially the same as calling <code class="language-plaintext highlighter-rouge">something</code>, so Brakeman now converts calls to <code class="language-plaintext highlighter-rouge">try</code>/<code class="language-plaintext highlighter-rouge">send</code> directly to the method being called.</p>
-
-<p>For example:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.find(1).try(:name)
-</code></pre></div></div>
-
-<p>is changed to</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.find(1).name
-</code></pre></div></div>
-
-<p>This can help find more vulnerabilities as well as prevent some false positives if the method name is actually something safe like <code class="language-plaintext highlighter-rouge">id</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/412">changes</a>)</p>
-
-<h3 id="block-scoping">Block Scoping</h3>
-
-<p>Several issues with blocks were fixed in this release. First, no calls with blocks were being processed correctly inside controllers. Secondly, instance variable assignments inside blocks were treated like local assignments. They are now treated as “method level” assignments (i.e. every method has its own “global” scope). Finally, local assignments inside blocks to existing variables were also being treated as block-local assignments.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/407">changes</a>)</p>
-
-<h3 id="warning-typos">Warning Typos</h3>
-
-<p>Two tiny changes have been made to warning messages. The “translate bug” from ages ago had an extra <code class="language-plaintext highlighter-rouge">}</code> in the message, and the message for unsafe reflection no longer capitalizes “Reflection”. But since everyone is using <a href="http://brakemanscanner.org/blog/2013/05/20/brakeman-2-dot-0-0-released/">warning fingerprints and not relying on matching messages</a>, you should be okay, right?</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/411">changes</a>)</p>
-
-<h3 id="signed-gems">Signed Gems</h3>
-
-<p>The Brakeman gems are now signed and can be verified with <a href="https://github.com/presidentbeef/brakeman/blob/master/brakeman-public_cert.pem">this certificate</a>.</p>
-
-<p>To verify on installation:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem cert --add &lt;(curl -Ls https://raw.github.com/presidentbeef/brakeman/master/brakeman-public_cert.pem)
-gem install brakeman -P MediumSecurity
-</code></pre></div></div>
-
-<p>“HighSecurity” requires all dependencies to be signed as well, which is unlikely.</p>
-
-<p>Additionally, here are the SHA sums for this release:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2ae503781c51a69a1123d37d46b4813ea91f01e8  brakeman-2.3.0.gem
-77d39eaf0e2663af526dcbf6e3b5bac16173fed1  brakeman-min-2.3.0.gem
-</code></pre></div></div>
-
-<h3 id="brakeman-users">Brakeman Users</h3>
-
-<p>We have a new page on this website <a href="http://brakemanscanner.org/brakeman_users/">listing companies which use Brakeman</a>.</p>
-
-<p>Please contact us (<a href="http://brakemanscanner.org/brakeman_users/">see bottom of page</a>) to have your company listed!</p>
-
-<h3 id="stickers">Stickers</h3>
-
-<p>Brakeman stickers are still available!</p>
-
-<blockquote class="twitter-tweet" lang="en"><p>Wish you were getting one of these? Just send your name and address to stickers@brakeman.org and you will be next! <a href="http://t.co/qXdnGVo6hG">pic.twitter.com/qXdnGVo6hG</a></p>&mdash; Brakeman Scanner (@brakeman) <a href="https://twitter.com/brakeman/statuses/403546302119563264">November 21, 2013</a></blockquote>
-<script async="" src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -697,6 +609,10 @@ gem install brakeman -P MediumSecurity
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">Brakeman 7.1.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
       </li>
     
@@ -710,10 +626,6 @@ gem install brakeman -P MediumSecurity
     
       <li class="post">
         <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
       </li>
     
   </ul>

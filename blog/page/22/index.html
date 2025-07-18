@@ -80,6 +80,112 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2012/04/20/brakeman-1-dot-6-released">Brakeman 1.6 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-04-20 10:22:00 -0600" pubdate  updated >2012-04-20 10:22:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A lot of code has changed in this release, particularly with the removal of the Ruport library for reporting. While Ruport worked pretty well, it caused some issues just due to the large number of (out-dated) dependencies it brought with it.</p>
+
+<p>Also, this release changes the JSON report output. This is a backwards <em>incompatible</em> change. But, given how useless the previous JSON reports were, hopefully this will not affect too many people.</p>
+
+<p><em>Changes since 1.5.3:</em></p>
+
+<ul>
+  <li>Remove the Ruport dependency (Neil Matatall)</li>
+  <li>Add more informational JSON output (Neil Matatall)</li>
+  <li>Add comparison to previous JSON report (Neil Matatall)</li>
+  <li>Add highlighting of dangerous values in HTML/text reports</li>
+  <li><code class="language-plaintext highlighter-rouge">Model#update_attribute</code> should not raise mass assignment warning (Dave Worth)</li>
+  <li>Don’t check <code class="language-plaintext highlighter-rouge">find_by_*</code> method for SQL injection</li>
+  <li>Fix duplicate reporting of mass assignment and SQL injection</li>
+  <li>Fix rescanning of deleted files</li>
+  <li>Properly check for <code class="language-plaintext highlighter-rouge">rails_xss</code> in Gemfile</li>
+</ul>
+
+<h3 id="no-more-ruport">No More Ruport</h3>
+
+<p>Ruport is a nice library, but it also has not been updated in over two years and its dependency tree was ridiculous.</p>
+
+<p>Thanks to Neil Matatall, Brakeman no longer depends on Ruport, but the reports should look essentially the same. The HTML reports are now rendered through ERB templates, so it should not be too difficult to customize the reports if desired.</p>
+
+<h3 id="better-json-output">Better JSON Output</h3>
+
+<p>JSON output now includes meta-information about the scan, errors raised during the scan, and line numbers for each warning.</p>
+
+<h3 id="json-report-comparison">JSON Report Comparison</h3>
+
+<p>Being able to compare Brakeman reports is essential for tracking warnings over time. Prior to this release, the only decent way of doing that was via the <a href="http://brakemanscanner.org/docs/jenkins/">Jenkins plugin</a>. But now Brakeman can compare results to the JSON report from a previous scan.</p>
+
+<p>For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.json
+brakeman --compare report.json
+</code></pre></div></div>
+
+<p>This will run another scan, then output a comparison of the reports (in JSON). The report includes a list of fixed warnings and a list of new warnings that were found.</p>
+
+<h3 id="user-input-highlighted-in-reports">User Input Highlighted in Reports</h3>
+
+<p>Sometimes it is unclear exactly what value has caused Brakeman to issue a particular warning. This release adds highlighting the detected user input in most warnings. (Some warnings, the code that is reported <em>is</em> the detected user input). This information is also available in the JSON reports.</p>
+
+<p><img src="/images/user_input_highlight.png" alt="User Input Highlight" title="Example of User Input Highlighting" /></p>
+
+<h3 id="fewer-mass-assignment-and-sql-injection-methods">Fewer Mass Assignment and SQL Injection Methods</h3>
+
+<p>Dave Worth pointed out that Brakeman was a little overzealous in which methods it considered susceptible to mass assignment and SQL injection attacks.</p>
+
+<p>Brakeman will no longer check <code class="language-plaintext highlighter-rouge">update_attribute</code> for mass assignment or the <code class="language-plaintext highlighter-rouge">find_by_*</code> dynamic methods for SQL injection.</p>
+
+<h3 id="fewer-mass-assignment-and-sql-injection-duplicates">Fewer Mass Assignment and SQL Injection Duplicates</h3>
+
+<p>Pesky duplicate reports of mass assignment and SQL injection were turning up as template warnings. This occurred when the results of the mass assignment or SQL query were assigned to a variable which was then used in a template. This should now be fixed.</p>
+
+<p>More details than are probably desired are available <a href="https://github.com/presidentbeef/brakeman/pull/82">here</a>.</p>
+
+<h3 id="rescanning-fixes">Rescanning Fixes</h3>
+
+<p>Rescanning of deleted files is now supported, and there some other issues with rescanning that are now resolved as well.</p>
+
+<h3 id="new-logo">New Logo</h3>
+
+<p>Brakeman has a sweet new logo, thanks to <a href="http://janellelawless.com/">Janelle Lawless</a>!</p>
+
+<p><img src="/images/logo_medium.png" alt="Brakeman Logo" /></p>
+
+<p>Updates to the website to reflect this awesomeness are coming soon.</p>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release!</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+
+<p>And don’t forget to check out the Brakeman talk at <a href="http://railsconf2012.com/sessions/44">RailsConf</a> in a few days.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/04/10/brakeman-1-dot-5-3-released">Brakeman 1.5.3 Released</a></h1>
     
     
@@ -414,109 +520,6 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/03/01/brakeman-1-dot-5-0-released">Brakeman 1.5.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-03-01 20:23:00 -0700" pubdate  updated >2012-03-01 20:23:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>A release was forced today because two new Rails vulnerabilities were reported (the first since November):</p>
-
-<ul>
-  <li><a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/9da0c515a6c4664">Manual options are not escaped in select()</a></li>
-  <li><a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/edd28f1e3d04e913">Some operations on SafeBuffer mistakenly return strings marked as html_safe</a></li>
-</ul>
-
-<p>This release includes checks for these two vulnerabilities.</p>
-
-<p>There is also a new check for skipping CSRF token verification, and some other changes which may result in fewer or more vulnerabilities being reported.</p>
-
-<p><em>Changes since 1.4.0:</em></p>
-
-<ul>
-  <li>Add version check for SafeBuffer vulnerability</li>
-  <li>Add check for select vulnerability in Rails 3</li>
-  <li>select() is no longer considered safe in Rails 2</li>
-  <li>Add check for skipping CSRF protection with a blacklist</li>
-  <li>Add JSON report format</li>
-  <li>Model#id should not be considered XSS</li>
-  <li>Standardize methods to check for SQL injection</li>
-  <li>Fix Rails 2 route parsing issue with nested routes</li>
-</ul>
-
-<h3 id="check-for-safebuffer-vulnerability">Check for SafeBuffer Vulnerability</h3>
-
-<p>A new vulnerability was reported that affects strings which are marked as <code class="language-plaintext highlighter-rouge">html_safe</code> and then modified in some way. For some operations, the new, modified string will still be marked as <code class="language-plaintext highlighter-rouge">html_safe</code>. Full details <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/edd28f1e3d04e913">here</a>.</p>
-
-<p>For this vulnerability, Brakeman only does a version check and reports if an application is used a vulnerable version of Rails. It only reports on Rails 3 applications, since Rails 3 introduced the concept of SafeBuffers.</p>
-
-<h3 id="check-for-select-helper-vulnerability">Check for select Helper Vulnerability</h3>
-
-<p>Another vulnerability was reported today in the <code class="language-plaintext highlighter-rouge">select</code> form helper. Option tags built by hand (interpolating values into <code class="language-plaintext highlighter-rouge">&lt;option&gt;&lt;/option&gt;</code>) will not be escaped by <code class="language-plaintext highlighter-rouge">select</code>. Full details <a href="http://groups.google.com/group/rubyonrails-security/browse_thread/thread/9da0c515a6c4664">here</a>.</p>
-
-<p>For Rails 3 applications, Brakeman checks for uses of <code class="language-plaintext highlighter-rouge">select</code> which have user input in the <code class="language-plaintext highlighter-rouge">options</code> argument. This check may be refined in the future.</p>
-
-<p>For Rails 2, Brakeman no longer considers <code class="language-plaintext highlighter-rouge">select</code> a safe method when checking for cross site scripting.</p>
-
-<h3 id="check-for-csrf-filter-skipping">Check for CSRF Filter Skipping</h3>
-
-<p>When cross site request forgery protection is enabled, a <code class="language-plaintext highlighter-rouge">before_filter</code> is added called <code class="language-plaintext highlighter-rouge">verify_authenticity_token</code>. This filter checks that actions called responding to a <code class="language-plaintext highlighter-rouge">POST</code> have a correct authenticity token from the client. Since this is a regular <code class="language-plaintext highlighter-rouge">before_filter</code>, it can be skipped using <code class="language-plaintext highlighter-rouge">skip_before_filter</code>.</p>
-
-<p>If <code class="language-plaintext highlighter-rouge">skip_before_filter</code> is called using an <code class="language-plaintext highlighter-rouge">:except</code> option, then the default for the controller becomes NOT checking for an authenticity token:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>skip_before_filter :verify_authenticity_token, :except =&gt; [:create, :delete]
-</code></pre></div></div>
-
-<p>It is recommended to use <code class="language-plaintext highlighter-rouge">:only</code> if skipping this filter is actually necessary. This way, any new actions added later will automatically fall under the CSRF protection.</p>
-
-<p>This check may be extended in the future to other important filters.</p>
-
-<h3 id="json-report-format">JSON Report Format</h3>
-
-<p>While the code for outputting JSON was in the 1.4.0 release, it was not actually added as a proper output format! This has been rectified.</p>
-
-<p><code class="language-plaintext highlighter-rouge">-f json</code> or <code class="language-plaintext highlighter-rouge">-o report.json</code> will now produce JSON reports.</p>
-
-<p>The information contained in these reports may change in the future, although that should only be adding more information.</p>
-
-<h3 id="sql-methods">SQL Methods</h3>
-
-<p>The code for finding SQL methods to check for SQL injection was a little messed up. Depending on how the method was called, different sets of methods were considered dangerous.</p>
-
-<p>This has been changed for better consistency and coverage. This means reports may include new SQL injections, so keep an eye out.</p>
-
-<h3 id="rails-2-route-parsing-fix">Rails 2 Route Parsing Fix</h3>
-
-<p>There was a bug in the code which determined if a method was being called on <code class="language-plaintext highlighter-rouge">map</code>, which caused Brakeman to think strange methods were route definitions (for example, <code class="language-plaintext highlighter-rouge">require</code>). This has been fixed.</p>
-
-<h3 id="report-problems">Report Problems!</h3>
-
-<p>Always <a href="https://github.com/presidentbeef/brakeman/issues">report problems</a> encountered when running Brakeman.</p>
-
-<p>Don’t forget to join the <a href="http://librelist.com/browser/brakeman/">mailing list</a> and/or follow <a href="https://twitter.com/brakeman">@Brakeman</a> on Twitter.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -555,6 +558,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">Brakeman 7.1.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
       </li>
     
@@ -568,10 +575,6 @@ end
     
       <li class="post">
         <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
       </li>
     
   </ul>

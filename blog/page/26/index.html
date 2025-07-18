@@ -80,6 +80,99 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2011/09/15/brakeman-0-dot-8-0-released">Brakeman 0.8.0 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2011-09-15 10:06:00 -0600" pubdate  updated >2011-09-15 10:06:00 -0600</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Change list for Brakeman 0.8.0:</p>
+
+<ul>
+  <li>Add check for mass assignment using without_protection</li>
+  <li>Add check for password in http_basic_authenticate_with</li>
+  <li>Warn on user input in hash argument with mass assignment</li>
+  <li>auto_link is now considered safe for Rails &gt;= 3.0.6</li>
+  <li>Output detected Rails version in report</li>
+  <li>Keep track of methods called in class definition</li>
+  <li>Add ruby_parser hack for Ruby 1.9 hash syntax</li>
+  <li>Add a few Rails 3.1 tests</li>
+</ul>
+
+<p>As always, please <a href="https://github.com/presidentbeef/brakeman/issues">report any issues</a>.</p>
+
+<h2 id="new-checks">New Checks</h2>
+
+<p>This release adds two checks specific to Rails 3.1.</p>
+
+<p>The first looks for mass assignment which deliberately bypasses attribute protection. For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.new(params[:user], :without_protection) =&gt; true)
+</code></pre></div></div>
+
+<p>If user input is used for initializing the record, the warning will be set to high confidence. Otherwise, it will show up as medium confidence.</p>
+
+<p>The second new check looks for controllers using the new <code class="language-plaintext highlighter-rouge">http_basic_authenticate_with</code> method and including the password directly in the source.</p>
+
+<p>The example from the <a href="http://guides.rubyonrails.org/getting_started.html">Rails guide</a> looks like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class PostsController &lt; ApplicationController
+ 
+  http_basic_authenticate_with :name =&gt; "dhh", :password =&gt; "secret", :except =&gt; :index
+
+  #...
+
+end
+</code></pre></div></div>
+
+<p>This would raise a warning, mostly because it is a bad idea to have passwords in plain text right in your source code.</p>
+
+<h2 id="changes-to-existing-warnings">Changes to Existing Warnings</h2>
+
+<p>Mass assignment has been changed to raise a warning if there is any user input when calling <code class="language-plaintext highlighter-rouge">Model.new</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">auto_link</code> was previously set to be a “known dangerous” method because it did not escape its output. That was fixed in Rails 3.0.6, so it will be considered safe for versions 3.0.6 and up. But then <code class="language-plaintext highlighter-rouge">auto_link</code> was removed in Rails 3.1, so for 3.1 and up it will be treated as a regular method.</p>
+
+<h2 id="changes-to-output">Changes to Output</h2>
+
+<p>Warnings reports will now include the detected Rails version as part of the information reported.</p>
+
+<h2 id="support-for-ruby-19-hash-syntax">Support for Ruby 1.9 Hash Syntax</h2>
+
+<p><a href="https://github.com/seattlerb/ruby_parser">RubyParser</a>, used by Brakeman for all its Ruby parsing needs, <a href="http://blog.zenspider.com/2010/12/bounty-ruby-parser-needs-19-lo.html">does not support the new Ruby 1.9 syntax</a>. After coming across an application which uses the <a href="http://blog.peepcode.com/tutorials/2011/rip-ruby-hash-rocket-syntax">1.9 hash syntax</a> <em>extremely</em> liberally, a temporary hack has been added that should allow Brakeman to parse it correctly.</p>
+
+<p>This does mean that Brakeman is overriding RubyParser’s code to add in this functionality. That is why it is a <em>temporary hack</em>.</p>
+
+<h2 id="new-tests">New Tests</h2>
+
+<p>Work has begun on a test application using Rails 3.1. There do not seem to be any huge changes in 3.1 that would prevent Brakeman from working, though.</p>
+
+<h2 id="next-version">Next Version</h2>
+
+<p>The main area of focus for the next (major) release will be Rails 3.x routing. Brakeman is currently quite limited in what kinds of routes in understands.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2011/08/27/one-year-anniversary-and-a-website">One Year Anniversary</a></h1>
     
     
@@ -150,6 +243,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">Brakeman 7.1.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
       </li>
     
@@ -163,10 +260,6 @@
     
       <li class="post">
         <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
       </li>
     
   </ul>

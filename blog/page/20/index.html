@@ -80,6 +80,108 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2013/01/18/brakeman-1-dot-9-1-released">Brakeman 1.9.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2013-01-18 17:36:00 -0700" pubdate  updated >2013-01-18 17:36:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This released was forced due to messed up dependencies with Brakeman 1.9.0 and Ruby2Ruby - my fault entirely! As such, this release does not match the roadmap for 1.9.1, which will be changed to 1.9.2.</p>
+
+<p><em>Changes since 1.9.0</em>:</p>
+
+<ul>
+  <li>Add check for CVE-2012-5664 - SQL Injection</li>
+  <li>Add check for CVE-2013-0155 - SQL Injection</li>
+  <li>Add check for CVE-2013-0156 - Remote Code Execution</li>
+  <li>Add check for unsafe <code class="language-plaintext highlighter-rouge">YAML.load</code></li>
+  <li>Update to RubyParser 3.1.1 (neersighted)</li>
+  <li>Remove ActiveSupport dependency (Neil Matatall)</li>
+  <li>Do not warn on arrays passed to <code class="language-plaintext highlighter-rouge">link_to</code> (Neil Matatall) (<a href="https://github.com/presidentbeef/brakeman/issues/232">#232</a>)</li>
+  <li>Warn on secret tokens (<a href="https://github.com/presidentbeef/brakeman/issues/200">#200</a>)</li>
+  <li>Warn on more mass assignment methods (<a href="https://github.com/presidentbeef/brakeman/issues/223">#223</a>)</li>
+</ul>
+
+<h3 id="cve-2012-5664---sql-injection">CVE-2012-5664 - SQL Injection</h3>
+
+<p><a href="https://groups.google.com/d/topic/rubyonrails-security/DCNTNp_qjFM/discussion">CVE-2012-5664</a> is a vulnerability Rails’ dynamic finders. While dynamic finders (such as <code class="language-plaintext highlighter-rouge">User.find_by_name</code>) appear to take a single argument, they also accept a hash options which can be used to modify the SQL query. Normally the hash of options would be the second argument, but it can also be the first. If an application passes in user code as the first argument, it will be interpreted as the options hash, leading to SQL injection.</p>
+
+<p>The provided fix is to only accept the hash if the dynamic finder is called with the proper number of arguments. A workaround is to always cast input to dynamic finders.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/228">changes</a>)</p>
+
+<h3 id="cve-2013-0155---sql-injection">CVE-2013-0155 - SQL Injection</h3>
+
+<p><a href="https://groups.google.com/d/topic/rubyonrails-security/c7jT-EeN9eI/discussion">CVE-2013-0155</a> is a SQL vulnerability where certain JSON input can cause <code class="language-plaintext highlighter-rouge">find</code> methods to add <code class="language-plaintext highlighter-rouge">NULL</code> as a valid value.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/239">changes</a>)</p>
+
+<h3 id="cve-2013-0156---remote-code-execution">CVE-2013-0156 - Remote Code Execution</h3>
+
+<p><a href="https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion">CVE-2013-0156</a> is the worst Rails vulnerability in recent memory. It allows attackers to easily execute arbitrary code on any Rails application.</p>
+
+<p>Besides upgrading Rails, there are workarounds for this issue: disable XML request parsing or disable YAML/symbol types inside XML requests.</p>
+
+<p>Exploits for this vulnerability are easily available and already in use in the wild. Please upgrade, patch, or use a workaround.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/239">changes</a>)</p>
+
+<h3 id="check-for-yamlload">Check for <code class="language-plaintext highlighter-rouge">YAML.load</code></h3>
+
+<p>In light of <a href="https://groups.google.com/d/topic/rubyonrails-security/61bkgvnSGTQ/discussion">CVE-2013-0156</a>, Brakeman will now warn on any uses of <code class="language-plaintext highlighter-rouge">YAML.load</code> with user input. Do not load arbitrary YAML in applications!</p>
+
+<h3 id="dependency-changes">Dependency Changes</h3>
+
+<p>Brakeman now uses the latest RubyParser and Ruby2Ruby versions.</p>
+
+<p>Thanks to Neil, Brakeman no longer depends on any version of ActiveSupport or i18n.</p>
+
+<h3 id="namespaced-urls-in-link_to">Namespaced URLs in <code class="language-plaintext highlighter-rouge">link_to</code></h3>
+
+<p>Brakeman will no longer warn on array arguments to <code class="language-plaintext highlighter-rouge">link_to</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/233">changes</a>)</p>
+
+<h3 id="secret-tokens">Secret Tokens</h3>
+
+<p>Secret tokens stored in source control are bad! Doubly bad if the source code is available publicly. Anyone with access to an application’s secret token can generate any session cookies they would like. See <a href="http://phenoelit.org/blog/archives/2012/12/21/let_me_github_that_for_you/index.html">this post</a> for details.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/227">changes</a>)</p>
+
+<h3 id="more-mass-assignment">More Mass Assignment</h3>
+
+<p>Bryan Helmkamp pointed out more Rails methods which perform mass assignment. The following methods have been added: <code class="language-plaintext highlighter-rouge">first_or_create</code>, <code class="language-plaintext highlighter-rouge">first_or_create!</code>, <code class="language-plaintext highlighter-rouge">first_or_initialize!</code>, <code class="language-plaintext highlighter-rouge">assign_attributes</code>, and <code class="language-plaintext highlighter-rouge">update</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/234">changes</a>)</p>
+
+<h3 id="report-issues">Report Issues</h3>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2012/12/25/brakeman-1-dot-9-0-released">Brakeman 1.9.0 Released</a></h1>
     
     
@@ -561,120 +663,6 @@ end
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2012/09/04/brakeman-1-dot-8-0-released">Brakeman 1.8.0 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2012-09-04 11:26:00 -0600" pubdate  updated >2012-09-04 11:26:00 -0600</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Changes since 1.7.1</em>:</p>
-
-<ul>
-  <li>Support relative paths in reports (fsword)</li>
-  <li>Allow Brakeman to be run without tty (fsword)</li>
-  <li>Fix exit code with <code class="language-plaintext highlighter-rouge">--compare</code> (fsword)</li>
-  <li>Fix <code class="language-plaintext highlighter-rouge">--rake</code> option (Deepak Kumar)</li>
-  <li>Add high confidence warnings for <code class="language-plaintext highlighter-rouge">to_json</code> XSS (Neil Matatall)</li>
-  <li>Fix <code class="language-plaintext highlighter-rouge">redirect_to</code> false negative</li>
-  <li>Fix duplicate warnings with <code class="language-plaintext highlighter-rouge">raw</code> calls</li>
-  <li>Fix shadowing of rendered partials</li>
-  <li>Add “render chain” to HTML reports</li>
-  <li>Add check for XSS in <code class="language-plaintext highlighter-rouge">content_tag</code></li>
-  <li>Add full backtrace for errors in debug mode</li>
-  <li>Treat model attributes in <code class="language-plaintext highlighter-rouge">or</code> expressions as immediate values</li>
-  <li>Switch to method access for Sexp nodes</li>
-</ul>
-
-<h3 id="relative-paths-in-reports">Relative Paths in Reports</h3>
-
-<p>The <code class="language-plaintext highlighter-rouge">--relative-paths</code> option will now cause Brakeman to output relative paths for warnings in reports in either JSON or tabs format. This is useful when comparing reports run on different machines or just in different directories.</p>
-
-<h3 id="brakeman-without-tty">Brakeman without TTY</h3>
-
-<p>Thanks to <a href="http://fsword.github.com/">fsword</a>, Brakeman can now run without a TTY available.</p>
-
-<h3 id="exit-code-for-compare">Exit Code for Compare</h3>
-
-<p>Also thanks to fsword, Brakeman will return a proper exit code when run with <code class="language-plaintext highlighter-rouge">-z --compare</code>. If any changes are found, the exit code will be nonzero.</p>
-
-<h3 id="rake-task-generation-fixed">Rake Task Generation Fixed</h3>
-
-<p>The <code class="language-plaintext highlighter-rouge">--rake</code> option was broken, but <a href="https://github.com/deepakinseattle">Deepak Kumar</a> noticed and fixed it!</p>
-
-<h3 id="high-confidence-warnings-for-json">High Confidence Warnings for JSON</h3>
-
-<p>Older versions of Rails default to not escaping <code class="language-plaintext highlighter-rouge">to_json</code> calls, leading to <a href="http://brakemanscanner.org/docs/warning_types/cross_site_scripting_to_json/">cross site scripting problems</a>. Since Rails 2.1.0, Rails has provided an option to escape JSON output by default. Brakeman will check this option, and warn on unescaped <code class="language-plaintext highlighter-rouge">to_json</code> calls.</p>
-
-<h3 id="fix-redirect-false-negative">Fix Redirect False Negative</h3>
-
-<p>Brakeman was incorrectly checking for <code class="language-plaintext highlighter-rouge">:only_path =&gt; true</code> in <em>any</em> argument to <code class="language-plaintext highlighter-rouge">redirect_to</code>. However, it is only valid as part of the first argument.</p>
-
-<h3 id="fix-duplicate-warnings-on-raw-calls">Fix Duplicate Warnings on Raw Calls</h3>
-
-<p>A logic mistake sometimes caused a high and weak confidence warning to be reported for the same code using <code class="language-plaintext highlighter-rouge">raw</code>. This has been fixed.</p>
-
-<h3 id="fix-shadowing-of-rendered-partials">Fix Shadowing of Rendered Partials</h3>
-
-<p>Due to the way Brakeman was storing rendered partials, a view that was rendered multiple times via different code paths would only store a single instance of the rendered view. This could result in some vulnerabilities not being reported.</p>
-
-<p>To fix this, Brakeman now stores the entire “render chain” (that is, each location of a <code class="language-plaintext highlighter-rouge">render</code>). This ensures a unique key for each rendered template.</p>
-
-<h3 id="report-render-chain-in-html">Report Render Chain in HTML</h3>
-
-<p>HTML reports now have a new feature that reports the “render chain” for view warnings (if the chain is more than a single call deep).</p>
-
-<p>A warning like this:</p>
-
-<p><img src="/images/unexpanded_call_chain.png" alt="Unexpanded" /></p>
-
-<p>Might expand to show this chain:</p>
-
-<p><img src="/images/expanded_call_chain.png" alt="Expanded" /></p>
-
-<h3 id="check-for-xss-in-content_tag">Check for XSS in <code class="language-plaintext highlighter-rouge">content_tag</code></h3>
-
-<p><code class="language-plaintext highlighter-rouge">content_tag</code> is a view helper for generating HTML tags containing some content. In Rails 2.x, <code class="language-plaintext highlighter-rouge">content_tag</code> did not escape this content. In Rails 3.x, this changed so that now it is escaped. While <code class="language-plaintext highlighter-rouge">content_tag</code> does have an <code class="language-plaintext highlighter-rouge">escape</code> parameter (true by default), this only applies to the tag attribute <em>values</em>.</p>
-
-<p>Brakeman now warns on possible cross site scripting via <code class="language-plaintext highlighter-rouge">content_tag</code> calls. <a href="/docs/warning_types/content_tag">See here</a> for more details.</p>
-
-<h3 id="backtraces-in-debug-mode">Backtraces in Debug Mode</h3>
-
-<p>By default, Brakeman tries its best to recover from errors and produce a report. However, this can sometimes make it difficult to track down the sources of errors. Now, with the <code class="language-plaintext highlighter-rouge">-d</code> option, Brakeman will report backtraces for errors encountered while running, as well as including backtraces in HTML reports.</p>
-
-<h3 id="convenience-methods-for-sexp-access">Convenience Methods for Sexp Access</h3>
-
-<p>Previously, all code dealing with <a href="https://en.wikipedia.org/wiki/S-exp">s-expressions</a> in the <code class="language-plaintext highlighter-rouge">Sexp</code> class accessed nodes via array access, e.g. <code class="language-plaintext highlighter-rouge">exp[1]</code> or <code class="language-plaintext highlighter-rouge">exp[2]</code>. This led to hard-to-read code like <code class="language-plaintext highlighter-rouge">exp[2][3][1][1..-1]</code>. This release includes convenience methods to replace those types of calls. Available methods are <a href="http://rdoc.info/gems/brakeman/Sexp">documented here</a>.</p>
-
-<p>Hopefully this leads to code that is both easier to read and easier to write.</p>
-
-<h3 id="reporting-problems">Reporting Problems</h3>
-
-<p>This release touches a lot of code (76 changed files with 1,515 additions and 598 deletions), so there is ample opportunity for bugs to sneak in. Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a>!</p>
-
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> and following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -713,6 +701,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">Brakeman 7.1.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
       </li>
     
@@ -726,10 +718,6 @@ end
     
       <li class="post">
         <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
       </li>
     
   </ul>

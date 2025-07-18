@@ -1,4 +1,80 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2025-04-04T11:26:55-06:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 7.0.2 Released</title><link href="https://brakemanscanner.org/blog/2025/04/04/brakeman-7-dot-0-dot-2-released" rel="alternate" type="text/html" title="Brakeman 7.0.2 Released" /><published>2025-04-04T11:00:00-06:00</published><updated>2025-04-04T11:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2025/04/04/brakeman-7-dot-0-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">&lt;p&gt;&lt;em&gt;Changes since 7.0.1:&lt;/em&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2025-07-18T15:22:30-06:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 7.1.0 Released</title><link href="https://brakemanscanner.org/blog/2025/07/18/brakeman-7-dot-1-dot-0-released" rel="alternate" type="text/html" title="Brakeman 7.1.0 Released" /><published>2025-07-18T11:00:00-06:00</published><updated>2025-07-18T11:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2025/07/18/brakeman-7-dot-1-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">&lt;p&gt;&lt;em&gt;Changes since 7.0.2:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Add Haml 6.x support (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1914&quot;&gt;#1914&lt;/a&gt;, &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1841&quot;&gt;#1841&lt;/a&gt;, etc.)&lt;/li&gt;
+  &lt;li&gt;Support render model shortcut (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/959&quot;&gt;#959&lt;/a&gt;, &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1940&quot;&gt;#1940&lt;/a&gt;, etc.)&lt;/li&gt;
+  &lt;li&gt;Add &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--ensure-no-obsolete-config-entries&lt;/code&gt; option (&lt;a href=&quot;https://github.com/viralpraxis&quot;&gt;viralpraxis&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Update JUnit report for CircleCI (Philippe Bernery)&lt;/li&gt;
+  &lt;li&gt;Improve ignored warnings layout in HTML report (&lt;a href=&quot;https://github.com/inkstak&quot;&gt;Sebastien Savater&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Only load escape functionality from cgi library (Earlopain)&lt;/li&gt;
+  &lt;li&gt;Add EOL dates for Rails 8.0 and Ruby 3.4&lt;/li&gt;
+  &lt;li&gt;Use lazy file lists for AppTree&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;haml-6-support&quot;&gt;Haml 6 Support&lt;/h3&gt;
+
+&lt;p&gt;Brakeman now ships with and supports Haml 6.&lt;/p&gt;
+
+&lt;p&gt;To continue using Brakeman with Haml 5.x, please use the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;brakeman-lib&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;brakeman-min&lt;/code&gt; gems.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1944&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;render-shortcuts&quot;&gt;Render Shortcuts&lt;/h3&gt;
+
+&lt;p&gt;After many, many years, Brakeman now supports shortcuts where specific models or collections are rendered. For example: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;render User.find(..)&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;render User.all&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Brakeman does not currently support rendering of collections with mixed types of models.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1948&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;fail-on-obsolete-ignored-warnings&quot;&gt;Fail on Obsolete Ignored Warnings&lt;/h3&gt;
+
+&lt;p&gt;When Brakeman is configured to ignore warnings, but then those warnings aren’t found, Brakeman reports “obsolete ignored warnings”.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/viralpraxis&quot;&gt;viralpraxis&lt;/a&gt; added the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--ensure-no-obsolete-config-entries&lt;/code&gt; option to return a failure exit code if there are obsolete entries.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1921&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;junit-report-for-circleci&quot;&gt;JUnit Report for CircleCI&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/pbernery&quot;&gt;Philippe Bernery&lt;/a&gt; has fixed JUnit reports to be compatible with CircleCI (again). Thanks!&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1934&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;better-ignored-warnings-layout&quot;&gt;Better Ignored Warnings Layout&lt;/h3&gt;
+
+&lt;p&gt;Speaking of ignored warnings, &lt;a href=&quot;https://github.com/inkstak&quot;&gt;Sebastien Savater&lt;/a&gt; has improved the layout in the HTML report to make it easier to read notes for ignored warnings.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1941&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;cgi-loading&quot;&gt;CGI Loading&lt;/h3&gt;
+
+&lt;p&gt;In preparation for &lt;a href=&quot;https://bugs.ruby-lang.org/issues/21258&quot;&gt;Ruby 3.5&lt;/a&gt;, &lt;a href=&quot;https://github.com/Earlopain&quot;&gt;Earlopain&lt;/a&gt; updated Brakeman to explcitly load &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cgi/escape&lt;/code&gt; instead of the entire CGI library.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1938&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;lazy-file-lists&quot;&gt;Lazy File Lists&lt;/h3&gt;
+
+&lt;p&gt;Use lazy file lists when managing files in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Brakeman::AppTree&lt;/code&gt;. This provides a small (~9%) speed improvement for large applications.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1913&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
+
+&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bbc708a75a53008490c8b9600b97fa85cb3d5a8818dd1560f18e0b89475d48af  brakeman-7.1.0.gem
+b5263ca27a725ad38fb98aa83908b0285eee46c29096eb4fb0b36b2795bbb082  brakeman-lib-7.1.0.gem
+0a141eaf08f864680af69c6642f9cf855be3eb89c3d5a3f5b0bd182f9eba2d82  brakeman-min-7.1.0.gem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Changes since 7.0.2:</summary></entry><entry><title type="html">Brakeman 7.0.2 Released</title><link href="https://brakemanscanner.org/blog/2025/04/04/brakeman-7-dot-0-dot-2-released" rel="alternate" type="text/html" title="Brakeman 7.0.2 Released" /><published>2025-04-04T11:00:00-06:00</published><updated>2025-04-04T11:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2025/04/04/brakeman-7-dot-0-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">&lt;p&gt;&lt;em&gt;Changes since 7.0.1:&lt;/em&gt;&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Fix error with empty &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BUNDLE_GEMFILE&lt;/code&gt; env variable&lt;/li&gt;
@@ -722,80 +798,4 @@ db1d8e2118af4b4701fbe49bf1177ac5c89a6a956ca037fdc0e62eb062e2dbb9  brakeman-min-6
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Brakeman 6.0 drops parsing support for Ruby 1.8/1.9, and raises the minimum Ruby version to run Brakeman to 3.0.</summary></entry><entry><title type="html">Brakeman 5.4.1 Released</title><link href="https://brakemanscanner.org/blog/2023/02/21/brakeman-5-dot-4-dot-1-released" rel="alternate" type="text/html" title="Brakeman 5.4.1 Released" /><published>2023-02-21T08:30:00-07:00</published><updated>2023-02-21T08:30:00-07:00</updated><id>https://brakemanscanner.org/blog/2023/02/21/brakeman-5-dot-4-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2023/02/21/brakeman-5-dot-4-dot-1-released">&lt;p&gt;Several changes in this release are updates to Brakeman’s open redirect check.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Changes since 5.4.0:&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Add Rails 6.1 and 7.0 default configuration values&lt;/li&gt;
-  &lt;li&gt;Support Rails 7 redirect options&lt;/li&gt;
-  &lt;li&gt;Add &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;redirect_back&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;redirect_back_or_to&lt;/code&gt; to open redirect check&lt;/li&gt;
-  &lt;li&gt;Revise checking for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;request.env&lt;/code&gt; to only consider request headers&lt;/li&gt;
-  &lt;li&gt;Prevent redirects using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;url_from&lt;/code&gt; being marked as unsafe (&lt;a href=&quot;https://github.com/lsylvester&quot;&gt;Lachlan Sylvester&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Warn about unscoped find for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;find_by(id: ...)&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Support &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;presence&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;presence_in&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;in?&lt;/code&gt; (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1569&quot;&gt;#1569&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Fix issue with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;if&lt;/code&gt; expressions in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;when&lt;/code&gt; clauses (&lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1743&quot;&gt;#1743&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Fix file/line location for EOL software warnings&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;rails-61-and-rails-70-defaults&quot;&gt;Rails 6.1 and Rails 7.0 Defaults&lt;/h3&gt;
-
-&lt;p&gt;The default configuration values for Rails 6.1 and Rails 7.0 have been added to Brakeman.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1751&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;open-redirect-updates&quot;&gt;Open Redirect Updates&lt;/h3&gt;
-
-&lt;p&gt;Rails 7 introduced a new protection against open directs.&lt;/p&gt;
-
-&lt;p&gt;If &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;config.action_controller.raise_on_open_redirects&lt;/code&gt; is set to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;true&lt;/code&gt;, then Rails prevents redirects that redirect to a different domain than &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;request.host&lt;/code&gt;.
-This protection can be bypassed by passing in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;allow_other_host: true&lt;/code&gt; to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;redirect_to&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1755&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/lsylvester&quot;&gt;Lachlan Sylvester&lt;/a&gt; pointed out it’s also possible to use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;url_from&lt;/code&gt; to ensure a URL is for the same host. So &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;redirect_to(url_from(params[:url]))&lt;/code&gt; is safe.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1749&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;p&gt;This release also expands the open redirect check to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;redirect_back&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;redirect_back_or_to&lt;/code&gt; which have options for a fallback URL.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1756&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;more-unscoped-finds&quot;&gt;More Unscoped Finds&lt;/h3&gt;
-
-&lt;p&gt;Brakeman will now warn about use of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;find_by(id: ...)&lt;/code&gt; the same way it would warn about &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;find_by_id&lt;/code&gt; for “unscoped finds” (i.e., possible insecure direct object references).&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1748&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;presence-method-support&quot;&gt;Presence Method Support&lt;/h3&gt;
-
-&lt;p&gt;Brakeman now handles &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;presence&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;presence_in&lt;/code&gt;, and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;in?&lt;/code&gt; methods.&lt;/p&gt;
-
-&lt;p&gt;Since &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;presence_in&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;in?&lt;/code&gt; are often used for guard clauses, this fixes some false positives.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1747&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;fileline-for-end-of-life-warnings&quot;&gt;File/Line for End-Of-Life Warnings&lt;/h3&gt;
-
-&lt;p&gt;March is nearly here, which means support for Ruby 2.7 is ending!&lt;/p&gt;
-
-&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/jburns42891&quot;&gt;Jon Burns&lt;/a&gt; for pointing out Brakeman was reporting the wrong file and/or line number for EOL Ruby warnings.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1761&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h3 id=&quot;checksums&quot;&gt;Checksums&lt;/h3&gt;
-
-&lt;p&gt;The SHA256 sums for this release are:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dc664d4b5d01dd81608db02ec9b7c383beb65a3169049df2939c4bbbd4edfb73  brakeman-5.4.1.gem
-c1bf7e4cec5bde1d53122b41743343d3e38e4aa30145707b902278dd3b588fd4  brakeman-lib-5.4.1.gem
-94d24f3ea881bfc213ead8fbf3568aa37b301272ccbecf383394c9d7d7f43eeb  brakeman-min-5.4.1.gem
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h3&gt;
-
-&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
-
-&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Several changes in this release are updates to Brakeman’s open redirect check.</summary></entry></feed>
+&lt;p&gt;Follow &lt;a href=&quot;https://twitter.com/brakeman&quot;&gt;@brakeman&lt;/a&gt; on Twitter and hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Brakeman 6.0 drops parsing support for Ruby 1.8/1.9, and raises the minimum Ruby version to run Brakeman to 3.0.</summary></entry></feed>

@@ -80,6 +80,112 @@
   <header>
     <div class="articlelogo">&nbsp;</div>
     
+    <h1 class="entry-title"><a href="/blog/2023/02/21/brakeman-5-dot-4-dot-1-released">Brakeman 5.4.1 Released</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2023-02-21 08:30:00 -0700" pubdate  updated >2023-02-21 08:30:00 -0700</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Several changes in this release are updates to Brakeman’s open redirect check.</p>
+
+<p><em>Changes since 5.4.0:</em></p>
+
+<ul>
+  <li>Add Rails 6.1 and 7.0 default configuration values</li>
+  <li>Support Rails 7 redirect options</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">redirect_back</code> and <code class="language-plaintext highlighter-rouge">redirect_back_or_to</code> to open redirect check</li>
+  <li>Revise checking for <code class="language-plaintext highlighter-rouge">request.env</code> to only consider request headers</li>
+  <li>Prevent redirects using <code class="language-plaintext highlighter-rouge">url_from</code> being marked as unsafe (<a href="https://github.com/lsylvester">Lachlan Sylvester</a>)</li>
+  <li>Warn about unscoped find for <code class="language-plaintext highlighter-rouge">find_by(id: ...)</code></li>
+  <li>Support <code class="language-plaintext highlighter-rouge">presence</code>, <code class="language-plaintext highlighter-rouge">presence_in</code> and <code class="language-plaintext highlighter-rouge">in?</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1569">#1569</a>)</li>
+  <li>Fix issue with <code class="language-plaintext highlighter-rouge">if</code> expressions in <code class="language-plaintext highlighter-rouge">when</code> clauses (<a href="https://github.com/presidentbeef/brakeman/issues/1743">#1743</a>)</li>
+  <li>Fix file/line location for EOL software warnings</li>
+</ul>
+
+<h3 id="rails-61-and-rails-70-defaults">Rails 6.1 and Rails 7.0 Defaults</h3>
+
+<p>The default configuration values for Rails 6.1 and Rails 7.0 have been added to Brakeman.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1751">changes</a>)</p>
+
+<h3 id="open-redirect-updates">Open Redirect Updates</h3>
+
+<p>Rails 7 introduced a new protection against open directs.</p>
+
+<p>If <code class="language-plaintext highlighter-rouge">config.action_controller.raise_on_open_redirects</code> is set to <code class="language-plaintext highlighter-rouge">true</code>, then Rails prevents redirects that redirect to a different domain than <code class="language-plaintext highlighter-rouge">request.host</code>.
+This protection can be bypassed by passing in <code class="language-plaintext highlighter-rouge">allow_other_host: true</code> to <code class="language-plaintext highlighter-rouge">redirect_to</code>.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1755">changes</a>)</p>
+
+<p><a href="https://github.com/lsylvester">Lachlan Sylvester</a> pointed out it’s also possible to use <code class="language-plaintext highlighter-rouge">url_from</code> to ensure a URL is for the same host. So <code class="language-plaintext highlighter-rouge">redirect_to(url_from(params[:url]))</code> is safe.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1749">changes</a>)</p>
+
+<p>This release also expands the open redirect check to <code class="language-plaintext highlighter-rouge">redirect_back</code> and <code class="language-plaintext highlighter-rouge">redirect_back_or_to</code> which have options for a fallback URL.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1756">changes</a>)</p>
+
+<h3 id="more-unscoped-finds">More Unscoped Finds</h3>
+
+<p>Brakeman will now warn about use of <code class="language-plaintext highlighter-rouge">find_by(id: ...)</code> the same way it would warn about <code class="language-plaintext highlighter-rouge">find_by_id</code> for “unscoped finds” (i.e., possible insecure direct object references).</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1748">changes</a>)</p>
+
+<h3 id="presence-method-support">Presence Method Support</h3>
+
+<p>Brakeman now handles <code class="language-plaintext highlighter-rouge">presence</code>, <code class="language-plaintext highlighter-rouge">presence_in</code>, and <code class="language-plaintext highlighter-rouge">in?</code> methods.</p>
+
+<p>Since <code class="language-plaintext highlighter-rouge">presence_in</code> and <code class="language-plaintext highlighter-rouge">in?</code> are often used for guard clauses, this fixes some false positives.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1747">changes</a>)</p>
+
+<h3 id="fileline-for-end-of-life-warnings">File/Line for End-Of-Life Warnings</h3>
+
+<p>March is nearly here, which means support for Ruby 2.7 is ending!</p>
+
+<p>Thanks to <a href="https://github.com/jburns42891">Jon Burns</a> for pointing out Brakeman was reporting the wrong file and/or line number for EOL Ruby warnings.</p>
+
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1761">changes</a>)</p>
+
+<h3 id="checksums">Checksums</h3>
+
+<p>The SHA256 sums for this release are:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dc664d4b5d01dd81608db02ec9b7c383beb65a3169049df2939c4bbbd4edfb73  brakeman-5.4.1.gem
+c1bf7e4cec5bde1d53122b41743343d3e38e4aa30145707b902278dd3b588fd4  brakeman-lib-5.4.1.gem
+94d24f3ea881bfc213ead8fbf3568aa37b301272ccbecf383394c9d7d7f43eeb  brakeman-min-5.4.1.gem
+</code></pre></div></div>
+
+<h3 id="reporting-issues">Reporting Issues</h3>
+
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+
+<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    <div class="articlelogo">&nbsp;</div>
+    
     <h1 class="entry-title"><a href="/blog/2022/11/17/brakeman-5-dot-4-dot-0-released">Brakeman 5.4.0 Released</a></h1>
     
     
@@ -464,50 +570,6 @@ the help message matches the order of the options in the prompt!</p>
 
   </article>
 
-
-  <article>
-    
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-    <h1 class="entry-title"><a href="/blog/2022/01/30/5-dot-2-dot-1-released">Brakeman 5.2.1 Released</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2022-01-30 11:30:00 -0700" pubdate  updated >2022-01-30 11:30:00 -0700</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Oops! Minor emergency fix release.</p>
-
-<p><em>Changes since 5.2.0:</em></p>
-
-<ul>
-  <li>Add warning codes for EOL Ruby and Rails check</li>
-</ul>
-
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Follow <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hang out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-</div>
-  
-  
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     <a href="/blog/archives">Blog Archives</a>
@@ -546,6 +608,10 @@ the help message matches the order of the options in the prompt!</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">Brakeman 7.1.0 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
       </li>
     
@@ -559,10 +625,6 @@ the help message matches the order of the options in the prompt!</p>
     
       <li class="post">
         <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2024/08/22/brakeman-6-dot-2-released">Brakeman 6.2.1 Released</a>
       </li>
     
   </ul>
