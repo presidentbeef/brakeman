@@ -1,5 +1,6 @@
-# Unreleased
+# 7.1.0 - 2025-07-18
 
+* Add EOL dates for Rails 8.0 and Ruby 3.4
 * Support render model shortcut
 * Use lazy file lists for AppTree
 * Add Haml 6.x support
