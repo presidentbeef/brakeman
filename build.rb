@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'fileutils'
-bundle_exclude = %w[io-console prism racc strscan]
+bundle_exclude = %w[io-console prism racc strscan thor]
 
 puts 'Packaging Brakeman gem...'
 
