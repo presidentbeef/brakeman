@@ -101,6 +101,11 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
   def renderable? exp
     return false unless call?(exp) and constant?(exp.target)
 
+    if exp.method == :with_content
+      exp = exp.target
+    end
+
+    return false unless constant?(exp.target)
     target_class_name = class_name(exp.target)
     known_renderable_class?(target_class_name) or tracker.find_method(:render_in, target_class_name)
   end
