@@ -1,3 +1,13 @@
+# Unreleased
+
+* Support render model shortcut
+* Use lazy file lists for AppTree
+* Add Haml 6.x support
+* Improve ignored warnings layout in HTML report (Sebastien Savater)
+* Update JUnit report for CircleCI (Philippe Bernery)
+* Only load escape functionality from cgi library (Earlopain)
+* Add `--ensure-no-obsolete-config-entries` option (viralpraxis)
+
 # 7.0.2 - 2025-04-04
 
 * Fix error with empty `BUNDLE_GEMFILE` env variable
