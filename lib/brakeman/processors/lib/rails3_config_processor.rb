@@ -30,13 +30,13 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BasicProcessor
     process res
   end
 
-  #Look for MyApp::Application.configure do ... end
+  #Look for MyApp::Application.configure do ... end or included do ... end
   def process_iter exp
     call = exp.block_call
 
-    if node_type?(call.target, :colon2) and
-      call.target.rhs == :Application and
-      call.method == :configure
+    if (node_type?(call.target, :colon2) &&
+      call.target.rhs == :Application &&
+      call.method == :configure) || (call.target.nil? && call.method == :included)
 
       @inside_config = true
       process exp.block if sexp? exp.block
