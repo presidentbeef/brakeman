@@ -1,117 +1,160 @@
 
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Brakeman: Brakeman 1.5.3 Released</title>
-  <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
-
-  <link rel="canonical" href="https://brakemanscanner.org/blog/2012/04/10/brakeman-1-dot-5-3-released"/>
-  <link href="/favicon.png" rel="shortcut icon" />
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="feed.xml" rel="alternate" title="Brakeman" type="application/atom+xml"/>
-  
-
-  
-
-  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
-<link href='https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
-<script language="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
-<script src="/javascripts/jquery.github_badge.js"></script>
-<meta property="twitter:account_id" content="23978537" />
-
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Brakeman 1.5.3 Released" />
-<meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
-<meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="/stylesheets/screen.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
 </head>
+<body class="blog">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="logo">
+                    <img src="/images/brakeman_logo_small.png" alt="Brakeman Logo">
+                    Brakeman
+                </a>
+                <ul class="nav-links"><li>
+                            <a href="/docs/">
+                                Documentation
+                            </a>
+                        </li><li>
+                            <a href="/blog/archives">
+                                News
+                            </a>
+                        </li><li>
+                            <a href="https://github.com/presidentbeef/brakeman">
+                                Code
+                            </a>
+                        </li></ul>
+                <div class="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
 
-<body  >
-  <header><hgroup>
-  <h1><a href="/">Brakeman</a></h1>
-  
-    <h2>Ruby on Rails Static Analysis Security Tool</h2>
-  
-</hgroup>
+    <!-- Main Content -->
+    <main>
+        <div class="blog-container">
+    <div class="container">
+        <div class="blog-layout">
+            <!-- Sidebar -->
+            <aside class="blog-sidebar fade-in stagger-1">
+                <div class="sidebar-card">
+                    <h4>Recent Posts</h4>
+                    
+                        <a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">Brakeman 7.1.0 Released</a>
+                    
+                        <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
+                    
+                        <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
+                    
+                        <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
+                    
+                </div>
 
-</header>
-  <nav role=navigation><ul role=subscription data-subscription="rss">
-  <li><a href="feed.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-<form action="" method="get">
-  <fieldset role="site-search">
-    <input type="hidden" name="q" value="site:https://brakemanscanner.org" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-<ul role=main-navigation>
-  <li><a href="/">Home</a></li>
-  <li><a href="/docs">Documentation</a></li>
-  <li><a href="https://github.com/presidentbeef/brakeman">Source</a></li>
-  <li><a href="/docs/contributing">Contributing</a></li>
-  <li><a href="/brakeman_users">Users</a></li>
-  <li><a href="/contact">Contact</a></li>
-</ul>
+                <div class="sidebar-card">
+                    <h4>Quick Links</h4>
+                    <a href="/docs/quickstart/">Quick Start</a>
+                    <a href="/docs/">Documentation</a>
+                    <a href="https://github.com/presidentbeef/brakeman/issues">Report Issues</a>
+                    <a href="https://github.com/presidentbeef/brakeman">GitHub Repository</a>
+                </div>
+            </aside>
 
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry">
-  
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-      <h1 class="entry-title">Brakeman 1.5.3 Released</h1>
-    
-    
-      <p class="meta">
+            <!-- Main Article -->
+            <div class="article-container">
+                <!-- Mobile Sidebar Toggle -->
+                <div class="sidebar-toggle">
+                    <span>Quick Navigation</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
 
+                <article class="article-main fade-in">
+                    <div class="article-header">
+                        <div class="article-meta">
+                            <span class="date-badge">April 10, 2012</span>
+                        </div>
+                        <h1 class="article-title">Brakeman 1.5.3 Released</h1>
+                        
+                    </div>
 
-
-
-<time datetime="2012-04-10 13:18:00 -0600" pubdate  updated >2012-04-10 13:18:00 -0600</time>
-
-
-</p>
-    
-  </header>
-
-
-<div class="entry-content"><p>A considerable number of bugs and odd cases have been fixed with this release, and one new check has been added. Upgrading is <em>always</em> recommended!</p>
-
-<p><em>Changes since 1.5.2:</em></p>
-
-<ul>
+                    <div class="article-content">
+                        
+                            <div class="changelog-intro">
+                                <h3>Changes since 1.5.2:</h3>
+                                <ul>
+                                    
+                                        <li><ul>
   <li>Add check for user input in <code class="language-plaintext highlighter-rouge">Object#send</code> (Neil Matatall)</li>
+</ul>
+</li>
+                                    
+                                        <li><ul>
   <li>Support output to multiple formats (Nick Green)</li>
+</ul>
+</li>
+                                    
+                                        <li><ul>
   <li>Prevent infinite loops in mutually recursive templates</li>
+</ul>
+</li>
+                                    
+                                        <li><ul>
   <li>Only check <code class="language-plaintext highlighter-rouge">eval</code> arguments for user input, not the call target</li>
+</ul>
+</li>
+                                    
+                                        <li><ul>
   <li>Handle <code class="language-plaintext highlighter-rouge">render :layout</code> in views</li>
+</ul>
+</li>
+                                    
+                                        <li><ul>
   <li>Search subdirectories for models</li>
+</ul>
+</li>
+                                    
+                                        <li><ul>
   <li>Set values in request hashes and propagate to views</li>
+</ul>
+</li>
+                                    
+                                        <li><ul>
   <li>Add rake task file to gemspec (Anton Ageev)</li>
+</ul>
+</li>
+                                    
+                                        <li><ul>
   <li>Filter rescanning of templates (Neil Matatall)</li>
+</ul>
+</li>
+                                    
+                                        <li><ul>
   <li>Improve handling of modules and nesting</li>
+</ul>
+</li>
+                                    
+                                        <li><ul>
   <li>Test for zero errors in test reports</li>
 </ul>
+</li>
+                                    
+                                </ul>
+                            </div>
+                        
 
-<h3 id="new-check-for-user-input-in-objectsend">New Check for User Input in Object#send</h3>
+
+			<div class="feature-section">
+			    <p>A considerable number of bugs and odd cases have been fixed with this release, and one new check has been added. Upgrading is <em>always</em> recommended!</p>
+
+<h2 id="new-check-for-user-input-in-objectsend">New Check for User Input in Object#send</h2>
 
 <p>This new check looks for instances where user input can be used to control the method called using <code class="language-plaintext highlighter-rouge">send</code>.</p>
 
@@ -122,14 +165,14 @@ method = params[:user][:action].to_sym
 user.send(method)
 </code></pre></div></div>
 
-<h3 id="support-for-multiple-output-formats">Support for Multiple Output Formats</h3>
+<h2 id="support-for-multiple-output-formats">Support for Multiple Output Formats</h2>
 
 <p>Brakeman can now accept multiple <code class="language-plaintext highlighter-rouge">-o</code> arguments in order to produce more than one report from the same scan:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.html -o report.json
 </code></pre></div></div>
 
-<h3 id="handle-mutually-recursive-templates">Handle Mutually Recursive Templates</h3>
+<h2 id="handle-mutually-recursive-templates">Handle Mutually Recursive Templates</h2>
 
 <p>In some cases where two templates would render each other as partials, it would cause infinite loops in Brakeman. This is now fixed, at least for the simple common case:</p>
 
@@ -143,13 +186,13 @@ user.send(method)
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= render :partial =&gt; 'one' %&gt;
 </code></pre></div></div>
 
-<h3 id="only-check-eval-arguments">Only Check <code class="language-plaintext highlighter-rouge">eval</code> Arguments</h3>
+<h2 id="only-check-eval-arguments">Only Check <code class="language-plaintext highlighter-rouge">eval</code> Arguments</h2>
 
 <p>Previously, Brakeman was checking the entire call to methods like <code class="language-plaintext highlighter-rouge">eval</code> or <code class="language-plaintext highlighter-rouge">class_eval</code> for user input. This led to false positives when <code class="language-plaintext highlighter-rouge">class_eval</code> was being called on a model.</p>
 
 <p>Now Brakeman only checks the arguments or block provided to the <code class="language-plaintext highlighter-rouge">eval</code> call.</p>
 
-<h3 id="handle-render-layout-in-views">Handle render :layout in views</h3>
+<h2 id="handle-render-layout-in-views">Handle render :layout in views</h2>
 
 <p>Brakeman was not handling <code class="language-plaintext highlighter-rouge">render :layout =&gt; "..."</code> in views properly. This led to errors like:</p>
 
@@ -158,11 +201,11 @@ user.send(method)
 
 <p><code class="language-plaintext highlighter-rouge">render :layout</code> is now handled just like rendering a partial.</p>
 
-<h3 id="search-for-models-in-subdirectories">Search for Models in Subdirectories</h3>
+<h2 id="search-for-models-in-subdirectories">Search for Models in Subdirectories</h2>
 
 <p>Brakeman was only searching <code class="language-plaintext highlighter-rouge">app/models/</code> for models, but not any subdirectories. Now it does!</p>
 
-<h3 id="propagate-request-values">Propagate Request Values</h3>
+<h2 id="propagate-request-values">Propagate Request Values</h2>
 
 <p>While Brakeman has always detected request values (e.g., query parameters) in views, it would not propagate values stored IN those request hashes.</p>
 
@@ -173,118 +216,45 @@ user.send(method)
 
 <p>That value would not be propagated to the view if the view used <code class="language-plaintext highlighter-rouge">params[:input]</code>.</p>
 
-<h3 id="add-rake-task-to-gemspec">Add Rake Task to Gemspec</h3>
+<h2 id="add-rake-task-to-gemspec">Add Rake Task to Gemspec</h2>
 
 <p>In 1.2.0, Brakeman added the <code class="language-plaintext highlighter-rouge">--rake</code> option to add a Rake task to a Rails application, but the actual task itself was not included in the gem!</p>
 
 <p>Thanks to Anton Ageev for pointing this out. Either no one else tried this option, or a lot of people were very disappointed.</p>
 
-<h3 id="filter-templates-when-rescanning">Filter Templates When Rescanning</h3>
+<h2 id="filter-templates-when-rescanning">Filter Templates When Rescanning</h2>
 
 <p>When rescanning (for example, with <a href="https://github.com/guard/guard-brakeman">guard-brakeman</a>), Brakeman was assuming any files in <code class="language-plaintext highlighter-rouge">app/views</code> is a template, but this isn’t always true.</p>
 
-<h3 id="reporting-issues">Reporting Issues</h3>
+			</div>
 
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a>!</p>
+                        
 
-<p>Also consider joining the <a href="http://brakemanscanner.org/contact/">mailing list</a> or following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter.</p>
-
-<p>And don’t forget to check out the Brakeman talk at <a href="http://railsconf2012.com/sessions/44">RailsConf</a> later this month.</p>
-</div>
-
-
-  <footer>
-    <p class="meta">
-      
-
-
-      
-
-
-
-
-<time datetime="2012-04-10 13:18:00 -0600" pubdate  updated >2012-04-10 13:18:00 -0600</time>
-
-
-
-      
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  
-</div>
-
-    
-  </footer>
-</article>
-
-</div>
-
-<aside role=sidebar>
-  <section>
-  <p></p>
-  <p>Brakeman is a free vulnerability scanner specifically designed for Ruby on Rails applications. It statically analyzes Rails application code to find security issues at any stage of development.</p>
-  <p><a href="/docs/quickstart">Get started!</a></p>
-</section>
-
-  <section>
-  <script type='text/javascript'>
-    $(document).ready(function(){
-      $("#github").GitHubBadge({
-        login: "presidentbeef",
-        kind: "project",
-        repo_name: "brakeman",
-        include_github_logo: false,
-        image_path: "",
-        commit_count: "1",
-        issue_count: "0",
-        repo_count: "0"
-      });
-    });
-  </script>
-  <div id="github"></div>
-  <a href="https://dl.circleci.com/status-badge/redirect/gh/presidentbeef/brakeman/tree/main"><img src="https://dl.circleci.com/status-badge/img/gh/presidentbeef/brakeman/tree/main.svg?style=svg" /></a>
-</section>
-
-  <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">Brakeman 7.1.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
-      </li>
-    
-  </ul>
-</section>
-
-</aside>
-
-
+                        <div class="reporting-section">
+                            <h3>Reporting Issues</h3>
+                            <p>Thank you to everyone who reported bugs and contributed to this release!</p>
+                            <p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+                            <p>Hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on GitHub</a> for questions and discussion.</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
     </div>
-  </div>
-  <footer><p>
-<span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | <a href="/content_license">Content license</a></span>
-</p>
+</div>
 
-</footer>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content"><div class="footer-section">
+                        <h4>Project</h4><a href="/docs/">Documentation</a><a href="https://github.com/presidentbeef/brakeman/releases">Changelog</a></div><div class="footer-section">
+                        <h4>Community</h4><a href="https://github.com/presidentbeef/brakeman">GitHub</a><a href="https://github.com/presidentbeef/brakeman/discussions">Discussions</a><a href="https://github.com/presidentbeef/brakeman/issues">Issues</a><a href="/contributing/">Contributing</a></div><div class="footer-section">
+                        <h4>Resources</h4><a href="/docs/quickstart/">Getting Started</a><a href="https://guides.rubyonrails.org/security.html">Rails Security Guide</a></div></div>
+        </div>
+    </footer>
+
+    <script src="/javascripts/main.js"></script>
 </body>
 </html>

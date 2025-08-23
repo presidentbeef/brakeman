@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="/stylesheets/screen.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body class="docs">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="logo">
+                    <img src="/images/brakeman_logo_small.png" alt="Brakeman Logo">
+                    Brakeman
+                </a>
+                <ul class="nav-links"><li>
+                            <a href="/docs/" class="active">
+                                Documentation
+                            </a>
+                        </li><li>
+                            <a href="/blog/archives">
+                                News
+                            </a>
+                        </li><li>
+                            <a href="https://github.com/presidentbeef/brakeman">
+                                Code
+                            </a>
+                        </li></ul>
+                <div class="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Documentation Container -->
+<div class="docs-container">
+    <div class="container">
+        <div class="docs-layout">
+            <!-- Sidebar -->
+            <aside class="docs-sidebar">
+                
+                    <div class="sidebar-section">
+                        <h3>Getting Started</h3>
+                        <ul class="sidebar-links">
+                            
+                                <li>
+                                    <a href="/docs/" 
+                                       >
+                                        Overview
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/quickstart/" 
+                                       >
+                                        Quickstart Guide
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/install/" 
+                                       >
+                                        Installation
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/running/" 
+                                       >
+                                        Basic Usage
+                                    </a>
+                                </li>
+                            
+                        </ul>
+                    </div>
+                
+                    <div class="sidebar-section">
+                        <h3>Configuration</h3>
+                        <ul class="sidebar-links">
+                            
+                                <li>
+                                    <a href="/docs/options/" 
+                                       >
+                                        Options
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/configuration/" 
+                                       class="active">
+                                        Configuration Files
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/ignoring_false_positives/" 
+                                       >
+                                        Ignoring False Positives
+                                    </a>
+                                </li>
+                            
+                        </ul>
+                    </div>
+                
+                    <div class="sidebar-section">
+                        <h3>More Information</h3>
+                        <ul class="sidebar-links">
+                            
+                                <li>
+                                    <a href="/docs/warning_types/" 
+                                       >
+                                        Warning Types
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/confidence/" 
+                                       >
+                                        Confidence Levels
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/automation/" 
+                                       >
+                                        Automation
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/brakeman_as_a_library/" 
+                                       >
+                                        Brakeman as a Library
+                                    </a>
+                                </li>
+                            
+                        </ul>
+                    </div>
+                
+                    <div class="sidebar-section">
+                        <h3>Development</h3>
+                        <ul class="sidebar-links">
+                            
+                                <li>
+                                    <a href="/docs/contributing/" 
+                                       >
+                                        Contributing
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/testing_brakeman/" 
+                                       >
+                                        Test Structure
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/contributing/adding_tests/" 
+                                       >
+                                        Adding a Test
+                                    </a>
+                                </li>
+                            
+                        </ul>
+                    </div>
+                
+            </aside>
+
+            <!-- Main Content -->
+            <main class="docs-content">
+                <div class="docs-header">
+                    <h1 class="docs-title">Configuration Files</h1>
+                    
+                </div>
+
+                <div class="docs-body">
+                    
+
+                    <p>Brakeman options can be stored and read from YAML files. To simplify the process of writing a configuration file, the <code class="language-plaintext highlighter-rouge">-C</code> option will output the currently set options.</p>
+
+<p>Options passed in on the commandline have priority over configuration files.</p>
+
+<p>The default config locations are <code class="language-plaintext highlighter-rouge">./config/brakeman.yml</code>, <code class="language-plaintext highlighter-rouge">~/.brakeman/config.yml</code>, and <code class="language-plaintext highlighter-rouge">/etc/brakeman/config.yml</code></p>
+
+<p>The <code class="language-plaintext highlighter-rouge">-c</code> option can be used to specify a configuration file to use.</p>
+
+
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content"><div class="footer-section">
+                        <h4>Project</h4><a href="/docs/">Documentation</a><a href="https://github.com/presidentbeef/brakeman/releases">Changelog</a></div><div class="footer-section">
+                        <h4>Community</h4><a href="https://github.com/presidentbeef/brakeman">GitHub</a><a href="https://github.com/presidentbeef/brakeman/discussions">Discussions</a><a href="https://github.com/presidentbeef/brakeman/issues">Issues</a><a href="/contributing/">Contributing</a></div><div class="footer-section">
+                        <h4>Resources</h4><a href="/docs/quickstart/">Getting Started</a><a href="https://guides.rubyonrails.org/security.html">Rails Security Guide</a></div></div>
+        </div>
+    </footer>
+
+    <script src="/javascripts/main.js"></script>
+</body>
+</html>

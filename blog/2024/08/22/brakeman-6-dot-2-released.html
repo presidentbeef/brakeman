@@ -1,119 +1,140 @@
 
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Brakeman: Brakeman 6.2.1 Released</title>
-  <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
-
-  <link rel="canonical" href="https://brakemanscanner.org/blog/2024/08/22/brakeman-6-dot-2-released"/>
-  <link href="/favicon.png" rel="shortcut icon" />
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="feed.xml" rel="alternate" title="Brakeman" type="application/atom+xml"/>
-  
-
-  
-
-  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
-<link href='https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
-<script language="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
-<script src="/javascripts/jquery.github_badge.js"></script>
-<meta property="twitter:account_id" content="23978537" />
-
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Brakeman 6.2.1 Released" />
-<meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
-<meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="/stylesheets/screen.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
 </head>
+<body class="blog">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="logo">
+                    <img src="/images/brakeman_logo_small.png" alt="Brakeman Logo">
+                    Brakeman
+                </a>
+                <ul class="nav-links"><li>
+                            <a href="/docs/">
+                                Documentation
+                            </a>
+                        </li><li>
+                            <a href="/blog/archives">
+                                News
+                            </a>
+                        </li><li>
+                            <a href="https://github.com/presidentbeef/brakeman">
+                                Code
+                            </a>
+                        </li></ul>
+                <div class="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
 
-<body  >
-  <header><hgroup>
-  <h1><a href="/">Brakeman</a></h1>
-  
-    <h2>Ruby on Rails Static Analysis Security Tool</h2>
-  
-</hgroup>
+    <!-- Main Content -->
+    <main>
+        <div class="blog-container">
+    <div class="container">
+        <div class="blog-layout">
+            <!-- Sidebar -->
+            <aside class="blog-sidebar fade-in stagger-1">
+                <div class="sidebar-card">
+                    <h4>Recent Posts</h4>
+                    
+                        <a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">Brakeman 7.1.0 Released</a>
+                    
+                        <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
+                    
+                        <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
+                    
+                        <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
+                    
+                </div>
 
-</header>
-  <nav role=navigation><ul role=subscription data-subscription="rss">
-  <li><a href="feed.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-<form action="" method="get">
-  <fieldset role="site-search">
-    <input type="hidden" name="q" value="site:https://brakemanscanner.org" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-<ul role=main-navigation>
-  <li><a href="/">Home</a></li>
-  <li><a href="/docs">Documentation</a></li>
-  <li><a href="https://github.com/presidentbeef/brakeman">Source</a></li>
-  <li><a href="/docs/contributing">Contributing</a></li>
-  <li><a href="/brakeman_users">Users</a></li>
-  <li><a href="/contact">Contact</a></li>
-</ul>
+                <div class="sidebar-card">
+                    <h4>Quick Links</h4>
+                    <a href="/docs/quickstart/">Quick Start</a>
+                    <a href="/docs/">Documentation</a>
+                    <a href="https://github.com/presidentbeef/brakeman/issues">Report Issues</a>
+                    <a href="https://github.com/presidentbeef/brakeman">GitHub Repository</a>
+                </div>
+            </aside>
 
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry">
-  
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-      <h1 class="entry-title">Brakeman 6.2.1 Released</h1>
-    
-    
-      <p class="meta">
+            <!-- Main Article -->
+            <div class="article-container">
+                <!-- Mobile Sidebar Toggle -->
+                <div class="sidebar-toggle">
+                    <span>Quick Navigation</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+
+                <article class="article-main fade-in">
+                    <div class="article-header">
+                        <div class="article-meta">
+                            <span class="date-badge">August 22, 2024</span>
+                        </div>
+                        <h1 class="article-title">Brakeman 6.2.1 Released</h1>
+                        
+                    </div>
+
+                    <div class="article-content">
+                        
+                            <div class="changelog-intro">
+                                <h3>Changes since 6.1.2:</h3>
+                                <ul>
+                                    
+                                        <li>Add optional support for Prism parser
+</li>
+                                    
+                                        <li>Handle parallel assignment with splats (<a href="https://github.com/presidentbeef/brakeman/issues/1833">#1833</a>)
+</li>
+                                    
+                                        <li>Warn about unscoped finds with <code class="language-plaintext highlighter-rouge">find_by!</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1786">#1786</a>)
+</li>
+                                    
+                                        <li>Add initial Rails 8 support (<a href="https://github.com/ron-shinall">Ron Shinall</a>)
+</li>
+                                    
+                                        <li>Add support for symbolic links (<a href="https://github.com/lubert">Lu Zhu</a>)
+</li>
+                                    
+                                        <li>Support YAML aliases in secret configs (<a href="https://github.com/chaadow">Chedli Bourguiba</a>)
+</li>
+                                    
+                                        <li>Add <code class="language-plaintext highlighter-rouge">--show-ignored</code> option (<a href="https://github.com/gazayas">Gabriel Arcangel Zayas</a>)
+</li>
+                                    
+                                        <li>Treat <code class="language-plaintext highlighter-rouge">::X</code> and <code class="language-plaintext highlighter-rouge">X</code> the same, for now (<a href="https://github.com/that-jill">Jill Klang</a>)
+</li>
+                                    
+                                        <li>Remediation advice for command injection <a href="https://github.com/rangerscience">Nicholas Barone</a>
+</li>
+                                    
+                                        <li>Fix compatibility with default frozen string literals (<a href="https://github.com/casperisfine">Jean Boussier</a>)
+</li>
+                                    
+                                        <li>Fix Ruby warnings in test suite (<a href="https://github.com/casperisfine">Jean Boussier</a>)
+</li>
+                                    
+                                </ul>
+                            </div>
+                        
 
 
-
-
-<time datetime="2024-08-22 10:30:00 -0600" pubdate  updated >2024-08-22 10:30:00 -0600</time>
-
-
-</p>
-    
-  </header>
-
-
-<div class="entry-content"><p>Lots of great contributions in this release, thanks!</p>
-
-<p><em>Changes since 6.1.2:</em></p>
-
-<ul>
-  <li>Add optional support for Prism parser</li>
-  <li>Handle parallel assignment with splats (<a href="https://github.com/presidentbeef/brakeman/issues/1833">#1833</a>)</li>
-  <li>Warn about unscoped finds with <code class="language-plaintext highlighter-rouge">find_by!</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1786">#1786</a>)</li>
-  <li>Add initial Rails 8 support (<a href="https://github.com/ron-shinall">Ron Shinall</a>)</li>
-  <li>Add support for symbolic links (<a href="https://github.com/lubert">Lu Zhu</a>)</li>
-  <li>Support YAML aliases in secret configs (<a href="https://github.com/chaadow">Chedli Bourguiba</a>)</li>
-  <li>Add <code class="language-plaintext highlighter-rouge">--show-ignored</code> option (<a href="https://github.com/gazayas">Gabriel Arcangel Zayas</a>)</li>
-  <li>Treat <code class="language-plaintext highlighter-rouge">::X</code> and <code class="language-plaintext highlighter-rouge">X</code> the same, for now (<a href="https://github.com/that-jill">Jill Klang</a>)</li>
-  <li>Remediation advice for command injection <a href="https://github.com/rangerscience">Nicholas Barone</a></li>
-  <li>Fix compatibility with default frozen string literals (<a href="https://github.com/casperisfine">Jean Boussier</a>)</li>
-  <li>Fix Ruby warnings in test suite (<a href="https://github.com/casperisfine">Jean Boussier</a>)</li>
-</ul>
+			<div class="feature-section">
+			    <p>Lots of great contributions in this release, thanks!</p>
 
 <p><em>What happened to 6.2.0? Packaging issue! No other changes.</em></p>
 
-<h3 id="optional-support-for-prism-parser">Optional Support for Prism Parser</h3>
+<h2 id="optional-support-for-prism-parser">Optional Support for Prism Parser</h2>
 
 <p><a href="https://ruby.github.io/prism/">Prism</a> is a new Ruby parsing library which is intended to bring together all the various Ruby parsing libraries together.</p>
 
@@ -123,7 +144,7 @@
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1858">changes</a>)</p>
 
-<h3 id="parallel-assignment-with-splats">Parallel Assignment with Splats</h3>
+<h2 id="parallel-assignment-with-splats">Parallel Assignment with Splats</h2>
 
 <p>Support splats in parallel assignments like</p>
 
@@ -132,7 +153,7 @@
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1843">changes</a>)</p>
 
-<h3 id="unscoped-finds-with-find_by">Unscoped Finds with <code class="language-plaintext highlighter-rouge">find_by!</code></h3>
+<h2 id="unscoped-finds-with-find_by">Unscoped Finds with <code class="language-plaintext highlighter-rouge">find_by!</code></h2>
 
 <p>Warn about insecure direct object references in code using <code class="language-plaintext highlighter-rouge">find_by!</code>:</p>
 
@@ -141,7 +162,7 @@
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1859">changes</a>)</p>
 
-<h3 id="initial-rails-8-support">Initial Rails 8 Support</h3>
+<h2 id="initial-rails-8-support">Initial Rails 8 Support</h2>
 
 <p>While there is no specific behavior added yet for Rails 8, Brakeman will detect it properly and the <code class="language-plaintext highlighter-rouge">-8</code>/<code class="language-plaintext highlighter-rouge">--rails8</code> options have been added.</p>
 
@@ -149,19 +170,19 @@
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1846">changes</a>)</p>
 
-<h3 id="support-for-symbolic-links">Support for Symbolic Links</h3>
+<h2 id="support-for-symbolic-links">Support for Symbolic Links</h2>
 
 <p>Thanks to <a href="https://github.com/lubert">Lu Zhu</a>, Brakeman will now follow symbolic links for directories - in particular links to files outside of the root directory of the Rails application.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1828">changes</a>)</p>
 
-<h3 id="yaml-aliases-in-secrets-config">YAML Aliases in Secrets Config</h3>
+<h2 id="yaml-aliases-in-secrets-config">YAML Aliases in Secrets Config</h2>
 
 <p><a href="https://github.com/chaadow">Chedli Bourguiba</a> enabled support for use of aliases in secrets configuration files.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1847">changes</a>)</p>
 
-<h3 id="option-to-show-ignored-warnings-in-text-report">Option to Show Ignored Warnings in Text Report</h3>
+<h2 id="option-to-show-ignored-warnings-in-text-report">Option to Show Ignored Warnings in Text Report</h2>
 
 <p>In response to <a href="https://github.com/presidentbeef/brakeman/issues/1767">this request</a>, <a href="https://github.com/gazayas">Gabriel Arcangel Zayas</a> added the <code class="language-plaintext highlighter-rouge">--show-ignored</code> option to
 list ignored warnings in the default text report.</p>
@@ -170,19 +191,19 @@ list ignored warnings in the default text report.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1861">changes</a>)</p>
 
-<h3 id="top-level-constants">Top-Level Constants</h3>
+<h2 id="top-level-constants">Top-Level Constants</h2>
 
 <p>While it may be semantically incorrect, Brakeman will now treat <code class="language-plaintext highlighter-rouge">::Foo</code> and <code class="language-plaintext highlighter-rouge">Foo</code> the same. This helps when matching against known constants like <code class="language-plaintext highlighter-rouge">ViewComponent::Base</code> and <code class="language-plaintext highlighter-rouge">::ViewComponent::Base</code>. Thanks to <a href="https://github.com/that-jill">Jill Klang</a> for addressing this one.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1838">changes</a>)</p>
 
-<h3 id="remediation-advice-for-command-injection">Remediation Advice for Command Injection</h3>
+<h2 id="remediation-advice-for-command-injection">Remediation Advice for Command Injection</h2>
 
 <p><a href="https://github.com/rangerscience">Nicholas Barone</a> added a note about using <code class="language-plaintext highlighter-rouge">shellescape</code> to make shell commands safer.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1852">changes</a>)</p>
 
-<h3 id="frozen-string-support">Frozen String Support</h3>
+<h2 id="frozen-string-support">Frozen String Support</h2>
 
 <p>(<a href="https://github.com/casperisfine">Jean Boussier</a>) has made Brakeman compatible with use of Ruby’s frozen string literals (e.g. <code class="language-plaintext highlighter-rouge">--enable-frozen-string-literal</code>), avoiding any future issues if/when frozen strings are the default.</p>
 
@@ -190,117 +211,57 @@ list ignored warnings in the default text report.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1855">changes</a>)</p>
 
-<h3 id="checksums">Checksums</h3>
 
-<p>The SHA256 sums for this release are:</p>
+			</div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>862e709caa1abf00dd0c47045682404c349f64876c7be74a8e6a4d6be5f61a1d  brakeman-6.2.1.gem
-7c3b5268a83d53069b778056624e5f215d17f24902ca7f381299c2ba7dc7b684  brakeman-lib-6.2.1.gem
-cb839d5f1e0d356c33141dda377f401712a89e4d501748f1c01faa41c9d0f70e  brakeman-min-6.2.1.gem
-</code></pre></div></div>
+                        
+                            <div class="checksums-section">
+                                <h3>Checksums</h3>
+                                <p>The SHA256 sums for this release are:</p>
+                                
+                                    <div class="checksum-line">
+                                        <span class="hash">862e709caa1abf00dd0c47045682404c349f64876c7be74a8e6a4d6be5f61a1d</span> 
+                                        <span class="filename">brakeman-6.2.1.gem</span>
+                                    </div>
+                                
+                                    <div class="checksum-line">
+                                        <span class="hash">7c3b5268a83d53069b778056624e5f215d17f24902ca7f381299c2ba7dc7b684</span> 
+                                        <span class="filename">brakeman-lib-6.2.1.gem</span>
+                                    </div>
+                                
+                                    <div class="checksum-line">
+                                        <span class="hash">cb839d5f1e0d356c33141dda377f401712a89e4d501748f1c01faa41c9d0f70e</span> 
+                                        <span class="filename">brakeman-min-6.2.1.gem</span>
+                                    </div>
+                                
+                            </div>
+                        
 
-<h3 id="reporting-issues">Reporting Issues</h3>
-
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
-</div>
-
-
-  <footer>
-    <p class="meta">
-      
-
-
-      
-
-
-
-
-<time datetime="2024-08-22 10:30:00 -0600" pubdate  updated >2024-08-22 10:30:00 -0600</time>
-
-
-
-      
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  
-</div>
-
-    
-  </footer>
-</article>
-
-</div>
-
-<aside role=sidebar>
-  <section>
-  <p></p>
-  <p>Brakeman is a free vulnerability scanner specifically designed for Ruby on Rails applications. It statically analyzes Rails application code to find security issues at any stage of development.</p>
-  <p><a href="/docs/quickstart">Get started!</a></p>
-</section>
-
-  <section>
-  <script type='text/javascript'>
-    $(document).ready(function(){
-      $("#github").GitHubBadge({
-        login: "presidentbeef",
-        kind: "project",
-        repo_name: "brakeman",
-        include_github_logo: false,
-        image_path: "",
-        commit_count: "1",
-        issue_count: "0",
-        repo_count: "0"
-      });
-    });
-  </script>
-  <div id="github"></div>
-  <a href="https://dl.circleci.com/status-badge/redirect/gh/presidentbeef/brakeman/tree/main"><img src="https://dl.circleci.com/status-badge/img/gh/presidentbeef/brakeman/tree/main.svg?style=svg" /></a>
-</section>
-
-  <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">Brakeman 7.1.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
-      </li>
-    
-  </ul>
-</section>
-
-</aside>
-
-
+                        <div class="reporting-section">
+                            <h3>Reporting Issues</h3>
+                            <p>Thank you to everyone who reported bugs and contributed to this release!</p>
+                            <p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+                            <p>Hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on GitHub</a> for questions and discussion.</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
     </div>
-  </div>
-  <footer><p>
-<span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | <a href="/content_license">Content license</a></span>
-</p>
+</div>
 
-</footer>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content"><div class="footer-section">
+                        <h4>Project</h4><a href="/docs/">Documentation</a><a href="https://github.com/presidentbeef/brakeman/releases">Changelog</a></div><div class="footer-section">
+                        <h4>Community</h4><a href="https://github.com/presidentbeef/brakeman">GitHub</a><a href="https://github.com/presidentbeef/brakeman/discussions">Discussions</a><a href="https://github.com/presidentbeef/brakeman/issues">Issues</a><a href="/contributing/">Contributing</a></div><div class="footer-section">
+                        <h4>Resources</h4><a href="/docs/quickstart/">Getting Started</a><a href="https://guides.rubyonrails.org/security.html">Rails Security Guide</a></div></div>
+        </div>
+    </footer>
+
+    <script src="/javascripts/main.js"></script>
 </body>
 </html>

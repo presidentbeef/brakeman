@@ -1,113 +1,124 @@
 
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Brakeman: Brakeman 3.4.0 Released</title>
-  <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <meta name="keywords" content="brakeman,ruby on rails,security,scanner,vulnerabilities,static analysis"/>
-
-  <link rel="canonical" href="https://brakemanscanner.org/blog/2016/09/07/brakeman-3-dot-4-0-released"/>
-  <link href="/favicon.png" rel="shortcut icon" />
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="feed.xml" rel="alternate" title="Brakeman" type="application/atom+xml"/>
-  
-
-  
-
-  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
-<link href='https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
-<script language="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
-<script src="/javascripts/jquery.github_badge.js"></script>
-<meta property="twitter:account_id" content="23978537" />
-
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@brakeman" />
-<meta name="twitter:title" content="Brakeman - Brakeman 3.4.0 Released" />
-<meta name="twitter:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
-<meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="/stylesheets/screen.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
 </head>
+<body class="blog">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="logo">
+                    <img src="/images/brakeman_logo_small.png" alt="Brakeman Logo">
+                    Brakeman
+                </a>
+                <ul class="nav-links"><li>
+                            <a href="/docs/">
+                                Documentation
+                            </a>
+                        </li><li>
+                            <a href="/blog/archives">
+                                News
+                            </a>
+                        </li><li>
+                            <a href="https://github.com/presidentbeef/brakeman">
+                                Code
+                            </a>
+                        </li></ul>
+                <div class="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
 
-<body  >
-  <header><hgroup>
-  <h1><a href="/">Brakeman</a></h1>
-  
-    <h2>Ruby on Rails Static Analysis Security Tool</h2>
-  
-</hgroup>
+    <!-- Main Content -->
+    <main>
+        <div class="blog-container">
+    <div class="container">
+        <div class="blog-layout">
+            <!-- Sidebar -->
+            <aside class="blog-sidebar fade-in stagger-1">
+                <div class="sidebar-card">
+                    <h4>Recent Posts</h4>
+                    
+                        <a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">Brakeman 7.1.0 Released</a>
+                    
+                        <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
+                    
+                        <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
+                    
+                        <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
+                    
+                </div>
 
-</header>
-  <nav role=navigation><ul role=subscription data-subscription="rss">
-  <li><a href="feed.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-<form action="" method="get">
-  <fieldset role="site-search">
-    <input type="hidden" name="q" value="site:https://brakemanscanner.org" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-<ul role=main-navigation>
-  <li><a href="/">Home</a></li>
-  <li><a href="/docs">Documentation</a></li>
-  <li><a href="https://github.com/presidentbeef/brakeman">Source</a></li>
-  <li><a href="/docs/contributing">Contributing</a></li>
-  <li><a href="/brakeman_users">Users</a></li>
-  <li><a href="/contact">Contact</a></li>
-</ul>
+                <div class="sidebar-card">
+                    <h4>Quick Links</h4>
+                    <a href="/docs/quickstart/">Quick Start</a>
+                    <a href="/docs/">Documentation</a>
+                    <a href="https://github.com/presidentbeef/brakeman/issues">Report Issues</a>
+                    <a href="https://github.com/presidentbeef/brakeman">GitHub Repository</a>
+                </div>
+            </aside>
 
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry">
-  
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-      <h1 class="entry-title">Brakeman 3.4.0 Released</h1>
-    
-    
-      <p class="meta">
+            <!-- Main Article -->
+            <div class="article-container">
+                <!-- Mobile Sidebar Toggle -->
+                <div class="sidebar-toggle">
+                    <span>Quick Navigation</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+
+                <article class="article-main fade-in">
+                    <div class="article-header">
+                        <div class="article-meta">
+                            <span class="date-badge">September 07, 2016</span>
+                        </div>
+                        <h1 class="article-title">Brakeman 3.4.0 Released</h1>
+                        
+                    </div>
+
+                    <div class="article-content">
+                        
+                            <div class="changelog-intro">
+                                <h3>Changes since 3.3.5:</h3>
+                                <ul>
+                                    
+                                        <li>Show obsolete ignore entries in reports (<a href="https://github.com/jcheatham">Jonathan Cheatham</a>)
+</li>
+                                    
+                                        <li>Add option to prune ignore file with <code class="language-plaintext highlighter-rouge">-I</code>
+</li>
+                                    
+                                        <li>Add new <code class="language-plaintext highlighter-rouge">plain</code> report format (<a href="https://github.com/presidentbeef/brakeman/issues/914">#914</a>)
+</li>
+                                    
+                                        <li>Support creating reports in non-existent paths (<a href="https://github.com/presidentbeef/brakeman/issues/924">#924</a>)
+</li>
+                                    
+                                        <li>Add <code class="language-plaintext highlighter-rouge">--no-exit-warn</code> (<a href="https://github.com/presidentbeef/brakeman/issues/925">#925</a>)
+</li>
+                                    
+                                        <li>Improved Slim template support
+</li>
+                                    
+                                </ul>
+                            </div>
+                        
 
 
-
-
-<time datetime="2016-09-07 13:55:00 -0600" pubdate  updated >2016-09-07 13:55:00 -0600</time>
-
-
-</p>
-    
-  </header>
-
-
-<div class="entry-content"><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Oops! Brakeman&#39;s 6th birthday was August 27th! 🎉 6 years, 61 contributors, 91 releases, 3.3 million gem downloads 🎉</p>&mdash; Brakeman Scanner (@brakeman) <a href="https://twitter.com/brakeman/status/772844048402964481">September 5, 2016</a></blockquote>
+			<div class="feature-section">
+			    <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Oops! Brakeman&#39;s 6th birthday was August 27th! 🎉 6 years, 61 contributors, 91 releases, 3.3 million gem downloads 🎉</p>&mdash; Brakeman Scanner (@brakeman) <a href="https://twitter.com/brakeman/status/772844048402964481">September 5, 2016</a></blockquote>
 <script async="" src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-<p><em>Changes since 3.3.5</em>:</p>
-
-<ul>
-  <li>Show obsolete ignore entries in reports (<a href="https://github.com/jcheatham">Jonathan Cheatham</a>)</li>
-  <li>Add option to prune ignore file with <code class="language-plaintext highlighter-rouge">-I</code></li>
-  <li>Add new <code class="language-plaintext highlighter-rouge">plain</code> report format (<a href="https://github.com/presidentbeef/brakeman/issues/914">#914</a>)</li>
-  <li>Support creating reports in non-existent paths (<a href="https://github.com/presidentbeef/brakeman/issues/924">#924</a>)</li>
-  <li>Add <code class="language-plaintext highlighter-rouge">--no-exit-warn</code> (<a href="https://github.com/presidentbeef/brakeman/issues/925">#925</a>)</li>
-  <li>Improved Slim template support</li>
-</ul>
-
-<h3 id="obsolete-ignore-entries">Obsolete Ignore Entries</h3>
+<h2 id="obsolete-ignore-entries">Obsolete Ignore Entries</h2>
 
 <p>The “ignore” configuration file can sometimes grow large due to stale entries that no longer correspond to existing warnings. Thanks to <a href="https://github.com/jcheatham">Jonathan Cheatham</a>, these obsolete entires will now be noted in the default and JSON reports.</p>
 
@@ -121,7 +132,7 @@
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/934">changes</a>)</p>
 
-<h3 id="new-report-format">New Report Format</h3>
+<h2 id="new-report-format">New Report Format</h2>
 
 <p>This release adds a new “plain text” report format. It will eventually replace the default “table” report in Brakeman 4.0.</p>
 
@@ -135,25 +146,25 @@
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/935">changes</a>)</p>
 
-<h3 id="report-paths">Report Paths</h3>
+<h2 id="report-paths">Report Paths</h2>
 
 <p>If the specified output file is in a non-existent path, Brakeman will now attempt to create the path before writing out the report.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/927">changes</a>)</p>
 
-<h3 id="no-exit-code-on-warnings">No Exit Code on Warnings</h3>
+<h2 id="no-exit-code-on-warnings">No Exit Code on Warnings</h2>
 
 <p><code class="language-plaintext highlighter-rouge">--no-exit-warn</code> has been added to complement <code class="language-plaintext highlighter-rouge">--exit-warn</code>.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/926">changes</a>)</p>
 
-<h3 id="improved-slim-support">Improved Slim Support</h3>
+<h2 id="improved-slim-support">Improved Slim Support</h2>
 
 <p>Most users will not notice any changes, but internally Slim templates are handled a bit better.</p>
 
 <p>(<a href="https://github.com/presidentbeef/brakeman/pull/932">changes</a> and <a href="https://github.com/presidentbeef/brakeman/pull/931">more</a>)</p>
 
-<h3 id="shas">SHAs</h3>
+<h2 id="shas">SHAs</h2>
 
 <p>The SHA256 sums for this release are</p>
 
@@ -162,109 +173,35 @@
 e3d61c1de5549984a0d9eb3a3a53a4ef17b1b41db1be7d504237dd05a0cfa203  brakeman-lib-3.4.0.gem
 </code></pre></div></div>
 
-<h3 id="reporting-issues">Reporting Issues</h3>
+			</div>
 
-<p>Thank you to everyone who reported bugs.</p>
+                        
 
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release! Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Also consider following <a href="https://twitter.com/brakeman">@brakeman</a> on Twitter and hanging out <a href="https://gitter.im/presidentbeef/brakeman">on Gitter</a> for questions and discussion.</p>
-
-</div>
-
-
-  <footer>
-    <p class="meta">
-      
-
-
-      
-
-
-
-
-<time datetime="2016-09-07 13:55:00 -0600" pubdate  updated >2016-09-07 13:55:00 -0600</time>
-
-
-
-      
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  
-</div>
-
-    
-  </footer>
-</article>
-
-</div>
-
-<aside role=sidebar>
-  <section>
-  <p></p>
-  <p>Brakeman is a free vulnerability scanner specifically designed for Ruby on Rails applications. It statically analyzes Rails application code to find security issues at any stage of development.</p>
-  <p><a href="/docs/quickstart">Get started!</a></p>
-</section>
-
-  <section>
-  <script type='text/javascript'>
-    $(document).ready(function(){
-      $("#github").GitHubBadge({
-        login: "presidentbeef",
-        kind: "project",
-        repo_name: "brakeman",
-        include_github_logo: false,
-        image_path: "",
-        commit_count: "1",
-        issue_count: "0",
-        repo_count: "0"
-      });
-    });
-  </script>
-  <div id="github"></div>
-  <a href="https://dl.circleci.com/status-badge/redirect/gh/presidentbeef/brakeman/tree/main"><img src="https://dl.circleci.com/status-badge/img/gh/presidentbeef/brakeman/tree/main.svg?style=svg" /></a>
-</section>
-
-  <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">Brakeman 7.1.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
-      </li>
-    
-  </ul>
-</section>
-
-</aside>
-
-
+                        <div class="reporting-section">
+                            <h3>Reporting Issues</h3>
+                            <p>Thank you to everyone who reported bugs and contributed to this release!</p>
+                            <p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+                            <p>Hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on GitHub</a> for questions and discussion.</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
     </div>
-  </div>
-  <footer><p>
-<span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | <a href="/content_license">Content license</a></span>
-</p>
+</div>
 
-</footer>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content"><div class="footer-section">
+                        <h4>Project</h4><a href="/docs/">Documentation</a><a href="https://github.com/presidentbeef/brakeman/releases">Changelog</a></div><div class="footer-section">
+                        <h4>Community</h4><a href="https://github.com/presidentbeef/brakeman">GitHub</a><a href="https://github.com/presidentbeef/brakeman/discussions">Discussions</a><a href="https://github.com/presidentbeef/brakeman/issues">Issues</a><a href="/contributing/">Contributing</a></div><div class="footer-section">
+                        <h4>Resources</h4><a href="/docs/quickstart/">Getting Started</a><a href="https://guides.rubyonrails.org/security.html">Rails Security Guide</a></div></div>
+        </div>
+    </footer>
+
+    <script src="/javascripts/main.js"></script>
 </body>
 </html>

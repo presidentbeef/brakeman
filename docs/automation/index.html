@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="/stylesheets/screen.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body class="docs">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="logo">
+                    <img src="/images/brakeman_logo_small.png" alt="Brakeman Logo">
+                    Brakeman
+                </a>
+                <ul class="nav-links"><li>
+                            <a href="/docs/" class="active">
+                                Documentation
+                            </a>
+                        </li><li>
+                            <a href="/blog/archives">
+                                News
+                            </a>
+                        </li><li>
+                            <a href="https://github.com/presidentbeef/brakeman">
+                                Code
+                            </a>
+                        </li></ul>
+                <div class="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Documentation Container -->
+<div class="docs-container">
+    <div class="container">
+        <div class="docs-layout">
+            <!-- Sidebar -->
+            <aside class="docs-sidebar">
+                
+                    <div class="sidebar-section">
+                        <h3>Getting Started</h3>
+                        <ul class="sidebar-links">
+                            
+                                <li>
+                                    <a href="/docs/" 
+                                       >
+                                        Overview
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/quickstart/" 
+                                       >
+                                        Quickstart Guide
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/install/" 
+                                       >
+                                        Installation
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/running/" 
+                                       >
+                                        Basic Usage
+                                    </a>
+                                </li>
+                            
+                        </ul>
+                    </div>
+                
+                    <div class="sidebar-section">
+                        <h3>Configuration</h3>
+                        <ul class="sidebar-links">
+                            
+                                <li>
+                                    <a href="/docs/options/" 
+                                       >
+                                        Options
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/configuration/" 
+                                       >
+                                        Configuration Files
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/ignoring_false_positives/" 
+                                       >
+                                        Ignoring False Positives
+                                    </a>
+                                </li>
+                            
+                        </ul>
+                    </div>
+                
+                    <div class="sidebar-section">
+                        <h3>More Information</h3>
+                        <ul class="sidebar-links">
+                            
+                                <li>
+                                    <a href="/docs/warning_types/" 
+                                       >
+                                        Warning Types
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/confidence/" 
+                                       >
+                                        Confidence Levels
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/automation/" 
+                                       class="active">
+                                        Automation
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/brakeman_as_a_library/" 
+                                       >
+                                        Brakeman as a Library
+                                    </a>
+                                </li>
+                            
+                        </ul>
+                    </div>
+                
+                    <div class="sidebar-section">
+                        <h3>Development</h3>
+                        <ul class="sidebar-links">
+                            
+                                <li>
+                                    <a href="/docs/contributing/" 
+                                       >
+                                        Contributing
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/testing_brakeman/" 
+                                       >
+                                        Test Structure
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <a href="/docs/contributing/adding_tests/" 
+                                       >
+                                        Adding a Test
+                                    </a>
+                                </li>
+                            
+                        </ul>
+                    </div>
+                
+            </aside>
+
+            <!-- Main Content -->
+            <main class="docs-content">
+                <div class="docs-header">
+                    <h1 class="docs-title">Automation</h1>
+                    
+                </div>
+
+                <div class="docs-body">
+                    
+
+                    <p>It is cumbersome to manually run Brakeman over and over.</p>
+
+<p>Thankfully, Brakeman is designed to be run in an automated fashion.</p>
+
+<p>The best output format to use with automation is JSON. Great care is taken to make sure the JSON format is stable.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.json
+</code></pre></div></div>
+
+<p>Note you can output multiple formats at the same time:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.json -o report.html
+</code></pre></div></div>
+
+<p>The exit codes for Brakeman can be helpful:</p>
+
+<ul>
+  <li>0 -	Everything was fine, no errors or issues</li>
+  <li>1 -	Unhandled exception raised</li>
+  <li>3 -	Warnings  were reported</li>
+  <li>4 -	Path did not look like a Rails application, no scan run</li>
+  <li>5 -	A newer version of Brakeman is available (when <code class="language-plaintext highlighter-rouge">--ensure-latest</code> is used)</li>
+  <li>6 -	Non-existent checks were specified</li>
+  <li>7 -	Recoverable errors encountered during scan</li>
+  <li>255 - Failure, non-recoverable error</li>
+</ul>
+
+<h2 id="tools">Tools</h2>
+
+<p>You can run Brakeman with:</p>
+
+<ul>
+  <li><a href="https://github.com/presidentbeef/ruby-lsp-brakeman">Brakeman for Ruby LSP</a> (runs in LSP-compatible IDEs)</li>
+  <li><a href="https://github.com/guard/guard-brakeman">Guard::Brakeman</a> (runs on file save)</li>
+  <li>The <a href="https://github.com/w0rp/ale">ALE</a> plugin for VIM (runs on file save)</li>
+  <li><a href="/docs/jenkins">Jenkins</a> continuous integration tool</li>
+</ul>
+
+<p>Documentation for setting up Brakeman in various CI tools:</p>
+
+<ul>
+  <li><a href="https://rietta.com/blog/2017/10/03/automate-security-scans-with-continuous-integration/">Travis CI</a></li>
+  <li><a href="https://semaphoreci.com/community/tutorials/automatic-security-testing-of-rails-applications-using-brakeman">Semaphore CI</a></li>
+  <li><a href="https://electric-cloud.com/plugins/directory/p/brakeman/">Electric Cloud</a></li>
+  <li><a href="https://medium.com/digital-banking-labs/setup-gitlab-ci-for-a-rails-application-ee38ea8c907d">GitLab CI</a></li>
+</ul>
+
+
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content"><div class="footer-section">
+                        <h4>Project</h4><a href="/docs/">Documentation</a><a href="https://github.com/presidentbeef/brakeman/releases">Changelog</a></div><div class="footer-section">
+                        <h4>Community</h4><a href="https://github.com/presidentbeef/brakeman">GitHub</a><a href="https://github.com/presidentbeef/brakeman/discussions">Discussions</a><a href="https://github.com/presidentbeef/brakeman/issues">Issues</a><a href="/contributing/">Contributing</a></div><div class="footer-section">
+                        <h4>Resources</h4><a href="/docs/quickstart/">Getting Started</a><a href="https://guides.rubyonrails.org/security.html">Rails Security Guide</a></div></div>
+        </div>
+    </footer>
+
+    <script src="/javascripts/main.js"></script>
+</body>
+</html>
