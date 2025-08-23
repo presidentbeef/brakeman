@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/stylesheets/screen.css">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 </head>
-<body class="post">
+<body class="blog">
     <!-- Header -->
     <header class="header">
         <div class="container">
@@ -44,29 +44,56 @@
 
     <!-- Main Content -->
     <main>
-        <div>
-<article class="hentry">
-  
-  <header>
-    <div class="articlelogo">&nbsp;</div>
-    
-      <h1 class="entry-title">Brakeman Turns Ten!</h1>
-    
-    
-      <p class="meta">
+        <div class="blog-container">
+    <div class="container">
+        <div class="blog-layout">
+            <!-- Sidebar -->
+            <aside class="blog-sidebar fade-in stagger-1">
+                <div class="sidebar-card">
+                    <h4>Recent Posts</h4>
+                    
+                        <a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">Brakeman 7.1.0 Released</a>
+                    
+                        <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
+                    
+                        <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
+                    
+                        <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
+                    
+                </div>
+
+                <div class="sidebar-card">
+                    <h4>Quick Links</h4>
+                    <a href="/docs/quickstart/">Quick Start</a>
+                    <a href="/docs/">Documentation</a>
+                    <a href="https://github.com/presidentbeef/brakeman/issues">Report Issues</a>
+                    <a href="https://github.com/presidentbeef/brakeman">GitHub Repository</a>
+                </div>
+            </aside>
+
+            <!-- Main Article -->
+            <div class="article-container">
+                <!-- Mobile Sidebar Toggle -->
+                <div class="sidebar-toggle">
+                    <span>Quick Navigation</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+
+                <article class="article-main fade-in">
+                    <div class="article-header">
+                        <div class="article-meta">
+                            <span class="date-badge">August 27, 2020</span>
+                        </div>
+                        <h1 class="article-title">Brakeman Turns Ten!</h1>
+                        
+                    </div>
+
+                    <div class="article-content">
+                        
 
 
-
-
-<time datetime="2020-08-27 08:10:00 -0600" pubdate  updated >2020-08-27 08:10:00 -0600</time>
-
-
-</p>
-    
-  </header>
-
-
-<div class="entry-content"><p>Hi! <a href="https://twitter.com/presidentbeef">Justin Collins</a> here with a rare non-release-related Brakeman post.</p>
+			<div class="feature-section">
+			    <p>Hi! <a href="https://twitter.com/presidentbeef">Justin Collins</a> here with a rare non-release-related Brakeman post.</p>
 
 <p>On August 27, 2010 (<em>two days before Rails 3.0!</em>), I released the <a href="https://rubygems.org/gems/brakeman/versions/0.0.2">first public version</a> of my summer intern project at AT&amp;T Interactive: a static analysis security tool for Ruby on Rails called “Brakeman”.</p>
 
@@ -151,94 +178,23 @@
 <p>As long as Rails continues to hang on as a solid option for many companies and individuals, I expect to continue maintaining Brakeman. The project means a lot to me and it’s a privilege and responsibility I take very seriously.</p>
 
 <p>We’ll see what happens in the next ten years!</p>
+
+			</div>
+
+                        
+
+                        <div class="reporting-section">
+                            <h3>Reporting Issues</h3>
+                            <p>Thank you to everyone who reported bugs and contributed to this release!</p>
+                            <p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+                            <p>Hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on GitHub</a> for questions and discussion.</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
 </div>
-
-
-  <footer>
-    <p class="meta">
-      
-
-
-      
-
-
-
-
-<time datetime="2020-08-27 08:10:00 -0600" pubdate  updated >2020-08-27 08:10:00 -0600</time>
-
-
-
-      
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  
-</div>
-
-    
-  </footer>
-</article>
-
-</div>
-
-<aside role=sidebar>
-  <section>
-  <p></p>
-  <p>Brakeman is a free vulnerability scanner specifically designed for Ruby on Rails applications. It statically analyzes Rails application code to find security issues at any stage of development.</p>
-  <p><a href="/docs/quickstart">Get started!</a></p>
-</section>
-
-  <section>
-  <script type='text/javascript'>
-    $(document).ready(function(){
-      $("#github").GitHubBadge({
-        login: "presidentbeef",
-        kind: "project",
-        repo_name: "brakeman",
-        include_github_logo: false,
-        image_path: "",
-        commit_count: "1",
-        issue_count: "0",
-        repo_count: "0"
-      });
-    });
-  </script>
-  <div id="github"></div>
-  <a href="https://dl.circleci.com/status-badge/redirect/gh/presidentbeef/brakeman/tree/main"><img src="https://dl.circleci.com/status-badge/img/gh/presidentbeef/brakeman/tree/main.svg?style=svg" /></a>
-</section>
-
-  <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">Brakeman 7.1.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">Brakeman 7.0.0 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2024/10/18/brakeman-6-dot-2-dot-2-released">Brakeman 6.2.2 Released</a>
-      </li>
-    
-  </ul>
-</section>
-
-</aside>
-
 
     </main>
 
