@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  qlty: qltysh/qlty-orb@0.0
+  qlty: qltysh/qlty-orb@0.1
 jobs:
   default: &default
     docker:
