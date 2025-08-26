@@ -26,7 +26,7 @@ jobs:
           command: |
             # This triggers SimpleCov to generate a coverage.json file
             export CC_TEST_REPORTER_ID=CC_TEST_REPORTER_ID
-            bundle exec rake RUBYOPT='--enable-frozen-string-literal --debug-frozen-string-literal'find .
+            bundle exec rake RUBYOPT='--enable-frozen-string-literal --debug-frozen-string-literal'
             mkdir -p tmp/
             mv coverage/coverage.json tmp/coverage.json
       - store_test_results:
