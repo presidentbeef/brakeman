@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  qlty: qltysh/qlty-orb@0.1
 jobs:
   default: &default
     docker:
@@ -18,24 +20,21 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/repo/tmp
-      - run:
-          name:  Download cc-test-reporter
-          command: |
-            mkdir -p tmp/
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
-            chmod +x ./tmp/cc-test-reporter
       - run: bundle check || bundle install
       - run:
+          name: Run tests and generate coverage
           command: |
+            # This triggers SimpleCov to generate a coverage.json file
+            export CC_TEST_REPORTER_ID=CC_TEST_REPORTER_ID
             bundle exec rake RUBYOPT='--enable-frozen-string-literal --debug-frozen-string-literal'
-            ./tmp/cc-test-reporter format-coverage -t simplecov -o tmp/codeclimate.json coverage/coverage.json
+            mkdir -p tmp/
+            mv coverage/coverage.json tmp/coverage.json
       - store_test_results:
           path: test-results
       - persist_to_workspace:
           root: tmp
           paths:
-            - codeclimate.json
-            - cc-test-reporter
+            - coverage.json
   test-3-2:
     <<: *default
     docker:
@@ -48,11 +47,12 @@ jobs:
     <<: *default
     working_directory: ~/repo
     steps:
+      - checkout
       - attach_workspace:
           at: ~/repo/tmp
-      - run:
-          name: Upload coverage results to Code Climate
-          command: "./tmp/cc-test-reporter upload-coverage -i ./tmp/codeclimate.json"
+      - qlty/coverage_publish:
+          files: tmp/coverage.json
+          strip_prefix: /home/circleci/project
 workflows:
   version: 2
   tests:
