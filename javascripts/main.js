@@ -37,7 +37,7 @@ if (sidebarToggle) {
     sidebarToggle.addEventListener('click', function() {
         const sidebar = document.querySelector('.blog-sidebar');
         const toggle = this;
-        
+
         sidebar.classList.toggle('expanded');
         toggle.classList.toggle('active');
     });
@@ -47,8 +47,11 @@ if (sidebarToggle) {
 const mobileToggle = document.querySelector('.mobile-menu-toggle');
 if (mobileToggle) {
     mobileToggle.addEventListener('click', function() {
-        // Add mobile menu functionality here
-        console.log('Mobile menu toggle clicked');
+        const navLinks = document.querySelector('.nav-links');
+        const toggle = this;
+
+        navLinks.classList.toggle('mobile-open');
+        toggle.classList.toggle('active');
     });
 }
 
@@ -77,6 +80,7 @@ document.querySelectorAll('.docs-card').forEach(card => {
 // Sidebar link interactions (docs pages)
 document.querySelectorAll('.sidebar-links a').forEach(link => {
     link.addEventListener('click', function(e) {
+        e.preventDefault();
         // Remove active class from all links
         document.querySelectorAll('.sidebar-links a').forEach(l => l.classList.remove('active'));
         // Add active class to clicked link
