@@ -16,7 +16,7 @@ class Rails8Tests < Minitest::Test
       controller: 0,
       model:      0,
       template:   2,
-      warning:    4
+      warning:    4,
     }
   end
 
@@ -114,5 +114,19 @@ class Rails8Tests < Minitest::Test
       relative_path: "app/views/things/_thing.html.erb",
       code: s(:call, s(:call, s(:const, :Thing), :new), :name),
       user_input: nil
+  end
+
+  def test_sql_injection_enum
+    assert_no_warning check_name: "SQL",
+      type: :warning,
+      warning_code: 0,
+      fingerprint: "6ce332de0056255cc786f7d381305a81dd03afabac97863fd678d342b7f9466c",
+      warning_type: "SQL Injection",
+      line: 6,
+      message: /^Possible\ SQL\ injection/,
+      confidence: 0,
+      relative_path: "app/models/group.rb",
+      code: s(:call, nil, :where, s(:dstr, "thing IN ", s(:evstr, s(:call, s(:call, s(:call, s(:const, :Group), :statuses), :values_at, s(:lit, :start), s(:lit, :stop)), :join, s(:str, ","))))),
+      user_input: s(:call, s(:call, s(:const, :Group), :statuses), :values_at, s(:lit, :start), s(:lit, :stop))
   end
 end
