@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Brakeman: Brakeman LSP Support</title>
+    <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="/stylesheets/screen.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <meta name="og:title" content="Brakeman - Brakeman LSP Support" />
+    <meta name="og:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
+    <meta name="og:image:secure" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
+    <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
+</head>
+<body class="blog">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="logo">
+                    <img src="/images/brakeman_logo_small.png" alt="Brakeman Logo">
+                    Brakeman
+                </a>
+                <ul class="nav-links"><li>
+                            <a href="/docs/">
+                                Documentation
+                            </a>
+                        </li><li>
+                            <a href="/blog/archives">
+                                News
+                            </a>
+                        </li><li>
+                            <a href="https://github.com/presidentbeef/brakeman">
+                                Code
+                            </a>
+                        </li></ul>
+                <div class="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="blog-container">
+    <div class="container">
+        <div class="blog-layout">
+            <!-- Sidebar -->
+            <aside class="blog-sidebar fade-in stagger-1">
+                <div class="sidebar-card">
+                    <h4>Recent Posts</h4>
+                    
+                        <a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">Brakeman 7.1.0 Released</a>
+                    
+                        <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
+                    
+                        <a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">Brakeman 7.0.1 Released</a>
+                    
+                        <a href="/blog/2025/01/10/brakeman-lsp-support">Brakeman LSP Support</a>
+                    
+                </div>
+
+                <div class="sidebar-card">
+                    <h4>Quick Links</h4>
+                    <a href="/docs/quickstart/">Quick Start</a>
+                    <a href="/docs/">Documentation</a>
+                    <a href="https://github.com/presidentbeef/brakeman/issues">Report Issues</a>
+                    <a href="https://github.com/presidentbeef/brakeman">GitHub Repository</a>
+                </div>
+            </aside>
+
+            <!-- Main Article -->
+            <div class="article-container">
+                <!-- Mobile Sidebar Toggle -->
+                <div class="sidebar-toggle">
+                    <span>Quick Navigation</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+
+                <article class="article-main fade-in">
+                    <div class="article-header">
+                        <div class="article-meta">
+                            <span class="date-badge">January 10, 2025</span>
+                        </div>
+                        <h1 class="article-title">Brakeman LSP Support</h1>
+                        
+                    </div>
+
+                    <div class="article-content">
+                        
+
+
+			<div class="feature-section">
+			    <p>Announcing the <a href="https://github.com/presidentbeef/ruby-lsp-brakeman">ruby-lsp-brakeman</a> project!</p>
+
+<p>This new gem allows Brakeman scans to be integrated into code editors via <a href="https://shopify.github.io/ruby-lsp/">ruby-lsp</a>. Scans will run asynchronously in the background and warnings will can be shown inline in the editor.</p>
+
+<h2 id="using-ruby-lsp-brakeman">Using Ruby-LSP-Brakeman</h2>
+
+<p>Add <code class="language-plaintext highlighter-rouge">ruby-lsp-brakeman</code> to your <code class="language-plaintext highlighter-rouge">Gemfile</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gem</span> <span class="s1">'ruby-lsp-brakeman'</span><span class="p">,</span> <span class="ss">require: </span><span class="kp">false</span>
+</code></pre></div></div>
+
+<h3 id="in-vs-code">In VS Code</h3>
+
+<p>If using with VS Code, make sure to install the <a href="https://marketplace.visualstudio.com/items?itemName=Shopify.ruby-lsp">Ruby LSP extension</a>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">bundle install</code> and then restart the Ruby LSP extension to enable the add-on.</p>
+
+<p>To double-check that Brakeman is running, examine the <code class="language-plaintext highlighter-rouge">output</code> tab in the VS Code panel for output like:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[info] (example-app) Finished initializing Ruby LSP!
+[info] (example-app) [Brakeman] Activated Ruby LSP Brakeman, running initial scan
+[info] (example-app) [Brakeman] Initial Brakeman scan complete - 0 warnings found
+</code></pre></div></div>
+
+<p>When files are saved, there should be logs like:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[info] (example-app) [Brakeman] Queued example-app/app/controllers/some_controller.rb
+[info] (example-app) [Brakeman] Rescanning example-app/app/controllers/some_controller.rb
+[info] (example-app) [Brakeman] Rescanned example-app/app/controllers/some_controller.rb
+[info] (example-app) [Brakeman] Warnings: 0 new, 1 fixed, 2 total
+</code></pre></div></div>
+
+<p>Findings will show up with squiggly underlines:</p>
+
+<p><img src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/hqftm3nn87fekg79in2s.png" alt="Inline Brakeman warning in VS Code" /></p>
+
+<h2 id="background-information">Background Information</h2>
+
+<p>Just for those interested in what’s going on behind the scenes!</p>
+
+<h3 id="language-server-protocol">Language Server Protocol</h3>
+
+<p><a href="https://microsoft.github.io/language-server-protocol/">Language Server Protocol (LSP)</a> is a standard for communication between code editors and code-related tools. It enables tools to hook into standard events for code review, code completion, formatting, etc.</p>
+
+<p>In the Ruby world, Shopify’s <code class="language-plaintext highlighter-rouge">ruby-lsp</code> provides a convenient implementation of LSP and the ability to build “add-ons” like <code class="language-plaintext highlighter-rouge">ruby-lsp-brakeman</code>.</p>
+
+<h3 id="how-brakeman-is-integrated">How Brakeman is Integrated</h3>
+
+<p>The Brakeman add-on primarily hooks into the file change monitoring, which is triggered when a file is saved or deleted. The file is then added to a queue for rescanning. All files in the queue will be rescanned in the next scan. This is to avoid either triggering multiple concurrent scans or missing file updates because a scan was already in progress.</p>
+
+<p>When the scan is complete, the warnings are reported back as a “<a href="https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#diagnostic">diagnostic</a>” to be displayed in the editor.</p>
+
+<p>Interestingly, it’s also necessary to return <em>empty</em> sets of diagnostics (per changed file) to clear any fixed warnings that were previously reported.</p>
+
+<h3 id="brakeman-rescanning">Brakeman Rescanning</h3>
+
+<p>Unlike some other code review or formatting tools, Brakeman works across the entire application, not one file at a time. Code in one file can have effects elsewhere in the application.</p>
+
+<p>A long time ago, “rescanning”/incremental scans were added to Brakeman. To achieve this, Brakeman needs to keep the entire state of the scan in memory, then attempt to update only the relevant information as files change. (This is as opposed to running scans on only a subset of files or caching results offline somehow. Side note: do not use <code class="language-plaintext highlighter-rouge">--only-files</code> to try to make this work!)</p>
+
+<p>To know what to update internally, Brakeman would try to guess based on the file that changed (including cascading effects). This was always pretty heavy on heuristics and not very well tested. But it kind of mostly worked!</p>
+
+<p>All the way back in Brakeman 5.0, the scan implementation moved away from using file names and paths to determine the type of file (e.g., controllers vs. models) to using the contents of the file instead. However, the re-scanning was not updated to use this information. Since it was still operating based on file paths, it was no longer aligned with the files being scanned by Brakeman normally.</p>
+
+<p>What all this means is that rescanning has been in a broken and slowly deteriorating state since Brakeman 5.0!</p>
+
+<p>With Brakeman 7.0, rescanning has been revised. For now, rescanning focuses on caching parsed files and only re-parsing changed files. The rest of the scan starts from “scratch”. Finding, reading, and parsing files is often one of the slowest parts of scans, so this should still save time for most folks.</p>
+
+<p>Since caching all the parsed files introduces a bit of memory overhead, the functionality is off by default. To enable, initial scans must be run with <code class="language-plaintext highlighter-rouge">support_rescanning: true</code>.</p>
+
+<p>Hopefully future work will be able to expand out the “incremental” part of rescanning again.</p>
+
+<h2 id="whats-next">What’s Next</h2>
+
+<p>While the add-on generally works with VS Code, I’d love to polish it up a bit more and move to a 1.0 release.</p>
+
+<p>I’m also considering if <code class="language-plaintext highlighter-rouge">ruby-lsp-brakeman</code> should depend on Brakeman, or if it should actually be a Brakeman dependency so everyone has it available by default. Let me know if you have thoughts on that.</p>
+
+<p>Please help by testing out <a href="https://github.com/presidentbeef/ruby-lsp-brakeman">ruby-lsp-brakeman</a> and <a href="https://github.com/presidentbeef/ruby-lsp-brakeman">sharing any feedback/bugs</a>!</p>
+
+			</div>
+
+                        
+
+                        <div class="reporting-section">
+                            <h3>Reporting Issues</h3>
+                            <p>Thank you to everyone who reported bugs and contributed to this release!</p>
+                            <p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+                            <p>Hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on GitHub</a> for questions and discussion.</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content"><div class="footer-section">
+                        <h4>Project</h4><a href="/docs/">Documentation</a><a href="https://github.com/presidentbeef/brakeman/releases">Changelog</a></div><div class="footer-section">
+                        <h4>Community</h4><a href="https://github.com/presidentbeef/brakeman">GitHub</a><a href="https://github.com/presidentbeef/brakeman/discussions">Discussions</a><a href="https://github.com/presidentbeef/brakeman/issues">Issues</a><a href="/contributing/">Contributing</a></div><div class="footer-section">
+                        <h4>Resources</h4><a href="/docs/quickstart/">Getting Started</a><a href="https://guides.rubyonrails.org/security.html">Rails Security Guide</a></div></div>
+        </div>
+    </footer>
+
+    <script src="/javascripts/main.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2025-08-29T16:52:26-06:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 7.1.0 Released</title><link href="https://brakemanscanner.org/blog/2025/07/18/brakeman-7-dot-1-dot-0-released" rel="alternate" type="text/html" title="Brakeman 7.1.0 Released" /><published>2025-07-18T00:00:00-06:00</published><updated>2025-07-18T00:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2025/07/18/brakeman-7-dot-1-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">&lt;h2 id=&quot;haml-6-support&quot;&gt;Haml 6 Support&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2025-08-29T20:32:16-06:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 7.1.0 Released</title><link href="https://brakemanscanner.org/blog/2025/07/18/brakeman-7-dot-1-dot-0-released" rel="alternate" type="text/html" title="Brakeman 7.1.0 Released" /><published>2025-07-18T00:00:00-06:00</published><updated>2025-07-18T00:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2025/07/18/brakeman-7-dot-1-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">&lt;h2 id=&quot;haml-6-support&quot;&gt;Haml 6 Support&lt;/h2&gt;
 
 &lt;p&gt;Brakeman now ships with and supports Haml 6.&lt;/p&gt;
 
@@ -94,7 +94,85 @@
 
 &lt;p&gt;Previously, processing time for each individual file was shown. Now the default is to only show processing time for each step in the scan.&lt;/p&gt;
 
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1908&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;</content><author><name></name></author><summary type="html">Fewer Code Evaluation Warnings</summary></entry><entry><title type="html">Brakeman 7.0.0 Released</title><link href="https://brakemanscanner.org/blog/2024/12/30/brakeman-7-dot-0-dot-0-released" rel="alternate" type="text/html" title="Brakeman 7.0.0 Released" /><published>2024-12-30T21:00:00-07:00</published><updated>2024-12-30T21:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2024/12/30/brakeman-7-dot-0-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">&lt;p&gt;Happy new year!&lt;/p&gt;
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1908&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;</content><author><name></name></author><summary type="html">Fewer Code Evaluation Warnings</summary></entry><entry><title type="html">Brakeman LSP Support</title><link href="https://brakemanscanner.org/blog/2025/01/10/brakeman-lsp-support" rel="alternate" type="text/html" title="Brakeman LSP Support" /><published>2025-01-10T09:23:00-07:00</published><updated>2025-01-10T09:23:00-07:00</updated><id>https://brakemanscanner.org/blog/2025/01/10/brakeman-lsp-support</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/01/10/brakeman-lsp-support">&lt;p&gt;Announcing the &lt;a href=&quot;https://github.com/presidentbeef/ruby-lsp-brakeman&quot;&gt;ruby-lsp-brakeman&lt;/a&gt; project!&lt;/p&gt;
+
+&lt;p&gt;This new gem allows Brakeman scans to be integrated into code editors via &lt;a href=&quot;https://shopify.github.io/ruby-lsp/&quot;&gt;ruby-lsp&lt;/a&gt;. Scans will run asynchronously in the background and warnings will can be shown inline in the editor.&lt;/p&gt;
+
+&lt;h2 id=&quot;using-ruby-lsp-brakeman&quot;&gt;Using Ruby-LSP-Brakeman&lt;/h2&gt;
+
+&lt;p&gt;Add &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ruby-lsp-brakeman&lt;/code&gt; to your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Gemfile&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;ruby-lsp-brakeman&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;require: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;in-vs-code&quot;&gt;In VS Code&lt;/h3&gt;
+
+&lt;p&gt;If using with VS Code, make sure to install the &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=Shopify.ruby-lsp&quot;&gt;Ruby LSP extension&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle install&lt;/code&gt; and then restart the Ruby LSP extension to enable the add-on.&lt;/p&gt;
+
+&lt;p&gt;To double-check that Brakeman is running, examine the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;output&lt;/code&gt; tab in the VS Code panel for output like:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[info] (example-app) Finished initializing Ruby LSP!
+[info] (example-app) [Brakeman] Activated Ruby LSP Brakeman, running initial scan
+[info] (example-app) [Brakeman] Initial Brakeman scan complete - 0 warnings found
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;When files are saved, there should be logs like:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[info] (example-app) [Brakeman] Queued example-app/app/controllers/some_controller.rb
+[info] (example-app) [Brakeman] Rescanning example-app/app/controllers/some_controller.rb
+[info] (example-app) [Brakeman] Rescanned example-app/app/controllers/some_controller.rb
+[info] (example-app) [Brakeman] Warnings: 0 new, 1 fixed, 2 total
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Findings will show up with squiggly underlines:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://dev-to-uploads.s3.amazonaws.com/uploads/articles/hqftm3nn87fekg79in2s.png&quot; alt=&quot;Inline Brakeman warning in VS Code&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;background-information&quot;&gt;Background Information&lt;/h2&gt;
+
+&lt;p&gt;Just for those interested in what’s going on behind the scenes!&lt;/p&gt;
+
+&lt;h3 id=&quot;language-server-protocol&quot;&gt;Language Server Protocol&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://microsoft.github.io/language-server-protocol/&quot;&gt;Language Server Protocol (LSP)&lt;/a&gt; is a standard for communication between code editors and code-related tools. It enables tools to hook into standard events for code review, code completion, formatting, etc.&lt;/p&gt;
+
+&lt;p&gt;In the Ruby world, Shopify’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ruby-lsp&lt;/code&gt; provides a convenient implementation of LSP and the ability to build “add-ons” like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ruby-lsp-brakeman&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;how-brakeman-is-integrated&quot;&gt;How Brakeman is Integrated&lt;/h3&gt;
+
+&lt;p&gt;The Brakeman add-on primarily hooks into the file change monitoring, which is triggered when a file is saved or deleted. The file is then added to a queue for rescanning. All files in the queue will be rescanned in the next scan. This is to avoid either triggering multiple concurrent scans or missing file updates because a scan was already in progress.&lt;/p&gt;
+
+&lt;p&gt;When the scan is complete, the warnings are reported back as a “&lt;a href=&quot;https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#diagnostic&quot;&gt;diagnostic&lt;/a&gt;” to be displayed in the editor.&lt;/p&gt;
+
+&lt;p&gt;Interestingly, it’s also necessary to return &lt;em&gt;empty&lt;/em&gt; sets of diagnostics (per changed file) to clear any fixed warnings that were previously reported.&lt;/p&gt;
+
+&lt;h3 id=&quot;brakeman-rescanning&quot;&gt;Brakeman Rescanning&lt;/h3&gt;
+
+&lt;p&gt;Unlike some other code review or formatting tools, Brakeman works across the entire application, not one file at a time. Code in one file can have effects elsewhere in the application.&lt;/p&gt;
+
+&lt;p&gt;A long time ago, “rescanning”/incremental scans were added to Brakeman. To achieve this, Brakeman needs to keep the entire state of the scan in memory, then attempt to update only the relevant information as files change. (This is as opposed to running scans on only a subset of files or caching results offline somehow. Side note: do not use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--only-files&lt;/code&gt; to try to make this work!)&lt;/p&gt;
+
+&lt;p&gt;To know what to update internally, Brakeman would try to guess based on the file that changed (including cascading effects). This was always pretty heavy on heuristics and not very well tested. But it kind of mostly worked!&lt;/p&gt;
+
+&lt;p&gt;All the way back in Brakeman 5.0, the scan implementation moved away from using file names and paths to determine the type of file (e.g., controllers vs. models) to using the contents of the file instead. However, the re-scanning was not updated to use this information. Since it was still operating based on file paths, it was no longer aligned with the files being scanned by Brakeman normally.&lt;/p&gt;
+
+&lt;p&gt;What all this means is that rescanning has been in a broken and slowly deteriorating state since Brakeman 5.0!&lt;/p&gt;
+
+&lt;p&gt;With Brakeman 7.0, rescanning has been revised. For now, rescanning focuses on caching parsed files and only re-parsing changed files. The rest of the scan starts from “scratch”. Finding, reading, and parsing files is often one of the slowest parts of scans, so this should still save time for most folks.&lt;/p&gt;
+
+&lt;p&gt;Since caching all the parsed files introduces a bit of memory overhead, the functionality is off by default. To enable, initial scans must be run with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;support_rescanning: true&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Hopefully future work will be able to expand out the “incremental” part of rescanning again.&lt;/p&gt;
+
+&lt;h2 id=&quot;whats-next&quot;&gt;What’s Next&lt;/h2&gt;
+
+&lt;p&gt;While the add-on generally works with VS Code, I’d love to polish it up a bit more and move to a 1.0 release.&lt;/p&gt;
+
+&lt;p&gt;I’m also considering if &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ruby-lsp-brakeman&lt;/code&gt; should depend on Brakeman, or if it should actually be a Brakeman dependency so everyone has it available by default. Let me know if you have thoughts on that.&lt;/p&gt;
+
+&lt;p&gt;Please help by testing out &lt;a href=&quot;https://github.com/presidentbeef/ruby-lsp-brakeman&quot;&gt;ruby-lsp-brakeman&lt;/a&gt; and &lt;a href=&quot;https://github.com/presidentbeef/ruby-lsp-brakeman&quot;&gt;sharing any feedback/bugs&lt;/a&gt;!&lt;/p&gt;</content><author><name></name></author><summary type="html">Announcing the ruby-lsp-brakeman project!</summary></entry><entry><title type="html">Brakeman 7.0.0 Released</title><link href="https://brakemanscanner.org/blog/2024/12/30/brakeman-7-dot-0-dot-0-released" rel="alternate" type="text/html" title="Brakeman 7.0.0 Released" /><published>2024-12-30T21:00:00-07:00</published><updated>2024-12-30T21:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2024/12/30/brakeman-7-dot-0-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2024/12/30/brakeman-7-dot-0-dot-0-released">&lt;p&gt;Happy new year!&lt;/p&gt;
 
 &lt;p&gt;This release of Brakeman contains several breaking changes and updates to default behavior.&lt;/p&gt;
 
@@ -452,73 +530,4 @@ well as &lt;em&gt;all&lt;/em&gt; columns on associated tables.&lt;/p&gt;
 
 &lt;h2 id=&quot;latest-rubyparser&quot;&gt;Latest RubyParser&lt;/h2&gt;
 
-&lt;p&gt;Bundled with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ruby_parser&lt;/code&gt; 3.20.3, which includes additional support for Ruby 3.2 syntax.&lt;/p&gt;</content><author><name></name></author><summary type="html">Very tiny release this time!</summary></entry><entry><title type="html">Brakeman 6.0.0 Released</title><link href="https://brakemanscanner.org/blog/2023/05/24/brakeman-6-dot-0-released" rel="alternate" type="text/html" title="Brakeman 6.0.0 Released" /><published>2023-05-24T15:30:00-06:00</published><updated>2023-05-24T15:30:00-06:00</updated><id>https://brakemanscanner.org/blog/2023/05/24/brakeman-6-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2023/05/24/brakeman-6-dot-0-released">&lt;p&gt;Brakeman 6.0 drops parsing support for Ruby 1.8/1.9, and raises the minimum Ruby version to run Brakeman to 3.0.&lt;/p&gt;
-
-&lt;h2 id=&quot;ruby-parsing-version-support&quot;&gt;Ruby Parsing Version Support&lt;/h2&gt;
-
-&lt;p&gt;This version of Brakeman no longer supports parsing Ruby 1.8/1.9 syntax.&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ruby_parser&lt;/code&gt;, the gem Brakeman depends on for parsing Ruby, dropped support quite a while ago. Brakeman was depending on the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ruby_parser-legacy&lt;/code&gt; gem for these older versions. But since it has been eight years since Ruby 1.9 has been unmaintained… it is time to let go.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1771&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;minimum-ruby-version&quot;&gt;Minimum Ruby Version&lt;/h2&gt;
-
-&lt;p&gt;The minimum Ruby version to run Brakeman is now 3.0.0.&lt;/p&gt;
-
-&lt;p&gt;Official support for the 2.x line of Ruby has ended, so it is a good time to bump up the minimum requirement and adopt more modern language features.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1771&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;missing-csrf-protection-warning&quot;&gt;Missing CSRF Protection Warning&lt;/h2&gt;
-
-&lt;p&gt;Since Rails 5.2.0, new applications have had cross-site request forgery protection enabled. Brakeman assumed the protection was enabled based on the Rails version. However, this was incorrect.&lt;/p&gt;
-
-&lt;p&gt;Now Brakeman correctly handles the default configuration values.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1776&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;content-tag-attributes&quot;&gt;Content Tag Attributes&lt;/h2&gt;
-
-&lt;p&gt;Brakeman will no longer warn about user input in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;content_tag&lt;/code&gt; attribute names in Rails 6.1.6+&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1779&quot;&gt;changes&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;obsolete-warnings-in-comparison-report&quot;&gt;Obsolete Warnings in Comparison Report&lt;/h2&gt;
-
-&lt;p&gt;When using the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--compare&lt;/code&gt; option, the output JSON will now include an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;obsolete&lt;/code&gt; key with an array of fingerprints.&lt;/p&gt;
-
-&lt;p&gt;These fingerprints are warnings that are configured to be ignored, but no longer exist.&lt;/p&gt;
-
-&lt;p&gt;Note that the report will include &lt;em&gt;all&lt;/em&gt; fingerprints in the ignore configuration that are not in the current report, even if they were already obsolete.&lt;/p&gt;
-
-&lt;p&gt;This report format matches the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--json&lt;/code&gt; output.&lt;/p&gt;
-
-&lt;p&gt;The report will resemble:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{
-  &quot;new&quot;: [ ... ],
-  &quot;fixed&quot;: [ ... ],
-  &quot;obsolete&quot;: [
-    &quot;abcdef01234567890ba28050e7faf1d54f218dfa9435c3f65f47cb378c18cf98&quot;
-  ]
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1777&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;scan-public-directories&quot;&gt;Scan ‘public’ Directories&lt;/h2&gt;
-
-&lt;p&gt;In the old days, Brakeman tried to scan only the “standard” Rails directories, mostly within &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/app/&lt;/code&gt;. With the 5.0 release, Brakeman was revised to make very few assumptions about what kinds of files live where, instead making decisions based on the content of files rather than their location.&lt;/p&gt;
-
-&lt;p&gt;However, there was a lingering exception. Brakeman would ignore any directories that included &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/public/&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;This exception has been removed.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1774&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;eol-dates-for-ruby&quot;&gt;EOL Dates for Ruby&lt;/h2&gt;
-
-&lt;p&gt;Fixed end-of-life date for Ruby 3.0 and added expected dates for 3.1 and 3.2.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1770&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;</content><author><name></name></author><summary type="html">Brakeman 6.0 drops parsing support for Ruby 1.8/1.9, and raises the minimum Ruby version to run Brakeman to 3.0.</summary></entry></feed>
+&lt;p&gt;Bundled with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ruby_parser&lt;/code&gt; 3.20.3, which includes additional support for Ruby 3.2 syntax.&lt;/p&gt;</content><author><name></name></author><summary type="html">Very tiny release this time!</summary></entry></feed>
