@@ -92,7 +92,7 @@ module Brakeman
       if system("which less > /dev/null")
         less_help = `less -?`
 
-        ["-R ", "-F ", "-X "].each do |opt|
+        ["-R ", "-F ", "-X ", " --wordwrap"].each do |opt|
           if less_help.include? opt
             @less_options << opt
           end
