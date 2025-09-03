@@ -13,7 +13,7 @@ class Rails31Tests < Minitest::Test
       :model => 3,
       :template => 23,
       :controller => 4,
-      :generic => 89 }
+      :generic => 90 }
   end
 
   def test_without_protection
@@ -465,7 +465,7 @@ class Rails31Tests < Minitest::Test
       :file => /product\.rb/
   end
 
-  def test_sql_injection_in_minimum
+  def test_sql_injection_in_calculate_column_name
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
       :line => 140,
@@ -474,7 +474,7 @@ class Rails31Tests < Minitest::Test
       :file => /product\.rb/
   end
 
-  def test_sql_injection_in_maximum
+  def test_sql_injection_in_minimum
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
       :line => 141,
@@ -483,7 +483,7 @@ class Rails31Tests < Minitest::Test
       :file => /product\.rb/
   end
 
-  def test_sql_injection_in_average
+  def test_sql_injection_in_maximum
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
       :line => 142,
@@ -492,7 +492,7 @@ class Rails31Tests < Minitest::Test
       :file => /product\.rb/
   end
 
-  def test_sql_injection_in_sum
+  def test_sql_injection_in_average
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
       :line => 143,
@@ -501,10 +501,19 @@ class Rails31Tests < Minitest::Test
       :file => /product\.rb/
   end
 
+  def test_sql_injection_in_sum
+    assert_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :line => 144,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 0,
+      :file => /product\.rb/
+  end
+
   def test_sql_injection_in_select
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :line => 151,
+      :line => 152,
       :message => /^Possible\ SQL\ injection/,
       :confidence => 0,
       :file => /product\.rb/
@@ -513,7 +522,7 @@ class Rails31Tests < Minitest::Test
   def test_sql_injection_interpolation_in_first_arg
     assert_warning :type => :warning,
       :warning_type => "SQL Injection",
-      :line => 174,
+      :line => 175,
       :message => /^Possible\ SQL\ injection/,
       :confidence => 0,
       :file => /product\.rb/

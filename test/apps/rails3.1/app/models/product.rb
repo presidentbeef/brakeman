@@ -137,6 +137,7 @@ class Product < ActiveRecord::Base
   def test_calculations
     #Should warn
     Product.calculate(:count, :all, :conditions => "blah = '#{params[:blah]}'")
+    Product.calculate(:sum, params[:column_name])  # Should warn - column name from params
     Product.minimum(:price, :conditions => "blah = #{params[:blach]}")
     Product.maximum(:price, :group => params[:columns])
     Product.average(:price, :conditions => ["blah = #{params[:columns]} and x = ?", x])
