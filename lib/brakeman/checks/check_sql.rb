@@ -188,7 +188,11 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                       when :find_by_sql, :count_by_sql
                         check_by_sql_arguments call.first_arg
                       when :calculate
-                        check_find_arguments call.third_arg
+                        if call.arglist.length > 2
+                          unsafe_sql?(call.second_arg) or check_find_arguments(call.third_arg)
+                        elsif call.arglist.length > 1
+                          unsafe_sql?(call.second_arg)
+                        end
                       when :last, :first, :all
                         check_find_arguments call.first_arg
                       when :average, :count, :maximum, :minimum, :sum
