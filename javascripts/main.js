@@ -80,7 +80,6 @@ document.querySelectorAll('.docs-card').forEach(card => {
 // Sidebar link interactions (docs pages)
 document.querySelectorAll('.sidebar-links a').forEach(link => {
     link.addEventListener('click', function(e) {
-        e.preventDefault();
         // Remove active class from all links
         document.querySelectorAll('.sidebar-links a').forEach(l => l.classList.remove('active'));
         // Add active class to clicked link
