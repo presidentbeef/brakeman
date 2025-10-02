@@ -68,6 +68,10 @@ module Brakeman
       self.absolute
     end
 
+    # Required for Pathname compatibility.
+    # Ruby 3.5+ requires Pathname#initialize to receive a String or an object with to_path method.
+    alias to_path to_str
+
     # Returns a string with the absolute path.
     def to_s
       self.to_str
