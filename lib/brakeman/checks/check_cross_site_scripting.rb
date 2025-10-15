@@ -289,13 +289,13 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   end
 
   def setup
-    @ignore_methods = Set[:==, :!=, :button_to, :check_box, :content_tag, :escapeHTML, :escape_once,
-                           :field_field, :fields_for, :form_for, :h, :hidden_field,
-                           :hidden_field, :hidden_field_tag, :image_tag, :label,
-                           :link_to, :mail_to, :radio_button, :select,
-                           :submit_tag, :text_area, :text_field,
-                           :text_field_tag, :url_encode, :u, :url_for,
-                           :will_paginate].merge tracker.options[:safe_methods]
+    @ignore_methods = Set[
+      :==, :!=, :button_to, :check_box, :content_tag, :dom_class, :dom_id,
+      :escapeHTML, :escape_once, :field_field, :fields_for, :form_for, :h,
+      :hidden_field, :hidden_field, :hidden_field_tag, :image_tag, :label,
+      :link_to, :mail_to, :radio_button, :select, :submit_tag, :text_area,
+      :text_field, :text_field_tag, :url_encode, :u, :url_for, :will_paginate
+    ].merge tracker.options[:safe_methods]
 
     @models = tracker.models.keys
     @inspect_arguments = tracker.options[:check_arguments]
