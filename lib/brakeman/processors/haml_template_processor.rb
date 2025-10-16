@@ -166,7 +166,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
   def haml_attribute_builder? exp
     call? exp and
       exp.target == ATTRIBUTE_BUILDER and
-      exp.method == :build
+      (exp.method == :build or exp.method == :build_id)
   end
 
   def fix_textareas? exp
