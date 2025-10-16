@@ -115,4 +115,18 @@ class Rails8Tests < Minitest::Test
       code: s(:call, s(:call, s(:const, :Thing), :new), :name),
       user_input: nil
   end
+
+  def test_cross_site_scripting_haml6_attribute_builder
+    assert_no_warning check_name: "CrossSiteScripting",
+      type: :template,
+      warning_code: 2,
+      fingerprint: "26ce9d920c75d29438b84cd3a45efdf4a7235d883d133937445c31c627bbc791",
+      warning_type: "Cross-Site Scripting",
+      line: 1,
+      message: /^Unescaped\ model\ attribute/,
+      confidence: 2,
+      relative_path: "app/views/users/dom_id.haml",
+      code: s(:call, s(:colon2, s(:colon3, :Haml), :AttributeBuilder), :build_id, s(:true), s(:call, nil, :dom_id, s(:call, s(:const, :User), :first))),
+      user_input: s(:call, s(:const, :User), :first)
+  end
 end
