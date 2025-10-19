@@ -129,4 +129,18 @@ class Rails8Tests < Minitest::Test
       code: s(:call, s(:colon2, s(:colon3, :Haml), :AttributeBuilder), :build_id, s(:true), s(:call, nil, :dom_id, s(:call, s(:const, :User), :first))),
       user_input: s(:call, s(:const, :User), :first)
   end
+
+  def test_sql_injection_permit_or_false_positive
+    assert_no_warning check_name: "SQL",
+      type: :warning,
+      warning_code: 0,
+      fingerprint: "ad3963321ca8cbee045dce7efd357265432d14700f6cfb791b22da0395ad4fb9",
+      warning_type: "SQL Injection",
+      line: 74,
+      message: /^Possible\ SQL\ injection/,
+      confidence: 0,
+      relative_path: "app/controllers/users_controller.rb",
+      code: s(:call, s(:const, :Thing), :find_by, s(:or, s(:call, s(:params), :permit, s(:lit, :foo_uid)), s(:hash, s(:lit, :id), s(:call, s(:params), :require, s(:lit, :model_id))))),
+      user_input: s(:call, s(:params), :permit, s(:lit, :foo_uid))
+  end
 end

@@ -315,6 +315,9 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       check_hash_keys arg
     elsif node_type? arg, :lit, :str
       nil
+    elsif node_type? arg, :or
+      check_query_arguments(arg.lhs) or
+        check_query_arguments(arg.rhs)
     else
       #Hashes are safe...but we check above for hash, so...?
       unsafe_sql? arg, :ignore_hash

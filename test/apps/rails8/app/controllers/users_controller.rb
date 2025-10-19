@@ -62,6 +62,18 @@ class UsersController < ApplicationController
     render 'things/index'
   end
 
+  def permit_or
+    if params[:foo_uid].present?
+      field_name = :foo_uid
+      query = params.permit(:foo_uid)
+    elsif params[:model_id].present?
+      field_name = :model_id
+      query = { id: params.require(:model_id) }
+    end
+
+    Thing.find_by(query) if field_name
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
