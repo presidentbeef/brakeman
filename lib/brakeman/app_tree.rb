@@ -192,7 +192,12 @@ module Brakeman
         files = patterns.flat_map { |pattern| Dir.glob(pattern) }
         files.uniq.lazy
       else
-        pattern = "#{root_search_pattern}#{directory}/**/#{name}#{extensions}"
+        if directory == '.'
+          pattern = File.join(top_directories_pattern, '**', "#{name}#{extensions}")
+        else
+          pattern = "#{root_search_pattern}#{directory}/**/#{name}#{extensions}"
+        end
+
         Dir.glob(pattern).lazy
       end
     end
@@ -267,6 +272,21 @@ module Brakeman
       )
 
       files.match(project_relative_path)
+    end
+
+    def top_directories_pattern
+      top_dirs = convert_to_file_paths(Dir.glob(File.join(root_search_pattern, '*/')))
+      top_dirs.reject! { |d| File.symlink?(d) or !File.directory?(d) }
+      top_dirs = reject_global_excludes(top_dirs)
+      top_dirs = reject_skipped_files(top_dirs)
+
+      if top_dirs.empty?
+        # Fall back to searching everything, otherwise the empty pattern
+        # will start searching from the global root
+        root_search_pattern
+      else
+        "{#{top_dirs.join(',')}}"
+      end
     end
 
     def root_search_pattern
