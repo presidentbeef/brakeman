@@ -262,14 +262,28 @@ module Brakeman
     end
 
     def match_path files, path
+      # TODO: Converting to Pathnames and Strings seems like a lot
+      # of converting that could perhaps all be handled in Brakeman::FilePath
+      # instead?
       absolute_path = Pathname.new(path)
+
       # relative root never has a leading separator. But, we use a leading
       # separator in a @skip_files entry to imply that a directory is
       # "absolute" with respect to the project directory.
-      project_relative_path = File.join(
-        File::SEPARATOR,
-        absolute_path.relative_path_from(@project_root_path).to_s
-      )
+      #
+      # Also directories need a trailing separator.
+      project_relative_path = if File.directory?(path)
+        File.join(
+          File::SEPARATOR,
+          absolute_path.relative_path_from(@project_root_path).to_s,
+          File::SEPARATOR
+        )
+      else
+        File.join(
+          File::SEPARATOR,
+          absolute_path.relative_path_from(@project_root_path).to_s
+        )
+      end
 
       files.match(project_relative_path)
     end
