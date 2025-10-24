@@ -33,6 +33,7 @@ module Brakeman
     #   * "path1/" - Matches any path that contains "path1" in the project directory.
     #   * "/path1/ - Matches any path that is rooted at "path1" in the project directory.
     #
+    # TODO: This is wacky and I don't like it.
     def self.regex_for_paths(paths)
       path_regexes = paths.map do |f|
         # If path ends in a file separator then we assume it is a path rather

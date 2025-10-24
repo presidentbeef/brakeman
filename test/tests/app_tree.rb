@@ -133,4 +133,44 @@ class AppTreeTests < Minitest::Test
       assert_equal [], at.ruby_file_paths.collect(&:absolute).to_a
     end
   end
+
+  def test_match_path
+    temp_dir_and_file_from_path('match/this/file.rb') do |dir, file|
+      at = Brakeman::AppTree.new(dir)
+
+      # '/path1/ - Matches any path that is rooted at 'path1' in the project directory.
+      paths = Brakeman::AppTree.__send__(:regex_for_paths, ['/match/'])
+
+      assert app_tree_match?(at, paths, File.join(dir, 'match'))
+      assert app_tree_match?(at, paths, File.join(dir, 'match', 'this'))
+      assert app_tree_match?(at, paths, File.join(dir, 'match', 'this', 'file.rb'))
+      assert app_tree_match?(at, paths, File.join(dir, 'match', '/'))
+      refute app_tree_match?(at, paths, File.join(dir, 'nested', 'match'))
+      refute app_tree_match?(at, paths, File.join(dir, 'not_exact_match'))
+
+      # 'path1/' - Matches any path that contains 'path1' in the project directory.
+      paths = Brakeman::AppTree.__send__(:regex_for_paths, ['match/', 'this/'])
+
+      assert app_tree_match?(at, paths, File.join(dir, 'match'))
+      assert app_tree_match?(at, paths, File.join(dir, 'match', File::SEPARATOR))
+      assert app_tree_match?(at, paths, File.join(dir, 'match', 'this', 'file.rb'))
+      assert app_tree_match?(at, paths, File.join(dir, 'also', 'this', 'other.rb'))
+      refute app_tree_match?(at, paths, File.join(dir, 'not_exact_match'))
+
+      # 'path1/file1.rb' - Matches a specific filename in the project directory.
+      paths = Brakeman::AppTree.__send__(:regex_for_paths, ['file.rb', 'this'])
+
+      assert app_tree_match?(at, paths, File.join(dir, 'file.rb'))
+      assert app_tree_match?(at, paths, File.join(dir, 'this', 'file.rb'))
+      assert app_tree_match?(at, paths, File.join(dir, 'match', 'this', 'file.rb'))
+      refute app_tree_match?(at, paths, File.join(dir, 'no', 'file.rb', 'match'))
+      refute app_tree_match?(at, paths, File.join(dir, 'match', 'this', File::SEPARATOR))
+    end
+  end
+
+  private
+
+  def app_tree_match?(app_tree, paths, path)
+    app_tree.__send__(:match_path, paths, path)
+  end
 end
