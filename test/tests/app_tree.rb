@@ -149,13 +149,15 @@ class AppTreeTests < Minitest::Test
       refute app_tree_match?(at, paths, File.join(dir, 'not_exact_match'))
 
       # 'path1/' - Matches any path that contains 'path1' in the project directory.
-      paths = Brakeman::AppTree.__send__(:regex_for_paths, ['match/', 'this/'])
+      FileUtils.mkdir_p(File.join(dir, 'this'))
+      paths = Brakeman::AppTree.__send__(:regex_for_paths, ['this/'])
 
-      assert app_tree_match?(at, paths, File.join(dir, 'match'))
-      assert app_tree_match?(at, paths, File.join(dir, 'match', File::SEPARATOR))
+      assert app_tree_match?(at, paths, File.join(dir, 'this', 'one.rb'))
+      assert app_tree_match?(at, paths, File.join(dir, 'this', File::SEPARATOR))
+      assert app_tree_match?(at, paths, File.join(dir, 'match', 'this', File::SEPARATOR))
       assert app_tree_match?(at, paths, File.join(dir, 'match', 'this', 'file.rb'))
       assert app_tree_match?(at, paths, File.join(dir, 'also', 'this', 'other.rb'))
-      refute app_tree_match?(at, paths, File.join(dir, 'not_exact_match'))
+      refute app_tree_match?(at, paths, File.join(dir, 'not_this_match'))
 
       # 'path1/file1.rb' - Matches a specific filename in the project directory.
       paths = Brakeman::AppTree.__send__(:regex_for_paths, ['file.rb', 'this'])
