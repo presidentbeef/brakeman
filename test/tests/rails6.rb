@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 37
+      :generic => 38
     }
   end
 
@@ -680,6 +680,15 @@ class Rails6Tests < Minitest::Test
       :confidence => 2,
       :relative_path => "app/controllers/groups_controller.rb",
       :code => s(:render, :action, s(:call, s(:const, :TestViewComponentContrib), :new, s(:call, s(:params), :require, s(:str, "name"))), s(:hash)),
+      :user_input => s(:call, s(:params), :require, s(:str, "name"))
+  end
+
+  def test_dynamic_render_path_view_component_with_content
+    assert_warning :type => :warning,
+      :warning_code => 15,
+      :warning_type => "Dynamic Render Path",
+      :relative_path => "app/controllers/groups_controller.rb",
+      :code => s(:render, :action, s(:call, s(:call, s(:const, :TestViewComponent), :new, s(:call, s(:params), :require, s(:str, "name"))), :with_content, s(:str, "string")), s(:hash)),
       :user_input => s(:call, s(:params), :require, s(:str, "name"))
   end
 
