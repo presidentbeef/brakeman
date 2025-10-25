@@ -33,6 +33,7 @@ module Brakeman
     #   * "path1/" - Matches any path that contains "path1" in the project directory.
     #   * "/path1/ - Matches any path that is rooted at "path1" in the project directory.
     #
+    # TODO: This is wacky and I don't like it.
     def self.regex_for_paths(paths)
       path_regexes = paths.map do |f|
         # If path ends in a file separator then we assume it is a path rather
@@ -192,7 +193,12 @@ module Brakeman
         files = patterns.flat_map { |pattern| Dir.glob(pattern) }
         files.uniq.lazy
       else
-        pattern = "#{root_search_pattern}#{directory}/**/#{name}#{extensions}"
+        if directory == '.'
+          pattern = File.join(top_directories_pattern, '**', "#{name}#{extensions}")
+        else
+          pattern = "#{root_search_pattern}#{directory}/**/#{name}#{extensions}"
+        end
+
         Dir.glob(pattern).lazy
       end
     end
@@ -257,16 +263,45 @@ module Brakeman
     end
 
     def match_path files, path
+      # TODO: Converting to Pathnames and Strings seems like a lot
+      # of converting that could perhaps all be handled in Brakeman::FilePath
+      # instead?
       absolute_path = Pathname.new(path)
+
       # relative root never has a leading separator. But, we use a leading
       # separator in a @skip_files entry to imply that a directory is
       # "absolute" with respect to the project directory.
-      project_relative_path = File.join(
-        File::SEPARATOR,
-        absolute_path.relative_path_from(@project_root_path).to_s
-      )
+      #
+      # Also directories need a trailing separator.
+      project_relative_path = if File.directory?(path)
+        File.join(
+          File::SEPARATOR,
+          absolute_path.relative_path_from(@project_root_path).to_s,
+          File::SEPARATOR
+        )
+      else
+        File.join(
+          File::SEPARATOR,
+          absolute_path.relative_path_from(@project_root_path).to_s
+        )
+      end
 
       files.match(project_relative_path)
+    end
+
+    def top_directories_pattern
+      top_dirs = convert_to_file_paths(Dir.glob(File.join(root_search_pattern, '*/')))
+      top_dirs.reject! { |d| File.symlink?(d) or !File.directory?(d) }
+      top_dirs = reject_global_excludes(top_dirs)
+      top_dirs = reject_skipped_files(top_dirs)
+
+      if top_dirs.empty?
+        # Fall back to searching everything, otherwise the empty pattern
+        # will start searching from the global root
+        root_search_pattern
+      else
+        "{#{top_dirs.join(',')}}"
+      end
     end
 
     def root_search_pattern
