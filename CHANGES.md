@@ -1,3 +1,15 @@
+# Unreleased
+
+* Word wrap text output in pager
+* Consider Tempfile.create.path as safe input (Ali Ismayilov)
+* Exclude directories before searching for files
+* Check each side of `or` SQL arguments
+* Ignore attribute builder in Haml 6
+* Add `FilePath#to_path` for Ruby 3.5 compatibility (S-H-GAMELINKS)
+* Fix SQL injection check for calculate method (Rohan Sharma)
+* Fix missing `td` in HTML report (John Hawthorn)
+* Check for unsafe SQL when two arguments are passed to AR methods (Patrick Brinich-Langlois)
+
 # 7.1.0 - 2025-07-18
 
 * Add EOL dates for Rails 8.0 and Ruby 3.4
