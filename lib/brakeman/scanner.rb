@@ -189,13 +189,17 @@ class Brakeman::Scanner
   def process_config
     # Sometimes folks like to put constants in environment.rb
     # so let's always process it even for newer Rails versions
-    process_config_file "environment.rb"
+    process_config_file "config/environment.rb"
 
     if options[:rails3] or options[:rails4] or options[:rails5] or options[:rails6]
-      process_config_file "application.rb"
-      process_config_file "environments/production.rb"
+      options[:additional_config_paths].each do |path|
+        process_config_file(path)
+      end
+
+      process_config_file "config/application.rb"
+      process_config_file "config/environments/production.rb"
     else
-      process_config_file "gems.rb"
+      process_config_file "config/gems.rb"
     end
 
     if @app_tree.exists?("vendor/plugins/rails_xss") or
@@ -215,7 +219,7 @@ class Brakeman::Scanner
   end
 
   def process_config_file file
-    path = @app_tree.file_path("config/#{file}")
+    path = @app_tree.file_path(file)
 
     if path.exists?
       @processor.process_config(parse_ruby_file(path), path)
