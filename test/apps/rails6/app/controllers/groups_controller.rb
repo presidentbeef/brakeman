@@ -90,4 +90,9 @@ class GroupsController < ApplicationController
   def render_view_component_contrib
     render(TestViewComponentContrib.new(params.require('name')))
   end
+
+  # Test ViewComponent with with_content chain (issue #1832)
+  def render_view_component_with_content
+    render(TestViewComponent.new(params.require('name')).with_content("string"))
+  end
 end
