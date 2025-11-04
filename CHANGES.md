@@ -1,5 +1,6 @@
-# Unreleased
+# 7.1.1 - 2025-11-03
 
+* Fix false positive when calling `with_content` on ViewComponents (Peer Allan)
 * Word wrap text output in pager
 * Consider Tempfile.create.path as safe input (Ali Ismayilov)
 * Exclude directories before searching for files
