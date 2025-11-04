@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2025-11-03T17:24:19-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 7.1.1 Released</title><link href="https://brakemanscanner.org/blog/2025/11/03/brakeman-7-dot-1-dot-1-released" rel="alternate" type="text/html" title="Brakeman 7.1.1 Released" /><published>2025-11-03T00:00:00-07:00</published><updated>2025-11-03T00:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2025/11/03/brakeman-7-dot-1-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/11/03/brakeman-7-dot-1-dot-1-released">&lt;h2 id=&quot;faster-file-search-on-macos&quot;&gt;Faster File Search on MacOS&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2025-11-03T17:36:16-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 7.1.1 Released</title><link href="https://brakemanscanner.org/blog/2025/11/03/brakeman-7-dot-1-dot-1-released" rel="alternate" type="text/html" title="Brakeman 7.1.1 Released" /><published>2025-11-03T00:00:00-07:00</published><updated>2025-11-03T00:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2025/11/03/brakeman-7-dot-1-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/11/03/brakeman-7-dot-1-dot-1-released">&lt;h2 id=&quot;faster-file-search-on-macos&quot;&gt;Faster File Search on MacOS&lt;/h2&gt;
 
 &lt;p&gt;Brakeman now pre-filters top-level directories to speed up file enumeration on MacOS. This can be significant when there are large numbers of files.&lt;/p&gt;
 
@@ -63,96 +63,7 @@ is also vulnerable to SQL injection.&lt;/p&gt;
 
 &lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
 
-&lt;p&gt;Hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Faster File Search on MacOS</summary></entry><entry><title type="html">Brakeman-LLM Released</title><link href="https://brakemanscanner.org/blog/2025/09/05/brakeman-llm-released" rel="alternate" type="text/html" title="Brakeman-LLM Released" /><published>2025-09-05T00:00:00-06:00</published><updated>2025-09-05T00:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2025/09/05/brakeman-llm-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/09/05/brakeman-llm-released">&lt;p&gt;A long time ago, when Brakeman was first designed, its output was optimized to fit into tables like this, with one warning per line:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+------------+----------------+--------------+-------------------+--------+------------------------------------------------------------------------+
-| Confidence | Class          | Method       | Warning Type      | CWE ID | Message                                                                |
-+------------+----------------+--------------+-------------------+--------+------------------------------------------------------------------------+
-| High       | HomeController | test_command | Command Injection | [77]   | Possible command injection near line 34: `ls #{+params[:file_name]+}`  |
-| High       | HomeController | test_command | Command Injection | [77]   | Possible command injection near line 36: system(+params[:user_input]+) |
-+------------+----------------+--------------+-------------------+--------+------------------------------------------------------------------------+
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;This severely limited the “message” that described the warning. Brakeman has largely stuck to this, even though the default output now looks like this:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Confidence: High
-Category: Command Injection
-Check: Execute
-Message: Possible command injection
-Code: `ls #{params[:file_name]}`
-File: app/controllers/home_controller.rb
-Line: 34
-
-Confidence: High
-Category: Command Injection
-Check: Execute
-Message: Possible command injection
-Code: system(params[:user_input])
-File: app/controllers/home_controller.rb
-Line: 36
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;From the beginning, Brakeman was intended as tool primarily for &lt;em&gt;developers&lt;/em&gt;, not security professionals.
-However, it’s pretty clear that “Possible command injection” isn’t enough content for most non-security folks.&lt;/p&gt;
-
-&lt;p&gt;Also, wouldn’t it be nice if the message used some of the known context about the warning? Like the code involved? And how about recommendations on how to fix the potential security issue??&lt;/p&gt;
-
-&lt;p&gt;Historically, this was pretty hard and I didn’t have a lot of motivation to build out something that complex.&lt;/p&gt;
-
-&lt;h2 id=&quot;brakeman-llm&quot;&gt;Brakeman-LLM&lt;/h2&gt;
-
-&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;brakeman-llm&lt;/code&gt; gem extends Brakeman with LLM-generated warning descriptions.&lt;/p&gt;
-
-&lt;p&gt;Under the hood, this is actually pretty simple, other than the bits that hook into Brakeman.
-Once a scan is complete, each warning is sent to an LLM of your choosing with a basic prompt to explain the warning and recommendations for how to fix it.&lt;/p&gt;
-
-&lt;p&gt;The quality of the results naturally depend on your LLM, but here is an example using Anthropic Claude:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Confidence: High
-Category: Command Injection
-Check: Execute
-Code: `ls #{params[:file_name]}`
-File: app/controllers/home_controller.rb
-Line: 34
-Message: Possible command injection
-
-This Brakeman warning indicates a critical Command Injection vulnerability in the Ruby on Rails application. The issue is located in the HomeController class, specifically in the test_command method on line 34 of the home_controller.rb file.
-
-The vulnerable code executes a shell command using backticks (`) to run the &apos;ls&apos; command with a file name supplied by the user through the params[:file_name] parameter. This is highly dangerous because it allows an attacker to inject arbitrary shell commands that will be executed on the server.
-
-For example, an attacker could supply a file name like &quot;; rm -rf /&quot; which would attempt to delete all files on the system. Or they could use &quot;&amp;amp; cat /etc/passwd&quot; to read sensitive system files.
-
-To fix this vulnerability, avoid using user input directly in shell commands. Instead, use built-in Ruby methods for file operations. For listing files, you can use the Dir.glob or Dir.entries methods:
-
-```ruby
-files = Dir.glob(&quot;#{Rails.root}/public/#{params[:file_name]}*&quot;)
-```
-
-If you absolutely must use external commands, ensure you properly sanitize and validate all user input. You can use Shellwords.escape to escape special characters:
-
-```ruby
-require &apos;shellwords&apos;
-safe_filename = Shellwords.escape(params[:file_name])
-output = `ls #{safe_filename}`
-```
-
-Additionally, consider using Ruby&apos;s File class methods instead of shell commands when possible. For example:
-
-```ruby
-File.exist?(params[:file_name])
-File.directory?(params[:file_name])
-```
-
-Always validate and sanitize user input, use the principle of least privilege, and avoid using shell commands with user-supplied data whenever possible. Implement proper input validation and consider using a whitelist of allowed file names or directories to further enhance security.
-
-(The above message is auto-generated and may contain errors.)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Note that the description above not only shows how to avoid command injection, it provides better approaches to listing files generally (which is what the original code was doing).&lt;/p&gt;
-
-&lt;h2 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h2&gt;
-
-&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman-llm/issues&quot;&gt;issues&lt;/a&gt; or suggestions.&lt;/p&gt;</content><author><name></name></author><summary type="html">A long time ago, when Brakeman was first designed, its output was optimized to fit into tables like this, with one warning per line:</summary></entry><entry><title type="html">Brakeman 7.1.0 Released</title><link href="https://brakemanscanner.org/blog/2025/07/18/brakeman-7-dot-1-dot-0-released" rel="alternate" type="text/html" title="Brakeman 7.1.0 Released" /><published>2025-07-18T00:00:00-06:00</published><updated>2025-07-18T00:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2025/07/18/brakeman-7-dot-1-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">&lt;h2 id=&quot;haml-6-support&quot;&gt;Haml 6 Support&lt;/h2&gt;
+&lt;p&gt;Hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Faster File Search on MacOS</summary></entry><entry><title type="html">Brakeman 7.1.0 Released</title><link href="https://brakemanscanner.org/blog/2025/07/18/brakeman-7-dot-1-dot-0-released" rel="alternate" type="text/html" title="Brakeman 7.1.0 Released" /><published>2025-07-18T00:00:00-06:00</published><updated>2025-07-18T00:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2025/07/18/brakeman-7-dot-1-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">&lt;h2 id=&quot;haml-6-support&quot;&gt;Haml 6 Support&lt;/h2&gt;
 
 &lt;p&gt;Brakeman now ships with and supports Haml 6.&lt;/p&gt;
 
@@ -580,4 +491,96 @@ However, it is not sufficient.&lt;/p&gt;
 
 &lt;p&gt;Now Brakeman has a limit on how large these chunks of code can get. This has improved performance without any noticable impact on true positives.&lt;/p&gt;
 
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1820&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;</content><author><name></name></author><summary type="html">Finally, just a small release!</summary></entry></feed>
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1820&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;</content><author><name></name></author><summary type="html">Finally, just a small release!</summary></entry><entry><title type="html">Brakeman 6.1.0 Released</title><link href="https://brakemanscanner.org/blog/2023/12/04/brakeman-6-dot-1-dot-0-released" rel="alternate" type="text/html" title="Brakeman 6.1.0 Released" /><published>2023-12-04T22:30:00-07:00</published><updated>2023-12-04T22:30:00-07:00</updated><id>https://brakemanscanner.org/blog/2023/12/04/brakeman-6-dot-1-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2023/12/04/brakeman-6-dot-1-dot-0-released">&lt;p&gt;It’s been a while!&lt;/p&gt;
+
+&lt;h2 id=&quot;ransack-searches&quot;&gt;Ransack Searches&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://activerecord-hackery.github.io/ransack/&quot;&gt;Ransack&lt;/a&gt; is a popular library for enabling search against ActiveRecord attributes.&lt;/p&gt;
+
+&lt;p&gt;It was originally intended for administrative interfaces (like those provided by ActiveAdmin).&lt;/p&gt;
+
+&lt;p&gt;Use usually looks like&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;Car&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ransack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And a url might look like&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;example.com?q[make_start]=vol
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This might generate a query like&lt;/p&gt;
+
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cars&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;LIKE&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;vol%&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The library does clever things with the query parameter key.
+In this case, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;make&lt;/code&gt; is the column and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;start&lt;/code&gt; means match values that start with the search term
+passed in.&lt;/p&gt;
+
+&lt;p&gt;However, it’s also possible to specify columns on related tables, such as&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;example.com?q[owner_name_start]=just
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Which would search the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;name&lt;/code&gt; column on the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;owners&lt;/code&gt; table (assuming &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Car&lt;/code&gt; has an association to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Owner&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;Prior to Ransack 4.0, the default configuration allowed searching &lt;em&gt;all&lt;/em&gt; columns on a table as
+well as &lt;em&gt;all&lt;/em&gt; columns on associated tables.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://positive.security/blog/ransack-data-exfiltration&quot;&gt;Some folks figured out this can be used to extract secret values&lt;/a&gt; by brute-forcing the value one character at a time.&lt;/p&gt;
+
+&lt;p&gt;To fix this issue, explicitly &lt;a href=&quot;https://activerecord-hackery.github.io/ransack/going-further/other-notes/#authorization-allowlistingdenylisting&quot;&gt;allow list the attributes and associations available&lt;/a&gt; to search.&lt;/p&gt;
+
+&lt;p&gt;In Ransack 4.0 and later, it is required to set up an allowlist.&lt;/p&gt;
+
+&lt;p&gt;Brakeman will warn about unrestricted use of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ransack&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;High&lt;/strong&gt; if no allow-listing methods are found in the class hierarchy of the model on which &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ransack&lt;/code&gt; is called&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Medium&lt;/strong&gt; if the use happens to be in a file with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;admin&lt;/code&gt; in the path&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Low&lt;/strong&gt; if the call to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ransack&lt;/code&gt; is not on a class&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1799&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h2 id=&quot;timing-output&quot;&gt;Timing Output&lt;/h2&gt;
+
+&lt;p&gt;Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--timing&lt;/code&gt; to output duration of various steps during the scan.&lt;/p&gt;
+
+&lt;p&gt;Useful for debugging slowness.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1801&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h2 id=&quot;another-sql-escaping-method&quot;&gt;Another SQL Escaping Method&lt;/h2&gt;
+
+&lt;p&gt;Brakeman will not warn about use of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;escape_string&lt;/code&gt; in SQL queries.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1789&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h2 id=&quot;class-methods&quot;&gt;Class Methods&lt;/h2&gt;
+
+&lt;p&gt;Brakeman will now treat methods defined inside of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;class &amp;lt;&amp;lt; self&lt;/code&gt; as class methods.&lt;/p&gt;
+
+&lt;p&gt;This does mean fingerprints of warnings found inside those methods will change.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1792&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h2 id=&quot;class-method-lookups&quot;&gt;Class Method Lookups&lt;/h2&gt;
+
+&lt;p&gt;Searching for class method definitions in parent classes will now actually look for class methods, not instance methods.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1796&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h2 id=&quot;keyword-splats-in-filters&quot;&gt;Keyword Splats in Filters&lt;/h2&gt;
+
+&lt;p&gt;Code like&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;before_action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kwargs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# ...&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Will no longer cause an error.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1800&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;</content><author><name></name></author><summary type="html">It’s been a while!</summary></entry></feed>
