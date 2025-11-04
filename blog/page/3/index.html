@@ -137,13 +137,13 @@
                     <article class="article-card">
                         <div class="article-header">
                             
-                                <span class="version-badge">Version 7.1.0</span>
+                                <span class="version-badge">Version 7.1.1</span>
                             
-                            <h3>Brakeman 7.1.0 Released</h3>
-                            <div class="article-meta">July 2025 • Haml 6 support, render shortcuts, and performance improvements</div>
+                            <h3>Brakeman 7.1.1 Released</h3>
+                            <div class="article-meta">November 2025 • Performance improvements on macOS and lots of bug fixes</div>
                         </div>
                         <div class="article-content">
-                            <h2 id="haml-6-support">Haml 6 Support</h2>
+                            <h2 id="faster-file-search-on-macos">Faster File Search on MacOS</h2>
 
 
                             
@@ -151,27 +151,41 @@
                                 <h4>🎉 What's New</h4>
                                 <ul>
                                     
-                                        <li>Add Haml 6.x support (<a href="https://github.com/presidentbeef/brakeman/issues/1914">#1914</a>, <a href="https://github.com/presidentbeef/brakeman/issues/1841">#1841</a>, etc.)
+                                        <li>Exclude directories before searching for files (<a href="https://github.com/presidentbeef/brakeman/issues/1925">#1925</a>)
 </li>
                                     
-                                        <li>Support render model shortcut (<a href="https://github.com/presidentbeef/brakeman/issues/959">#959</a>, <a href="https://github.com/presidentbeef/brakeman/issues/1940">#1940</a>, etc.)
+                                        <li>Check for unsafe SQL when two arguments are passed to AR methods (<a href="https://github.com/patbl">Patrick Brinich-Langlois</a>)
 </li>
                                     
-                                        <li>Add <code class="language-plaintext highlighter-rouge">--ensure-no-obsolete-config-entries</code> option (<a href="https://github.com/viralpraxis">viralpraxis</a>)
+                                        <li>Fix SQL injection check for <code class="language-plaintext highlighter-rouge">calculate</code> method (<a href="https://github.com/rsharma-figma">Rohan Sharma</a>)
 </li>
                                     
-                                        <li>Update JUnit report for CircleCI (<a href="https://github.com/pbernery">Philippe Bernery</a>)
+                                        <li>Check each side of <code class="language-plaintext highlighter-rouge">or</code> SQL arguments (<a href="https://github.com/presidentbeef/brakeman/issues/1935">#1935</a>)
 </li>
                                     
                                 </ul>
                             
                             
-                            <a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released" class="read-more-btn">Read Full Release Notes →</a>
+                            <a href="/blog/2025/11/03/brakeman-7-dot-1-dot-1-released" class="read-more-btn">Read Full Release Notes →</a>
                         </div>
                     </article>
                 
             </div>
             <div class="news-sidebar">
+                
+		<a href="/blog/2025/09/05/brakeman-llm-released" class="sidebar-card">
+			<h4>Brakeman-LLM Released</h4>
+			<p>A long time ago, when Brakeman was first designed, its output was optimized to fit into tables like this, with...</p>
+			<span class="date">September 2025</span>
+		</a>
+                
+		<a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released" class="sidebar-card">
+			<h4>Brakeman 7.1.0 Released</h4>
+			<p>Haml 6 Support
+
+</p>
+			<span class="date">July 2025</span>
+		</a>
                 
 		<a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released" class="sidebar-card">
 			<h4>Brakeman 7.0.2 Released</h4>
@@ -187,22 +201,6 @@
 
 </p>
 			<span class="date">April 2025</span>
-		</a>
-                
-		<a href="/blog/2025/01/10/brakeman-lsp-support" class="sidebar-card">
-			<h4>Brakeman LSP Support</h4>
-			<p>Announcing the ruby-lsp-brakeman project!
-
-</p>
-			<span class="date">January 2025</span>
-		</a>
-                
-		<a href="/blog/2024/12/30/brakeman-7-dot-0-dot-0-released" class="sidebar-card">
-			<h4>Brakeman 7.0.0 Released</h4>
-			<p>Happy new year!
-
-</p>
-			<span class="date">December 2024</span>
 		</a>
                 
             </div>
