@@ -26,4 +26,10 @@ class Evals
       METHODS
     end
   end
+
+  class << self
+    def defs_eval(string)
+      eval("foo #{string}")
+    end
+  end
 end

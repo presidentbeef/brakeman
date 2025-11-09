@@ -16,7 +16,7 @@ class Rails8Tests < Minitest::Test
       controller: 0,
       model:      0,
       template:   2,
-      warning:    4
+      warning:    5
     }
   end
 
@@ -59,6 +59,21 @@ class Rails8Tests < Minitest::Test
       confidence: 2,
       relative_path: "lib/evals.rb",
       code: s(:call, nil, :eval, s(:dstr, "interpolate ", s(:evstr, s(:lvar, :something)))),
+      user_input: nil
+  end
+
+  def test_dangerous_eval_4
+    assert_warning check_name: "Evaluation",
+      type: :warning,
+      warning_code: 13,
+      fingerprint: "3f08e08ea36320517ee869bd7f6f6f150efe38f6e02667f5907e9964881b46be",
+      warning_type: "Dangerous Eval",
+      line: 32,
+      message: /^Dynamic\ string\ evaluated\ as\ code/,
+      confidence: 2,
+      method: :"self.defs_eval",
+      relative_path: "lib/evals.rb",
+      code: s(:call, nil, :eval, s(:dstr, "foo ", s(:evstr, s(:lvar, :string)))),
       user_input: nil
   end
 
