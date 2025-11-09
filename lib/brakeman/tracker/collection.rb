@@ -56,7 +56,9 @@ module Brakeman
         @class_methods[name] = meth_info
 
         # TODO fix this weirdness
-        name = :"#{src[1]}.#{name}"
+        # See https://github.com/presidentbeef/brakeman/pull/881 for context
+        prefix = sexp?(src[1]) ? src[1][0] : src[1]
+        name = :"#{prefix}.#{name}"
       end
 
       @methods[visibility][name] = meth_info
