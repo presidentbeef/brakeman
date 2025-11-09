@@ -16,7 +16,7 @@ class Rails8Tests < Minitest::Test
       controller: 0,
       model:      0,
       template:   2,
-      warning:    5
+      warning:    9
     }
   end
 
@@ -59,6 +59,66 @@ class Rails8Tests < Minitest::Test
       confidence: 2,
       relative_path: "lib/evals.rb",
       code: s(:call, nil, :eval, s(:dstr, "interpolate ", s(:evstr, s(:lvar, :something)))),
+      user_input: nil
+  end
+
+  def test_dangerous_eval_4
+    assert_warning check_name: "Evaluation",
+      type: :warning,
+      warning_code: 13,
+      fingerprint: "3f08e08ea36320517ee869bd7f6f6f150efe38f6e02667f5907e9964881b46be",
+      warning_type: "Dangerous Eval",
+      line: 32,
+      message: /^Dynamic\ string\ evaluated\ as\ code/,
+      confidence: 2,
+      method: :"self.defs_eval",
+      relative_path: "lib/evals.rb",
+      code: s(:call, nil, :eval, s(:dstr, "foo ", s(:evstr, s(:lvar, :string)))),
+      user_input: nil
+  end
+
+  def test_dangerous_eval_5
+    assert_warning check_name: "Evaluation",
+      type: :warning,
+      warning_code: 13,
+      fingerprint: "a4284b65b029c04b9e786bf70d7a1bb88a9e7d35a4c0258b0e0e7f8011524994",
+      warning_type: "Dangerous Eval",
+      line: 37,
+      message: /^Dynamic\ string\ evaluated\ as\ code/,
+      confidence: 2,
+      method: :"Object.object_defs_eval",
+      relative_path: "lib/evals.rb",
+      code: s(:call, nil, :eval, s(:dstr, "foo ", s(:evstr, s(:lvar, :string)))),
+      user_input: nil
+  end
+
+  def test_dangerous_eval_6
+    assert_warning check_name: "Evaluation",
+      type: :warning,
+      warning_code: 13,
+      fingerprint: "bcd52e91053d1e52c90c9a30992e255bb5602e6f06740b9473e1c4b0b6110430",
+      warning_type: "Dangerous Eval",
+      line: 41,
+      message: /^Dynamic\ string\ evaluated\ as\ code/,
+      confidence: 2,
+      method: :"@ivar.ivar_def_eval",
+      relative_path: "lib/evals.rb",
+      code: s(:call, nil, :eval, s(:dstr, "foo ", s(:evstr, s(:lvar, :string)))),
+      user_input: nil
+  end
+
+  def test_dangerous_eval_7
+    assert_warning check_name: "Evaluation",
+      type: :warning,
+      warning_code: 13,
+      fingerprint: "a261e54367af8c1621ab2612ca8b7d0c67f67edb46295aeb3a68ca90035b29f6",
+      warning_type: "Dangerous Eval",
+      line: 46,
+      message: /^Dynamic\ string\ evaluated\ as\ code/,
+      confidence: 2,
+      method: :"lvar.lvar_def_eval",
+      relative_path: "lib/evals.rb",
+      code: s(:call, nil, :eval, s(:dstr, "foo ", s(:evstr, s(:lvar, :string)))),
       user_input: nil
   end
 
