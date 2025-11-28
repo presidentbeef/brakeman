@@ -193,7 +193,9 @@ module Brakeman
         files = patterns.flat_map { |pattern| Dir.glob(pattern) }
         files.uniq.lazy
       else
-        if directory == '.'
+        # Always use top_directories_pattern for the base to respect skip_files
+        # at the glob level, preventing traversal of excluded directories
+        if directory == '.' || directory == '**'
           pattern = File.join(top_directories_pattern, '**', "#{name}#{extensions}")
         else
           pattern = "#{root_search_pattern}#{directory}/**/#{name}#{extensions}"
