@@ -358,7 +358,7 @@ class RailsWithXssPluginTests < Minitest::Test
       :warning_code => 22,
       :fingerprint => "4ad12198bfbc84a389e439d3c4cc9c2551e3c2aa7b36182336463ca87e45ec5b",
       :warning_type => "Cross-Site Scripting",
-      :line => 18,
+      :line => 19,
       :message => /^Upgrade\ to\ Rails\ 3\ or\ use\ options_for_se/,
       :confidence => 1,
       :relative_path => "app/views/users/index.html.erb",

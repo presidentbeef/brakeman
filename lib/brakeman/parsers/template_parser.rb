@@ -21,7 +21,7 @@ module Brakeman
       begin
         src = case type
               when :erb
-                type = :erubis if erubis?
+                type = :erubi if erubi?
                 parse_erb path, text
               when :haml
                 type = :haml6 if haml6?
@@ -47,16 +47,8 @@ module Brakeman
 
     def parse_erb path, text
       if tracker.config.escape_html?
-        if tracker.options[:rails3]
-          require 'brakeman/parsers/rails3_erubis'
-          Brakeman::Rails3Erubis.new(text, :filename => path).src
-        else
-          require 'brakeman/parsers/rails2_xss_plugin_erubis'
-          Brakeman::Rails2XSSPluginErubis.new(text, :filename => path).src
-        end
-      elsif tracker.config.erubis?
-        require 'brakeman/parsers/rails2_erubis'
-        Brakeman::ScannerErubis.new(text, :filename => path).src
+        require 'brakeman/parsers/rails_erubi'
+        Brakeman::Erubi.new(text, :filename => path).src
       else
         require 'erb'
         src = if ERB.instance_method(:initialize).parameters.assoc(:key) # Ruby 2.6+
@@ -69,9 +61,9 @@ module Brakeman
       end
     end
 
-    def erubis?
+    def erubi?
       tracker.config.escape_html? or
-        tracker.config.erubis?
+        tracker.config.erubi?
     end
 
     def parse_haml path, text
@@ -148,7 +140,7 @@ module Brakeman
       fp = Brakeman::FileParser.new(tracker.app_tree, tracker.options[:parser_timeout])
       tp = self.new(tracker, fp)
       src = tp.parse_erb '_inline_', text
-      type = tp.erubis? ? :erubis : :erb
+      type = tp.erubi? ? :erubi : :erb
 
       return type, fp.parse_ruby(src, "_inline_")
     end

@@ -1,7 +1,7 @@
 require 'brakeman/processors/template_processor'
 
-#Processes ERB templates using Erubis instead of erb.
-class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
+#Processes ERB templates using Erubi instead of erb.
+class Brakeman::ErubiTemplateProcessor < Brakeman::TemplateProcessor
 
   #s(:call, TARGET, :method, ARGS)
   def process_call exp
@@ -14,7 +14,7 @@ class Brakeman::ErubisTemplateProcessor < Brakeman::TemplateProcessor
     exp.arglist = process exp.arglist
     method = exp.method
 
-    #_buf is the default output variable for Erubis
+    #_buf is the default output variable for Erubi
     if node_type?(target, :lvar, :ivar) and (target.value == :_buf or target.value == :@output_buffer)
       if method == :<< or method == :safe_concat
 

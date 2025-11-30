@@ -33,14 +33,15 @@ class Brakeman::Rails2ConfigProcessor < Brakeman::BasicProcessor
     process res
   end
 
-  #Check if config is set to use Erubis
+  # Check if config is set to use Erubis
+  # but because it's 2026 we're going to use Erubi
   def process_call exp
     target = exp.target
     target = process target if sexp? target
 
     if exp.method == :gem and exp.first_arg.value == "erubis"
-      Brakeman.notify "[Notice] Using Erubis for ERB templates"
-      @tracker.config.erubis = true
+      Brakeman.notify "[Notice] Using Erubi for ERB templates"
+      @tracker.config.erubi = true
     end
 
     exp
