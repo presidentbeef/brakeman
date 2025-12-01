@@ -78,7 +78,7 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BasicProcessor
     if exp.target == RAILS_CONFIG
       #Get rid of '=' at end
       attribute = exp.method.to_s[0..-2].to_sym
-      if exp.args.length > 1
+      if exp.num_args > 1
         #Multiple arguments?...not sure if this will ever happen
         @tracker.config.rails[attribute] = exp.args
       else

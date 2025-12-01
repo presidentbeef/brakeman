@@ -74,6 +74,11 @@ class UsersController < ApplicationController
     Thing.find_by(query) if field_name
   end
 
+  def stats_count
+     $stats.count("thing.#{variable}", :tags => ({ :cool => "stuff" }))
+     not_ar_model.count("something - #{params[:x]}")
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
