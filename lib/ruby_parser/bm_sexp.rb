@@ -172,6 +172,20 @@ class Sexp
     self[2] = name
   end
 
+  # Number of arguments in a method call.
+  def num_args
+    expect :call, :attrasgn, :safe_call, :safe_attrasgn, :super, :zsuper
+
+    case self.node_type
+    when :call, :attrasgn, :safe_call, :safe_attrasgn
+      self.length - 3
+    when :super
+      self.length - 1
+    when :zsuper
+      0
+    end
+  end
+
   #Sets the arglist in a method call.
   def arglist= exp
     expect :call, :attrasgn, :safe_call, :safe_attrasgn

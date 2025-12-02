@@ -188,18 +188,20 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
                       when :find_by_sql, :count_by_sql
                         check_by_sql_arguments call.first_arg
                       when :calculate
-                        if call.arglist.length > 2
+                        if call.num_args > 2
                           unsafe_sql?(call.second_arg) or check_find_arguments(call.third_arg)
-                        elsif call.arglist.length > 1
+                        elsif call.num_args > 1
                           unsafe_sql?(call.second_arg)
                         end
                       when :last, :first, :all
                         check_find_arguments call.first_arg
                       when :average, :count, :maximum, :minimum, :sum
-                        if call.arglist.length > 1
-                          unsafe_sql?(call.first_arg) or check_find_arguments(call.last_arg)
+                        if call.num_args > 1
+                          if version_between?("0.0.0", "4.9.9") # In Rails 5+ these do not accept multiple arguments
+                            check_find_arguments(call.first_arg) or check_find_arguments(call.second_arg)
+                          end
                         else
-                          check_find_arguments call.last_arg
+                          check_find_arguments call.first_arg
                         end
                       when :where, :rewhere, :having, :find_by, :find_by!, :find_or_create_by, :find_or_create_by!, :find_or_initialize_by,:not, :delete_by, :destroy_by
                         check_query_arguments call.arglist
