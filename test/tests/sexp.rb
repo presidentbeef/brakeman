@@ -339,6 +339,23 @@ class SexpTests < Minitest::Test
     assert_equal s(:lit, 3), exp.second_arg
   end
 
+  def test_num_args
+    assert_equal 3, parse('x(1, 2, 3)').num_args
+    assert_equal 2, parse('x(1, 2)').num_args
+    assert_equal 1, parse('x(1)').num_args
+    assert_equal 0, parse('x()').num_args
+
+
+    assert_equal 1, parse('x.y = 1').num_args
+    assert_equal 2, parse('super 1, 2').num_args
+    assert_equal 0, parse('super').num_args
+    assert_equal 0, parse('super()').num_args
+
+    assert_raises do
+      parse('1').num_args
+    end
+  end
+
   # For performance reasons, Sexps cache their hash value. This was not being
   # invalidated on <<
   def test_hash_invalidation_on_push
