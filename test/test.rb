@@ -16,6 +16,7 @@ require 'brakeman'
 require 'brakeman/scanner'
 require 'minitest/autorun'
 require 'minitest/pride'
+require 'minitest/mock'
 
 if ENV["CIRCLECI"]
   require 'minitest/ci'
