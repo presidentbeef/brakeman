@@ -12,10 +12,10 @@ jobs:
           command: bundle exec rake
       - store_test_results:
           path: test-results
-  test-3-1:
+  test-3-2:
     <<: *default
     docker:
-      - image: cimg/ruby:3.1
+      - image: cimg/ruby:3.2
     steps:
       - checkout
       - attach_workspace:
@@ -35,10 +35,6 @@ jobs:
           root: tmp
           paths:
             - coverage.json
-  test-3-2:
-    <<: *default
-    docker:
-      - image: cimg/ruby:3.2
   test-3-4:
     <<: *default
     docker:
@@ -58,9 +54,8 @@ workflows:
   tests:
     jobs:
       - default
-      - test-3-1
       - test-3-2
       - test-3-4
       - upload-coverage:
           requires:
-            - test-3-1
+            - test-3-2
