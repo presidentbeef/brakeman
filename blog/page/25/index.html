@@ -13,8 +13,7 @@
 
     <meta name="og:title" content="Brakeman - Brakeman Security Scanner" />
     <meta name="og:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
-    <meta name="og:image:secure" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
-    <meta name="twitter:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
+    <meta name="og:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 </head>
 <body class="homepage">
     <!-- Header -->
@@ -137,13 +136,13 @@
                     <article class="article-card">
                         <div class="article-header">
                             
-                                <span class="version-badge">Version 7.1.1</span>
+                                <span class="version-badge">Version 7.1.2</span>
                             
-                            <h3>Brakeman 7.1.1 Released</h3>
-                            <div class="article-meta">November 2025 • Performance improvements on macOS and lots of bug fixes</div>
+                            <h3>Brakeman 7.1.2 Released</h3>
+                            <div class="article-meta">December 2025 • Ruby 4.0 compatibility and fewer false positives</div>
                         </div>
                         <div class="article-content">
-                            <h2 id="faster-file-search-on-macos">Faster File Search on MacOS</h2>
+                            <h2 id="dependency-updates">Dependency Updates</h2>
 
 
                             
@@ -151,27 +150,35 @@
                                 <h4>🎉 What's New</h4>
                                 <ul>
                                     
-                                        <li>Exclude directories before searching for files (<a href="https://github.com/presidentbeef/brakeman/issues/1925">#1925</a>)
+                                        <li>Update <code class="language-plaintext highlighter-rouge">ruby_parser</code> to remove max version restriction (<a href="Chedli Bourguiba">https://github.com/chaadow</a>)
 </li>
                                     
-                                        <li>Check for unsafe SQL when two arguments are passed to AR methods (<a href="https://github.com/patbl">Patrick Brinich-Langlois</a>)
+                                        <li>Increase minimum Ruby version to 3.2.0
 </li>
                                     
-                                        <li>Fix SQL injection check for <code class="language-plaintext highlighter-rouge">calculate</code> method (<a href="https://github.com/rsharma-figma">Rohan Sharma</a>)
+                                        <li>Reduce SQL injection false positives from <code class="language-plaintext highlighter-rouge">count</code> (and other) calls (<a href="https://github.com/presidentbeef/brakeman/pull/1936">#1936</a>)
 </li>
                                     
-                                        <li>Check each side of <code class="language-plaintext highlighter-rouge">or</code> SQL arguments (<a href="https://github.com/presidentbeef/brakeman/issues/1935">#1935</a>)
+                                        <li>Remove more XSS false positives related to Haml attribute builder
 </li>
                                     
                                 </ul>
                             
                             
-                            <a href="/blog/2025/11/03/brakeman-7-dot-1-dot-1-released" class="read-more-btn">Read Full Release Notes →</a>
+                            <a href="/blog/2025/12/25/brakeman-7-dot-1-dot-2-released" class="read-more-btn">Read Full Release Notes →</a>
                         </div>
                     </article>
                 
             </div>
             <div class="news-sidebar">
+                
+		<a href="/blog/2025/11/03/brakeman-7-dot-1-dot-1-released" class="sidebar-card">
+			<h4>Brakeman 7.1.1 Released</h4>
+			<p>Faster File Search on MacOS
+
+</p>
+			<span class="date">November 2025</span>
+		</a>
                 
 		<a href="/blog/2025/08/30/brakeman-llm-released" class="sidebar-card">
 			<h4>Brakeman-LLM Released</h4>
@@ -190,14 +197,6 @@
 		<a href="/blog/2025/04/04/brakeman-7-dot-0-dot-2-released" class="sidebar-card">
 			<h4>Brakeman 7.0.2 Released</h4>
 			<p>Error on Empty Environment Variable
-
-</p>
-			<span class="date">April 2025</span>
-		</a>
-                
-		<a href="/blog/2025/04/03/brakeman-7-dot-0-dot-1-released" class="sidebar-card">
-			<h4>Brakeman 7.0.1 Released</h4>
-			<p>Fewer Code Evaluation Warnings
 
 </p>
 			<span class="date">April 2025</span>

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Brakeman: Brakeman 1.2 Released</title>
+    <title>Brakeman: Brakeman 7.1.2 Released</title>
     <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
     <meta charset="UTF-8">
@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/stylesheets/screen.css">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-    <meta name="og:title" content="Brakeman - Brakeman 1.2 Released" />
+    <meta name="og:title" content="Brakeman - Brakeman 7.1.2 Released" />
     <meta name="og:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
     <meta name="og:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 </head>
@@ -86,46 +86,33 @@
                 <article class="article-main fade-in">
                     <div class="article-header">
                         <div class="article-meta">
-                            <span class="date-badge">January 13, 2012</span>
+                            <span class="date-badge">December 25, 2025</span>
                         </div>
-                        <h1 class="article-title">Brakeman 1.2 Released</h1>
+                        <h1 class="article-title">Brakeman 7.1.2 Released</h1>
+                        
+                            <p class="article-subtitle">Ruby 4.0 compatibility and fewer false positives</p>
                         
                     </div>
 
                     <div class="article-content">
                         
                             <div class="changelog-intro">
-                                <h3>Changes since 1.1:</h3>
+                                <h3>Changes since 7.1.1:</h3>
                                 <ul>
                                     
-                                        <li><ul>
-  <li>Speed improvements for CheckExecute and CheckRender</li>
-</ul>
+                                        <li>Update <code class="language-plaintext highlighter-rouge">ruby_parser</code> to remove max version restriction (<a href="Chedli Bourguiba">https://github.com/chaadow</a>)
 </li>
                                     
-                                        <li><ul>
-  <li>Check <code class="language-plaintext highlighter-rouge">named_scope</code> and <code class="language-plaintext highlighter-rouge">scope</code> for SQL injection</li>
-</ul>
+                                        <li>Increase minimum Ruby version to 3.2.0
 </li>
                                     
-                                        <li><ul>
-  <li>Add <code class="language-plaintext highlighter-rouge">--rake</code> option to create rake task to run Brakeman</li>
-</ul>
+                                        <li>Reduce SQL injection false positives from <code class="language-plaintext highlighter-rouge">count</code> (and other) calls (<a href="https://github.com/presidentbeef/brakeman/pull/1936">#1936</a>)
 </li>
                                     
-                                        <li><ul>
-  <li>Add <code class="language-plaintext highlighter-rouge">--summary</code> option to only output summary</li>
-</ul>
+                                        <li>Remove more XSS false positives related to Haml attribute builder
 </li>
                                     
-                                        <li><ul>
-  <li>Add experimental support for rescanning a subset of files</li>
-</ul>
-</li>
-                                    
-                                        <li><ul>
-  <li>Fix a problem with Rails 3 routes</li>
-</ul>
+                                        <li>Update Minitest version to 6.0
 </li>
                                     
                                 </ul>
@@ -134,57 +121,80 @@
 
 
 			<div class="feature-section">
-			    <p>First Brakeman release of 2012!</p>
+			    <h2 id="dependency-updates">Dependency Updates</h2>
 
-<p>Besides those, there has also been quite a bit of code improvement internally.</p>
+<p>Chedli Bourguiba updated RubyParser to 3.22 which removes a Ruby version cap so it can be used with Ruby 4.0.</p>
 
-<h2 id="speed-improvements">Speed Improvements</h2>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1987">changes</a>)</p>
 
-<p>The checks for command injection and dynamic render paths should be considerably faster now.</p>
+<p>Minitest (dev-only dependency) updated to 6.0. Since Minitest dropped support for Ruby 3.1, this is a good time for Brakeman to do so, too.
+Minimum Ruby version to run Brakeman is now 3.2.0, although note Brakeman supports parsing of much older versions of Ruby. The version of Ruby used to run Brakeman does not need to match the version used to run the Rails application being scanned.</p>
 
-<h2 id="more-sql-injection-checks">More SQL Injection Checks</h2>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1985">changes</a>)</p>
 
-<p>Thanks to <a href="https://github.com/presidentbeef/brakeman/issues/30">a5sk4s</a> for pointing out that Brakeman was not checking <code class="language-plaintext highlighter-rouge">named_scope</code> for SQL injection. This has been rectified. For Rails 3.1 and up, <code class="language-plaintext highlighter-rouge">scope</code> will be checked.</p>
+<h2 id="sql-injection-false-positives">SQL Injection False Positives</h2>
 
-<p>Also, it seems common to use <code class="language-plaintext highlighter-rouge">Model.table_name</code> inside SQL statements. This will no longer raise a warning.</p>
+<p>Fixes in the previous release caused a high number of false positives related to <code class="language-plaintext highlighter-rouge">count</code> calls that were not actually ActiveRecord methods.</p>
 
-<h2 id="brakeman-rake-task">Brakeman Rake Task</h2>
+<p>This release should address most of these false positives unless the application is using an ancient version of Rails.</p>
 
-<p>The <code class="language-plaintext highlighter-rouge">--rake</code> option can now be used to install a Rake task for running Brakeman. The task will be copied to <code class="language-plaintext highlighter-rouge">lib/tasks/brakeman.rake</code>.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1980">changes</a>)</p>
 
-<p>To use, run this from the root of the Rails app:</p>
+<h2 id="more-haml-fixes">More Haml Fixes</h2>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman --rake
-</code></pre></div></div>
+<p>More methods used by <code class="language-plaintext highlighter-rouge">Haml::AttributeBuilder</code> are ignored, as long as the first argument is <code class="language-plaintext highlighter-rouge">true</code> (which indicates the output will be HTML-escaped).</p>
 
-<p>Then, to run Brakeman:</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1988">changes</a>)</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake brakeman:run
-</code></pre></div></div>
+<h2 id="reporting-issues">Reporting Issues</h2>
 
-<p>Naturally, this requires Rake to be installed.</p>
+<p>Additional thanks to <a href="https://github.com/thompson-tomo">James Thompson</a> and <a href="https://github.com/sampart">Sam Partington</a> for fixing the list of supoprted report types!</p>
 
-<p>To output to a specific file:</p>
+<p>As a reminder, supoprted formats are:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake brakeman:run["report.html"]
-</code></pre></div></div>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">text</code> - Default</li>
+  <li><code class="language-plaintext highlighter-rouge">html</code></li>
+  <li><code class="language-plaintext highlighter-rouge">json</code></li>
+  <li><code class="language-plaintext highlighter-rouge">junit</code> - Specifically compatible with CircleCI</li>
+  <li><code class="language-plaintext highlighter-rouge">markdown</code></li>
+  <li><code class="language-plaintext highlighter-rouge">csv</code></li>
+  <li><code class="language-plaintext highlighter-rouge">github</code></li>
+  <li><code class="language-plaintext highlighter-rouge">sarif</code></li>
+  <li><code class="language-plaintext highlighter-rouge">sonar</code></li>
+  <li><code class="language-plaintext highlighter-rouge">tabs</code> - Deprecated, avoid</li>
+  <li><code class="language-plaintext highlighter-rouge">codeclimate</code> - Deprecated</li>
+</ul>
 
-<p>More actions may be added in the future.</p>
+<p>Thank you to everyone who reported bugs and contributed to this release!</p>
 
-<h2 id="summary-option">Summary Option</h2>
+<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
 
-<p>Sometimes the specifics of a scan are not needed. The <code class="language-plaintext highlighter-rouge">--summary</code> option will limit the report output to just the summary section.</p>
-
-<h2 id="rescan-for-subset-of-files">Rescan for Subset of Files</h2>
-
-<p>This release adds experimental support for rescanning a subset of paths in a Rails application. Please see this <a href="https://gist.github.com/1563286">example</a>.</p>
-
-<h2 id="issues">Issues</h2>
-
-<p>Please report <em>any</em> problems or questions on <a href="https://github.com/presidentbeef/brakeman/issues">GitHub</a> or send a tweet to <a href="https://twitter.com/#!/brakemanscanner">@Brakeman</a>!</p>
+<p>Hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
 
 			</div>
 
+                        
+                            <div class="checksums-section">
+                                <h3>Checksums</h3>
+                                <p>The SHA256 sums for this release are:</p>
+                                
+                                    <div class="checksum-line">
+                                        <span class="hash">6b04927710a2e7d13a72248b5d404c633188e02417f28f3d853e4b6370d26dce</span> 
+                                        <span class="filename">brakeman-7.1.2.gem</span>
+                                    </div>
+                                
+                                    <div class="checksum-line">
+                                        <span class="hash">814c83ec5262f882dc5644c2b0c448d2a7e9a3f3c4fe3afefc36e8c7ff63bfce</span> 
+                                        <span class="filename">brakeman-lib-7.1.2.gem</span>
+                                    </div>
+                                
+                                    <div class="checksum-line">
+                                        <span class="hash">4eed82aca0156103f7205e9d8189daad9d18f01edf3eab17eed88835bd1a4eba</span> 
+                                        <span class="filename">brakeman-min-7.1.2.gem</span>
+                                    </div>
+                                
+                            </div>
                         
 
                         <div class="reporting-section">

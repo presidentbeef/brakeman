@@ -1,4 +1,53 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2025-12-09T10:31:43-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 7.1.1 Released</title><link href="https://brakemanscanner.org/blog/2025/11/03/brakeman-7-dot-1-dot-1-released" rel="alternate" type="text/html" title="Brakeman 7.1.1 Released" /><published>2025-11-03T00:00:00-07:00</published><updated>2025-11-03T00:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2025/11/03/brakeman-7-dot-1-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/11/03/brakeman-7-dot-1-dot-1-released">&lt;h2 id=&quot;faster-file-search-on-macos&quot;&gt;Faster File Search on MacOS&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2025-12-25T06:40:23-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 7.1.2 Released</title><link href="https://brakemanscanner.org/blog/2025/12/25/brakeman-7-dot-1-dot-2-released" rel="alternate" type="text/html" title="Brakeman 7.1.2 Released" /><published>2025-12-25T00:00:00-07:00</published><updated>2025-12-25T00:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2025/12/25/brakeman-7-dot-1-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/12/25/brakeman-7-dot-1-dot-2-released">&lt;h2 id=&quot;dependency-updates&quot;&gt;Dependency Updates&lt;/h2&gt;
+
+&lt;p&gt;Chedli Bourguiba updated RubyParser to 3.22 which removes a Ruby version cap so it can be used with Ruby 4.0.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1987&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;Minitest (dev-only dependency) updated to 6.0. Since Minitest dropped support for Ruby 3.1, this is a good time for Brakeman to do so, too.
+Minimum Ruby version to run Brakeman is now 3.2.0, although note Brakeman supports parsing of much older versions of Ruby. The version of Ruby used to run Brakeman does not need to match the version used to run the Rails application being scanned.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1985&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h2 id=&quot;sql-injection-false-positives&quot;&gt;SQL Injection False Positives&lt;/h2&gt;
+
+&lt;p&gt;Fixes in the previous release caused a high number of false positives related to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;count&lt;/code&gt; calls that were not actually ActiveRecord methods.&lt;/p&gt;
+
+&lt;p&gt;This release should address most of these false positives unless the application is using an ancient version of Rails.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1980&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h2 id=&quot;more-haml-fixes&quot;&gt;More Haml Fixes&lt;/h2&gt;
+
+&lt;p&gt;More methods used by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Haml::AttributeBuilder&lt;/code&gt; are ignored, as long as the first argument is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;true&lt;/code&gt; (which indicates the output will be HTML-escaped).&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1988&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h2 id=&quot;reporting-issues&quot;&gt;Reporting Issues&lt;/h2&gt;
+
+&lt;p&gt;Additional thanks to &lt;a href=&quot;https://github.com/thompson-tomo&quot;&gt;James Thompson&lt;/a&gt; and &lt;a href=&quot;https://github.com/sampart&quot;&gt;Sam Partington&lt;/a&gt; for fixing the list of supoprted report types!&lt;/p&gt;
+
+&lt;p&gt;As a reminder, supoprted formats are:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;text&lt;/code&gt; - Default&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;html&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;json&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;junit&lt;/code&gt; - Specifically compatible with CircleCI&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;markdown&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;csv&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;github&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sarif&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sonar&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tabs&lt;/code&gt; - Deprecated, avoid&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;codeclimate&lt;/code&gt; - Deprecated&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Thank you to everyone who reported bugs and contributed to this release!&lt;/p&gt;
+
+&lt;p&gt;Please report any &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues&quot;&gt;issues&lt;/a&gt; with this release. Take a look at &lt;a href=&quot;https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue&quot;&gt;this guide&lt;/a&gt; to reporting Brakeman problems.&lt;/p&gt;
+
+&lt;p&gt;Hang out &lt;a href=&quot;https://github.com/presidentbeef/brakeman/discussions&quot;&gt;on Github&lt;/a&gt; for questions and discussion.&lt;/p&gt;</content><author><name></name></author><summary type="html">Dependency Updates</summary></entry><entry><title type="html">Brakeman 7.1.1 Released</title><link href="https://brakemanscanner.org/blog/2025/11/03/brakeman-7-dot-1-dot-1-released" rel="alternate" type="text/html" title="Brakeman 7.1.1 Released" /><published>2025-11-03T00:00:00-07:00</published><updated>2025-11-03T00:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2025/11/03/brakeman-7-dot-1-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/11/03/brakeman-7-dot-1-dot-1-released">&lt;h2 id=&quot;faster-file-search-on-macos&quot;&gt;Faster File Search on MacOS&lt;/h2&gt;
 
 &lt;p&gt;Brakeman now pre-filters top-level directories to speed up file enumeration on MacOS. This can be significant when there are large numbers of files.&lt;/p&gt;
 
@@ -603,54 +652,4 @@ list ignored warnings in the default text report.&lt;/p&gt;
 
 &lt;p&gt;Along the way, they also fixed up some Ruby warnings in the test suite.&lt;/p&gt;
 
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1855&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;</content><author><name></name></author><summary type="html">Lots of great contributions in this release, thanks!</summary></entry><entry><title type="html">Brakeman 6.1.2 Released</title><link href="https://brakemanscanner.org/blog/2024/02/01/brakeman-6-dot-1-dot-2-released" rel="alternate" type="text/html" title="Brakeman 6.1.2 Released" /><published>2024-02-01T10:30:00-07:00</published><updated>2024-02-01T10:30:00-07:00</updated><id>https://brakemanscanner.org/blog/2024/02/01/brakeman-6-dot-1-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2024/02/01/brakeman-6-dot-1-dot-2-released">&lt;p&gt;Finally, just a small release!&lt;/p&gt;
-
-&lt;h2 id=&quot;components-in-render-paths&quot;&gt;Components in Render Paths&lt;/h2&gt;
-
-&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/ElMassimo&quot;&gt;Máximo Mussini&lt;/a&gt; and &lt;a href=&quot;https://github.com/vividmuimui&quot;&gt;vividmuimui&lt;/a&gt;, there will be fewer false positives
-warning about dynamic render paths when using components.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1805&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1821&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;performance-improvement-with-complex-branching&quot;&gt;Performance Improvement with Complex Branching&lt;/h2&gt;
-
-&lt;p&gt;Brakeman has a very hard time with code like&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;baz&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;do_thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# etc.&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Because to Brakeman it looks like&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;baz&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;do_thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;baz&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;This can quickly snowball into gigantic chunks of code, causing Brakeman to use lots of memory and essentially freeze up.&lt;/p&gt;
-
-&lt;p&gt;In the past, limits on how many times a value is “branched” have helped with this (and is configurable with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--branch-limit&lt;/code&gt;).
-However, it is not sufficient.&lt;/p&gt;
-
-&lt;p&gt;Now Brakeman has a limit on how large these chunks of code can get. This has improved performance without any noticable impact on true positives.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1820&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;</content><author><name></name></author><summary type="html">Finally, just a small release!</summary></entry></feed>
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1855&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;</content><author><name></name></author><summary type="html">Lots of great contributions in this release, thanks!</summary></entry></feed>
