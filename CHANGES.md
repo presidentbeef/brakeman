@@ -1,3 +1,11 @@
+# 7.1.2 - 2025-12-25
+
+* Update `ruby_parser` to remove version restriction (Chedli Bourguiba)
+* Raise minimum required Ruby to 3.2.0
+* Use Minitest 6.0
+* Reduce SQL injection false positives from `count` calls
+* Ignore more Haml attribute builder methods
+
 # 7.1.1 - 2025-11-03
 
 * Fix false positive when calling `with_content` on ViewComponents (Peer Allan)
