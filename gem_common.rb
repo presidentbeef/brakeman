@@ -9,7 +9,7 @@ module Brakeman
 
     def self.base_dependencies spec
       spec.add_dependency "parallel", "~>1.20"
-      spec.add_dependency "ruby_parser", "~>3.20.2"
+      spec.add_dependency "ruby_parser", "~>3.22.0"
       spec.add_dependency "sexp_processor", "~> 4.7"
       spec.add_dependency "ruby2ruby", "~>2.5.1"
       spec.add_dependency "racc"
