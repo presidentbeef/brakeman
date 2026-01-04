@@ -46,7 +46,7 @@ module Brakeman
     end
 
     def parse_erb path, text
-      if tracker.config.escape_html?
+      if erubi?
         require 'brakeman/parsers/rails_erubi'
         Brakeman::Erubi.new(text, :filename => path).src
       else
