@@ -65,8 +65,8 @@ module Brakeman
         result = HamlTemplateProcessor.new(@tracker, name, called_from, file_name).process src
       when :haml6
         result = Haml6TemplateProcessor.new(@tracker, name, called_from, file_name).process src
-      when :erubis
-        result = ErubisTemplateProcessor.new(@tracker, name, called_from, file_name).process src
+      when :erubi
+        result = ErubiTemplateProcessor.new(@tracker, name, called_from, file_name).process src
       when :slim
         result = SlimTemplateProcessor.new(@tracker, name, called_from, file_name).process src
       else

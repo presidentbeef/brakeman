@@ -5,7 +5,7 @@ module Brakeman
     include Util
 
     attr_reader :gems, :rails, :ruby_version, :tracker
-    attr_writer :erubis, :escape_html
+    attr_writer :erubi, :escape_html
 
     def initialize tracker
       @tracker = tracker
@@ -13,7 +13,7 @@ module Brakeman
       @gems = {}
       @settings = {}
       @escape_html = nil
-      @erubis = nil
+      @erubi = nil
       @ruby_version = nil
       @rails_version = nil
     end
@@ -28,8 +28,8 @@ module Brakeman
       false
     end
 
-    def erubis?
-      @erubis
+    def erubi?
+      @erubi
     end
 
     def escape_html?
