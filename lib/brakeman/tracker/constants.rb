@@ -29,7 +29,7 @@ module Brakeman
 
     def set_name name, context
       @name = name
-      @name_array = Constants.constant_as_array(name)
+      @name_array = Constants.constant_as_array(name, context)
     end
 
     def match? name
@@ -129,7 +129,22 @@ module Brakeman
       end
     end
 
-    def self.constant_as_array exp
+    def self.constant_as_array exp, context = nil
+      # Only prepend context for simple (unqualified) constants
+      if context && (exp.is_a?(Symbol) || (exp.is_a?(Sexp) && exp.node_type == :const))
+        context_name = context[:module] || context[:class]
+        context_name = context_name.name if context_name.respond_to?(:name)
+        if context_name
+          # Build colon2 chain: A::B becomes s(:colon2, s(:const, :A), :B)
+          parts = context_name.to_s.split("::")
+          base = Sexp.new(:const, parts.first.to_sym)
+          parts[1..].each do |part|
+            base = Sexp.new(:colon2, base, part.to_sym)
+          end
+          exp = Sexp.new(:colon2, base, exp)
+        end
+      end
+
       res = []
       while exp
         if exp.is_a? Sexp

@@ -120,4 +120,162 @@ class ConstantTests < Minitest::Test
     assert_equal "file.rb", const.context[:file]
     assert_equal :CoolClass, const.context[:class]
   end
+
+  def test_constant_in_module_should_not_match_different_qualified_path
+    # When MY_CONST is defined in both module A and module B,
+    # looking up B::MY_CONST should return B's value, not A's
+    assert_alias <<-OUTPUT, <<-INPUT, true
+    module A
+      MY_CONST = 1
+    end
+
+    module B
+      MY_CONST = 2
+    end
+
+    class Foo
+      def bar
+        2
+      end
+    end
+    OUTPUT
+    module A
+      MY_CONST = 1
+    end
+
+    module B
+      MY_CONST = 2
+    end
+
+    class Foo
+      def bar
+        B::MY_CONST
+      end
+    end
+    INPUT
+  end
+
+  def test_constant_in_module_should_not_match_undefined_qualified_path
+    # When MY_CONST is defined only in module A,
+    # looking up B::MY_CONST should NOT resolve to A's value
+    assert_alias <<-OUTPUT, <<-INPUT, true
+    module A
+      MY_CONST = 1
+    end
+
+    class Foo
+      def bar
+        B::MY_CONST
+      end
+    end
+    OUTPUT
+    module A
+      MY_CONST = 1
+    end
+
+    class Foo
+      def bar
+        B::MY_CONST
+      end
+    end
+    INPUT
+  end
+
+  def test_nested_constant_in_module_should_not_match_different_qualified_path
+    # When MY_CONST is defined in both A::Z and B::Z,
+    # looking up B::Z::MY_CONST should return B::Z's value, not A::Z's
+    assert_alias <<-OUTPUT, <<-INPUT, true
+    module A
+      module Z
+        MY_CONST = 1
+      end
+    end
+
+    module B
+      module Z
+        MY_CONST = 2
+      end
+    end
+
+    class Foo
+      def bar
+        2
+      end
+    end
+    OUTPUT
+    module A
+      module Z
+        MY_CONST = 1
+      end
+    end
+
+    module B
+      module Z
+        MY_CONST = 2
+      end
+    end
+
+    class Foo
+      def bar
+        B::Z::MY_CONST
+      end
+    end
+    INPUT
+  end
+
+  def test_nested_constant_in_module_should_not_match_undefined_qualified_path
+    # When MY_CONST is defined only in A::Z,
+    # looking up B::Z::MY_CONST should NOT resolve to A::Z's value
+    assert_alias <<-OUTPUT, <<-INPUT, true
+    module A
+      module Z
+        MY_CONST = 1
+      end
+    end
+
+    class Foo
+      def bar
+        B::Z::MY_CONST
+      end
+    end
+    OUTPUT
+    module A
+      module Z
+        MY_CONST = 1
+      end
+    end
+
+    class Foo
+      def bar
+        B::Z::MY_CONST
+      end
+    end
+    INPUT
+  end
+
+  def test_qualified_constant_defined_in_module_should_not_prepend_context
+    # When B::MY_CONST is explicitly defined (even from within module A),
+    # it should be stored as B::MY_CONST, not A::B::MY_CONST
+    assert_alias <<-OUTPUT, <<-INPUT, true
+    module A
+      B::MY_CONST = 1
+    end
+
+    class Foo
+      def bar
+        1
+      end
+    end
+    OUTPUT
+    module A
+      B::MY_CONST = 1
+    end
+
+    class Foo
+      def bar
+        B::MY_CONST
+      end
+    end
+    INPUT
+  end
 end
