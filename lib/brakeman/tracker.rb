@@ -329,6 +329,8 @@ class Brakeman::Tracker
     finder = Brakeman::FindAllCalls.new self
 
     method_sets.each do |set|
+      Brakeman.logger.spin
+
       set.each do |set_name, info|
         info.each_method do |method_name, definition|
           src = definition.src
@@ -339,12 +341,14 @@ class Brakeman::Tracker
 
     if locations.include? :templates
       self.each_template do |_name, template|
+        Brakeman.logger.spin
         finder.process_source template.src, :template => template, :file => template.file
       end
     end
 
     if locations.include? :initializers
       self.initializers.each do |file_name, src|
+        Brakeman.logger.spin
         finder.process_all_source src, :file => file_name
       end
     end

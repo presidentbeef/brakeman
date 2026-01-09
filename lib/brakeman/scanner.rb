@@ -44,9 +44,10 @@ class Brakeman::Scanner
     tracker.file_cache
   end
 
-  def process_step description
-    Brakeman.notify HighLine.color("» #{description}...".ljust(40), :bold, :green)
-
+  def process_step description, &block
+    Brakeman.process_step description, &block
+    return
+    
     if @show_timing
       start_t = Time.now
       yield
@@ -123,7 +124,7 @@ class Brakeman::Scanner
       process_templates
     end
 
-    process_step 'Processing data flow in templates' do
+    process_step 'Processing data flow' do
       process_template_data_flows
     end
 
@@ -135,11 +136,11 @@ class Brakeman::Scanner
       process_controllers
     end
 
-    process_step 'Processing data flow in controllers' do
+    process_step 'Processing data flow' do
       process_controller_data_flows
     end
 
-    process_step 'Indexing call sites' do
+    process_step 'Indexing method calls' do
       index_call_sites
     end
 
@@ -154,6 +155,7 @@ class Brakeman::Scanner
     template_parser = Brakeman::TemplateParser.new(tracker, fp)
 
     fp.read_files(template_paths) do |path, contents|
+      Brakeman.logger.spin
       template_parser.parse_template(path, contents)
     end
 
@@ -167,6 +169,8 @@ class Brakeman::Scanner
     detector = Brakeman::FileTypeDetector.new
 
     astfiles.each do |file|
+      Brakeman.logger.spin
+
       if file.is_a? Brakeman::TemplateParser::TemplateFile
         file_cache.add_file file, :template
       else
@@ -202,7 +206,7 @@ class Brakeman::Scanner
       options[:rails3] or options[:escape_html]
 
       tracker.config.escape_html = true
-      Brakeman.notice 'Escaping HTML by default'
+      Brakeman.debug 'Escaping HTML by default'
     end
 
     if @app_tree.exists? ".ruby-version"
@@ -273,16 +277,16 @@ class Brakeman::Scanner
     unless tracker.options[:rails3] or tracker.options[:rails4]
       if @app_tree.exists?("script/rails")
         tracker.options[:rails3] = true
-        Brakeman.notice 'Detected Rails 3 application'
+        Brakeman.debug 'Detected Rails 3 application'
       elsif @app_tree.exists?("app/channels")
         tracker.options[:rails3] = true
         tracker.options[:rails4] = true
         tracker.options[:rails5] = true
-        Brakeman.notice 'Detected Rails 5 application'
+        Brakeman.debug 'Detected Rails 5 application'
       elsif not @app_tree.exists?("script")
         tracker.options[:rails3] = true
         tracker.options[:rails4] = true
-        Brakeman.notice "Detected Rails 4 application"
+        Brakeman.debug 'Detected Rails 4 application'
       end
     end
   end
@@ -427,16 +431,15 @@ class Brakeman::Scanner
     total = list.length
     current = 0
     list.each do |item|
-      report_progress current, total, type
+      report_progress current, total
       current += 1
       yield item
     end
   end
 
-  def report_progress(current, total, type = "files")
+  def report_progress(current, total)
     return unless @options[:report_progress]
-    $stderr.print "  #{HighLine.color(current.to_s, :bold)}/#{total} #{type} processed"
-    $stderr.print "\r"
+    Brakeman.logger.update_progress(current, total)
   end
 
   def index_call_sites

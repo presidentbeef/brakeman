@@ -125,7 +125,7 @@ module Brakeman
 
       if get_gem :rails_xss
         @escape_html = true
-        Brakeman.notice "Escaping HTML by default"
+        Brakeman.debug "Escaping HTML by default"
       end
     end
 
@@ -286,7 +286,7 @@ module Brakeman
     end
 
     private def notify_version version
-      Brakeman.notice "Detected Rails #{version} application"
+      Brakeman.debug "Detected Rails #{version} application"
     end
   end
 end

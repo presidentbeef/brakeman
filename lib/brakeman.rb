@@ -33,6 +33,7 @@ module Brakeman
   @quiet = false
   @loaded_dependencies = []
   @vendored_paths = false
+  @logger = nil
 
   #Run Brakeman scan. Returns Tracker object.
   #
@@ -96,19 +97,27 @@ module Brakeman
     if options[:use_prism]
       begin
         require 'prism'
-        notice 'Using Prism parser'
       rescue LoadError => e
         Brakeman.debug_error "Asked to use Prism, but failed to load: #{e}"
       end
     end
 
+    # TODO
     if $stderr.tty? or options[:output_color] == :force
       HighLine.use_color = !!options[:output_color]
     else
       HighLine.use_color = false
     end
 
+    require 'brakeman/logger'
+    @logger = Brakeman::Logger.get_logger(options)
+    @logger.announce "Brakeman v#{Brakeman::Version}"
+
     scan options
+  end
+
+  def self.logger
+    @logger || Brakeman::Logger.get_logger({})
   end
 
   #Sets up options for run, checks given application path
@@ -405,23 +414,25 @@ module Brakeman
   #Run a scan. Generally called from Brakeman.run instead of directly.
   def self.scan options
     #Load scanner
-    process_step 'Loading scanner...'
+    scanner, tracker = nil
 
-    begin
-      require 'brakeman/scanner'
-    rescue LoadError
-      raise NoBrakemanError, 'Cannot find lib/ directory.'
+    process_step 'Loading scanner...' do
+      begin
+        require 'brakeman/scanner'
+      rescue LoadError
+        raise NoBrakemanError, 'Cannot find lib/ directory.'
+      end
+
+      add_external_checks options
+
+      #Start scanning
+      scanner = Scanner.new options
+      tracker = scanner.tracker
+
+      check_for_missing_checks options[:run_checks], options[:skip_checks], options[:enable_checks]
     end
 
-    add_external_checks options
-
-    #Start scanning
-    scanner = Scanner.new options
-    tracker = scanner.tracker
-
-    check_for_missing_checks options[:run_checks], options[:skip_checks], options[:enable_checks]
-
-    process_step "Processing application in #{tracker.app_path}"
+    @logger.announce "Processing application in #{tracker.app_path}"
     scanner.process
 
     tracker.run_checks
@@ -429,13 +440,13 @@ module Brakeman
     self.filter_warnings tracker, options
 
     if options[:output_files]
-      process_step 'Generating report...'
-
-      write_report_to_files tracker, options[:output_files]
+      process_step 'Generating report' do
+        write_report_to_files tracker, options[:output_files]
+      end
     elsif options[:print_report]
-      process_step 'Generating report...'
-
-      write_report_to_formats tracker, options[:output_formats]
+      process_step 'Generating report' do
+        write_report_to_formats tracker, options[:output_formats]
+      end
     end
 
     tracker
@@ -454,7 +465,8 @@ module Brakeman
       File.open output_file, "w" do |f|
         f.write tracker.report.format(tracker.options[:output_formats][idx])
       end
-      notify "Report saved in '#{output_file}'"
+
+      @logger.announce "Report saved in '#{output_file}'"
     end
   end
   private_class_method :write_report_to_files
@@ -592,6 +604,7 @@ module Brakeman
 
   def self.filter_warnings tracker, options
     require 'brakeman/report/ignore/config'
+    config = nil
 
     app_tree = Brakeman::AppTree.from_options(options)
 
@@ -603,16 +616,16 @@ module Brakeman
       return
     end
 
-    process_step "Filtering warnings..."
-
-    if options[:interactive_ignore]
-      require 'brakeman/report/ignore/interactive'
-      config = InteractiveIgnorer.new(file, tracker.warnings).start
-    else
-      notice "Using '#{file}' to filter warnings"
-      config = IgnoreConfig.new(file, tracker.warnings)
-      config.read_from_file
-      config.filter_ignored
+    process_step "Filtering warnings..." do
+      if options[:interactive_ignore]
+        require 'brakeman/report/ignore/interactive'
+        config = InteractiveIgnorer.new(file, tracker.warnings).start
+      else
+        @logger.announce "Using '#{file}' to filter warnings"
+        config = IgnoreConfig.new(file, tracker.warnings)
+        config.read_from_file
+        config.filter_ignored
+      end
     end
 
     tracker.ignored_filter = config
@@ -642,8 +655,8 @@ module Brakeman
     @quiet = val
   end
 
-  def self.process_step description
-    Brakeman.notify HighLine.color("» #{description}", :green, :bold)
+  def self.process_step description, &block
+    @logger.context description, &block
   end
 
   class DependencyError < RuntimeError; end

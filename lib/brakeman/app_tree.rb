@@ -213,13 +213,17 @@ module Brakeman
     end
 
     def reject_directories(paths)
-      paths.reject { |path| File.directory?(path) }
+      paths.reject do |path|
+        Brakeman.logger.spin
+        File.directory?(path)
+      end
     end
 
     def select_only_files(paths)
       return paths unless @only_files
 
       paths.select do |path|
+        Brakeman.logger.spin
         match_path @only_files, path
       end
     end
@@ -228,6 +232,7 @@ module Brakeman
       return paths unless @skip_files
 
       paths.reject do |path|
+        Brakeman.logger.spin
         match_path @skip_files, path
       end
     end

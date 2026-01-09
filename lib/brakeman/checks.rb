@@ -121,43 +121,43 @@ class Brakeman::Checks
     parallel = tracker.options[:parallel_checks]
     error_mutex = Mutex.new
 
-    if parallel
-      Brakeman.process_step "Running #{checks.length} checks in parallel..."
+    message = if parallel
+      "Running #{checks.length} checks in parallel..."
     else
-      Brakeman.process_step "Running #{checks.length} checks..."
+      "Running #{checks.length} checks..."
     end
 
-    checks.each do |c|
-      check_name = get_check_name c
-      Brakeman.debug " - #{check_name}"
+    Brakeman.process_step(message) do
+      checks.each do |c|
+        check_name = get_check_name c
+        Brakeman.debug " - #{check_name}"
+
+        if parallel
+          threads << Thread.new do
+            self.run_a_check(c, error_mutex, tracker)
+          end
+        else
+          results << self.run_a_check(c, error_mutex, tracker)
+        end
+
+        #Maintain list of which checks were run
+        #mainly for reporting purposes
+        check_runner.checks_run << check_name[5..-1]
+      end
+
+      threads.each { |t| t.join }
 
       if parallel
-        threads << Thread.new do
-          self.run_a_check(c, error_mutex, tracker)
+        threads.each do |thread|
+          thread.value.each do |warning|
+            check_runner.add_warning warning
+          end
         end
       else
-        results << self.run_a_check(c, error_mutex, tracker)
-      end
-
-      #Maintain list of which checks were run
-      #mainly for reporting purposes
-      check_runner.checks_run << check_name[5..-1]
-    end
-
-    threads.each { |t| t.join }
-
-    Brakeman.process_step "Checks finished, collecting results..."
-
-    if parallel
-      threads.each do |thread|
-        thread.value.each do |warning|
-          check_runner.add_warning warning
-        end
-      end
-    else
-      results.each do |warnings|
-        warnings.each do |warning|
-          check_runner.add_warning warning
+        results.each do |warnings|
+          warnings.each do |warning|
+            check_runner.add_warning warning
+          end
         end
       end
     end
