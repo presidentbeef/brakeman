@@ -186,6 +186,8 @@ module Brakeman
             warn caller
           end
 
+          Brakeman.logger.cleanup
+
           exit!
         end
       end

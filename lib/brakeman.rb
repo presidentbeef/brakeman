@@ -432,7 +432,7 @@ module Brakeman
       check_for_missing_checks options[:run_checks], options[:skip_checks], options[:enable_checks]
     end
 
-    @logger.announce "Processing application in #{tracker.app_path}"
+    @logger.announce "Scanning #{tracker.app_path}"
     scanner.process
 
     tracker.run_checks

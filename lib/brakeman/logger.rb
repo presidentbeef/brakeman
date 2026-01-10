@@ -52,7 +52,7 @@ module Brakeman
 
       def announce message
         clear_line
-        @dest.puts @highline.color(message)
+        @dest.puts @highline.color(message, :green)
       end
 
       def context description, &block
@@ -89,7 +89,7 @@ module Brakeman
       end
 
       def set_prefix message
-        @prefix = "#{@highline.color('»', :bold, :cyan)} #{@highline.color(message, :bold, :green)}"
+        @prefix = "#{@highline.color('»', :bold, :cyan)} #{@highline.color(message, :green)}"
         @post_fix_pos = HighLine::Wrapper.actual_length(@prefix) + 1
       end
 
@@ -112,10 +112,9 @@ module Brakeman
         @last_spin = Time.now
       end
 
-
       def cleanup
-        puts
         @reline.show_cursor
+        puts
       end
     end
   end
