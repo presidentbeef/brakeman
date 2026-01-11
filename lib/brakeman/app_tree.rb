@@ -120,7 +120,7 @@ module Brakeman
 
     def template_paths
       @template_paths ||= find_paths(".", "*.{#{VIEW_EXTENSIONS}}") +
-        find_paths("**", "*.{erb,haml,slim}").reject { |path| File.basename(path).count(".") > 1 }
+        find_paths(".", "*.{erb,haml,slim}").reject { |path| File.basename(path).count(".") > 1 }
     end
 
     def layout_exists?(name)
