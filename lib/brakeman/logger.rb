@@ -18,7 +18,12 @@ module Brakeman
         @dest = $stderr
       end
 
-      def announce
+      def log(message, newline: true)
+        if newline
+          @dest.puts message
+        else
+          @dest.write message
+        end
       end
 
       def cleanup
@@ -52,7 +57,7 @@ module Brakeman
 
       def announce message
         clear_line
-        @dest.puts @highline.color(message, :green)
+        log @highline.color(message, :green)
       end
 
       def context description, &block
@@ -78,13 +83,13 @@ module Brakeman
 
       def write_prefix pref
         set_prefix pref
-        @dest.write prefix
+        log(prefix, newline: false)
         @reline.erase_after_cursor
       end
 
       def write_after message
         @reline.move_cursor_column(@post_fix_pos)
-        @dest.write message
+        log(message, newline: false)
         @reline.erase_after_cursor
       end
 
@@ -114,7 +119,7 @@ module Brakeman
 
       def cleanup
         @reline.show_cursor
-        puts
+        log('')
       end
     end
   end
