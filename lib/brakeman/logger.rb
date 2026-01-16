@@ -66,25 +66,51 @@ module Brakeman
       def cleanup; end
 
       def show_timing? = @show_timing
+
+      def color(*)
+        if @highline
+          @highline.color(*)
+        else
+          message
+        end
+      end
     end
 
     class Plain < Base
       def initialize(options)
         super
+
+        @highline = HighLine.new
       end
 
       def announce(message)
-        log message
-      end
-
-      def context(description, &block)
-        log "#{description}..."
-
-        yield self
+        log color(message, :bold, :green)
       end
 
       def alert(message)
-        log "!! #{message}"
+        log color(message, :red)
+      end
+
+      def context(description, &)
+        log "#{color(description, :green)}..."
+
+        if show_timing?
+          time_step(description, &)
+        else
+          yield
+        end
+      end
+
+      def time_step(description, &)
+        start_t = Time.now
+        yield
+        duration = Time.now - start_t
+
+        log color(("Completed #{description.to_s.downcase} in %0.2fs" % duration), :gray)
+      end
+
+      def color(...)
+        @highline.color(...)
       end
     end
 
@@ -94,21 +120,7 @@ module Brakeman
       end
     end
 
-    class Debug < Base
-      def initialize(options)
-        super
-
-        @highline = HighLine.new
-      end
-
-      def announce(message)
-        log message
-      end
-
-      def alert(message)
-        log color(message, :red)
-      end
-
+    class Debug < Plain
       def debug(message)
         log color(message, :gray)
       end
@@ -128,18 +140,6 @@ module Brakeman
         else
           yield
         end
-      end
-
-      def time_step(description, &)
-        start_t = Time.now
-        yield
-        duration = Time.now - start_t
-
-        log color(("Completed #{description.to_s.downcase} in %0.2fs" % duration), :gray)
-      end
-
-      def color(...)
-        @highline.color(...)
       end
     end
     
@@ -256,10 +256,6 @@ module Brakeman
       def cleanup
         @reline.show_cursor
         log('')
-      end
-
-      def color(...)
-        @highline.color(...)
       end
     end
   end
