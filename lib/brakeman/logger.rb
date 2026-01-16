@@ -119,7 +119,7 @@ module Brakeman
         time_step(description, &)
       end
 
-      def one_context(description, &)
+      def single_context(description, &)
         debug "Processing #{description}"
 
         if show_timing?
@@ -135,7 +135,7 @@ module Brakeman
         yield
         duration = Time.now - start_t
 
-        log color(("Done #{description.downcase} in %0.2fs" % duration), :gray)
+        log color(("Completed #{description.to_s.downcase} in %0.2fs" % duration), :gray)
       end
 
       def color(...)
