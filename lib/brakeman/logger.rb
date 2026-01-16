@@ -14,8 +14,9 @@ module Brakeman
     end
 
     class Base
-      def initialize options
+      def initialize(options)
         @dest = $stderr
+        @show_timing = options[:debug] || options[:show_timing]
       end
 
       def log(message, newline: true)
@@ -36,7 +37,7 @@ module Brakeman
     class Console < Base
       attr_reader :prefix
       
-      def initialize(options = nil)
+      def initialize(options)
         super
 
         Brakeman.load_brakeman_dependency('highline')
@@ -60,11 +61,25 @@ module Brakeman
         log @highline.color(message, :green)
       end
 
-      def context description, &block
+      def context(description, &)
         write_prefix description
-        yield self
+
+        time_step(description, &)
       ensure
         clear_prefix
+      end
+
+      def time_step(description, &)
+        if show_timing?
+          start_t = Time.now
+          yield
+          duration = Time.now - start_t
+
+          write_after color(('%0.2fs' % duration), :gray)
+          log '' # move to next line
+        else
+          yield
+        end
       end
 
       def update_status status
