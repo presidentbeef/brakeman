@@ -122,9 +122,9 @@ class Brakeman::Checks
     error_mutex = Mutex.new
 
     message = if parallel
-      "Running #{checks.length} checks in parallel..."
+      "Running #{checks.length} checks in parallel"
     else
-      "Running #{checks.length} checks..."
+      "Running #{checks.length} checks"
     end
 
     Brakeman.process_step(message) do

@@ -416,7 +416,7 @@ module Brakeman
     #Load scanner
     scanner, tracker = nil
 
-    process_step 'Loading scanner...' do
+    process_step 'Loading scanner' do
       begin
         require 'brakeman/scanner'
       rescue LoadError
