@@ -58,7 +58,7 @@ module Brakeman
 
       def announce message
         clear_line
-        log @highline.color(message, :green)
+        log color(message, :green)
       end
 
       def context(description, &)
@@ -90,9 +90,9 @@ module Brakeman
         percent = ((current / total.to_f) * 100).to_i
         tenths = [(percent / 10), 0].max
 
-        lead = @highline.color(@percenter[percent % 10 / 3], :bold, :red)
-        done_blocks = @highline.color("⣿" * tenths, :red)
-        remaining = @highline.color("⣀" * (9 - tenths), :gray)
+        lead = color(@percenter[percent % 10 / 3], :bold, :red)
+        done_blocks = color("⣿" * tenths, :red)
+        remaining = color("⣀" * (9 - tenths), :gray)
         write_after "#{done_blocks}#{lead}#{remaining}"
       end
 
@@ -109,7 +109,7 @@ module Brakeman
       end
 
       def set_prefix message
-        @prefix = "#{@highline.color('»', :bold, :cyan)} #{@highline.color(message, :green)}"
+        @prefix = "#{color('»', :bold, :cyan)} #{color(message, :green)}"
         @post_fix_pos = HighLine::Wrapper.actual_length(@prefix) + 1
       end
 
@@ -127,7 +127,7 @@ module Brakeman
       def spin
         return unless (Time.now - @last_spin) > 0.2
 
-        write_after @highline.color(@spinner[@spindex], :bold, :red)
+        write_after color(@spinner[@spindex], :bold, :red)
         @spindex = (@spindex + 1) % @spinner.length
         @last_spin = Time.now
       end
@@ -135,6 +135,10 @@ module Brakeman
       def cleanup
         @reline.show_cursor
         log('')
+      end
+
+      def color(...)
+        @highline.color(...)
       end
     end
   end
