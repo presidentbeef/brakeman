@@ -31,8 +31,6 @@ class Brakeman::Scanner
     end
 
     @processor = processor || Brakeman::Processor.new(@app_tree, options)
-    @show_timing = tracker.options[:debug] || tracker.options[:show_timing]
-    @per_file_timing = tracker.options[:debug] && tracker.options[:show_timing]
   end
 
   #Returns the Tracker generated from the scan
@@ -44,33 +42,12 @@ class Brakeman::Scanner
     tracker.file_cache
   end
 
-  def process_step description, &block
-    Brakeman.process_step description, &block
-    return
-    
-    if @show_timing
-      start_t = Time.now
-      yield
-      duration = Time.now - start_t
-
-      Brakeman.notify "(#{description})", "Duration: #{duration} seconds"
-    else
-      yield
-    end
+  def process_step(description, &)
+    Brakeman.process_step(description, &)
   end
 
-  def process_step_file description
-    if @per_file_timing
-      Brakeman.notify 'Processing', description
-
-      start_t = Time.now
-      yield
-      duration = Time.now - start_t
-
-      Brakeman.notify "(#{description})", "Duration: #{duration} seconds"
-    else
-      yield
-    end
+  def process_step_file(description, &)
+    Brakeman.logger.single_context(description, &)
   end
 
   #Process everything in the Rails application
@@ -226,7 +203,7 @@ class Brakeman::Scanner
     end
 
   rescue => e
-    Brakeman.notice "Error while processing #{path}"
+    Brakeman.alert "Error while processing #{path}"
     tracker.error e.exception(e.message + "\nwhile processing #{path}"), e.backtrace
   end
 
@@ -268,7 +245,7 @@ class Brakeman::Scanner
       @processor.process_gems gem_files
     end
   rescue => e
-    Brakeman.notice 'Error while processing Gemfile'
+    Brakeman.alert 'Error while processing Gemfile'
     tracker.error e.exception(e.message + "\nWhile processing Gemfile"), e.backtrace
   end
 
@@ -312,7 +289,6 @@ class Brakeman::Scanner
   #Adds parsed information to tracker.libs.
   def process_libs
     if options[:skip_libs]
-      Brakeman.notice 'Skipping libraries'
       return
     end
 
@@ -339,11 +315,11 @@ class Brakeman::Scanner
       if routes_sexp = parse_ruby_file(file)
         @processor.process_routes routes_sexp
       else
-        Brakeman.notice 'Error while processing routes - assuming all public controller methods are actions.'
+        Brakeman.alert 'Error while processing routes - assuming all public controller methods are actions.'
         options[:assume_all_routes] = true
       end
     else
-      Brakeman.notice 'No route information found'
+      Brakeman.alert 'No route information found'
     end
   end
 

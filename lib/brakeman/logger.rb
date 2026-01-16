@@ -2,14 +2,24 @@ module Brakeman
   module Logger
     def self.get_logger options
       dest = $stderr
-   
+
+      if dest.tty? or options[:output_color] == :force
+        HighLine.use_color = !!options[:output_color]
+      else
+        HighLine.use_color = false
+      end
+
       case
       when options[:debug]
         Debug.new(options)
       when options[:quiet]
         Quiet.new(options)
+      when options[:report_progress] == false
+        Plain.new(options)
       when dest.tty?
         Console.new(options)
+      else
+        Plain.new(options)
       end
     end
 
@@ -27,11 +37,110 @@ module Brakeman
         end
       end
 
-      def cleanup
+      # Notify about important information - use sparingly
+      def announce(message); end
+
+      # Notify regarding errors - use sparingly
+      def alert(message); end
+
+      # Output debug information
+      def debug(message); end
+
+      def context(description, &)
+        yield self
+      end
+
+      def single_context(description, &)
+        yield
+      end
+
+      def update_status(status); end
+
+      # Update progress towards a known total
+      def update_progress(current, total, type = 'files'); end
+
+      # Show a spinner
+      def spin; end
+
+      # Called on exit
+      def cleanup; end
+
+      def show_timing? = @show_timing
+    end
+
+    class Plain < Base
+      def initialize(options)
+        super
+      end
+
+      def announce(message)
+        log message
+      end
+
+      def context(description, &block)
+        log "#{description}..."
+
+        yield self
+      end
+
+      def alert(message)
+        log "!! #{message}"
       end
     end
 
     class Quiet < Base
+      def initialize(options)
+        super
+      end
+    end
+
+    class Debug < Base
+      def initialize(options)
+        super
+
+        @highline = HighLine.new
+      end
+
+      def announce(message)
+        log message
+      end
+
+      def alert(message)
+        log color(message, :red)
+      end
+
+      def debug(message)
+        log color(message, :gray)
+      end
+
+      def context(description, &)
+        log "#{description}..."
+
+        time_step(description, &)
+      end
+
+      def one_context(description, &)
+        debug "Processing #{description}"
+
+        if show_timing?
+          # Even in debug, only show timing for each file if asked
+          time_step(description, &)
+        else
+          yield
+        end
+      end
+
+      def time_step(description, &)
+        start_t = Time.now
+        yield
+        duration = Time.now - start_t
+
+        log color(("Done #{description.downcase} in %0.2fs" % duration), :gray)
+      end
+
+      def color(...)
+        @highline.color(...)
+      end
     end
     
     class Console < Base
@@ -58,7 +167,14 @@ module Brakeman
 
       def announce message
         clear_line
-        log color(message, :green)
+        log color(message, :bold, :green)
+        rewrite_prefix
+      end
+
+      def alert message
+        clear_line
+        log color(message, :red)
+        rewrite_prefix
       end
 
       def context(description, &)
@@ -76,7 +192,7 @@ module Brakeman
           duration = Time.now - start_t
 
           write_after color(('%0.2fs' % duration), :gray)
-          log '' # move to next line
+          log ''
         else
           yield
         end
@@ -98,7 +214,12 @@ module Brakeman
 
       def write_prefix pref
         set_prefix pref
-        log(prefix, newline: false)
+        rewrite_prefix
+      end
+
+      # If an alert was written, redo prefix on next line
+      def rewrite_prefix
+        log(@prefix, newline: false)
         @reline.erase_after_cursor
       end
 

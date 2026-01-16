@@ -12,7 +12,7 @@ class Brakeman::CheckModelAttributes < Brakeman::BaseCheck
 
     #Roll warnings into one warning for all models
     if tracker.options[:collapse_mass_assignment]
-      Brakeman.notice "The `collapse_mass_assignment` option has been removed."
+      Brakeman.alert "The `collapse_mass_assignment` option has been removed."
     end
 
     check_models do |name, model|

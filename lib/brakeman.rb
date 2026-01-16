@@ -98,15 +98,8 @@ module Brakeman
       begin
         require 'prism'
       rescue LoadError => e
-        Brakeman.debug_error "Asked to use Prism, but failed to load: #{e}"
+        Brakeman.alert "Asked to use Prism, but failed to load: #{e}"
       end
-    end
-
-    # TODO
-    if $stderr.tty? or options[:output_color] == :force
-      HighLine.use_color = !!options[:output_color]
-    else
-      HighLine.use_color = false
     end
 
     require 'brakeman/logger'
@@ -182,15 +175,15 @@ module Brakeman
           if options.include? :additional_checks_path
             options.delete :additional_checks_path
 
-            notice 'Ignoring additional check paths in config file. Use --allow-check-paths-in-config to allow' unless (options[:quiet] || quiet)
+            alert 'Ignoring additional check paths in config file. Use --allow-check-paths-in-config to allow' unless (options[:quiet] || quiet)
           end
         end
 
         # notify if options[:quiet] and quiet is nil||false
-        notice "Using configuration in #{config}" unless (options[:quiet] || quiet)
+        alert "Using configuration in #{config}" unless (options[:quiet] || quiet)
         options
       else
-        notice "Empty configuration file: #{config}" unless quiet
+        alert "Empty configuration file: #{config}" unless quiet
         {}
       end
     else
@@ -397,9 +390,10 @@ module Brakeman
       File.open file, "w" do |f|
         YAML.dump options, f
       end
-      notify "Output configuration to #{file}"
+
+      announce "Output configuration to #{file}"
     else
-      notify YAML.dump(options)
+      puts YAML.dump(options)
     end
   end
 
@@ -510,34 +504,16 @@ module Brakeman
     Rescanner.new(options, tracker.processor, files).recheck
   end
 
-  def self.notify prefix, message = nil
-    unless @quiet
-      require 'highline'
-
-      if message
-        message = "#{HighLine.color(prefix, :gray)} #{message}"
-      else
-        message = prefix
-      end
-
-      $stderr.puts message
-    end
+  def self.announce message
+    logger.announce message
   end
-
-  def self.notice message
-    self.notify HighLine.color("  #{message}", :gray)
+  
+  def self.alert message
+    logger.alert message
   end
 
   def self.debug message
-    $stderr.puts message if @debug
-  end
-
-  def self.debug_notice message
-    self.notice message if @debug
-  end
-
-  def self.debug_error message
-    $stderr.puts HighLine.color("  #{message}", :red) if @debug
+    logger.debug message
   end
 
   # Compare JSON output from a previous scan and return the diff of the two scans
@@ -549,7 +525,7 @@ module Brakeman
     begin
       previous_results = JSON.parse(File.read(options[:previous_results_json]), :symbolize_names => true)[:warnings]
     rescue JSON::ParserError
-      self.notify "Error parsing comparison file: #{options[:previous_results_json]}"
+      self.alert "Error parsing comparison file: #{options[:previous_results_json]}"
       exit!
     end
 
@@ -655,8 +631,8 @@ module Brakeman
     @quiet = val
   end
 
-  def self.process_step description, &block
-    @logger.context description, &block
+  def self.process_step(description, &)
+    @logger.context(description, &)
   end
 
   class DependencyError < RuntimeError; end

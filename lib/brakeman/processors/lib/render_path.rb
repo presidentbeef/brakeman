@@ -36,7 +36,7 @@ module Brakeman
           file: template.file,
         }
       else
-        Brakeman.debug_notice "No render path to add template information"
+        Brakeman.debug "No render path to add template information"
       end
     end
 

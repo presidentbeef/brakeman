@@ -27,7 +27,7 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
 
     #If inside an inner class we treat it as a library.
     if @current_class
-      Brakeman.debug_notice "Treating inner class as library: #{name}"
+      Brakeman.debug "Treating inner class as library: #{name}"
       Brakeman::LibraryProcessor.new(@tracker).process_library exp, @current_file
       return exp
     end

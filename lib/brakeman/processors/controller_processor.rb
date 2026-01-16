@@ -30,13 +30,13 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
     #But if not inside a controller already, then the class may include
     #a real controller, so we can't take this shortcut.
     if @current_class and @current_class.name.to_s.end_with? "Controller"
-      Brakeman.debug_notice "Treating inner class as library: #{name}"
+      Brakeman.debug "Treating inner class as library: #{name}"
       Brakeman::LibraryProcessor.new(@tracker).process_library exp, @current_file
       return exp
     end
 
     if not name.to_s.end_with? "Controller"
-      Brakeman.debug_notice "Adding noncontroller as library: #{name}"
+      Brakeman.debug "Adding noncontroller as library: #{name}"
       #Set the class to be a module in order to get the right namespacing.
       #Add class to libraries, in case it is needed later (e.g. it's used
       #as a parent class for a controller.)
@@ -124,7 +124,7 @@ class Brakeman::ControllerProcessor < Brakeman::BaseProcessor
             if @app_tree.layout_exists?(name)
               @current_class.layout = "layouts/#{name}"
             else
-              Brakeman.debug_notice "Layout not found: #{name}"
+              Brakeman.debug "Layout not found: #{name}"
             end
           elsif node_type? last_arg, :nil, :false
             #layout :false or layout nil

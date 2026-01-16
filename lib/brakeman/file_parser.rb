@@ -13,9 +13,9 @@ module Brakeman
       if @use_prism
         begin
           require 'prism'
-          Brakeman.debug_notice 'Using Prism parser'
+          Brakeman.debug 'Using Prism parser'
         rescue LoadError => e
-          Brakeman.debug_error "Asked to use Prism, but failed to load: #{e}"
+          Brakeman.debug "Asked to use Prism, but failed to load: #{e}"
           @use_prism = false
         end
       end

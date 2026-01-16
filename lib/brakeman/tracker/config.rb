@@ -182,7 +182,7 @@ module Brakeman
         option = config[o]
 
         if not option.is_a? Hash
-          Brakeman.debug_notice "Skipping config setting: #{path.map(&:to_s).join(".")}"
+          Brakeman.debug "Skipping config setting: #{path.map(&:to_s).join(".")}"
           return
         end
 

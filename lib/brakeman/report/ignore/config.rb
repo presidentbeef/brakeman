@@ -107,7 +107,7 @@ module Brakeman
           raise e, "\nError[#{e.class}] while reading brakeman ignore file: #{file}\n"
         end
       else
-        Brakeman.notice "Could not find ignore configuration in #{file}"
+        Brakeman.alert "Could not find ignore configuration in #{file} (no file)"
         @already_ignored = []
       end
 
