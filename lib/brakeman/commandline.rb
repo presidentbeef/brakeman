@@ -117,7 +117,7 @@ module Brakeman
       # Override this method for different behavior.
       def quit exit_code = 0, message = nil
         warn message if message
-        Brakeman.logger.cleanup
+        Brakeman.cleanup
         exit exit_code
       end
 
@@ -187,7 +187,7 @@ module Brakeman
             warn caller
           end
 
-          Brakeman.logger.cleanup
+          Brakeman.cleanup
 
           exit!
         end

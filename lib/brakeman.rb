@@ -1,5 +1,6 @@
 require 'set'
 require 'highline'
+require 'brakeman/logger'
 require 'brakeman/version'
 
 module Brakeman
@@ -102,15 +103,18 @@ module Brakeman
       end
     end
 
-    require 'brakeman/logger'
     @logger = Brakeman::Logger.get_logger(options)
-    @logger.announce "Brakeman v#{Brakeman::Version}"
+    logger.announce "Brakeman v#{Brakeman::Version}"
 
     scan options
   end
 
   def self.logger
-    @logger || Brakeman::Logger.get_logger({})
+    @logger || Brakeman::Logger::Plain.new({})
+  end
+
+  def self.cleanup
+    @logger.cleanup if @logger
   end
 
   #Sets up options for run, checks given application path
@@ -393,7 +397,7 @@ module Brakeman
 
       announce "Output configuration to #{file}"
     else
-      puts YAML.dump(options)
+      $stdout.puts YAML.dump(options)
     end
   end
 
@@ -426,7 +430,7 @@ module Brakeman
       check_for_missing_checks options[:run_checks], options[:skip_checks], options[:enable_checks]
     end
 
-    @logger.announce "Scanning #{tracker.app_path}"
+    logger.announce "Scanning #{tracker.app_path}"
     scanner.process
 
     tracker.run_checks
@@ -460,7 +464,7 @@ module Brakeman
         f.write tracker.report.format(tracker.options[:output_formats][idx])
       end
 
-      @logger.announce "Report saved in '#{output_file}'"
+      logger.announce "Report saved in '#{output_file}'"
     end
   end
   private_class_method :write_report_to_files
@@ -597,7 +601,7 @@ module Brakeman
         require 'brakeman/report/ignore/interactive'
         config = InteractiveIgnorer.new(file, tracker.warnings).start
       else
-        @logger.announce "Using '#{file}' to filter warnings"
+        logger.announce "Using '#{file}' to filter warnings"
         config = IgnoreConfig.new(file, tracker.warnings)
         config.read_from_file
         config.filter_ignored
@@ -632,7 +636,7 @@ module Brakeman
   end
 
   def self.process_step(description, &)
-    @logger.context(description, &)
+    logger.context(description, &)
   end
 
   class DependencyError < RuntimeError; end

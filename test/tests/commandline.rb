@@ -104,7 +104,7 @@ class CommandlineTests < Minitest::Test
   def test_empty_config
     empty_config = "--- {}\n"
 
-    assert_stderr empty_config do
+    assert_stdout empty_config do
       cl_with_options "-C"
     end
   end
