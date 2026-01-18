@@ -149,6 +149,8 @@ module BrakemanTester::RescanTestHelper
     @@temp_dirs.each do |_, dir|
       FileUtils.remove_dir(dir, true)
     end
+
+    Brakeman.cleanup
   end
 
   def self.included _

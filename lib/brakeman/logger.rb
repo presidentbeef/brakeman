@@ -63,7 +63,7 @@ module Brakeman
       def spin; end
 
       # Called on exit
-      def cleanup; end
+      def cleanup(newline); end
 
       def show_timing? = @show_timing
 
@@ -253,9 +253,9 @@ module Brakeman
         @last_spin = Time.now
       end
 
-      def cleanup
+      def cleanup(newline = true)
         @reline.show_cursor
-        log('')
+        log('') if newline
       end
     end
   end

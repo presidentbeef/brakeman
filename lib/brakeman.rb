@@ -113,8 +113,12 @@ module Brakeman
     @logger || Brakeman::Logger::Plain.new({})
   end
 
-  def self.cleanup
-    @logger.cleanup if @logger
+  def self.logger= log
+    @logger = log
+  end
+
+  def self.cleanup(newline = true)
+    @logger.cleanup(newline) if @logger
   end
 
   #Sets up options for run, checks given application path
@@ -599,6 +603,7 @@ module Brakeman
     process_step "Filtering warnings..." do
       if options[:interactive_ignore]
         require 'brakeman/report/ignore/interactive'
+        logger.cleanup
         config = InteractiveIgnorer.new(file, tracker.warnings).start
       else
         logger.announce "Using '#{file}' to filter warnings"

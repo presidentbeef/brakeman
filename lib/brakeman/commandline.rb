@@ -59,6 +59,8 @@ module Brakeman
           puts JSON.pretty_generate(vulns)
         end
 
+        Brakeman.cleanup(false)
+
         if options[:exit_on_warn] && vulns[:new].count > 0
           quit Brakeman::Warnings_Found_Exit_Code
         end
