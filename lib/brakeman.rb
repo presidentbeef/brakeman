@@ -103,7 +103,7 @@ module Brakeman
       end
     end
 
-    @logger = Brakeman::Logger.get_logger(options)
+    @logger = options[:logger] || Brakeman::Logger.get_logger(options)
     logger.announce "Brakeman v#{Brakeman::Version}"
 
     scan options
@@ -387,6 +387,10 @@ module Brakeman
     end
 
     options.delete :create_config
+
+    if options[:logger]
+      @logger = options.delete(:logger)
+    end
 
     options.each do |k,v|
       if v.is_a? Set

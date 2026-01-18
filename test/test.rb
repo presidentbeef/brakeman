@@ -51,6 +51,7 @@ module BrakemanTester
     end
 
     def new_tracker options = {}
+      Brakeman.logger ||= Brakeman::Logger.get_logger(options)
       Brakeman::Tracker.new(Brakeman::AppTree.new("/tmp/FAKE_BRAKEMAN_PATH#{rand(10000)}"), nil, options)
     end
   end
