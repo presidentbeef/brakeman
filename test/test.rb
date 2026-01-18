@@ -34,6 +34,8 @@ class Minitest::Test
   end
 end
 
+# Brakeman.set_default_logger(report_progress: false)
+
 #Helper methods for running scans
 module BrakemanTester
   class << self
@@ -151,7 +153,9 @@ module BrakemanTester::RescanTestHelper
       FileUtils.remove_dir(dir, true)
     end
 
-    Brakeman.cleanup
+    # Make sure to reset console
+    require 'brakeman/logger'
+    Brakeman::Logger::Console.new({}).cleanup
   end
 
   def self.included _
