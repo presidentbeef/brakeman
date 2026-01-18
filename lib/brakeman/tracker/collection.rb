@@ -55,11 +55,21 @@ module Brakeman
       if src.node_type == :defs
         @class_methods[name] = meth_info
 
-        # TODO fix this weirdness
-        name = :"#{src[1]}.#{name}"
+        name = :"#{method_definition_receiver(src[1])}.#{name}"
       end
 
       @methods[visibility][name] = meth_info
+    end
+
+    def method_definition_receiver(receiver)
+      return receiver if receiver.is_a?(Symbol)
+
+      case receiver.sexp_type
+      when :self
+        "self"
+      else
+        receiver[1].to_s
+      end
     end
 
     def each_method

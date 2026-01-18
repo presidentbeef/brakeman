@@ -26,4 +26,23 @@ class Evals
       METHODS
     end
   end
+
+  class << self
+    def defs_eval(string)
+      eval("foo #{string}")
+    end
+  end
+
+  def Object.object_defs_eval(string)
+    eval("foo #{string}")
+  end
+
+  def @ivar.ivar_def_eval(string)
+    eval("foo #{string}")
+  end
+
+  lvar = Object.new
+  def lvar.lvar_def_eval(string)
+    eval("foo #{string}")
+  end
 end
