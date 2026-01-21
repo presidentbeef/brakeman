@@ -1,8 +1,6 @@
 module Brakeman
   module Logger
-    def self.get_logger options
-      dest = $stderr
-
+    def self.get_logger options, dest = $stderr
       if dest.tty? or options[:output_color] == :force
         HighLine.use_color = !!options[:output_color]
       else
