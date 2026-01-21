@@ -103,18 +103,22 @@ module Brakeman
       end
     end
 
-    @logger = options[:logger] || Brakeman::Logger.get_logger(options)
+    @logger = options[:logger] || set_default_logger(options)
     logger.announce "Brakeman v#{Brakeman::Version}"
 
     scan options
   end
 
   def self.logger
-    @logger || Brakeman::Logger::Plain.new({})
+    @logger
   end
 
   def self.logger= log
     @logger = log
+  end
+
+  def self.set_default_logger(options = {})
+    @logger = Brakeman::Logger.get_logger(options)
   end
 
   def self.cleanup(newline = true)
@@ -390,6 +394,8 @@ module Brakeman
 
     if options[:logger]
       @logger = options.delete(:logger)
+    else
+      set_default_logger(options)
     end
 
     options.each do |k,v|
