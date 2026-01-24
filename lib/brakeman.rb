@@ -1,5 +1,4 @@
 require 'set'
-require 'highline'
 require 'brakeman/logger'
 require 'brakeman/version'
 
@@ -525,7 +524,7 @@ module Brakeman
   def self.announce message
     logger.announce message
   end
-  
+
   def self.alert message
     logger.alert message
   end

@@ -1,12 +1,6 @@
 module Brakeman
   module Logger
     def self.get_logger options, dest = $stderr
-      if dest.tty? or options[:output_color] == :force
-        HighLine.use_color = !!options[:output_color]
-      else
-        HighLine.use_color = false
-      end
-
       case
       when options[:debug]
         Debug.new(options)
@@ -27,6 +21,8 @@ module Brakeman
         @show_timing = options[:debug] || options[:show_timing]
       end
 
+      # Output a message to the log.
+      # If newline is `false`, does not output a newline after message.
       def log(message, newline: true)
         if newline
           @dest.puts message
@@ -44,15 +40,15 @@ module Brakeman
       # Output debug information
       def debug(message); end
 
+      # Wraps a step in the scanning process
       def context(description, &)
         yield self
       end
 
+      # Wraps a substep (e.g. processing one file)
       def single_context(description, &)
         yield
       end
-
-      def update_status(status); end
 
       # Update progress towards a known total
       def update_progress(current, total, type = 'files'); end
@@ -65,11 +61,25 @@ module Brakeman
 
       def show_timing? = @show_timing
 
+      # Use ANSI codes to color a string
       def color(*)
         if @highline
           @highline.color(*)
         else
           message
+        end
+      end
+
+      private
+
+      def load_highline(output_color)
+        if @dest.tty? or output_color == :force
+          puts "Color! #{output_color.inspect}"
+          Brakeman.load_brakeman_dependency 'highline'
+          @highline = HighLine.new
+          @highline.use_color = !!output_color
+        else
+          @highline.use_color = false
         end
       end
     end
@@ -78,7 +88,7 @@ module Brakeman
       def initialize(options)
         super
 
-        @highline = HighLine.new
+        load_highline(options[:output_color])
       end
 
       def announce(message)
@@ -105,10 +115,6 @@ module Brakeman
         duration = Time.now - start_t
 
         log color(("Completed #{description.to_s.downcase} in %0.2fs" % duration), :gray)
-      end
-
-      def color(...)
-        @highline.color(...)
       end
     end
 
@@ -140,21 +146,20 @@ module Brakeman
         end
       end
     end
-    
+
     class Console < Base
       attr_reader :prefix
-      
+
       def initialize(options)
         super
 
-        Brakeman.load_brakeman_dependency('highline')
+        load_highline(options[:output_color])
         require 'reline'
         require 'reline/io/ansi'
 
         @prefix = ''
         @post_fix_pos = 0
         @reline = Reline::ANSI.new
-        @highline = HighLine.new
         @report_progress = options[:report_progress]
         @spinner = ["⣀", "⣄", "⣤", "⣦", "⣶", "⣷", "⣿"]
         @percenter = ["⣀", "⣤", "⣶", "⣿"]
@@ -194,10 +199,6 @@ module Brakeman
         else
           yield
         end
-      end
-
-      def update_status status
-        write_after status
       end
 
       def update_progress current, total, type = 'files'
