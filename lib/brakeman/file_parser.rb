@@ -13,9 +13,9 @@ module Brakeman
       if @use_prism
         begin
           require 'prism'
-          Brakeman.debug '[Notice] Using Prism parser'
+          Brakeman.debug 'Using Prism parser'
         rescue LoadError => e
-          Brakeman.debug "[Notice] Asked to use Prism, but failed to load: #{e}"
+          Brakeman.debug "Asked to use Prism, but failed to load: #{e}"
           @use_prism = false
         end
       end
@@ -46,6 +46,7 @@ module Brakeman
       #
       # Note this method no longer uses read_files
       @file_list, new_errors = Parallel.map(list, parallel_options) do |file_name|
+        Brakeman.logger.spin
         file_path = @app_tree.file_path(file_name)
         contents = file_path.read
 

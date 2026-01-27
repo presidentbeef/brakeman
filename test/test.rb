@@ -34,6 +34,8 @@ class Minitest::Test
   end
 end
 
+# Brakeman.set_default_logger(report_progress: false)
+
 #Helper methods for running scans
 module BrakemanTester
   class << self
@@ -51,6 +53,7 @@ module BrakemanTester
     end
 
     def new_tracker options = {}
+      Brakeman.logger ||= Brakeman::Logger.get_logger(options)
       Brakeman::Tracker.new(Brakeman::AppTree.new("/tmp/FAKE_BRAKEMAN_PATH#{rand(10000)}"), nil, options)
     end
   end
@@ -149,6 +152,10 @@ module BrakemanTester::RescanTestHelper
     @@temp_dirs.each do |_, dir|
       FileUtils.remove_dir(dir, true)
     end
+
+    # Make sure to reset console
+    require 'brakeman/logger'
+    Brakeman::Logger::Console.new({}).cleanup
   end
 
   def self.included _

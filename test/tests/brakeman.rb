@@ -275,7 +275,7 @@ class ConfigTests < Minitest::Test
       :run_checks => []
     }
 
-    assert_output nil, /Duration/ do
+    assert_output nil, / in \d+\.\d+s/ do
       Brakeman.run options
     end
 
@@ -383,7 +383,7 @@ class ConfigTests < Minitest::Test
   def test_dump_config_no_file
     options = {:create_config => true, :test_option => "test"}
 
-    assert_output nil, "---\n:test_option: test\n" do
+    assert_output "---\n:test_option: test\n" do
       Brakeman.dump_config(options)
     end
   end
@@ -393,7 +393,7 @@ class ConfigTests < Minitest::Test
     test_set = Set.new ["test", "test2"]
     options = {:create_config => true, :test_option => test_set}
 
-    assert_output nil, "---\n:test_option:\n- test\n- test2\n" do
+    assert_output "---\n:test_option:\n- test\n- test2\n" do
       Brakeman.dump_config(options)
     end
   end
@@ -433,7 +433,7 @@ class ConfigTests < Minitest::Test
     test_file = "test.cfg"
     options = {:create_config => test_file, :test_option => "test"}
 
-    assert_output nil, "Output configuration to test.cfg\n" do
+    assert_output nil, /Output configuration to test.cfg/ do
       Brakeman.dump_config(options)
     end
 

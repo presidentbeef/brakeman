@@ -88,29 +88,29 @@ module Brakeman
         if tracker.options[:rails3].nil? and tracker.options[:rails4].nil?
           if @rails_version.start_with? "3"
             tracker.options[:rails3] = true
-            Brakeman.notify "[Notice] Detected Rails 3 application"
+            notify_version 3
           elsif @rails_version.start_with? "4"
             tracker.options[:rails3] = true
             tracker.options[:rails4] = true
-            Brakeman.notify "[Notice] Detected Rails 4 application"
+            notify_version 4
           elsif @rails_version.start_with? "5"
             tracker.options[:rails3] = true
             tracker.options[:rails4] = true
             tracker.options[:rails5] = true
-            Brakeman.notify "[Notice] Detected Rails 5 application"
+            notify_version 5
           elsif @rails_version.start_with? "6"
             tracker.options[:rails3] = true
             tracker.options[:rails4] = true
             tracker.options[:rails5] = true
             tracker.options[:rails6] = true
-            Brakeman.notify "[Notice] Detected Rails 6 application"
+            notify_version 6
           elsif @rails_version.start_with? "7"
             tracker.options[:rails3] = true
             tracker.options[:rails4] = true
             tracker.options[:rails5] = true
             tracker.options[:rails6] = true
             tracker.options[:rails7] = true
-            Brakeman.notify "[Notice] Detected Rails 7 application"
+            notify_version 7
           elsif @rails_version.start_with? "8"
             tracker.options[:rails3] = true
             tracker.options[:rails4] = true
@@ -118,14 +118,14 @@ module Brakeman
             tracker.options[:rails6] = true
             tracker.options[:rails7] = true
             tracker.options[:rails8] = true
-            Brakeman.notify "[Notice] Detected Rails 8 application"
+            notify_version 8
           end
         end
       end
 
       if get_gem :rails_xss
         @escape_html = true
-        Brakeman.notify "[Notice] Escaping HTML by default"
+        Brakeman.debug "Escaping HTML by default"
       end
     end
 
@@ -182,7 +182,7 @@ module Brakeman
         option = config[o]
 
         if not option.is_a? Hash
-          Brakeman.debug "[Notice] Skipping config setting: #{path.map(&:to_s).join(".")}"
+          Brakeman.debug "Skipping config setting: #{path.map(&:to_s).join(".")}"
           return
         end
 
@@ -202,7 +202,7 @@ module Brakeman
       version = tracker.config.rails[:load_defaults].value.to_s
 
       unless version.match?(/^\d+\.\d+$/)
-        Brakeman.debug "[Notice] Unknown version: #{tracker.config.rails[:load_defaults]}"
+        Brakeman.alert "Unknown version: #{tracker.config.rails[:load_defaults]}"
         return
       end
 
@@ -283,6 +283,10 @@ module Brakeman
         set_rails_config(value: true_value, path: [:active_support, :remove_deprecated_time_with_zone_name])
         set_rails_config(value: true_value, path: [:active_support, :use_rfc4122_namespaced_uuids])
       end
+    end
+
+    private def notify_version version
+      Brakeman.debug "Detected Rails #{version} application"
     end
   end
 end

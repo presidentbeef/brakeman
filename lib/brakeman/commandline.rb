@@ -54,10 +54,12 @@ module Brakeman
             f.puts JSON.pretty_generate(vulns)
           end
 
-          Brakeman.notify "Comparison saved in '#{options[:comparison_output_file]}'"
+          Brakeman.announce "Comparison saved in '#{options[:comparison_output_file]}'"
         else
           puts JSON.pretty_generate(vulns)
         end
+
+        Brakeman.cleanup(false)
 
         if options[:exit_on_warn] && vulns[:new].count > 0
           quit Brakeman::Warnings_Found_Exit_Code
@@ -117,6 +119,7 @@ module Brakeman
       # Override this method for different behavior.
       def quit exit_code = 0, message = nil
         warn message if message
+        Brakeman.cleanup
         exit exit_code
       end
 
@@ -185,6 +188,8 @@ module Brakeman
           if options[:debug]
             warn caller
           end
+
+          Brakeman.cleanup
 
           exit!
         end
