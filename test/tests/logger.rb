@@ -10,27 +10,17 @@ class LoggerTests < Minitest::Test
   end
 
   def test_color_options
-    Brakeman::Logger.get_logger({})
-    refute HighLine.use_color?
+    refute Brakeman::Logger.get_logger({}).color?
 
-    Brakeman::Logger.get_logger(output_color: false)
-    refute HighLine.use_color?
+    refute Brakeman::Logger.get_logger(output_color: false).color?
 
     # No color unless TTY
-    HighLine.use_color = true
-    Brakeman::Logger.get_logger({output_color: true}, StringIO.new)
-    refute HighLine.use_color?
+    refute Brakeman::Logger.get_logger({output_color: true}, StringIO.new).color?
+    refute Brakeman::Logger.get_logger({}, StringIO.new).color?
 
-    HighLine.use_color = true
-    Brakeman::Logger.get_logger({}, StringIO.new)
-    refute HighLine.use_color?
+    assert Brakeman::Logger.get_logger({output_color: true}, $stderr).color?
 
-    HighLine.use_color = false
-    Brakeman::Logger.get_logger({output_color: true}, $stderr)
-    assert HighLine.use_color?
-
-    HighLine.use_color = false
-    Brakeman::Logger.get_logger({output_color: :force}, StringIO.new)
-    assert HighLine.use_color?
+    # :force forces color
+    assert Brakeman::Logger.get_logger({output_color: :force}, StringIO.new).color?
   end
 end

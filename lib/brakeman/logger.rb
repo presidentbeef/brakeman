@@ -3,21 +3,21 @@ module Brakeman
     def self.get_logger options, dest = $stderr
       case
       when options[:debug]
-        Debug.new(options)
+        Debug.new(options, dest)
       when options[:quiet]
-        Quiet.new(options)
+        Quiet.new(options, dest)
       when options[:report_progress] == false
-        Plain.new(options)
+        Plain.new(options, dest)
       when dest.tty?
-        Console.new(options)
+        Console.new(options, dest)
       else
-        Plain.new(options)
+        Plain.new(options, dest)
       end
     end
 
     class Base
-      def initialize(options)
-        @dest = $stderr
+      def initialize(options, log_destination = $stderr)
+        @dest = log_destination
         @show_timing = options[:debug] || options[:show_timing]
       end
 
@@ -62,12 +62,16 @@ module Brakeman
       def show_timing? = @show_timing
 
       # Use ANSI codes to color a string
-      def color(*)
+      def color(message, *)
         if @highline
-          @highline.color(*)
+          @highline.color(message, *)
         else
           message
         end
+      end
+
+      def color?
+        @highline and @highline.use_color?
       end
 
       private
@@ -78,13 +82,13 @@ module Brakeman
           @highline = HighLine.new
           @highline.use_color = !!output_color
         else
-          @highline.use_color = false
+          @highline = nil
         end
       end
     end
 
     class Plain < Base
-      def initialize(options)
+      def initialize(options, *)
         super
 
         load_highline(options[:output_color])
@@ -118,7 +122,7 @@ module Brakeman
     end
 
     class Quiet < Base
-      def initialize(options)
+      def initialize(*)
         super
       end
     end
@@ -149,7 +153,7 @@ module Brakeman
     class Console < Base
       attr_reader :prefix
 
-      def initialize(options)
+      def initialize(options, *)
         super
 
         load_highline(options[:output_color])
