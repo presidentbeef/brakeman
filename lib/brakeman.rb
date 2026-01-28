@@ -73,7 +73,6 @@ module Brakeman
   #  * :safe_methods - array of methods to consider safe
   #  * :show_ignored - Display warnings that are usually ignored
   #  * :sql_safe_methods - array of sql sanitization methods to consider safe
-  #  * :skip_libs - do not process lib/ directory (default: false)
   #  * :skip_vendor - do not process vendor/ directory (default: true)
   #  * :skip_checks - checks not to run (run all if not specified)
   #  * :absolute_paths - show absolute path of each file (default: false)
