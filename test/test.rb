@@ -34,7 +34,7 @@ class Minitest::Test
   end
 end
 
-# Brakeman.set_default_logger(report_progress: false)
+Brakeman.set_default_logger({})
 
 #Helper methods for running scans
 module BrakemanTester
