@@ -142,10 +142,6 @@ module Brakeman::Options
           options[:ignore_attr_protected] = true
         end
 
-        opts.on "--[no-]index-libs", "Add libraries to call index (Default)" do |index|
-          options[:index_libs] = index
-        end
-
         opts.on "--interprocedural", "Process method calls to known methods" do
           options[:interprocedural] = true
         end

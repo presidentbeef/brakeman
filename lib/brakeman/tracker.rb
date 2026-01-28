@@ -101,15 +101,9 @@ class Brakeman::Tracker
     @app_path ||= File.expand_path @options[:app_path]
   end
 
-  #Iterate over all methods in controllers and models.
+  #Iterate over all methods
   def each_method
-    classes = [self.controllers, self.models]
-
-    if @options[:index_libs]
-      classes << self.libs
-    end
-
-    classes.each do |set|
+    [self.controllers, self.models, self.libs].each do |set|
       set.each do |set_name, collection|
         collection.each_method do |method_name, definition|
           src = definition.src
@@ -137,13 +131,7 @@ class Brakeman::Tracker
 
 
   def each_class
-    classes = [self.controllers, self.models]
-
-    if @options[:index_libs]
-      classes << self.libs
-    end
-
-    classes.each do |set|
+    [self.controllers, self.models, self.libs].each do |set|
       set.each do |set_name, collection|
         collection.src.each do |file, src|
           yield src, set_name, file

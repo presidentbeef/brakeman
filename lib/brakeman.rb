@@ -54,7 +54,6 @@ module Brakeman
   #  * :highlight_user_input - highlight user input in reported warnings (default: true)
   #  * :html_style - path to CSS file
   #  * :ignore_model_output - consider models safe (default: false)
-  #  * :index_libs - add libraries to call index (default: true)
   #  * :interprocedural - limited interprocedural processing of method calls (default: false)
   #  * :message_limit - limit length of messages
   #  * :min_confidence - minimum confidence (0-2, 0 is highest)
@@ -232,7 +231,6 @@ module Brakeman
       :html_style => "#{File.expand_path(File.dirname(__FILE__))}/brakeman/format/style.css",
       :ignore_model_output => false,
       :ignore_redirect_to_model => true,
-      :index_libs => true,
       :message_limit => 100,
       :min_confidence => 2,
       :output_color => true,
