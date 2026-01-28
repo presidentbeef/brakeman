@@ -50,7 +50,7 @@ If Brakeman is running a bit slow, try
 
     brakeman --faster
 
-This will disable some features, but will probably be much faster (currently it is the same as `--skip-libs --no-branching`). *WARNING*: This may cause Brakeman to miss some vulnerabilities.
+This will disable some features, but will probably be much faster (currently it is the same as `--no-branching`). *WARNING*: This may cause Brakeman to miss some vulnerabilities.
 
 To disable flow sensitivity in `if` expressions:
 
@@ -79,10 +79,6 @@ The inverse but even more dangerous option is to choose specific files or direct
     brakeman --only-files file1,/path2/,path2/
 
 Again, since Brakeman looks at the whole program, it is very likely not going to behave as expected when scanning a subset of files. Also, if certain files are excluded Brakeman may not function at all.
-
-To skip processing of the `lib/` directory:
-
-    brakeman --skip-libs
 
 To run a subset of checks:
 
