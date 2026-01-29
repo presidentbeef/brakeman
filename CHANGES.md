@@ -1,3 +1,7 @@
+# 8.0.1 - 2026-01-29
+
+* Make sure to reset the cursor even when exit code is 0
+
 # 8.0.0 - 2026-01-29
 
 * No longer produce weak dynamic render path warnings
