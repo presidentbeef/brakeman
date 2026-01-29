@@ -176,6 +176,9 @@ module Brakeman
       require 'yaml'
       options = YAML.safe_load_file config, permitted_classes: [Symbol], symbolize_names: true
 
+      # Brakeman.logger is probably not set yet
+      logger = Brakeman::Logger.get_logger(options || line_options)
+
       if options
         options.each { |k, v| options[k] = Set.new v if v.is_a? Array }
 
@@ -186,15 +189,16 @@ module Brakeman
           if options.include? :additional_checks_path
             options.delete :additional_checks_path
 
-            alert 'Ignoring additional check paths in config file. Use --allow-check-paths-in-config to allow' unless (options[:quiet] || quiet)
+            logger.alert 'Ignoring additional check paths in config file. Use --allow-check-paths-in-config to allow' unless (options[:quiet] || quiet)
           end
         end
 
         # notify if options[:quiet] and quiet is nil||false
-        alert "Using configuration in #{config}" unless (options[:quiet] || quiet)
+        # potentially remove these checks now that logger is used
+        logger.alert "Using configuration in #{config}" unless (options[:quiet] || quiet)
         options
       else
-        alert "Empty configuration file: #{config}" unless quiet
+        logger.alert "Empty configuration file: #{config}" unless quiet
         {}
       end
     else
