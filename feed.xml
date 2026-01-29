@@ -1,4 +1,82 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2026-01-28T09:49:56-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 7.1.2 Released</title><link href="https://brakemanscanner.org/blog/2025/12/25/brakeman-7-dot-1-dot-2-released" rel="alternate" type="text/html" title="Brakeman 7.1.2 Released" /><published>2025-12-25T00:00:00-07:00</published><updated>2025-12-25T00:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2025/12/25/brakeman-7-dot-1-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/12/25/brakeman-7-dot-1-dot-2-released">&lt;h2 id=&quot;dependency-updates&quot;&gt;Dependency Updates&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2026-01-29T13:15:58-07:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 8.0.0</title><link href="https://brakemanscanner.org/blog/2026/01/29/brakeman-8-dot-0-dot-0-released" rel="alternate" type="text/html" title="Brakeman 8.0.0" /><published>2026-01-29T00:00:00-07:00</published><updated>2026-01-29T00:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2026/01/29/brakeman-8-dot-0-dot-0-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2026/01/29/brakeman-8-dot-0-dot-0-released">&lt;h2 id=&quot;new-scanner-progress-output&quot;&gt;New Scanner Progress Output&lt;/h2&gt;
+
+&lt;p&gt;How Brakeman outputs scan progress has been completely updated!&lt;/p&gt;
+
+&lt;video src=&quot;/video/brakeman-ui-2026.webm&quot; alt=&quot;Refreshed Brakeman scanner progress output&quot; type=&quot;video/webm&quot; loop=&quot;true&quot; autoplay=&quot;true&quot;&gt;&lt;/video&gt;
+
+&lt;p&gt;Hopefully this feels more modern and less cluttered.&lt;/p&gt;
+
+&lt;p&gt;Don’t like the colors? &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--no-color&lt;/code&gt; will switch Brakeman to black-and-white (or whatever your terminal shows) output.&lt;/p&gt;
+
+&lt;p&gt;Don’t like the animation? &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--no-progress&lt;/code&gt; will switch Brakeman to a simplified output.&lt;/p&gt;
+
+&lt;p&gt;(Note that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--no-progress&lt;/code&gt; has always been recommended if the output is going somewhere that acts like a terminal but
+really isn’t, like CI logs.)&lt;/p&gt;
+
+&lt;p&gt;Other logging has also been improved. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--timing&lt;/code&gt; is now similar to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--no-progress&lt;/code&gt;, but of course with information about elapsed time.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--debug&lt;/code&gt; continues to dump tons of information, but with some improved colors.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;There may be bugs lurking, as this was a large code/behavior change.&lt;/strong&gt; Please report any issues!&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1993&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h2 id=&quot;removed-options&quot;&gt;Removed Options&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--skip-libs&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--index-libs&lt;/code&gt; have been removed as options.&lt;/p&gt;
+
+&lt;p&gt;As noted in &lt;a href=&quot;&quot;&gt;&lt;/a&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--skip-libs&lt;/code&gt; has been completely broken for a while. The original intent was to make it easy to skip the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;lib/&lt;/code&gt; directory, back when it wasn’t as valuable to Brakeman. Now, however, Brakeman ingests (almost) all Ruby files and sorts them out based on content rather than paths.&lt;/p&gt;
+
+&lt;p&gt;To have Brakeman skip specific directories, use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--skip-files&lt;/code&gt; instead.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--index-libs&lt;/code&gt; was introduced mainly for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--no-index-libs&lt;/code&gt;, which I’m sure no one ever used.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1997&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h2 id=&quot;improved-constant-lookups&quot;&gt;Improved Constant Lookups&lt;/h2&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/flavorjones&quot;&gt;Mike Dalessio&lt;/a&gt;, Brakeman now stores and uses more context for constants. This makes it more likely that it will find the right constant when trying to resolve constant values.&lt;/p&gt;
+
+&lt;p&gt;This is huge! Previously, Brakeman would mix up constants with the same name in different contexts and ignore any scoping.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1981&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h2 id=&quot;singleton-method-prefixes&quot;&gt;Singleton Method Prefixes&lt;/h2&gt;
+
+&lt;p&gt;Ever seen Brakeman output like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;s(:self).my_cool_method&lt;/code&gt;? This has been a known problem with methods defined as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;def self.my_cool_method&lt;/code&gt; (or more unusually &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;def MyClass.my_cool_method&lt;/code&gt;) for a long time. But &lt;a href=&quot;https://github.com/viralpraxis&quot;&gt;viralpraxis&lt;/a&gt; fixed it up!&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, this will very likely impact ignored fingerprints if such a method is involved in a warning. But it’s worth it for cleanup (also hey it’s a major version upgrade!)&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1976&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h2 id=&quot;faster-file-collection-for-templates&quot;&gt;Faster File Collection for Templates&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/flavorjones&quot;&gt;Mikael Henriksson&lt;/a&gt; noticed the faster file search in &lt;a href=&quot;http://localhost:4000/blog/2025/11/03/brakeman-7-dot-1-dot-1-released&quot;&gt;Brakeman 7.1.1&lt;/a&gt; didn’t apply to template files.&lt;/p&gt;
+
+&lt;p&gt;He fixed that up so Brakeman should be nice and speedy on MacOS.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1991&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h2 id=&quot;no-more-weak-dynamic-render-path-warnings&quot;&gt;No More Weak Dynamic Render Path Warnings&lt;/h2&gt;
+
+&lt;p&gt;Dynamic render paths (allowing user input to influence which template file is rendered) have been the source of many false positives and
+it has become quite a bit harder to exploit them due to how and where Rails searches for matching templates.&lt;/p&gt;
+
+&lt;p&gt;Most false positives were from low confidence warnings about method calls that might have included user input somewhere in their arguments.&lt;/p&gt;
+
+&lt;p&gt;This release drops any dynamic render path warnings that were low confidence. It’s still best not to allow direct manipulation of which templates are rendered.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1997&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h2 id=&quot;erubis-replaced-with-erubi&quot;&gt;Erubis Replaced with Erubi&lt;/h2&gt;
+
+&lt;p&gt;Rails swapped Erubis for Erubi back in the 5.1 release. Functionally, from Brakeman’s point of view, it does not make a big difference and was not worth the effort to change.&lt;/p&gt;
+
+&lt;p&gt;However, Erubi hasn’t been touched since 2011. Time to catch up with the modern world.&lt;/p&gt;
+
+&lt;p&gt;The main side-effect of swapping to Erubi appears to be more accurate line numbers, which is great! Everything else should be the same.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1990&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;</content><author><name></name></author><summary type="html">New Scanner Progress Output</summary></entry><entry><title type="html">Brakeman 7.1.2 Released</title><link href="https://brakemanscanner.org/blog/2025/12/25/brakeman-7-dot-1-dot-2-released" rel="alternate" type="text/html" title="Brakeman 7.1.2 Released" /><published>2025-12-25T00:00:00-07:00</published><updated>2025-12-25T00:00:00-07:00</updated><id>https://brakemanscanner.org/blog/2025/12/25/brakeman-7-dot-1-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/12/25/brakeman-7-dot-1-dot-2-released">&lt;h2 id=&quot;dependency-updates&quot;&gt;Dependency Updates&lt;/h2&gt;
 
 &lt;p&gt;Chedli Bourguiba updated RubyParser to 3.22 which removes a Ruby version cap so it can be used with Ruby 4.0.&lt;/p&gt;
 
@@ -573,83 +651,4 @@ both true and false positive rates.&lt;/p&gt;
 
 &lt;p&gt;Unfortunately, timing of this Brakeman release means Brakeman is already warning about Rails 6.1 end-of-support (ended October 1st).&lt;/p&gt;
 
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1843&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;</content><author><name></name></author><summary type="html">Small release!</summary></entry><entry><title type="html">Brakeman 6.2.1 Released</title><link href="https://brakemanscanner.org/blog/2024/08/22/brakeman-6-dot-2-released" rel="alternate" type="text/html" title="Brakeman 6.2.1 Released" /><published>2024-08-22T10:30:00-06:00</published><updated>2024-08-22T10:30:00-06:00</updated><id>https://brakemanscanner.org/blog/2024/08/22/brakeman-6-dot-2-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2024/08/22/brakeman-6-dot-2-released">&lt;p&gt;Lots of great contributions in this release, thanks!&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;What happened to 6.2.0? Packaging issue! No other changes.&lt;/em&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;optional-support-for-prism-parser&quot;&gt;Optional Support for Prism Parser&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://ruby.github.io/prism/&quot;&gt;Prism&lt;/a&gt; is a new Ruby parsing library which is intended to bring together all the various Ruby parsing libraries together.&lt;/p&gt;
-
-&lt;p&gt;This release adds optional support for the Prism parser.&lt;/p&gt;
-
-&lt;p&gt;To enable use of Prism, install it directly or add it to your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Gemfile&lt;/code&gt;. Then enable it with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--prism&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1858&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;parallel-assignment-with-splats&quot;&gt;Parallel Assignment with Splats&lt;/h2&gt;
-
-&lt;p&gt;Support splats in parallel assignments like&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1843&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;unscoped-finds-with-find_by&quot;&gt;Unscoped Finds with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;find_by!&lt;/code&gt;&lt;/h2&gt;
-
-&lt;p&gt;Warn about insecure direct object references in code using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;find_by!&lt;/code&gt;:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;find_by!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;id: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1859&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;initial-rails-8-support&quot;&gt;Initial Rails 8 Support&lt;/h2&gt;
-
-&lt;p&gt;While there is no specific behavior added yet for Rails 8, Brakeman will detect it properly and the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-8&lt;/code&gt;/&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--rails8&lt;/code&gt; options have been added.&lt;/p&gt;
-
-&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/ron-shinall&quot;&gt;Ron Shinall&lt;/a&gt; for proactively adding this functionality.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1846&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;support-for-symbolic-links&quot;&gt;Support for Symbolic Links&lt;/h2&gt;
-
-&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/lubert&quot;&gt;Lu Zhu&lt;/a&gt;, Brakeman will now follow symbolic links for directories - in particular links to files outside of the root directory of the Rails application.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1828&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;yaml-aliases-in-secrets-config&quot;&gt;YAML Aliases in Secrets Config&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/chaadow&quot;&gt;Chedli Bourguiba&lt;/a&gt; enabled support for use of aliases in secrets configuration files.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1847&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;option-to-show-ignored-warnings-in-text-report&quot;&gt;Option to Show Ignored Warnings in Text Report&lt;/h2&gt;
-
-&lt;p&gt;In response to &lt;a href=&quot;https://github.com/presidentbeef/brakeman/issues/1767&quot;&gt;this request&lt;/a&gt;, &lt;a href=&quot;https://github.com/gazayas&quot;&gt;Gabriel Arcangel Zayas&lt;/a&gt; added the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--show-ignored&lt;/code&gt; option to
-list ignored warnings in the default text report.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/ignored_warnings_example.png&quot; alt=&quot;Ignored warnings in text report&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1861&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;top-level-constants&quot;&gt;Top-Level Constants&lt;/h2&gt;
-
-&lt;p&gt;While it may be semantically incorrect, Brakeman will now treat &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;::Foo&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Foo&lt;/code&gt; the same. This helps when matching against known constants like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ViewComponent::Base&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;::ViewComponent::Base&lt;/code&gt;. Thanks to &lt;a href=&quot;https://github.com/that-jill&quot;&gt;Jill Klang&lt;/a&gt; for addressing this one.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1838&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;remediation-advice-for-command-injection&quot;&gt;Remediation Advice for Command Injection&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/rangerscience&quot;&gt;Nicholas Barone&lt;/a&gt; added a note about using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;shellescape&lt;/code&gt; to make shell commands safer.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1852&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;frozen-string-support&quot;&gt;Frozen String Support&lt;/h2&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/casperisfine&quot;&gt;Jean Boussier&lt;/a&gt;) has made Brakeman compatible with use of Ruby’s frozen string literals (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--enable-frozen-string-literal&lt;/code&gt;), avoiding any future issues if/when frozen strings are the default.&lt;/p&gt;
-
-&lt;p&gt;Along the way, they also fixed up some Ruby warnings in the test suite.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1855&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;</content><author><name></name></author><summary type="html">Lots of great contributions in this release, thanks!</summary></entry></feed>
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1843&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;</content><author><name></name></author><summary type="html">Small release!</summary></entry></feed>
