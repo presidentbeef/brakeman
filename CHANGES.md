@@ -1,3 +1,14 @@
+# 8.0.0 - ?
+
+* No longer produce weak dynamic render path warnings
+* `--skip-libs` removed
+* `--index-libs` removed
+* Revamp of scan progress output and logging
+* Faster file globbing for templates (Mikael Henriksson)
+* Fix singleton method prefixes (viralpraxis)
+* Fix qualified constant lookup to respect module/class context (Mike Dalessio)
+* Replace Erubis with Erubi
+
 # 7.1.2 - 2025-12-25
 
 * Update `ruby_parser` to remove version restriction (Chedli Bourguiba)
