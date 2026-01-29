@@ -92,6 +92,8 @@ module Brakeman
       options[:report_progress] = false
     end
 
+    @logger = options[:logger] || set_default_logger(options)
+
     if options[:use_prism]
       begin
         require 'prism'
@@ -100,8 +102,7 @@ module Brakeman
       end
     end
 
-    @logger = options[:logger] || set_default_logger(options)
-    logger.announce "Brakeman v#{Brakeman::Version}"
+    Brakeman.announce "Brakeman v#{Brakeman::Version}"
 
     scan options
   end
