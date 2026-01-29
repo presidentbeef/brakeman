@@ -2,7 +2,7 @@ require 'brakeman/checks/base_check'
 
 #Check calls to +render()+ for dangerous values
 class Brakeman::CheckRender < Brakeman::BaseCheck
-  Brakeman::Checks.add_optional self
+  Brakeman::Checks.add self
 
   @description = "Finds calls to render that might allow file access or code execution"
 
