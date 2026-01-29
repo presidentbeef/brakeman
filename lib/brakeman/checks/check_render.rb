@@ -17,8 +17,7 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
 
     case result[:call].render_type
     when :partial, :template, :action, :file
-      check_for_rce(result) or
-        check_for_dynamic_path(result)
+      check_for_dynamic_path(result)
     when :inline
     when :js
     when :json
@@ -59,29 +58,6 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
         :user_input => input,
         :confidence => confidence,
         :cwe_id => [22]
-    end
-  end
-
-  def check_for_rce result
-    return unless version_between? "0.0.0", "3.2.22" or
-                  version_between? "4.0.0", "4.1.14" or
-                  version_between? "4.2.0", "4.2.5"
-
-
-    view = result[:call][2]
-    if sexp? view and not duplicate? result
-      if params? view
-        add_result result
-        return if safe_param? view
-
-        warn :result => result,
-          :warning_type => "Remote Code Execution",
-          :warning_code => :dynamic_render_path_rce,
-          :message => msg("Passing query parameters to ", msg_code("render"), " is vulnerable in ", msg_version(rails_version), " ", msg_cve("CVE-2016-0752")),
-          :user_input => view,
-          :confidence => :high,
-          :cwe_id => [22]
-      end
     end
   end
 
