@@ -2,7 +2,7 @@ require 'brakeman/checks/base_check'
 
 #Check calls to +render()+ for dangerous values
 class Brakeman::CheckRender < Brakeman::BaseCheck
-  Brakeman::Checks.add self
+  Brakeman::Checks.add_optional self
 
   @description = "Finds calls to render that might allow file access or code execution"
 
@@ -40,8 +40,6 @@ class Brakeman::CheckRender < Brakeman::BaseCheck
         else
           confidence = :high
         end
-      elsif input = include_user_input?(view)
-        confidence = :weak
       else
         return
       end

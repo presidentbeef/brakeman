@@ -1,6 +1,6 @@
-require 'brakeman/checks/base_check'
+require 'brakeman/checks/check_render'
 
-class Brakeman::CheckRenderRCE < Brakeman::BaseCheck
+class Brakeman::CheckRenderRCE < Brakeman::CheckRender
   Brakeman::Checks.add self
 
   @description = "Finds calls to render that might be vulnerable to CVE-2016-0752"
@@ -27,7 +27,7 @@ class Brakeman::CheckRenderRCE < Brakeman::BaseCheck
 
     view = result[:call][2]
     if sexp? view and not duplicate? result
-      if params? view
+      if params? view and not safe_param? view
         add_result result
 
         warn :result => result,

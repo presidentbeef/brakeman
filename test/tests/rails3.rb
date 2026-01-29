@@ -6,7 +6,8 @@ class Rails3Tests < Minitest::Test
 
   def report
     @@report ||= BrakemanTester.run_scan "rails3", "Rails 3", :rails3 => true,
-      :config_file => File.join(TEST_PATH, "apps", "rails3", "config", "brakeman.yml")
+      :config_file => File.join(TEST_PATH, "apps", "rails3", "config", "brakeman.yml"),
+      :enable_checks => ['CheckRender']
   end
 
   def expected

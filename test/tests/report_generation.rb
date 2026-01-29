@@ -121,7 +121,7 @@ class TestReportGeneration < Minitest::Test
     refute_includes report, "File:"
     refute_includes report, "Link:"
     refute_includes report, "Message:"
-    refute_includes report, "Render Path:"
+    refute_match /^Render Path:/, report
   ensure
     @@tracker.options.delete(:text_fields)
   end

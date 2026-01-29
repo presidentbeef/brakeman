@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 38
+      :generic => 37
     }
   end
 
@@ -684,7 +684,8 @@ class Rails6Tests < Minitest::Test
   end
 
   def test_dynamic_render_path_view_component_with_content
-    assert_warning :type => :warning,
+    # No more low confidence render path warnings
+    assert_no_warning :type => :warning,
       :warning_code => 15,
       :warning_type => "Dynamic Render Path",
       :relative_path => "app/controllers/groups_controller.rb",

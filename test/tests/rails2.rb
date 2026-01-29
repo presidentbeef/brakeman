@@ -14,7 +14,7 @@ class Rails2Tests < Minitest::Test
       :controller => 1,
       :model => 4,
       :template => 47,
-      :generic => 60 }
+      :generic => 61 }
   end
 
   def report
@@ -146,6 +146,34 @@ class Rails2Tests < Minitest::Test
       :relative_path => "app/controllers/home_controller.rb",
       :code => s(:render, :action, s(:call, s(:params), :[], s(:lit, :my_action)), s(:hash)),
       :user_input => s(:call, s(:params), :[], s(:lit, :my_action))
+  end
+
+    def test_dynamic_render_path_2
+    assert_warning check_name: "Render",
+      type: :warning,
+      warning_code: 15,
+      fingerprint: "9f381f7bb425b10b410d86c9be069504ca8825022823c15e0a628308fde9d604",
+      warning_type: "Dynamic Render Path",
+      line: 77,
+      message: /^Render\ path\ contains\ parameter\ value/,
+      confidence: 0,
+      relative_path: "app/controllers/home_controller.rb",
+      code: s(:render, :action, s(:call, s(:params), :[], s(:lit, :my_action)), s(:hash)),
+      user_input: s(:call, s(:params), :[], s(:lit, :my_action))
+  end
+
+  def test_dynamic_render_path_3
+    assert_warning check_name: "Render",
+      type: :template,
+      warning_code: 15,
+      fingerprint: "6b78bac3c96c2ebb1dc7d05d02d61f27e95207e566e6e83df5fefd8899afa760",
+      warning_type: "Dynamic Render Path",
+      line: 8,
+      message: /^Render\ path\ contains\ parameter\ value/,
+      confidence: 1,
+      relative_path: "app/views/home/test_render.html.erb",
+      code: s(:render, :file, s(:dstr, "/tmp/", s(:evstr, s(:call, s(:call, nil, :params), :[], s(:lit, :file)))), s(:hash)),
+      user_input: s(:call, s(:call, nil, :params), :[], s(:lit, :file))
   end
 
   def test_file_access
@@ -1518,7 +1546,7 @@ class Rails2WithOptionsTests < Minitest::Test
       :controller => 1,
       :model => 4,
       :template => 47,
-      :generic => 60 }
+      :generic => 61 }
   end
 
   def report
