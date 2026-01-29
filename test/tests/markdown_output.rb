@@ -10,6 +10,6 @@ class TestMarkdownOutput < Minitest::Test
   end
 
   def test_reported_warnings
-    assert_equal 175, @@report.lines.to_a.count, "Did you add vulnerabilities to the Rails 2 app? Update this test please!"
+    assert_equal 176, @@report.lines.to_a.count, "Did you add vulnerabilities to the Rails 2 app? Update this test please!"
   end
 end

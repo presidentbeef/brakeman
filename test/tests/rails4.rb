@@ -21,7 +21,7 @@ class Rails4Tests < Minitest::Test
       :controller => 0,
       :model => 3,
       :template => 8,
-      :generic => 90
+      :generic => 92
     }
   end
 
@@ -427,13 +427,41 @@ class Rails4Tests < Minitest::Test
       :user_input => s(:call, s(:params), :[], s(:lit, :page))
   end
 
+  def test_dynamic_render_path_1
+    assert_warning check_name: "Render",
+      type: :warning,
+      warning_code: 15,
+      fingerprint: "5b2267a68b4bfada283b59bdb9f453489111a5f2c335737588f88135d99426fa",
+      warning_type: "Dynamic Render Path",
+      line: 14,
+      message: /^Render\ path\ contains\ parameter\ value/,
+      confidence: 0,
+      relative_path: "app/controllers/users_controller.rb",
+      code: s(:render, :action, s(:call, s(:params), :[], s(:lit, :page)), s(:hash)),
+      user_input: s(:call, s(:params), :[], s(:lit, :page))
+  end
+
+  def test_dynamic_render_path_2
+    assert_warning check_name: "Render",
+      type: :warning,
+      warning_code: 15,
+      fingerprint: "fa1ad77b62059d1aeeb48217a94cc03a0109b1f17d8332c0e3a5718360de9a8c",
+      warning_type: "Dynamic Render Path",
+      line: 19,
+      message: /^Render\ path\ contains\ parameter\ value/,
+      confidence: 0,
+      relative_path: "app/controllers/users_controller.rb",
+      code: s(:render, :action, s(:call, s(:params), :[], s(:lit, :page)), s(:hash)),
+      user_input: s(:call, s(:params), :[], s(:lit, :page))
+  end
+
   def test_dynamic_render_safeish_values
     assert_no_warning :type => :warning,
       :warning_code => 99,
       :fingerprint => "fe066eddb631b6ab1ab2baaad37e1f0a6aa6ae2c5611cb3b6bfcea1f279fe96b",
       :warning_type => "Remote Code Execution",
       :line => 60,
-      :message => /^Passing\ query\ parameters\ to\ render\(\)\ is\ /,
+      :message => /^Passing\ query\ parameters\ to/,
       :confidence => 0,
       :relative_path => "app/controllers/another_controller.rb",
       :code => s(:render, :action, s(:call, s(:params), :[], s(:lit, :action)), s(:hash)),
@@ -444,7 +472,7 @@ class Rails4Tests < Minitest::Test
       :fingerprint => "7205e53a21cb8e2b33ae76f3c25a1b9e60b61169d19fe423e4b936d92966450b",
       :warning_type => "Remote Code Execution",
       :line => 61,
-      :message => /^Passing\ query\ parameters\ to\ render\(\)\ is\ /,
+      :message => /^Passing\ query\ parameters\ to/,
       :confidence => 0,
       :relative_path => "app/controllers/another_controller.rb",
       :code => s(:render, :action, s(:call, s(:params), :[], s(:lit, :controller)), s(:hash)),
