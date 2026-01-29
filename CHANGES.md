@@ -1,4 +1,4 @@
-# 8.0.0 - ?
+# 8.0.0 - 2026-01-29
 
 * No longer produce weak dynamic render path warnings
 * `--skip-libs` removed
