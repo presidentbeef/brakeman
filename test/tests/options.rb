@@ -18,7 +18,6 @@ class BrakemanOptionsTest < Minitest::Test
     :ignore_attr_protected  => "--ignore-protected",
     :interprocedural        => "--interprocedural",
     :ignore_ifs             => "--no-branching",
-    :skip_libs              => "--skip-libs",
     :debug                  => "-d",
     :interactive_ignore     => "-I",
     :report_routes          => "-m",
@@ -87,15 +86,7 @@ class BrakemanOptionsTest < Minitest::Test
 
   def test_faster_options
     options = setup_options_from_input("--faster")
-    assert options[:ignore_ifs] && options[:skip_libs]
-  end
-
-  def test_index_libs_option
-    options = setup_options_from_input("--index-libs")
-    assert options[:index_libs]
-
-    options = setup_options_from_input("--no-index-libs")
-    assert !options[:index_libs]
+    assert options[:ignore_ifs]
   end
 
   def test_skip_vendor_option

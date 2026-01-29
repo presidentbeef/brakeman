@@ -284,14 +284,10 @@ class Brakeman::Scanner
     @processor.process_initializer(init.path, init.ast)
   end
 
-  #Process all .rb in lib/
-  #
-  #Adds parsed information to tracker.libs.
+  # Adds parsed information to tracker.libs.
+  # This is a catch-all for any Ruby files that weren't determined
+  # to be a specific type of file (like a controller).
   def process_libs
-    if options[:skip_libs]
-      return
-    end
-
     libs = file_cache.libs.sort_by { |path, _| path }
 
     track_progress libs do |path, lib|

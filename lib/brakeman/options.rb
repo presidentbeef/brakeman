@@ -131,7 +131,6 @@ module Brakeman::Options
 
         opts.on "--faster", "Faster, but less accurate scan" do
           options[:ignore_ifs] = true
-          options[:skip_libs] = true
           options[:disable_constant_tracking] = true
         end
 
@@ -141,10 +140,6 @@ module Brakeman::Options
 
         opts.on "--ignore-protected", "Consider models with attr_protected safe" do
           options[:ignore_attr_protected] = true
-        end
-
-        opts.on "--[no-]index-libs", "Add libraries to call index (Default)" do |index|
-          options[:index_libs] = index
         end
 
         opts.on "--interprocedural", "Process method calls to known methods" do
@@ -210,10 +205,6 @@ module Brakeman::Options
 
         opts.on "--[no-]skip-vendor", "Skip processing vendor directory (Default)" do |skip|
           options[:skip_vendor] = skip
-        end
-
-        opts.on "--skip-libs", "Skip processing lib directory" do
-          options[:skip_libs] = true
         end
 
         opts.on "--add-libs-path path1,path2,etc", Array, "An application relative lib directory (ex. app/mailers) to process" do |paths|
