@@ -23,6 +23,7 @@ module Brakeman
       spec.add_dependency "haml", "< 7.0"
       spec.add_dependency "slim", ">=1.3.6", "< 5.3"
       spec.add_dependency "rexml", "~>3.0"
+      spec.add_dependency "reline", "~>0.6"
       spec.add_dependency "prism", "~>1.0"
     end
   end
