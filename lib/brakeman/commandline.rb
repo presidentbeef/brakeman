@@ -33,6 +33,8 @@ module Brakeman
         set_options options, default_app_path
         check_latest if options[:ensure_latest]
         run_report options
+
+        quit
       end
 
       # Check for the latest version.
