@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Brakeman: Brakeman 2.2.0 Released</title>
+    <title>Brakeman: Brakeman 8.0.1</title>
     <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
     <meta charset="UTF-8">
@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/stylesheets/screen.css">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-    <meta name="og:title" content="Brakeman - Brakeman 2.2.0 Released" />
+    <meta name="og:title" content="Brakeman - Brakeman 8.0.1" />
     <meta name="og:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
     <meta name="og:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 </head>
@@ -86,46 +86,21 @@
                 <article class="article-main fade-in">
                     <div class="article-header">
                         <div class="article-meta">
-                            <span class="date-badge">October 28, 2013</span>
+                            <span class="date-badge">January 29, 2026</span>
                         </div>
-                        <h1 class="article-title">Brakeman 2.2.0 Released</h1>
+                        <h1 class="article-title">Brakeman 8.0.1</h1>
+                        
+                            <p class="article-subtitle">Fix for disappearing cursor</p>
                         
                     </div>
 
                     <div class="article-content">
                         
                             <div class="changelog-intro">
-                                <h3>Changes since 2.2.0:</h3>
+                                <h3>Changes since 8.0.0:</h3>
                                 <ul>
                                     
-                                        <li><ul>
-  <li>Support scanning Rails engines (<a href="https://github.com/phene">Geoffrey Hichborn</a>)</li>
-</ul>
-</li>
-                                    
-                                        <li><ul>
-  <li>Ignore redirects to models using <code class="language-plaintext highlighter-rouge">friendly_id</code> (<a href="https://github.com/aj0strow">AJ Ostrow</a>)</li>
-</ul>
-</li>
-                                    
-                                        <li><ul>
-  <li>Add check for detailed exceptions in production (<a href="https://github.com/presidentbeef/brakeman/issues/391">#391</a>)</li>
-</ul>
-</li>
-                                    
-                                        <li><ul>
-  <li>Use Rails version from Gemfile if it is available (<a href="https://github.com/presidentbeef/brakeman/issues/398">#398</a>)</li>
-</ul>
-</li>
-                                    
-                                        <li><ul>
-  <li>Only add routes with actual names (<a href="https://github.com/presidentbeef/brakeman/issues/395">#395</a>)</li>
-</ul>
-</li>
-                                    
-                                        <li><ul>
-  <li>Reduce command injection false positives</li>
-</ul>
+                                        <li>Fix for disappearing cursor when no warnings are reported
 </li>
                                     
                                 </ul>
@@ -134,55 +109,31 @@
 
 
 			<div class="feature-section">
-			    <p>This is a small release, with some bug and false positive fixes alongside initial support for Rails engines and a new check for detailed exceptions.</p>
-
-<h2 id="rails-engines">Rails Engines</h2>
-
-<p><a href="https://github.com/phene">Geoffrey Hichborn</a> added support for checking Rails engines paths when searching for controllers, models, and views. Please let us know if there are any issues or files missed with this change.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/397">changes</a>)</p>
-
-<h2 id="redirects-with-friendly-id">Redirects with Friendly ID</h2>
-
-<p>Thanks to <a href="https://github.com/aj0strow">AJ Ostrow</a>, Brakeman should no longer warn on redirects to models using <code class="language-plaintext highlighter-rouge">friendly_id</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/400">changes</a>)</p>
-
-<h2 id="detailed-exceptions">Detailed Exceptions</h2>
-
-<p><a href="https://github.com/ntalbott">Nathaniel Talbott</a> suggested checking that detailed exceptions (treating requests as local) are not enabled in production.</p>
-
-<p>Brakeman now generates a warning in a new category called “<a href="http://brakemanscanner.org/docs/warning_types/information_disclosure/">Information Disclosure</a>” if <code class="language-plaintext highlighter-rouge">config.consider_all_requests_local</code> is set to <code class="language-plaintext highlighter-rouge">true</code> in production or a controller overrides <code class="language-plaintext highlighter-rouge">show_detailed_exceptions?</code> to return something other than <code class="language-plaintext highlighter-rouge">false</code>.</p>
-
-<p>Please see the <a href="https://github.com/presidentbeef/brakeman/pull/396">changes</a> regarding the new category and two new warning codes associated with these warnings.</p>
-
-<h2 id="better-version-detection">Better Version Detection</h2>
-
-<p>Brakeman now uses the Rails version found in <code class="language-plaintext highlighter-rouge">Gemfile</code> or <code class="language-plaintext highlighter-rouge">Gemfile.lock</code> to determine when to enable Rails 3/4 mode, which seems obvious in retrospect. This required swapping when the <code class="language-plaintext highlighter-rouge">Gemfile</code> and the configuration files are processed.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/402">changes</a>)</p>
-
-<h2 id="rails-3-routes">Rails 3 Routes</h2>
-
-<p>A small fix prevents Brakeman from raising an error when a route is a redirect or any value other than a string or symbol.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/403">changes</a>)</p>
-
-<h2 id="command-injection-false-positives">Command Injection False Positives</h2>
-
-<p>There should be fewer false positives for command injection when interpolated values are literals. The check also now ignores commonly used values <code class="language-plaintext highlighter-rouge">RAILS_ROOT</code>, <code class="language-plaintext highlighter-rouge">Rails.env</code>, and <code class="language-plaintext highlighter-rouge">Rails.root</code>.</p>
-
-<p>Additionally, reported “dangerous” values (<code class="language-plaintext highlighter-rouge">user_input</code> in JSON reports) for command injection are more specific. For example:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system "rm -rf #{some_var}"
-</code></pre></div></div>
-
-<p>used to report the entire string <code class="language-plaintext highlighter-rouge">"rm -rf #{some_var}"</code> as dangerous, even though it’s really warning about the interpolation of <code class="language-plaintext highlighter-rouge">some_var</code>. Now Brakeman will report the first potentially dangerous interpolated value. Note that this does not change fingerprints for existing warnings.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/404">changes</a>)</p>
+			    <p>(<a href="https://github.com/presidentbeef/brakeman/pull/1990">Changes</a>)</p>
 
 			</div>
 
+                        
+                            <div class="checksums-section">
+                                <h3>Checksums</h3>
+                                <p>The SHA256 sums for this release are:</p>
+                                
+                                    <div class="checksum-line">
+                                        <span class="hash">c68ce0ac35a6295027c4eab8b4ac597d2a0bfc82f0d62dcd334bbf944d352f70</span> 
+                                        <span class="filename">brakeman-8.0.1.gem</span>
+                                    </div>
+                                
+                                    <div class="checksum-line">
+                                        <span class="hash">0ff8504f02f69d99b8b168c20ce6164978870ef169b40b4850c6e15bdffbfe8e</span> 
+                                        <span class="filename">brakeman-lib-8.0.1.gem</span>
+                                    </div>
+                                
+                                    <div class="checksum-line">
+                                        <span class="hash">ea99c6ae0cbc3caa21f970e7a601dc578056b5f5e636a759b1d49872b5c50106</span> 
+                                        <span class="filename">brakeman-min-8.0.1.gem</span>
+                                    </div>
+                                
+                            </div>
                         
 
                         <div class="reporting-section">
