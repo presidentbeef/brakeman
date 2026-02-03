@@ -57,7 +57,7 @@ module Brakeman
       def spin; end
 
       # Called on exit
-      def cleanup(newline); end
+      def cleanup(newline = true); end
 
       def show_timing? = @show_timing
 
