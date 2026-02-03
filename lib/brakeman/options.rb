@@ -1,5 +1,6 @@
 require 'optparse'
 require 'set'
+require 'brakeman/safe_method_handler'
 
 #Parses command line arguments for Brakeman
 module Brakeman::Options
@@ -180,7 +181,7 @@ module Brakeman::Options
 
         opts.on "-s", "--safe-methods meth1,meth2,etc", Array, "Set methods as safe for unescaped output in views" do |methods|
           options[:safe_methods] ||= Set.new
-          options[:safe_methods].merge methods.map {|e| e.to_sym }
+          options[:safe_methods].merge methods.map {|e| SafeMethodHandler.normalize_method(e) }
         end
 
         opts.on "--sql-safe-methods meth1,meth2,etc", Array, "Do not warn of SQL if the input is wrapped in a safe method" do |methods|
