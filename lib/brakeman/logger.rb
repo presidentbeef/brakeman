@@ -163,6 +163,7 @@ module Brakeman
         @prefix = ''
         @post_fix_pos = 0
         @reline = Reline::ANSI.new
+        @reline.output = @dest
         @report_progress = options[:report_progress]
         @spinner = ["⣀", "⣄", "⣤", "⣦", "⣶", "⣷", "⣿"]
         @percenter = ["⣀", "⣤", "⣶", "⣿"]
