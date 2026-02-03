@@ -4,7 +4,7 @@ orbs:
 jobs:
   default: &default
     docker:
-      - image: cimg/ruby:3.3
+      - image: cimg/ruby:4.0
     steps:
       - checkout
       - run: ruby --version && bundle check || bundle install
@@ -35,6 +35,10 @@ jobs:
           root: tmp
           paths:
             - coverage.json
+  test-3-3:
+    <<: *default
+    docker:
+      - image: cimg/ruby:3.3
   test-3-4:
     <<: *default
     docker:
@@ -55,6 +59,7 @@ workflows:
     jobs:
       - default
       - test-3-2
+      - test-3-3
       - test-3-4
       - upload-coverage:
           requires:
