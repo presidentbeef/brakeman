@@ -1,3 +1,8 @@
+# 8.0.2 - 2026-02-03
+
+* Reline console control should use stderr
+* Fix logger cleanup based method (Imran Iqbal)
+
 # 8.0.1 - 2026-01-29
 
 * Make sure to reset the cursor even when exit code is 0
