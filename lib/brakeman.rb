@@ -225,7 +225,9 @@ module Brakeman
 
   #Default set of options
   def self.default_options
-    { :assume_all_routes => true,
+    {
+      :additional_config_paths => Set.new,
+      :assume_all_routes => true,
       :check_arguments => true,
       :collapse_mass_assignment => false,
       :combine_locations => true,
