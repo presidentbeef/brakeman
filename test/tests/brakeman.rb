@@ -398,13 +398,47 @@ class ConfigTests < Minitest::Test
     end
   end
 
-  def test_ensure_latest
-    Gem.stub :latest_version_for, Brakeman::Version do
-      refute Brakeman.ensure_latest
+  def test_ensure_latest_is_current
+    test_spec = Gem::Specification.new do |s|
+      s.version = Brakeman::Version
     end
 
-    Gem.stub :latest_version_for, '0.1.2' do
-      assert_equal "Brakeman #{Brakeman::Version} is not the latest version 0.1.2", Brakeman.ensure_latest
+    Gem.stub :latest_spec_for, test_spec do
+      refute Brakeman.ensure_latest
+    end
+  end
+
+  def test_ensure_latest_is_newer
+    test_spec = Gem::Specification.new do |s|
+      s.version = '99.99.99'
+    end
+
+    Gem.stub :latest_spec_for, test_spec do
+      assert_equal "Brakeman #{Brakeman::Version} is not the latest version #{test_spec.version.to_s}", Brakeman.ensure_latest
+    end
+  end
+
+  def test_ensure_latest_too_new
+    test_spec = Gem::Specification.new do |s|
+      s.version = Brakeman::Version
+      s.date = Date.today
+    end
+
+    Gem.stub :latest_spec_for, test_spec do
+      # Latest release must be 10 days old
+      refute Brakeman.ensure_latest(days_old: 10)
+    end
+  end
+
+  def test_ensure_latest_old_enough
+    test_spec = Gem::Specification.new do |s|
+      s.version = Brakeman::Version
+      s.date = Time.parse((Date.today - 3).to_s)
+    end
+
+    Gem.stub :latest_spec_for, test_spec do
+      # Latest release must be 2 days old
+      refute Brakeman.ensure_latest(days_old: 2)
     end
   end
 
