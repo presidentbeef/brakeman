@@ -84,6 +84,14 @@ class BrakemanOptionsTest < Minitest::Test
     assert !options[:exit_on_warn]
   end
 
+  def test_ensure_latest
+    options = setup_options_from_input("--ensure-latest")
+    assert options[:ensure_latest]
+
+    options = setup_options_from_input("--ensure-latest", "10")
+    assert_equal 10, options[:ensure_latest]
+  end
+
   def test_faster_options
     options = setup_options_from_input("--faster")
     assert options[:ignore_ifs]

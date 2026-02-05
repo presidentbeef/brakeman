@@ -416,11 +416,25 @@ module Brakeman
     end
   end
 
-  def self.ensure_latest
+  # Returns quit message unless the latest version
+  # of Brakeman matches the current version.
+  #
+  # Optionally checks that the latest version is at least
+  # the specified number of days old.
+  def self.ensure_latest(days_old: 0)
     current = Brakeman::Version
-    latest = Gem.latest_version_for('brakeman').to_s
-    if current != latest
-      "Brakeman #{current} is not the latest version #{latest}"
+    latest = Gem.latest_spec_for('brakeman')
+    release_date = latest.date.to_date
+    latest_version = latest.version.to_s
+
+    if (Date.today - latest.date.to_date) >= days_old
+      if current != latest_version
+        return "Brakeman #{current} is not the latest version #{latest_version}"
+      else
+        false
+      end
+    else
+      false
     end
   end
 

@@ -31,7 +31,7 @@ module Brakeman
         set_interrupt_handler options
         early_exit_options options
         set_options options, default_app_path
-        check_latest if options[:ensure_latest]
+        check_latest(options[:ensure_latest]) if options[:ensure_latest]
         run_report options
 
         quit
@@ -39,9 +39,14 @@ module Brakeman
 
       # Check for the latest version.
       #
-      # If the latest version is newer, quit with a message.
-      def check_latest
-        if error = Brakeman.ensure_latest
+      # If the latest version is newer than the current version
+      # and age, exit.
+      def check_latest(days_old = 0)
+        if days_old == true
+          days_old = 0
+        end
+
+        if error = Brakeman.ensure_latest(days_old:)
           quit Brakeman::Not_Latest_Version_Exit_Code, error
         end
       end
