@@ -66,7 +66,7 @@ class Brakeman::TemplateAliasProcessor < Brakeman::AliasProcessor
   end
 
   #Determine template name
-  def template_name name
+  def template_name name = nil
     if !name.to_s.include?('/') && @template.name.to_s.include?('/')
       name = "#{@template.name.to_s.match(/^(.*\/).*$/)[1]}#{name}"
     end
