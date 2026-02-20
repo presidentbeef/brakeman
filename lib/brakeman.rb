@@ -57,6 +57,7 @@ module Brakeman
   #  * :interprocedural - limited interprocedural processing of method calls (default: false)
   #  * :message_limit - limit length of messages
   #  * :min_confidence - minimum confidence (0-2, 0 is highest)
+  #  * :model_paths - array of paths for files to be considered as models (default: app/models/**/*)
   #  * :output_files - files for output
   #  * :output_formats - formats for output (:to_s, :to_tabs, :to_csv, :to_html)
   #  * :parallel_checks - run checks in parallel (default: true)
@@ -238,6 +239,7 @@ module Brakeman
       :ignore_redirect_to_model => true,
       :message_limit => 100,
       :min_confidence => 2,
+      :model_paths => Set['app/models/**/*'],
       :output_color => true,
       :pager => true,
       :parallel_checks => true,
