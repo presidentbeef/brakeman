@@ -17,6 +17,7 @@ require 'brakeman/processors/lib/basic_processor'
 #Values for tracker.config.rails will still be Sexps.
 class Brakeman::Rails3ConfigProcessor < Brakeman::BasicProcessor
   RAILS_CONFIG = Sexp.new(:call, nil, :config)
+  RAILS_APPLICATION = Sexp.new(:colon2, s(:const, :Rails), :Application)
 
   def initialize *args
     super
@@ -48,13 +49,21 @@ class Brakeman::Rails3ConfigProcessor < Brakeman::BasicProcessor
 
   #Look for class Application < Rails::Application
   def process_class exp
-    if exp.class_name == :Application
+    if application_class? exp
       @inside_config = true
       process_all exp.body if sexp? exp.body
       @inside_config = false
     end
 
     exp
+  end
+
+  def application_class? exp
+    return unless node_type? exp, :class
+
+    exp.class_name == :Application or
+    (node_type? exp.class_name, :colon2 and exp.class_name.rhs == :Application) or
+    (exp.parent_name == RAILS_APPLICATION)
   end
 
   #Look for configuration settings that
