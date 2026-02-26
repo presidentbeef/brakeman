@@ -19,7 +19,9 @@ module Brakeman::RenderHelper
       end
     when :default
       begin
-        process_template template_name, exp[3], nil, exp.line
+        # exp[2] is either the action name (from controller) or :default when no explicit arg
+        name_arg = (exp[2].nil? || exp[2] == :default) ? nil : exp[2]
+        process_template template_name(name_arg), exp[3], nil, exp.line
       rescue ArgumentError
         Brakeman.debug "Problem processing render: #{exp}"
       end
