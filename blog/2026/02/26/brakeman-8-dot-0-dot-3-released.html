@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Brakeman: Brakeman 4.2.0 Released</title>
+    <title>Brakeman: Brakeman 8.0.3</title>
     <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
     <meta charset="UTF-8">
@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/stylesheets/screen.css">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-    <meta name="og:title" content="Brakeman - Brakeman 4.2.0 Released" />
+    <meta name="og:title" content="Brakeman - Brakeman 8.0.3" />
     <meta name="og:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
     <meta name="og:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 </head>
@@ -86,46 +86,30 @@
                 <article class="article-main fade-in">
                     <div class="article-header">
                         <div class="article-meta">
-                            <span class="date-badge">February 21, 2018</span>
+                            <span class="date-badge">February 26, 2026</span>
                         </div>
-                        <h1 class="article-title">Brakeman 4.2.0 Released</h1>
+                        <h1 class="article-title">Brakeman 8.0.3</h1>
+                        
+                            <p class="article-subtitle">Bug fixes and age delay for --ensure-latest</p>
                         
                     </div>
 
                     <div class="article-content">
                         
                             <div class="changelog-intro">
-                                <h3>Changes since 4.1.1:</h3>
+                                <h3>Changes since 8.0.2:</h3>
                                 <ul>
                                     
-                                        <li>Handle ERb use of <code class="language-plaintext highlighter-rouge">String#&lt;&lt;</code> method for Ruby 2.5 (<a href="https://github.com/pocke">Pocke</a>)
+                                        <li>Add release age option for <code class="language-plaintext highlighter-rouge">--ensure-latest</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1989">#1989</a>)
 </li>
                                     
-                                        <li>Exclude template folders in <code class="language-plaintext highlighter-rouge">lib/</code> (<a href="https://github.com/Kani999">kru0096</a>)
+                                        <li>Fix <code class="language-plaintext highlighter-rouge">polymorphic_name</code> SQLi false positive (<a href="https://github.com/FFederi">Fredrico Franco</a>)
 </li>
                                     
-                                        <li>Warn about SQL injection with <code class="language-plaintext highlighter-rouge">not</code>
+                                        <li>Fix logger behavior when loading config files (<a href="https://github.com/presidentbeef/brakeman/issues/2009">#2009</a>)
 </li>
                                     
-                                        <li>Avoid warning about symbol DoS on <code class="language-plaintext highlighter-rouge">Model#attributes</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1096">#1096</a>)
-</li>
-                                    
-                                        <li>Avoid warning about open redirects with model methods ending with <code class="language-plaintext highlighter-rouge">_path</code>(<a href="https://github.com/presidentbeef/brakeman/issues/1117">#1117</a>)
-</li>
-                                    
-                                        <li>Avoid warning about command injection with <code class="language-plaintext highlighter-rouge">Shellwords.escape</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1159">#1159</a>)
-</li>
-                                    
-                                        <li>Use ivars from <code class="language-plaintext highlighter-rouge">initialize</code> in libraries
-</li>
-                                    
-                                        <li>Fix multiple assignment of globals (<a href="https://github.com/presidentbeef/brakeman/issues/1155">#1155</a>)
-</li>
-                                    
-                                        <li><code class="language-plaintext highlighter-rouge">Sexp#body=</code> can accept <code class="language-plaintext highlighter-rouge">:rlist</code> from <code class="language-plaintext highlighter-rouge">Sexp#body_list</code>
-</li>
-                                    
-                                        <li>Update RubyParser to 3.11.0
+                                        <li>Handle application names with module prefixes (<a href="https://github.com/presidentbeef/brakeman/issues/2011">#2011</a>)
 </li>
                                     
                                 </ul>
@@ -134,62 +118,49 @@
 
 
 			<div class="feature-section">
-			    <p>First release of 2018!</p>
+			    <h2 id="add-age-option-for-latest-release">Add Age Option for Latest Release</h2>
 
-<h2 id="update-erb-handling-for-ruby-250">Update ERb Handling for Ruby 2.5.0</h2>
+<p>When using <code class="language-plaintext highlighter-rouge">--ensure-latest</code>, you can now specify a minimum age (in days) for the latest release. The intent is to protect against supply chain attacks in case
+the Brakeman gems are compromised.</p>
 
-<p>The way ERb templates are compiled changed in Ruby 2.5.0 to use <code class="language-plaintext highlighter-rouge">String#&lt;&lt;</code>, so Brakeman has been changed to accomodate.</p>
+<p><code class="language-plaintext highlighter-rouge">--ensure-latest 10</code> will only return a non-zero exit code if the latest version of Brakeman is at least 10 days old.
+Note that for performance reasons, Brakeman will only check the <em>latest</em> version, it will not try to find an less-recent version that meets the age requirements.
+This means you may miss versions if the releases are too close together.</p>
 
-<p>Please note ERb also changed such that <code class="language-plaintext highlighter-rouge">&lt;% #</code> is not supported in Ruby 2.5.0. It will be fixed in the next Ruby release, but the correct syntax is <code class="language-plaintext highlighter-rouge">&lt;%#</code>.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/2008">changes</a>)</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1149">changes</a>)</p>
+<h2 id="ignore-polymorphic_name-in-sql">Ignore <code class="language-plaintext highlighter-rouge">polymorphic_name</code> in SQL</h2>
 
-<h2 id="exclude-template-folders">Exclude Template Folders</h2>
+<p><a href="https://github.com/FFederi">Fredrico Franco</a> fixed a false positive where Brakeman would erroneously warn about <a href="https://api.rubyonrails.org/classes/ActiveRecord/Inheritance/ClassMethods.html#method-i-polymorphic_name">polymorphic_name</a>
+in SQL queries.</p>
 
-<p>Files in <code class="language-plaintext highlighter-rouge">lib/**/templates</code> will be ignored, since they are generally ERb files, not actually Ruby.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/2014">changes</a>)</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1143">changes</a>)</p>
+<h2 id="fix-another-disappearing-cursor-issue">Fix Another Disappearing Cursor Issue</h2>
 
-<h2 id="sql-injection-with-not">SQL Injection with <code class="language-plaintext highlighter-rouge">not</code></h2>
+<p>Fixed an issue where setting <code class="language-plaintext highlighter-rouge">--quiet</code> and loading a configuration file would cause the terminal cursor to not be restored when Brakeman exits.</p>
 
-<p>In ActiveRecord, <code class="language-plaintext highlighter-rouge">not</code> takes the same arguments as <code class="language-plaintext highlighter-rouge">where</code>, making it just as vulnerable to SQL injection.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/2013">changes</a>)</p>
 
-<p>Thank you to <a href="https://twitter.com/jobertabma">Jobert Abma</a> for reporting this.</p>
+<h2 id="application-names-with-module-prefixes">Application Names with Module Prefixes</h2>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1152">changes</a>)</p>
+<p>Brakeman will now correctly pick up configurations where the application is defined as</p>
 
-<h2 id="symbol-dos-false-positive">Symbol DoS False Positive</h2>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">MyApp::Application</span> <span class="o">&lt;</span> <span class="no">Rails</span><span class="o">::</span><span class="no">Application</span>
+  <span class="c1"># ...</span>
+<span class="k">end</span>
+</code></pre></div></div>
 
-<p>Brakeman will no longer warn about <code class="language-plaintext highlighter-rouge">Model#attributes.symbolize_keys</code>.</p>
+<p>instead of</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1165">changes</a>)</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">MyApp</span>
+  <span class="k">class</span> <span class="nc">Application</span> <span class="o">&lt;</span> <span class="no">Rails</span><span class="o">::</span><span class="no">Application</span>
+    <span class="c1"># ...</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
 
-<h2 id="open-redirect-false-positive">Open Redirect False Positive</h2>
-
-<p>Brakeman will no longer warn about open redirects with <code class="language-plaintext highlighter-rouge">Model#something_ending_in_path</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1164">changes</a>)</p>
-
-<h2 id="shellwords-escaping">Shellwords Escaping</h2>
-
-<p>Brakeman will no longer warn about command injection when <code class="language-plaintext highlighter-rouge">Shellwords.escape</code> and friends are used.</p>
-
-<p>Please note that user input in shell commands is rarely a good idea, even if escaped, since they can change the behavior of the program in unexpected ways. Many Linux tools have options that allow arbitrary code execution.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1162">changes</a>)</p>
-
-<h2 id="use-initialized-environment-in-libraries">Use Initialized Environment in Libraries</h2>
-
-<p>When processing libraries, instance variables set in <code class="language-plaintext highlighter-rouge">initialize</code> will be used in subsequent methods.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1161">changes</a>)</p>
-
-<h2 id="update-rubyparser">Update RubyParser</h2>
-
-<p>This release includes updated versions of RubyParser and friends. This may cause some warning fingerprints to change if they include a call to <code class="language-plaintext highlighter-rouge">self[...]</code>.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1160">changes</a>)</p>
-
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/2012">changes</a>)</p>
 
 			</div>
 
@@ -199,18 +170,18 @@
                                 <p>The SHA256 sums for this release are:</p>
                                 
                                     <div class="checksum-line">
-                                        <span class="hash">c6ad3861920075ccf553343815fcce07aa09d015bc8529c6e4d8a865674530f7</span> 
-                                        <span class="filename">brakeman-4.2.0.gem</span>
+                                        <span class="hash">19713795e0496937bb7a817967461963e9533f180b0e608adbee3c4780be61c6</span> 
+                                        <span class="filename">brakeman-8.0.3.gem</span>
                                     </div>
                                 
                                     <div class="checksum-line">
-                                        <span class="hash">94a97496761ddd27974867bde3235cab303761dadec4bd6a8d22260a72aaaa38</span> 
-                                        <span class="filename">brakeman-lib-4.2.0.gem</span>
+                                        <span class="hash">89074c3f9141adb7b6eedcdf2542269a08044252fda426db1ba606e4a157a11e</span> 
+                                        <span class="filename">brakeman-lib-8.0.3.gem</span>
                                     </div>
                                 
                                     <div class="checksum-line">
-                                        <span class="hash">a071eb6d6e866df0338bcb9c8dd56f5b0d66c68212eb604f551ac8aa196d6923</span> 
-                                        <span class="filename">brakeman-min-4.2.0.gem</span>
+                                        <span class="hash">973ffa1883ee688a46e6a9681be3e96a682872dcd6eb782cd062f5d7dbfacf0b</span> 
+                                        <span class="filename">brakeman-min-8.0.3.gem</span>
                                     </div>
                                 
                             </div>
