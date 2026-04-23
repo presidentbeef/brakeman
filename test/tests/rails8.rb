@@ -231,4 +231,17 @@ class Rails8Tests < Minitest::Test
       code: s(:call, s(:call, nil, :not_ar_model), :count, s(:dstr, "something - ", s(:evstr, s(:call, s(:params), :[], s(:lit, :x))))),
       user_input: s(:call, s(:params), :[], s(:lit, :x))
   end
+
+  def test_command_injection_1
+    assert_no_warning check_name: "Execute",
+      type: :warning,
+      warning_code: 14,
+      warning_type: "Command Injection",
+      line: 3,
+      message: /^Possible\ command\ injection/,
+      confidence: 1,
+      relative_path: "lib/cmd.rb",
+      code: s(:call, s(:const, :Open3), :capture3, s(:str, "git"), s(:str, "diff"), s(:str, "origin/main"), s(:call, s(:dstr, "origin/", s(:evstr, s(:call, nil, :release_branch))), :shellescape)),
+      user_input: s(:call, nil, :release_branch)
+  end
 end

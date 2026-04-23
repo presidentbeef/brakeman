@@ -122,9 +122,14 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       # should be ignored
 
       args.pop if hash?(args.last) && args.length > 2
-      failure = include_user_input?(args) ||
-                dangerous_interp?(args) ||
-                dangerous_string_building?(args)
+
+      args.each_sexp do |arg|
+        failure = include_user_input?(arg) ||
+          dangerous_interp?(arg) ||
+          dangerous_string_building?(arg)
+
+        break if failure
+      end
     else
       failure = include_user_input?(args) ||
                 dangerous_interp?(args) ||
@@ -176,6 +181,8 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
   def include_user_input? exp
     if node_type? exp, :arglist, :dstr, :evstr, :dxstr
       exp.each_sexp do |e|
+        next if shell_escape? e
+
         if res = include_user_input?(e)
           return res
         end
@@ -196,7 +203,7 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
       # Check for input at start of string
       exp[1] == "" and
         node_type? exp[2], :evstr and
-        has_immediate_user_input? exp[2]
+        dangerous? exp[2]
     else
       has_immediate_user_input? exp
     end
@@ -266,6 +273,8 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
   end
 
   def dangerous_interp? exp
+    return if shell_escape? exp
+
     match = include_interp? exp
     return unless match
     interp = match.match
