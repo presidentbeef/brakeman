@@ -347,6 +347,13 @@ class Brakeman::AliasProcessor < Brakeman::SexpProcessor
           exp = safe_literal(exp.line)
         end
       end
+    when :index_by
+      # Convert %w[a b].index_by(&:itself) to {"a" => "a", "b" => "b"}
+      if array? target and all_literals? target and
+          node_type? first_arg, :block_pass and first_arg[1] == s(:lit, :itself)
+        hash_body = target.each_sexp.flat_map { |e| [e, e.deep_clone] }
+        exp = s(:hash, *hash_body).line(exp.line)
+      end
     end
 
     exp
