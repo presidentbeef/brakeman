@@ -6,7 +6,7 @@ class Brakeman::GemProcessor < Brakeman::BasicProcessor
   def initialize *args
     super
     @gem_name_version = /^\s*([-_+.A-Za-z0-9]+) \((\w(\.\w+)*)\)/
-    @ruby_version = /^\s+ruby (\d\.\d.\d+)/
+    @ruby_version = /^\s+ruby (\d+\.\d+\.\d+)/
   end
 
   def process_gems gem_files
