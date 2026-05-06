@@ -146,4 +146,24 @@ class ShellStuff
       system("something -out #{tempfile.path}")
     end
   end
+
+  def capture_array_safe
+    Open3.capture2("true", params[:user_input])
+    Open3.capture2e("true", params[:user_input])
+    Open3.capture3("true", params[:user_input])
+  end
+
+  def popen2_array_safe
+    Open3.popen2("true", params[:user_input])
+    Open3.popen2e("true", params[:user_input])
+    Open3.popen3("true", params[:user_input])
+  end
+
+  def spawn_array_safe
+    spawn("true", params[:user_input])
+  end
+
+  def spawn_env_hash_safe
+    spawn({"LOG" => "1"}, "true", params[:user_input])
+  end
 end
