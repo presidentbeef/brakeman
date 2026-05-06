@@ -55,6 +55,13 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
     first_arg = call.first_arg
     failure = nil
 
+    # All spawn-family methods optionally accept an env hash as the first
+    # argument. Strip it so first_arg always points to the command name.
+    if hash?(first_arg)
+      args.delete_at(1)
+      first_arg = args[1]
+    end
+
     case call.method
     when :popen
       # Normally, if we're in a `popen` call, we only are worried about shell
@@ -99,14 +106,17 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
 
         break if failure
       end
-    when :system, :exec
-      # Normally, if we're in a `system` or `exec` call, we only are worried
-      # about shell injection when there's a single argument, because comma-
-      # separated arguments are always escaped by Ruby. However, an exception is
-      # when the first two arguments are something like "bash -c" because then
-      # the third argument is effectively the command being run and might be
-      # a malicious executable if it comes (partially or fully) from user input.
-      if dash_c_shell_command?(first_arg, call.second_arg)
+    when :system, :exec, :spawn, :capture2, :capture2e, :capture3,
+         :popen2, :popen2e, :popen3
+      # Comma-separated arguments are passed directly to execve without a
+      # shell, so only the first argument (the command name) needs checking.
+      # Exception: `bash -c <script>` — the script is the injection vector.
+      #
+      # All of these methods accept an optional trailing options hash
+      # (e.g. stdin_data:, chdir:); strip it before checking.
+      args.pop if hash?(args.last) && args.length > 2
+
+      if dash_c_shell_command?(first_arg, args[2])
         failure = include_user_input?(args[3]) ||
                   dangerous_interp?(args[3]) ||
                   dangerous_string_building?(args[3])
@@ -114,21 +124,6 @@ class Brakeman::CheckExecute < Brakeman::BaseCheck
         failure = include_user_input?(first_arg) ||
                   dangerous_interp?(first_arg) ||
                   dangerous_string_building?(first_arg)
-      end
-    when :capture2, :capture2e, :capture3
-      # Open3 capture methods can take a :stdin_data argument which is used as the
-      # the input to the called command so it is not succeptable to command injection.
-      # As such if the last argument is a hash (and therefore execution options) it
-      # should be ignored
-
-      args.pop if hash?(args.last) && args.length > 2
-
-      args.each_sexp do |arg|
-        failure = include_user_input?(arg) ||
-          dangerous_interp?(arg) ||
-          dangerous_string_building?(arg)
-
-        break if failure
       end
     else
       failure = include_user_input?(args) ||

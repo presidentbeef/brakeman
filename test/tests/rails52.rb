@@ -642,6 +642,91 @@ class Rails52Tests < Minitest::Test
       user_input: nil
   end
 
+  def test_capture_multi_arg_safe
+    # Multi-arg form of capture2/2e/3 passes each argument directly to execve
+    # (no shell), so only the command name is a danger — not the extra args.
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :warning_type => "Command Injection",
+      :line => 151,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "lib/shell.rb",
+      :code => s(:call, s(:const, :Open3), :capture2, s(:str, "true"), s(:call, s(:params), :[], s(:lit, :user_input))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :user_input))
+
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :warning_type => "Command Injection",
+      :line => 152,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "lib/shell.rb",
+      :code => s(:call, s(:const, :Open3), :capture2e, s(:str, "true"), s(:call, s(:params), :[], s(:lit, :user_input))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :user_input))
+
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :warning_type => "Command Injection",
+      :line => 153,
+      :message => /^Possible\ command\ injection/,
+      :confidence => 0,
+      :relative_path => "lib/shell.rb",
+      :code => s(:call, s(:const, :Open3), :capture3, s(:str, "true"), s(:call, s(:params), :[], s(:lit, :user_input))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :user_input))
+  end
+
+  def test_popen2_multi_arg_safe
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :warning_type => "Command Injection",
+      :line => 157,
+      :message => /^Possible\ command\ injection/,
+      :relative_path => "lib/shell.rb",
+      :code => s(:call, s(:const, :Open3), :popen2, s(:str, "true"), s(:call, s(:params), :[], s(:lit, :user_input))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :user_input))
+
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :warning_type => "Command Injection",
+      :line => 158,
+      :message => /^Possible\ command\ injection/,
+      :relative_path => "lib/shell.rb",
+      :code => s(:call, s(:const, :Open3), :popen2e, s(:str, "true"), s(:call, s(:params), :[], s(:lit, :user_input))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :user_input))
+
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :warning_type => "Command Injection",
+      :line => 159,
+      :message => /^Possible\ command\ injection/,
+      :relative_path => "lib/shell.rb",
+      :code => s(:call, s(:const, :Open3), :popen3, s(:str, "true"), s(:call, s(:params), :[], s(:lit, :user_input))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :user_input))
+  end
+
+  def test_spawn_multi_arg_safe
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :warning_type => "Command Injection",
+      :line => 163,
+      :message => /^Possible\ command\ injection/,
+      :relative_path => "lib/shell.rb",
+      :code => s(:call, nil, :spawn, s(:str, "true"), s(:call, s(:params), :[], s(:lit, :user_input))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :user_input))
+  end
+
+  def test_spawn_env_hash_safe
+    assert_no_warning :type => :warning,
+      :warning_code => 14,
+      :warning_type => "Command Injection",
+      :line => 167,
+      :message => /^Possible\ command\ injection/,
+      :relative_path => "lib/shell.rb",
+      :code => s(:call, nil, :spawn, s(:hash, s(:str, "LOG"), s(:str, "1")), s(:str, "true"), s(:call, s(:params), :[], s(:lit, :user_input))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :user_input))
+  end
+
   def test_command_injection_ignored_in_stdin
     assert_no_warning :type => :warning,
       :warning_code => 14,
