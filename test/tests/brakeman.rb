@@ -578,4 +578,27 @@ class GemProcessorTests < Minitest::Test
       assert_version "1.1", :simplecov, "Couldn't match gemlock with eol: #{eol}"
     end
   end
+
+  def parse_ruby_version_from_lock(version_string)
+    empty_block = Sexp.new(:block)
+    gem_lock = "RUBY VERSION\n   ruby #{version_string}\n"
+    @gem_processor.process_gems :gemfile => { :file => "Gemfile", :src => empty_block }, :gemlock => { :file => "Gemfile.lock", :src => gem_lock }
+    @tracker.config.ruby_version
+  end
+
+  def test_gem_lock_ruby_version_single_digit
+    assert_equal "3.2.0", parse_ruby_version_from_lock("3.2.0")
+  end
+
+  def test_gem_lock_ruby_version_with_patchlevel
+    assert_equal "3.2.0", parse_ruby_version_from_lock("3.2.0p123")
+  end
+
+  def test_gem_lock_ruby_version_double_digit_minor
+    assert_equal "3.10.5", parse_ruby_version_from_lock("3.10.5")
+  end
+
+  def test_gem_lock_ruby_version_double_digit_major
+    assert_equal "10.20.5", parse_ruby_version_from_lock("10.20.5")
+  end
 end
