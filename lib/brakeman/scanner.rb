@@ -187,8 +187,14 @@ class Brakeman::Scanner
     end
 
     if @app_tree.exists? ".ruby-version"
-      if version = @app_tree.file_path(".ruby-version").read[/(\d\.\d.\d+)/]
-        tracker.config.set_ruby_version version, @app_tree.file_path(".ruby-version"), 1
+      contents = @app_tree.file_path(".ruby-version").read
+      # Skip alternative Ruby implementations — the EOL dates Brakeman knows
+      # about are MRI's, so a `.ruby-version` of "jruby-10.0.2.0" should not
+      # be parsed as MRI 0.0.2 / 10.0.2.
+      unless contents =~ /\A\s*(jruby|truffleruby|rbx|rubinius|mruby)\b/i
+        if version = contents[/(\d+\.\d+\.\d+)/]
+          tracker.config.set_ruby_version version, @app_tree.file_path(".ruby-version"), 1
+        end
       end
     end
 
