@@ -186,6 +186,8 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
 
   def raw? exp
     call? exp and
-      exp.method == :raw
+      exp.target.nil? and
+      exp.method == :raw and
+      exp.first_arg
   end
 end

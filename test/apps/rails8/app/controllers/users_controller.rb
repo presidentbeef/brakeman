@@ -79,6 +79,10 @@ class UsersController < ApplicationController
      not_ar_model.count("something - #{params[:x]}")
   end
 
+  def chained_raw
+    @users = User.all
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
