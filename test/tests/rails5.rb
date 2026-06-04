@@ -416,6 +416,20 @@ class Rails5Tests < Minitest::Test
       :user_input => s(:call, s(:call, s(:call, nil, :request), :cookies), :[], s(:str, "value"))
   end
 
+  def test_render_inline_partial_local_named_text
+    # render("partial", text: ...) passes `text` as a local to the partial.
+    # It must not be treated as `render text:` (inline rendering).
+    assert_no_warning :type => :template,
+      :warning_code => 84,
+      :warning_type => "Cross-Site Scripting",
+      :line => 6,
+      :message => /^Unescaped\ parameter\ value\ rendered\ inline/,
+      :confidence => 0,
+      :relative_path => "app/views/widget/show.html.erb",
+      :code => s(:render, :text, s(:call, s(:params), :[], s(:lit, :comment)), s(:hash)),
+      :user_input => s(:call, s(:params), :[], s(:lit, :comment))
+  end
+
   def test_warning_in_helper_method
     assert_warning :type => :warning,
       :warning_code => 13,

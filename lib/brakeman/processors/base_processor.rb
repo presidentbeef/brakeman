@@ -227,6 +227,11 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     end
 
     #Look for render :action, ... or render "action", ...
+    #When the type is determined by a leading positional argument, a key in the
+    #options hash that happens to match a render type name (e.g. `text:`) is a
+    #local passed to the partial/action, not a render type directive.
+    type_from_positional = false
+
     if string? first_arg or symbol? first_arg
       if @current_template and @tracker.options[:rails3]
         type = :partial
@@ -235,15 +240,18 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
         type = :action
         value = first_arg
       end
+      type_from_positional = true
     elsif first_arg.is_a? Symbol or first_arg.is_a? String
       type = :action
       value = Sexp.new(:lit, first_arg.to_sym).line(call.line)
+      type_from_positional = true
     elsif first_arg.nil?
       type = :default
     elsif not hash? first_arg
       # Maybe do partial if in view?
       type = :action
       value = first_arg
+      type_from_positional = true
     end
 
     types_in_hash = Set[:action, :file, :inline, :js, :json, :nothing, :partial, :template, :text, :update, :xml]
@@ -259,10 +267,10 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     #For example, render :file => "blah"
     if hash? last_arg
       hash_iterate(last_arg) do |key, val|
-        if symbol? key and types_in_hash.include? key.value
+        if symbol? key and types_in_hash.include? key.value and not type_from_positional
           type = key.value
           value = val
-        else  
+        else
           rest << key << val
         end
       end

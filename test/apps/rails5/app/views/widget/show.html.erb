@@ -2,3 +2,5 @@
 
 <%= link_to("Thing", "#{ENV['SOME_URL']}#{params[:x]}") %>
 <%= link_to("Email!", "mailto:#{params[:x]}") %>
+
+<%= render("shared/inventory_record", text: params[:comment]) %>
