@@ -2,6 +2,7 @@ require 'brakeman/checks/base_check'
 require 'brakeman/processors/lib/find_call'
 require 'brakeman/processors/lib/processor_helper'
 require 'brakeman/util'
+require 'brakeman/safe_method_handler'
 require 'set'
 
 #This check looks for unescaped output in templates which contains
@@ -363,7 +364,7 @@ class Brakeman::CheckCrossSiteScripting < Brakeman::BaseCheck
   end
 
   def ignored_method? target, method
-    @ignore_methods.include? method or method.to_s =~ IGNORE_LIKE
+    SafeMethodHandler.include?(method, @ignore_methods) or method.to_s =~ IGNORE_LIKE
   end
 
   def cgi_escaped? target, method
