@@ -254,7 +254,7 @@ class Rails8Tests < Minitest::Test
       warning_code: 0,
       fingerprint: "8ddf1c9f218b2b7736160bc3d6cbd90c4a325b9dd27a7dd0d38c32b6e8e98fa6",
       warning_type: "SQL Injection",
-      line: 91,
+      line: 95,
       message: /^Possible\ SQL\ injection/,
       confidence: 0,
       relative_path: "app/controllers/users_controller.rb",
