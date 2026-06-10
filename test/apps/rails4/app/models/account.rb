@@ -16,6 +16,7 @@ class Account < ActiveRecord::Base
     self.class.connection.execute "DESCRIBE  #{self.business_object.table_name}"
     connection.select_one "SELECT * FROM somewhere WHERE x=#{connection.quote(params[:x])}"
     connection.execute "DELETE FROM stuff WHERE id=#{self.id}"
+    connection.execute("CREATE SCHEMA #{connection.quote_schema_name(params[:y])}")
   end
 
   def lots_of_string_building_sql
