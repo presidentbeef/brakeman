@@ -83,6 +83,18 @@ class UsersController < ApplicationController
     @users = User.all
   end
 
+  def permitted_compact_blank
+    # compact_blank/compact return permitted Parameters, so chaining them
+    # after permit/slice should not raise a SQL injection warning.
+    User.where(params.permit(:foo, :bar).slice(:foo, :bar).compact_blank)
+    User.where(params.permit(:foo, :bar).slice(:foo, :bar).compact)
+  end
+
+  def still_unsafe_sql
+    # A raw interpolated string is still unsafe and should warn.
+    User.where("name = '#{params[:name]}'")
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user

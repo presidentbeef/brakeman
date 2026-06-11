@@ -16,7 +16,7 @@ class Rails8Tests < Minitest::Test
       controller: 0,
       model:      0,
       template:   2,
-      warning:    9
+      warning:    10
     }
   end
 
@@ -230,6 +230,35 @@ class Rails8Tests < Minitest::Test
       relative_path: "app/controllers/users_controller.rb",
       code: s(:call, s(:call, nil, :not_ar_model), :count, s(:dstr, "something - ", s(:evstr, s(:call, s(:params), :[], s(:lit, :x))))),
       user_input: s(:call, s(:params), :[], s(:lit, :x))
+  end
+
+  def test_sql_injection_compact_blank_false_positive
+    assert_no_warning check_name: "SQL",
+      type: :warning,
+      warning_type: "SQL Injection",
+      relative_path: "app/controllers/users_controller.rb",
+      code: s(:call, s(:const, :User), :where, s(:call, s(:call, s(:call, s(:params), :permit, s(:lit, :foo), s(:lit, :bar)), :slice, s(:lit, :foo), s(:lit, :bar)), :compact_blank))
+  end
+
+  def test_sql_injection_compact_false_positive
+    assert_no_warning check_name: "SQL",
+      type: :warning,
+      warning_type: "SQL Injection",
+      relative_path: "app/controllers/users_controller.rb",
+      code: s(:call, s(:const, :User), :where, s(:call, s(:call, s(:call, s(:params), :permit, s(:lit, :foo), s(:lit, :bar)), :slice, s(:lit, :foo), s(:lit, :bar)), :compact))
+  end
+
+  def test_sql_injection_still_warns_on_interpolation
+    assert_warning check_name: "SQL",
+      type: :warning,
+      warning_code: 0,
+      fingerprint: "8ddf1c9f218b2b7736160bc3d6cbd90c4a325b9dd27a7dd0d38c32b6e8e98fa6",
+      warning_type: "SQL Injection",
+      line: 95,
+      message: /^Possible\ SQL\ injection/,
+      confidence: 0,
+      relative_path: "app/controllers/users_controller.rb",
+      user_input: s(:call, s(:params), :[], s(:lit, :name))
   end
 
   def test_command_injection_1
