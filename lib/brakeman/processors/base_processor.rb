@@ -258,12 +258,19 @@ class Brakeman::BaseProcessor < Brakeman::SexpProcessor
     #Look for "type" of render in options hash
     #For example, render :file => "blah"
     if hash? last_arg
-      hash_iterate(last_arg) do |key, val|
-        if symbol? key and types_in_hash.include? key.value
-          type = key.value
-          value = val
-        else  
-          rest << key << val
+      if type
+        #The render type was already determined by a positional argument, so a
+        #key in the options hash that happens to match a render type name (e.g.
+        #`text:`) is a local passed to the partial/action, not a type directive.
+        rest = last_arg
+      else
+        hash_iterate(last_arg) do |key, val|
+          if symbol? key and types_in_hash.include? key.value
+            type = key.value
+            value = val
+          else
+            rest << key << val
+          end
         end
       end
     end
