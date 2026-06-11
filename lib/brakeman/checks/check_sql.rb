@@ -645,7 +645,7 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
       locale_call? exp
   end
 
-  QUOTE_METHODS = [:quote, :quote_column_name, :quoted_date, :quote_string, :quote_table_name]
+  QUOTE_METHODS = [:quote, :quote_column_name, :quoted_date, :quote_string, :quote_table_name, :quote_schema_name]
 
   def quote_call? exp
     if call? exp.target
