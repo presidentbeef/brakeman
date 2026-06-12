@@ -13,8 +13,31 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 37
+      :generic => 38
     }
+  end
+
+  # Issue #1750: a bare `connection.delete` whose argument is an HTTP URL/path
+  # (Faraday/HTTP client) must NOT be reported as SQL injection.
+  def test_no_sql_injection_faraday_connection_delete
+    assert_no_warning :type => :warning,
+      :warning_type => "SQL Injection",
+      :relative_path => "app/models/stream_client.rb"
+  end
+
+  # Issue #1750 guard: a bare `connection.delete` whose argument IS a SQL string
+  # with interpolation must still warn (no false negative from the FP fix).
+  def test_sql_injection_bare_connection_delete
+    assert_warning :type => :warning,
+      :warning_code => 0,
+      :fingerprint => "fa62370154c764324f5a80d8d7e26491bf2ae96b29d157d3ee5320774c48c143",
+      :warning_type => "SQL Injection",
+      :line => 26,
+      :message => /^Possible\ SQL\ injection/,
+      :confidence => 1,
+      :relative_path => "app/models/user.rb",
+      :code => s(:call, s(:call, nil, :connection), :delete, s(:dstr, "DELETE FROM users WHERE updated_at < '", s(:evstr, s(:lvar, :period)), s(:str, "'"))),
+      :user_input => s(:lvar, :period)
   end
 
   def test_sql_injection_delete_by
