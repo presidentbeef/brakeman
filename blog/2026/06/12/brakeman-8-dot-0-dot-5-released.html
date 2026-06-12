@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Brakeman: Brakeman 6.0.1 Released</title>
+    <title>Brakeman: Brakeman 8.0.5</title>
     <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
     <meta charset="UTF-8">
@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/stylesheets/screen.css">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-    <meta name="og:title" content="Brakeman - Brakeman 6.0.1 Released" />
+    <meta name="og:title" content="Brakeman - Brakeman 8.0.5" />
     <meta name="og:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
     <meta name="og:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 </head>
@@ -86,22 +86,39 @@
                 <article class="article-main fade-in">
                     <div class="article-header">
                         <div class="article-meta">
-                            <span class="date-badge">July 20, 2023</span>
+                            <span class="date-badge">June 12, 2026</span>
                         </div>
-                        <h1 class="article-title">Brakeman 6.0.1 Released</h1>
+                        <h1 class="article-title">Brakeman 8.0.5</h1>
+                        
+                            <p class="article-subtitle">Lots of bug fixes</p>
                         
                     </div>
 
                     <div class="article-content">
                         
                             <div class="changelog-intro">
-                                <h3>Changes since 6.0.0:</h3>
+                                <h3>Changes since 8.0.4:</h3>
                                 <ul>
                                     
-                                        <li>Accept strings for <code class="language-plaintext highlighter-rouge">load_defaults</code> version (<a href="https://github.com/presidentbeef/brakeman/issues/1784">#1784</a>)
+                                        <li>Add <code class="language-plaintext highlighter-rouge">quote_schema_name</code> to safe quote method list (<a href="https://github.com/kiskoza">Zsolt Kozaroczy</a>; <a href="https://github.com/presidentbeef/brakeman/pull/2028">changes</a>)
 </li>
                                     
-                                        <li>Bundle latest <code class="language-plaintext highlighter-rouge">ruby_parser</code>
+                                        <li>Fix SQL injection false positive for <code class="language-plaintext highlighter-rouge">compact_blank</code>/<code class="language-plaintext highlighter-rouge">compact</code> on permitted params (<a href="https://github.com/arpitjain099">Arpit Jain</a>; <a href="https://github.com/presidentbeef/brakeman/pull/2025">changes</a>)
+</li>
+                                    
+                                        <li>Fix inline render false positive for local named <code class="language-plaintext highlighter-rouge">text</code> (<a href="https://github.com/arpitjain099">Arpit Jain</a>; <a href="https://github.com/presidentbeef/brakeman/pull/2027">changes</a>)
+</li>
+                                    
+                                        <li>Fix HAML crash on <code class="language-plaintext highlighter-rouge">.raw</code> calls (<a href="https://github.com/FFederi">Federico Franco</a>; <a href="https://github.com/presidentbeef/brakeman/pull/2023">changes</a>)
+</li>
+                                    
+                                        <li>Fix Ruby version parsing - especially for non-CRuby versions (<a href="https://github.com/ChrisJr404">Chris Southerland Jr</a>; <a href="https://github.com/presidentbeef/brakeman/pull/2021">changes</a>)
+</li>
+                                    
+                                        <li>Fix <code class="language-plaintext highlighter-rouge">TemplateAliasProcessor#template_name</code> arity (<a href="https://github.com/viralpraxis">viralpraxis</a>; <a href="https://github.com/presidentbeef/brakeman/pull/2010">changes</a>)
+</li>
+                                    
+                                        <li>Reduce false positives when using shell escaping (<a href="https://github.com/presidentbeef/brakeman/commit/169a7d4a800ca13188e74e871fb8ade3ab349470">changes</a>)
 </li>
                                     
                                 </ul>
@@ -110,20 +127,11 @@
 
 
 			<div class="feature-section">
-			    <p>Very tiny release this time!</p>
+			    <p>Breaking with tradition, since these are all bug fixes that are pretty clear from the description I will not be writing up detailed notes.</p>
 
-<h2 id="strings-for-load_defaults">Strings for <code class="language-plaintext highlighter-rouge">load_defaults</code></h2>
+<p>Nearly all fixes came from the community this round - thank you all for your contributions!</p>
 
-<p>While the default for Rails generators and documentation is to use floats for versions, e.g. <code class="language-plaintext highlighter-rouge">load_defaults 6.1</code>, internally it uses strings. It appears quite a few apps also use strings.</p>
-
-<p>Now Brakeman supports and uses strings.</p>
-
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1785">changes</a>)</p>
-
-<h2 id="latest-rubyparser">Latest RubyParser</h2>
-
-<p>Bundled with <code class="language-plaintext highlighter-rouge">ruby_parser</code> 3.20.3, which includes additional support for Ruby 3.2 syntax.</p>
-
+<p>Links to the pull requests are included above.</p>
 
 			</div>
 
@@ -133,18 +141,18 @@
                                 <p>The SHA256 sums for this release are:</p>
                                 
                                     <div class="checksum-line">
-                                        <span class="hash">39641c63bc247bbdf993a349de90a13e146c464c872191f2adc12555bde591be</span> 
-                                        <span class="filename">brakeman-6.0.1.gem</span>
+                                        <span class="hash">03735f9690d3fd4b32d66aacbf0a6d15a84266bdd06b32c05c8ecc8f6021d2be</span> 
+                                        <span class="filename">brakeman-8.0.5.gem</span>
                                     </div>
                                 
                                     <div class="checksum-line">
-                                        <span class="hash">e029fbd43c97bbb9c084fa4f0e13ee259bf193b79d66ba7ef94fa9496bab62cd</span> 
-                                        <span class="filename">brakeman-lib-6.0.1.gem</span>
+                                        <span class="hash">287be7e40fbada68008387564aa9a18e22494c3c3bee5eea2b91c0ab74c85f71</span> 
+                                        <span class="filename">brakeman-lib-8.0.5.gem</span>
                                     </div>
                                 
                                     <div class="checksum-line">
-                                        <span class="hash">ef2ff1234ba2a9e7216a0a047b9df0def8c3b8d162d29853c907238901353a54</span> 
-                                        <span class="filename">brakeman-min-6.0.1.gem</span>
+                                        <span class="hash">cc33b87e4ed33cb20ef4fa9bba908e9a6d92c705fbd708685bf59700e58dec1c</span> 
+                                        <span class="filename">brakeman-min-8.0.5.gem</span>
                                     </div>
                                 
                             </div>

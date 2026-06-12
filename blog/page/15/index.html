@@ -136,13 +136,13 @@
                     <article class="article-card">
                         <div class="article-header">
                             
-                                <span class="version-badge">Version 8.0.3</span>
+                                <span class="version-badge">Version 8.0.5</span>
                             
-                            <h3>Brakeman 8.0.3</h3>
-                            <div class="article-meta">February 2026 • Bug fixes and age delay for --ensure-latest</div>
+                            <h3>Brakeman 8.0.5</h3>
+                            <div class="article-meta">June 2026 • Lots of bug fixes</div>
                         </div>
                         <div class="article-content">
-                            <h2 id="add-age-option-for-latest-release">Add Age Option for Latest Release</h2>
+                            <p>Breaking with tradition, since these are all bug fixes that are pretty clear from the description I will not be writing up detailed notes.</p>
 
 
                             
@@ -150,27 +150,35 @@
                                 <h4>🎉 What's New</h4>
                                 <ul>
                                     
-                                        <li>Add release age option for <code class="language-plaintext highlighter-rouge">--ensure-latest</code> (<a href="https://github.com/presidentbeef/brakeman/issues/1989">#1989</a>)
+                                        <li>Add <code class="language-plaintext highlighter-rouge">quote_schema_name</code> to safe quote method list (<a href="https://github.com/kiskoza">Zsolt Kozaroczy</a>; <a href="https://github.com/presidentbeef/brakeman/pull/2028">changes</a>)
 </li>
                                     
-                                        <li>Fix <code class="language-plaintext highlighter-rouge">polymorphic_name</code> SQLi false positive (<a href="https://github.com/FFederi">Fredrico Franco</a>)
+                                        <li>Fix SQL injection false positive for <code class="language-plaintext highlighter-rouge">compact_blank</code>/<code class="language-plaintext highlighter-rouge">compact</code> on permitted params (<a href="https://github.com/arpitjain099">Arpit Jain</a>; <a href="https://github.com/presidentbeef/brakeman/pull/2025">changes</a>)
 </li>
                                     
-                                        <li>Fix logger behavior when loading config files (<a href="https://github.com/presidentbeef/brakeman/issues/2009">#2009</a>)
+                                        <li>Fix inline render false positive for local named <code class="language-plaintext highlighter-rouge">text</code> (<a href="https://github.com/arpitjain099">Arpit Jain</a>; <a href="https://github.com/presidentbeef/brakeman/pull/2027">changes</a>)
 </li>
                                     
-                                        <li>Handle application names with module prefixes (<a href="https://github.com/presidentbeef/brakeman/issues/2011">#2011</a>)
+                                        <li>Fix HAML crash on <code class="language-plaintext highlighter-rouge">.raw</code> calls (<a href="https://github.com/FFederi">Federico Franco</a>; <a href="https://github.com/presidentbeef/brakeman/pull/2023">changes</a>)
 </li>
                                     
                                 </ul>
                             
                             
-                            <a href="/blog/2026/02/26/brakeman-8-dot-0-dot-3-released" class="read-more-btn">Read Full Release Notes →</a>
+                            <a href="/blog/2026/06/12/brakeman-8-dot-0-dot-5-released" class="read-more-btn">Read Full Release Notes →</a>
                         </div>
                     </article>
                 
             </div>
             <div class="news-sidebar">
+                
+		<a href="/blog/2026/02/26/brakeman-8-dot-0-dot-3-released" class="sidebar-card">
+			<h4>Brakeman 8.0.3</h4>
+			<p>Add Age Option for Latest Release
+
+</p>
+			<span class="date">February 2026</span>
+		</a>
                 
 		<a href="/blog/2026/01/29/brakeman-8-dot-0-dot-1-released" class="sidebar-card">
 			<h4>Brakeman 8.0.1</h4>
@@ -193,14 +201,6 @@
 
 </p>
 			<span class="date">December 2025</span>
-		</a>
-                
-		<a href="/blog/2025/11/03/brakeman-7-dot-1-dot-1-released" class="sidebar-card">
-			<h4>Brakeman 7.1.1 Released</h4>
-			<p>Faster File Search on MacOS
-
-</p>
-			<span class="date">November 2025</span>
 		</a>
                 
             </div>
