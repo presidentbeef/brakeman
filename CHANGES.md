@@ -1,3 +1,13 @@
+# 8.0.5 - 2026-06-12
+
+* Add `quote_schema_name` to safe quote method list (Zsolt Kozaroczy)
+* Fix SQL injection false positive for `compact_blank`/`compact` on permitted params (Arpit Jain)
+* Fix inline render false positive for local named `text` (Arpit Jain)
+* Fix HAML crash on `.raw` calls (Federico Franco)
+* Fix Ruby version parsing - especially for non-CRuby versions (Chris Southerland Jr) 
+* Fix `TemplateAliasProcessor#template_name` arity (viralpraxis)
+* Reduce false positives when using shell escaping
+
 # 8.0.4 - 2026-02-26
 
 * Load 'date' library for `--ensure-latest`
