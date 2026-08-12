@@ -136,13 +136,13 @@
                     <article class="article-card">
                         <div class="article-header">
                             
-                                <span class="version-badge">Version 8.0.5</span>
+                                <span class="version-badge">Version 8.0.6</span>
                             
-                            <h3>Brakeman 8.0.5</h3>
-                            <div class="article-meta">June 2026 • Lots of bug fixes</div>
+                            <h3>Brakeman 8.0.6</h3>
+                            <div class="article-meta">August 2026 • A few bug fixes</div>
                         </div>
                         <div class="article-content">
-                            <p>Breaking with tradition, since these are all bug fixes that are pretty clear from the description I will not be writing up detailed notes.</p>
+                            <h3 id="rails-80-eol-date">Rails 8.0 EOL Date</h3>
 
 
                             
@@ -150,27 +150,33 @@
                                 <h4>🎉 What's New</h4>
                                 <ul>
                                     
-                                        <li>Add <code class="language-plaintext highlighter-rouge">quote_schema_name</code> to safe quote method list (<a href="https://github.com/presidentbeef/brakeman/pull/2028">changes</a> by <a href="https://github.com/kiskoza">Zsolt Kozaroczy</a>)
+                                        <li>Fix EOL date for Rails 8.0 (<a href="https://github.com/yeaseul-kim">yeaseul-kim</a>)
 </li>
                                     
-                                        <li>Fix SQL injection false positive for <code class="language-plaintext highlighter-rouge">compact_blank</code>/<code class="language-plaintext highlighter-rouge">compact</code> on permitted params (<a href="https://github.com/presidentbeef/brakeman/pull/2025">changes</a> by <a href="https://github.com/arpitjain099">Arpit Jain</a>)
+                                        <li>Fix command injection false positives ([Jacob Evelyn(https://github.com/JacobEvelyn))
 </li>
                                     
-                                        <li>Fix inline render false positive for local named <code class="language-plaintext highlighter-rouge">text</code> (<a href="https://github.com/presidentbeef/brakeman/pull/2027">changes</a> by  <a href="https://github.com/arpitjain099">Arpit Jain</a>)
+                                        <li>Add EOL dates for Rails 8.1 and Ruby 4.0
 </li>
                                     
-                                        <li>Fix HAML crash on <code class="language-plaintext highlighter-rouge">.raw</code> calls (<a href="https://github.com/presidentbeef/brakeman/pull/2023">changes</a> by <a href="https://github.com/FFederi">Federico Franco</a>)
+                                        <li>Fix unused variable warning (<a href="https://github.com/viralpraxis">@viralpraxis</a>)
 </li>
                                     
                                 </ul>
                             
                             
-                            <a href="/blog/2026/06/12/brakeman-8-dot-0-dot-5-released" class="read-more-btn">Read Full Release Notes →</a>
+                            <a href="/blog/2026/08/12/brakeman-8-dot-0-dot-6-released" class="read-more-btn">Read Full Release Notes →</a>
                         </div>
                     </article>
                 
             </div>
             <div class="news-sidebar">
+                
+		<a href="/blog/2026/06/12/brakeman-8-dot-0-dot-5-released" class="sidebar-card">
+			<h4>Brakeman 8.0.5</h4>
+			<p>Breaking with tradition, since these are all bug fixes that are pretty clear from the description I will not be...</p>
+			<span class="date">June 2026</span>
+		</a>
                 
 		<a href="/blog/2026/02/26/brakeman-8-dot-0-dot-3-released" class="sidebar-card">
 			<h4>Brakeman 8.0.3</h4>
@@ -193,14 +199,6 @@
 
 </p>
 			<span class="date">January 2026</span>
-		</a>
-                
-		<a href="/blog/2025/12/25/brakeman-7-dot-1-dot-2-released" class="sidebar-card">
-			<h4>Brakeman 7.1.2 Released</h4>
-			<p>Dependency Updates
-
-</p>
-			<span class="date">December 2025</span>
 		</a>
                 
             </div>

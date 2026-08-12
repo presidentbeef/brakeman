@@ -1,4 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2026-06-12T16:50:28-06:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 8.0.5</title><link href="https://brakemanscanner.org/blog/2026/06/12/brakeman-8-dot-0-dot-5-released" rel="alternate" type="text/html" title="Brakeman 8.0.5" /><published>2026-06-12T00:00:00-06:00</published><updated>2026-06-12T00:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2026/06/12/brakeman-8-dot-0-dot-5-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2026/06/12/brakeman-8-dot-0-dot-5-released">&lt;p&gt;Breaking with tradition, since these are all bug fixes that are pretty clear from the description I will not be writing up detailed notes.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brakemanscanner.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brakemanscanner.org/" rel="alternate" type="text/html" /><updated>2026-08-12T16:34:58-06:00</updated><id>https://brakemanscanner.org/feed.xml</id><title type="html">Brakeman</title><entry><title type="html">Brakeman 8.0.6</title><link href="https://brakemanscanner.org/blog/2026/08/12/brakeman-8-dot-0-dot-6-released" rel="alternate" type="text/html" title="Brakeman 8.0.6" /><published>2026-08-12T00:00:00-06:00</published><updated>2026-08-12T00:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2026/08/12/brakeman-8-dot-0-dot-6-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2026/08/12/brakeman-8-dot-0-dot-6-released">&lt;h3 id=&quot;rails-80-eol-date&quot;&gt;Rails 8.0 EOL Date&lt;/h3&gt;
+
+&lt;p&gt;Changed from October 7, 2026 to &lt;strong&gt;November 7&lt;/strong&gt;, 2026.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/2034&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;command-injection-false-positives&quot;&gt;Command Injection False Positives&lt;/h3&gt;
+
+&lt;p&gt;Jacob fixed some false positives when command-excuting methods like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;spawn&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;popen2&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;capture2&lt;/code&gt;, etc. are used safely.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/2022&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;eol-dates-for-rails-81-and-ruby-40&quot;&gt;EOL Dates for Rails 8.1 and Ruby 4.0&lt;/h3&gt;
+
+&lt;p&gt;They have been added.&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/2033&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;</content><author><name></name></author><summary type="html">Rails 8.0 EOL Date</summary></entry><entry><title type="html">Brakeman 8.0.5</title><link href="https://brakemanscanner.org/blog/2026/06/12/brakeman-8-dot-0-dot-5-released" rel="alternate" type="text/html" title="Brakeman 8.0.5" /><published>2026-06-12T00:00:00-06:00</published><updated>2026-06-12T00:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2026/06/12/brakeman-8-dot-0-dot-5-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2026/06/12/brakeman-8-dot-0-dot-5-released">&lt;p&gt;Breaking with tradition, since these are all bug fixes that are pretty clear from the description I will not be writing up detailed notes.&lt;/p&gt;
 
 &lt;p&gt;Nearly all fixes came from the community this round - thank you all for your contributions!&lt;/p&gt;
 
@@ -456,42 +472,4 @@ the long explanations from the LLM more legible.&lt;/p&gt;
 
 &lt;p&gt;Fixed.&lt;/p&gt;
 
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1932&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;</content><author><name></name></author><summary type="html">Error on Empty Environment Variable</summary></entry><entry><title type="html">Brakeman 7.0.1 Released</title><link href="https://brakemanscanner.org/blog/2025/04/03/brakeman-7-dot-0-dot-1-released" rel="alternate" type="text/html" title="Brakeman 7.0.1 Released" /><published>2025-04-03T17:00:00-06:00</published><updated>2025-04-03T17:00:00-06:00</updated><id>https://brakemanscanner.org/blog/2025/04/03/brakeman-7-dot-0-dot-1-released</id><content type="html" xml:base="https://brakemanscanner.org/blog/2025/04/03/brakeman-7-dot-0-dot-1-released">&lt;h2 id=&quot;fewer-code-evaluation-warnings&quot;&gt;Fewer Code Evaluation Warnings&lt;/h2&gt;
-
-&lt;p&gt;Brakeman will warn on fewer cases of code evaluation of dynamic strings.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1920&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;custom-gemfile&quot;&gt;Custom Gemfile&lt;/h2&gt;
-
-&lt;p&gt;Which &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Gemfile&lt;/code&gt; to scan can now be configured with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--gemfile&lt;/code&gt; or setting the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BUNDLE_GEMFILE&lt;/code&gt; option.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1912&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;errors-matching-directory-names&quot;&gt;Errors Matching Directory Names&lt;/h2&gt;
-
-&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/viralpraxis&quot;&gt;viralpraxis&lt;/a&gt; for fixing an issue where directory names ending in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.rb&lt;/code&gt; were treated like Ruby files.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1911&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;support-for-terminal-table-40&quot;&gt;Support for Terminal Table 4.0&lt;/h2&gt;
-
-&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/chaadow&quot;&gt;Chedli Bourguiba&lt;/a&gt; for helping bump the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;terminal-table&lt;/code&gt; dependency to allow use of the latest version.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1917&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;frozen-strings-in-prism&quot;&gt;Frozen Strings in Prism&lt;/h2&gt;
-
-&lt;p&gt;This release fixes some compatibility with frozen strings in Prism 1.4.0.&lt;/p&gt;
-
-&lt;p&gt;These are a little hard to track down, so please report any errors that have not been fixed.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1928&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;less-noisy-timing&quot;&gt;Less Noisy Timing&lt;/h2&gt;
-
-&lt;p&gt;Use of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--timing&lt;/code&gt; is now a little less noisy unless &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--debug&lt;/code&gt; is also set.&lt;/p&gt;
-
-&lt;p&gt;Previously, processing time for each individual file was shown. Now the default is to only show processing time for each step in the scan.&lt;/p&gt;
-
-&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1908&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;</content><author><name></name></author><summary type="html">Fewer Code Evaluation Warnings</summary></entry></feed>
+&lt;p&gt;(&lt;a href=&quot;https://github.com/presidentbeef/brakeman/pull/1932&quot;&gt;changes&lt;/a&gt;)&lt;/p&gt;</content><author><name></name></author><summary type="html">Error on Empty Environment Variable</summary></entry></feed>

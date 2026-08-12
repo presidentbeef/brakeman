@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Brakeman: Brakeman 1.6 Released</title>
+    <title>Brakeman: Brakeman 8.0.6</title>
     <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
     <meta charset="UTF-8">
@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/stylesheets/screen.css">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-    <meta name="og:title" content="Brakeman - Brakeman 1.6 Released" />
+    <meta name="og:title" content="Brakeman - Brakeman 8.0.6" />
     <meta name="og:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
     <meta name="og:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 </head>
@@ -86,61 +86,30 @@
                 <article class="article-main fade-in">
                     <div class="article-header">
                         <div class="article-meta">
-                            <span class="date-badge">April 20, 2012</span>
+                            <span class="date-badge">August 12, 2026</span>
                         </div>
-                        <h1 class="article-title">Brakeman 1.6 Released</h1>
+                        <h1 class="article-title">Brakeman 8.0.6</h1>
+                        
+                            <p class="article-subtitle">A few bug fixes</p>
                         
                     </div>
 
                     <div class="article-content">
                         
                             <div class="changelog-intro">
-                                <h3>Changes since 1.5.3:</h3>
+                                <h3>Changes since 8.0.5:</h3>
                                 <ul>
                                     
-                                        <li><ul>
-  <li>Remove the Ruport dependency (Neil Matatall)</li>
-</ul>
+                                        <li>Fix EOL date for Rails 8.0 (<a href="https://github.com/yeaseul-kim">yeaseul-kim</a>)
 </li>
                                     
-                                        <li><ul>
-  <li>Add more informational JSON output (Neil Matatall)</li>
-</ul>
+                                        <li>Fix command injection false positives ([Jacob Evelyn(https://github.com/JacobEvelyn))
 </li>
                                     
-                                        <li><ul>
-  <li>Add comparison to previous JSON report (Neil Matatall)</li>
-</ul>
+                                        <li>Add EOL dates for Rails 8.1 and Ruby 4.0
 </li>
                                     
-                                        <li><ul>
-  <li>Add highlighting of dangerous values in HTML/text reports</li>
-</ul>
-</li>
-                                    
-                                        <li><ul>
-  <li><code class="language-plaintext highlighter-rouge">Model#update_attribute</code> should not raise mass assignment warning (Dave Worth)</li>
-</ul>
-</li>
-                                    
-                                        <li><ul>
-  <li>Don’t check <code class="language-plaintext highlighter-rouge">find_by_*</code> method for SQL injection</li>
-</ul>
-</li>
-                                    
-                                        <li><ul>
-  <li>Fix duplicate reporting of mass assignment and SQL injection</li>
-</ul>
-</li>
-                                    
-                                        <li><ul>
-  <li>Fix rescanning of deleted files</li>
-</ul>
-</li>
-                                    
-                                        <li><ul>
-  <li>Properly check for <code class="language-plaintext highlighter-rouge">rails_xss</code> in Gemfile</li>
-</ul>
+                                        <li>Fix unused variable warning (<a href="https://github.com/viralpraxis">@viralpraxis</a>)
 </li>
                                     
                                 </ul>
@@ -149,64 +118,47 @@
 
 
 			<div class="feature-section">
-			    <p>A lot of code has changed in this release, particularly with the removal of the Ruport library for reporting. While Ruport worked pretty well, it caused some issues just due to the large number of (out-dated) dependencies it brought with it.</p>
+			    <h3 id="rails-80-eol-date">Rails 8.0 EOL Date</h3>
 
-<p>Also, this release changes the JSON report output. This is a backwards <em>incompatible</em> change. But, given how useless the previous JSON reports were, hopefully this will not affect too many people.</p>
+<p>Changed from October 7, 2026 to <strong>November 7</strong>, 2026.</p>
 
-<h2 id="no-more-ruport">No More Ruport</h2>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/2034">changes</a>)</p>
 
-<p>Ruport is a nice library, but it also has not been updated in over two years and its dependency tree was ridiculous.</p>
+<h3 id="command-injection-false-positives">Command Injection False Positives</h3>
 
-<p>Thanks to Neil Matatall, Brakeman no longer depends on Ruport, but the reports should look essentially the same. The HTML reports are now rendered through ERB templates, so it should not be too difficult to customize the reports if desired.</p>
+<p>Jacob fixed some false positives when command-excuting methods like <code class="language-plaintext highlighter-rouge">spawn</code>, <code class="language-plaintext highlighter-rouge">popen2</code>, <code class="language-plaintext highlighter-rouge">capture2</code>, etc. are used safely.</p>
 
-<h2 id="better-json-output">Better JSON Output</h2>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/2022">changes</a>)</p>
 
-<p>JSON output now includes meta-information about the scan, errors raised during the scan, and line numbers for each warning.</p>
+<h3 id="eol-dates-for-rails-81-and-ruby-40">EOL Dates for Rails 8.1 and Ruby 4.0</h3>
 
-<h2 id="json-report-comparison">JSON Report Comparison</h2>
+<p>They have been added.</p>
 
-<p>Being able to compare Brakeman reports is essential for tracking warnings over time. Prior to this release, the only decent way of doing that was via the <a href="http://brakemanscanner.org/docs/jenkins/">Jenkins plugin</a>. But now Brakeman can compare results to the JSON report from a previous scan.</p>
-
-<p>For example:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o report.json
-brakeman --compare report.json
-</code></pre></div></div>
-
-<p>This will run another scan, then output a comparison of the reports (in JSON). The report includes a list of fixed warnings and a list of new warnings that were found.</p>
-
-<h2 id="user-input-highlighted-in-reports">User Input Highlighted in Reports</h2>
-
-<p>Sometimes it is unclear exactly what value has caused Brakeman to issue a particular warning. This release adds highlighting the detected user input in most warnings. (Some warnings, the code that is reported <em>is</em> the detected user input). This information is also available in the JSON reports.</p>
-
-<p><img src="/images/user_input_highlight.png" alt="User Input Highlight" title="Example of User Input Highlighting" /></p>
-
-<h2 id="fewer-mass-assignment-and-sql-injection-methods">Fewer Mass Assignment and SQL Injection Methods</h2>
-
-<p>Dave Worth pointed out that Brakeman was a little overzealous in which methods it considered susceptible to mass assignment and SQL injection attacks.</p>
-
-<p>Brakeman will no longer check <code class="language-plaintext highlighter-rouge">update_attribute</code> for mass assignment or the <code class="language-plaintext highlighter-rouge">find_by_*</code> dynamic methods for SQL injection.</p>
-
-<h2 id="fewer-mass-assignment-and-sql-injection-duplicates">Fewer Mass Assignment and SQL Injection Duplicates</h2>
-
-<p>Pesky duplicate reports of mass assignment and SQL injection were turning up as template warnings. This occurred when the results of the mass assignment or SQL query were assigned to a variable which was then used in a template. This should now be fixed.</p>
-
-<p>More details than are probably desired are available <a href="https://github.com/presidentbeef/brakeman/pull/82">here</a>.</p>
-
-<h2 id="rescanning-fixes">Rescanning Fixes</h2>
-
-<p>Rescanning of deleted files is now supported, and there some other issues with rescanning that are now resolved as well.</p>
-
-<h2 id="new-logo">New Logo</h2>
-
-<p>Brakeman has a sweet new logo, thanks to <a href="http://janellelawless.com/">Janelle Lawless</a>!</p>
-
-<p><img src="/images/logo_medium.png" alt="Brakeman Logo" /></p>
-
-<p>Updates to the website to reflect this awesomeness are coming soon.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/2033">changes</a>)</p>
 
 			</div>
 
+                        
+                            <div class="checksums-section">
+                                <h3>Checksums</h3>
+                                <p>The SHA256 sums for this release are:</p>
+                                
+                                    <div class="checksum-line">
+                                        <span class="hash">759cc69341115e6c2dcd47b6fd8649a0b9bd540e3585ac8a0a94e31c66fee386</span> 
+                                        <span class="filename">brakeman-8.0.6.gem</span>
+                                    </div>
+                                
+                                    <div class="checksum-line">
+                                        <span class="hash">f56697ed48543f58aa4d3d9d9a7929cab99f8ddb273479ab8f06877de077b240</span> 
+                                        <span class="filename">brakeman-lib-8.0.6.gem</span>
+                                    </div>
+                                
+                                    <div class="checksum-line">
+                                        <span class="hash">efb425199579777757ed32aade4e7b4663d1475f08c7b6f1f3d0b74ec2ec1205</span> 
+                                        <span class="filename">brakeman-min-8.0.6.gem</span>
+                                    </div>
+                                
+                            </div>
                         
 
                         <div class="reporting-section">
