@@ -1513,4 +1513,26 @@ class AliasProcessorTests < Minitest::Test
     # Does not raise because the error is caught and handled by the Tracker
     assert Brakeman::AliasProcessor.new(BrakemanTester.new_tracker).process s(:block, s(:attrasgn, s(:call, nil, :x), :"[]!", s(:lit, 1), s(:lit, 2)))
   end
+
+  def test_index_by_itself
+    assert_alias '{"a" => "a", "b" => "b"}', <<-RUBY
+      x = %w[a b].index_by(&:itself)
+      x
+    RUBY
+  end
+
+  def test_index_by_itself_with_freeze
+    assert_alias '{"a" => "a", "b" => "b"}', <<-RUBY
+      x = %w[a b].index_by(&:itself).freeze
+      x
+    RUBY
+  end
+
+  def test_index_by_without_itself
+    # Should not convert if not &:itself
+    assert_alias '%w[a b].index_by(&:to_s)', <<-RUBY
+      x = %w[a b].index_by(&:to_s)
+      x
+    RUBY
+  end
 end

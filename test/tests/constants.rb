@@ -278,4 +278,32 @@ class ConstantTests < Minitest::Test
     end
     INPUT
   end
+
+  def test_constants_index_by_itself
+    # index_by(&:itself) on an array of literals should be converted to a hash
+    value = s(:call,
+      s(:array, s(:str, "a").line(1), s(:str, "b").line(1)).line(1),
+      :index_by,
+      s(:block_pass, s(:lit, :itself).line(1)).line(1)).line(1)
+    @constants.add :LOOKUP, value
+
+    result = @constants.get_simple_value(s(:const, :LOOKUP))
+    assert_equal :hash, result.node_type
+    assert_equal ["a", "a", "b", "b"], result.each_sexp.map(&:value)
+  end
+
+  def test_constants_index_by_itself_with_freeze
+    # .index_by(&:itself).freeze — freeze is stripped first, then index_by
+    value = s(:call,
+      s(:call,
+        s(:array, s(:str, "x").line(1), s(:str, "y").line(1)).line(1),
+        :index_by,
+        s(:block_pass, s(:lit, :itself).line(1)).line(1)).line(1),
+      :freeze).line(1)
+    @constants.add :FROZEN_LOOKUP, value
+
+    result = @constants.get_simple_value(s(:const, :FROZEN_LOOKUP))
+    assert_equal :hash, result.node_type
+    assert_equal ["x", "x", "y", "y"], result.each_sexp.map(&:value)
+  end
 end
