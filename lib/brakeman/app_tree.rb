@@ -251,7 +251,10 @@ module Brakeman
       paths.reject do |path|
         relative_path = path.relative
 
-        if @skip_vendor and relative_path.include? 'vendor/' and !in_engine_paths?(path) and !in_add_libs_paths?(path)
+        if @skip_vendor and
+            (relative_path == 'vendor' || relative_path.include?('vendor/')) and
+            !in_engine_paths?(path) and
+            !in_add_libs_paths?(path)
           true
         else
           match_path EXCLUDED_PATHS, path
