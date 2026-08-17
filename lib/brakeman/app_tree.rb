@@ -263,11 +263,17 @@ module Brakeman
     end
 
     def in_engine_paths?(path)
-      @engine_paths.any? { |p| path.absolute.include?(p) }
+      @engine_paths.any? do |p|
+        path.absolute.include?(p) ||
+          expand_path(p).start_with?("#{path.absolute}#{File::SEPARATOR}")
+      end
     end
 
     def in_add_libs_paths?(path)
-      @additional_libs_path.any? { |p| path.absolute.include?(p) }
+      @additional_libs_path.any? do |p|
+        path.absolute.include?(p) ||
+          expand_path(p).start_with?("#{path.absolute}#{File::SEPARATOR}")
+      end
     end
 
     def match_path files, path

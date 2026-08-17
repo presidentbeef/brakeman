@@ -92,6 +92,9 @@ class AppTreeTests < Minitest::Test
 
   def test_ruby_file_paths_skip_vendor_true_add_libs_path
     temp_dir_and_file_from_path("vendor/bundle/gems/gem123/lib/test.rb") do |dir, file|
+      # Make sure there is another top-level directory to search
+      FileUtils.mkdir_p(File.join(dir, "app"))
+
       at = Brakeman::AppTree.new(dir, :skip_vendor => true, :additional_libs_path => ["vendor/bundle/gems/gem123/lib"])
       assert_equal [file], at.ruby_file_paths.collect(&:absolute).to_a
     end
@@ -99,7 +102,10 @@ class AppTreeTests < Minitest::Test
 
   def test_ruby_file_paths_skip_vendor_true_add_engine_path
     temp_dir_and_file_from_path("vendor/bundle/gems/gem123/test.rb") do |dir, file|
-      at = Brakeman::AppTree.new(dir, :skip_vendor => true, :engine_paths => ["vendor/bundle/gems"])
+      # Make sure there is another top-level directory to search
+      FileUtils.mkdir_p(File.join(dir, "app"))
+
+      at = Brakeman::AppTree.new(dir, :skip_vendor => true, :engine_paths => ["vendor/bundle/gems/gem123"])
       assert_equal [file], at.ruby_file_paths.collect(&:absolute).to_a
     end
   end
