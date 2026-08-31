@@ -43,7 +43,13 @@ class WarningTests < Minitest::Test
       user_input: Sexp.new(:params),
       confidence: :high
     )
+    output_processor = Minitest::Mock.new
+    output_processor.expect :format, "[Format Error]".freeze, [warning.code, warning.user_input]
 
-    assert_equal "[Format Error]", warning.format_with_user_input
+    Brakeman::OutputProcessor.stub :new, output_processor do
+      assert_equal "[Format Error]", warning.format_with_user_input
+    end
+
+    output_processor.verify
   end
 end
