@@ -36,4 +36,14 @@ class WarningTests < Minitest::Test
 
     refute w.relative_path.start_with? "/"
   end
+
+  def test_format_with_user_input_returns_format_error
+    warning = Brakeman::Warning.new(
+      code: Sexp.new(:bad_node_type),
+      user_input: Sexp.new(:params),
+      confidence: :high
+    )
+
+    assert_equal "[Format Error]", warning.format_with_user_input
+  end
 end
