@@ -12,6 +12,7 @@ Please follow the typical GitHub flow:
 * Fork Brakeman
 * Clone locally `git clone your_new_fork`
 * Create a new branch `git checkout -b fix_some_broken_stuff`
+* Install gem dependencies `bundle install`
 * Add new tests
 * Make fixes, follow coding conventions of project
 * Run tests with `ruby test/test.rb` or just `rake` 
