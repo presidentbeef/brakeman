@@ -64,6 +64,8 @@ module Brakeman
       @only_files = init_options[:only_files]
       @additional_libs_path = init_options[:additional_libs_path] || []
       @engine_paths = init_options[:engine_paths] || []
+      @additional_libs_path_pairs = @additional_libs_path.map { |p| [p, expand_path(p)] }
+      @engine_path_pairs = @engine_paths.map { |p| [p, expand_path(p)] }
       @absolute_engine_paths = @engine_paths.select { |path| path.start_with?(File::SEPARATOR) }
       @relative_engine_paths = @engine_paths - @absolute_engine_paths
       @skip_vendor = init_options[:skip_vendor]
@@ -251,7 +253,10 @@ module Brakeman
       paths.reject do |path|
         relative_path = path.relative
 
-        if @skip_vendor and relative_path.include? 'vendor/' and !in_engine_paths?(path) and !in_add_libs_paths?(path)
+        if @skip_vendor and
+            (relative_path == 'vendor' || relative_path.include?('vendor/')) and
+            !in_engine_paths?(path) and
+            !in_add_libs_paths?(path)
           true
         else
           match_path EXCLUDED_PATHS, path
@@ -260,11 +265,17 @@ module Brakeman
     end
 
     def in_engine_paths?(path)
-      @engine_paths.any? { |p| path.absolute.include?(p) }
+      @engine_path_pairs.any? do |original, expanded|
+        path.absolute.include?(original) ||
+          expanded.start_with?("#{path.absolute}#{File::SEPARATOR}")
+      end
     end
 
     def in_add_libs_paths?(path)
-      @additional_libs_path.any? { |p| path.absolute.include?(p) }
+      @additional_libs_path_pairs.any? do |original, expanded|
+        path.absolute.include?(original) ||
+          expanded.start_with?("#{path.absolute}#{File::SEPARATOR}")
+      end
     end
 
     def match_path files, path
