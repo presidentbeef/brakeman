@@ -1221,7 +1221,7 @@ class Rails4Tests < Minitest::Test
     assert_no_warning :type => :model,
       :warning_type => "Format Validation",
       :line => 11,
-      :message => /^Insufficient\ validation\ for\ 'number/,
+      :message => /^Insufficient\ validation\ for\ `number/,
       :confidence => 0,
       :file => /phone\.rb/
   end
