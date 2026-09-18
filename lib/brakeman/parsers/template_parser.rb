@@ -56,8 +56,15 @@ module Brakeman
         else
           ERB.new(text, nil, '-').src
         end
-        src.sub!(/^#.*\n/, '')
-        src
+
+        # Encoding comment at the beginning throws off line numbers
+        # but the string is frozen in ERB 6.0.2+, so we don't want to
+        # unnecessarily duplicate the string
+        if src.start_with? '#'
+          src.sub(/^#.*\n/, '')
+        else
+          src
+        end
       end
     end
 
