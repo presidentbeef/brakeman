@@ -51,6 +51,11 @@ module Brakeman::Options
           options[:app_path] = path
         end
 
+        opts.on "--add-config-path path1,path2,etc", Array, "An application relative path to an additional Rails configuration module" do |paths|
+          options[:additional_config_paths] ||= Set.new
+          options[:additional_config_paths].merge paths
+        end
+
         opts.on "-q", "--[no-]quiet", "Suppress informational messages" do |quiet|
           options[:quiet] = quiet
         end
