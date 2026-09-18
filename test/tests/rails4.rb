@@ -19,7 +19,7 @@ class Rails4Tests < Minitest::Test
   def expected
     @expected ||= {
       :controller => 0,
-      :model => 3,
+      :model => 4,
       :template => 8,
       :generic => 92
     }
@@ -1208,13 +1208,14 @@ class Rails4Tests < Minitest::Test
   def test_format_validation_model_alias_processing
     assert_warning :type => :model,
       :warning_code => 30,
-      :fingerprint => "d2bfa987fd0e59d1d515a0bc0baaf378d1dd75483184c945b662b96d370add28",
+      :fingerprint => "71ad3b372e454952877d66e17e0903bf4777fc00deb581fe29a83218b69903b7",
       :warning_type => "Format Validation",
       :line => 8,
       :message => /^Insufficient\ validation\ for\ `email`\ usin/,
       :confidence => 0,
       :relative_path => "app/models/email.rb",
-      :user_input => nil
+      :user_input => nil,
+      :code => s(:arglist, s(:lit, :email), s(:hash, s(:lit, :with), s(:lit, /^[a-z0-9]+@[a-z0-9]+\.[a-z]+$/)))
   end
 
   def test_format_validation_with_multiline
@@ -1224,6 +1225,22 @@ class Rails4Tests < Minitest::Test
       :message => /^Insufficient\ validation\ for\ 'number/,
       :confidence => 0,
       :file => /phone\.rb/
+  end
+
+  def test_format_validation_not_ignored_when_similar_ignored
+    warnings = find :type => :model,
+                    :warning_type => "Format Validation",
+                    :message => /^Insufficient\ validation\ for\ `number`/,
+                    :relative_path => "app/models/phone.rb"
+
+    assert_equal 1, warnings.length
+    assert_equal 13, warnings[0].line
+    assert_equal "f975c806d28a706e123bfd96e7e1958fac7cfbce8cffac2b40b0d311068fcd30", warnings[0].fingerprint
+
+    assert_no_warning :type => :model,
+      :warning_type => "Format Validation",
+      :relative_path => "app/models/phone.rb",
+      :line => 12
   end
 
   def test_additional_libs_option

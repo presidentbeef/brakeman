@@ -92,7 +92,8 @@ class Brakeman::CheckValidationRegex < Brakeman::BaseCheck
       :message => msg("Insufficient validation for ", msg_code(get_name validator), " using ", msg_code(regex.inspect), ". Use ", msg_code("\\A"), " and ", msg_code("\\z"), " as anchors"),
       :line => value.line,
       :confidence => :high,
-      :cwe_id => [777]
+      :cwe_id => [777],
+      :code => validator
     end
   end
 

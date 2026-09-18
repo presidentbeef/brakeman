@@ -400,7 +400,9 @@ class Rails2Tests < Minitest::Test
       :message => /^Insufficient validation for `name` using/,
       :confidence => 0,
       :file => /account\.rb/,
-      :relative_path => "app/models/account.rb"
+      :relative_path => "app/models/account.rb",
+      :fingerprint => "98999fc8f3d44b20f120efea34da33ee1b6c4d991b99237efaeb41dfaf7a5d7a",
+      :code => s(:arglist, s(:lit, :name), s(:hash, s(:lit, :with), s(:lit, /^[a-zA-Z]+$/)))
   end
 
   def test_unescaped_parameter
