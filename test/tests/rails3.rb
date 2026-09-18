@@ -499,7 +499,9 @@ class Rails3Tests < Minitest::Test
       :line => 2,
       :message => /^Insufficient validation for `name` using/,
       :confidence => 0,
-      :file => /account\.rb/
+      :file => /account\.rb/,
+      :fingerprint => "98999fc8f3d44b20f120efea34da33ee1b6c4d991b99237efaeb41dfaf7a5d7a",
+      :code => s(:arglist, s(:lit, :name), s(:hash, s(:lit, :with), s(:lit, /^[a-zA-Z]+$/)))
   end
 
   def test_format_validation_with_z
@@ -508,7 +510,9 @@ class Rails3Tests < Minitest::Test
       :line => 3,
       :message => /^Insufficient validation for `blah` using/,
       :confidence => 0,
-      :file => /account\.rb/
+      :file => /account\.rb/,
+      :fingerprint => "de12c306740d3521355036825032e98b9bd8f9eb7febdf8cad804ee34aa88312",
+      :code => s(:arglist, s(:lit, :blah), s(:hash, s(:lit, :with), s(:lit, /\A[a-zA-Z]+$/)))
   end
 
   def test_format_validation_with_a
@@ -517,7 +521,9 @@ class Rails3Tests < Minitest::Test
       :line => 4,
       :message => /^Insufficient validation for `something` using/,
       :confidence => 0,
-      :file => /account\.rb/
+      :file => /account\.rb/,
+      :fingerprint => "ab6b3d8f3d65899a3ff9ae15db6a50942c4c9e2a0b5d202fdff4eb28d469d2c9",
+      :code => s(:arglist, s(:lit, :something), s(:hash, s(:lit, :with), s(:lit, /[a-zA-Z]\z/)))
   end
 
   def test_allowable_validation

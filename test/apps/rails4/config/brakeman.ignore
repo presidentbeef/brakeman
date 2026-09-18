@@ -1,6 +1,28 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Format Validation",
+      "warning_code": 30,
+      "fingerprint": "1bd4805f5a9ee1317d8cacce22be2c4e3bca60b4eb27bb41196063c2b7e9f67b",
+      "check_name": "ValidationRegex",
+      "message": "Insufficient validation for `number` using `/\\A(?!.*123456789)/m`. Use `\\A` and `\\z` as anchors",
+      "file": "app/models/phone.rb",
+      "line": 12,
+      "link": "https://brakemanscanner.org/docs/warning_types/format_validation/",
+      "code": ":number, { :with => /\\A(?!.*123456789)/m }",
+      "render_path": null,
+      "location": {
+        "type": "model",
+        "model": "Phone"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        777
+      ],
+      "note": "ignored for test_format_validation_not_ignored_when_similar_ignored"
+    },
+    {
       "warning_type": "Mass Assignment",
       "warning_code": 60,
       "fingerprint": "cd83ecf615b17f849ba28050e7faf1d54f218dfa9435c3f65f47cb378c18cf98",

@@ -10,7 +10,7 @@ class Rails31Tests < Minitest::Test
 
   def expected
     @expected ||= {
-      :model => 3,
+      :model => 5,
       :template => 23,
       :controller => 4,
       :generic => 90 }
@@ -1154,7 +1154,9 @@ class Rails31Tests < Minitest::Test
       :line => 2,
       :message => /^Insufficient\ validation\ for\ `username`\ u/,
       :confidence => 0,
-      :file => /account\.rb/
+      :file => /account\.rb/,
+      :fingerprint => "477bdcb734ae96b6709ceb9d4ba163d83b9c9c8e7dae85c8994830033c5565dc",
+      :code => s(:arglist, s(:lit, :username), s(:hash, s(:lit, :length), s(:lit, 6..20), s(:lit, :format), s(:lit, /([a-z][0-9])+/i)))
   end
 
   def test_validates_format_with
@@ -1163,7 +1165,9 @@ class Rails31Tests < Minitest::Test
       :line => 3,
       :message => /^Insufficient\ validation\ for\ `phone`\ usin/,
       :confidence => 0,
-      :file => /account\.rb/
+      :file => /account\.rb/,
+      :fingerprint => "bd1ed12d5b669097da73a1955e3a43fe008110aaf40cb3a6e74098d0df4925e4",
+      :code => s(:arglist, s(:lit, :phone), s(:hash, s(:lit, :format), s(:hash, s(:lit, :with), s(:lit, /(\d{3})-(\d{3})-(\d{4})/), s(:lit, :on), s(:lit, :create)), s(:lit, :presence), s(:true)))
   end
 
   def test_validates_format_with_short_regex
@@ -1172,7 +1176,31 @@ class Rails31Tests < Minitest::Test
       :line => 4,
       :message => /^Insufficient\ validation\ for\ `first_name`/,
       :confidence => 0,
-      :file => /account\.rb/
+      :file => /account\.rb/,
+      :fingerprint => "9ac6c7e4d8a69aafd509f999996753eeca51ccfa6f7653e52b02bf486601045e",
+      :code => s(:arglist, s(:lit, :first_name), s(:hash, s(:lit, :format), s(:lit, /\w+/)))
+  end
+
+  def test_validates_format_unique_fingerprint_same_attr_different_patterns
+    warnings = find :type => :model,
+                    :message => /^Insufficient\ validation\ for\ `username`\ u/,
+                    :confidence => 0,
+                    :file => /account\.rb/
+    assert_equal 2, warnings.length
+    refute_equal warnings[0].fingerprint, warnings[1].fingerprint
+    refute_equal warnings[0].line, warnings[1].line
+  end
+
+  def test_validates_format_unique_fingerprint_different_attrs_repeated_pattern
+    repeated_pattern = /\w+/
+    warnings = find :type => :model,
+                    :message => /^Insufficient\ validation\ for\ `(first|last)_name`/,
+                    :confidence => 0,
+                    :file => /account\.rb/
+    assert_equal 2, warnings.length
+    refute_equal warnings[0].fingerprint, warnings[1].fingerprint
+    assert_equal warnings[0].code, s(:arglist, s(:lit, :first_name), s(:hash, s(:lit, :format), s(:lit, repeated_pattern)))
+    assert_equal warnings[1].code, s(:arglist, s(:lit, :last_name), s(:hash, s(:lit, :format), s(:lit, repeated_pattern)))
   end
 
   def test_session_secret_token

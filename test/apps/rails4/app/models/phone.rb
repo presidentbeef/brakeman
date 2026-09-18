@@ -9,4 +9,6 @@ class Phone < ActiveRecord::Base
     \z
   }x
   validates_format_of :number, with: PHONE_NUMBER_REGEXP
+  validates_format_of :number, with: /\A(?!.*123456789)/m # should not contain many digits ascending, may be fake
+  validates_format_of :number, with: /\A(?!.*987654321)/m # should not contain many digits descending, may be fake
 end

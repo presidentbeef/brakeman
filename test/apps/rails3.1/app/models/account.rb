@@ -4,4 +4,6 @@ class Account < ActiveRecord::Base
   validates :first_name, :format => /\w+/
   serialize :cc_info #safe from CVE-2013-0277
   attr_accessible :blah_admin_blah
+  validates :username, :format => /\A(?!.*admin)/mi # should not contain "admin"
+  validates :last_name, :format => /\w+/
 end
