@@ -275,6 +275,28 @@ class Rails8Tests < Minitest::Test
       user_input: s(:call, s(:call, s(:const, :User), :first), :name)
   end
 
+  def test_sql_injection_enum_positional_syntax
+    assert_no_warning check_name: "SQL",
+      type: :warning,
+      warning_code: 0,
+      fingerprint: "5d2341aac7ee7ce2a26f807db710bbb179a532114f8ad49d043e34e9ae570d76",
+      warning_type: "SQL Injection",
+      line: 7,
+      message: /^Possible\ SQL\ injection/,
+      confidence: 0,
+      relative_path: "app/models/enum_repro.rb",
+      code: s(:call, nil, :where, s(:dstr, "thing IN (", s(:evstr, s(:call, s(:call, s(:const, :EnumRepro), :statuses), :[], s(:lit, :start))), s(:str, ")"))),
+      user_input: s(:call, s(:call, s(:const, :EnumRepro), :statuses), :[], s(:lit, :start))
+  end
+
+  def test_sql_injection_enum_old_style_syntax_still_safe
+    assert_no_warning check_name: "SQL",
+      type: :warning,
+      warning_type: "SQL Injection",
+      relative_path: "app/models/enum_repro.rb",
+      line: 16
+  end
+
   def test_command_injection_1
     assert_no_warning check_name: "Execute",
       type: :warning,

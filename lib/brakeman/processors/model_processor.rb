@@ -91,12 +91,25 @@ class Brakeman::ModelProcessor < Brakeman::BaseProcessor
   end
 
   def add_enum_method call
-    arg = call.first_arg
-    return unless hash? arg
-    return unless symbol? arg[1]
+    if call.second_arg.nil?
+      # Rails < 7.1 syntax: enum status: { active: 0, archived: 1 }
+      arg = call.first_arg
+      return unless hash? arg
+      return unless symbol? arg[1]
 
-    enum_name = arg[1].value # first key
-    enums = arg[2] # first value
+      enum_name = arg[1].value # first key
+      enums = arg[2] # first value
+    else
+      # Rails >= 7.1 syntax: enum :status, { active: 0, archived: 1 }
+      first_arg = call.first_arg
+      second_arg = call.second_arg
+      return unless symbol? first_arg
+      return unless hash? second_arg or array? second_arg
+
+      enum_name = first_arg.value
+      enums = second_arg
+    end
+
     enums_name = pluralize(enum_name.to_s).to_sym
 
     call_line = call.line
