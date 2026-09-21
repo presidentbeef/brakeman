@@ -171,7 +171,7 @@ class Brakeman::HamlTemplateProcessor < Brakeman::TemplateProcessor
 
   def escaped_builder_method? exp
     case exp.method
-    when :build, :build_aria, :build_boolean, :build_data, :build_id, :escape_html
+    when :build, :build_aria, :build_boolean, :build_class, :build_data, :build_id, :escape_html
       true? exp.first_arg
     else
       false
