@@ -32,10 +32,14 @@ module Brakeman
     #   * "path1/file1.rb" - Matches a specific filename in the project directory.
     #   * "path1/" - Matches any path that contains "path1" in the project directory.
     #   * "/path1/ - Matches any path that is rooted at "path1" in the project directory.
+    #   * "./path1/file1.rb" or "./path1/" - Same as with a leading "/" instead of "./".
     #
     # TODO: This is wacky and I don't like it.
     def self.regex_for_paths(paths)
       path_regexes = paths.map do |f|
+        # "./path" is relative to the project directory, like "/path"
+        f = f.sub(%r{\A(?:\./)+}, File::SEPARATOR)
+
         # If path ends in a file separator then we assume it is a path rather
         # than a filename.
         if f.end_with?(File::SEPARATOR)
