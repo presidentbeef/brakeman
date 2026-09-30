@@ -1,3 +1,15 @@
+# 8.1.0 - 2026-09-30
+
+* Better help and error message for `--ensure-latest`
+* Fix frozen string error (Shai Coleman)
+* Update Sonar report format (fangxing)
+* Fix frozen `src` string error
+* Recognize `Haml::AttributeBuilder.build_class` as an escaped output (Yuriy Tumanov)
+* Include regex code in validation warnings (Eliot Sykes)
+* Check validation regexes in non-activerecord models (Eliot Sykes)
+* Skip top-level vendor directory before recursive globbing (Conor O'Donnell)
+* Support Rails 7.1+ positional enum syntax in SQL injection check (Michael Vogl/Yuriy Tumanov)
+
 # 8.0.6 - 2026-08-13
 
 * Fix EOL date for Rails 8.0 (yeaseul-kim)
