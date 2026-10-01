@@ -76,6 +76,7 @@ module Brakeman
   #  * :skip_checks - checks not to run (run all if not specified)
   #  * :absolute_paths - show absolute path of each file (default: false)
   #  * :summary_only - only output summary section of report for plain/table (:summary_only, :no_summary, true)
+  #  * :unscoped_find_all_optional - only skip models in UnscopedFind if all belongs_to associations are optional (default: false)
   #
   #Alternatively, just supply a path as a string.
   def self.run options

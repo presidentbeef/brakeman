@@ -411,6 +411,14 @@ class BrakemanOptionsTest < Minitest::Test
     refute options[:follow_symlinks]
   end
 
+  def test_unscoped_find_all_optional
+    options = setup_options_from_input("--unscoped-find-all-optional")
+    assert options[:unscoped_find_all_optional]
+
+    options = setup_options_from_input("--no-unscoped-find-all-optional")
+    refute options[:unscoped_find_all_optional]
+  end
+
   def test_set_gemfile
     options = setup_options_from_input("--gemfile", "Gemfile.mine")
     assert_equal "Gemfile.mine", options[:gemfile]

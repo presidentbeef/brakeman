@@ -808,11 +808,20 @@ class Rails5Tests < Minitest::Test
       :fingerprint => "21a836b647ac118baf1a63e5fa4c219f8d600760b05ff9b8927c39a97ebf1dd1",
       :warning_type => "Unscoped Find",
       :line => 67,
-      :message => /^Unscoped\ call\ to\ User\#find/,
+      :message => /^Unscoped\ call\ to\ `User\#find`/,
       :confidence => 2,
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))),
       :user_input => s(:call, s(:params), :[], s(:lit, :id))
+  end
+
+  def test_unscoped_find_skips_model_with_any_optional_belongs_to
+    assert_no_warning :type => :warning,
+      :warning_code => 82,
+      :warning_type => "Unscoped Find",
+      :line => 3,
+      :message => /^Unscoped\ call\ to\ `Project\#find`/,
+      :relative_path => "app/controllers/projects_controller.rb"
   end
 
   def test_reverse_tabnabbing
@@ -983,5 +992,35 @@ class Rails5Tests < Minitest::Test
       relative_path: "Gemfile.lock",
       code: nil,
       user_input: nil
+  end
+end
+
+class Rails5WithUnscopedFindAllOptionalTests < Minitest::Test
+  include BrakemanTester::FindWarning
+
+  def report
+    @@report ||= BrakemanTester.run_scan "rails5", "Rails 5", run_all_checks: true, unscoped_find_all_optional: true
+  end
+
+  def test_unscoped_find_with_required_and_optional_belongs_to
+    assert_warning :type => :warning,
+      :warning_code => 82,
+      :fingerprint => "c99b8fc8005efd14a79192a8b6f4ca9a5bb7fb34d78d5abc2d1ce6a803b866eb",
+      :warning_type => "Unscoped Find",
+      :line => 3,
+      :message => /^Unscoped\ call\ to\ `Project\#find`/,
+      :confidence => 2,
+      :relative_path => "app/controllers/projects_controller.rb",
+      :code => s(:call, s(:const, :Project), :find, s(:call, s(:params), :[], s(:lit, :id))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :id))
+  end
+
+  def test_unscoped_find_with_all_optional_belongs_to
+    assert_no_warning :type => :warning,
+      :warning_code => 82,
+      :warning_type => "Unscoped Find",
+      :line => 7,
+      :message => /^Unscoped\ call\ to\ `Comment\#find`/,
+      :relative_path => "app/controllers/projects_controller.rb"
   end
 end

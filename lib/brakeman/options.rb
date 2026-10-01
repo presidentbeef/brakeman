@@ -197,6 +197,10 @@ module Brakeman::Options
           options[:url_safe_methods].merge methods.map {|e| e.to_sym }
         end
 
+        opts.on "--[no-]unscoped-find-all-optional", "Only skip models in UnscopedFind check if all belongs_to associations are optional" do |all_optional|
+          options[:unscoped_find_all_optional] = all_optional
+        end
+
         opts.on "--skip-files file1,path2,etc", Array, "Skip processing of these files/directories. Directories are application relative and must end in \"#{File::SEPARATOR}\"" do |files|
           options[:skip_files] ||= Set.new
           options[:skip_files].merge files

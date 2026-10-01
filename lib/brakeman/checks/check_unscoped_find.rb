@@ -11,7 +11,11 @@ class Brakeman::CheckUnscopedFind < Brakeman::BaseCheck
 
     associated_model_names = active_record_models.keys.select do |name|
       if belongs_to = active_record_models[name].associations[:belongs_to]
-        not optional_belongs_to? belongs_to
+        if tracker.options[:unscoped_find_all_optional]
+          not all_optional_belongs_to? belongs_to
+        else
+          not optional_belongs_to? belongs_to
+        end
       else
         false
       end
@@ -62,5 +66,18 @@ class Brakeman::CheckUnscopedFind < Brakeman::BaseCheck
     end
 
     false
+  end
+
+  def all_optional_belongs_to? exp
+    return false unless exp.is_a? Array
+
+    # Arguments from all belongs_to calls are in one array, so split on association names
+    associations = exp.slice_before { |e| symbol? e }.select { |args| symbol? args.first }
+
+    return false if associations.empty?
+
+    associations.all? do |args|
+      args.any? { |e| hash? e and true? hash_access(e, :optional) }
+    end
   end
 end
