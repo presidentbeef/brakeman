@@ -105,6 +105,15 @@ module Brakeman
         value = value.target
       end
 
+      # Convert %w[...].index_by(&:itself) to a hash literal
+      if call? value and value.method == :index_by and
+          array? value.target and all_literals? value.target and
+          node_type? value.first_arg, :block_pass and
+          value.first_arg[1] == s(:lit, :itself)
+        hash_body = value.target.each_sexp.flat_map { |e| [e, e.deep_clone] }
+        value = s(:hash, *hash_body).line(value.line)
+      end
+
       base_name = Constants.get_constant_base_name(name)
       @constants[base_name] ||= []
       @constants[base_name] << Constant.new(name, value, context)
