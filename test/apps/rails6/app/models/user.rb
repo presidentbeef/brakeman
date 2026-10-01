@@ -21,6 +21,11 @@ class User < ApplicationRecord
     SQL
   end
 
+  def delete_old_records(period)
+    # Bare `connection.delete` with a SQL string must still warn (no FN).
+    connection.delete("DELETE FROM users WHERE updated_at < '#{period}'")
+  end
+
   def recent_stuff
     where("date > #{Date.today - 1}")
   end
