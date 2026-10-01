@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Brakeman: Brakeman 7.1.0 Released</title>
+    <title>Brakeman: Brakeman 8.1.0</title>
     <meta name="description" content="Brakeman is a static analysis security vulnerability scanner for Ruby on Rails applications."/>
 
     <meta charset="UTF-8">
@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/stylesheets/screen.css">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-    <meta name="og:title" content="Brakeman - Brakeman 7.1.0 Released" />
+    <meta name="og:title" content="Brakeman - Brakeman 8.1.0" />
     <meta name="og:description" content="Brakeman Static Analysis Security Scanner for Ruby on Rails" />
     <meta name="og:image" content="https://brakemanscanner.org/images/brakeman_logo_dark.png" />
 </head>
@@ -86,42 +86,42 @@
                 <article class="article-main fade-in">
                     <div class="article-header">
                         <div class="article-meta">
-                            <span class="date-badge">July 18, 2025</span>
+                            <span class="date-badge">September 30, 2026</span>
                         </div>
-                        <h1 class="article-title">Brakeman 7.1.0 Released</h1>
+                        <h1 class="article-title">Brakeman 8.1.0</h1>
                         
-                            <p class="article-subtitle">Haml 6 support, render shortcuts, and performance improvements</p>
+                            <p class="article-subtitle">Updated SonarQube format, updated validation regex warnings, more!</p>
                         
                     </div>
 
                     <div class="article-content">
                         
                             <div class="changelog-intro">
-                                <h3>Changes since 7.0.2:</h3>
+                                <h3>Changes since 8.0.6:</h3>
                                 <ul>
                                     
-                                        <li>Add Haml 6.x support (<a href="https://github.com/presidentbeef/brakeman/issues/1914">#1914</a>, <a href="https://github.com/presidentbeef/brakeman/issues/1841">#1841</a>, etc.)
+                                        <li>Update SonarQube report to use generic issue format (<a href="https://github.com/fffx">fangxing</a>)
 </li>
                                     
-                                        <li>Support render model shortcut (<a href="https://github.com/presidentbeef/brakeman/issues/959">#959</a>, <a href="https://github.com/presidentbeef/brakeman/issues/1940">#1940</a>, etc.)
+                                        <li>Include regex code in validation warnings (<a href="https://github.com/eliotsykes">Eliot Sykes</a>)
 </li>
                                     
-                                        <li>Add <code class="language-plaintext highlighter-rouge">--ensure-no-obsolete-config-entries</code> option (<a href="https://github.com/viralpraxis">viralpraxis</a>)
+                                        <li>Check validation regexes in non-activerecord models (<a href="https://github.com/eliotsykes">Eliot Sykes</a>)
 </li>
                                     
-                                        <li>Update JUnit report for CircleCI (<a href="https://github.com/pbernery">Philippe Bernery</a>)
+                                        <li>Skip top-level vendor directory before recursive globbing (<a href="https://github.com/ronocod">Conor O’Donnell</a>)
 </li>
                                     
-                                        <li>Improve ignored warnings layout in HTML report (<a href="https://github.com/inkstak">Sebastien Savater</a>)
+                                        <li>Support Rails 7.1+ positional enum syntax in SQL injection check (<a href="https://github.com/cubasepp">Michael Vogl</a>/<a href="https://github.com/Eljees">Yuriy Tumanov</a>)
 </li>
                                     
-                                        <li>Only load escape functionality from cgi library (<a href="https://github.com/Earlopain">Earlopain</a>)
+                                        <li>Recognize <code class="language-plaintext highlighter-rouge">Haml::AttributeBuilder.build_class</code> as an escaped output (<a href="https://github.com/Eljees">Yuriy Tumanov</a>)
 </li>
                                     
-                                        <li>Add EOL dates for Rails 8.0 and Ruby 3.4
+                                        <li>Fix frozen string error (<a href="https://github.com/shaicoleman">Shai Coleman</a>)
 </li>
                                     
-                                        <li>Use lazy file lists for AppTree
+                                        <li>Better help and error message for <code class="language-plaintext highlighter-rouge">--ensure-latest</code> (<a href="https://github.com/presidentbeef/brakeman/issues/2036">#2036</a>)
 </li>
                                     
                                 </ul>
@@ -130,61 +130,69 @@
 
 
 			<div class="feature-section">
-			    <h2 id="haml-6-support">Haml 6 Support</h2>
+			    <h3 id="sonarqube-report-format">SonarQube Report Format</h3>
 
-<p>Brakeman now ships with and supports Haml 6.</p>
+<p>When using the Sonar format report (<code class="language-plaintext highlighter-rouge">-f sonar</code>), Brakeman will now use the newer <a href="https://docs.sonarsource.com/sonarqube-server/analyzing-source-code/importing-external-issues/generic-issue-import-format">generic issues report</a>.</p>
 
-<p>To continue using Brakeman with Haml 5.x, please use the <code class="language-plaintext highlighter-rouge">brakeman-lib</code> or <code class="language-plaintext highlighter-rouge">brakeman-min</code> gems.</p>
+<p>In theory, you could also use the SARIF report (<code class="language-plaintext highlighter-rouge">-f sarif</code>) but this has not been tested.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1944">changes</a>)</p>
+<p>Thanks Fangxing!</p>
 
-<h2 id="render-shortcuts">Render Shortcuts</h2>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/2038">changes</a>)</p>
 
-<p>After many, many years, Brakeman now supports shortcuts where specific models or collections are rendered. For example: <code class="language-plaintext highlighter-rouge">render User.find(..)</code> or <code class="language-plaintext highlighter-rouge">render User.all</code></p>
+<h3 id="validation-regex-changes">Validation Regex Changes</h3>
 
-<p>Brakeman does not currently support rendering of collections with mixed types of models.</p>
+<p>Previously, Brakeman was not including the validation regex itself when warning about insufficient anchoring.
+This could cause two different validation warnings to have the same fingerprint.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1948">changes</a>)</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">validates_format_of</span> <span class="ss">:something</span><span class="p">,</span> <span class="sr">/^something$/</span>
+</code></pre></div></div>
 
-<h2 id="fail-on-obsolete-ignored-warnings">Fail on Obsolete Ignored Warnings</h2>
+<p>This has been rectified, thanks to Eliot Sykes. However, this will mean fingerprint values will change for existing validation regex warnings.</p>
 
-<p>When Brakeman is configured to ignore warnings, but then those warnings aren’t found, Brakeman reports “obsolete ignored warnings”.</p>
+<p>Eliot also expanded Brakeman’s check for insufficient anchoring in validation regexes to include non-ActiveRecord models.</p>
 
-<p><a href="https://github.com/viralpraxis">viralpraxis</a> added the <code class="language-plaintext highlighter-rouge">--ensure-no-obsolete-config-entries</code> option to return a failure exit code if there are obsolete entries.</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/2050">changes</a>)</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1921">changes</a>)</p>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/2053">changes</a>)</p>
 
-<h2 id="junit-report-for-circleci">JUnit Report for CircleCI</h2>
+<h3 id="better-vendor-directory-skipping">Better Vendor Directory Skipping</h3>
 
-<p><a href="https://github.com/pbernery">Philippe Bernery</a> has fixed JUnit reports to be compatible with CircleCI (again). Thanks!</p>
+<p>Brakeman skips the top-level vendor directory by default or if <code class="language-plaintext highlighter-rouge">--skip-vendor</code> is used.</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1934">changes</a>)</p>
+<p>However, there were performance issues because while files in the directory were skipped, they were still searched for matching file names.</p>
 
-<h2 id="better-ignored-warnings-layout">Better Ignored Warnings Layout</h2>
+<p>Conor noticed the performance problem and fixed it!</p>
 
-<p>Speaking of ignored warnings, <a href="https://github.com/inkstak">Sebastien Savater</a> has improved the layout in the HTML report to make it easier to read notes for ignored warnings.</p>
+<p>(<a href="">changes</a>)</p>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1941">changes</a>)</p>
+<h3 id="newer-enum-support">Newer Enum Support</h3>
 
-<h2 id="cgi-loading">CGI Loading</h2>
+<p>Michael Vogl added support for the newer (Rails 7.1+) syntax for enums:</p>
 
-<p>In preparation for <a href="https://bugs.ruby-lang.org/issues/21258">Ruby 3.5</a>, <a href="https://github.com/Earlopain">Earlopain</a> updated Brakeman to explcitly load <code class="language-plaintext highlighter-rouge">cgi/escape</code> instead of the entire CGI library.</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">enum</span> <span class="ss">:status</span><span class="p">,</span> <span class="ss">active: </span><span class="mi">0</span><span class="p">,</span> <span class="ss">archived: </span><span class="mi">1</span>
+</code></pre></div></div>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1938">changes</a>)</p>
+<p>And Yuriy Tumanov fixed up the tests for it.</p>
 
-<h2 id="lazy-file-lists">Lazy File Lists</h2>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1946">changes</a>)</p>
 
-<p>Use lazy file lists when managing files in <code class="language-plaintext highlighter-rouge">Brakeman::AppTree</code>. This provides a small (~9%) speed improvement for large applications.</p>
+<h3 id="more-haml-builders">More Haml Builders</h3>
 
-<p>(<a href="https://github.com/presidentbeef/brakeman/pull/1913">changes</a>)</p>
+<p>Yuriy also fixed an issue where <code class="language-plaintext highlighter-rouge">Haml::AttributeBuilder.build_class</code> was falsely being reported as vulnerable to cross-site scripting.</p>
 
-<h2 id="reporting-issues">Reporting Issues</h2>
+<p>(<a href="https://github.com/presidentbeef/brakeman/pull/2052">changes</a>)</p>
 
-<p>Thank you to everyone who reported bugs and contributed to this release!</p>
-
-<p>Please report any <a href="https://github.com/presidentbeef/brakeman/issues">issues</a> with this release. Take a look at <a href="https://github.com/presidentbeef/brakeman/wiki/How-to-Report-a-Brakeman-Issue">this guide</a> to reporting Brakeman problems.</p>
-
-<p>Hang out <a href="https://github.com/presidentbeef/brakeman/discussions">on Github</a> for questions and discussion.</p>
+<ul>
+  <li>Update SonarQube report to use generic issue format (<a href="https://github.com/fffx">fangxing</a>)</li>
+  <li>Include regex code in validation warnings (<a href="https://github.com/eliotsykes">Eliot Sykes</a>)</li>
+  <li>Check validation regexes in non-activerecord models (<a href="https://github.com/eliotsykes">Eliot Sykes</a>)</li>
+  <li>Skip top-level vendor directory before recursive globbing (<a href="https://github.com/ronocod">Conor O’Donnell</a>)</li>
+  <li>Support Rails 7.1+ positional enum syntax in SQL injection check (<a href="https://github.com/cubasepp">Michael Vogl</a>/<a href="https://github.com/Eljees">Yuriy Tumanov</a>)</li>
+  <li>Recognize <code class="language-plaintext highlighter-rouge">Haml::AttributeBuilder.build_class</code> as an escaped output (<a href="https://github.com/Eljees">Yuriy Tumanov</a>)</li>
+  <li>Fix frozen string error (<a href="https://github.com/shaicoleman">Shai Coleman</a>)</li>
+  <li>Better help and error message for <code class="language-plaintext highlighter-rouge">--ensure-latest</code> (<a href="https://github.com/presidentbeef/brakeman/issues/2036">#2036</a></li>
+</ul>
 
 			</div>
 
@@ -194,18 +202,18 @@
                                 <p>The SHA256 sums for this release are:</p>
                                 
                                     <div class="checksum-line">
-                                        <span class="hash">bbc708a75a53008490c8b9600b97fa85cb3d5a8818dd1560f18e0b89475d48af</span> 
-                                        <span class="filename">brakeman-7.1.0.gem</span>
+                                        <span class="hash">cfa9e5214e4925842f4bc849a64f8a7e6c5d0425fe98eac8d7b7bc60fdc17e07</span> 
+                                        <span class="filename">brakeman-8.1.0.gem</span>
                                     </div>
                                 
                                     <div class="checksum-line">
-                                        <span class="hash">b5263ca27a725ad38fb98aa83908b0285eee46c29096eb4fb0b36b2795bbb082</span> 
-                                        <span class="filename">brakeman-lib-7.1.0.gem</span>
+                                        <span class="hash">88c56fa1bf295164f3f6a73bb627830d8d641a9b08e0b8683113acb694273ca4</span> 
+                                        <span class="filename">brakeman-lib-8.1.0.gem</span>
                                     </div>
                                 
                                     <div class="checksum-line">
-                                        <span class="hash">0a141eaf08f864680af69c6642f9cf855be3eb89c3d5a3f5b0bd182f9eba2d82</span> 
-                                        <span class="filename">brakeman-min-7.1.0.gem</span>
+                                        <span class="hash">320e25c6e8e1638376a25bdbeffa358457cb19a1385db4497ed10d2a4028d33e</span> 
+                                        <span class="filename">brakeman-min-8.1.0.gem</span>
                                     </div>
                                 
                             </div>
