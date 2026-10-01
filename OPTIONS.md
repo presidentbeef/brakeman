@@ -93,6 +93,10 @@ Note it is not necessary to include the `Check` part of the check. For example, 
     brakeman --test CheckSQL
     brakeman --test SQL
 
+The optional Unscoped Find check skips models with any `belongs_to` association marked `optional: true`. To only skip models where all `belongs_to` associations are optional:
+
+    brakeman -E UnscopedFind --unscoped-find-all-optional
+
 ## Output Options
 
 To see all kinds of debugging information:
