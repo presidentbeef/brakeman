@@ -1,4 +1,5 @@
 require 'brakeman/checks/check_cross_site_scripting'
+require 'brakeman/safe_method_handler'
 
 #Checks for calls to link_to which pass in potentially hazardous data
 #to the second argument.  While this argument must be html_safe to not break
@@ -131,7 +132,7 @@ class Brakeman::CheckLinkToHref < Brakeman::CheckLinkTo
   end
 
   def ignored_method? target, method
-    @ignore_methods.include? method or
+    SafeMethodHandler.include?(method, @ignore_methods) or
       method.to_s =~ /_path$/ or
       (target.nil? and method.to_s =~ /_url$/)
   end
