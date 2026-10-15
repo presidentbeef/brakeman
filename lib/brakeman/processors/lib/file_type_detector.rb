@@ -1,6 +1,7 @@
 module Brakeman
   class FileTypeDetector < BaseProcessor
-    def initialize
+    def initialize(model_paths)
+      @model_paths = model_paths
       super(nil)
       reset
     end
@@ -38,7 +39,7 @@ module Brakeman
 
     def guess_from_path path
       case
-      when path.include?('app/models')
+      when @model_paths.any? { |model_path| File.fnmatch?(model_path, path, File::FNM_PATHNAME) }
         :model
       when path.include?('app/controllers')
         :controller

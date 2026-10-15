@@ -143,7 +143,7 @@ class Brakeman::Scanner
   end
 
   def detect_file_types(astfiles)
-    detector = Brakeman::FileTypeDetector.new
+    detector = Brakeman::FileTypeDetector.new(@options.fetch(:model_paths))
 
     astfiles.each do |file|
       Brakeman.logger.spin
