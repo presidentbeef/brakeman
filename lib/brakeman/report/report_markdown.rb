@@ -52,6 +52,7 @@ class Brakeman::Report::Markdown < Brakeman::Report::Table
     output_table("Controller Warnings:", generate_controller_warnings, out)
     output_table("Model Warnings:", generate_model_warnings, out)
     output_table("View Warnings:", generate_template_warnings, out)
+    output_table("Ignored Warnings:", generate_ignored_warnings, out)
 
     out
   end
@@ -82,10 +83,25 @@ class Brakeman::Report::Markdown < Brakeman::Report::Table
       t.add_row([checks.checks_run.sort.join(", ")])
     end
   end
+  
+  def generate_ignored_warnings
+    render_warnings ignored_warnings,
+                    :ignored,
+                    'ignored_warnings',
+                    ['Confidence', 'Warning Type', 'File', 'Message', 'Note'],
+                    'Warning Type'
+  end
 
   def convert_warning warning, original
     warning["Message"] = markdown_message original, warning["Message"]
     warning["Warning Type"] = "[#{warning['Warning Type']}](#{original.link})" if original.link
+    warning
+  end
+  
+  def convert_ignored_warning warning, original
+    warning = convert_warning(warning, original)
+    warning['File'] = original.file.relative
+    warning['Note'] = CGI.escapeHTML(@ignore_filter.note_for(original) || "")
     warning
   end
 
