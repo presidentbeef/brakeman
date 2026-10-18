@@ -196,12 +196,15 @@ module Brakeman
         files.uniq.lazy
       else
         if directory == '.'
-          pattern = File.join(top_directories_pattern, '**', "#{name}#{extensions}")
+          pattern = File.join(top_directories_pattern, '**', '*')
         else
-          pattern = "#{root_search_pattern}#{directory}/**/#{name}#{extensions}"
+          pattern = "#{root_search_pattern}#{directory}/**/*"
         end
 
-        Dir.glob(pattern).lazy
+        # Dir.glob walks the tree again for each alternative in braces,
+        # so walk it once and match the extensions on each file name
+        file_pattern = "#{name}#{extensions}"
+        Dir.glob(pattern).select { |path| File.fnmatch?(file_pattern, File.basename(path), File::FNM_EXTGLOB) }.lazy
       end
     end
 
