@@ -60,6 +60,7 @@ module Brakeman
     def initialize(root, init_options = {})
       @root = root
       @project_root_path = Pathname.new(@root)
+      @project_root_prefix = File.join(@root, '')
       @skip_files = init_options[:skip_files]
       @only_files = init_options[:only_files]
       @additional_libs_path = init_options[:additional_libs_path] || []
@@ -155,6 +156,7 @@ module Brakeman
       @controller_paths = @controller_paths.to_a
       @template_paths = @template_paths.to_a
       @lib_files = @file_paths.to_a
+      @all_files = nil
 
       self
     end
@@ -196,15 +198,16 @@ module Brakeman
         files.uniq.lazy
       else
         if directory == '.'
-          pattern = File.join(top_directories_pattern, '**', '*')
+          # Ruby files and templates are both searched for in the whole tree
+          files = @all_files ||= Dir.glob(File.join(top_directories_pattern, '**', '*'))
         else
-          pattern = "#{root_search_pattern}#{directory}/**/*"
+          files = Dir.glob("#{root_search_pattern}#{directory}/**/*")
         end
 
         # Dir.glob walks the tree again for each alternative in braces,
         # so walk it once and match the extensions on each file name
         file_pattern = "#{name}#{extensions}"
-        Dir.glob(pattern).select { |path| File.fnmatch?(file_pattern, File.basename(path), File::FNM_EXTGLOB) }.lazy
+        files.select { |path| File.fnmatch?(file_pattern, File.basename(path), File::FNM_EXTGLOB) }.lazy
       end
     end
 
@@ -285,7 +288,14 @@ module Brakeman
       # TODO: Converting to Pathnames and Strings seems like a lot
       # of converting that could perhaps all be handled in Brakeman::FilePath
       # instead?
-      absolute_path = Pathname.new(path)
+      absolute_path = path.to_s
+
+      # Pathname#relative_path_from is slow, and every candidate file goes through here
+      relative_path = if absolute_path.start_with?(@project_root_prefix)
+        absolute_path.delete_prefix(@project_root_prefix)
+      else
+        Pathname.new(absolute_path).relative_path_from(@project_root_path).to_s
+      end
 
       # relative root never has a leading separator. But, we use a leading
       # separator in a @skip_files entry to imply that a directory is
@@ -295,13 +305,13 @@ module Brakeman
       project_relative_path = if File.directory?(path)
         File.join(
           File::SEPARATOR,
-          absolute_path.relative_path_from(@project_root_path).to_s,
+          relative_path,
           File::SEPARATOR
         )
       else
         File.join(
           File::SEPARATOR,
-          absolute_path.relative_path_from(@project_root_path).to_s
+          relative_path
         )
       end
 
