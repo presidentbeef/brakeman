@@ -13,7 +13,7 @@ class Rails5Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 19,
-      :generic => 26
+      :generic => 27
     }
   end
 
@@ -808,11 +808,33 @@ class Rails5Tests < Minitest::Test
       :fingerprint => "21a836b647ac118baf1a63e5fa4c219f8d600760b05ff9b8927c39a97ebf1dd1",
       :warning_type => "Unscoped Find",
       :line => 67,
-      :message => /^Unscoped\ call\ to\ User\#find/,
+      :message => /^Unscoped\ call\ to\ `User\#find`/,
       :confidence => 2,
       :relative_path => "app/controllers/users_controller.rb",
       :code => s(:call, s(:const, :User), :find, s(:call, s(:params), :[], s(:lit, :id))),
       :user_input => s(:call, s(:params), :[], s(:lit, :id))
+  end
+
+  def test_unscoped_find_with_required_and_optional_belongs_to
+    assert_warning :type => :warning,
+      :warning_code => 82,
+      :fingerprint => "c99b8fc8005efd14a79192a8b6f4ca9a5bb7fb34d78d5abc2d1ce6a803b866eb",
+      :warning_type => "Unscoped Find",
+      :line => 3,
+      :message => /^Unscoped\ call\ to\ `Project\#find`/,
+      :confidence => 2,
+      :relative_path => "app/controllers/projects_controller.rb",
+      :code => s(:call, s(:const, :Project), :find, s(:call, s(:params), :[], s(:lit, :id))),
+      :user_input => s(:call, s(:params), :[], s(:lit, :id))
+  end
+
+  def test_unscoped_find_with_all_optional_belongs_to
+    assert_no_warning :type => :warning,
+      :warning_code => 82,
+      :warning_type => "Unscoped Find",
+      :line => 7,
+      :message => /^Unscoped\ call\ to\ `Comment\#find`/,
+      :relative_path => "app/controllers/projects_controller.rb"
   end
 
   def test_reverse_tabnabbing
