@@ -108,10 +108,6 @@ module Brakeman
       find_paths(".").uniq
     end
 
-    def initializer_paths
-      @initializer_paths ||= prioritize_concerns(find_paths("config/initializers"))
-    end
-
     def controller_paths
       @controller_paths ||= prioritize_concerns(find_paths("app/**/controllers"))
     end
@@ -129,13 +125,6 @@ module Brakeman
       !Dir.glob("#{root_search_pattern}app/views/layouts/#{name}.html.{erb,haml,slim}").empty?
     end
 
-    def lib_paths
-      @lib_files ||= find_paths("lib").reject { |path| path.relative.include? "/generators/" or path.relative.include? "lib/tasks/" or path.relative.include? "lib/templates/" } +
-                     find_additional_lib_paths +
-                     find_helper_paths +
-                     find_job_paths
-    end
-
     def gemspec
       return @gemspec unless @gemspec.nil?
 
@@ -151,27 +140,13 @@ module Brakeman
 
     # Call this to be able to marshall the AppTree
     def marshallable
-      @initializer_paths = @initializer_paths.to_a
       @controller_paths = @controller_paths.to_a
       @template_paths = @template_paths.to_a
-      @lib_files = @file_paths.to_a
 
       self
     end
 
   private
-
-    def find_helper_paths
-      find_paths "app/helpers"
-    end
-
-    def find_job_paths
-      find_paths "app/jobs"
-    end
-
-    def find_additional_lib_paths
-      @additional_libs_path.collect{ |path| find_paths path }.flatten
-    end
 
     def find_paths(directory, extensions = ".rb")
       select_files(glob_files(directory, "*", extensions))
