@@ -173,6 +173,17 @@ class AppTreeTests < Minitest::Test
       assert app_tree_match?(at, paths, File.join(dir, 'match', 'this', 'file.rb'))
       refute app_tree_match?(at, paths, File.join(dir, 'no', 'file.rb', 'match'))
       refute app_tree_match?(at, paths, File.join(dir, 'match', 'this', File::SEPARATOR))
+
+      # './path1/file1.rb' and './path1/' - Same as with a leading '/'.
+      paths = Brakeman::AppTree.__send__(:regex_for_paths, ['./match/this/file.rb'])
+
+      assert app_tree_match?(at, paths, File.join(dir, 'match', 'this', 'file.rb'))
+      refute app_tree_match?(at, paths, File.join(dir, 'file.rb'))
+
+      paths = Brakeman::AppTree.__send__(:regex_for_paths, ['./match/'])
+
+      assert app_tree_match?(at, paths, File.join(dir, 'match', 'this', 'file.rb'))
+      refute app_tree_match?(at, paths, File.join(dir, 'nested', 'match'))
     end
   end
 
