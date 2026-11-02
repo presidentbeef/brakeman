@@ -56,6 +56,16 @@ class RailsConfiguration < Minitest::Test
     assert_equal Sexp.new(:true), tracker.config.rails[:action_controller][:wrap_parameters_by_default]
   end
 
+  def test_rails8_configuration_load_defaults_with_config
+    additional_config_path = File.expand_path(File.join(File.dirname(__FILE__), "..", "/apps/rails8/additional_config/application.rb"))
+
+    tracker = Brakeman.run(app_path: File.join(TEST_PATH, "apps", "rails8"), additional_config_paths: [additional_config_path])
+
+    assert_equal Sexp.new(:lit, 8.0), tracker.config.rails[:load_defaults]
+    
+    assert_equal Sexp.new(:nil), tracker.config.rails[:generators][:system_tests]
+  end
+
   def test_invalid_load_defaults
     tracker = BrakemanTester.new_tracker
     tracker.config.rails[:load_defaults] = Sexp.new(:str, 'asd2ojasdo.asodja1')

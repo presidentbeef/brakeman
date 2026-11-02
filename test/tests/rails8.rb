@@ -5,9 +5,11 @@ class Rails8Tests < Minitest::Test
   include BrakemanTester::CheckExpected
 
   def report
+    additional_config_path = File.expand_path(File.join(File.dirname(__FILE__), "..", "/apps/rails8/additional_config/application.rb"))
+
     @@report ||=
       Date.stub :today, Date.parse("2024-05-13") do
-        BrakemanTester.run_scan "rails8", "Rails 8", run_all_checks: true, use_prism: false
+        BrakemanTester.run_scan "rails8", "Rails 8", run_all_checks: true, use_prism: false, additional_config_paths: [additional_config_path]
       end
   end
 
