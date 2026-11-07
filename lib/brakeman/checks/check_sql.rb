@@ -723,14 +723,62 @@ class Brakeman::CheckSQL < Brakeman::BaseCheck
     target = call.target
 
     if call? target and target.method == :connection
-      target = target.target
-      klass = class_name(target)
+      inner = target.target
+      klass = class_name(inner)
 
-      target.nil? or
-      target == SELF_CLASS or
-      node_type? target, :self or
-      klass == :"ActiveRecord::Base" or
-      active_record_models.include? klass
+      # `connection` with no explicit receiver is ambiguous: inside an
+      # ActiveRecord model it is the AR connection, but it is also a very
+      # common name for a Faraday/HTTP client (see issue #1750). When the
+      # receiver is implicit, only treat the call as a SQL connection call if
+      # the argument does not clearly look like an HTTP URL/path. Calls with an
+      # explicit AR receiver (`self`, `ActiveRecord::Base`, a model) are left
+      # untouched so real SQL injection is still reported.
+      if inner.nil?
+        not http_url_argument?(call.first_arg)
+      else
+        inner == SELF_CLASS or
+        node_type? inner, :self or
+        klass == :"ActiveRecord::Base" or
+        active_record_models.include? klass
+      end
+    end
+  end
+
+  SQL_LEADING_KEYWORD = /\A\s*(?:SELECT|INSERT|UPDATE|DELETE|REPLACE|WITH|MERGE|UPSERT|CALL|EXEC|TRUNCATE|DESCRIBE|SHOW|ALTER|CREATE|DROP|GRANT|REVOKE|PRAGMA|BEGIN|COMMIT|ROLLBACK|SET|EXPLAIN)\b/i
+
+  # An HTTP-style URL or path argument, e.g. Faraday's
+  # `connection.delete("api/sessions/#{id}")`. Used to avoid flagging non-SQL
+  # connection calls. Deliberately conservative: anything that opens with a SQL
+  # keyword, or that is not slash-delimited path-like text, is NOT treated as a
+  # URL so genuine SQL strings keep being analyzed.
+  def http_url_argument? arg
+    leading = leading_static_string arg
+    return false if leading.nil? or leading.empty?
+
+    # Never mistake SQL for a URL.
+    return false if leading =~ SQL_LEADING_KEYWORD
+
+    # Absolute URLs or scheme-relative URLs.
+    return true if leading =~ %r{\A\s*https?://}i
+    return true if leading =~ %r{\A\s*//[^\s]}
+
+    # Relative path: one or more slash-separated segments made of URL-ish
+    # characters, no SQL whitespace structure. e.g. "api/sessions/", "/v1/users/".
+    leading =~ %r{\A/?[A-Za-z0-9_.~%:@!$&'()*+,;=-]+(?:/[A-Za-z0-9_.~%:@!$&'()*+,;=-]*)+\z}
+  end
+
+  # Returns the leading literal portion of a string/dstr argument, or nil if the
+  # argument does not begin with a static string.
+  def leading_static_string arg
+    return nil unless sexp? arg
+
+    case arg.node_type
+    when :str, :string
+      arg.value.is_a?(String) ? arg.value : nil
+    when :dstr
+      arg[1].is_a?(String) ? arg[1] : nil
+    else
+      nil
     end
   end
 
