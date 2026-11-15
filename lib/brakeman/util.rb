@@ -283,6 +283,65 @@ module Brakeman::Util
     end
   end
 
+  #Check if _exp_ is a call that returns a response from a large language
+  #model: RubyLLM chats, and the official OpenAI and Anthropic clients.
+  #
+  #The model's reply can be steered by anything in its context, such as a
+  #web page, an email, or a document, so it is treated as user input.
+  def llm_response? exp
+    return false unless call? exp
+
+    case exp.method
+    when :ask, :say, :complete
+      ruby_llm_chat? exp.target
+    when :create
+      llm_client_resource? exp.target
+    else
+      false
+    end
+  end
+
+  #RubyLLM.chat(...) or RubyLLM::Chat.new(...), possibly configured
+  #with chained calls such as with_instructions or with_tool
+  def ruby_llm_chat? exp
+    while call? exp
+      if exp.method == :chat and class_name(exp.target) == :RubyLLM
+        return true
+      elsif exp.method == :new and class_name(exp.target) == :'RubyLLM::Chat'
+        return true
+      end
+
+      exp = exp.target
+    end
+
+    false
+  end
+
+  #client.chat.completions or client.responses on OpenAI::Client.new,
+  #client.messages on Anthropic::Client.new
+  def llm_client_resource? exp
+    return false unless call? exp
+
+    case exp.method
+    when :completions
+      call? exp.target and
+        exp.target.method == :chat and
+        llm_client? exp.target.target, :'OpenAI::Client'
+    when :responses
+      llm_client? exp.target, :'OpenAI::Client'
+    when :messages
+      llm_client? exp.target, :'Anthropic::Client'
+    else
+      false
+    end
+  end
+
+  def llm_client? exp, client_class
+    call? exp and
+      exp.method == :new and
+      class_name(exp.target) == client_class
+  end
+
   #Check if exp is params, cookies, or request_headers
   def request_value? exp
     params? exp or
