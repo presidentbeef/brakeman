@@ -26,4 +26,4 @@ To ensure that SSL verification happens use the following mode:
 
 If the server certificate is invalid or context.ca_file is not set when verifying peers an OpenSSL::SSL::SSLError will be raised.
 
-For more information on the impact of this issue, see the paper [The Most Dangerous Code in the World](https://www.cs.utexas.edu/~shmat/shmat_ccs12.pdf).
+For more information on the impact of this issue, see the paper [The Most Dangerous Code in the World](https://www.cs.cornell.edu/~shmat/shmat_ccs12.pdf).
