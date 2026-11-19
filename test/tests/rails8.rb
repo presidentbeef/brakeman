@@ -16,7 +16,7 @@ class Rails8Tests < Minitest::Test
       controller: 0,
       model:      0,
       template:   2,
-      warning:    10
+      warning:    11
     }
   end
 
@@ -255,6 +255,19 @@ class Rails8Tests < Minitest::Test
       fingerprint: "8ddf1c9f218b2b7736160bc3d6cbd90c4a325b9dd27a7dd0d38c32b6e8e98fa6",
       warning_type: "SQL Injection",
       line: 95,
+      message: /^Possible\ SQL\ injection/,
+      confidence: 0,
+      relative_path: "app/controllers/users_controller.rb",
+      user_input: s(:call, s(:params), :[], s(:lit, :name))
+  end
+
+  def test_sql_injection_in_block_with_chained_call
+    assert_warning check_name: "SQL",
+      type: :warning,
+      warning_code: 0,
+      fingerprint: "eb82529d47469163b82ecc1287e87c0e446567667c5de15ef15e117780db3f1a",
+      warning_type: "SQL Injection",
+      line: 99,
       message: /^Possible\ SQL\ injection/,
       confidence: 0,
       relative_path: "app/controllers/users_controller.rb",

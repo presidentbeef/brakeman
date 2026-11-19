@@ -157,6 +157,74 @@ class CallIndexTests < Minitest::Test
     assert_equal xyz, x[:full_call]
   end
 
+  def index_calls src
+    all_calls = Brakeman::FindAllCalls.new(Object.new)
+    all_calls.process_source(RubyParser.new.parse(src), method: :x)
+    Brakeman::CallIndex.new(all_calls.calls)
+  end
+
+  def test_block_as_target
+    call_index = index_calls <<-RUBY
+      def x
+        things.map { |thing| inside(thing) }.flatten
+      end
+    RUBY
+
+    assert_equal 1, call_index.find_calls(method: :flatten).length
+    assert_equal 0, call_index.find_calls(target: :things, method: :map).length
+    assert_equal 1, call_index.find_calls(
+      target: :things, method: :map, nested: true
+    ).length
+    assert_equal 1, call_index.find_calls(target: nil, method: :inside).length
+  end
+
+  def test_block_in_block_call_arguments_as_target
+    call_index = index_calls <<-RUBY
+      def x
+        outer(things.map { inside }) { }.last
+      end
+    RUBY
+
+    assert_equal 0, call_index.find_calls(target: nil, method: :inside).length
+    assert_equal 1, call_index.find_calls(
+      target: nil, method: :inside, nested: true
+    ).length
+  end
+
+  def test_non_call_targets
+    call_index = index_calls <<-RUBY
+      def x
+        [in_array(1)].flatten
+        "\#{in_string(1)}".strip
+        (in_or(1) || []).first
+        (y ? in_ternary(1) : []).first
+        { key: in_hash(1) }.to_json
+      end
+    RUBY
+
+    [:in_array, :in_string, :in_or, :in_ternary, :in_hash].each do |method|
+      calls = call_index.find_calls(target: nil, method: method)
+      assert_equal 1, calls.length, method
+    end
+  end
+
+  def test_block_does_not_leak_full_call
+    call_index = index_calls <<-RUBY
+      def x
+        outer(things.map { inside }.flatten, other.thing).last
+      end
+    RUBY
+
+    inside = call_index.find_calls(target: nil, method: :inside).first
+    thing = call_index.find_calls(
+      target: :other, method: :thing, nested: true
+    ).first
+
+    refute_nil inside
+    assert_equal inside, inside[:full_call]
+    refute_equal inside, thing[:full_call]
+  end
+
   def test_find_error
     assert_raises do
       @call_index.find_calls :target => nil, :methods => nil
