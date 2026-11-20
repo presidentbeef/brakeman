@@ -162,6 +162,8 @@ class Brakeman::Messages::Input
       "request value"
     when :model
       "model attribute"
+    when :llm
+      "LLM response"
     else
       "user input"
     end

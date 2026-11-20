@@ -15,8 +15,8 @@ class Rails8Tests < Minitest::Test
     @@expected ||= {
       controller: 0,
       model:      0,
-      template:   2,
-      warning:    10
+      template:   3,
+      warning:    15
     }
   end
 
@@ -308,5 +308,98 @@ class Rails8Tests < Minitest::Test
       relative_path: "lib/cmd.rb",
       code: s(:call, s(:const, :Open3), :capture3, s(:str, "git"), s(:str, "diff"), s(:str, "origin/main"), s(:call, s(:dstr, "origin/", s(:evstr, s(:call, nil, :release_branch))), :shellescape)),
       user_input: s(:call, nil, :release_branch)
+  end
+
+  def test_command_injection_llm_response
+    assert_warning check_name: "Execute",
+      type: :warning,
+      warning_code: 14,
+      fingerprint: "1979b7ada19958c6e6bcda52ae31d819037506d3a160d088fb2876860a3564be",
+      warning_type: "Command Injection",
+      line: 7,
+      message: /^Possible\ command\ injection/,
+      confidence: 0,
+      relative_path: "app/controllers/chats_controller.rb",
+      code: s(:call, nil, :system, s(:call, s(:call, s(:call, s(:const, :RubyLLM), :chat), :ask, s(:str, "Which cleanup command should run?")), :content)),
+      user_input: s(:call, s(:call, s(:const, :RubyLLM), :chat), :ask, s(:str, "Which cleanup command should run?"))
+  end
+
+  def test_dangerous_eval_llm_response
+    assert_warning check_name: "Evaluation",
+      type: :warning,
+      warning_code: 13,
+      fingerprint: "dfc31c48dab0623d7c185eeb546f77773f80827cf8efa24728d9401d9e8bd91e",
+      warning_type: "Dangerous Eval",
+      line: 12,
+      message: /^LLM\ response\ evaluated\ as\ code/,
+      confidence: 0,
+      relative_path: "app/controllers/chats_controller.rb",
+      code: s(:call, nil, :eval, s(:call, s(:call, s(:call, s(:call, s(:const, :RubyLLM), :chat), :with_instructions, s(:str, "Reply with Ruby only")), :ask, s(:str, "Tidy the inbox")), :content)),
+      user_input: s(:call, s(:call, s(:call, s(:const, :RubyLLM), :chat), :with_instructions, s(:str, "Reply with Ruby only")), :ask, s(:str, "Tidy the inbox"))
+  end
+
+  def test_dangerous_send_llm_response
+    assert_warning check_name: "Send",
+      type: :warning,
+      warning_code: 23,
+      fingerprint: "9f19ff5031f873419794823ab0345fc3a09adefccb687295d3d8973d24378063",
+      warning_type: "Dangerous Send",
+      line: 16,
+      message: /^User\ controlled\ method\ execution/,
+      confidence: 0,
+      relative_path: "app/controllers/chats_controller.rb",
+      code: s(:call, nil, :send, s(:call, s(:call, s(:call, s(:colon2, s(:const, :RubyLLM), :Chat), :new), :ask, s(:str, "Which method should run next?")), :content)),
+      user_input: s(:call, s(:call, s(:colon2, s(:const, :RubyLLM), :Chat), :new), :ask, s(:str, "Which method should run next?"))
+  end
+
+  def test_sql_injection_openai_response
+    assert_warning check_name: "SQL",
+      type: :warning,
+      warning_code: 0,
+      fingerprint: "0c1d99887d5b529e7c7d41d8086c86b1f0d29fd6ba3ba5e77f7265a8928aaaf8",
+      warning_type: "SQL Injection",
+      line: 21,
+      message: /^Possible\ SQL\ injection/,
+      confidence: 0,
+      relative_path: "app/controllers/chats_controller.rb",
+      code: s(:call, s(:const, :User), :where, s(:call, s(:call, s(:call, s(:call, s(:call, s(:call, s(:call, s(:call, s(:colon2, s(:const, :OpenAI), :Client), :new), :chat), :completions), :create, s(:hash, s(:lit, :model), s(:str, "gpt-5"), s(:lit, :messages), s(:array))), :choices), :first), :message), :content)),
+      user_input: s(:call, s(:call, s(:call, s(:call, s(:colon2, s(:const, :OpenAI), :Client), :new), :chat), :completions), :create, s(:hash, s(:lit, :model), s(:str, "gpt-5"), s(:lit, :messages), s(:array)))
+  end
+
+  def test_unsafe_reflection_anthropic_response
+    assert_warning check_name: "UnsafeReflection",
+      type: :warning,
+      warning_code: 24,
+      fingerprint: "d68a1c3515bf167ec1e0c049fb756fcec1755373e6a0c13ccf1b18c7d66be6f2",
+      warning_type: "Remote Code Execution",
+      line: 25,
+      message: /^Unsafe\ reflection\ method\ `constantize`\ c/,
+      confidence: 0,
+      relative_path: "app/controllers/chats_controller.rb",
+      code: s(:call, s(:call, s(:call, s(:call, s(:call, s(:call, s(:call, s(:colon2, s(:const, :Anthropic), :Client), :new), :messages), :create, s(:hash, s(:lit, :model), s(:str, "claude-sonnet-5-5"), s(:lit, :max_tokens), s(:lit, 10), s(:lit, :messages), s(:array))), :content), :first), :text), :constantize),
+      user_input: s(:call, s(:call, s(:call, s(:colon2, s(:const, :Anthropic), :Client), :new), :messages), :create, s(:hash, s(:lit, :model), s(:str, "claude-sonnet-5-5"), s(:lit, :max_tokens), s(:lit, 10), s(:lit, :messages), s(:array)))
+  end
+
+  def test_cross_site_scripting_llm_response
+    assert_warning check_name: "CrossSiteScripting",
+      type: :template,
+      warning_code: 2,
+      fingerprint: "646d62d8034210e5f8b0d5456fb50a43624a043472148a2fdc08cab8d309405d",
+      warning_type: "Cross-Site Scripting",
+      line: 1,
+      message: /^Unescaped\ LLM\ response/,
+      confidence: 0,
+      relative_path: "app/views/chats/show.html.erb",
+      code: s(:call, s(:call, s(:const, :RubyLLM), :chat), :ask, s(:str, "Summarize the latest support ticket")),
+      user_input: nil
+  end
+
+  def test_command_injection_unknown_ask_is_not_llm_response
+    assert_no_warning check_name: "Execute",
+      type: :warning,
+      warning_code: 14,
+      warning_type: "Command Injection",
+      line: 30,
+      relative_path: "app/controllers/chats_controller.rb"
   end
 end

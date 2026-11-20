@@ -83,6 +83,10 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
       end
     end
 
+    if not @has_user_input and llm_response? exp
+      @has_user_input = Match.new(:llm, exp)
+    end
+
     exp
   end
 
@@ -318,6 +322,8 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
         return Match.new(:cookies, exp)
       elsif request_headers? exp
         return Match.new(:request, exp)
+      elsif llm_response? exp
+        return Match.new(:llm, exp)
       else
         has_immediate_user_input? exp.target
       end
