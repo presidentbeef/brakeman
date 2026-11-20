@@ -1,3 +1,8 @@
+# 8.1.1 - 2026-11-20
+
+* Only skip `UnscopedFind` when all `belongs_to` are optional (Artin Boghosian)
+* Add check for Ruby2Shell/CVE-2026-132825
+
 # 8.1.0 - 2026-09-30
 
 * Better help and error message for `--ensure-latest`
