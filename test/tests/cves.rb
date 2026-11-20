@@ -407,4 +407,13 @@ class CVETests < Minitest::Test
     assert_version '1.4.3', :'rails-html-sanitizer'
     assert_no_warning type: :generic, :warning_code => 124
   end
+
+  def test_ruby2shell_fix_version
+    before_rescan_of 'Gemfile', 'rails8' do
+      replace 'Gemfile', "ruby '4.0.1'", "ruby '4.0.10'"
+    end
+
+    assert_new 0
+    assert_no_warning type: :generic, warning_code: 130
+  end
 end

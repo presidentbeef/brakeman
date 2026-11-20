@@ -16,7 +16,7 @@ class Rails8Tests < Minitest::Test
       controller: 0,
       model:      0,
       template:   2,
-      warning:    10
+      warning:    11
     }
   end
 
@@ -308,5 +308,19 @@ class Rails8Tests < Minitest::Test
       relative_path: "lib/cmd.rb",
       code: s(:call, s(:const, :Open3), :capture3, s(:str, "git"), s(:str, "diff"), s(:str, "origin/main"), s(:call, s(:dstr, "origin/", s(:evstr, s(:call, nil, :release_branch))), :shellescape)),
       user_input: s(:call, nil, :release_branch)
+  end
+
+  def test_remote_code_execution_ruby2shell
+    assert_warning check_name: "Ruby2Shell",
+      type: :warning,
+      warning_code: 130,
+      fingerprint: "3e15b710ae7f3639965d5906699731a1b8e896c0e4fc419fe8b71571a0f18113",
+      warning_type: "Remote Code Execution",
+      line: 3,
+      message: /^Ruby\ 4\.0\.1\ has\ a\ critical\ remote\ code\ ex/,
+      confidence: 0,
+      relative_path: "Gemfile",
+      code: nil,
+      user_input: nil
   end
 end

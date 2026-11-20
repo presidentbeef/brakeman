@@ -16,7 +16,7 @@ class Rails7Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 0,
-      :warning => 26
+      :warning => 27
     }
   end
 
@@ -461,5 +461,19 @@ class Rails7Tests < Minitest::Test
       relative_path: "app/controllers/users_controller.rb",
       code: s(:call, s(:call, s(:call, nil, :some_book), :things), :ransack, s(:call, s(:params), :[], s(:lit, :q))),
       user_input: s(:call, s(:params), :[], s(:lit, :q))
+  end
+
+  def test_remote_code_execution_ruby2shell
+    assert_warning check_name: "Ruby2Shell",
+      type: :warning,
+      warning_code: 130,
+      fingerprint: "967044914508d2052d3dabf5e7f26e614511b6694ed34daf53fa35e4cb3d0abd",
+      warning_type: "Remote Code Execution",
+      line: 235,
+      message: /^Ruby\ 2\.7\.0\ has\ a\ critical\ remote\ code\ ex/,
+      confidence: 0,
+      relative_path: "MyGemfile.lock",
+      code: nil,
+      user_input: nil
   end
 end
