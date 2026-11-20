@@ -21,11 +21,11 @@ class Brakeman::CheckRuby2Shell < Brakeman::BaseCheck
     if fix_version
       warn warning_type: 'Remote Code Execution',
         warning_code: :ruby2shell,
-        message: msg(msg_version(ruby_version, 'Ruby'), ' has a critical remote code execution vulnerability. Upgrade to ', msg_version(fix_version, 'Ruby'), ' or later'),
+        message: msg(msg_version(ruby_version, 'Ruby'), ' has a critical remote code execution vulnerability ', msg_cve('CVE-2026-132825'), '. Upgrade to ', msg_version(fix_version, 'Ruby'), ' or later'),
         confidence: :high,
         gem_info: gemfile_or_environment('ruby'),
         link: 'https://www.ruby-lang.org/en/news/2026/11/18/multiple-vulnerabilities-in-regexp-and-string/',
-        cwe_id: [125, 787]
+        cwe_id: [122, 125, 787]
     end
   end
 end
