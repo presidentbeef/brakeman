@@ -13,7 +13,7 @@ class Rails6Tests < Minitest::Test
       :controller => 0,
       :model => 0,
       :template => 4,
-      :generic => 37
+      :generic => 38
     }
   end
 
@@ -846,5 +846,19 @@ class Rails6Tests < Minitest::Test
       message: /^Support\ for\ Ruby\ 2\.5\.3\ ended\ on\ 2021\-03\-/,
       confidence: 0,
       relative_path: "Gemfile"
+  end
+
+  def test_remote_code_execution_ruby2shell
+    assert_warning check_name: "Ruby2Shell",
+      type: :warning,
+      warning_code: 130,
+      fingerprint: "3e15b710ae7f3639965d5906699731a1b8e896c0e4fc419fe8b71571a0f18113",
+      warning_type: "Remote Code Execution",
+      line: 4,
+      message: /^Ruby\ 2\.5\.3\ has\ a\ critical\ remote\ code\ ex/,
+      confidence: 0,
+      relative_path: "Gemfile",
+      code: nil,
+      user_input: nil
   end
 end

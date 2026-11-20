@@ -149,7 +149,8 @@ module Brakeman
     #Returns true if low_version <= RAILS_VERSION <= high_version
     #
     #If the Rails version is unknown, returns false.
-    def version_between? low_version, high_version, current_version = nil
+    def version_between? low_version, high_version, current_version = false
+      return false if current_version.nil? # protect against accidents
       current_version ||= rails_version
       return false unless current_version
 

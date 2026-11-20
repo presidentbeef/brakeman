@@ -470,7 +470,7 @@ class Brakeman::BaseCheck < Brakeman::SexpProcessor
     version_between? version, "2.3.18.99", tracker.config.gem_version(:'railslts-version')
   end
 
-  def version_between? low_version, high_version, current_version = nil
+  def version_between? low_version, high_version, current_version = false
     tracker.config.version_between? low_version, high_version, current_version
   end
 
