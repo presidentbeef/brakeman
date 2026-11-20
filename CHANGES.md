@@ -2,6 +2,7 @@
 
 * Only skip `UnscopedFind` when all `belongs_to` are optional (Artin Boghosian)
 * Add check for Ruby2Shell/CVE-2026-132825
+* Walk each directory once when globbing files by extension (Clément Joubert)
 
 # 8.1.0 - 2026-09-30
 
