@@ -1,4 +1,5 @@
 require 'tempfile'
+require 'stringio'
 require_relative '../test'
 
 class BrakemanTests < Minitest::Test
@@ -6,6 +7,16 @@ class BrakemanTests < Minitest::Test
     assert_raises Brakeman::NoApplication do
       Brakeman.run "/tmp#{rand}" #better not exist
     end
+  end
+
+  def test_run_with_path_string_when_stderr_is_not_a_tty
+    old_stderr, $stderr = $stderr, StringIO.new
+
+    assert_raises Brakeman::NoApplication do
+      Brakeman.run "/tmp#{rand}" #better not exist
+    end
+  ensure
+    $stderr = old_stderr
   end
 
   def test_exception_no_on_no_application_if_forced

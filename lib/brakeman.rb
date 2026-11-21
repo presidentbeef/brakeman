@@ -79,6 +79,10 @@ module Brakeman
   #
   #Alternatively, just supply a path as a string.
   def self.run options
+    if options.is_a? String
+      options = { :app_path => options }
+    end
+
     if not $stderr.tty? and options[:report_progress].nil?
       options[:report_progress] = false
     end
