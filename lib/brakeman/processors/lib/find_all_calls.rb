@@ -66,23 +66,8 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
   end
 
   def process_iter exp
-    call = exp.block_call
-
-    if call.node_type == :call
-      call_hash = create_call_hash(call)
-
-      call_hash[:block] = exp.block
-      call_hash[:block_args] = exp.block_args
-      call_hash.freeze
-
-      @calls << call_hash
-
-      process exp.block
-    else
-      #Probably a :render call with block
-      process call
-      process exp.block
-    end
+    index_block_call exp
+    process exp.block
 
     exp
   end
@@ -131,6 +116,33 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
   end
 
   private
+
+  def index_block_call exp
+    call = exp.block_call
+
+    if call.node_type == :call
+      call_hash = create_call_hash(call)
+
+      call_hash[:block] = exp.block
+      call_hash[:block_args] = exp.block_args
+      call_hash.freeze
+
+      @calls << call_hash
+    else
+      #Probably a :render call with block
+      process call
+    end
+  end
+
+  # Calls inside a non-call target are not part of the call chain
+  def process_outside_target exp
+    already_in_target = @in_target
+    old_full_call = @full_call
+    @in_target = false
+    process exp
+    @in_target = already_in_target
+    @full_call = old_full_call
+  end
 
   def add_simple_call method_name, exp
     @calls << { :target => nil,
@@ -242,6 +254,16 @@ class Brakeman::FindAllCalls < Brakeman::BasicProcessor
       @in_target = true
       process target
       @in_target = already_in_target
+    elsif node_type? target, :iter
+      # A block holds calls too: `x.map { a(y) }.flatten`
+      already_in_target = @in_target
+      @in_target = true
+      index_block_call target
+      @in_target = already_in_target
+      process_outside_target target.block
+    elsif sexp? target
+      # Anything else holding calls: `[a(x)].flatten`, `(a(x) || b).c`
+      process_outside_target target
     end
 
     # Process call arguments
